@@ -1,0 +1,560 @@
+{
+  "schema": "sucafina-canonical-clones-diagnostic-receipt-v1",
+  "attempt": "diagnostic-01",
+  "classification": "instrumented-preview-timeout-no-qualification",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "productTree": "5537fb6a8a9f4079ed981fa74727cfbf3d76812b",
+    "snapshot": "9ca5887b65d0b3f479f179838d98ebba64f6995f",
+    "snapshotTree": "ea51662fec0b02b5d235a5493315b54172997718",
+    "snapshotParentIsProduct": true,
+    "instrumented": true,
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "a11922821a47594d76397582be38f9b7940177ca",
+      "value": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-analytics.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "sha": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+      "characters": 30401,
+      "splitLines": 443,
+      "exactPrefixOfPermanentBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+      "fullFirstDeclarationAndHelpersPreserved": true,
+      "laterDeclarationsRemovedLines": 376,
+      "journeyWithinSelectedDeclarationTruncated": false
+    },
+    "overlays": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "sha": "a11922821a47594d76397582be38f9b7940177ca"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "status": "modified",
+        "sha": "764a4eb01fc5011a66eb688d1d073bbf2c135516"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "status": "modified",
+        "sha": "feb60cf0ec72bd02c80a214d4bd289a30a66c477"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "status": "modified",
+        "sha": "3db3c491251f17722f0cba2ffe68ca7b7cb8ac88"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+        "status": "modified",
+        "sha": "b102b84c93ec09e43fce536c9db5a58338929f86"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "status": "modified",
+        "sha": "a2177137dc82c729aca639689c14e4f77b5b8de4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "status": "modified",
+        "sha": "4f8c561a96cdcd9bede5384ddc10d5598b12cb93"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+        "status": "added",
+        "sha": "378304409f12da81563e3c6ff83e44fcc8b68e26"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "status": "modified",
+        "sha": "4e4a4088807077124605682647139ee2ebe7118f"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "status": "modified",
+        "sha": "db1d7f4f0d770e5eed811070b0814c0363083c62"
+      }
+    ],
+    "overlayCount": 10,
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "unchangedBySnapshot": true
+    },
+    "originalBudgetsMs": {
+      "test": 780000,
+      "defaultAction": 20000,
+      "firstPreviewResponse": 60000,
+      "changed": false
+    },
+    "preflight": {
+      "snapshotParentAndTenPathCompareIndependentlyRead": true,
+      "exactSpecPrefixIndependentlyRead": true,
+      "inversePreflightReportedPassBy": "root",
+      "archivePerformsNoTreeMutation": true
+    }
+  },
+  "actions": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5cloneprobe",
+    "run": 45054828500,
+    "runAttempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-22T18:23:44Z",
+    "updatedAt": "2026-11-22T18:33:17Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45054828500",
+    "jobs": [
+      {
+        "id": 137307621294,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-22T18:23:46Z",
+        "completedAt": "2026-11-22T18:33:11Z",
+        "selectedSteps": [
+          {
+            "number": 21,
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-22T18:25:14Z",
+            "completedAt": "2026-11-22T18:33:05Z"
+          },
+          {
+            "number": 23,
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:33:05Z",
+            "completedAt": "2026-11-22T18:33:08Z"
+          }
+        ]
+      },
+      {
+        "id": 137310417616,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T18:33:13Z",
+        "completedAt": "2026-11-22T18:33:17Z",
+        "selectedSteps": [
+          {
+            "number": 2,
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T18:33:14Z",
+            "completedAt": "2026-11-22T18:33:15Z"
+          }
+        ]
+      }
+    ],
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "artifacts": {
+      "query": "GET /repos/gustavomhss/Orchestra-SF/actions/runs/45054828500/artifacts",
+      "items": [
+        {
+          "id": 14767625900,
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 8823794,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14767625900",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14767625900/zip",
+          "expired": false,
+          "created_at": "2026-11-22T18:33:08Z",
+          "expires_at": "2026-11-29T18:33:05Z",
+          "updated_at": "2026-11-22T18:33:08Z",
+          "digest": "sha256:282a9e704b63f01ea6967c017fcef6d0fac3a74f46aed4fb994a4eb0541704fa",
+          "workflow_run": {
+            "id": 45054828500,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-sf5cloneprobe",
+            "head_sha": "9ca5887b65d0b3f479f179838d98ebba64f6995f"
+          }
+        }
+      ],
+      "downloadPerformed": false,
+      "contentsVerified": false
+    },
+    "cleanup": {
+      "job": 137310417616,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "finalLogErrorsObserved": false,
+      "remoteRefReadbackPerformed": false
+    },
+    "rerun": false
+  },
+  "result": {
+    "tests": 1,
+    "failed": 1,
+    "passed": 0,
+    "testTitle": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "testDeclaration": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 12,
+      "column": 1
+    },
+    "preview": {
+      "request": {
+        "sourceLine": 1234,
+        "timestamp": "2026-11-22T18:32:03.1241274Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "originalPayload": "{\"operation\":\"decision-portfolio-preview\",\"phase\":\"native-request\",\"sequence\":3,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+        "value": {
+          "operation": "decision-portfolio-preview",
+          "phase": "native-request",
+          "sequence": 3,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      "operation": "decision-portfolio-preview",
+      "sequence": 3,
+      "method": "POST",
+      "matchingResponseObservedInFinalLog": false,
+      "matchingRequestFailedEventObservedInFinalLog": false,
+      "failure": {
+        "name": "TimeoutError",
+        "message": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+        "waiterMs": 60000,
+        "sourceLocation": {
+          "line": 72,
+          "column": 32
+        },
+        "evidence": [
+          {
+            "sourceLine": 1270,
+            "timestamp": "2026-11-22T18:33:05.7056319Z",
+            "originalPayload": "    TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\""
+          },
+          {
+            "sourceLine": 1274,
+            "timestamp": "2026-11-22T18:33:05.7057972Z",
+            "originalPayload": "    > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })"
+          },
+          {
+            "sourceLine": 1279,
+            "timestamp": "2026-11-22T18:33:05.7060808Z",
+            "originalPayload": "        at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32"
+          },
+          {
+            "sourceLine": 1318,
+            "timestamp": "2026-11-22T18:33:05.7977836Z",
+            "originalPayload": "  1 failed"
+          },
+          {
+            "sourceLine": 1320,
+            "timestamp": "2026-11-22T18:33:05.8131229Z",
+            "originalPayload": "error: script \"test:e2e:local\" exited with code 1"
+          },
+          {
+            "sourceLine": 1321,
+            "timestamp": "2026-11-22T18:33:05.8184543Z",
+            "originalPayload": "##[error]Process completed with exit code 1."
+          }
+        ]
+      },
+      "laterOperationOutcomeObserved": false
+    },
+    "history": [
+      {
+        "sequence": 1,
+        "request": {
+          "sourceLine": 1196,
+          "timestamp": "2026-11-22T18:31:48.8184854Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":1,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 1,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        "response": {
+          "sourceLine": 1198,
+          "timestamp": "2026-11-22T18:31:49.4149596Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":1,\"ownerBinding\":\"exact\",\"elapsedMs\":596,\"http\":200,\"status\":\"ok\",\"reason\":null,\"valueShape\":\"array\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 596,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        },
+        "http": 200,
+        "status": "ok",
+        "valueShape": "array",
+        "elapsedMs": 596,
+        "arrayCardinalityRecorded": false
+      },
+      {
+        "sequence": 2,
+        "request": {
+          "sourceLine": 1216,
+          "timestamp": "2026-11-22T18:32:01.5795619Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":2,\"method\":\"POST\",\"ownerBinding\":\"exact\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        "response": {
+          "sourceLine": 1218,
+          "timestamp": "2026-11-22T18:32:02.3342877Z",
+          "marker": "SF_ANALYTICS_SOURCE",
+          "originalPayload": "{\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":2,\"ownerBinding\":\"exact\",\"elapsedMs\":754,\"http\":200,\"status\":\"ok\",\"reason\":null,\"valueShape\":\"array\"}",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 754,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        },
+        "http": 200,
+        "status": "ok",
+        "valueShape": "array",
+        "elapsedMs": 754,
+        "arrayCardinalityRecorded": false
+      }
+    ],
+    "stages": {
+      "count": 46,
+      "first": {
+        "sourceLine": 1028,
+        "timestamp": "2026-11-22T18:26:04.8462631Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "build",
+        "value": "build"
+      },
+      "last": {
+        "sourceLine": 1118,
+        "timestamp": "2026-11-22T18:27:43.9260481Z",
+        "marker": "SF_DESIGN_STAGE",
+        "originalPayload": "decisions-ready",
+        "value": "decisions-ready"
+      },
+      "buildProgressEvidence": [
+        {
+          "sourceLine": 1028,
+          "timestamp": "2026-11-22T18:26:04.8462631Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "build",
+          "value": "build"
+        },
+        {
+          "sourceLine": 1030,
+          "timestamp": "2026-11-22T18:26:49.0134261Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "installation",
+          "value": "installation"
+        },
+        {
+          "sourceLine": 1042,
+          "timestamp": "2026-11-22T18:26:51.2900800Z",
+          "marker": "SF_DESIGN_STAGE",
+          "originalPayload": "native-ready",
+          "value": "native-ready"
+        }
+      ]
+    },
+    "diagnostics": [
+      {
+        "sourceLine": 1248,
+        "timestamp": "2026-11-22T18:33:03.1581005Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-failure\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "sourceLine": 1250,
+        "timestamp": "2026-11-22T18:33:03.1667875Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"native-view\",\"state\":{\"discovery\":\"ready\",\"provider\":\"ready\",\"view\":\"ready\",\"text\":\"Context and access⁨127.0.0.1:40389⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraintsde5e444f-7a9a-4841-b145-0f5fcfeb5c9b · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case.\"}}",
+        "value": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:40389⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1Constraintsde5e444f-7a9a-4841-b145-0f5fcfeb5c9b · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      },
+      {
+        "sourceLine": 1266,
+        "timestamp": "2026-11-22T18:33:03.6769805Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "originalPayload": "{\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}",
+        "value": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ],
+    "finalScopeMarkerObserved": false,
+    "previewResultReached": false,
+    "recordedPortfolioResultReached": false,
+    "sensitivityJourneyReached": false,
+    "finalVisualState": {
+      "image": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "reviewer": "root_cost",
+      "previewLabel": "Running",
+      "previewPanel": "Preview is not yet available.",
+      "selectionControls": "dimmed",
+      "history": "No recorded results for this case.",
+      "laterOutcomeInferred": false
+    }
+  },
+  "profiler": {
+    "file": "profiler.json",
+    "sourceSchema": "sf-clone-cost-v1",
+    "records": 6,
+    "started": 1,
+    "periodic": 5,
+    "final": 0,
+    "request": 1,
+    "nativePreviewRequestSequence": 3,
+    "numberingSystemsAreIndependent": true,
+    "scope": "before-human-admit",
+    "checkpointClock": "safe-flush",
+    "totals": "settled-within-window",
+    "elapsedMs": [
+      10000,
+      20002,
+      30000,
+      40000,
+      50000
+    ],
+    "emittedBucketsPerSnapshot": 18,
+    "legendBucketCount": 38,
+    "lastPending": 1,
+    "consistencyAudit": "PASS for data shape/legends/balances/monotonicity; not a test or qualification PASS",
+    "zeroReportedErrorsDropsUnknownSkippedClipped": true,
+    "durationsInclusive": true,
+    "durationsMustNotBeSummed": true,
+    "finalOutcomeNotObserved": true
+  },
+  "evidence": {
+    "source": "GitHub MCP final completed-job logs and metadata",
+    "testLogCharacters": 848542,
+    "testLogSplitLines": 1381,
+    "cleanupLogCharacters": 2288,
+    "cleanupLogSplitLines": 40,
+    "structuredEmissions": 120,
+    "nativeRecords": 81,
+    "profilerRecords": 6,
+    "previewChunkRecords": 33,
+    "counts": {
+      "SF_DESIGN_STAGE": 46,
+      "SF_ANALYTICS_SOURCE": 24,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_DESIGN_PREVIEW": 33,
+      "SF_ANALYTICS_CAPTURE": 6,
+      "SF_PORTFOLIO_READONLY": 6,
+      "SF_DESIGN_DIAGNOSTICS": 3
+    },
+    "parseErrors": [],
+    "eventFile": "source-events.json",
+    "manifest": "manifest.json",
+    "images": 7,
+    "imageBytes": 536832,
+    "allImagesIndividuallyViewedBy": "root_cost",
+    "rootVisualReviewAttributed": false,
+    "originalPayloadLocatorsVerified": 120,
+    "rawLogsArchived": false,
+    "nonceArchived": false
+  },
+  "separatelyScopedTechnicalVerification": {
+    "run": 45048665481,
+    "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+    "gatesPassed": 8,
+    "replayedByThisRun": false,
+    "scopeUnchanged": true
+  },
+  "qualification": {
+    "ui42Qualified": false,
+    "ui43Qualified": false,
+    "ui44Qualified": false,
+    "completeDeclarationPassed": false,
+    "visualQualification": false,
+    "globalCountsChanged": false,
+    "causalPerformanceGainEstablished": false,
+    "userAcceptanceEstablished": false
+  },
+  "limits": [
+    "This is an instrumented diagnostic run. Clock reads, trace objects, counters, safe-flush bookkeeping and output add overhead that is not independently quantified.",
+    "Durations are inclusive, rounded milliseconds. Do not add nested buckets or add the cumulative checkpoints together, subtract child times to claim exclusive cost, or treat them as CPU time.",
+    "The started record declares a 60,000 ms window scoped before human.admit. Checkpoints are emitted at safe flushes and contain settled-within-window totals, not a completed-request profile.",
+    "Five periodic snapshots stop at 50,000 ms. There is no final record or preview response; the unobserved tail and later server outcome remain unknown.",
+    "The last pending count of 1 is the tracked comparison.scenario-fences span with 52 entries and 51 settlements. It is not a count of all work in the application.",
+    "Canonical unit/expansion fields are conservative estimates and maxima, not measured output bytes. Prefix and maximum fields can come from different calls and must not be combined into a single complete graph.",
+    "The 25 comparison.proof / batch.hit events count proof-branch selections that still require the final fence; they do not establish 25 successful authorized egresses.",
+    "Absent bucket rows are reported as not emitted in these snapshots, not as a measured whole-request zero.",
+    "History response events preserve status ok and array shape, not array cardinality. The static History panel is a separate visual observation.",
+    "The final Running/skeleton capture does not establish later completion, unwind, cancellation or persistence outcome.",
+    "No visual qualification, acceptance-count change or causal performance gain is established. The artifact ZIP is metadata-only; no raw log or Omni control value is archived."
+  ],
+  "archive": {
+    "qaOnly": true,
+    "scope": "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/diagnostic-01/",
+    "files": 12,
+    "textFiles": 5,
+    "jpegs": 7,
+    "delivery": "immutable blobs only",
+    "rawLogsCommitted": false,
+    "nonceCommitted": false,
+    "productChanges": false,
+    "rollupsChanged": false,
+    "topReadmeChanged": false,
+    "rootReviewChanged": false,
+    "treeCreated": false,
+    "commitCreated": false,
+    "refUpdated": false,
+    "newCiExecution": false
+  }
+}

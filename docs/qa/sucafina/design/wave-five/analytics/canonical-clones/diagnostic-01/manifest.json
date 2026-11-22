@@ -1,0 +1,587 @@
+{
+  "schema": "sucafina-canonical-clones-diagnostic-manifest-v1",
+  "attempt": "diagnostic-01",
+  "runId": 45054828500,
+  "jobId": 137307621294,
+  "classification": "instrumented-preview-timeout-no-qualification",
+  "recordCounts": {
+    "SF_DESIGN_STAGE": 46,
+    "SF_ANALYTICS_SOURCE": 24,
+    "SF_ANALYTICS_CONTEXT": 2,
+    "SF_DESIGN_PREVIEW": 33,
+    "SF_ANALYTICS_CAPTURE": 6,
+    "SF_PORTFOLIO_READONLY": 6,
+    "SF_DESIGN_DIAGNOSTICS": 3
+  },
+  "structuredEmissionCount": 120,
+  "allOriginalPayloadsPreservedIn": "source-events.json",
+  "profileRecordsAndDecodedCountersIn": "profiler.json",
+  "rawLogArchived": false,
+  "nonceArchived": false,
+  "imageSource": "Original JPEG bytes from SF_DESIGN_PREVIEW emissions; no conversion, recompression, resizing, crop or annotation",
+  "chunkAudit": {
+    "images": 7,
+    "bytes": 536832,
+    "records": 33,
+    "indexing": "1-based",
+    "completeImages": 7,
+    "missingParts": [],
+    "duplicateParts": [],
+    "inconsistentPartTotals": [],
+    "allOriginalEmissionOrdersSequential": true,
+    "base64SyntaxAndRoundtrip": true,
+    "jpegStartAndEndMarkers": true,
+    "parseErrors": []
+  },
+  "byteIdentityVerification": {
+    "method": "Independently computed SHA-1 of Git blob header plus original JPEG bytes equals each GitHub create_blob SHA. SHA-256 and per-chunk base64 hashes are also recorded.",
+    "gitContentAddressMatches": 7,
+    "separateBinaryReadbackCompleted": false,
+    "separateBinaryReadbackScope": "This delivery creates blobs only; no tree, commit or ref. Separate binary content readback can be performed after composition into a commit."
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "bytes": 80591,
+      "sha256": "5393fb0ba42108ff516a225d7b307be72a852cd99ccce393213538fa4980d9c9",
+      "expectedGitBlobSha": "c87e0221b69734b941d68a4c6533c5ebbc705c29",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 107456,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T18:31:40.8180665Z",
+      "lastChunkAt": "2026-11-22T18:31:40.9318336Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "6351cb8752b812b103fd5af56831f1db3f1a18de62adbfa17f5e58c99517e45d",
+          "sourceLine": 1160,
+          "timestamp": "2026-11-22T18:31:40.8180665Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "ad45f564b0fe338ab96ac68d1d7b91799582b63a5c679be6528e6acdeaa1b274",
+          "sourceLine": 1162,
+          "timestamp": "2026-11-22T18:31:40.8417871Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "c1b1362819bd805b6b4f36262cef76c301cb016d2768c32eee9cf5789c7f2c60",
+          "sourceLine": 1164,
+          "timestamp": "2026-11-22T18:31:40.8749764Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "304e3f97e0ba126ecc81d5312a90c127db0027d6951cd4ea34e247e0d547a34b",
+          "sourceLine": 1166,
+          "timestamp": "2026-11-22T18:31:40.9086544Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 11456,
+          "base64Sha256": "28282b9dd19c4e02a3974ecd9470b049c2d42bea859dcbb195880b6f5109c403",
+          "sourceLine": 1168,
+          "timestamp": "2026-11-22T18:31:40.9318336Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "c87e0221b69734b941d68a4c6533c5ebbc705c29",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark desktop Portfolio scenarios list shows two authorized case cards, versions 2 and 6, with Open case links.",
+          "The operating-plans title wraps inside its card; both cards remain within the content panel."
+        ],
+        "limits": [
+          "This list capture does not show a completed preview or recorded result."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "bytes": 85900,
+      "sha256": "7e4731f96123c511466591b70467ed88a9a9dee9788df9ddf615e3eef2e2d6c7",
+      "expectedGitBlobSha": "845df242d79885b255f254654b396c2d82565ebb",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 114536,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T18:31:41.4727960Z",
+      "lastChunkAt": "2026-11-22T18:31:41.5919135Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "1a211bd8df7dddc5c02c73d4d470c7fda2ebb211064f25356aa4b727ff0b607e",
+          "sourceLine": 1172,
+          "timestamp": "2026-11-22T18:31:41.4727960Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "9f0f3cb6155c0240feea76cd710adb702e8568ddec3e747e0814afe1d7bc1521",
+          "sourceLine": 1174,
+          "timestamp": "2026-11-22T18:31:41.4969723Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "d43578a981b97d74a2ca89e2239b13effee0c99b626df68a2814234e9ce32b37",
+          "sourceLine": 1176,
+          "timestamp": "2026-11-22T18:31:41.5244700Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "6903eaba2e6ece0402685dd64c37b6723798a0978f68727167401b4c5061ddb2",
+          "sourceLine": 1178,
+          "timestamp": "2026-11-22T18:31:41.5612961Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 18536,
+          "base64Sha256": "e637f25613eccd8fbcc0096dec159c1d7cdc98c1df96c8161d0122d6378a7768",
+          "sourceLine": 1180,
+          "timestamp": "2026-11-22T18:31:41.5919135Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "845df242d79885b255f254654b396c2d82565ebb",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Light desktop list shows the same two authorized case cards, versions 2 and 6, with visible Open case actions.",
+          "Titles remain inside the cards, including the wrapped operating-plans title."
+        ],
+        "limits": [
+          "Theme/list appearance is intermediate evidence, not preview or result qualification."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "bytes": 28676,
+      "sha256": "125d7955d8e9f307f57485695f316c7358653aa05a9b9d7b189f83f6947188be",
+      "expectedGitBlobSha": "8f62ff43b60fa78ad3d0868ea66cd9537e3b4885",
+      "width": 390,
+      "height": 844,
+      "base64Characters": 38236,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T18:31:41.7034024Z",
+      "lastChunkAt": "2026-11-22T18:31:41.7198627Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "40325bba49532d61dc83635a75d6366e708467ea70939ccff3ef8dae09f17894",
+          "sourceLine": 1184,
+          "timestamp": "2026-11-22T18:31:41.7034024Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 14236,
+          "base64Sha256": "d78649f664ef20922aebd510c3c6d22b0871e2c3773c53c9bdcd49cf8afce34c",
+          "sourceLine": 1186,
+          "timestamp": "2026-11-22T18:31:41.7198627Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "8f62ff43b60fa78ad3d0868ea66cd9537e3b4885",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Dark 390×844 list stacks the two case cards in one column.",
+          "Both case titles wrap inside their cards; versions 2 and 6 and both Open case actions are visible within the viewport."
+        ],
+        "limits": [
+          "The capture establishes the visible list layout only."
+        ]
+      }
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "bytes": 27478,
+      "sha256": "b5ef64f121a3216745e4238299fac261b15b7fa00a6a052a137659946e93a7ec",
+      "expectedGitBlobSha": "3efe10603e6cd0442b2e4e535101a735f2ca9772",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 36640,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T18:31:42.0406660Z",
+      "lastChunkAt": "2026-11-22T18:31:42.0568069Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "124d28a4a3cb62ef3e97d26088488a800388b57b06f092ae5b6e102add6274a1",
+          "sourceLine": 1190,
+          "timestamp": "2026-11-22T18:31:42.0406660Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 12640,
+          "base64Sha256": "8cc4a176858bd5299a2e1e3cf5776e181359657138f35c3a5d949b2bc0b44cef",
+          "sourceLine": 1192,
+          "timestamp": "2026-11-22T18:31:42.0568069Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "3efe10603e6cd0442b2e4e535101a735f2ca9772",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Light 320×800 list displays both case cards in a single column.",
+          "Titles wrap inside the cards, and the versions and Open case actions remain visible within the viewport."
+        ],
+        "limits": [
+          "No preview completion or result is shown."
+        ]
+      }
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "bytes": 97929,
+      "sha256": "e661678a62c6ef8f10e6cb4f35dd89850c07295c58ae756e08608808bac95d46",
+      "expectedGitBlobSha": "dd01dc8beba37b4cf6166178e12958b97e6cd57a",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 130572,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T18:31:50.8082161Z",
+      "lastChunkAt": "2026-11-22T18:31:50.9244388Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "e8d2308feceddfdd32c6a5f2597cf6994112e1dcb0be31caef13a1900a555a95",
+          "sourceLine": 1202,
+          "timestamp": "2026-11-22T18:31:50.8082161Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "d9fe75160d4839bf9323c7e7cf04bca6d675dc7f42a0b68ebf70f66e2998d0ae",
+          "sourceLine": 1204,
+          "timestamp": "2026-11-22T18:31:50.8293233Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "62b4ed35325c421eba50bd10d0e8f0a3d1dcd144894c15cce05ef9b10c85441f",
+          "sourceLine": 1206,
+          "timestamp": "2026-11-22T18:31:50.8503825Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "b2e7a7c6e091c97de6d5dc1c90a55f3dcb6e3edcbb6786944c33761240d230d2",
+          "sourceLine": 1208,
+          "timestamp": "2026-11-22T18:31:50.8774733Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "06cf53c28cbe309b0803e43e5d2a17a7695d33511b10681e847a3e1d96924e5f",
+          "sourceLine": 1210,
+          "timestamp": "2026-11-22T18:31:50.9063974Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 10572,
+          "base64Sha256": "da4a001b15724da74eb74fc11da64d324f40db6b90efd829f3e60cd790ef9448",
+          "sourceLine": 1212,
+          "timestamp": "2026-11-22T18:31:50.9244388Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "dd01dc8beba37b4cf6166178e12958b97e6cd57a",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Regional-sourcing case version 2 shows No eligible scenarios in the authorized case.",
+          "Constraint v0 and the priority criterion are unchecked; Exploration limit is 32 and Preview combinations is dimmed.",
+          "History displays No recorded results for this case."
+        ],
+        "limits": [
+          "The displayed History state is distinct from the source response metadata; the two successful History events preserve array shape but not cardinality."
+        ]
+      }
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "bytes": 106221,
+      "sha256": "5b431f530d1eee09b49685419fb148db74f76b5dc0f05e08bad3c05b68b25b18",
+      "expectedGitBlobSha": "d7b7db626c5232b26d665c0e817ad79fc52b345e",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 141628,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T18:32:02.9613196Z",
+      "lastChunkAt": "2026-11-22T18:32:03.1143363Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "51c908b1d57fd2030d7ed13590923b51cc919dfcad6673d2046d4ed1c4748d9b",
+          "sourceLine": 1220,
+          "timestamp": "2026-11-22T18:32:02.9613196Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "3d6daebdfa8f16070d16057d8ecbebfc1751c9f90efcf322375cad5d4d7f5e5f",
+          "sourceLine": 1222,
+          "timestamp": "2026-11-22T18:32:02.9880582Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "ff9b4e139814c99cdd0fffa064b1dee68e5187fca0f459cd2da7eb13557bd294",
+          "sourceLine": 1224,
+          "timestamp": "2026-11-22T18:32:03.0134013Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "89d06efbe4533400313abaea4fc1e78714af4c942e4915e6bf49ad7c9746add5",
+          "sourceLine": 1226,
+          "timestamp": "2026-11-22T18:32:03.0409300Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "c1b75dc4ddf00f3359a98e0023cca8abacb27d3b0a09b99f0eb9cd2b10b68e74",
+          "sourceLine": 1228,
+          "timestamp": "2026-11-22T18:32:03.0768054Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 21628,
+          "base64Sha256": "59b6ba80f2096b9ef6afe9c6ef4bb5dd0ba43e269059de8aea120a7f513e18c1",
+          "sourceLine": 1230,
+          "timestamp": "2026-11-22T18:32:03.1143363Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "d7b7db626c5232b26d665c0e817ad79fc52b345e",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Operating-plans case version 6 shows Decision candidate plan v1 and constraint v2 checked; the baseline, monthly hypothesis and priority criterion are unchecked.",
+          "Exploration limit is 4 with a visible focus outline; Preview combinations is blue and available.",
+          "History displays No recorded results for this case."
+        ],
+        "limits": [
+          "This is the configuration state before the observed preview POST."
+        ]
+      }
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "bytes": 110037,
+      "sha256": "fdcbae149ff99a1bf2214c66235f47cd7dd7dd149bfea35a745e3a312705da93",
+      "expectedGitBlobSha": "7506f2861335518c893932596ad3e9f2dabbba8f",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 146716,
+      "declaredParts": 7,
+      "receivedParts": 7,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "firstChunkAt": "2026-11-22T18:33:03.5140403Z",
+      "lastChunkAt": "2026-11-22T18:33:03.6757050Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "a79e94e24615344ebec7d6399da67d98f689285ae32cf5d69163f66505f324ca",
+          "sourceLine": 1252,
+          "timestamp": "2026-11-22T18:33:03.5140403Z"
+        },
+        {
+          "part": 2,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "b1fd332f65299c8f0d3678c50f774b233db307680638dec65148ab888a5d9d99",
+          "sourceLine": 1254,
+          "timestamp": "2026-11-22T18:33:03.5507542Z"
+        },
+        {
+          "part": 3,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "27469f6fb49afb560c821ec65f1aa2c2de70e1213f211709b80507f4bb402bbe",
+          "sourceLine": 1256,
+          "timestamp": "2026-11-22T18:33:03.5883187Z"
+        },
+        {
+          "part": 4,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "3bc7c108d032cf7935ba3890bd004857aa01660a6f2f51f4c9c449c1984e8ed4",
+          "sourceLine": 1258,
+          "timestamp": "2026-11-22T18:33:03.6168376Z"
+        },
+        {
+          "part": 5,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "78bd4b3f88f6fa72810c0fba354dcf94a6956514b2c745594985d3554d8d931c",
+          "sourceLine": 1260,
+          "timestamp": "2026-11-22T18:33:03.6384029Z"
+        },
+        {
+          "part": 6,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "08516849ddad5a7db145f9b26e768b947957d5b04c1dbf835cab256eb9455e27",
+          "sourceLine": 1262,
+          "timestamp": "2026-11-22T18:33:03.6621090Z"
+        },
+        {
+          "part": 7,
+          "parts": 7,
+          "base64Characters": 2716,
+          "base64Sha256": "c0d6ef61b09f8c43acaf32a1bdd0fe313b423d0ab05b95860a7412e5eb5a1a93",
+          "sourceLine": 1264,
+          "timestamp": "2026-11-22T18:33:03.6757050Z"
+        }
+      ],
+      "mimeType": "image/jpeg",
+      "gitBlobSha": "7506f2861335518c893932596ad3e9f2dabbba8f",
+      "gitBlobIdentityVerified": true,
+      "visualReview": {
+        "reviewer": "root_cost",
+        "individuallyViewed": true,
+        "observations": [
+          "Final desktop capture retains Decision candidate plan v1, constraint v2 and Exploration limit 4.",
+          "Preview combinations shows Running; the selection controls and limit are dimmed.",
+          "A skeleton panel says Preview is not yet available. History displays No recorded results for this case."
+        ],
+        "limits": [
+          "The image records the pending preview state at capture time. It does not establish later unwind, completion, cancellation, reconnection or persistence outcome."
+        ]
+      }
+    }
+  ],
+  "visualReview": {
+    "reviewer": "root_cost",
+    "allSevenImagesIndividuallyViewed": true,
+    "rootVisualReviewAttributed": false,
+    "qualification": false
+  },
+  "limitations": [
+    "This is an instrumented diagnostic run. Clock reads, trace objects, counters, safe-flush bookkeeping and output add overhead that is not independently quantified.",
+    "Durations are inclusive, rounded milliseconds. Do not add nested buckets or add the cumulative checkpoints together, subtract child times to claim exclusive cost, or treat them as CPU time.",
+    "The started record declares a 60,000 ms window scoped before human.admit. Checkpoints are emitted at safe flushes and contain settled-within-window totals, not a completed-request profile.",
+    "Five periodic snapshots stop at 50,000 ms. There is no final record or preview response; the unobserved tail and later server outcome remain unknown.",
+    "The last pending count of 1 is the tracked comparison.scenario-fences span with 52 entries and 51 settlements. It is not a count of all work in the application.",
+    "Canonical unit/expansion fields are conservative estimates and maxima, not measured output bytes. Prefix and maximum fields can come from different calls and must not be combined into a single complete graph.",
+    "The 25 comparison.proof / batch.hit events count proof-branch selections that still require the final fence; they do not establish 25 successful authorized egresses.",
+    "Absent bucket rows are reported as not emitted in these snapshots, not as a measured whole-request zero.",
+    "History response events preserve status ok and array shape, not array cardinality. The static History panel is a separate visual observation.",
+    "The final Running/skeleton capture does not establish later completion, unwind, cancellation or persistence outcome.",
+    "No visual qualification, acceptance-count change or causal performance gain is established. The artifact ZIP is metadata-only; no raw log or Omni control value is archived."
+  ]
+}
