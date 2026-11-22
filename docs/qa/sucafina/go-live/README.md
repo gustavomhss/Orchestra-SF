@@ -2,7 +2,7 @@
 
 **CAP03, jornadas nativas/F04, observador de restart, registro Microsoft, proveniência e agregador completo já estão integrados em dev. Os cinco gates finais continuam abertos.** Faltam a composição de produto qualificada, o candidato C/T confirmado, os ACKs originais, o tar verificado e as execuções nas reservas isoladas.
 
-Observação desta edição: **22/11/2026 às 15:52:11 em America/Sao_Paulo (22/11/2026 às 18:52:11 UTC)**. Último dev observado: `b7776698e61934ed2cb820658408ff8a8207ec62`, árvore `364344c376a4feb35245d8089bde1941d025ebf9`. Essa identidade é uma composição entregue; **não é o candidato final aprovado**.
+Observação desta edição: **22/11/2026 às 16:01:12 em America/Sao_Paulo (22/11/2026 às 19:01:12 UTC)**. Último dev observado: `b7776698e61934ed2cb820658408ff8a8207ec62`, árvore `364344c376a4feb35245d8089bde1941d025ebf9`. Essa identidade é uma composição entregue; **não é o candidato final aprovado**.
 
 O [registro estruturado](status.json) contém dono, SHA/árvore, artefato, recibo e bloqueio por gate. O [registro de execução](execution-2026-11-22.md) conserva os resultados anteriores, inclusive tentativas negativas, e separa cada prova por fonte. O [runbook instalado de G08](g08-installed-execution.md) descreve a rota concreta entregue pela #698.
 
