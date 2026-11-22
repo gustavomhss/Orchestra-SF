@@ -88,6 +88,12 @@ O OPEX organiza as linhas de despesas e o CAPEX organiza projetos e linhas de in
 
 A edição, a colagem de valores, a distribuição e a revisão usam as regras da versão selecionada. Meses fechados e restrições de acesso continuam visíveis. Os ajustes só são concluídos depois da confirmação apresentada pela operação.
 
+## Revisões e visões salvas no operador local
+
+Quando a instalação disponibilizar **Revisão e ações** no Dashboard, selecione o período e carregue as opções autorizadas. O painel reúne pauta, registros preservados e alterações que você pode revisar. Se o envio ficar sem confirmação, use o controle de recuperação do painel para reenviar a mesma solicitação.
+
+Em **Saved views**, salve a página com os filtros atuais ou defina uma página inicial. Se uma referência ficar indisponível, remova-a ou substitua-a pela página autorizada que estiver aberta. Se uma gravação ficar sem confirmação, use **Retry same request** antes de alterar o formulário.
+
 ## Leitura em telas menores
 
 As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.
