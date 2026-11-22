@@ -559,6 +559,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     state.status === "outcome-unknown" ? "sf.common.operationUnknown" :
     state.status === "invalid" ? "sf.common.invalidLink" :
     state.status === "loading" ? "sf.common.loading" : "sf.common.unavailable"
+  const designed = () => props.surfaceId === "UI55" || props.surfaceId === "UI56"
   const isImport = () => props.surfaceId === "UI55"
   const isHistory = () => props.surfaceId === "UI57" && props.route.kind === "history"
   const isReference = () => props.surfaceId === "UI56" || (props.surfaceId === "UI57" && !isHistory())
@@ -592,7 +593,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   }
 
   return (
-    <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
+    <SfPageFrame titleKey={key(title())} subtitleKey={designed() ? key(isImport() ? "sf.u23.importSubtitle" : "sf.u23.previewSubtitle") : undefined} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
         id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
@@ -602,7 +603,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       } : undefined}
     >
       <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
-        data-sf-phase={state.phase} data-sf-read-state={state.status}>
+        data-sf-wave={designed() ? "five" : undefined} data-sf-phase={state.phase} data-sf-read-state={state.status}>
+        <Show when={designed()}>
+          <ol class="sf-files-steps" aria-label={t("sf.u23.importStages")}>
+            <li data-current={!state.manifest && !state.file}><span>1</span>{t("sf.u23.chooseDestination")}</li>
+            <li data-current={!state.manifest && !!state.file}><span>2</span>{t("sf.u23.chooseFile")}</li>
+            <li data-current={!!state.manifest}><span>3</span>{t("sf.u23.reviewPreview")}</li>
+          </ol>
+        </Show>
         <SfStatePanel state={state.status} messageKey={key(message())}
           onRetryRead={state.phase === "unknown" ? undefined : () => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
               if (state.exportKind === "po") setState("poRefresh", state.poRefresh + 1)
@@ -612,59 +620,82 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             fence(); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
           } : undefined}>
           <Show when={isImport()}>
-            <div class="sf-files-fields">
-              <label>{t("sf.u23.source")}
-                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
-                  <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
-                </select>
-              </label>
-              <label>{t("sf.u23.periodStart")}
-                <input type="date" value={state.start} disabled={editLocked()}
-                  onChange={(e) => changePeriod("start", e.currentTarget.value)} />
-              </label>
-              <label>{t("sf.u23.periodEnd")}
-                <input type="date" value={state.end} disabled={editLocked()}
-                  onChange={(e) => changePeriod("end", e.currentTarget.value)} />
-              </label>
-              <button type="button" class="mx-btn" disabled={editLocked()}
-                onClick={() => { void discover() }}>{t("sf.u23.find")}</button>
-              <Show when={state.needsDiscovery}>
-                <p role="status" class="sf-files-note" data-sf-discovery="required">
-                  {t("sf.u23.periodRediscover")}
-                </p>
-              </Show>
-              <label>{t("sf.u23.destination")}
-                <select aria-label={t("sf.u23.destination")} value={state.selectionRef} disabled={editLocked() || !state.targets.length}
-                  onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
-                  <option value="">{t("sf.u23.destinationEmpty")}</option>
-                  <For each={state.targets}>{(target) =>
-                    <option value={target.selectionRef}>{target.label}</option>}</For>
-                </select>
-              </label>
-              <label>{t("sf.u23.file")}
-                <input type="file" accept=".xls,.xlsx,.json" disabled={editLocked()}
-                  onChange={(e) => { change(); setState("file", e.currentTarget.files?.[0]) }} />
-              </label>
-              <Show when={state.surface === "planner"}>
-                <label><input type="checkbox" checked={state.newVersion} disabled={editLocked()}
-                  onChange={(e) => { change(); setState("newVersion", e.currentTarget.checked) }} />
-                  {t("sf.u23.newVersion")}</label>
-                <label><input type="checkbox" checked={state.removeMissing} disabled={editLocked()}
-                  onChange={(e) => { change(); setState("removeMissing", e.currentTarget.checked) }} />
-                  {t("sf.u23.removeMissing")}</label>
-              </Show>
-              <Show when={selectedTarget()?.sheet && ["All Members", "Projects Import", "All Projects"].includes(selectedTarget()!.sheet!)}>
-                <label><input type="checkbox" checked={state.replace} disabled={editLocked()}
-                  onChange={(e) => { change(); setState("replace", e.currentTarget.checked) }} />
-                  {t("sf.u23.replace")}</label>
-              </Show>
-              <label>{t("sf.u23.headerRow")}
-                <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
-                  onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
-              </label>
-              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file ||
-                !permitted("files.import-admit") || !permitted("files.import-preview")}
-                onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
+            {/* The browser FileList and options stay mounted when the preview takes the canvas. */}
+            <div class="sf-files-setup" hidden={!!state.manifest && matchedSurface()}>
+              <section class="sf-files-fields sf-files-destination" aria-label={t("sf.u23.destinationAndPeriod")}>
+                <header class="sf-files-section-heading">
+                  <h2>{t("sf.u23.destinationAndPeriod")}</h2>
+                  <p>{t("sf.u23.destinationHelp")}</p>
+                </header>
+                <label>{t("sf.u23.source")}
+                  <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                    <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
+                  </select>
+                </label>
+                <label>{t("sf.u23.periodStart")}
+                  <input type="date" value={state.start} disabled={editLocked()}
+                    onChange={(e) => changePeriod("start", e.currentTarget.value)} />
+                </label>
+                <label>{t("sf.u23.periodEnd")}
+                  <input type="date" value={state.end} disabled={editLocked()}
+                    onChange={(e) => changePeriod("end", e.currentTarget.value)} />
+                </label>
+                <div class="sf-files-discover">
+                  <button type="button" class="mx-btn" disabled={editLocked()}
+                    onClick={() => { void discover() }}>{t("sf.u23.find")}</button>
+                  <Show when={state.needsDiscovery}>
+                    <p role="status" class="sf-files-note" data-sf-discovery="required">
+                      {t("sf.u23.periodRediscover")}
+                    </p>
+                  </Show>
+                </div>
+                <label class="sf-files-destination-select">{t("sf.u23.destination")}
+                  <select aria-label={t("sf.u23.destination")} value={state.selectionRef} disabled={editLocked() || !state.targets.length}
+                    onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
+                    <option value="">{t("sf.u23.destinationEmpty")}</option>
+                    <For each={state.targets}>{(target) =>
+                      <option value={target.selectionRef}>{target.label}</option>}</For>
+                  </select>
+                </label>
+              </section>
+              <section class="sf-files-fields sf-files-upload" aria-label={t("sf.u23.fileAndOptions")}>
+                <header class="sf-files-section-heading">
+                  <h2>{t("sf.u23.fileAndOptions")}</h2>
+                  <p>{t("sf.u23.fileHelp")}</p>
+                </header>
+                <label class="sf-files-file">{t("sf.u23.file")}
+                  <input type="file" accept=".xls,.xlsx,.json" disabled={editLocked()}
+                    onChange={(e) => { change(); setState("file", e.currentTarget.files?.[0]) }} />
+                </label>
+                <details class="sf-files-options">
+                  <summary>{t("sf.u23.options")}</summary>
+                  <div class="sf-files-option-fields">
+                    <Show when={state.surface === "planner"}>
+                      <label><input type="checkbox" checked={state.newVersion} disabled={editLocked()}
+                        onChange={(e) => { change(); setState("newVersion", e.currentTarget.checked) }} />
+                        {t("sf.u23.newVersion")}</label>
+                      <label><input type="checkbox" checked={state.removeMissing} disabled={editLocked()}
+                        onChange={(e) => { change(); setState("removeMissing", e.currentTarget.checked) }} />
+                        {t("sf.u23.removeMissing")}</label>
+                    </Show>
+                    <Show when={selectedTarget()?.sheet && ["All Members", "Projects Import", "All Projects"].includes(selectedTarget()!.sheet!)}>
+                      <label><input type="checkbox" checked={state.replace} disabled={editLocked()}
+                        onChange={(e) => { change(); setState("replace", e.currentTarget.checked) }} />
+                        {t("sf.u23.replace")}</label>
+                    </Show>
+                    <label>{t("sf.u23.headerRow")}
+                      <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
+                        onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
+                    </label>
+                  </div>
+                </details>
+                <div class="sf-files-prepare">
+                  <p>{t("sf.u23.previewReview")}</p>
+                  <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file ||
+                    !permitted("files.import-admit") || !permitted("files.import-preview")}
+                    onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
+                </div>
+              </section>
             </div>
           </Show>
           <Show when={isHistory()}>
@@ -691,7 +722,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </form>
           </Show>
           <Show when={isReference()}>
-            <div class="sf-files-fields">
+            <div class="sf-files-fields" classList={{ "sf-files-reference": designed() }}>
+              <Show when={designed()}><header class="sf-files-section-heading">
+                <h2>{t("sf.u23.loadPreview")}</h2><p>{t("sf.u23.loadPreviewHelp")}</p>
+              </header></Show>
               <label>{t("sf.u23.source")}
                 <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
@@ -702,6 +736,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </div>
           </Show>
           <Show when={(isImport() || isReference() || isHistory()) && state.manifest && matchedSurface()}>
+            <div classList={{ "sf-files-preview": designed() }} style={!designed() ? { display: "contents" } : undefined}>
+            <Show when={designed()}>
+              <div class="sf-files-preview-heading"><div><h2>{t("sf.u23.reviewPreview")}</h2>
+                <p>{t("sf.u23.previewReview")}</p></div>
+                <Show when={isImport()}><button type="button" class="mx-btn" disabled={editLocked()}
+                  onClick={cancelPreview}>{t("sf.u23.cancel")}</button></Show>
+              </div>
+            </Show>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{state.manifest!.domainApplied ? t("sf.u23.confirmed") : t("sf.u23.simulation")}</h2>
               <p>{state.manifest!.context.period.start} – {state.manifest!.context.period.end} · {state.manifest!.context.currency}</p>
@@ -733,6 +775,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </section>
             <section class="sf-files-section" aria-label={t("sf.u23.changes")}>
               <h2>{t("sf.u23.changes")}</h2>
+              <Show when={designed()}><dl class="sf-files-change-summary">
+                <For each={["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const}>{(kind) =>
+                  <div><dt>{t("sf.u23." + kind)}</dt><dd>{new Intl.NumberFormat(language.intl()).format(changeSummary(kind).length)}</dd></div>}
+                </For>
+              </dl></Show>
               <For each={["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const}>
                 {(kind) => <details>
                   <summary>{t("sf.u23." + kind)} ({changeSummary(kind).length})</summary>
@@ -786,6 +833,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 onClick={() => { if (isHistory()) void loadHistory(); else void reconcile() }}>
                 {t("sf.u23.reconcile")}
               </button>
+            </div>
             </div>
           </Show>
           <Show when={isExport()}>

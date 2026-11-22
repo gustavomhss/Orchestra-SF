@@ -1,13 +1,46 @@
-.sf-u44-relations{display:grid;gap:1rem;min-width:0;overflow-wrap:anywhere}
-.sf-u44-relation-source,.sf-u44-relation-create{display:grid;gap:.75rem;min-width:0;max-width:80ch}
-.sf-u44-relation-source{grid-template-columns:minmax(0,1fr) auto;align-items:end}
-.sf-u44-relation-source label,.sf-u44-relation-create label{display:grid;gap:.3rem;min-width:0}
-.sf-u44-relation-source input,.sf-u44-relation-create input,.sf-u44-relation-create textarea{font:inherit;min-height:44px;max-width:100%;width:100%;box-sizing:border-box}
-.sf-u44-relation-create textarea{min-height:7rem}
-.sf-u44-review{display:grid;gap:.65rem;min-width:0;padding:1rem;border:1px solid var(--mx-border,var(--border-color,currentColor));border-radius:.6rem}
-.sf-u44-review dl{display:grid;gap:.5rem;margin:0}
-.sf-u44-review dl>div{display:grid;gap:.2rem}
-.sf-u44-review dd{margin:0;overflow-wrap:anywhere}
-.sf-u44-review button{justify-self:start;min-height:44px}
-.sf-u44-ref{overflow-wrap:anywhere}
-@media(max-width:767px){.sf-u44-relation-source{grid-template-columns:minmax(0,1fr)}.sf-u44-review{padding:.75rem}}
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-workspace,
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-reading { display: grid; gap: var(--sf-collab-gap); min-inline-size: 0; }
+.sf-u44-relations[data-sf-wave="five"] :is(.sf-u44-relation-source,.sf-u44-relation-create,.sf-u44-review) {
+  display: grid;
+  gap: var(--sf-collab-gap);
+  min-inline-size: 0;
+  padding: var(--sf-collab-panel);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+}
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-source { grid-template-columns: minmax(0,1fr) auto; align-items: end; }
+.sf-u44-relations[data-sf-wave="five"] label { display: grid; gap: 8px; min-inline-size: 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-create {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  inline-size: 100%;
+  max-inline-size: var(--sf-collab-editor);
+  box-sizing: border-box;
+}
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-create > :is(p,.sf-u44-wide,button) { grid-column: 1 / -1; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-create > p { color: var(--mx-dim); max-inline-size: 62ch; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-create > button { justify-self: start; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review { max-inline-size: var(--sf-collab-editor); }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review dl { display: grid; gap: 0; margin: 0; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review dl > div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 16px; padding-block: 14px; border-block-end: 1px solid var(--mx-line); }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review dt { color: var(--mx-dim); }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review dd { margin: 0; min-inline-size: 0; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review ul { padding-inline-start: 20px; margin: 0; }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-review button { justify-self: start; }
+.sf-u44-relations[data-sf-wave="five"] .sf-collab-relations {
+  padding: var(--sf-collab-panel);
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+}
+.sf-u44-relations[data-sf-wave="five"] .sf-collab-form { border: 0; border-block-end: 1px solid var(--mx-line); border-radius: 0; padding: 0 0 20px; background: none; }
+.sf-u44-relations[data-sf-wave="five"][data-sf-relation-tools="closed"] .sf-collab-form { display: none; }
+.sf-u44-relations[data-sf-wave="five"] .sf-collab-items { border: 0; border-radius: 0; }
+.sf-u44-relations[data-sf-wave="five"] .sf-collab-item { padding-inline: 0; background: none; }
+.sf-u44-relations[data-sf-wave="five"] .sf-collab-pair { font-size: var(--orchestra-font-size-lg); }
+.sf-u44-relations[data-sf-wave="five"] .sf-u44-ref { color: var(--mx-dim); padding-inline: var(--sf-collab-panel); }
+@media(max-width:767px) {
+  .sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-source,
+  .sf-u44-relations[data-sf-wave="five"] .sf-u44-relation-create,
+  .sf-u44-relations[data-sf-wave="five"] .sf-u44-review dl > div { grid-template-columns: minmax(0,1fr); }
+}

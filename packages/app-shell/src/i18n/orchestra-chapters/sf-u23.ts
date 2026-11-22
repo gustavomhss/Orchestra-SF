@@ -1,6 +1,18 @@
 // N27 source-locked copy. Labels without an existing source translation are
 // deliberately legacy-source-copy-preserved (COPY-01); never infer a new translation.
 export const SF_U23_COPY = {
+  "sf.u23.importSubtitle": "Choose an authorized destination and inspect the proposed changes before applying a file.",
+  "sf.u23.previewSubtitle": "Review the original simulation, source context and item changes.",
+  "sf.u23.importStages": "Import stages",
+  "sf.u23.chooseDestination": "Choose destination",
+  "sf.u23.chooseFile": "Select file",
+  "sf.u23.reviewPreview": "Review preview",
+  "sf.u23.destinationAndPeriod": "Destination and period",
+  "sf.u23.destinationHelp": "Available destinations come from the selected source and period.",
+  "sf.u23.fileAndOptions": "File and options",
+  "sf.u23.fileHelp": "Select an XLS, XLSX or JSON file supported by the destination.",
+  "sf.u23.loadPreview": "Load the source preview",
+  "sf.u23.loadPreviewHelp": "Select the original source to read this preview and its current receipt.",
   "sf.ui55.title": "Import file",
   "sf.ui55.primary": "Generate preview",
   "sf.ui56.title": "Import preview",
@@ -63,6 +75,18 @@ export const SF_U23_COPY = {
 } as const
 
 export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
+  "sf.u23.importSubtitle": "Escolha um destino autorizado e confira as alterações propostas antes de aplicar um arquivo.",
+  "sf.u23.previewSubtitle": "Revise a simulação original, o contexto da fonte e as alterações dos itens.",
+  "sf.u23.importStages": "Etapas da importação",
+  "sf.u23.chooseDestination": "Escolher destino",
+  "sf.u23.chooseFile": "Selecionar arquivo",
+  "sf.u23.reviewPreview": "Revisar prévia",
+  "sf.u23.destinationAndPeriod": "Destino e período",
+  "sf.u23.destinationHelp": "Os destinos disponíveis vêm da fonte e do período selecionados.",
+  "sf.u23.fileAndOptions": "Arquivo e opções",
+  "sf.u23.fileHelp": "Selecione um arquivo XLS, XLSX ou JSON compatível com o destino.",
+  "sf.u23.loadPreview": "Carregar prévia da fonte",
+  "sf.u23.loadPreviewHelp": "Selecione a fonte original para consultar esta prévia e seu recibo atual.",
   "sf.ui55.title": "Importar arquivo",
   "sf.ui55.primary": "Gerar prévia",
   "sf.ui56.title": "Prévia da importação",
