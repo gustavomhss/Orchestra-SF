@@ -208,7 +208,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx"
       ],
-      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI52",
@@ -222,7 +222,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx"
       ],
-      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI53",
@@ -236,7 +236,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx"
       ],
-      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI54",
@@ -293,10 +293,13 @@
   "verification": {
     "status": "PARTIALLY_VERIFIED",
     "technicalEvidence": "technical-verification.json",
-    "qualifiedAreas": 7,
+    "qualifiedAreas": 10,
     "blockFullyQualified": false,
     "userApproval": "PENDING",
     "merged": false,
-    "inventoryAcceptedAndMergedAreas": 41
+    "inventoryAcceptedAndMergedAreas": 41,
+    "pendingFinalTestTypes": [
+      "collab acknowledgement observation and provenance capture alignment"
+    ]
   }
 }

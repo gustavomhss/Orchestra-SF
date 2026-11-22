@@ -1,0 +1,90 @@
+{
+  "source": "edcd24396fbcfa971b7dad04c2d5a74e0c928ea9",
+  "sourceTree": "94eba03619a54a179921176bf6e0f53dc8f35cfc",
+  "snapshot": "7b5e54cbf9613994ff34b0d22930485197136160",
+  "tree": "154647aa5eec5d64f8983ae3ca004e6a6aa67288",
+  "branch": "ci-run-sf5importtrace8",
+  "paths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+    "apps/cli/test/fixture/sucafina-native-installation.ts",
+    "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    ".ci-run.json"
+  ],
+  "notes": "Bounded aggregate counts/us/max payload units only. Timers are nested/inclusive; do not sum across categories. Recursive copyValue and original fingerprint closure unchanged. No workflow, grant, source result or timeout change.",
+  "kind": "disposable-aggregate-profile",
+  "status": "failed at unchanged UI56 provider readiness assertion",
+  "run": 44989682301,
+  "job": 137107805107,
+  "measurements": {
+    "snapshots": [
+      "clone",
+      "copy-root",
+      "materialize",
+      "plan",
+      "decode",
+      "observe",
+      "current-snapshot",
+      "current-snapshots"
+    ],
+    "branches": [
+      "plan",
+      "clone",
+      "lazy"
+    ],
+    "surfaces": [
+      "dashboard",
+      "planner",
+      "procurement"
+    ],
+    "canonical": [
+      "canonical",
+      "digest"
+    ],
+    "health": [
+      "input-operational",
+      "observe-sf-personal-views-health",
+      "observe-sf-import-health",
+      "observe-sf-document-health",
+      "observe-sf-search-health",
+      "observe-sf-collaboration-reading-health",
+      "observe-sf-report-health",
+      "observe-sf-review-thread-context-health",
+      "observe-sf-dashboard-draft-health",
+      "observe-sf-review-agenda-health",
+      "observe-sf-review-read-health",
+      "observe-sf-portfolio-reading-health",
+      "observe-sf-decision-intent-health",
+      "observe-sf-decision-reading-health",
+      "observe-sf-analysis-reading-health",
+      "observe-sf-decision-application-health",
+      "observe-sf-recall-health"
+    ],
+    "units": "UTF-16 code units from original payload.length or plan.payloadUnits; zero means unknown/unmeasured, not necessarily empty",
+    "time": "cumulative microseconds plus local health/context elapsed milliseconds",
+    "interpretation": "Timers overlap: clone contains copy-root; observe contains decode/plan; currentSnapshot(s) contains copy/materialization; digest contains canonical. Compare per-group deltas, never sum overlapping counters."
+  },
+  "originalOperations": "No source, original producer function binding, outcome, namespace grant, persistence fence or timeout was replaced. Recursive copyValue and fingerprint copy closure are byte-identical to the source.",
+  "stdout": "Both original fixture layers forward only /^SF_IMPORT_TRACE [a-z0-9-]+$/ to stdout. All emitted variable values are numeric counters/durations or static labels. No payload, headers, credentials or private body is logged.",
+  "cleanupJob": 137109053693,
+  "artifact": [
+    {
+      "id": 14740909386,
+      "name": "playwright-ubuntu-24.04-1",
+      "sizeBytes": 16447129,
+      "digest": "sha256:f594ceb0213730567c92ed839076e2f06d98cfeb5a8440e136ce6893c022695b",
+      "expiresAt": "2026-11-29T05:35:53Z"
+    }
+  ],
+  "profile": "import-trace-08-profile.json",
+  "conclusion": {
+    "originalUI55": "Original admission, preview, authenticated reference, review modes, full impact disclosure and cancellation reached.",
+    "UI56": "The provider remained resolving at the original 10-second readiness assertion. No UI56 success inferred.",
+    "dominantEvidence": "After the preview, each operational group makes 1602 original observeSnapshot calls with approximately 4 seconds of inclusive observation time. Snapshot plan creation is zero after the memo correction; clone time is approximately 0.74 seconds and cannot alone explain the approximately 11.3-second traced operational group.",
+    "scopeHypothesis": "Batching audited reads inside the original provider's readonly root can remove repeated physical SQL/hash observations while keeping original callbacks, authority checks and two fresh top-level operational phases.",
+    "attributionLimit": "Health observers run concurrently. Per-observer elapsed times include queueing and shared work, so they are not exclusive CPU attribution. Instrumented wall times differ from clean runs and are not claimed as a benchmark."
+  }
+}

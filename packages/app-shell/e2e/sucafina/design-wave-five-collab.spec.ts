@@ -9,6 +9,7 @@ import { collabTest, capture, enter, observePage, ready, reflow, scheme, scrollP
 import { seedWaveFiveCollab, waveFiveCollabData } from "./design-support/wave-five-collab-seed"
 import { captureOriginalImportPreview } from "./design-support/wave-five-collab-imports"
 import { waveFourTest } from "./design-support/wave-four"
+import { forwardOnce } from "./operations-support/runtime"
 import { waveThreeData } from "./design-support/wave-three-data"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
@@ -163,6 +164,10 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await looks(page, info, "UI55-scanned-simulation")
     await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
     await expect(surface.getByText("11200", { exact: false }).first()).toBeVisible()
+    const firstChange = surface.getByRole("region", { name: "Item and field changes", exact: true })
+      .locator("details[open] .sf-files-change").first()
+    await firstChange.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
+    await expect(firstChange).toBeInViewport({ ratio: 1 })
     await capture(page, info, "UI55-dark-desktop-field-change")
     const impact = surface.locator(".sf-files-impact")
     await expect(impact).not.toHaveAttribute("open", "")
@@ -192,6 +197,10 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await expect(continuation).toHaveAttribute("href", new RegExp("/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/review\\?"))
     await looks(page, info, "UI56-preview")
     await surface.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary").filter({ hasText: /^changed / }).click()
+    const firstChange = surface.getByRole("region", { name: "Item and field changes", exact: true })
+      .locator("details[open] .sf-files-change").first()
+    await firstChange.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
+    await expect(firstChange).toBeInViewport({ ratio: 1 })
     await capture(page, info, "UI56-dark-desktop-field-provenance")
     const impact = surface.locator(".sf-files-impact")
     await expect(impact).not.toHaveAttribute("open", "")
@@ -285,11 +294,7 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
     return new Response(new Uint8Array(await response.body()), { status: response.status(), headers: response.headers() })
   }
   const url = (pathname: string) => new URL(pathname, installation.origin).href
-  const mode = (operation: string) => (response: { url(): string; request(): { method(): string } }) => {
-    const selected = new URL(response.url())
-    return selected.origin === installation.origin && selected.pathname.startsWith(installation.mount + "/") &&
-      selected.searchParams.get("sf") === operation && response.request().method() === "POST"
-  }
+
 
   const seeded = await seedWaveFiveCollab({ actorId: installation.actorId, request: sourceRequest }, installation.year)
   const relationshipPath = "/orchestra/sf-work/relations/" + encodeSfRouteRef(seeded.relation.id)
@@ -404,15 +409,26 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
     await surface.getByRole("button", { name: "Review confirmation", exact: true }).click()
     const confirm = review.getByRole("button", { name: "Confirm no change", exact: true })
     await expect(confirm).toBeEnabled()
-    const received = page.waitForResponse(mode("collaboration-confirmation-confirm"))
-    await confirm.click()
-    const response = await received
+    // Observe the one original POST outside Chromium's released response cache.
+    // forwardOnce delivers the original status, headers and bytes unchanged.
+    const original = await forwardOnce(page, installation.origin + installation.mount +
+      "/dashboard?sf=collaboration-confirmation-confirm", "POST")
+    const [{ response }] = await Promise.all([original.completed, confirm.click()]).finally(original.close)
     expect(response.status()).toBe(200)
     const record = Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.confirmation-confirm"].output)(await response.json())
     if (record.status !== "ok") throw new Error("Original no-change confirmation was not recorded")
     confirmationId = record.value.id
     await expect(surface.locator("[data-sf-confirm-receipt]")).toBeVisible()
     await expect(surface.locator("[data-sf-confirm-receipt]")).toContainText("Valid for the current source")
+    await expect(surface.locator("[data-sf-confirm-receipt]")).toContainText(record.value.auditRef)
+    const fresh = await sourceRequest("/dashboard?sf=collaboration-confirmation-project", {
+      method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": randomUUID() },
+      body: JSON.stringify({ id: confirmationId }),
+    })
+    expect(fresh.status).toBe(200)
+    const projected = Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.confirmation-project"].output)(await fresh.json())
+    expect(projected).toMatchObject({ status: "ok", value: { confirmationId, state: "valid",
+      evaluatedSourceVersion: record.value.observedSourceVersion } })
     await capture(page, info, "UI53-dark-desktop-original-receipt")
     expect(mutations.filter((value) => value === "collaboration-confirmation-confirm")).toHaveLength(1)
     await enter(page, owner, url("/orchestra/sf-work/confirmations/" + encodeSfRouteRef(confirmationId)), "Confirm no change")

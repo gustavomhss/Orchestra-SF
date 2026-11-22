@@ -1,0 +1,37 @@
+{
+  "candidate": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+  "code": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "adcdfe07b97b75a6cddf20de763e271d5015161c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
+    }
+  ],
+  "result": "cold review approved by independent peer; runtime proof separately pending",
+  "findings": [
+    {
+      "issue": "Provider retains a first callback then rejects before entering the original SQLite root.",
+      "correction": "Outer invocation active flag closes in finally; late callback entry and after-work publication require active.",
+      "case": "a retained first callback cannot start after the provider rejected the phase"
+    },
+    {
+      "issue": "An absent own optional method can change through an unchanged object prototype.",
+      "correction": "Inherited advertised methods are unsupported before work; absent methods must stay absent even through the prototype. Invoke captured readRoot.call.",
+      "case": "an absent method cannot become inherited during the original phase"
+    }
+  ],
+  "rootFollowup": "Pin hasCurrentSnapshots because it influences original choice-scope reuse.",
+  "confirmed": "No catch/replay, original exact callback result retained, original read-root owner closes, arbitrary external await remains outside root.",
+  "unit": "phase-unit-02.json"
+}

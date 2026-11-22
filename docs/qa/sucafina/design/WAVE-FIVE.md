@@ -11,7 +11,7 @@ São **15 áreas e 22 padrões de rota existentes**. O inventário continua em *
 | Cenários e sensibilidade | UI42–UI44 | A avaliação original ainda excede o prazo; resultado persistido e sensibilidade não estão qualificados. |
 | Catálogo e visão contextual de BI | UI45–UI46 | Jornadas nativas e valores/unidades originais verificados; capturas selecionadas revisadas. |
 | Revisões e relatórios | UI47–UI50 | Jornadas, preservações e recusas originais verificadas. |
-| Relações, conversas e confirmações | UI51–UI53 | Repetição limpa em andamento após correção da leitura do corpo original pelo teste. |
+| Relações, conversas e confirmações | UI51–UI53 | Jornada limpa passou com confirmação original, comprovante e releitura autenticada; tipos do último ajuste de teste ainda serão conferidos. |
 | Propostas de hot topics | UI54 | Rascunho original criado e relido; nenhuma preparação ou mudança de domínio produzida. |
 | Importação e prévia | UI55–UI56 | Jornada diagnóstica passou; repetição limpa da atualização da prévia ainda pendente. |
 
@@ -25,7 +25,7 @@ As correções de integração preservam os produtores, as admissões, as recusa
 
 ## Evidências já revisadas
 
-A [galeria de revisões](wave-five/reviews/REVIEW-GALLERY.md) contém a seleção das capturas reais de UI47–UI50 e UI54. A [galeria de BI](wave-five/reviews/BI-NATIVE-HANDOFF.md) separa os valores originais, as unidades e as versões em português. Capturas de tentativas incompletas permanecem identificadas como diagnóstico; não contam como conclusão das jornadas pendentes.
+As jornadas de **10 das 15 áreas** têm evidência qualificada neste checkpoint. A [galeria de revisões](wave-five/reviews/REVIEW-GALLERY.md) contém a seleção das capturas reais de UI47–UI50 e UI54. A [galeria de BI](wave-five/reviews/BI-NATIVE-HANDOFF.md) separa os valores originais, as unidades e as versões em português. O [registro de colaboração](wave-five/collab/HANDOFF.md) reúne a jornada de UI51–UI53 e os caminhos das capturas originais. Capturas de tentativas incompletas permanecem identificadas como diagnóstico; não contam como conclusão das jornadas pendentes.
 
 Todas as execuções ocorreram no `test-ci` existente, em Linux, `prod` e `strict`, usando a aplicação nativa instalada e dados isolados emitidos pelos produtores originais. O [registro das fontes protegidas](wave-five/protected-source-audit.json) confirma que workflows, guards, schemas e configurações de proteção permanecem intactos.
 

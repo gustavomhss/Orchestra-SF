@@ -50,7 +50,7 @@ The canonical portfolio input has no `surface` field, while its original transpo
 
 ## Import progress and remaining qualification
 
-The import owner exposes its actual scan, preview and source-read activity separately, using explicit English and Brazilian Portuguese copy. Original upload admission and preview bytes are preserved. UI55 setup has actual installed captures. UI56 still awaits its successful original-reference reread and native rendered preview; diagnostic instrumentation remains confined to disposable CI snapshots.
+The import owner exposes its actual scan, preview and source-read activity separately, using explicit English and Brazilian Portuguese copy. Original upload admission and preview bytes are preserved. UI55 setup and UI56's original-reference reread, rendered preview and full impact have actual installed diagnostic captures. The diagnostic journey and exact 24-group availability equivalence passed; a clean repetition of the refresh step remains pending. Diagnostic instrumentation remains confined to disposable CI snapshots.
 
 ## Incremental verification record
 
@@ -58,7 +58,7 @@ The import owner exposes its actual scan, preview and source-read activity separ
 
 ## Reactive portfolio inputs
 
-The closed operation schemas remain unchanged. Solid can retain reactive metadata in both the input itself and nested values. The native input boundary now unwraps and structured-clones its source object before passing the entire value to the original decoder. It does not pick known fields or drop malformed excess values. Eighteen browser-condition regression cases passed (147 assertions, Actions run 44986712960). The installed scenario journey then emitted original history and two preview responses with HTTP 200. Its subsequent persistence failure remains recorded separately until the original human-selection precondition is verified.
+The closed operation schemas remain unchanged. Solid can retain reactive metadata in both the input itself and nested values. The native input boundary now unwraps and structured-clones its source object before passing the entire value to the original decoder. It does not pick known fields or drop malformed excess values. Eighteen browser-condition regression cases passed (147 assertions, Actions run 44986712960). The installed scenario journey then emitted original history and two preview responses with HTTP 200. That earlier persistence failure remains recorded separately. The original human-selection precondition was then registered and verified by exact fresh readback. The current full journey remains blocked by the original evaluation's cumulative read cost; no later persisted result is claimed.
 
 ## BI06 observation time
 
@@ -100,3 +100,10 @@ The installed host now groups its sixteen audited read observers inside the orig
 The helper pins the original own data methods and prototype, rejects method/prototype drift, preserves an existing owner, and executes unsupported adapters once through the original path. A root callback is valid only while the original outer invocation is active, may execute once, and must publish exactly the original result after closure. There is no catch-and-replay path, result cache or authority cache. Write poisoning, abort, late callbacks, unjoined work and substituted results remain refusals. Thirteen helper cases plus the original 24 collaboration and 24 portfolio cases passed (61 cases, 524 assertions) in Actions run 44992111577. CLI and permanent E2E types passed in run 44992366975.
 
 The installed equivalence snapshot in run 44992278999 compared all original availability fields before and after grouping: sixteen host groups covering 66 operations and eight local groups covering 149 operations matched exactly. That diagnostic import journey passed, including the original 10s UI56 admission, full source impact and Portuguese. Its single observed original reference request took 5.3 seconds; this is a diagnostic observation, not a latency benchmark. The later clean run 44992688529 passed admission but failed the unchanged 10s refresh heading expectation, so clean qualification remains open. Instrumentation exists only in diagnostic snapshots and is not integrated into the product.
+
+
+## Clean collaboration receipt observation
+
+Actions run 44993470385 passed the installed UI51–UI53 journey with the current runtime. The existing test helper forwards the original confirmation POST once, with zero retries and redirects, and delivers its original status, headers and bytes unchanged. This retains the acknowledgement outside Chromium's released response cache. The test decodes the original schema, verifies its auditRef in the UI and independently re-reads the original authenticated confirmation projection. It confirms the same confirmation ID, current validity and observed source version. There is no extra confirmation command or synthetic acknowledgement. Twenty-four actual captures were preserved and inspected by the collaboration reviewer; root independently inspected five. Relationship create/remove and thread replies were not submitted.
+
+The later import trace (run 44993675945) passed diagnostically but measured 9.955 seconds from refresh to visible preview, close to the unchanged 10-second expectation. Its original reference GET took 436ms; four original context observation groups surrounding it took about2 seconds each. Each group materialized detached snapshots 228 times, consuming about1.2–1.4 seconds. No plans were rebuilt in those groups. This identifies remaining work in detached copies rather than a producer request or cache warm-up; clean qualification remains open.

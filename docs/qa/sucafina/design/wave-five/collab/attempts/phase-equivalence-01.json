@@ -1,0 +1,635 @@
+{
+  "source": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+  "sourceTree": "308630ee33cdebdaacba5a58cab13c742587740f",
+  "snapshot": "e7b71d60b23df49e48aeeb2bbd4dc170388c5e7b",
+  "tree": "7ea8c09356063fd432d3ba832fe2f0b08699ea83",
+  "branch": "ci-run-sf5phaseequal1",
+  "paths": [
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/local/entry.ts",
+    "apps/cli/test/fixture/sucafina-native-installation.ts",
+    "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    ".ci-run.json"
+  ],
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4c3a912fc6bc4b723a2aa544e2924a9fc35ad37"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f409c692a9131725feffb44bb251fa3993f7bc02"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f77efd293c998e27ccabf35f23f4758eed2a03dc"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07a7eb1de18c7c486c76f022b63484ea6cadd3d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6beadb9e3bc1d7814ca7a12835ccc12e49950dd"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "content": "{\n  \"package\": \"app\",\n  \"packageSelector\": \"@orchestra/app\",\n  \"directory\": \"packages/app-shell\",\n  \"runner\": \"playwright\",\n  \"args\": [\n    \"e2e/sucafina/design-wave-five-collab.spec.ts\"\n  ],\n  \"config\": \"e2e/playwright.production.config.ts\",\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"strict\",\n    \"ORCHESTRA_CHANNEL\": \"prod\"\n  }\n}\n"
+    }
+  ],
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "notes": "Diagnostic-only first-call comparison. All fields of original installed availability compared per observer, 16 host and 8 local. Actual read-only source work runs twice only for first comparison. No command handler invoked, no result substitutes, no timeout changes.",
+  "status": "passed diagnostic installed equivalence and complete import journey",
+  "run": 44992278999,
+  "job": 137115729923,
+  "cleanupJob": 137116825050,
+  "tests": {
+    "passed": 1,
+    "failed": 0
+  },
+  "productionCode": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "adcdfe07b97b75a6cddf20de763e271d5015161c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
+    }
+  ],
+  "equivalence": {
+    "fields": [
+      "operationId",
+      "state",
+      "reason",
+      "operational"
+    ],
+    "comparison": "Sort original availability rows by operationId, compare every field independently per observer. Both original and grouped lists must fulfill. No source handler command is invoked.",
+    "host": {
+      "observers": 16,
+      "operations": 66
+    },
+    "local": {
+      "observers": 8,
+      "operations": 149
+    },
+    "observers": [
+      {
+        "group": "local",
+        "index": 0,
+        "original": 7,
+        "grouped": 7,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7490186Z"
+      },
+      {
+        "group": "local",
+        "index": 1,
+        "original": 6,
+        "grouped": 6,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7494262Z"
+      },
+      {
+        "group": "local",
+        "index": 2,
+        "original": 18,
+        "grouped": 18,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7495428Z"
+      },
+      {
+        "group": "local",
+        "index": 3,
+        "original": 3,
+        "grouped": 3,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7496614Z"
+      },
+      {
+        "group": "local",
+        "index": 4,
+        "original": 1,
+        "grouped": 1,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7498341Z"
+      },
+      {
+        "group": "local",
+        "index": 5,
+        "original": 5,
+        "grouped": 5,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7499244Z"
+      },
+      {
+        "group": "local",
+        "index": 6,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7500091Z"
+      },
+      {
+        "group": "local",
+        "index": 7,
+        "original": 107,
+        "grouped": 107,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.7500987Z"
+      },
+      {
+        "group": "host",
+        "index": 0,
+        "original": 4,
+        "grouped": 4,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9592092Z"
+      },
+      {
+        "group": "host",
+        "index": 1,
+        "original": 6,
+        "grouped": 6,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9599290Z"
+      },
+      {
+        "group": "host",
+        "index": 2,
+        "original": 10,
+        "grouped": 10,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9649802Z"
+      },
+      {
+        "group": "host",
+        "index": 3,
+        "original": 1,
+        "grouped": 1,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9650967Z"
+      },
+      {
+        "group": "host",
+        "index": 4,
+        "original": 9,
+        "grouped": 9,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9652176Z"
+      },
+      {
+        "group": "host",
+        "index": 5,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9653175Z"
+      },
+      {
+        "group": "host",
+        "index": 6,
+        "original": 1,
+        "grouped": 1,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9654296Z"
+      },
+      {
+        "group": "host",
+        "index": 7,
+        "original": 7,
+        "grouped": 7,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9655310Z"
+      },
+      {
+        "group": "host",
+        "index": 8,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9656284Z"
+      },
+      {
+        "group": "host",
+        "index": 9,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9657247Z"
+      },
+      {
+        "group": "host",
+        "index": 10,
+        "original": 7,
+        "grouped": 7,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9658246Z"
+      },
+      {
+        "group": "host",
+        "index": 11,
+        "original": 7,
+        "grouped": 7,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9659225Z"
+      },
+      {
+        "group": "host",
+        "index": 12,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9660209Z"
+      },
+      {
+        "group": "host",
+        "index": 13,
+        "original": 2,
+        "grouped": 2,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9661324Z"
+      },
+      {
+        "group": "host",
+        "index": 14,
+        "original": 3,
+        "grouped": 3,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9662334Z"
+      },
+      {
+        "group": "host",
+        "index": 15,
+        "original": 1,
+        "grouped": 1,
+        "exactFieldsMatch": true,
+        "at": "2026-11-22T06:10:11.9663329Z"
+      }
+    ],
+    "allNonempty": true,
+    "allEqual": true,
+    "stages": [
+      {
+        "at": "2026-11-22T06:10:11.7490186Z",
+        "stage": "phase-local-observer-0-original-7-grouped-7-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7494262Z",
+        "stage": "phase-local-observer-1-original-6-grouped-6-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7495428Z",
+        "stage": "phase-local-observer-2-original-18-grouped-18-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7496614Z",
+        "stage": "phase-local-observer-3-original-3-grouped-3-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7498341Z",
+        "stage": "phase-local-observer-4-original-1-grouped-1-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7499244Z",
+        "stage": "phase-local-observer-5-original-5-grouped-5-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7500091Z",
+        "stage": "phase-local-observer-6-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7500987Z",
+        "stage": "phase-local-observer-7-original-107-grouped-107-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.7502225Z",
+        "stage": "phase-local-equivalence-match-8-operations-149"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9592092Z",
+        "stage": "phase-host-observer-0-original-4-grouped-4-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9599290Z",
+        "stage": "phase-host-observer-1-original-6-grouped-6-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9649802Z",
+        "stage": "phase-host-observer-2-original-10-grouped-10-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9650967Z",
+        "stage": "phase-host-observer-3-original-1-grouped-1-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9652176Z",
+        "stage": "phase-host-observer-4-original-9-grouped-9-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9653175Z",
+        "stage": "phase-host-observer-5-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9654296Z",
+        "stage": "phase-host-observer-6-original-1-grouped-1-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9655310Z",
+        "stage": "phase-host-observer-7-original-7-grouped-7-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9656284Z",
+        "stage": "phase-host-observer-8-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9657247Z",
+        "stage": "phase-host-observer-9-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9658246Z",
+        "stage": "phase-host-observer-10-original-7-grouped-7-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9659225Z",
+        "stage": "phase-host-observer-11-original-7-grouped-7-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9660209Z",
+        "stage": "phase-host-observer-12-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9661324Z",
+        "stage": "phase-host-observer-13-original-2-grouped-2-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9662334Z",
+        "stage": "phase-host-observer-14-original-3-grouped-3-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9663329Z",
+        "stage": "phase-host-observer-15-original-1-grouped-1-match-1"
+      },
+      {
+        "at": "2026-11-22T06:10:11.9664305Z",
+        "stage": "phase-host-equivalence-match-16-operations-66"
+      }
+    ]
+  },
+  "importEvidence": {
+    "originalAdmission": 1,
+    "originalPreview": 1,
+    "apply": 0,
+    "sourceReadback": true,
+    "UI55": "Original scanned preview, simulation four modes, full impact original row count/last field, cancellation retains native file/destination.",
+    "UI56": "Original owner-bound preview and continuation, four modes, field provenance, full impact and original reference readback.",
+    "ptBR": [
+      "UI55",
+      "UI56"
+    ],
+    "readinessTimeoutMs": 10000,
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "independentReferenceElapsedMs": 5300,
+    "performanceLimitation": "One diagnostic run, not a benchmark. The only comparison overhead runs before the file preview; later calls use production grouping."
+  },
+  "captures": [
+    {
+      "index": 0,
+      "name": "UI55-setup-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:10:16.1623074Z S",
+      "base64Length": 131776
+    },
+    {
+      "index": 1,
+      "name": "UI55-setup-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:10:16.8345017Z S",
+      "base64Length": 137412
+    },
+    {
+      "index": 2,
+      "name": "UI55-setup-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:10:16.9980046Z S",
+      "base64Length": 56228
+    },
+    {
+      "index": 3,
+      "name": "UI55-setup-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:10:17.3312976Z S",
+      "base64Length": 55340
+    },
+    {
+      "index": 4,
+      "name": "UI55-dark-desktop-selected-file-options",
+      "parts": 6,
+      "at": "2026-11-22T06:10:22.7837578Z S",
+      "base64Length": 135944
+    },
+    {
+      "index": 5,
+      "name": "UI55-dark-390-selected-file-options",
+      "parts": 3,
+      "at": "2026-11-22T06:10:22.9336312Z S",
+      "base64Length": 48304
+    },
+    {
+      "index": 6,
+      "name": "UI55-scanned-simulation-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:10:42.7973949Z S",
+      "base64Length": 136288
+    },
+    {
+      "index": 7,
+      "name": "UI55-scanned-simulation-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:10:43.2639920Z S",
+      "base64Length": 140592
+    },
+    {
+      "index": 8,
+      "name": "UI55-scanned-simulation-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:10:43.4515567Z S",
+      "base64Length": 63356
+    },
+    {
+      "index": 9,
+      "name": "UI55-scanned-simulation-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:10:43.7551370Z S",
+      "base64Length": 62784
+    },
+    {
+      "index": 10,
+      "name": "UI55-dark-desktop-field-change",
+      "parts": 8,
+      "at": "2026-11-22T06:10:44.2758003Z S",
+      "base64Length": 168452
+    },
+    {
+      "index": 11,
+      "name": "UI55-dark-desktop-complete-source-impact",
+      "parts": 9,
+      "at": "2026-11-22T06:10:44.7997923Z S",
+      "base64Length": 200816
+    },
+    {
+      "index": 12,
+      "name": "UI55-dark-desktop-cancel-retains-file",
+      "parts": 6,
+      "at": "2026-11-22T06:10:45.2794869Z S",
+      "base64Length": 135892
+    },
+    {
+      "index": 13,
+      "name": "UI56-preview-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:11:05.7786410Z S",
+      "base64Length": 141168
+    },
+    {
+      "index": 14,
+      "name": "UI56-preview-light-desktop",
+      "parts": 7,
+      "at": "2026-11-22T06:11:06.2834042Z S",
+      "base64Length": 145332
+    },
+    {
+      "index": 15,
+      "name": "UI56-preview-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:11:06.4574340Z S",
+      "base64Length": 64216
+    },
+    {
+      "index": 16,
+      "name": "UI56-preview-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:11:06.7554896Z S",
+      "base64Length": 63484
+    },
+    {
+      "index": 17,
+      "name": "UI56-dark-desktop-field-provenance",
+      "parts": 7,
+      "at": "2026-11-22T06:11:07.2273653Z S",
+      "base64Length": 147916
+    },
+    {
+      "index": 18,
+      "name": "UI56-dark-desktop-complete-source-impact",
+      "parts": 9,
+      "at": "2026-11-22T06:11:07.7101487Z S",
+      "base64Length": 201108
+    },
+    {
+      "index": 19,
+      "name": "UI55-pt-BR-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:11:19.0754454Z S",
+      "base64Length": 136924
+    },
+    {
+      "index": 20,
+      "name": "UI56-pt-BR-dark-desktop",
+      "parts": 7,
+      "at": "2026-11-22T06:11:39.5262489Z S",
+      "base64Length": 149732
+    }
+  ],
+  "inspectedGallery": [
+    {
+      "index": 13,
+      "name": "UI56-preview-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:11:05.7786410Z S",
+      "base64Length": 141168,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/phase-equivalence-01-UI56-preview-dark-desktop.jpg",
+      "sha": "e16de4e085639478aaccce4c597fb753183e0544",
+      "inspection": "Viewed actual Actions JPEG; no relevant overflow or clipped control. Field provenance capture shows first original changed field; full annual impact is DOM-asserted and remains disclosed."
+    },
+    {
+      "index": 15,
+      "name": "UI56-preview-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:11:06.4574340Z S",
+      "base64Length": 64216,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/phase-equivalence-01-UI56-preview-light-390.jpg",
+      "sha": "1e4ea627c24a5f62999f6eccef1fd648979bfbb5",
+      "inspection": "Viewed actual Actions JPEG; no relevant overflow or clipped control. Field provenance capture shows first original changed field; full annual impact is DOM-asserted and remains disclosed."
+    },
+    {
+      "index": 17,
+      "name": "UI56-dark-desktop-field-provenance",
+      "parts": 7,
+      "at": "2026-11-22T06:11:07.2273653Z S",
+      "base64Length": 147916,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/phase-equivalence-01-UI56-dark-desktop-field-provenance.jpg",
+      "sha": "380fad7d719871b07cd7f3c68df7c6a2ea2a7aca",
+      "inspection": "Viewed actual Actions JPEG; no relevant overflow or clipped control. Field provenance capture shows first original changed field; full annual impact is DOM-asserted and remains disclosed."
+    },
+    {
+      "index": 20,
+      "name": "UI56-pt-BR-dark-desktop",
+      "parts": 7,
+      "at": "2026-11-22T06:11:39.5262489Z S",
+      "base64Length": 149732,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/phase-equivalence-01-UI56-pt-BR-dark-desktop.jpg",
+      "sha": "e2087e4abab1b8f667b4b4bbb29dfdbad672cdcc",
+      "inspection": "Viewed actual Actions JPEG; no relevant overflow or clipped control. Field provenance capture shows first original changed field; full annual impact is DOM-asserted and remains disclosed."
+    }
+  ],
+  "artifact": [
+    {
+      "id": 14742398074,
+      "name": "playwright-ubuntu-24.04-1",
+      "sizeBytes": 25116512,
+      "digest": "sha256:7699ef2b19fed998af46d84dafb084075f338a6469f8df8ffe045fb06ef71ac2",
+      "expiresAt": "2026-11-29T06:11:40Z"
+    }
+  ],
+  "limitations": [
+    "Diagnostic-only first-call extra original read observations; clean import-only run44992688529 separately qualifies production code.",
+    "No import Apply, external messages/email/notifications or human visual approval.",
+    "Actual browser zoom not measured."
+  ]
+}

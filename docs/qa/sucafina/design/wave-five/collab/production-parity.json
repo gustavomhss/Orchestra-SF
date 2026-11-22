@@ -1,5 +1,5 @@
 {
-  "workerSource": "1b096bfed1c00109cb9084d9d72409f51da10336",
+  "workerSource": "edf94a3cd308070fce76984abfc9957192e88542",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -57,11 +57,11 @@
     },
     {
       "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
-      "sha": "e34ed981336ea58bc0daf6a47c429f679b531ed4"
+      "sha": "950b5b65de02ce3002a00279262185c7afbce9ff"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
-      "sha": "56680de04159b0539b6afc405cb3a557fda2ed40"
+      "sha": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
@@ -74,6 +74,14 @@
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
       "sha": "c407b9b67c7f3142935d10ba524d36399f618250"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "adcdfe07b97b75a6cddf20de763e271d5015161c"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
     }
   ],
   "qualification": {
@@ -94,7 +102,7 @@
       "import": "failed: original valid preview persisted, then all native context health observers slow down; reference handler is never entered before test timeout. Diagnostic trace6 confirms stage timing; trace7 measures original snapshot materialization."
     },
     "observerBatch": {
-      "status": "24 original-source unit cases passed; clean runtime import qualification pending",
+      "status": "24 original-source unit cases passed; import fixed3 remains blocked at UI56 readiness",
       "cases": 24,
       "physicalNamespaceReadsPerObserver": {
         "before": 22,
@@ -107,7 +115,12 @@
       "importRun": 44988782004,
       "job": 137105026147,
       "assertions": 304,
-      "record": "qualification/collaboration-batch-01.json"
+      "record": "qualification/collaboration-batch-01.json",
+      "typeOnlyFollowup": {
+        "source": "5caf3316be860f7a9d1df99e68fd0630d023509b",
+        "testBlob": "950b5b65de02ce3002a00279262185c7afbce9ff",
+        "change": "Two readonly tuple expectations copied to mutable arrays, preserving expected values/order."
+      }
     },
     "importFixed2": {
       "source": "74be68770c958a720c3a34fa5b8e71b779c77e44",
@@ -116,10 +129,75 @@
       "job": 137102272074,
       "status": "partial UI55 original simulation and cancellation; UI56 readiness fails unchanged 10 s assertion",
       "record": "attempts/import-fixed-02.json"
+    },
+    "importFixed3": {
+      "source": "c6f50789ce4f9d3265172c47274f5754b06975b2",
+      "snapshot": "12389e15961f7fb04b7f8b0d956e693a19d27d61",
+      "run": 44988782004,
+      "job": 137105069614,
+      "status": "partial UI55; same unchanged UI56 readiness assertion fails",
+      "record": "attempts/import-fixed-03.json"
+    },
+    "operationalReadPhase": {
+      "source": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+      "unitRun": 44992111577,
+      "unitJob": 137115211181,
+      "cases": 61,
+      "assertions": 524,
+      "helperCases": 13,
+      "unitRecord": "qualification/phase-unit-02.json",
+      "audit": "qualification/operational-read-audit.json",
+      "review": "qualification/operational-read-review.json",
+      "runtimeStatus": "Integrated exact helper/compositions; all24 installed groups matched. Clean UI51–53 passed. Clean UI56 refresh remains open.",
+      "equivalenceRun": 44992278999,
+      "equivalenceRecord": "attempts/phase-equivalence-01.json"
+    },
+    "cleanImport4": {
+      "run": 44992688529,
+      "result": "failed after UI56 readiness at preview-refresh rendering deadline",
+      "record": "attempts/import-fixed-04.json"
+    },
+    "cleanCollaboration7": {
+      "run": 44992785649,
+      "result": "failed on Chromium acknowledgement read after actual confirmation receipt; test observation corrected",
+      "record": "attempts/collaboration-clean-07.json"
+    },
+    "cleanCollaboration8": {
+      "source": "15ff166d5c5fa9527e5d9515048fe15f58702264",
+      "productSource": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+      "snapshot": "ff18667522878c4b46a0cbcae0452f0472010b2d",
+      "run": 44993470385,
+      "job": 137119394081,
+      "result": "passed",
+      "captures": 24,
+      "record": "attempts/collaboration-clean-08.json",
+      "specBlob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
+    },
+    "importTrace9": {
+      "run": 44993675945,
+      "job": 137120009217,
+      "result": "diagnostic test passed with only45ms margin at unchanged10s UI56 refresh assertion; not a clean import qualification",
+      "record": "attempts/import-trace-09.json",
+      "profile": "attempts/import-trace-09-profile.json"
     }
   },
   "excluded": [
-    "All temporary SF_IMPORT_TRACE source overlays on ci-run-sf5importtrace through ci-run-sf5importtrace7.",
+    "All temporary SF_IMPORT_TRACE profiling/equivalence source overlays on disposable ci-run snapshots.",
     "Root-owned header, installation variants, host-context binding/composition, type-only IDs and confirmation read-scope fix."
-  ]
+  ],
+  "sharedCompositionCandidates": {
+    "source": "2213d2f216745976bb89d345277726e3a833f1d4",
+    "candidate": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+      }
+    ],
+    "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files."
+  }
 }
