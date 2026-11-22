@@ -242,6 +242,13 @@ test("a previous seven-case report cannot attest the two actual draft scenarios"
   assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
 })
 
+test("a previous principal-only nine-case report cannot attest distinct destination grants", () => {
+  const value = report()
+  value.suites[0].specs[0].title = "Two original Microsoft principals select the same Team without claiming different grants"
+  assert.throws(() => verifyReport(value, false), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+  assert.throws(() => verifyReport(value, true), /G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED/)
+})
+
 test("private files are exclusive, bounded, owner-only and reject links", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "g08-refusal-"))
   try {
@@ -268,16 +275,16 @@ test("digest preserves exact bytes including trailing newline", () => {
 })
 
 const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
-test("nine current scenarios preserve eight complete mappings, partial distinct grants and all separate G08 groups", () => {
+test("nine current scenarios preserve complete contract mappings without claiming installed G08 groups", () => {
   const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
   assert.equal(cases.length, 9)
   assert.equal(preservedTeams.length, 9)
   assert.deepEqual(list.originalTeams.map((entry) => entry.id), preservedTeams)
   assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
-  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 8)
+  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 9)
   assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "draft-cancel-discard").status, "PASS")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PARTIAL")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
   assert(executed.groups.every((entry) => entry.status === "NOT_RUN"))
   assert.equal(executed.complete, false)
@@ -290,12 +297,12 @@ for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
   ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
   ["landing keyboard substituted for Chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
-  ["different grants claimed from principals", (value) => { value.originalTeams.obligations[0].coverage = "complete" }],
+  ["principal-only control substituted for distinct grants", (value) => { value.originalTeams.obligations[0].implementedCases = ["same-team-principal-binding"] }],
   ["principal-only control substituted for native admin UI", (value) => { value.originalTeams.obligations[4].implementedCases = ["same-team-principal-binding"] }],
   ["draft discard omitted", (value) => { value.originalTeams.obligations[6].implementedCases = [] }],
   ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
-  ["missing distinct-grants blocker", (value) => { value.originalTeams.obligations[0].blocker = null }],
-  ["principal case removed from partial mapping", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
+  ["stale product blocker attached to a complete grant mapping", (value) => { value.originalTeams.obligations[0].blocker = "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED" }],
+  ["distinct-grants oracle omitted", (value) => { value.originalTeams.obligations[0].implementedCases = [] }],
   ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
   ["missing required group", (value) => { value.groups.pop() }],
   ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],

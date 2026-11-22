@@ -54,7 +54,7 @@ async function expectNoBusiness(page: Page, target: Target, principal: string) {
   return live
 }
 
-test("Two original Microsoft principals select the same Team without claiming different grants", async ({ harness }) => {
+test("Two distinct Microsoft accounts enter the same installed Team with their own authority", async ({ harness }) => {
   const { target, actors } = harness.plan
   const page = await harness.page(), holder = await harness.page("holder")
   expect(page.context()).not.toBe(holder.context())
