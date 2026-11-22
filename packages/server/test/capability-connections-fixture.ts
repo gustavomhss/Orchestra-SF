@@ -33,6 +33,7 @@ import { mkdir, mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { randomBytes } from "node:crypto"
+import { technicalLocationMap } from "../../core/test/fixture/technical-location-map"
 import { ServerAuth } from "../src/auth"
 import { CapabilityConnectionsHandler } from "../src/handlers/capability-connections"
 import { ServerCapabilityVerification } from "../src/capability-verification"
@@ -65,7 +66,7 @@ export function make(options: { password?: string } = {}) {
       ])
       return LayerNode.compile(nodes.node).pipe(Layer.fresh,
         Layer.provide(LayerNode.compile(nodes.hoisted, [[Database.node, databaseNode]])))
-    }, { idleTimeToLive: "60 minutes" }))
+    }, { idleTimeToLive: "60 minutes" }).pipe(Effect.map(technicalLocationMap)))
     const context = yield* Layer.build(Layer.mergeAll(Layer.succeed(Database.Service, database), map,
       LayerNode.compile(EventV2.node, [[Database.node, databaseNode]])))
     const locations = Context.get(context, LocationServiceMap.Service)

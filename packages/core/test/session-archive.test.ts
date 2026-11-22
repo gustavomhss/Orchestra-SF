@@ -357,9 +357,8 @@ describe("SessionV2 archive", () => {
       const timestamp = DateTime.toEpochMillis(archived.time.archived)
       yield* session.archive({ sessionID: parent.id, archived: true })
       expect((yield* session.get(parent.id)).time.archived).toEqual(archived.time.archived)
-      expect(yield* session.create({ id: parent.id, location: { directory: AbsolutePath.make("/other") } })).toEqual(
-        archived,
-      )
+      // Adoption is an exact retry; changing placement is rejected by the Session creation contract.
+      expect(yield* session.create({ id: parent.id, location })).toEqual(archived)
       expect((yield* session.list()).map((item) => item.id)).toEqual([child.id])
       expect((yield* rows(db, parent.id)).slice(before.length)).toMatchObject([
         {

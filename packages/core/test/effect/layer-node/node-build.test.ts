@@ -11,6 +11,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
+import { technicalLocationMap } from "../../fixture/technical-location-map"
 import { tmpdir } from "../../fixture/tmpdir"
 
 class Value extends Context.Service<Value, { readonly value: string }>()("test/TagValue") {}
@@ -51,20 +52,14 @@ describe("node build", () => {
     const mapLayer = Layer.effect(
       LocationServiceMap.Service,
       Effect.gen(function* () {
-        const service = yield* CycleB
+        yield* CycleB
         return yield* LayerMap.make(
-          (ref: Location.Ref) =>
-            Layer.succeed(
-              Location.Service,
-              Location.Service.of({
-                directory: ref.directory,
-                workspaceID: ref.workspaceID,
-                project: { id: Project.ID.global, directory: service.directory },
-              }),
-            ),
+          (_ref: Location.Ref) => Layer.effectContext<LocationServices, LocationError, never>(
+            Effect.die("A cyclic map must be rejected before Location acquisition"),
+          ),
           { idleTimeToLive: "1 minute" },
-        )
-      }) as unknown as Effect.Effect<LayerMap.LayerMap<Location.Ref, LocationServices, LocationError>, never, CycleB>,
+        ).pipe(Effect.map(technicalLocationMap))
+      }),
     )
     const map = Node.makeGlobalNode({ service: LocationServiceMap.Service, layer: mapLayer, deps: [b] })
     await expect(

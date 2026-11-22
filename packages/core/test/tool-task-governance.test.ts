@@ -36,6 +36,7 @@ import { TaskTool } from "@orchestra/core/tool/task"
 import { TaskGovernance } from "@orchestra/core/tool/task-governance"
 import { ToolRegistry } from "@orchestra/core/tool/registry"
 import { Context, DateTime, Deferred, Effect, Layer, LayerMap, Schema, Stream } from "effect"
+import { technicalLocationMap } from "./fixture/technical-location-map"
 import { testEffect } from "./lib/effect"
 import { settleTool } from "./lib/tool"
 
@@ -144,7 +145,7 @@ const it = testEffect(AppNodeBuilder.build(LayerNode.group([
   }))],
   [LocationServiceMap.node, Layer.effect(LocationServiceMap.Service,
     LayerMap.make((_ref: Location.Ref) =>
-      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))))],
+      Layer.effectContext<LocationServices, never, never>(Effect.die("Unexpected hook Location acquisition"))).pipe(Effect.map(technicalLocationMap)))],
   [SessionExecution.node, execution],
   [TaskGovernance.node, governance],
   [LayerNodePlatform.llmClient, client],
