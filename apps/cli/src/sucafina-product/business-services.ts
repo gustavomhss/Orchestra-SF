@@ -64,6 +64,7 @@ import type { WorkSignals } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { createSfReviewerRecall } from "./reviewer-recall.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
+import { createProcurementAnswerSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/answer-source.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
 import { createProcurementDecisionPreparation } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
 import { createProcurementQueuePageView, procurementQueueIntent } from "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
@@ -125,6 +126,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     readContractSource: contracts.readContractSource,
   }
   const procurement = createProcurementPort(procurementHost)
+  const procurementAnswers = createProcurementAnswerSource({ host, sources: individual, procurement })
   const sourcingEvidence = createProcurementSourcingEvidence(procurementHost)
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
@@ -189,7 +191,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
-    : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
+    : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement"
+      ? scope.scopeDefinitionVersion === "procurement-answer-v1" ? procurementAnswers : procurementConfirmation : undefined
   const confirmationSource: NonNullable<Parameters<typeof createCollaborationHost>[0]["confirmationSource"]> = {
     verifyManifest: async (scope, call) => (await confirmationSourceFor(scope)?.verifyManifest(scope, call)) ?? false,
     fenceManifest: async (scope, call) => (await confirmationSourceFor(scope)?.fenceManifest(scope, call)) ?? false,
@@ -203,6 +206,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
     reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
     resolveAnswerScope: async (source, refs, call) => {
+      if (source.target.surface === "procurement") return procurementAnswers.resolveAnswerScope(source, refs, call)
       if (source.target.surface === "planner") return plannerConfirmation.current?.resolveAnswerScope(source, refs, call) ?? { status: "unavailable", reason: "answer-scope-unavailable" }
       // Preserve the existing single-record Dashboard manifest. Other domains
       // still need their own producer; a source reference grants no scope.
