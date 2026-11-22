@@ -122,10 +122,11 @@ export function createSfPortfolioComparisonScope(input: {
   const scenarioFence = async (reference: string, call: TrustedDomainContext, scope: Scope, caseRef: Parameters<Compare>[0]["caseRef"]) =>
     (await scenarioFences([reference], call, scope, caseRef))?.[0]
   const resolveScenario: PlannerScenarioHost["resolve"] = async (reference, call) => {
-    if (!input.scenarios) return { status: "unavailable", reason: "portfolio-scenario-reader-unavailable" }
+    const scenarios = input.scenarios
+    if (!scenarios) return { status: "unavailable", reason: "portfolio-scenario-reader-unavailable" }
     const scope = active.get(call)
     if (scope && !current(call, scope)) return denied()
-    if (!scope) return input.scenarios.resolve(reference, call)
+    if (!scope) return scenarios.resolve(reference, call)
     const selected = await input.business.selectedCase(call)
     if (selected.status !== "ok" || !current(call, scope)) return denied()
     const key = digestSfValue({ reference, caseRef: selected.value, binding: scope.binding })
@@ -144,7 +145,7 @@ export function createSfPortfolioComparisonScope(input: {
         return after === before && current(call, scope) ? { status: "ok", value } : denied()
       }
       scope.scenarios.delete(key)
-      const result = await input.scenarios.resolve(reference, call)
+      const result = await scenarios.resolve(reference, call)
       if (result.status !== "ok") return result
       if (!before) return current(call, scope) ? result : denied()
       const after = await scenarioFence(reference, call, scope, selected.value)
