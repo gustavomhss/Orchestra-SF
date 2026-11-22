@@ -1,16 +1,16 @@
 # Sucafina nativa — inventário e retrabalho das telas
 
-## Bloco atual — 20 áreas prontas para revisão
+## Quarto bloco — 20 áreas aprovadas e mescladas
 
-O quarto bloco implementa **CAP20–CAP28, UI30–UI32 e UI34–UI41**, com 49 padrões de rota já existentes. O [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) permanece em rascunho, aguardando revisão do usuário; este bloco não foi mesclado.
+O quarto bloco implementa **CAP20–CAP28, UI30–UI32 e UI34–UI41**, com 49 padrões de rota já existentes. O [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) foi aprovado pelo usuário e mesclado em `f2a6c23551289ef8705baea03f8cec2425b8445a`. [Registro verificado do merge](wave-four/MERGE.md).
 
 [Galeria completa da rodada](wave-four/evidence/README.md) · [Resultado e decisões de implementação](WAVE-FOUR.md) · [Validação e limites](wave-four/VALIDATION.md) · [Mapa de áreas, rotas e estados](wave-four/scope.json)
 
 | Situação da campanha | Áreas |
 | --- | ---: |
 | Rodadas anteriores já mescladas | 21 |
-| Implementadas neste bloco, pendentes de revisão | 20 |
-| Total implementado | **41 de 70** |
+| Áreas deste bloco aprovadas e mescladas | 20 |
+| Total implementado e mesclado | **41 de 70** |
 | Ainda por retrabalhar | **29** |
 
 | Grupo deste bloco | Áreas | Rotas existentes |
@@ -21,7 +21,7 @@ O quarto bloco implementa **CAP20–CAP28, UI30–UI32 e UI34–UI41**, com 49 p
 | Decisões — Intenção, Alternativas, Premissas, Perguntas, Escolha, Alterações, Histórico/Recibos, Análises | 8 | 13 |
 | **Total** | **20** | **49** |
 
-O candidato técnico `0550c4bb8fc3b4b4e68561777010ca03483e2391` incorpora `dev 2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. O [Gate17](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) passou **15 checks e 89 regressões**, incluindo tipos completos da aplicação, E2E e CLI. As jornadas usam instalação e produtores originais; a galeria contém **146 capturas revisadas** deste bloco. Decisões passou também após o limite de cinco minutos que antes bloqueava o caso. As origens das imagens e os limites de cada fluxo estão na validação; a aprovação das rodadas anteriores não se aplica a estas vinte áreas.
+O candidato técnico `0550c4bb8fc3b4b4e68561777010ca03483e2391` incorpora `dev 2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. O [Gate17](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) passou **15 checks e 89 regressões**, incluindo tipos completos da aplicação, E2E e CLI. As jornadas usam instalação e produtores originais; a galeria contém **146 capturas revisadas** deste bloco. Decisões passou também após o limite de cinco minutos que antes bloqueava o caso. As origens das imagens e os limites de cada fluxo estão na validação; o usuário aprovou estas vinte áreas após examinar as capturas, e o merge foi confirmado pela API do GitHub.
 
 ## Histórico — terceira rodada mesclada
 
@@ -76,7 +76,7 @@ As imagens usam dados isolados de teste. Incluem desktop em claro/escuro, portug
 
 The source route registry contains **70 unique surfaces, 165 route patterns and 15 native chapters**. These numbers describe route recognition; they do not prove runtime admission, data availability or visual acceptance. Every entrypoint below exists as a blob in the pinned native source tree. `inventory.json` preserves every route variant and source blob SHA, including create, edit, detail, review, comparison and alias routes.
 
-The first wave follows the first three Sucafina destinations in the source navigation: **Today (UI29), Decisions/Cases (UI33), Executive dashboard (CAP01)**. Wave two continues with Hot Topics (CAP02), Budget Overview (CAP03) and OPEX (CAP04). Wave three implements CAP05–CAP19. Wave four implements CAP20–CAP28, UI30–UI32 and UI34–UI41. The campaign now has 41 implemented areas: 21 merged and 20 pending user review in draft PR #588. There are 29 remaining areas. The implemented route scope is 118 of 165 existing patterns; 47 remain. Route coverage is not a claim that every route/state/locale combination was exercised.
+The first wave follows the first three Sucafina destinations in the source navigation: **Today (UI29), Decisions/Cases (UI33), Executive dashboard (CAP01)**. Wave two continues with Hot Topics (CAP02), Budget Overview (CAP03) and OPEX (CAP04). Wave three implements CAP05–CAP19. Wave four implements CAP20–CAP28, UI30–UI32 and UI34–UI41. The campaign now has 41 implemented and merged areas: 21 from earlier waves and 20 in user-approved PR #588. There are 29 remaining areas. The implemented route scope is 118 of 165 existing patterns; 47 remain. Route coverage is not a claim that every route/state/locale combination was exercised.
 
 | Order | Surface | Screen | Main route | Native source entrypoint |
 | --- | --- | --- | --- | --- |

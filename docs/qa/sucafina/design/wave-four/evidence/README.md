@@ -1,6 +1,6 @@
 # Wave four — original browser evidence
 
-Status: **REVIEWED_PENDING_USER_ACCEPTANCE**. The four galleries contain **146 reviewed captures for all 20 areas** in this block. Six additional representative JPEGs document regression checks of earlier areas and are excluded from that total.
+Status: **REVIEWED_USER_APPROVED_MERGED**. The four galleries contain **146 reviewed captures for all 20 areas** in this block. Six additional representative JPEGs document regression checks of earlier areas and are excluded from that total.
 
 | Group | Areas | Captures persisted and reviewed | Source / qualification |
 | --- | ---: | ---: | --- |
@@ -27,4 +27,4 @@ Work's images come from three explicitly identified source runs; Work10 subseque
 
 Decisions14 generated all 41 expected images with no missing or skipped captures. All 56 monitored source reads succeeded, including 21 after the five-minute boundary that previously triggered refusal. Its strict assertions also require positive case content, so an empty HTTP 200 response cannot pass. Empty changes/receipts, unavailable question cycles and absent admitted models remain authentic source states; no successful application or analysis run was fabricated.
 
-[Draft PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) is ready for the user's review. These 20 areas remain unmerged and unaccepted by the user.
+The user approved these 20 areas after viewing the screenshots. [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) is merged at `f2a6c23551289ef8705baea03f8cec2425b8445a`; [merge verification](../MERGE.md) preserves the original source and test provenance.

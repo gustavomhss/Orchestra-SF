@@ -1,16 +1,16 @@
 # Wave four — validation
 
-Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. All twenty areas have passed their scoped original browser journeys and visual review. The persistent galleries contain **146 reviewed captures** for this block. Final technical verification passed **15 checks and 89 regression cases**. User acceptance remains pending; the draft PR is not merged.
+Status: **MERGED_VERIFIED**. All twenty areas have passed their scoped original browser journeys and visual review. The persistent galleries contain **146 reviewed captures** for this block. Final technical verification passed **15 checks and 89 regression cases**. The user explicitly approved this block, and PR #588 merged as `f2a6c23551289ef8705baea03f8cec2425b8445a`. [Merge verification](MERGE.md).
 
 ## Candidate and scope
 
 - Final functional product: `e5494ff044ee46cdd80c1d754131c284538d4d31` (Decisions14 browser parent).
 - Final technical candidate: `0550c4bb8fc3b4b4e68561777010ca03483e2391` (adds the canonical case-scope regression and documentation; functional source unchanged).
 - Incorporated dev: `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`.
-- Isolated branch: `sf-design-twenty`; [draft PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588).
+- Isolated branch: `sf-design-twenty`; [merged PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588).
 - Earlier block: PR #587 merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`.
 - This block: 20 inventory areas, 49 registered route patterns. Recognition of a route is not independent qualification of every state.
-- Browser and technical snapshots retain their exact parent commits below. User acceptance of this block is pending; it has not been merged.
+- Browser and technical snapshots retain their exact parent commits below. User acceptance is recorded; the actual merge receipt and exact tree verification are in [merge.json](merge.json).
 
 | Area | Native surface | Registered patterns | Evidence group |
 | --- | --- | ---: | --- |
@@ -142,8 +142,8 @@ All 574 preexisting English literals across the ten audited catalogs are unchang
 - Original unavailable analysis models/operations must remain unavailable; catalog/history success cannot qualify prepare/start/cancel/read/output without their own real operation/run evidence.
 - No original changes or application receipts are fabricated to populate UI39/UI40; structural negative unit fixtures do not qualify positive C12 preparation/application.
 - All runtime work used existing test-ci snapshots through GitHub. No owner-machine runtime, alternate CI lane, workflow change, authorization bypass or response mock was used.
-- This block remains in draft PR #588. Prior acceptance of 21 earlier areas does not approve these twenty.
+- This block was explicitly approved by the user after viewing its captures and merged through PR #588. Earlier-wave acceptance was not substituted for this approval.
 
-The qualified base remains dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. A later inspection found PR #607 at dev `8bd7645767deb85b286b046a52a4e9f1db100262`, confined to three desktop WSL IPC paths with no overlap in the 251-path qualified own delta. It was not incorporated or attributed to these test runs. [Composition and final observation](DEV-COMPOSITION.md).
+The native qualification base remains dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. The eventual merge target was `ad47c1b804452f3a7a943a7d4dad75d74a6367e5`, containing ten later commits across 13 desktop-main paths from PRs #607/#608/#609. Exact comparison found no overlap with the 296-path approved own delta and no app-shell, CLI, Sucafina, schema, dependency or workflow change. The actual merged tree equals the independently constructed union of approved and current-dev blobs. Those desktop changes are not attributed to the native test runs. [Composition and merge verification](DEV-COMPOSITION.md).
 
 The complete attempt ledger, including failures and corrections, is [attempts.json](attempts.json).

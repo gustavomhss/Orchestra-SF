@@ -226,7 +226,10 @@
     "compareTruncated": false,
     "overlapPaths": [],
     "integrated": false,
-    "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here."
+    "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here.",
+    "observationScope": "HISTORICAL_PRE_APPROVAL",
+    "subsequentlyIncludedByMerge": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "qualifiedRunAttributionUnchanged": true
   },
   "finalGalleryIntegrity": {
     "atCommit": "fa9a44040ec130e04580159c24cd158d97ab7caa",
@@ -288,7 +291,7 @@
     "captures": 146,
     "allManuallyReviewed": true,
     "rootRepresentativesAcrossAllAreas": true,
-    "userAcceptance": "PENDING"
+    "userAcceptance": "ACCEPTED_FOR_INTEGRATION"
   },
   "finalDeliveryConsistencyReview": {
     "status": "PASSED",
@@ -331,9 +334,38 @@
       "missing": 0
     },
     "currentQualificationPendingLabels": 0,
-    "userAcceptancePending": true,
     "failedAttemptsPreserved": true,
     "laterDevExplicitlyNotQualified": true,
-    "extraExecutionPerformed": false
-  }
+    "extraExecutionPerformed": false,
+    "userAcceptancePendingAtReview": true
+  },
+  "integrationReceipt": {
+    "status": "MERGED_VERIFIED",
+    "pullRequest": 588,
+    "mergeCommit": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "mergeTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "mergedAt": "2026-11-22T02:21:24Z",
+    "head": "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7",
+    "parents": [
+      "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+      "b757d9ef1e8b2d266b5f8df3e5511c853fe48eb7"
+    ],
+    "baseAtMerge": "ad47c1b804452f3a7a943a7d4dad75d74a6367e5",
+    "devObserved": "f2a6c23551289ef8705baea03f8cec2425b8445a",
+    "expectedTree": "bbcda60c9d11477d474e7c88a3a6f4258ae644dc",
+    "treeMatches": true,
+    "userApproval": "aprovado pra merge",
+    "nativeFunctionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "technicalRun": 44972927162,
+    "decisionsRun": 44972048219,
+    "upstreamCommitsSinceQualifiedBase": 10,
+    "upstreamPathsSinceQualifiedBase": 13,
+    "upstreamOnlyPrefix": "apps/desktop/src/main/",
+    "overlapPaths": [],
+    "preMergeHeadChecks": 0,
+    "preMergeStatusContexts": 0,
+    "nativeSourceUnchanged": true
+  },
+  "currentUserAcceptance": "ACCEPTED_FOR_INTEGRATION"
 }

@@ -1,6 +1,6 @@
 # Composition with qualified dev `2eeb1142`
 
-Status: **COMPOSED_AND_VERIFIED_PENDING_USER_REVIEW**. Final technical candidate `0550c4bb8fc3b4b4e68561777010ca03483e2391` and functional product `e5494ff044ee46cdd80c1d754131c284538d4d31` incorporate dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` through composition `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, 21 upstream commits changed 80 distinct paths in three stages. Stage path counts are not added as distinct-file counts because some paths recur.
+Status: **COMPOSED_VERIFIED_USER_APPROVED_MERGED**. Final technical candidate `0550c4bb8fc3b4b4e68561777010ca03483e2391` and functional product `e5494ff044ee46cdd80c1d754131c284538d4d31` incorporate dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` through composition `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, 21 upstream commits changed 80 distinct paths in three stages. Stage path counts are not added as distinct-file counts because some paths recur.
 
 ## Stage one — dev3ce1acd0
 
@@ -72,4 +72,10 @@ After qualification, dev advanced to `8bd7645767deb85b286b046a52a4e9f1db100262` 
 
 The final candidate retains its explicitly tested dev2eeb base. PR #607 was not incorporated or attributed to Gate17 or Decisions14. This observation prevents an unrelated advancing dev branch from being represented as an already tested composition.
 
-The candidate is not merged and has no user acceptance for this block. Final qualification and material coverage limits are in [VALIDATION.md](VALIDATION.md).
+## Final integration after user approval
+
+The user explicitly approved the shown screens for merge. PR #588 merged at `f2a6c23551289ef8705baea03f8cec2425b8445a` onto `ad47c1b804452f3a7a943a7d4dad75d74a6367e5`. Since the qualified dev2eeb base, current dev had advanced by ten commits across 13 files, all under apps/desktop/src/main (PRs #607/#608/#609). Exact comparison against all 296 approved own paths found zero overlap. These changes cover WSL IPC, privileged-window redirects and credential redaction in desktop logs; they do not alter native Sucafina, app-shell, CLI, schemas, dependencies or workflows.
+
+The independently constructed tree `bbcda60c9d11477d474e7c88a3a6f4258ae644dc` is exactly the actual GitHub merge tree. Both the approved wave and the current upstream security changes are preserved. The native functional code is unchanged from Decisions14 and Gate17; no new native execution was needed or claimed. The approved HEAD had zero check-runs and zero status contexts; successful qualification resides in the explicitly cited test-ci snapshots.
+
+The earlier “Later dev observation” section records the historical pre-approval observation. PRs #607/#608/#609 are now present through the final merge, while the original test sources remain unchanged. [Merge receipt](merge.json) · [Verification](MERGE.md) · [Qualification limits](VALIDATION.md).
