@@ -1,5 +1,6 @@
 import type { HoldTargetPreimage, Persistence, SnapshotAuthorityRead } from "./contract.ts"
 import type { AssetPersistence } from "./assets.ts"
+import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
 import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
 
 /** Authentication records are separate from business snapshots and their backups. Payloads are encrypted by identity. */
@@ -22,6 +23,8 @@ export type LocalStore = Persistence & AssetPersistence & {
   holdTargetPreimage?: HoldTargetPreimage
   observeAuthority?: SnapshotAuthorityRead
   secrets: CorporateLocalSecrets
+  /** Private installation policy; never a business snapshot or a generic Core DB. */
+  teamProfiles?: TeamProfilePolicyStore
   dispose: () => Promise<void>
 }
 export type DirectoryPerson = { id: string; name: string }
@@ -41,6 +44,39 @@ export type EntraTeamsResult =
       reason: "capability_disabled" | "consent_required" | "token_expired" | "identity_mismatch" | "unauthenticated" | "forbidden" | "throttled" | "timeout" | "provider_unavailable" | "invalid_response" | "incomplete" | "limit_exceeded"
       retryAfterMs?: number
     }>
+export type EntraTeamsUnavailableReason = Extract<EntraTeamsResult, { state: "unavailable" }>["reason"]
+export type EntraTeamResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      source: "team"
+      team: Readonly<{ teamObjectId: string; name: string; archived: boolean }>
+    }>
+  | Extract<EntraTeamsResult, { state: "unavailable" }>
+export type EntraGroupMembershipResult =
+  | Readonly<{
+      state: "complete"
+      tenantId: string
+      principalObjectId: string
+      groupObjectId: string
+      source: "checkMemberGroups"
+      membership: "transitive"
+      member: boolean
+    }>
+  | Extract<EntraTeamsResult, { state: "unavailable" }>
+/** Server-only proof captured from the original Microsoft session, never a business grant. */
+export type TeamProfileAdministratorObservation =
+  | Readonly<{
+      status: "available"
+      principal: Readonly<{ tenantId: string; principalObjectId: string }>
+      /** Repeats the current supreme-group proof and the exact encrypted session fence. */
+      verifyCurrent: () => Promise<boolean>
+      readTeam?: (teamObjectId: string) => Promise<EntraTeamResult>
+    }>
+  | Readonly<{ status: "unauthenticated" }>
+  | Readonly<{ status: "denied" }>
+  | Readonly<{ status: "unavailable"; reason: EntraTeamsUnavailableReason }>
 export type EntraTeamsSessionResult = EntraTeamsResult | Readonly<{ state: "unauthenticated" }>
 export type EntraTeamsObservation = Readonly<{
   result: EntraTeamsSessionResult
@@ -51,11 +87,15 @@ export type EntraTeamsInput = Readonly<{
   tokens: Pick<EntraTokens, "accessToken" | "expiresAt" | "grantedScopes">
   principal: Readonly<{ tenantId: string; principalObjectId: string }>
 }>
+export type EntraTeamInput = EntraTeamsInput & Readonly<{ teamObjectId: string }>
+export type EntraGroupMembershipInput = EntraTeamsInput & Readonly<{ groupObjectId: string }>
 export type EntraClient = {
   readonly tenantId?: string
   readonly clientId?: string
   readonly profile?: "local-public" | "web-confidential"
   joinedTeams?: (input: EntraTeamsInput) => Promise<EntraTeamsResult>
+  team?: (input: EntraTeamInput) => Promise<EntraTeamResult>
+  checkGroupMembership?: (input: EntraGroupMembershipInput) => Promise<EntraGroupMembershipResult>
   teamMembers?: (input: EntraTeamsInput & { teamObjectId: string }) => Promise<DirectoryPerson[]>
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
@@ -80,6 +120,11 @@ export type LocalIdentity = {
   teamDirectory?: (request: Request) => Promise<EntraTeamsSessionResult>
   /** Keeps the exact encrypted session generation server-side across business awaits. */
   observeTeams?: (request: Request) => Promise<EntraTeamsObservation>
+  /** Current installation administration is independent of Team membership and business roles. */
+  observeTeamProfileAdministrator?: (
+    request: Request,
+    groupId: string,
+  ) => Promise<TeamProfileAdministratorObservation>
   /** System administration uses a current Entra group grant independent of Team membership. */
   observeCorporateRecoveryActor?: (
     request: Request,
