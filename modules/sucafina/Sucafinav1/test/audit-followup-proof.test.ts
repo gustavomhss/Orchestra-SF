@@ -7,6 +7,9 @@ import { roleMap } from "../runtime/admin.ts"
 import { object } from "../runtime/contract.ts"
 import type { Command, Snapshot } from "../runtime/contract.ts"
 import { DashboardPortfolio } from "../runtime/dashboard-portfolio.ts"
+import { domain as procurementDomain } from "../runtime/procurement.ts"
+import { createSfProductAuthority } from "../product/integration/product-authority.ts"
+import { createSfBusinessServices } from "../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { resolve } from "../src/identity.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -25,6 +28,7 @@ import { createSfBusinessContext, createSfRecordHistory } from "../product/host-
 import { createSfExecutionBindingRegistry } from "../product/host-binding/execution-context.ts"
 import { createSfProductState } from "../product/host-binding/state-provider.ts"
 import { createDashboardRecordSourceIssuer } from "../product/integration/dashboard-sources.ts"
+import { createProcurementSourceResolver } from "../product/procurement/sources.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
@@ -45,7 +49,7 @@ function ok<T>(result: PortResult<T>): T {
  * sf_answer_read are real. Authentication and the two administrator directory
  * grants are explicit fixture boundaries, not an installed Entra/Teams claim.
  */
-async function fixture() {
+async function fixture(options: { historyConsumer?: boolean; recipientMode?: "omitted" | "installed" } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-followup-proof-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -125,7 +129,8 @@ async function fixture() {
     return records.issue({ page, recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
   }
   const creationTarget = { ref: "workspace", incarnation: "workspace-original" }
-  const state = createSfProductState({ persistence, createId: randomUUID,
+  const threadHistoryWrites = options.historyConsumer ? new WeakSet<object>() : undefined
+  const state = createSfProductState({ persistence, createId: randomUUID, threadHistoryWrites,
     authorize: async (candidate, snapshot) => identity(candidate, snapshot),
     resolveTarget: async (candidate, snapshot, namespace, ref) => namespace === "threads" && ref === creationTarget.ref && identity(candidate, snapshot) ? { incarnation: creationTarget.incarnation } : undefined,
   })
@@ -145,11 +150,19 @@ async function fixture() {
     },
   }
   const authority = createSfDomainAuthority({ ui, native: createSfExecutionBindingRegistry({ authenticateAndResolve: async () => undefined, revalidateAdmission: async () => false }) })
-  const collaboration = createCollaborationHost({ host, state, creationTarget, scopedSources: persistence, evidence, human, authority, recipientAuthority,
+  // business-services.ts always installs these Procurement reissue delegates.
+  // Dashboard is outside their domain; the canonical reader remains the fallback.
+  const nativeReissuer = options.recipientMode === "installed" ? createProcurementSourceResolver({ host, scopedSources: persistence,
+    contextFor: async () => ({ status: "unavailable", reason: "unselected-procurement" }),
+  }) : undefined
+  const collaboration = createCollaborationHost({ host, state, creationTarget, scopedSources: persistence, evidence, human, authority, recipientAuthority, threadHistoryWrites,
     procurement: { list: async () => ({ status: "unavailable", reason: "unselected-procurement" }) },
     collections: { resolveRequestCollection: async () => ({ status: "unavailable", reason: "unselected-collection" }) },
     cases: { read: async () => ({ status: "unavailable", reason: "unselected-case" }) },
-    issueForActor, prepareReissueScope: source.prepareReissueScope, confirmationSource: source,
+    ...(options.recipientMode === "omitted" ? {} : {
+      issueForActor: nativeReissuer?.issueForActor ?? issueForActor,
+      prepareReissueScope: nativeReissuer?.prepareReissueScope ?? source.prepareReissueScope,
+    }), confirmationSource: source,
     requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at,
   })
   const read = async (actor: string, operation = "sf_relation_read", payload: unknown = { recordRefs: [] }) => {
@@ -162,18 +175,22 @@ async function fixture() {
     const context = ok(await human.admit(request(actor), action, payload))
     try { return ok(await work(context)) } finally { human.finish(context) }
   }
-  const create = async () => {
+  const createQuestion = async (recipientRef = "recipient") => {
     const context = await read("questioner")
     const reference = ok(await records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["name", "status"], period }, context))
     archive.set(reference.refDigest, { ref: structuredClone(reference), projection: ok(await records.read(reference.refId, context)) })
-    const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
+    const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef, body: "Please check the selected project.", evidenceRefs: [reference] }
     const mutation = { expectedStorageVersion: 0, idempotencyKey: "create-question" }
     const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, async (call) => {
       expect((await records.resolve(reference.refId, call)).status).toBe("ok")
       expect((await evidence.resolve(reference, call)).state).toBe("fresh")
-      expect(await collaboration.authority.recipientSources("recipient", [reference], call)).toBe(true)
+      expect(await collaboration.authority.recipientSources(recipientRef, [reference], call)).toBe(true)
       return collaboration.threads.create(draft, mutation, call)
     })
+    return { thread, reference }
+  }
+  const create = async () => {
+    const { thread, reference } = await createQuestion()
     const version = ok(await collaboration.storageVersion("threads", await read("recipient")))
     const replyMutation = { expectedStorageVersion: version, idempotencyKey: "recipient-reply" }
     const replied = await withHuman("recipient", "collaboration.thread.reply", { id: thread.id, body: answer, mutation: replyMutation }, (call) => collaboration.recipientActions!.reply(thread.id, answer, replyMutation, call))
@@ -209,7 +226,7 @@ async function fixture() {
     })
     if (result.status !== "ok" || !result.value) throw new Error("Concurrent state write rejected: " + JSON.stringify(result))
   }
-  return { store, persistence, records, state, collaboration, read, create, answerRead, availability, mutate, changeSource, changeThread,
+  return { store, persistence, records, state, collaboration, read, createQuestion, create, answerRead, availability, mutate, changeSource, changeThread,
     revoke: () => persistence.transaction("dashboard", async (snapshot) => {
       const access = object(snapshot.data.access)
       delete access.recipient
@@ -349,4 +366,177 @@ test("diagnostic 9: a transient real reuse outage is not downgraded when sources
     expect(JSON.stringify(result)).not.toContain(answer)
     expect((await f.answerRead(selected.thread.id)).result.status).toBe("ok")
   } finally { await f.dispose() }
+}, 120_000)
+
+test("diagnostic 9 review: the author cannot reuse another actor's uncaptured reply basis as history", async () => {
+  const f = await fixture({ historyConsumer: true })
+  try {
+    const selected = await f.create()
+    const context = await f.read("questioner")
+    const message = selected.thread.messages[0]!
+    expect(f.availability.history).toBe(false)
+    expect((await f.collaboration.threadReads.read(selected.thread.id, context)).status).toBe("ok")
+    for (const changed of [false, true]) {
+      if (changed) await f.changeSource()
+      const historical = await f.collaboration.threadReads.readHistorical(selected.thread.id, context)
+      const version = await f.collaboration.threadHistory!.readVersion(selected.thread.id, message.id, message.incarnation, message.version, context)
+      expect(historical.status).not.toBe("ok")
+      expect(version.status).not.toBe("ok")
+      expect(JSON.stringify([historical, version])).not.toContain(message.body)
+      expect(JSON.stringify([historical, version])).not.toContain(answer)
+    }
+  } finally { await f.dispose() }
+}, 120_000)
+
+for (const recipientMode of ["omitted", "installed"] as const) {
+  test("diagnostic 9 review: " + recipientMode + " recipient reader exposes only the author's exact current source", async () => {
+    const f = await fixture({ historyConsumer: true, recipientMode })
+    try {
+      // A self-addressed ordinary clarification is supported without an
+      // external recipient authority, as in the current Local Operator.
+      const selected = await f.createQuestion("questioner")
+      const context = await f.read("questioner")
+      const message = selected.thread.messages[0]!
+      expect(f.availability.history).toBe(false)
+      if (recipientMode === "omitted") expect(f.collaboration.recipientThread).toBeUndefined()
+      else {
+        expect(f.collaboration.recipientThread).toBeDefined()
+        expect((await f.collaboration.recipientThread!(selected.thread.id, context)).status).toBe("unavailable")
+      }
+      expect((await f.records.resolve(selected.reference.refId, context)).status).toBe("ok")
+      const before = ok(await f.collaboration.threadReads.readHistorical(selected.thread.id, context))
+      expect(before.sourceRef).toBe(selected.reference.refId)
+      expect(before.sourceIncarnation).toBe(selected.reference.target.incarnation)
+      expect(before.observedVersion).toBe(selected.reference.target.version)
+      expect(before.evidenceRefs).toEqual([selected.reference])
+      const observed = ok(await f.collaboration.threadHistory!.readVersion(selected.thread.id, message.id, message.incarnation, message.version, context))
+      expect(observed.message).toEqual(message)
+      expect(observed.evidenceRefs).toEqual([selected.reference])
+
+      await f.changeSource()
+      expect((await f.records.resolve(selected.reference.refId, context)).status).toBe("stale")
+      const historical = await f.collaboration.threadReads.readHistorical(selected.thread.id, context)
+      const version = await f.collaboration.threadHistory!.readVersion(selected.thread.id, message.id, message.incarnation, message.version, context)
+      expect(historical.status).not.toBe("ok")
+      expect(version.status).not.toBe("ok")
+      expect(JSON.stringify([historical, version])).not.toContain(message.body)
+      expect(f.availability.history).toBe(false)
+    } finally { await f.dispose() }
+  }, 120_000)
+}
+
+
+// This control uses the shipping business-services and product-authority
+// factories unchanged, including their original Procurement reissue delegates,
+// source resolver, answer-scope resolver, and Atlas business-context router.
+// The private SQLite store, directory authentication and operation grants are
+// test inputs. No scanner/capture, native session or Teams readiness is claimed.
+test("diagnostic 9 shipped composition: Procurement reply has no ordinary answer scope", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-followup-shipped-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  let business: ReturnType<typeof createSfBusinessServices> | undefined
+  try {
+    const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
+    for (const surface of ["dashboard", "planner", "procurement"] as const) {
+      await persistence.initializeSources(surface)
+      await persistence.transaction(surface, async (snapshot) => {
+        snapshot.data.roleMap = [{ surface, role: "admin", entra: "admins", version: 1, by: "questioner" }]
+        snapshot.data.access = Object.fromEntries(people.map((person) => [person.id, { assigned: [], domains: [] }]))
+        return { commit: true, value: undefined }
+      })
+    }
+    const environment = { at, id: randomUUID, directory: people }
+    const requestId = await persistence.transaction("procurement", async (snapshot) => {
+      const actor = { id: "questioner", roles: ["admin"], canWrite: true }
+      const settings = procurementDomain.execute(snapshot, actor, { page: "Settings", action: "reset", version: 0, values: {} }, environment)
+      if (!settings.ok) throw new Error("Canonical Procurement settings failed: " + JSON.stringify(settings))
+      const created = procurementDomain.execute(snapshot, actor, { page: "Requests", action: "create", version: 0, values: { pr: {
+        title: "Selected purchase", type: "product", description: "Selected source", estAmount: 100, costCenter: "IT",
+        needBy: "2026-12-01", justification: "Diagnostic source", recurring: false, expenseType: "CAPEX",
+      } } }, environment)
+      if (!created.ok || typeof object(created.value).number !== "string") throw new Error("Canonical request failed: " + JSON.stringify(created))
+      return { commit: true, value: object(created.value).number as string }
+    })
+    const authority = createSfProductAuthority({
+      identity: () => ({ installationId: "installation", hostId: "local-diagnostic", projectId: "project", location: { directory: directory as never } }),
+      installationId: "installation", origin: "https://example.test", policyVersion: "policy", persistence,
+      authenticate: async (candidate, options) => {
+        const id = candidate.headers.get("actor")
+        return people.some((person) => person.id === id) && options ? resolve(id!, [...options.roleMap], (group) => group === "admins") : null
+      },
+      environment: async () => environment,
+      grants: people.map((person) => ({ principalRef: person.id, namespaces: ["threads", "confirmations", "relations", "cases", "preferences"] as const,
+        operations: ["sf_work_list", "sf_answer_read", "sf_relation_read", "sf_question_prepare"], humanActions: collaborationHumanActions })),
+      createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(),
+      inspectSession: async () => undefined, verifySelection: async () => false,
+      verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
+    })
+    business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: new WeakSet<object>() })
+    // The shipped factory accepts no scanner. Current record resolution is real;
+    // no history or recall operation is exercised by these diagnostic versions.
+    business.initializeAtlas(undefined, { boundaryVersion: "diagnostic-current-source", schemaVersion: "diagnostic-current-source", manifestVersion: "diagnostic-current-source", skillVersion: "diagnostic-current-source" })
+    const services = business
+    const request = () => new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test", actor: "questioner" } })
+    const read = async (operation: string, payload: unknown) => {
+      const digest = digestSfValue(payload)
+      const call = ok(await authority.ui.admit(request(), operation, digest))
+      expect(await authority.ui.validate(call, operation, digest)).toBe(true)
+      return call
+    }
+    const withHuman = async <T>(action: CollaborationHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<PortResult<T>>) => {
+      const call = ok(await authority.human.admit(request(), action, payload))
+      try { return await work(call) } finally { authority.human.finish(call) }
+    }
+    const selectionPayload = { purpose: "work-selection", period }
+    const selectionContext = await read("sf_work_list", selectionPayload)
+    const selection = ok(await services.procurementSelections.create(selectionContext, period))
+    expect(selection.period).toEqual(period)
+    const sourceRef = ok(await services.individual.issue("procurement-request", requestId, selectionContext))
+    const reference = ok(await services.individual.resolve(sourceRef, selectionContext)).evidence
+    expect(reference.target.surface).toBe("procurement")
+    expect(reference.target.recordId).toBe(requestId)
+    expect((await services.context.resolve(reference, selectionContext)).state).toBe("fresh")
+    expect((await services.procurement.read({ requestRef: sourceRef }, selectionContext)).status).toBe("ok")
+    expect(await services.collaboration.authority.recipientSources("recipient", [reference], selectionContext)).toBe(false)
+    expect(await services.collaboration.authority.recipientSources("questioner", [reference], selectionContext)).toBe(true)
+
+    const draft = { kind: "clarification" as const, sourceRef, sourceIncarnation: reference.target.incarnation,
+      observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check this purchase.", evidenceRefs: [reference] }
+    const mutation = { expectedStorageVersion: 0, idempotencyKey: "other-recipient" }
+    const crossPerson = await withHuman("collaboration.thread.create", { draft, mutation }, (call) => services.collaboration.threads.create(draft, mutation, call))
+    expect(crossPerson.status).not.toBe("ok")
+    expect(ok(await services.collaboration.storageVersion("threads", selectionContext))).toBe(0)
+
+    const selfDraft = { ...draft, recipientRef: "questioner" }
+    const selfMutation = { expectedStorageVersion: 0, idempotencyKey: "self-recipient" }
+    const thread = ok(await withHuman("collaboration.thread.create", { draft: selfDraft, mutation: selfMutation }, (call) => services.collaboration.threads.create(selfDraft, selfMutation, call)))
+    expect(thread.messages[0]?.sourceContext?.reviewContext).toBeUndefined()
+    expect(services.collaboration.recipientThread).toBeDefined()
+    const replyBody = "The designated recipient checked the real Procurement request."
+    const replyMutation = { expectedStorageVersion: ok(await services.collaboration.storageVersion("threads", selectionContext)), idempotencyKey: "self-reply" }
+    const replied = ok(await withHuman("collaboration.thread.reply", { id: thread.id, body: replyBody, mutation: replyMutation },
+      (call) => services.collaboration.recipientActions!.reply(thread.id, replyBody, replyMutation, call)))
+    const message = replied.messages.at(-1)!
+    expect(message.authorRef).toBe(thread.recipientRef!)
+    expect(message.body).toBe(replyBody)
+    expect(replied.current.sourceRef.target.surface).toBe("procurement")
+    expect((await services.context.resolve(replied.current.sourceRef, selectionContext)).state).toBe("fresh")
+
+    const payload = { questionRef: thread.id }
+    const call = await read("sf_answer_read", payload)
+    const visible = ok(await services.collaboration.threadReads.read(thread.id, call))
+    expect(visible.messages.at(-1)?.body).toBe(replyBody)
+    const answerRef = "sf-thread-answer:" + [thread.id, message.id, message.incarnation].map(encodeURIComponent).join(":") + ":" + message.version
+    const prepared = await services.collaboration.answerReuse!.prepare(thread.id, answerRef, call)
+    expect(prepared).toEqual({ status: "unavailable", reason: "answer-scope-unavailable" })
+    const capability = services.collaboration.capabilities.find((entry) => entry.id === "sf_answer_read")!
+    const result = await capability.handler(payload, call)
+    expect(result).toEqual({ status: "unavailable", reason: "answer-reuse-unavailable" })
+    expect(JSON.stringify(result)).not.toContain(replyBody)
+  } finally {
+    business?.dispose()
+    await store.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
 }, 120_000)
