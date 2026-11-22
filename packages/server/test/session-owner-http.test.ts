@@ -262,3 +262,77 @@ corporate("response namespaces carry the full owner and current generation witho
     expect(info.data.namespace?.authorityGeneration).toBe(2)
   }))
 })
+
+corporate("the original prefixed Web adapter cuts actual JSON bytes without trusting Content-Length", async () => {
+  await using f = await sessionHttpFixture()
+  await f.run((http) => Effect.gen(function* () {
+    const own = yield* f.seed("ses_http_real_body_cap")
+    const before = JSON.stringify(f.business.all("SELECT * FROM event"))
+    const chunk = new Uint8Array(1024 * 1024).fill(97)
+    const streamed = (size: number, prefix: string, suffix: string) => {
+      const state = { stage: 0, payload: 0, bytes: 0, cancelled: 0, completed: false }
+      const encode = new TextEncoder()
+      const body = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          const bytes = state.stage === 0 ? encode.encode(prefix)
+            : state.payload < size ? chunk.subarray(0, Math.min(chunk.byteLength, size - state.payload))
+            : state.stage === 1 ? encode.encode(suffix) : undefined
+          if (!bytes) {
+            state.completed = true
+            controller.close()
+            return
+          }
+          if (state.stage === 0) state.stage = 1
+          else if (state.payload < size) state.payload += bytes.byteLength
+          else state.stage = 2
+          state.bytes += bytes.byteLength
+          controller.enqueue(bytes)
+        },
+        cancel() { state.cancelled++ },
+      }, { highWaterMark: 0 })
+      return { body, state }
+    }
+    for (const [suffix, limit, forgedLength] of [
+      ["/rename", BodyLimit.DEFAULT_LIMIT, false],
+      ["/rename", BodyLimit.DEFAULT_LIMIT, true],
+      ["/prompt", BodyLimit.UPLOAD_LIMIT, false],
+    ] as const) {
+      const body = suffix === "/rename"
+        ? streamed(limit + chunk.byteLength, '{"title":"', '"}')
+        : streamed(limit + chunk.byteLength, '{"prompt":{"text":"', '"},"resume":false}')
+      const original = http.request("/api/session/" + own.id + suffix, ownerA, {
+        method: "POST", body: body.body,
+        headers: { "content-type": "application/json", ...(forgedLength ? { "content-length": "1" } : {}) },
+      })
+      expect(original.headers.get("content-length")).toBe(forgedLength ? "1" : null)
+      const response = yield* Effect.promise(() => http.direct(original))
+      expect(response.status).toBe(413)
+      expect((yield* decode(response, ErrorBody))._tag).toBe("PayloadTooLargeError")
+      expect(http.originals).toContain(original)
+      expect(body.state.cancelled).toBe(1)
+      expect(body.state.completed).toBe(false)
+      expect(body.state.bytes).toBeGreaterThan(limit)
+      expect(body.state.bytes).toBeLessThanOrEqual(limit + chunk.byteLength)
+      expect(f.calls.resumes).toBe(0)
+      expect(f.calls.wakes).toBe(0)
+      expect(f.business.all("SELECT id FROM session_input")).toEqual([])
+      expect(JSON.stringify(f.business.all("SELECT * FROM event"))).toBe(before)
+      expect(f.control.pendingWriters(f.storage)).toEqual([])
+    }
+    // Actual bytes above the JSON cap still use the original 64 MiB upload cap.
+    const insideUpload = streamed(BodyLimit.DEFAULT_LIMIT + chunk.byteLength, "{invalid", "")
+    const allowedBytes = http.request("/api/session/" + own.id + "/prompt", ownerA, {
+      method: "POST", headers: { "content-type": "application/json" }, body: insideUpload.body,
+    })
+    const malformed = yield* Effect.promise(() => http.direct(allowedBytes))
+    expect(malformed.status).toBe(400)
+    expect((yield* decode(malformed, ErrorBody))._tag).toBe("InvalidRequestError")
+    expect(http.originals).toContain(allowedBytes)
+    expect(insideUpload.state.completed).toBe(true)
+    expect(insideUpload.state.cancelled).toBe(0)
+    expect(f.calls.resumes).toBe(0)
+    expect(f.calls.wakes).toBe(0)
+    expect(f.business.all("SELECT id FROM session_input")).toEqual([])
+    expect(JSON.stringify(f.business.all("SELECT * FROM event"))).toBe(before)
+  }))
+})
