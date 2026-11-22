@@ -67,7 +67,7 @@ export async function createMicrosoftInstallation(
       const { createCorporateRecoveryHttp } = await import("../runtime/corporate-recovery-http.ts")
       const { openCorporateRecoveryRegister } = await import("../runtime/corporate-recovery-register.ts")
       const register = await (overrides.openRecoveryRegister ?? openCorporateRecoveryRegister)(registerPath, directory)
-      return createCorporateRecoveryHttp({ config, directory, identity, now, register, profilePolicy })
+      return createCorporateRecoveryHttp({ config, directory, identity, now, register, profilePolicy, readPolicy: prepared.readCurrentConfiguration })
     })()
     const readTeams = identity.teamDirectory
     if (config.teams === "direct" && !store.teamProfiles) throw new Error("Microsoft Team policy is unavailable")
@@ -82,14 +82,15 @@ export async function createMicrosoftInstallation(
     })
     const checkpoint = config.teams === "direct" && store.teamProfiles ? await (async () => {
       const { createCorporateCheckpointHttp } = await import("../runtime/corporate-checkpoint-http.ts")
-      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, now })
+      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, readPolicy: prepared.readCurrentConfiguration, now })
     })() : undefined
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
       profilePolicy: store.teamProfiles,
       ...(nativeWeb ? { readBusinessContext: (request: Request, admission: Parameters<typeof readTeamBusinessContext>[0]["admission"]) =>
-        readTeamBusinessContext({ request, admission, identity, config, directory, now, teamCurrentChoice: context.teamCurrentChoice }) } : {}),
+        readTeamBusinessContext({ request, admission, identity, readCurrentConfiguration: prepared.readCurrentConfiguration,
+          directory, now, teamCurrentChoice: context.teamCurrentChoice }) } : {}),
       ...(teamProfiles ? { observeAdministrator: (request: Request) => teamProfiles.administrator(request, { refreshSession: false }) } : {}),
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
@@ -248,7 +249,7 @@ export async function createMicrosoftInstallation(
         const access = await teamAccess(request, route?.teamObjectId)
         if (access.status === "allowed") {
           if (route) return runTeamBusiness({
-            request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
+            request, route, admission: access, authorizeTeam: teamAccess, identity, readCurrentConfiguration: prepared.readCurrentConfiguration, directory,
             keys: prepared.loaded.keys, now,
             teamCurrentChoice: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? context.teamCurrentChoice : undefined,
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,

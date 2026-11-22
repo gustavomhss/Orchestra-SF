@@ -40,6 +40,8 @@ export async function microsoftHttpFixture(options: {
     administrator: boolean
     teams: string[]
     graphCalls: string[]
+    beforeGraphRequest?: (url: URL) => Promise<void>
+    observeRequest?: (request: Request) => void
     requests: number
     loopbackPeers: number
     ingressRequests: number
@@ -50,6 +52,7 @@ export async function microsoftHttpFixture(options: {
     hostname: "127.0.0.1", port: 0, idleTimeout: 0,
     async fetch(request, server) {
       state.requests += 1
+      state.observeRequest?.(request)
       if (server.requestIP(request)?.address !== "127.0.0.1")
         return new Response("Non-loopback proof peer", { status: 500 })
       state.loopbackPeers += 1
@@ -134,6 +137,7 @@ export async function microsoftHttpFixture(options: {
         if (url.origin === "https://graph.microsoft.com") {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-" + label + "-access")
           state.graphCalls.push(url.pathname)
+          await state.beforeGraphRequest?.(url)
           if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled " + label.toUpperCase() + " actor" })
           if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: state.administrator ? [groupId] : [] })
           if (url.href === graph + "/me/joinedTeams")
