@@ -193,4 +193,3 @@ O registro final deve conter dono/executor/revisor, autorização e reserva, C/T
 Usar hashes e aliases sanitizados no repositório. Estado bruto, chaves, cookies, IDs privados, banco e arquivos de backup ficam no fluxo privado autorizado. Campos ainda não observados permanecem nulos ou NOT_RUN, nunca PASS.
 
 **Fechamento:** ensaio realizado no tar final instalado, com backup, corte, retomada e rollback comprovados, preservando recibos e efeitos posteriores ao checkpoint. A preparação documental e as provas antigas não atendem sozinhas a esse fechamento.
-

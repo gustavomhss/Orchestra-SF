@@ -170,4 +170,3 @@ O `--dry-run` não prova a instalação efetiva e não exige os mesmos controles
 ```
 
 **Fechamento de G07:** tar verificado e instalado com prova real, vinculado ao C/T confirmado, componente por componente, com recibos e identidade do artefato. Esse mesmo hash de tar deve constar nos resultados de G08 e G10. Qualquer mudança de fonte, compilador ou bytes exige nova identificação e qualificação do que mudou; nenhuma aprovação é herdada para outro candidato.
-

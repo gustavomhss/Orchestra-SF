@@ -169,4 +169,3 @@ O run histórico [44684352036](https://github.com/gustavomhss/Orchestra-SF/actio
 O agregado da Migração registrado na preparação inicial, [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, terminou com falhas, inclusive pool/SF4/SF5/SF8/UI. Sua correção e integração continuam com a Migração.
 
 Compras 222 (2) mantém seu aceite original de QA. G07 usa o mesmo C/T final confirmado, e G08/G10 qualificam o tar instalado em ambientes isolados cuja reserva e autorização tenham sido confirmadas. Nenhum resultado de componente ou roteiro libera produção.
-
