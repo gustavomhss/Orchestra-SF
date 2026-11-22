@@ -89,12 +89,15 @@ export function TeamProfileConfiguration(props: Readonly<{
   const save = async () => {
     const view = ui.view
     if (ui.busy || view.status !== "ready" || !current()) return
+    // Reactive store metadata must not enter the closed configuration wire contract.
+    const agents = view.document?.settings.agents
+    const preservedAgents = agents ? structuredClone(unwrap(agents)) : undefined
     const decoded = Schema.decodeUnknownOption(TeamProfile.ConfigurationCommand, { onExcessProperty: "error" })({
       profile, expectedRevision: view.configRevision,
       document: { version: 1, settings: {
         model: ui.model.trim(),
         ...(ui.agent.trim() ? { default_agent: ui.agent.trim() } : {}),
-        ...(view.document?.settings.agents ? { agents: structuredClone(unwrap(view.document.settings.agents)) } : {}),
+        ...(preservedAgents ? { agents: preservedAgents } : {}),
       } },
     })
     if (Option.isNone(decoded)) { setUi("invalid", true); return }
