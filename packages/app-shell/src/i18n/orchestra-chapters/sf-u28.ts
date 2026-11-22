@@ -1,8 +1,9 @@
-/** N16/UI69. Legacy source labels retained verbatim in both locales (COPY-01). */
+/** UI69 presentation copy; source operation names and contracts remain unchanged. */
 export const SF_U28_COPY = {
   "sf.ui69.title": "Local administration",
   "sf.ui69.primary": "Review operation",
   "sf.u28.profile": "Profile",
+  "sf.u28.description": "Review local access, viewer summaries, notifications and backups.",
   "sf.u28.mode": "Login",
   "sf.u28.localOperator": "local-operator",
   "sf.u28.access": "Access",
@@ -19,13 +20,31 @@ export const SF_U28_COPY = {
   "sf.u28.actions": "Actions",
   "sf.u28.version": "Version",
   "sf.u28.import": "Import JSON",
-  // Original runtime/admin.ts labels, retained verbatim under COPY-01.
   "sf.u28.summaries": "Additional viewer summaries",
   "sf.u28.saveSummaries": "Save summaries",
 } as const
 
 export const SF_U28_COPY_BR: Readonly<Record<keyof typeof SF_U28_COPY, string>> = {
-  ...SF_U28_COPY,
   "sf.ui69.title": "Administração local",
   "sf.ui69.primary": "Revisar operação",
+  "sf.u28.profile": "Perfil",
+  "sf.u28.description": "Revise o acesso local, os resumos para consulta, as notificações e os backups.",
+  "sf.u28.mode": "Acesso",
+  "sf.u28.localOperator": "Operador local",
+  "sf.u28.access": "Permissão",
+  "sf.u28.maintenance": "Manutenção",
+  "sf.u28.notifications": "Notificações",
+  "sf.u28.read": "Lida",
+  "sf.u28.unread": "Não lida",
+  "sf.u28.backups": "Backups",
+  "sf.u28.application": "Aplicação",
+  "sf.u28.created": "Criado em",
+  "sf.u28.retention": "Retenção",
+  "sf.u28.attachments": "Anexos",
+  "sf.u28.bytes": "Bytes",
+  "sf.u28.actions": "Ações",
+  "sf.u28.version": "Versão",
+  "sf.u28.import": "Importar JSON",
+  "sf.u28.summaries": "Resumos adicionais para consulta",
+  "sf.u28.saveSummaries": "Salvar resumos",
 }

@@ -101,11 +101,19 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
   const data = () => authorizedData() || empty
   const selected = () => data().backups.find((entry) => entry.id === state.selectedBackup)
   const refresh = () => setState("revision", (value) => value + 1)
+  const date = (value: string) => {
+    const parsed = new Date(value)
+    return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat(language.intl(), {
+      dateStyle: "medium", timeStyle: "short",
+    }).format(parsed)
+  }
+  const number = (value: number) => new Intl.NumberFormat(language.intl()).format(value)
 
   return (
-    <div data-sf-surface="UI69" data-sf-owner={authorizedData() ? "local-operator" : "not-authorized"}>
+    <div class="sf-administration" data-sf-wave="polish" data-sf-surface="UI69" data-sf-owner={authorizedData() ? "local-operator" : "not-authorized"}>
       <SfPageFrame
         titleKey={copyKey("sf.ui69.title")}
+        subtitleKey={copyKey("sf.u28.description")}
         context={[]}
         tabs={[]}
         activeTab={null}
@@ -145,7 +153,7 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
                     <For each={data().notifications}>
                       {(notification) => (
                         <li data-sf-notification={notification.id}>
-                          <time dateTime={notification.at}>{notification.at}</time>
+                          <time dateTime={notification.at}>{date(notification.at)}</time>
                           <span><bdi>{notification.surface}</bdi></span>
                           <span>{heading(notification.read ? "sf.u28.read" : "sf.u28.unread")}</span>
                         </li>
@@ -171,9 +179,9 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
                       <tbody><For each={data().backups}>{(backup) => (
                         <tr data-sf-backup={backup.id}>
                           <th scope="row"><bdi>{backup.surface}</bdi></th>
-                          <td><time dateTime={backup.at}>{backup.at}</time></td>
+                          <td><time dateTime={backup.at}>{date(backup.at)}</time></td>
                           <td><bdi>{backup.tier}</bdi></td>
-                          <td>{backup.assets}</td><td>{backup.bytes}</td>
+                          <td>{number(backup.assets)}</td><td>{number(backup.bytes)}</td>
                           <td><button type="button" class="mx-btn" aria-expanded={state.selectedBackup === backup.id}
                             onClick={() => setState("selectedBackup", state.selectedBackup === backup.id ? null : backup.id)}>
                             {heading("sf.ui69.primary")}
@@ -187,7 +195,7 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
                   {(backup) => (
                     <dl class="sf-u28-definition" data-sf-backup-review>
                       <dt>{heading("sf.u28.application")}</dt><dd><bdi>{backup().surface}</bdi></dd>
-                      <dt>{heading("sf.u28.created")}</dt><dd>{backup().at}</dd>
+                      <dt>{heading("sf.u28.created")}</dt><dd><time dateTime={backup().at}>{date(backup().at)}</time></dd>
                       <dt>{heading("sf.u28.retention")}</dt><dd><bdi>{backup().tier}</bdi></dd>
                       <dt>{heading("sf.u28.version")}</dt><dd>{backup().version}</dd>
                     </dl>
