@@ -779,6 +779,29 @@ function ProviderConnection(props: {
     )
   }
 
+  function AuthErrorView() {
+    let retry: HTMLButtonElement | undefined
+    // The selected method disappears when authorization fails. Keep keyboard
+    // focus in the dialog on the recovery action instead of falling back to body.
+    onMount(() => retry?.focus({ preventScroll: true }))
+    return (
+      <div data-provider-connection-error class="flex flex-col gap-4 px-3 text-[13px] leading-5 text-v2-text-text-base">
+        <div role="alert" class="flex items-start gap-2">
+          <Icon name="circle-ban-sign" class="mt-0.5 shrink-0 text-icon-critical-base" />
+          <span class="min-w-0 break-words">{language.t("provider.connect.status.failed", { error: store.error ?? "" })}</span>
+        </div>
+        {/* A stored sign-in only needs its refresh repeated; a failed attempt starts over. */}
+        <ButtonV2
+          ref={retry}
+          class="self-start"
+          onClick={() => void (store.connected ? complete() : selectMethod(store.methodIndex ?? 0))}
+        >
+          {language.t("orchestra.providers.retry")}
+        </ButtonV2>
+      </div>
+    )
+  }
+
   function OAuthAutoView() {
     const code = createMemo(() => {
       const instructions = store.authorization?.instructions
@@ -919,19 +942,7 @@ function ProviderConnection(props: {
               <AuthPromptsView />
             </Match>
             <Match when={store.state === "error"}>
-              <div data-provider-connection-error class="flex flex-col gap-4 px-3 text-[13px] leading-5 text-v2-text-text-base">
-                <div role="alert" class="flex items-start gap-2">
-                  <Icon name="circle-ban-sign" class="mt-0.5 shrink-0 text-icon-critical-base" />
-                  <span class="min-w-0 break-words">{language.t("provider.connect.status.failed", { error: store.error ?? "" })}</span>
-                </div>
-                {/* A stored sign-in only needs its refresh repeated; a failed attempt starts over. */}
-                <ButtonV2
-                  class="self-start"
-                  onClick={() => void (store.connected ? complete() : selectMethod(store.methodIndex ?? 0))}
-                >
-                  {language.t("orchestra.providers.retry")}
-                </ButtonV2>
-              </div>
+              <AuthErrorView />
             </Match>
             <Match when={method()?.type === "key"}>
               <ApiAuthView />
