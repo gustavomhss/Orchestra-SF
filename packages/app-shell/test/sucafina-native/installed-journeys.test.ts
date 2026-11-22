@@ -1,3 +1,4 @@
+import { closeNativeOwnedPages } from "../../e2e/sucafina/native/fixture/installed-browser.ts"
 /** Controls of selection/private evidence boundaries only. DTOs below never authenticate a browser or qualify LIVE. */
 import { expect, test } from "bun:test"
 import { chmod, link, lstat, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises"
@@ -50,7 +51,7 @@ function context(owner: NativeTarget, actor: NativeActor) {
       teams: { status: "ready", choices: [{ profile, displayName: "METADATA ONLY" }], selected: profile, configRevision: "f".repeat(64) } },
     destinations: (["CAP14", "CAP04", "CAP05"] as const).map((cap, index) => ({
       capabilityId: cap, surface: "dashboard", page: ["Vendor Contracts", "OPEX Detail", "CAPEX Projects"][index],
-      canRead: true, allowedActionIds: actor === "holder" ? [] : ["save"],
+      canRead: actor !== "denied", allowedActionIds: actor === "dashboardAdmin" || actor === "denied" ? [] : ["save"],
     })),
     availability: ["CAP14", "CAP04", "CAP05"].map((cap) => ({ family: "domain-read", resource: cap, state: "ready",
       operations: [{ operationId: "domain.page." + cap, state: "ready", reason: null, operational: true }] })),
@@ -62,7 +63,7 @@ function bundle(suite: NativeInstalledSuite, manifest = metadata(suite)) {
     invocation: manifest.invocation, manifestSha256: digest(JSON.stringify(manifest)),
     selections: nativeSuiteCases[suite].map((caseId) => {
       const owner = caseId === "empty" ? manifest.wrongTeam : manifest.target
-      const actor: NativeActor = caseId === "denied" ? "denied" : caseId === "readonly" ? "holder" : "requester"
+      const actor: NativeActor = caseId === "denied" ? "denied" : caseId === "readonly" ? "dashboardAdmin" : "requester"
       const current = context(owner, actor), observed = actor === "denied" ? context(owner, "requester") : current
       const binding = Schema.decodeUnknownSync(SfTeamInstallationDescriptor)({
         contractRevision: "sf-team-profile/1", authMode: "microsoft", installationId: owner.installationId,
@@ -148,4 +149,19 @@ test("private writer refuses replacement and hard-linked/symlink roots; no false
     await rm(root, { recursive: true, force: true })
     await expect(lstat(root)).rejects.toMatchObject({ code: "ENOENT" })
   }
+})
+
+test("owned cleanup attempts every page and disconnect after close failure, without a positive receipt", async () => {
+  const attempts: string[] = []
+  const first = { close: async () => { attempts.push("first"); throw new Error("CONTROLLED_CLOSE_FAILURE") }, isClosed: () => false }
+  let secondClosed = false
+  const second = { close: async () => { attempts.push("second"); secondClosed = true }, isClosed: () => secondClosed }
+  await expect(closeNativeOwnedPages([first, second], async () => { attempts.push("disconnect") }))
+    .rejects.toThrow("F04_OWNED_PAGE_CLEANUP_FAILED")
+  expect(attempts).toEqual(["first", "second", "disconnect"])
+  expect(secondClosed).toBe(true)
+  const remains = { close: async () => { attempts.push("remains") }, isClosed: () => false }
+  await expect(closeNativeOwnedPages([remains], async () => { attempts.push("disconnect-again") }))
+    .rejects.toThrow("F04_OWNED_PAGE_CLEANUP_FAILED")
+  expect(attempts.slice(-2)).toEqual(["remains", "disconnect-again"])
 })

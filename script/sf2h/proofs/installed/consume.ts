@@ -1,5 +1,5 @@
 /** Recheck all original case selections. This is prerequisite inspection, never an installed journey PASS. */
-import { admittedContext, connectNativeInstalledBrowser, prepareNativePage } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
+import { admittedContext, connectNativeInstalledBrowser, prepareNativePage, closeNativeOwnedPages } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
 import { consumeCurrentNativeSelection, nativeManifestForTarget, readNativeSelectedInstallation,
   u15RegisteredEnvironment } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
 import type { NativeInstalledSuite } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
@@ -31,9 +31,7 @@ export async function consumeInstalledSuiteFromHost(suite: NativeInstalledSuite)
         observedCases.push({ caseId: result.caseId, actor: result.actor, teamObjectId: result.manifest.target.teamObjectId,
           sourceVersionAdvanced: result.sourceVersionAdvancedSinceRegistration })
       } finally {
-        if (routePage !== page) await routePage.close()
-        await page.close()
-        if (!routePage.isClosed() || !page.isClosed()) throw new Error("F04_CONSUMER_OWNED_PAGE_REMAINS")
+        await closeNativeOwnedPages(routePage === page ? [page] : [routePage, page])
       }
     }
     return { suite, candidateSha: manifest.candidateSha, invocation: manifest.invocation, cases: observedCases,

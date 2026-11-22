@@ -88,7 +88,7 @@ jobs:
           const tap = read("node.tap"), junit = read("controls.junit.xml")
           for (const [name, count] of [["tests",40],["pass",40],["fail",0],["cancelled",0],["skipped",0],["todo",0]])
             assert(new RegExp("^# " + name + " " + count + "$", "m").test(tap), "F04_NODE_INVENTORY_" + name)
-          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 24, "F04_HELPER_INVENTORY_24_REQUIRED")
+          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 25, "F04_HELPER_INVENTORY_25_REQUIRED")
           assert(!/<(?:failure|error|skipped)\b/.test(junit), "F04_HELPER_FAILURE_OR_SKIP")
           const omni = verifyOmni(read("controls.log"), process.env.ORCHESTRA_OMNI_CONTROL_NONCE)
           const inventory = JSON.parse(read("list-inventory.json"))
@@ -102,7 +102,7 @@ jobs:
           const receipt = { schema: "sf-g08-native-controls-v1", status: "PASS", source, sources, files,
             run: { id: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
               workflowSha: process.env.GITHUB_WORKFLOW_SHA }, guardBase: read("guard-base.txt").trim(), omni,
-            controls: { node:40, bun:24, failures:0, skipped:0 }, originalSource, normativeSource,
+            controls: { node:40, bun:25, failures:0, skipped:0 }, originalSource, normativeSource,
             groups: [{ id:"U15", count:6, state:"LISTED_NOT_RUN" },{ id:"U39", count:22, state:"LISTED_NOT_RUN" },
               { id:"U40", count:22, state:"LISTED_NOT_RUN" }],
             f04: { count:3, titlesSha256:f04Titles.map(digest), state:"NOT_RUN", runtime:"BUN_HAPPYDOM_NO_CDP" },

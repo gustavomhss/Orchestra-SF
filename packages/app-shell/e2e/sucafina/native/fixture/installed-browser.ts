@@ -89,3 +89,24 @@ export async function admittedContext(session: InstalledBrowserSession, actor: N
     throw new Error("F04_CURRENT_ORIGINAL_PRINCIPAL_CHANGED")
   return context
 }
+
+/** Attempt every owned close and detach even after a failure; this helper emits no positive receipt. */
+export async function closeNativeOwnedPages(
+  pages: readonly Pick<Page, "close" | "isClosed">[],
+  disconnect?: () => Promise<void>,
+) {
+  const failures: unknown[] = []
+  try {
+    for (const page of pages) {
+      try {
+        await page.close()
+        if (!page.isClosed()) throw new Error("F04_OWNED_PAGE_NOT_CLOSED")
+      } catch (error) { failures.push(error) }
+    }
+  } finally {
+    if (disconnect) {
+      try { await disconnect() } catch (error) { failures.push(error) }
+    }
+  }
+  if (failures.length) throw new AggregateError(failures, "F04_OWNED_PAGE_CLEANUP_FAILED")
+}

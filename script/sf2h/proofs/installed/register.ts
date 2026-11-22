@@ -4,7 +4,7 @@ import path from "node:path"
 import type { Browser, Page } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
 import type { SfResolvedRoute } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts"
 import { privateText } from "../../../sf-ci/g08-private-evidence.mjs"
-import { attachHostedNativeBrowser, disconnectNativeBrowser, prepareNativePage } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
+import { attachHostedNativeBrowser, disconnectNativeBrowser, prepareNativePage, closeNativeOwnedPages } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts"
 import { registerNativeInstalledManifest } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
 import type { NativeInstalledRegistration } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts"
 import { nativeCaseIntent, nativeRole, nativeSuiteCases, nativeSuiteCapability } from "../../../../packages/app-shell/e2e/sucafina/native/fixture/case-contract.ts"
@@ -139,7 +139,6 @@ export async function registerInstalledProofFromHost(input: Readonly<{
     }
     throw error
   } finally {
-    for (const page of owned) { await page.close(); if (!page.isClosed()) throw new Error("F04_REGISTRATION_PAGE_NOT_CLOSED") }
-    await disconnectNativeBrowser(browser)
+    await closeNativeOwnedPages(owned, () => disconnectNativeBrowser(browser))
   }
 }
