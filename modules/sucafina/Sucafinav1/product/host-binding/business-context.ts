@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
+import { digestSfPrivateValue } from "../contracts/private-canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
@@ -572,7 +573,9 @@ export function createSfAtlasBusiness(input: {
       binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
       selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
       return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
-    const sourceIdentity = digestSfValue(sources)
+    // assemble.context returned fresh structured clones. Only this initial, private
+    // fingerprint shares synchronous canonical fragments; exposed fences stay live.
+    const sourceIdentity = digestSfPrivateValue(sources)
     if (request) captureObservations.set(sources, { call, read: async (requested) => {
       const selected = structuredClone(requested)
       const selectionIdentity = digestSfValue(selected)

@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
+import { digestSfPrivateValue } from "../contracts/private-canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioResult } from "../contracts/decisions.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
@@ -35,7 +36,7 @@ export function createPlannerCalculationEvidence(input: {
     return ancestry.run({ binding: key, runs: new Set([...runs, value.resultRef]), checks: new Set([...checks, value.resultRef]) }, async () => {
       try {
         const http = input.host.requestFor(context)
-        if (!http || http.signal.aborted || !await input.host.revalidate(context) || !value.resultRef.trim() || value.resultDigest !== digestSfValue(value.result) || !sourceClosure(value.result, value.sourceRefs, context, !!input.nested)) return false
+        if (!http || http.signal.aborted || !await input.host.revalidate(context) || !value.resultRef.trim() || value.resultDigest !== digestSfPrivateValue(value.result) || !sourceClosure(value.result, value.sourceRefs, context, !!input.nested)) return false
         const complete = completeSources(value.result, value.sourceRefs)
         if (digestSfValue(refs.map((ref) => ref.refDigest).sort()) !== digestSfValue(complete.map((ref) => ref.refDigest).sort())) return false
         sfEvidenceSourceMaps(refs)
@@ -48,7 +49,7 @@ export function createPlannerCalculationEvidence(input: {
             continue
           }
           const resolved = structuredClone(await input.nested.evidence.resolve(structuredClone(ref), context))
-          if (resolved.state !== "fresh" || resolved.accessRevision !== context.binding.accessRevision || !resolved.currentRef || !resolved.authorizedProjection || digestSfValue(resolved.ref) !== digestSfValue(ref) || digestSfValue(resolved.currentRef) !== digestSfValue(ref)) return false
+          if (resolved.state !== "fresh" || resolved.accessRevision !== context.binding.accessRevision || !resolved.currentRef || !resolved.authorizedProjection || digestSfPrivateValue(resolved.ref) !== digestSfValue(ref) || digestSfPrivateValue(resolved.currentRef) !== digestSfValue(ref)) return false
         }
         return !http.signal.aborted && await input.host.revalidate(context)
       } catch { return false }
@@ -77,7 +78,7 @@ export function createPlannerCalculationEvidence(input: {
     const stored = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context))
     if (stored.status !== "ok") return stored
     if (stored.value.kind !== "scenario" || !sourceClosure(stored.value.result, stored.value.sourceRefs, context, !!input.nested)) return { status: "unavailable", reason: "calculation-source-closure-invalid" }
-    if (stored.value.resultRef !== runId || stored.value.requestDigest !== digestSfValue(binding.value.request) || stored.value.resultDigest !== digestSfValue(stored.value.result) || !stored.value.sourceRefs.length) return { status: "stale", reason: "calculation-binding-changed" }
+    if (stored.value.resultRef !== runId || stored.value.requestDigest !== digestSfPrivateValue(binding.value.request) || stored.value.resultDigest !== digestSfPrivateValue(stored.value.result) || !stored.value.sourceRefs.length) return { status: "stale", reason: "calculation-binding-changed" }
     if (input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context)) return { status: "unavailable", reason: "calculation-nested-evidence-unproven" }
     const simulate = input.nested?.replayScenario ?? input.replayRecordOnly
     const reproduced = structuredClone(await simulate(structuredClone(binding.value.request), context))
@@ -89,7 +90,7 @@ export function createPlannerCalculationEvidence(input: {
     const latestBinding = structuredClone(await input.loadRecordOnlyRequest(runId, context))
     const latest = structuredClone(await input.readForCalculation({ resultRef: runId, kind: "scenario" }, context))
     const replayAgain = structuredClone(await simulate(structuredClone(binding.value.request), context))
-    if (latestBinding.status !== "ok" || digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== reproducedDigest || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
+    if (latestBinding.status !== "ok" || digestSfPrivateValue(latestBinding.value) !== digestSfPrivateValue(binding.value) || latest.status !== "ok" || digestSfPrivateValue(latest.value) !== digestSfPrivateValue(stored.value) || replayAgain.status !== "ok" || !sourceClosure(replayAgain.value, stored.value.sourceRefs, context, !!input.nested) || plannerScenarioDigest(replayAgain.value) !== reproducedDigest || input.nested && !await verifyCalculationRequestSources(binding.value.request, stored.value, context) || http.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "calculation-or-authority-changed" }
     const value: CalculationEvidence = { schema: "sf-evidence-v1", kind: "calculation", refId: `planner-calculation:${encodeURIComponent(runId)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "proposal", target: { calculationId: "planner:scenario", runId, engineVersion: binding.value.engineVersion, inputDigest: stored.value.requestDigest, resultDigest: stored.value.resultDigest, sourceRefs: stored.value.sourceRefs, period: stored.value.result.horizon, currency: stored.value.result.currency } }
     return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
   }

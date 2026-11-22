@@ -1,5 +1,6 @@
 import { types } from "node:util"
 import { canonicalSfValue, digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+import { canonicalSfPrivateValue, digestSfPrivateValue } from "../contracts/private-canonical.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
@@ -81,10 +82,10 @@ export function createSfDecisionResultStore(input: {
   const observationCaseCanonical = () => {
     const canonicals = new WeakMap<object, string>()
     return (value: unknown) => {
-      if (!value || typeof value !== "object") return canonicalSfValue(value)
+      if (!value || typeof value !== "object") return canonicalSfPrivateValue(value)
       const prior = canonicals.get(value)
       if (prior !== undefined) return prior
-      const canonical = canonicalSfValue(value)
+      const canonical = canonicalSfPrivateValue(value)
       canonicals.set(value, canonical)
       return canonical
     }
@@ -95,24 +96,24 @@ export function createSfDecisionResultStore(input: {
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext, privateExpected?: (value: DecisionCase) => string) => {
     try {
       const candidate = structuredClone(value)
-      const expected = privateExpected ? privateExpected(value) : canonicalSfValue(candidate)
-      return await input.authorizeCase(candidate, context) && canonicalSfValue(candidate) === expected
+      const expected = privateExpected ? privateExpected(value) : canonicalSfPrivateValue(candidate)
+      return await input.authorizeCase(candidate, context) && canonicalSfPrivateValue(candidate) === expected
     } catch { return false }
   }
-  const verifySources = async (value: Result, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, encodeExpected = canonicalSfValue) => {
+  const verifySources = async (value: Result, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, encodeExpected = canonicalSfPrivateValue) => {
     try {
       const candidate = structuredClone(value)
       const sources = structuredClone(refs)
       const expected = encodeExpected({ candidate, sources })
-      return await input.verifySources(candidate, sources, context) && canonicalSfValue({ candidate, sources }) === expected
+      return await input.verifySources(candidate, sources, context) && canonicalSfPrivateValue({ candidate, sources }) === expected
     } catch { return false }
   }
-  const verifyCalculationSources = async (value: Extract<StoredDecisionResult, { kind: "scenario" }>, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, encodeExpected = canonicalSfValue) => {
+  const verifyCalculationSources = async (value: Extract<StoredDecisionResult, { kind: "scenario" }>, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, encodeExpected = canonicalSfPrivateValue) => {
     try {
       const candidate = structuredClone(value)
       const sources = structuredClone(refs)
       const expected = encodeExpected({ candidate, sources })
-      return !!input.verifyCalculationSources && await input.verifyCalculationSources(candidate, sources, context) && canonicalSfValue({ candidate, sources }) === expected
+      return !!input.verifyCalculationSources && await input.verifyCalculationSources(candidate, sources, context) && canonicalSfPrivateValue({ candidate, sources }) === expected
     } catch { return false }
   }
   const readResult = async (incoming: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext, historical: boolean, calculation = false, ledger?: HistoricalCalculationRead): Promise<PortResult<StoredDecisionResult>> => {
@@ -136,7 +137,7 @@ export function createSfDecisionResultStore(input: {
     if (sealed && !sameResultRoot()) return { status: "unavailable", reason: "result-unavailable" }
     const value = structuredClone(current.value)
     const firstCaseCanonical = observationCaseCanonical()
-    if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
+    if (!value || value.stored.kind !== request.kind || !validResult(value.stored) || value.stored.resultRef !== request.resultRef || value.stored.resultDigest !== digestSfPrivateValue(value.stored.result)) return { status: "unavailable", reason: "result-unavailable" }
     if (historicalRequest && !historicalCalculationMatches(value.current, value.stored, historicalRequest, context)) return { status: "denied", reason: "historical-calculation-unavailable" }
     let firstRefs: readonly BusinessEvidenceRef[] | undefined
     if (calculation && (value.stored.kind !== "scenario" || !input.verifyCalculationSources && (firstRefs = calculationSources(value.stored)).some((ref) => ref.kind !== "record"))) return { status: "unavailable", reason: "calculation-source-unsupported" }
@@ -146,7 +147,7 @@ export function createSfDecisionResultStore(input: {
     // reuse their expected bytes only after matching the entire stored result;
     // its source derivation and every callback clone are still independent.
     let expectedSources: string | undefined
-    const encodeExpected = (payload: unknown) => expectedSources ??= canonicalSfValue(payload)
+    const encodeExpected = (payload: unknown) => expectedSources ??= canonicalSfPrivateValue(payload)
     if (!await verifySources(value.stored, firstSources, context, encodeExpected).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && value.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(value.stored, firstSources, context, encodeExpected).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
     if (sealed && !sameResultRoot()) return { status: "unavailable", reason: "result-unavailable" }
@@ -158,8 +159,8 @@ export function createSfDecisionResultStore(input: {
     if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored) return { status: "denied", reason: "result-access-unavailable" }
     // Canonical selectors still run independently. A sealed root proves their
     // stored bytes are identical; callbacks keep fresh clones and mutation checks.
-    const latestCanonical = sealed ? undefined : canonicalSfValue(latest.stored)
-    if ((!sealed && latestCanonical !== canonicalSfValue(value.stored)) ||
+    const latestCanonical = sealed ? undefined : canonicalSfPrivateValue(latest.stored)
+    if ((!sealed && latestCanonical !== canonicalSfPrivateValue(value.stored)) ||
       !await authorizeCase(latest.current!, context, latestCaseCanonical).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     const latestSources = calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs
     if (!await verifySources(latest.stored, latestSources, context, encodeExpected).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
@@ -173,7 +174,7 @@ export function createSfDecisionResultStore(input: {
     const observed = structuredClone(final.value)
     const finalCaseCanonical = observationCaseCanonical()
     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || finalCaseCanonical(observed.current) !== latestCaseCanonical(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
-    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || finalCaseCanonical(observed.current) !== latestCaseCanonical(latest.current) || !observed.stored || (!sealed && canonicalSfValue(observed.stored) !== latestCanonical) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
+    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || finalCaseCanonical(observed.current) !== latestCaseCanonical(latest.current) || !observed.stored || (!sealed && canonicalSfPrivateValue(observed.stored) !== latestCanonical) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
     // The entire final envelope was already cloned, including unselected fields.
     // No callback or earlier observation retains this returned graph.
     return { status: "ok", value: observed.stored }
