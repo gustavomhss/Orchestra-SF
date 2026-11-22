@@ -16,6 +16,7 @@ const principalId = "33333333-3333-4333-8333-333333333333"
 
 test("Microsoft Team private import admits clean bytes and rejects real EICAR with isolated staging", async () => {
   await control("private-admission", "main", async (f) => {
+    const intakeLimit = await concurrentIntakes(f)
     const observations = []
     for (const team of [f.http.teamA, f.http.teamB]) {
       const before = await acceptedImport(f, team, await workbook())
@@ -23,7 +24,7 @@ test("Microsoft Team private import admits clean bytes and rejects real EICAR wi
       const after = await acceptedImport(f, team, await workbook())
       observations.push({ teamObjectId: team, before, refused, after })
     }
-    return { observations, mainCleanAfter: await healthyMain() }
+    return { observations, intakeLimit, mainCleanAfter: await healthyMain() }
   })
 }, 120_000)
 
@@ -258,6 +259,64 @@ async function acceptedImport(f: Fixture, team: string, bytes: Uint8Array, obser
     storedDigest: digest(Buffer.from(blob.payload, "hex")), proofDigest: digest(Buffer.from(proof.payload, "hex")),
     catalogDigest: digestSfValue(entry), otherTeam: { teamObjectId: other,
       before: digestSfValue(otherBefore), after: digestSfValue(otherAfter) } }
+}
+
+async function concurrentIntakes(f: Fixture) {
+  const before = f.http.durable()
+  const releases: (() => void)[] = []
+  const pending = [0, 1].map(() => {
+    const boundary = "sf-g06-" + randomUUID()
+    const body = new ReadableStream<Uint8Array>({ start(controller) {
+      controller.enqueue(new TextEncoder().encode("--" + boundary +
+        "\r\nContent-Disposition: form-data; name=\"surface\"\r\n\r\nplanner\r\n"))
+      releases.push(() => {
+        controller.enqueue(new TextEncoder().encode("--" + boundary + "--\r\n"))
+        controller.close()
+      })
+    } })
+    return call(f, f.http.teamA, { sf: "import-admit" }, { method: "POST", body },
+      { "content-type": "multipart/form-data; boundary=" + boundary, "idempotency-key": randomUUID() })
+  })
+  const completed = Promise.allSettled(pending)
+  let released: Response[] = []
+  let busy: { httpStatus: number; retryAfter: string | null } | undefined
+  try {
+    const deadline = Date.now() + 10_000
+    while (!busy && Date.now() < deadline) {
+      // A completed form without a file cannot stage data. It is used only to
+      // observe the original transport's shared intake counter over real TCP.
+      const form = new FormData()
+      form.set("surface", "planner")
+      const response = await call(f, f.http.teamA, { sf: "import-admit" }, { method: "POST", body: form },
+        { "idempotency-key": randomUUID() })
+      const value = await response.json()
+      if (response.status === 503) {
+        expect(value).toEqual({ status: "unavailable", reason: "import-intake-busy" })
+        expect(response.headers.get("retry-after")).toBe("1")
+        busy = { httpStatus: response.status, retryAfter: response.headers.get("retry-after") }
+      } else {
+        expect(response.status).toBe(400)
+        expect(value).toEqual({ status: "invalid" })
+        await new Promise((resolve) => setTimeout(resolve, 10))
+      }
+    }
+    expect(busy).toBeDefined()
+  } finally {
+    const failures: unknown[] = []
+    for (const release of releases) { try { release() } catch (error) { failures.push(error) } }
+    const results = await completed
+    for (const result of results) {
+      if (result.status === "fulfilled") released.push(result.value)
+      else failures.push(result.reason)
+    }
+    if (failures.length) throw new AggregateError(failures, "G06_TEAM_IMPORT_INTAKE_RELEASE_FAILED")
+    for (const response of released) {
+      expect(response.status).toBe(400)
+      expect(await response.json()).toEqual({ status: "invalid" })
+    }
+  }
+  return { pending: 2, busy, released: released.map((response) => response.status),
+    durable: unchanged(f.http, before) }
 }
 
 async function deniedImport(f: Fixture, team: string, bytes: Uint8Array) {

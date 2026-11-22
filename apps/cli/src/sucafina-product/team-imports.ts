@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { AbsolutePath } from "@orchestra/schema/schema"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
@@ -16,6 +17,10 @@ import type { Surface } from "../../../../modules/sucafina/Sucafinav1/src/identi
 import { sfUiCommandIdentity } from "./command-identity.ts"
 import { createSfDocumentTargetAuthority } from "./document-authority.ts"
 import { createSfImportServices } from "./import-services.ts"
+
+type ImportRuntime = NonNullable<ReturnType<Parameters<typeof createSfImportHttp>[0]["runtime"]>>
+const requestRuntime = new AsyncLocalStorage<ImportRuntime>()
+const transports = new Map<string, { http: ReturnType<typeof createSfImportHttp>; activeRequests: number }>()
 
 const modes = new Set(["imports", "import-targets", "import-admit", "import-preview", "import-reference", "import-detail", "import-apply"])
 
@@ -101,10 +106,18 @@ export async function runSfTeamImports(input: {
   })
   const service = createSfImportServices({ runtime, authority })
   if (!service) throw new Error("SF_TEAM_IMPORT_COMPOSITION_UNAVAILABLE")
-  const http = createSfImportHttp({
-    origin, mount, runtime: () => ({ ui: authority.ui, human: authority.human, service: {
+  const transportRuntime: ImportRuntime = { ui: authority.ui, human: authority.human, service: {
       ...service,
-      discover: async (surface, context, period) => {
+      imports: {
+        ...service.imports,
+        admit: (value, context) => fence.run(context, () => service.imports.admit(value, context)),
+        readPreviewReference: (value, context) => fence.run(context, () => service.imports.readPreviewReference(value, context)),
+        detail: (value, context) => fence.run(context, () => service.imports.detail(value, context)),
+        apply: (value, context) => fence.run(context, () => service.imports.apply(value, context)),
+      },
+      prepareTarget: (value, context) => fence.run(context, () => service.prepareTarget(value, context)),
+      dispatch: (value, context) => fence.run(context, () => service.dispatch(value, context)),
+      discover: (surface, context, period) => fence.run(context, async () => {
         // Only a valid original discovery request and current private writer
         // may enroll source metadata for an older Team. Refused intake never
         // bootstraps storage. This creates no user, role, grant or business row.
@@ -113,14 +126,27 @@ export async function runSfTeamImports(input: {
           for (const target of ["dashboard", "planner", "procurement"] as const) await sources.initializeSources(target)
         }
         return service.discover(surface, context, period)
-      },
-    } }),
-  })
+      }),
+    } }
+  // The original transport owns the intake count across concurrent requests.
+  // Only its lifetime is shared; authority and services remain request-local.
+  const transportKey = JSON.stringify([origin, mount, partition])
+  let transport = transports.get(transportKey)
+  if (!transport) {
+    transport = { http: createSfImportHttp({ origin, mount, runtime: () => requestRuntime.getStore() }), activeRequests: 0 }
+    transports.set(transportKey, transport)
+  }
+  transport.activeRequests += 1
+  const http = transport.http
   try {
-    const response = await http(request, input.surface)
+    const response = await requestRuntime.run(transportRuntime, () => http(request, input.surface))
     return response && !await input.current() ? denied() : response
   } catch (error) {
+    if (error instanceof Error && error.message === "SF_CURRENT_CHOICE_FENCE_CHANGED") return denied()
     if (!await input.current().catch(() => false)) return denied()
     throw error
+  } finally {
+    transport.activeRequests -= 1
+    if (transport.activeRequests === 0) transports.delete(transportKey)
   }
 }

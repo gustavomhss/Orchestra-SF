@@ -402,6 +402,10 @@ export function verifyMicrosoftImportEvidence({ admission, env, service, log }) 
     digestValue(value.otherTeam?.before) && value.otherTeam.before === value.otherTeam.after
   const admitted = controls[0]
   const observations = admitted.result.observations
+  const intake = admitted.result.intakeLimit
+  if (intake?.pending !== 2 || intake.busy?.httpStatus !== 503 || intake.busy.retryAfter !== "1" ||
+      !isDeepStrictEqual(intake.released, [400, 400]) || !sameDurable(intake.durable, admitted.binding.teamObjectIds))
+    fail("original shared intake limit and released requests must be observed over HTTP without durable effects")
   const eicarDigest = hash(Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64"))
   if (!Array.isArray(observations) || observations.length !== 2 ||
       !isDeepStrictEqual(observations.map((value) => value.teamObjectId).sort(), [...admitted.binding.teamObjectIds].sort()) ||

@@ -346,7 +346,8 @@ function importFixture() {
     const daemon = index === 3 ? f.evidence.service.error : f.evidence.service.main
     const result = id === "private-admission"
       ? { observations: teams.map((teamObjectId) => ({ teamObjectId, before: accepted(teamObjectId), after: accepted(teamObjectId),
-          refused: { httpStatus: 403, bytes: 68, digest: eicarDigest, durable } })), mainCleanAfter: true }
+          refused: { httpStatus: 403, bytes: 68, digest: eicarDigest, durable } })),
+          intakeLimit: { pending: 2, busy: { httpStatus: 503, retryAfter: "1" }, released: [400, 400], durable }, mainCleanAfter: true }
       : id === "malformed-file"
         ? { observations: ["format-mismatch", "truncated-xlsx"].map((kind) => ({ kind, digest: "7".repeat(64), bytes: 100,
             scannerAccepted: true, staged: true, rejectedAt: "preview", httpStatus: 400, admission: accepted(teams[0]), durable })),
@@ -428,6 +429,10 @@ for (const [name, mutate] of [
   ["incomplete cleanup", (r) => { r.cleanup.completed = false }],
   ["remaining directory", (r) => { r.cleanup.directoryRemoved = false }],
   ["unhealthy main scanner", (r) => { r.result.mainCleanAfter = false }],
+  ["missing shared intake observation", (r) => { delete r.result.intakeLimit }],
+  ["accepted third intake", (r) => { r.result.intakeLimit.busy.httpStatus = 200 }],
+  ["unreleased intake", (r) => { r.result.intakeLimit.released.pop() }],
+  ["durable intake effect", (r) => { r.result.intakeLimit.durable[0].after = "9".repeat(64) }],
   ["no second Team", (r) => { r.result.observations.pop() }],
   ["accepted EICAR", (r) => { r.result.observations[0].refused.httpStatus = 200 }],
   ["different EICAR bytes", (r) => { r.result.observations[0].refused.digest = "8".repeat(64) }],
