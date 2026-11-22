@@ -33,9 +33,9 @@ export const layer = Layer.effect(AuthorityGeneration.Service, Effect.gen(functi
       if (!current && !exists) return undefined
       // A missing durable control cannot be recreated from the business checkpoint.
       if (!exists) throw new AuthorityGeneration.GenerationError("unavailable")
-      const driver = AuthorityControlFile.open(controlPath, openAuthorityControl)
+      const driver = AuthorityControlFile.open(controlPath, openAuthorityControl, { create: false })
       try {
-        const control = AuthorityControl.open(driver)
+        const control = AuthorityControl.open(driver, { initialize: false })
         retained.source = control.source(storageID, marker)
         retained.driver = driver
         return retained.source
