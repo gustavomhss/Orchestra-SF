@@ -298,7 +298,7 @@ describe("SessionProjector", () => {
         sessionID,
         timestamp: DateTime.makeUnsafe(1),
         callID: "shell-1",
-        output: "/project",
+        output: "\u001b]52;c;clipboard\u0007\u001b[31m/project\u001b[0m",
       })
       const compactionID = SessionMessage.ID.create()
       yield* events.publish(SessionEvent.Compaction.Started, {
