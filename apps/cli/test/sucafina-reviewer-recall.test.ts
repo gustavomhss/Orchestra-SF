@@ -113,10 +113,15 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     }
     const toolCalls = () => {
       expect(Array.isArray(payload.tools) && payload.tools.some((tool) => object(tool).name === operation)).toBe(true)
-      return Object.entries(toolInputs).map(([id, ref]) => ({ type: "response.output_item.done", item: {
-        type: "function_call", id: "item-" + id, call_id: "call-" + id, name: operation,
-        arguments: JSON.stringify({ selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 }),
-      } }))
+      return Object.entries(toolInputs).flatMap(([id, ref]) => {
+        const item = { type: "function_call", id: "item-" + id, call_id: "call-" + id, name: operation }
+        const args = JSON.stringify({ selectionRefs: [ref], similarityCriteria: ["decision-type"], period, limit: 5 })
+        return [
+          { type: "response.output_item.added", item: { ...item, arguments: "" } },
+          { type: "response.function_call_arguments.delta", item_id: item.id, delta: args },
+          { type: "response.output_item.done", item: { ...item, arguments: args } },
+        ]
+      })
     }
     const finalText = () => {
       const outputs = Object.fromEntries(messages.filter((message) => message.type === "function_call_output" && typeof message.output === "string")
@@ -303,6 +308,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           })
           const run = value(await step("read the reviewer run", 100_000, (signal) =>
             human("analysis.read", { runRef }, (call) => analyses.read(call, runRef), "reviewer", signal)), "read reviewer")
+          console.info(`SF_REVIEWER_PROOF reviewer ended ${run.state} (${run.reason ?? "none"})`)
           const sourceAfter = await sourceFences()
           console.info(`SF_REVIEWER_PROOF changed source fences ${Object.keys(sourceBefore).filter((surface) =>
             sourceBefore[surface as keyof typeof sourceBefore] !== sourceAfter[surface as keyof typeof sourceBefore]).join(",") || "none"}`)
@@ -315,8 +321,9 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
           console.info(`SF_REVIEWER_PROOF budget receipts ${budgetReceipts ?? "missing"}, oracle calls ${tokenCounts} reviewer / ${titleTokenCounts} title`)
           const sessionID = SessionSchema.ID.make(run.native.sessionID)
           const messages = await step("read the native tool receipts", 8_000, (signal) => Effect.runPromise(sessions.messages({ sessionID }), { signal }))
-          const calls = messages.flatMap((message) => message.type === "assistant" ? message.content.flatMap((part) =>
-            part.type === "tool" && part.state.status === "completed" ? [object(part.state.structured)] : []) : [])
+          const parts = messages.flatMap((message) => message.type === "assistant" ? message.content : [])
+          console.info(`SF_REVIEWER_PROOF session parts ${parts.map((part) => part.type === "tool" ? `tool:${part.state.status}` : part.type).join(",") || "none"}`)
+          const calls = parts.flatMap((part) => part.type === "tool" && part.state.status === "completed" ? [object(part.state.structured)] : [])
           expect(calls).toHaveLength(2)
           const accepted = calls.find((call) => call.status === "ok")
           expect(accepted?.receipt).toMatchObject({ kind: "native", operation, handlerExport: "recallSfDecisions", nativeSessionId: run.native.sessionID })
