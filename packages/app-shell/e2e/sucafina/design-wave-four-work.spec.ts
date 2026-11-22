@@ -232,6 +232,7 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await capture(page, info, "UI32-light-desktop-confirmed-view-readback")
     await editor.getByRole("button", { name: "Remove saved view", exact: true }).click()
     await expect(review.getByRole("button", { name: "Confirm removal", exact: true })).toBeVisible()
+    await expect(review.getByText("This saved view will be removed.", { exact: true })).toBeVisible()
     await capture(page, info, "UI32-light-desktop-removal-review")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     expect(writes).toEqual(["save"])
