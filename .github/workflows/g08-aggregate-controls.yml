@@ -1,0 +1,112 @@
+name: g08-aggregate-controls
+
+on:
+  push:
+    branches: [g08-complete-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Observe the exact source and original inventory
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e"
+          test "$(git rev-parse 'HEAD^{tree}')" = "4e425fa9278be05e0018bc64d25c06f5417363b2"
+          git merge-base --is-ancestor "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e" "$GITHUB_SHA"
+          test "$(git diff --name-only "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e" "$GITHUB_SHA")" = ".github/workflows/g08-aggregate-controls.yml"
+          mkdir -m700 "$RUNNER_TEMP/g08-aggregate"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/g08-aggregate/source.refs"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/whitespace.log"
+          bash -n script/sf-ci/g08-installed-run.sh
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Exercise original nine-evidence controls and complete-group refusal boundaries
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/g08-aggregate/controls.xml" script/sf-ci/g08-private-evidence.test.mjs script/sf-ci/g08-installed-evidence.test.mjs 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/controls.log"
+      - name: Exercise original native routes and the actual registration and provenance imports
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL=declared ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict ORCHESTRA_CHANNEL=prod
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$RUNNER_TEMP/g08-aggregate/adapters-omni-nonce.txt"
+          bun test --preload ./script/test-omni-control.ts --reporter=junit --reporter-outfile="$RUNNER_TEMP/g08-aggregate/adapters.xml" ./script/sf-ci/g08-installed-adapters.test.ts 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/adapters.log"
+      - name: Require the closed workflow and canonical guards
+        run: |
+          set -euo pipefail
+          bun -e 'const { inspectOriginalWorkflow, verifyExecutionAuthorization, verifyOriginalProducer, verifyDatasetCleanupAuthority } = await import("./script/sf-ci/g08-proof-provenance.mjs"); const { executeRegistration, validateU15RegisteredEnvironment } = await import("./script/sf2h/proofs/installed/execute-registration.ts"); for (const fn of [verifyExecutionAuthorization, verifyOriginalProducer, verifyDatasetCleanupAuthority, executeRegistration, validateU15RegisteredEnvironment]) if (typeof fn !== "function") throw Error("G08_ORIGINAL_DEPENDENCY_EXPORT_REQUIRED"); console.log(JSON.stringify(inspectOriginalWorkflow(await Bun.file(".github/workflows/g08-installed-complete.yml").text()))); const { verifyOmni } = await import("./script/sf-ci/g08-native-journeys.mjs"); verifyOmni(await Bun.file(process.env.RUNNER_TEMP + "/g08-aggregate/adapters.log").text(), (await Bun.file(process.env.RUNNER_TEMP + "/g08-aggregate/adapters-omni-nonce.txt").text()).trim()); console.log("Original registration exports and actual canonical producer workflow verified; no installed dispatch.");' 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/workflow.log"
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/guards.log"
+      - name: Preserve exact source-bound component receipt
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess,xml.etree.ElementTree as ET
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"g08-aggregate"
+          report=ET.parse(root/"controls.xml").getroot()
+          cases=list(report.iter("testcase"))
+          assert len(cases)==254,(len(cases),"expected150 original and104 aggregate controls")
+          assert not any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"])
+          names=[case.attrib["name"] for case in cases]
+          assert len(names)==len(set(names))
+          assert "joining all groups permits different explicitly bound actors per invocation" in names
+          assert "complete join refuses AZ02 cookie replaced" in names
+          adapters=list(ET.parse(root/"adapters.xml").getroot().iter("testcase"))
+          assert len(adapters)==5
+          assert not any(case.find(tag) is not None for case in adapters for tag in ["failure","error","skipped"])
+          assert len({case.attrib["name"] for case in adapters})==5
+          refs=(root/"source.refs").read_text().splitlines()
+          assert refs[:2]==["03a8c8ab88d3dddff6524a4c3ccd39ac1250140e","4e425fa9278be05e0018bc64d25c06f5417363b2"]
+          paths=["script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-installed-evidence.mjs",
+            "script/sf-ci/g08-installed-evidence.test.mjs","script/sf-ci/g08-installed-adapters.test.ts","script/sf-ci/g08-installed-run.sh",
+            ".github/workflows/g08-installed-complete.yml","docs/qa/sucafina/go-live/g08-installed-execution.md",
+            "script/sf-ci/g08-private-evidence.test.mjs","script/sf-ci/g08-native-journeys.mjs",
+            "sf/azure/identity/az02-proof.cjs","packages/app-shell/e2e/sucafina/g08/obligations.json",
+            "script/sf-ci/g08-proof-provenance.mjs","script/sf2h/proofs/installed/execute-registration.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts"]
+          files=[{"path":p,"sha256":hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest(),
+            "gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip()} for p in paths]
+          reports=[{"path":p.name,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()]
+          receipt={"schema":"sf-g08-aggregate-controls-v1","status":"COMPONENT_CONTROLS_VERIFIED",
+            "source":{"sha":"03a8c8ab88d3dddff6524a4c3ccd39ac1250140e","tree":"4e425fa9278be05e0018bc64d25c06f5417363b2"},"snapshot":os.environ["GITHUB_SHA"],
+            "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"]},
+            "guardBase":refs[2],"cases":259,"nodeControls":254,"originalPrivateControls":150,"aggregateControls":104,"adapterControls":5,
+            "failures":0,"skips":0,"sources":files,"reports":reports,
+            "installed":False,"liveQualified":False,"finalCandidate":False,"g08Closed":False,"productionCutover":False,
+            "limits":["Synthetic parser, composition and refusal controls only.",
+              "Operational adapter, original producer provenance and restart observer dependencies retain their own qualification.",
+              "No installed invocation, final candidate, tar or environment reservation has been created."]}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print("254 Node and5 Bun source-bound controls verified; installed0 and all gates remain open")
+          PY
+      - name: Preserve original hosted controls, including failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-aggregate-controls-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g08-aggregate/
+          if-no-files-found: error
+          retention-days: 30
