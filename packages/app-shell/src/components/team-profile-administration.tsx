@@ -1,5 +1,5 @@
 import { createUniqueId, For, onCleanup, onMount, Show } from "solid-js"
-import { createStore, reconcile } from "solid-js/store"
+import { createStore, reconcile, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
@@ -82,7 +82,7 @@ export function TeamProfileAdministration(props: Readonly<{
     const view = ui.view
     if (ui.busy || ui.configuration || view.status !== "ready" || !current()) return
     const decoded = Schema.decodeUnknownOption(TeamProfile.AdminCommand)({
-      action, profile, expectedRevision: view.configRevision,
+      action, profile: structuredClone(unwrap(profile)), expectedRevision: view.configRevision,
     })
     if (Option.isNone(decoded)) { setUi("invalid", true); return }
     const attempt = ++serial
