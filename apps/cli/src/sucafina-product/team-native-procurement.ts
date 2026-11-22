@@ -138,6 +138,9 @@ export function createSfTeamNativeProcurement(input: SfTeamNativeProcurementInpu
         if (!observed) return denied()
         // Re-read the same original authority and durable producer after awaited IO.
         // F02's Dashboard revision cannot stand in for Procurement's roles/ACL.
+        const end = await readContext()
+        if (!end || !await current()) return denied()
+        if (digestSfValue(end) !== digestSfValue(bound)) return stale()
         const retained = await application.persistence.transaction("procurement", async (snapshot) => {
           const actor = await actorFor(application, request, snapshot)
           return { commit: false, value: !!actor && digestSfValue(actor) === observed.actorDigest &&
@@ -145,9 +148,7 @@ export function createSfTeamNativeProcurement(input: SfTeamNativeProcurementInpu
             (!prepared || await prepared.current(snapshot, actor)) && await current() }
         }, { signal: request.signal })
         if (!retained) return stale()
-        const end = await readContext()
-        if (!end || !await current()) return denied()
-        if (digestSfValue(end) !== digestSfValue(bound)) return stale()
+        // No further IO may outlive the final original Procurement observation.
         return reply({ status: "ok", context: bound.stamp, value: {
           capabilityId: "CAP25", selection: selected, ...observed.projection,
           // This seam publishes a read. It does not invent command authority.

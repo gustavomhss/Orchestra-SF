@@ -17,7 +17,7 @@ async function fixture() {
   const store = await openLocalStore(root)
   const state = {
     current: true, role: "requester", revision: 1, contextReads: 0, authReads: 0,
-    loseAfterEnvironment: false, loseOnSecondAuth: false, mutateAfterFirstRead: false,
+    loseAfterEnvironment: false, loseOnSecondAuth: false, mutateAfterFirstRead: false, loseOnSecondContext: false,
     requests: new Set<Request>(), originalRequests: true, cleanup: false,
   }
   const profile = Schema.decodeUnknownSync(TeamProfile.Ref)({
@@ -67,6 +67,7 @@ async function fixture() {
         request, handler, binding, profile, current: async () => state.current,
         async readContext(original, query) {
           state.contextReads++
+          if (state.loseOnSecondContext && state.contextReads === 2) state.role = "none"
           state.originalRequests &&= original === request && query.teamObjectId === profile.teamObjectId
           if (state.mutateAfterFirstRead && state.contextReads === 2) state.revision++
           return { status: "ok", value: context() }
@@ -119,7 +120,14 @@ test("Team CAP25 uses original HTTP writer, projection and versionRecord; CAS409
     expect(create.status).toBe(200)
     const created = await create.json()
     expect(created.ok).toBe(true)
-    const id = created.value.number
+    // The original HTTP writer intentionally returns no business value; discover
+    // the new record through the original authorized read, not a fixture shortcut.
+    const firstRead = await f.read()
+    expect(firstRead.status).toBe(200)
+    const firstPage = await firstRead.json()
+    const row = firstPage.value.data.requests.find((entry: { pr?: { title?: string } }) =>
+      entry.pr?.title === "Controlled negative-write request")
+    const id = row?.number
     expect(typeof id).toBe("string")
     const response = await f.read("?request=" + encodeURIComponent(id))
     expect(response.status).toBe(200)
@@ -216,5 +224,28 @@ test("Team CAP25 rejects an invented Application source and leaves unrelated rou
     expect(response.status).toBe(404)
     await response.body?.cancel()
     expect(f.state.authReads).toBe(0)
+  } finally { await f.close() }
+})
+
+test("Team CAP25 rechecks Procurement after the final F02 await even when Dashboard revision is unchanged", async () => {
+  const f = await fixture()
+  try {
+    const create = await f.command({ page: "Requests", action: "create", version: 0,
+      values: { pr: { title: "Private row before role revocation" } } })
+    expect(create.status).toBe(200)
+    expect((await create.json()).ok).toBe(true)
+    const admitted = await f.read()
+    expect(admitted.status).toBe(200)
+    expect(await admitted.text()).toContain("Private row before role revocation")
+    const before = f.durable()
+    f.state.contextReads = 0
+    f.state.loseOnSecondContext = true
+    const response = await f.read()
+    expect(response.status).toBe(409)
+    expect(await response.json()).toEqual({ status: "stale", reason: "procurement-source-changed" })
+    expect(f.state.contextReads).toBe(2)
+    expect(f.state.current).toBe(true)
+    expect(f.context().stamp.accessRevision).toBe("access-1")
+    expect(f.durable()).toEqual(before)
   } finally { await f.close() }
 })
