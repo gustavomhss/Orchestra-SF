@@ -1,4 +1,4 @@
-import { expect, type Browser, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
+import { expect, type Browser, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
 import { waveFourTest, capture, enter, reflow, scheme, scrollPageTop } from "./wave-four"
 
@@ -44,15 +44,20 @@ export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation
 }
 /** Report the actual native ctx.context reads without changing their admission. */
 export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
-  const reads: Promise<{ http: number; body: unknown }>[] = []
-  page.on("response", (response) => {
+  const reads: Promise<{ http: number; body: unknown; acquisitionFailure?: string }>[] = []
+  const onResponse = (response: Response) => {
     if (response.request().method() !== "GET" || !new URL(response.url()).pathname.endsWith("/api/ui/context")) return
-    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body })))
-  })
-  return async (stage: string) => {
+    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body }))
+      .catch(() => ({ http: response.status(), body: undefined, acquisitionFailure: "native-context-body-unavailable" })))
+  }
+  page.on("response", onResponse)
+  return async (stage: string, stop = false) => {
+    if (stop) page.off("response", onResponse)
     expect(reads.length).toBeGreaterThan(0)
     for (const pending of reads.splice(0)) {
-      const { http, body: raw } = await pending
+      const { http, body: raw, acquisitionFailure } = await pending
+      if (acquisitionFailure) console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, acquisitionFailure }))
+      expect(acquisitionFailure, "The actual native context body must be readable at its required diagnostic point").toBeUndefined()
       const body = object(raw)
       expect(http).toBe(200)
       expect(body.status).toBe("ok")
