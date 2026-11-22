@@ -21,7 +21,7 @@ const extensible = Object.isExtensible
 const owns = Object.hasOwn
 const proxy = types.isProxy
 const freezeObservation = Object.freeze
-const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
+const objectPrototype = Object.prototype, arrayPrototype = Array.prototype, arraySpecies = Symbol.species
 const immutableUiContexts = new WeakMap<object, object>()
 const immutableUiContextFor = immutableUiContexts.get.bind(immutableUiContexts)
 const rememberImmutableUiContext = immutableUiContexts.set.bind(immutableUiContexts)
@@ -30,7 +30,7 @@ const integrityPins: readonly (readonly [object, PropertyKey])[] = [
   [globalThis, "Object"], [globalThis, "Array"], [globalThis, "JSON"], [globalThis, "Bun"],
   [Object, "prototype"], [Object, "keys"], [Object, "getPrototypeOf"],
   [Array, "prototype"], [Array, "isArray"], [arrayPrototype, "map"], [arrayPrototype, "sort"],
-  [arrayPrototype, "includes"], [arrayPrototype, "constructor"], [Array, Symbol.species],
+  [arrayPrototype, "includes"], [arrayPrototype, "constructor"], [Array, arraySpecies],
   [JSON, "stringify"], [Bun, "CryptoHasher"], [Bun.CryptoHasher, "prototype"],
   [Bun.CryptoHasher.prototype, "update"], [Bun.CryptoHasher.prototype, "digest"],
 ]
@@ -45,7 +45,7 @@ function integrityEnvironmentCurrent() {
         owns(actual, "value") !== owns(expected, "value")) return false
     if (owns(expected, "value")) {
       if (actual.value !== expected.value || actual.writable !== expected.writable) return false
-    } else if (pin[1] !== Symbol.species || actual.get !== expected.get || actual.set !== expected.set) return false
+    } else if (pin[1] !== arraySpecies || actual.get !== expected.get || actual.set !== expected.set) return false
   }
   return true
 }

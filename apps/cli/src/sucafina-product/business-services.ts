@@ -74,6 +74,7 @@ import { prepareSourcingDossier, type ProcurementPreparation } from "../../../..
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
+const BindingWitnessMap = WeakMap
 const bindingWitnessApply = Reflect.apply
 const bindingWitnessGet = WeakMap.prototype.get
 const bindingWitnessSet = WeakMap.prototype.set
@@ -246,7 +247,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type CaseRef = { id: string; incarnation: string; version: number }
   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; historical?: boolean }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
-  const bindingWitnesses = new WeakMap<TrustedDomainContext, SfUiContextIntegrity>()
+  const bindingWitnesses = new BindingWitnessMap<TrustedDomainContext, SfUiContextIntegrity>()
   const callBindingDigest = (call: TrustedDomainContext) => {
     const observed = observeSfUiContextIntegrity(call)
     bindingWitnessApply(bindingWitnessSet, bindingWitnesses, [call, observed])
