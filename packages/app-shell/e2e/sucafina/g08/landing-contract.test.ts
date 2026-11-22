@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 // Component DOM contract only: real SfTeamWebApp/HTTP reader, controlled network boundary; never installed QA.
 import { expect, spyOn, test } from "bun:test"
 import { setImmediate } from "node:timers"
