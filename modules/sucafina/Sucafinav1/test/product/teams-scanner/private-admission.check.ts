@@ -10,8 +10,8 @@ import { scanLocalFile } from "../../../runtime/local-scanner.ts"
 import { microsoftHttpFixture } from "../../fixture/microsoft-http.ts"
 
 // Additional Microsoft/Team composition controls. The original eight Operations
-// obligations remain untouched. Native private import-admit/import-preview are
-// not mounted by runTeamBusiness; this supplier-upload proof cannot close that gap.
+// obligations remain untouched. These supplier-upload cases do not exercise
+// native import-admit/import-preview; the separate import selection covers them.
 type MicrosoftFixture = Awaited<ReturnType<typeof microsoftHttpFixture>>
 const digest = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex")
 
