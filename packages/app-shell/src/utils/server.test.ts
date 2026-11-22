@@ -50,7 +50,7 @@ describe("technical active-session adapter", () => {
   })
 
   test("returns only real active session IDs from the current envelope", async () => {
-    const data = { ses_active_first: { type: "running" }, ses_active_second: { type: "running" } }
+    const data = { ses_active_first: { type: "running" }, ses_active_second: { type: "running" } } as const
     const active = await read({ data })
     expect(active).toEqual(data)
     expect(Object.keys(active)).toEqual(["ses_active_first", "ses_active_second"])
