@@ -1,5 +1,7 @@
 import { Database } from "bun:sqlite"
 import { expect, test } from "bun:test"
+import { Schema } from "effect"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -379,10 +381,14 @@ async function recoveryPolicyFixture(bootstrapEnabledTeamIds: readonly string[] 
     const mutate = async (action: "enable" | "disable" | "remove", id = teamObjectId) => {
       const catalog = await profilePolicy.read()
       const result = await profilePolicy.mutate({
-        principal: { tenantId: config.tenantId, principalObjectId: "10000000-0000-4000-8000-000000000006" },
+        principal: Schema.decodeUnknownSync(TeamProfile.Principal)({
+          tenantId: config.tenantId, principalObjectId: "10000000-0000-4000-8000-000000000006",
+        }),
         at: Date.parse(at), authorize: async () => true,
-        command: { action, profile: { installationId, tenantId: config.tenantId, teamObjectId: id },
-          expectedRevision: catalog.configRevision },
+        command: Schema.decodeUnknownSync(TeamProfile.AdminCommand)({
+          action, profile: { installationId, tenantId: config.tenantId, teamObjectId: id },
+          expectedRevision: catalog.configRevision,
+        }),
       })
       if (result.status !== "ok" || !result.changed) throw new Error("Expected a real changed Team policy")
     }
