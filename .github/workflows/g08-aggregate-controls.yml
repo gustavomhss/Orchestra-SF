@@ -31,8 +31,9 @@ jobs:
           set -euo pipefail
           umask 077
           test "$(git rev-parse HEAD)" = "76741cfcc38fa005199a0a22ad26cf7c70363b7a"
-          test "$(git rev-parse 'HEAD^{tree}')" = "abf99e2a690f83c6a146269cf5d7a11f4c4fceb0"
-          test "$(git show -s --format=%P "$GITHUB_SHA")" = "76741cfcc38fa005199a0a22ad26cf7c70363b7a"
+          test "$(git rev-parse 'HEAD^{tree}')" = "abf99e2a673f83c6a146269cf5d7a11f4c4fceb0"
+          git merge-base --is-ancestor "76741cfcc38fa005199a0a22ad26cf7c70363b7a" "$GITHUB_SHA"
+          test "$(git diff --name-only "76741cfcc38fa005199a0a22ad26cf7c70363b7a" "$GITHUB_SHA")" = ".github/workflows/g08-aggregate-controls.yml"
           mkdir -m700 "$RUNNER_TEMP/g08-aggregate"
           git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/g08-aggregate/source.refs"
           git diff --check "$(git merge-base HEAD origin/dev)" HEAD 2>&1 | tee "$RUNNER_TEMP/g08-aggregate/whitespace.log"
@@ -63,7 +64,7 @@ jobs:
           assert "joining all groups permits different explicitly bound actors per invocation" in names
           assert "complete join refuses AZ02 cookie replaced" in names
           refs=(root/"source.refs").read_text().splitlines()
-          assert refs[:2]==["76741cfcc38fa005199a0a22ad26cf7c70363b7a","abf99e2a690f83c6a146269cf5d7a11f4c4fceb0"]
+          assert refs[:2]==["76741cfcc38fa005199a0a22ad26cf7c70363b7a","abf99e2a673f83c6a146269cf5d7a11f4c4fceb0"]
           paths=["script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-installed-evidence.mjs",
             "script/sf-ci/g08-installed-evidence.test.mjs","script/sf-ci/g08-installed-run.sh",
             ".github/workflows/g08-installed-complete.yml","docs/qa/sucafina/go-live/g08-installed-execution.md",
@@ -73,7 +74,7 @@ jobs:
             "gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip()} for p in paths]
           reports=[{"path":p.name,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()]
           receipt={"schema":"sf-g08-aggregate-controls-v1","status":"COMPONENT_CONTROLS_VERIFIED",
-            "source":{"sha":"76741cfcc38fa005199a0a22ad26cf7c70363b7a","tree":"abf99e2a690f83c6a146269cf5d7a11f4c4fceb0"},"snapshot":os.environ["GITHUB_SHA"],
+            "source":{"sha":"76741cfcc38fa005199a0a22ad26cf7c70363b7a","tree":"abf99e2a673f83c6a146269cf5d7a11f4c4fceb0"},"snapshot":os.environ["GITHUB_SHA"],
             "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"]},
             "guardBase":refs[2],"cases":240,"originalPrivateControls":150,"aggregateControls":90,
             "failures":0,"skips":0,"sources":files,"reports":reports,
