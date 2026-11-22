@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import path from "node:path"
 import { AbsolutePath } from "@orchestra/schema/schema"
+import { registerContractReview } from "../../../../modules/sucafina/Sucafinav1/product/ai/packs/contract-review/mcp/index.ts"
 import { registerTool } from "../../../../modules/sucafina/Sucafinav1/product/ai/packs/vendor-review/mcp/index.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -10,7 +11,8 @@ import { enumerateSfSources } from "../../../../modules/sucafina/Sucafinav1/prod
 import { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { projectSfProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
 import type { AssetPersistence } from "../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
-import { rows } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { rows, text } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { DashboardPortfolio } from "../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts"
 import type { LocalIdentity, LocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
 import { openLocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import type { MicrosoftConfiguration } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts"
@@ -18,7 +20,7 @@ import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurem
 import { readRequestBody } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { createTeamProfileAccess } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-access.ts"
 import { emptyMap } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
-import type { ResolvedActor } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
+import type { ResolvedActor, Surface } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
 import { openProcurement } from "../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { createSfBusinessServices } from "./business-services.ts"
 import { createSfProductDispatch } from "./contribution.ts"
@@ -52,23 +54,28 @@ type PairedRequest = {
   store: LocalStore
 }
 
+type PairedResponse = {
+  response: Response | undefined
+  currentProjection?: () => Promise<boolean>
+}
+
 export function createSfTeamPurchaseMcp(input: TeamMcpInput & { period: Readonly<Period> }) {
-  return createPairedProcurementMcp(input, {
-    purpose: "purchases", path: "/api/claw", operations,
-    handle: (scope) => purchaseRuntime({
+  return createPairedTeamMcp(input, {
+    purpose: "purchases", path: "/api/claw", surface: "procurement", operations,
+    handle: async (scope) => ({ response: await purchaseRuntime({
       ...scope, origin: input.config.origin, mount: input.config.mount, period: input.period,
       principal: scope.actor.id, now: input.now, current: scope.publishable,
       authenticate: async (request, context) =>
         request === scope.request && context?.surface === "procurement" && await scope.current() ? scope.actor : null,
-    })(scope.request),
+    })(scope.request) }),
   })
 }
 
 export function createSfTeamSupplierMcp(input: TeamMcpInput) {
   const path = "/api/claw/vendor-review"
-  return createPairedProcurementMcp(input, {
-    purpose: "vendor-review", path, operations: ["sf_supplier_read"],
-    handle: (scope) => createSfMcpRequestHandler({
+  return createPairedTeamMcp(input, {
+    purpose: "vendor-review", path, surface: "procurement", operations: ["sf_supplier_read"],
+    handle: async (scope) => ({ response: await createSfMcpRequestHandler({
       origin: input.config.origin,
       pathname: input.config.mount + path + "/mcp",
       authenticate: async (request) => request === scope.request && await scope.current(),
@@ -89,27 +96,74 @@ export function createSfTeamSupplierMcp(input: TeamMcpInput) {
           }, { signal, sealedRead: true })
         })
       },
-    })(scope.request),
+    })(scope.request) }),
   })
 }
 
-function createPairedProcurementMcp(input: TeamMcpInput, pack: {
+export function createSfTeamContractMcp(input: TeamMcpInput) {
+  const path = "/api/claw/contract-review"
+  return createPairedTeamMcp(input, {
+    purpose: "contract-review", path, surface: "dashboard", operations: ["sf_contract_read"],
+    async handle(scope) {
+      const roles = scope.actor.roles.filter((role) => role.surface === "dashboard").map((role) => role.role)
+      const readContracts = (refs: readonly string[], signal: AbortSignal) => scope.store.transaction("dashboard", async (snapshot) => {
+        if (signal.aborted || !await scope.current()) return { commit: false, value: [] }
+        const view = DashboardPortfolio.domain.view(snapshot, { id: scope.actor.id, roles, canWrite: false }, {
+          at: input.now().toISOString(), id: randomUUID, directory: [], directoryScope: "team",
+        })
+        const contracts = rows(view.data.contracts)
+        return { commit: false, value: refs.map((ref) => {
+          const matches = contracts.filter((row) =>
+            (typeof row.num === "number" && Number.isFinite(row.num) ? String(row.num) : text(row.num).trim()) === ref)
+          const [row] = matches
+          if (matches.length !== 1 || !row) return undefined
+          return {
+            ref, title: text(row.name) || null, vendor: text(row.vendor) || null,
+            endsOn: text(row.end) || null, renewalType: text(row.renewType) || null,
+          }
+        }) }
+      }, { signal, sealedRead: true })
+      const observed: NonNullable<Awaited<ReturnType<typeof readContracts>>[number]>[] = []
+      const response = await createSfMcpRequestHandler({
+        origin: input.config.origin, pathname: input.config.mount + path + "/mcp",
+        authenticate: async (request) => request === scope.request && await scope.current(),
+        register(server, _request, schemas) {
+          registerContractReview(server, schemas, async (ref, signal) => {
+            const [contract] = await readContracts([ref], signal)
+            if (contract) observed.push(contract)
+            return contract
+          })
+        },
+      })(scope.request)
+      if (!observed.length) return { response }
+      return { response, currentProjection: async () => {
+        // A batched request may return multiple projections. Recheck all of them after role and Team admission.
+        const current = await readContracts(observed.map((contract) => contract.ref), scope.request.signal).catch(() => [])
+        return current.length === observed.length && current.every((contract, index) =>
+          contract && digestSfValue(contract) === digestSfValue(observed[index]))
+      } }
+    },
+  })
+}
+
+function createPairedTeamMcp(input: TeamMcpInput, pack: {
   purpose: string
   path: string
+  surface: Surface
   operations: readonly string[]
-  handle: (request: PairedRequest) => Promise<Response | undefined>
+  handle: (request: PairedRequest) => Promise<PairedResponse>
 }) {
   const { config, identity, authorizeTeam, now } = input
   const connectPath = config.mount + pack.path + "/connect"
   const mcpPath = config.mount + pack.path + "/mcp"
-  const roles = emptyMap().filter((row) => row.surface === "procurement")
-    .map((row) => ({ ...row, entra: config.groups.procurement[row.role] ?? null }))
+  const roles = emptyMap().filter((row) => row.surface === pack.surface)
+    .map((row) => ({ ...row, entra: config.groups[pack.surface][row.role] ?? null }))
   const credentials = new Map<string, { cookie: string; expiresAt: number; principal: string; team: string; partition: string }>()
   const audience = new Map<string, string>()
   const authenticate = async (request: Request, admission: Admission) => {
     if (request.signal.aborted || !await admission.verifyCurrent()) return null
-    const actor = await identity.authenticate(request, { surface: "procurement", roleMap: roles })
-    return actor?.id === admission.principalObjectId && actor.roles.some((role) => role.surface === "procurement") &&
+    const actor = await identity.authenticate(request, { surface: pack.surface, roleMap: roles })
+    return actor?.id === admission.principalObjectId && actor.roles.some((role) => role.surface === pack.surface) &&
       await admission.verifyCurrent() && !request.signal.aborted ? actor : null
   }
   const verifyTeam = async (request: Request, admission: Admission) => {
@@ -181,9 +235,9 @@ function createPairedProcurementMcp(input: TeamMcpInput, pack: {
     const directory = path.join(input.directory, "business-teams", credential.partition)
     const store = await openLocalStore(directory)
     try {
-      const response = await pack.handle({ actor, current, publishable, request: admitted, directory,
+      const { response, currentProjection } = await pack.handle({ actor, current, publishable, request: admitted, directory,
         partition: credential.partition, team: credential.team, store })
-      if (await publishable()) return response
+      if (await publishable() && (!currentProjection || await currentProjection()) && active()) return response
       void response?.body?.cancel().catch(() => undefined)
       return denied()
     } finally {
