@@ -27,14 +27,13 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
     steps:
       - name: Prepare minimized observation and validate configured scope
         env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
           INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
         run: |
           set -euo pipefail
@@ -66,6 +65,7 @@ jobs:
           PY
 
       - name: Observe GitHub environment and runner metadata where the existing token permits
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
@@ -101,6 +101,14 @@ jobs:
                   "status": r.get("status"), "busy": r.get("busy"),
                   "labels": [label.get("name") for label in r.get("labels", [])]} for r in v.get("runners", [])],
           })
+          for scope, endpoint in [
+              ("repositoryVariableNames", "actions/variables?per_page=100"),
+              ("environmentVariableNames", "environments/azure-mvp/variables?per_page=100"),
+          ]:
+              read(scope, endpoint, lambda v: {
+                  "totalCount": v.get("total_count"),
+                  "azureNames": [item["name"] for item in v.get("variables", []) if item.get("name", "").startswith("AZURE_")],
+              })
           (root / "github-metadata.json").write_text(json.dumps(observations, indent=2) + "\n")
           PY
 
@@ -113,6 +121,10 @@ jobs:
 
       - name: Read the configured Azure foundation without guest execution
         env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
           INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
         run: |
           set -euo pipefail
