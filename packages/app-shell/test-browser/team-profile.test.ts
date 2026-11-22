@@ -75,6 +75,7 @@ const settle = () => new Promise<void>((resolve) => setImmediate(resolve))
 type PendingRequest = {
   url: URL
   signal: AbortSignal | undefined
+  init: RequestInit | undefined
   resolve: (response: Response) => void
   reject: (error: Error) => void
 }
@@ -92,7 +93,7 @@ function mount(target = installation.publicOrigin + "/") {
       return Promise.resolve(json({ installations: [installation] }))
     }
     return new Promise<Response>((resolve, reject) => {
-      requests.push({ url, signal: init?.signal ?? undefined, resolve, reject })
+      requests.push({ url, signal: init?.signal ?? undefined, init, resolve, reject })
     })
   })
   const host = document.createElement("div")
@@ -484,4 +485,277 @@ test("a valid URL cannot authorize a different Team returned by the context prod
   } finally {
     view.close()
   }
+})
+
+
+const administrationContext = (status: "no-teams" | "revoked" | "denied" = "no-teams", identity = principal) => {
+  const base = context(undefined, identity)
+  return { ...base, value: { ...base.value, profile: {
+    ...base.value.profile, administration: { status: "available" }, teams: { status },
+  } } }
+}
+const catalog = (configRevision: string | number, profiles: { profile: ReturnType<typeof profile>; enabled: boolean }[] = []) =>
+  json({ status: "ok", configRevision, profiles })
+
+function expectAdminRequest(request: PendingRequest, method: "GET" | "POST") {
+  expect(request.url.origin).toBe(installation.publicOrigin)
+  expect(request.url.pathname).toBe(installation.mount + "/api/ui/team-profiles")
+  expect(Object.fromEntries(request.url.searchParams)).toEqual({
+    contractRevision: "sf-team-profile/1", installationId: installation.installationId, tenantId: installation.tenantId,
+  })
+  expect(request.init?.method).toBe(method)
+  expect(request.init?.credentials).toBe("same-origin")
+  expect(request.init?.redirect).toBe("error")
+  expect(request.init?.cache).toBe("no-store")
+}
+function expectAdminCommand(request: PendingRequest, action: string, teamObjectId: string, expectedRevision: string | number) {
+  expectAdminRequest(request, "POST")
+  expect(new Headers(request.init?.headers).get("content-type")).toBe("application/json")
+  if (typeof request.init?.body !== "string") throw new Error("Expected an administrative JSON command")
+  expect(JSON.parse(request.init.body)).toEqual({ action, profile: profile(teamObjectId), expectedRevision })
+}
+function submitTeam(view: ReturnType<typeof mount>, teamObjectId: string) {
+  const input = view.host.querySelector<HTMLInputElement>("[data-sf-team-id-input]")
+  const form = view.host.querySelector<HTMLFormElement>("[data-sf-team-administration] form")
+  if (!input || !form) throw new Error("Expected the real administrative Team form")
+  input.value = teamObjectId
+  input.dispatchEvent(new Event("input", { bubbles: true }))
+  form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }))
+}
+async function openAdministration(view: ReturnType<typeof mount>) {
+  await settle()
+  view.request(0).resolve(json(administrationContext()))
+  await settle()
+  expect(view.selected()).toBeNull()
+  expect(view.host.querySelector('a[href$="/dashboard"]')).toBeNull()
+  view.click("[data-sf-admin-toggle]")
+  await settle()
+  expectAdminRequest(view.request(1), "GET")
+}
+
+test("an administrator without a Team can enable, disable and remove profiles with the exact opaque CAS revision", async () => {
+  const view = mount()
+  try {
+    await openAdministration(view)
+    view.request(1).resolve(catalog("sf-team-policy:initial"))
+    await settle()
+    const changes = [
+      { action: "enable", previous: "sf-team-policy:initial", next: "0", profiles: [{ profile: profile(teamA), enabled: true }] },
+      { action: "disable", previous: "0", next: 0, profiles: [{ profile: profile(teamA), enabled: false }] },
+      { action: "remove", previous: 0, next: "sf-team-policy:removed", profiles: [] },
+    ]
+    for (const [index, change] of changes.entries()) {
+      if (change.action === "enable") submitTeam(view, teamA)
+      else view.click('[data-sf-admin-team="' + teamA + '"] [data-sf-admin-action="' + change.action + '"]')
+      await settle()
+      const request = 2 + index * 3
+      expectAdminCommand(view.request(request), change.action, teamA, change.previous)
+      expect(view.host.querySelector<HTMLInputElement>("[data-sf-team-id-input]")?.disabled).toBe(true)
+      view.request(request).resolve(json({ status: "ok", configRevision: change.next, changed: true }))
+      await settle()
+      expectIntent(view.request(request + 1))
+      expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+      view.request(request + 1).resolve(json(administrationContext()))
+      await settle()
+      expectAdminRequest(view.request(request + 2), "GET")
+      view.request(request + 2).resolve(catalog(change.next, change.profiles))
+      await settle()
+      expect(view.host.querySelectorAll("[data-sf-admin-team]")).toHaveLength(change.profiles.length)
+      expect(view.selected()).toBeNull()
+      expect(window.location.href).toBe(installation.publicOrigin + "/")
+    }
+    expect(view.requests.filter((request) => request.init?.method === "POST")).toHaveLength(3)
+  } finally { view.close() }
+})
+
+for (const status of ["revoked", "denied", "no-teams"] as const) {
+  test("an explicit Team " + status + " projection preserves the URL and independent administration without business authority", async () => {
+    const target = teamHref(teamB)
+    const view = mount(target)
+    try {
+      await settle()
+      expectIntent(view.request(0), teamB)
+      view.request(0).resolve(json(administrationContext(status)))
+      await settle()
+      expect(view.state()).toBe("authenticated")
+      expect(view.selected()).toBeNull()
+      expect(view.host.querySelector('a[href$="/dashboard"]')).toBeNull()
+      expect(window.location.href).toBe(target)
+      view.click("[data-sf-admin-toggle]")
+      await settle()
+      expectAdminRequest(view.request(1), "GET")
+      view.request(1).resolve(catalog("current", [{ profile: profile(teamA), enabled: true }]))
+      await settle()
+      expect(view.host.querySelector("[data-sf-admin-team]")?.getAttribute("data-sf-admin-team")).toBe(teamA)
+      expect(view.selected()).toBeNull()
+    } finally { view.close() }
+  })
+}
+
+test("a ready Team projection cannot substitute the principal in its business stamp", async () => {
+  const view = mount(teamHref(teamA))
+  try {
+    await settle()
+    const body = context(teamA)
+    body.value.stamp.team!.owner.principal = { ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555" }
+    body.value.profile.administration.status = "available"
+    view.request(0).resolve(json(body))
+    await settle()
+    expect(view.state()).toBe("unavailable")
+    expect(view.selected()).toBeNull()
+    expect(view.host.querySelector("[data-sf-admin-toggle]")).toBeNull()
+  } finally { view.close() }
+})
+
+for (const invalid of ["foreign-profile", "status-mismatch"]) {
+  test("administrative reads refuse a " + invalid + " response without displaying a usable catalog", async () => {
+    const view = mount()
+    try {
+      await openAdministration(view)
+      view.request(1).resolve(invalid === "foreign-profile"
+        ? catalog("foreign", [{ profile: { ...profile(teamA), installationId: "foreign-installation" }, enabled: true }])
+        : json({ status: "ok", configRevision: "current", profiles: [] }, 403))
+      await settle()
+      expect(view.host.querySelector("[data-sf-team-administration]")?.getAttribute("data-sf-team-administration")).toBe("unavailable")
+      expect(view.host.querySelector("[data-sf-team-id-input]")).toBeNull()
+      expect(view.host.querySelector("[data-sf-admin-team]")).toBeNull()
+      expect(view.requests).toHaveLength(2)
+    } finally { view.close() }
+  })
+}
+
+test("an administrative conflict requires an explicit new read and never reuses the revision from the conflict", async () => {
+  const view = mount()
+  try {
+    await openAdministration(view)
+    view.request(1).resolve(catalog("read-one"))
+    await settle()
+    submitTeam(view, teamB)
+    await settle()
+    expectAdminCommand(view.request(2), "enable", teamB, "read-one")
+    view.request(2).resolve(json({ status: "conflict", configRevision: "conflict-is-not-a-read" }, 409))
+    await settle()
+    expect(view.host.querySelector("[data-sf-admin-notice]")?.textContent).toContain("configuration changed")
+    expect(view.host.querySelector("[data-sf-team-id-input]")).toBeNull()
+    expect(view.requests).toHaveLength(3)
+    revalidate("focus")
+    await settle()
+    view.request(3).resolve(json(administrationContext()))
+    await settle()
+    expect(view.requests).toHaveLength(4)
+    view.click("[data-sf-admin-read]")
+    await settle()
+    expectAdminRequest(view.request(4), "GET")
+    view.request(4).resolve(catalog("fresh-read"))
+    await settle()
+    submitTeam(view, teamB)
+    await settle()
+    expectAdminCommand(view.request(5), "enable", teamB, "fresh-read")
+    view.request(5).resolve(json({ status: "denied" }, 403))
+    await settle()
+    const denied = administrationContext()
+    denied.value.profile.administration.status = "denied"
+    view.request(6).resolve(json(denied))
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+    expect(view.host.querySelector("[data-sf-admin-notice]")?.textContent).toContain("could not be confirmed")
+  } finally { view.close() }
+})
+
+for (const failure of ["network", "focus"]) {
+  test("an administrative POST interrupted by " + failure + " keeps an unknown outcome until an explicit read without resending", async () => {
+    const view = mount()
+    try {
+      await openAdministration(view)
+      view.request(1).resolve(catalog("before-write"))
+      await settle()
+      submitTeam(view, teamB)
+      await settle()
+      expectAdminCommand(view.request(2), "enable", teamB, "before-write")
+      if (failure === "network") {
+        view.request(2).reject(new Error("Connection lost after dispatch"))
+        await settle()
+        expect(view.host.querySelector("[data-sf-admin-notice]")?.textContent).toContain("unknown")
+      }
+      revalidate("focus")
+      await settle()
+      expect(view.request(2).signal?.aborted).toBe(true)
+      view.request(3).resolve(json(administrationContext()))
+      await settle()
+      expect(view.host.querySelector("[data-sf-admin-notice]")?.textContent).toContain("unknown")
+      expect(view.host.querySelector("[data-sf-team-id-input]")).toBeNull()
+      expect(view.requests).toHaveLength(4)
+      if (failure === "focus") {
+        view.request(2).resolve(json({ status: "ok", configRevision: "late-success", changed: true }))
+        await settle()
+        expect(view.host.querySelector("[data-sf-admin-notice]")?.textContent).toContain("unknown")
+        expect(view.requests).toHaveLength(4)
+      }
+      view.click("[data-sf-admin-read]")
+      await settle()
+      expectAdminRequest(view.request(4), "GET")
+      view.request(4).resolve(catalog("observed-current", [{ profile: profile(teamB), enabled: true }]))
+      await settle()
+      expect(view.host.querySelector("[data-sf-admin-notice]")).toBeNull()
+      expect(view.host.querySelector("[data-sf-admin-team]")?.getAttribute("data-sf-admin-team")).toBe(teamB)
+      expect(view.requests.filter((request) => request.init?.method === "POST")).toHaveLength(1)
+    } finally { view.close() }
+  })
+}
+
+test("a late administrative catalog cannot survive a principal change or open administration for the next account", async () => {
+  const view = mount()
+  try {
+    await openAdministration(view)
+    revalidate("focus")
+    await settle()
+    expect(view.request(1).signal?.aborted).toBe(true)
+    view.request(2).resolve(json(administrationContext("no-teams", {
+      ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555",
+    })))
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+    view.request(1).resolve(catalog("previous-account", [{ profile: profile(teamA), enabled: true }]))
+    await settle()
+    expect(view.host.querySelector("[data-sf-admin-team]")).toBeNull()
+    expect(view.requests).toHaveLength(3)
+    view.click("[data-sf-admin-toggle]")
+    await settle()
+    expectAdminRequest(view.request(3), "GET")
+    view.request(3).resolve(catalog("next-account", [{ profile: profile(teamB), enabled: false }]))
+    await settle()
+    expect(view.host.querySelectorAll("[data-sf-admin-team]")).toHaveLength(1)
+    expect(view.host.querySelector("[data-sf-admin-team]")?.getAttribute("data-sf-admin-team")).toBe(teamB)
+  } finally { view.close() }
+})
+
+test("logout aborts an administrative write and discards its late response before another account", async () => {
+  const view = mount()
+  try {
+    await openAdministration(view)
+    view.request(1).resolve(catalog("before-logout"))
+    await settle()
+    submitTeam(view, teamA)
+    await settle()
+    view.click("header > button")
+    await settle()
+    expect(view.request(2).signal?.aborted).toBe(true)
+    expect(view.request(3).url.pathname).toBe(installation.mount + "/auth/logout")
+    view.request(3).resolve(new Response(null, { status: 204 }))
+    await settle()
+    expect(view.state()).toBe("unauthenticated")
+    view.request(2).resolve(json({ status: "ok", configRevision: "late-after-logout", changed: true }))
+    await settle()
+    expect(view.host.querySelector("[data-sf-admin-notice]")).toBeNull()
+    expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+    revalidate("focus")
+    await settle()
+    view.request(4).resolve(json(administrationContext("no-teams", {
+      ...principal, principalObjectId: "d1111111-2222-4333-8444-555555555555",
+    })))
+    await settle()
+    expect(view.host.querySelector("[data-sf-admin-notice]")).toBeNull()
+    expect(view.host.querySelector("[data-sf-team-administration]")).toBeNull()
+    expect(view.requests).toHaveLength(5)
+  } finally { view.close() }
 })

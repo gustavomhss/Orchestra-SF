@@ -5,7 +5,7 @@ import { Permission } from "@orchestra/schema/permission"
 import { PromptInput } from "@orchestra/schema/prompt-input"
 import { Session } from "@orchestra/schema/session"
 import { Project } from "@orchestra/schema/project"
-import { AbsolutePath, NonNegativeInt, PositiveInt, RelativePath, statics } from "@orchestra/schema/schema"
+import { AbsolutePath, NonNegativeInt, PositiveInt, RelativePath, optional, statics } from "@orchestra/schema/schema"
 import { Workspace } from "@orchestra/schema/workspace"
 import { Context, Effect, Encoding, Result, Schema, SchemaGetter, Struct } from "effect"
 import { HttpApiEndpoint, HttpApiGroup, HttpApiMiddleware, HttpApiSchema, OpenApi } from "effect/unstable/httpapi"
@@ -146,7 +146,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionsQuery,
         success: Schema.Struct({
           data: Schema.Array(Session.Info),
-          namespace: Schema.optional(TeamProfile.SessionNamespaceTransport),
+          namespace: optional(TeamProfile.SessionNamespaceTransport),
           cursor: Schema.Struct({
             previous: SessionsCursor.pipe(Schema.optional),
             next: SessionsCursor.pipe(Schema.optional),
@@ -182,7 +182,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
     )
     .add(
       HttpApiEndpoint.get("session.active", "/api/session/active", {
-        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive), namespace: Schema.optional(TeamProfile.SessionNamespaceTransport) }),
+        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive), namespace: optional(TeamProfile.SessionNamespaceTransport) }),
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "v2.session.active",
@@ -628,7 +628,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionHistoryQuery,
         success: Schema.Struct({
           data: Schema.Array(SessionEvent.Durable),
-          namespace: Schema.optional(TeamProfile.SessionNamespaceTransport),
+          namespace: optional(TeamProfile.SessionNamespaceTransport),
           hasMore: Schema.Boolean,
         }).annotate({ identifier: "SessionHistory" }),
         error: SessionNotFoundError,

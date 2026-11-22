@@ -10,6 +10,7 @@ const sessionID = "ses_timeline_state_regression"
 const userMessageID = "msg_user_regression"
 const assistantMessageID = "msg_assistant_regression"
 const editPartID = "prt_0001_edit"
+const streamTextID = "timeline-benchmark-stream"
 // V2 text has no part ID of its own: the timeline derives it from the message and the text ordinal.
 export const textPartID = `${assistantMessageID}:text:0`
 const title = "Timeline collapse state regression"
@@ -197,13 +198,13 @@ export async function setupTimelineBenchmark(
 
 // The streamed text opens as a new V2 text slot after the history edit; its first delta carries the initial text.
 export function buildInitialStreamEvent(deltaCount: number): EventPayload[] {
-  const base = { sessionID, assistantMessageID, ordinal: 0 }
+  const base = { sessionID, assistantMessageID, textID: streamTextID, timestamp: 1700000003000 }
   return [
-    { directory, payload: { type: "session.text.started", properties: base } },
+    { directory, payload: { type: "session.next.text.started", properties: base } },
     {
       directory,
       payload: {
-        type: "session.text.delta",
+        type: "session.next.text.delta",
         properties: {
           ...base,
           delta: `Streaming${streamChunk(0, deltaCount + 1)}\n\n\`\`\`ts\nconst initial = true\n\`\`\``,
@@ -217,11 +218,12 @@ export function buildStreamDeltaEvents(deltaCount: number): EventPayload[] {
   return Array.from({ length: deltaCount }, (_, index) => ({
     directory,
     payload: {
-      type: "session.text.delta",
+      type: "session.next.text.delta",
       properties: {
         sessionID,
         assistantMessageID,
-        ordinal: 0,
+        textID: streamTextID,
+        timestamp: 1700000003001 + index,
         delta: streamChunk(index + 1, deltaCount + 1),
       },
     },

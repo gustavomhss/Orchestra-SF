@@ -20,9 +20,21 @@ A origem instalada **R** é verificada por `current_source()`, `check_rollback_r
 
 O CLI real exige Linux x64/root, lock/preflight do instalador, serviço parado, Caddy em manutenção, volume de dados e Azure IMDS compatíveis com a reserva privada. A drenagem dos demais escritores é uma atestação do operador vinculada por hash; inatividade do serviço e bytes da instalação são observações. A presença/leitura da chave no inventário **não prova decriptação**.
 
-Os recibos host `orchestra-sf.teams-checkpoint.v2` e `orchestra-sf.teams-clone-integrity.v2` conservam `releaseQualified:false`, `businessRecovery:NOT_RUN` e `keyDecryption:NOT_RUN`. O censo cobre as raízes observadas, não uma lista predefinida de todos os bancos possíveis; o operador deve conciliar esse inventário com todas as classes e destinos de dados da instalação.
+Os recibos operacionais `orchestra-sf.teams-checkpoint.v2` e `orchestra-sf.teams-clone-integrity.v3` conservam `releaseQualified:false`, `businessRecovery:NOT_RUN` e `keyDecryption:NOT_RUN`. O censo cobre as raízes observadas, não uma lista predefinida de todos os bancos possíveis; o operador deve conciliar esse inventário com todas as classes e destinos de dados da instalação.
 
 Contrato, entradas privadas e comandos completos: [sf/azure/recovery/README.md](../../../../sf/azure/recovery/README.md).
+
+## Correção integrada do recibo de clone
+
+A [PR #658](https://github.com/gustavomhss/Orchestra-SF/pull/658) corrigiu a perda da identidade do destino no recibo. Fonte `9714cd1819e2f0f5158210076268ac2bb0e5f9fb`, árvore `25139019a6152f771dfdcb977267f1c5d6b9146a`, merge `1773fe7fcff1e291e7f15786f42262af3bb40d3c`.
+
+O caminho operacional passa a emitir `orchestra-sf.teams-clone-integrity.v3`, com bloco obrigatório `clone`: VM retornada pelo Azure IMDS, horário da observação, hash dos mesmos bytes da reserva lidos na admissão e horário da conclusão da verificação. O binding da origem permanece separado. As condições de isolamento continuam identificadas como `OPERATOR_ATTESTATION`. O resultado v2 do helper de arquivos não comprova a VM de destino.
+
+O [run 45030815611](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45030815611), tentativa 1, job 137233784079, aprovou **17 controles de arquivos/SQLite**, zero falha/erro/skip, spawn-imports e 78 guards sem findings em três paths. O snapshot de CI `100be506a886bef64d210fedb0342e38fc5fc044` tem a fonte revisada como pai único e acrescenta somente a workflow descartável; o job executou o checkout exato da fonte/árvore. Essa workflow não entrou no merge.
+
+Artefato [14758030307](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45030815611/artifacts/14758030307), 2.874 bytes, ZIP SHA-256 `f9a4b0078640013dcc7669766356cc0518bfeab07a6ab55db48960b904ea9513`; recibo SHA-256 `4b15cc7049220905f95969718dc31aa14ab0dc95c74de815c68a344ec9988062`. Aquisição, hash/CRC, refs, inventário, logs e recibo foram conferidos pela coordenação. A comparação após merge confirmou os três blobs revisados.
+
+Os dois novos controles usam fixtures declaradas de identidade de VM para verificar o vínculo do recibo e recusas antes de escrita; não acessam Azure. A prova continua `FILESYSTEM_COMPONENT_CONTROLS`, `installedTeamsProof:false`, `releaseQualified:false`. Os runs anteriores 45030521031 e 45030692679 falharam no driver de CI e permanecem históricos; o verde acima é o registro final dessa correção. Nenhum ensaio instalado foi executado.
 
 ## O que já existe e o limite das provas
 
@@ -35,7 +47,7 @@ Contrato, entradas privadas e comandos completos: [sf/azure/recovery/README.md](
 | [Instalador atual](https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/sf/azure/vm/install-factory-distribution.py) e [guia Azure](https://github.com/gustavomhss/Orchestra-SF/blob/79912446753af5bb291fc2581543732eb4c83057/sf/azure/README.md) | Verificação do tar, seleção atômica e rollback de código com compatibilidade revisada | Seleção não inicia serviço nem restaura dados; manutenção deve permanecer até decisão explícita |
 | [Plano G10 histórico](https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-qualification-review.json) | Obrigações de inventário, checkpoint, efeitos, clone, retomada e evidência | `sf/azure/recovery/recovery.py` e o spec de ensaio não estão no dev consultado; seus comandos não são uma rota executável atual |
 
-Os componentes de recuperação e o novo adaptador backup/clone estão em dev. O executor operacional deve vincular a reserva, a migração admitida, a chave utilizável, as observações do host e os efeitos de negócio às etapas abaixo. Os 15 controles do adaptador não executaram essa sequência. Não há recibo de ensaio no tar final nesta preparação.
+Os componentes de recuperação e o novo adaptador backup/clone estão em dev. O executor operacional deve vincular a reserva, a migração admitida, a chave utilizável, as observações do host e os efeitos de negócio às etapas abaixo. Os controles de componente, incluindo os 17 do replay final, não executaram essa sequência. Não há recibo de ensaio no tar final nesta preparação.
 
 ## Entradas e responsáveis
 
@@ -83,7 +95,7 @@ Todas as etapas estão **NOT_RUN** nesta frente. Cada transição exige o recibo
 | 4. Fazer backup e provar leitura | Executar a rota de backup admitida; verificar arquivo, anexos, destino independente e acesso à chave. Validar recuperação em destino isolado antes do corte. | Recibo de backup com hashes, recovery point, prova de leitura/restore, duração e resultado. Checkpoint isoladamente não fecha G10. |
 | 5. Instalar e migrar C | Verificar e instalar o tar G07; executar a migração admitida, inclusive interrupção/retomada planejada. O escritor antigo continua recusado; R permanece instalado e retido. | Mesmos bytes C/T/H, versões, IDs/proveniência preservados, nenhum fallback para Team padrão. |
 | 6. Cortar no QA restrito | Iniciar o serviço instalado e abrir apenas o ingresso restrito aos validadores da reserva, mantendo o callback Entra autorizado. Validar leitura/escrita por Team. | Identidade física do processo, health/negativos, leitura e efeito autorizado. Registrar tempo de corte/retomada. |
-| 7. Checkpoint de negócio e efeito posterior | Criar um checkpoint de Team pela operação suportada. Executar um comando real com chave K; observar o efeito/recibo E e publicá-los no registro monotônico pelo observador independente. | Checkpoint, manifesto, K/E e geração externa ligados à mesma instalação/Team. E precisa existir depois do checkpoint. |
+| 7. Checkpoint de negócio e efeito posterior | **Bloqueado até confirmar a rota operacional de captura lógica no tar Microsoft.** Obter o checkpoint do Team por essa rota; depois executar o comando real com chave K, observar efeito/recibo E e publicá-los no registro monotônico pelo observador independente. | Checkpoint, manifesto, K/E e geração externa ligados à mesma instalação/Team. E precisa existir depois do checkpoint. |
 | 8. Restaurar o dashboard do Team | Com recuperador Entra atualmente autorizado, chamar a rota corporativa de recuperação com o checkpoint e a versão corrente observada. | HTTP 204 e releitura durável. A fronteira posterior e as intenções externas não retrocedem. 409/403/503 são recusas, nunca sucesso. |
 | 9. Reiniciar e repetir | Reiniciar de fato o serviço C; observar PID/início/exec/factory/tar. Repetir exatamente K e o payload original com autoridade revalidada. | Mesmo recibo/resultado, exatamente um efeito no destino independente, nenhuma nova emissão ou slot duplicado. |
 | 10. Executar negativas | Na cópia isolada admitida, testar registro indisponível, pin/versão incompatível, revogação, principal ou Team errado. Recuperador admin sem Team pode recuperar o Team habilitado, mas não ganha acesso de negócio. | Recusas sem novo efeito/retorno de dados; estado e registro preservados. Sem fabricar credenciais ou alterar autoridade por SQL. |
@@ -112,6 +124,16 @@ python3 -B sf/azure/recovery/teams-checkpoint.py verify-clone \
 ~~~
 
 O restore de arquivos verificado no clone é parte da etapa 4. Validar separadamente a utilização da chave, as classes de negócio e a recuperação operacional admitida. Nenhum recibo de integridade de arquivo autoriza ativar o clone.
+
+### Dependência operacional do checkpoint lógico
+
+A revisão de `dev@37931c77eb07aecf01610bb0ee7d717276b85539` confirmou uma lacuna na etapa 7. O tar físico criado por `teams-checkpoint.py` contém `state/`, `configuration/` e seu inventário. Ele não cria o checkpoint lógico `backups-teams/<partition>/dashboard/backup-<UUID>` consumido pela rota corporativa.
+
+A API interna [`createLocalBackups(...).capture(...)`](https://github.com/gustavomhss/Orchestra-SF/blob/37931c77eb07aecf01610bb0ee7d717276b85539/modules/sucafina/Sucafinav1/runtime/local-backups.ts) produz esse checkpoint, mas a [factory Microsoft](https://github.com/gustavomhss/Orchestra-SF/blob/37931c77eb07aecf01610bb0ee7d717276b85539/modules/sucafina/Sucafinav1/local/microsoft-entry.ts) não expõe uma operação de captura. A ação `backup-now` existente em `local/entry.ts` é restrita à composição Local Operator. O uso direto da API no teste Microsoft não fornece um comando ao operador do tar.
+
+Antes do ensaio, a coordenação precisa confirmar a rota de captura e o dono da composição, com autorização corrente, Team/instalação explícitos e saída ligada ao checkpoint/manifesto. Também deve definir a leitura operacional de `snapshot.versions.dataset?.version ?? 0` e da fronteira corrente entregue ao observador independente. A requisição `recover` usa essa versão de dataset; não usa uma versão inferida do arquivo de backup. Pedido registrado em [7080174757](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7080174757).
+
+Até essa rota existir, as etapas 7–9 ficam `BLOCKED_BY_CHECKPOINT_OPERATION`. Não substituir o checkpoint lógico por export JSON público, tar físico, fixture ou escrita SQL. A captura não concede autoridade de recuperação, e a leitura local não substitui a observação independente do efeito nem publica a geração monotônica.
 
 ### Recuperação corporativa
 
