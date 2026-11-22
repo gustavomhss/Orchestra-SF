@@ -154,6 +154,7 @@ for (const [name, change] of [
   ["top-level error", (value) => { value.errors = [{ message: "failed" }] }],
   ["skipped stats", (value) => { value.stats.skipped = 1 }],
   ["foreign spec", (value) => { value.suites[0].specs[0].file = "different.spec.ts" }],
+  ["lookalike spec", (value) => { value.suites[0].specs[0].file = "foreign-teams-installed.spec.ts" }],
 ]) test("refuses report " + name, () => { const value = report(); change(value); assert.throws(() => verifyReport(value, true)) })
 
 test("private files are exclusive, bounded, owner-only and reject links", async () => {

@@ -41,7 +41,8 @@ export async function observe(page: Page, target: Target, selection = false) {
   const value = Schema.decodeUnknownSync(Schema.toCodecJson(SfInstallationList), strict)(await response.json())
   if (value.installations.length !== 1) throw new Error("G08_DISCOVERY_OWNER_NOT_UNIQUE")
   const descriptor = value.installations[0]!
-  if (descriptor.authMode !== "microsoft" || descriptor.installationId !== target.installationId ||
+  if (descriptor.contractRevision !== "sf-team-profile/1" || descriptor.authMode !== "microsoft" ||
+    descriptor.installationId !== target.installationId ||
     descriptor.tenantId !== target.tenantId || descriptor.projectId !== target.projectId ||
     descriptor.hostId !== target.hostId || descriptor.publicOrigin !== target.publicOrigin || descriptor.mount !== target.mount)
     throw new Error("G08_DISCOVERY_OWNER_MISMATCH")

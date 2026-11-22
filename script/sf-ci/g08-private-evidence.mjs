@@ -261,7 +261,7 @@ export function verifyReport(value, executed) {
   assert(project.name === "g08-installed" && project.retries === 0 && project.repeatEach === 1, "G08_NO_RETRIES_OR_REPEATS")
   assert(!config.shard && !config.grepInvert && JSON.stringify(config.grep ?? {}) === "{}", "G08_UNFILTERED_RUN_REQUIRED")
   for (const spec of specs) {
-    assert(typeof spec.file === "string" && spec.file.replaceAll("\\", "/").endsWith("teams-installed.spec.ts"), "G08_ORIGINAL_SPEC_REQUIRED")
+    assert(typeof spec.file === "string" && spec.file.replaceAll("\\", "/") === "teams-installed.spec.ts", "G08_ORIGINAL_SPEC_REQUIRED")
     assert(Array.isArray(spec.tests) && spec.tests.length === 1, "G08_SINGLE_RESULT_REQUIRED")
     const entry = record(spec.tests[0])
     assert(entry.projectName === "g08-installed" && entry.expectedStatus === "passed", "G08_EXPECTED_PASS_REQUIRED")
@@ -342,4 +342,8 @@ async function main() {
   console.log("G08_CORE_TEAMS_INSTALLED_VERIFIED_G08_REMAINS_OPEN")
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
-  main().catch(() => { console.error("G08_EVIDENCE_REFUSED_PRIVATE_DETAILS_RETAINED_ON_HOST"); process.exitCode = 1 })
+  main().catch((error) => {
+    const code = error instanceof Error ? error.message.match(/G08_[A-Z0-9_]+/)?.[0] : undefined
+    console.error(code ?? "G08_EVIDENCE_REFUSED_PRIVATE_DETAILS_RETAINED_ON_HOST")
+    process.exitCode = 1
+  })
