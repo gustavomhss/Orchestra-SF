@@ -49,3 +49,16 @@ No create/edit action is invented for the read-only overview or for an approval 
 The browser journey covers overview/filter, request list/create/edit, quotation comparison and sourcing edit, PR approval, sourcing approval, PO rejection and order draft save, supplier create/edit, settings edit, and source reread after confirmation. It verifies that cancelled reviews retain request, supplier, sourcing, PR decision and settings values. It also verifies a recorded zero versus a missing estimate, and preserved quote/PO notes after unrelated edits.
 
 The existing regression suites retain authority, conflict, pending/unknown, permissions, reference validation, source metadata and bank-secret protections. This new visual journey does not simulate those failures with network mocks and does not claim to have newly exercised every negative branch. It does not submit supplier bank data, activate suppliers, reset policies, dispatch external notifications, or assert external delivery of internally issued orders.
+
+## Observed qualification
+
+[Procurement10](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) passed the four independent installed groups on snapshot `7f3de0206fc25b2925d7c55947d9b5785bdfe7ba`. Its [gallery and manifest](../evidence/procurement/README.md) contain all 43 reviewed captures and the exact eleven command/readback pairs.
+
+| Group | Original POSTs | Observed fresh source result |
+| --- | ---: | --- |
+| Requests, sourcing and approvals | 8 | Saved PR values; created source record; pr_pending; retained sourcing evaluator/quote metadata/selection; approved PR to sourcing; approved sourcing to po_draft; rejected PO to po_rejected; saved PO delivery conditions and retained line notes |
+| Suppliers | 2 | Created supplier is pending with source notes; edited notes survive a fresh source reopen |
+| Settings | 1 | Reminder day 9 survives a fresh settings page; minimum quotations 3 and USD currency remain |
+| Portuguese | 0 | Real source rows in CAP24–27 and the seven-section policy form in CAP28, desktop and 320 px |
+
+All groups passed their exact POST-count and empty page-/console-error assertions. Six readable command response bodies were positive; five bodies were unavailable to the collector and relied on the unchanged application-completion checks plus the same explicit fresh source readbacks. No body unavailability was converted to an acknowledgement. The seventeen-route inventory above is broader than this observed action/state matrix.
