@@ -1,0 +1,76 @@
+{
+  "source": "b799889413c648f89ff78147499f7b9748affb43",
+  "sourceTree": "107865c1aba1ad8c285c3216ee408eb4964bc3a0",
+  "root": "def862d6a2ea65bf94720b4b6b0761873df63986",
+  "candidate": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+  "tree": "04f8e5a51ecec1be01c1a9e547f56a4fec59725f",
+  "snapshot": "6cf35ff7d2f4e850cb8c62c47941ef607872554d",
+  "branch": "ci-run-sf5draftintentequal1",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "overlays": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "7b82dd6b4a2ec712d12cd04109e16155d660d012",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.qualification-original.ts",
+      "sha": "842989d8163acbba6c0c0f7b6c9b87ad370dcb50",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.qualification-original.ts",
+      "sha": "a9488e57a14713d47536d2096d7fe73fc1f57406",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "sha": "f77efd293c998e27ccabf35f23f4758eed2a03dc",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "sha": "07a7eb1de18c7c486c76f022b63484ea6cadd3d3",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "sha": "6c9f74daf4d99b24e81d23d3988dabb3095e06d0",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "content": "{\n  \"package\": \"app\",\n  \"packageSelector\": \"@orchestra/app\",\n  \"directory\": \"packages/app-shell\",\n  \"runner\": \"playwright\",\n  \"args\": [\n    \"e2e/sucafina/design-wave-five-collab.spec.ts\"\n  ],\n  \"config\": \"e2e/playwright.production.config.ts\",\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"strict\",\n    \"ORCHESTRA_CHANNEL\": \"prod\"\n  }\n}\n"
+    }
+  ],
+  "expectedCounts": {
+    "draft": 7,
+    "intent": 7
+  },
+  "notes": "Disposable installed comparison. Original observer files are byte-identical, and original/candidate receive the same installed inputs once per UI owner. Exact operationId/state/reason/operational availability fields are compared; no source handler, grant, timeout or UI response is replaced. Subsequent invocations use the candidate once. This diagnostic run cannot substitute for clean import qualification.",
+  "result": "running",
+  "unitRun": 44998337630,
+  "unitCases": 106,
+  "unitAssertions": 1155
+}

@@ -44,12 +44,12 @@
   ],
   "run": 44998337630,
   "testJob": 137134156854,
-  "result": "running",
+  "result": "passed",
   "declaredNewCases": 35,
   "previousRegressionCases": 71,
   "staticReview": {
     "root": "Original namespace/mode/phase batching and lease/human revalidation ordering approved by reading.",
-    "peer": "Independent review approved candidate991eb; no blocking issue, captured original arrow reader ignores receiver.",
+    "peer": "Independent reviewer approved candidate991eb by full read: all candidate arrays unchanged, draft8reads/6humanActions/7revalidates, intent4reads/2humanActions/14revalidates, exact original arrow reader and final lease closure.",
     "receiver": "Original state-provider.ts386 defines read as an arrow function closing over input.persistence."
   },
   "changes": {
@@ -68,5 +68,17 @@
       "revalidations": 14
     }
   },
-  "limits": "No installed equality or clean browser PASS is claimed before those executions finish. Unchanged producer/grant/schema/registry/provider/selector/workflow/budget boundaries."
+  "limits": "Installed availability equality and clean browser qualification remain pending. Unit success alone does not qualify UI56.",
+  "cases": 106,
+  "failed": 0,
+  "assertions": 1155,
+  "newCases": 35,
+  "cleanupJob": 137134383481,
+  "installedComparison": {
+    "source": "b799889413c648f89ff78147499f7b9748affb43",
+    "snapshot": "6cf35ff7d2f4e850cb8c62c47941ef607872554d",
+    "record": "attempts/draft-intent-equivalence-01.json",
+    "status": "running"
+  },
+  "testBoundary": "Tests use genuine SQLite, original current-choice/source persistence composition, canonical C08 reader and original UI lease implementation. External identity/grant callbacks and replacement hooks are controlled to exercise refusal paths. Source handlers throw if called; no produced result or authority receipt is installed."
 }
