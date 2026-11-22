@@ -5,6 +5,7 @@ import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { createSfTeamProfileClient } from "@orchestra/client/sucafina/team-profile"
 import { useLanguage } from "../context/language"
+import { TeamProfileConfiguration } from "./team-profile-configuration"
 
 export type TeamAdministrationNotice =
   | "sf.teams.adminSaved" | "sf.teams.adminUnknown" | "sf.teams.adminConflict" | "sf.teams.adminFailed"
@@ -13,7 +14,7 @@ type View =
   | { status: "loading" | "denied" | "unavailable" }
   | { status: "ready"; profiles: readonly TeamProfile.AdminProfile[]; configRevision: TeamProfile.ConfigRevision }
 
-/** This panel edits shared enablement only; it never supplies a business owner or a grant. */
+/** Shared enablement and configuration; this panel never supplies a business owner or a grant. */
 export function TeamProfileAdministration(props: Readonly<{
   binding: SfTeamInstallationDescriptor
   context: SfTeamContext
@@ -26,8 +27,8 @@ export function TeamProfileAdministration(props: Readonly<{
 }>) {
   const language = useLanguage()
   const inputId = createUniqueId()
-  const [ui, setUi] = createStore<{ view: View; input: string; busy: boolean; invalid: boolean; limit: number }>({
-    view: { status: "unavailable" }, input: "", busy: false, invalid: false, limit: 100,
+  const [ui, setUi] = createStore<{ view: View; input: string; busy: boolean; invalid: boolean; limit: number; configuration: TeamProfile.Ref | undefined }>({
+    view: { status: "unavailable" }, input: "", busy: false, invalid: false, limit: 100, configuration: undefined,
   })
   const principal = { ...props.context.profile.principal }
   const generation = props.generation
@@ -49,7 +50,7 @@ export function TeamProfileAdministration(props: Readonly<{
     fetch: (input, init) => fetch(input, init),
   })
   const read = async () => {
-    if (pendingWrite || !current()) return
+    if (pendingWrite || ui.configuration || !current()) return
     const attempt = ++serial
     operation?.abort()
     operation = new AbortController()
@@ -79,7 +80,7 @@ export function TeamProfileAdministration(props: Readonly<{
   }
   const configure = async (action: TeamProfile.AdminCommand["action"], profile: TeamProfile.Ref) => {
     const view = ui.view
-    if (ui.busy || view.status !== "ready" || !current()) return
+    if (ui.busy || ui.configuration || view.status !== "ready" || !current()) return
     const decoded = Schema.decodeUnknownOption(TeamProfile.AdminCommand)({
       action, profile, expectedRevision: view.configRevision,
     })
@@ -149,27 +150,38 @@ export function TeamProfileAdministration(props: Readonly<{
     <Show when={ui.view.status === "denied"}><p role="alert">{language.t("sf.teams.adminDenied")}</p></Show>
     <Show when={ui.view.status === "unavailable"}><p role="alert">{language.t("sf.teams.adminUnavailable")}</p></Show>
     <Show when={ui.invalid}><p role="alert">{language.t("sf.teams.invalidTeam")}</p></Show>
-    <button type="button" class="mx-btn self-start" data-sf-admin-read disabled={ui.busy || ui.view.status === "loading"}
+    <button type="button" class="mx-btn self-start" data-sf-admin-read disabled={ui.busy || !!ui.configuration || ui.view.status === "loading"}
       onClick={() => void read()}>{language.t("sf.teams.adminRead")}</button>
     <Show when={ready()}>{(view) => <>
+      <Show when={ui.configuration} keyed>{(profile) =>
+        <TeamProfileConfiguration binding={props.binding} context={props.context} generation={generation}
+          currentGeneration={props.currentGeneration} currentContext={props.currentContext} profile={profile}
+          configRevision={view().configRevision} refresh={props.refresh} notify={props.notify}
+          close={() => setUi("configuration", undefined)} invalidate={() => {
+            setUi("configuration", undefined)
+            setUi("view", reconcile({ status: "unavailable" }))
+          }} />
+      }</Show>
       <form class="flex flex-col gap-2" onSubmit={(event) => { event.preventDefault(); enable() }}>
         <label for={inputId}>{language.t("sf.teams.teamId")}</label>
         <input id={inputId} data-sf-team-id-input class="mx-btn" autocomplete="off" maxlength={36}
-          value={ui.input} disabled={ui.busy} aria-describedby={inputId + "-help"} aria-invalid={ui.invalid}
+          value={ui.input} disabled={ui.busy || !!ui.configuration} aria-describedby={inputId + "-help"} aria-invalid={ui.invalid}
           onInput={(event) => setUi({ input: event.currentTarget.value, invalid: false })} />
         <p id={inputId + "-help"}>{language.t("sf.teams.enterTeam")}</p>
-        <button type="submit" class="mx-btn self-start" disabled={ui.busy}>{language.t("sf.teams.enable")}</button>
+        <button type="submit" class="mx-btn self-start" disabled={ui.busy || !!ui.configuration}>{language.t("sf.teams.enable")}</button>
       </form>
       <Show when={view().profiles.length} fallback={<p>{language.t("sf.teams.adminEmpty")}</p>}>
         <ul class="flex flex-col gap-3"><For each={view().profiles.slice(0, ui.limit)}>{(row) =>
           <li class="flex flex-wrap items-center gap-2" data-sf-admin-team={row.profile.teamObjectId}>
             <bdi class="break-all">{row.profile.teamObjectId}</bdi>
             <span>{language.t(row.enabled ? "sf.teams.enabled" : "sf.teams.disabled")}</span>
-            <button type="button" class="mx-btn" disabled={ui.busy}
+            <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration}
               data-sf-admin-action={row.enabled ? "disable" : "enable"}
               onClick={() => void configure(row.enabled ? "disable" : "enable", row.profile)}>
               {language.t(row.enabled ? "sf.teams.disable" : "sf.teams.enable")}</button>
-            <button type="button" class="mx-btn" disabled={ui.busy} data-sf-admin-action="remove"
+            <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration} data-sf-admin-configuration
+              onClick={() => setUi("configuration", row.profile)}>{language.t("sf.teams.configureChat")}</button>
+            <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration} data-sf-admin-action="remove"
               onClick={() => void configure("remove", row.profile)}>{language.t("sf.teams.remove")}</button>
           </li>
         }</For></ul>
