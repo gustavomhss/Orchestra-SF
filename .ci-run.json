@@ -1,0 +1,27 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+    "./Sucafinav1/test/product/teams-scanner/private-admission.check.ts",
+    "./Sucafinav1/test/g05-http-team-isolation.test.ts",
+    "./Sucafinav1/test/product/teams-scanner/private-import.check.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "teamsProfileScanner": {
+    "schema": "teams-profile-scanner-v3",
+    "candidateSha": "b4d1315876cd03c358741bbe2e6438569c843e47",
+    "candidateTree": "8a551f69e77e91cce1eee5a3d4696aaa4ab9bcf0",
+    "requestSha256": "7a677934d05907fda7d1e718360be7b2ec1ed31966ec90fa767778cdd9368023",
+    "selection": "controls-with-imports"
+  }
+}
