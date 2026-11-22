@@ -278,3 +278,15 @@ A separate snapshot-only diagnostic preserved this failure while observing the s
 [Run 44991578651](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44991578651), snapshot `ed96d0f667d6d2ed4516ca73115b6f3d165d4ab8`, retained the original 60-second failure and then observed the same single preview POST. It returned after 300,102ms with 403/denied/`decision-authority-changed`. Original selection registration and exact fresh readbacks passed; UI43/UI44 were not reached. The final handler revalidates after the inner operation and masks its result when the five-minute UI admission expires. The source of the latency is still being measured; no lease or permanent timeout was changed.
 
 Seven JPEGs are durable; only the final original refusal image was viewed. Internal timing markers were discarded by both original stdout sinks, so no inner call counts are claimed. [Full receipt and limits](attempt-09/README.md), [manifest](attempt-09/manifest.json).
+
+## Attempt 10 — visible finite work during the same five-minute preview
+
+[Run 44992841677](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44992841677), diagnostic snapshot `754c9b996a5d9f63591acbf3ae3707da994fc885`, preserved the original 60-second failure and observed the same single preview until 403/denied/`decision-authority-changed` at 300,054ms. Bounded forwarded markers recorded 20 completed metrics and 80 completed canonical resolves, with no pending recorded span. Four selection comparisons contain the first eight metrics; twelve more run afterward. Inclusive timers overlap; the 87,838ms after selection outside metric intervals remain unassigned. There were no periodic snapshot records and no physical-root counter.
+
+Seven JPEGs are durable; only the final refusal was viewed. The [receipt and interpretation](attempt-10/README.md), [manifest](attempt-10/manifest.json), [complete events](attempt-10/profile.json) and [intervals](attempt-10/preview-intervals.json) preserve the evidence. UI43/UI44 remain unqualified. Diagnostic overlays are excluded from product.
+
+## Attempt 11 — current native availability runtime, unchanged preview budget
+
+[Run 44992968102](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44992968102) used product `b486fd1e76bdb2dc7c48cb070ba67a744358131a`, snapshot `1118949166cfe49ec1a3931a7d9d0176c81c646f`, with only the first permanent Portfolio declaration retained. No profiler was present. Original comparisons returned 200/ok in 25,764ms and 25,820ms; selection registration returned 200/ok in 77,135ms, with exact readback. The single native preview POST had no observed response before the unchanged 60-second failure and teardown. Do not import Attempt 10's later 403 into this run.
+
+Seven JPEGs are durable; only the pending preview was viewed. [Receipt and limitations](attempt-11/README.md), [manifest](attempt-11/manifest.json). UI43/UI44 were not reached.
