@@ -116,8 +116,7 @@ export function createTeamProfileAccess(input: {
 
   async function authorize(request: Request, teamObjectId?: string, options?: { refreshSession?: boolean }) {
     const intent = readTeamProfileIntent(request, binding)
-    if (!intent || intent.kind === "administration" ||
-        teamObjectId && intent.kind === "team" && teamObjectId !== intent.profile.teamObjectId)
+    if (!intent || teamObjectId && intent.kind === "team" && teamObjectId !== intent.profile.teamObjectId)
       return { status: "denied" } as const
     const current = await observe(request, options?.refreshSession)
     if (current.status === "unavailable") return { status: "unavailable" } as const
