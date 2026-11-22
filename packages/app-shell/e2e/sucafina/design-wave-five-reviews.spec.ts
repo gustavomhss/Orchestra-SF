@@ -106,19 +106,43 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
   const diagnostics = observePage(page)
   const reads = monitor(page)
   const externalWrites = guardExternalWrites(page, installation.mount)
+  const initialWorkbenchRead = page.waitForResponse((response) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).searchParams.get("sf") === "dashboard-workbench", { timeout: 40_000 })
   await enter(page, owner, installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" +
     encodeSfRouteRef("design-test-before-proposal-source"), "Follow-up proposal", 40_000)
+  const initialWorkbenchResponse = await initialWorkbenchRead
+  expect(initialWorkbenchResponse.status()).toBe(200)
+  const originalWorkbench = object(await initialWorkbenchResponse.json())
+  expect(originalWorkbench.status).toBe("ok")
+  await info.attach("original-native-workbench-test-data", { contentType: "application/json",
+    body: JSON.stringify(originalWorkbench, null, 2) })
   const initialSource = page.locator('[data-sf-surface="UI54"] .sf-state-panel')
   await expect(initialSource).not.toHaveAttribute("data-sf-state", "loading", { timeout: 40_000 })
   console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-proposal-initial-source",
     state: await initialSource.getAttribute("data-sf-state") }))
   await capture(page, info, "UI54-dark-desktop-initial-source-test-data")
-  const draft = await seedWaveFiveReviewProposal(page.request, installation, owner)
+  const draft = await seedWaveFiveReviewProposal(page.request, installation, owner, originalWorkbench)
   const proposal: Screen = { id: "UI54",
     href: installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(draft.draftRef),
     title: "Follow-up proposal", titleBr: "Proposta de encaminhamento", state: "ready" }
   await page.setViewportSize({ width: 1440, height: 1100 })
+  const draftWorkbenchRead = page.waitForResponse((response) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).searchParams.get("sf") === "dashboard-workbench", { timeout: 40_000 })
   await screen(page, owner, proposal)
+  const draftWorkbenchResponse = await draftWorkbenchRead
+  expect(draftWorkbenchResponse.status()).toBe(200)
+  const registeredWorkbench = object(await draftWorkbenchResponse.json())
+  expect(registeredWorkbench.status).toBe("ok")
+  const decisions = object(object(registeredWorkbench.value).decisions)
+  const drafts = decisions.drafts
+  if (!Array.isArray(drafts)) throw new Error("Original native discovery omitted its drafts")
+  expect(drafts.map(object).filter((entry) => entry.draftRef === draft.draftRef)).toHaveLength(1)
+  expect(Array.isArray(decisions.preparations) ? decisions.preparations.length : undefined).toBe(0)
+  expect(Array.isArray(decisions.changes) ? decisions.changes.length : undefined).toBe(0)
+  await info.attach("original-native-registered-draft-test-data", { contentType: "application/json",
+    body: JSON.stringify(registeredWorkbench, null, 2) })
   await expect(page.locator('[data-sf-surface="UI54"]')).toContainText(draft.action)
   await expect(page.locator('[data-component="sf-change-review"]')).toHaveCount(0)
   await capture(page, info, "UI54-dark-desktop-original-draft-test-data")
@@ -297,6 +321,9 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
           expect(await updateRead.json()).toMatchObject({ status: "stale", reason: "review-read-changed" })
           await expect(page.getByRole("alert").filter({ hasText:
             "The original sources changed or could not be revalidated. Read them again." })).toBeVisible()
+          await page.getByRole("alert").filter({ hasText:
+            "The original sources changed or could not be revalidated. Read them again." }).scrollIntoViewIfNeeded()
+          await capture(page, info, "UI48-dark-desktop-original-stale-update-test-data")
         }
       }
       await scrollPageTop(page)
@@ -350,6 +377,13 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
     }
     await capture(page, info, names[index] + "-dark-390-test-data")
     if (index === 1 || index === 2) await captureValues(page, info, names[index] + "-values-dark-390-test-data", index === 2)
+    if (entry.id === "UI49") {
+      const region = page.locator("[data-sf-comparison-diff] .sf-n28-scroll").first()
+      await region.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" }))
+      await capture(page, info, "UI49-dark-390-original-comparison-table-test-data")
+      await region.evaluate((element) => element.scrollTo({ left: element.scrollWidth, behavior: "instant" }))
+      await capture(page, info, "UI49-dark-390-current-source-column-test-data")
+    }
   }
 
   const cookies = await page.context().cookies(installation.origin + installation.mount)

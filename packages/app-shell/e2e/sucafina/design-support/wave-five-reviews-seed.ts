@@ -13,7 +13,7 @@ function text(value: unknown) {
 
 /** Original authenticated producers create the test case and draft. No store, grant or receipt is patched. */
 export async function seedWaveFiveReviewProposal(request: APIRequestContext, installation: DesignInstallation,
-  owner: { installationId: string; projectId: string; hostId: string }) {
+  owner: { installationId: string; projectId: string; hostId: string }, originalWorkbench: unknown) {
   const base = installation.origin + installation.mount + "/dashboard"
   const post = async (mode: string, data: unknown, mutation = false) => {
     const response = await request.post(base + "?sf=" + mode, {
@@ -44,8 +44,13 @@ export async function seedWaveFiveReviewProposal(request: APIRequestContext, ins
   console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-proposal-native-availability",
     operations: operations.map(({ operationId, state, operational }) => ({ operationId, state, operational })) }))
   const period = { start: installation.year + "-01-01", end: installation.year + "-12-31" }
-  // The canonical Decisions fixture first registers an original empty-source case.
-  // The proposal's target evidence is subsequently read and supplied to the original draft producer.
+  // The app's successful original workbench response supplies the exact authorized
+  // target and evidence. Do not reconstruct a different read envelope or forge headers.
+  const workbench = object(originalWorkbench)
+  expect(workbench.status).toBe("ok")
+  const discovered = object(workbench.value)
+  expect(object(discovered.period)).toEqual(period)
+  // Case creation uses the existing canonical original Decisions fixture operation.
   const created = await post("workbench-command", { operation: "sf_case_draft", input: {
     objective: "Design test data · Preserve the sourcing follow-up proposal",
     horizon: period, currency: "USD",
@@ -59,7 +64,6 @@ export async function seedWaveFiveReviewProposal(request: APIRequestContext, ins
   expect(controls.status).toBe("ok")
   const selected = object(object(controls.value).selected)
   const caseRef = object(selected.caseRef)
-  const discovered = object((await post("dashboard-workbench", { page: "Hot Topics & Actions", period })).value)
   const records = discovered.records
   if (!Array.isArray(records)) throw new Error("Original workbench omitted its record catalog")
   const row = records.map(object).find((entry) => entry.label === installation.topicName)
@@ -75,12 +79,7 @@ export async function seedWaveFiveReviewProposal(request: APIRequestContext, ins
     sourceRefs: [evidence], expectedVersion: 0,
   }, true)
   const draftRef = text(object(saved.value).draftRef)
-  const checked = object((await post("dashboard-workbench", { page: "Hot Topics & Actions", period })).value)
-  const decisions = object(checked.decisions)
-  const drafts = decisions.drafts
-  if (!Array.isArray(drafts)) throw new Error("Original discovery omitted its drafts")
-  expect(drafts.map(object).filter((entry) => entry.draftRef === draftRef)).toHaveLength(1)
-  expect(Array.isArray(decisions.preparations) ? decisions.preparations.length : undefined).toBe(0)
-  expect(Array.isArray(decisions.changes) ? decisions.changes.length : undefined).toBe(0)
+  // The caller re-reads through the actual native consumer and verifies the registered
+  // draft, absence of preparations and absence of changes before any capture.
   return { draftRef, action }
 }
