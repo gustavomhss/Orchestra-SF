@@ -19,6 +19,27 @@ export function requestBodyLength(value: string | null, limit: number): number |
   return length
 }
 
+/** Cleanup must never replace an established EOF, rejection or cancellation. */
+function cancelRequestBody(source: Pick<ReadableStream<Uint8Array>, "cancel">) {
+  try {
+    // A source may have an arbitrary async cancellation hook; closing its reader is synchronous.
+    void source.cancel().catch(() => undefined)
+  } catch {
+    // Preserve the already established terminal result even for a broken source implementation.
+  }
+}
+
+function releaseRequestBodyReader(reader: ReadableStreamDefaultReader<Uint8Array>, cancel: boolean) {
+  if (cancel) cancelRequestBody(reader)
+  try {
+    reader.releaseLock()
+  } catch {
+    // Native readers can fail during release after EOF. Cancel is a best-effort close,
+    // not proof that the runtime released its lock; no further reads use this reader.
+    if (!cancel) cancelRequestBody(reader)
+  }
+}
+
 /** One lazy reader, zero read-ahead and a byte budget checked before enqueueing. */
 export function limitRequestBody(source: ReadableStream<Uint8Array> | null, input: {
   limit: number
@@ -37,13 +58,11 @@ export function limitRequestBody(source: ReadableStream<Uint8Array> | null, inpu
     input.signal.removeEventListener("abort", aborted)
     const reader = state.reader
     state.reader = undefined
-    // Cancel closes pending reads synchronously. Do not await an arbitrary source's cancel hook.
     if (reader) {
-      if (cancel) void reader.cancel().catch(() => undefined)
-      reader.releaseLock()
+      releaseRequestBodyReader(reader, cancel)
       return
     }
-    if (cancel && source && !source.locked) void source.cancel().catch(() => undefined)
+    if (cancel && source && !source.locked) cancelRequestBody(source)
   }
   const reject = (status: 400 | 413) => {
     if (state.ended) return
@@ -71,8 +90,9 @@ export function limitRequestBody(source: ReadableStream<Uint8Array> | null, inpu
             if (input.declared !== undefined && state.bytes !== input.declared) return reject(400)
             state.ended = true
             state.complete = true
-            release(false)
+            // Settle the bounded stream before touching source-reader cleanup.
             controller.close()
+            release(false)
             return
           }
           if (!(chunk.value instanceof Uint8Array)) return reject(400)
@@ -113,7 +133,7 @@ export async function readRequestBody(request: Request, limit: number): Promise<
     try {
       return requestBodyLength(request.headers.get("content-length"), limit)
     } catch (error) {
-      if (request.body && !request.body.locked) void request.body.cancel().catch(() => undefined)
+      if (request.body && !request.body.locked) cancelRequestBody(request.body)
       throw error
     }
   })()
@@ -138,7 +158,10 @@ export async function readRequestBody(request: Request, limit: number): Promise<
     }, 0)
     return bytes
   } finally {
-    reader?.releaseLock()
-    bounded.dispose()
+    try {
+      bounded.dispose()
+    } finally {
+      if (reader) releaseRequestBodyReader(reader, false)
+    }
   }
 }
