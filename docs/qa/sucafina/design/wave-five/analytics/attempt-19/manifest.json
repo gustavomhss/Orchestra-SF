@@ -1,0 +1,588 @@
+{
+  "schema": "sf-wave-five-analytics-attempt-v1",
+  "attempt": 19,
+  "label": "Portfolio22",
+  "kind": "installed-native-original-journey",
+  "outcome": "failure",
+  "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "snapshot": "405775a4af9c9a990228d3cff44b8c0940bf899d",
+  "tree": "7bb398d233182066b19bc49b0bd1553474ba165b",
+  "run": {
+    "id": 45029253108,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45029253108",
+    "branch": "ci-run-sf5portfolio22",
+    "workflow": "test-ci",
+    "attempt": 1,
+    "createdAt": "2026-11-22T13:46:34Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "test": {
+      "id": 137228964207,
+      "name": "test (ubuntu-24.04)",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45029253108/job/137228964207",
+      "status": "completed",
+      "conclusion": "failure",
+      "startedAt": "2026-11-22T13:46:37Z",
+      "completedAt": "2026-11-22T13:55:49Z"
+    },
+    "cleanup": {
+      "id": 137231419873,
+      "name": "cleanup",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45029253108/job/137231419873",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-22T13:55:50Z",
+      "completedAt": "2026-11-22T13:55:53Z"
+    }
+  },
+  "preflight": {
+    "parentVerified": true,
+    "parent": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "comparePathsExact": true,
+    "fileCount": 2,
+    "overlays": [
+      {
+        "path": ".ci-run.json",
+        "sha": "a11922821a47594d76397582be38f9b7940177ca",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+        "status": "modified"
+      }
+    ],
+    "spec": "original first declaration, with its unchanged helpers, from Portfolio18 snapshot 5b31da8839f2738995fc5b07cdb4b05212188eab",
+    "request": {
+      "package": "app",
+      "packageSelector": "@orchestra/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "environment": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "originalTimeouts": {
+      "journeyMs": 780000,
+      "pageDefaultMs": 20000,
+      "portfolioPreviewMs": 60000,
+      "portfolioEvaluateMs": 60000,
+      "sensitivityEvaluateMs": 120000,
+      "installationFixtureMs": 190000,
+      "nativeSetupMs": 180000,
+      "nativeWebBuildMs": 120000
+    },
+    "helperBlobs": {
+      "source": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+      "analytics": "ebbab2a37b7f1fe5b65bbe4595dbc4b12347ae02",
+      "capture": "61bab8a4b008a0dd7d55be7726ede3419c319a1d",
+      "decisionsSeed": "32b39933bf81c220729d3af910809e7d7b88910f",
+      "nativeInstallation": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "productionConfig": "9724c9412a19fdbcf45ebe55873e49501c63639a"
+    },
+    "profiler": false,
+    "preload": false,
+    "replay": false
+  },
+  "failure": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "line": 72,
+    "column": 32,
+    "type": "TimeoutError",
+    "message": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+    "operation": "decision-portfolio-preview",
+    "sequence": 3,
+    "originalTimeoutMs": 60000,
+    "nativeRequestAt": "2026-11-22T13:54:40.8816535Z",
+    "responseObserved": false,
+    "http": null,
+    "status": null,
+    "body": null,
+    "secondPreview": false,
+    "explicitPortfolioEvaluation": false,
+    "portfolioResultsJourney": false,
+    "sensitivityEvaluation": false,
+    "portugueseJourney": false,
+    "internalPersistence": "unknown"
+  },
+  "preparation": {
+    "originalHelper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+    "complete": true,
+    "caseVersion": 6,
+    "criterionVersion": 2,
+    "humanSelectionVersion": 1,
+    "originalUnitsReadbackMatched": true,
+    "originalAlternativePairMatched": true,
+    "originalCriteriaMatched": true,
+    "currentComparisonUnchanged": true,
+    "comparisonsMs": [
+      61786,
+      60373
+    ],
+    "selectionRegistrationMs": 40254,
+    "ruleRegistrationMs": 1413
+  },
+  "nativeHistory": [
+    {
+      "sequence": 1,
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 438
+    },
+    {
+      "sequence": 2,
+      "http": 200,
+      "status": "ok",
+      "elapsedMs": 824
+    }
+  ],
+  "progression": {
+    "completed": [
+      "original isolated native fixture and source preparation",
+      "original rule and units readback",
+      "original comparison, human portfolio selection and repeated comparison readback",
+      "UI42 list: dark/light desktop, dark 390 px and light 320 px",
+      "UI42 empty authorized case and disabled preview",
+      "UI42 original candidate and v2 constraint selected with exploration limit 4"
+    ],
+    "blocked": "first original decision-portfolio-preview response wait",
+    "notReached": [
+      "conditioned preview result and its assertions/capture",
+      "back-to-scenarios and repeated preview",
+      "explicit portfolio evaluation and confirmation",
+      "UI43 recorded portfolio results and source readback",
+      "UI44 source controls, review, sensitivity evaluation and recorded samples",
+      "Portuguese completion journey",
+      "final SF_ANALYTICS_SCOPE completion event"
+    ]
+  },
+  "events": {
+    "file": "source-events.json",
+    "sha": "a26619bde585ac0ba5d2c6aac5148537d023591e",
+    "sourceRecords": 24,
+    "contextRecords": 2,
+    "captureMetadataRecords": 6,
+    "fixtureStages": 46,
+    "pageDiagnostics": 3,
+    "completionRecords": 0,
+    "parseErrors": 0,
+    "finalJobOnly": true,
+    "remoteContentVerified": true
+  },
+  "visual": {
+    "source": "unchanged original SF_DESIGN_PREVIEW log chunks",
+    "allEmittedViewed": true,
+    "emittedImages": 7,
+    "originalChunks": 33,
+    "decodedJpegBytes": 537306,
+    "chunkNumbering": "1-based; every part 1..parts present exactly once",
+    "resampled": false,
+    "remoteBytesVerified": true,
+    "captureCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236",
+    "images": [
+      {
+        "name": "UI42-list-dark-desktop-test-data",
+        "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 80643,
+        "width": 1440,
+        "height": 1100,
+        "partCount": 5,
+        "firstTimestamp": "2026-11-22T13:54:19.7259430Z",
+        "lastTimestamp": "2026-11-22T13:54:19.8577034Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Dark desktop list: two authorized cases, versions 2 and 6, and separate Open case actions are readable in aligned cards. This capture covers the list state only.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "list",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:19.7259430Z"
+          },
+          {
+            "part": 2,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:19.7590635Z"
+          },
+          {
+            "part": 3,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:19.7904255Z"
+          },
+          {
+            "part": 4,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:19.8315096Z"
+          },
+          {
+            "part": 5,
+            "parts": 5,
+            "encodedChars": 11524,
+            "timestamp": "2026-11-22T13:54:19.8577034Z"
+          }
+        ],
+        "sha": "1425601dcb1828a07267d7fd5a50ed3488b78b05",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "UI42-list-light-desktop-test-data",
+        "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 85929,
+        "width": 1440,
+        "height": 1100,
+        "partCount": 5,
+        "firstTimestamp": "2026-11-22T13:54:20.2961524Z",
+        "lastTimestamp": "2026-11-22T13:54:20.4648589Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Light desktop list: the same two cases, versions and actions remain readable; case titles wrap within their cards.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "list",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.2961524Z"
+          },
+          {
+            "part": 2,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.3212599Z"
+          },
+          {
+            "part": 3,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.3635983Z"
+          },
+          {
+            "part": 4,
+            "parts": 5,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.4394263Z"
+          },
+          {
+            "part": 5,
+            "parts": 5,
+            "encodedChars": 18572,
+            "timestamp": "2026-11-22T13:54:20.4648589Z"
+          }
+        ],
+        "sha": "c127c22b5cf9f387f048641852775e6100063a93",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "UI42-list-dark-390-test-data",
+        "path": "gallery/UI42-list-dark-390-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 28708,
+        "width": 390,
+        "height": 844,
+        "partCount": 2,
+        "firstTimestamp": "2026-11-22T13:54:20.5773171Z",
+        "lastTimestamp": "2026-11-22T13:54:20.5990676Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Dark 390 px list: the native layout stacks both case cards; headings, versions and Open case actions remain visible without obvious horizontal clipping.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "list",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 2,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.5773171Z"
+          },
+          {
+            "part": 2,
+            "parts": 2,
+            "encodedChars": 14280,
+            "timestamp": "2026-11-22T13:54:20.5990676Z"
+          }
+        ],
+        "sha": "5dd3373e80c5017c09c782de5718ba393af9902e",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "UI42-list-light-320-test-data",
+        "path": "gallery/UI42-list-light-320-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 27471,
+        "width": 320,
+        "height": 800,
+        "partCount": 2,
+        "firstTimestamp": "2026-11-22T13:54:20.9031385Z",
+        "lastTimestamp": "2026-11-22T13:54:20.9242294Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Light 320 px list: both case cards stack inside the compact native page; long titles wrap, and versions plus Open case actions remain visible.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "list",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 2,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:20.9031385Z"
+          },
+          {
+            "part": 2,
+            "parts": 2,
+            "encodedChars": 12628,
+            "timestamp": "2026-11-22T13:54:20.9242294Z"
+          }
+        ],
+        "sha": "05079b8948ec3e9f5b8424166f231b2223eb9d8d",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "UI42-empty-authorized-case-test-data",
+        "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 97948,
+        "width": 1440,
+        "height": 1100,
+        "partCount": 6,
+        "firstTimestamp": "2026-11-22T13:54:29.5723829Z",
+        "lastTimestamp": "2026-11-22T13:54:29.6911761Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Empty authorized case: case version 2, USD and the source horizon are readable; the page explicitly reports no eligible scenarios, keeps Preview combinations disabled and shows no recorded results.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "configure",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:29.5723829Z"
+          },
+          {
+            "part": 2,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:29.5930449Z"
+          },
+          {
+            "part": 3,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:29.6139968Z"
+          },
+          {
+            "part": 4,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:29.6440615Z"
+          },
+          {
+            "part": 5,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:29.6726107Z"
+          },
+          {
+            "part": 6,
+            "parts": 6,
+            "encodedChars": 10600,
+            "timestamp": "2026-11-22T13:54:29.6911761Z"
+          }
+        ],
+        "sha": "0e6fcc5475e31d8a71f7acdf7fc302db4f4b7578",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 106410,
+        "width": 1440,
+        "height": 1100,
+        "partCount": 6,
+        "firstTimestamp": "2026-11-22T13:54:40.7442907Z",
+        "lastTimestamp": "2026-11-22T13:54:40.8725839Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Configured source case: case version 6 shows three original candidates, the selected candidate and v2 constraint, and exploration limit 4 with a visible focus outline. Preview combinations is available before submission.",
+        "visualOutcome": "readable partial state; not complete journey qualification",
+        "surface": "UI42",
+        "stage": "configure",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:40.7442907Z"
+          },
+          {
+            "part": 2,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:40.7673659Z"
+          },
+          {
+            "part": 3,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:40.7907812Z"
+          },
+          {
+            "part": 4,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:40.8232900Z"
+          },
+          {
+            "part": 5,
+            "parts": 6,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:54:40.8510496Z"
+          },
+          {
+            "part": 6,
+            "parts": 6,
+            "encodedChars": 21880,
+            "timestamp": "2026-11-22T13:54:40.8725839Z"
+          }
+        ],
+        "sha": "ee5e379c60b6dc4e6f1bca6134d728db3189232d",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+        "mimeType": "image/jpeg",
+        "bytes": 110197,
+        "width": 1440,
+        "height": 1100,
+        "partCount": 7,
+        "firstTimestamp": "2026-11-22T13:55:41.2422723Z",
+        "lastTimestamp": "2026-11-22T13:55:41.4101182Z",
+        "viewed": true,
+        "reviewer": "/root/read_path",
+        "finding": "Failure capture: Preview combinations remains Running, the inputs are disabled, the preview region says Preview is not yet available with placeholder bars, and History still has no recorded results. This is a pending producer state, not a completed preview.",
+        "visualOutcome": "blocked pending preview; no result qualification",
+        "surface": "UI42",
+        "stage": "pending-preview-at-failure",
+        "chunks": [
+          {
+            "part": 1,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.2422723Z"
+          },
+          {
+            "part": 2,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.2921918Z"
+          },
+          {
+            "part": 3,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.3253483Z"
+          },
+          {
+            "part": 4,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.3479524Z"
+          },
+          {
+            "part": 5,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.3692098Z"
+          },
+          {
+            "part": 6,
+            "parts": 7,
+            "encodedChars": 24000,
+            "timestamp": "2026-11-22T13:55:41.3961541Z"
+          },
+          {
+            "part": 7,
+            "parts": 7,
+            "encodedChars": 2932,
+            "timestamp": "2026-11-22T13:55:41.4101182Z"
+          }
+        ],
+        "sha": "7fe03a233950702a7730d52365a05190fd5fef03",
+        "remoteBytesVerified": true,
+        "verifiedAtCommit": "0ff56e6f41c39fb2243fe002329f095a2115e236"
+      }
+    ]
+  },
+  "artifact": {
+    "id": 14757102249,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 8821531,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14757102249",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14757102249/zip",
+    "expired": false,
+    "created_at": "2026-11-22T13:55:45Z",
+    "expires_at": "2026-11-29T13:55:43Z",
+    "updated_at": "2026-11-22T13:55:45Z",
+    "digest": "sha256:ee8d2090539da8f7275004ca6b02dbf897d2bc40003a2184e320516c71e56247",
+    "workflow_run": {
+      "id": 45029253108,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf5portfolio22",
+      "head_sha": "405775a4af9c9a990228d3cff44b8c0940bf899d"
+    },
+    "acquisition": "metadata retained; canonical PNG ZIP not downloaded"
+  },
+  "qualification": {
+    "fullJourneyCompleted": false,
+    "areaPassDeclared": false,
+    "areasQualifiedByThisAttempt": 0,
+    "globalInventoryChanged": false,
+    "ui42": "partial list, empty case and configuration; first preview blocked",
+    "ui43": "not reached",
+    "ui44": "not reached in this journey"
+  },
+  "limitations": [
+    "No preview response, HTTP status or producer body was observed within the unchanged 60000 ms wait.",
+    "Internal completion or persistence after the browser wait is unknown; no completion is inferred from readiness metadata.",
+    "The seven reviewed JPEGs cover partial UI42 states only. No UI43, UI44 result or Portuguese completion is established.",
+    "No profiler was installed and no causal performance conclusion is drawn from the source timings.",
+    "The external Playwright artifact has its recorded expiry; the seven original JPEGs and filtered events are preserved in this repository."
+  ],
+  "preservation": {
+    "qaOnly": true,
+    "branch": "sf-portfolio-qa",
+    "prefix": "docs/qa/sucafina/design/wave-five/analytics/attempt-19/",
+    "noRuntimeChange": true,
+    "noWorkflowChange": true,
+    "noProducerOrPermissionChange": true,
+    "noHelperSeedOrTimeoutChange": true,
+    "noReplay": true,
+    "noAutomaticRerun": true,
+    "noRawTranscriptCommitted": true,
+    "noGlobalCountChange": true
+  }
+}
