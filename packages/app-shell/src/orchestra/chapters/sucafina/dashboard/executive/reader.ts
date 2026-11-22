@@ -3,7 +3,7 @@ import { createStore } from "solid-js/store"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfRef, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import type { SfUiState } from "../../shared/frame/types"
-import { useSfContext } from "../../context"
+import { useSfReadableContext as useSfContext } from "../../context"
 
 /**
  * U02 read lifecycle. A single authorized producer request per selection; no

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { digest, parseRequest, repository, verifyAdmission } from "./go-live-package.mjs"
+import { createHash } from "node:crypto"
+import { digest, parseRequest, readPinnedRequest, readQualificationRequest, repository, requestRevision,
+  sameAdmission, verifyAdmission, verifyBuildAdmission } from "./go-live-package.mjs"
 
 function fixture() {
   const candidate = { sha: "a".repeat(40), tree: "b".repeat(40) }
@@ -169,4 +171,168 @@ test("existing textual ACK can be bound without asking its author to approve aga
 test("API failure stops qualification instead of creating a source receipt", async () => {
   const f = fixture()
   await assert.rejects(verifyAdmission(f.request, async () => { throw new Error("source unavailable") }), /source unavailable/)
+})
+
+
+// Synthetic GitHub source controls. These fixtures do not produce a tar or an installed receipt.
+function pinRequest(f, value, kind, revision = "f".repeat(40)) {
+  const path = "docs/qa/sucafina/go-live/" + (kind === "build" ? "g07-build-request.json" : "g07-request.json")
+  const bytes = Buffer.from(JSON.stringify(value, null, 2) + "\n")
+  const content = {
+    type: "file", path, encoding: "base64", size: bytes.length, content: bytes.toString("base64"),
+    sha: createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+  }
+  const contentPath = f.base + "/contents/" + path + "?ref=" + revision
+  f.data.set(f.base + "/git/commits/" + revision, { sha: revision, tree: { sha: "e".repeat(40) } })
+  f.data.set(contentPath, content)
+  return { revision, content, contentPath }
+}
+
+function buildFixture() {
+  const f = fixture()
+  const build = {
+    schema: "sf-g07-build-request-v1", candidate: f.request.candidate,
+    acknowledgements: f.request.acknowledgements, productionCutover: false
+  }
+  const pinned = pinRequest(f, build, "build")
+  const context = {
+    repository, eventName: "push", ref: "refs/heads/release-build-" + pinned.revision,
+    sha: build.candidate.sha, tree: build.candidate.tree,
+    runId: "33", runAttempt: "2", jobId: "44", checkRunId: "55"
+  }
+  Object.assign(f.data.get(f.base + "/actions/runs/33/attempts/2"), {
+    head_sha: context.sha, head_branch: context.ref.slice("refs/heads/".length),
+    path: ".github/workflows/g09-final.yml", event: "push", status: "in_progress", conclusion: null
+  })
+  Object.assign(f.data.get(f.base + "/actions/jobs/44"), {
+    head_sha: context.sha, status: "in_progress", conclusion: null
+  })
+  return { ...f, build, context, pinned,
+    repin: () => pinRequest(f, build, "build"),
+    run: () => f.data.get(f.base + "/actions/runs/33/attempts/2"),
+    job: () => f.data.get(f.base + "/actions/jobs/44") }
+}
+
+test("build admission observes immutable request bytes, actual C/T and the active producer before any artifact exists", async () => {
+  const f = buildFixture()
+  const result = await verifyBuildAdmission(f.context, f.api)
+  assert.equal(result.schema, "sf-g07-build-admission-v1")
+  assert.equal(result.status, "VERIFIED_SOURCE")
+  assert.deepEqual(result.candidate, f.build.candidate)
+  assert.equal(result.requestSource.revision, f.pinned.revision)
+  assert.equal(result.requestSource.blobSha, f.pinned.content.sha)
+  assert.equal(result.requestSource.sha256, digest(Buffer.from(f.pinned.content.content, "base64")))
+  assert.equal(result.producer.workflowSha, f.context.sha)
+  assert.equal(result.producer.operatorLogin, "qa-test-fixture")
+  assert.equal(result.acknowledgements.migration.source.authorLogin, result.acknowledgements.release.source.authorLogin)
+  assert.match(result.acknowledgements.release.roleConfirmation.identityLimit, /identities are not inferred/)
+  assert.equal(result.productionCutover, false)
+  assert.equal(result.installation, null)
+  assert.equal(f.calls.some((path) => path.includes("/actions/artifacts/")), false)
+})
+
+for (const [name, change, message] of [
+  ["floating request ref", (f) => { f.context.ref = "refs/heads/release-build-dev" }, /exact immutable request branch/],
+  ["foreign Actions repository", (f) => { f.context.repository = "other/repo" }, /Actions repository/],
+  ["non-push request", (f) => { f.context.eventName = "workflow_dispatch" }, /push event/],
+  ["request commit replacement", (f) => { f.data.get(f.base + "/git/commits/" + f.pinned.revision).sha = "d".repeat(40) }, /request commit mismatch/],
+  ["wrong request file", (f) => { f.pinned.content.path = "other.json" }, /file identity/],
+  ["request byte truncation", (f) => { f.pinned.content.size += 1 }, /byte count mismatch/],
+  ["noncanonical base64", (f) => { f.pinned.content.content += "!" }, /noncanonical request encoding/],
+  ["request blob substitution", (f) => { f.pinned.content.sha = "0".repeat(40) }, /Git blob mismatch/],
+  ["oversized request", (f) => { f.pinned.content.size = 131073 }, /request byte limit/],
+  ["missing migration ACK", (f) => { delete f.build.acknowledgements.migration; f.repin() }, /object required/],
+  ["shared original ACK", (f) => { f.build.acknowledgements.release.url = f.build.acknowledgements.migration.url; f.repin() }, /separate original/],
+  ["missing role declaration", (f) => { f.changePin("release", (pin) => { delete pin.role }); f.repin() }, /one unambiguous pin/],
+  ["requested production cutover", (f) => { f.build.productionCutover = true; f.repin() }, /must not authorize production/],
+  ["premature producer claim", (f) => { f.build.producer = f.request.producer; f.repin() }, /must not claim a completed producer/],
+  ["branch outside C", (f) => { f.context.sha = "c".repeat(40) }, /build branch candidate mismatch/],
+  ["checkout outside T", (f) => { f.context.tree = "c".repeat(40) }, /checkout tree mismatch/],
+  ["source tree changed", (f) => { f.data.get(f.base + "/git/commits/" + f.context.sha).tree.sha = "c".repeat(40) }, /source tree mismatch/],
+  ["producer from another C", (f) => { f.run().head_sha = "c".repeat(40) }, /producer source mismatch/],
+  ["producer from another B", (f) => { f.run().head_branch = "release-build-" + "d".repeat(40) }, /request branch mismatch/],
+  ["producer from another repository", (f) => { f.run().repository.full_name = "other/repo" }, /producer repository mismatch/],
+  ["producer event mismatch", (f) => { f.run().event = "pull_request" }, /producer event mismatch/],
+  ["producer workflow replacement", (f) => { f.run().path = ".github/workflows/other.yml" }, /workflow path mismatch/],
+  ["different actual operator", (f) => { f.run().triggering_actor.login = "unconfirmed" }, /confirmed Release operator/],
+  ["producer completed already", (f) => { f.run().status = "completed" }, /run is not active/],
+  ["job from another attempt", (f) => { f.job().run_attempt = 1 }, /another attempt/],
+  ["job from another C", (f) => { f.job().head_sha = "c".repeat(40) }, /job source mismatch/],
+  ["another producer job", (f) => { f.job().name = "other-job" }, /unexpected producer job/],
+  ["job check-run replacement", (f) => { f.job().check_run_url += "0" }, /check-run mismatch/],
+  ["job no longer active", (f) => { f.job().status = "completed" }, /job is not active/],
+  ["job already concluded", (f) => { f.job().conclusion = "success" }, /already concluded/],
+  ["ACK later than producer start", (f) => { f.comment("release").updated_at = "2026-01-01T11:01:00Z" }, /started before both/]
+]) {
+  test("pre-build admission refuses " + name, async () => {
+    const f = buildFixture()
+    change(f)
+    await assert.rejects(verifyBuildAdmission(f.context, f.api), message)
+  })
+}
+
+test("two actually declared roles can share the owner and GitHub account without inventing separate identities", async () => {
+  const f = buildFixture()
+  for (const role of ["migration", "release"]) {
+    f.build.acknowledgements[role].owner = "jointly-delegated-test-fixture"
+    f.changePin(role, (pin) => { pin.owner = "jointly-delegated-test-fixture" })
+  }
+  f.repin()
+  const result = await verifyBuildAdmission(f.context, f.api)
+  assert.equal(result.acknowledgements.migration.roleConfirmation.owner,
+    result.acknowledgements.release.roleConfirmation.owner)
+  assert.notEqual(result.acknowledgements.migration.source.url, result.acknowledgements.release.source.url)
+})
+
+test("pre-tar recheck reads original ACKs again and refuses an edit after initial admission", async () => {
+  const f = buildFixture()
+  const first = await verifyBuildAdmission(f.context, f.api)
+  const final = await verifyBuildAdmission(f.context, f.api)
+  first.verifier = { workflowSha: f.context.sha, observedAt: "2026-01-01T11:01:00Z" }
+  final.verifier = { workflowSha: f.context.sha, observedAt: "2026-01-01T11:02:00Z" }
+  sameAdmission(first, final)
+  f.comment("migration").body += "\nEdited while compiling."
+  await assert.rejects(verifyBuildAdmission(f.context, f.api), /source changed/)
+  final.requestSource.sha256 = "0".repeat(64)
+  assert.throws(() => sameAdmission(first, final), /live source changed/)
+})
+
+test("qualifier request branch must point to C while request B remains independently pinned", async () => {
+  const f = fixture()
+  const pinned = pinRequest(f, f.request, "qualify")
+  const context = {
+    repository, eventName: "push", ref: "refs/heads/g07-qualify-" + pinned.revision,
+    sha: f.request.candidate.sha
+  }
+  const loaded = await readQualificationRequest(context, f.api)
+  assert.equal(loaded.request.candidate.sha, context.sha)
+  assert.equal(loaded.source.revision, pinned.revision)
+  assert.equal(loaded.source.blobSha, pinned.content.sha)
+  await assert.rejects(readQualificationRequest({ ...context, sha: "e".repeat(40) }, f.api),
+    /branch must point to the exact candidate/)
+  assert.throws(() => requestRevision("qualify", { ...context, ref: "refs/heads/g07-qualify-dev" }),
+    /exact immutable request branch/)
+})
+
+test("existing manual qualification remains constrained to dev and a full immutable request SHA", async () => {
+  const f = fixture()
+  const pinned = pinRequest(f, f.request, "qualify")
+  const context = {
+    repository, eventName: "workflow_dispatch", ref: "refs/heads/dev", requestRevision: pinned.revision
+  }
+  const loaded = await readQualificationRequest(context, f.api)
+  assert.equal(loaded.source.revision, pinned.revision)
+  assert.throws(() => requestRevision("qualify", { ...context, ref: "refs/heads/other" }), /requires dev/)
+  assert.throws(() => requestRevision("qualify", { ...context, requestRevision: "dev" }), /invalid digest/)
+})
+
+test("request loading rejects invalid UTF-8 even if byte count and Git blob match", async () => {
+  const f = fixture()
+  const pinned = pinRequest(f, f.request, "qualify")
+  const bytes = Buffer.from([0xff])
+  Object.assign(pinned.content, {
+    size: bytes.length, content: bytes.toString("base64"),
+    sha: createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+  })
+  await assert.rejects(readPinnedRequest(pinned.revision, "qualify", f.api), /encoded data was not valid/)
 })

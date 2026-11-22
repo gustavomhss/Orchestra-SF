@@ -4,7 +4,8 @@ import assert from "node:assert/strict"
 import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
+import az02 from "../../sf/azure/identity/az02-proof.cjs"
+import { destinationGrants, requireDistinctDestinationGrants, cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateGrantProof, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
@@ -83,6 +84,50 @@ function environment() {
     GITHUB_RUN_ID: value.invocation.runId, GITHUB_RUN_ATTEMPT: value.invocation.runAttempt,
     GITHUB_WORKFLOW_SHA: value.invocation.workflowSha, SF_G08_INVOCATION_ID: value.invocation.id }
 }
+
+function destinationControl() {
+  return { destinations: [
+    { capabilityId: "CAP01", surface: "dashboard", page: "synthetic-page-a", canRead: true,
+      allowedActionIds: ["synthetic-read", "synthetic-export"] },
+    { capabilityId: "CAP02", surface: "dashboard", page: "synthetic-page-b", canRead: true, allowedActionIds: [] },
+  ] }
+}
+test("distinct-grant oracle accepts actual destination page and permission differences", () => {
+  for (const change of [
+    (value) => { value.destinations.pop() },
+    (value) => { value.destinations[0].page = "synthetic-page-c" },
+    (value) => { value.destinations[0].canRead = false },
+    (value) => { value.destinations[0].allowedActionIds = ["synthetic-read"] },
+  ]) {
+    const requester = destinationControl(), holder = structuredClone(requester)
+    change(holder)
+    assert.doesNotThrow(() => requireDistinctDestinationGrants(requester, holder))
+  }
+})
+test("distinct-grant oracle refuses empty projections, metadata changes and ordering alone", () => {
+  const requester = { ...destinationControl(), stamp: { principalRef: "synthetic-requester", accessRevision: 1 }, availability: [] }
+  const holder = { ...destinationControl(), stamp: { principalRef: "synthetic-holder", accessRevision: 2 },
+    availability: [{ synthetic: "changed availability is not a grant" }] }
+  holder.destinations.reverse()
+  holder.destinations.forEach((entry) => entry.allowedActionIds.reverse())
+  assert.deepEqual(destinationGrants(requester), destinationGrants(holder))
+  assert.throws(() => requireDistinctDestinationGrants(requester, holder), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+  assert.throws(() => requireDistinctDestinationGrants({ ...requester, destinations: [] },
+    { ...holder, destinations: [] }), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+})
+test("distinct-grant oracle refuses ambiguous or malformed destination permissions", () => {
+  for (const change of [
+    (value) => { delete value.destinations },
+    (value) => { value.destinations[0].allowedActionIds.push("synthetic-read") },
+    (value) => { value.destinations.push(structuredClone(value.destinations[0])) },
+    (value) => { value.destinations[0].canRead = "true" },
+    (value) => { value.destinations[0].authority = "synthetic-extra" },
+  ]) {
+    const value = destinationControl()
+    change(value)
+    assert.throws(() => destinationGrants(value))
+  }
+})
 
 test("synthetic complete metadata validates without treating metadata as authority", () => {
   assert.equal(validatePlan(plan()).candidate.sha, plan().candidate.sha)
@@ -214,29 +259,43 @@ test("digest preserves exact bytes including trailing newline", () => {
 })
 
 const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
-test("original nine Teams obligations and 50 business registrations remain separate from seven current-contract controls", () => {
+test("nine current-contract controls retain the original Teams obligations and separate 50 business registrations", () => {
   const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
-  assert.equal(cases.length, 7)
+  assert.equal(cases.length, 9)
   assert.equal(preservedTeams.length, 9)
   assert.deepEqual(list.originalTeams.map((entry) => entry.id), preservedTeams)
   assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
-  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 5)
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "NOT_RUN")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PARTIAL")
-  assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PARTIAL")
+  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 9)
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "PASS")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PASS")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
   assert.deepEqual(executed.groups.map((entry) => entry.id), pendingGroups)
-  assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32])
+  assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37])
   assert.throws(() => requireCompleteGate(list), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
   assert.throws(() => requireCompleteGate(executed), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
+})
+test("AZ02 coverage preserves 32 original obligations and requires all 37 cases from the integrated producer", () => {
+  const group = obligations.groups.find((entry) => entry.id === "AZ02")
+  assert.equal(group.expectedCount, 32)
+  assert.deepEqual(group.phases.map((entry) => entry.count), [14, 11, 2, 2, 2, 1])
+  assert.deepEqual(group.operationalContract.caseIdsByPhase, az02.ROSTER)
+  assert.deepEqual(group.operationalContract.phases.map((entry) => entry.count), [16, 14, 2, 2, 2, 1])
+  assert.deepEqual(group.operationalContract.remappedIds, az02.LEGACY_MAP)
+  assert.deepEqual(group.operationalContract.addedCaseIds, az02.ADDITIONS)
+  const coverage = coverageLedger(obligations, true)
+  assert.deepEqual(coverage.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37])
+  assert(coverage.groups.every((entry) => entry.status === "NOT_RUN"))
+  assert.equal(coverage.complete, false)
+  assert.throws(() => requireCompleteGate(coverage), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
 })
 for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
   ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
-  ["landing keyboard claimed as chat", (value) => { value.originalTeams.obligations[5].coverage = "complete" }],
-  ["different grants claimed from principals", (value) => { value.originalTeams.obligations[0].coverage = "complete" }],
-  ["native admin UI claimed from HTTP", (value) => { value.originalTeams.obligations[4].coverage = "complete" }],
+  ["landing keyboard substituted for chat", (value) => { value.originalTeams.obligations[5].implementedCases = ["aba-two-windows"] }],
+  ["different grants claimed from old principal-only control", (value) => { value.originalTeams.obligations[0].implementedCases = ["same-team-principal-binding"] }],
+  ["native admin UI claimed from old HTTP-only control", (value) => { value.originalTeams.obligations[4].implementedCases = ["admin-api-without-team"] }],
   ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
-  ["missing product blocker", (value) => { value.originalTeams.obligations[4].blocker = null }],
+  ["missing required mapping", (value) => { value.originalTeams.obligations[4].implementedCases = [] }],
   ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
   ["missing required group", (value) => { value.groups.pop() }],
   ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],
@@ -244,6 +303,17 @@ for (const [name, change] of [
   ["U40 collapsed title list", (value) => { value.groups[2].originalTitles = value.groups[2].originalTitles.slice(0, 1) }],
   ["U15 receipt assumed from old source", (value) => { value.groups[0].state = "PASS" }],
   ["AZ02 restart omitted", (value) => { value.groups[4].phases.pop() }],
+  ["AZ02 operational contract omitted", (value) => { delete value.groups[4].operationalContract }],
+  ["AZ02 original history rewritten to37", (value) => { value.groups[4].expectedCount = 37 }],
+  ["AZ02 original case replaced", (value) => { value.groups[4].originalCaseIdsByPhase.actors[0] = "FORGED_ACTOR" }],
+  ["AZ02 original ID preemptively renamed", (value) => { value.groups[4].originalCaseIdsByPhase.preflight[4] = "BIND_tenantId" }],
+  ["AZ02 operational count left at32", (value) => { value.groups[4].operationalContract.expectedCount = 32 }],
+  ["AZ02 added negative removed", (value) => { value.groups[4].operationalContract.addedCaseIds.pop() }],
+  ["AZ02 phase flattened", (value) => { value.groups[4].operationalContract.phases[0].count = 14 }],
+  ["AZ02 operational case duplicated", (value) => { value.groups[4].operationalContract.caseIdsByPhase.actors[0] = value.groups[4].operationalContract.caseIdsByPhase.actors[1] }],
+  ["AZ02 unsupported ID mapping", (value) => { value.groups[4].operationalContract.remappedIds.BIND_projectId = "BIND_hostId" }],
+  ["AZ02 foreign contract source", (value) => { value.groups[4].operationalContract.source.commit = "a".repeat(40) }],
+  ["AZ02 manual LIVE claim", (value) => { value.groups[4].operationalContract.liveQualified = true }],
   ["gate closed by metadata", (value) => { value.gateClosed = true }],
 ]) test("preserved coverage refuses " + name, () => {
   const value = structuredClone(obligations)
@@ -274,6 +344,7 @@ for (const [name, change] of [
   ["duplicate groups", (value) => { value.groups[0] = value.groups[1] }],
   ["unknown groups", (value) => { value.groups[0].id = "unregistered" }],
   ["incorrect group count", (value) => { value.groups[0].expectedCount = 1 }],
+  ["historical AZ02 count used for closing", (value) => { value.groups[4].expectedCount = 32 }],
 ]) test("closing coverage rejects vacuous or forged PASS inventory: " + name, () => {
   // Synthetic metadata only. Even a fully passing shape could never replace verified original receipts.
   const value = coverageLedger(obligations, true)
@@ -282,4 +353,56 @@ for (const [name, change] of [
   value.groups.forEach((entry) => { entry.status = "PASS" })
   change(value)
   assert.throws(() => requireCompleteGate(value))
+})
+
+
+function grantProof() {
+  const original = plan(), fixture = (actor) => "ses_g08_" + original.invocation.id + "_" + (actor === "requester" ? "a" : "b").repeat(32)
+  const profile = { installationId: original.target.installationId, tenantId: original.target.tenantId, teamObjectId: original.target.teamObjectId }
+  const namespace = (actor) => ({ version: 1, owner: { profile,
+    principal: { tenantId: original.target.tenantId, principalObjectId: original.actors[actor] } }, authorityGeneration: 1 })
+  const created = { id: fixture("requester"), namespace: namespace("requester"), title: "Synthetic parser control",
+    projectID: "global", location: { directory: "/synthetic" }, cost: 0,
+    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }, time: { created: 1, updated: 1 } }
+  return { schema: "sf-g08-session-grants-v1", invocationId: original.invocation.id, profile,
+    fixtureIds: { requester: fixture("requester"), holder: fixture("holder") },
+    requester: { namespace: namespace("requester"), before: [], created, observed: structuredClone(created),
+      afterCreate: [structuredClone(created)], createStatus: 200, readStatus: 200 },
+    holder: { namespace: namespace("holder"), before: [], afterDenial: [], deniedStatus: 401, readStatus: 200 },
+    cleanup: { requester: { namespace: namespace("requester"), entries: [] }, holder: { namespace: namespace("holder"), entries: [] } } }
+}
+test("synthetic grant transcript requires a positive durable effect, original owners, denial without effect and cleanup", () => {
+  const value = grantProof()
+  assert.deepEqual(validateGrantProof(value, validatePlan(plan())), value)
+  // This shape test is neither a Microsoft admission nor an installed grant proof.
+})
+for (const [name, change] of [
+  ["identity only", (value) => { delete value.requester.created }],
+  ["empty after-create", (value) => { value.requester.afterCreate = [] }],
+  ["forged requester failure", (value) => { value.requester.createStatus = 401 }],
+  ["holder also allowed", (value) => { value.holder.deniedStatus = 200 }],
+  ["unauthenticated holder read", (value) => { value.holder.readStatus = 401 }],
+  ["foreign invocation", (value) => { value.invocationId = "0".repeat(32) }],
+  ["foreign Team", (value) => { value.profile = { ...value.profile, teamObjectId: uuid(99) } }],
+  ["same actor twice", (value) => { value.holder.namespace = structuredClone(value.requester.namespace) }],
+  ["missing namespace", (value) => { delete value.requester.namespace }],
+  ["extra namespace authority claim", (value) => { value.requester.namespace.grants = ["create"] }],
+  ["missing current generation", (value) => { value.requester.namespace.authorityGeneration = 0 }],
+  ["existing fixture", (value) => { value.requester.before = [structuredClone(value.requester.created)] }],
+  ["same fixture ID", (value) => { value.fixtureIds.holder = value.fixtureIds.requester }],
+  ["unbounded non-fixture ID", (value) => { value.fixtureIds.requester = "ses_existing" }],
+  ["wrong created owner", (value) => { value.requester.created.namespace = structuredClone(value.holder.namespace) }],
+  ["changed reread", (value) => { value.requester.observed.title = "changed" }],
+  ["duplicate effect", (value) => { value.requester.afterCreate.push(structuredClone(value.requester.created)) }],
+  ["denial created a row", (value) => { value.holder.afterDenial = [{
+    ...value.requester.created, id: value.fixtureIds.holder, namespace: structuredClone(value.holder.namespace),
+  }] }],
+  ["missing cleanup", (value) => { delete value.cleanup }],
+  ["requester row remains", (value) => { value.cleanup.requester.entries = [structuredClone(value.requester.created)] }],
+  ["holder cleanup owner changed", (value) => { value.cleanup.holder.namespace = structuredClone(value.requester.namespace) }],
+  ["operator status replaces observations", (value) => { value.status = "PASS" }],
+]) test("grant transcript refuses " + name, () => {
+  const value = grantProof()
+  change(value)
+  assert.throws(() => validateGrantProof(value, validatePlan(plan())))
 })

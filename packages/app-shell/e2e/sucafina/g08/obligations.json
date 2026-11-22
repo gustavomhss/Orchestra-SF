@@ -1,14 +1,14 @@
 {
   "schema": "sf-g08-obligations-v1",
-  "scope": "Required G08 obligations preserved; seven executable current-contract controls are a subset, with integration prerequisites.",
+  "scope": "Nine original Teams obligations mapped to executable current product contracts, preserving original destination grants and real private Session actions together. No installed execution is implied. U15/U39/U40/F04/AZ02 remain separately mandatory.",
   "plan": {
     "commit": "736a5087c223629be4d73c8a4535d615fcafd96a",
     "path": "docs/architecture/teams-profile-test-plan.json",
     "gate": "G08-NATIVE-TEAMS"
   },
   "inspectedCandidate": {
-    "sha": "37931c77eb07aecf01610bb0ee7d717276b85539",
-    "note": "Read-only contract reconciliation, not a final candidate or installed acceptance."
+    "sha": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+    "note": "Merged Team HTTP, private policy, native UI hooks, domain factory and Procurement proof route. Component receipts remain source-specific; no final C/T, installed acceptance or LIVE claim."
   },
   "originalTeams": {
     "source": {
@@ -23,17 +23,18 @@
         "title": "Two distinct Microsoft accounts enter the same installed Team with their own authority",
         "required": true,
         "implementedCases": [
-          "same-team-principal-binding"
+          "same-team-distinct-grants"
         ],
-        "coverage": "partial",
-        "blocker": "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED",
-        "detail": "The observed integrated producer still publishes no business destinations. Different original principals are preserved but do not establish different business grants.",
-        "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
-        "sourceLines": [
-          88,
-          104
-        ],
-        "state": "NOT_RUN"
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "Requires integrated private Session admission and HTTP. Two original Microsoft principals read their own owner-bound namespace in the same Team. Requester creates exactly one random fixture and rereads it; holder's create is refused401 while its full original Session inventory is unchanged and still readable. Both fixture IDs are absent after original cleanup. Distinct identities, empty destinations or cross-principal denials alone never pass. In addition, both the UI F02 and independent reread must carry distinct original destination/page/canRead/allowedActionIds projections, stable through both actor reloads. Ordering, principal, revisions and availability alone never satisfy this difference.",
+        "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
+        "state": "NOT_RUN",
+        "contractSource": {
+          "commit": "eaa9f126c71dccbeec195cdcb47d6d44fdb69343",
+          "path": "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
+          "blob": "6b400aa600b8389de3de83adeee8095568c5be96"
+        }
       },
       {
         "id": "aba-two-windows",
@@ -106,52 +107,54 @@
         "title": "A Microsoft configuration administrator without Teams cannot acquire business access",
         "required": true,
         "implementedCases": [
-          "admin-api-without-team"
+          "admin-without-team"
         ],
-        "coverage": "partial",
-        "blocker": "BLOCKED_BY_PRODUCT_ADMINISTRATION_UI_NOT_COMPOSED",
-        "detail": "The integrated API can prove administration available without Team and business403 using the original admin actor. The earlier scenario also opened a native administration UI that #654/#655 do not compose; do not replace that UI assertion silently.",
-        "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
-        "sourceLines": [
-          79,
-          104
-        ],
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "Requires native #661 administration UI in the installed source. The original no-Team Microsoft administrator opens its actual toggle/panel, the UI itself reads the mounted catalog, and rendered rows/actions match. The same actor still receives explicit Team revocation and business403; the native panel remains usable without a Team. API availability alone is insufficient.",
+        "sourcePath": "packages/app-shell/src/components/team-profile-administration.tsx",
         "state": "NOT_RUN",
         "contractSource": {
-          "commit": "295eb0f01777657608cdceff2180f5efb7d8646b",
-          "path": "modules/sucafina/Sucafinav1/runtime/team-profile-access.ts",
-          "blob": "2b89cc8e0cacb241fd8fd173a48e25bd8a3f864e"
+          "commit": "6c96110aea248594f47e92cfd569e97867f72396",
+          "path": "packages/app-shell/src/components/team-profile-administration.tsx",
+          "blob": "a5882b1285a6e8959aa1f0eccacfb083ff51e2fd"
         }
       },
       {
         "id": "narrow-keyboard-draft",
         "title": "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner",
         "required": true,
-        "implementedCases": [],
-        "coverage": "none",
-        "blocker": "BLOCKED_BY_PRODUCT_TEAM_CHAT_NOT_COMPOSED",
-        "detail": "The current landing has no Team chat. Preserve opening a native Team chat draft by keyboard on narrow Web; no directory/git substitution.",
-        "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
-        "sourceLines": [
-          100,
-          139
+        "implementedCases": [
+          "narrow-keyboard-draft"
         ],
-        "state": "NOT_RUN"
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "Requires #667 native Chat composed with the real Session facade. At320px, keyboard reaches and opens new Chat; original F02 and the UI Session-list response bind the same owner, the real PromptInputV2 accepts an unsent draft, no Session write occurs, inventory is unchanged and controls remain reachable. No landing or directory/git substitute.",
+        "sourcePath": "packages/app-shell/src/pages/team-session.tsx",
+        "state": "NOT_RUN",
+        "contractSource": {
+          "commit": "b663dd0865fa91c705f732c88975473de8d49c50",
+          "path": "packages/app-shell/src/pages/team-session.tsx",
+          "blob": "358ab7e83ee77c158d742d44ab54edfd5718f5df"
+        }
       },
       {
         "id": "draft-cancel-discard",
         "title": "A Team switch keeps a canceled chat draft and discards it only on confirmation",
         "required": true,
-        "implementedCases": [],
-        "coverage": "none",
-        "blocker": "BLOCKED_BY_PRODUCT_DRAFT_DISCARD_NOT_COMPOSED",
-        "detail": "The current landing has no draft editor/discard dialog. Preserve cancel retaining A/draft and confirmation discarding before B; no empty-landing substitute.",
-        "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
-        "sourceLines": [
-          100,
-          139
+        "implementedCases": [
+          "draft-cancel-discard"
         ],
-        "state": "NOT_RUN"
+        "coverage": "complete",
+        "blocker": null,
+        "detail": "Requires #667 native draft lifecycle. The actual modal blocks B reads while A's draft is dirty; cancel retains A/URL/text with zero navigation reads. Confirm emits original F02 and Session-list reads for B and discards text. Returning to A never resurrects it. Both Team Session inventories remain unchanged; no prompt/model submission.",
+        "sourcePath": "packages/app-shell/src/pages/team-profile.tsx",
+        "state": "NOT_RUN",
+        "contractSource": {
+          "commit": "b663dd0865fa91c705f732c88975473de8d49c50",
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "blob": "989d0903bd4db1b1a227f1f2327a23cd6ce654ac"
+        }
       },
       {
         "id": "real-revoke-restore",
@@ -162,7 +165,7 @@
         ],
         "coverage": "complete",
         "blocker": null,
-        "detail": "Requires original admin observer and mounted durable policy route from295eb. Observe opaque CAS, exact catalog rereads, original F02 revocation and business403 for both actors, unchanged B, real restore and cleanup. Never accept manual status as proof.",
+        "detail": "Requires the original admin observer and durable mounted policy plus native #661 panel. Its own disable POST carries the exact opaque CAS. Observe catalog rereads, original F02 revocation and business403 for both actors, unchanged B, real restore and cleanup. Reconcile uncertainty through an original read; never retry a mutation or accept manual status.",
         "sourcePath": "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
         "sourceLines": [
           107,
@@ -369,15 +372,158 @@
         }
       ],
       "state": "NOT_RUN",
-      "blocker": "BLOCKED_BY_PRODUCT_MODERN_PHASE_PRODUCER_AND_RESERVED_HOST",
+      "blocker": "BLOCKED_BY_FINAL_CANDIDATE_TAR_AND_RESERVED_HOST",
       "requiredProducer": [
-        "all six phases on modern tenant/Team/host/revision contract",
+        "all six operational phases with 37 exact cases; the 32 original obligations and two explicit ID remappings are retained",
         "real original actors/current authority",
         "source CAS409 and validation422 with unchanged state",
         "real revoke and observed source denial",
         "logout cookie invalidation/replay",
         "observed restart of same C/tree/tar and replay denial; does not replace G10"
-      ]
+      ],
+      "originalCaseIdsByPhase": {
+        "preflight": [
+          "GUEST",
+          "MISSING_SELECTORS",
+          "DUPLICATE_SELECTOR",
+          "BIND_installationId",
+          "BIND_projectId",
+          "BIND_hostId",
+          "CROSS_ORIGIN_GET",
+          "CROSS_SITE_GET",
+          "CSRF_NO_ORIGIN",
+          "CSRF_OTHER_ORIGIN",
+          "CSRF_CROSS_SITE",
+          "OIDC_REDIRECT",
+          "CALLBACK_WITHOUT_CHALLENGE",
+          "CALLBACK_DUPLICATE_STATE"
+        ],
+        "actors": [
+          "ACTOR_REQUESTER",
+          "ACTOR_HOLDER",
+          "ACTOR_DENIED",
+          "DISTINCT_ACTORS",
+          "AUTH_BIND_installationId",
+          "AUTH_BIND_projectId",
+          "AUTH_BIND_hostId",
+          "AUTH_CSRF_NO_ORIGIN",
+          "AUTH_CSRF_OTHER_ORIGIN",
+          "AUTH_CSRF_CROSS_SITE",
+          "AUTH_CSRF_SESSION_SURVIVES"
+        ],
+        "producer": [
+          "CAS_409",
+          "VALIDATION_422"
+        ],
+        "after-revoke": [
+          "REVOKE_CONTEXT",
+          "REVOKE_SOURCE"
+        ],
+        "logout": [
+          "LOGOUT_204",
+          "REPLAY_AFTER_LOGOUT"
+        ],
+        "after-restart": [
+          "REPLAY_AFTER_RESTART"
+        ]
+      },
+      "operationalContract": {
+        "action": "CHANGE_CONTRACT",
+        "source": {
+          "commit": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "blob": "6b8104170fe546e74e46c0fd374c1fe1254caf24"
+        },
+        "expectedCount": 37,
+        "phases": [
+          {
+            "id": "preflight",
+            "count": 16
+          },
+          {
+            "id": "actors",
+            "count": 14
+          },
+          {
+            "id": "producer",
+            "count": 2
+          },
+          {
+            "id": "after-revoke",
+            "count": 2
+          },
+          {
+            "id": "logout",
+            "count": 2
+          },
+          {
+            "id": "after-restart",
+            "count": 1
+          }
+        ],
+        "remappedIds": {
+          "BIND_projectId": "BIND_tenantId",
+          "AUTH_BIND_projectId": "AUTH_BIND_tenantId"
+        },
+        "addedCaseIds": [
+          "NO_TEAM_BUSINESS",
+          "ADMIN_NO_TEAM_MAINTENANCE",
+          "AUTH_FOREIGN_TEAM",
+          "AUTH_FORGED_PRINCIPAL",
+          "AUTH_FORGED_REVISIONS"
+        ],
+        "caseIdsByPhase": {
+          "preflight": [
+            "GUEST",
+            "MISSING_SELECTORS",
+            "DUPLICATE_SELECTOR",
+            "BIND_installationId",
+            "BIND_tenantId",
+            "BIND_hostId",
+            "CROSS_ORIGIN_GET",
+            "CROSS_SITE_GET",
+            "CSRF_NO_ORIGIN",
+            "CSRF_OTHER_ORIGIN",
+            "CSRF_CROSS_SITE",
+            "OIDC_REDIRECT",
+            "CALLBACK_WITHOUT_CHALLENGE",
+            "CALLBACK_DUPLICATE_STATE",
+            "NO_TEAM_BUSINESS",
+            "ADMIN_NO_TEAM_MAINTENANCE"
+          ],
+          "actors": [
+            "ACTOR_REQUESTER",
+            "ACTOR_HOLDER",
+            "ACTOR_DENIED",
+            "DISTINCT_ACTORS",
+            "AUTH_BIND_installationId",
+            "AUTH_BIND_tenantId",
+            "AUTH_BIND_hostId",
+            "AUTH_CSRF_NO_ORIGIN",
+            "AUTH_CSRF_OTHER_ORIGIN",
+            "AUTH_CSRF_CROSS_SITE",
+            "AUTH_CSRF_SESSION_SURVIVES",
+            "AUTH_FOREIGN_TEAM",
+            "AUTH_FORGED_PRINCIPAL",
+            "AUTH_FORGED_REVISIONS"
+          ],
+          "producer": [
+            "CAS_409",
+            "VALIDATION_422"
+          ],
+          "after-revoke": [
+            "REVOKE_CONTEXT",
+            "REVOKE_SOURCE"
+          ],
+          "logout": [
+            "LOGOUT_204",
+            "REPLAY_AFTER_LOGOUT"
+          ],
+          "after-restart": [
+            "REPLAY_AFTER_RESTART"
+          ]
+        }
+      }
     }
   ],
   "gateClosed": false,
@@ -393,7 +539,64 @@
       "observedHead": "bf7cbeb579130b3a83b910306121105b26652d70",
       "integrationSource": "295eb0f01777657608cdceff2180f5efb7d8646b",
       "contract": "authenticated no-teams/revoked principal; installed original admin observer/HTTP route; durable opaque CAS policy"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/661",
+      "observedHead": "6c96110aea248594f47e92cfd569e97867f72396",
+      "contract": "native no-Team administration panel, original catalog HTTP, exact opaque CAS UI mutation"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/663",
+      "observedHead": "29337a377ef8e2b146623f30eb9179ca31dd1a33",
+      "integrationSource": "eaa9f126c71dccbeec195cdcb47d6d44fdb69343",
+      "contract": "private explicit Session grants, owner-bound original Microsoft admission and mounted canonical Session HTTP"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/667",
+      "observedHead": "b663dd0865fa91c705f732c88975473de8d49c50",
+      "contract": "real native Chat/composer/draft lifecycle and discard modal; not a model execution proof"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/665",
+      "observedHead": "f8981f8051edfc3647a368af44cbc41563680c2e",
+      "contract": "Original administration/session/config/chat and Web body boundaries integrated into dev; final-candidate validation remains separate.",
+      "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6",
+      "state": "MERGED"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/686",
+      "observedHead": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
+      "integrationSource": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
+      "contract": "Original F02 business pages/ACL, distinct destination grants and both actor reloads; complements real private Session operations."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/677",
+      "observedHead": "edadc608f10fd52c79197028f2b47de65fdfa7eb",
+      "mergeCommit": "5d0d3973a21b02df954e0e5cf31afe103960c23d",
+      "state": "MERGED",
+      "contract": "Current private policy at F02, import, checkpoint and recovery boundaries; original EOF cleanup."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/685",
+      "observedHead": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+      "mergeCommit": "0fa4778b559963e0f3e7c60051060844d362e796",
+      "state": "MERGED",
+      "contract": "Original CAP25 reader with current Team authority; AZ02 six operational phases with 32 original plus five additive cases."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/689",
+      "observedHead": "0f0373159f04528ed74bf500b55dd311ae0c23d9",
+      "mergeCommit": "428cb9f93c59288d299f57dc70ed93566eda6ec1",
+      "state": "MERGED",
+      "contract": "Original native CAP14/CAP04/CAP05 leaves connected to the Team shell and guarded navigation."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/690",
+      "observedHead": "482367ec13c073f73bec859a676e05d14e8f319b",
+      "mergeCommit": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+      "state": "MERGED",
+      "contract": "Original Microsoft factory mounts native domain readers and canonical writers, with one current F02 authority."
     }
   ],
-  "integrationStatus": "SOURCE_CONTRACT_OBSERVED_IN_OTHER_WRITERS_NOT_FINAL_CANDIDATE"
+  "integrationStatus": "PREPARATION_MERGED_NOT_FINAL_CANDIDATE"
 }

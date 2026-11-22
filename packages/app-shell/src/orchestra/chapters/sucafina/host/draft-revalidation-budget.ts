@@ -2,12 +2,12 @@ import { Option, Schema } from "effect"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { draftAvailability } from "./draft-revalidation-availability"
 
 /** CAP04/CAP05: retain the source editor's owner, entry, deviation and YTD CAS keys. */
 export async function revalidateBudgetDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (signal.aborted) return { status: "unavailable" }
   if (input.originalOwner.installationId !== fresh.stamp.installationId ||
@@ -50,13 +50,13 @@ export async function revalidateBudgetDraft(
   if (input.identity.kind === "record" && action !== "save-entry" && input.identity.recordRef !== ownerId)
     return { status: "unavailable" }
 
-  const available = draftAvailability(fresh, "domain-read", cap,
-    [`domain.page.${cap}`, `domain.command.${cap}.${action}`])
-  if (available) return available
   if (!fresh.destinations.some((destination) => destination.capabilityId === cap &&
       destination.surface === "dashboard" &&
       destination.page === (cap === "CAP04" ? "OPEX Detail" : "CAPEX Projects") &&
       destination.canRead && destination.allowedActionIds.includes(action))) return { status: "denied" }
+  const available = draftAvailability(fresh, "domain-read", cap,
+    [`domain.page.${cap}`, `domain.command.${cap}.${action}`])
+  if (available) return available
   const client = createSfDomainClient(transport)
   const response = await (cap === "CAP04"
     ? client["domain.page.CAP04"]({ year }, { signal })

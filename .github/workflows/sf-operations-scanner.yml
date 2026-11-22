@@ -58,6 +58,9 @@ jobs:
       - name: Typecheck Sucafina control composition
         working-directory: modules/sucafina
         run: bun typecheck
+      - name: Typecheck the native CLI Team importer
+        working-directory: apps/cli
+        run: bun typecheck
       - uses: ./.github/actions/ripgrep
       - uses: ./.github/actions/omni-binaries
       - name: Prepare pinned real ClamD and official databases

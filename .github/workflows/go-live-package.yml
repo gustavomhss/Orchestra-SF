@@ -2,11 +2,12 @@ name: go-live-package
 
 on:
   push:
-    branches: [go-live-package]
+    branches: [go-live-package, g07-qualify-*]
   pull_request:
     branches: [dev]
     paths:
       - .github/workflows/go-live-package.yml
+      - .github/workflows/g09-final.yml
       - script/sf-ci/go-live-package*
       - script/sf-ci/test_go_live_package_archive.py
       - sf/azure/vm/install-factory-distribution.py
@@ -44,15 +45,93 @@ jobs:
         with:
           bun-version: "1.3.14"
       - name: Source admission controls
-        run: node --test script/sf-ci/go-live-package.test.mjs
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap script/sf-ci/go-live-package.test.mjs 2>&1 | tee "$RUNNER_TEMP/g07-controls-node.log"
       - name: Actual archive and existing installer controls
-        run: python3 -B script/sf-ci/test_go_live_package_archive.py
+        run: |
+          set -euo pipefail
+          python3 -B script/sf-ci/test_go_live_package_archive.py 2>&1 | tee "$RUNNER_TEMP/g07-controls-python.log"
       - name: Repository guards
-        run: bun run check:guards --base origin/dev
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g07-controls-guards.log"
+      - name: Bind component controls to their actual checkout
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          export SOURCE_SHA="$(git rev-parse HEAD)"
+          export SOURCE_TREE="$(git rev-parse 'HEAD^{tree}')"
+          export BASE_SHA="$(git rev-parse origin/dev)"
+          export MERGE_BASE="$(git merge-base HEAD origin/dev)"
+          export BUN_VERSION="$(bun --version)"
+          export PYTHON_VERSION="$(python3 --version)"
+          node --input-type=module <<'JS'
+          import assert from "node:assert/strict"
+          import { createHash } from "node:crypto"
+          import { readFile, writeFile } from "node:fs/promises"
+          const hash = (bytes) => createHash("sha256").update(bytes).digest("hex")
+          const temp = process.env.RUNNER_TEMP
+          const node = await readFile(temp + "/g07-controls-node.log", "utf8")
+          const python = await readFile(temp + "/g07-controls-python.log", "utf8")
+          const counts = Object.fromEntries(["tests", "pass", "fail", "cancelled", "skipped", "todo"].map((name) => {
+            const match = node.match(new RegExp("^# " + name + " (\\d+)$", "m"))
+            assert(match, "missing Node control summary: " + name)
+            return [name, Number(match[1])]
+          }))
+          assert(counts.tests > 0 && counts.pass === counts.tests)
+          for (const name of ["fail", "cancelled", "skipped", "todo"]) assert.equal(counts[name], 0)
+          const pythonCount = Number(python.match(/^Ran (\d+) tests? in /m)?.[1])
+          assert(pythonCount > 0)
+          assert.match(python, /^OK$/m)
+          const source = { sha: process.env.SOURCE_SHA, tree: process.env.SOURCE_TREE,
+            base: process.env.BASE_SHA, mergeBase: process.env.MERGE_BASE }
+          for (const value of Object.values(source)) assert(/^[0-9a-f]{40}$/.test(value))
+          const paths = [
+            ".github/workflows/g09-final.yml", ".github/workflows/go-live-package.yml",
+            "script/sf-ci/go-live-package.mjs", "script/sf-ci/go-live-package.test.mjs",
+            "script/sf-ci/go-live-package-archive.py", "script/sf-ci/test_go_live_package_archive.py",
+            "sf/azure/vm/install-factory-distribution.py"
+          ]
+          const files = []
+          for (const path of paths) files.push({ path, sha256: hash(await readFile(path)) })
+          const logs = []
+          for (const name of ["node", "python", "guards"]) {
+            const path = "g07-controls-" + name + ".log"
+            logs.push({ path, sha256: hash(await readFile(temp + "/" + path)) })
+          }
+          const receipt = {
+            schema: "sf-g07-controls-v1", status: "COMPONENT_CONTROLS_PASSED", source, files, logs,
+            execution: { eventSha: process.env.GITHUB_SHA, workflowRef: process.env.GITHUB_WORKFLOW_REF,
+              runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+              job: process.env.GITHUB_JOB, checkRunId: process.env.CHECK_RUN_ID },
+            toolchain: { node: process.version, bun: process.env.BUN_VERSION, python: process.env.PYTHON_VERSION },
+            controls: { node: counts, python: pythonCount,
+              guards: { command: "bun run check:guards --base origin/dev", status: "PASSED" } },
+            scope: "synthetic-source-and-fixture-archive-controls",
+            releaseTarProduced: false, installation: null, g07Closed: false, productionCutover: false
+          }
+          await writeFile(temp + "/g07-controls-receipt.json", JSON.stringify(receipt, null, 2) + "\n",
+            { flag: "wx", mode: 0o600 })
+          JS
+      - name: Preserve component evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g07-route-controls-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/g07-controls-node.log
+            ${{ runner.temp }}/g07-controls-python.log
+            ${{ runner.temp }}/g07-controls-guards.log
+            ${{ runner.temp }}/g07-controls-receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+          compression-level: 6
 
   qualify:
     needs: controls
-    if: github.event_name == 'workflow_dispatch' && github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'
+    if: github.repository == 'gustavomhss/Orchestra-SF' && ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev') || (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/g07-qualify-')))
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -77,30 +156,15 @@ jobs:
           set -euo pipefail
           umask 077
           node --input-type=module <<'JS'
-          import assert from "node:assert/strict"
-          import { createHash } from "node:crypto"
           import { writeFile } from "node:fs/promises"
-          const revision = process.env.REQUEST_REVISION
-          assert(/^[0-9a-f]{40}$/.test(revision), "full request commit SHA required")
-          const path = "docs/qa/sucafina/go-live/g07-request.json"
-          const response = await fetch("https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/" + path + "?ref=" + revision, {
-            headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + process.env.GH_TOKEN,
-              "X-GitHub-Api-Version": "2022-11-28" },
-            redirect: "error", signal: AbortSignal.timeout(30000)
+          import { readQualificationRequest } from "./tooling/script/sf-ci/go-live-package.mjs"
+          const loaded = await readQualificationRequest({
+            repository: process.env.GITHUB_REPOSITORY, eventName: process.env.GITHUB_EVENT_NAME,
+            ref: process.env.GITHUB_REF, sha: process.env.GITHUB_SHA, requestRevision: process.env.REQUEST_REVISION
           })
-          assert(response.ok, "versioned G07 request unavailable")
-          const item = await response.json()
-          assert(item.type === "file" && item.path === path && item.encoding === "base64" && item.size <= 131072,
-            "invalid request identity or size")
-          const bytes = Buffer.from(item.content, "base64")
-          assert.equal(bytes.length, item.size, "request byte count mismatch")
-          const blob = createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
-          assert.equal(blob, item.sha, "request Git blob mismatch")
-          await writeFile(process.env.RUNNER_TEMP + "/g07-request.json", bytes, { flag: "wx", mode: 0o600 })
-          await writeFile(process.env.RUNNER_TEMP + "/g07-request-source.json", JSON.stringify({
-            repository: "gustavomhss/Orchestra-SF", revision, path, blobSha: item.sha,
-            sha256: createHash("sha256").update(bytes).digest("hex")
-          }, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          await writeFile(process.env.RUNNER_TEMP + "/g07-request.json", loaded.raw, { flag: "wx", mode: 0o600 })
+          await writeFile(process.env.RUNNER_TEMP + "/g07-request-source.json",
+            JSON.stringify(loaded.source, null, 2) + "\n", { flag: "wx", mode: 0o600 })
           JS
       - name: Verify both confirmations and actual producer metadata
         id: admission
@@ -147,13 +211,11 @@ jobs:
           set -euo pipefail
           node tooling/script/sf-ci/go-live-package.mjs admit "$RUNNER_TEMP/g07-request.json" "$RUNNER_TEMP/g07-admission-final.json"
           node --input-type=module <<'JS'
-          import assert from "node:assert/strict"
           import { readFile } from "node:fs/promises"
+          import { sameAdmission } from "./tooling/script/sf-ci/go-live-package.mjs"
           const first = JSON.parse(await readFile(process.env.RUNNER_TEMP + "/g07-admission.json", "utf8"))
           const final = JSON.parse(await readFile(process.env.RUNNER_TEMP + "/g07-admission-final.json", "utf8"))
-          delete first.verifier.observedAt
-          delete final.verifier.observedAt
-          assert.deepEqual(first, final, "live source changed during package verification")
+          sameAdmission(first, final)
           JS
       - name: Publish package evidence only
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

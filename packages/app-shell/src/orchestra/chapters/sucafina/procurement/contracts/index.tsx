@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/language"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { useSfContext } from "../../context"
+import { useSfReadableContext as useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
@@ -532,7 +532,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                     }}><Icon name="arrow-left" size="small" />{t("sf.u15.back")}</button>
                   <Show when={!editing() && actionAllowed("save") && currentVersion() !== undefined}>
                     <button type="button" class="mx-btn primary" disabled={view.sending || view.outcomeUnknown}
-                      onClick={() => setView("editing", true)}>{t("sf.u15.edit")}</button>
+                      onClick={() => navigate(buildHref(selectedRef(), "edit"))}>{t("sf.u15.edit")}</button>
                   </Show>
                 </div>
                 <h2 tabindex="-1">{view.reviewing ? t("sf.u15.reviewTitle") : creating() ? t("sf.cap14.primary") :

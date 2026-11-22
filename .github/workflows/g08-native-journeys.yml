@@ -1,0 +1,124 @@
+name: g08-native-journeys
+
+on:
+  push:
+    branches: ["native-journeys"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: g08-native-controls-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  controls:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      ORCHESTRA_OMNI_CONTROL: declared
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_CHANNEL: prod
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Bind the source and fresh declared Omni control
+        run: |
+          set -euo pipefail
+          umask 077
+          native_out="$RUNNER_TEMP/g08-native-controls-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          native_private="$RUNNER_TEMP/g08-native-list-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir "$native_out" "$native_private"
+          printf 'SF_NATIVE_CONTROLS=%s\nSF_NATIVE_LIST_PRIVATE=%s\n' "$native_out" "$native_private" >> "$GITHUB_ENV"
+          git rev-parse HEAD > "$native_out/source-sha.txt"
+          git rev-parse 'HEAD^{tree}' > "$native_out/source-tree.txt"
+          git rev-parse origin/dev > "$native_out/guard-base.txt"
+          native_nonce=$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$native_nonce" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Reject incomplete or fabricated report evidence
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap script/sf-ci/g08-native-journeys.test.mjs 2>&1 | tee "$SF_NATIVE_CONTROLS/node.tap"
+      - name: Exercise selected-case and private-file boundaries plus affected helpers
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts --reporter=junit --reporter-outfile "$SF_NATIVE_CONTROLS/controls.junit.xml" ./test/sucafina-native/installed-journeys.test.ts ./test-browser/sucafina-native/fixture/journeys.test.ts ./test-browser/sucafina-native/fixture/selection.test.ts ./test-browser/sucafina-native/fixture/response-faults.test.ts 2>&1 | tee "$SF_NATIVE_CONTROLS/controls.log"
+      - name: Typecheck the complete native executor and F04 through its package script
+        working-directory: packages/app-shell/e2e/sucafina/native
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_NATIVE_CONTROLS/types.log"
+      - name: List the original6/22/22 without starting host or browser
+        working-directory: packages/app-shell
+        run: |
+          set -euo pipefail
+          bunx --no-install playwright test --config e2e/playwright.production.config.ts e2e/sucafina/native/journeys/u15.spec.ts e2e/sucafina/native/journeys/u39.spec.ts e2e/sucafina/native/journeys/u40.spec.ts --list --workers=1 --retries=0 --repeat-each=1 --reporter=json > "$SF_NATIVE_LIST_PRIVATE/list.json"
+          node ../../script/sf-ci/g08-native-journeys.mjs list ALL "$SF_NATIVE_LIST_PRIVATE/list.json" "$SF_NATIVE_CONTROLS/list-inventory.json"
+      - name: Check all guards against origin dev
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_NATIVE_CONTROLS/guards.log"
+          git diff --check origin/dev...HEAD
+      - name: Verify exact controls and write source-bound component receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { readFileSync, writeFileSync, readdirSync } from "node:fs"
+          import { digest } from "./script/sf-ci/g08-private-evidence.mjs"
+          import { verifyOmni, f04Titles, originalSource, normativeSource } from "./script/sf-ci/g08-native-journeys.mjs"
+          const root = process.env.SF_NATIVE_CONTROLS
+          const read = (name) => readFileSync(root + "/" + name, "utf8")
+          const tap = read("node.tap"), junit = read("controls.junit.xml")
+          for (const [name, count] of [["tests",40],["pass",40],["fail",0],["cancelled",0],["skipped",0],["todo",0]])
+            assert(new RegExp("^# " + name + " " + count + "$", "m").test(tap), "F04_NODE_INVENTORY_" + name)
+          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 54, "F04_HELPER_INVENTORY_54_REQUIRED")
+          assert(!/<(?:failure|error|skipped)\b/.test(junit), "F04_HELPER_FAILURE_OR_SKIP")
+          const omni = verifyOmni(read("controls.log"), process.env.ORCHESTRA_OMNI_CONTROL_NONCE)
+          const inventory = JSON.parse(read("list-inventory.json"))
+          assert.equal(inventory.inventory.length, 50)
+          assert(inventory.inventory.every((item) => item.state === "LISTED_NOT_RUN"))
+          const source = { sha: read("source-sha.txt").trim(), tree: read("source-tree.txt").trim() }
+          assert.equal(source.sha, process.env.GITHUB_SHA)
+          const paths = ["packages/app-shell/e2e/sucafina/native/fixture.ts","packages/app-shell/e2e/sucafina/native/fixture/case-contract.ts","packages/app-shell/e2e/sucafina/native/fixture/browser-transport.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-browser.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-host.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts","packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts","packages/app-shell/e2e/sucafina/native/fixture/installed-operations.ts","packages/app-shell/e2e/sucafina/native/fixture/isolated-installation.ts","packages/app-shell/e2e/sucafina/native/fixture/journeys.ts","packages/app-shell/e2e/sucafina/native/fixture/readiness.ts","packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts","packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts","packages/app-shell/e2e/sucafina/native/fixture/selection.ts","packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts","packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts","packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts","packages/app-shell/e2e/sucafina/native/package.json","packages/app-shell/e2e/sucafina/native/tsconfig.json","packages/app-shell/e2e/playwright.production.config.ts","packages/app-shell/test/sucafina-native/installed-journeys.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts","packages/app-shell/test-browser/sucafina-native/fixture/response-faults.test.ts","sf/azure/identity/az02-proof.cjs","packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts","script/sf2h/proofs/installed/register.ts","script/sf2h/proofs/installed/consume.ts","script/sf2h/proofs/installed/README.md","script/sf-ci/g08-native-journeys.mjs","script/sf-ci/g08-native-journeys.test.mjs",".github/workflows/g08-native-journeys.yml","packages/app-shell/src/orchestra/chapters/sucafina/host/team-domain-route.ts","packages/client/src/sucafina/team-domain.ts","packages/schema/src/sucafina/context.ts","packages/schema/src/sucafina/team-profile.ts","script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-installed-preflight.py"]
+          const sources = paths.map((path) => ({ path, sha256: digest(readFileSync(path)) }))
+          const files = readdirSync(root).sort().map((path) => ({ path, sha256: digest(readFileSync(root + "/" + path)) }))
+          const receipt = { schema: "sf-g08-native-controls-v1", status: "PASS", source, sources, files,
+            run: { id: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+              workflowSha: process.env.GITHUB_WORKFLOW_SHA }, guardBase: read("guard-base.txt").trim(), omni,
+            controls: { node:40, bun:54, failures:0, skipped:0 }, originalSource, normativeSource,
+            groups: [{ id:"U15", count:6, state:"LISTED_NOT_RUN" },{ id:"U39", count:22, state:"LISTED_NOT_RUN" },
+              { id:"U40", count:22, state:"LISTED_NOT_RUN" }],
+            f04: { count:3, titlesSha256:f04Titles.map(digest), state:"NOT_RUN", runtime:"BUN_HAPPYDOM_NO_CDP" },
+            installed:false, liveQualified:false, finalCandidate:false, g08Closed:false, productionCutover:false,
+            limits:["Metadata, privacy boundaries, report refusal, native fault-helper controls and inert listing only.",
+              "Original existing Microsoft contexts, real reserved TeamA/TeamB data and installed host observations are still required.",
+              "CAP03 source navigation and same-C/T/tar composition must be observed before installed execution.",
+              "No original installed test or F04 control has run in this hosted tooling job."] }
+          writeFileSync(root + "/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+          console.log("Native tooling controls PASS;50 original cases LISTED_NOT_RUN; F04 NOT_RUN")
+          NODE
+      - name: Preserve source-bound tooling evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-native-controls-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ env.SF_NATIVE_CONTROLS }}
+          if-no-files-found: error
+          retention-days: 30

@@ -1,9 +1,11 @@
 import path from "node:path"
-import { mkdir } from "node:fs/promises"
+import { chmod, mkdir } from "node:fs/promises"
 import { Effect, Layer, Schema, Scope } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SessionAccess } from "@orchestra/schema/session-access"
 import { Database } from "../../src/database/database"
+import type { CredentialVault } from "../../src/credential/vault"
+import type { ProviderAdmission } from "../../src/provider/admission"
 import { AuthorityControl } from "../../src/database/authority-control"
 import { AuthorityControlFile } from "../../src/database/authority-control-file"
 import { AuthoritySqlFence } from "../../src/database/authority-sql-fence"
@@ -52,15 +54,21 @@ type Services = Database.Service | EventV2.Service | SessionV2.Service | Session
  */
 export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, unknown, LayerNode.Tag | undefined> = never>(input: {
   actions?: readonly SessionAccess.Action[]
+  storageLayout?: "component" | "installation"
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
   inspection?: boolean
+  connections?: (owner: TeamProfile.Owner) => CredentialVault.Factory
+  providers?: (owner: TeamProfile.Owner) => ProviderAdmission.Factory
+  replacements?: LayerNode.Replacements
 } = {}) {
   const temporary = await tmpdir()
   const directory = temporary.path
   const workspaceDirectory = path.join(directory, "workspace")
-  await mkdir(workspaceDirectory)
-  const filename = path.join(directory, "core-owned.sqlite")
+  await mkdir(workspaceDirectory, input.storageLayout === "installation" ? { mode: 0o700 } : undefined)
+  const filename = input.storageLayout === "installation"
+    ? path.join(directory, "host-data", "orchestra.db") : path.join(directory, "core-owned.sqlite")
+  if (input.storageLayout === "installation") await mkdir(path.dirname(filename), { mode: 0o700 })
   const hooks: { beforeProject?: () => Promise<void>; beforeConfiguration?: () => Promise<void> } = {}
   const calls = { projects: 0, resumes: 0, wakes: 0 }
   const projects = Layer.succeed(ProjectV2.Service, ProjectV2.Service.of({
@@ -91,6 +99,7 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
       [SessionExecution.node, execution],
       [Global.node, Global.layerWith({ home: directory, data: directory, config: directory,
         cache: directory, state: directory })],
+      ...input.replacements ?? [],
     ],
   ))
   const run = <A, E>(body: Effect.Effect<A, E, Services | LayerNode.Output<Extra> | Scope.Scope>) =>
@@ -101,6 +110,7 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
     const sessions = yield* SessionV2.Service
     yield* sessions.create({ id: input.legacyID, location })
   }))
+  if (input.storageLayout === "installation") await chmod(filename, 0o600)
   const business = openAuthorityControl(filename)
   const controlDriver = AuthorityControlFile.open(filename + ".authority.sqlite", openAuthorityControl)
   const control = AuthorityControl.open(controlDriver)
@@ -136,6 +146,8 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
     const admission: SessionOwner.Admission = {
       binding: { owner, revisions: { configRevision: capturedRevision, accessRevision: "core-test-authority" } },
       verifyCurrent: () => Effect.sync(valid),
+      ...(input.connections ? { connections: input.connections(owner) } : {}),
+      ...(input.providers ? { providers: input.providers(owner) } : {}),
       authorize: (action, sessionID) => Effect.sync(() => authorized(action, sessionID)),
       excludedSessions: () => Effect.sync(() => [...excluded()]),
       configuration: () => Effect.promise(async () => {

@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { admitScanner, canonical, exactRequest, expectedCases, files, hash, microsoftCases, microsoftFiles, parseScannerRequest, verifyScannerEvidence } from "./team-profile-scanner.mjs"
+import { admitScanner, canonical, exactRequest, expectedCases, files, hash, importCases, importFiles, microsoftCases, microsoftFiles, parseScannerRequest, verifyScannerEvidence } from "./team-profile-scanner.mjs"
 
 // All observations below are synthetic inputs to the verifier. They are never
 // service evidence, a Teams tenant observation, or an actual G06 receipt.
@@ -320,5 +320,191 @@ for (const [name, mutate] of [
   ["G05 denied durable write", (e) => { e.g05.durableComparison.teams[0].after = "0".repeat(64) }],
 ]) test("expanded verifier rejects " + name, () => {
   const { evidence } = microsoftFixture(); mutate(evidence)
+  assert.throws(() => verifyScannerEvidence(evidence), /TEAMS_SCANNER_FAIL_CLOSED/)
+})
+
+
+function importFixture() {
+  const f = microsoftFixture()
+  const request = exactRequest("controls-with-imports")
+  const envelope = { ...f.input.teamsProfileScanner, schema: "teams-profile-scanner-v3",
+    selection: "controls-with-imports", requestSha256: hash(canonical(request)) }
+  f.input = { ...request, teamsProfileScanner: envelope }
+  f.env.GITHUB_REF_NAME = "tp-scan-" + envelope.candidateSha.slice(0, 12) + envelope.requestSha256.slice(0, 12) + "1"
+  f.evidence.admission = admitScanner(f.input, f.env)
+  f.evidence.setup.teamsProfile = envelope
+  f.evidence.summary.cases = importCases.map(([file, name]) => ({ file, name, classname: "", failures: 0, errors: 0,
+    skipped: 0, todo_identified: 0, executed: 1, known_control_or_hook: 0, product_executed: 1 }))
+  Object.assign(f.evidence.summary.counts, { tests: importCases.length, executed: importCases.length, product_executed: importCases.length })
+  const teams = ["44444444-4444-4444-8444-444444444444", "55555555-5555-4555-8555-555555555555"]
+  const durable = teams.map((teamObjectId) => ({ teamObjectId, before: "6".repeat(64), after: "6".repeat(64) }))
+  const accepted = (team) => ({ httpStatus: 200, ref: "7".repeat(64), bytes: 100, digest: "7".repeat(64),
+    storedDigest: "7".repeat(64), proofDigest: "8".repeat(64), catalogDigest: "9".repeat(64),
+    otherTeam: { teamObjectId: teams.find((id) => id !== team), before: "6".repeat(64), after: "6".repeat(64) } })
+  const eicarDigest = hash(Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64"))
+  for (const [index, id] of ["private-admission", "malformed-file", "denied-owner", "scanner-outage"].entries()) {
+    const daemon = index === 3 ? f.evidence.service.error : f.evidence.service.main
+    const result = id === "private-admission"
+      ? { observations: teams.map((teamObjectId) => ({ teamObjectId, before: accepted(teamObjectId), after: accepted(teamObjectId),
+          refused: { httpStatus: 403, bytes: 68, digest: eicarDigest, durable } })),
+          intakeLimit: { pending: 2, busy: { httpStatus: 503, retryAfter: "1" }, released: [400, 400], durable }, mainCleanAfter: true }
+      : id === "malformed-file"
+        ? { observations: ["format-mismatch", "truncated-xlsx"].map((kind) => ({ kind, digest: "7".repeat(64), bytes: 100,
+            scannerAccepted: true, staged: true, rejectedAt: "preview", httpStatus: 400, admission: accepted(teams[0]), durable })),
+          truncatedSourceDigest: "8".repeat(64), truncatedSourceBytes: 122, truncatedRemovedBytes: 22, mainCleanAfter: true }
+        : id === "denied-owner"
+          ? { attempts: ["wrong-installation", "wrong-tenant", "selector-route-mismatch", "revoked-membership"]
+              .map((kind) => ({ kind, httpStatus: 403, durable })),
+            foreignReference: { httpStatus: 503, durable },
+            missingGrant: { httpStatus: 403, explicitGrants: 0, binding: "e".repeat(64), cleanupComplete: true, durable },
+            configurationRevocation: { source: "private-installation-file",
+              observations: ["grants:before-request", "roles:before-request", "grants:after-request-body",
+                "roles:after-request-body", "unavailable:before-request"].map((value) => {
+                  const [kind, boundary] = value.split(":")
+                  return { kind, boundary, httpStatus: kind === "unavailable" ? 503 : 403,
+                    originalBodyObserved: boundary === "after-request-body", restoredReadStatus: 200, durable }
+                }), cleanAfterRestore: accepted(teams[0]) },
+            mainCleanAfter: true }
+          : { connectionRefused: true, attempts: teams.map((teamObjectId) => ({ teamObjectId, httpStatus: 403,
+              bytes: 100, digest: "8".repeat(64), durable })), mainCleanAfter: true }
+    const value = { schema: "orchestra.g06.microsoft-team-import-control/2", control: id, status: "PASS",
+      sourceSha: f.env.GITHUB_SHA, runId: f.env.GITHUB_RUN_ID, runAttempt: f.env.GITHUB_RUN_ATTEMPT,
+      proofClass: "COMPONENT_REAL_CLAMD", composition: "MICROSOFT_TEAM_NATIVE_IMPORT", identityProvider: "CONTROLLED_ENTRA_GRAPH",
+      runtimeFactory: "createMicrosoftInstallation", installedTeamsProof: false, finalCandidate: false,
+      scanner: { host: daemon.host, port: daemon.port, pid: daemon.pid },
+      binding: { installationId: String(index + 5).repeat(64), tenantId: "11111111-1111-4111-8111-111111111111",
+        principalObjectId: "33333333-3333-4333-8333-333333333333", teamObjectIds: teams },
+      transport: { protocol: "http:", listener: "127.0.0.1", port: 4000, requests: 50, loopbackPeers: 50, ingressRequests: 50 },
+      graphRequests: ["/v1.0/me/joinedTeams"], cleanup: { completed: true, directoryRemoved: true }, result }
+    f.evidence.log += "G06_MICROSOFT_IMPORT_" + id.toUpperCase().replaceAll("-", "_") + " " + JSON.stringify(value) + "\n"
+  }
+  return f
+}
+function changeImport(evidence, id, mutate) {
+  const prefix = "G06_MICROSOFT_IMPORT_" + id.toUpperCase().replaceAll("-", "_") + " "
+  evidence.log = evidence.log.split("\n").map((line) => {
+    if (!line.startsWith(prefix)) return line
+    const record = JSON.parse(line.slice(prefix.length))
+    mutate(record)
+    return prefix + JSON.stringify(record)
+  }).join("\n")
+}
+test("native import selection preserves twelve prior cases and binds four component import controls to the candidate", () => {
+  const f = importFixture()
+  assert.deepEqual(importFiles.slice(0, microsoftFiles.length), microsoftFiles)
+  assert.deepEqual(importCases.slice(0, microsoftCases.length), microsoftCases)
+  assert.equal(importFiles.length, 6)
+  assert.equal(importCases.length, 16)
+  assert.equal(admitScanner(f.input, f.env).envelope.schema, "teams-profile-scanner-v3")
+  const result = verifyScannerEvidence(f.evidence)
+  assert.equal(result.status, "PASS")
+  assert.deepEqual(result.cases, importCases)
+  assert.equal(result.microsoftTeams.controls.length, 3)
+  assert.equal(result.microsoftTeams.g05Controls.length, 11)
+  assert.equal(result.microsoftTeams.teamsPrivateImportProof, false)
+  assert.equal(result.microsoftImports.controls.length, 4)
+  assert.equal(result.microsoftImports.componentPrivateImportProof, true)
+  assert.equal(result.microsoftImports.installedTeamsProof, false)
+  assert.equal(result.microsoftImports.finalCandidate, false)
+  assert.equal(result.microsoftImports.g06Closed, false)
+  assert.equal(result.microsoftImports.candidateSha, f.input.teamsProfileScanner.candidateSha)
+  assert.equal(result.microsoftImports.snapshotSha, f.env.GITHUB_SHA)
+  assert.notEqual(result.microsoftImports.candidateSha, result.microsoftImports.snapshotSha)
+})
+for (const [name, mutate] of [
+  ["legacy schema with import selection", (f) => { f.input.teamsProfileScanner.schema = "teams-profile-scanner-v1" }],
+  ["team schema with import selection", (f) => { f.input.teamsProfileScanner.schema = "teams-profile-scanner-v2" }],
+  ["missing native import file", (f) => { f.input.args.splice(5, 1) }],
+  ["different native file order", (f) => { [f.input.args[0], f.input.args[5]] = [f.input.args[5], f.input.args[0]] }],
+]) test("native import admission rejects " + name, () => {
+  const f = importFixture(); mutate(f)
+  assert.throws(() => admitScanner(f.input, f.env), /TEAMS_SCANNER_FAIL_CLOSED/)
+})
+for (const [name, mutate] of [
+  ["wrong snapshot", (r) => { r.sourceSha = "f".repeat(40) }],
+  ["wrong run", (r) => { r.runId = "124" }],
+  ["wrong attempt", (r) => { r.runAttempt = "2" }],
+  ["different factory", (r) => { r.runtimeFactory = "testReplacement" }],
+  ["claiming live identity", (r) => { r.identityProvider = "REAL_ENTRA_GRAPH" }],
+  ["claiming installed proof", (r) => { r.installedTeamsProof = true }],
+  ["claiming final candidate", (r) => { r.finalCandidate = true }],
+  ["foreign scanner", (r) => { r.scanner.pid += 10 }],
+  ["public listener", (r) => { r.transport.listener = "0.0.0.0" }],
+  ["unobserved peer", (r) => { r.transport.loopbackPeers -= 1 }],
+  ["unobserved ingress", (r) => { r.transport.ingressRequests -= 1 }],
+  ["no joined Teams authority", (r) => { r.graphRequests = [] }],
+  ["incomplete cleanup", (r) => { r.cleanup.completed = false }],
+  ["remaining directory", (r) => { r.cleanup.directoryRemoved = false }],
+  ["unhealthy main scanner", (r) => { r.result.mainCleanAfter = false }],
+  ["missing shared intake observation", (r) => { delete r.result.intakeLimit }],
+  ["accepted third intake", (r) => { r.result.intakeLimit.busy.httpStatus = 200 }],
+  ["unreleased intake", (r) => { r.result.intakeLimit.released.pop() }],
+  ["durable intake effect", (r) => { r.result.intakeLimit.durable[0].after = "9".repeat(64) }],
+  ["no second Team", (r) => { r.result.observations.pop() }],
+  ["accepted EICAR", (r) => { r.result.observations[0].refused.httpStatus = 200 }],
+  ["different EICAR bytes", (r) => { r.result.observations[0].refused.digest = "8".repeat(64) }],
+  ["no clean after EICAR", (r) => { r.result.observations[0].after.httpStatus = 403 }],
+  ["unverified private blob", (r) => { r.result.observations[0].before.storedDigest = "8".repeat(64) }],
+  ["missing admission proof", (r) => { delete r.result.observations[0].before.proofDigest }],
+  ["changed foreign store", (r) => { r.result.observations[0].before.otherTeam.after = "9".repeat(64) }],
+  ["durable effect on refused bytes", (r) => { r.result.observations[0].refused.durable[0].after = "9".repeat(64) }],
+]) test("native import receipt rejects " + name, () => {
+  const { evidence } = importFixture()
+  changeImport(evidence, "private-admission", mutate)
+  assert.throws(() => verifyScannerEvidence(evidence), /TEAMS_SCANNER_FAIL_CLOSED/)
+})
+for (const [name, id, mutate] of [
+  ["missing format mismatch staging", "malformed-file", (r) => { r.result.observations[0].staged = false }],
+  ["malformed refusal by unsupported media", "malformed-file", (r) => { r.result.observations[0].httpStatus = 415 }],
+  ["malformed refused before the original parser", "malformed-file", (r) => {
+    Object.assign(r.result.observations[0], { scannerAccepted: false, staged: false, rejectedAt: "admission", httpStatus: 403 })
+  }],
+  ["changed state during malformed preview", "malformed-file", (r) => { r.result.observations[0].durable[0].after = "9".repeat(64) }],
+  ["unbound truncated file", "malformed-file", (r) => { r.result.truncatedRemovedBytes = 21 }],
+  ["missing refused owner", "denied-owner", (r) => { r.result.attempts.pop() }],
+  ["accepted foreign reference", "denied-owner", (r) => { r.result.foreignReference.httpStatus = 200 }],
+  ["effects from foreign reference", "denied-owner", (r) => { r.result.foreignReference.durable[1].after = "9".repeat(64) }],
+  ["implicit grant", "denied-owner", (r) => { r.result.missingGrant.explicitGrants = 1 }],
+  ["accepted absent grant", "denied-owner", (r) => { r.result.missingGrant.httpStatus = 200 }],
+  ["uncleaned no-grant fixture", "denied-owner", (r) => { r.result.missingGrant.cleanupComplete = false }],
+  ["reused no-grant installation", "denied-owner", (r) => { r.result.missingGrant.binding = "5".repeat(64) }],
+  ["missing current private configuration", "denied-owner", (r) => { delete r.result.configurationRevocation }],
+  ["inferred configuration source", "denied-owner", (r) => { r.result.configurationRevocation.source = "startup-object" }],
+  ["missing private revocation boundary", "denied-owner", (r) => { r.result.configurationRevocation.observations.pop() }],
+  ["duplicate private revocation boundary", "denied-owner", (r) => { r.result.configurationRevocation.observations[1] = r.result.configurationRevocation.observations[0] }],
+  ["accepted changed private grants", "denied-owner", (r) => { r.result.configurationRevocation.observations[0].httpStatus = 200 }],
+  ["body boundary unobserved", "denied-owner", (r) => { r.result.configurationRevocation.observations[2].originalBodyObserved = false }],
+  ["effect after private revocation", "denied-owner", (r) => { r.result.configurationRevocation.observations[2].durable[0].after = "9".repeat(64) }],
+  ["private policy not restored", "denied-owner", (r) => { r.result.configurationRevocation.observations[3].restoredReadStatus = 403 }],
+  ["fallback after unreadable private policy", "denied-owner", (r) => { r.result.configurationRevocation.observations[4].httpStatus = 200 }],
+  ["missing clean import after restoration", "denied-owner", (r) => { delete r.result.configurationRevocation.cleanAfterRestore }],
+  ["wrong stopped daemon", "scanner-outage", (r) => { r.scanner.pid = 200 }],
+  ["unobserved refused connection", "scanner-outage", (r) => { r.result.connectionRefused = false }],
+  ["missing second Team outage", "scanner-outage", (r) => { r.result.attempts.pop() }],
+  ["accepted outage", "scanner-outage", (r) => { r.result.attempts[0].httpStatus = 200 }],
+]) test("native import receipt rejects " + name, () => {
+  const { evidence } = importFixture()
+  changeImport(evidence, id, mutate)
+  assert.throws(() => verifyScannerEvidence(evidence), /TEAMS_SCANNER_FAIL_CLOSED/)
+})
+test("native import malformed control records actual antivirus rejection of truncated XLSX without replacing the parser case", () => {
+  const { evidence } = importFixture()
+  changeImport(evidence, "malformed-file", (r) => {
+    Object.assign(r.result.observations[1], { scannerAccepted: false, staged: false, rejectedAt: "admission", httpStatus: 403 })
+    delete r.result.observations[1].admission
+  })
+  const result = verifyScannerEvidence(evidence)
+  assert.equal(result.microsoftImports.controls[1].result.observations[0].rejectedAt, "preview")
+  assert.equal(result.microsoftImports.controls[1].result.observations[1].rejectedAt, "admission")
+})
+for (const [name, mutate] of [
+  ["missing original stopped-daemon marker", (e) => { e.log = e.log.split("\n").filter((line) => !line.startsWith("OPERATIONS63_REAL_DOWN ")).join("\n") }],
+  ["missing native import marker", (e) => { e.log = e.log.split("\n").filter((line) => !line.startsWith("G06_MICROSOFT_IMPORT_PRIVATE_ADMISSION ")).join("\n") }],
+  ["duplicate native import marker", (e) => { e.log += "\n" + e.log.split("\n").find((line) => line.startsWith("G06_MICROSOFT_IMPORT_PRIVATE_ADMISSION ")) }],
+  ["missing legacy selection case", (e) => { e.summary.cases.shift() }],
+  ["missing G05 selection case", (e) => { e.summary.cases.splice(11, 1) }],
+  ["reused control installation", (e) => { changeImport(e, "malformed-file", (r) => { r.binding.installationId = "5".repeat(64) }) }],
+]) test("native selection rejects " + name, () => {
+  const { evidence } = importFixture(); mutate(evidence)
   assert.throws(() => verifyScannerEvidence(evidence), /TEAMS_SCANNER_FAIL_CLOSED/)
 })

@@ -448,12 +448,139 @@ def actual_vm_id():
     return value["vmId"].lower()
 
 
+
+def sha256(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def az02_process(value, package):
+    require(isinstance(value, dict) and set(value) ==
+            {"pid", "startTicks", "bootId", "executable", "factorySha256"}, "G08_AZ02_PROCESS_SHAPE_REQUIRED")
+    require(type(value["pid"]) is int and value["pid"] > 0 and
+            isinstance(value["startTicks"], str) and re.fullmatch(r"[1-9][0-9]*", value["startTicks"]) and
+            isinstance(value["bootId"], str) and re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", value["bootId"]) and
+            value["executable"] == "/opt/orchestra-sf/releases/" + package["candidate"]["sha"] + "/bin/orchestra" and
+            value["factorySha256"] == package["factory"]["sha256"], "G08_AZ02_ORIGINAL_PROCESS_REQUIRED")
+    return value
+
+
+def phase_process(process, binding, package):
+    require(isinstance(process, dict) and process.get("unit") == UNIT and
+            process.get("activeState") == "active" and process.get("subState") == "running" and
+            binding.get("status") == "LOOPBACK_PID_AND_HTTPS_BOUND", "G08_AZ02_RUNNING_HOST_REQUIRED")
+    return az02_process({
+        "pid": process["pid"], "startTicks": process["startTicks"], "bootId": process["bootId"],
+        "executable": process["exe"], "factorySha256": binding["factorySha256"],
+    }, package)
+
+
+def validate_az02_restart_phase(phase, private, private_raw, plan, plan_raw, package):
+    public_keys = {"schema", "phase", "status", "proofClass", "liveQualified", "installedTeamsProof", "g08Closed",
+                   "finalCandidate", "candidate", "archiveSha256", "invocation", "source", "counts", "cases", "scope",
+                   "hostPlanSha256", "privateEvidenceSha256"}
+    require(isinstance(phase, dict) and set(phase) == public_keys and
+            phase["schema"] == "sf.az02.teams-proof.v2" and phase["phase"] == "after-restart" and
+            phase["status"] == "PASS" and phase["proofClass"] == "OWNER_OPERATED_HTTPS_OBSERVATIONS" and
+            all(phase[key] is False for key in ("liveQualified", "installedTeamsProof", "g08Closed", "finalCandidate")),
+            "G08_ORIGINAL_AZ02_RESTART_PHASE_REQUIRED")
+    require(isinstance(private, dict) and set(private) ==
+            {"schema", "phase", "candidate", "archiveSha256", "invocation", "details"} and
+            private["schema"] == "sf.az02.private-observations.v2" and private["phase"] == "after-restart",
+            "G08_ORIGINAL_AZ02_PRIVATE_OBSERVATION_REQUIRED")
+    for value in (phase, private):
+        require(value["candidate"] == plan["candidate"] == package["candidate"] and
+                value["archiveSha256"] == package["archive"]["sha256"] and
+                value["invocation"] == plan["invocation"], "G08_AZ02_SOURCE_TAR_INVOCATION_MISMATCH")
+    require(phase["hostPlanSha256"] == sha256(plan_raw) and
+            phase["privateEvidenceSha256"] == sha256(private_raw), "G08_AZ02_ORIGINAL_BYTES_MISMATCH")
+    source = phase["source"]
+    require(isinstance(source, dict) and source.get("legacySha") == "687759276c2c9121c2cfd20a5994b277ceb7ee4d" and
+            source.get("contractRevision") == "sf-team-profile/1" and source.get("legacyCaseCount") == 32 and
+            source.get("currentCaseCount") == 37, "G08_AZ02_SOURCE_CONTRACT_MISMATCH")
+    counts = phase["counts"]
+    require(isinstance(counts, dict) and all(type(value) is int for value in counts.values()) and
+            counts == {"total": 1, "passed": 1, "failed": 0, "skipped": 0}, "G08_AZ02_EXACT_RESTART_CASE_REQUIRED")
+    cases = phase["cases"]
+    require(isinstance(cases, list) and len(cases) == 1 and isinstance(cases[0], dict) and
+            set(cases[0]) == {"id", "expected", "observed", "status"} and
+            cases[0]["id"] == "REPLAY_AFTER_RESTART" and cases[0]["status"] == "PASS" and
+            cases[0]["observed"] in ("401", "403") and
+            cases[0]["expected"] == "native process change and same revoked cookie denied on fresh host",
+            "G08_AZ02_ORIGINAL_REPLAY_REFUSAL_REQUIRED")
+    details = private["details"]
+    require(isinstance(details, list) and len(details) == 1 and isinstance(details[0], dict) and
+            set(details[0]) == {"role", "cookieSha256", "before", "after", "freshHost"} and
+            details[0]["role"] == "requester" and isinstance(details[0]["cookieSha256"], str) and
+            re.fullmatch(r"[0-9a-f]{64}", details[0]["cookieSha256"]), "G08_AZ02_ORIGINAL_RESTART_DETAILS_REQUIRED")
+    return details[0]
+
+
+def az02_restart_binding(root, plan, plan_raw, package):
+    # Files alone cannot authenticate past execution. The canonical workflow/aggregate must
+    # establish the original runPhase job and these exact bytes; live process/HTTPS are read again below.
+    before_host, before_raw = private_json(root, "host-before.json")
+    phase, phase_raw = private_json(root, "az02-phase.json")
+    private, private_raw = private_json(root, "az02-private.json")
+    detail = validate_az02_restart_phase(phase, private, private_raw, plan, plan_raw, package)
+    require(isinstance(before_host, dict) and before_host.get("schema") == "sf-g08-installed-host-v1" and
+            before_host.get("status") == "INSTALLATION_BYTES_AND_PROCESS_VERIFIED" and before_host.get("phase") == "before" and
+            before_host.get("candidate") == plan["candidate"] and before_host.get("currentSource") == plan["candidate"]["sha"] and
+            before_host.get("invocationId") == plan["invocation"]["id"] and before_host.get("vmId") == plan["reservation"]["vmId"] and
+            before_host.get("archiveSha256") == package["archive"]["sha256"] and
+            before_host.get("manifestSha256") == package["manifest"]["sha256"] and
+            before_host.get("installerSha256") == package["verification"]["installerSha256"] and
+            isinstance(before_host.get("releaseReceiptSha256"), str) and
+            re.fullmatch(r"[0-9a-f]{64}", before_host["releaseReceiptSha256"]),
+            "G08_AZ02_ORIGINAL_BEFORE_HOST_MISMATCH")
+    observed_at = datetime.fromisoformat(before_host["observedAt"].replace("Z", "+00:00"))
+    require(datetime.fromisoformat(plan["reservation"]["startsAt"]) <= observed_at <= datetime.now(timezone.utc) and
+            observed_at < datetime.fromisoformat(plan["reservation"]["endsAt"]), "G08_AZ02_BEFORE_OUTSIDE_WINDOW")
+    validate_discovery({"installations": [before_host["binding"]["descriptor"]]}, plan["target"])
+    before = az02_process(detail["before"], package)
+    after = az02_process(detail["after"], package)
+    require(before == phase_process(before_host["process"], before_host["binding"], package),
+            "G08_AZ02_BEFORE_PROCESS_MISMATCH")
+    require(any(before[key] != after[key] for key in ("pid", "startTicks", "bootId")), "G08_AZ02_PROCESS_DID_NOT_RESTART")
+    fresh = detail["freshHost"]
+    require(isinstance(fresh, dict) and isinstance(fresh.get("hostId"), str) and
+            re.fullmatch(r"[A-Za-z0-9._:-]{8,128}", fresh["hostId"]) and fresh["hostId"] != plan["target"]["hostId"],
+            "G08_AZ02_FRESH_HOST_REQUIRED")
+    target = {**plan["target"], "hostId": fresh["hostId"]}
+    validate_discovery({"installations": [fresh]}, target)
+    producer = REPOSITORY / "sf/azure/identity/az02-proof.cjs"
+    return target, {
+        "schema": "sf-g08-az02-restart-v1",
+        "status": "AZ02_TRANSITION_INPUTS_BOUND_NOT_LIVE",
+        "candidate": plan["candidate"], "archiveSha256": package["archive"]["sha256"], "invocation": plan["invocation"],
+        "planSha256": sha256(plan_raw), "hostBeforeSha256": sha256(before_raw),
+        "releaseReceiptSha256": before_host["releaseReceiptSha256"],
+        "az02PhaseSha256": sha256(phase_raw), "az02PrivateSha256": sha256(private_raw),
+        "producerSourceSha256": sha256(producer.read_bytes()),
+        "oldHostId": plan["target"]["hostId"], "newHostId": target["hostId"],
+        "before": before, "after": after, "cookieSha256": detail["cookieSha256"],
+        "requiresOriginalWorkflowChain": True, "liveQualified": False,
+    }
+
+
+def complete_az02_restart_observation(root, restart, process, binding, package):
+    require(phase_process(process, binding, package) == restart["after"] and
+            binding["descriptor"]["hostId"] == restart["newHostId"], "G08_AZ02_CURRENT_PROCESS_OR_HOST_CHANGED")
+    for name, key in (("plan.json", "planSha256"), ("host-before.json", "hostBeforeSha256"),
+                      ("az02-phase.json", "az02PhaseSha256"), ("az02-private.json", "az02PrivateSha256")):
+        _, raw = private_json(root, name)
+        require(sha256(raw) == restart[key], "G08_AZ02_INPUT_CHANGED_DURING_OBSERVATION")
+    require(sha256((REPOSITORY / "sf/azure/identity/az02-proof.cjs").read_bytes()) == restart["producerSourceSha256"],
+            "G08_AZ02_PRODUCER_CHANGED_DURING_OBSERVATION")
+    return {**restart, "status": "AZ02_PROCESS_AND_HOST_TRANSITION_REOBSERVED"}
+
+
 def observe(root, phase):
+    require(phase in ("before", "after", "after-restart"), "G08_OBSERVER_PHASE_REQUIRED")
     require(os.uname().sysname == "Linux" and os.uname().machine == "x86_64" and
             os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("CI") == "true" and
             os.environ.get("RUNNER_ENVIRONMENT") == "self-hosted" and
             os.environ.get("GITHUB_REPOSITORY") == "gustavomhss/Orchestra-SF", "G08_PRIVATE_LINUX_ACTIONS_REQUIRED")
-    plan, _ = private_json(root, "plan.json", 65536)
+    plan, plan_raw = private_json(root, "plan.json", 65536)
     package, package_raw = private_json(root, "package-receipt.json")
     require(plan["schema"] == "sf-g08-private-plan-v1" and plan["scratchRoot"] == str(root) and
             package["schema"] == "sf-g07-package-v1" and package["status"] == "PACKAGE_VERIFIED" and
@@ -504,8 +631,10 @@ def observe(root, phase):
           "bytes": (release / entry["path"]).stat().st_size} for entry in distribution["files"]],
         key=lambda entry: entry["path"])
     require(installed == sorted(package["manifest"]["files"], key=lambda entry: entry["path"]), "G08_INSTALLED_G07_INVENTORY_MISMATCH")
+    target, restart = (az02_restart_binding(root, plan, plan_raw, package) if phase == "after-restart"
+                       else (plan["target"], None))
     process = running_process(candidate)
-    binding = runtime_binding(process, package, plan["target"])
+    binding = runtime_binding(process, package, target)
     require(running_process(candidate) == process, "G08_PROCESS_CHANGED_DURING_BINDING")
     require(installer.current_source() == candidate, "G08_RELEASE_CHANGED_DURING_OBSERVATION")
     result = {
@@ -516,7 +645,14 @@ def observe(root, phase):
         "installerSha256": hashlib.sha256(INSTALLER.read_bytes()).hexdigest(),
         "releaseReceiptSha256": hashlib.sha256(release_raw).hexdigest(), "process": process, "binding": binding,
     }
-    output = root / ("host-" + phase + ".json")
+    if restart is not None:
+        require(result["releaseReceiptSha256"] == restart["releaseReceiptSha256"],
+                "G08_AZ02_INSTALLED_RECEIPT_CHANGED")
+        result["target"] = target
+        result["restart"] = complete_az02_restart_observation(root, restart, process, binding, package)
+        require(running_process(candidate) == process and installer.current_source() == candidate,
+                "G08_AZ02_FINAL_PROCESS_OR_RELEASE_CHANGED")
+    output = root / ("host-after.json" if phase == "after-restart" else "host-" + phase + ".json")
     with os.fdopen(os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600), "w") as writer:
         writer.write(json.dumps(result, separators=(",", ":")) + "\n")
         writer.flush()
@@ -525,7 +661,7 @@ def observe(root, phase):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("phase", choices=("before", "after"))
+    parser.add_argument("phase", choices=("before", "after", "after-restart"))
     args = parser.parse_args()
     observe(private_root(os.environ["SF_G08_PRIVATE_ROOT"]), args.phase)
 

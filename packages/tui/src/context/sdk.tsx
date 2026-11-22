@@ -89,6 +89,11 @@ export const { use: useSDK, provider: SDKProvider } = createSimpleContext({
           await (async () => {
             for await (const event of v2.events.subscribe({ signal: ctrl.signal })) {
               if (ctrl.signal.aborted) break
+              if ("namespace" in event) {
+                setOffline(true)
+                ctrl.abort()
+                throw new Error("Team streams require a client that validates their owner and authority generation")
+              }
               setOffline(false)
               handleEvent({
                 directory: event.location?.directory ?? props.directory ?? "",

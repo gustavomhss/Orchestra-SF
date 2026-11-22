@@ -13,7 +13,10 @@ import { teamProfileInstallationId } from "../../runtime/team-profile-access.ts"
 // controlled; HTTP, callback/session issuance, Team admission, storage and scanner
 // remain the original implementation. This is never installed-tenant evidence.
 export async function microsoftHttpFixture(options: {
-  label?: "g05" | "g06"
+  label?: "g05" | "g06" | "g08" | "g10"
+  nativeWeb?: boolean
+  grants?: readonly Readonly<Record<string, unknown>>[]
+  plannerAdministrator?: boolean
   scanner?: { host: "127.0.0.1"; port: number } | null
 } = {}) {
   const label = options.label ?? "g05"
@@ -35,18 +38,22 @@ export async function microsoftHttpFixture(options: {
   const state: {
     installation?: Awaited<ReturnType<typeof createMicrosoftInstallation>>
     nonce: string
+    administrator: boolean
     teams: string[]
     graphCalls: string[]
+    beforeGraphRequest?: (url: URL) => Promise<void>
+    observeRequest?: (request: Request) => void
     requests: number
     loopbackPeers: number
     ingressRequests: number
     cleanupComplete: boolean
-  } = { nonce: "", teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0,
+  } = { nonce: "", administrator: true, teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0,
     loopbackPeers: 0, ingressRequests: 0, cleanupComplete: false }
   const listener = Bun.serve({
     hostname: "127.0.0.1", port: 0, idleTimeout: 0,
     async fetch(request, server) {
       state.requests += 1
+      state.observeRequest?.(request)
       if (server.requestIP(request)?.address !== "127.0.0.1")
         return new Response("Non-loopback proof peer", { status: 500 })
       state.loopbackPeers += 1
@@ -88,9 +95,9 @@ export async function microsoftHttpFixture(options: {
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: { dashboard: { admin: "group:" + groupId }, planner: {},
+      groups: { dashboard: { admin: "group:" + groupId }, planner: options.plannerAdministrator ? { admin: "group:" + groupId } : {},
         procurement: { buyer: "group:" + groupId, admin: "group:" + groupId } },
-      grants: [{ principalRef: groupId, operations: ["sf_case_read"] }],
+      grants: options.grants ?? [{ principalRef: groupId, operations: ["sf_case_read"] }],
       supremeAdminGroupId: groupId, scanner: options.scanner ?? null,
       teams: "direct", enabledTeamIds: [teamA, teamB],
     }))
@@ -103,6 +110,7 @@ export async function microsoftHttpFixture(options: {
       TMPDIR: join(directory, "host-tmp"), XDG_DATA_HOME: join(directory, "host-data"),
       XDG_CONFIG_HOME: join(directory, "host-config"), XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
+      ...(options.nativeWeb ? { SUCAFINA_NATIVE_TEAM_WEB: "1" } : {}),
     }, {
       now: () => new Date(epoch * 1000),
       async fetch(request) {
@@ -131,8 +139,9 @@ export async function microsoftHttpFixture(options: {
         if (url.origin === "https://graph.microsoft.com") {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-" + label + "-access")
           state.graphCalls.push(url.pathname)
+          await state.beforeGraphRequest?.(url)
           if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled " + label.toUpperCase() + " actor" })
-          if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: [groupId] })
+          if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: state.administrator ? [groupId] : [] })
           if (url.href === graph + "/me/joinedTeams")
             return Response.json({ value: state.teams.map((id) => ({ id, tenantId, displayName: id, isArchived: false })) })
         }
