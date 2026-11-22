@@ -1,0 +1,228 @@
+"""Real filesystem/SQLite controls; these do not impersonate an installed Azure VM."""
+import hashlib
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import sqlite3
+import stat
+import sys
+import tarfile
+import tempfile
+import unittest
+from unittest.mock import patch
+
+SPEC = importlib.util.spec_from_file_location("checkpoint", Path(__file__).with_name("teams-checkpoint.py"))
+checkpoint = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(checkpoint)
+
+
+class CheckpointTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(prefix="sf-g10-component-")
+        self.root = Path(self.temporary.name).resolve()
+        self.roots = {"state": self.root / "state", "configuration": self.root / "configuration"}
+        self.destination = self.root / "backup"
+        self.clone = self.root / "clone"
+        for directory in [*self.roots.values(), self.destination, self.clone]:
+            directory.mkdir(mode=0o700)
+        self.database = self.roots["state"] / "installation.sqlite"
+        with sqlite3.connect(self.database) as db:
+            db.executescript("CREATE TABLE effects (id TEXT PRIMARY KEY, receipt TEXT NOT NULL);"
+                             "INSERT INTO effects VALUES ('original', 'receipt-original');")
+        self.database.chmod(0o600)
+        (self.roots["state"] / "empty").mkdir(mode=0o700)
+        (self.roots["state"] / "attachments").mkdir(mode=0o700)
+        (self.roots["state"] / "attachments" / "private.bin").write_bytes(bytes(range(256)) * 80)
+        (self.roots["configuration"] / "runtime.env").write_text("COMPONENT_FIXTURE_ONLY=1\n")
+        self.binding = {"candidate": {"sha": "a" * 40, "tree": "b" * 40},
+                        "archiveSha256": "c" * 64, "service": "NOT_OBSERVED_IN_COMPONENT_TEST"}
+
+    def tearDown(self):
+        self.temporary.cleanup()
+
+    def make(self):
+        return checkpoint.checkpoint_files(self.roots, self.destination, self.binding)
+
+    def rewrite_archive(self, archive, receipt, change):
+        with tarfile.open(archive, "r:gz") as source:
+            members = [(member, source.extractfile(member).read() if member.isfile() else None)
+                       for member in source.getmembers()]
+        altered = self.destination / "altered.tar.gz"
+        with tarfile.open(altered, "w:gz") as target:
+            for member, data in change(members):
+                target.addfile(member, io.BytesIO(data) if data is not None else None)
+        altered.chmod(0o600)
+        # Simulate a replaced outer checksum to ensure the inner inventory still
+        # detects tampered payloads, rosters and path types independently.
+        bound = {**receipt, "archive": {"sha256": checkpoint.file_digest(altered), "bytes": altered.stat().st_size}}
+        return altered, bound
+
+    def test_roundtrip_includes_database_attachment_configuration_and_empty_directory(self):
+        archive, receipt = self.make()
+        manifest = checkpoint.verify_checkpoint(archive, receipt)
+        result = checkpoint.restore_clone_files(archive, receipt, self.clone)
+        self.assertEqual(result["proofClass"], "ISOLATED_CLONE_FILE_INTEGRITY_ONLY")
+        self.assertFalse(result["releaseQualified"])
+        self.assertEqual(result["businessRecovery"], "NOT_RUN")
+        self.assertEqual(result["keyDecryption"], "NOT_RUN")
+        self.assertEqual(manifest["sqlite"], ["state/installation.sqlite"])
+        self.assertEqual(receipt["entryCount"], 7)
+        restored = self.clone / "restored"
+        self.assertTrue((restored / "state/empty").is_dir())
+        self.assertEqual((restored / "state/attachments/private.bin").read_bytes(), bytes(range(256)) * 80)
+        self.assertEqual((restored / "configuration/runtime.env").read_bytes(), b"COMPONENT_FIXTURE_ONLY=1\n")
+        with sqlite3.connect(restored / "state/installation.sqlite") as db:
+            self.assertEqual(db.execute("SELECT id, receipt FROM effects").fetchall(), [("original", "receipt-original")])
+        self.assertEqual(stat.S_IMODE(archive.stat().st_mode), 0o600)
+        self.assertEqual(stat.S_IMODE((restored / "state/installation.sqlite").stat().st_mode), 0o600)
+
+    def test_clone_never_overwrites_original_post_checkpoint_data(self):
+        archive, receipt = self.make()
+        with sqlite3.connect(self.database) as db:
+            db.execute("INSERT INTO effects VALUES ('later', 'receipt-later')")
+        original = checkpoint.file_digest(self.database)
+        checkpoint.restore_clone_files(archive, receipt, self.clone)
+        self.assertEqual(checkpoint.file_digest(self.database), original)
+        with sqlite3.connect(self.database) as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM effects").fetchone(), (2,))
+        with sqlite3.connect(self.clone / "restored/state/installation.sqlite") as db:
+            self.assertEqual(db.execute("SELECT count(*) FROM effects").fetchone(), (1,))
+
+    def test_symlink_hardlink_and_special_files_are_refused(self):
+        node = self.roots["state"] / "unadmitted"
+        for kind in ("symlink", "hardlink", "fifo"):
+            with self.subTest(kind=kind):
+                if kind == "symlink":
+                    node.symlink_to(self.database)
+                elif kind == "hardlink":
+                    os.link(self.database, node)
+                else:
+                    os.mkfifo(node)
+                try:
+                    with self.assertRaises((ValueError, OSError)):
+                        self.make()
+                finally:
+                    node.unlink()
+        self.assertEqual(list(self.destination.iterdir()), [])
+
+    def test_nonempty_sqlite_journal_requires_clean_shutdown(self):
+        Path(str(self.database) + "-wal").write_bytes(b"unsettled-wal")
+        with self.assertRaisesRegex(ValueError, "unsettled SQLite journal"):
+            self.make()
+
+    def test_missing_or_corrupt_database_cannot_produce_a_receipt(self):
+        self.database.unlink()
+        with self.assertRaisesRegex(ValueError, "no actual SQLite"):
+            self.make()
+        self.database.write_bytes(b"SQLite format 3\x00" + b"corrupt" * 100)
+        with self.assertRaises(sqlite3.DatabaseError):
+            self.make()
+        self.assertEqual(list(self.destination.iterdir()), [])
+
+    def test_backup_destination_inside_source_is_refused(self):
+        nested = self.roots["state"] / "nested-backup"
+        nested.mkdir(mode=0o700)
+        with self.assertRaisesRegex(ValueError, "outside every source"):
+            checkpoint.checkpoint_files(self.roots, nested, self.binding)
+
+    def test_changed_archive_is_refused_before_clone_writes(self):
+        archive, receipt = self.make()
+        with archive.open("ab") as stream:
+            stream.write(b"changed")
+        with self.assertRaisesRegex(ValueError, "hash or size differs"):
+            checkpoint.restore_clone_files(archive, receipt, self.clone)
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_changed_payload_is_refused_even_with_updated_outer_digest(self):
+        archive, receipt = self.make()
+        def alter(members):
+            return [(member, b"X" * len(data) if member.name.endswith("private.bin") else data)
+                    for member, data in members]
+        modified, bound = self.rewrite_archive(archive, receipt, alter)
+        with self.assertRaisesRegex(ValueError, "file hash differs"):
+            checkpoint.restore_clone_files(modified, bound, self.clone)
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_missing_duplicate_extra_and_traversal_members_are_refused(self):
+        archive, receipt = self.make()
+        extra = tarfile.TarInfo("state/extra")
+        extra.size = 1
+        traversal = tarfile.TarInfo("state/../../outside")
+        traversal.size = 1
+        changes = {
+            "missing": lambda members: members[:-1],
+            "duplicate": lambda members: members + [members[-1]],
+            "extra": lambda members: members + [(extra, b"x")],
+            "traversal": lambda members: members + [(traversal, b"x")],
+            "duplicate-inventory": lambda members: [members[0], members[0], *members[1:]],
+        }
+        for name, change in changes.items():
+            with self.subTest(name=name):
+                altered, bound = self.rewrite_archive(archive, receipt, change)
+                with self.assertRaises(ValueError):
+                    checkpoint.restore_clone_files(altered, bound, self.clone)
+                self.assertEqual(list(self.clone.iterdir()), [])
+                altered.unlink()
+
+    def test_link_archive_member_cannot_escape_clone(self):
+        archive, receipt = self.make()
+        def alter(members):
+            for member, data in members:
+                if member.name.endswith("private.bin"):
+                    member.type = tarfile.SYMTYPE
+                    member.linkname = "/etc/passwd"
+                    member.size = 0
+                    yield member, None
+                else:
+                    yield member, data
+        altered, bound = self.rewrite_archive(archive, receipt, alter)
+        with self.assertRaisesRegex(ValueError, "file differs"):
+            checkpoint.restore_clone_files(altered, bound, self.clone)
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_source_mutation_during_copy_has_no_published_receipt(self):
+        original_add = tarfile.TarFile.addfile
+        changed = False
+        def addfile(package, member, fileobj=None):
+            nonlocal changed
+            result = original_add(package, member, fileobj)
+            if member.name.endswith("private.bin") and not changed:
+                changed = True
+                (self.roots["configuration"] / "runtime.env").write_bytes(b"changed-after-copy")
+            return result
+        with patch.object(tarfile.TarFile, "addfile", addfile):
+            with self.assertRaisesRegex(ValueError, "source changed"):
+                self.make()
+        self.assertTrue(changed)
+        self.assertEqual(list(self.destination.iterdir()), [])
+
+    def test_clone_requires_empty_private_real_directory(self):
+        archive, receipt = self.make()
+        (self.clone / "existing").write_text("must survive")
+        with self.assertRaises(ValueError):
+            checkpoint.restore_clone_files(archive, receipt, self.clone)
+        self.assertEqual((self.clone / "existing").read_text(), "must survive")
+        link = self.root / "clone-link"
+        link.symlink_to(self.clone, target_is_directory=True)
+        with self.assertRaises(ValueError):
+            checkpoint.restore_clone_files(archive, receipt, link)
+
+
+if __name__ == "__main__":
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(CheckpointTests)
+    expected = [case.id() for case in suite]
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    receipt_path = os.environ.get("G10_COMPONENT_RECEIPT")
+    if receipt_path:
+        checkpoint.write_private(Path(receipt_path), {
+            "schema": "orchestra-sf.g10-component-tests.v1", "proofClass": "FILESYSTEM_COMPONENT_CONTROLS",
+            "candidateSha": os.environ.get("GITHUB_SHA"), "runId": os.environ.get("GITHUB_RUN_ID"),
+            "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT"), "expectedCases": expected,
+            "caseInventorySha256": hashlib.sha256(checkpoint.canonical_json(expected)).hexdigest(),
+            "executed": result.testsRun, "failures": len(result.failures), "errors": len(result.errors),
+            "skipped": len(result.skipped), "result": "PASS" if result.wasSuccessful() and not result.skipped else "FAIL",
+            "installedTeamsProof": False, "releaseQualified": False,
+        })
+    sys.exit(0 if result.wasSuccessful() and not result.skipped and result.testsRun == len(expected) else 1)
