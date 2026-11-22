@@ -8,6 +8,13 @@ on:
         description: Exact source commit to qualify
         type: string
         required: true
+      scope:
+        description: Full G03/G04 qualification or Reports baseline evidence only
+        type: choice
+        default: full
+        options:
+          - full
+          - reports-baseline
 
 permissions:
   contents: read
@@ -21,8 +28,119 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
+  reports-baseline:
+    name: sf/reports-baseline-evidence
+    if: inputs.scope == 'reports-baseline'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SF_SUITE_ID: CI-UI-REPORTS
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      PLAYWRIGHT_WORKERS: "1"
+      PLAYWRIGHT_NO_VIDEO: "1"
+      REPORTS_CANDIDATE: fc9a8e93d8b3683ea1344fb8159c7dec999faed0
+      REPORTS_TREE: b132f581cebaef35578cf7f2c7f26aee35ca97c9
+      REPORTS_OMNI_ARTIFACT: "14735891807"
+      REPORTS_OMNI_SHA256: 6412fe6b130efd60f413f86041cfd5bd4eaf346d871a78822637ac0a0f93b49b
+    steps:
+      - name: Pin the approved candidate and Linux runner
+        env:
+          REQUESTED_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY_ID" = 1455724710
+          test "$REQUESTED_SHA" = "$REPORTS_CANDIDATE"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ env.REPORTS_CANDIDATE }}
+          persist-credentials: false
+      - name: Verify checkout and restore the exact prior Omni artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$REPORTS_CANDIDATE"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$REPORTS_TREE"
+          archive="$RUNNER_TEMP/reports-omni.zip"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$REPORTS_OMNI_ARTIFACT/zip" > "$archive"
+          printf '%s  %s\n' "$REPORTS_OMNI_SHA256" "$archive" | sha256sum -c -
+          dir="$GITHUB_WORKSPACE/native/omni/target/release"
+          mkdir -p "$dir"
+          unzip -q "$archive" libhugr_omni_node.so hugr-omni-supervisor -d "$dir"
+          test -s "$dir/libhugr_omni_node.so" && test -s "$dir/hugr-omni-supervisor"
+          chmod +x "$dir/hugr-omni-supervisor"
+          printf 'HUGR_OMNI_ADDON=%s\nHUGR_OMNI_SUPERVISOR=%s\n' "$dir/libhugr_omni_node.so" "$dir/hugr-omni-supervisor" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Install Chromium
+        working-directory: packages/app-shell
+        run: bunx playwright install --with-deps chromium
+      - name: Run only the manifest-selected Reports spec
+        id: reports
+        run: |
+          set -euo pipefail
+          umask 077
+          evidence="$RUNNER_TEMP/reports-baseline"
+          install -d -m 700 "$evidence"
+          spec="$(node script/sf-ci/gate.mjs select)"
+          test "$spec" = e2e/sucafina/reports.spec.ts
+          cd packages/app-shell
+          # The fixture records GITHUB_SHA as the actual source checkout.
+          PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.raw.json" GITHUB_SHA="$REPORTS_CANDIDATE" \
+            bun run test:e2e:local "$spec" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line
+      - name: Bind the unmodified JSON to an execution receipt for baseline review
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import { createHash } from "node:crypto"
+          import { readFileSync, writeFileSync } from "node:fs"
+          import path from "node:path"
+          import { minimalPlaywrightEvidence, playwrightCoverageIdentity, validateManifest } from "./script/sf-ci/gate.mjs"
+
+          const env = process.env
+          const evidence = path.join(env.RUNNER_TEMP, "reports-baseline")
+          const manifest = readFileSync("sf/ci/suites.json")
+          const suites = validateManifest(JSON.parse(manifest))
+          const suite = suites.find((entry) => entry.id === env.SF_SUITE_ID && entry.kind === "playwright")
+          const raw = readFileSync(path.join(evidence, "report.raw.json"))
+          const minimized = minimalPlaywrightEvidence(raw.toString("utf8"), suite.specFile)
+          const coverage = playwrightCoverageIdentity(minimized, suite.specFile)
+          const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex")
+          const receipt = {
+            schemaVersion: 1, status: "BASELINE_REVIEW_PENDING", suiteId: suite.id,
+            sourceSha: env.REPORTS_CANDIDATE, treeSha: env.REPORTS_TREE, workflowSha: env.GITHUB_WORKFLOW_SHA,
+            runId: env.GITHUB_RUN_ID, runAttempt: env.GITHUB_RUN_ATTEMPT,
+            runnerOS: env.RUNNER_OS, runnerArch: env.RUNNER_ARCH, exitCode: 0,
+            omniArtifactId: env.REPORTS_OMNI_ARTIFACT, omniArchiveSha256: env.REPORTS_OMNI_SHA256,
+            manifestSha256: sha256(manifest), rawReportSha256: sha256(raw), minimizedReportSha256: sha256(minimized),
+            ...coverage,
+          }
+          writeFileSync(path.join(evidence, "report.minimized.json"), minimized, { mode: 0o600 })
+          writeFileSync(path.join(evidence, "baseline-execution.json"), JSON.stringify(receipt, null, 2) + "\n", { mode: 0o600 })
+          console.log("SF_REPORTS_BASELINE_REVIEW_PENDING", coverage.cases, "cases")
+          JS
+      - name: Publish Reports baseline review evidence
+        if: ${{ !cancelled() && steps.reports.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-reports-baseline-review
+          path: |
+            ${{ runner.temp }}/reports-baseline/report.raw.json
+            ${{ runner.temp }}/reports-baseline/report.minimized.json
+            ${{ runner.temp }}/reports-baseline/baseline-execution.json
+          if-no-files-found: error
+          retention-days: 7
+
   preflight:
     name: sf/preflight
+    if: inputs.scope == 'full'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -606,7 +724,7 @@ jobs:
 
   verify:
     name: sf/verify
-    if: always()
+    if: always() && inputs.scope == 'full'
     needs: [preflight, static, omni, unit, unit-sf, ui, teams-profile-browser-pool]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
