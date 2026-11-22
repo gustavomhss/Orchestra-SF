@@ -11,22 +11,24 @@ import { restoreBackup } from "./operations.ts"
 import { readRequestBody, RequestBodyError } from "./request-body.ts"
 import { captureSfCorporateRestoreRetention } from "./restore-effect-frontier.ts"
 import { teamProfileInstallationId } from "./team-profile-access.ts"
+import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
 
 const decodeBody = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)
 const checkpointId = /^backup-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/
 
 export function createCorporateRecoveryHttp(input: {
-  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId" | "enabledTeamIds" | "supremeAdminGroupId" | "grants">
+  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId" | "supremeAdminGroupId" | "grants">
   directory: string
   identity: Pick<LocalIdentity, "prepare" | "observeCorporateRecoveryActor">
   register: Awaited<ReturnType<typeof openCorporateRecoveryRegister>>
+  profilePolicy: Pick<TeamProfilePolicyStore, "read">
   now: () => Date
 }) {
-  const { config, directory, identity, register, now } = input
+  const { config, directory, identity, register, profilePolicy, now } = input
+  if (!profilePolicy || typeof profilePolicy.read !== "function") throw new Error("Corporate recovery requires current Team policy")
   const route = config.mount + "/api/ui/team-profile-migration/recover"
   const installationId = teamProfileInstallationId({ ...config, directory })
   const installationDigest = digestSfValue({ installationId, tenantId: config.tenantId, clientId: config.clientId })
-  const enabled = new Set(config.enabledTeamIds)
   const respond = (status: number) => new Response(null, {
     status,
     headers: { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", ...(status === 405 ? { Allow: "POST" } : {}) },
@@ -52,7 +54,18 @@ export function createCorporateRecoveryHttp(input: {
       const parsed = decodeBody(new TextDecoder().decode(await readRequestBody(request, 2048)))
       if (parsed._tag !== "Some" || !recoveryCommand(parsed.value)) return respond(400)
       const command = parsed.value
-      if (!enabled.has(command.teamObjectId)) return respond(403)
+      const catalog = await profilePolicy.read()
+      const enabled = catalog.profiles.filter((entry) => entry.enabled &&
+        entry.profile.installationId === installationId && entry.profile.tenantId === config.tenantId &&
+        entry.profile.teamObjectId === command.teamObjectId)
+      if (enabled.length !== 1) return respond(403)
+      const verifyCurrent = async () => {
+        if (request.signal.aborted || !await admission.verifyCurrent()) return false
+        const current = await profilePolicy.read()
+        return !request.signal.aborted && current.configRevision === catalog.configRevision &&
+          current.profiles.filter((entry) => entry.enabled && entry.profile.installationId === installationId &&
+            entry.profile.tenantId === config.tenantId && entry.profile.teamObjectId === command.teamObjectId).length === 1
+      }
       const partition = digestSfValue({ installationId, tenantId: config.tenantId, teamObjectId: command.teamObjectId })
       const team = path.join(directory, "business-teams", partition)
       const archiveRoot = path.join(directory, "backups-teams", partition)
@@ -60,6 +73,7 @@ export function createCorporateRecoveryHttp(input: {
       // The witness is acquired from the independently owned registry, never from the request or backup.
       const status = await register.withCurrentPin(installationDigest, partition, async (pin) => {
         request.signal.throwIfAborted()
+        if (!await verifyCurrent()) return 403
         if (!await Bun.file(path.join(team, "installation.sqlite")).exists()) return 404
         const backups = await createLocalBackups(archiveRoot)
         const store = await openLocalStore(team)
@@ -74,7 +88,7 @@ export function createCorporateRecoveryHttp(input: {
                 return captureSfCorporateRestoreRetention(current, checkpoint, frontier,
                   { installationDigest, generation: pin.generation, pin })
               },
-              verifyCurrent: admission.verifyCurrent,
+              verifyCurrent,
               signal: request.signal,
             })
           return result.ok ? 204 : result.status

@@ -1,0 +1,201 @@
+name: azure-qualification-inventory
+
+on:
+  push:
+    branches: [dev]
+    paths: [.github/workflows/azure-qualification-inventory.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: azure-qualification-inventory
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-24.04
+    environment: azure-mvp
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+      deployments: read
+      id-token: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Prepare minimized observation and validate configured scope
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -m 700 "$INVENTORY_DIR"
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, re
+          root = pathlib.Path(os.environ["INVENTORY_DIR"])
+          required = ["AZURE_CLIENT_ID", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID", "AZURE_RESOURCE_GROUP"]
+          uuid = r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+          invalid = [key for key in required[:3] if not re.fullmatch(uuid, os.environ.get(key, ""))]
+          group = os.environ.get("AZURE_RESOURCE_GROUP", "")
+          if not re.fullmatch(r"[A-Za-z0-9_.()-]{1,90}", group) or group.endswith("."):
+              invalid.append("AZURE_RESOURCE_GROUP")
+          receipt = {
+              "schema": "orchestra-sf.azure-qualification-inventory.v1",
+              "class": "CONTROL_PLANE_OBSERVATION",
+              "observedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "sourceSha": os.environ["GITHUB_SHA"], "ref": os.environ["GITHUB_REF"],
+              "runId": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "actor": os.environ["GITHUB_ACTOR"], "triggeringActor": os.environ["GITHUB_TRIGGERING_ACTOR"],
+              "environment": "azure-mvp", "invalidConfigurationKeys": invalid,
+              "scope": "configured-resource-group", "reservationConfirmed": False,
+              "guestObserved": False, "installedQualification": False, "productionCutover": False,
+          }
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          if invalid:
+              raise SystemExit("Configuration unavailable or invalid: " + ", ".join(invalid))
+          PY
+
+      - name: Observe GitHub environment and runner metadata where the existing token permits
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, urllib.error, urllib.request
+          root = pathlib.Path(os.environ["INVENTORY_DIR"])
+          base = "https://api.github.com/repos/gustavomhss/Orchestra-SF/"
+          observations = {}
+          def read(name, endpoint, project):
+              request = urllib.request.Request(base + endpoint, headers={
+                  "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                  "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28",
+              }, method="GET")
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      data = json.load(response)
+                  observations[name] = {"status": "OBSERVED", "value": project(data)}
+              except urllib.error.HTTPError as error:
+                  observations[name] = {"status": "NOT_OBSERVABLE", "httpStatus": error.code}
+              except Exception as error:
+                  observations[name] = {"status": "NOT_OBSERVABLE", "errorType": type(error).__name__}
+          read("environment", "environments/azure-mvp", lambda v: {
+              "name": v.get("name"), "deploymentBranchPolicy": v.get("deployment_branch_policy"),
+              "protectionRuleTypes": [r.get("type") for r in v.get("protection_rules", [])],
+          })
+          read("branchPolicies", "environments/azure-mvp/deployment-branch-policies", lambda v: [
+              {"name": p.get("name"), "type": p.get("type")} for p in v.get("branch_policies", [])
+          ])
+          read("runners", "actions/runners?per_page=100", lambda v: {
+              "totalCount": v.get("total_count"),
+              "runners": [{"id": r.get("id"), "name": r.get("name"), "os": r.get("os"),
+                  "status": r.get("status"), "busy": r.get("busy"),
+                  "labels": [label.get("name") for label in r.get("labels", [])]} for r in v.get("runners", [])],
+          })
+          for scope, endpoint in [
+              ("repositoryVariableNames", "actions/variables?per_page=100"),
+              ("environmentVariableNames", "environments/azure-mvp/variables?per_page=100"),
+          ]:
+              read(scope, endpoint, lambda v: {
+                  "totalCount": v.get("total_count"),
+                  "azureNames": [item["name"] for item in v.get("variables", []) if item.get("name", "").startswith("AZURE_")],
+              })
+          (root / "github-metadata.json").write_text(json.dumps(observations, indent=2) + "\n")
+          PY
+
+      - name: Azure login with the existing environment identity
+        uses: azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Read the configured Azure foundation without guest execution
+        env:
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          INVENTORY_DIR: ${{ runner.temp }}/azure-qualification-inventory
+        run: |
+          set -euo pipefail
+          umask 077
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, subprocess
+          root = pathlib.Path(os.environ["INVENTORY_DIR"])
+          group = os.environ["AZURE_RESOURCE_GROUP"]
+          observations = {}
+          def read(name, args, query):
+              try:
+                  result = subprocess.run(["az", *args, "--only-show-errors", "--output", "json", "--query", query],
+                      capture_output=True, text=True, timeout=90, check=False)
+                  if result.returncode:
+                      observations[name] = {"status": "NOT_OBSERVABLE", "exitCode": result.returncode}
+                      return None
+                  value = json.loads(result.stdout)
+                  observations[name] = {"status": "OBSERVED", "value": value}
+                  return value
+              except Exception as error:
+                  observations[name] = {"status": "NOT_OBSERVABLE", "errorType": type(error).__name__}
+                  return None
+          def save():
+              receipt = json.loads((root / "receipt.json").read_text())
+              receipt["completedAt"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+              receipt["observationStatus"] = "COMPLETE" if observations and all(
+                  item["status"] == "OBSERVED" for item in observations.values()) else "PARTIAL"
+              (root / "azure-metadata.json").write_text(json.dumps(observations, indent=2) + "\n")
+              (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          account = read("account", ["account", "show"], "{subscriptionId:id,tenantId:tenantId,cloud:environmentName}")
+          if not account or account.get("cloud") != "AzureCloud" or (
+              account.get("subscriptionId", "").lower() != os.environ["AZURE_SUBSCRIPTION_ID"].lower() or
+              account.get("tenantId", "").lower() != os.environ["AZURE_TENANT_ID"].lower()):
+              save()
+              raise SystemExit("Authenticated Azure account did not match the configured scope")
+          resource_group = read("resourceGroup", ["group", "show", "--name", group],
+              "{id:id,name:name,location:location,provisioningState:properties.provisioningState}")
+          if not resource_group:
+              save()
+              raise SystemExit("Configured resource group could not be observed")
+          read("virtualMachines", ["vm", "list", "--resource-group", group, "--show-details"],
+              "[].{id:id,name:name,location:location,vmSize:hardwareProfile.vmSize,powerState:powerState,provisioningState:provisioningState,osDiskId:storageProfile.osDisk.managedDisk.id,dataDisks:storageProfile.dataDisks[].{id:managedDisk.id,lun:lun,caching:caching,deleteOption:deleteOption},nics:networkProfile.networkInterfaces[].id,identityType:identity.type}")
+          read("publicAddresses", ["network", "public-ip", "list", "--resource-group", group],
+              "[].{id:id,name:name,ipAddress:ipAddress,fqdn:dnsSettings.fqdn,provisioningState:provisioningState}")
+          read("networkInterfaces", ["network", "nic", "list", "--resource-group", group],
+              "[].{id:id,name:name,vmId:virtualMachine.id,nsgId:networkSecurityGroup.id,forwarding:enableIPForwarding,subnets:ipConfigurations[].subnet.id,publicAddresses:ipConfigurations[].publicIPAddress.id}")
+          read("networkSecurityGroups", ["network", "nsg", "list", "--resource-group", group],
+              "[].{id:id,name:name,rules:securityRules[].{name:name,priority:priority,access:access,direction:direction,protocol:protocol,source:sourceAddressPrefix,destination:destinationAddressPrefix,sourcePort:sourcePortRange,destinationPort:destinationPortRange}}")
+          read("disks", ["disk", "list", "--resource-group", group],
+              "[].{id:id,name:name,managedBy:managedBy,diskSizeGB:diskSizeGb,diskState:diskState,provisioningState:provisioningState,encryptionType:encryption.type}")
+          read("snapshots", ["snapshot", "list", "--resource-group", group],
+              "[].{id:id,name:name,timeCreated:timeCreated,osType:osType,provisioningState:provisioningState,sourceResourceId:creationData.sourceResourceId}")
+          read("foundationDeployment", ["deployment", "group", "show", "--resource-group", group, "--name", "orchsf-foundation"],
+              "{name:name,state:properties.provisioningState,timestamp:properties.timestamp,fqdn:properties.outputs.fqdn.value,publicOrigin:properties.outputs.publicOrigin.value,vmName:properties.outputs.vmName.value,dataDiskId:properties.outputs.dataDiskId.value,backupVaultName:properties.outputs.backupVaultName.value,backupPolicyName:properties.outputs.backupPolicyName.value,protectedItemName:properties.outputs.protectedItemName.value}")
+          vaults = read("backupVaults", ["backup", "vault", "list", "--resource-group", group],
+              "[].{id:id,name:name,location:location,provisioningState:properties.provisioningState}") or []
+          for vault in vaults[:10]:
+              name = vault["name"]
+              read("backupItems:" + name, ["backup", "item", "list", "--resource-group", group, "--vault-name", name],
+                  "[].{name:name,id:id,sourceResourceId:properties.sourceResourceId,friendlyName:properties.friendlyName,protectionState:properties.protectionState,lastBackupStatus:properties.lastBackupStatus,lastBackupTime:properties.lastBackupTime,lastRecoveryPoint:properties.lastRecoveryPoint}")
+              read("recentBackupJobs:" + name, ["backup", "job", "list", "--resource-group", group, "--vault-name", name],
+                  "[:50].{name:name,operation:properties.operation,status:properties.status,entity:properties.entityFriendlyName,startTime:properties.startTime,endTime:properties.endTime}")
+          save()
+          print("Azure control-plane observation saved; no reservation or installed proof asserted.")
+          PY
+
+      - name: Preserve only minimized nonsecret observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: azure-qualification-inventory-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/azure-qualification-inventory
+          if-no-files-found: error
+          retention-days: 7
