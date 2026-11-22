@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import { digestSfPrivateValue } from "../contracts/private-canonical.ts"
+import { compareSfPrivateCanonical, digestSfPrivateValue } from "../contracts/private-canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
@@ -728,6 +728,15 @@ function plannerProjectionMatches(projection: DomainProjection, ref: Extract<Bus
       projection.context.principalRef !== call.binding.principalRef || projection.context.accessRevision !== call.binding.accessRevision ||
       projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== "planner" ||
       digestSfValue(projection.context.period) !== digestSfValue(ref.target.period)) return false
+  // Prove the entire graph before reading a source selector. Plain aliases can
+  // share completed bytes synchronously; any callback-bearing shape keeps the
+  // original evaluation order below, including short-circuit and hasher hooks.
+  const compared = compareSfPrivateCanonical({ projection, ref }, (canonical) => {
+    const expected = canonical(ref)
+    return projection.values.every((value) =>
+      value.sourceRefs.length === 1 && canonical(value.sourceRefs[0]) === expected)
+  })
+  if (compared !== undefined) return compared
   // One synchronous projection check shares only the expected reference digest.
   // Every value still proves its own source, and the reference is checked again at exit.
   const referenceDigest = digestSfValue(ref)

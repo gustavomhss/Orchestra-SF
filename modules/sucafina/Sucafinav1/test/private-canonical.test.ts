@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { types } from "node:util"
 import { canonicalSfValue, digestSfValue } from "../product/contracts/canonical.ts"
-import { canonicalSfPrivateValue, digestSfPrivateValue } from "../product/contracts/private-canonical.ts"
+import { canonicalSfPrivateValue, compareSfPrivateCanonical, digestSfPrivateValue } from "../product/contracts/private-canonical.ts"
 
 test("private canonical fragments retain exact tagged bytes for detached aliases and ordinary values", () => {
   expect(typeof types.isProxy).toBe("function")
@@ -146,5 +146,102 @@ test("private canonical route falls back when the serializer, prototype or Proxy
     else Reflect.deleteProperty(Array.prototype, "toJSON")
     if (indexZero) Object.defineProperty(Array.prototype, "0", indexZero)
     else Reflect.deleteProperty(Array.prototype, "0")
+  }
+})
+
+test("private source comparisons share complete bytes only within a verified synchronous graph", () => {
+  const reference = { kind: "record", target: { id: "source", revision: 1 }, amount: -0 }
+  const projection = { values: Array.from({ length: 128 }, () => ({ sourceRefs: [reference] })) }
+  let retained: ((value: unknown) => string) | undefined
+  expect(compareSfPrivateCanonical({ projection, reference }, (canonical) => {
+    retained = canonical
+    const expected = canonical(reference)
+    return projection.values.every((value) => value.sourceRefs.length === 1 && canonical(value.sourceRefs[0]) === expected)
+  })).toBe(true)
+  expect(() => retained!(reference)).toThrow("SF_PRIVATE_CANONICAL_CLOSED")
+  const different = structuredClone(reference); different.target.revision++
+  projection.values[70]!.sourceRefs = [different]
+  expect(compareSfPrivateCanonical({ projection, reference }, (canonical) => {
+    const expected = canonical(reference)
+    return projection.values.every((value) => canonical(value.sourceRefs[0]) === expected)
+  })).toBe(false)
+  projection.values[70]!.sourceRefs = [reference]
+  expect(compareSfPrivateCanonical({ projection, reference }, (canonical) => {
+    const first = canonical(reference)
+    reference.target.revision++
+    return first === canonical(reference)
+  })).toBe(false)
+  expect(canonicalSfPrivateValue(reference)).toBe(canonicalSfValue(reference))
+  const hidden = Object.defineProperty({}, "source", { value: reference })
+  expect(compareSfPrivateCanonical({ hidden, reference }, (canonical) =>
+    canonical(Object.getOwnPropertyDescriptor(hidden, "source")!.value) === canonical(reference))).toBe(true)
+})
+
+test("a late source getter cannot repair an earlier mismatching alias before original short-circuit", () => {
+  const fixture = (initialMatch: boolean) => {
+    const expected = { id: "source", revision: 1 }, earlier = { id: "source", revision: initialMatch ? 1 : 2 }
+    let reads = 0
+    const later = Object.defineProperty({} as { sourceRefs: readonly object[] }, "sourceRefs", {
+      enumerable: true, get: () => { reads++; earlier.revision = initialMatch ? 2 : 1; return [expected] },
+    })
+    return { expected, values: [{ sourceRefs: [earlier] }, later], reads: () => reads, earlier }
+  }
+  const original = (value: ReturnType<typeof fixture>) => {
+    const expected = digestSfValue(value.expected)
+    const matches = value.values.every((entry) =>
+      entry.sourceRefs.length === 1 && digestSfValue(entry.sourceRefs[0]) === expected)
+    return matches && digestSfValue(value.expected) === expected
+  }
+  for (const initialMatch of [false, true]) {
+    const direct = fixture(initialMatch), guarded = fixture(initialMatch)
+    let entered = false
+    expect(compareSfPrivateCanonical({ expected: guarded.expected, values: guarded.values }, () => { entered = true; return true })).toBeUndefined()
+    expect(entered).toBe(false)
+    expect(guarded.reads()).toBe(0)
+    expect(original(guarded)).toBe(original(direct))
+    expect(guarded.reads()).toBe(direct.reads())
+    expect(guarded.earlier).toEqual(direct.earlier)
+    expect(guarded.reads()).toBe(initialMatch ? 2 : 0)
+  }
+})
+
+test("private source comparison preserves observable CryptoHasher constructor, update and digest hooks", () => {
+  const constructor = Object.getOwnPropertyDescriptor(Bun, "CryptoHasher")!
+  const update = Object.getOwnPropertyDescriptor(Bun.CryptoHasher.prototype, "update")!
+  const digest = Object.getOwnPropertyDescriptor(Bun.CryptoHasher.prototype, "digest")!
+  expect(typeof update.value).toBe("function")
+  expect(typeof digest.value).toBe("function")
+  const reference = { revision: 1 }, source = structuredClone(reference)
+  let calls = 0
+  const check = () => {
+    let entered = false
+    const result = compareSfPrivateCanonical({ reference, source }, () => { entered = true; return true })
+    expect(result).toBeUndefined()
+    expect(entered).toBe(false)
+    expect(calls).toBe(0)
+    expect(digestSfValue(reference)).toBe(digestSfValue(source))
+    expect(calls).toBeGreaterThan(0)
+  }
+  try {
+    Object.defineProperty(Bun, "CryptoHasher", { ...constructor, value: new Proxy(constructor.value, {
+      construct(target, args) { calls++; return Reflect.construct(target, args, target) },
+    }) })
+    check()
+    Object.defineProperty(Bun, "CryptoHasher", constructor)
+    calls = 0
+    Object.defineProperty(Bun.CryptoHasher.prototype, "update", { ...update, value: function(this: unknown, ...args: unknown[]) {
+      calls++; return Reflect.apply(update.value, this, args)
+    } })
+    check()
+    Object.defineProperty(Bun.CryptoHasher.prototype, "update", update)
+    calls = 0
+    Object.defineProperty(Bun.CryptoHasher.prototype, "digest", { ...digest, value: function(this: unknown, ...args: unknown[]) {
+      calls++; return Reflect.apply(digest.value, this, args)
+    } })
+    check()
+  } finally {
+    Object.defineProperty(Bun, "CryptoHasher", constructor)
+    Object.defineProperty(Bun.CryptoHasher.prototype, "update", update)
+    Object.defineProperty(Bun.CryptoHasher.prototype, "digest", digest)
   }
 })
