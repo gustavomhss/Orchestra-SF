@@ -16,7 +16,7 @@ export type TeamSessionGrant = Readonly<{
   humanActions: readonly SfHumanAction[]
   sessionActions: readonly SessionAccess.Action[]
   referenceActions: readonly "list"[]
-  migrationActions: readonly ("map" | "cut" | "recover")[]
+  migrationActions: readonly ("map" | "cut" | "checkpoint" | "recover")[]
   connectionActions: readonly ConnectionAccess.Action[]
   connectionResources: readonly ConnectionAccess.Resource[]
   providerBindings: ProviderAccess.Bindings
@@ -41,8 +41,8 @@ export function teamSessionPolicy(value: Record<string, unknown>) {
   if (!Array.isArray(value.grants) || value.grants.length > 1000) throw new Error("Explicit Microsoft product grants required")
   const grants: TeamSessionGrant[] = value.grants.map((entry: unknown) => {
     if (!record(entry) || Object.keys(entry).some((key) => !["principalRef", "namespaces", "operations", "humanActions", "sessionActions", "referenceActions", "migrationActions", "connectionActions", "connectionResources", "providerBindings"].includes(key)) || typeof entry.principalRef !== "string" || !microsoftUuid.test(entry.principalRef)) throw new Error("Resource-tenant object ID required for product grant")
-    const grantedNamespaces = Schema.decodeUnknownSync(Schema.Array(Schema.Literals(namespaces)))(strings(entry.namespaces, namespaces, "namespaces"))
-    const operations = strings(entry.operations, freeze.operations.map((operation) => operation.operation), "operations")
+    const grantedNamespaces = Schema.decodeUnknownSync(Schema.Array(Schema.Literals(namespaces)))(strings(entry.namespaces === undefined ? [] : entry.namespaces, namespaces, "namespaces"))
+    const operations = strings(entry.operations === undefined ? [] : entry.operations, freeze.operations.map((operation) => operation.operation), "operations")
     const humanActions = Schema.decodeUnknownSync(Schema.Array(Schema.Literals(sfHumanActions)))(strings(entry.humanActions ?? [], sfHumanActions, "human actions"))
     const sessionActions = Schema.decodeUnknownSync(Schema.Array(SessionAccess.Action))(
       strings(entry.sessionActions === undefined ? [] : entry.sessionActions, SessionAccess.Actions, "session actions"),
@@ -50,8 +50,8 @@ export function teamSessionPolicy(value: Record<string, unknown>) {
     const referenceActions = Schema.decodeUnknownSync(Schema.Array(Schema.Literal("list")))(
       strings(entry.referenceActions === undefined ? [] : entry.referenceActions, ["list"], "reference actions"),
     )
-    const migrationActions = Schema.decodeUnknownSync(Schema.Array(Schema.Literals(["map", "cut", "recover"])))(
-      strings(entry.migrationActions === undefined ? [] : entry.migrationActions, ["map", "cut", "recover"], "migration actions"),
+    const migrationActions = Schema.decodeUnknownSync(Schema.Array(Schema.Literals(["map", "cut", "checkpoint", "recover"])))(
+      strings(entry.migrationActions === undefined ? [] : entry.migrationActions, ["map", "cut", "checkpoint", "recover"], "migration actions"),
     )
     const connectionActions = Schema.decodeUnknownSync(Schema.Array(ConnectionAccess.Action))(
       strings(entry.connectionActions === undefined ? [] : entry.connectionActions, ConnectionAccess.Actions, "connection actions"),
