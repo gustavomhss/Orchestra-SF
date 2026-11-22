@@ -146,17 +146,17 @@ export function TeamProfileConfiguration(props: Readonly<{
     }
     operation?.abort()
   })
-  return <section class="mx-card flex w-full flex-col gap-3" data-sf-team-configuration={ui.view.status}>
+  return <section class="sf-team-configuration" data-sf-team-configuration={ui.view.status}>
     <header>
-      <h3 class="text-lg font-semibold">{language.t("sf.teams.configuration")}</h3>
-      <bdi class="break-all">{profile.teamObjectId}</bdi>
+      <h3 class="sf-team-section-title">{language.t("sf.teams.configuration")}</h3>
+      <code class="sf-team-profile-reference"><bdi>{profile.teamObjectId}</bdi></code>
       <p>{language.t("sf.teams.configurationDescription")}</p>
     </header>
     <Show when={ui.view.status === "loading"}><p role="status">{language.t("sf.ui67.loading")}</p></Show>
     <Show when={ui.view.status === "denied"}><p role="alert">{language.t("sf.teams.adminDenied")}</p></Show>
     <Show when={ui.view.status === "unavailable"}><p role="alert">{language.t("sf.teams.adminUnavailable")}</p></Show>
     <Show when={ui.invalid}><p role="alert">{language.t("sf.teams.configurationInvalid")}</p></Show>
-    <div class="flex flex-wrap gap-2">
+    <div class="sf-team-row-actions">
       <button type="button" class="mx-btn" data-sf-configuration-read disabled={ui.busy || ui.view.status === "loading"}
         onClick={() => void read()}>{language.t("sf.teams.adminRead")}</button>
       <button type="button" class="mx-btn" data-sf-configuration-close disabled={ui.busy}
@@ -164,18 +164,18 @@ export function TeamProfileConfiguration(props: Readonly<{
     </div>
     <Show when={ready()}>{(view) => <>
       <Show when={!view().document}><p>{language.t("sf.teams.configurationEmpty")}</p></Show>
-      <form class="flex flex-col gap-2" data-sf-configuration-form onSubmit={(event) => { event.preventDefault(); void save() }}>
+      <form class="sf-team-configuration-form" data-sf-configuration-form onSubmit={(event) => { event.preventDefault(); void save() }}>
         <label for={id + "-model"}>{language.t("sf.teams.configurationModel")}</label>
-        <input id={id + "-model"} class="mx-btn" data-sf-configuration-model autocomplete="off" maxlength={512}
+        <input id={id + "-model"} class="sf-team-input" data-sf-configuration-model autocomplete="off" maxlength={512}
           value={ui.model} disabled={ui.busy} aria-invalid={ui.invalid} aria-describedby={id + "-help"}
           onInput={(event) => setUi({ model: event.currentTarget.value, invalid: false })} />
         <p id={id + "-help"}>{language.t("sf.teams.configurationModelHelp")}</p>
         <label for={id + "-agent"}>{language.t("sf.teams.configurationAgent")}</label>
-        <input id={id + "-agent"} class="mx-btn" data-sf-configuration-agent autocomplete="off" maxlength={64}
+        <input id={id + "-agent"} class="sf-team-input" data-sf-configuration-agent autocomplete="off" maxlength={64}
           value={ui.agent} disabled={ui.busy} aria-invalid={ui.invalid}
           onInput={(event) => setUi({ agent: event.currentTarget.value, invalid: false })} />
         <Show when={view().document?.settings.agents}><p>{language.t("sf.teams.configurationPreserved")}</p></Show>
-        <button type="submit" class="mx-btn self-start" data-sf-configuration-save disabled={ui.busy}>
+        <button type="submit" class="mx-btn primary" data-sf-configuration-save disabled={ui.busy}>
           {language.t("sf.teams.configurationSave")}</button>
       </form>
     </>}</Show>

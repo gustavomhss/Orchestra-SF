@@ -1,5 +1,8 @@
 import { createMemo, createSignal, createUniqueId, For, lazy, onCleanup, onMount, Show, Suspense } from "solid-js"
 import { createStore } from "solid-js/store"
+import { syncThemeBackground } from "@orchestra/ui/theme/context"
+import "../orchestra/chapters/kit.css"
+import "./team-profile.css"
 import type { SfTeamContext, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { readCurrentTeamInstallation, readTeamWebContext } from "../context/team-profile-web"
 import { readTeamNavigationIntent, readTeamSessionNavigation, teamNavigationReturnTo, teamNavigationURL,
@@ -23,6 +26,16 @@ type TeamWebState =
 
 export function SfTeamWebApp() {
   const language = useLanguage()
+  onMount(() => {
+    const elements = [document.documentElement, document.body]
+    const previous = elements.map((element) => element.hasAttribute("data-new-layout"))
+    elements.forEach((element) => element.toggleAttribute("data-new-layout", true))
+    syncThemeBackground()
+    onCleanup(() => {
+      elements.forEach((element, index) => element.toggleAttribute("data-new-layout", previous[index]))
+      syncThemeBackground()
+    })
+  })
   const [state, setState] = createSignal<TeamWebState>({ status: "loading" })
   const [logoutFailed, setLogoutFailed] = createSignal(false)
   const [signingOut, setSigningOut] = createSignal(false)
@@ -405,19 +418,25 @@ export function SfTeamWebApp() {
   })
 
   return (
-    <div class="mx-auto flex h-full w-full flex-col gap-6 overflow-y-auto p-6"
-      classList={{ "max-w-3xl": !sessionRoute() && !domainRoute(), "max-w-screen-2xl": !!sessionRoute() || !!domainRoute() }}
+    <div class="sf-team-shell" data-sf-team-layout={sessionRoute() ? "chat" : domainRoute() ? "domain" : "access"}
       data-sf-teams-shell data-sf-teams-state={state().status}
       data-sf-team-selected={selected()?.profile.teamObjectId}>
-      <header class="flex items-center justify-between gap-4">
+      <header class="sf-team-brand">
         <img src="/brand/sucafina/lockup-primary.svg" alt="Sucafina" width="145" />
-        <Show when={state().status === "authenticated" || state().status === "denied"}>
-          <button type="button" class="mx-btn" onClick={() => void logout()}>{language.t("sf.ui67.signOut")}</button>
-        </Show>
+        <div class="sf-team-brand-actions">
+          <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
+            <button type="button" class="mx-btn" onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
+          </Show>
+          <Show when={state().status === "authenticated" || state().status === "denied"}>
+            <button type="button" class="mx-btn" onClick={() => void logout()}>{language.t("sf.ui67.signOut")}</button>
+          </Show>
+        </div>
       </header>
-      <main class="mx-card flex flex-col items-start gap-4"
-        classList={{ "sf-team-main-chat": !!sessionRoute(), "min-h-0": !!sessionRoute(), "flex-1": !!sessionRoute() }}>
-        <h1 class="text-xl font-semibold">{language.t("sf.teams.title")}</h1>
+      <main class="sf-team-surface" classList={{ "sf-team-main-chat": !!sessionRoute() }}>
+        <header class="sf-team-heading">
+          <div class="mx-eyebrow">{language.t("sf.teams.title")}</div>
+          <h1>{selected()?.displayName || language.t("sf.teams.select")}</h1>
+        </header>
         <Show when={!selected()}>
           <p role={state().status === "invalid" ? "alert" : "status"}>{language.t(statusCopy())}</p>
         </Show>
@@ -427,12 +446,13 @@ export function SfTeamWebApp() {
           <a class="mx-btn" href={selectionHref()}>{language.t("sf.teams.select")}</a>
         </Show>
         <Show when={state().status === "unauthenticated" && signInHref()} keyed>{(href) =>
-          <a class="mx-btn" href={href}>{language.t("sf.teams.signIn")}</a>
+          <a class="mx-btn primary" href={href}>{language.t("sf.teams.signIn")}</a>
         }</Show>
+        <div class="sf-team-toolbar">
         <Show when={choices().length}>
-          <label class="flex flex-col gap-1">
+          <label class="sf-team-picker">
             {language.t("sf.teams.team")}
-            <select class="mx-btn" data-sf-team-picker value={selected()?.profile.teamObjectId ?? ""} onChange={(event) => {
+            <select class="sf-team-input" data-sf-team-picker value={selected()?.profile.teamObjectId ?? ""} onChange={(event) => {
               const choice = choices().find((item) => item.profile.teamObjectId === event.currentTarget.value)
               event.currentTarget.value = selected()?.profile.teamObjectId ?? ""
               if (choice) void selectTeam(choice.profile.teamObjectId)
@@ -448,7 +468,7 @@ export function SfTeamWebApp() {
           </label>
         </Show>
         <Show when={groupPath()} keyed>{(path) =>
-          <a class="mx-btn" href={path + "/dashboard"} onClick={leavePage}>{language.t("sf.teams.dashboard")}</a>
+          <a class="mx-btn primary" href={path + "/dashboard"} onClick={leavePage}>{language.t("sf.teams.dashboard")}</a>
         }</Show>
         <Show when={selected() && !sessionRoute()}>
           <div><button type="button" class="mx-btn" data-sf-new-chat onClick={() => {
@@ -457,6 +477,7 @@ export function SfTeamWebApp() {
             if (url) void goSession(url.href)
           }}>{language.t("sf.teams.newChat")}</button></div>
         </Show>
+        </div>
         <Show when={authenticated()} keyed>{(current) => {
           const scope = administrationScope(current)
           const notice = () => administration.notice?.scope === scope ? administration.notice.key : undefined
@@ -464,7 +485,7 @@ export function SfTeamWebApp() {
             if (key) setAdministration("notice", { scope, key })
             else if (administration.notice?.scope === scope) setAdministration("notice", undefined)
           }
-          return <>
+          return <div class="sf-team-administration-wrap">
             <Show when={notice()} keyed>{(key) =>
               <p data-sf-admin-notice role={key === "sf.teams.adminSaved" ? "status" : "alert"}>{language.t(key)}</p>
             }</Show>
@@ -479,7 +500,7 @@ export function SfTeamWebApp() {
                   refresh={refresh} notice={notice()} notify={notify} />
               </Show>
             </Show>
-          </>
+          </div>
         }}</Show>
         <Show when={chat.notice} keyed>{(key) => <p class="sf-team-notice" data-sf-chat-notice role="alert">{language.t(key)}</p>}</Show>
         <Show when={chat.consent}><SfTeamDiscardDialog close={closeConsent} /></Show>
@@ -493,9 +514,6 @@ export function SfTeamWebApp() {
           fetch={(input, init) => fetch(input, init)} reload={refresh}
           navigate={goDomain} confirmDiscard={confirmDiscard}
           onLifecycle={(value) => { domain = value }} />
-        <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
-          <button type="button" class="mx-btn" onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
-        </Show>
       </main>
     </div>
   )
@@ -506,10 +524,12 @@ function SfTeamDiscardDialog(props: Readonly<{ close(yes?: boolean): void }>) {
   let dialog!: HTMLDialogElement
   onMount(() => dialog.showModal())
   onCleanup(() => { if (dialog.open) dialog.close() })
-  return <dialog ref={dialog} class="sf-team-dialog" data-sf-draft-guard aria-labelledby={id}
+  return <dialog ref={dialog} class="mx-dialog sf-team-dialog" data-sf-draft-guard aria-labelledby={id}
     onCancel={(event) => { event.preventDefault(); props.close(false) }}>
-    <h2 id={id}>{language.t("sf.teams.discard")}</h2>
-    <button class="mx-btn" type="button" data-sf-keep-editing autofocus onClick={() => props.close(false)}>{language.t("common.cancel")}</button>
-    <button class="mx-btn" type="button" data-sf-confirm-discard onClick={() => props.close(true)}>{language.t("sf.ui67.discardNavigate")}</button>
+    <header class="mx-dialog-head"><h2 id={id}>{language.t("sf.teams.discard")}</h2></header>
+    <footer class="mx-dialog-foot">
+      <button class="mx-btn" type="button" data-sf-keep-editing autofocus onClick={() => props.close(false)}>{language.t("common.cancel")}</button>
+      <button class="mx-btn danger" type="button" data-sf-confirm-discard onClick={() => props.close(true)}>{language.t("sf.teams.discardConfirm")}</button>
+    </footer>
   </dialog>
 }

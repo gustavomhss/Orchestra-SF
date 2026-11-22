@@ -1,0 +1,140 @@
+/* Teams uses the same native kit as the installed Orchestra workspace. */
+.sf-team-shell, .sf-team-dialog {
+  --sf-team-xs: 4px;
+  --sf-team-sm: 8px;
+  --sf-team-md: 12px;
+  --sf-team-lg: 16px;
+  --sf-team-xl: 20px;
+  --sf-team-gap: 24px;
+  --sf-team-gutter: 32px;
+  --sf-team-control: 44px;
+  --sf-team-hairline: 1px;
+  --sf-team-focus: 2px;
+  --sf-team-access-width: 840px;
+  --sf-team-work-width: 1440px;
+  --sf-team-dialog-width: 560px;
+  min-inline-size: 0;
+  color: var(--mx-strong);
+  font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
+}
+.sf-team-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-team-gap);
+  inline-size: min(100%, var(--sf-team-work-width));
+  block-size: 100%;
+  margin-inline: auto;
+  padding: var(--sf-team-gap) var(--sf-team-gutter);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+.sf-team-shell[data-sf-team-layout="access"] { max-inline-size: var(--sf-team-access-width); }
+.sf-team-brand, .sf-team-brand-actions, .sf-team-row-actions, .sf-team-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sf-team-sm);
+}
+.sf-team-brand { justify-content: space-between; gap: var(--sf-team-gap); flex: none; }
+.sf-team-brand img { display: block; flex: none; max-inline-size: 100%; }
+.sf-team-brand-actions { justify-content: flex-end; }
+.sf-team-surface {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sf-team-xl);
+  min-inline-size: 0;
+  padding: var(--sf-team-gutter);
+  border: var(--sf-team-hairline) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-xl);
+  background: var(--mx-raised);
+  box-shadow: var(--mx-card-shadow);
+}
+.sf-team-heading { flex: none; }
+.sf-team-heading .mx-eyebrow { margin-block-end: var(--sf-team-sm); }
+.sf-team-heading h1 { margin: 0; color: var(--mx-strong); font: 600 var(--orchestra-font-size-4xl)/1.2 var(--mx-emphasis); letter-spacing: -.035em; overflow-wrap: anywhere; }
+.sf-team-shell[data-sf-team-layout="chat"] { overflow: hidden; }
+.sf-team-shell[data-sf-team-layout="chat"] .sf-team-heading h1 { font-size: var(--orchestra-font-size-2xl); }
+.sf-team-shell[data-sf-team-layout="chat"] .sf-team-surface { flex: 1; min-block-size: 0; }
+.sf-team-shell[data-sf-team-layout="chat"] .sf-team-heading .mx-eyebrow { margin: 0; }
+.sf-team-shell[data-sf-team-layout="chat"] .sf-team-surface { gap: var(--sf-team-md); padding: var(--sf-team-xl); }
+.sf-team-toolbar { align-items: flex-end; gap: var(--sf-team-md); flex: none; }
+.sf-team-toolbar:empty, .sf-team-administration-wrap:empty { display: none; }
+.sf-team-picker { display: grid; gap: var(--sf-team-sm); min-inline-size: 0; flex: 1; max-inline-size: 28rem; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-team-shell .mx-btn, .sf-team-dialog .mx-btn { min-block-size: var(--sf-team-control); }
+.sf-team-surface > .mx-btn { align-self: flex-start; }
+.sf-team-input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--sf-team-control);
+  padding: var(--sf-team-sm) var(--sf-team-md);
+  border: var(--sf-team-hairline) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  color: var(--mx-strong);
+  background: var(--mx-soft);
+  font: var(--orchestra-font-size-md)/1.5 var(--mx-sans);
+}
+.sf-team-input:hover { border-color: var(--mx-rim); }
+.sf-team-input:focus-visible { outline: var(--sf-team-focus) solid var(--mx-blue); outline-offset: var(--sf-team-focus); }
+.sf-team-input[aria-invalid="true"] { border-color: var(--mx-bad); }
+.sf-team-input:disabled { opacity: .6; cursor: not-allowed; }
+.sf-team-surface > p, .sf-team-administration-wrap > p, .sf-team-administration > p, .sf-team-configuration > p { margin: 0; }
+.sf-team-surface > p[role], .sf-team-administration-wrap > p[role], .sf-team-administration > p[role], .sf-team-configuration > p[role] {
+  padding: var(--sf-team-md) var(--sf-team-lg);
+  border: var(--sf-team-hairline) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  color: var(--mx-dim);
+  background: var(--mx-soft);
+  overflow-wrap: anywhere;
+}
+.sf-team-shell p[role="alert"] { color: var(--mx-bad); border-color: color-mix(in srgb, var(--mx-bad) 28%, var(--mx-line)); }
+.sf-team-administration-wrap { display: grid; gap: var(--sf-team-lg); flex: none; }
+.sf-team-administration-wrap > .mx-btn { justify-self: start; }
+.sf-team-administration, .sf-team-configuration { display: grid; gap: var(--sf-team-xl); min-inline-size: 0; }
+.sf-team-administration { padding-block-start: var(--sf-team-gap); border-block-start: var(--sf-team-hairline) solid var(--mx-line); }
+.sf-team-configuration { padding: var(--sf-team-xl); border: var(--sf-team-hairline) solid var(--mx-line); border-radius: var(--orchestra-radius-lg); background: var(--mx-soft); }
+.sf-team-section-title { margin: 0; color: var(--mx-strong); font: 600 var(--orchestra-font-size-xl)/1.4 var(--mx-emphasis); }
+.sf-team-administration header p, .sf-team-configuration header p { max-inline-size: 72ch; margin: var(--sf-team-sm) 0 0; color: var(--mx-dim); }
+.sf-team-administration > .mx-btn { justify-self: start; }
+.sf-team-enable-form, .sf-team-configuration-form { display: grid; gap: var(--sf-team-sm); min-inline-size: 0; max-inline-size: 46rem; }
+.sf-team-enable-form label, .sf-team-configuration-form label { font-weight: 600; color: var(--mx-strong); }
+.sf-team-enable-form p, .sf-team-configuration-form p { margin: 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-team-enable-form .mx-btn, .sf-team-configuration-form .mx-btn { justify-self: start; margin-block-start: var(--sf-team-md); }
+.sf-team-configuration-form label:not(:first-child) { margin-block-start: var(--sf-team-md); }
+.sf-team-profiles { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.sf-team-profile-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--sf-team-md) var(--sf-team-lg); padding-block: var(--sf-team-lg); border-block-start: var(--sf-team-hairline) solid var(--mx-line); }
+.sf-team-profile-identity { display: grid; gap: var(--sf-team-xs); min-inline-size: 0; }
+.sf-team-profile-identity strong { font: 600 var(--orchestra-font-size-lg)/1.5 var(--mx-emphasis); overflow-wrap: anywhere; }
+.sf-team-profile-identity code, .sf-team-profile-reference { color: var(--mx-dim); font: var(--orchestra-font-size-sm)/1.6 var(--mx-mono); overflow-wrap: anywhere; }
+.sf-team-profile-row .sf-team-row-actions { grid-column: 1 / -1; }
+.sf-team-profile-row .sf-team-row-actions .mx-btn:last-child { margin-inline-start: auto; }
+.sf-team-dialog:not([open]) { display: none; }
+.sf-team-dialog:modal { position: fixed; inset: 0; margin: auto; }
+.sf-team-dialog {
+  inline-size: min(var(--sf-team-dialog-width), calc(100vw - var(--sf-team-gutter)));
+  max-block-size: calc(100dvh - var(--sf-team-gutter));
+  background: var(--orchestra-float-background);
+  -webkit-backdrop-filter: var(--orchestra-float-filter);
+  backdrop-filter: var(--orchestra-float-filter);
+  box-shadow: var(--mx-shadow);
+}
+.sf-team-dialog::backdrop { background: var(--orchestra-scrim); -webkit-backdrop-filter: var(--orchestra-scrim-filter); backdrop-filter: var(--orchestra-scrim-filter); }
+.sf-team-dialog .mx-dialog-head { padding: var(--sf-team-gap); }
+.sf-team-dialog .mx-dialog-head h2 { font-size: var(--orchestra-font-size-2xl); line-height: 1.45; }
+.sf-team-dialog .mx-dialog-foot { flex-wrap: wrap; padding: var(--sf-team-lg) var(--sf-team-gap); }
+@media (max-width: 767px) {
+  .sf-team-shell { --sf-team-gutter: 16px; padding: var(--sf-team-lg); gap: var(--sf-team-lg); }
+  .sf-team-brand { align-items: flex-start; gap: var(--sf-team-md); }
+  .sf-team-brand-actions { justify-content: flex-start; }
+  .sf-team-heading h1 { font-size: var(--orchestra-font-size-3xl); }
+  .sf-team-toolbar { align-items: stretch; }
+  .sf-team-picker { flex-basis: 100%; max-inline-size: none; }
+  .sf-team-surface { padding: var(--sf-team-xl); }
+  .sf-team-configuration { padding: var(--sf-team-lg); }
+}
+@media (max-width: 479px) {
+  .sf-team-profile-row { grid-template-columns: minmax(0, 1fr); }
+  .sf-team-profile-row .mx-badge { justify-self: start; }
+  .sf-team-dialog .mx-dialog-foot { flex-direction: column-reverse; }
+  .sf-team-dialog .mx-dialog-foot .mx-btn { inline-size: 100%; }
+}
