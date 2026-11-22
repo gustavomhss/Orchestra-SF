@@ -13,6 +13,7 @@ import { useSfCase, sfContextUiState, sfFailureUiState, sfOperationReady } from 
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type ChoiceEnvelope = Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.choice.read"]["output"]>
 type ChoiceValue = Extract<ChoiceEnvelope, { status: "ok" }>["value"]
@@ -211,7 +212,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
         onInvoke: () => { caseData.reload(); setUi("readSequence", (value) => value + 1) },
       }]}
     >
-      <div class="sf-n24 sf-decision-page sf-decision-alternatives" data-sf-wave="four" data-sf-decision="UI35" data-sf-surface="UI35">
+      <div class="sf-n24 sf-decision-page sf-decision-alternatives sf-workflow" data-sf-wave="four" data-sf-decision="UI35" data-sf-surface="UI35">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", sourceRef())}>{t("sf.ui35.return")}</A>}
         </Show>

@@ -14,6 +14,7 @@ import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { SfDataTable, type SfColumn, type SfSort, type SfUiState, type SfCopyKey as SfTableCopyKey } from "../shared/table"
 import "./work.css"
+import "../reviews/workflows.css"
 
 type Listed = Extract<typeof SfCollaboration.operations["collaboration.work-list"]["output"]["Type"], { status: "ok" }>["value"]
 type WorkItem = Listed["items"][number]
@@ -377,7 +378,11 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       render: (row) => <span class="sf-work-state">{row.state}</span> },
     { id: "owner", labelKey: tableKey("sf.u41.owner"), align: "start",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 },
-      render: (row) => <span>{row.ownerLabel ?? row.ownerRef}</span> },
+      render: (row) => <div>{row.ownerLabel ?? t("sf.common.unavailable")}
+        <Show when={!row.ownerLabel}>
+          <details class="sf-technical-details"><summary>{t("sf.u41.ownerReference")}</summary><bdi>{row.ownerRef}</bdi></details>
+        </Show>
+      </div> },
     { id: "due", labelKey: tableKey("sf.u41.due"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 145 }, sortKey: "due",
       render: (row) => <span>{row.due ?? "—"}</span> },
@@ -398,7 +403,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         busy: detailState() === "loading", onInvoke: () => { const next = selectedRef() ?? items()?.[0]?.actionRef; if (next) void selectWork(next) },
       } : undefined}
     >
-      <section class="sf-work" data-sf-surface="UI30" data-sf-polish="planner" data-sf-wave="four">
+      <section class="sf-work sf-workflow" data-sf-surface="UI30" data-sf-polish="planner" data-sf-wave="four">
         <Show when={owner.state().status === "ready"}>
           <form class="sf-work-filters" data-sf-work-period onSubmit={(event) => { event.preventDefault(); void loadWork() }}>
             <label>{t("sf.u41.start")}
@@ -452,7 +457,9 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                               <h2>{view().item.title ?? t("sf.common.unavailable")}</h2>
                               <dl>
                                 <div><dt>{t("sf.u41.actionRef")}</dt><dd data-sf-work-action-ref>{view().item.actionRef}</dd></div>
-                                 <div><dt>{t("sf.u41.owner")}</dt><dd data-sf-work-owner-ref={view().item.ownerRef}>{view().item.ownerLabel ?? view().item.ownerRef}</dd></div>
+                                 <div><dt>{t("sf.u41.owner")}</dt><dd data-sf-work-owner-ref={view().item.ownerRef}>{view().item.ownerLabel ?? t("sf.common.unavailable")}
+                                    <details class="sf-technical-details"><summary>{t("sf.u41.ownerReference")}</summary><bdi>{view().item.ownerRef}</bdi></details>
+                                  </dd></div>
                                 <div><dt>{t("sf.u41.state")}</dt><dd>{view().item.state}</dd></div>
                                 <Show when={view().item.sourceVersion !== undefined}>
                                   <div><dt>{t("sf.u41.sourceVersion")}</dt><dd data-sf-work-source-version>{view().item.sourceVersion}</dd></div>

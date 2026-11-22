@@ -103,10 +103,10 @@ const EDIT_FIELDS: Readonly<Record<EditKind, readonly Field[]>> = {
     { name: "q2", label: "sf.u31.q2", kind: "text" },
     { name: "q3", label: "sf.u31.q3", kind: "text" },
     { name: "q4", label: "sf.u31.q4", kind: "text" },
-    { name: "statusQ1", label: "sf.u31.statusQ1", kind: "text" },
-    { name: "statusQ2", label: "sf.u31.statusQ2", kind: "text" },
-    { name: "statusQ3", label: "sf.u31.statusQ3", kind: "text" },
-    { name: "statusQ4", label: "sf.u31.statusQ4", kind: "text" },
+    { name: "statusQ1", label: "sf.u31.statusQ1", kind: "select", options: statusOptions },
+    { name: "statusQ2", label: "sf.u31.statusQ2", kind: "select", options: statusOptions },
+    { name: "statusQ3", label: "sf.u31.statusQ3", kind: "select", options: statusOptions },
+    { name: "statusQ4", label: "sf.u31.statusQ4", kind: "select", options: statusOptions },
     { name: "notes", label: "sf.u31.notes", kind: "textarea" },
   ],
 }
@@ -190,7 +190,10 @@ function fields(value: FormData): readonly SfReviewField[] {
     path: field.name, label: labelMessage(field.label),
     value: value[field.name] === undefined
       ? { kind: "missing", reason: labelMessage("sf.common.unknown") }
-      : { kind: "text", text: { kind: "data", text: text(value[field.name]) } },
+      : (field.name === "status" || field.name.startsWith("statusQ")) &&
+          statusOptions.some((option) => option === value[field.name])
+        ? { kind: "text", text: { kind: "message", message: labelMessage("sf.u31.status." + (value[field.name] || "blank")) } }
+        : { kind: "text", text: { kind: "data", text: text(value[field.name]) } },
   }))
 }
 function readState(status: string, http: number): SfUiState {
@@ -205,6 +208,11 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
   const t = (name: string) => language.t(name as Parameters<typeof language.t>[0])
+  const statusText = (value: unknown) => {
+    const status = text(value)
+    return statusOptions.some((option) => option === status)
+      ? t("sf.u31.status." + (status || "blank")) : status || t("sf.common.unavailable")
+  }
   const [store, setStore] = createStore({
     state: "loading" as SfUiState,
     data: undefined as Performance | undefined,
@@ -709,8 +717,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                           <For each={["q1", "q2", "q3", "q4"] as const}>{(quarter) => <div>
                             <dt>{t("sf.u31." + quarter)}</dt>
                             <dd><bdi>{text(sub[quarter]) || t("sf.common.unavailable")}</bdi></dd>
-                            <dd class="sf-u31-caption"><bdi>{text(sub[quarter === "q1" ? "statusQ1" : quarter === "q2" ? "statusQ2"
-                              : quarter === "q3" ? "statusQ3" : "statusQ4"]) || t("sf.common.unavailable")}</bdi></dd>
+                            <dd class="sf-u31-caption"><bdi>{statusText(sub[quarter === "q1" ? "statusQ1" : quarter === "q2" ? "statusQ2"
+                              : quarter === "q3" ? "statusQ3" : "statusQ4"])}</bdi></dd>
                           </div>}</For>
                         </dl>
                       </section>
@@ -754,6 +762,9 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                           }>
                             <select name={field.name} aria-label={t(field.label)} value={draft() ? text(draft()![field.name]) : ""}
                               onChange={(event) => modify(field.name,event.currentTarget.value)}>
+                              <Show when={draft()?.[field.name] && !field.options?.includes(text(draft()?.[field.name]))}>
+                                <option value={text(draft()?.[field.name])}>{text(draft()?.[field.name])}</option>
+                              </Show>
                               <For each={field.options || []}>{(option) =>
                                 <option value={option}>{t("sf.u31.status." + (option || "blank"))}</option>}</For>
                             </select>

@@ -16,6 +16,7 @@ import {
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
 import "./runs.css"
+import "../../reviews/workflows.css"
 
 type Routine = (typeof SfRoutineResult)["Type"]
 type Projection = Extract<(typeof SfRoutines.operations["projection.routine"]["output"])["Type"], { status: "ok" }>
@@ -207,7 +208,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         onInvoke: () => { void owner.reload() },
       }]}
     >
-      <section class="sf-n29-run" data-sf-surface={props.surfaceId} data-state={view.state}>
+      <section data-sf-wave="polish" class="sf-n29-run sf-workflow" data-sf-surface={props.surfaceId} data-state={view.state}>
         <Show when={!runRef()}><p>{t("sf.u27.noRun")}</p></Show>
         <Show when={canFallback() && runRef()}>
           <div class="mx-card">

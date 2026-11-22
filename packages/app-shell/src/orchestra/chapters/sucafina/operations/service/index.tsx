@@ -683,7 +683,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
         }>
           <Show when={state.state === "partial"}>
             <p role="status">{t(commonKey("partial"))}</p>
-            <button type="button" onClick={() => setState("refresh", (value) => value + 1)}>
+            <button class="mx-btn" type="button" onClick={() => setState("refresh", (value) => value + 1)}>
               {t(commonKey("retry"))}
             </button>
           </Show>
@@ -856,11 +856,11 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
 
           <Show when={state.operationState === "conflict"}>
             <p role="alert">{t(commonKey("conflict"))}</p>
-            <button type="button" onClick={() => setState("refresh", (value) => value + 1)}>
+            <button class="mx-btn" type="button" onClick={() => setState("refresh", (value) => value + 1)}>
               {t(commonKey("retry"))}
             </button>
             <Show when={state.editor && activeDraft()}>
-              <button type="button" onClick={discardCurrent}>{t(commonKey("discard"))}</button>
+              <button class="mx-btn" type="button" onClick={discardCurrent}>{t(commonKey("discard"))}</button>
             </Show>
           </Show>
           <Show when={state.operationState === "saved"}>
@@ -892,7 +892,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   <Show when={!editor.review} fallback={
                     <Show when={activeDraft()} keyed>{(snapshot) => <>
                       <Show when={state.operationState === "unknown"}>
-                        <button type="button" class="mx-btn" disabled={state.submitting}
+                        <button class="mx-btn" type="button" disabled={state.submitting}
                           onClick={() => setState("refresh", (value) => value + 1)}>{t("sf.s03.checkOutcome" as SfCopyKey)}</button>
                       </Show>
                       <fieldset disabled={reviewLocked()} aria-busy={state.submitting}
@@ -998,10 +998,10 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                         <button class="mx-btn primary" type="submit" disabled={state.submitting || !isValid(editor.action, currentFields(), editorPage)}>
                           {t(commonKey("review"))}
                         </button>
-                        <button type="button" onClick={closeEditor}>
+                        <button class="mx-btn" type="button" onClick={closeEditor}>
                           {t(commonKey("close"))}
                         </button>
-                        <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                        <button class="mx-btn" type="button" disabled={state.submitting || state.operationState === "unknown"}
                           onClick={discardCurrent}>{t(commonKey("discard"))}</button>
                       </div>
                     </form>

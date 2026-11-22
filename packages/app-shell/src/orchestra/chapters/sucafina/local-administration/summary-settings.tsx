@@ -27,7 +27,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
   const text = (value: string) => language.t(value as Parameters<typeof language.t>[0])
-  const titles: Readonly<Record<SummaryPage, SfCopyKey>> = {
+  const titles = {
     "Executive Dashboard": "sf.cap01.title",
     "Hot Topics & Actions": "sf.cap02.title",
     "Budget Overview": "sf.cap03.title",
@@ -44,7 +44,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
     "Vendor Contracts": "sf.cap14.title",
     "Stakeholder Management": "sf.cap15.title",
     "IT Performance Contract": "sf.cap16.title",
-  }
+  } as const satisfies Readonly<Record<SummaryPage, Parameters<typeof language.t>[0]>>
   const pageTitle = (page: SummaryPage) => language.t(titles[page])
   const [state, setState] = createStore({
     page: "loading" as SfUiState,

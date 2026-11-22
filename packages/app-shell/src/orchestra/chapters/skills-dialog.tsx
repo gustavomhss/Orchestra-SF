@@ -1,5 +1,6 @@
 import { createSignal, onCleanup, onMount, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
+import { Markdown } from "@orchestra/session-ui/markdown"
 import { backdropDismiss } from "./dialog-backdrop"
 import type { SkillAccess, SkillEntry } from "./skills-data"
 
@@ -52,6 +53,7 @@ export function SkillDialog(props: {
     event.preventDefault()
     const state = props.state
     if (state.type === "remove") return void run(() => props.onRemove(state.skill))
+    if (!editable) return
     const data = new FormData(event.currentTarget)
     void run(() =>
       props.onSave({
@@ -111,7 +113,7 @@ export function SkillDialog(props: {
               <bdi>{title()}</bdi>
             </h2>
             <p>
-              <bdi>{detail()}</bdi>
+              <bdi>{!editable && props.state.type !== "remove" ? skill?.description : detail()}</bdi>
             </p>
           </div>
           <button
@@ -134,6 +136,20 @@ export function SkillDialog(props: {
             when={props.state.type !== "remove"}
             fallback={<p class="mx-note">{language.t("orchestra.skills.remove.note")}</p>}
           >
+            <Show when={editable} fallback={
+              <article class="orchestra-skill-reader" data-skill-reader aria-label={language.t("orchestra.skills.content")}>
+                <Markdown text={skill?.content ?? ""} />
+                <details class="orchestra-skill-source">
+                  <summary>{language.t("orchestra.skills.dialog.source")}</summary>
+                  <p><bdi>{detail()}</bdi></p>
+                  <label class="mx-field">
+                    <span>{language.t("orchestra.skills.content")}</span>
+                    <textarea name="instructions" value={skill?.content ?? ""} readOnly spellcheck={false}
+                      rows={Math.min(16, Math.max(4, (skill?.content ?? "").split("\n").length))} />
+                  </label>
+                </details>
+              </article>
+            }>
             <label class="mx-field">
               <span>{language.t("orchestra.skills.dialog.name")}</span>
               <input name="name" type="text" value={skill?.name ?? ""} required readOnly={!editable || busy()} />
@@ -164,14 +180,15 @@ export function SkillDialog(props: {
                 </button>
               )}
             </Show>
+            </Show>
           </Show>
         </div>
         <footer class="mx-dialog-foot">
           <button type="button" class="mx-btn" disabled={busy()} onClick={dismiss}>
-            {language.t("orchestra.skills.dialog.cancel")}
+            {language.t(!editable && props.state.type !== "remove" ? "orchestra.skills.dialog.done" : "orchestra.skills.dialog.cancel")}
           </button>
           <Show when={editable || props.state.type === "remove"}>
-            <button class="mx-btn primary" type="submit" disabled={busy()}>
+            <button class="mx-btn" classList={{ primary: props.state.type !== "remove", danger: props.state.type === "remove" }} type="submit" disabled={busy()}>
               {language.t(
                 props.state.type === "remove" ? "orchestra.skills.remove.confirm" : "orchestra.skills.dialog.save",
               )}

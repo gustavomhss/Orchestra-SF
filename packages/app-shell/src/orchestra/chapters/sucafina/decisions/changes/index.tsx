@@ -26,6 +26,7 @@ import {
 } from "../choice/model"
 import "../choice/u18.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type ApplyOutcome = Readonly<{ receiptId: string; surface: string; version: number; outcome: "applied" | "conflict" | "failed" }>
 type View = {
@@ -378,7 +379,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="work"
     onLayoutMode={() => undefined}
   >
-    <div class="sf-decision-page sf-decision-changes" data-sf-wave="four" data-sf-decision="UI39" data-sf-surface="UI39">
+    <div class="sf-decision-page sf-decision-changes sf-workflow" data-sf-wave="four" data-sf-decision="UI39" data-sf-surface="UI39">
     <SfStatePanel state={active()} messageKey={u18ErrorKey(active())}
       coverage={selected() ? coverage() : undefined}
       onRetryRead={() => void read()}>

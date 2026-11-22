@@ -68,6 +68,17 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const t = (s: string, params?: Record<string, string | number>) =>
     language.t(s as Parameters<typeof language.t>[0], params)
   const missingCurrency = () => t("sf.u02.noCurrency")
+  const reviewLabels: Readonly<Record<Review["kind"], Parameters<typeof language.t>[0]>> = {
+    "position-save": "sf.u08.savePosition",
+    "position-delete": "sf.u08.deletePosition",
+    "rate-save": "sf.u08.saveRate",
+    "rate-delete": "sf.u08.deleteRate",
+    increase: "sf.u08.saveIncrease",
+    mapping: "sf.u08.saveMapping",
+    sync: "sf.u08.sync",
+  }
+  const quantity = (value: number | null | undefined) => value == null ? t("sf.u08.none") :
+    new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 2 }).format(value)
   const owner = useSfContext()
   const [state, setState] = createStore({
     phase: "loading" as SfUiState,
@@ -240,7 +251,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const fields = (values: object): SfReviewField[] =>
     Object.entries(values).map(([path, value]) => ({
       path, label: msg("sf.u08." + (path === "locs" ? "locations" : path === "cur" ? "currency" : path)),
-      value: display(String(value)),
+      value: display(typeof value === "boolean" ? t(value ? "sf.u08.inPlan" : "sf.u08.excluded") :
+        path === "rateId" ? state.page?.data.rates?.find((rate) => rate.id === value)?.name ?? String(value) :
+        String(value)),
     }))
   const baseFields = createMemo<SfReviewField[]>(() => {
     const review = state.review
@@ -431,8 +444,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
               <section class="sf-u08-plan-summary">
                 <h2>{t("sf.u08.metrics")}</h2>
                 <dl class="sf-u08-summary">
-                  <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
-                    ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
+                  <div><dt>{t("sf.u08.fte")}</dt><dd>{quantity(page().data.metrics?.fte)}</dd></div>
                   {/* CAP20 projects calculated() HR totals in USD; rate cards retain their source currency. */}
                   <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
                     <div><dt>{t("sf.u08.total")}</dt><dd>{money(page().data.metrics?.hrTotal, "USD", language.intl(), missingCurrency()) ?? t("sf.u08.none")}</dd></div>
@@ -625,9 +637,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
       <Show when={currentReview()} keyed>
         {(current) => <div class="sf-u08-review" data-sf-polish="planner" data-sf-wave="four">
           <p>{t("sf.u08.reviewChange")}</p>
-          <Show when={current.kind === "sync"}><p>{t("sf.u08.noRoster")}</p></Show>
+          <Show when={current.kind === "sync"}><p role="note" class="sf-u08-source-note">{t("sf.u08.noRoster")}</p></Show>
           <SfChangeReview
-            operation={{ ref: current.operationRef, label: msg("sf.cap20.primary"),
+            operation={{ ref: current.operationRef, label: msg(reviewLabels[current.kind]),
               scope: { kind: "data", text: currentVersion() } }}
             base={{ kind: "persisted", ref: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,
               version: current.version, fields: reviewFields() }}
@@ -642,10 +654,10 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
               : { state: "complete", summary: msg("sf.u08.scope"), reasons: [], knownCount: 1, expectedCount: 1 }}
             blockingReasons={canReview() ? [] : [msg("sf.u08.unavailableAction")]}
             confirmation={canReview()
-              ? { kind: "admitted", labelKey: key("sf.cap20.primary"), purpose: reviewPurpose(),
+              ? { kind: "admitted", labelKey: key(reviewLabels[current.kind]), purpose: reviewPurpose(),
                 binding: { kind: "catalog-command", operationId: operationId(),
                   version: { kind: "record", expectedVersion: current.version }, confirmation: "presentation-only" } }
-              : { kind: "blocked", labelKey: key("sf.cap20.primary"), reasons: [msg("sf.u08.unavailableAction")] }}
+              : { kind: "blocked", labelKey: key(reviewLabels[current.kind]), reasons: [msg("sf.u08.unavailableAction")] }}
             state={state.phase}
             onConfirm={() => void submit()}
             onRevise={() => setState("review", null)}

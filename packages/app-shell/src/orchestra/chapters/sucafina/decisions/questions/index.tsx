@@ -17,6 +17,7 @@ import { SfQuestionCycles } from "./cycles"
 import { SfQuestionConsume } from "./consume"
 import "../cases/n24.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type RecipientsEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.recipients"]["output"]>
 type Recipient = Extract<RecipientsEnvelope, { status: "ok" }>["value"][number]
@@ -178,7 +179,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
         disabled: caseData.read.state === "loading", busy: false, onInvoke: () => caseData.reload(),
       }]}
     >
-      <div class="sf-n24 sf-decision-page sf-decision-questions" data-sf-wave="four" data-sf-decision="UI37" data-sf-surface="UI37">
+      <div class="sf-n24 sf-decision-page sf-decision-questions sf-workflow" data-sf-wave="four" data-sf-decision="UI37" data-sf-surface="UI37">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>

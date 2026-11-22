@@ -143,3 +143,6 @@
 @media (prefers-reduced-motion: reduce) { .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) * { scroll-behavior: auto; transition-duration: 0s; animation-duration: 0s; } }
 
 .sf-u07-surface:is([data-sf-surface="CAP18"],[data-sf-surface="CAP19"]) .sf-u07-review-controls { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+
+.sf-u07-form-fields [data-sf-field="desc"] { grid-column: 1 / -1; }
+.sf-u07-form-fields textarea { min-block-size: 112px; inline-size: 100%; max-inline-size: 100%; resize: vertical; box-sizing: border-box; font: inherit; color: var(--mx-strong); background: var(--mx-base); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-sm); padding: 10px 12px; }

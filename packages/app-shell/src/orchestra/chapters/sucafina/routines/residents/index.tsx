@@ -12,6 +12,7 @@ import type { SfUiState } from "../../shared/frame"
 import { n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority, n29StateKey, useN29Copy } from "../catalog/ui"
 import { operationGranted, StatusText, WhenText } from "../../reviews/labels"
 import "./residents.css"
+import "../../reviews/workflows.css"
 
 type Profile = (typeof SfResidentCatalog)["Type"]["profiles"][number]
 type Cases = Extract<(typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"])["Type"], { status: "ok" }>["value"]["cases"]
@@ -290,7 +291,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <section class="sf-n29-residents" data-sf-surface={props.surfaceId} data-state={pageState()}>
+      <section data-sf-wave="polish" class="sf-n29-residents sf-workflow" data-sf-surface={props.surfaceId} data-state={pageState()}>
         <Show when={view.state === "ready" || view.state === "empty"}>
           <div class="sf-n29-summary" aria-label={t("sf.u35.coverage")}>
             <p><strong>{t("sf.u35.profiles")}:</strong> {t("sf.u35.count", { count: view.profiles.length })}</p>
@@ -339,7 +340,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
               </div>
               <Show when={selected()}>
                 {(profile) => (
-                  <article class="mx-card sf-n29-resident-detail">
+                  <article class="mx-card sf-n29-resident-detail sf-section">
                     <h2>{t("sf.u35.profile")}: <bdi>{profile().id}</bdi></h2>
                     <section aria-label={t("sf.u35.contribution")} data-sf-contribution-proof data-state={view.outputState}>
                       <h3>{t("sf.u35.contribution")}</h3>

@@ -293,7 +293,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
         content: <dl class="sf-u05-detail-fields">
           <div><dt>{t("sf.u05.projects.budget")}</dt><dd>{row.budget === null || row.budget === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</dd></div>
           <div><dt>{t("sf.u05.projects.spent")}</dt><dd>{row.spent === null || row.spent === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</dd></div>
-          <div><dt>{t("sf.u05.projects.progress")}</dt><dd>{row.pct === null || row.pct === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct)}</dd></div>
+          <div><dt>{t("sf.u05.projects.progress")}</dt><dd>{row.pct === null || row.pct === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct) + "%"}</dd></div>
         </dl> },
       { id: "watch", titleKey: kt("sf.u05.projects.watchSection"), state: "ready" as const,
         content: <p>{row.watchList === undefined || row.watchList === null ?
@@ -442,7 +442,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
           <Show when={view.review}>
             {(review) => <section class="sf-u05-command-review" role="region" aria-label={t("sf.u05.projects.review")}>
               <header class="sf-u05-editor-heading">
-                <h2>{t(review().kind === "save-milestone" ? "sf.u05.design.reviewMilestone" : "sf.u05.projects.confirmDelete")}</h2>
+                <h2>{t(review().kind === "save-milestone" ? "sf.u05.design.reviewMilestone" : review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}</h2>
                 <p>{t(review().kind === "save-milestone" ? "sf.u05.projects.review" : "sf.u05.design.deleteHint")}</p>
               </header>
               <dl class="sf-u05-review-summary">
@@ -470,7 +470,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
               <div class="sf-u05-form-actions">
                 <button class="mx-btn" classList={{ primary: review().kind === "save-milestone", "sf-u05-danger": review().kind !== "save-milestone" }}
                   type="button" disabled={view.busy || view.uncertain} onClick={confirmReview}>
-                  {t(review().kind === "save-milestone" ? "sf.u05.projects.confirmSave" : "sf.u05.projects.confirmDelete")}
+                  {t(review().kind === "save-milestone" ? "sf.u05.projects.milestoneSave" : review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}
                 </button>
                 <button class="mx-btn" type="button" disabled={view.busy}
                   onClick={() => setView("review", null)}>{t("sf.u05.design.revise")}</button>

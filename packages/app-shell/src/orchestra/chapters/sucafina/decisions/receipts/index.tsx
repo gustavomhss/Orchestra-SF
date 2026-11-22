@@ -22,6 +22,7 @@ import {
 } from "../choice/model"
 import "../choice/u18.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type View = {
   state: SfUiState
@@ -233,7 +234,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="reading"
     onLayoutMode={() => undefined}
   >
-    <div class="sf-decision-page sf-decision-receipts" data-sf-wave="four" data-sf-decision="UI40" data-sf-surface="UI40">
+    <div class="sf-decision-page sf-decision-receipts sf-workflow" data-sf-wave="four" data-sf-decision="UI40" data-sf-surface="UI40">
     <SfStatePanel state={currentState()} messageKey={u18ErrorKey(currentState())}
       onRetryRead={() => void read()}>
       <Show when={view.caseData}>

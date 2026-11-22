@@ -12,8 +12,10 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
+import { StatusText } from "../../reviews/labels"
 import "./analyses.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type Choices = Extract<typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"]["Type"], { status: "ok" }>["value"]
 type Case = Choices["cases"][number]
@@ -381,11 +383,15 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     <SfPageFrame titleKey={k("sf.ui41.title")} density="comfortable" layout="work"
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       onLayoutMode={() => undefined}>
-      <section class="sf-analyses sf-decision-page sf-decision-analyses" data-sf-wave="four" data-sf-decision="UI41" data-sf-surface="UI41">
+      <section class="sf-analyses sf-decision-page sf-decision-analyses sf-workflow" data-sf-wave="four" data-sf-decision="UI41" data-sf-surface="UI41">
         <SfStatePanel state={viewState()} messageKey={k(message())}
           onRetryRead={() => { void loadChoices() }}>
+          <Show when={view.cases.length > 0} fallback={
+            <button class="mx-btn" type="button" onClick={() => void loadChoices()}
+              disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.refreshChoices")}</button>
+          }>
           <div class="mx-card sf-decision-analysis-editor" hidden={view.phase === "reviewing" || view.phase === "starting"}>
-          <div class="sf-decision-section-heading"><h2>{t("sf.u37.prepare")}</h2></div>
+          <div class="sf-decision-section-heading"><h2>{t(view.analyses.length && view.models.length ? "sf.u37.prepare" : "sf.u37.cases")}</h2></div>
           <div class="sf-analyses-controls">
             <label><span id="sf-analysis-case-label">{t("sf.u37.chooseCase")}</span>
               <select aria-labelledby="sf-analysis-case-label" value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
@@ -407,6 +413,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
+            <Show when={view.analyses.length > 0 && view.models.length > 0}>
             <label><span id="sf-analysis-type-label">{t("sf.u37.chooseAnalysis")}</span>
               <select aria-labelledby="sf-analysis-type-label" value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("analysisKey", event.currentTarget.value) }}>
@@ -431,10 +438,12 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
             </label>
             <button class="mx-btn primary" type="button" onClick={() => void prepare()}
               disabled={!canPrepare()}>{t("sf.u37.prepare")}</button>
+            </Show>
             <button class="mx-btn" type="button" onClick={() => void loadChoices()}
               disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.refreshChoices")}</button>
           </div>
           </div>
+          </Show>
           <Show when={selectedAnalysis() && selectedAnalysis()!.skillId !== "sf-enquadrar-decisao"}>
             <p role="status" class="sf-analyses-note">{t("sf.u37.inputNotPublished")}</p>
           </Show>
@@ -445,7 +454,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
             <section class="mx-card sf-analyses-section sf-decision-review-stage" data-sf-analysis-review>
               <h2>{t("sf.u37.reviewInput")}</h2>
               <dl class="sf-analyses-facts">
-                <dt>{t("sf.u37.case")}</dt><dd>{view.preparedRequest!.caseRef.id}</dd>
+                <dt>{t("sf.u37.case")}</dt><dd>{selectedCase()?.label || t("sf.u37.caseNameUnavailable")}</dd>
                 <dt>{t("sf.u37.profile")}</dt><dd>{view.preparedRequest!.profileId}</dd>
                 <dt>{t("sf.u37.skill")}</dt><dd>{view.preparedRequest!.skillId}</dd>
                 <dt>{t("sf.u37.objective")}</dt><dd>{view.preparedRequest!.objective}</dd>
@@ -453,7 +462,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 <dt>{t("sf.u37.chooseModel")}</dt><dd>{selectedModel() ? selectedModel()!.providerID + "/" + selectedModel()!.id + (selectedModel()!.variant ? "/" + selectedModel()!.variant : "") : ""}</dd>
               </dl>
               <details class="sf-decision-source-scope"><summary>{t("sf.u37.source")}</summary>
-              <dl class="sf-analyses-facts"><dt>caseRef.incarnation</dt><dd>{view.preparedRequest!.caseRef.incarnation}</dd>
+              <dl class="sf-analyses-facts"><dt>{t("sf.u37.case")}</dt><dd><bdi>{view.preparedRequest!.caseRef.id}</bdi></dd>
+                <dt>caseRef.incarnation</dt><dd>{view.preparedRequest!.caseRef.incarnation}</dd>
                 <dt>caseRef.version</dt><dd>{view.preparedRequest!.caseRef.version}</dd>
                 <dt>profileVersion</dt><dd>{view.preparedRequest!.profileVersion}</dd>
                 <dt>skillVersion</dt><dd>{view.preparedRequest!.skillVersion}</dd>
@@ -495,7 +505,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                   <For each={view.runs}>{(run) => (
                     <li>
                       <span>{t("sf.u37.reference")}: {run.runRef}</span>
-                      <span>{t("sf.u37.status")}: {run.state}</span>
+                      <span>{t("sf.u37.status")}: <StatusText value={run.state} /></span>
                       <button type="button" class="mx-btn" disabled={isBusy()}
                         onClick={() => void readRun(run.runRef)}>{t("sf.u37.openRun")}</button>
                     </li>
@@ -514,7 +524,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                     <h2>{t("sf.u37.detail")}</h2>
                     <dl class="sf-analyses-facts">
                       <dt>{t("sf.u37.reference")}</dt><dd>{run().runRef}</dd>
-                      <dt>{t("sf.u37.status")}</dt><dd>{run().state}</dd>
+                      <dt>{t("sf.u37.status")}</dt><dd><StatusText value={run().state} /></dd>
                       <dt>{t("sf.u37.version")}</dt><dd>{run().version}</dd>
                       <Show when={run().outputRef}><dt>{t("sf.u37.outputRef")}</dt><dd>{run().outputRef}</dd></Show>
                     </dl>

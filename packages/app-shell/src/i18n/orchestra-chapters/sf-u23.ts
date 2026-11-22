@@ -78,7 +78,18 @@ export const SF_U23_COPY = {
   "sf.u23.row": "row",
   "sf.u23.column": "column",
   "sf.u23.noImpact": "No changes",
-  "sf.u23.rejectedReceipt": "Rejected import receipt"
+  "sf.u23.rejectedReceipt": "Rejected import receipt",
+  "sf.u23.label.source": "Source",
+  "sf.u23.label.headerRow": "Header row",
+  "sf.u23.label.previewRef": "Import preview reference",
+  "sf.u23.label.format": "File format",
+  "sf.u23.sourceDetails": "Source details",
+  "sf.u23.fieldReference": "Field reference",
+  "sf.u23.changeCell": "{{sheet}} · Row {{row}}, column {{column}}",
+  "sf.u23.sourceChange": "Change from source",
+  "sf.u23.before": "Before import",
+  "sf.u23.after": "Proposed value",
+  "sf.u23.exportUnavailable": "This export format is unavailable for the current project and access.",
 } as const
 
 export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
@@ -159,5 +170,16 @@ export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
   "sf.u23.row": "row",
   "sf.u23.column": "column",
   "sf.u23.noImpact": "No changes",
-  "sf.u23.rejectedReceipt": "Rejected import receipt"
+  "sf.u23.rejectedReceipt": "Rejected import receipt",
+  "sf.u23.label.source": "Origem",
+  "sf.u23.label.headerRow": "Linha do cabeçalho",
+  "sf.u23.label.previewRef": "Referência da prévia de importação",
+  "sf.u23.label.format": "Formato do arquivo",
+  "sf.u23.sourceDetails": "Detalhes da origem",
+  "sf.u23.fieldReference": "Referência do campo",
+  "sf.u23.changeCell": "{{sheet}} · Linha {{row}}, coluna {{column}}",
+  "sf.u23.sourceChange": "Alteração da origem",
+  "sf.u23.before": "Antes da importação",
+  "sf.u23.after": "Valor proposto",
+  "sf.u23.exportUnavailable": "Este formato de exportação está indisponível para o projeto e o acesso atuais.",
 }

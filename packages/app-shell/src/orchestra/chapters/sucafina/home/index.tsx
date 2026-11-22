@@ -85,12 +85,12 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   const label = (value: string | number | boolean | null | undefined) => {
     const text = scalar(value)
     const labels: Readonly<Record<string, SfCopyKey>> = {
-      critical: "sf.ui29.state.critical", high: "sf.ui29.state.high", normal: "sf.ui29.state.normal",
-      open: "sf.ui29.state.open", progress: "sf.ui29.state.progress", blocked: "sf.ui29.state.blocked",
-      done: "sf.ui29.state.done", mitigating: "sf.ui29.state.mitigating", closed: "sf.ui29.state.closed",
+      critical: key("sf.ui29.state.critical"), high: key("sf.ui29.state.high"), normal: key("sf.ui29.state.normal"),
+      open: key("sf.ui29.state.open"), progress: key("sf.ui29.state.progress"), blocked: key("sf.ui29.state.blocked"),
+      done: key("sf.ui29.state.done"), mitigating: key("sf.ui29.state.mitigating"), closed: key("sf.ui29.state.closed"),
     }
     const message = labels[text]
-    return message ? t(message) : text || t("sf.ui29.notProjected")
+    return message ? t(message) : text || t(key("sf.ui29.notProjected"))
   }
   const [screen, setScreen] = createStore<State>({ status: "loading", data: null })
   const [attention, setAttention] = createStore<Attention>({

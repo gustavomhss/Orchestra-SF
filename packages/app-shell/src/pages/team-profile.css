@@ -138,3 +138,10 @@
   .sf-team-dialog .mx-dialog-foot { flex-direction: column-reverse; }
   .sf-team-dialog .mx-dialog-foot .mx-btn { inline-size: 100%; }
 }
+
+/* Expanded administration remains reachable even when it exceeds the chat viewport. */
+.sf-team-shell[data-sf-team-layout="chat"]:has(.sf-team-administration) { overflow-y: auto; }
+.sf-team-main-chat:has(.sf-team-administration) { overflow: visible; flex: none; }
+.sf-team-main-chat:has(.sf-team-administration) > .sf-team-session { block-size: max(420px, 65dvh); flex: none; }
+.sf-team-dialog .mx-dialog-head { min-block-size: 0; overflow-y: auto; }
+.sf-team-dialog .mx-dialog-foot { flex: none; }

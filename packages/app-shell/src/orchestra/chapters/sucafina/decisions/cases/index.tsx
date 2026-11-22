@@ -12,6 +12,7 @@ import { sfDecisionHref } from "./route"
 import "./n24.css"
 import "./cases.css"
 import "../../shared/wave-one.css"
+import "../../reviews/workflows.css"
 
 const key = (value: string) => value as SfCopyKey
 
@@ -55,7 +56,7 @@ export function SfCasesView(props: SfSurfaceProps): JSX.Element {
       }}
       secondaryActions={[]}
     >
-      <div class="sf-n24 sf-cases" data-sf-wave="cases" data-sf-creating={ui.create ? "true" : "false"}>
+      <div class="sf-n24 sf-cases sf-workflow" data-sf-wave="cases" data-sf-creating={ui.create ? "true" : "false"}>
         <Show when={isPage()} fallback={<SfStatePanel state="invalid" messageKey={key("sf.ui33.unavailable")} />}>
           <Show when={ui.createMounted && route()}>
             {(activeRoute) =>

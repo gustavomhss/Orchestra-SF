@@ -85,6 +85,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
   }
   const rows = (collection: Catalog) => screen.page?.value.data[collection] ?? []
   const selectedRow = () => rows(screen.collection).find((row) => row.id === screen.selected)
+  const entityLabel = (id: string) => rows("entities").find((entity) => entity.id === id)?.name ?? id
   const currentValue = () => {
     const state = draft()?.snapshot()
     return state?.availability === "active" ? state.value : null
@@ -397,7 +398,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     ...(value.collection === "allocations" ? [
       field("sf.cap21.field.contractRef.label", value.contractRef),
       field("sf.cap21.field.splits.label", value.splits.map((split) =>
-        split.entityRef + ": " + split.percent + "%").join(", ")),
+        entityLabel(split.entityRef) + ": " + split.percent + "%").join(", ")),
       field("sf.cap21.field.total.label", String(splitTotal(value.splits)) + "%"),
     ] : []),
   ]
@@ -507,10 +508,10 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
               <input type="search" class="mx-input" value={screen.filter}
                 onInput={(event) => setScreen("filter", event.currentTarget.value)} />
             </label>
-            <Show when={can("import-workbook")}>
-              <p class="sf-n20-source-only">{language.t("sf.cap21.import-hint")}</p>
-            </Show>
           </div>
+          <Show when={can("import-workbook")}>
+            <p class="sf-n20-source-only" role="note">{language.t("sf.cap21.import-hint")}</p>
+          </Show>
           <div class="sf-n20-catalog-grid">
             {sectionRows("entities")}
             {sectionRows("allocations")}
@@ -532,7 +533,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                       <dd><bdi>{row.contractRef || language.t("sf.cap21.missing")}</bdi></dd>
                       <dt>{language.t("sf.cap21.field.splits.label")}</dt>
                       <dd>{(row.splits ?? []).length
-                        ? row.splits?.map((split) => split.entityRef + " · " + split.percent + "%").join(", ")
+                        ? row.splits?.map((split) => entityLabel(split.entityRef) + " · " + split.percent + "%").join(", ")
                         : language.t("sf.cap21.unconfigured")}</dd>
                       <dt>{language.t("sf.cap21.field.total.label")}</dt>
                       <dd>{splitTotal(row.splits ?? [])}%</dd>
@@ -558,8 +559,13 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                 <Show when={value().detail !== undefined}>
                   <label>
                     <span>{language.t(value().collection === "entities" ? "sf.cap21.field.code.label" : "sf.cap21.field.desc.label")}</span>
-                    <input class="mx-input" value={value().detail ?? ""}
-                      onInput={(event) => draft()?.edit({ ...value(), detail: event.currentTarget.value })} />
+                    <Show when={value().collection === "allocations"} fallback={
+                      <input class="mx-input" value={value().detail ?? ""}
+                        onInput={(event) => draft()?.edit({ ...value(), detail: event.currentTarget.value })} />
+                    }>
+                      <textarea class="mx-input" rows={3} value={value().detail ?? ""}
+                        onInput={(event) => draft()?.edit({ ...value(), detail: event.currentTarget.value })} />
+                    </Show>
                   </label>
                 </Show>
                 <Show when={value().collection === "allocations"}>
@@ -573,7 +579,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                     <p>{language.t("sf.cap21.splits-hint")}</p>
                     <For each={rows("entities")}>{(entity) => (
                       <label>
-                        <span>{entity.name} · {entity.id}</span>
+                        <span><bdi>{entity.name}</bdi><small class="sf-n20-reference">{entity.id}</small></span>
                         <input class="mx-input" type="number" min="0" max="100" step="0.01"
                           aria-label={entity.name + " " + language.t("sf.cap21.field.percent.label")}
                           value={value().splits.find((split) => split.entityRef === entity.id)?.percent ?? ""}
