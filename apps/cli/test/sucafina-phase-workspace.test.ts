@@ -29,8 +29,9 @@ import { createSfRoutinePhaseOrigin, readSfRoutinePhaseParent } from "../src/suc
 import { createSfRoutinePhaseFence } from "../src/sucafina-product/routine-native-phase-fence"
 import { sfNativeLocationRef } from "../src/sucafina-product/native-identity"
 
-// Real entry, host factory, configured Global/SQLite factories and Phase/Session graph.
-// Authentication is a fixture input to the real UI lease registry; this is not installed Teams qualification.
+// Real entry, host factory, configured Global factory and Phase/Session graph.
+// SQLite uses the test preload's private database; authentication is a fixture input to the real UI lease registry.
+// This is a component factory proof, not installed Teams qualification.
 const installationId = "d1e1902b-33e9-46b2-aaf2-6e8c88a3f621"
 const origin = "http://127.0.0.1:4110"
 const request = new Request(origin + "/sucafina/routines/catalog", { method: "POST" })
@@ -72,8 +73,8 @@ async function withRuntime<A>(root: string, directory: string, consume: (resourc
   for (const directory of Object.values(globals)) await mkdir(directory, { recursive: true, mode: 0o700 })
   const graph = AppNodeBuilder.build(LayerNode.group([
     Database.node, EventV2.node, Global.node, ProjectV2.node, SessionStore.node, SessionV2.node, SessionExecution.node, LocationServiceMap.node,
-  ]), [[Database.node, Database.layerFromPath(path.join(root, "host-data", "orchestra.db"))],
-    [Global.node, Global.layerWith(globals)], [SessionExecution.node, SessionExecutionLocal.node], [Snapshot.node, Snapshot.noopLayer],
+  ]), [[Global.node, Global.layerWith(globals)],
+    [SessionExecution.node, SessionExecutionLocal.node], [Snapshot.node, Snapshot.noopLayer],
     ...(governance.contribution.replacements ?? [])], runtime.contribution.locationNodes)
   try {
     return await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -99,7 +100,7 @@ async function admit(resources: SfRoutineNativeRuntimeResources, active: () => b
   const authority = createSfUiAuthority({
     authorize: async () => active() ? { installationId: resources.identity.installationId, projectId: resources.identity.projectId,
       principalRef: `macos:${installationId}:${userInfo().uid}`, policyVersion: scope.policyVersion, accessRevision: scope.accessRevision } : undefined,
-    commandIdentity: async () => "phase-original-ui-command", createId: crypto.randomUUID, now: Date.now,
+    commandIdentity: async () => "phase-original-ui-command", createId: () => crypto.randomUUID(), now: Date.now,
     privateCommands: ["sf-human:routines.run"],
   })
   const digest = digestSfValue(scope)
@@ -169,6 +170,7 @@ test("Local Operator refuses unsafe or aliased workspace before creating host ru
     try {
       await denied()
       expect((await lstat(workspace)).mode & 0o777).toBe(0o755)
+      expect(await Bun.file(path.join(installed.root, "business-local", "installation.sqlite")).exists()).toBe(false)
     } finally { await chmod(workspace, 0o700) }
     const retained = path.join(installed.root, "retained-workspace")
     await rename(workspace, retained)
