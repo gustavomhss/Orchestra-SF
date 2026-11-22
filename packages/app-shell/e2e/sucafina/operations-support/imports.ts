@@ -4,7 +4,7 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
@@ -120,13 +120,22 @@ async function tokens(page: Page, account: Account, year: string, version: strin
     expect(Number.isSafeInteger(revision)).toBe(true)
     result[id] = revision
     if (!observeControls) continue
-    const row = surface.locator(`tbody tr[data-sf-row="${id}"]`)
+    await surface.getByRole("tab", { name: "Lines", exact: true }).click()
+    const lines = surface.getByRole("tabpanel", { name: "Lines", exact: true })
+    await expect(lines).toBeVisible()
+    const row = lines.locator(`tbody tr[data-sf-row="${id}"]`)
     await expect(row).toHaveCount(1)
     await row.getByRole("button", { name: "Manage", exact: true }).click()
-    const detail = page.getByRole("region", { name: "Manage record", exact: true })
-    const line = detail.locator("p").filter({ has: page.getByText(id, { exact: true }) })
+    const detail = surface.getByRole("region", { name: "Manage", exact: true })
+    await expect(detail).toBeVisible()
+    const provenance = detail.locator("details.sf-u07-source")
+    await provenance.locator("summary").click()
+    const line = provenance.locator("p").filter({ has: page.getByText(id, { exact: true }) })
     await expect(line).toHaveCount(1)
+    await expect(line).toBeVisible()
     await expect(line).toContainText(new RegExp(`Source revision:\\s*${revision}(?![0-9])`))
+    await detail.getByRole("button", { name: "Back to plan", exact: true }).click()
+    await expect(lines).toBeVisible()
   }
   return result
 }
@@ -227,10 +236,42 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   }
   expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
   const surface = page.locator('[data-sf-surface="CAP23"]')
-  await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
-  // CAP23 acknowledges the save; read the single record from this isolated installation.
+  const reads: { event: string; method: string; path: string; status?: number; failure?: string }[] = []
+  const versionRead = (request: Request) => {
+    const url = new URL(request.url())
+    return request.method() === "GET" && url.origin === account.origin &&
+      url.pathname === new URL(account.baseURL).pathname + "/planner" && url.searchParams.get("page") === "Versions"
+  }
+  const requested = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "request", method: request.method(), path: new URL(request.url()).pathname })
+  }
+  const responded = (response: Response) => {
+    if (versionRead(response.request())) reads.push({ event: "response", method: response.request().method(),
+      path: new URL(response.url()).pathname, status: response.status() })
+  }
+  const failed = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "failed", method: request.method(),
+      path: new URL(request.url()).pathname, failure: request.failure()?.errorText })
+  }
+  page.on("request", requested)
+  page.on("response", responded)
+  page.on("requestfailed", failed)
   const createdRow = surface.locator("tr[data-sf-row]")
-  await expect(createdRow).toHaveCount(1)
+  try {
+    await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
+    // The original UI must finish its authorized readback; no reload, timeout extension or substitute read can pass this.
+    await expect(createdRow).toHaveCount(1)
+  } finally {
+    page.off("request", requested)
+    page.off("response", responded)
+    page.off("requestfailed", failed)
+    await observation(info, "operations-first-version-readback", {
+      path: new URL(page.url()).pathname, year: new URL(page.url()).searchParams.get("year"), reads,
+      states: await page.locator("[data-sf-state]").evaluateAll((panels) => panels.map((panel) => ({
+        state: panel.getAttribute("data-sf-state"), text: panel.textContent?.trim().slice(0, 240),
+      }))),
+    })
+  }
   await expect(createdRow).toHaveAttribute("data-sf-row", /\S+/)
   const version = (await createdRow.getAttribute("data-sf-row"))!
   await createdRow.getByRole("button", { name: "Open record", exact: true }).click()
@@ -243,7 +284,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   const nameField = versionDetail.locator("#sf-u46-name")
   await expect(nameField).toBeEnabled()
   await nameField.fill(name)
-  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save", exact: true }), { id: version, version: 1, values: { name } })
+  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save version", exact: true }), { id: version, version: 1, values: { name } })
   await expect(versionDetail.locator("#sf-u46-name")).toHaveValue(name)
   await expect(versionDetail.getByRole("heading", { name, exact: true })).toBeVisible()
   const fiscalYear = await year.inputValue()
@@ -326,7 +367,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
   await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
   await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary")).toHaveCount(6)
+  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator(":scope > details > summary")).toHaveCount(6)
   const [afterPreview, previewTokens] = await Promise.all([
     exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
   ])

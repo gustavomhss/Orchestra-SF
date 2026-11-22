@@ -90,8 +90,8 @@ test("confirming a quote shows progress, sends one CAS command, and reads the re
     const confirm = review.querySelector<HTMLButtonElement>("button.primary")!
     const alert = () => view.node.querySelector('[role="alert"]')
     expect(review.textContent).toContain("Fornecedor A")
-    expect(review.textContent).toContain("32400 USD")
-    expect(confirm.textContent?.trim()).toBe("Confirm once")
+    expect(review.textContent).toContain(new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(32400) + " USD")
+    expect(confirm.textContent?.trim()).toBe("Select winning quote")
     confirm.click()
     await waitFor(() => alert() && !confirm.disabled)
     expect(writes).toHaveLength(0)

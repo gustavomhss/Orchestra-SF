@@ -158,3 +158,11 @@ html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { di
   .sf-team-shell[data-sf-team-layout="chat"] .sf-team-surface { flex: none; overflow: visible; }
   .sf-team-shell[data-sf-team-layout="chat"] .sf-team-session { block-size: max(var(--sf-team-chat-height), 70dvh); flex: none; }
 }
+
+@media (max-width: 767px) {
+  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-session { block-size: max(28rem, 50dvh); }
+}
+@media (max-width: 359px) {
+  .sf-team-shell { --sf-team-logo-width: 80px; }
+  .sf-team-brand { gap: var(--sf-team-sm); }
+}
