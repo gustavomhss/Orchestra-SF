@@ -114,7 +114,7 @@ const deniedContext = await request(context, { cookie: denied, accept: "applicat
 assert.equal(deniedContext.status, 403, "native Team context denies account")
 const deniedResult = await deniedContext.json()
 assert(deniedResult?.status === "denied" && Object.keys(deniedResult).length === 1, "no Team payload is returned")
-console.log("ENTRA_NATIVE_TEAM_DENIAL_OK: authenticated account received 403 on dashboard and direct Team URL")
+process.stdout.write("ENTRA_NATIVE_TEAM_DENIAL_OK: authenticated account received 403 on dashboard and direct Team URL\n")
 // Load Playwright from the candidate's locked workspace, not a global install.
 const { chromium } = createRequire(resolve(process.env.GITHUB_WORKSPACE, "packages/app-shell/package.json"))("@playwright/test")
 const browser = await chromium.launch()
@@ -169,4 +169,4 @@ try {
 } finally {
   await browser.close()
 }
-console.log("ENTRA_NATIVE_PACKAGE_OK: installed Web rendered by Chromium, exact JS bytes, separate signed sessions, no-Team and direct-Team 403")
+process.stdout.write("ENTRA_NATIVE_PACKAGE_OK: installed Web rendered by Chromium, exact JS bytes, separate signed sessions, no-Team and direct-Team 403\n")
