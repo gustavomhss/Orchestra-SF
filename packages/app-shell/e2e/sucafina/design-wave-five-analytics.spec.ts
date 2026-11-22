@@ -198,7 +198,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   for (const [index, sample] of originalSamples.entries()) {
     const cells = renderedSamples.nth(index).locator("td")
     await expect(cells.nth(0)).toHaveText(String(sample.parameterValue) + " " + sourceText(actualSensitivity.parameterUnit))
-    await expect(cells.nth(1)).toHaveText(sample.value === null ? "Unknown" : String(sample.value) + " " + sourceText(actualSensitivity.unit))
+    await expect(cells.nth(1)).toHaveText(sample.value === null ? "Unknown result" : String(sample.value) + " " + sourceText(actualSensitivity.unit))
     await expect(cells.nth(2)).toHaveText(sourceText(sample.resultRef))
   }
   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "sensitivity-sample-readback",
