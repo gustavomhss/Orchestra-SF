@@ -1,20 +1,19 @@
 {
-  "source": "d55797c88dd19f3b88d7c16ce35a9212dc46799f",
-  "status": "qualification pending on fifth composed candidate",
-  "candidate": {
-    "branch": "ci-run-sf5collab5",
-    "sha": "dae865e09253d29c5216655b4d435d1c91aa0e2e",
-    "source": "722ec9c9703c139160147f344f74ee010d61d6ec",
-    "tree": "34ce2d300ff79f4c5fb7a517b565842876b8f186"
-  },
-  "production": [
+  "workerSource": "4d3a6de3e80c506c9ef325e1d24540ed7234740d",
+  "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
+  "files": [
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
-      "sha": "2a89ffb3783b7673fbe6676680f06c8412140e08"
+      "sha": "22a871f91d41d5753a8501482792be64f8d563c4"
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
       "sha": "66191bad409758318261ed57e74dc35afd1f3dd7"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "sha": "5bfacfdfa016b0af26fc68d7b2593f07ae2eb132"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/confirmations.css",
@@ -30,7 +29,7 @@
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
-      "sha": "08abf55e45e2dde5a1a4cfefc8237cc541e797ab"
+      "sha": "32f0ab855a88cbc9a6634979b1b5c0558da5021f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/relations.css",
@@ -46,29 +45,57 @@
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
-      "sha": "994f1b531c06c20ed12f6825332700024ca3876d"
+      "sha": "86dcef3e6a4555f913a87c9164899639e1eff5ef"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
-      "sha": "f12eb5784044a7ce59f97f0bba3ca2214796851a"
-    }
-  ],
-  "qualification": [
+      "sha": "3f36cc939ae8266ace4d4c11346583af493cabd1"
+    },
     {
       "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
       "sha": "98cc21d4e9db6ec81c2b36c525be7946563908d9"
     },
     {
       "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
-      "sha": "39385d43779dcb4e26cbc30aee10eedc0991a367"
+      "sha": "839e64c59ce4f9a36782f379cd333059d312955e"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
-      "sha": "185eb6f3c0da992e8d76f9c883090bef205cfbce"
+      "sha": "b04b83d641cac0c4bd31edeee992640e40053991"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
+      "sha": "a65fcc203fa02d0129a44ad3a84c32ff615c4b77"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-seed.ts",
+      "sha": "2192b5260a9837dc614a58ada15cb1843b36a533"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
-      "sha": "18253073530ece8299b8919d022a4bb29ee1bc8e"
+      "sha": "c407b9b67c7f3142935d10ba524d36399f618250"
     }
+  ],
+  "qualification": {
+    "technical": {
+      "source": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
+      "run": 44981671317,
+      "job": 137083298996,
+      "gates": 12,
+      "cases": 94,
+      "collaborationCases": 18,
+      "status": "passed before latest activity labels and observed-kind renderer correction"
+    },
+    "browser": {
+      "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
+      "run": 44982724904,
+      "job": 137086555249,
+      "collaboration": "passed UI51/52/53 original journeys and pt-BR; observed-kind renderer correction awaits new capture",
+      "import": "failed: original valid preview delivered, independent authenticated reference read timed out; UI55/56 success not claimed"
+    }
+  },
+  "excluded": [
+    "All temporary SF_IMPORT_TRACE source overlays on ci-run-sf5importtrace / ci-run-sf5importtrace2.",
+    "Root-owned header, installation variants, host-context binding/composition, type-only IDs and confirmation read-scope fix."
   ]
 }

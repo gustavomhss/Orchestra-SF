@@ -23,7 +23,7 @@ Native raised/soft surfaces, 20px panel padding (16px below 767px), 16–20px ga
 - Relation review hides the ordinary workspace while leaving the explicit draft mounted. Cancelling creation restores target focus and raw evidence. Cancelling removal resets only S05's list-local request fence and restores its remove control; the explicit editor remains mounted. Original CAS, source evidence, idempotency and destructive confirmation remain.
 - Discussion preserves its original messages, source scope and unsent draft while opening provenance. No reply is posted during qualification.
 - Confirmation presents the original material before the final action. Scope, coverage, fingerprints, receipt and source validity remain producer-owned.
-- Import keeps the native FileList/options mounted during preview and restores them on cancel. The current step follows the actual destination/preview state. Only one Cancel preview action remains.
+- Import keeps the native FileList/options mounted during preview and restores them on cancel. The current step follows the actual destination/preview state. Only one Cancel preview action remains. Its polite status reports scanning, preparing the original preview, or reading original source details only while that exact stage is awaited; it never announces success from HTTP status alone.
 - Preview retains original domain impact, changed/unchanged/ignored/rejected records and the original UI57 continuation.
 
 ## Source availability repair
@@ -57,6 +57,14 @@ Terminology references:
 - Existing native `sf-s05.ts` and `sf-u44.ts` glossary.
 
 Planner, XLS, XLSX and JSON remain names. Source IDs and record values remain original data.
+
+The visual review of attempt 5 found a literal `{kind}` in the existing relationship label. Root delegated the minimal shared `collaboration/index.tsx` correction: only the two exact frozen observed-kind keys resolve that one field through a callback replacement, preserving literal source data and every catalog byte. The relation leaf's two direct uses receive the same exact-field handling. Browser assertions require the original relationship kind in English and pt-BR; the renderer correction awaits a subsequent capture.
+
+## Coordinated source composition
+
+The composed root additionally restores the read snapshot scope required by the original confirmation fences. Only `readSelection` receives that read-only wrapper. The original observation/reissue runs outside the lock; manifest and source fences, both observation comparisons, current authority checks, expiry and the confirmation write fence remain unchanged. Browser attempt 6 passed the complete UI51/52/53 journey, including the original confirmation, its receipt and a fresh validity readback. This shared source composition is root-owned and is not copied into this worker branch.
+
+The import journey remains unresolved after attempt 6: the original preview output passes its codec/schema, but an independent authenticated reference read times out. Disposable branch `ci-run-sf5importtrace` adds static stage logs to the original reads and forwards only those bounded stage names through the fixture stdout. Its source overlays are diagnostic-only, never integrated into product or worker branches. No source guard, lock, producer result or authorization is replaced.
 
 ## Evidence and approval boundary
 
