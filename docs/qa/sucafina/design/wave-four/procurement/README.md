@@ -2,9 +2,11 @@
 
 ## Scope and status
 
-This leaf implements the five native Procurement areas over the existing producers and F01 ownership. The product commit is `9af9b0820ac3cd1be090c3dbb49a35870c0368e1`; the browser journey is `91331662a8cbd81d18a819d470ea148bc11bf556`. Both belong to `sf-twenty-procurement` and are integrated by the coordinating `sf-design-twenty` branch. The independent previous wave / PR 587 is a dependency, not an edit target.
+CAP24–CAP28 are implemented over the existing native producers and F01 ownership. [Procurement10, run 44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654), passed all four installed browser journeys on product commit `331cafc50bee2112f6366ff428658de938c6f58e` (snapshot `7f3de0206fc25b2925d7c55947d9b5785bdfe7ba`). It completed eleven original producer POSTs and eleven explicit fresh canonical source readbacks, with empty page-error and console-error arrays. All 43 emitted JPEG previews were manually reviewed.
 
-No local build, test or browser was run by this leaf. The native browser spec is written and handed to the root Actions workflow. Passing screenshots, final visual approval and CI conclusions must be recorded from that workflow; the proposed capture names below are not a claim that screenshots already exist.
+The complete [capture gallery and manifest](../evidence/procurement/README.md) preserve the run evidence. [HANDOFF.md](HANDOFF.md) records implementation decisions, actual qualification and remaining limits. The leaf's code head is `7c2ddfad2dddf00709c04a3f554e8050ba9ea773`; the root integrates it in `sf-design-twenty`. The independent previous wave / PR 587 remains a dependency, not an edit target.
+
+This leaf did not run a local build, test or browser and did not launch CI. All reported execution comes from the coordinating Actions workflow. Six acknowledgement bodies were readable and positive; five were unavailable to the collector. Those five still passed HTTP 200/JSON, original application completion, provider/view readiness, one-POST and explicit source-readback assertions. No unavailable body is reported as a readable acknowledgement.
 
 ## Composition
 
@@ -42,6 +44,10 @@ The fixture contains three suppliers and seven requests: absent estimate, record
 
 ## Verification handoff
 
-The executable journey is `packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts`, using `design-support/wave-four` and the production browser runner. It exercises eleven original command kinds with explicit confirmation and source readback, plus cancel/resume paths, both themes, Portuguese and 320 px reflow.
+The executable journey is `packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts`, using `design-support/wave-four` and the production browser runner. It registers four original installed test groups: requests/sourcing/approvals (eight commands), suppliers (two), settings (one) and Portuguese entry views (zero). Eleven original command executions each require explicit confirmation and fresh source readback. The journey also verifies cancel/resume paths, quotation selection and notes, PO notes, both themes and 320 px reflow.
 
-See [route and state matrix](route-state-matrix.md), [evidence plan](evidence-plan.md) and [copy audit](copy-audit.json). Root integration owns the actual run, screenshot inspection, final scores and merge decision.
+[Gate 44964454946](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964454946) passed 12 gates and 84 regression cases, including all ten procurement browser-condition regressions. Those regressions use the original F02 decoder, actual Solid browser runtime, original draft controller and original creation transition gate. The coordinator owns the latest full-composition gate and merge decision.
+
+The visual pass covers the 43 listed states in Chromium at 1440 × 1100 and 320 × 900. It does not measure actual browser zoom or every combination of the 17 existing route patterns, source states, languages and themes. The established negative-authority, pending/unknown and bank-protection suites remain separate from this positive browser journey.
+
+See the [route and state matrix](route-state-matrix.md), [observed run history](evidence-plan.md), [copy audit](copy-audit.json) and [complete gallery](../evidence/procurement/README.md).
