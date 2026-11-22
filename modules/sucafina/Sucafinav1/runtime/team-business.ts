@@ -115,6 +115,35 @@ export async function runTeamBusiness(input: {
     }
     const derive = (key: Uint8Array) => createHmac("sha256", key).update("sucafina-team/1\0" + partition).digest()
     const bankKey = derive(keys.bank)
+    const environment = async () => {
+      const at = input.now().toISOString()
+      if (config.teamDirectory === "members") {
+        const actor = await currentActor()
+        if (!actor?.roles.length || (request.method === "POST" && !actor.canWrite)) throw new TeamAuthorityChanged()
+        const directory = await readDirectory(admission)
+        authorized.roster = rosterDigest(directory)
+        return { at, id: randomUUID, directory, bankKey, directoryScope: "team" as const }
+      }
+      const person = await identity.person(request)
+      const directory = person?.id === admission.principalObjectId ? [person] : []
+      return { at, id: randomUUID, directory, bankKey, directoryScope: "team" as const }
+    }
+    const services = { signingKey: derive(keys.assets), scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) }
+    const mode = new URL(request.url).searchParams.get("sf")
+    if (mode === "imports" || mode?.startsWith("import-")) {
+      const actor = await currentActor()
+      if (!actor?.roles.length) return denied()
+      authorized.actor = actor
+      const { runSfTeamImports } = await import("../../../../apps/cli/src/sucafina-product/team-imports.ts")
+      const response = await runSfTeamImports({
+        request, origin: config.origin, mount: route.mount, surface: route.surface, partition,
+        directory: storeDirectory, principalId: admission.principalObjectId, grants: config.grants,
+        persistence: store, assets: services, environment, now: input.now,
+        authenticate: (original, context) => original === request && context ? currentActor(context.surface) : Promise.resolve(null),
+        current: () => reauthorize({ refreshSession: false }),
+      })
+      if (response) return response
+    }
     const business = createModule(route.mount, {
       persistence,
       rolePolicy,
@@ -124,21 +153,9 @@ export async function runTeamBusiness(input: {
         if (actor?.roles.length) authorized.actor = actor
         return actor
       },
-      environment: async () => {
-        const at = input.now().toISOString()
-        if (config.teamDirectory === "members") {
-          const actor = await currentActor()
-          if (!actor?.roles.length || (request.method === "POST" && !actor.canWrite)) throw new TeamAuthorityChanged()
-          const directory = await readDirectory(admission)
-          authorized.roster = rosterDigest(directory)
-          return { at, id: randomUUID, directory, bankKey, directoryScope: "team" as const }
-        }
-        const person = await identity.person(request)
-        const directory = person?.id === admission.principalObjectId ? [person] : []
-        return { at, id: randomUUID, directory, bankKey, directoryScope: "team" as const }
-      },
+      environment,
       maxJsonBytes: 2 * 1024 * 1024,
-      assets: { persistence, services: { signingKey: derive(keys.assets), scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
+      assets: { persistence, services },
     })
     const response = await business(request)
     // This request already proved Microsoft/Team admission. Revocation during the

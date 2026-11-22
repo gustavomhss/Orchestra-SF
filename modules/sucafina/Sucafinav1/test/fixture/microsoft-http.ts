@@ -13,7 +13,9 @@ import { teamProfileInstallationId } from "../../runtime/team-profile-access.ts"
 // controlled; HTTP, callback/session issuance, Team admission, storage and scanner
 // remain the original implementation. This is never installed-tenant evidence.
 export async function microsoftHttpFixture(options: {
-  label?: "g05" | "g06"
+  label?: "g05" | "g06" | "g10"
+  grants?: readonly Readonly<Record<string, unknown>>[]
+  plannerAdministrator?: boolean
   scanner?: { host: "127.0.0.1"; port: number } | null
 } = {}) {
   const label = options.label ?? "g05"
@@ -35,13 +37,14 @@ export async function microsoftHttpFixture(options: {
   const state: {
     installation?: Awaited<ReturnType<typeof createMicrosoftInstallation>>
     nonce: string
+    administrator: boolean
     teams: string[]
     graphCalls: string[]
     requests: number
     loopbackPeers: number
     ingressRequests: number
     cleanupComplete: boolean
-  } = { nonce: "", teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0,
+  } = { nonce: "", administrator: true, teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0,
     loopbackPeers: 0, ingressRequests: 0, cleanupComplete: false }
   const listener = Bun.serve({
     hostname: "127.0.0.1", port: 0, idleTimeout: 0,
@@ -88,9 +91,9 @@ export async function microsoftHttpFixture(options: {
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
-      groups: { dashboard: { admin: "group:" + groupId }, planner: {},
+      groups: { dashboard: { admin: "group:" + groupId }, planner: options.plannerAdministrator ? { admin: "group:" + groupId } : {},
         procurement: { buyer: "group:" + groupId, admin: "group:" + groupId } },
-      grants: [{ principalRef: groupId, operations: ["sf_case_read"] }],
+      grants: options.grants ?? [{ principalRef: groupId, operations: ["sf_case_read"] }],
       supremeAdminGroupId: groupId, scanner: options.scanner ?? null,
       teams: "direct", enabledTeamIds: [teamA, teamB],
     }))
@@ -132,7 +135,7 @@ export async function microsoftHttpFixture(options: {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-" + label + "-access")
           state.graphCalls.push(url.pathname)
           if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled " + label.toUpperCase() + " actor" })
-          if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: [groupId] })
+          if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: state.administrator ? [groupId] : [] })
           if (url.href === graph + "/me/joinedTeams")
             return Response.json({ value: state.teams.map((id) => ({ id, tenantId, displayName: id, isArchived: false })) })
         }
