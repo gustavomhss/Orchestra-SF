@@ -176,6 +176,7 @@ export async function openInstalledWorkbenchCase(page: Page, origin: string, ref
 
 type PausedCommand = {
   requestId: string
+  networkId?: string
   request: { url: string; method: string }
   responseStatusCode?: number
   responseHeaders?: { name: string; value: string }[]
@@ -193,16 +194,24 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
   // The original request can fail while the click itself is still awaiting navigation.
   // Its rejection is consumed below; this handler only prevents an unhandled rejection.
   void captured.promise.catch(() => undefined)
-  const observed: { active: boolean; request?: Request; failure?: { error: unknown }; pending?: Promise<void> } = { active: false }
-  const cleanupErrors: unknown[] = []
+  const observed: { active: boolean; request?: Request; networkId?: string; failure?: { error: unknown }; pending?: Promise<void> } = { active: false }
+  const errors: unknown[] = []
   const fail = (error: unknown) => {
     observed.failure ??= { error }
+    errors.push(error)
     captured.reject(observed.failure.error)
   }
   const onRequest = (request: Request) => {
     if (!observed.active || !isCommand(request, mode, method) || new URL(request.url()).origin !== origin) return
     if (observed.request && observed.request !== request) return fail(new Error("More than one original Decisions command was sent"))
     observed.request = request
+  }
+  const onSent = (event: Pick<PausedCommand, "requestId" | "request">) => {
+    if (!observed.active) return
+    const url = new URL(event.request.url)
+    if (url.origin !== origin || url.pathname !== "/sucafina/dashboard" || url.searchParams.get("sf") !== mode || event.request.method !== method) return
+    if (observed.networkId && observed.networkId !== event.requestId) return fail(new Error("More than one original Decisions network command was sent"))
+    observed.networkId = event.requestId
   }
   const onRequestFailed = (request: Request) => {
     if (request !== observed.request) return
@@ -220,6 +229,8 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
         expect(url.searchParams.get("sf")).toBe(mode)
         expect(event.request.method).toBe(method)
         if (!observed.request) throw new Error("Original Decisions command request was not observed")
+        if (!observed.networkId || event.networkId !== observed.networkId)
+          throw new Error("Paused response does not belong to the observed Decisions network request")
         expect(event.request.url).toBe(observed.request.url())
         expect(event.request.method).toBe(observed.request.method())
         const status = event.responseStatusCode
@@ -234,16 +245,18 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
       } catch (error) {
         fail(error)
         try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
-        catch (cleanupError) { cleanupErrors.push(cleanupError) }
+        catch (cleanupError) { errors.push(cleanupError) }
       }
     })()
   }
-  const outcome: { value?: Record<string, unknown>; failure?: { error: unknown } } = {}
+  const outcome: { value?: Record<string, unknown> } = {}
   try {
     page.on("request", onRequest)
     page.on("requestfailed", onRequestFailed)
     page.on("close", onClose)
+    session.on("Network.requestWillBeSent", onSent)
     session.once("Fetch.requestPaused", onPaused)
+    await session.send("Network.enable")
     await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
     observed.active = true
     await button.click()
@@ -253,7 +266,7 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
       () => JSON.parse(reply.json), observations)
     if (observed.failure) throw observed.failure.error
   } catch (error) {
-    outcome.failure = { error }
+    errors.push(error)
   } finally {
     observed.active = false
     // Each owned listener and CDP resource is released even if another release fails.
@@ -262,21 +275,19 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
       () => page.off("requestfailed", onRequestFailed),
       () => page.off("close", onClose),
       () => session.off("Fetch.requestPaused", onPaused),
+      () => session.off("Network.requestWillBeSent", onSent),
       () => session.send("Fetch.disable"),
+      () => session.send("Network.disable"),
       () => session.detach(),
       async () => { await observed.pending },
     ]) {
       try { await release() }
-      catch (error) { cleanupErrors.push(error) }
+      catch (error) { errors.push(error) }
     }
   }
-  const errors = [...new Set([
-    ...(observed.failure ? [observed.failure.error] : []),
-    ...(outcome.failure ? [outcome.failure.error] : []),
-    ...cleanupErrors,
-  ])]
-  if (errors.length === 1) throw errors[0]
-  if (errors.length > 1) throw new AggregateError(errors, "Decisions command observation or cleanup failed")
+  const failures = [...new Set(errors)]
+  if (failures.length === 1) throw failures[0]
+  if (failures.length > 1) throw new AggregateError(failures, "Decisions command observation or cleanup failed")
   return outcome.value!
 }
 
