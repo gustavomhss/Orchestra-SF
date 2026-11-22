@@ -426,6 +426,7 @@ async function strictProcessRuntime() {
  */
 export async function captureOriginalCommand(root, name, executable, args, env, cwd = process.cwd()) {
   const handle = await open(path.join(root, name), constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
+  const primaryFailures = []
   try {
     const { AppProcess, Effect, Exit, Stream, ChildProcess, layer } = await strictProcessRuntime()
     return await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -448,7 +449,16 @@ export async function captureOriginalCommand(root, name, executable, args, env, 
       if (Exit.isFailure(exit)) return yield* Effect.failCause(exit.cause)
       return { exit: exit.value, signal: null }
     })).pipe(Effect.provide(layer)))
-  } finally { await finishCommandOutput(handle) }
+  } catch (error) {
+    primaryFailures.push(error)
+    throw error
+  } finally {
+    try { await finishCommandOutput(handle) }
+    catch (cleanup) {
+      if (primaryFailures.length) throw new AggregateError([primaryFailures[0], cleanup], "G08_COMMAND_AND_PRIVATE_OUTPUT_CLEANUP_FAILED")
+      throw cleanup
+    }
+  }
 }
 /** Each call observes the real Git process; no cache or injected command backend is accepted. */
 async function observeOriginalGit(args) {
