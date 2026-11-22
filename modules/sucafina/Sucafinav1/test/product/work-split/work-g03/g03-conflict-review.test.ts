@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser } from "@playwright/test"
 import { randomUUID } from "node:crypto"
-import { caseWorkSelectionForm, caseWorkSelectionScript } from "../../../../product/ui/case-work-selection.ts"
 import { closeWp01Browser, launchWp01Browser } from "../../wp01/browser-fixture.ts"
 import { createWorkSelectionDomainFixture } from "../../wp01/work-selection-domain-fixture.ts"
 
@@ -11,10 +10,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
   afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
-  const fixture = () => createWorkSelectionDomainFixture(browser, (projection) => ({ html: caseWorkSelectionForm(projection), script: caseWorkSelectionScript }))
+  const fixture = () => createWorkSelectionDomainFixture(browser)
   type Fixture = Awaited<ReturnType<typeof fixture>>
   async function choose(app: Fixture) {
-    expect((await app.page.goto(`${app.origin}${app.mount}`))?.status()).toBe(200)
+    expect((await app.page.goto(app.caseUrl))?.status()).toBe(200)
     const form = app.page.locator("[data-case-work-selection]")
     await form.getByRole("checkbox").check()
     await form.getByLabel("Work start", { exact: true }).fill("2026-03-01")
@@ -155,15 +154,20 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         document.documentElement.dataset.workRevocations = "0"
         addEventListener("sf-access-revoked", () => { document.documentElement.dataset.workRevocations = String(Number(document.documentElement.dataset.workRevocations) + 1) })
       })
+      const retainedForm = await form.elementHandle()
+      if (!retainedForm) throw new Error("Live selection form unavailable before revocation")
       expect(await app.page.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST" })).status)).toBe(204)
       const denied = app.page.waitForResponse((value) => new URL(value.url()).searchParams.get("sf") === "collaboration-selection-list")
       await form.getByRole("button", { name: "Load saved selections", exact: true }).click()
       expect((await denied).status()).toBe(403)
-      await app.page.waitForFunction(() => document.querySelector('[data-case-work-selection] [role="status"]')?.textContent?.startsWith("Work selection access changed."))
-      expect(await form.getAttribute("data-context")).toBeNull()
-      expect(await form.getAttribute("data-dirty")).toBeNull()
-      expect(await form.locator("a,input,button").count()).toBe(0)
-      expect(await form.textContent()).not.toContain(app.source.target.recordId)
+      await app.page.locator("main[data-access-unavailable]").waitFor()
+      expect(await retainedForm.evaluate((element) => element.querySelector('[role="status"]')?.textContent)).toMatch(/^Work selection access changed\./)
+      expect(await retainedForm.getAttribute("data-context")).toBeNull()
+      expect(await retainedForm.getAttribute("data-dirty")).toBeNull()
+      expect(await retainedForm.evaluate((element) => element.querySelectorAll("a,input,button").length)).toBe(0)
+      expect(await form.count()).toBe(0)
+      expect(await retainedForm.textContent()).not.toContain(app.source.target.recordId)
+      await retainedForm.dispose()
       expect(await app.page.locator("html").getAttribute("data-work-revocations")).toBe("1")
       expect(writes()).toHaveLength(4)
       // Retry remains subject to the revoked real session even for an existing receipt.
@@ -182,10 +186,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const audit = app.request()
       audit.headers.set("cookie", cookie)
       expect(await stored(app, audit)).toEqual(committed)
-      // Chromium may reject navigation for an empty 403. Observe the actual
-      // server response and forward it unchanged before judging that rejection.
+      // Observe the original HTTP denial and forward it unchanged before
+      // checking whether Chromium exposes the navigation response.
       let revokedReloadHttp: number | undefined
-      await app.page.route(app.origin + app.mount, async (route) => {
+      await app.page.route(app.caseUrl, async (route) => {
         const response = await route.fetch()
         revokedReloadHttp = response.status()
         await route.fulfill({ response })

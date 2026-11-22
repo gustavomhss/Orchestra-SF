@@ -7,7 +7,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
+import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
@@ -22,14 +22,15 @@ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createCollaborationHost } from "../../../product/collaboration/host.ts"
 import { createCollaborationHttp } from "../../../product/collaboration/http.ts"
 import { createCollaborationHumanAuthority } from "../../../product/collaboration/human.ts"
+import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
+import { createSfProductDispatch } from "../../../../../../apps/cli/src/sucafina-product/contribution.ts"
 import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
 
 /** Published collaboration HTTP/service over real BCS cases/evidence, C08 and
- * encrypted operator sessions. The component renderer receives the actual
- * authorized case projection. No directory, authority or mutation is simulated.
- * This mounts current-source selection only, not historical reissue, native
- * execution, question attachment or the complete application host. */
-export async function createWorkSelectionDomainFixture(browser: Browser, render: (projection: AuthorizedCaseProjection) => { html: string; script: string }) {
+ * encrypted operator sessions. The Workbench route obtains its case via the
+ * production dispatcher. This composition mounts current-source selection;
+ * historical reissue, native execution and question attachment are unmounted. */
+export async function createWorkSelectionDomainFixture(browser: Browser) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-work-selection-consumer-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(directory)
@@ -107,23 +108,24 @@ export async function createWorkSelectionDomainFixture(browser: Browser, render:
       targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "fixture-case", commandDigest: digestSfValue(decision) }, async (state) => { state.cases[decision.id] = decision; return { commit: true, value: true } })
     if (seeded.status !== "ok") throw new Error("Real case seeding unavailable")
     const caseRef = encodeCaseRef(decision)
+    const caseUrl = `${origin}${mount}?${new URLSearchParams({ sf: "workbench-case", caseRef })}`
+    const unmounted = (port: string): never => { throw new Error(`Work selection fixture does not mount ${port}`) }
+    const runtime = { ...authority,
+      ...(collaboration.caseSelection ? { caseWorkSelection: true as const } : {}),
+      dispatch: createSfProductDispatch({ descriptors: services.descriptors, authority: authority.authority }),
+      work: collaboration.work,
+      get sessions() { return unmounted("sessions") },
+      selected: [],
+      models: async () => [],
+    } satisfies SfHostServices
+    const workbench = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => runtime })
     const attempts: { route: string | null; body: string; key: string | null; status: number }[] = []
     routing.handle = async (incoming) => {
       const auth = await identity.handle(incoming)
       if (auth) return auth
       const url = new URL(incoming.url)
       if (url.pathname !== mount) return new Response(null, { status: 404 })
-      if (incoming.method === "GET") {
-        const payload = { caseRef }, digest = digestSfValue(payload), admitted = await authority.ui.admit(incoming, "sf_case_read", digest)
-        if (admitted.status !== "ok") return new Response(null, { status: 403 })
-        try {
-          if (!await authority.ui.validate(admitted.value, "sf_case_read", digest)) return new Response(null, { status: 403 })
-          const current = await services.cases.read(payload, admitted.value)
-          if (current.status !== "ok" || !await authority.ui.revalidate(admitted.value)) return new Response(null, { status: current.status === "denied" ? 403 : 503 })
-          const component = render(current.value)
-          return new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${component.html}<script>${component.script}</script></body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
-        } finally { authority.ui.finish(admitted.value) }
-      }
+      if (incoming.method === "GET") return await workbench(incoming, "dashboard") ?? new Response(null, { status: 404 })
       const body = await incoming.clone().text()
       const result = await http(incoming) ?? new Response(null, { status: 404 })
       attempts.push({ route: url.searchParams.get("sf"), body, key: incoming.headers.get("idempotency-key"), status: result.status })
@@ -136,7 +138,7 @@ export async function createWorkSelectionDomainFixture(browser: Browser, render:
     page.setDefaultTimeout(10_000)
     page.on("pageerror", (error) => errors.push(error.message))
     const post = (mode: string, payload: unknown = {}, key = randomUUID()) => fetch(`${origin}${mount}?sf=${encodeURIComponent(mode)}`, { method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": key }, body: JSON.stringify(payload) })
-    return { origin, mount, identity, principalRef, period, caseRef, source: issued.value, page, context, errors, attempts, post, request, authority, persistence, collaboration,
+    return { origin, mount, identity, principalRef, period, caseRef, caseUrl, source: issued.value, page, context, errors, attempts, post, request, authority, persistence, collaboration,
       readCase: () => read("sf_case_read", { caseRef }, (call) => services.cases.read({ caseRef }, call)), close }
   } catch (error) {
     try { await close() } catch (cleanup) { throw new AggregateError([error, cleanup], "Work selection fixture setup and cleanup failed") }

@@ -203,7 +203,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       persistence: store,
       authenticate: identity.authenticate,
       environment: environmentFor,
-      ...(runtime ? { product } : {}),
+      ...(runtime ? { product, plannerMonthlyAvailable: () => Boolean(runtime?.services?.()?.plannerMonthly) } : {}),
       maxJsonBytes: 2 * 1024 * 1024,
       assets,
     }

@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser } from "@playwright/test"
 import { randomUUID } from "node:crypto"
-import { caseWorkSelectionForm, caseWorkSelectionScript } from "../../../../product/ui/case-work-selection.ts"
 import { closeWp01Browser, launchWp01Browser } from "../../wp01/browser-fixture.ts"
 import { createWorkSelectionDomainFixture } from "../../wp01/work-selection-domain-fixture.ts"
 
@@ -11,10 +10,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
   afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
-  const fixture = () => createWorkSelectionDomainFixture(browser, (projection) => ({ html: caseWorkSelectionForm(projection), script: caseWorkSelectionScript }))
+  const fixture = () => createWorkSelectionDomainFixture(browser)
   type Fixture = Awaited<ReturnType<typeof fixture>>
   async function choose(app: Fixture) {
-    expect((await app.page.goto(`${app.origin}${app.mount}`))?.status()).toBe(200)
+    expect((await app.page.goto(app.caseUrl))?.status()).toBe(200)
     const form = app.page.locator("[data-case-work-selection]")
     await form.getByRole("checkbox").check()
     await form.getByLabel("Work start", { exact: true }).fill("2026-03-01")

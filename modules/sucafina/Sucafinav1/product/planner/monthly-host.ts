@@ -24,6 +24,14 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
     if (!validMonthlyRequest(request)) return { status: "needs-input" as const, reason: "invalid-monthly-request" }
     const http = input.host.requestFor(context)
     if (context.kind !== "ui" || !http) return { status: "denied" as const, reason: "monthly-authority-unavailable" }
+    const key = action === "planner.apply" ? http.headers.get("idempotency-key") : null
+    const receiptKey = key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({
+      installationId: context.binding.installationId, projectId: context.binding.projectId,
+      principalRef: context.binding.principalRef, key,
+    }) : undefined
+    if (action === "planner.apply" && request.drafts && !receiptKey)
+      return { status: "needs-input" as const, reason: "monthly-idempotency-key-required" }
+    const requestDigest = receiptKey ? digestSfValue(request) : undefined
     const allowed = async () => !http.signal.aborted && await input.host.revalidate(context).catch(() => false) && await input.humanAuthorize(context, action, request).catch(() => false)
     if (!await allowed()) return { status: "denied" as const, reason: "monthly-authority-unavailable" }
     const environment = await input.host.environment(http).catch(() => undefined)
@@ -39,7 +47,26 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
     const result = await input.host.persistence.transaction<PortResult<MonthlyResult>>("planner", async (snapshot) => {
       const actor = await identify(snapshot).catch(() => undefined)
       if (!actor || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-unavailable" } }
-      const version = rows(domain.view(snapshot, actor, environment).data.versions).find((item) => item.id === request.versionId)
+      const initialView = domain.view(snapshot, actor, environment)
+      const version = rows(initialView.data.versions).find((item) => item.id === request.versionId)
+      const authorityDigest = receiptKey ? digestSfValue({
+        actor, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion,
+      }) : undefined
+      const saved = receiptKey ? snapshot.sfPlannerMonthlyReceipts?.[receiptKey] : undefined
+      if (saved) {
+        if (saved.authorityDigest !== authorityDigest || !actor.canWrite ||
+            !await allowed() || digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor))
+          return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
+        if (saved.requestDigest !== requestDigest)
+          return { commit: false, value: { status: "conflict" as const, reason: "monthly-idempotency-content-changed" } }
+        const visible = rows(object(version?.summary).lines)
+        if (!version || saved.rows.some((row) => row.result && visible.filter((line) => line.id === row.draft.rowId &&
+            line.sec === (request.page === "OPEX" ? "opex" : "capex")).length !== 1))
+          return { commit: false, value: { status: "denied" as const, reason: "monthly-replay-row-unavailable" } }
+        return { commit: false, value: {
+          status: "ok" as const, value: { rows: saved.rows, view: monthlyView(initialView, actor) },
+        } }
+      }
       if (!version) return { commit: false, value: { status: "needs-input" as const, reason: "planner-version-unavailable" } }
       if (request.setting) {
         const setting = request.setting
@@ -103,6 +130,10 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       if (digestSfValue(await identify(snapshot).catch(() => undefined)) !== digestSfValue(actor) || !await allowed()) return { commit: false, value: { status: "denied" as const, reason: "monthly-authority-changed" } }
       const commit = results.some((row) => row.result?.ok === true)
       const response = { rows: results.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.result ? { result: row.result } : {}) })), view: monthlyView(domain.view(snapshot, actor, environment), actor) }
+      if (commit && receiptKey && requestDigest && authorityDigest) {
+        snapshot.sfPlannerMonthlyReceipts ??= {}
+        snapshot.sfPlannerMonthlyReceipts[receiptKey] = { requestDigest, authorityDigest, rows: response.rows }
+      }
       return { commit, value: { status: "ok" as const, value: response } }
     }, { signal: http.signal }).catch(() => ({ status: "unavailable" as const, reason: "monthly-storage-unavailable" }))
     if (!await allowed()) {

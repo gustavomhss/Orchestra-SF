@@ -38,7 +38,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     return operation
   }
 
-  async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
+  async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void, pathname = "/sucafina/dashboard") {
     const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
       ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
       : post(request) })
@@ -53,7 +53,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       waiters.set(page, owned)
       page.setDefaultTimeout(5_000)
       page.setDefaultNavigationTimeout(8_000)
-      await page.goto(new URL('/sucafina/dashboard', server.url).href)
+      await page.goto(new URL(pathname, server.url).href)
       expect(await within(page.evaluate(() => document.characterSet), "read fixture character set")).toBe("UTF-8")
       await check(page)
     } catch (error) { failure = error; throw error }
@@ -76,13 +76,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   const planner = `<div class="table-scroll"><table><tbody><tr><td>Planning line</td><td>Licenses</td><td><form data-command="save" data-page="OPEX" data-record="line" data-version="1"><input name="versionId" value="v1"><input name="collection" value="lines">${["b", "a", "f"].flatMap((prefix) => Array.from({ length: 12 }, (_, index) => `<input name="${prefix}${index}" value="100">`)).join("")}<button type="submit">Save row</button></form></td></tr></tbody></table></div><script>${plannerMonthlyScript}</script>`
 
+  function plannerCase(post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void) {
+    return browserCase(planner, (request) => {
+      expect(new URL(request.url).pathname).toBe("/sucafina/planner")
+      expect(new URL(request.url).search).toBe("?sf=workbench-planner")
+      return post(request)
+    }, check, release, "/sucafina/planner")
+  }
+
   test("monthly apply freezes its draft and replays the exact admitted request after a lost response", async () => {
     const calls: { body: string; key: string | null }[] = []
     const admitted = new Set<string | null>()
     const wait: { release?: () => void; started?: () => void } = {}
     const started = new Promise<void>((resolve) => { wait.started = resolve })
     try {
-      await browserCase(planner, async (request) => {
+      await plannerCase(async (request) => {
         const body = await request.text()
         const input = JSON.parse(body)
         const result = { status: "ok", value: { rows: input.input.drafts.map((draft: unknown) => ({ draft, errors: [], result: { ok: true } })) } }
@@ -128,7 +136,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   }, 30_000)
 
   test("the live monthly grid exposes only the published draft contract and preserves the existing record form", async () => {
-    await browserCase(planner, () => Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
+    await plannerCase(() => Response.json({ status: "unavailable" }, { status: 503 }), async (page) => {
       expect(await page.getByRole("button", { name: "Preview annual budget", exact: true }).count()).toBe(0)
       expect(await page.getByRole("button", { name: "Preview spread", exact: true }).count()).toBe(0)
       expect(await page.getByRole("button", { name: "Preview reset", exact: true }).count()).toBe(0)
@@ -143,7 +151,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("monthly apply times out while reading an unfinished response body and retries the identical request", async () => {
     const attempts: { body: string; key: string | null }[] = []
     const stream: { close?: () => void } = {}
-    await browserCase(planner, async (request) => {
+    await plannerCase(async (request) => {
       const body = await request.text()
       const input = JSON.parse(body)
       const result = { status: "ok", value: { rows: input.input.drafts.map((draft: unknown) => ({ draft, errors: [], result: { ok: true } })) } }
@@ -775,7 +783,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
   test("an unknown monthly write followed by a row conflict remains unresolved and locked", async () => {
     const attempts: { body: string; key: string | null }[] = []
-    await browserCase(planner, async (request) => {
+    await plannerCase(async (request) => {
       const body = await request.text()
       const input = JSON.parse(body)
       if (input.action === "apply") {

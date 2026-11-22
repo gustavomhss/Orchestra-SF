@@ -15,6 +15,7 @@ import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
+import { plannerMonthlyScript } from "../product/ui/planner-monthly.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -39,6 +40,7 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+  plannerMonthlyAvailable?: () => boolean
   productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
   assets?: { persistence: AssetPersistence; services: AssetServices }
 }
@@ -473,7 +475,9 @@ export function createApplication(mount: string, application: Application) {
           value: reply("Page implementation unavailable", 503),
         }
       const nav = allowed.map((key, index) => ({ key, index }))
-      const html = documentHtml(
+      const monthlyScript = surface === "planner" && (page === "OPEX" || page === "CAPEX") && actor.canWrite &&
+        application.plannerMonthlyAvailable?.() ? plannerMonthlyScript : undefined
+      const shell = documentHtml(
         surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",
         surface,
         links(nav),
@@ -490,11 +494,12 @@ export function createApplication(mount: string, application: Application) {
           : "",
         application.authMount,
       )
+      const html = monthlyScript ? shell.replace("</body>", () => `<script>${monthlyScript}</script></body>`) : shell
       return {
         commit: snapshot.audit.length !== auditBefore,
         value: reply(request.method === "HEAD" ? null : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(html),
+          "Content-Security-Policy": htmlPolicy(html, monthlyScript),
         }),
       }
     })

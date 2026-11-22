@@ -58,6 +58,8 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
   }
   work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
+  /** Case-bound selection UI is available only with the private collaboration adapter mounted. */
+  caseWorkSelection?: true
   /** Exact C58 human-authorized destination reader and its terminal witness.
    * Never expose producer authority, a grant factory or its resolver to UI. */
   /** Authorized, host-owned A07 projection. Never serializes authority or source ports. */

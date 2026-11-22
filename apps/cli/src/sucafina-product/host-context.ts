@@ -1139,6 +1139,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
+    ...(business.collaboration.caseSelection ? { caseWorkSelection: true as const } : {}),
     productView: business.procurementQueueView, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,

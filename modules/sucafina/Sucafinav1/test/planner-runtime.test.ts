@@ -1,4 +1,11 @@
 import { expect, test } from "bun:test"
+import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { createPlannerMonthlyHost } from "../product/planner/monthly-host.ts"
+import type { MonthlyRequest } from "../product/planner/monthly-host.ts"
+import type { TrustedUiContext } from "../product/contracts/sf-execution.ts"
+import { openLocalStore } from "../runtime/local-store.ts"
 import { domain, pages, render } from "../runtime/planner.ts"
 import type { Snapshot } from "../runtime/contract.ts"
 const actor = { id: "directory-admin", canWrite: true, roles: ["admin"] }
@@ -95,6 +102,65 @@ function run(
     environment,
   )
 }
+test("monthly apply replays the committed receipt after reopening SQLite without another write", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "planner-monthly-replay-"))
+  const fixture = { store: await openLocalStore(directory) }
+  const request = new Request("http://localhost/sucafina/planner?sf=workbench-planner", {
+    method: "POST",
+    headers: { "idempotency-key": "planner-monthly-lost-response" },
+  })
+  const context: TrustedUiContext = {
+    kind: "ui",
+    binding: {
+      installationId: "planner-installation", projectId: "planner-project", principalRef: actor.id,
+      requestId: "planner-first-request", policyVersion: "policy", accessRevision: "revision",
+      expiresAt: "2099-01-01T00:00:00.000Z",
+    },
+    lease: {} as TrustedUiContext["lease"],
+  }
+  const host = () => createPlannerMonthlyHost({
+    host: {
+      persistence: fixture.store,
+      requestFor: () => request,
+      authenticate: async () => ({ ...actor, roles: [{ surface: "planner", role: "admin" }] }),
+      environment: async () => environment,
+      revalidate: async () => true,
+    },
+    humanAuthorize: async () => true,
+  })
+  const input: MonthlyRequest = {
+    page: "OPEX", versionId: "v",
+    drafts: [{ rowId: "l", revision: 1, cells: [{ measure: "budget", month: 1, text: "88" }] }],
+  }
+  const readSnapshot = () => fixture.store.transaction("planner", async (current) => ({
+    commit: false, value: structuredClone(current),
+  }))
+  try {
+    await fixture.store.transaction("planner", async (current) => {
+      Object.assign(current, seeded())
+      expect(run(current, "OPEX", "save", "l", { annual: 1200 })).toMatchObject({ ok: true })
+      return { commit: true, value: undefined }
+    })
+    const first = await host().apply(input, context)
+    expect(first).toMatchObject({ status: "ok", value: { rows: [{ result: { ok: true } }] } })
+    const committed = await readSnapshot()
+    expect(Object.keys(committed.sfPlannerMonthlyReceipts ?? {})).toHaveLength(1)
+
+    await fixture.store.dispose()
+    fixture.store = await openLocalStore(directory)
+    const retry = { ...context, binding: { ...context.binding, requestId: "planner-retry-request" } }
+    expect(await host().apply(input, retry)).toEqual(first)
+    expect(await host().apply({
+      ...input, drafts: [{ rowId: "l", revision: 1, cells: [{ measure: "budget", month: 1, text: "89" }] }],
+    }, retry)).toMatchObject({ status: "conflict", reason: "monthly-idempotency-content-changed" })
+    expect(await host().apply(input, {
+      ...retry, binding: { ...retry.binding, accessRevision: "changed" },
+    })).toMatchObject({ status: "denied" })
+    expect(await readSnapshot()).toEqual(committed)
+  } finally {
+    try { await fixture.store.dispose() } finally { await rm(directory, { recursive: true, force: true }) }
+  }
+})
 test("line numerical operations preserve manual months and null versus zero", () => {
   const state = seeded()
   expect(run(state, "OPEX", "save", "l", { annual: 100000, el: "licenses" })).toMatchObject({ ok: true })
