@@ -1,0 +1,380 @@
+{
+  "schema": "sucafina-context-integrity-verification-attempt-v1",
+  "attempt": "attempt-02",
+  "classification": "PASS for the three selected follow-up gates; combined with attempt-01 on identical production files, all six selected verification gates have passing evidence",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "productTree": "1ed3cafc973db7f4103646c3f0fa06c1586a9ff5",
+    "snapshot": "d24f52d7c36d300e8d543a156da57154d7bd9b69",
+    "snapshotTree": "16e616f6fad99fe0b0f539995717a75ec4e4909b",
+    "previousProduct": "62b66c502640d31d35cae31ef354101aa9b25d81",
+    "productDelta": {
+      "commits": 2,
+      "files": [
+        {
+          "commit": "58126990696aa8c2ba5e59cc6192887dd4a30919",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+          "beforeBlob": "0ac9d8249d898fc799ec5dbc312c06906c38f071",
+          "afterBlob": "51dc68c5e4dced64641e265344aa3099e1301946",
+          "additions": 13,
+          "deletions": 10,
+          "change": "Replace the impossible prototype accessor redefinition with a configurable own update getter on a real CryptoHasher instance returned by a temporary constructor proxy.",
+          "preserved": "The getter deletes its own shadow, returns the original native update method, performs the same transient serializer mutation/restoration, and retains the original capture/current assertions.",
+          "observedEffect": "The previously blocked getter subcase completes; all seven cases pass and the assertion count rises from 96 to 100.",
+          "runtimeProductionChange": false
+        },
+        {
+          "commit": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "beforeBlob": "b67a3fd90eefc5ebf880528d22be2afcdc25c3c8",
+          "afterBlob": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4",
+          "additions": 1,
+          "deletions": 1,
+          "change": "Add the explicit expect<Snapshot | undefined> type argument to the existing optional currentSnapshot comparison.",
+          "preserved": "The transaction callback, returned value, optional currentSnapshot call and toEqual comparison are unchanged; only the assertion type argument changes.",
+          "observedEffect": "The Sucafina package typecheck now returns exit 0.",
+          "runtimeProductionChange": false
+        }
+      ],
+      "productionFilesChanged": 0,
+      "productionIdenticalToAttempt1": true,
+      "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/62b66c502640d31d35cae31ef354101aa9b25d81...e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d"
+    },
+    "wrapper": {
+      "path": "apps/cli/test/sucafina-design-verification.test.ts",
+      "sha": "f28bdc1b08fe74eeb7937c1b1fd2fe948677c413",
+      "unchangedFromAttempt1": true
+    },
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "e5d89e2b4d287cec178def3e28003f7a9dc7aeca",
+      "value": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "360000",
+          "-t",
+          "guardrails|immutable UI context integrity|Sucafina package typecheck"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "selection": "guardrails and the two previously failing new gates only"
+    },
+    "snapshotDelta": [
+      "add .ci-run.json",
+      "add the unchanged snapshot-only verification wrapper"
+    ]
+  },
+  "actions": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5context2",
+    "run": 45029061059,
+    "runAttempt": 1,
+    "runConclusion": "success",
+    "testJob": 137228382586,
+    "testConclusion": "success",
+    "cleanupJob": 137228762050,
+    "cleanupConclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45029061059",
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "targetedFollowup": true,
+    "artifacts": []
+  },
+  "budgetsMs": {
+    "requestBunTimeout": 360000,
+    "integrityCommand": 120000,
+    "integrityGate": 180000,
+    "sucafinaTypecheckCommand": 240000,
+    "sucafinaTypecheckGate": 300000,
+    "budgetsChangedFromAttempt1": false,
+    "integrityTestCustomTimeout": false
+  },
+  "wrapperResult": {
+    "pass": 3,
+    "fail": 0,
+    "tests": 3,
+    "files": 1,
+    "expectCalls": 7,
+    "reportedDurationSeconds": 19.14,
+    "gates": [
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8445533Z",
+        "status": "pass",
+        "name": "the composed candidate passes guardrails from the exact dev base",
+        "durationMs": 2847.31
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8743144Z",
+        "status": "pass",
+        "name": "immutable UI context integrity preserves opaque behavior and live authority",
+        "durationMs": 37.1
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:46.8915723Z",
+        "status": "pass",
+        "name": "the new context integrity tests pass the Sucafina package typecheck",
+        "durationMs": 16017.55
+      }
+    ]
+  },
+  "integrityTestResult": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+    "sha": "51dc68c5e4dced64641e265344aa3099e1301946",
+    "lines": 294,
+    "pass": 7,
+    "fail": 0,
+    "tests": 7,
+    "files": 1,
+    "expectCalls": 100,
+    "reportedDurationMs": 31,
+    "cases": [
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8736611Z",
+        "status": "pass",
+        "name": "immutable UI integrity remains separate from live admission and revocation",
+        "durationMs": 8.6
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8737367Z",
+        "status": "pass",
+        "name": "opaque contexts retain kind/binding getter order and the Root's already captured binding",
+        "durationMs": 0.46
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8738113Z",
+        "status": "pass",
+        "name": "mint inspects values after commandIdentity and the actual freeze result",
+        "durationMs": 0.77
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8738813Z",
+        "status": "pass",
+        "name": "serializer changes and inherited hooks retain the original canonical path",
+        "durationMs": 0.79
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8739548Z",
+        "status": "pass",
+        "name": "CryptoHasher hooks execute on fallback, including its original exception",
+        "durationMs": 0.46
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8740238Z",
+        "status": "pass",
+        "name": "a temporary hasher or update getter cannot attest a capture made under hooks",
+        "durationMs": 0.45
+      },
+      {
+        "wrapperLogTimestamp": "2026-11-22T13:45:30.8740920Z",
+        "status": "pass",
+        "name": "private integrity checks do not consult later Symbol or WeakMap method hooks",
+        "durationMs": 0.22
+      }
+    ]
+  },
+  "sucafinaTypecheck": {
+    "exitCode": 0,
+    "diagnostics": [],
+    "result": "pass"
+  },
+  "guardReport": {
+    "wrapperLogTimestamp": "2026-11-22T13:45:30.8399601Z",
+    "path": "guard-report.json",
+    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 731,
+    "warnings": 36,
+    "gateFindings": 0,
+    "errors": 0,
+    "approvals": 0,
+    "touchesGuards": false,
+    "parsedReportIdenticalToAttempt1": true
+  },
+  "commandEvidence": [
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:45:28.4682480Z",
+      "payload": {
+        "gate": "fetch pinned guard base",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=1",
+          "origin",
+          "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:45:28.4709388Z",
+      "payload": {
+        "gate": "resolve pinned guard base",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:45:30.8351972Z",
+      "payload": {
+        "gate": "guardrails",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev",
+          "--json"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:45:30.8734367Z",
+      "payload": {
+        "gate": "immutable UI context integrity regressions",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/ui-context-integrity.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "wrapperLogTimestamp": "2026-11-22T13:45:46.8916907Z",
+      "payload": {
+        "gate": "Sucafina package typecheck",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    }
+  ],
+  "combinedEvidence": {
+    "scope": "The six gates selected by the original context-integrity verification request",
+    "previousAttemptPath": "../attempt-01/receipt.json",
+    "previousRun": 45028131990,
+    "previousRunConclusion": "failure",
+    "previousWrapperResult": {
+      "pass": 4,
+      "fail": 2
+    },
+    "previousAttemptPreserved": true,
+    "productionByteIdentityConfirmed": true,
+    "twoChangesAreTestOnly": true,
+    "gateCoverage": [
+      {
+        "gate": "guardrails from the exact dev base",
+        "attempt": "attempt-02",
+        "run": 45029061059,
+        "testJob": 137228382586,
+        "result": "pass"
+      },
+      {
+        "gate": "permanent app-shell e2e typecheck",
+        "attempt": "attempt-01",
+        "run": 45028131990,
+        "testJob": 137225529279,
+        "result": "pass"
+      },
+      {
+        "gate": "CLI package typecheck",
+        "attempt": "attempt-01",
+        "run": 45028131990,
+        "testJob": 137225529279,
+        "result": "pass"
+      },
+      {
+        "gate": "original four-file LocalStore / CurrentChoice / C17 / Finance composition",
+        "attempt": "attempt-01",
+        "run": 45028131990,
+        "testJob": 137225529279,
+        "result": "pass"
+      },
+      {
+        "gate": "UI context integrity regressions",
+        "attempt": "attempt-02",
+        "run": 45029061059,
+        "testJob": 137228382586,
+        "result": "pass"
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "attempt": "attempt-02",
+        "run": 45029061059,
+        "testJob": 137228382586,
+        "result": "pass"
+      }
+    ],
+    "allSixRunTogetherInAttempt2": false,
+    "compositionGroupRerunInAttempt2": false,
+    "c17PhaseEventsInAttempt2": 0,
+    "c17EvidenceLocation": "../attempt-01/phase-events.json",
+    "limits": [
+      "Attempt-01 remains a global failure; its historical result is not rewritten.",
+      "Attempt-02 passed only its three selected gates. The CLI, e2e and original composition evidence comes from attempt-01.",
+      "The LocalStore test correction is an explicit type argument; its runtime assertion is unchanged. The corrected context test is executed in attempt-02.",
+      "No original C17 phases are rerun or duplicated by this attempt or archive.",
+      "This is selected verification coverage across two runs with identical production files, not an installed UI qualification or causal performance measurement."
+    ],
+    "allSixSelectedGatesHavePassingEvidence": true
+  },
+  "qualification": {
+    "installedUiQualification": false,
+    "ui42": "pending",
+    "ui43": "pending",
+    "ui44": "pending",
+    "blockQualifiedSurfaces": 12,
+    "blockTotalSurfaces": 15,
+    "acceptedMergedTotal": 41,
+    "countChanges": false,
+    "selectedVerificationGatesCoveredAcrossAttempts": true
+  },
+  "archive": {
+    "qaOnly": true,
+    "parentQa": "cf542d73d752595f2ba646285da01497654d993e",
+    "qaBranchProductBase": "62b66c502640d31d35cae31ef354101aa9b25d81",
+    "testedProduct": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "note": "This QA-only branch append does not copy the test corrections into the QA branch; the exact tested source is referenced by immutable product/snapshot SHAs.",
+    "rawLogsCommitted": false,
+    "runtimeOrTestChanges": false,
+    "newCiExecution": false
+  }
+}
