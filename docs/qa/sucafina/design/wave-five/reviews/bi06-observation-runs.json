@@ -56,7 +56,7 @@
         "fail": 1,
         "expectations": 68
       },
-      "reason": "HTTP fixture read choices at envelope root; original bi-options returns PortResult.value (investigating exact handler)"
+      "reason": "Test oracle read choices at envelope root; original bi-options returns PortResult.value. Corrected test only."
     },
     {
       "branch": "ci-run-sf5biclock2",
@@ -73,7 +73,7 @@
         "fail": 1,
         "expectations": 82
       },
-      "scope": "C16 and original HTTP data/source-link positives and all prior boundary tests pass; provider replacement refused with original dispatcher reason (inspect actual)."
+      "scope": "Original HTTP options/data/source links and prior groups passed; provider replacement was correctly refused by original C16 binding-unavailable, while the test expected a private holder reason. Test oracle corrected and positive delegated-provider controls added."
     },
     {
       "branch": "ci-run-sf5biclock3",
@@ -99,5 +99,117 @@
     "native non-UI calls remain outside the holder",
     "no projection/source/authority caching, no producer or grant change",
     "CLI types/guards and installed browser are separate composed gates"
-  ]
+  ],
+  "installedQualifications": [
+    {
+      "attempt": 1,
+      "run": 44988337151,
+      "job": 137103725904,
+      "cleanup": 137105018246,
+      "snapshot": "9472494bd3fd208f7e80d3e76e500a11960c7d95",
+      "product": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+      "testSummary": "1 passed (4.6m)",
+      "status": "success",
+      "visualOutcome": "changes-required",
+      "manifest": "bi-native-attempt-01/manifest.json",
+      "artifact": {
+        "id": 14740533334,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 32595431,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14740533334",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14740533334/zip",
+        "expired": false,
+        "created_at": "2026-11-22T05:17:30Z",
+        "expires_at": "2026-11-29T05:17:28Z",
+        "updated_at": "2026-11-22T05:17:30Z",
+        "digest": "sha256:1c0a901f3105f2bb36fd3739fe94b256176a427aed37319db1c2effdbbd35e5f",
+        "workflow_run": {
+          "id": 44988337151,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf5binative1",
+          "head_sha": "9472494bd3fd208f7e80d3e76e500a11960c7d95"
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "run": 44989634639,
+      "job": 137107669401,
+      "cleanup": 137108862702,
+      "snapshot": "74d1de6ad2454712d1d430a9165b17f9cecf1051",
+      "product": "22f0eae12c4bb42684cc28b35d10f35ac3243b71",
+      "testSummary": "1 passed (3.9m)",
+      "status": "success",
+      "visualOutcome": "12 selected images approved; one manually inspected bad crop retained and superseded by native3; other27 not manually inspected by this reviewer",
+      "manifest": "bi-native-attempt-02/manifest.json",
+      "artifact": {
+        "id": 14741277986,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 36766392,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741277986",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741277986/zip",
+        "expired": false,
+        "created_at": "2026-11-22T05:35:00Z",
+        "expires_at": "2026-11-29T05:34:57Z",
+        "updated_at": "2026-11-22T05:35:00Z",
+        "digest": "sha256:f16fede2b526ac20fb6569a9614168bc37b0dbc7e8a4ffa4d5e43179c3311a70",
+        "workflow_run": {
+          "id": 44989634639,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf5binative2",
+          "head_sha": "74d1de6ad2454712d1d430a9165b17f9cecf1051"
+        }
+      }
+    },
+    {
+      "attempt": 3,
+      "run": 44990477521,
+      "job": 137110210773,
+      "cleanup": 137111188106,
+      "snapshot": "fa6b988e79c820886ad80f32e66a3ed664ad83c4",
+      "product": "01ced03042f396941902820487db67cf469336c4",
+      "testSummary": "1 passed (3.2m)",
+      "status": "success",
+      "visualOutcome": "approved selected BI06 images; exact set below",
+      "manifest": "bi-native-attempt-03/manifest.json",
+      "artifact": {
+        "id": 14741114781,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 12520247,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741114781",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14741114781/zip",
+        "expired": false,
+        "created_at": "2026-11-22T05:45:49Z",
+        "expires_at": "2026-11-29T05:45:48Z",
+        "updated_at": "2026-11-22T05:45:49Z",
+        "digest": "sha256:48e8b3677bed1e256f53c148887acd19304ca7feca583c57a366d3f0d5c0c577",
+        "workflow_run": {
+          "id": 44990477521,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf5binative3",
+          "head_sha": "fa6b988e79c820886ad80f32e66a3ed664ad83c4"
+        }
+      }
+    }
+  ],
+  "typeQualification": {
+    "run": 44989840123,
+    "job": 137108269511,
+    "snapshot": "b4896d460a32549f0eb37be3c21564968fd2cda9",
+    "productPrefix": "796c7f2",
+    "status": "success",
+    "checks": [
+      "app-shell typecheck",
+      "permanent E2E typecheck",
+      "CLI typecheck"
+    ],
+    "diagnostics": 0,
+    "omniSpawns": 3,
+    "reportedBy": "root",
+    "product": "796c7f27634dca55e25087cb44d1a0fe45a06cf9",
+    "scopeNote": "Before final capture-only7d4 spec; runtime formatter and CLI observation code included."
+  }
 }
