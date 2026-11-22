@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.operations63.scanner-tools.v1",
+  "version": "1.5.4",
+  "platform": "linux-x86_64",
+  "asset": {
+    "name": "clamav-1.5.4.linux.x86_64.deb",
+    "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+    "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+    "size": 105819396,
+    "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+    "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+  },
+  "source_commit": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+  "source_tag_object": "2cbd122d3a401b9bded52ef6bf201bff605af474",
+  "source_files": {
+    "CMakeLists.txt": "7ebb1c3834057707042ab5564689f3807a47f0e6",
+    "INSTALL.md": "5fc4bf7116c7a4183714a05eb88a57d8c37c20b8",
+    "clamd/CMakeLists.txt": "0ad10506520625052b6f219daad5064145c6de8c",
+    "freshclam/CMakeLists.txt": "1aad53091e712a24052e937945bc8e5306b4b3ac",
+    "etc/clamd.conf.sample": "73be60eae8a266743e75b668dd606eb20436f067",
+    "etc/freshclam.conf.sample": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
+  },
+  "relocation": {
+    "prefix": "usr/local",
+    "clamd": "sbin/clamd",
+    "freshclam": "bin/freshclam",
+    "certificates": "etc/certs",
+    "library_paths": ["lib", "lib64"],
+    "note": "Upstream defaults to /usr/local and build-time RPATH. Setup uses process-scoped LD_LIBRARY_PATH, explicit database/certificate/config paths, and rejects missing dynamic dependencies or relocated tools that cannot report the pinned version. No claim that the unexecuted package has already relocated successfully."
+  },
+  "database": {
+    "mirror": "database.clamav.net",
+    "required": ["main", "daily", "bytecode"],
+    "official_only": true,
+    "synthetic_database_allowed": false
+  },
+  "services": {
+    "main": { "host": "127.0.0.1", "port": 3310, "stream_max_length": 16777216 },
+    "error": { "host": "127.0.0.1", "port": 3311, "stream_max_length": 1024 }
+  },
+  "bounds_seconds": { "download": 180, "freshclam": 300, "readiness": 180, "cleanup": 10 }
+}
