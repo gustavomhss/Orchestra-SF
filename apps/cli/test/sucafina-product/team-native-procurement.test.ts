@@ -65,7 +65,7 @@ async function fixture() {
       state.requests.add(request)
       const reader = createSfTeamNativeProcurement({
         request, handler, binding, profile, current: async () => {
-          if (state.loseOnFinalCurrent && state.contextReads >= 2) state.role = "none"
+          if (state.loseOnFinalCurrent && state.contextReads >= 2 && state.authReads >= 2) state.role = "none"
           return state.current
         },
         async readContext(original, query) {
@@ -245,12 +245,14 @@ for (const race of ["context", "current"] as const) test("Team CAP25 rechecks Pr
     expect(await admitted.text()).toContain("Private row before role revocation")
     const before = f.durable()
     f.state.contextReads = 0
+    f.state.authReads = 0
     f.state.loseOnSecondContext = race === "context"
     f.state.loseOnFinalCurrent = race === "current"
     const response = await f.read()
     expect(response.status).toBe(409)
     expect(await response.json()).toEqual({ status: "stale", reason: "procurement-source-changed" })
     expect(f.state.contextReads).toBe(2)
+    expect(f.state.authReads).toBe(race === "current" ? 3 : 2)
     expect(f.state.current).toBe(true)
     expect(f.context().stamp.accessRevision).toBe("access-1")
     expect(f.durable()).toEqual(before)
