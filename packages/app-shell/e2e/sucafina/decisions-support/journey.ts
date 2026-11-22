@@ -4,6 +4,28 @@ import { Schema } from "effect"
 import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 
+const decisionsProbeEpoch = Date.now()
+let decisionsProbeCall = 0
+function probeDecisionPhase(event: string, fields: Record<string, unknown> = {}) {
+  console.info("MIGRATION_DECISIONS_DIAGNOSTIC", JSON.stringify({
+    event, ms: Date.now() - decisionsProbeEpoch, ...fields, qualification: false,
+  }))
+}
+async function probeChoiceSelection(page: Page, event: string, call: number, mode: string) {
+  const state = await page.evaluate(() => {
+    const form = document.querySelector<HTMLFormElement>("form[data-decision-choice]")
+    const baseline = form?.querySelector<HTMLSelectElement>('select[name="baseline"]')
+    const alternative = form?.querySelector<HTMLSelectElement>('select[name="alternative"]')
+    const compare = form?.querySelector<HTMLButtonElement>("[data-compare]")
+    return { formPresent: !!form, connected: !!form?.isConnected, dirty: form?.dataset.dirty === "true",
+      baselinePresent: !!baseline, alternativePresent: !!alternative,
+      sameSelection: !!baseline && !!alternative && baseline.value === alternative.value,
+      baselineFirst: baseline?.selectedIndex === 0, alternativeFirst: alternative?.selectedIndex === 0,
+      compareDisabled: !!compare?.disabled }
+  }).catch(() => ({ selectionObserved: false }))
+  probeDecisionPhase(event, { call, mode, ...state })
+}
+
 const chapterOwners = new WeakMap<ReturnType<Page["context"]>, { origin: string; project: string; installation: string }>()
 
 export function decisionsChapterURL(page: Page, origin: string, path: string) {
@@ -52,6 +74,7 @@ export async function withInstallation(page: Page, info: TestInfo,
   const listener = (request: Request) => {
     const url = new URL(request.url())
     if (url.origin !== installation.origin || !url.searchParams.has("sf")) return
+    probeDecisionPhase("request", { method: request.method(), mode: url.searchParams.get("sf") })
     const body: unknown = request.method() === "POST" && request.headers()["content-type"]?.includes("application/json")
       ? request.postDataJSON() : undefined
     requests.push({ method: request.method(), mode: url.searchParams.get("sf")!,
@@ -63,6 +86,8 @@ export async function withInstallation(page: Page, info: TestInfo,
   const onConsole = (message: { type: () => string; text: () => string }) => { if (message.type() === "error") diagnostics.push(receiptDiagnostic(`console.error: ${message.text()}`)) }
   const onResponse = (response: Response) => {
     const url = new URL(response.url())
+    if (url.origin === installation.origin && url.pathname === "/sucafina/dashboard" && url.searchParams.has("sf"))
+      probeDecisionPhase("response", { method: response.request().method(), mode: url.searchParams.get("sf"), status: response.status() })
     if (url.origin === installation.origin && (url.pathname.startsWith("/sucafina/api/ui/") ||
         url.pathname === "/sucafina/planner" || url.pathname === "/sucafina/procurement"))
       diagnostics.push(`http ${response.request().method()} ${url.pathname} ${response.status()}`)
@@ -73,12 +98,22 @@ export async function withInstallation(page: Page, info: TestInfo,
   page.on("response", onResponse)
   page.on("pageerror", onPageError)
   page.on("framenavigated", onNavigated)
+  const failed = (request: Request) => {
+    const url = new URL(request.url())
+    if (url.origin === installation.origin && url.searchParams.has("sf"))
+      probeDecisionPhase("requestfailed", { method: request.method(), mode: url.searchParams.get("sf"),
+        error: request.failure()?.errorText.match(/^net::ERR_[A-Z_]+$/)?.[0] ?? "transport-failed" })
+  }
+  page.on("requestfailed", failed)
+  page.once("close", () => probeDecisionPhase("page-close"))
   try {
     const { binding } = await installation.signIn(page)
     chapterOwners.set(page.context(), { origin: binding.publicOrigin, project: binding.projectId, installation: binding.installationId })
     await action(installation, observations)
     body.completed = true
   } finally {
+    probeDecisionPhase("installation-finally-entered")
+    page.off("requestfailed", failed)
     chapterOwners.delete(page.context())
     page.off("request", listener)
     page.off("console", onConsole)
@@ -92,7 +127,11 @@ export async function withInstallation(page: Page, info: TestInfo,
         verdict: "The Playwright runtime report owns the terminal test result.",
         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
       }, null, 2) })
-    } finally { await installation.stop() }
+    } finally {
+      probeDecisionPhase("installation-stop-start")
+      await installation.stop()
+      probeDecisionPhase("installation-stop-finished")
+    }
   }
 }
 
@@ -187,10 +226,13 @@ type PausedCommand = {
  */
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
+  const call = ++decisionsProbeCall
+  probeDecisionPhase("command-start", { call, mode, method })
   const origin = new URL(page.url()).origin
   const session = await page.context().newCDPSession(page)
   const captured = Promise.withResolvers<{ url: string; status: number; contentType: string; json: string }>()
   session.once("Fetch.requestPaused", async (event: PausedCommand) => {
+    probeDecisionPhase("fetch-paused", { call, mode, method: event.request.method, status: event.responseStatusCode ?? null })
     try {
       const url = new URL(event.request.url)
       expect(url.origin).toBe(origin)
@@ -201,26 +243,40 @@ export async function clickCommand(page: Page, button: Locator, mode: string, ob
       if (typeof status !== "number") throw new Error("Missing original command HTTP status")
       const headers = event.responseHeaders ?? []
       const contentType = headers.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
+      probeDecisionPhase("get-body-start", { call, mode })
       const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      probeDecisionPhase("get-body-finished", { call, mode })
       const bytes = raw.base64Encoded ? Buffer.from(raw.body, "base64") : Buffer.from(raw.body, "utf8")
+      probeDecisionPhase("fulfill-start", { call, mode })
       await session.send("Fetch.fulfillRequest", { requestId: event.requestId, responseCode: status,
         responseHeaders: headers, body: bytes.toString("base64") })
+      probeDecisionPhase("fulfill-finished", { call, mode })
       captured.resolve({ url: event.request.url, status, contentType, json: bytes.toString("utf8") })
     } catch (error) {
       try { await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "Failed" }) }
       catch { /* Already released by the browser; surface original error below. */ }
+      probeDecisionPhase("capture-rejected", { call, mode })
       captured.reject(error)
     }
   })
+  probeDecisionPhase("fetch-enable-start", { call, mode })
   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=${mode}*`, requestStage: "Response" }] })
+  probeDecisionPhase("fetch-enable-finished", { call, mode })
   try {
+    await probeChoiceSelection(page, "before-click", call, mode)
     await button.click()
+    probeDecisionPhase("click-finished", { call, mode })
+    await probeChoiceSelection(page, "after-click", call, mode)
     const reply = await captured.promise
+    probeDecisionPhase("capture-resolved", { call, mode })
     return checkedReply({ mode: new URL(reply.url).searchParams.get("sf"), httpStatus: reply.status, contentType: reply.contentType },
       () => JSON.parse(reply.json), observations)
   } finally {
+    probeDecisionPhase("fetch-disable-start", { call, mode })
     await session.send("Fetch.disable")
+    probeDecisionPhase("fetch-disable-finished", { call, mode })
     await session.detach()
+    probeDecisionPhase("fetch-detached", { call, mode })
   }
 }
 
