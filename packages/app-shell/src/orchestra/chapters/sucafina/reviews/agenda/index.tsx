@@ -1,11 +1,13 @@
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
+import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
+import { encodeSfRouteRef } from "../../navigation-state"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
@@ -35,6 +37,7 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
@@ -52,6 +55,16 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   let sourceAbort: AbortController | undefined
   let commandAbort: AbortController | undefined
   const ready = () => owner.ready()
+  const openPreserved = () => {
+    if (!ready() || !store.preserved) return
+    const query = new URLSearchParams({
+      server: props.route.ownerSelection.serverKey,
+      project: props.route.ownerSelection.projectId,
+    })
+    if (props.route.ownerSelection.installationId)
+      query.set("installation", props.route.ownerSelection.installationId)
+    navigate("/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(store.preserved.id) + "?" + query)
+  }
   const authorized = (operationId: string) => operationGranted(ready()?.context, operationId, { family: "reviews", resource: "agenda" })
   const mayPreview = () => authorized("dashboard.dashboard-agenda")
   const mayPreserve = () => authorized("dashboard.dashboard-review-preserve")
@@ -258,8 +271,8 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     >
       <div class="sf-n28" data-sf-surface="UI47" data-sf-wave="five" data-phase={store.phase}>
         <header class="sf-review-intro">
-          <h2>{t(store.phase === "reviewing" ? "sf.u25.previewTitle" : "sf.u25.prepareHeading")}</h2>
-          <p>{t(store.phase === "reviewing" ? "sf.u25.previewHint" : "sf.u25.prepareHint")}</p>
+          <h2>{t(store.phase === "confirmed" ? "sf.u25.confirmedHeading" : store.phase === "reviewing" ? "sf.u25.previewTitle" : "sf.u25.prepareHeading")}</h2>
+          <p>{t(store.phase === "confirmed" ? "sf.u25.created" : store.phase === "reviewing" ? "sf.u25.previewHint" : "sf.u25.prepareHint")}</p>
         </header>
         <div class="sf-review-workbench" hidden={store.phase === "reviewing" || store.phase === "confirmed"}>
         <section class="mx-card sf-review-source">
@@ -343,12 +356,13 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           </section>
         </Show>
         <Show when={store.phase === "confirmed" && store.preserved}>
-          <section role="status" class="mx-card" data-sf-preserved-confirmed>
-            <p>{t("sf.u25.created")}</p>
-            <dl>
-              <dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd>
-              <dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd>
+          <section class="mx-card sf-n28-section sf-review-stage" data-sf-preserved-confirmed>
+            <dl class="sf-n28-summary">
+              <div><dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd></div>
+              <div><dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd></div>
             </dl>
+            <div class="sf-n28-actions"><button class="mx-btn primary" type="button"
+              disabled={!ready()} onClick={openPreserved}>{t("sf.u32.openReview")}</button></div>
           </section>
         </Show>
         <Show when={store.phase === "outcome-unknown"}>

@@ -212,7 +212,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
         <SfStatePanel state={store.readState}
           messageKey={key(recovery() || typeof store.marker === "string" ? "sf.common.unavailable" :
             !ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
-          onRetryRead={() => setStore("retry", (count) => count + 1)}>
+          onRetryRead={ref() ? () => setStore("retry", (count) => count + 1) : undefined}>
           <Show when={store.review}>{(review) => <section class="sf-n28-section" data-preserved-review={review().id}>
             <dl class="sf-n28-summary mx-card">
               <div><dt>{t("sf.u33.review")}</dt><dd>{review().id}</dd></div>

@@ -167,7 +167,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         <SfStatePanel
           state={store.status}
           messageKey={key(!ref() ? "sf.u32.listUnavailable" : "sf.u32.reviewUnavailable")}
-          onRetryRead={() => setStore("retry", (value) => value + 1)}
+          onRetryRead={ref() ? () => setStore("retry", (value) => value + 1) : undefined}
         >
           <Show when={store.review}>
             {(review) => <article data-review-ref={review().id} data-review-version={review().version}>

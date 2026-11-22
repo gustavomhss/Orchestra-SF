@@ -1,6 +1,7 @@
 import { expect, type Page, type Request } from "@playwright/test"
 import { Schema } from "effect"
 import { SfReviewDomainProjection } from "@orchestra/schema/sucafina/reviews"
+import { readPreservedProjection } from "../../src/orchestra/chapters/sucafina/reviews/preserved/model"
 import { seedWaveFiveReviewProposal } from "./design-support/wave-five-reviews-seed"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { waveFourTest, enter, observePage, scheme, reflow, capture, scrollPageTop } from "./design-support/wave-four"
@@ -125,6 +126,24 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       error: String(error).replace(/[a-f0-9]{64}/g, "[redacted]").slice(0, 7000) }))
     throw error
   }
+  const decoded = readPreservedProjection(originalContent)
+  if (!decoded) throw new Error("Original preserved projection must decode without fabricated fields")
+  expect(decoded.values.length).toBeGreaterThan(0)
+  const corruptions: ((content: Record<string, unknown>) => void)[] = [
+    (content) => { delete content.context },
+    (content) => { object(content.context).capabilities = undefined },
+    (content) => { object(object(content.context).period).unexpected = "not an original period field" },
+    (content) => { const values = content.values as unknown[]; object(values[0]).value = Number.NaN },
+    (content) => { const values = content.values as unknown[]; object(values[0]).granularity = "invented" },
+  ]
+  for (const corrupt of corruptions) {
+    const invalid = structuredClone(originalContent)
+    corrupt(invalid)
+    expect(readPreservedProjection(invalid)).toBeUndefined()
+  }
+  await page.locator("[data-sf-preserved-confirmed]").getByRole("button", { name: "Open preserved review", exact: true }).click()
+  await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(first))
+  await expect(page.locator('[data-sf-surface="UI48"] .sf-n28-values > div')).toHaveCount(decoded.values.length)
   await selectAgenda(page, owner, installation.origin, installation.year)
   const second = await preserve(page)
   expect(first).not.toBe(second)
@@ -147,7 +166,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       await screen(page, owner, entry)
       await scheme(page, color)
       if (entry.id === "UI49") {
-        await page.getByRole("button", { name: "Compare reviews", exact: true }).click()
+        await page.locator(".sf-review-compare-form").getByRole("button", { name: "Read and compare authorized reviews", exact: true }).click()
         await expect(page.locator("[data-sf-comparison-compatibility]")).toHaveAttribute("data-sf-comparison-compatibility", "compatible", { timeout: 40_000 })
         await expect(page.getByText("Section order changed between preserved revisions.", { exact: true })).toHaveCount(0)
         await expect(page.locator('[data-change-numeric="true"]')).toHaveCount(0)
@@ -202,7 +221,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
     if (index === 0 || index === 4) continue
     await screen(page, owner, entry)
     if (entry.id === "UI49") {
-      await page.getByRole("button", { name: "Compare reviews", exact: true }).click()
+      await page.locator(".sf-review-compare-form").getByRole("button", { name: "Read and compare authorized reviews", exact: true }).click()
       await expect(page.locator("[data-sf-comparison-compatibility]")).toBeVisible({ timeout: 40_000 })
     }
     await capture(page, info, names[index] + "-dark-390-test-data")
@@ -245,7 +264,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       if (index === 0 || index === 4) continue
       await screen(localized, owner, entry, true)
       if (entry.id === "UI49") {
-        await localized.getByRole("button", { name: "Comparar revisões", exact: true }).click()
+        await localized.locator(".sf-review-compare-form").getByRole("button", { name: "Ler e comparar revisões autorizadas", exact: true }).click()
         await expect(localized.locator("[data-sf-comparison-compatibility]")).toBeVisible({ timeout: 40_000 })
       }
       await capture(localized, info, names[index] + "-pt-BR-dark-desktop-test-data")

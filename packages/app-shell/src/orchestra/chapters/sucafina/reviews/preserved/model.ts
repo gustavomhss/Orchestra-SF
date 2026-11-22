@@ -1,4 +1,5 @@
 import { Option, Schema } from "effect"
+import { unwrap } from "solid-js/store"
 import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
 import type { SfUiState } from "../../shared/frame"
 
@@ -102,7 +103,14 @@ function covers(period: { start: string; end: string } | undefined, section: { s
 
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
-  const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(content)
+  // Solid adds symbol metadata to reactive objects. Restore only a store proxy
+  // to plain source data before applying the unchanged, closed producer codec.
+  let source: unknown = content
+  try {
+    const unwrapped = unwrap(content)
+    if (unwrapped !== content) source = structuredClone(unwrapped)
+  } catch { return undefined }
+  const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(source)
   return Option.isSome(decoded) ? decoded.value : undefined
 }
 
