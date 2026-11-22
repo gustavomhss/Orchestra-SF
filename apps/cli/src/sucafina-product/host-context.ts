@@ -1,3 +1,4 @@
+import { runSfOperationalReadPhase } from "./native-ui/operational-read-phase.ts"
 export { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 export { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfProcurementScenarioHttp } from "./procurement-scenario-services.ts"
@@ -1008,218 +1009,223 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
     operational: async (request, stamp) => {
-      const observations = await Promise.allSettled([
-        input.operational?.(request, stamp) ?? Promise.resolve([]),
-        observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          source: () => identity() && services.personalViews === personalViews ? personalViews : undefined }, request, stamp),
-        observeSfImportHealth({ authority, binding: input.nativeReadBinding, source: () => {
-          if (!identity() || services.productHttp !== productHttp || !imports || !input.assets) return undefined
-          return { producer: productHttp, handler: importHttp, service: imports,
-            persistence: input.persistence, assets: input.assets,
-            dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
-              authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity,
-              input.persistence.readScopedSource, input.persistence.resolveScopedSource, imports.descriptors] }
-        } }, request, stamp),
-        observeSfDocumentHealth({ authority, binding: input.nativeReadBinding, source: () =>
-          identity() && services.productHttp === productHttp && documents && input.assets
-            ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
-        }, request, stamp),
-        observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-          binding: input.nativeReadBinding, source: () =>
-            identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&
-              documents && services.documents === documents.documents && input.assets
-              ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets,
-                catalog: descriptors, dispatch: nativeSearchDispatch } : undefined,
-        }, request, stamp),
-        observeSfCollaborationReadingHealth({
-          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-          binding: input.nativeReadBinding, source: (id) => {
-            if (services.productHttp !== productHttp || !identity()) return undefined
-            const c = business.collaboration
-            const handlers = [collaborationHttp.get("dashboard"), collaborationHttp.get("planner"), collaborationHttp.get("procurement")]
-            if (handlers.some((handler) => typeof handler !== "function")) return undefined
-            const dependencies: object[] = [business, c, c.authority, c.authority.sources, collaborationHttp,
-              collaborationHuman, collaborationHuman.admit, collaborationHuman.authorize, collaborationHuman.finish,
-              authority, authority.ui, authority.host, authority.state, authority.state.read, authority.state.transaction, input.persistence]
-            for (const handler of handlers) { if (handler) dependencies.push(handler) }
-            switch (id) {
-              case "collaboration.relation-read": dependencies.push(c.relations, c.relations.read, c.relations.readByReference); break
-              case "collaboration.relation-create": dependencies.push(c.relations, c.relations.create); break
-              case "collaboration.relation-remove": dependencies.push(c.relations, c.relations.remove); break
-              case "collaboration.thread-read":
-                dependencies.push(c.threads, c.threads.read)
-                if (c.recipientThread) dependencies.push(c.recipientThread)
-                break
-              case "collaboration.thread-reply":
-                dependencies.push(c.threads, c.threads.read, c.threads.reply)
-                if (c.recipientThread) dependencies.push(c.recipientThread)
-                if (c.recipientActions) dependencies.push(c.recipientActions, c.recipientActions.reply)
-                if (c.replyInstalledReview) dependencies.push(c.replyInstalledReview)
-                break
-              case "collaboration.confirmation-prepare":
-                if (!c.confirmation) return undefined
-                dependencies.push(c.confirmation, c.confirmation.prepare); break
-              case "collaboration.confirmation-project":
-                if (!c.confirmation) return undefined
-                dependencies.push(c.confirmation, c.confirmation.project, c.confirmation.readSelection); break
-              case "collaboration.confirmation-confirm":
-                if (!c.confirmation) return undefined
-                dependencies.push(c.confirmation, c.confirmation.confirm); break
-              case "collaboration.storage-version": dependencies.push(c.storageVersion); break
-            }
-            return { producer: productHttp, dependencies }
-          },
-        }, request, stamp),
-        observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
-        observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
-        observeSfDashboardDraftHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          humanActions: authority.humanActions, source: (operationId) => {
-            if (services.productHttp !== productHttp || !identity() || !input.persistence.transactionAll ||
-              !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
-            const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
-            const operation = operationId === "dashboard.dashboard-capture" ? dashboard.capture :
-              operationId === "dashboard.dashboard-workbench" ? dashboard.discover :
-              operationId === "dashboard.dashboard-hot-topic-source" ? dashboard.issue :
-              operationId === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
-              operationId === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
-              operationId === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list : decisions.drafts.lookupFirstSave
-            return { producer: productHttp, handler: dashboardHttp, operation,
+      // Arbitrary extensions run and are awaited outside this audited read root.
+      const external = input.operational?.(request, stamp) ?? Promise.resolve([])
+      const scoped = runSfOperationalReadPhase(input.persistence, request, async () => {
+        const internal = await Promise.allSettled([
+          observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            source: () => identity() && services.personalViews === personalViews ? personalViews : undefined }, request, stamp),
+          observeSfImportHealth({ authority, binding: input.nativeReadBinding, source: () => {
+            if (!identity() || services.productHttp !== productHttp || !imports || !input.assets) return undefined
+            return { producer: productHttp, handler: importHttp, service: imports,
+              persistence: input.persistence, assets: input.assets,
               dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
-                authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity, authority.human,
-                authority.human.admit, authority.human.authorize, authority.humanActions, authority.state.transaction,
-                dashboard, dashboard.discover, dashboard.issue, dashboard.capture, dashboard.observer, dashboard.observer.preparePrivateDraftRead,
-                decisions, decisions.discover, decisions.revalidateDraftRead, decisions.drafts, decisions.drafts.register,
-                decisions.drafts.readCurrent, decisions.drafts.list, decisions.drafts.lookupFirstSave,
-                business.cases, business.cases.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
-                business.dashboardRecords, business.dashboardRecords.issue, business.dashboardRecords.resolve, business.dashboardRecords.read,
-                input.persistence, input.persistence.transaction, input.persistence.transactionAll,
-                input.persistence.readScopedSource, input.persistence.resolveScopedSource] }
+                authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity,
+                input.persistence.readScopedSource, input.persistence.resolveScopedSource, imports.descriptors] }
           } }, request, stamp),
-        observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          humanActions: authority.humanActions, source: () => {
-            if (services.productHttp !== productHttp || !identity()) return undefined
-            return { producer: productHttp, handler: dashboardHttp, dashboard: business.dashboardServices,
-              dependencies: [authority, authority.ui, authority.state, authority.state.transaction, authority.human, authority.human.admit,
-                authority.human.authorize, authority.humanActions, dashboardHttp, business.dashboardServices,
-                business.dashboardServices.agenda, business.dashboardServices.preserveReview, business.dashboard, business.dashboard.read,
-                business.dashboardSources, business.dashboardSources.resolveDashboardSource, business.dashboardRecords,
-                business.dashboardRecords.issue, business.dashboardRecords.resolve, input.persistence, input.persistence.transaction, input.persistence.resolveScopedSource] }
-          } }, request, stamp),
-        observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          source: (operationId) => {
-            if (operationId === "dashboard.dashboard-review") {
-              if (services.productHttp !== productHttp) return undefined
-              return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
-                business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
-            }
-            if (!nativeReviewProjection || services.nativeReviewProjection !== nativeReviewProjection || !extended.reviews) return undefined
-            return { producer: nativeReviewProjection, dependencies: [authority, authority.ui, authority.state, nativeReviewProjection.handle,
-              extended.reviews, extended.reviews.reviews, extended.reviews.reviews.read, business.dashboardServices,
-              business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
-              input.persistence, input.persistence.resolveScopedSource] }
-          } }, request, stamp),
-        observeSfPortfolioReadingHealth({
-          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-          binding: input.nativeReadBinding, source: (id) => {
-            const portfolio = extended.portfolioServices, product = portfolio.product
-            if (services.productHttp !== productHttp || !identity() || !product ||
-              extended.portfolio !== product || !business.plannerProduct.scenarios) return undefined
-            const dependencies: object[] = [authority, authority.ui, authority.host, authority.host.revalidate,
-              authority.host.requestFor, authority.human, authority.human.admit, authority.human.authorize,
-              authority.state, authority.state.read, authority.state.transaction,
-              portfolioHttp, portfolio, portfolio.http, product, product.http, product.contribution,
-              business, business.withCase, business.cases, business.cases.read, business.results,
-              business.results.read, business.plannerProduct, business.plannerProduct.scenarios,
-              business.plannerSources, portfolio.planner, business.context, input.persistence]
-            switch (id) {
-              case "portfolio.decision-portfolio-results":
-                dependencies.push(product.http.list, portfolio.portfolioBindings, portfolio.portfolioBindings.list); break
-              case "portfolio.decision-portfolio-preview":
-                dependencies.push(product.http.preview, product.contribution.preview, portfolio.selection); break
-              case "portfolio.decision-portfolio-read":
-                if (!product.contribution.persistent) return undefined
-                dependencies.push(product.http.read, product.contribution.persistent, product.contribution.persistent.read); break
-              case "portfolio.decision-portfolio-evaluate":
-                if (!product.contribution.persistent) return undefined
-                dependencies.push(product.http.evaluate, product.contribution.persistent,
-                  product.contribution.persistent.evaluateAndStore, portfolio.portfolioBindings); break
-              case "portfolio.decision-sensitivity-units":
-                dependencies.push(product.http.sensitivityUnits, product.issueSensitivityUnits); break
-              case "portfolio.decision-sensitivity-read":
-                if (!product.contribution.persistentSensitivity) return undefined
-                dependencies.push(product.http.readSensitivity, product.contribution.persistentSensitivity,
-                  product.contribution.persistentSensitivity.read); break
-              case "portfolio.decision-sensitivity-evaluate":
-                if (!product.contribution.persistentSensitivity) return undefined
-                dependencies.push(product.http.sensitivity, product.contribution.persistentSensitivity,
-                  product.contribution.persistentSensitivity.evaluateAndStore, product.issueSensitivityUnits, product.sensitivity); break
-            }
-            return { producer: productHttp, dependencies }
-          },
-        }, request, stamp),
-        observeSfDecisionIntentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          humanActions: authority.humanActions, source: (operationId) => {
-            if (services.productHttp !== productHttp || !identity()) return undefined
-            if (operationId === "decisions.command.sf_case_draft") {
-              const draft = descriptors.filter((entry) => entry.id === "sf_case_draft")
-              if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
-              return { producer: productHttp, dependencies: [services.dispatch, draft[0], business.cases, business.cases.draft, input.persistence] }
-            }
-            if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
-              return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
-                decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
-            return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
-              extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
-              business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
-          } }, request, stamp),
-        observeSfDecisionReadingHealth({
-          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-          binding: input.nativeReadBinding,
-          source: (operationId) => {
-            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
-            if (operationId === "decisions.choice.read") {
-              if (!currentChoice || !input.currentChoiceFence) return undefined
+          observeSfDocumentHealth({ authority, binding: input.nativeReadBinding, source: () =>
+            identity() && services.productHttp === productHttp && documents && input.assets
+              ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
+          }, request, stamp),
+          observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+            binding: input.nativeReadBinding, source: () =>
+              identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&
+                documents && services.documents === documents.documents && input.assets
+                ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets,
+                  catalog: descriptors, dispatch: nativeSearchDispatch } : undefined,
+          }, request, stamp),
+          observeSfCollaborationReadingHealth({
+            ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+            binding: input.nativeReadBinding, source: (id) => {
+              if (services.productHttp !== productHttp || !identity()) return undefined
+              const c = business.collaboration
+              const handlers = [collaborationHttp.get("dashboard"), collaborationHttp.get("planner"), collaborationHttp.get("procurement")]
+              if (handlers.some((handler) => typeof handler !== "function")) return undefined
+              const dependencies: object[] = [business, c, c.authority, c.authority.sources, collaborationHttp,
+                collaborationHuman, collaborationHuman.admit, collaborationHuman.authorize, collaborationHuman.finish,
+                authority, authority.ui, authority.host, authority.state, authority.state.read, authority.state.transaction, input.persistence]
+              for (const handler of handlers) { if (handler) dependencies.push(handler) }
+              switch (id) {
+                case "collaboration.relation-read": dependencies.push(c.relations, c.relations.read, c.relations.readByReference); break
+                case "collaboration.relation-create": dependencies.push(c.relations, c.relations.create); break
+                case "collaboration.relation-remove": dependencies.push(c.relations, c.relations.remove); break
+                case "collaboration.thread-read":
+                  dependencies.push(c.threads, c.threads.read)
+                  if (c.recipientThread) dependencies.push(c.recipientThread)
+                  break
+                case "collaboration.thread-reply":
+                  dependencies.push(c.threads, c.threads.read, c.threads.reply)
+                  if (c.recipientThread) dependencies.push(c.recipientThread)
+                  if (c.recipientActions) dependencies.push(c.recipientActions, c.recipientActions.reply)
+                  if (c.replyInstalledReview) dependencies.push(c.replyInstalledReview)
+                  break
+                case "collaboration.confirmation-prepare":
+                  if (!c.confirmation) return undefined
+                  dependencies.push(c.confirmation, c.confirmation.prepare); break
+                case "collaboration.confirmation-project":
+                  if (!c.confirmation) return undefined
+                  dependencies.push(c.confirmation, c.confirmation.project, c.confirmation.readSelection); break
+                case "collaboration.confirmation-confirm":
+                  if (!c.confirmation) return undefined
+                  dependencies.push(c.confirmation, c.confirmation.confirm); break
+                case "collaboration.storage-version": dependencies.push(c.storageVersion); break
+              }
+              return { producer: productHttp, dependencies }
+            },
+          }, request, stamp),
+          observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+          observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
+          observeSfDashboardDraftHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            humanActions: authority.humanActions, source: (operationId) => {
+              if (services.productHttp !== productHttp || !identity() || !input.persistence.transactionAll ||
+                !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
+              const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
+              const operation = operationId === "dashboard.dashboard-capture" ? dashboard.capture :
+                operationId === "dashboard.dashboard-workbench" ? dashboard.discover :
+                operationId === "dashboard.dashboard-hot-topic-source" ? dashboard.issue :
+                operationId === "dashboard.dashboard-draft-read" ? decisions.revalidateDraftRead :
+                operationId === "dashboard.dashboard-hot-topic-draft" ? decisions.drafts.register :
+                operationId === "dashboard.dashboard-hot-topic-drafts" ? decisions.drafts.list : decisions.drafts.lookupFirstSave
+              return { producer: productHttp, handler: dashboardHttp, operation,
+                dependencies: [authority, authority.host, authority.host.authenticate, authority.host.environment,
+                  authority.host.revalidate, authority.host.requestFor, authority.ui.operationIdentity, authority.human,
+                  authority.human.admit, authority.human.authorize, authority.humanActions, authority.state.transaction,
+                  dashboard, dashboard.discover, dashboard.issue, dashboard.capture, dashboard.observer, dashboard.observer.preparePrivateDraftRead,
+                  decisions, decisions.discover, decisions.revalidateDraftRead, decisions.drafts, decisions.drafts.register,
+                  decisions.drafts.readCurrent, decisions.drafts.list, decisions.drafts.lookupFirstSave,
+                  business.cases, business.cases.read, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
+                  business.dashboardRecords, business.dashboardRecords.issue, business.dashboardRecords.resolve, business.dashboardRecords.read,
+                  input.persistence, input.persistence.transaction, input.persistence.transactionAll,
+                  input.persistence.readScopedSource, input.persistence.resolveScopedSource] }
+            } }, request, stamp),
+          observeSfReviewAgendaHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            humanActions: authority.humanActions, source: () => {
+              if (services.productHttp !== productHttp || !identity()) return undefined
+              return { producer: productHttp, handler: dashboardHttp, dashboard: business.dashboardServices,
+                dependencies: [authority, authority.ui, authority.state, authority.state.transaction, authority.human, authority.human.admit,
+                  authority.human.authorize, authority.humanActions, dashboardHttp, business.dashboardServices,
+                  business.dashboardServices.agenda, business.dashboardServices.preserveReview, business.dashboard, business.dashboard.read,
+                  business.dashboardSources, business.dashboardSources.resolveDashboardSource, business.dashboardRecords,
+                  business.dashboardRecords.issue, business.dashboardRecords.resolve, input.persistence, input.persistence.transaction, input.persistence.resolveScopedSource] }
+            } }, request, stamp),
+          observeSfReviewReadHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            source: (operationId) => {
+              if (operationId === "dashboard.dashboard-review") {
+                if (services.productHttp !== productHttp) return undefined
+                return { producer: productHttp, dependencies: [authority, authority.ui, authority.state, dashboardHttp,
+                  business.dashboardServices, business.dashboardServices.readReview, input.persistence, input.persistence.resolveScopedSource] }
+              }
+              if (!nativeReviewProjection || services.nativeReviewProjection !== nativeReviewProjection || !extended.reviews) return undefined
+              return { producer: nativeReviewProjection, dependencies: [authority, authority.ui, authority.state, nativeReviewProjection.handle,
+                extended.reviews, extended.reviews.reviews, extended.reviews.reviews.read, business.dashboardServices,
+                business.dashboardServices.discover, business.dashboardSources, business.dashboardSources.resolveDashboardSource,
+                input.persistence, input.persistence.resolveScopedSource] }
+            } }, request, stamp),
+          observeSfPortfolioReadingHealth({
+            ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+            binding: input.nativeReadBinding, source: (id) => {
+              const portfolio = extended.portfolioServices, product = portfolio.product
+              if (services.productHttp !== productHttp || !identity() || !product ||
+                extended.portfolio !== product || !business.plannerProduct.scenarios) return undefined
+              const dependencies: object[] = [authority, authority.ui, authority.host, authority.host.revalidate,
+                authority.host.requestFor, authority.human, authority.human.admit, authority.human.authorize,
+                authority.state, authority.state.read, authority.state.transaction,
+                portfolioHttp, portfolio, portfolio.http, product, product.http, product.contribution,
+                business, business.withCase, business.cases, business.cases.read, business.results,
+                business.results.read, business.plannerProduct, business.plannerProduct.scenarios,
+                business.plannerSources, portfolio.planner, business.context, input.persistence]
+              switch (id) {
+                case "portfolio.decision-portfolio-results":
+                  dependencies.push(product.http.list, portfolio.portfolioBindings, portfolio.portfolioBindings.list); break
+                case "portfolio.decision-portfolio-preview":
+                  dependencies.push(product.http.preview, product.contribution.preview, portfolio.selection); break
+                case "portfolio.decision-portfolio-read":
+                  if (!product.contribution.persistent) return undefined
+                  dependencies.push(product.http.read, product.contribution.persistent, product.contribution.persistent.read); break
+                case "portfolio.decision-portfolio-evaluate":
+                  if (!product.contribution.persistent) return undefined
+                  dependencies.push(product.http.evaluate, product.contribution.persistent,
+                    product.contribution.persistent.evaluateAndStore, portfolio.portfolioBindings); break
+                case "portfolio.decision-sensitivity-units":
+                  dependencies.push(product.http.sensitivityUnits, product.issueSensitivityUnits); break
+                case "portfolio.decision-sensitivity-read":
+                  if (!product.contribution.persistentSensitivity) return undefined
+                  dependencies.push(product.http.readSensitivity, product.contribution.persistentSensitivity,
+                    product.contribution.persistentSensitivity.read); break
+                case "portfolio.decision-sensitivity-evaluate":
+                  if (!product.contribution.persistentSensitivity) return undefined
+                  dependencies.push(product.http.sensitivity, product.contribution.persistentSensitivity,
+                    product.contribution.persistentSensitivity.evaluateAndStore, product.issueSensitivityUnits, product.sensitivity); break
+              }
+              return { producer: productHttp, dependencies }
+            },
+          }, request, stamp),
+          observeSfDecisionIntentHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            humanActions: authority.humanActions, source: (operationId) => {
+              if (services.productHttp !== productHttp || !identity()) return undefined
+              if (operationId === "decisions.command.sf_case_draft") {
+                const draft = descriptors.filter((entry) => entry.id === "sf_case_draft")
+                if (draft.length !== 1 || draft[0]?.handlerExport !== "draftCase") return undefined
+                return { producer: productHttp, dependencies: [services.dispatch, draft[0], business.cases, business.cases.draft, input.persistence] }
+              }
+              if (operationId === "decisions.decision-edit" || operationId === "decisions.controls.read")
+                return { producer: productHttp, dependencies: [decisionDomainHttp, decisionDomain, decisionDomain.management,
+                  decisionDomain.management.edit, business.withCase, business.cases, input.persistence] }
+              return { producer: productHttp, dependencies: [extended.productHttp, extended.bi, extended.bi.descriptor,
+                extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
+                business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
+            } }, request, stamp),
+          observeSfDecisionReadingHealth({
+            ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+            binding: input.nativeReadBinding,
+            source: (operationId) => {
+              if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
+              if (operationId === "decisions.choice.read") {
+                if (!currentChoice || !input.currentChoiceFence) return undefined
+                return { producer: productHttp,
+                  dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
+                    business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
+                    business.readSourceFences, input.persistence],
+                  choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
+              }
               return { producer: productHttp,
-                dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
-                  business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
-                  business.readSourceFences, input.persistence],
-                choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
-            }
-            return { producer: productHttp,
-              dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
-                business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
-              question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
-          },
-        }, request, stamp),
-        observeSfAnalysisReadingHealth({
-          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-          binding: input.nativeReadBinding,
-          source: (operationId) => {
-            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
-              services.analyses !== analyses || services.selected !== selected) return undefined
-            if (operationId === "intelligence.analysis.choices") return {
-              producer: productHttp,
-              dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models,
-                ...(state.models ? [state.models] : []), selected, nativeSearchDispatch, business.cases, business.cases.read,
-                authority.human, authority.human.admit, input.persistence],
-            }
-            return { producer: productHttp,
-              dependencies: [analyses, analyses.list, business.cases, business.cases.read,
-                authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
-          },
-        }, request, stamp),
-        observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
-          humanActions: authority.humanActions, source: (operationId) => {
-            if (services.productHttp !== productHttp || !identity()) return undefined
-            const producer = business.procurementDecisions
-            const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
-              operationId === "decisions.decision-apply" ? producer.apply : producer.recover
-            return { producer: productHttp, dependencies: [authority, authority.ui, authority.state,
-              operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
-              producer, operation, business.withCase, business.cases, input.persistence] }
-          } }, request, stamp),
-        observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
-      ])
+                dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
+                  business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
+                question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
+            },
+          }, request, stamp),
+          observeSfAnalysisReadingHealth({
+            ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+            binding: input.nativeReadBinding,
+            source: (operationId) => {
+              if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
+                services.analyses !== analyses || services.selected !== selected) return undefined
+              if (operationId === "intelligence.analysis.choices") return {
+                producer: productHttp,
+                dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models,
+                  ...(state.models ? [state.models] : []), selected, nativeSearchDispatch, business.cases, business.cases.read,
+                  authority.human, authority.human.admit, input.persistence],
+              }
+              return { producer: productHttp,
+                dependencies: [analyses, analyses.list, business.cases, business.cases.read,
+                  authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
+            },
+          }, request, stamp),
+          observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
+            humanActions: authority.humanActions, source: (operationId) => {
+              if (services.productHttp !== productHttp || !identity()) return undefined
+              const producer = business.procurementDecisions
+              const operation = operationId === "decisions.decision-review" ? producer.reviewChange :
+                operationId === "decisions.decision-apply" ? producer.apply : producer.recover
+              return { producer: productHttp, dependencies: [authority, authority.ui, authority.state,
+                operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
+                producer, operation, business.withCase, business.cases, input.persistence] }
+            } }, request, stamp),
+          observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
+        ])
+        return internal.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
+      })
+      const observations = await Promise.allSettled([external, scoped])
       return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
     },
     admit: async (request) => {
