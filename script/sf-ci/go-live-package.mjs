@@ -49,9 +49,9 @@ function reference(value, label) {
   return value
 }
 
-export function parseRequest(value) {
+function parsePinRequest(value, schema) {
   record(value, "request")
-  assert.equal(value.schema, "sf-g07-request-v1")
+  assert.equal(value.schema, schema)
   assert.equal(value.productionCutover, false, "qualification must not authorize production cutover")
   record(value.candidate, "candidate")
   hex(value.candidate.sha, sha40, "candidate.sha")
@@ -72,6 +72,17 @@ export function parseRequest(value) {
   }
   assert.notEqual(value.acknowledgements.migration.url, value.acknowledgements.release.url,
     "two role confirmations must have separate original source records")
+  return value
+}
+
+export function parseBuildRequest(value) {
+  parsePinRequest(value, "sf-g07-build-request-v1")
+  assert.equal(value.producer, undefined, "build request must not claim a completed producer")
+  return { ...value, status: "PARSED" }
+}
+
+export function parseRequest(value) {
+  parsePinRequest(value, "sf-g07-request-v1")
   const producer = record(value.producer, "producer")
   for (const field of ["runId", "runAttempt", "jobId", "checkRunId", "artifactId"]) id(producer[field], "producer." + field)
   hex(producer.workflowSha, sha40, "producer.workflowSha")
@@ -169,13 +180,123 @@ async function verifyAcknowledgement(role, request, api) {
   return evidence
 }
 
-export async function verifyAdmission(value, api) {
-  const request = parseRequest(value)
+
+export function requestRevision(kind, context) {
+  record(context, "Actions context")
+  assert.equal(context.repository, repository, "Actions repository mismatch")
+  if (kind === "qualify" && context.eventName === "workflow_dispatch") {
+    assert.equal(context.ref, "refs/heads/dev", "manual qualification requires dev")
+    return hex(context.requestRevision, sha40, "request revision")
+  }
+  assert(["build", "qualify"].includes(kind), "unknown request kind")
+  assert.equal(context.eventName, "push", "request branch requires a push event")
+  const prefix = kind === "build" ? "release-build-" : "g07-qualify-"
+  const match = new RegExp("^refs/heads/" + prefix + "([0-9a-f]{40})$").exec(context.ref)
+  assert(match, "exact immutable request branch required")
+  return match[1]
+}
+
+export async function readPinnedRequest(revision, kind, api = github) {
+  hex(revision, sha40, "request revision")
+  assert(["build", "qualify"].includes(kind), "unknown request kind")
+  const path = "docs/qa/sucafina/go-live/" + (kind === "build" ? "g07-build-request.json" : "g07-request.json")
+  const commit = await api("/repos/" + repository + "/git/commits/" + revision)
+  assert.equal(commit.sha, revision, "request commit mismatch")
+  hex(commit.tree?.sha, sha40, "request tree")
+  const item = await api("/repos/" + repository + "/contents/" + path + "?ref=" + revision)
+  assert(item.type === "file" && item.path === path && item.encoding === "base64",
+    "invalid pinned request file identity")
+  assert(Number.isSafeInteger(item.size) && item.size > 0 && item.size <= 131072, "request byte limit")
+  assert(typeof item.content === "string" && item.content.length <= 180224, "encoded request byte limit")
+  const encoded = item.content.replace(/[\r\n]/g, "")
+  const bytes = Buffer.from(encoded, "base64")
+  assert.equal(bytes.toString("base64"), encoded, "noncanonical request encoding")
+  assert.equal(bytes.length, item.size, "request byte count mismatch")
+  const blob = createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+  assert.equal(blob, item.sha, "request Git blob mismatch")
+  const raw = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+  const request = kind === "build" ? parseBuildRequest(JSON.parse(raw)) : parseRequest(JSON.parse(raw))
+  return {
+    raw, request,
+    source: { repository, revision, tree: commit.tree.sha, path, blobSha: item.sha,
+      sha256: digest(bytes), bytes: bytes.length }
+  }
+}
+
+export async function readQualificationRequest(context, api = github) {
+  const loaded = await readPinnedRequest(requestRevision("qualify", context), "qualify", api)
+  if (context.eventName === "push") {
+    assert.equal(hex(context.sha, sha40, "qualifier source"), loaded.request.candidate.sha,
+      "qualification branch must point to the exact candidate")
+  }
+  return loaded
+}
+
+async function verifyPin(request, api) {
   const candidate = await api("/repos/" + repository + "/git/commits/" + request.candidate.sha)
   assert.equal(candidate.sha, request.candidate.sha, "source commit mismatch")
   assert.equal(candidate.tree?.sha, request.candidate.tree, "source tree mismatch")
   const migration = await verifyAcknowledgement("migration", request, api)
   const release = await verifyAcknowledgement("release", request, api)
+  return { migration, release }
+}
+
+export async function verifyBuildAdmission(context, api = github) {
+  const loaded = await readPinnedRequest(requestRevision("build", context), "build", api)
+  const request = loaded.request
+  assert.notEqual(loaded.source.revision, request.candidate.sha, "request must be separate from candidate")
+  assert.equal(hex(context.sha, sha40, "checkout SHA"), request.candidate.sha, "build branch candidate mismatch")
+  assert.equal(hex(context.tree, sha40, "checkout tree"), request.candidate.tree, "checkout tree mismatch")
+  const acknowledgements = await verifyPin(request, api)
+  for (const field of ["runId", "runAttempt", "jobId", "checkRunId"]) id(context[field], "Actions." + field)
+  const run = await api("/repos/" + repository + "/actions/runs/" + context.runId + "/attempts/" + context.runAttempt)
+  const job = await api("/repos/" + repository + "/actions/jobs/" + context.jobId)
+  assert.equal(String(run.id), context.runId, "producer run mismatch")
+  assert.equal(String(run.run_attempt), context.runAttempt, "producer attempt mismatch")
+  assert.equal(run.repository?.full_name, repository, "producer repository mismatch")
+  assert.equal(run.head_sha, request.candidate.sha, "producer source mismatch")
+  assert.equal(run.head_branch, context.ref.slice("refs/heads/".length), "producer request branch mismatch")
+  assert.equal(run.event, "push", "producer event mismatch")
+  assert.equal(run.path, ".github/workflows/g09-final.yml", "producer workflow path mismatch")
+  assert.equal(run.status, "in_progress", "producer run is not active")
+  const operatorLogin = run.triggering_actor?.login || run.actor?.login
+  assert.equal(operatorLogin, request.acknowledgements.release.operator,
+    "producer was not invoked by the confirmed Release operator account")
+  assert.equal(String(job.id), context.jobId, "producer job mismatch")
+  assert.equal(String(job.run_id), context.runId, "job belongs to another run")
+  assert.equal(String(job.run_attempt), context.runAttempt, "job belongs to another attempt")
+  assert.equal(job.head_sha, request.candidate.sha, "job source mismatch")
+  assert.equal(job.name, "teams-profile-artifact", "unexpected producer job")
+  assert.equal(job.check_run_url, "https://api.github.com/repos/" + repository + "/check-runs/" + context.checkRunId,
+    "job check-run mismatch")
+  assert.equal(job.status, "in_progress", "producer job is not active")
+  assert.equal(job.conclusion, null, "producer job already concluded")
+  const started = instant(job.started_at, "job.started_at")
+  for (const role of ["migration", "release"]) {
+    assert(started >= instant(acknowledgements[role].source.updatedAt, role + ".updatedAt"),
+      "producer started before both final candidate confirmations")
+  }
+  return {
+    schema: "sf-g07-build-admission-v1", status: "VERIFIED_SOURCE", repository,
+    candidate: request.candidate, requestSource: loaded.source, acknowledgements,
+    producer: { workflowSha: run.head_sha, workflowPath: run.path, ref: context.ref,
+      runId: context.runId, runAttempt: context.runAttempt, jobId: context.jobId,
+      checkRunId: context.checkRunId, jobName: job.name, operatorLogin, startedAt: job.started_at },
+    productionCutover: false, installation: null
+  }
+}
+
+export function sameAdmission(first, final) {
+  const before = structuredClone(first)
+  const after = structuredClone(final)
+  if (before.verifier) delete before.verifier.observedAt
+  if (after.verifier) delete after.verifier.observedAt
+  assert.deepEqual(before, after, "live source changed during package verification")
+}
+
+export async function verifyAdmission(value, api) {
+  const request = parseRequest(value)
+  const { migration, release } = await verifyPin(request, api)
   const p = request.producer
   const run = await api("/repos/" + repository + "/actions/runs/" + p.runId + "/attempts/" + p.runAttempt)
   const job = await api("/repos/" + repository + "/actions/jobs/" + p.jobId)
@@ -286,26 +407,52 @@ export async function downloadArchive(admission, output) {
   return { artifactId: p.artifactId, zipBytes: observed.bytes, zipSha256: p.zipSha256 }
 }
 
-async function main() {
-  assert.equal(process.env.GITHUB_ACTIONS, "true", "qualification must execute in GitHub Actions")
-  const [command, input, output] = process.argv.slice(2)
-  assert(input && output && process.argv.length === 5, "input and new output path required")
-  if (command === "download") {
-    const result = await downloadArchive(JSON.parse(await readFile(input, "utf8")), output)
-    process.stdout.write(JSON.stringify(result) + "\n")
-    return
-  }
-  assert.equal(command, "admit", "usage: go-live-package.mjs admit request.json admission.json")
-  const raw = await readFile(input, "utf8")
-  assert(Buffer.byteLength(raw) <= 131072, "request exceeds limit")
-  const result = await verifyAdmission(JSON.parse(raw), github)
-  result.requestSha256 = digest(raw)
-  result.verifier = {
+function observation() {
+  return {
     workflowSha: hex(process.env.GITHUB_SHA, sha40, "verifier.workflowSha"),
     runId: id(process.env.GITHUB_RUN_ID, "verifier.runId"),
     runAttempt: id(process.env.GITHUB_RUN_ATTEMPT, "verifier.runAttempt"),
     observedAt: new Date().toISOString()
   }
+}
+
+async function readJson(path) {
+  const raw = await readFile(path, "utf8")
+  assert(Buffer.byteLength(raw) <= 131072, "request exceeds limit")
+  return { raw, value: JSON.parse(raw) }
+}
+
+async function main() {
+  assert.equal(process.env.GITHUB_ACTIONS, "true", "qualification must execute in GitHub Actions")
+  const [command, input, output] = process.argv.slice(2)
+  if (command === "build-admit" || command === "build-recheck") {
+    const destination = command === "build-admit" ? input : output
+    assert(destination && process.argv.length === (command === "build-admit" ? 4 : 5),
+      "build-admit output.json | build-recheck prior.json output.json")
+    const result = await verifyBuildAdmission({
+      repository: process.env.GITHUB_REPOSITORY, eventName: process.env.GITHUB_EVENT_NAME,
+      ref: process.env.GITHUB_REF, sha: process.env.GITHUB_SHA, tree: process.env.SOURCE_TREE,
+      runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+      jobId: process.env.PRODUCER_JOB_ID, checkRunId: process.env.CHECK_RUN_ID
+    })
+    result.verifier = observation()
+    if (command === "build-recheck") sameAdmission((await readJson(input)).value, result)
+    await writeFile(destination, JSON.stringify(result, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+    process.stdout.write(JSON.stringify({ status: result.status, candidate: result.candidate,
+      requestRevision: result.requestSource.revision, productionCutover: false, installed: false }) + "\n")
+    return
+  }
+  assert(input && output && process.argv.length === 5, "input and new output path required")
+  if (command === "download") {
+    const result = await downloadArchive((await readJson(input)).value, output)
+    process.stdout.write(JSON.stringify(result) + "\n")
+    return
+  }
+  assert.equal(command, "admit", "usage: go-live-package.mjs admit request.json admission.json")
+  const { raw, value } = await readJson(input)
+  const result = await verifyAdmission(value, github)
+  result.requestSha256 = digest(raw)
+  result.verifier = observation()
   await writeFile(output, JSON.stringify(result, null, 2) + "\n", { flag: "wx", mode: 0o600 })
   process.stdout.write(JSON.stringify({ status: result.status, candidate: result.candidate,
     artifactId: result.producer.artifactId, productionCutover: false, installed: false }) + "\n")
