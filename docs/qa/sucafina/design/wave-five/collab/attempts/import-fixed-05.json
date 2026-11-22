@@ -23,14 +23,201 @@
   ],
   "specBlob": "6c9f74daf4d99b24e81d23d3988dabb3095e06d0",
   "permanentSpec": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
-  "notes": "Clean production bundle, import declaration selected with all permanent helpers and original assertion budgets. No profiling, baseline modules or stdout bridges.",
+  "notes": "Clean production bundle; no profiling, baseline modules or stdout bridges. Original assertion budgets unchanged. Independent original reference returned status ok/HTTP 200 in 6605 ms; this does not establish a rendered preview.",
   "snapshot": "12c27f7830a31229296acf5b2c9c226851cb2721",
-  "result": "running",
+  "result": "failed",
   "sourceQualifiers": [
     "71 original helper/collaboration/portfolio cases pass",
     "Installed availability equality: original9/candidate9 collaboration, original7/candidate7 portfolio",
     "Root composed comparator and captured readers"
   ],
   "limits": "The prior equality journey still missed the10s refresh deadline. This clean composed run keeps the same deadline and will not be treated as passed from HTTP200 alone.",
-  "run": 44997174038
+  "run": 44997174038,
+  "testJob": 137130609517,
+  "cleanupJob": 137131678749,
+  "assertion": {
+    "location": "design-wave-five-collab.spec.ts:195",
+    "budgetMs": 10000,
+    "expected": "Original reviewed preview heading visible after Refresh",
+    "observed": "UI56 retained the Loading skeleton at the assertion deadline; native provider and view were already ready."
+  },
+  "originalDiagnostics": [
+    {
+      "kind": "original-import-progress",
+      "stage": "preview-producer-response",
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "codecStatus": "ok",
+      "typed": "Some",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "original-import-preview",
+      "manifestId": "178b389724a3141a2554d6f814dade831889fbecf5c8e70863d36654df5b8e49",
+      "state": "preview",
+      "sourceDigest": "9fea0c4246202a4892e0ba3d10b11a4c067a71deb1689b0588114fd91bf877b4",
+      "domainApplied": false
+    },
+    {
+      "kind": "original-import-progress",
+      "stage": "preview-delivered",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "original-import-progress",
+      "stage": "independent-reference-read",
+      "elapsedMs": 6605,
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "activity": "reading-source",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready"
+      }
+    },
+    {
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "artifact": [
+    {
+      "id": 14744631844,
+      "node_id": "MDg6QXJ0aWZhY3QxNDc0NDYzMTg0NA==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 16770190,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14744631844",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14744631844/zip",
+      "expired": false,
+      "digest": "sha256:39552dc9aba974759da2149f83e5d2561e3e093693b31f9b8514f52bd8eaa0f2",
+      "created_at": "2026-11-22T07:17:04Z",
+      "updated_at": "2026-11-22T07:17:04Z",
+      "expires_at": "2026-11-29T07:17:02Z",
+      "workflow_run": {
+        "id": 44997174038,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf5importfixed5",
+        "head_sha": "12c27f7830a31229296acf5b2c9c226851cb2721"
+      }
+    }
+  ],
+  "captures": {
+    "count": 14,
+    "manifest": [
+      {
+        "i": 0,
+        "name": "UI55-setup-dark-desktop",
+        "parts": 6,
+        "base64Length": 131772
+      },
+      {
+        "i": 1,
+        "name": "UI55-setup-light-desktop",
+        "parts": 6,
+        "base64Length": 137436
+      },
+      {
+        "i": 2,
+        "name": "UI55-setup-light-390",
+        "parts": 3,
+        "base64Length": 56224
+      },
+      {
+        "i": 3,
+        "name": "UI55-setup-dark-390",
+        "parts": 3,
+        "base64Length": 55380
+      },
+      {
+        "i": 4,
+        "name": "UI55-dark-desktop-selected-file-options",
+        "parts": 6,
+        "base64Length": 135880
+      },
+      {
+        "i": 5,
+        "name": "UI55-dark-390-selected-file-options",
+        "parts": 3,
+        "base64Length": 48304
+      },
+      {
+        "i": 6,
+        "name": "UI55-scanned-simulation-dark-desktop",
+        "parts": 6,
+        "base64Length": 136244
+      },
+      {
+        "i": 7,
+        "name": "UI55-scanned-simulation-light-desktop",
+        "parts": 6,
+        "base64Length": 140612
+      },
+      {
+        "i": 8,
+        "name": "UI55-scanned-simulation-light-390",
+        "parts": 3,
+        "base64Length": 63300
+      },
+      {
+        "i": 9,
+        "name": "UI55-scanned-simulation-dark-390",
+        "parts": 3,
+        "base64Length": 62796
+      },
+      {
+        "i": 10,
+        "name": "UI55-dark-desktop-field-change",
+        "parts": 10,
+        "base64Length": 227304
+      },
+      {
+        "i": 11,
+        "name": "UI55-dark-desktop-complete-source-impact",
+        "parts": 9,
+        "base64Length": 200616
+      },
+      {
+        "i": 12,
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "parts": 6,
+        "base64Length": 135908
+      },
+      {
+        "i": 13,
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 5,
+        "base64Length": 96320
+      }
+    ],
+    "persistedFailure": {
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/import-fixed-05-FAILED-native-wave-three-test-data.jpg",
+      "sha": "678721415aa9f2f2c2a8439fd194acca3624e199",
+      "name": "FAILED-native-wave-three-test-data",
+      "capture": {
+        "i": 13,
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 5,
+        "base64Length": 96320
+      },
+      "review": "Observed UI56 title and original stage 3, with Loading skeleton still present at the failed 10-second post-Refresh heading assertion. This is failure evidence, not a qualified preview."
+    }
+  },
+  "scope": "The original scanner, preview producer, authenticated reference, complete impact disclosure and cancel journey ran before the UI56 refresh failure. No apply occurred. UI56 and import pt-BR qualification remain open."
 }
