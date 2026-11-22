@@ -13,7 +13,8 @@ import { teamProfileInstallationId } from "../../runtime/team-profile-access.ts"
 // controlled; HTTP, callback/session issuance, Team admission, storage and scanner
 // remain the original implementation. This is never installed-tenant evidence.
 export async function microsoftHttpFixture(options: {
-  label?: "g05" | "g06" | "g10"
+  label?: "g05" | "g06" | "g08" | "g10"
+  nativeWeb?: boolean
   grants?: readonly Readonly<Record<string, unknown>>[]
   plannerAdministrator?: boolean
   scanner?: { host: "127.0.0.1"; port: number } | null
@@ -109,6 +110,7 @@ export async function microsoftHttpFixture(options: {
       TMPDIR: join(directory, "host-tmp"), XDG_DATA_HOME: join(directory, "host-data"),
       XDG_CONFIG_HOME: join(directory, "host-config"), XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
+      ...(options.nativeWeb ? { SUCAFINA_NATIVE_TEAM_WEB: "1" } : {}),
     }, {
       now: () => new Date(epoch * 1000),
       async fetch(request) {
