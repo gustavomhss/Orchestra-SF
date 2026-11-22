@@ -135,7 +135,18 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       return source.observe(scope, context)
     }
     const fence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => await source.fenceManifest(scope, context) && await source.fence(scope, observation, context)
-    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence, now: () => Date.parse(input.now()) })
+    const readFence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => {
+      const request = input.host.requestFor(context)
+      const transactionAll = input.host.persistence.transactionAll
+      if (!request || request.signal.aborted || !transactionAll) return false
+      // Observation reissues its authorized scope before this read. The original
+      // manifest/source fences require the persistence-owned locked snapshot;
+      // they must run inside a read-only transaction, as write fences already do.
+      return transactionAll(async () => ({ commit: false,
+        value: !request.signal.aborted && await fence(scope, observation, context),
+      }), { signal: request.signal }).catch(() => false)
+    }
+    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence: readFence, now: () => Date.parse(input.now()) })
     const port = createConfirmationPort<T>({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
     const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmationWork>> => {
       const request = input.host.requestFor(context)
