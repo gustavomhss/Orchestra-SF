@@ -484,9 +484,10 @@
         44998750010,
         45002137493,
         45003432183,
-        45008412557
+        45008412557,
+        45013832359
       ],
-      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is now integrated; a clean original UI42–UI44 journey is the next qualification step. The clean original Portfolio18 journey on integrated source 2d3abae also failed the first preview's unchanged 60s wait, with no response observed. Original preparation/readbacks and both histories passed. No evaluate or UI43/UI44 stage was reached.",
+      "limitation": "Portfolio diagnostic 17 retains the original 60-second preview failure and observes that same POST returning 403 at about 300 seconds. Isolated UI44 passes original A04/units/rule/source, editor/review/cancel, but its single evaluate POST has no observed response in the original 120 seconds. The readonly correction is integrated; clean Portfolio18 remains the latest clean attempt and failed the unchanged first-preview 60s wait without an observed response. Its original preparation/readbacks and both histories passed; no evaluate or UI43/UI44 stage was reached. Portfolio19 is a partial instrumented diagnostic, also failed at 60s with no preview response, and emitted no profiler snapshot summaries. It adds no qualification or causal performance evidence. Portfolio20 is in progress at this checkpoint; no outcome is recorded.",
       "evidence": "analytics/attempt-15/README.md",
       "isolatedSensitivityEvidence": "collab/sensitivity-isolated-01/README.md",
       "latestClean": {
@@ -500,6 +501,75 @@
         "agentViewed": 7,
         "rootViewed": 2,
         "explicitEvaluations": 0
+      },
+      "latestDiagnostic": {
+        "label": "Portfolio19",
+        "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+        "run": 45013832359,
+        "job": 137181760072,
+        "cleanupJob": 137184430073,
+        "cleanupStatus": "PASSED",
+        "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+        "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+        "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+        "evidence": "analytics/attempt-16/README.md",
+        "immutableArchiveCommit": "41a4f73f5e9e5ea5480c79752d644df41e6907d3",
+        "originalPreviewTimeoutMs": 60000,
+        "failureLine": 72,
+        "previewResponseObserved": false,
+        "internalPersistence": "UNKNOWN",
+        "preparation": {
+          "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+          "complete": true
+        },
+        "nativeHistory": [
+          {
+            "sequence": 1,
+            "http": 200,
+            "status": "ok"
+          },
+          {
+            "sequence": 2,
+            "http": 200,
+            "status": null,
+            "acquisitionFailure": "response-body-unavailable",
+            "additionalObserverRecord": "native-request-failed",
+            "sourceRefusalProven": false
+          }
+        ],
+        "profiler": {
+          "records": 10,
+          "started": 1,
+          "sealedRootMarkers": 5,
+          "rootCallbackExits": 4,
+          "periodicSnapshots": 0,
+          "finalSnapshots": 0,
+          "emittedBucketRecords": 0,
+          "aggregateCounts": null,
+          "aggregateBucketCount": null,
+          "pending": null,
+          "drops": null,
+          "costs": null,
+          "interpretation": "Aggregate counts, pending spans, drops and costs are UNKNOWN because no snapshot summaries were emitted. Callback exits do not prove the provider's later egress accepted the operation."
+        },
+        "captures": 7,
+        "additionalQualifiedAreas": 0
+      },
+      "diagnosticInProgress": {
+        "label": "Portfolio20",
+        "status": "IN_PROGRESS_AT_CHECKPOINT_NO_OUTCOME_RECORDED",
+        "run": 45015314625,
+        "job": 137186259049,
+        "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+        "parentSnapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+        "onlyChangedPath": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+        "helperBlob": "81792fc1fba96de5b4cc0b93a2213862a2d2bc2a",
+        "delta": "Bounded checkpoints from the existing diagnostic span end; original 60000 ms preview limit and all other diagnostic overlays unchanged.",
+        "maximumPeriodicCheckpoints": 5,
+        "originalPreviewTimeoutMs": 60000,
+        "result": null,
+        "qualificationClaim": false
       }
     }
   ],
@@ -539,6 +609,17 @@
         "blob": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
       }
     ],
-    "scope": "Only original exact-owner readonly evidence is forwarded; Planner root consumer asks each actual lexical child for fresh evidence of the same physical root. No authority, result or projection cache; original guards and budgets unchanged."
+    "scope": "Only original exact-owner readonly evidence is forwarded; Planner root consumer asks each actual lexical child for fresh evidence of the same physical root. No authority, result or projection cache; original guards and budgets unchanged.",
+    "isolatedFollowUp619": {
+      "status": "ISOLATED_NOT_EXECUTED_NOT_INTEGRATED",
+      "branch": "sf-readonly-guards",
+      "candidate": "62a4233ae6f9145f5c45d527ceb1bb562d84b516",
+      "qualificationProposal": "f4f7999b2e6656afe4b746b81b7a0147ab868330",
+      "proposalBase": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+      "qualificationRun": null,
+      "integrated": false,
+      "performanceClaim": null,
+      "scope": "The single source-lifecycle line 619 readonly lookup change and its reviewed regression candidate remain separate from product and diagnostic 19/20."
+    }
   }
 }

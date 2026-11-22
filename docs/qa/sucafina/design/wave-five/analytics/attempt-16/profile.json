@@ -1,0 +1,162 @@
+{
+  "schema": "sf-portfolio-readonly-profile-receipt-v1",
+  "runId": 45013832359,
+  "testJobId": 137181760072,
+  "snapshot": "46792e9d945a8d27802ec2ae7c05b1a6ce7b5068",
+  "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+  "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "acquisition": "incomplete-no-bucket-snapshots",
+  "recordCount": 10,
+  "parseErrors": [],
+  "startedCount": 1,
+  "rootMarkerCount": 9,
+  "periodicSnapshotCount": 0,
+  "finalSnapshotCount": 0,
+  "bucketRecordCount": 0,
+  "observedBucketDrops": null,
+  "observedRootDrops": null,
+  "observedLineDrops": null,
+  "observedPendingSpans": null,
+  "observedInclusiveTotals": null,
+  "records": [
+    {
+      "timestamp": "2026-11-22T10:53:37.3285695Z",
+      "request": 1,
+      "phase": "started",
+      "operation": "decision-portfolio-preview",
+      "schema": "sf-portfolio-readonly-v1",
+      "originalObservationWindowMs": 60000,
+      "maximumBuckets": 256,
+      "maximumRoots": 64,
+      "maximumLines": 2048,
+      "maximumLineLength": 4096
+    },
+    {
+      "timestamp": "2026-11-22T10:53:45.5350690Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-sealed",
+      "ordinal": 1,
+      "elapsedMs": 8217
+    },
+    {
+      "timestamp": "2026-11-22T10:54:00.5023624Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-exit",
+      "ordinal": 1,
+      "elapsedMs": 23184
+    },
+    {
+      "timestamp": "2026-11-22T10:54:00.5060415Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-sealed",
+      "ordinal": 2,
+      "elapsedMs": 23189
+    },
+    {
+      "timestamp": "2026-11-22T10:54:00.7001276Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-exit",
+      "ordinal": 2,
+      "elapsedMs": 23382
+    },
+    {
+      "timestamp": "2026-11-22T10:54:04.5431369Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-sealed",
+      "ordinal": 3,
+      "elapsedMs": 27225
+    },
+    {
+      "timestamp": "2026-11-22T10:54:19.2826816Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-exit",
+      "ordinal": 3,
+      "elapsedMs": 41965
+    },
+    {
+      "timestamp": "2026-11-22T10:54:19.2864620Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-sealed",
+      "ordinal": 4,
+      "elapsedMs": 41969
+    },
+    {
+      "timestamp": "2026-11-22T10:54:19.4615183Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-exit",
+      "ordinal": 4,
+      "elapsedMs": 42143
+    },
+    {
+      "timestamp": "2026-11-22T10:54:23.8842148Z",
+      "request": 1,
+      "phase": "root",
+      "kind": "physical-sealed",
+      "ordinal": 5,
+      "elapsedMs": 46566
+    }
+  ],
+  "rootCallbackIntervals": [
+    {
+      "ordinal": 1,
+      "enterMs": 8217,
+      "exitMs": 23184,
+      "callbackDurationMs": 14967,
+      "complete": true
+    },
+    {
+      "ordinal": 2,
+      "enterMs": 23189,
+      "exitMs": 23382,
+      "callbackDurationMs": 193,
+      "complete": true
+    },
+    {
+      "ordinal": 3,
+      "enterMs": 27225,
+      "exitMs": 41965,
+      "callbackDurationMs": 14740,
+      "complete": true
+    },
+    {
+      "ordinal": 4,
+      "enterMs": 41969,
+      "exitMs": 42143,
+      "callbackDurationMs": 174,
+      "complete": true
+    },
+    {
+      "ordinal": 5,
+      "enterMs": 46566,
+      "exitMs": null,
+      "callbackDurationMs": null,
+      "complete": false
+    }
+  ],
+  "interpretation": [
+    "authority groups direct and registered reader paths; subtype counts do not pair raw/Choice events",
+    "LocalStore ACL-only without scope is an admitted result for nonempty surfaces",
+    "guard currentLocalReadonlyAuthorityData is unchanged and raw-only",
+    "source.observe.egress-gate retains the original OR and can skip the second authentication",
+    "root.physical.callback completion does not establish the provider's later egress acceptance",
+    "cumulative inclusive durations count settled spans only; no addition across snapshots or nested names",
+    "final missing or pending >0 does not establish completed operation",
+    "periodic timer ticks are observed events, not guaranteed sampling; started without snapshots does not imply zero work",
+    "timings belong to this instrumented diagnostic; clean Portfolio18 remains the original-budget failure receipt"
+  ],
+  "limitations": [
+    "No snapshot summary was emitted; overflow, pending counts and bucket totals are unavailable rather than zero.",
+    "Five physical-sealed entry markers and four callback exits were observed. The fifth callback has no observed exit. A callback exit is not the provider's later egress acceptance.",
+    "No aggregate recognition, ACL, fence, guard or projector cost can be inferred from these records.",
+    "The absence of periodic records does not establish why the timer did not emit. No rerun, replay or extended observation was performed.",
+    "All observations are from an instrumented partial diagnostic; no UI42, UI43 or UI44 completion is claimed."
+  ]
+}
