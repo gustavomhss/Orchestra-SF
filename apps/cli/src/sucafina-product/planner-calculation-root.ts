@@ -110,7 +110,23 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         const accepted = await root.call(persistence, async () => {
           invocations++
           if (invocations !== 1 || !current()) return false
-          const healthy = currentSfReadonlySnapshotScope(persistence)?.current ?? live
+          const observed = currentSfReadonlySnapshotScope(persistence)
+          const sealed = observed && { identity: observed.identity, bytesIdentity: observed.bytesIdentity }
+          const integrity = { failed: false }
+          // A legal nested transaction has its own lexical scope. Ask that live
+          // scope for a fresh proof of this exact physical root, never the parent's current().
+          const healthy = sealed ? () => {
+            if (integrity.failed) return false
+            try {
+              const fresh = currentSfReadonlySnapshotScope(persistence)
+              const valid = !!fresh && fresh.identity === sealed.identity && fresh.bytesIdentity === sealed.bytesIdentity && fresh.current()
+              if (!valid) integrity.failed = true
+              return valid
+            } catch (error) {
+              integrity.failed = true
+              throw error
+            }
+          } : live
           if (!healthy()) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }

@@ -1,6 +1,7 @@
 import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
+import { currentChoiceReadonlyAuthorityData } from "../decisions/current-choice-preview.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, SnapshotAuthorityRead, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
@@ -119,6 +120,10 @@ export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalS
 const authorityMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "currentSnapshotScope"] as const
 const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean }>()
 
+function currentDriverReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]) {
+  return currentLocalReadonlyAuthorityData(owner, surfaces) ?? currentChoiceReadonlyAuthorityData(owner, surfaces)
+}
+
 /** Read lexical presence without copying data for a registered local adapter. */
 export function hasSfLocalSnapshotScope(owner: object) {
   const all = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
@@ -144,12 +149,12 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
   const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
   const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
     sourceAuthorityReaders.get(descriptor.value) : undefined
-  if (!registered) return currentLocalReadonlyAuthorityData(owner, surfaces)
+  if (!registered) return currentDriverReadonlyAuthorityData(owner, surfaces)
   const root = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
   if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner)) return undefined
   // A caller may bracket the root callback. The admitted snapshot methods
   // and the actual underlying LocalStore scope still determine its data.
-  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces)
+  const observation = currentDriverReadonlyAuthorityData(registered.base, surfaces)
   if (!observation) return undefined
   const integrity = { failed: false }
   return { snapshots: observation.snapshots, scope: observation.scope, current: (requirement) => {
@@ -529,7 +534,7 @@ export function createSfSourcePersistence(input: {
           Object.getOwnPropertyDescriptor(input, "persistence")
         const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
           active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
-          currentLocalReadonlyAuthorityData(driver, ["planner"]) : undefined
+          currentDriverReadonlyAuthorityData(driver, ["planner"]) : undefined
         // Preparation receives an isolated view before source authorization.
         const prepared = await prepare(structuredClone(snapshot))
         if (checking) requireSourceChecks(checking)

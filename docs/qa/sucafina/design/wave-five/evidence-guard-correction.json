@@ -24,5 +24,21 @@
     "test budgets",
     "runtime"
   ],
-  "qualification": "Guard rerun required after correction; prior workflow remains failed."
+  "qualification": "Original guard-only rerun passed after cleanup; prior combined workflow remains failed on its recorded findings.",
+  "rerun": {
+    "run": 45007665762,
+    "job": 137162771489,
+    "cleanup": 137163084504,
+    "snapshot": "ffb12c38b322b0936b9d589976f37abac0ebd331",
+    "productQaBase": "079590dca92d8eeecf97abd0b8bd6d2db25223ac",
+    "runtimeCandidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
+    "rules": 78,
+    "files": 669,
+    "warnings": 36,
+    "gates": 0,
+    "errors": 0,
+    "approved": 0,
+    "touchesGuards": false,
+    "scope": "Original guards only; no domain/E2E tests rerun"
+  }
 }
