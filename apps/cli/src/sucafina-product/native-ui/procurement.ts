@@ -53,7 +53,7 @@ const orderKeys = [
 ] as const
 const quoteKeys = [
   "id", "supplierId", "supplier", "currency", "total", "description", "notes",
-  "attachments", "scores", "cscores", "techPass",
+  "attachments", "scores", "cscores", "techPass", "qty", "unitPrice",
 ] as const
 const supplierKeys = [
   "id", "number", "status", "createdBy", "legalName", "tradingName", "type", "country",
