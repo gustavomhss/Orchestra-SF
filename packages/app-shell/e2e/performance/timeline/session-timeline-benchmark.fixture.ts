@@ -97,6 +97,35 @@ export async function setupTimelineBenchmark(
   },
 ) {
   const events: EventPayload[] = []
+  const consumed: EventPayload[] = []
+  const consoleMessages: { type: string; text: string }[] = []
+  const pageErrors: string[] = []
+  const requestFailures: { url: string; error: string | null }[] = []
+  const responses: { url: string; status: number; body: string }[] = []
+  let eventRequests = 0
+  page.on("console", (message) => {
+    const entry = { type: message.type(), text: message.text().slice(0, 4000) }
+    if (consoleMessages.length < 30 && !consoleMessages.some((item) => item.type === entry.type && item.text === entry.text))
+      consoleMessages.push(entry)
+  })
+  page.on("pageerror", (error) => {
+    if (pageErrors.length < 10) pageErrors.push(error.stack ?? error.message)
+  })
+  page.on("requestfailed", (request) => {
+    if (requestFailures.length < 20) requestFailures.push({ url: request.url(), error: request.failure()?.errorText ?? null })
+  })
+  page.on("response", async (response) => {
+    if (!["/event", "/global/event", "/api/event"].includes(new URL(response.url()).pathname)) return
+    eventRequests++
+    try {
+      const body = await response.text()
+      if (body.includes("session.next.text") || responses.length < 3) {
+        if (responses.length < 10) responses.push({ url: response.url(), status: response.status(), body: body.slice(0, 16000) })
+      }
+    } catch (error) {
+      if (responses.length < 10) responses.push({ url: response.url(), status: response.status(), body: String(error) })
+    }
+  })
   let eventBatch = options.eventBatch
   const currentUserMessage = options.turnDiffs
     ? { ...userMessage, info: { ...userMessage.info, summary: { diffs: options.turnDiffs } } }
@@ -118,7 +147,11 @@ export async function setupTimelineBenchmark(
       messageID === userMessageID
         ? (options.turnDiffs ?? []).map((diff) => ({ ...diff, path: diff.file, status: "modified" }))
         : [],
-    events: () => events.splice(0, eventBatch),
+    events: () => {
+      const batch = events.splice(0, eventBatch)
+      if (consumed.length < 10) consumed.push(...batch.slice(0, 10 - consumed.length))
+      return batch
+    },
     eventRetry: 16,
   })
   // The build retains the base config's default backend port while performance workers mock the app port.
@@ -158,6 +191,21 @@ export async function setupTimelineBenchmark(
   return {
     scroller,
     text,
+    async diagnostics() {
+      return {
+        url: page.url(), expectedPartID: textPartID, pendingEvents: events.length, consumed,
+        eventRequests, responses, consoleMessages, pageErrors, requestFailures,
+        dom: await page.evaluate((assistantID) => ({
+          partIDs: [...document.querySelectorAll("[data-timeline-part-id]")]
+            .map((element) => element.getAttribute("data-timeline-part-id")).slice(-50),
+          assistantParts: [...document.querySelectorAll<HTMLElement>("[data-timeline-part-id]")]
+            .filter((element) => element.getAttribute("data-timeline-part-id")?.startsWith(assistantID))
+            .map((element) => ({ id: element.getAttribute("data-timeline-part-id"), text: element.innerText.slice(0, 400) })),
+          timelineRows: document.querySelectorAll("[data-timeline-row]").length,
+          bodyTail: document.body.innerText.slice(-3000),
+        }), assistantMessageID),
+      }
+    },
     transport: {
       enqueue(payload: EventPayload | EventPayload[]) {
         events.push(...(Array.isArray(payload) ? payload : [payload]))

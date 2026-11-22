@@ -112,8 +112,13 @@ async function runTimelineStreamBenchmark(page: Page, options: TimelineStreamOpt
 
   fixture.transport.enqueue(buildInitialStreamEvent(deltaCount))
   const contentStart = performance.now()
-  await expect(fixture.text).toBeVisible()
-  await expect(fixture.text).toContainText("Implementation plan")
+  try {
+    await expect(fixture.text).toBeVisible()
+    await expect(fixture.text).toContainText("Implementation plan")
+  } catch (error) {
+    console.log("TIMELINE_STREAM_DIAGNOSTIC", JSON.stringify(await fixture.diagnostics()))
+    throw error
+  }
   const initialContentObservedMs = performance.now() - contentStart
   await fixture.scrollToBottom()
   await fixture.waitForStableGeometry()
