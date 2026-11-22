@@ -362,14 +362,59 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await page.keyboard.press("Shift+Tab")
   await expect(tableRegion).toBeFocused()
   await expect(tableRegion).toHaveCSS("outline-style", "solid")
-  await catalog.locator(".sf-bi-source-actions summary").first().click()
-  const sourceAction = catalog.locator(".sf-bi-source-action-list button").first()
-  await expect(sourceAction).toBeVisible()
-  const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source", { timeout: 60_000 })
-  await sourceAction.click()
-  expect((await sourceResponse).status()).toBe(200)
-  await expect(catalog.getByRole("navigation", { name: "Authorized source links", exact: true })).toBeVisible()
-  await captureAnalytics(page, info, "UI46-resolved-original-source-test-data")
+  const actionIds = await catalog.locator(".sf-bi-source-action-list button[data-sf-source-value-id]")
+    .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-sf-source-value-id")))
+  const sourceRows = financialValues.flatMap((value) => {
+    if (!actionIds.includes(sourceText(value.id))) return []
+    const refs = array(value.sourceRefs).map(object)
+    const pointer = value.drilldown ? object(value.drilldown) : refs.length === 1 ? refs[0] : undefined
+    return pointer?.refId ? [{ valueId: sourceText(value.id), referenceId: sourceText(pointer.refId),
+      referenceDigest: sourceText(pointer.refDigest) }] : []
+  })
+  expect(sourceRows.length).toBeGreaterThan(0)
+  const sharedSource = sourceRows.find((row) => sourceRows.some((other) =>
+    other.referenceId === row.referenceId && other.valueId !== row.valueId))
+  const selectedSources = sharedSource
+    ? sourceRows.filter((row) => row.referenceId === sharedSource.referenceId)
+      .filter((row, index, all) => all.findIndex((other) => other.valueId === row.valueId) === index).slice(0, 2)
+    : sourceRows.slice(0, 1)
+  expect(selectedSources).toHaveLength(sharedSource ? 2 : 1)
+  const originalProjectionText = await catalog.locator('[data-sf-bi-view="BI01"]').textContent()
+  const originalSelection = await catalog.locator('[data-sf-field="selection"]').inputValue()
+  for (const [index, selected] of selectedSources.entries()) {
+    const sourceAction = catalog.locator(".sf-bi-source-action-list button[data-sf-source-value-id=" + JSON.stringify(selected.valueId) + "]")
+    await expect(sourceAction).toHaveCount(1)
+    const disclosure = sourceAction.locator("xpath=ancestor::details[1]")
+    if (await disclosure.getAttribute("open") === null) await disclosure.locator("summary").click()
+    await expect(sourceAction).toBeVisible()
+    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source", { timeout: 60_000 })
+    await sourceAction.click()
+    const originalSourceResponse = await sourceResponse
+    expect(originalSourceResponse.status()).toBe(200)
+    const requested = new URL(originalSourceResponse.url())
+    expect(requested.origin).toBe(owner.publicOrigin)
+    expect(requested.pathname).toBe(owner.mount + "/dashboard")
+    expect(requested.searchParams.get("viewId")).toBe("BI01")
+    expect(requested.searchParams.get("selectionRef")).toBe(originalSelection)
+    expect(requested.searchParams.get("valueId")).toBe(selected.valueId)
+    expect(requested.searchParams.get("referenceDigest")).toBe(selected.referenceDigest)
+    const sourceLinks = array(object(await originalSourceResponse.json()).links).map(object)
+    expect(sourceLinks.length).toBeGreaterThan(0)
+    const navigation = catalog.getByRole("navigation", { name: "Authorized source links", exact: true })
+    await expect(navigation).toBeVisible()
+    await expect(navigation.getByRole("link")).toHaveCount(sourceLinks.length)
+    for (const [linkIndex, link] of sourceLinks.entries()) {
+      await expect(navigation.getByRole("link").nth(linkIndex)).toHaveText(sourceText(link.label))
+      await expect(navigation.getByRole("link").nth(linkIndex)).toHaveAttribute("href",
+        new URL(sourceText(link.url), owner.publicOrigin + owner.mount + "/dashboard").href)
+    }
+    expect(await catalog.locator('[data-sf-bi-view="BI01"]').textContent()).toBe(originalProjectionText)
+    await navigation.scrollIntoViewIfNeeded()
+    await captureAnalytics(page, info, "UI46-resolved-original-source-" + (index + 1) + "-test-data")
+  }
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-source-identity-regression",
+    selectedValues: selectedSources.map((source) => source.valueId), samePublishedReference: !!sharedSource,
+    exactValueAndDigestQueries: selectedSources.length, originalProjectionRetained: true }))
   await catalog.locator('[data-sf-field="start"]').fill(installation.year + "-02-01")
   await expect(catalog.locator(".sf-chart-frame")).toHaveCount(0)
   await expect(catalog.getByRole("navigation", { name: "Authorized source links", exact: true })).toHaveCount(0)
