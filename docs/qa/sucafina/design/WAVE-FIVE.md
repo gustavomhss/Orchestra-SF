@@ -75,6 +75,8 @@ A [jornada UI44 isolada 03](wave-five/collab/sensitivity-isolated-03/README.md),
 
 Os dois cleanups passaram. As capturas, eventos filtrados e recibos foram preservados sem log bruto. **A contagem permanece em 12/15**, com UI42–UI44 pendentes. A conclusão técnica de C17 não substitui essas jornadas instaladas.
 
+O [guard final do checkpoint](wave-five/analytics/context-integrity/checkpoint-guard/receipt.json), run [45032261331](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45032261331), passou sobre a composição revisada: **78 regras, 782 arquivos, 36 warnings**, nenhum bloqueio, erro ou aprovação excepcional. Essa execução verificou somente os guards originais; a produção e as evidências anteriores permaneceram iguais.
+
 ## Aceite
 
 **Aprovação visual do usuário pendente. Nenhum merge realizado.** As galerias apresentam as evidências reais das doze áreas qualificadas. As três jornadas pendentes impedem considerar o bloco concluído.

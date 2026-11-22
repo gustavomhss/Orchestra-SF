@@ -2265,6 +2265,43 @@
       },
       "receipt": "analytics/context-integrity/attempt-02/receipt.json",
       "scope": "New context tests, Sucafina package types and original guards only. Passing original composition/CLI/E2E gates from attempt21 are retained on identical production; no claim of a single all-green six-gate run."
+    },
+    {
+      "attempt": 23,
+      "name": "Original guard after context product and QA integration",
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+      "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+      "run": 45032261331,
+      "job": 137238212802,
+      "cleanupJob": 137238528279,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      "conclusion": "success",
+      "scope": "Original guards only on the final reviewed context checkpoint; no repetition of runtime/tests/types/installed journeys.",
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 782,
+        "warnings": 36,
+        "gates": 0,
+        "errors": 0,
+        "approved": 0,
+        "touchesGuards": false
+      },
+      "receipt": "analytics/context-integrity/checkpoint-guard/receipt.json",
+      "report": "analytics/context-integrity/checkpoint-guard/guard-report.json",
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      }
     }
   ],
   "causalControls": [

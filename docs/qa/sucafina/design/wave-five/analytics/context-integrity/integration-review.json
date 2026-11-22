@@ -110,7 +110,8 @@
     "root": "PASS",
     "peer": "read_path PASS for production, tests and both corrections",
     "wrapper": "dev_delta PASS; read_path PASS of reduced follow-up",
-    "noProductionChangeBetweenContextRuns": true
+    "noProductionChangeBetweenContextRuns": true,
+    "qa": "root and dev_delta PASS;48 exact archive blobs,57 QA paths, corrected historical wording"
   },
   "evidence": {
     "sensitivity": {
@@ -177,6 +178,17 @@
         "responseObserved": false,
         "receipt": "../../collab/sensitivity-isolated-03/receipt.json"
       }
+    },
+    "checkpointGuard": {
+      "run": 45032261331,
+      "status": "success",
+      "receipt": "checkpoint-guard/receipt.json",
+      "rules": 78,
+      "files": 782,
+      "warnings": 36,
+      "gates": 0,
+      "errors": 0,
+      "approved": 0
     }
   },
   "preserved": {

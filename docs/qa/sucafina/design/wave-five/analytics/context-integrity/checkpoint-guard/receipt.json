@@ -1,0 +1,113 @@
+{
+  "schema": "sucafina-qa-checkpoint-guard-v1",
+  "classification": "original guard only after new QA evidence composition",
+  "repository": "gustavomhss/Orchestra-SF",
+  "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+  "qaTree": "f074dbc20fed2acf6e9b80aa4a4b44e6af7e1181",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+  "snapshotTree": "facc1b91e659472bdecf8ef8829dff0d31ceec98",
+  "run": 45032261331,
+  "testJob": 137238212802,
+  "testConclusion": "success",
+  "cleanupJob": 137238528279,
+  "cleanupConclusion": "success",
+  "guardBase": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "requestBlob": "a9207a036327372ccfcc28b222058cb4fa2cbe51",
+  "wrapperBlob": "f28bdc1b08fe74eeb7937c1b1fd2fe948677c413",
+  "commands": [
+    {
+      "gate": "fetch pinned guard base",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "resolve pinned guard base",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "guardrails",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "result": {
+    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 782,
+    "errors": [],
+    "approved": [],
+    "touchesGuards": false,
+    "findings": {
+      "warn": 36
+    },
+    "warningCount": 36,
+    "gateCount": 0
+  },
+  "rootReview": "PASS exact QA-only delta, literal readbacks and original event/image subset verification",
+  "peerReview": "dev_delta PASS;48 archived blobs exact,57 QA paths; final temporal corrections checked",
+  "reason": "Original guard required on newly composed57 QA paths; a prior raw-transcript guard failure justified this focused check.",
+  "notSelected": [
+    "C17",
+    "other runtime regressions",
+    "package typechecks",
+    "installed journeys"
+  ],
+  "changesAfterCheck": "Only this receipt, guard report and its rollup references are added after the verified QA tree; production and all archived evidence stay identical.",
+  "qualification": {
+    "qualified": 12,
+    "total": 15,
+    "pending": [
+      "UI42",
+      "UI43",
+      "UI44"
+    ],
+    "acceptedMerged": 41,
+    "userApproval": "pending",
+    "merged": false
+  },
+  "rawLogArchived": false,
+  "acquisition": "Only completed job log; no replay, bypass or exceptional approval.",
+  "test": {
+    "pass": 1,
+    "fail": 0,
+    "assertions": 5,
+    "durationSeconds": 2.95
+  },
+  "omni": {
+    "verdict": "pass",
+    "declaredTests": 1,
+    "spawns": 3,
+    "delegated": 0
+  }
+}

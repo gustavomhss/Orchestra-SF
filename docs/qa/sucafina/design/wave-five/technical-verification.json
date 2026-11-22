@@ -226,6 +226,27 @@
       "errors": 0,
       "approved": 0,
       "report": "analytics/context-integrity/attempt-02/guard-report.json"
+    },
+    {
+      "name": "Original guards after reviewed context QA composition",
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "attempt": 23,
+      "run": 45032261331,
+      "job": 137238212802,
+      "cleanupJob": 137238528279,
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
+      "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 782,
+      "warnings": 36,
+      "gates": 0,
+      "errors": 0,
+      "approved": 0,
+      "touchesGuards": false,
+      "report": "analytics/context-integrity/checkpoint-guard/guard-report.json",
+      "limitation": "Only this guard receipt/report and its rollup references are appended after the verified QA tree."
     }
   ],
   "focusedRegressions": [
@@ -900,7 +921,7 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "CONTEXT_INTEGRITY_TECHNICALLY_VERIFIED_INSTALLED_JOURNEYS_FAILED",
+    "status": "CONTEXT_INTEGRITY_INTEGRATED_INSTALLED_JOURNEYS_FAILED",
     "candidate": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
     "tree": "1ed3cafc973db7f4103646c3f0fa06c1586a9ff5",
     "base": "9341bc3d25f5771009258b58c91c0fe85cb093ae",
@@ -987,6 +1008,7 @@
         "scope": "The single source-lifecycle line 619 readonly lookup change and reviewed regression candidate remain separate from product and diagnostics 19–21.",
         "reason": "All measured source/audit guard digests total 951 ms through 50 s, including unchanged transactionAll and potentially non-readonly paths. This is not projected saving; no candidate CI is justified by this cost evidence."
       }
-    }
+    },
+    "integratedProduct": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d"
   }
 }
