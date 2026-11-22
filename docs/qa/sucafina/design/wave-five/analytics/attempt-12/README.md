@@ -23,7 +23,9 @@ Selection registration was shorter than Attempt 11's 77,135ms; isolated comparis
 
 ## Captures and qualification
 
-Seven original Chromium JPEGs are durable. Only [the pending preview](FAILED-native-wave-three-test-data.jpg) was emitted and visually reviewed in this attempt. It shows the original running action, disabled selection controls, pending preview skeleton and empty portfolio history. It does not show a completed or denied preview. The remaining six images are explicitly unreviewed.
+All seven original Chromium JPEGs are durable and were emitted as actual images for review. The desktop dark/light list preserves distinct original case cards with readable title/version/action hierarchy. At 390px dark and 320px light, long original text wraps inside a single column without clipping and both case actions remain visible. The authorized empty case retains its original facts and disabled preview. The configured case shows the exact selected candidate/criterion and a complete focus outline around exploration limit 4. No further presentation defect was found in these captured stages.
+
+[The pending preview](FAILED-native-wave-three-test-data.jpg) shows the original running action, disabled selection controls, pending preview skeleton and empty portfolio history. It is diagnostic, not a completed or denied result. These seven stage reviews do not qualify the complete UI42 journey, UI43/UI44, Portuguese, mobile editor/result layouts or browser zoom.
 
 [Canonical artifact 14744515794](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44996623210/artifacts/14744515794): 8,822,753 bytes; SHA-256 `fe5ce6302710ac417035f8ef055eeb9e0ce8fd54305872529f9891043edb0fb4`. Full PNG and trace evidence remain there.
 
