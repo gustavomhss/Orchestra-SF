@@ -187,8 +187,12 @@ for (const cap of ["CAP04", "CAP05"] as const) {
     const view = fixture(cap, { detail: true })
     try {
       const collection = cap === "CAP04" ? "opexOwners" : "capexProjects"
-      await eventually(() => view.host.querySelector(".sf-budget-source")?.textContent?.includes(collection + ":line-one") === true)
-      const source = Array.from(view.host.querySelectorAll<HTMLButtonElement>("button")).find((button) => button.textContent?.trim() === "View source")
+      const detailSelector = cap === "CAP04" ? "[data-sf-opex-detail]" : "[data-sf-capex-detail]"
+      const reference = () => view.host.querySelector(detailSelector + " details.sf-opex-reference code")
+      await eventually(() => reference()?.textContent?.trim() === collection + ":line-one")
+      expect(reference()?.textContent?.trim()).toBe(collection + ":line-one")
+      const detail = view.host.querySelector(detailSelector)!
+      const source = Array.from(detail.querySelectorAll<HTMLButtonElement>("button")).find((button) => button.textContent?.trim() === "View source")
       expect(source).toBeDefined(); expect(source!.disabled).toBe(false)
       source!.click(); await budgetReady(view)
       const url = new URL(window.location.href)
