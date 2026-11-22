@@ -1,0 +1,42 @@
+{
+  "kind": "composed-technical",
+  "source": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
+  "snapshot": "d3cb92d71c89a42531a40a617d8f5863b40c17ac",
+  "run": 44981671317,
+  "job": 137083298996,
+  "status": "passed",
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317",
+  "gates": {
+    "passed": 12,
+    "failed": 0
+  },
+  "regressionCases": {
+    "passed": 94,
+    "failed": 0,
+    "collaborationObserver": 18
+  },
+  "checks": [
+    "App-shell typecheck",
+    "App-shell E2E typecheck including original import capture helper",
+    "CLI native host typecheck",
+    "Guardrails against pinned dev d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "Palette generation and byte parity",
+    "Native work/search, analysis, collaboration and portfolio source health",
+    "Portfolio readiness and sensitivity units regressions",
+    "Review and Files routing regression",
+    "Existing English catalog preservation and bilingual additions"
+  ],
+  "ownedCatalogs": [
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+      "preservedEnglish": 59,
+      "addedBilingual": 12
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+      "preservedEnglish": 67,
+      "addedBilingual": 7
+    }
+  ],
+  "scope": "Technical qualification is separate from browser journeys, screenshot review and human design acceptance."
+}

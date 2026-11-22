@@ -33,3 +33,25 @@ All browser journeys use the existing GitHub Actions test-ci, production bundle 
 Unavailable review/report lists, stale original update responses, absent sensitivity selections and unapplied proposals are recorded as their actual states. A successful screenshot or HTTP status alone is never counted as a completed source mutation.
 
 The current delivery remains pending the user's visual review. No merge is authorized by this document.
+
+## BI value identity and native source links
+
+A visible BI mark can share a source reference with another mark. The consumer now carries the exact original `valueId`, `refId` and reference digest together through the table, plot, timeline, waterfall and source actions. The resolver requires one matching original value and a matching reference inside that value. It does not choose the first global reference or substitute a sibling's value. The original BI01 browser response proved two different values sharing one reference, each reopening its own exact source query without changing the displayed projection.
+
+The existing source producer also returns canonical native `/orchestra/` paths. A separate presentation adapter admits only those original same-origin, canonical registry paths. It preserves the producer's filters and adds the current owner selectors after rejecting producer-supplied owner selectors, duplicate query names, foreign origins, credentials and fragments. The destination still performs its own original F01/access admission. The older mounted-destination helper and source route builder remain byte-unchanged. Eight boundary cases and the two real BI01 source links passed.
+
+## Confirmation source fence
+
+The original confirmation reader called the source fence outside a grouped source snapshot, so the original observer could not prove its current sources. Its two read fences now execute inside the installed `transactionAll` with `commit: false`, the original cancellation signal and the original fence callback. Observation and reissue remain outside that held scope; the write fence is unchanged. The installed collaboration journey passed original prepare, project, confirm, receipt and recorded-validity reopening. This correction creates no new receipt or source authority.
+
+## Native portfolio routing
+
+The canonical portfolio input has no `surface` field, while its original transport route contains `{surface}`. The client now derives the dashboard transport destination only for the exact ten original `SfPortfolio` operations after decoding their unchanged closed input schema. It adds no field to the request body, route registry, grant or producer contract. Fourteen routing cases passed, including unrelated fixed routes, missing surface, excess fields and the actual installation origin/mount. The browser's remaining no-request failure is tracked separately and is not represented as fixed by those pure cases.
+
+## Import progress and remaining qualification
+
+The import owner exposes its actual scan, preview and source-read activity separately, using explicit English and Brazilian Portuguese copy. Original upload admission and preview bytes are preserved. UI55 setup has actual installed captures. UI56 still awaits its successful original-reference reread and native rendered preview; diagnostic instrumentation remains confined to disposable CI snapshots.
+
+## Incremental verification record
+
+`technical-attempts.json` retains attempts 1–8 with each exact product, snapshot, run, job, check scope and failure. Later focused checks do not relabel an earlier failed whole workflow. The 94 original source/readiness/routing regressions, 14 client routing cases and 8 native BI destination cases passed in their stated scopes. Seven generated palettes stayed byte-identical; all 357 existing English key/value literals stayed unchanged and all 46 new keys had explicit pt-BR in the recorded copy check. Browser qualification and final integration types remain distinct from those regression receipts.

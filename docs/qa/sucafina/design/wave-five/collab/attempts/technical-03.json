@@ -1,0 +1,26 @@
+{
+  "kind": "focused-technical",
+  "source": "72884298af5b1f22fa060dfea1d021ed73a308bd",
+  "snapshot": "baf8e247860d5c2c5a483fae4a574f53553f6068",
+  "run": 44981426797,
+  "job": 137082544984,
+  "cleanupJob": 137082943597,
+  "status": "failed",
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981426797",
+  "collaborationObserver": {
+    "passed": 18,
+    "failed": 0
+  },
+  "passed": [
+    "App-shell typecheck",
+    "E2E typecheck",
+    "All focused source-observer cases including collaboration 18/18",
+    "Guardrails and palette parity"
+  ],
+  "reason": "CLI typecheck rejected fixture annotations that hid the concrete SQLite capabilities; original health behavior already passed.",
+  "correction": {
+    "commit": "3b230ac07408eea50271ec91cc2f4d4ee020c203",
+    "blob": "839e64c59ce4f9a36782f379cd333059d312955e",
+    "change": "Preserve the actual driver type with typeof storage; no casts or runtime change."
+  }
+}

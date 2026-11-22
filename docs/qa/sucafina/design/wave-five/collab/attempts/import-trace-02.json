@@ -1,0 +1,44 @@
+{
+  "kind": "import-stage-diagnostic",
+  "source": "2a73ad159e3c5529425f11b94b71677cef7dd1bb",
+  "snapshot": "d3793dbc0dd4d99ee35163e324eb34f353aefc21",
+  "parent": "2fe0ef127b53370ee06518f6599f50b6c0e37ecd",
+  "branch": "ci-run-sf5importtrace2",
+  "run": 44983747444,
+  "job": 137089683753,
+  "cleanupJob": 137090758087,
+  "status": "failed",
+  "result": "The original admission and preview succeeded; the first independent import-reference request timed out after 40 seconds and UI55 remained in previewing/selecting. UI56 was not reached.",
+  "observations": {
+    "originalPreview": {
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "codecStatus": "ok",
+      "schema": "Some",
+      "domainApplied": false,
+      "state": "preview"
+    },
+    "traceCount": 376,
+    "authorizeTargetCompleted": 22,
+    "stagedEntryCompleted": 17,
+    "blobReadsCompleted": 8,
+    "httpReferenceEntries": 0,
+    "hostReferenceEntries": 0,
+    "storeReadEntries": 0,
+    "referenceStateReadEntries": 0
+  },
+  "conclusion": "This run does not demonstrate an import-store read lock: the GET never entered the traced original import-reference handler.",
+  "overlay": [
+    "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+    "modules/sucafina/Sucafinav1/product/imports/host.ts",
+    "modules/sucafina/Sucafinav1/product/imports/store.ts",
+    "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+    "apps/cli/src/sucafina-product/import-services.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+    "apps/cli/test/fixture/sucafina-native-installation.ts",
+    "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+    ".ci-run.json",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
+  ],
+  "boundary": "Disposable CI source tracing only. Original calls, identities, fences, workflow and request validator unchanged. No trace overlay was copied to a product branch."
+}
