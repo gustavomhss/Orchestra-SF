@@ -140,7 +140,8 @@ export function createSfBiServices(input: {
           : { status: "needs-input", reason: "planner-bi-selection-unavailable" }
       },
     } },
-    procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
+    procurement: { views: ["BI05", "BI06"], host: {
+      list: (selectionRef, call) => business.biObservation.read(selectionRef, call, () => business.procurement.list(selectionRef, call)), revalidate } },
     scenario: { views: scenarioCosts ? ["BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
     ...(scenarioCosts ? { projectedScenario: { views: ["BI09", "BI10"] as const, host: scenarioCosts } } : {}),
     ...(portfolioProjection ? { portfolio: { views: ["BI09", "BI10"] as const, host: { readProjection: portfolioProjection,
@@ -173,7 +174,8 @@ export function createSfBiServices(input: {
   }
   const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) => {
     const selected = readSfDecisionBiSelection(request.selectionRef)
-    const dispatch = () => dispatchBiPresentation(request, call, presentationSource, authority.authority)
+    const dispatch = () => business.biObservation.run(request, call, { operation: "sf_bi_view", input: request },
+      () => dispatchBiPresentation(request, call, presentationSource, authority.authority))
     // The completed-proof scope covers the original pair. An inverse result can
     // have additional evidence; keep all canonical reads for this new selection.
     return selected && "scenarioResultRef" in selected && selected.advantageComparisonRef !== undefined

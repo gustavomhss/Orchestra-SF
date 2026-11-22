@@ -175,8 +175,9 @@ export function createSfExtendedHttp(input: {
         if (referenceDigest !== null && !/^[a-f0-9]{64}$/.test(referenceDigest)) return json({ status: "needs-input", reason: "invalid-source-choice" }, 400)
         const selectedCase = readSfDecisionBiSelection(ref) ? await options.caseFor(ref, call) : undefined
         if (readSfDecisionBiSelection(ref) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
+        const selected = { viewId, selectionRef: ref, period }
         const read = async () => {
-          const current = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
+          const current = await input.bi.source.read(selected, call)
           if (current.status !== "ok") return current
           const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
           if (!value) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
@@ -190,12 +191,13 @@ export function createSfExtendedHttp(input: {
           const links = await sfExtendedSourceLinks({ business, reference, call, url })
           // Reopen the protected selection after destination resolution. The
           // producer's digest comparison ignores only observation timestamps.
-          const latest = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
+          const latest = await input.bi.source.read(selected, call)
           if (latest.status !== "ok") return latest
           if (!sameBiProjection(latest.value, current.value)) return { status: "stale" as const, reason: "bi-source-changed" }
           return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-or-destination-period-unavailable" }
         }
-        const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
+        const result = await business.biObservation.run(selected, call, { operation: action, input: bootstrap },
+          () => selectedCase ? business.withCase(call, selectedCase, {}, read) : read())
         return result.status === "ok" ? json(result.value) : json(result, result.status === "denied" ? 403 : 409)
       }
       if (mode === "bi-data") {

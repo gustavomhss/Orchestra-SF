@@ -1,4 +1,5 @@
 import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
+import { createSfBiObservationScope } from "./bi-observation-scope.ts"
 import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
 import { randomUUID } from "node:crypto"
 import { AsyncLocalStorage } from "node:async_hooks"
@@ -118,7 +119,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const selected = await registry.resolveRequestSource(ref, call)
     return selected.status === "unavailable" && selected.reason === "Request unavailable" ? individual.resolve(ref, call) : selected
   }
-  const procurementHost = { ...host, ...registry,
+  const biObservation = createSfBiObservationScope(input.authority)
+  const procurementHost = { ...host, ...registry, environment: biObservation.environment,
     resolveRequestSource: resolveProcurement,
     isCurrentRequestSource: (snapshot: Snapshot, evidence: Extract<BusinessEvidenceRef, { kind: "record" }>) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
     resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent,
@@ -759,7 +761,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation, withPlannerObservation,
+    withMemoryObservation, withPlannerObservation, biObservation,
     bindReviewCollaboration: reviewCollaboration.bind,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
