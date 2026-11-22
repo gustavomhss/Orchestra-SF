@@ -1,5 +1,5 @@
 {
-  "workerSource": "4d3a6de3e80c506c9ef325e1d24540ed7234740d",
+  "workerSource": "e5cae6417b3bdb40bbf33ae7408df1bd807f9e7f",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -61,7 +61,7 @@
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
-      "sha": "b04b83d641cac0c4bd31edeee992640e40053991"
+      "sha": "fb7020a27f87732e710c3d25f5cb6f2d24427068"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
@@ -84,18 +84,18 @@
       "gates": 12,
       "cases": 94,
       "collaborationCases": 18,
-      "status": "passed before latest activity labels and observed-kind renderer correction"
+      "status": "passed before latest activity labels, observed-kind renderer correction and target readback instrumentation"
     },
     "browser": {
       "source": "7a9e0696ff353d9352938abd2c5527d76f0a47b1",
       "run": 44982724904,
       "job": 137086555249,
       "collaboration": "passed UI51/52/53 original journeys and pt-BR; observed-kind renderer correction awaits new capture",
-      "import": "failed: original valid preview delivered, independent authenticated reference read timed out; UI55/56 success not claimed"
+      "import": "failed: original valid preview persisted, then all native context health observers slow down; reference handler is never entered before test timeout. Diagnostic trace6 confirms stage timing; trace7 measures original snapshot materialization."
     }
   },
   "excluded": [
-    "All temporary SF_IMPORT_TRACE source overlays on ci-run-sf5importtrace / ci-run-sf5importtrace2.",
+    "All temporary SF_IMPORT_TRACE source overlays on ci-run-sf5importtrace through ci-run-sf5importtrace7.",
     "Root-owned header, installation variants, host-context binding/composition, type-only IDs and confirmation read-scope fix."
   ]
 }

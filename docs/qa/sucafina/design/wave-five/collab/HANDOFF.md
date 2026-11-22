@@ -43,7 +43,9 @@ The input workbook contains a header and one isolated Planner OPEX row proposing
 
 [Trace 2](attempts/import-trace-02.json) shows all original target authorization, staged file checks and blob reads completing, while no import-reference handler entry occurs. [Trace 3](attempts/import-trace-03.json) also traces the installed outer handler: preview dispatch and response return complete; the next native context dispatch starts but does not finish before teardown. Both a separately authenticated Node fetch and the Playwright API context time out before the reference handler entry. The Chromium aborted event alone does not establish a transport-capture defect.
 
-Trace overlays exist only in disposable CI snapshots. They do not change producer data, identities, guards, workflow, registry, authority or product branches. The next diagnostic adds static start/end markers around the original native health observations, plus numeric preview structure counts. No private headers, credentials or source bodies are persisted in the diagnostic records.
+[Trace 6](attempts/import-trace-06.json) confirms that the first context admission completes in approximately 228 ms, then all 17 original health observations start. The preceding whole health pass took approximately 673 ms. After the preview, document health finishes after about 6.8 seconds and several other observations finish between 29.9 and 38.3 seconds; the remaining observations are still pending at the 40-second independent read timeout. [Forwarded stage timings](attempts/import-trace-06-timings.json) document the evidence without attributing CPU time or changing any source checks. The next diagnostic measures the original SQL payload length and copy-plan classification.
+
+Trace overlays exist only in disposable CI snapshots. They do not change producer data, identities, guards, workflow, registry, authority or product branches. No private headers, credentials or source bodies are persisted in the diagnostic records.
 
 ## Integration boundary and remaining work
 
