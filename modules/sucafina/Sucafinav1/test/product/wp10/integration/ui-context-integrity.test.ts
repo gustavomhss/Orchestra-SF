@@ -248,23 +248,26 @@ test("a temporary hasher or update getter cannot attest a capture made under hoo
   expect(captured.digest).toBe("captured-under-hook")
   expect(captured.current()).toBe(false)
 
-  const prototype = Bun.CryptoHasher.prototype
-  const updateDescriptor = property(prototype, "update"), stringifyDescriptor = property(JSON, "stringify")
-  if (!updateDescriptor || !stringifyDescriptor) throw new Error("missing canonical descriptors")
+  const update = Bun.CryptoHasher.prototype.update, stringifyDescriptor = property(JSON, "stringify")
+  if (!stringifyDescriptor) throw new Error("missing canonical serializer descriptor")
   let updateReads = 0, serializerCalls = 0
-  const restored = withProperty(prototype, "update", {
-    configurable: updateDescriptor.configurable, enumerable: updateDescriptor.enumerable,
-    get: () => {
+  // Bun's prototype update is non-configurable; a real instance can shadow it.
+  const getterConstructor = new Proxy(Bun.CryptoHasher, { construct(target, args) {
+    define(Bun, "CryptoHasher", constructorDescriptor)
+    const hasher = Reflect.construct(target, args)
+    define(hasher, "update", { configurable: true, get: () => {
       updateReads++
-      define(prototype, "update", updateDescriptor)
+      Reflect.deleteProperty(hasher, "update")
       define(JSON, "stringify", { ...stringifyDescriptor, value: new Proxy(JSON.stringify, { apply() {
         serializerCalls++
         define(JSON, "stringify", stringifyDescriptor)
         return '"captured-under-update-getter"'
       } }) })
-      return updateDescriptor.value
-    },
-  }, () => {
+      return update
+    } })
+    return hasher
+  } })
+  const restored = withValue(Bun, "CryptoHasher", getterConstructor, () => {
     try { return observeSfUiContextIntegrity(call) } finally { define(JSON, "stringify", stringifyDescriptor) }
   })
   expect(updateReads).toBe(1)
