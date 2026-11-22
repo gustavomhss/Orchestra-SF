@@ -40,6 +40,7 @@ export async function microsoftHttpFixture(options: {
     administrator: boolean
     teams: string[]
     graphCalls: string[]
+    beforeGraphRequest?: (url: URL) => Promise<void>
     requests: number
     loopbackPeers: number
     ingressRequests: number
@@ -134,6 +135,7 @@ export async function microsoftHttpFixture(options: {
         if (url.origin === "https://graph.microsoft.com") {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-" + label + "-access")
           state.graphCalls.push(url.pathname)
+          await state.beforeGraphRequest?.(url)
           if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled " + label.toUpperCase() + " actor" })
           if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: state.administrator ? [groupId] : [] })
           if (url.href === graph + "/me/joinedTeams")

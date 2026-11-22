@@ -17,13 +17,15 @@ const digest = /^[0-9a-f]{64}$/
 
 /** Produces a private checkpoint and metadata; it never writes or approves the independent recovery register. */
 export function createCorporateCheckpointHttp(input: {
-  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId" | "supremeAdminGroupId" | "grants">
+  config: Pick<MicrosoftConfiguration, "origin" | "mount" | "tenantId" | "clientId">
+  readPolicy: () => Promise<Pick<MicrosoftConfiguration, "teams" | "supremeAdminGroupId" | "grants">>
   directory: string
   identity: Pick<LocalIdentity, "prepare" | "observeCorporateRecoveryActor">
   profilePolicy: Pick<TeamProfilePolicyStore, "read">
   now: () => Date
 }) {
-  const { config, directory, identity, profilePolicy, now } = input
+  const { config, readPolicy, directory, identity, profilePolicy, now } = input
+  if (typeof readPolicy !== "function") throw new Error("Corporate checkpoint requires current private policy")
   const route = config.mount + "/api/ui/team-profile-migration/checkpoint"
   const installationId = teamProfileInstallationId({ ...config, directory })
   const installationDigest = digestSfValue({ installationId, tenantId: config.tenantId, clientId: config.clientId })
@@ -39,12 +41,15 @@ export function createCorporateCheckpointHttp(input: {
     if (url.origin !== config.origin || request.headers.get("origin") !== config.origin || url.search ||
         request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site") return respond(403)
     if (request.headers.get("content-type")?.split(";")[0]?.trim().toLowerCase() !== "application/json") return respond(415)
-    if (!config.supremeAdminGroupId || !identity.observeCorporateRecoveryActor) return respond(403)
+    if (!identity.observeCorporateRecoveryActor) return respond(403)
     try {
+      const policy = await readPolicy()
+      const groupId = policy.supremeAdminGroupId
+      if (policy.teams !== "direct" || !groupId) return respond(403)
       await identity.prepare(request)
-      const admission = await identity.observeCorporateRecoveryActor(request, config.supremeAdminGroupId)
+      const admission = await identity.observeCorporateRecoveryActor(request, groupId)
       if (!admission) return respond(403)
-      const grants = config.grants.filter((grant) => grant.principalRef === admission.principalId)
+      const grants = policy.grants.filter((grant) => grant.principalRef === admission.principalId)
       // Existing recover-only grants do not acquire snapshot observation or capture authority.
       if (grants.length !== 1 || !Array.isArray(grants[0]?.migrationActions) ||
           !grants[0].migrationActions.includes("checkpoint")) return respond(403)
@@ -59,7 +64,13 @@ export function createCorporateCheckpointHttp(input: {
       const verifyCurrent = async () => {
         if (request.signal.aborted || !await admission.verifyCurrent()) return false
         const current = await profilePolicy.read()
-        return !request.signal.aborted && current.configRevision === catalog.configRevision &&
+        // Read the private file again at the publication fence; startup grants never authorize a retry.
+        const currentPolicy = await readPolicy()
+        const currentGrants = currentPolicy.grants.filter((grant) => grant.principalRef === admission.principalId)
+        return !request.signal.aborted && currentPolicy.teams === "direct" &&
+          currentPolicy.supremeAdminGroupId === groupId && currentGrants.length === 1 &&
+          Array.isArray(currentGrants[0]?.migrationActions) && currentGrants[0].migrationActions.includes("checkpoint") &&
+          current.configRevision === catalog.configRevision &&
           current.profiles.filter((entry) => entry.enabled && entry.profile.installationId === installationId &&
             entry.profile.tenantId === config.tenantId && entry.profile.teamObjectId === command.teamObjectId).length === 1
       }

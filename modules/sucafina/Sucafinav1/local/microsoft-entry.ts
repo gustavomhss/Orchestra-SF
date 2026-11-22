@@ -67,7 +67,7 @@ export async function createMicrosoftInstallation(
       const { createCorporateRecoveryHttp } = await import("../runtime/corporate-recovery-http.ts")
       const { openCorporateRecoveryRegister } = await import("../runtime/corporate-recovery-register.ts")
       const register = await (overrides.openRecoveryRegister ?? openCorporateRecoveryRegister)(registerPath, directory)
-      return createCorporateRecoveryHttp({ config, directory, identity, now, register, profilePolicy })
+      return createCorporateRecoveryHttp({ config, readPolicy: prepared.readCurrentConfiguration, directory, identity, now, register, profilePolicy })
     })()
     const readTeams = identity.teamDirectory
     if (config.teams === "direct" && !store.teamProfiles) throw new Error("Microsoft Team policy is unavailable")
@@ -82,7 +82,7 @@ export async function createMicrosoftInstallation(
     })
     const checkpoint = config.teams === "direct" && store.teamProfiles ? await (async () => {
       const { createCorporateCheckpointHttp } = await import("../runtime/corporate-checkpoint-http.ts")
-      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, now })
+      return createCorporateCheckpointHttp({ config, readPolicy: prepared.readCurrentConfiguration, directory, identity, profilePolicy: store.teamProfiles!, now })
     })() : undefined
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,

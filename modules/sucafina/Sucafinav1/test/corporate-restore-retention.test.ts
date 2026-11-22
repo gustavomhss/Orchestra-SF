@@ -28,6 +28,7 @@ const actor = { id: authority.principalRef, roles: ["admin"], canWrite: true }
 const policy = { access: { operator: { assigned: ["Operations"] } }, roleMap: [], budgetLineIds: {} }
 const teamObjectId = "10000000-0000-4000-8000-000000000001"
 const config = {
+  teams: "direct" as const,
   origin: "https://sf.example.test",
   mount: "/sucafina",
   tenantId: "10000000-0000-4000-8000-000000000002",
@@ -179,7 +180,7 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     if (!policyStore.teamProfiles) throw new Error("Expected the original Team policy store")
     const register = await openCorporateRecoveryRegister(registerFile, directory, process.getuid?.())
     const recovery = createCorporateRecoveryHttp({
-      config, directory, register, profilePolicy: policyStore.teamProfiles, now: () => new Date(at),
+      config, readPolicy: async () => config, directory, register, profilePolicy: policyStore.teamProfiles, now: () => new Date(at),
       identity: {
         prepare: async () => {},
         observeCorporateRecoveryActor: async (request, group) =>
@@ -292,7 +293,7 @@ test("corporate recovery keeps recover authority separate from checkpoint author
   try {
     const recovery = createCorporateRecoveryHttp({
       ...fixture.input,
-      config: { ...fixture.input.config, grants: [{ principalRef: actor.id, migrationActions: ["checkpoint"] }] },
+      readPolicy: async () => ({ ...await fixture.input.readPolicy(), grants: [{ principalRef: actor.id, migrationActions: ["checkpoint"] }] }),
     })
     expect((await fixture.post(recovery))?.status).toBe(403)
     expect(fixture.verification.calls).toBe(0)
@@ -358,8 +359,24 @@ async function recoveryPolicyFixture(bootstrapEnabledTeamIds: readonly string[] 
       calls: 0, before: async () => {},
     }
     const fixtureConfig = { ...config, enabledTeamIds: [...bootstrapEnabledTeamIds] }
+    const privatePolicy: {
+      value: Awaited<ReturnType<Parameters<typeof createCorporateRecoveryHttp>[0]["readPolicy"]>>
+      unavailable: boolean
+    } = { value: fixtureConfig, unavailable: false }
+    const changeAuthority = (change: "removed" | "checkpoint-only" | "duplicate" | "group" | "unavailable") => {
+      if (change === "unavailable") { privatePolicy.unavailable = true; return }
+      privatePolicy.value = change === "group"
+        ? { ...privatePolicy.value, supremeAdminGroupId: "10000000-0000-4000-8000-000000000008" }
+        : { ...privatePolicy.value, grants: change === "removed" ? []
+          : change === "duplicate" ? [...config.grants, ...config.grants]
+          : [{ principalRef: actor.id, migrationActions: ["checkpoint"] }] }
+    }
     const input: Parameters<typeof createCorporateRecoveryHttp>[0] = {
       config: fixtureConfig,
+      readPolicy: async () => {
+        if (privatePolicy.unavailable) throw new Error("Controlled private configuration unavailable")
+        return privatePolicy.value
+      },
       directory, register, profilePolicy, now: () => new Date(at),
       // This controlled administrator has no Team-directory admission. Recovery
       // still observes its original dedicated identity capability and explicit grant.
@@ -393,7 +410,7 @@ async function recoveryPolicyFixture(bootstrapEnabledTeamIds: readonly string[] 
       if (result.status !== "ok" || !result.changed) throw new Error("Expected a real changed Team policy")
     }
     return {
-      input, post, mutate, policyStore, profilePolicy, verification, current,
+      input, post, mutate, changeAuthority, policyStore, profilePolicy, verification, current,
       snapshot: () => read(store),
       readAsset: () => assets.transaction("dashboard", async (_snapshot, blobs) => ({ commit: false, value: await blobs.get(assetKey) })),
       close,
@@ -403,3 +420,43 @@ async function recoveryPolicyFixture(bootstrapEnabledTeamIds: readonly string[] 
     throw error
   }
 }
+
+test.each(["removed", "checkpoint-only", "duplicate", "group"] as const)(
+  "corporate recovery rejects current private authority changed after startup: %s",
+  async (change) => {
+    const fixture = await recoveryPolicyFixture()
+    try {
+      fixture.changeAuthority(change)
+      expect((await fixture.post())?.status).toBe(403)
+      expect(fixture.verification.calls).toBe(0)
+      expect(await fixture.snapshot()).toEqual(fixture.current)
+      expect(await fixture.readAsset()).toBeUndefined()
+    } finally { await fixture.close() }
+  },
+)
+
+test.each(["removed", "checkpoint-only", "duplicate", "group", "unavailable"] as const)(
+  "corporate recovery rolls back staged data, blobs and audit when current private authority changes: %s",
+  async (change) => {
+    const fixture = await recoveryPolicyFixture()
+    try {
+      // The original third check follows restore staging and precedes SQLite COMMIT.
+      fixture.verification.before = async (call) => { if (call === 3) fixture.changeAuthority(change) }
+      expect((await fixture.post())?.status).toBe(change === "unavailable" ? 503 : 403)
+      expect(fixture.verification.calls).toBe(3)
+      expect(await fixture.snapshot()).toEqual(fixture.current)
+      expect(await fixture.readAsset()).toBeUndefined()
+    } finally { await fixture.close() }
+  },
+)
+
+test("corporate recovery never falls back to startup authority when the current private reader fails", async () => {
+  const fixture = await recoveryPolicyFixture()
+  try {
+    fixture.changeAuthority("unavailable")
+    expect((await fixture.post())?.status).toBe(503)
+    expect(fixture.verification.calls).toBe(0)
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    expect(await fixture.readAsset()).toBeUndefined()
+  } finally { await fixture.close() }
+})
