@@ -806,10 +806,6 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               </section>}
             </Show>
             <div class="sf-files-actions">
-              <Show when={isImport()}>
-                <button type="button" class="mx-btn" disabled={editLocked()}
-                  onClick={cancelPreview}>{t("sf.u23.cancel")}</button>
-              </Show>
               <Show when={isReference() && props.surfaceId === "UI56" && state.manifest?.state === "preview" && !state.reference?.receipt && continuationHref("review")}>
                 {(href) => <A class="mx-btn" href={href()}>
                   {t("sf.ui56.primary")}
