@@ -43,7 +43,7 @@ jobs:
       - name: Exercise the original AZ02 producer controls
         run: |
           set -euo pipefail
-          node --test sf/azure/identity/az02-proof.test.cjs 2>&1 | tee "$SF_RESTART_CONTROLS/az02.tap"
+          node --test --test-reporter=tap sf/azure/identity/az02-proof.test.cjs 2>&1 | tee "$SF_RESTART_CONTROLS/az02.tap"
       - name: Exercise original host controls and restart transition refusals
         run: |
           set -euo pipefail
@@ -67,7 +67,7 @@ jobs:
           const read = (name) => readFileSync(root + "/" + name, "utf8")
           const tap = read("az02.tap"), python = read("observer.txt")
           const total = Number(tap.match(/^# tests (\d+)$/m)?.[1])
-          assert(Number.isSafeInteger(total) && total >= 33, "AZ02_ORIGINAL_CONTROLS_REQUIRED")
+          assert(total === 42, "AZ02_ORIGINAL_CONTROLS_REQUIRED")
           for (const [name, count] of [["pass", total], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
             assert(new RegExp("^# " + name + " " + count + "$", "m").test(tap), "AZ02_CONTROL_" + name)
           assert(/Ran 49 tests in [0-9.]+s\s+OK\s*$/m.test(python), "OBSERVER_EXACT_49_CONTROLS_REQUIRED")
