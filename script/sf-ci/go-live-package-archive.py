@@ -136,6 +136,8 @@ def require_provenance(admission, native, proof, inputs, members, manifest, ledg
     require(admission.get("schema") == "sf-g07-admission-v1" and admission.get("status") == "VERIFIED_SOURCE" and
             admission.get("productionCutover") is False, "live source admission missing")
     require(HEX40.fullmatch(candidate["sha"]) and HEX40.fullmatch(candidate["tree"]), "candidate identity")
+    require(isinstance(producer.get("operatorLogin"), str) and producer["operatorLogin"],
+            "observed Release operator account missing")
     require(native.get("schema") == "sf-entra-factory-package-v1" and native.get("proof") == "packaged",
             "native package receipt schema")
     for field in ("sourceSHA", "checkoutSHA", "expectedSourceSHA"):
@@ -254,6 +256,7 @@ def verify_package(archive, admission_file, installer_file, output):
             "producer": {"workflowSha": producer["workflowSha"], "workflowPath": producer["workflowPath"],
                          "runId": producer["runId"], "runAttempt": producer["runAttempt"], "jobId": producer["jobId"],
                          "checkRunId": producer["checkRunId"], "jobName": producer["jobName"],
+                         "operatorLogin": producer["operatorLogin"],
                          "toolchain": {"bun": proof["bun"], "bunRevision": proof["bunRevision"],
                                        "bunArchiveSha256": proof["bunArchiveSha256"]}},
             "acknowledgements": admission["acknowledgements"],

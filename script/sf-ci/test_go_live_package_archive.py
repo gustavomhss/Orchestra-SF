@@ -42,7 +42,7 @@ class PackageTest(unittest.TestCase):
             "acknowledgements": {"migration": {"testFixtureOnly": True}, "release": {"testFixtureOnly": True}},
             "producer": {"workflowSha": WORKFLOW, "workflowPath": ".github/workflows/g09-candidate.yml",
                          "runId": "33", "runAttempt": "2", "jobId": "44", "checkRunId": "55",
-                         "jobName": "teams-profile-artifact", "artifactId": "66", "artifactName": "test-fixture-only",
+                         "jobName": "teams-profile-artifact", "operatorLogin": "qa-test-fixture", "artifactId": "66", "artifactName": "test-fixture-only",
                          "sourceProofFile": "compile-provenance.json", "buildInputsFile": "build-inputs.json"},
             "productionCutover": False, "installation": None,
         }

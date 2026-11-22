@@ -39,7 +39,8 @@ function fixture() {
     [base + "/issues/comments/111", m.data],
     [base + "/issues/comments/222", r.data],
     [base + "/actions/runs/33/attempts/2", { id: 33, run_attempt: 2, head_sha: request.producer.workflowSha,
-      path: request.producer.workflowPath, repository: { full_name: repository }, status: "completed", conclusion: "success" }],
+      path: request.producer.workflowPath, repository: { full_name: repository }, status: "completed", conclusion: "success",
+      actor: { login: "qa-test-fixture" }, triggering_actor: { login: "qa-test-fixture" } }],
     [base + "/actions/jobs/44", { id: 44, run_id: 33, run_attempt: 2, head_sha: request.producer.workflowSha,
       check_run_url: "https://api.github.com/repos/" + repository + "/check-runs/55",
       status: "completed", conclusion: "success", name: "teams-profile-artifact",
@@ -82,6 +83,7 @@ test("live-source contract binds both role statements, exact commit tree, attemp
   assert.deepEqual(result.candidate, f.request.candidate)
   assert.equal(result.acknowledgements.migration.roleConfirmation.status, "DECLARED_IN_TRUSTED_SOURCE")
   assert.equal(result.acknowledgements.release.roleConfirmation.operator, "qa-test-fixture")
+  assert.equal(result.producer.operatorLogin, "qa-test-fixture")
   assert.match(result.acknowledgements.release.roleConfirmation.identityLimit, /agent-session identities are not inferred/)
   assert.equal(result.installation, null)
   assert.equal(result.productionCutover, false)
@@ -106,6 +108,8 @@ for (const [name, change, message] of [
   ["producer predates final ACK", (f) => { f.comment("release").updated_at = "2026-01-01T11:30:00Z" }, /started before/],
   ["wrong producing attempt", (f) => { f.data.get(f.base + "/actions/jobs/44").run_attempt = 1 }, /another attempt/],
   ["wrong producer workflow", (f) => { f.data.get(f.base + "/actions/runs/33/attempts/2").path = ".github/workflows/other.yml" }, /workflow path mismatch/],
+  ["different triggering operator", (f) => { f.data.get(f.base + "/actions/runs/33/attempts/2").triggering_actor.login = "unconfirmed-operator" }, /confirmed Release operator/],
+  ["missing operator metadata", (f) => { const run = f.data.get(f.base + "/actions/runs/33/attempts/2"); delete run.triggering_actor; delete run.actor }, /confirmed Release operator/],
   ["failed job", (f) => { f.data.get(f.base + "/actions/jobs/44").conclusion = "failure" }, /did not succeed/],
   ["wrong check run", (f) => { f.data.get(f.base + "/actions/jobs/44").check_run_url += "0" }, /check-run mismatch/],
   ["artifact from another run", (f) => { f.data.get(f.base + "/actions/artifacts/66").workflow_run.id = 34 }, /another run/],

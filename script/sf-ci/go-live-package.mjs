@@ -186,6 +186,9 @@ export async function verifyAdmission(value, api) {
   assert.equal(run.path, p.workflowPath, "producer workflow path mismatch")
   assert.equal(run.repository?.full_name, repository, "producer repository mismatch")
   assert.equal(run.status, "completed", "producer run is not complete")
+  const operatorLogin = run.triggering_actor?.login || run.actor?.login
+  assert.equal(operatorLogin, request.acknowledgements.release.operator,
+    "producer was not invoked by the confirmed Release operator account")
   assert.equal(String(job.id), p.jobId, "producer job mismatch")
   assert.equal(String(job.run_id), p.runId, "job belongs to another run")
   assert.equal(String(job.run_attempt), p.runAttempt, "job belongs to another attempt")
@@ -215,7 +218,7 @@ export async function verifyAdmission(value, api) {
     repository,
     candidate: request.candidate,
     acknowledgements: { migration, release },
-    producer: { ...p, jobName: job.name, startedAt: job.started_at, completedAt: job.completed_at,
+    producer: { ...p, operatorLogin, jobName: job.name, startedAt: job.started_at, completedAt: job.completed_at,
       runConclusion: run.conclusion, artifactCreatedAt: artifact.created_at, zipBytes: artifact.size_in_bytes },
     productionCutover: false,
     installation: null
