@@ -239,8 +239,12 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   const reads: { event: string; method: string; path: string; status?: number; failure?: string }[] = []
   const versionRead = (request: Request) => {
     const url = new URL(request.url())
-    return request.method() === "GET" && url.origin === account.origin &&
-      url.pathname === new URL(account.baseURL).pathname + "/planner" && url.searchParams.get("page") === "Versions"
+    const mount = new URL(account.baseURL).pathname
+    return request.method() === "GET" && url.origin === account.origin && (
+      url.pathname === mount + "/api/ui/pages/CAP23" ||
+      url.pathname === mount + "/api/ui/context" ||
+      url.pathname === mount + "/planner" && url.searchParams.get("page") === "Versions"
+    )
   }
   const requested = (request: Request) => {
     if (versionRead(request)) reads.push({ event: "request", method: request.method(), path: new URL(request.url()).pathname })

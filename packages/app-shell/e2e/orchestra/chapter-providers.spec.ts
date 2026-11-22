@@ -303,6 +303,7 @@ async function expectCompactProviderError(page: Page, message: string) {
   const retry = error.getByRole("button", { name: "Try again", exact: true })
   await expect(alert).toHaveText(message)
   await expect(retry).toBeEnabled()
+  await expect(retry).toBeFocused()
   await expect(alert).toBeInViewport({ ratio: 1 })
   await expect(retry).toBeInViewport({ ratio: 1 })
   const [frame, text, action] = await Promise.all([
