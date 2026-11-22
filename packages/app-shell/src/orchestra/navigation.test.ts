@@ -17,6 +17,21 @@ const ids = (items: readonly { id: string }[]) => items.map((item) => item.id)
 test("keeps Inbox independent in primary navigation, then Advanced, with Settings last", () => {
   expect(ids(primaryNavigation)).toEqual(["home", "chat", "inbox", "board", "agents", "cicd"])
   expect(ids(advancedNavigation)).toEqual([
+    "sf-home",
+    "sf-decisions",
+    "sf-dashboard",
+    "sf-people",
+    "sf-operations",
+    "sf-portfolio",
+    "sf-procurement",
+    "sf-planner",
+    "sf-work",
+    "sf-bi",
+    "sf-reviews",
+    "sf-imports",
+    "sf-documents",
+    "sf-memory",
+    "sf-routines",
     "maestro",
     "flight-engineer",
     "workflows",
