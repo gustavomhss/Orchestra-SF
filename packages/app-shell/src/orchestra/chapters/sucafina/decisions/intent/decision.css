@@ -196,11 +196,13 @@
 .sf-decision-page .sf-u18-receipt[aria-current="true"] > header h3 { color: var(--orchestra-accent); }
 
 /* UI41: configuration, exact input review and source history have distinct stages. */
-.sf-decision-analysis-editor { display: grid; gap: 20px; }
-.sf-decision-page .sf-analyses-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: end; }
+.sf-decision-analysis-editor { display: grid; inline-size: 100%; max-inline-size: var(--sf-decision-stage-width); margin-inline: auto; gap: 20px; }
+.sf-decision-analysis-history { margin-block-start: 24px; }
+.sf-decision-page .sf-analyses-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: end; }
+.sf-decision-page .sf-analyses-controls > label:first-child { grid-column: 1 / -1; }
 .sf-decision-page .sf-analyses-wide { grid-column: 1 / -1; }
 .sf-decision-page .sf-analyses-controls > button { justify-self: start; }
-.sf-decision-page .sf-analyses-controls > button + button { justify-self: end; grid-column: 3; }
+.sf-decision-page .sf-analyses-controls > button + button { justify-self: end; grid-column: 2; }
 .sf-decision-page .sf-analyses-list { gap: 0; }
 .sf-decision-page .sf-analyses-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px 20px; border: 0; border-block-start: 1px solid var(--mx-line); border-radius: 0; padding: 16px 0; }
 .sf-decision-page .sf-analyses-list li:first-child { border-block-start: 0; }
