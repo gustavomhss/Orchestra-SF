@@ -105,4 +105,3 @@ test("Local Operator refuses unsafe or aliased workspace before creating host ru
     expect((await loadLocalConfiguration(installed.configuration)).keys).toEqual(installed.keys)
   } finally { await rm(installed.container, { recursive: true, force: true }) }
 }, 120_000)
-
