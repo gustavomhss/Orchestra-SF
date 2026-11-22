@@ -185,7 +185,9 @@ export function finalizePlannerSensitivity(input: {
   })
 }
 
-/** Pending-only inventory has not assessed a category. Do not search it into an exact bound. */
-function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
-  return scenario.costCoverage.entries.some((entry) => entry.status !== "pending")
+/** Every priced component needs assessed coverage; omitted categories remain unknown. */
+export function assessedKnownSubtotalCoverage(scenario: ScenarioResult) {
+  const included = scenario.costCoverage.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+  return scenario.costCoverage.coverageState !== "unavailable" && scenario.costCoverage.issues.length === 0 &&
+    quantifiedSensitivityScenario(scenario) && scenario.components.every((component) => included.includes(component.id))
 }

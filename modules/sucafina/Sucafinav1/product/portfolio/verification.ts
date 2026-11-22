@@ -13,8 +13,8 @@ import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.
 import type { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
 import { createPlannerIntervalProof } from "../planner/interval-proof.ts"
 import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
-import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sensitivity.ts"
-import { finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
+import { createSensitivityEvaluator } from "./sensitivity.ts"
+import { assessedKnownSubtotalCoverage, finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
 import { validatePlannerThreshold } from "./threshold-proof.ts"
 import type { KnownSubtotalThreshold } from "./threshold-proof.ts"
 import type { createPlannerSensitivity, SensitivityDisclosureFormat } from "./planner-sensitivity.ts"
@@ -140,7 +140,7 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !assessedKnownSubtotalCoverage(sourceScenario) || !assessedKnownSubtotalCoverage(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         if (expectedResult.thresholdEvidence.state === "exact") {
           // The persisted number is a candidate, never a reused proof. Rebuild
           // its current domain and verify its accepted/rejected IEEE boundary.
