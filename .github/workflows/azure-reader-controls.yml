@@ -1,0 +1,326 @@
+name: azure-reader-controls
+on:
+  push:
+    branches: [azure-reader-final]
+permissions:
+  contents: read
+concurrency:
+  group: azure-reader-controls
+  cancel-in-progress: false
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    env:
+      CANDIDATE_SHA: 4273ab9bdb8f6fd2909b90484c83acb6c3d70df0
+      CANDIDATE_TREE: 7a2f3e4e25de50fe037f336fbf150be6a340054c
+      BASE_SHA: afeee5cf2cb2d07d3265b16a622d2993bd28df90
+    steps:
+      - name: Checkout the reviewed candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 4273ab9bdb8f6fd2909b90484c83acb6c3d70df0
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source and disposable driver attribution
+        run: |
+          set -euo pipefail
+          umask 077
+          export EVIDENCE="$RUNNER_TEMP/azure-reader-controls"
+          export CONTROL_INPUTS="$RUNNER_TEMP/azure-reader-control-inputs"
+          printf 'EVIDENCE=%s\nCONTROL_INPUTS=%s\n' "$EVIDENCE" "$CONTROL_INPUTS" >> "$GITHUB_ENV"
+          mkdir -m 700 "$EVIDENCE" "$CONTROL_INPUTS"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$CANDIDATE_TREE"
+          test "$(git rev-parse 'HEAD^')" = "$BASE_SHA"
+          test "$(git rev-parse "$GITHUB_SHA^")" = "$CANDIDATE_SHA"
+          test "$(git rev-list --parents -n 1 "$GITHUB_SHA" | wc -w)" = 2
+          test "$(git diff --name-only "$CANDIDATE_SHA" "$GITHUB_SHA")" = ".github/workflows/azure-reader-controls.yml"
+          test "$(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA" | wc -l)" = 2
+          git diff --check "$BASE_SHA" "$CANDIDATE_SHA"
+          test -z "$(git status --porcelain)"
+          {
+            printf 'candidateSha=%s\n' "$CANDIDATE_SHA"
+            printf 'candidateTree=%s\n' "$CANDIDATE_TREE"
+            printf 'baseSha=%s\n' "$BASE_SHA"
+            printf 'driverSha=%s\n' "$GITHUB_SHA"
+            printf 'driverTree=%s\n' "$(git rev-parse "$GITHUB_SHA^{tree}")"
+            printf 'guardBaseSha=%s\n' "$(git rev-parse origin/dev)"
+          } > "$EVIDENCE/source.refs"
+          git show "$BASE_SHA:.github/workflows/azure-qualification-inventory.yml" > "$CONTROL_INPUTS/base.yml"
+          sha256sum .github/workflows/azure-qualification-inventory.yml docs/qa/sucafina/go-live/g10-cutover-rollback.md > "$EVIDENCE/source.sha256"
+      - name: Prepare declared dependency runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.15.0
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Parse original workflow and preserve authorization boundaries
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          const {readFileSync, writeFileSync} = await import("node:fs");
+          const {createRequire} = await import("node:module");
+          const {deepStrictEqual, equal, ok} = await import("node:assert/strict");
+          const {parse} = createRequire(process.cwd() + "/packages/core/package.json")("yaml");
+          const path = ".github/workflows/azure-qualification-inventory.yml";
+          const original = parse(readFileSync(process.env.CONTROL_INPUTS + "/base.yml", "utf8"));
+          const candidate = parse(readFileSync(path, "utf8"));
+          deepStrictEqual(candidate.on, {push: {branches: ["dev"], paths: [path]}, workflow_dispatch: null});
+          deepStrictEqual(candidate.permissions, {contents: "read"});
+          equal(candidate.jobs.observe.environment, "azure-mvp");
+          deepStrictEqual(candidate.jobs.observe.permissions, {contents: "read", actions: "read", deployments: "read", "id-token": "write"});
+          equal(candidate.jobs.observe.if, "github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/dev'");
+          equal(candidate.jobs.observe.steps.length, 5);
+          equal(candidate.jobs.observe.steps[3].name, "Read the configured Azure foundation without guest execution");
+          const unchanged = structuredClone(candidate);
+          unchanged.jobs.observe.steps[3].run = original.jobs.observe.steps[3].run;
+          deepStrictEqual(unchanged, original);
+          let index = 0;
+          for (const step of candidate.jobs.observe.steps) {
+            if (!step.run) continue;
+            const match = step.run.match(/python3 - <<'PY'\n([\s\S]*?)\nPY(?:\n|$)/);
+            ok(match, "original Python block exists in " + step.name);
+            writeFileSync(process.env.CONTROL_INPUTS + "/embedded-" + index + ".py", match[1] + "\n");
+            writeFileSync(process.env.CONTROL_INPUTS + "/shell-" + index + ".sh", step.run);
+            index++;
+          }
+          equal(index, 3);
+          const report = {yamlParsed: true, originalPythonBlocks: index, unchangedAuthorizationAndOtherSteps: true, actualAzureObserved: false};
+          writeFileSync(process.env.EVIDENCE + "/workflow-structure.json", JSON.stringify(report, null, 2) + "\n");
+          console.log(JSON.stringify(report));
+          JS
+          for input in "$CONTROL_INPUTS"/shell-*.sh; do
+            bash -n "$input"
+          done
+      - name: Exercise the original minimizers and partial receipt path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' 2>&1 | tee "$EVIDENCE/projection-tests.log"
+          import ast, datetime, hashlib, json, os, pathlib, re, tempfile, unittest
+          inputs = pathlib.Path(os.environ["CONTROL_INPUTS"])
+          source_paths = sorted(inputs.glob("embedded-*.py"))
+          assert len(source_paths) == 3
+          for path in source_paths:
+              compile(path.read_text(), str(path), "exec")
+          source = source_paths[2].read_text()
+          tree = ast.parse(source)
+          names = {"metadata_hash", "minimize_tags", "scoped_network_reference", "minimize_network_bindings", "minimize_permissions", "save"}
+          functions = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in names]
+          assert {node.name for node in functions} == names and len(functions) == 6
+          namespace = {"hashlib": hashlib, "json": json, "re": re, "datetime": datetime}
+          exec(compile(ast.Module(body=functions, type_ignores=[]), str(source_paths[2]), "exec"), namespace)
+          partial = [node for node in tree.body if isinstance(node, ast.If) and isinstance(node.test, ast.BoolOp) and any(
+              isinstance(item, ast.Subscript) and isinstance(item.value, ast.Name) and item.value.id == "permissions"
+              and isinstance(item.slice, ast.Constant) and item.slice.value == "nextPagePresent"
+              for item in node.test.values)]
+          assert len(partial) == 1
+          partial_code = compile(ast.Module(body=partial, type_ignores=[]), str(source_paths[2]), "exec")
+          calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "read"]
+          caller = [node for node in calls if isinstance(node.args[0], ast.Constant) and node.args[0].value == "callerPermissions"]
+          assert len(caller) == 1
+          args = caller[0].args[1]
+          assert isinstance(args, ast.List)
+          assert [node.value for node in args.elts[:4]] == ["rest", "--method", "get", "--url"]
+          assert len(args.elts) == 5 and isinstance(args.elts[4], ast.Name) and args.elts[4].id == "permissions_url"
+          assert isinstance(caller[0].args[3], ast.Name) and caller[0].args[3].id == "minimize_permissions"
+          urls = [node for node in tree.body if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id == "permissions_url" for target in node.targets)]
+          assert len(urls) == 1
+          url_text = ast.unparse(urls[0].value)
+          assert "https://management.azure.com/subscriptions/" in url_text
+          assert "/providers/Microsoft.Authorization/permissions?api-version=2022-04-01" in url_text
+          assert "AZURE_SUBSCRIPTION_ID" in url_text and "urllib.parse.quote(group, safe='')" in url_text
+          assert "nextLink" not in url_text
+          vnet = [node for node in calls if isinstance(node.args[0], ast.Constant) and node.args[0].value == "networkBindings"]
+          assert len(vnet) == 1
+          assert [node.value for node in vnet[0].args[1].elts[:4]] == ["network", "vnet", "list", "--resource-group"]
+          assert isinstance(vnet[0].args[1].elts[4], ast.Name) and vnet[0].args[1].elts[4].id == "group"
+          flags = ("reservationConfirmed", "guestObserved", "installedQualification", "productionCutover")
+          for flag in flags:
+              assert '"' + flag + '": False' in source_paths[0].read_text()
+          subscription = "11111111-1111-1111-1111-111111111111"
+          group = "qa-reserved"
+          prefix = "/subscriptions/" + subscription + "/resourceGroups/" + group + "/providers/Microsoft.Network/"
+          network_id = prefix + "virtualNetworks/qa-vnet"
+          subnet_id = network_id + "/subnets/qa-subnet"
+          class ProjectionControls(unittest.TestCase):
+              def test_01_absent_and_empty_tags(self):
+                  self.assertEqual(namespace["minimize_tags"](None), {"present": False, "count": 0, "entries": []})
+                  empty = namespace["minimize_tags"]({})
+                  self.assertFalse(empty["present"])
+                  self.assertEqual(empty["count"], 0)
+                  self.assertRegex(empty["sha256"], r"^[a-f0-9]{64}$")
+
+              def test_02_closed_enums_and_canonical_hash(self):
+                  tags = {"Environment": "QA", "Purpose": "G10-CLONE", "Gate": "G10", "LeaseState": "RESERVED"}
+                  result = namespace["minimize_tags"](tags)
+                  self.assertEqual({item["name"]: item["enum"] for item in result["entries"]}, {"environment": "qa", "purpose": "g10-clone", "gate": "g10", "leasestate": "reserved"})
+                  self.assertEqual(result["sha256"], namespace["minimize_tags"](dict(reversed(list(tags.items()))))["sha256"])
+
+              def test_03_free_values_and_unknown_names_are_not_published(self):
+                  canaries = ["PRIVATE_OWNER_CANARY", "https://private.invalid/reservation?key=SECRET_CANARY", "PRIVATE_UNKNOWN_KEY", "2026-11-23T03:17:28Z"]
+                  result = namespace["minimize_tags"]({"Owner": canaries[0], "ReservationRef": canaries[1], canaries[2]: "PRIVATE_UNKNOWN_VALUE", "WindowStart": canaries[3], "Environment": "PRIVATE_ENUM_VALUE"})
+                  encoded = json.dumps(result)
+                  for canary in canaries + ["PRIVATE_UNKNOWN_VALUE", "PRIVATE_ENUM_VALUE"]:
+                      self.assertNotIn(canary, encoded)
+                  self.assertEqual(result["count"], 5)
+                  for entry in result["entries"]:
+                      self.assertRegex(entry["valueSha256"], r"^[a-f0-9]{64}$")
+                      self.assertNotIn("enum", entry)
+
+              def test_04_malformed_tags_rejected(self):
+                  for value in [[], "secret", {3: "value"}, {"owner": None}, {"owner": {"nested": "secret"}}]:
+                      with self.subTest(shape=type(value).__name__), self.assertRaises(ValueError):
+                          namespace["minimize_tags"](value)
+
+              def test_05_scoped_network_and_absent_association(self):
+                  function = namespace["scoped_network_reference"]
+                  self.assertEqual(function(None, "natGateways", subscription, group), {"present": False})
+                  for kind in ("virtualNetworks", "networkSecurityGroups", "routeTables", "natGateways"):
+                      identifier = prefix + kind + "/Qa.Resource-(1)"
+                      value = function(identifier, kind, subscription.upper(), group.upper())
+                      self.assertEqual(value, {"present": True, "scope": "CONFIGURED_RESOURCE_GROUP", "id": identifier})
+                  self.assertEqual(function(subnet_id, "subnets", subscription, group)["id"], subnet_id)
+
+              def test_06_external_and_unexpected_references_are_hash_only(self):
+                  function = namespace["scoped_network_reference"]
+                  identifier = prefix + "networkSecurityGroups/qa-nsg"
+                  values = [
+                      identifier.replace(subscription, "22222222-2222-2222-2222-222222222222"),
+                      identifier.replace(group, group + "-other"),
+                      identifier.replace("Microsoft.Network", "Microsoft.Compute"),
+                      identifier.replace("networkSecurityGroups", "routeTables"),
+                      identifier + "/nested", identifier + "?secret=PRIVATE_QUERY",
+                      identifier.replace("qa-nsg", "%71a-nsg"), "https://private.invalid/PRIVATE_URL"
+                  ]
+                  for value in values:
+                      with self.subTest(referenceHash=hashlib.sha256(value.encode()).hexdigest()):
+                          result = function(value, "networkSecurityGroups", subscription, group)
+                          self.assertEqual(set(result), {"present", "scope", "sha256"})
+                          self.assertEqual(result["scope"], "OUTSIDE_SCOPE_OR_UNEXPECTED_ID")
+                          self.assertNotIn(value, json.dumps(result))
+                  with self.assertRaises(ValueError):
+                      function(identifier, "unexpectedType", subscription, group)
+                  with self.assertRaises(ValueError):
+                      function(7, "routeTables", subscription, group)
+
+              def test_07_bindings_preserve_valid_parent_and_minimize_external_association(self):
+                  foreign = prefix.replace(group, "foreign-rg") + "natGateways/PRIVATE_NAT"
+                  result = namespace["minimize_network_bindings"]([{"id": network_id.upper(), "subnets": [{"id": subnet_id, "nsgId": prefix + "networkSecurityGroups/qa-nsg", "routeTableId": None, "natGatewayId": foreign}]}], subscription, group)
+                  subnet = result[0]["subnets"][0]
+                  self.assertEqual(subnet["id"], subnet_id)
+                  self.assertEqual(subnet["networkSecurityGroup"]["scope"], "CONFIGURED_RESOURCE_GROUP")
+                  self.assertEqual(subnet["routeTable"], {"present": False})
+                  self.assertEqual(subnet["natGateway"]["scope"], "OUTSIDE_SCOPE_OR_UNEXPECTED_ID")
+                  self.assertNotIn("PRIVATE_NAT", json.dumps(result))
+                  self.assertEqual(namespace["minimize_network_bindings"]([], subscription, group), [])
+
+              def test_08_invalid_network_scope_and_parent_rejected(self):
+                  for value in [
+                      {},
+                      [{"id": network_id.replace(group, "other-rg"), "subnets": []}],
+                      [{"id": network_id, "subnets": None}],
+                      [{"id": network_id, "subnets": [{"id": subnet_id.replace("qa-vnet", "other-vnet")}]}],
+                      [{"id": network_id, "subnets": [{"id": subnet_id.replace(subscription, "other-subscription")}]}],
+                  ]:
+                      with self.subTest(shape=type(value).__name__), self.assertRaises(ValueError):
+                          namespace["minimize_network_bindings"](value, subscription, group)
+
+              def test_09_permission_arrays_are_observations_only(self):
+                  raw = {"value": [{"actions": ["*/read", "Microsoft.Network/*"], "notActions": ["Microsoft.Network/networkSecurityGroups/write"], "dataActions": None, "notDataActions": [], "private": "PRIVATE_PERMISSION_CANARY"}]}
+                  result = namespace["minimize_permissions"](raw)
+                  self.assertEqual(result["permissions"], [{key: raw["value"][0][key] for key in ("actions", "notActions", "dataActions", "notDataActions")}])
+                  self.assertFalse(result["authorizationInferred"])
+                  self.assertFalse(result["nextLinkFollowed"])
+                  self.assertFalse(result["nextPagePresent"])
+                  self.assertEqual(result["pageLimit"], 1)
+                  self.assertNotIn("PRIVATE_PERMISSION_CANARY", json.dumps(result))
+
+              def test_10_malformed_permission_values_rejected(self):
+                  for value in [[], {}, {"value": None}, {"value": ["secret"]}, {"value": [{"actions": "*"}]}, {"value": [{"dataActions": [7]}]}, {"value": [{"notActions": ["https://private.invalid/SECRET"]}]}]:
+                      with self.subTest(shape=type(value).__name__), self.assertRaises(ValueError):
+                          namespace["minimize_permissions"](value)
+
+              def test_11_original_next_link_path_persists_partial_without_link(self):
+                  canary = "https://private.invalid/SECRET_NEXT_PAGE"
+                  projected = namespace["minimize_permissions"]({"value": [], "nextLink": canary})
+                  self.assertTrue(projected["nextPagePresent"])
+                  with tempfile.TemporaryDirectory() as directory:
+                      root = pathlib.Path(directory)
+                      (root / "receipt.json").write_text(json.dumps(dict.fromkeys(flags, False)))
+                      namespace.update(root=root, permissions=projected, observations={"callerPermissions": {"status": "OBSERVED", "value": projected}})
+                      exec(partial_code, namespace)
+                      namespace["save"]()
+                      receipt = json.loads((root / "receipt.json").read_text())
+                      metadata = json.loads((root / "azure-metadata.json").read_text())
+                      self.assertEqual(receipt["observationStatus"], "PARTIAL")
+                      self.assertEqual(metadata["callerPermissions"]["status"], "PARTIAL")
+                      self.assertNotIn(canary, json.dumps(metadata))
+                      for flag in flags:
+                          self.assertIs(receipt[flag], False)
+
+              def test_12_complete_page_preserves_complete_and_false_flags(self):
+                  for next_link in [None, ""]:
+                      with tempfile.TemporaryDirectory() as directory:
+                          root = pathlib.Path(directory)
+                          (root / "receipt.json").write_text(json.dumps(dict.fromkeys(flags, False)))
+                          projected = namespace["minimize_permissions"]({"value": [], "nextLink": next_link})
+                          namespace.update(root=root, permissions=projected, observations={"callerPermissions": {"status": "OBSERVED", "value": projected}})
+                          exec(partial_code, namespace)
+                          namespace["save"]()
+                          receipt = json.loads((root / "receipt.json").read_text())
+                          self.assertEqual(receipt["observationStatus"], "COMPLETE")
+                          for flag in flags:
+                              self.assertIs(receipt[flag], False)
+          suite = unittest.defaultTestLoader.loadTestsFromTestCase(ProjectionControls)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          report = {
+              "originalPythonBlocksCompiled": 3, "originalFunctionsExercised": sorted(names),
+              "originalPartialStatementExercised": True, "fixedGetAndVnetScopeChecked": True,
+              "tests": result.testsRun, "failures": len(result.failures), "errors": len(result.errors), "skipped": len(result.skipped),
+              "actualAzureObserved": False,
+          }
+          pathlib.Path(os.environ["EVIDENCE"], "projection-controls.json").write_text(json.dumps(report, indent=2) + "\n")
+          if not result.wasSuccessful() or result.testsRun != 12 or result.skipped:
+              raise SystemExit(1)
+          PY
+      - name: Run canonical change guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$EVIDENCE/guards.log"
+          test -z "$(git status --porcelain)"
+          sha256sum --check "$EVIDENCE/source.sha256"
+      - name: Record a component-only result
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ["EVIDENCE"])
+          controls = json.loads((root / "projection-controls.json").read_text())
+          assert controls["tests"] == 12 and not controls["failures"] and not controls["errors"] and not controls["skipped"]
+          refs = dict(line.split("=", 1) for line in (root / "source.refs").read_text().splitlines())
+          hashes = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(root.iterdir()) if path.is_file()}
+          receipt = {
+              "schema": "orchestra-sf.azure-reader-controls.v1", "class": "COMPONENT_READINESS",
+              **refs, "runId": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "result": "PASS", "tests": controls["tests"], "failures": 0, "errors": 0, "skipped": 0,
+              "yamlStructureVerified": True, "pythonBlocksCompiled": 3, "shellBlocksParsed": 3,
+              "canonicalGuardsPassed": True, "fileSha256": hashes,
+              "actualAzureObserved": False, "reservationConfirmed": False, "guestObserved": False,
+              "installedQualification": False, "productionCutover": False,
+          }
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps(receipt, indent=2))
+          PY
+      - name: Preserve original validation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: azure-reader-controls-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/azure-reader-controls
+          if-no-files-found: error
+          retention-days: 7
