@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "STATIC_REVIEWED_PENDING_FOCUSED_AND_INSTALLED_QUALIFICATION",
+  "integrationBase": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+  "candidates": [
+    "4e32415ebf7b684ef26ca0012d48eb90acd095ee",
+    "dca1820442b05a06aa3eb981f2c59007e05af606"
+  ],
+  "files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/producer.ts",
+      "blob": "cc4680188c1004349e7a7b25e84ce68366aea1a0"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+      "blob": "3753bd060cefde92389e9ba2deb585388a6386f6"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+      "blob": "a18e0fa6543867c60871da6436bf1b1b53e91a26"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "blob": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+      "blob": "581ac6c7f506c9ef7e46c633e70139edebddcfdd"
+    }
+  ],
+  "originalSources": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "blob": "23721ab89535bcf8644a98cf3ed2de65a929a329"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332"
+    },
+    {
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "blob": "c42b12d9189862399cd166924d212c84114b5fb3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts",
+      "blob": "32b39933bf81c220729d3af910809e7d7b88910f"
+    }
+  ],
+  "findings": [
+    "A04 already publishes nested original units and selection using a matching closed schema.",
+    "No producer, schema, grant, route, selector, original seed or persistent field is changed by this delta.",
+    "Native consumer checks exact operation/family and original full identity, version, selection, source scope and access revision.",
+    "Fixture makes one original rule registration before portfolio proof creation and verifies original published receipt, current version, case, decision and units.",
+    "External complete stored-rule readback is not exposed and is not claimed.",
+    "Nine structural tests are specimens, not source issuance or installed success evidence."
+  ],
+  "limitations": [
+    "UI42/UI43/UI44 installed journey remains unqualified.",
+    "This delta still needs app/CLI/E2E types and focused source-contract gates."
+  ]
+}

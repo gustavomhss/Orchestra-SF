@@ -6,7 +6,11 @@ The UI42–UI56 presentation work uses the existing native shell, route registry
 
 The portfolio consumer now accepts an individually ready, operational action inside an aggregate resource marked partial. It still requires the exact operation ID and family. A ready sibling never authorizes a denied or missing operation. Six focused cases cover this distinction.
 
-The original decision-sensitivity-units output is flat. Its reader now decodes the unchanged closed output contract and binds the case identity/incarnation/revision, baseline, scenario and parameter before displaying the original units and evidence references. Five cases reject the obsolete shape, incomplete metadata, excess fields and crossed source identities.
+The earlier sensitivity leaf incorrectly treated the original issue response as a flat evaluation binding. That claim was not qualified by an installed UI44 journey. The original issue producer returns nested units; the flat portfolio catalog describes resolve-time binding data that requires a registered criterion and bounds. Neither producer nor schema is changed to reconcile those different results.
+
+UI44 now uses the existing A04 decisions.controls.read GET and its unchanged closed input/output contract. That reader already publishes selected.units and selected.unitSelection. The leaf requires that exact operation in the decisions family, verifies the selected public reference, case identity/incarnation/revision, original scenario/parameter listing, complete selection tuple, current access revision and source installation/project, and retains the original units and full evidence references. It does not manufacture evaluation metadata or a rule binding. Nine structural cases cover those boundaries; installed sensitivity qualification remains pending.
+
+The isolated wave-five fixture now registers sensitivity through the original decision-criteria action before creating any portfolio selection proof. It preserves the seed's lte/2000 threshold, horizon and evidence, uses the observed expectedRuleVersion and A04-issued units, then re-reads the original case, decision, units and published rule version. The original seed remains byte-identical. The external API does not expose the complete stored rule; no such external readback is claimed.
 
 ## Installed collaboration and portfolio observations
 
@@ -122,3 +126,10 @@ Independent review closed two late identity gaps: the alternatives adapter verif
 The portfolio availability observer retains seven original action admissions and separate leases. It shares only equal namespace and original read/write-mode metadata inside each of two phases; the next phase and next invocation create new promises. Case/preferences reads fall from28 to8 per invocation, while each candidate retains its own source identity, metadata checks and revalidations. Every admitted lease closes even after a validation/read/finish failure.
 
 Both collaboration and portfolio observers now capture the original state reader before any await. Queued namespace work invokes that exact reference, while the existing identity checks refuse readiness if the live method changes. The two regression controls fail with the previous readers and pass with the correction. Run44996210905 passed71 cases and680 assertions (13 phase-boundary,25 collaboration and33 portfolio cases). The underlying decoder, source provider, namespace selector allowlists, store budgets, schemas and authority leases are unchanged. Installed equivalence and the clean import refresh remain separate qualification steps.
+
+
+## Latest composed verification and remaining journeys
+
+Run44996682703 passed the composed CLI types, permanent browser-test types and original guards at product506a0a6141c5afaff37ec8c282ea3cb2cc7daf31. The guard report records78 rules,567 inspected files,36 warnings and no errors, approvals or guard touches. The A04 leaf and its fixture correction are a later delta and require their own focused and type checks.
+
+The clean portfolio run44996623210 retained its original60-second preview failure after the original comparison and selection registrations completed. UI43 and UI44 were not reached. The latest clean import run44997174038 passed readiness but failed the unchanged10-second post-refresh heading expectation; its independent original reference read returned200/ok in6605ms. The latest installed metadata comparison in run44996583965 matched all9 collaboration and7 portfolio availability entries, while that browser journey still failed the refresh heading. These results do not qualify any of the five pending areas.

@@ -65,9 +65,14 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
   const selection = () => store.controls?.selected ?? null
   const scenarios = () => selection()?.scenarios ?? []
   const parameters = () => scenarios().find((entry) => entry.ref === store.scenarioRef)?.parameters ?? []
-  const unitsCurrent = () => !!store.units && !!selection() && store.units.caseRef.version === selection()!.caseRef.version &&
-    store.units.scenarioRef === store.scenarioRef && store.units.baselineRef === store.baselineRef &&
-    store.units.parameterRef === store.parameterRef && store.scenarioRef !== store.baselineRef
+  const unitsCurrent = () => {
+    const units = store.units, selected = selection()
+    return !!units && !!selected && units.ref === selected.ref &&
+      units.caseRef.id === selected.caseRef.id && units.caseRef.incarnation === selected.caseRef.incarnation &&
+      units.caseRef.version === selected.caseRef.version && units.scenarioRef === store.scenarioRef &&
+      units.baselineRef === store.baselineRef && units.parameterRef === store.parameterRef &&
+      store.scenarioRef !== store.baselineRef
+  }
   const invalidateUnits = () => set({ units: null, unitsState: "empty", review: false })
   const routeTo = (target: "sensitivity-selection" | "sensitivity-result", caseRef?: string, resultRef?: string) => {
     const href = sfDecisionHref(props.route, target, { caseRef, resultRef })
@@ -139,20 +144,23 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
   })
   const issue = () => {
     const current = active(), selected = selection()
-    if (!current || !selected || !admitted("portfolio.decision-sensitivity-units") ||
+    if (!current || !selected || !admitted("decisions.controls.read") ||
       !scenarios().some((item) => item.ref === store.scenarioRef) ||
       !scenarios().some((item) => item.ref === store.baselineRef) ||
       store.scenarioRef === store.baselineRef ||
       !parameters().some((item) => item.ref === store.parameterRef) ||
       store.busy) return
-    const epoch = owner.generation(), caseRef = selected.caseRef
+    const epoch = owner.generation(), reference = selected.ref, caseRef = { ...selected.caseRef }
     const scenario = store.scenarioRef, baseline = store.baselineRef, parameter = store.parameterRef
     const controller = new AbortController()
     set({ busy: true, units: null, unitsState: "loading", review: false, message: null })
-    void sfSensitivityUnitsForSelection(current.transport, current.context, caseRef,
+    void sfSensitivityUnitsForSelection(current.transport, current.context, reference, caseRef,
       scenario, baseline, parameter, controller.signal).then((result) => {
-      if (owner.generation() !== epoch || selection()?.caseRef.version !== caseRef.version ||
-        store.scenarioRef !== scenario || store.baselineRef !== baseline || store.parameterRef !== parameter) return
+      const selected = selection()
+      if (owner.generation() !== epoch || selected?.ref !== reference ||
+        selected.caseRef.id !== caseRef.id || selected.caseRef.incarnation !== caseRef.incarnation ||
+        selected.caseRef.version !== caseRef.version || store.scenarioRef !== scenario ||
+        store.baselineRef !== baseline || store.parameterRef !== parameter) return
       if (result.status !== "ok") { set("unitsState", result.state); return }
       set({ units: result.value, unitsState: "ready" })
     }).catch(() => {
@@ -299,7 +307,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                             <For each={parameters()}>{(item) => <option value={item.ref}>{item.label}</option>}</For>
                           </select>
                         </label>
-                        <button class="mx-btn" type="button" disabled={!admitted("portfolio.decision-sensitivity-units") ||
+                        <button class="mx-btn" type="button" disabled={!admitted("decisions.controls.read") ||
                           !store.scenarioRef || !store.baselineRef || store.scenarioRef === store.baselineRef ||
                           !store.parameterRef || store.busy} onClick={issue}>{t("sf.u19.sensitivity.unit")}</button>
                       </fieldset>

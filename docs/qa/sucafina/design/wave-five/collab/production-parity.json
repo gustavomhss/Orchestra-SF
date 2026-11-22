@@ -1,5 +1,5 @@
 {
-  "workerSource": "edf94a3cd308070fce76984abfc9957192e88542",
+  "workerSource": "1040067c132156f5e2ee445f2e8fd3373ad0ef28",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -53,11 +53,11 @@
     },
     {
       "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
-      "sha": "eb405fac33b6a34a9d4a3fb68fff2877a4659cb7"
+      "sha": "e0b83d004fb9682254c9c81fe154fb2658354720"
     },
     {
       "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
-      "sha": "950b5b65de02ce3002a00279262185c7afbce9ff"
+      "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
@@ -82,6 +82,14 @@
     {
       "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
       "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+      "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5"
+    },
+    {
+      "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+      "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233"
     }
   ],
   "qualification": {
@@ -185,6 +193,39 @@
       "job": 137123713976,
       "result": "diagnostic test passed; large-string leaf hypothesis disproved; clean import qualification remains open",
       "record": "attempts/import-trace-10.json"
+    },
+    "portfolioBatch": {
+      "candidate": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+      "integrated": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+      "unitRun": 44996210905,
+      "unitJob": 137127697907,
+      "cases": 71,
+      "assertions": 680,
+      "portfolioCases": 33,
+      "collaborationCases": 25,
+      "helperCases": 13,
+      "namespaceReads": {
+        "original": 28,
+        "batched": 8
+      },
+      "baselineRun": 44996212778,
+      "baselineExpectedFailures": 2,
+      "baselineReplacementCalls": {
+        "collaboration": 2,
+        "portfolio": 1
+      },
+      "record": "qualification/portfolio-batch-02.json",
+      "installedComparisonRun": 44996583965,
+      "installedComparisonSource": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+      "runtime": "Installed original9/candidate9 collaboration and original7/candidate7 portfolio match; diagnostic import still misses10s. Clean composed import5 running.",
+      "installedComparisonRecord": "attempts/batch-equivalence-01.json"
+    },
+    "cleanImport5": {
+      "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+      "snapshot": "12c27f7830a31229296acf5b2c9c226851cb2721",
+      "run": 44997174038,
+      "result": "running",
+      "record": "attempts/import-fixed-05.json"
     }
   },
   "excluded": [
@@ -204,6 +245,6 @@
         "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
       }
     ],
-    "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files."
+    "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files. Root later delegated portfolio metadata batching and canonical-reader capture in both observers; exact four blobs are listed and integrated by root."
   }
 }

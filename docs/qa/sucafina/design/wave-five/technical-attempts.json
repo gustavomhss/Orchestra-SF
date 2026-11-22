@@ -1449,6 +1449,109 @@
         "localTests": false
       },
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44992777997"
+    },
+    {
+      "attempt": 15,
+      "product": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+      "snapshot": "005f4af0fdc30155b61d80e187f777d9f1c3b149",
+      "run": 44996682703,
+      "job": 137129100538,
+      "cleanupJob": 137129467497,
+      "cleanupStatus": "success",
+      "checks": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "notRerun": 13
+      },
+      "scope": "Composed CLI and permanent E2E types and original guardrails after criteria-bearing physical observation, both pinned metadata readers, all new focused tests and the final collab acknowledgement/capture spec.",
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=1",
+            "origin",
+            "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "guardrails",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 567,
+        "warnings": 36,
+        "errors": 0,
+        "approved": 0,
+        "touchesGuards": false
+      },
+      "failures": [],
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44996682703"
     }
   ]
 }

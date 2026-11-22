@@ -45,17 +45,14 @@ export type SfRecordedPortfolioProjection = Readonly<{
 export type SfRecordedSensitivityProjection = Readonly<{
   resultRef: string; caseRef: SfCaseVersionRef; result: SfSensitivityResultView
 }>
-export type SfSensitivityUnits = Readonly<{
-  caseRef: SfCaseVersionRef
-  scenarioRef: string
-  baselineRef: string
-  parameterRef: string
-  parameterUnit: string
-  resultUnit: string
-  unit: string
-  engineVersion: string
-  sourceRefs: readonly string[]
-}>
+type SfControlsProjection = Extract<
+  Schema.Schema.Type<(typeof SfDecisions.operations)["decisions.controls.read"]["output"]>,
+  { status: "ok" }
+>["value"]
+export type SfSensitivityUnits = NonNullable<NonNullable<SfControlsProjection["selected"]>["units"]> &
+  Readonly<{ ref: string; caseRef: SfCaseVersionRef; scenarioRef: string }>
+type SfSensitivitySelection = Pick<SfSensitivityUnits, "ref" | "caseRef" | "scenarioRef" | "baselineRef" | "parameterRef">
+type SfSensitivityStamp = Pick<SfContext["stamp"], "installationId" | "projectId" | "accessRevision">
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -185,40 +182,49 @@ export async function sfPortfolioEvaluate(
     fail("portfolio-evaluate-result-mismatch")
 }
 export async function sfSensitivityUnitsForSelection(
-  transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
+  transport: SfTransport, context: Pick<SfContext, "availability" | "stamp">,
+  reference: string, caseRef: SfCaseVersionRef,
   scenarioRef: string, baselineRef: string, parameterRef: string, signal: AbortSignal,
 ): Promise<OpResult<SfSensitivityUnits>> {
-  const id = "portfolio.decision-sensitivity-units"
-  if (!sfPortfolioReady(context, id, "portfolio")) return fail("sensitivity-units-not-admitted", "denied")
-  const input = sfPortfolioDecodeInput(SfPortfolio[id].input, {
-    caseRef, scenarioRef, baselineRef, parameterRef,
+  const id = "decisions.controls.read"
+  if (!sfPortfolioReady(context, id, "decisions")) return fail("sensitivity-units-not-admitted", "denied")
+  const input = Schema.decodeUnknownOption(Schema.toType(SfDecisions.operations[id].input), { onExcessProperty: "error" })({
+    case: reference, scenario: scenarioRef, baseline: baselineRef, parameter: parameterRef,
   })
-  if (Option.isNone(input)) return fail("sensitivity-units-input-mismatch", "invalid")
-  const result = transportResult(await createSfPortfolioClient(transport)[id](input.value, { signal }))
+  if (Option.isNone(input) || scenarioRef === baselineRef) return fail("sensitivity-units-input-mismatch", "invalid")
+  const result = transportResult(await createSfDecisionsClient(transport)[id](input.value, { signal }))
   if (result.status !== "ok") return result
-  const value = sfReadSensitivityUnits(result.value, { caseRef, scenarioRef, baselineRef, parameterRef })
+  const value = sfReadSensitivityUnits(result.value,
+    { ref: reference, caseRef, scenarioRef, baselineRef, parameterRef }, context.stamp)
   return value ? { status: "ok", value } : fail("sensitivity-units-projection-mismatch")
 }
-/** Decode the original units binding and retain its exact selection and source references. */
+/** The original A04 controls read issues units without creating an evaluation binding or rule. */
 export function sfReadSensitivityUnits(
-  value: unknown,
-  selection: Pick<SfSensitivityUnits, "caseRef" | "scenarioRef" | "baselineRef" | "parameterRef">,
+  value: unknown, selection: SfSensitivitySelection, stamp: SfSensitivityStamp,
 ): SfSensitivityUnits | null {
-  const decoded = Schema.decodeUnknownOption(SfPortfolio["portfolio.decision-sensitivity-units"].output)({
-    status: "ok", value,
-  })
+  const decoded = Schema.decodeUnknownOption(
+    Schema.toType(SfDecisions.operations["decisions.controls.read"].output), { onExcessProperty: "error" },
+  )({ status: "ok", value })
   if (Option.isNone(decoded) || decoded.value.status !== "ok") return null
-  const binding = decoded.value.value
-  const { caseRef, scenarioRef, baselineRef, parameterRef } = selection
-  if (binding.caseRef.id !== caseRef.id || binding.caseRef.incarnation !== caseRef.incarnation ||
-      binding.caseRef.version !== caseRef.version || binding.baselineRef !== baselineRef ||
-      binding.sensitivityRequest.scenarioRef !== scenarioRef ||
-      binding.sensitivityRequest.parameterBounds.parameterRef !== parameterRef) return null
-  return {
-    caseRef, scenarioRef, baselineRef, parameterRef,
-    parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unit: binding.unit,
-    engineVersion: binding.engineVersion, sourceRefs: binding.evidenceRefs.map((source) => source.refId),
-  }
+  const source = decoded.value.value
+  const selected = source.selected
+  const units = selected?.units
+  const chosen = selected?.unitSelection
+  if (!selected || !units || !chosen || selected.ref !== selection.ref ||
+    source.accessRevision !== stamp.accessRevision ||
+    source.cases.filter((entry) => entry.ref === selection.ref && entry.version === selection.caseRef.version).length !== 1 ||
+    selected.caseRef.id !== selection.caseRef.id || selected.caseRef.incarnation !== selection.caseRef.incarnation ||
+    selected.caseRef.version !== selection.caseRef.version || selected.decision.id !== selected.caseRef.id ||
+    selected.decision.incarnation !== selected.caseRef.incarnation || selected.decision.version !== selected.caseRef.version ||
+    chosen.scenarioRef !== selection.scenarioRef || chosen.baselineRef !== selection.baselineRef ||
+    chosen.parameterRef !== selection.parameterRef || units.baselineRef !== chosen.baselineRef ||
+    units.parameterRef !== chosen.parameterRef || chosen.scenarioRef === chosen.baselineRef ||
+    selected.scenarios.filter((entry) => entry.ref === chosen.baselineRef).length !== 1 ||
+    selected.scenarios.filter((entry) => entry.ref === chosen.scenarioRef &&
+      entry.parameters.filter((parameter) => parameter.ref === chosen.parameterRef).length === 1).length !== 1 ||
+    !units.sourceRefs.length || units.sourceRefs.some((source) =>
+      source.installationId !== stamp.installationId || source.projectId !== stamp.projectId)) return null
+  return { ...units, ref: selected.ref, caseRef: selected.caseRef, scenarioRef: chosen.scenarioRef }
 }
 export async function sfSensitivityRecorded(
   transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,

@@ -1,0 +1,253 @@
+{
+  "source": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+  "sourceTree": "51444c1d1a1cf8a23ff952b8b23b060b06164d5e",
+  "base": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+      "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+      "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+      "sha": "e0b83d004fb9682254c9c81fe154fb2658354720",
+      "mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+      "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+      "mode": "100644",
+      "type": "blob"
+    }
+  ],
+  "unit": {
+    "source": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+    "sourceTree": "51444c1d1a1cf8a23ff952b8b23b060b06164d5e",
+    "base": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+    "entries": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+        "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+        "sha": "e0b83d004fb9682254c9c81fe154fb2658354720",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "tree": "f192dc880cfdd120dd294cd272c3b439b911d1c1",
+    "branch": "ci-run-sf5portfoliobatch2",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-operational-read-phase.test.ts",
+        "./test/sucafina-collaboration-reading-health.test.ts",
+        "./test/sucafina-portfolio-reading-health.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "snapshot": "33ce1c69b9371d5b874f3b81b2757a6762a085ec",
+    "result": "passed",
+    "expectedCases": 71,
+    "run": 44996210905,
+    "job": 137127697907,
+    "cleanupJob": 137127939622,
+    "passed": 71,
+    "failed": 0,
+    "assertions": 680
+  },
+  "baseline": {
+    "source": "62e6d382d35d4d6b449b14b1915cb8924865371f",
+    "sourceTree": "92c2bc7db3a6ad6c338d0748fc9c7a52a107bbaa",
+    "tree": "962fc45e085474cc1277a6e1ff3f8216b7d23784",
+    "branch": "ci-run-sf5readerbaseline1",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-collaboration-reading-health.test.ts",
+        "./test/sucafina-portfolio-reading-health.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "expected": "Two new queued-reader replacement tests must fail on the original dynamic reader lookup; all earlier tests remain original.",
+    "testEntries": [
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "snapshot": "272d07dc98aefad3cd452e919cf8affdfc7f0826",
+    "result": "failed exactly in the two new queued-reader regressions, as expected",
+    "run": 44996212778,
+    "job": 137127702858,
+    "cleanupJob": 137127935955,
+    "passed": 56,
+    "failed": 2,
+    "assertions": 608,
+    "replacementCalls": {
+      "collaboration": 2,
+      "portfolio": 1
+    },
+    "meaning": "Original live lookup invoked a substituted reader even though final readiness was refused. Capturing the canonical reference prevents invocation itself."
+  },
+  "review": {
+    "root": "Mode/namespace/phase sharing and lease fences reviewed; queued reader identity captured as requested.",
+    "peer": "Approved by static follow-up on source536a06. Captured canonical reader call fixes queued lookup; current still observes live read identity. Same scopes and original bindings."
+  },
+  "implementation": "Only original per-phase namespace/mode metadata sharing and captured canonical reader identity. Each operation retains original admission, grant mode, source/version comparison and revalidation. No decoder, workflow, registry, schema, provider callback or grant change.",
+  "runtimeQualification": "Exact installed availability match. Clean composed import5 running; UI56 performance remains open.",
+  "installedComparison": {
+    "source": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
+    "sourceTree": "51444c1d1a1cf8a23ff952b8b23b060b06164d5e",
+    "base": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+    "entries": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+        "sha": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+        "sha": "e0b83d004fb9682254c9c81fe154fb2658354720",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "sha": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "mode": "100644",
+        "type": "blob"
+      }
+    ],
+    "tree": "4ccb70721c54a8a0678e0f9968f78c329aabed17",
+    "branch": "ci-run-sf5batchequal1",
+    "request": {
+      "package": "app",
+      "packageSelector": "@orchestra/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/design-wave-five-collab.spec.ts"
+      ],
+      "config": "e2e/playwright.production.config.ts",
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "overlays": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "sha": "c07066c428f1cea18592f7150fa9d3892ad80f05",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.qualification-original.ts",
+        "sha": "45ccca2ff1076aa0b71f7961603bae7ca724b482",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.qualification-original.ts",
+        "sha": "eb405fac33b6a34a9d4a3fb68fff2877a4659cb7",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "f77efd293c998e27ccabf35f23f4758eed2a03dc",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "07a7eb1de18c7c486c76f022b63484ea6cadd3d3",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+        "sha": "6c9f74daf4d99b24e81d23d3988dabb3095e06d0",
+        "mode": "100644",
+        "type": "blob"
+      },
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "content": "{\n  \"package\": \"app\",\n  \"packageSelector\": \"@orchestra/app\",\n  \"directory\": \"packages/app-shell\",\n  \"runner\": \"playwright\",\n  \"args\": [\n    \"e2e/sucafina/design-wave-five-collab.spec.ts\"\n  ],\n  \"config\": \"e2e/playwright.production.config.ts\",\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"strict\",\n    \"ORCHESTRA_CHANNEL\": \"prod\"\n  }\n}\n"
+      }
+    ],
+    "expectedCounts": {
+      "portfolio": 7,
+      "collaboration": 9
+    },
+    "notes": "Disposable installed comparison: original source health modules copied unchanged; only pure observer callsites are compared once per installed UI owner, inside original scoped operational composition. Exact four availability fields checked; original handlers/bindings/grants remain. All subsequent calls use only the candidate. No source results or timeouts changed.",
+    "snapshot": "47eb789e32c63b25b765e679d94e0bca3451e76e",
+    "result": "original9/candidate9 collaboration and original7/candidate7 portfolio all four availability fields match; subsequent import refresh misses10s",
+    "run": 44996583965,
+    "record": "../attempts/batch-equivalence-01.json",
+    "job": 137128806270
+  },
+  "integration": {
+    "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+    "tree": "777e9a1a2fb3debbac3eb96ee795a2a9390f948a",
+    "observerBlobsIdentical": true,
+    "notes": "Root integrated both exact observer/test pairs with its separately qualified comparator. The already dispatched comparison remains on536a06; the next clean journey uses this full composed source."
+  }
+}

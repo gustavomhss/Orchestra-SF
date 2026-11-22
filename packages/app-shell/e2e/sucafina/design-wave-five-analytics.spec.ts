@@ -146,12 +146,38 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   await sensitivity.getByRole("combobox", { name: "Baseline", exact: true }).selectOption(sourceText(baseline!.ref))
   await sensitivity.getByRole("combobox", { name: "Parameter", exact: true }).selectOption(sourceText(parameters[0]!.ref))
   await captureAnalytics(page, info, "UI44-original-source-selection-test-data")
-  const unitsResponse = page.waitForResponse((response) => isOperation(response.request(), "decision-sensitivity-units"), { timeout: 60_000 })
+  const unitQuery = { case: sourceText(main!.ref), scenario: sourceText(selectedScenario!.ref),
+    baseline: sourceText(baseline!.ref), parameter: prepared.parameterRef }
+  const unitsResponse = page.waitForResponse((response) => {
+    const request = response.request(), url = new URL(request.url())
+    return request.method() === "GET" && isOperation(request, "decision-controls") &&
+      Object.entries(unitQuery).every(([key, value]) => url.searchParams.get(key) === value)
+  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))
   await sensitivity.getByRole("button", { name: "Unit", exact: true }).click()
-  expect((await unitsResponse).status()).toBe(200)
+  const issued = await unitsResponse
+  expect(issued.response.status()).toBe(200)
+  expect(issued.response.request().postData()).toBeNull()
+  const issuedUrl = new URL(issued.response.url())
+  expect(issuedUrl.origin).toBe(owner.publicOrigin)
+  expect(issuedUrl.pathname).toBe(owner.mount + "/dashboard")
+  expect([...issuedUrl.searchParams]).toHaveLength(6)
+  expect(Object.fromEntries(issuedUrl.searchParams)).toEqual({ sf: "decision-controls", format: "json", ...unitQuery })
+  expect(issued.body.status).toBe("ok")
+  const issuedSelection = object(object(issued.body.value).selected)
+  expect(issuedSelection.ref).toBe(unitQuery.case)
+  expect(issuedSelection.caseRef).toEqual(caseRef)
+  expect(issuedSelection.unitSelection).toEqual({ scenarioRef: unitQuery.scenario,
+    baselineRef: unitQuery.baseline, parameterRef: unitQuery.parameter })
+  expect(issuedSelection.units).toEqual(prepared.sensitivityRule.units)
+  expect(array(issuedSelection.rules).map(object).find((rule) => rule.id === prepared.sensitivityRule.criterionId))
+    .toEqual({ id: prepared.sensitivityRule.criterionId, expectedVersion: prepared.sensitivityRule.version })
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "decision-controls-sensitivity-units",
+    method: issued.response.request().method(), http: issued.response.status(), selection: issuedSelection.unitSelection,
+    units: issuedSelection.units, acquisition: "native-original-get-body" }))
   await expect(sensitivity.locator(".sf-u19-criterion")).toBeVisible()
-  await sensitivity.getByRole("combobox", { name: "Criterion", exact: true }).selectOption({ index: 1 })
-  await sensitivity.getByLabel("Criterion value", { exact: true }).fill("2000")
+  await sensitivity.getByRole("combobox", { name: "Criterion", exact: true }).selectOption(prepared.sensitivityRule.criterionId)
+  await sensitivity.getByRole("combobox", { name: "Operator", exact: true }).selectOption(prepared.sensitivityRule.operator)
+  await sensitivity.getByLabel("Criterion value", { exact: true }).fill(String(prepared.sensitivityRule.value))
   const minimum = String(prepared.parameterValue)
   const maximum = String(prepared.parameterValue + 2000)
   await sensitivity.getByLabel("Minimum", { exact: true }).fill(minimum)

@@ -3,7 +3,7 @@
   "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+  "product": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -122,7 +122,20 @@
     },
     {
       "name": "composed CLI/E2E types and guards after both observation corrections",
-      "status": "PENDING"
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "attempt": 15,
+      "run": 44996682703,
+      "job": 137129100538,
+      "snapshot": "005f4af0fdc30155b61d80e187f777d9f1c3b149",
+      "product": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 567,
+      "warnings": 36,
+      "errors": 0,
+      "approved": 0,
+      "touchesGuards": false,
+      "report": "technical-attempts/15-guard-report.json"
     }
   ],
   "focusedRegressions": [
@@ -260,13 +273,17 @@
         "UI55",
         "UI56"
       ],
-      "status": "DIAGNOSTIC_JOURNEY_PASSED_CLEAN_REPEAT_PENDING",
+      "status": "DIAGNOSTIC_JOURNEY_PASSED_LATEST_CLEAN_REPEAT_FAILED",
       "runs": [
         44992278999,
         44992688529,
-        44993675945
+        44993675945,
+        44994897281,
+        44996583965,
+        44997174038
       ],
-      "limitation": "Both diagnostic journeys passed. The first clean repeat still failed its unchanged 10s refresh heading expectation. Trace9 measured the original GET at436ms and four original context observation groups at about2s each; no clean completion is claimed."
+      "limitation": "Diagnostic journeys passed; the latest clean run on506a failed the unchanged10s post-refresh heading. Original independent reference200/ok6605ms; readiness passed. Latest16-entry metadata equivalence passed separately inside a workflow whose import journey failed. No clean completion is claimed.",
+      "evidence": "collab/attempts/import-fixed-05.json"
     },
     {
       "areas": [
@@ -289,9 +306,13 @@
       ],
       "status": "FULL_PERSISTENCE_AND_SENSITIVITY_NOT_QUALIFIED",
       "runs": [
-        44991578651
+        44991578651,
+        44992841677,
+        44992968102,
+        44996623210
       ],
-      "limitation": "The original preview exceeded its 60s test expectation and the same request later returned 403 decision-authority-changed at about 300s. No successful persisted result or sensitivity is claimed."
+      "limitation": "Latest clean run44996623210 emitted one original preview request and failed the unchanged60s expectation. Original preflight comparison/selection/readbacks completed, but UI43/UI44 were not reached. Bounded earlier diagnostics preserve the original failure and later authority refusal, not successful persistence.",
+      "evidence": "analytics/attempt-12/README.md"
     }
   ],
   "references": {
@@ -303,5 +324,35 @@
   },
   "userAcceptance": "PENDING",
   "merged": false,
-  "inventoryAcceptedAndMergedAreas": 41
+  "inventoryAcceptedAndMergedAreas": 41,
+  "pendingDelta": {
+    "status": "PENDING_FOCUSED_TYPES_AND_INSTALLED_QUALIFICATION",
+    "scope": "Original A04 sensitivity units leaf and original rule registration fixture",
+    "sourceCandidates": [
+      "4e32415ebf7b684ef26ca0012d48eb90acd095ee",
+      "dca1820442b05a06aa3eb981f2c59007e05af606"
+    ],
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/producer.ts",
+        "blob": "cc4680188c1004349e7a7b25e84ce68366aea1a0"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+        "blob": "3753bd060cefde92389e9ba2deb585388a6386f6"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+        "blob": "a18e0fa6543867c60871da6436bf1b1b53e91a26"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "blob": "1c9aaeeb88dd319d834e09bdc545a05a3f02c238"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+        "blob": "581ac6c7f506c9ef7e46c633e70139edebddcfdd"
+      }
+    ]
+  }
 }
