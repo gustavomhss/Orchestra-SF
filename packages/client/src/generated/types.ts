@@ -1,6 +1,6 @@
-import type { SessionEventEncoded } from "../wire"
+import type { SessionEventTransportEncoded } from "../wire"
 
-import type { OrchestraEventEncoded } from "@orchestra/protocol/groups/event"
+import type { OrchestraEventTransportEncoded } from "@orchestra/protocol/groups/event"
 
 export type JsonValue =
   | null
@@ -385,6 +385,14 @@ export type SessionsListInput = {
 export type SessionsListOutput = {
   readonly data: ReadonlyArray<{
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -424,6 +432,14 @@ export type SessionsListOutput = {
       }>
     }
   }>
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
@@ -457,6 +473,14 @@ export type SessionsCreateInput = {
 export type SessionsCreateOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -498,13 +522,37 @@ export type SessionsCreateOutput = {
   }
 }["data"]
 
-export type SessionsActiveOutput = { readonly data: { readonly [x: string]: { readonly type: "running" } } }["data"]
+export type SessionsActiveOutput = {
+  readonly data: { readonly [x: string]: { readonly type: "running" } }
+  readonly namespace?:
+    | {
+        readonly version: 1
+        readonly owner: {
+          readonly profile: {
+            readonly installationId: string
+            readonly tenantId: string
+            readonly teamObjectId: string
+          }
+          readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+        }
+        readonly authorityGeneration: number
+      }
+    | undefined
+}
 
 export type SessionsGetInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
 
 export type SessionsGetOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -908,6 +956,14 @@ export type SessionsForkInput = {
 export type SessionsForkOutput = {
   readonly data: {
     readonly id: string
+    readonly namespace?: {
+      readonly version: 1
+      readonly owner: {
+        readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+        readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+      }
+      readonly authorityGeneration: number
+    }
     readonly parentID?: string
     readonly projectID: string
     readonly agent?: string
@@ -1791,6 +1847,14 @@ export type SessionsHistoryOutput = {
         readonly data: { readonly timestamp: number; readonly sessionID: string; readonly messageID: string }
       }
   >
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly hasMore: boolean
 }
 
@@ -1799,7 +1863,7 @@ export type SessionsEventsInput = {
   readonly after?: { readonly after?: number | undefined }["after"]
 }
 
-export type SessionsEventsOutput = SessionEventEncoded
+export type SessionsEventsOutput = SessionEventTransportEncoded
 
 export type SessionsInterruptInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
 
@@ -2182,6 +2246,14 @@ export type MessagesListOutput = {
         readonly time: { readonly created: number }
       }
   >
+  readonly namespace?: {
+    readonly version: 1
+    readonly owner: {
+      readonly profile: { readonly installationId: string; readonly tenantId: string; readonly teamObjectId: string }
+      readonly principal: { readonly tenantId: string; readonly principalObjectId: string }
+    }
+    readonly authorityGeneration: number
+  } | null
   readonly cursor: { readonly previous?: string | null; readonly next?: string | null }
 }
 
@@ -3622,7 +3694,7 @@ export type BehaviorsSetOutput = {
   readonly data: ReadonlyArray<{ readonly id: string; readonly name: string; readonly instructions: string }>
 }
 
-export type EventsSubscribeOutput = OrchestraEventEncoded
+export type EventsSubscribeOutput = OrchestraEventTransportEncoded
 
 export type PtysListInput = {
   readonly location?: {
