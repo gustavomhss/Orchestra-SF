@@ -207,7 +207,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         await form.getByLabel("Criteria, one per line", { exact: true }).fill("Cost")
         expect(await within(tab.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST", credentials: "same-origin", signal: AbortSignal.timeout(5000) })).status), "logout operator")).toBe(204)
         await form.getByRole("button", { name: "Create decision", exact: true }).click()
-        await tab.getByText("Your access changed. Reload before creating a decision.", { exact: true }).waitFor()
+        await tab.getByText("Your access changed. Reopen an authorized page to reconcile this creation.", { exact: true }).waitFor()
         expect(await tab.locator("[data-source-refs], [data-decision-context] h2, [data-decision-context] input").count()).toBe(0)
         expect((await get(contextUrl()))?.status).toBe(403)
         expect((await post(sourceRefs, "revoked-session"))?.status).toBe(403)

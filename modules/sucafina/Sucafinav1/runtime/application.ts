@@ -17,6 +17,7 @@ import { handleDashboardPreview } from "../product/integration/dashboard-preview
 import { publicSfData } from "../product/integration/public-state.ts"
 import { plannerMonthlyScript } from "../product/ui/planner-monthly.ts"
 import { recordSearchScript, recordSearchWidget } from "../product/ui/record-search.ts"
+import { contextualDecisionScript } from "../product/ui/contextual-decision.ts"
 import { personalViewsScript, personalViewsWidget } from "../product/ui/personal-views.ts"
 import { dashboardWorkbenchScript, dashboardWorkbenchWidget } from "../product/interface/dashboard-workbench.ts"
 
@@ -484,11 +485,13 @@ export function createApplication(mount: string, application: Application) {
         application.plannerMonthlyAvailable?.() ? plannerMonthlyScript : undefined
       const personalViews = application.personalViewsAvailable?.() === true
       const workbench = surface === "dashboard" && application.dashboardWorkbenchAvailable?.() === true
-      const widgetScript = personalViews || workbench
+      const contextualDecision = surface === "dashboard" && page === "Vendor Contracts" && actor.canWrite && Boolean(application.product)
+      const widgetScript = personalViews || workbench || contextualDecision
         ? `;(() => {
   const attach = () => {
     ${personalViews ? personalViewsScript : ""}
     ${workbench ? dashboardWorkbenchScript : ""}
+    ${contextualDecision ? contextualDecisionScript : ""}
   };
   attach();
   const content = document.querySelector("#content");

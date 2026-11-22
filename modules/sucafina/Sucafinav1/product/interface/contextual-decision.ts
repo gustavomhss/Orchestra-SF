@@ -46,8 +46,8 @@ export async function handleContextualDecision(request: Request, input: { origin
   const { runtime } = input
   const url = new URL(request.url)
   const render = (body: string, status: number, revision = "") => {
-    const html = documentHtml("Workbench", input.surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", revision).replace("</body>", `<script>${decisionCreateScript}</script></body>`)
-    return new Response(request.method === "HEAD" ? null : html, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(revision ? { "X-SF-Access-Revision": revision } : {}) } })
+    const html = documentHtml("Workbench", input.surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", revision).replace("</body>", () => `<script>${decisionCreateScript}</script></body>`)
+    return new Response(request.method === "HEAD" ? null : html, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html, decisionCreateScript), "X-Content-Type-Options": "nosniff", ...(revision ? { "X-SF-Access-Revision": revision } : {}) } })
   }
   if (input.surface !== "dashboard" || (request.method !== "GET" && request.method !== "HEAD")) return render("<h2>Context unavailable</h2><p>Open an authorized contract in Dashboard to create a contextual decision.</p>", input.surface !== "dashboard" ? 403 : 405)
   if ([...url.searchParams.keys()].some((key) => !["sf", "recordId", "start", "end", "returnTo"].includes(key) || url.searchParams.getAll(key).length !== 1)) return render("<h2>Invalid context</h2><p>Open the contract again and select Create decision.</p>", 400)
