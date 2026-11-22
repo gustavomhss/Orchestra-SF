@@ -235,8 +235,9 @@ test("original HTTP BI06 data and source links share their own admitted observat
     expect(await missing!.json()).toMatchObject({ status: "unavailable", reason: "bi-value-source-unavailable" })
     await fixture.approve()
     const changed = await fixture.http(fixture.request({ sf: "bi-data", ...query, selectionRef }), "dashboard")
-    expect([403, 409]).toContain(changed?.status)
-    expect(object(await changed!.json()).status).not.toBe("ok")
+    if (!changed) throw new Error("Original BI data handler did not return a response after source mutation")
+    expect([403, 409]).toContain(changed.status)
+    expect(object(await changed.json()).status).not.toBe("ok")
   })
 }, 45_000)
 
