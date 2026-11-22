@@ -3,7 +3,7 @@ import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext, SfOwnerSelection, SurfaceId } from "@orchestra/schema/sucafina/context"
-import type { SfUiState } from "../../shared/frame"
+import type { SfUiState } from "../../shared/frame/types"
 import { readSfProjectPage, type SfProjectPage } from "./model"
 
 type ProjectSurface = Extract<SurfaceId, "CAP09" | "CAP10">
