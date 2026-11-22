@@ -1,6 +1,7 @@
 import { Event } from "@orchestra/schema/event"
 import { EventManifest } from "@orchestra/schema/event-manifest"
 import { Location } from "@orchestra/schema/location"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import type { Definition } from "@orchestra/schema/event"
 import { Schema } from "effect"
 import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "effect/unstable/httpapi"
@@ -28,12 +29,15 @@ const schema = <const Definitions extends ReadonlyArray<Definition>>(definitions
 
 const make = <const Definitions extends ReadonlyArray<Definition>>(definitions: Definitions) => {
   const EventSchema = schema(definitions)
+  const Transport = Schema.Union([EventSchema, Schema.Struct({ namespace: TeamProfile.SessionNamespace, event: EventSchema })])
+    .annotate({ identifier: "V2EventTransport" })
   return {
     schema: EventSchema,
+    transport: Transport,
     group: HttpApiGroup.make("server.event")
       .add(
         HttpApiEndpoint.get("event.subscribe", "/api/event", {
-          success: HttpApiSchema.StreamSse({ data: EventSchema }),
+          success: HttpApiSchema.StreamSse({ data: Transport }),
         }).annotateMerge(
           OpenApi.annotations({
             identifier: "v2.event.subscribe",
@@ -54,3 +58,8 @@ export const EventGroup = event.group
 export const OrchestraEvent = event.schema
 export type OrchestraEvent = typeof OrchestraEvent.Type
 export type OrchestraEventEncoded = typeof OrchestraEvent.Encoded
+
+/** Namespace labels are added at the admitted HTTP boundary, outside canonical event payloads. */
+export const OrchestraEventTransport = event.transport
+export type OrchestraEventTransport = typeof OrchestraEventTransport.Type
+export type OrchestraEventTransportEncoded = typeof OrchestraEventTransport.Encoded

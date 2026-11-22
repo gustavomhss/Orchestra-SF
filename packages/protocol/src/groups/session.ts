@@ -24,6 +24,7 @@ import { Location } from "@orchestra/schema/location"
 import { Revert } from "@orchestra/schema/revert"
 import { SessionEvent } from "@orchestra/schema/session-event"
 import { SessionTodo } from "@orchestra/schema/session-todo"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 
 const SessionsQueryFields = {
   workspace: Workspace.ID.pipe(Schema.optional),
@@ -98,6 +99,13 @@ const SessionActive = Schema.Struct({
 
 const SessionHistoryLimit = PositiveInt.check(Schema.isLessThanOrEqualTo(100))
 
+/** Corporate stream wrapper. The event member is the unchanged durable codec. */
+export const SessionEventTransport = Schema.Union([
+  SessionEvent.Durable,
+  Schema.Struct({ namespace: TeamProfile.SessionNamespace, event: SessionEvent.Durable }),
+]).annotate({ identifier: "SessionEventTransport" })
+export type SessionEventTransport = typeof SessionEventTransport.Type
+
 export const SessionHistoryQuery = Schema.Struct({
   limit: Schema.NumberFromString.pipe(Schema.decodeTo(SessionHistoryLimit), Schema.optional),
   after: Schema.NumberFromString.pipe(Schema.decodeTo(NonNegativeInt), Schema.optional),
@@ -138,6 +146,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionsQuery,
         success: Schema.Struct({
           data: Schema.Array(Session.Info),
+          namespace: Schema.optional(TeamProfile.SessionNamespace),
           cursor: Schema.Struct({
             previous: SessionsCursor.pipe(Schema.optional),
             next: SessionsCursor.pipe(Schema.optional),
@@ -173,7 +182,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
     )
     .add(
       HttpApiEndpoint.get("session.active", "/api/session/active", {
-        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive) }),
+        success: Schema.Struct({ data: Schema.Record(Session.ID, SessionActive), namespace: Schema.optional(TeamProfile.SessionNamespace) }),
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "v2.session.active",
@@ -619,6 +628,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: SessionHistoryQuery,
         success: Schema.Struct({
           data: Schema.Array(SessionEvent.Durable),
+          namespace: Schema.optional(TeamProfile.SessionNamespace),
           hasMore: Schema.Boolean,
         }).annotate({ identifier: "SessionHistory" }),
         error: SessionNotFoundError,
@@ -639,7 +649,7 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
         query: {
           after: Schema.NumberFromString.pipe(Schema.decodeTo(NonNegativeInt), Schema.optional),
         },
-        success: HttpApiSchema.StreamSse({ data: SessionEvent.Durable }),
+        success: HttpApiSchema.StreamSse({ data: SessionEventTransport }),
         error: SessionNotFoundError,
       })
         .middleware(sessionLocationMiddleware)

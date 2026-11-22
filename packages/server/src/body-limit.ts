@@ -43,6 +43,12 @@ export const withLimit = (override?: (request: HttpServerRequest.HttpServerReque
   { global: true },
 )
 
+/** Preserve the canonical upload cap when the installed adapter prefixes its routes. */
+export const layerWithMount = (mount: string) => withLimit((request) => {
+  const pathname = request.url.split("?", 1)[0]!
+  return limitFor(pathname.startsWith(mount + "/") ? pathname.slice(mount.length) : pathname)
+})
+
 export const layer = withLimit()
 
 function exceeded(defect: unknown) {
