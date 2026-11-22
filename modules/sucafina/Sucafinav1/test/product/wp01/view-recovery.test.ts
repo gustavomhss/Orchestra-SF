@@ -236,23 +236,46 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const state: { calls: number; started?: () => void; release?: () => void } = { calls: 0 }
     const started = new Promise<void>((resolve) => { state.started = resolve })
     const entry: SfPersonalViewRecord = { view: { id: "private-view-01", title: "PRIVATE-VIEW", surface: "planner", page: "OPEX" }, version: 1 }
+    const authorized = JSON.stringify({ status: "ok", value: [entry] })
+    const bytes = new TextEncoder().encode(authorized)
+    const split = Math.floor(bytes.length / 2)
     const server = Bun.serve({ port: 0, fetch: async (request) => {
       if (request.method === "GET") return new Response(pageHtml(personalViewsWidget({ surface: "planner", page: "OPEX" }), personalViewsScript), { headers: { "Content-Type": "text/html" } })
       state.calls++
-      if (state.calls === 2) { await new Promise<void>((resolve) => { state.release = resolve; state.started?.() }); return Response.json({ status: "ok", value: [entry] }, { headers: { "X-Late-Fixture": "yes" } }) }
+      if (state.calls === 2) {
+        // Start the authorized response before the denial. The body reader
+        // must already be waiting when the widget closes on the next request.
+        return new Response(new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(bytes.subarray(0, split))
+            state.release = () => {
+              state.release = undefined
+              controller.enqueue(bytes.subarray(split))
+              controller.close()
+            }
+            state.started?.()
+          },
+          cancel() { state.release = undefined },
+        }), { headers: { "Content-Type": "application/json", "X-Late-Fixture": "yes" } })
+      }
       return state.calls === 1 ? Response.json({ status: "ok", value: [entry] }) : Response.json({ status: "denied" }, { status })
     } })
     const page = await fixturePage(server)
     try {
       await page.goto(new URL("planner?page=OPEX", server.url).href)
       await page.getByRole("button", { name: "PRIVATE-VIEW", exact: true }).waitFor()
+      const delivered = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
+      void delivered.catch(() => undefined)
       await page.getByRole("button", { name: "Refresh saved views" }).click()
-      await within(started, "request entered the delayed fixture handler")
+      await within(started, "start the delayed authorized response")
+      const late = await within(delivered, "observe authorized response headers before revocation")
+      expect(late.status()).toBe(200)
+      await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))), "allow the consumer to await the partial body")
       await page.getByRole("button", { name: "Refresh saved views" }).click()
       await page.getByText("Your access changed. Reload before opening or changing saved views.").waitFor()
-      const late = page.waitForResponse((response) => response.headers()["x-late-fixture"] === "yes")
       state.release?.()
-      await finishRead(page, late)
+      expect(await within(late.text(), "read the late authorized response")).toBe(authorized)
+      await finishRead(page, Promise.resolve(late))
       expect(await page.content()).not.toContain("PRIVATE-VIEW")
       expect(await page.locator("[data-personal-views] button, [data-personal-views] input").count()).toBe(0)
     } finally { state.release?.(); await closeFixture(page, server) }

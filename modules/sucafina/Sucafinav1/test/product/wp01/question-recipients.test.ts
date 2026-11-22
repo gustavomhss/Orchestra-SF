@@ -10,12 +10,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
   const fixture = () => createWorkSelectionDomainFixture(browser)
-  const recipientResponse = (app: Awaited<ReturnType<typeof fixture>>) => {
-    const endpoint = new URL("?sf=collaboration-recipients", app.caseUrl).href
-    return app.page.waitForResponse((response) => response.url() === endpoint && response.request().method() === "POST")
+  type Fixture = Awaited<ReturnType<typeof fixture>>
+  const recipientURL = (app: Fixture) => new URL("?sf=collaboration-recipients", app.caseUrl).href
+  const recipientResponse = (app: Fixture) =>
+    app.page.waitForResponse((response) => response.url() === recipientURL(app) && response.request().method() === "POST")
+
+  async function within<T>(operation: Promise<T>, phase: string): Promise<T> {
+    let timeout: ReturnType<typeof setTimeout> | undefined
+    try {
+      return await Promise.race([operation, new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error(`Question recipient verification timed out: ${phase}`)), 5_000)
+      })])
+    } finally { if (timeout !== undefined) clearTimeout(timeout) }
   }
   // The installed Workbench can load unrelated panels. Every collaboration attempt still counts.
-  const collaborationAttempts = (app: Awaited<ReturnType<typeof fixture>>) =>
+  const collaborationAttempts = (app: Fixture) =>
     app.attempts.filter((attempt) => attempt.route?.startsWith("collaboration-"))
 
   test("the question consumer finds recipients through the canonical HTTP route and the real authorized directory", async () => {
@@ -74,12 +83,32 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await form.getByLabel("Recipient", { exact: true }).selectOption(app.principalRef)
       const retainedForm = await form.elementHandle()
       if (!retainedForm) throw new Error("Live question form unavailable before revocation")
-      expect(await app.page.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST" })).status)).toBe(204)
-      const denied = recipientResponse(app)
-      await form.getByRole("button", { name: "Find recipients", exact: true }).click()
-      const refused = await denied
+      const logout = await app.context.request.post(`${app.origin}/sucafina/auth/logout`, { headers: { origin: app.origin }, timeout: 5_000 })
+      expect(logout.status()).toBe(204)
+      // The widget ignores denied bodies. Read the real producer response
+      // before forwarding it unchanged to the browser for revocation.
+      const producer = Promise.withResolvers<{ status: number; body: unknown }>()
+      void producer.promise.catch(() => undefined)
+      await app.page.route(recipientURL(app), async (route) => {
+        try {
+          expect(route.request().method()).toBe("POST")
+          const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 5_000 })
+          const body: unknown = await within(response.json(), "read the real denial body")
+          await route.fulfill({ response })
+          producer.resolve({ status: response.status(), body })
+        } catch (error) {
+          producer.reject(error)
+          await route.abort("failed").catch(() => undefined)
+        }
+      }, { times: 1 })
+      const [refused, actual] = await Promise.all([
+        within(recipientResponse(app), "observe the canonical directory denial"),
+        within(producer.promise, "verify the producer denial before browser delivery"),
+        form.getByRole("button", { name: "Find recipients", exact: true }).click(),
+      ])
       expect(refused.status()).toBe(403)
-      const refusal = await refused.json()
+      expect(actual.status).toBe(403)
+      const refusal = actual.body
       expect(refusal).toMatchObject({ status: "denied" })
       expect(refusal).not.toHaveProperty("value")
       await app.page.locator("main[data-access-unavailable]").waitFor()
@@ -97,6 +126,16 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         ["collaboration-recipients", 403, {}],
       ])
       expect(app.attempts.some((attempt) => attempt.route === "collaboration-thread-create")).toBe(false)
+      // Read durable state with a fresh observer session outside the revoked browser.
+      const enrollment = await within(app.identity.enroll(), "prepare the state observer enrollment")
+      const login = await within(app.identity.handle(new Request(`${app.origin}/sucafina/auth/local?code=${enrollment}`)), "admit the state observer")
+      const cookie = login?.headers.get("set-cookie")?.split(";")[0]
+      if (!cookie) throw new Error("The authorized state observer did not receive a session")
+      const request = app.request()
+      request.headers.set("cookie", cookie)
+      const state = await within(app.authority.state.read(request, "threads", (value) => Object.keys(value.threads)), "read persisted threads")
+      expect(state.status).toBe("ok")
+      if (state.status === "ok") expect(state.value).toEqual([])
       expect(app.errors).toEqual([])
     } finally { await app.close() }
   }, 45_000)
