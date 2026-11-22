@@ -1,10 +1,10 @@
 // Synthetic parser/refusal controls only. No test here authenticates, installs, revokes or approves G08.
 import test from "node:test"
 import assert from "node:assert/strict"
-import { chmod, link, mkdtemp, rm, symlink, writeFile } from "node:fs/promises"
+import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { cases, digest, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
+import { cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
@@ -73,7 +73,7 @@ function report() {
       title: entry.title, file: "teams-installed.spec.ts", ok: true,
       tests: [{ projectName: "g08-installed", expectedStatus: "passed", status: "expected",
         results: [{ status: "passed", retry: 0, errors: [] }] }],
-    })) }], stats: { expected: 9, unexpected: 0, skipped: 0, flaky: 0 } }
+    })) }], stats: { expected: cases.length, unexpected: 0, skipped: 0, flaky: 0 } }
 }
 function environment() {
   const value = plan()
@@ -211,4 +211,54 @@ test("private files are exclusive, bounded, owner-only and reject links", async 
 })
 test("digest preserves exact bytes including trailing newline", () => {
   assert.notEqual(digest("{}"), digest("{}\n"))
+})
+
+const obligations = JSON.parse(await readFile(new URL("../../" + obligationPath, import.meta.url), "utf8"))
+test("original nine Teams obligations and 50 business registrations remain separate from seven current-contract controls", () => {
+  const list = coverageLedger(obligations, false), executed = coverageLedger(obligations, true)
+  assert.equal(cases.length, 7)
+  assert.equal(preservedTeams.length, 9)
+  assert.deepEqual(list.originalTeams.map((entry) => entry.id), preservedTeams)
+  assert(list.originalTeams.every((entry) => entry.status === "NOT_RUN"))
+  assert.equal(executed.originalTeams.filter((entry) => entry.status === "PASS").length, 5)
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "narrow-keyboard-draft").status, "NOT_RUN")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PARTIAL")
+  assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PARTIAL")
+  assert.deepEqual(executed.groups.map((entry) => entry.id), pendingGroups)
+  assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32])
+  assert.throws(() => requireCompleteGate(list), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
+  assert.throws(() => requireCompleteGate(executed), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
+})
+for (const [name, change] of [
+  ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
+  ["renamed original Teams case", (value) => { value.originalTeams.obligations[0].id = "principal-only" }],
+  ["landing keyboard claimed as chat", (value) => { value.originalTeams.obligations[5].coverage = "complete" }],
+  ["different grants claimed from principals", (value) => { value.originalTeams.obligations[0].coverage = "complete" }],
+  ["native admin UI claimed from HTTP", (value) => { value.originalTeams.obligations[4].coverage = "complete" }],
+  ["fake manual revoke PASS", (value) => { value.originalTeams.obligations[7].state = "PASS" }],
+  ["missing product blocker", (value) => { value.originalTeams.obligations[4].blocker = null }],
+  ["wrong complete mapping", (value) => { value.originalTeams.obligations[7].implementedCases = ["aba-two-windows"] }],
+  ["missing required group", (value) => { value.groups.pop() }],
+  ["renamed required group", (value) => { value.groups[0].id = "legacy-U15" }],
+  ["U39 collapsed inventory", (value) => { value.groups[1].expectedCount = 1 }],
+  ["U40 collapsed title list", (value) => { value.groups[2].originalTitles = value.groups[2].originalTitles.slice(0, 1) }],
+  ["U15 receipt assumed from old source", (value) => { value.groups[0].state = "PASS" }],
+  ["AZ02 restart omitted", (value) => { value.groups[4].phases.pop() }],
+  ["gate closed by metadata", (value) => { value.gateClosed = true }],
+]) test("preserved coverage refuses " + name, () => {
+  const value = structuredClone(obligations)
+  change(value)
+  assert.throws(() => coverageLedger(value, true))
+})
+test("source prerequisite refuses missing integrated files without using file presence as live authority", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "g08-source-control-"))
+  try {
+    await assert.rejects(requireProductContracts(root), /G08_PRODUCT_CONTRACT_NOT_INTEGRATED/)
+    for (const file of productContractPaths) {
+      await mkdir(path.dirname(path.join(root, file)), { recursive: true })
+      await writeFile(path.join(root, file), "// synthetic file presence; no installed capability\n")
+    }
+    await requireProductContracts(root)
+    assert.throws(() => requireCompleteGate(coverageLedger(obligations, true)), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
+  } finally { await rm(root, { recursive: true, force: true }) }
 })

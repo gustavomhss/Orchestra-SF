@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { landing } from "./landing-contract.ts"
 import { canonicalAddress, cases, digest, privateText, readPlan, record, validateHost, validatePackage, writePrivate } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
 
 export type Plan = Awaited<ReturnType<typeof readPlan>>
@@ -79,22 +80,23 @@ export function ownerQuery(target: Target) {
   return new URLSearchParams({ contractRevision: "sf-team-profile/1", server: target.serverKey,
     installationId: target.installationId, tenantId: target.tenantId, teamObjectId: target.teamObjectId })
 }
-export function contextURL(target: Target, selection = false) {
+export function contextURL(target: Target, selection: boolean | "administration" = false) {
   const url = new URL(target.mount + "/api/ui/context", target.publicOrigin)
   url.search = new URLSearchParams({ contractRevision: "sf-team-profile/1", installationId: target.installationId,
-    tenantId: target.tenantId, hostId: target.hostId, kind: selection ? "selection" : "team",
+    tenantId: target.tenantId, hostId: target.hostId, kind: selection === "administration" ? "administration" : selection ? "selection" : "team",
     ...(selection ? {} : { teamObjectId: target.teamObjectId }) }).toString()
   return url.href
 }
-export async function contextReply(page: Page, target: Target, selection = false) {
+export async function contextReply(page: Page, target: Target, selection: boolean | "administration" = false) {
   return originalRequest(page, contextURL(target, selection))
 }
-export async function observe(page: Page, target: Target, selection = false) {
+export async function observe(page: Page, target: Target, selection: boolean | "administration" = false) {
   if (new URL(page.url()).origin !== target.shellOrigin) throw new Error("G08_ACTOR_OUTSIDE_INSTALLED_SHELL")
   const discovery = new URL("/api/sucafina/installations", target.discoveryOrigin)
   discovery.search = new URLSearchParams({ select: "current", contractRevision: "sf-team-profile/1" }).toString()
   const response = await originalRequest(page, discovery.href)
-  if (response.status() !== 200) throw new Error("G08_ORIGINAL_DISCOVERY_UNAVAILABLE")
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? "")) throw new Error("G08_ORIGINAL_DISCOVERY_UNAVAILABLE")
   const value = Schema.decodeUnknownSync(Schema.toCodecJson(SfInstallationList), strict)(await response.json())
   if (value.installations.length !== 1) throw new Error("G08_DISCOVERY_OWNER_NOT_UNIQUE")
   const descriptor = value.installations[0]!
@@ -105,8 +107,9 @@ export async function observe(page: Page, target: Target, selection = false) {
     throw new Error("G08_DISCOVERY_OWNER_MISMATCH")
   return contextValue(await contextReply(page, target, selection), target, selection)
 }
-async function contextValue(reply: Response, target: Target, selection = false) {
-  if (reply.status() !== 200) throw new Error("G08_ORIGINAL_CONTEXT_UNAVAILABLE")
+async function contextValue(reply: Response, target: Target, selection: boolean | "administration" = false) {
+  if (reply.status() !== 200 || reply.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(reply.headers()["content-type"] ?? "")) throw new Error("G08_ORIGINAL_CONTEXT_UNAVAILABLE")
   const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), strict)(await reply.json())
   if (result.status !== "ok") throw new Error("G08_ORIGINAL_MICROSOFT_CONTEXT_REQUIRED")
   const live = result.value
@@ -121,24 +124,29 @@ async function contextValue(reply: Response, target: Target, selection = false) 
   return live
 }
 export async function selected(page: Page, target: Target, principal: string) {
-  await expect(page.locator("[data-sf-teams-shell]")).toHaveAttribute("data-sf-teams-state", "authenticated")
+  await expect(page.locator(landing.shell)).toHaveAttribute("data-sf-teams-state", "authenticated")
   await expect(page.locator("[data-sf-teams-shell]")).toHaveAttribute("data-sf-team-selected", target.teamObjectId)
   const live = await observe(page, target)
   expect(live.stamp.principalRef).toBe(principal)
   expect(live.profile.teams.status).toBe("ready")
   expect(live.stamp.team?.owner.profile).toEqual(teamRef(target))
-  expect(live.destinations.some((entry) => entry.canRead)).toBe(true)
+  expect(live.profile.principal.principalObjectId).toBe(principal)
+  expect(live.stamp.team?.owner.principal).toEqual(live.profile.principal)
+  // Selection is not a claim about business grants, which require their own original proof.
+  await expect(page.locator(landing.picker)).toHaveValue(target.teamObjectId)
+  await expect(page.locator(landing.dashboard)).toHaveAttribute("href", target.mount + "/teams/" + target.teamObjectId + "/dashboard")
   return live
 }
-export async function uiContext(page: Page, target: Target, action: () => Promise<unknown>) {
-  return contextValue(await uiReply(page, contextURL(target), "GET", action), target)
+export async function uiContext(page: Page, target: Target, action: () => Promise<unknown>, selection: boolean | "administration" = false) {
+  return contextValue(await uiReply(page, contextURL(target, selection), "GET", action), target, selection)
 }
 export async function switchTeam(page: Page, target: Target, principal: string, action: () => Promise<unknown>) {
   const changed = await uiContext(page, target, action)
   expect(changed.stamp.principalRef).toBe(principal)
   expect(changed.profile.teams.status).toBe("ready")
   expect(changed.stamp.team?.owner.profile).toEqual(teamRef(target))
-  expect(changed.destinations.some((entry) => entry.canRead)).toBe(true)
+  expect(changed.profile.principal.principalObjectId).toBe(principal)
+  expect(changed.stamp.team?.owner.principal).toEqual(changed.profile.principal)
   // The action's original F02 response and the independent re-read must both have the selected owner.
   return selected(page, target, principal)
 }
@@ -149,12 +157,13 @@ export async function focusRefresh(page: Page, target: Target) {
   return live
 }
 
-// Original HTTP contract from 08fa1796. Missing route blocks this case; nothing here registers a handler.
+// Public shapes observed in integrated295eb / #655. The original mounted producer and current actor remain required.
+// ConfigRevision is opaque: preserve the exact token; never coerce or assume +1.
 const AdminCatalog = Schema.Struct({
-  status: Schema.Literal("ok"), configRevision: Schema.Number,
+  status: Schema.Literal("ok"), configRevision: TeamProfile.ConfigRevision,
   profiles: Schema.Array(Schema.Struct({ profile: TeamProfile.Ref, enabled: Schema.Boolean })),
 })
-const AdminResult = Schema.Struct({ status: Schema.Literal("ok"), configRevision: Schema.Number, changed: Schema.Boolean })
+const AdminResult = Schema.Struct({ status: Schema.Literal("ok"), configRevision: TeamProfile.ConfigRevision, changed: Schema.Boolean })
 function adminURL(target: Target) {
   const url = new URL(target.mount + "/api/ui/team-profiles", target.publicOrigin)
   url.search = new URLSearchParams({ contractRevision: "sf-team-profile/1", installationId: target.installationId,
@@ -163,24 +172,37 @@ function adminURL(target: Target) {
 }
 export async function adminCatalog(page: Page, target: Target) {
   const response = await originalRequest(page, adminURL(target))
-  if (response.status() !== 200) throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
+    throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
   const catalog = Schema.decodeUnknownSync(AdminCatalog, strict)(await response.json())
-  if (!Number.isSafeInteger(catalog.configRevision) || catalog.configRevision < 0 ||
+  if (catalog.profiles.length > 10_000 ||
     new Set(catalog.profiles.map((entry) => JSON.stringify(entry.profile))).size !== catalog.profiles.length ||
     catalog.profiles.some((entry) => entry.profile.installationId !== target.installationId ||
       entry.profile.tenantId !== target.tenantId))
     throw new Error("G08_REAL_ADMIN_CATALOG_INVALID")
   return catalog
 }
-export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: number) {
+export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: TeamProfile.ConfigRevision) {
   const response = await originalRequest(page, adminURL(target), "POST", {
     action, profile: teamRef(target), expectedRevision,
   })
-  if (response.status() !== 200) throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
+    throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
   const result = Schema.decodeUnknownSync(AdminResult, strict)(await response.json())
-  if (!result.changed || result.configRevision !== expectedRevision + 1)
+  if (!result.changed || result.configRevision === expectedRevision)
     throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
   return result
+}
+
+export async function expectUnauthenticated(reply: Response) {
+  expect(reply.status()).toBe(401)
+  expect(reply.headers()["cache-control"]).toBe("no-store")
+  expect(reply.headers()["location"]).toBeUndefined()
+  const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), strict)(await reply.json())
+  expect(result).toEqual({ status: "unauthenticated" })
+}
+export async function businessReply(page: Page, target: Target) {
+  return originalRequest(page, new URL(target.mount + "/teams/" + target.teamObjectId + "/dashboard", target.publicOrigin).href)
 }
 
 async function attach(plan: Plan, addresses: readonly string[]) {
