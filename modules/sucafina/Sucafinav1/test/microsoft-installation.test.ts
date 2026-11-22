@@ -1572,3 +1572,54 @@ test("Microsoft private session readers detect changed grants and key bytes with
     expect(before.bytes).not.toEqual(new Uint8Array(32).fill(93))
   } finally { await f.close() }
 })
+
+test("Corporate native login preserves closed Team domain routes without granting membership", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    const contracts = "/orchestra/sf-procurement/contracts?" + new URLSearchParams({ ...f.selection, teamObjectId })
+    await f.signIn(contracts, contracts, "//foreign.example.test/replace")
+    for (const pathname of ["/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      for (const year of ["2024", "2026", "2027"]) {
+        const returnTo = pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId, year })
+        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=foreign")
+      }
+    }
+    f.membership.teams = []
+    const cookie = await f.signIn(contracts)
+    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
+  } finally { await f.close() }
+})
+
+test("Corporate native domain return rejects incomplete, duplicate, legacy and out-of-range intent after signed OIDC", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    for (const pathname of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      const budget = pathname !== "/orchestra/sf-procurement/contracts"
+      const selection = { ...f.selection, teamObjectId, ...(budget ? { year: "2026" } : {}) }
+      const query = new URLSearchParams(selection).toString()
+      for (const returnTo of [
+        pathname,
+        pathname + "?" + new URLSearchParams({ ...f.selection, ...(budget ? { year: "2026" } : {}) }),
+        pathname + "?" + query + "&teamObjectId=" + secondTeamId,
+        pathname + "?" + query + "&%74eamObjectId=" + teamObjectId,
+        pathname + "?" + query + "&principalRef=" + oid,
+        pathname + "?" + query + "&accessRevision=claimed",
+        pathname + "?" + query + "&projectId=technical-placement",
+        pathname + "?" + query + "&hostId=technical-host",
+        pathname + "?" + new URLSearchParams({ ...selection, server: "https://foreign.example.test" }),
+        pathname + "?" + new URLSearchParams({ ...selection, contractRevision: "sf-native-ui/1" }),
+        pathname + "/extra?" + query,
+        pathname + "?" + query + "#replaced",
+      ]) await f.signIn(returnTo, mount + "/dashboard")
+      if (budget) {
+        await f.signIn(pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId }), mount + "/dashboard")
+        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
+        for (const year of ["", "2023", "2028", "02026", "2026.0", "-2026", "2026suffix"])
+          await f.signIn(pathname + "?" + new URLSearchParams({ ...selection, year }), mount + "/dashboard")
+      } else {
+        await f.signIn(pathname + "?" + query + "&year=2026", mount + "/dashboard")
+      }
+    }
+  } finally { await f.close() }
+})

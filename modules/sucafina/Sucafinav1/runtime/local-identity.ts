@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { SfDomainReadSelection } from "@orchestra/schema/sucafina/domain"
 import { Session as NativeSession } from "@orchestra/schema/session"
 import { Schema } from "effect"
 import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsObservation, EntraTeamsResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
@@ -430,17 +431,23 @@ function nativeTeamReturn(value: string | null, origin: string) {
   const sessionSegment = /^\/orchestra\/sf-sessions\/([A-Za-z0-9_-]{1,256})$/.exec(url.pathname)?.[1]
   const sessionRoute = sessionSegment === "new" ||
     sessionSegment !== undefined && Schema.is(NativeSession.ID)(sessionSegment)
+  const budgetRoute = ["/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"].includes(url.pathname)
+  const domainRoute = budgetRoute || url.pathname === "/orchestra/sf-procurement/contracts"
   if (url.origin !== origin || url.username || url.password || url.hash ||
-      !sessionRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
-  if (!url.search) return sessionRoute ? undefined : url.pathname
+      !sessionRoute && !domainRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
+  if (!url.search) return sessionRoute || domainRoute ? undefined : url.pathname
   const parameters = url.searchParams
   const keys = [...parameters.keys()]
-  const required = ["contractRevision", "server", "installationId", "tenantId"]
-  if (sessionRoute && (keys.length !== 5 || !parameters.has("teamObjectId")) ||
-      (keys.length !== 4 && keys.length !== 5) || new Set(keys).size !== keys.length ||
-      required.some((key) => !parameters.has(key)) ||
+  const required = ["contractRevision", "server", "installationId", "tenantId",
+    ...(sessionRoute || domainRoute ? ["teamObjectId"] : []), ...(budgetRoute ? ["year"] : [])]
+  if (new Set(keys).size !== keys.length || required.some((key) => !parameters.has(key)) ||
       keys.some((key) => !required.includes(key) && key !== "teamObjectId") ||
       parameters.get("server") !== origin) return
+  if (budgetRoute) {
+    const year = parameters.get("year")!
+    // The Team budget URL requires a year; its allowed values remain the original domain codec.
+    if (!/^[0-9]{4}$/.test(year) || !Schema.is(SfDomainReadSelection)({ year: Number(year) })) return
+  }
   const installationId = parameters.get("installationId")
   const tenantId = parameters.get("tenantId")
   const contractRevision = parameters.get("contractRevision")
