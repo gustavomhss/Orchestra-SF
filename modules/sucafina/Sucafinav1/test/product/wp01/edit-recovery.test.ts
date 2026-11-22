@@ -973,29 +973,53 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   const questionForm = `<form data-case-question data-context='${JSON.stringify(questionContext)}'><label>Record<select name="source"><option value="0">Restricted budget source</option></select></label><button type="button" data-find-recipients>Find recipients</button><label>Recipient<select name="recipient" required><option value="recipient-1" selected>Restricted recipient</option></select></label><label>Question<textarea name="question" required></textarea></label><button type="submit">Create question</button><p role="status"></p></form><script>${caseQuestionScript}</script>`
 
   test.each([401, 403])("question %i clears the draft and context and fences an older recipient response", async (denial) => {
+    // Diagnostic overlay only: relative phases, statuses and the public fixture marker.
+    const probeStart = Date.now()
+    const probe: Record<string, unknown>[] = []
+    const mark = (event: string, fields: Record<string, unknown> = {}) => probe.push({ event, ms: Date.now() - probeStart, ...fields })
+    const modeOf = (url: string) => {
+      const mode = new URL(url).searchParams.get("sf")
+      return mode === "collaboration-recipients" || mode === "collaboration-storage-version" ? mode : "other"
+    }
     const gate: { release?: () => void; started?: () => void } = {}
     const started = new Promise<void>((resolve) => { gate.started = resolve })
     const calls: string[] = []
+    try {
     await browserCase(questionForm, async (request) => {
+      mark("server-enter", { method: request.method, mode: modeOf(request.url) })
       const mode = new URL(request.url).searchParams.get("sf")!
       calls.push(mode)
       if (mode === "collaboration-recipients") {
         await new Promise<void>((resolve) => { gate.release = resolve; gate.started?.() })
+        mark("server-after-release", { mode, status: 200, fixture: "question-recipients" })
         return Response.json({ status: "ok", value: [{ id: "late-recipient", name: "Late restricted recipient" }] }, { headers: { "X-Late-Fixture": "question-recipients" } })
       }
+      mark("server-denial", { mode, status: denial })
       return Response.json({ status: "denied", detail: "PRIVATE-DENIAL" }, { status: denial })
     }, async (page) => {
+      page.on("request", (request) => mark("request", { method: request.method(), mode: modeOf(request.url()) }))
+      page.on("response", (response) => mark("response", { mode: modeOf(response.url()), status: response.status(),
+        fixture: response.headers()["x-late-fixture"] === "question-recipients" ? "question-recipients" : "absent" }))
+      page.on("requestfinished", (request) => mark("finished", { mode: modeOf(request.url()) }))
+      page.on("requestfailed", (request) => mark("failed", { mode: modeOf(request.url()),
+        error: request.failure()?.errorText.match(/^net::ERR_[A-Z_]+$/)?.[0] ?? "transport-failed" }))
+      page.once("close", () => mark("close"))
+      mark("page-ready")
       await page.getByLabel("Question", { exact: true }).fill("Private unsent question")
       await page.getByRole("button", { name: "Find recipients", exact: true }).click()
       await within(started, "recipient lookup entered its delayed handler")
+      mark("lookup-held")
       await page.getByRole("button", { name: "Create question", exact: true }).click()
       await page.getByText("Question access changed. Reopen the decision with your current access.", { exact: true }).waitFor()
       expect(await page.locator('[data-case-question] input, [data-case-question] select, [data-case-question] textarea, [data-case-question] button').count()).toBe(0)
       expect(await page.locator('[data-case-question]').getAttribute("data-context")).toBeNull()
       expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBeNull()
+      mark("revocation-asserted")
       const late = observe(page, page.waitForResponse((response) => response.headers()["x-late-fixture"] === "question-recipients"))
+      mark("release-late")
       gate.release?.()
       expect(await within((await late).finished(), "finish the older recipient response")).toBeNull()
+      mark("late-finished")
       await within(page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle the older recipient response")
       expect(await page.locator('[data-case-question] select, [data-case-question] textarea').count()).toBe(0)
       expect(await page.content()).not.toContain("Late restricted recipient")
@@ -1004,7 +1028,10 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.content()).not.toContain("PRIVATE-DENIAL")
       await page.locator('[data-case-question]').dispatchEvent("submit")
       expect(calls).toEqual(["collaboration-recipients", "collaboration-storage-version"])
-    }, () => gate.release?.())
+    }, () => { mark("cleanup-release"); gate.release?.() })
+    } finally {
+      console.info("MIGRATION_POOL401_DIAGNOSTIC", JSON.stringify({ denial, events: probe, qualification: false }))
+    }
   }, 30_000)
 
   test("transient question recipient and preflight failures preserve the selected recipient and editable draft", async () => {
