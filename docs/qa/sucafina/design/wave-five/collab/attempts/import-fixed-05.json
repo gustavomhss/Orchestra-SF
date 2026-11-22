@@ -1,0 +1,36 @@
+{
+  "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
+  "sourceTree": "777e9a1a2fb3debbac3eb96ee795a2a9390f948a",
+  "tree": "0460ff029e2f74a60fc7ed2a683c22b86492f8ef",
+  "branch": "ci-run-sf5importfixed5",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "overlays": [
+    ".ci-run.json",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
+  ],
+  "specBlob": "6c9f74daf4d99b24e81d23d3988dabb3095e06d0",
+  "permanentSpec": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+  "notes": "Clean production bundle, import declaration selected with all permanent helpers and original assertion budgets. No profiling, baseline modules or stdout bridges.",
+  "snapshot": "12c27f7830a31229296acf5b2c9c226851cb2721",
+  "result": "running",
+  "sourceQualifiers": [
+    "71 original helper/collaboration/portfolio cases pass",
+    "Installed availability equality: original9/candidate9 collaboration, original7/candidate7 portfolio",
+    "Root composed comparator and captured readers"
+  ],
+  "limits": "The prior equality journey still missed the10s refresh deadline. This clean composed run keeps the same deadline and will not be treated as passed from HTTP200 alone.",
+  "run": 44997174038
+}

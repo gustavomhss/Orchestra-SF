@@ -60,7 +60,7 @@ Both portfolio and collaboration now capture the registered original `state.read
 
 [The current qualification](qualification/portfolio-batch-02.json) records 71 passing cases/680 assertions (13 helper, 25 collaboration, 33 portfolio) and the separate baseline's two expected failures with 56 other cases passing. Independent static review approved namespace/mode/phase isolation, original fences and the reader capture. No decoder, provider callback, selector allowlist, grant, registry, schema or workflow changed.
 
-The installed comparison currently running on `536a06` compares the exact original availability fields for all seven portfolio and nine collaboration operations. That snapshot was dispatched before root's composed integration; its observer blobs are identical. The subsequent clean import journey will use `506a0a`, including root's independently qualified comparator, without repeating the installed comparison unless a concrete difference appears.
+The [installed comparison](attempts/batch-equivalence-01.json) on `536a06` matches all four original availability fields for seven portfolio and nine collaboration operations. Its subsequent import refresh still misses 10 s, and the actual teardown screenshot still shows Loading; no later success is inferred. That snapshot was dispatched before root's composed integration, whose observer blobs are identical. [Clean import5](attempts/import-fixed-05.json) is running on `506a0a`, including root's independently qualified comparator, with no comparison modules or profiler overlays. The existing production configuration and all budgets remain unchanged.
 
 ## Remaining import cost and next action
 
