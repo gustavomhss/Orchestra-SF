@@ -120,6 +120,9 @@ export async function setupTimelineBenchmark(
         : [],
     events: () => events.splice(0, eventBatch),
     eventRetry: 16,
+    // Polling returns finite batches of one logical stream; repeated greetings would refetch the static history
+    // and erase the text slot between its started event and deltas.
+    eventGreeting: "once",
   })
   // The build retains the base config's default backend port while performance workers mock the app port.
   // Bridge that authority through the shared mock so failed health probes cannot select a different server.

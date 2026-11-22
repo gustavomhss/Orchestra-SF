@@ -91,14 +91,20 @@ export async function sessionHttpFixture(input: { actions?: readonly SessionAcce
           const owner = selected.get(original)
           if (!owner || producer.state !== "ready") return undefined
           const revision = producer.revision
+          const configRevision = "http:" + revision
           const valid = () => !original.signal.aborted && producer.state === "ready" &&
             producer.revision === revision && !revoked.has(key(owner))
           const exclusions = () => excluded.get(key(owner)) ?? []
           return {
-            binding: { owner, revisions: { configRevision: "http:" + revision, accessRevision: "controlled-http-component" } },
+            binding: { owner, revisions: { configRevision, accessRevision: "controlled-http-component" } },
             verifyCurrent: () => Effect.sync(valid),
             authorize: (action, id) => Effect.sync(() => valid() && actions.has(action) && (!id || !exclusions().includes(id))),
             excludedSessions: () => Effect.sync(() => [...exclusions()]),
+            // Explicit private fixture configuration lets real Location services boot without a model or global defaults.
+            configuration: () => Effect.sync(() => valid() ? {
+              origin: "installation-team-store", profile: owner.profile, configRevision,
+              document: { version: 1, settings: {} },
+            } : undefined),
           }
         },
       })

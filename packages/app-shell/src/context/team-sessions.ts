@@ -118,6 +118,15 @@ export function createTeamSessionsWorkspace(input: Readonly<{
   let lastOwner: TeamProfile.Owner | undefined
   const draftKey = () => state.active ?? "new"
   const snapshotDraft = () => structuredClone(unwrap(prompt[0]))
+  const replaceDraft = (draft: PromptInputV2PersistedState) => {
+    const next = structuredClone(unwrap(draft))
+    batch(() => {
+      // The native editor suppresses its local input echo. External transitions
+      // replace the prompt array so resets and restorations are still observed.
+      prompt[1]("prompt", next.prompt)
+      prompt[1](reconcile(next))
+    })
+  }
   const saveDraft = () => { if (active) drafts.set(draftKey(), snapshotDraft()) }
   const valid = (scope: Scope) => active === scope && !scope.abort.signal.aborted &&
     input.current(scope.context, scope.generation)
@@ -175,7 +184,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       hints.clear(); lastOwner = undefined
     }
     drafts = new Map()
-    batch(() => { prompt[1](reconcile(emptyPrompt())); setState(reconcile({ ...initial(), generation: state.generation + 1 })) })
+    batch(() => { replaceDraft(emptyPrompt()); setState(reconcile({ ...initial(), generation: state.generation + 1 })) })
   }
   const invalidate = (scope: Scope, reason: SfTeamSessionFailure | "stream") => {
     if (active !== scope) return
@@ -315,7 +324,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
             sameTeamSessionOwner(quarantine.namespace.owner, namespace.owner) &&
             quarantine.namespace.authorityGeneration === namespace.authorityGeneration) {
           drafts = quarantine.drafts
-          prompt[1](reconcile(drafts.get(draftKey()) ?? emptyPrompt()))
+          replaceDraft(drafts.get(draftKey()) ?? emptyPrompt())
         }
         else if ([...quarantine.drafts.values()].some((draft) => (promptText(draft) ?? "").trim()))
           input.notice("sf.teams.chatDraftsRemoved")
@@ -339,7 +348,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     saveDraft()
     if (!id) {
       setState("active", undefined)
-      prompt[1](reconcile(drafts.get("new") ?? emptyPrompt()))
+      replaceDraft(drafts.get("new") ?? emptyPrompt())
       return true
     }
     const parsed = Schema.decodeUnknownOption(SessionID)(id)
@@ -356,7 +365,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       batch(() => {
         setState({ active: id, tabs: [...state.tabs.filter((tab) => tab.id !== id), info],
           closed: state.closed.filter((tab) => tab !== id) })
-        prompt[1](reconcile(drafts.get(id) ?? emptyPrompt()))
+        replaceDraft(drafts.get(id) ?? emptyPrompt())
       })
       await readMessages(scope, parsed.value)
       check(scope)
@@ -466,7 +475,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       !!(quarantine && [...quarantine.drafts.values()].some((draft) => !!(promptText(draft) ?? "").trim())),
     discardDrafts() {
       if (unresolved()) { input.notice("sf.teams.pending"); return false }
-      quarantine = undefined; drafts.clear(); prompt[1](reconcile(emptyPrompt())); return true
+      quarantine = undefined; drafts.clear(); replaceDraft(emptyPrompt()); return true
     },
     async closeTab(id: string, discard = false) {
       const scope = active
@@ -479,7 +488,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
       setState("threads", produce((threads) => { delete threads[id] }))
       setState({ tabs: state.tabs.filter((item) => item.id !== id),
         closed: [id, ...state.closed.filter((item) => item !== id)].slice(0, 24) })
-      if (state.active === id) { setState("active", undefined); prompt[1](reconcile(drafts.get("new") ?? emptyPrompt())) }
+      if (state.active === id) { setState("active", undefined); replaceDraft(drafts.get("new") ?? emptyPrompt()) }
       persist(scope)
       return true
     },
@@ -531,7 +540,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
         pending(scope, operation)
         // Dispatch retires this text as an unsent draft. Unknown outcomes retain
         // IDs for read-only reconciliation and are never converted into a retry.
-        drafts.delete(id); prompt[1](reconcile(emptyPrompt()))
+        drafts.delete(id); replaceDraft(emptyPrompt())
         const admitted = await scope.client.prompt({ sessionID: id, id: messageID, text })
         check(scope); settled(scope, operation); operation = undefined
         scope.receipts = [...scope.receipts.filter((value) => value.messageID !== messageID), { sessionID: id, messageID }].slice(-64)

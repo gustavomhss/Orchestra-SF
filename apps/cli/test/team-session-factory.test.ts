@@ -35,7 +35,7 @@ it.live.skipIf(process.platform === "win32")(
         XDG_CACHE_HOME: path.join(fixture.directory, "xdg-cache"),
         XDG_STATE_HOME: path.join(fixture.directory, "xdg-state"),
       },
-    })))
+    }))
     if (result.exitCode !== 0) throw new Error("Team Session factory smoke failed: " + result.stderr.toString() + result.stdout.toString())
     expect(result.stdout.toString()).toContain("TEAM_SESSION_FACTORY_SMOKE_OK")
     expect(fixture.business.all("SELECT id FROM session")).toEqual([])
