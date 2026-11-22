@@ -78,10 +78,19 @@
     {
       "id": 6,
       "name": "Phase bridge physical origin",
-      "owner": "#237 ownership reconciliation",
-      "state": "ownership-pending",
+      "owner": "Installed composition / #237; acceptance pending",
+      "state": "confirmed-gap-ownership-pending",
       "pr": 237,
-      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/237#issuecomment-7074525977"
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/237#issuecomment-7074525977",
+      "proof": "Actions44990601001 on unchanged devcca156, snapshotd65e723:2tests45assertions. Real routine native runtime/governance + Session/Event/SQLite reproduces SF_NATIVE_PHASE_ORIGIN_MUST_BE_HOST_PRIVATE before durable Session when using the Local Operator profile's installation-mandated host-data layout. Global.data/native-origins is a descendant of the configured workspace. Positive private sibling and relative/noncanonical/symlink/unsafe-ancestor/revocation negatives pass; this does not qualify the installed layout. Historical path.resolve alone cannot fix ancestry. #560 private filesystem and #569 skill provenance remain valid but not equivalent to positive installed composition.",
+      "ci": [
+        44990601001
+      ],
+      "proofSnapshot": "d65e72388e878f5a12d71504ffd3fabf4f9d99d5",
+      "proofSource": "cca15664bcb6aa4f1b90104ba6ec68ff454c7aec",
+      "findingComment": "https://github.com/gustavomhss/Orchestra-SF/pull/237#issuecomment-7074927375",
+      "acceptance": null,
+      "remaining": "Confirm responsible owner/destination with237; resolve workspace/private-state layout without weakening physical guards, then prove installed positive and all negatives. #345 is superseded historical reference, not an additional current owner. This diagnostic does not assert a Microsoft/G09 failure; that profile requires a separate workspace."
     },
     {
       "id": 7,
@@ -133,7 +142,7 @@
       "id": 11,
       "name": "UI state copy and currency",
       "owner": "Astra/provider_state",
-      "state": "implementation",
+      "state": "partial",
       "subparts": {
         "headcount": {
           "pr": 630,
@@ -173,7 +182,8 @@
         "imports": {
           "state": "ownership-pending",
           "pr": 613,
-          "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7074751579"
+          "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7074751579",
+          "operationalDependency": "S5: PO availability/index requires producer qualification and coordinated host-context ownership; UI copy remains separate613."
         }
       }
     }
@@ -187,7 +197,8 @@
       "ordinal": 1,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/script/distribution-payload.ts",
@@ -197,7 +208,8 @@
       "ordinal": 2,
       "inventoryRows": [
         "I16"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
@@ -207,7 +219,8 @@
       "ordinal": 3,
       "inventoryRows": [
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/bi-services.ts",
@@ -217,7 +230,9 @@
       "ordinal": 4,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "The historical hunk adds only a trailing blank line; no product behavior is missing."
     },
     {
       "path": "apps/cli/src/sucafina-product/business-services.ts",
@@ -228,7 +243,8 @@
       "inventoryRows": [
         "I25",
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
@@ -238,7 +254,8 @@
       "ordinal": 6,
       "inventoryRows": [
         "I23"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
@@ -247,8 +264,11 @@
       "blobRelation": "different",
       "ordinal": 7,
       "inventoryRows": [
-        "I01"
-      ]
+        "I01",
+        "I02"
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "The historical added members/similar-cases operations are present. files.export.po remains absent from current operational-resource index; schema/client existence alone does not qualify readiness. S5 verifies actual producer and ownership before a minimal fix."
     },
     {
       "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
@@ -258,17 +278,19 @@
       "ordinal": 8,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
       "historicalBlob": "a5c059946a8d3b0d3be6570f36b4eb484cf1af29",
-      "currentBlob": "fd5e40da9a982d445259606629b7dbdf581b42af",
+      "currentBlob": "c670a45ba421d3fb6dbce8c677223f04b74250db",
       "blobRelation": "different",
       "ordinal": 9,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
@@ -278,7 +300,8 @@
       "ordinal": 10,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-bridge.ts",
@@ -288,7 +311,8 @@
       "ordinal": 11,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-fence.ts",
@@ -298,7 +322,8 @@
       "ordinal": 12,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-origin.ts",
@@ -308,7 +333,8 @@
       "ordinal": 13,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
@@ -318,7 +344,8 @@
       "ordinal": 14,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/test/distribution-web-native.test.ts",
@@ -328,7 +355,8 @@
       "ordinal": 15,
       "inventoryRows": [
         "I16"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/test/distribution-web.test.ts",
@@ -338,7 +366,8 @@
       "ordinal": 16,
       "inventoryRows": [
         "I16"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/cli/test/factory-distribution-linux.test.ts",
@@ -348,27 +377,30 @@
       "ordinal": 17,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/app-dock-linux-live.test.ts",
       "historicalBlob": "c64b32a7402e771f7b3e3524222e119d1f6bc10d",
-      "currentBlob": "51540e247a30688fe693292d2d28ae7909375ade",
-      "blobRelation": "different",
+      "currentBlob": "c64b32a7402e771f7b3e3524222e119d1f6bc10d",
+      "blobRelation": "identical",
       "ordinal": 18,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/app-dock.ts",
       "historicalBlob": "a246c08e6840b5844bc7cf125b412d7f19563c8a",
-      "currentBlob": "e67d046dd9ac9a69af5e589c453db7af5b25ff99",
+      "currentBlob": "5a33bfa94386b22860de40b5b1dbda0dcc4c97b5",
       "blobRelation": "different",
       "ordinal": 19,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/live-capture.ts",
@@ -378,7 +410,8 @@
       "ordinal": 20,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/live-ipc.test.ts",
@@ -388,7 +421,8 @@
       "ordinal": 21,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/live-ipc.ts",
@@ -398,7 +432,8 @@
       "ordinal": 22,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/live-overlay.ts",
@@ -408,7 +443,8 @@
       "ordinal": 23,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/live-transport-log.ts",
@@ -418,7 +454,8 @@
       "ordinal": 24,
       "inventoryRows": [
         "I14"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/log-redact.ts",
@@ -428,7 +465,8 @@
       "ordinal": 25,
       "inventoryRows": [
         "I14"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/logging.ts",
@@ -438,7 +476,8 @@
       "ordinal": 26,
       "inventoryRows": [
         "I14"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/windows.ts",
@@ -448,7 +487,8 @@
       "ordinal": 27,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "apps/desktop/src/main/wsl/ipc.ts",
@@ -458,7 +498,8 @@
       "ordinal": 28,
       "inventoryRows": [
         "I13"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "docs/handoff/HANDOFF-audit-one.md",
@@ -468,7 +509,8 @@
       "ordinal": 29,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/engine-adapters/claude-code/src/v2/host.ts",
@@ -478,7 +520,8 @@
       "ordinal": 30,
       "inventoryRows": [
         "I09"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/local/entry.ts",
@@ -489,7 +532,8 @@
       "inventoryRows": [
         "I01",
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
@@ -499,7 +543,8 @@
       "ordinal": 32,
       "inventoryRows": [
         "I07"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
@@ -511,7 +556,8 @@
         "I05",
         "I22",
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
@@ -521,7 +567,8 @@
       "ordinal": 34,
       "inventoryRows": [
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
@@ -531,7 +578,8 @@
       "ordinal": 35,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
@@ -542,7 +590,8 @@
       "inventoryRows": [
         "I05",
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
@@ -553,7 +602,8 @@
       "inventoryRows": [
         "I05",
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
@@ -563,7 +613,8 @@
       "ordinal": 38,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
@@ -573,7 +624,8 @@
       "ordinal": 39,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
@@ -583,7 +635,8 @@
       "ordinal": 40,
       "inventoryRows": [
         "I19"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
@@ -593,18 +646,20 @@
       "ordinal": 41,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
       "historicalBlob": "b74b526717ba4bca91c53eb591ae09c12da69671",
-      "currentBlob": "78cfacb69c0e83c04c55d593a005bccff75f6282",
+      "currentBlob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
       "blobRelation": "different",
       "ordinal": 42,
       "inventoryRows": [
         "I06",
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
@@ -614,7 +669,8 @@
       "ordinal": 43,
       "inventoryRows": [
         "I06"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
@@ -624,7 +680,8 @@
       "ordinal": 44,
       "inventoryRows": [
         "I19"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
@@ -634,7 +691,8 @@
       "ordinal": 45,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
@@ -644,7 +702,8 @@
       "ordinal": 46,
       "inventoryRows": [
         "I23"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
@@ -654,7 +713,8 @@
       "ordinal": 47,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
@@ -664,7 +724,8 @@
       "ordinal": 48,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
@@ -675,7 +736,8 @@
       "inventoryRows": [
         "I22",
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
@@ -686,7 +748,8 @@
       "inventoryRows": [
         "I22",
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
@@ -696,7 +759,8 @@
       "ordinal": 51,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
@@ -706,7 +770,8 @@
       "ordinal": 52,
       "inventoryRows": [
         "I21"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
@@ -716,7 +781,8 @@
       "ordinal": 53,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
@@ -726,7 +792,8 @@
       "ordinal": 54,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
@@ -736,27 +803,31 @@
       "ordinal": 55,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
       "historicalBlob": "05eb28a407e03ca2d551f05cce479d69c588e4fe",
-      "currentBlob": "630ebaa2c8f36535884d85a6151b4c13ecfda704",
+      "currentBlob": "571890e9845e7edf322af1cbf2ace275f5df1b49",
       "blobRelation": "different",
       "ordinal": 56,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Integrated635 restores primary-source proof for known subtotals with current annual-source/monthly-observation semantics, preserving coverage refs and refusing mixed/transformed/null links."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
       "historicalBlob": "7fbe74766c6e08a63e8cd133997b7716a78fbd4a",
-      "currentBlob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "currentBlob": "7779595b7440daca4769883432ac81fc3c8bb0e2",
       "blobRelation": "different",
       "ordinal": 57,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
@@ -766,7 +837,8 @@
       "ordinal": 58,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
@@ -776,7 +848,8 @@
       "ordinal": 59,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
@@ -786,27 +859,30 @@
       "ordinal": 60,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
       "historicalBlob": "f1b94175ef167c2483d3a1aa58ae917ee498cc4e",
-      "currentBlob": "50c261bf5bb70b0089057b5093803c5f8867cec2",
+      "currentBlob": "688d1c811a08510bbb527e7af8388a428d409f32",
       "blobRelation": "different",
       "ordinal": 61,
       "inventoryRows": [
         "I04"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
       "historicalBlob": "ef1cca25821f7830b39e1df8ec29e3a8c15bce4f",
-      "currentBlob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
-      "blobRelation": "different",
+      "currentBlob": "ef1cca25821f7830b39e1df8ec29e3a8c15bce4f",
+      "blobRelation": "identical",
       "ordinal": 62,
       "inventoryRows": [
         "I04"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
@@ -816,7 +892,8 @@
       "ordinal": 63,
       "inventoryRows": [
         "I20"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
@@ -826,7 +903,9 @@
       "ordinal": 64,
       "inventoryRows": [
         "I03"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Historical hunk only names a DOCX continuation paragraph style basedOn Normal and bumps a private renderer digest. Current renderer already emits the same continuation text/layout and seals artifact bytes/inclusion; no separate current product contract depends on the historic style marker. Do not claim the old byte seal/version is interchangeable."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/routine-selection.ts",
@@ -836,7 +915,8 @@
       "ordinal": 65,
       "inventoryRows": [
         "I20"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
@@ -846,7 +926,8 @@
       "ordinal": 66,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
@@ -856,7 +937,9 @@
       "ordinal": 67,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Current Persistence already includes currentSnapshot and stronger snapshot-owner/fence contracts. The optional detached snapshot accessor from349 is absorbed; physical read optimizations are not inferred from missing old fixtures."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
@@ -866,7 +949,8 @@
       "ordinal": 68,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/installed-console.ts",
@@ -876,7 +960,8 @@
       "ordinal": 69,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
@@ -886,7 +971,8 @@
       "ordinal": 70,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
@@ -897,7 +983,8 @@
       "inventoryRows": [
         "I04",
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
@@ -907,7 +994,8 @@
       "ordinal": 72,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
@@ -917,7 +1005,8 @@
       "ordinal": 73,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
@@ -927,7 +1016,8 @@
       "ordinal": 74,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
@@ -937,7 +1027,8 @@
       "ordinal": 75,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
@@ -947,7 +1038,8 @@
       "ordinal": 76,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
@@ -957,7 +1049,8 @@
       "ordinal": 77,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts",
@@ -967,7 +1060,8 @@
       "ordinal": 78,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-entry.test.ts",
@@ -977,7 +1071,8 @@
       "ordinal": 79,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
@@ -987,7 +1082,8 @@
       "ordinal": 80,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
@@ -998,7 +1094,8 @@
       "inventoryRows": [
         "I24",
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-first-login.test.ts",
@@ -1009,7 +1106,8 @@
       "inventoryRows": [
         "I24",
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
@@ -1020,7 +1118,8 @@
       "inventoryRows": [
         "I24",
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
@@ -1031,7 +1130,8 @@
       "inventoryRows": [
         "I24",
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
@@ -1042,7 +1142,8 @@
       "inventoryRows": [
         "I24",
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/operator-browser.test.ts",
@@ -1052,7 +1153,8 @@
       "ordinal": 86,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts",
@@ -1062,7 +1164,8 @@
       "ordinal": 87,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
@@ -1072,7 +1175,8 @@
       "ordinal": 88,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/decision-compare-performance/current-case-observations.test.ts",
@@ -1082,7 +1186,8 @@
       "ordinal": 89,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/docx-continuation130/table-flow.test.ts",
@@ -1092,7 +1197,8 @@
       "ordinal": 90,
       "inventoryRows": [
         "I03"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/result-materialization.test.ts",
@@ -1102,7 +1208,8 @@
       "ordinal": 91,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
@@ -1112,7 +1219,8 @@
       "ordinal": 92,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/fixture.ts",
@@ -1122,7 +1230,8 @@
       "ordinal": 93,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/native-fixture.ts",
@@ -1132,7 +1241,8 @@
       "ordinal": 94,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-fixture.ts",
@@ -1142,7 +1252,8 @@
       "ordinal": 95,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-pairs.test.ts",
@@ -1152,7 +1263,8 @@
       "ordinal": 96,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
@@ -1162,7 +1274,8 @@
       "ordinal": 97,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
@@ -1173,7 +1286,8 @@
       "inventoryRows": [
         "I04",
         "I19"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
@@ -1183,7 +1297,8 @@
       "ordinal": 99,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
@@ -1193,7 +1308,8 @@
       "ordinal": 100,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
@@ -1203,7 +1319,8 @@
       "ordinal": 101,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
@@ -1213,7 +1330,8 @@
       "ordinal": 102,
       "inventoryRows": [
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/operation-verifier.test.ts",
@@ -1223,7 +1341,8 @@
       "ordinal": 103,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
@@ -1233,7 +1352,8 @@
       "ordinal": 104,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-issuer.test.ts",
@@ -1243,7 +1363,8 @@
       "ordinal": 105,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/projection-access.test.ts",
@@ -1253,7 +1374,8 @@
       "ordinal": 106,
       "inventoryRows": [
         "I03"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp08/record-read-observation.test.ts",
@@ -1263,7 +1385,8 @@
       "ordinal": 107,
       "inventoryRows": [
         "I22"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
@@ -1273,7 +1396,8 @@
       "ordinal": 108,
       "inventoryRows": [
         "I26"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
@@ -1284,7 +1408,8 @@
       "inventoryRows": [
         "I22",
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
@@ -1294,7 +1419,8 @@
       "ordinal": 110,
       "inventoryRows": [
         "I21"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
@@ -1304,7 +1430,8 @@
       "ordinal": 111,
       "inventoryRows": [
         "I23"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
@@ -1314,7 +1441,8 @@
       "ordinal": 112,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
@@ -1324,7 +1452,8 @@
       "ordinal": 113,
       "inventoryRows": [
         "I24"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
@@ -1334,7 +1463,8 @@
       "ordinal": 114,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
@@ -1344,7 +1474,8 @@
       "ordinal": 115,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
@@ -1354,7 +1485,8 @@
       "ordinal": 116,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
@@ -1363,8 +1495,10 @@
       "blobRelation": "absent",
       "ordinal": 117,
       "inventoryRows": [
-        "I18"
-      ]
+        "I25"
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Historical fixture-only change preserves one Request identity for Planner/C08 outcome review. It is not a numeric contract guard and is not claimed covered by624; test infrastructure is reconciled with current host/behavior rather than blindly restored."
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
@@ -1374,7 +1508,8 @@
       "ordinal": 118,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
@@ -1384,7 +1519,8 @@
       "ordinal": 119,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/installed-console-preload.ts",
@@ -1394,7 +1530,8 @@
       "ordinal": 120,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/installed-console.ts",
@@ -1404,7 +1541,8 @@
       "ordinal": 121,
       "inventoryRows": [
         "I28"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
@@ -1414,7 +1552,8 @@
       "ordinal": 122,
       "inventoryRows": [
         "I02"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
@@ -1424,7 +1563,8 @@
       "ordinal": 123,
       "inventoryRows": [
         "I03"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
@@ -1434,7 +1574,8 @@
       "ordinal": 124,
       "inventoryRows": [
         "I03"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
@@ -1444,7 +1585,8 @@
       "ordinal": 125,
       "inventoryRows": [
         "I25"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
@@ -1454,17 +1596,19 @@
       "ordinal": 126,
       "inventoryRows": [
         "I02"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/capabilities-section.tsx",
       "historicalBlob": "7d903bc2ca1c93543fc346e81cc0e87f1d89bbe9",
-      "currentBlob": "46b14c7264c25372473588420ef2fca5a67554c3",
+      "currentBlob": "546b09de2564fb89904421a7edff2d6ae27a070b",
       "blobRelation": "different",
       "ordinal": 127,
       "inventoryRows": [
         "I15"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-data.test.ts",
@@ -1474,7 +1618,8 @@
       "ordinal": 128,
       "inventoryRows": [
         "I15"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-data.ts",
@@ -1484,7 +1629,8 @@
       "ordinal": 129,
       "inventoryRows": [
         "I15"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-view.tsx",
@@ -1494,27 +1640,30 @@
       "ordinal": 130,
       "inventoryRows": [
         "I15"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-cross.ts",
       "historicalBlob": "a92311c7a5e6990cd4735d2169cc5a882ce8d7f6",
-      "currentBlob": "13d31052d3857dadf959136eba15301aa6cc9b9b",
-      "blobRelation": "different",
+      "currentBlob": "a92311c7a5e6990cd4735d2169cc5a882ce8d7f6",
+      "blobRelation": "identical",
       "ordinal": 131,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
       "historicalBlob": "f1ff523731e0f17a9e05545b7796e4107b2fd3d2",
-      "currentBlob": "a2cf0fed6c71660955f53d564abd245d6f29f55e",
+      "currentBlob": "ef1f90dfc74bafac5425f7ba934ebec861bde030",
       "blobRelation": "different",
       "ordinal": 132,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
@@ -1524,7 +1673,8 @@
       "ordinal": 133,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
@@ -1534,17 +1684,19 @@
       "ordinal": 134,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/agents-view.tsx",
       "historicalBlob": "675ae1f7d104a6158c4a1c3059ac6f2406451043",
-      "currentBlob": "7c27c5aa810c1f3811e1ddcf719344c1ca11a1cc",
-      "blobRelation": "different",
+      "currentBlob": "675ae1f7d104a6158c4a1c3059ac6f2406451043",
+      "blobRelation": "identical",
       "ordinal": 135,
       "inventoryRows": [
         "I15"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
@@ -1554,27 +1706,30 @@
       "ordinal": 136,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/view.tsx",
       "historicalBlob": "8b8809ef956f8f7cbfea41358c3ecb8faa1616c0",
-      "currentBlob": "c482bde9ed8fdd4c277464caaf8cde3113c05a3d",
+      "currentBlob": "dae8177100c21495fe9fa4d68f1c2aae17cef9ce",
       "blobRelation": "different",
       "ordinal": 137,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
       "historicalBlob": "bcbaed29aec8ed5ea183b7e1dd1659623dac6579",
-      "currentBlob": "f83d1b9df785a6c2abaae2d5d032e3c7f1da0687",
+      "currentBlob": "c2da4454a18863093a6ddf5fe1534110e2ce1f35",
       "blobRelation": "different",
       "ordinal": 138,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
@@ -1584,7 +1739,8 @@
       "ordinal": 139,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
@@ -1594,17 +1750,19 @@
       "ordinal": 140,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
       "historicalBlob": "ae99b53209b0fe15b4aedd1982cf16dd3bab3d21",
-      "currentBlob": "3357f14b20086aac70bf5f108651c129cb9c89db",
+      "currentBlob": "edb4d287b2f5771422d24f53efa8911b5bbcdb68",
       "blobRelation": "different",
       "ordinal": 141,
       "inventoryRows": [
         "I27"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/client/src/sucafina/bindings.ts",
@@ -1614,7 +1772,9 @@
       "ordinal": 142,
       "inventoryRows": [
         "I01"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Equivalent denial safety via strict discriminated schemas572 and actual consumers573/588: denied carries no value; consumers require body.statusok before data; transport clears stamp401/403. Historical deniedIsNotData invalid-conversion is not ported. Analysis588 negative/readiness tests are narrower than all17operation DOM coverage."
     },
     {
       "path": "packages/client/src/sucafina/transport.ts",
@@ -1624,7 +1784,8 @@
       "ordinal": 143,
       "inventoryRows": [
         "I17"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/permission.ts",
@@ -1634,7 +1795,8 @@
       "ordinal": 144,
       "inventoryRows": [
         "I08"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/scheduled-task.ts",
@@ -1644,7 +1806,8 @@
       "ordinal": 145,
       "inventoryRows": [
         "I10"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session.ts",
@@ -1654,47 +1817,52 @@
       "ordinal": 146,
       "inventoryRows": [
         "I10"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/context-epoch.ts",
       "historicalBlob": "9b933cd66e7018a8acad021b2a65eb82feda8afa",
-      "currentBlob": "65b17a86a4fb131d427e12d489cec2c06a088094",
+      "currentBlob": "96ca771914d760b8750778e9b48af51916a3b0b8",
       "blobRelation": "different",
       "ordinal": 147,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/meeting-briefing.ts",
       "historicalBlob": "f28d83fbea0ad7502492428781b2f4aab35a5734",
-      "currentBlob": "279b07e4a8ad9c0297abf15a5e072a2ee0f4cc3a",
+      "currentBlob": "b466298d99ffa951b8fdf54a90eb8c056a3042ba",
       "blobRelation": "different",
       "ordinal": 148,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/meeting-context.ts",
       "historicalBlob": "b5e8184210ea73c9947ab27adb8d84af138a1306",
-      "currentBlob": "23e12c5a9b611b298674c919559229f0e101b65a",
-      "blobRelation": "different",
+      "currentBlob": "b5e8184210ea73c9947ab27adb8d84af138a1306",
+      "blobRelation": "identical",
       "ordinal": 149,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/message-updater.ts",
       "historicalBlob": "cb3fd373d4c4c69934a97f1d73f651a1ca3823a8",
-      "currentBlob": "4333586a8fb15f638096987b3a1d75baaf19a6be",
+      "currentBlob": "62cf9973415f87b5620d7aec510975f3d9cdd3f2",
       "blobRelation": "different",
       "ordinal": 150,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/run-coordinator.ts",
@@ -1704,38 +1872,42 @@
       "ordinal": 151,
       "inventoryRows": [
         "I12"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/runner/direct-commands.ts",
       "historicalBlob": "ac0c8bc4b630fa0a9524ce9b5e47a439a339b504",
-      "currentBlob": "93e4de0452ed534467900539eedbacd7ee0f6ff5",
+      "currentBlob": "db0927504a6aa6ba341ef016364c00fa2e1ad15c",
       "blobRelation": "different",
       "ordinal": 152,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/runner/llm.ts",
       "historicalBlob": "479fb5b355b58983a9c37a972e0242faa12bdd9f",
-      "currentBlob": "bd019e1a7176d9fc780de30c1d8ef1484a7cfc6a",
+      "currentBlob": "b6df15107957ad6051e356bb590e90605512189d",
       "blobRelation": "different",
       "ordinal": 153,
       "inventoryRows": [
         "I08",
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/session/runner/to-llm-message.ts",
       "historicalBlob": "0f166b9752919063c9b33d71e2abe82161c5319c",
-      "currentBlob": "8728799459cc8b61fd781526ad7c2f9a0c18341c",
-      "blobRelation": "different",
+      "currentBlob": "0f166b9752919063c9b33d71e2abe82161c5319c",
+      "blobRelation": "identical",
       "ordinal": 154,
       "inventoryRows": [
         "I11"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/tool/task-permission.ts",
@@ -1745,7 +1917,8 @@
       "ordinal": 155,
       "inventoryRows": [
         "I08"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/src/tool/task.ts",
@@ -1756,7 +1929,8 @@
       "inventoryRows": [
         "I08",
         "I10"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/core/test/session-run-coordinator.test.ts",
@@ -1766,7 +1940,8 @@
       "ordinal": 157,
       "inventoryRows": [
         "I12"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/schema/src/sucafina/domain/fields.ts",
@@ -1776,7 +1951,8 @@
       "ordinal": 158,
       "inventoryRows": [
         "I18"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/schema/src/sucafina/files/structures.ts",
@@ -1786,7 +1962,8 @@
       "ordinal": 159,
       "inventoryRows": [
         "I17"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     },
     {
       "path": "packages/schema/src/sucafina/planner.ts",
@@ -1796,10 +1973,131 @@
       "ordinal": 160,
       "inventoryRows": [
         "I18"
-      ]
+      ],
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
     }
   ],
   "historicalDestinations": [
+    {
+      "n": 560,
+      "title": "feat(sf): integrar a instalação nativa de Files e C17",
+      "merged": "2026-11-21T04:57:08Z",
+      "merge": "3d19bbcc30c6d6ea62c717c891b7bed51a2b41fc",
+      "head": "90e724224b5f59d5d04fbf9fdce5484142e4b5e4",
+      "base": "dev"
+    },
+    {
+      "n": 562,
+      "title": "fix(sucafina): preserve C17 calculation ancestry across reopen",
+      "merged": "2026-11-21T05:38:14Z",
+      "merge": "0164e91b4f1f4c1186617899bdfc8bad4f92dfba",
+      "head": "14149347c0f1bf83db84a33c95f62957e840a4bb",
+      "base": "dev"
+    },
+    {
+      "n": 563,
+      "title": "fix(sucafina): restore the installed Reports collaboration flow",
+      "merged": "2026-11-21T12:45:10Z",
+      "merge": "1fd255026dec8e1db1f4342f7ec206a6812b42ea",
+      "head": "6c6999fb7779a00e6e653b5e2f8586061deeb181",
+      "base": "dev"
+    },
+    {
+      "n": 566,
+      "title": "feat(sf): expose trusted native installation discovery",
+      "merged": "2026-11-21T06:40:49Z",
+      "merge": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
+      "head": "3a8bcdb9351056e005c85f289749f34cd16cb5ef",
+      "base": "dev"
+    },
+    {
+      "n": 569,
+      "title": "fix(sf): restore authenticated skill load provenance",
+      "merged": "2026-11-21T06:50:03Z",
+      "merge": "e452abd1c028e5aaa5378663894ba7a95048f876",
+      "head": "8212e23891ef9378fda39476d52934aa99e80389",
+      "base": "dev"
+    },
+    {
+      "n": 570,
+      "title": "feat(sf): mount native context on the local installation",
+      "merged": "2026-11-21T06:50:08Z",
+      "merge": "b5297b938735eab8ae37a686f01015f37c727724",
+      "head": "fa648516e862467921f1edb0aba80f0ae21a1f74",
+      "base": "dev"
+    },
+    {
+      "n": 572,
+      "title": "feat(sf): restore native Web contracts and client transport",
+      "merged": "2026-11-21T07:52:15Z",
+      "merge": "0289a1d6a0000e59914de0cc227c581ab614999a",
+      "head": "4aa86a2ce41c9689b218ec0ceb462cf39242be08",
+      "base": "dev"
+    },
+    {
+      "n": 573,
+      "title": "feat(sf): restore the native Web shell for the local operator",
+      "merged": "2026-11-21T08:04:46Z",
+      "merge": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
+      "head": "392bb7bd98023413194a7f06596f267f175ebb32",
+      "base": "dev"
+    },
+    {
+      "n": 575,
+      "title": "fix(sucafina): retain Files authorization through download",
+      "merged": "2026-11-21T08:58:30Z",
+      "merge": "16896ff38ff4512ae1da375bd722fbf284d1cedc",
+      "head": "df54ddf93486559e69a4f6c30cdbbcec2eb1865a",
+      "base": "dev"
+    },
+    {
+      "n": 579,
+      "title": "fix(sucafina): qualify native Imports and Documents",
+      "merged": "2026-11-21T09:50:42Z",
+      "merge": "da48ba0105ea98ceabf5247b36f0596e07c722fa",
+      "head": "e0229873ab067ec3e9fdf6a784d00faef48c2877",
+      "base": "dev"
+    },
+    {
+      "n": 581,
+      "title": "feat(sf): mount the authenticated Team Web entry",
+      "merged": "2026-11-21T13:57:45Z",
+      "merge": "bcdc109326de02e20c01c32ffb6b00bee3ff978d",
+      "head": "0869f0467d7f89ae752c3cc2aa44c5f77c40d3e6",
+      "base": "dev"
+    },
+    {
+      "n": 582,
+      "title": "fix(sucafina): complete installed CurrentChoice preview",
+      "merged": "2026-11-21T15:00:48Z",
+      "merge": "761abac2f8ee4106db0347189ff304a4a79bf026",
+      "head": "c2274e5985d570e0d5391b1192f1ae6244cda636",
+      "base": "dev"
+    },
+    {
+      "n": 583,
+      "title": "feat(sucafina): refine six native screens",
+      "merged": "2026-11-21T18:18:35Z",
+      "merge": "acc0181508ceda7416bce57284b2307a9b20385b",
+      "head": "55bc2c624ae3ba4384df1203329de046d76f14b5",
+      "base": "dev"
+    },
+    {
+      "n": 585,
+      "title": "feat(sf): enable CurrentChoice for Microsoft Teams",
+      "merged": "2026-11-21T19:53:48Z",
+      "merge": "2f44b902ef0eb28fc73c3b9a31876866d850bc1a",
+      "head": "e32bd1186d966de218d49825aca00728d2e87175",
+      "base": "dev"
+    },
+    {
+      "n": 587,
+      "title": "feat(sf): redesign fifteen native Sucafina areas",
+      "merged": "2026-11-21T22:12:42Z",
+      "merge": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+      "head": "602238a48e04eb209e0c2fba0af3adc8fd5e6edf",
+      "base": "dev"
+    },
     {
       "n": 589,
       "title": "fix(core): enforce recorded session permission denies",
@@ -1943,81 +2241,9 @@
       "merge": "79912446753af5bb291fc2581543732eb4c83057",
       "head": "0bcbcb41a62d73da308630a1dffbee363e31f25b",
       "base": "dev"
-    },
-    {
-      "n": 566,
-      "title": "feat(sf): expose trusted native installation discovery",
-      "merged": "2026-11-21T06:40:49Z",
-      "merge": "948fab6ef2f8bbbcf2c8a6b787755a1d5713e6e1",
-      "head": "3a8bcdb9351056e005c85f289749f34cd16cb5ef",
-      "base": "dev"
-    },
-    {
-      "n": 570,
-      "title": "feat(sf): mount native context on the local installation",
-      "merged": "2026-11-21T06:50:08Z",
-      "merge": "b5297b938735eab8ae37a686f01015f37c727724",
-      "head": "fa648516e862467921f1edb0aba80f0ae21a1f74",
-      "base": "dev"
-    },
-    {
-      "n": 572,
-      "title": "feat(sf): restore native Web contracts and client transport",
-      "merged": "2026-11-21T07:52:15Z",
-      "merge": "0289a1d6a0000e59914de0cc227c581ab614999a",
-      "head": "4aa86a2ce41c9689b218ec0ceb462cf39242be08",
-      "base": "dev"
-    },
-    {
-      "n": 573,
-      "title": "feat(sf): restore the native Web shell for the local operator",
-      "merged": "2026-11-21T08:04:46Z",
-      "merge": "39355aa1988b33653151ddc8b76bc2dac55e55dd",
-      "head": "392bb7bd98023413194a7f06596f267f175ebb32",
-      "base": "dev"
-    },
-    {
-      "n": 575,
-      "title": "fix(sucafina): retain Files authorization through download",
-      "merged": "2026-11-21T08:58:30Z",
-      "merge": "16896ff38ff4512ae1da375bd722fbf284d1cedc",
-      "head": "df54ddf93486559e69a4f6c30cdbbcec2eb1865a",
-      "base": "dev"
-    },
-    {
-      "n": 579,
-      "title": "fix(sucafina): qualify native Imports and Documents",
-      "merged": "2026-11-21T09:50:42Z",
-      "merge": "da48ba0105ea98ceabf5247b36f0596e07c722fa",
-      "head": "e0229873ab067ec3e9fdf6a784d00faef48c2877",
-      "base": "dev"
-    },
-    {
-      "n": 582,
-      "title": "fix(sucafina): complete installed CurrentChoice preview",
-      "merged": "2026-11-21T15:00:48Z",
-      "merge": "761abac2f8ee4106db0347189ff304a4a79bf026",
-      "head": "c2274e5985d570e0d5391b1192f1ae6244cda636",
-      "base": "dev"
-    },
-    {
-      "n": 583,
-      "title": "feat(sucafina): refine six native screens",
-      "merged": "2026-11-21T18:18:35Z",
-      "merge": "acc0181508ceda7416bce57284b2307a9b20385b",
-      "head": "55bc2c624ae3ba4384df1203329de046d76f14b5",
-      "base": "dev"
-    },
-    {
-      "n": 585,
-      "title": "feat(sf): enable CurrentChoice for Microsoft Teams",
-      "merged": "2026-11-21T19:53:48Z",
-      "merge": "2f44b902ef0eb28fc73c3b9a31876866d850bc1a",
-      "head": "e32bd1186d966de218d49825aca00728d2e87175",
-      "base": "dev"
     }
   ],
-  "currentDev": "d572060d8164607f6981e6d42635a854a6fa23a4",
+  "currentDev": "90861699b40d7093adbba70a69ac866eb517090f",
   "supplementary": [
     {
       "id": "S1",
@@ -2058,7 +2284,9 @@
         "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
         "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
       ],
-      "proof": "Current verification has the unstaged no-sensitivityReadScope early return; actual portfolio composition does not pass the host. #405 retains the exact pending correction with partially failed historical CI. #445/#516 overlap qualification/order; #455/#500 are separate physical read observations. No new writer started and no transfer accepted."
+      "proof": "Current verification has the unstaged no-sensitivityReadScope early return; actual portfolio composition does not pass the host. #405 retains the exact pending correction with partially failed historical CI. #445/#516 overlap qualification/order; #455/#500 are separate physical read observations. No new writer started and no transfer accepted.",
+      "coordinationQualification": "https://github.com/gustavomhss/Orchestra-SF/pull/445#issuecomment-7074956953",
+      "remaining": "Final-publication guard405 and consistent private known-subtotal qualification/replay445/516 need one accepted owner and delivery to dev; physical read optimizations455/500 do not prove behavioral equivalence."
     },
     {
       "id": "S3",
@@ -2083,12 +2311,40 @@
       "id": "S4",
       "name": "Planner BI known-subtotal origin",
       "inventoryRow": "I25",
-      "state": "reproduction",
+      "state": "integrated",
       "owner": "Astra/planner_contracts",
       "paths": [
         "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts"
       ],
-      "proof": "Current blob630ebaa remains historical base; knownSubtotalSource proof from349 absent. Exact priced components can share one original source while coverage refs make sourceRefs plural; current drilldown then null. No active writer of this backend path identified: #613352paths at796c7f excludes it; #505 changes UI only; #219 docs-only. Reproduction underway using current producer; no UI files or port period contract assigned."
+      "proof": "Actual persisted C08 scenario promotions and BI09/10 factories with annual sources/monthly observation: baseline null drilldown reproduced15asserts; source BI+Finance2tests90assertions. Proves original priced components while retaining coverage refs and subperiods; 0allowed,null/transformed/mixeddenied. Full CLI/Sucafina types0/0;78guards2paths0. Approved7b34d merged;parentsd572+7b34d confirmed.",
+      "pr": 635,
+      "head": "7b34d700d77b6a64aa9140a456487c231dd8e380",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/635#pullrequestreview-6010607765",
+      "merge": "90861699b40d7093adbba70a69ac866eb517090f",
+      "ci": [
+        44991053426
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Native PO export operational resource index",
+      "inventoryRows": [
+        "I01",
+        "I02"
+      ],
+      "state": "confirmed-gap-ownership-pending",
+      "owner": "Files/Operations G06 via628 + composition writer613; acceptance pending",
+      "paths": [
+        "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts"
+      ],
+      "proof": "Current mounted PO producer exists: local entry -> original Files router/binding -> application serveDownload -> downloads PO HTML with admission/snapshot/actor/digest checks. No nativeOperational/domain-health/host-context observer publishes PO; live-context lacks POindex; Imports requires ready+operational. Catalog-only is insufficient. #613@2213d2f writes shared host-context health composition/Imports, but no POobserver. #628G06 owner claims remain null. Static proof only; JSON export-egress does not qualify PO.",
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7075015233",
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "acceptance": null,
+      "remaining": "One accepted owner for authorized PO health observation + composition + index + actual PO regression/egress; coordinate with613 before writing shared host-context.",
+      "coordination613": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7075016672"
     }
   ],
   "inventory": [
@@ -2104,8 +2360,8 @@
         573,
         581
       ],
-      "state": "absorbed",
-      "proof": "Discovery, native context/client/shell and authenticated Team Web entry are merged into dev."
+      "state": "partial",
+      "proof": "Discovery, native context/client/shell and authenticated Team Web entry are merged into dev. Separate hunk S5 PO export resource index is not absorbed by the generic shell mapping; producer proof pending."
     },
     {
       "id": "I02",
@@ -2116,8 +2372,8 @@
         575,
         579
       ],
-      "state": "absorbed",
-      "proof": "Native Files/Imports/Documents preserve ownership, abort, denied responses and signed bytes; empty downloads are separately I17."
+      "state": "partial",
+      "proof": "Native Files/Imports/Documents preserve ownership, abort, denied responses and signed bytes; empty downloads are separately I17. Separate original349 files.export.po resource hunk S5 remains under actual producer/ownership verification."
     },
     {
       "id": "I03",
@@ -2164,13 +2420,14 @@
       "historicalEvidence": "`product/decisions/mutations.ts:120,125` já recusa um resultado completo sem `coverageEvidence` e liga `verifySnapshot` ao commit.",
       "originalDestination": "**Recusa básica absorvida.** A prova privada para no-op e o ordenamento seguem no recorte Finance.",
       "prs": [
-        560
+        560,
+        632
       ],
       "candidates": [
         8
       ],
-      "state": "partial",
-      "proof": "Mutation refuses complete coverage without producer evidence; private no-op ordering is candidate8."
+      "state": "integrated-and-absorbed",
+      "proof": "Complete coverage without a private evidence producer was already refused by560; the residual no-op/private ordering and revocation proof was integrated by632 on exact reviewed1b2e763, mergecca15664, CI44989560573."
     },
     {
       "id": "I07",
@@ -2386,7 +2643,7 @@
         6
       ],
       "state": "partial",
-      "proof": "Governed skill-load provenance integrated; physical installed origin proof and ownership237 pending. Legacy login/console probes are references, not release qualification."
+      "proof": "Governed skill-load provenance integrated569. Real current factory proof confirms installed origin incompatibility; normalization is insufficient. Candidate6 remains pending owner acceptance/delivery237; positive sibling fixture is not installed qualification."
     },
     {
       "id": "I25",
@@ -2400,14 +2657,15 @@
         596,
         597,
         627,
-        632
+        632,
+        635
       ],
       "candidates": [
         7,
         8
       ],
       "state": "partial",
-      "proof": "CurrentChoice,Financepair,storedreaderfence and privatecoverageorder integrated. Ancillary resultstore/operationaccess equivalences mapped. Sensitivity S2 still awaits owner acceptance/qualification; BI primaryorigin S4 has independent free reproduction underway."
+      "proof": "CurrentChoice, Finance pair, stored reader fence, private coverage order and known-subtotal BI origin integrated (627/632/635 plus historical destinations). Ancillary result-store/operation access equivalences mapped. S2 sensitivity publication/qualification remains pending explicit owner acceptance and delivery; no equivalence inferred from performance optimizations."
     },
     {
       "id": "I26",
@@ -2431,14 +2689,17 @@
       "prs": [
         573,
         579,
-        583
+        583,
+        587,
+        630,
+        633
       ],
       "candidates": [
         10,
         11
       ],
       "state": "partial",
-      "proof": "Current native journeys preserved; confirmation/Imports overlap613, Headcount and free cross-links copy handled independently."
+      "proof": "Talent denied/enum behavior absorbed573/587; Headcount producer currencies integrated630; Crosslinks/Executive denial+catalog integrated633. Confirmation10 and Imports11 overlap active613 and remain pending without explicit acceptance."
     },
     {
       "id": "I28",
@@ -2449,6 +2710,96 @@
       "proof": "Original inventory explicitly replaces console PAGE, installed-console/preload, historical workflow and performance probes with current native production host. Historical refs preserved; tests are mapped to behavioral rows rather than ported as a parallel interface."
     }
   ],
-  "reconciliationStatus": "In progress: mapped28 behavior rows and160 historical paths; mapping is not a completion claim.",
-  "readyToClose": false
+  "reconciliationStatus": "Execution checkpoint: 11 candidates reconciled with28 original behavior rows and160 historical paths. Five candidates integrated and one absorbed; five candidates remain pending. Three complementary fixes integrated; sensitivity and PO composition remain pending. No accepted transfer is inferred from a request.",
+  "readyToClose": false,
+  "historyPreservation": {
+    "pr": 349,
+    "state": "open",
+    "merged": false,
+    "headRef": "audit-one",
+    "head": "d51c2d2f2a1dfe28059904a07e37db253aea1547",
+    "baseRef": "close-final-candidate",
+    "base": "52d2c24f4f8cb776889b97894131df6ada43ce98",
+    "handoffRef": "audit-residual-bundle",
+    "handoff": "8a2f89faf71d77b499a70cfa5f7e6045a44ac022",
+    "documentationBranch": "audit-residual-ledger",
+    "action": "Read-only preservation confirmed; no historical ref or PR state changed by this bundle."
+  },
+  "scopeExclusions": [
+    "G09 remains with its established front.",
+    "#588 remains with its established front.",
+    "Teams migration qualification and cutover remain with Migration.",
+    "Original #349 explicitly excludes analysis action discriminator, document-confirm evidence body and upload {ok:true} without ID because another session owns those producer wires. This bundle preserves that recorded scope boundary."
+  ],
+  "ownershipChecks": {
+    "lastObservedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+    "pendingWithoutAck": [
+      {
+        "candidate": 3,
+        "pr": 257,
+        "comment": 7074525725
+      },
+      {
+        "candidate": 6,
+        "pr": 237,
+        "comment": 7074927375
+      },
+      {
+        "candidate": 9,
+        "coordinationPR": 628,
+        "comment": 7074704506
+      },
+      {
+        "candidate": 10,
+        "pr": 613,
+        "comment": 7074520894
+      },
+      {
+        "candidate": 11,
+        "subpart": "Imports",
+        "pr": 613,
+        "comment": 7074751579
+      },
+      {
+        "supplement": "S2",
+        "pr": 405,
+        "comment": 7074835793
+      },
+      {
+        "supplement": "S5",
+        "coordinationPR": 628,
+        "comment": 7075015233
+      }
+    ],
+    "acceptedTransfers": [],
+    "note": "Requests and historical associations are not accepted transfers; deliveries stay pending until explicit acceptance and recorded destination."
+  },
+  "auditReview": {
+    "reviewer": "Astra/provider_state (independent of ledger author)",
+    "sourceCheckpoint": "4cf497156909005ccf60a1998844c66b18a7eed9",
+    "counts": {
+      "candidates": 11,
+      "rows": 28,
+      "paths": 160,
+      "uniquePaths": 160
+    },
+    "findings": [
+      "Corrected wp14/domain-outcome fixture mapping from I18 to I25; not attributed to numerical624.",
+      "Documented bindings denial equivalence through strict discriminants/current consumers572/573/588; no claim of17operation DOM coverage.",
+      "Found missing POresource index and health observation; S5 remains pending coordinated ownership and real qualification.",
+      "Kept Context/core full-typecheck and schema baseline diagnostics explicit, and retained gate-level reuse limits for625/626."
+    ],
+    "terminalPRMetadataChecked": 41,
+    "initialExactReviewsChecked": 9
+  },
+  "ciLimits": [
+    "No local build, test or typecheck; all executable gates used existing GitHub Actions test-ci in isolated snapshots.",
+    "Tests and gates are tied to exact product heads. Source snapshot parents and allowed request/harness-only deltas were verified; guards ran on clean product diffs.",
+    "625 reused passing existing Agents/typecheck/guards from44988002304; only its DOM invocation failed before execution. DOM was separately qualified by44988169984 on unchanged product head.",
+    "626 reused159tests/548assertions and production runtime typecheck from44988743502; final44989026751 passed type-diagnostic comparison and clean product guards. Full Core retains one existing Jira fixture TS2353, identical base/head.",
+    "624 production schema and Sucafina typechecks pass. Complete schema retains three pre-existing Teams fixture diagnostics identical between base and head; not a claim of global schema typecheck PASS.",
+    "AppDock631 uses actual listener code at existing Electron fixture boundary; it does not requalify installed Linux/Docker runtime.",
+    "Phase6's green diagnostic run proves the Local Operator layout incompatibility and existing private-path controls; it does not qualify Microsoft/G09 or an installed Teams cutover.",
+    "PO/S5 is a static producer/composition/consumer proof, not an executed PO export or positive installed readiness test."
+  ]
 }
