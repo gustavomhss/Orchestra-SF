@@ -360,6 +360,31 @@ describe("ScheduledTask capability revisions", () => {
 })
 
 describe("ScheduledTask capability manual runs", () => {
+  it.effect("a wake failure cannot turn a mismatched durable delivery into a started receipt", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const { db } = yield* Database.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      const key = "invocation:msg_assistant:call_delivery"
+      const ids = ScheduledTaskModel.slotIDs(`${created.id}:manual:${key}`, start)
+
+      hook.onWake = db
+        .update(SessionInputTable)
+        .set({ delivery: "queue" })
+        .where(eq(SessionInputTable.id, SessionMessage.ID.make(ids.message)))
+        .run()
+        .pipe(Effect.asVoid, Effect.orDie)
+      hook.failWake = true
+
+      const result = yield* tasks.capability.run(owner, created.id, key).pipe(Effect.flip)
+      expect(result).toBeInstanceOf(ScheduledTask.RunError)
+      expect(yield* inputs).toMatchObject([{ id: ids.message, session_id: ids.session, delivery: "queue" }])
+      expect(yield* runRows).toMatchObject([{ state: "failed", session_id: ids.session }])
+    }),
+  )
+
   it.effect("a manual run dedupes on its key and never moves next or counts", () =>
     Effect.gen(function* () {
       yield* TestClock.setTime(start)

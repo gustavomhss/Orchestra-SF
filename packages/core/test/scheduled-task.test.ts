@@ -254,6 +254,31 @@ describe("ScheduledTask restart recovery", () => {
     }),
   )
 
+  for (const mismatch of ["content", "delivery"] as const) {
+    it.effect(`does not count a stopped claim whose prompt ${mismatch} differs in the same Session`, () =>
+      Effect.gen(function* () {
+        yield* TestClock.setTime(slot - MINUTE)
+        const tasks = yield* ScheduledTask.Service
+        const sessions = yield* SessionV2.Service
+        const created = yield* tasks.create(directory, hourly)
+        const ids = yield* stopped({ task: created, slot, claimed: slot - MINUTE, admitted: false })
+        yield* sessions.create({ id: ids.session, agent: AgentV2.defaultID, location: { directory } })
+        const prompt = { text: mismatch === "content" ? "A different prompt." : created.prompt }
+        const delivery = mismatch === "delivery" ? "queue" : "steer"
+        yield* sessions.prompt({ id: ids.message, sessionID: ids.session, prompt, delivery, resume: false })
+        wakes.length = 0
+
+        yield* TestClock.setTime(slot + ScheduledTask.LEASE)
+        yield* tasks.tick
+
+        expect(wakes).toEqual([])
+        expect(yield* inputs).toMatchObject([{ id: ids.message, session_id: ids.session, prompt, delivery }])
+        expect(yield* runRows).toMatchObject([{ state: "failed", session_id: ids.session }])
+        expect(yield* first(tasks)).toMatchObject({ runs: 0, last: { outcome: "failed" } })
+      }),
+    )
+  }
+
   it.effect("a stopped claim that never admitted its prompt is void, and the slot is served once", () =>
     Effect.gen(function* () {
       yield* TestClock.setTime(slot - MINUTE)

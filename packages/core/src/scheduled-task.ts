@@ -9,6 +9,7 @@ import { makeGlobalNode } from "./effect/app-node"
 import { AbsolutePath } from "./schema"
 import { SessionV2 } from "./session"
 import { SessionInput } from "./session/input"
+import { Prompt } from "./session/prompt"
 import { ScheduledTaskCapability } from "./scheduled-task/capability"
 import { ScheduledTaskModel } from "./scheduled-task/model"
 import { ScheduledTaskPort } from "./scheduled-task/port"
@@ -76,6 +77,15 @@ type LegacyTask = ScheduledTaskShared.LegacyTask
 type RunRow = ScheduledTaskShared.RunRow
 type Claim = ScheduledTaskShared.Claim
 type Outcome = ScheduledTaskShared.Outcome
+
+const PROMPT_MISMATCH = "Scheduled prompt refused: the admitted prompt does not match this run"
+
+const matchesClaim = (durable: SessionInput.Admitted, claimed: Claim) =>
+  SessionInput.equivalent(durable, {
+    sessionID: claimed.sessionID,
+    prompt: Prompt.make({ text: claimed.prompt }),
+    delivery: "steer",
+  })
 
 const layer = Layer.effect(
   Service,
@@ -163,8 +173,7 @@ const layer = Layer.effect(
         if (checked && !(yield* cap.holds(claimed))) return { type: "void" } as const
         if (admitted) {
           const durable = yield* SessionInput.find(db, claimed.messageID)
-          if (!durable || durable.sessionID !== claimed.sessionID)
-            return { type: "failed", error: "Scheduled prompt refused: session was not created for this task" } as const
+          if (!durable || !matchesClaim(durable, claimed)) return { type: "failed", error: PROMPT_MISMATCH } as const
         }
         const session = yield* sessions.create({
           id: claimed.sessionID,
@@ -183,13 +192,15 @@ const layer = Layer.effect(
       }).pipe(
         Effect.catchCause((cause) =>
           Effect.gen(function* () {
-            // A pre-existing Session is never this task's run, even if its prompt id was already admitted there.
-            if (Cause.squash(cause) instanceof SessionV2.ConflictError)
+            const error = Cause.squash(cause)
+            if (error instanceof SessionV2.ConflictError || error instanceof SessionV2.PromptConflictError)
               return { type: "failed", error: reason(cause) } as const
-            // A capability prompt that was admitted to this claim's Session before the failure (a wake that failed) did start.
+            // A wake can fail after exact durable admission. The run already started in that case.
             const durable =
-              claimed.task.policy === "capability" ? yield* SessionInput.find(db, claimed.messageID) : undefined
-            if (durable?.sessionID === claimed.sessionID) return { type: "started", sessionID: claimed.sessionID } as const
+              admitted || claimed.task.policy === "capability"
+                ? yield* SessionInput.find(db, claimed.messageID)
+                : undefined
+            if (durable && matchesClaim(durable, claimed)) return { type: "started", sessionID: claimed.sessionID } as const
             return { type: "failed", error: reason(cause) } as const
           }),
         ),
@@ -307,14 +318,13 @@ const layer = Layer.effect(
       if (!claimed) return
       const admitted = yield* SessionInput.find(db, claimed.messageID)
       if (!admitted) return yield* settle(claimed, { type: "void" })
-      if (admitted.sessionID !== claimed.sessionID)
-        return yield* settle(claimed, {
-          type: "failed",
-          error: "Scheduled prompt refused: session was not created for this task",
-        })
+      if (!matchesClaim(admitted, claimed))
+        return yield* settle(claimed, { type: "failed", error: PROMPT_MISMATCH })
       const retried = yield* dispatch(claimed, true)
+      if (retried.type === "failed") return yield* settle(claimed, retried)
       if (retried.type !== "started") yield* Effect.logWarning("Scheduled run retry failed", retried)
-      yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
+      // An exact prompt already counted as admitted even if its owner has since been revoked.
+      yield* settle(claimed, { type: "started", sessionID: claimed.sessionID })
     })
 
     const tick = Effect.gen(function* () {
