@@ -93,7 +93,18 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await surface.locator("[data-sf-work-filter]").fill("")
     await page.setViewportSize({ width: 1440, height: 1100 })
     await item.getByRole("button", { name: "Work details", exact: true }).click()
+    // Opening reauthorizes through the original destination producer again;
+    // Work8 measured the preceding check at 18s in this real installation.
+    const openedDestinationReply = page.waitForResponse((response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname === installation.mount + "/dashboard" &&
+      new URL(response.url()).searchParams.get("sf") === "collaboration-work-destination",
+      { timeout: 40_000 }).then((response) => ({ status: response.status(), contentType: response.headers()["content-type"] }))
     await details.getByRole("button", { name: "Open authorized destination", exact: true }).click()
+    const openedDestination = await openedDestinationReply
+    console.info("SF_DESIGN_WORK_DESTINATION_OPEN " + JSON.stringify(openedDestination))
+    expect(openedDestination.status).toBe(200)
+    expect(openedDestination.contentType).toContain("application/json")
     await expect(page).toHaveURL((url) => url.origin === installation.origin &&
       url.pathname === "/orchestra/sf-dashboard/hot-topics/r_" + Buffer.from(seeded.topicId, "utf8").toString("base64url"))
     await ready(page, "Hot Topics & Actions")

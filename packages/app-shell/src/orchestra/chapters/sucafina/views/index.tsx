@@ -3,10 +3,11 @@ import { sfPlannerSavedViewHref } from "./planner-view"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
-import { SfViewsList, SfViewsOpen } from "@orchestra/schema/sucafina/work"
+import { SfViewsList, SfViewsOpen, SfViewsSave, SfViewsRemove } from "@orchestra/schema/sucafina/work"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import type { SfCallOptions } from "@orchestra/client/sucafina/transport"
 import type { SfEditScopeKey, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
-import type { Schema } from "effect"
+import { Option, Schema } from "effect"
 import { useSfContext } from "../context"
 import type { SfPublicDraftController, SfSurfaceProps } from "../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
@@ -276,15 +277,26 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     setScreen({ mutation: "submitting", error: null })
     try {
       const client = createSfWorkClient(ready.transport)
-      const result = kind === "save"
-        ? await client["views.save"]({ surface: record.view.surface, action: "save", input: {
-            view: state.value, expectedVersion: record.version,
-          } }, options)
-        : await client["views.remove"]({ surface: record.view.surface, action: "remove", input: {
-            id: record.view.id, expectedVersion: record.version,
-          } }, options)
+      const result = payload.action === "save"
+        ? await client["views.save"](payload, options)
+        : await client["views.remove"](payload, options)
       if (request.signal.aborted || generation !== owner.generation() || revision !== current()?.context.stamp.accessRevision) return
       if (result.kind !== "response") {
+        if (result.reason === "contract-mismatch") {
+          // Temporary CI diagnosis of the observed pre-dispatch rejection.
+          // Log only contract/identity booleans; never view contents or owner IDs.
+          const contract: Schema.Top = kind === "save" ? SfViewsSave.Input : SfViewsRemove.Input
+          const parsed = Schema.decodeUnknownOption(Schema.toType(contract), { onExcessProperty: "error" })(payload)
+          const wire = SfNativeOperationBindings[mutationName]?.decodeInput(payload)
+          const latest = current()
+          console.info("SF_DESIGN_VIEW_INPUT " + JSON.stringify({
+            typedInput: Option.isSome(parsed), wireInput: wire?.status,
+            sameGeneration: generation === owner.generation(),
+            sameTransport: ready.transport === latest?.transport,
+            sameRevision: revision === latest?.context.stamp.accessRevision,
+            keyValid: /^[A-Za-z0-9._:-]{8,128}$/.test(options.idempotencyKey ?? ""),
+          }))
+        }
         if (result.reason !== "aborted") console.error("SF saved view mutation failed", result.reason)
         setScreen("mutation", result.reason === "contract-unavailable" || result.reason === "contract-mismatch" ? "failed" : "outcome-unknown")
         editor?.setPhase("outcome-unknown")
