@@ -4,7 +4,7 @@ import assert from "node:assert/strict"
 import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import { cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateGrantProof, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
+import { destinationGrants, requireDistinctDestinationGrants, cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateGrantProof, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
 function scope(installationId = "synthetic-installation", teamObjectId = uuid(2)) {
@@ -83,6 +83,50 @@ function environment() {
     GITHUB_RUN_ID: value.invocation.runId, GITHUB_RUN_ATTEMPT: value.invocation.runAttempt,
     GITHUB_WORKFLOW_SHA: value.invocation.workflowSha, SF_G08_INVOCATION_ID: value.invocation.id }
 }
+
+function destinationControl() {
+  return { destinations: [
+    { capabilityId: "CAP01", surface: "dashboard", page: "synthetic-page-a", canRead: true,
+      allowedActionIds: ["synthetic-read", "synthetic-export"] },
+    { capabilityId: "CAP02", surface: "dashboard", page: "synthetic-page-b", canRead: true, allowedActionIds: [] },
+  ] }
+}
+test("distinct-grant oracle accepts actual destination page and permission differences", () => {
+  for (const change of [
+    (value) => { value.destinations.pop() },
+    (value) => { value.destinations[0].page = "synthetic-page-c" },
+    (value) => { value.destinations[0].canRead = false },
+    (value) => { value.destinations[0].allowedActionIds = ["synthetic-read"] },
+  ]) {
+    const requester = destinationControl(), holder = structuredClone(requester)
+    change(holder)
+    assert.doesNotThrow(() => requireDistinctDestinationGrants(requester, holder))
+  }
+})
+test("distinct-grant oracle refuses empty projections, metadata changes and ordering alone", () => {
+  const requester = { ...destinationControl(), stamp: { principalRef: "synthetic-requester", accessRevision: 1 }, availability: [] }
+  const holder = { ...destinationControl(), stamp: { principalRef: "synthetic-holder", accessRevision: 2 },
+    availability: [{ synthetic: "changed availability is not a grant" }] }
+  holder.destinations.reverse()
+  holder.destinations.forEach((entry) => entry.allowedActionIds.reverse())
+  assert.deepEqual(destinationGrants(requester), destinationGrants(holder))
+  assert.throws(() => requireDistinctDestinationGrants(requester, holder), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+  assert.throws(() => requireDistinctDestinationGrants({ ...requester, destinations: [] },
+    { ...holder, destinations: [] }), /G08_DISTINCT_DESTINATION_GRANTS_REQUIRED/)
+})
+test("distinct-grant oracle refuses ambiguous or malformed destination permissions", () => {
+  for (const change of [
+    (value) => { delete value.destinations },
+    (value) => { value.destinations[0].allowedActionIds.push("synthetic-read") },
+    (value) => { value.destinations.push(structuredClone(value.destinations[0])) },
+    (value) => { value.destinations[0].canRead = "true" },
+    (value) => { value.destinations[0].authority = "synthetic-extra" },
+  ]) {
+    const value = destinationControl()
+    change(value)
+    assert.throws(() => destinationGrants(value))
+  }
+})
 
 test("synthetic complete metadata validates without treating metadata as authority", () => {
   assert.equal(validatePlan(plan()).candidate.sha, plan().candidate.sha)

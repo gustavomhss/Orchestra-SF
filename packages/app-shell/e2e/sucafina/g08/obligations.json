@@ -1,14 +1,14 @@
 {
   "schema": "sf-g08-obligations-v1",
-  "scope": "Nine original Teams obligations mapped to executable current product contracts; no installed execution is implied. U15/U39/U40/F04/AZ02 remain separately mandatory.",
+  "scope": "Nine original Teams obligations mapped to executable current product contracts, preserving original destination grants and real private Session actions together. No installed execution is implied. U15/U39/U40/F04/AZ02 remain separately mandatory.",
   "plan": {
     "commit": "736a5087c223629be4d73c8a4535d615fcafd96a",
     "path": "docs/architecture/teams-profile-test-plan.json",
     "gate": "G08-NATIVE-TEAMS"
   },
   "inspectedCandidate": {
-    "sha": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
-    "note": "Integrated #657 foundation only; #665/#667 product source contracts observed separately, not a final installed candidate."
+    "sha": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
+    "note": "Explicit reconciliation of original F02 business destinations and private Session action controls. Product-contract preparation, not final C/T, installed acceptance or LIVE proof."
   },
   "originalTeams": {
     "source": {
@@ -27,7 +27,7 @@
         ],
         "coverage": "complete",
         "blocker": null,
-        "detail": "Requires integrated private Session admission and HTTP. Two original Microsoft principals read their own owner-bound namespace in the same Team. Requester creates exactly one random fixture and rereads it; holder's create is refused401 while its full original Session inventory is unchanged and still readable. Both fixture IDs are absent after original cleanup. Distinct identities, empty destinations or cross-principal denials alone never pass.",
+        "detail": "Requires integrated private Session admission and HTTP. Two original Microsoft principals read their own owner-bound namespace in the same Team. Requester creates exactly one random fixture and rereads it; holder's create is refused401 while its full original Session inventory is unchanged and still readable. Both fixture IDs are absent after original cleanup. Distinct identities, empty destinations or cross-principal denials alone never pass. In addition, both the UI F02 and independent reread must carry distinct original destination/page/canRead/allowedActionIds projections, stable through both actor reloads. Ordering, principal, revisions and availability alone never satisfy this difference.",
         "sourcePath": "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
         "state": "NOT_RUN",
         "contractSource": {
@@ -417,6 +417,12 @@
       "source": "https://github.com/gustavomhss/Orchestra-SF/pull/665",
       "observedHead": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
       "contract": "integration of actual administration/session/config/chat sources, pending its own validation"
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/686",
+      "observedHead": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
+      "integrationSource": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
+      "contract": "Original F02 business pages/ACL, distinct destination grants and both actor reloads; complements real private Session operations."
     }
   ],
   "integrationStatus": "PRODUCT_CONTRACTS_OBSERVED_IN_OPEN_INTEGRATION_NOT_FINAL_CANDIDATE"

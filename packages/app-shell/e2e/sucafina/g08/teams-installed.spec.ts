@@ -8,6 +8,7 @@ import {
 } from "./installed-fixture.ts"
 import type { Target } from "./installed-fixture.ts"
 import { landing } from "./landing-contract.ts"
+import { destinationGrants, requireDistinctDestinationGrants } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
 
 const test = installedTest
 const href = (target: Target) => {
@@ -52,17 +53,24 @@ async function expectNoBusiness(page: Page, target: Target, principal: string) {
   return live
 }
 
-test("Original Microsoft principals in the same Team have different effective Session grants", async ({ harness }) => {
+test("Two distinct Microsoft accounts enter the same installed Team with their own authority", async ({ harness }) => {
   const { target, actors } = harness.plan
   const page = await harness.page(), holder = await harness.page("holder")
   expect(page.context()).not.toBe(holder.context())
-  await Promise.all([
+  const [first, second] = await Promise.all([
     uiContext(page, target, () => page.goto(href(target))),
     uiContext(holder, target, () => holder.goto(href(target))),
   ])
+  expect(first.stamp.principalRef).toBe(actors.requester)
+  expect(second.stamp.principalRef).toBe(actors.holder)
   const requester = await selected(page, target, actors.requester), other = await selected(holder, target, actors.holder)
   expect(requester.stamp.team?.owner.profile).toEqual(other.stamp.team?.owner.profile)
   expect(requester.stamp.team?.owner.principal).not.toEqual(other.stamp.team?.owner.principal)
+  expect(first.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(second.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(destinationGrants(first)).toEqual(destinationGrants(requester))
+  expect(destinationGrants(second)).toEqual(destinationGrants(other))
+  requireDistinctDestinationGrants(first, second)
   const before = await sessionInventory(page, target, actors.requester)
   const holderBefore = await sessionInventory(holder, target, actors.holder)
   const positiveId = "ses_g08_" + harness.plan.invocation.id + "_" + randomUUID().replaceAll("-", "")
@@ -112,10 +120,24 @@ test("Original Microsoft principals in the same Team have different effective Se
       observations = { ...observations, cleanup: { requester: cleanup[0].value, holder: cleanup[1].value } }
   }
   await recordGrantProof(harness.plan, observations)
-  await uiContext(holder, target, () => holder.reload())
-  await selected(holder, target, actors.holder)
-  await uiContext(page, target, () => page.reload())
-  await selected(page, target, actors.requester)
+  // Only original destination pages/permissions prove the difference, never identity, revision or availability.
+  const holderReload = await uiContext(holder, target, () => holder.reload())
+  const holderCurrent = await selected(holder, target, actors.holder)
+  expect(holderReload.stamp.principalRef).toBe(actors.holder)
+  expect(holderReload.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(holderCurrent.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(destinationGrants(holderReload)).toEqual(destinationGrants(other))
+  expect(destinationGrants(holderCurrent)).toEqual(destinationGrants(other))
+  const requesterReload = await uiContext(page, target, () => page.reload())
+  const requesterCurrent = await selected(page, target, actors.requester)
+  expect(requesterReload.stamp.principalRef).toBe(actors.requester)
+  expect(requesterReload.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(requesterCurrent.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(destinationGrants(requesterReload)).toEqual(destinationGrants(requester))
+  expect(destinationGrants(requesterCurrent)).toEqual(destinationGrants(requester))
+  requireDistinctDestinationGrants(requesterReload, holderReload)
+  await expect(page).toHaveURL(href(target))
+  await expect(holder).toHaveURL(href(target))
 })
 
 test("An explicit A B A Team switch leaves the sibling window on its own Team", async ({ harness }) => {

@@ -8,7 +8,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 export const cases = Object.freeze([
-  { id: "same-team-distinct-grants", title: "Original Microsoft principals in the same Team have different effective Session grants" },
+  { id: "same-team-distinct-grants", title: "Two distinct Microsoft accounts enter the same installed Team with their own authority" },
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
@@ -67,6 +67,32 @@ function text(value) {
   assert(typeof value === "string" && value.trim() === value && value.length > 0 && value.length <= 2048 &&
     !/[\u0000-\u001f\u007f]/.test(value), "G08_TEXT_REQUIRED")
   return value
+}
+/** Canonical business projection only. The caller must first decode the original F02 response.
+ * Principal, revisions and resource availability are deliberately outside this comparison.
+ * @param {unknown} value
+ */
+export function destinationGrants(value) {
+  const destinations = record(value).destinations
+  assert(Array.isArray(destinations), "G08_ORIGINAL_DESTINATIONS_REQUIRED")
+  const projection = destinations.map((value) => {
+    const entry = record(value)
+    exact(entry, ["capabilityId", "surface", "page", "canRead", "allowedActionIds"])
+    const surface = text(entry.surface)
+    assert(["dashboard", "planner", "procurement"].includes(surface) &&
+      typeof entry.canRead === "boolean" && Array.isArray(entry.allowedActionIds), "G08_DESTINATION_GRANT_INVALID")
+    const actions = entry.allowedActionIds.map(text).sort()
+    assert.equal(new Set(actions).size, actions.length, "G08_DUPLICATE_ACTION_GRANT")
+    return { capabilityId: text(entry.capabilityId), surface, page: text(entry.page),
+      canRead: entry.canRead, allowedActionIds: actions }
+  })
+  assert.equal(new Set(projection.map((entry) => entry.capabilityId)).size, projection.length,
+    "G08_DUPLICATE_DESTINATION_GRANT")
+  return projection.map((entry) => JSON.stringify(entry)).sort()
+}
+/** @param {unknown} requester @param {unknown} holder */
+export function requireDistinctDestinationGrants(requester, holder) {
+  assert.notDeepEqual(destinationGrants(requester), destinationGrants(holder), "G08_DISTINCT_DESTINATION_GRANTS_REQUIRED")
 }
 /** @param {unknown} value @param {number} length @returns {string} */
 function hex(value, length) {
