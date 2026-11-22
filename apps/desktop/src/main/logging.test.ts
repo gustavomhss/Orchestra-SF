@@ -19,6 +19,7 @@ test("desktop file logs redact scoped, structured and renderer messages before d
   mockElectron({
     app,
     ipcMain: new EventEmitter(),
+    ipcRenderer: undefined,
     BrowserWindow: { fromWebContents: () => ({ webContents: contents }) },
     netLog: { currentlyLogging: false },
     shell: { showItemInFolder: () => {} },
