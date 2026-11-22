@@ -44,6 +44,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
     "sf.common.empty" | "sf.common.noAccess" | "sf.common.loginAgain" | "sf.common.invalidLink" |
     "sf.common.conflict" | "sf.common.operationUnknown" | "sf.common.partial"): Key => s as Key
   const t = (s: keyof typeof SF_U44_COPY) => language.t(s as Parameters<typeof language.t>[0])
+  const observedKind = (kind: string) => language.t("sf.u44.observedKind").replace("{kind}", () => kind)
   const [presentation, setPresentation] = createStore({ editing: props.route.kind === "new", tools: false, listEpoch: 1 })
   const reviewing = () => !!preparedPair() || !!removeDraft()
   let targetInput: HTMLInputElement | undefined
@@ -343,7 +344,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
               <section aria-label={t("sf.u44.inbound")}>
                 <h3>{t("sf.u44.inbound")}</h3>
                 <ul><For each={relations().filter((r) => r.toRef === source() && r.fromRef !== source())}>
-                  {(record) => <li><code>{record.fromRef}</code> · {language.t("sf.u44.observedKind", { kind: record.kind })}</li>}
+                  {(record) => <li><code>{record.fromRef}</code> · {observedKind(record.kind)}</li>}
                 </For></ul>
               </section>
             </Show>
@@ -377,7 +378,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
             <h3>{t("sf.u44.reviewLink")}</h3>
             <dl><div><dt>{t("sf.u44.sourceRef")}</dt><dd>{pair().fromRef}</dd></div>
               <div><dt>{t("sf.u44.targetRef")}</dt><dd>{pair().toRef}</dd></div>
-              <div><dt>{t("sf.u44.kind")}</dt><dd>{language.t("sf.u44.observedKind", { kind: pair().kind })}</dd></div>
+              <div><dt>{t("sf.u44.kind")}</dt><dd>{observedKind(pair().kind)}</dd></div>
               <div><dt>{t("sf.u44.postedEvidence")}</dt><dd><ul>{pair().evidenceRefs.map((item) => <li><code>{item.refId}</code></li>)}</ul></dd></div></dl>
             <button class="mx-btn primary" data-sf-relations-confirm type="button" disabled={busy() || !!pending() || !granted("collaboration.relation-create")}
               onClick={() => void submitCreate()}>{t("sf.u44.confirmLink")}</button>

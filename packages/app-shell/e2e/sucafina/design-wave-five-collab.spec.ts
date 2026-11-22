@@ -263,6 +263,7 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
     await expect(surface).toHaveAttribute("data-sf-wave", "five")
     await expect(surface.locator("[data-sf-relations-source]")).toHaveValue(seeded.relation.fromRef)
     await expect(surface.locator(".sf-collab-pair")).toContainText(seeded.relation.toRef)
+    await expect(surface.locator(".sf-collab-kind")).toHaveText("Observed relationship type: " + seeded.relation.kind)
     await looks(page, info, "UI51-relationship")
 
     await surface.getByRole("button", { name: "Remove relationship", exact: true }).click()
@@ -294,6 +295,7 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
     await editor.getByRole("button", { name: "Review relationship", exact: true }).click()
     const review = surface.locator("[data-sf-relation-review]")
     await expect(review).toBeVisible()
+    await expect(review.getByText("Observed relationship type: " + seeded.relation.kind, { exact: true })).toBeVisible()
     await expect(surface.locator(".sf-u44-relation-workspace")).toBeHidden()
     await capture(page, info, "UI51-dark-desktop-create-review")
     await review.getByRole("button", { name: "Keep editing", exact: true }).click()
@@ -399,6 +401,7 @@ waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and ma
       ]) {
         await enter(localized, owner, url(screen.path), screen.title)
         await scheme(localized, "dark")
+        if (screen.id === "UI51") await expect(localized.locator(".sf-collab-kind")).toHaveText("Tipo de relação observado: " + seeded.relation.kind)
         await capture(localized, info, screen.id + "-pt-BR-dark-desktop")
       }
       expect(localDiagnostics.pageErrors).toEqual([])
