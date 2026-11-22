@@ -190,12 +190,14 @@ export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
     if (!sameStamp(context.value, refreshed.value))
       return Response.json({ status: "stale", reason: "domain-authority-changed" }, { status: 409, headers })
     const finalEnvironment = await source.application.environment(input.request)
+    // The private/Team fence may await. Observe source authority after it, with no
+    // later asynchronous boundary between the final transaction and publication.
+    if (!await current()) return resultResponse(denied())
     const stable = await source.application.persistence.transaction("dashboard", async (snapshot) => ({
       commit: false, value: digestSfValue(snapshot.versions) === projected.fence &&
         digestSfValue(await authority(source.application, input.request, refreshed.value, snapshot, finalEnvironment)) === authorities.get(refreshed.value),
     }), { signal: input.request.signal })
     if (!stable) return Response.json({ status: "stale", reason: "domain-source-changed" }, { status: 409, headers })
-    if (!await current()) return resultResponse(denied())
     const outputSchema: Schema.Top = pageOperations[cap].output
     const output = Schema.decodeUnknownOption(Schema.toType(outputSchema), { onExcessProperty: "error" })({
       status: "ok", context: refreshed.value.stamp,

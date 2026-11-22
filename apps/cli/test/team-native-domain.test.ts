@@ -39,6 +39,7 @@ async function createFixture() {
     authenticated: boolean; active: boolean; role: "admin" | "viewer"; teams: string[];
     originals: Request[]; writerRequests: Request[]; environmentCalls: number; contextCalls: number;
     environmentHook?: () => Promise<void>; contextHook?: (request: Request) => Promise<void>;
+    currentHook?: () => Promise<void>;
   } = { authenticated: true, active: true, role: "admin", teams: [...teams],
     originals: [], writerRequests: [], environmentCalls: 0, contextCalls: 0 }
   const valid = (request: Request) => state.authenticated && request.headers.get("cookie") === "component-session=original"
@@ -75,7 +76,8 @@ async function createFixture() {
     return accessReader.readContext(request, query, binding)
   }
   const bridge = (request: Request, team = 0, handler = handlers[team]!) => createSfTeamNativeDomain({
-    request, handler, binding, profile: profiles[team]!, readContext: originalRead, current: async () => state.active,
+    request, handler, binding, profile: profiles[team]!, readContext: originalRead,
+    current: async () => { await state.currentHook?.(); return state.active },
   })
   const request = (suffix: string, init: RequestInit = {}, team = 0) => new Request(origin + mount + suffix, {
     ...init, headers: { Cookie: "component-session=original", ...Object.fromEntries(new Headers(init.headers)),
@@ -258,4 +260,28 @@ test("command response uses the exact original Request and never authorizes a mi
   expect((await f.bridge(req).handle())!.status).toBe(403)
   expect(f.state.originals.every((value) => value === req)).toBe(true)
   expect(await f.snapshot()).toEqual(before)
+}))
+
+test("business authority revoked during the last private fence cannot publish an already projected page", async () => fixture(async (f) => {
+  expect((await f.command("CAP14", { vendor: "Final fence private vendor", amount: 45 })).response.status).toBe(200)
+  const before = await f.context(), snapshot = await f.snapshot()
+  f.state.environmentCalls = 0
+  let revoked = 0
+  // The first five observations serve the initial/renewed F02 and page; the
+  // sixth environment belongs to the final source transaction. The private
+  // current fence deliberately remains true while business authority changes.
+  f.state.currentHook = async () => {
+    if (f.state.environmentCalls !== 6 || revoked) return
+    revoked++
+    f.state.role = "viewer"
+  }
+  const result = await f.read("CAP14")
+  expect(revoked).toBe(1)
+  expect(result.response.status).toBe(409)
+  const body = await result.response.text()
+  expect(body).not.toContain("Final fence private vendor")
+  expect(JSON.parse(body)).toEqual({ status: "stale", reason: "domain-source-changed" })
+  expect(await f.snapshot()).toEqual(snapshot)
+  f.state.currentHook = undefined
+  expect((await f.context()).stamp.accessRevision).not.toBe(before.stamp.accessRevision)
 }))

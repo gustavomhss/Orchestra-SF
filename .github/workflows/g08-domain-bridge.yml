@@ -89,7 +89,7 @@ jobs:
           root = Path(os.environ["GITHUB_WORKSPACE"])
           output = Path(os.environ["SF_G08_DOMAIN_EVIDENCE"])
           suites = [
-              ("producer", "apps/cli/test/team-native-domain.test.ts", 9),
+              ("producer", "apps/cli/test/team-native-domain.test.ts", 10),
               ("client", "packages/client/test/sucafina-team-domain.test.ts", 11),
           ]
           reports = []
