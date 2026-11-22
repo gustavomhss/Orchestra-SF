@@ -1,8 +1,8 @@
-import type { SfContext } from "../context/contracts"
+import type { SfReadableContext } from "../context/contracts"
 
 /** Operational evidence is not an authorization grant; missing evidence is retryable. */
 export function draftAvailability(
-  fresh: SfContext, family: string, resourceId: string, operations: readonly string[],
+  fresh: SfReadableContext, family: string, resourceId: string, operations: readonly string[],
 ): Readonly<{ status: "denied" }> | Readonly<{ status: "unavailable" }> | undefined {
   const resources = fresh.availability.filter((resource) => resource.family === family && resource.resource === resourceId)
   if (resources.length !== 1) return { status: "unavailable" }
@@ -17,3 +17,4 @@ export function draftAvailability(
     return { status: "unavailable" }
   return
 }
+

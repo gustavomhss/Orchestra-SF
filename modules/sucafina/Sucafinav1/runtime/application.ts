@@ -55,7 +55,10 @@ export function readSfApplicationSource(handler: object) {
 export async function readSfApplicationContext(handler: object, request: Request, principalRef: string,
   verifyCurrent?: () => Promise<boolean>) {
   const source = applicationSources.get(handler)
-  if (!source || !["GET", "HEAD"].includes(request.method) || request.signal.aborted) return undefined
+  // An internal read during a POST retains the original Request and requires its current authority fence.
+  // This private projection consumes no body and cannot commit; HTTP F02 still rejects POST at its handler.
+  const readMethod = ["GET", "HEAD"].includes(request.method) || request.method === "POST" && typeof verifyCurrent === "function"
+  if (!source || !readMethod || request.signal.aborted) return undefined
   const application = source.application
   const read = async () => {
     const observed = await Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) =>
