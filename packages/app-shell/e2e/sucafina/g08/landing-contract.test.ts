@@ -321,6 +321,33 @@ test("G08 admin selectors reach the real catalog UI for a principal without Team
     view.request(2).resolve(json(adminCatalog()))
     await eventually(() => view.host.querySelector(landing.administration)?.getAttribute("data-sf-team-administration") === "ready")
     expect(view.host.querySelector(landing.dashboard)).toBeNull()
+    view.click('[data-sf-admin-team="' + teamA + '"] [data-sf-admin-configuration]')
+    await settle()
+    const configuration = view.request(3)
+    expect(configuration.method).toBe("GET")
+    expect(configuration.url.pathname).toBe(installation.mount + "/api/ui/team-profiles/configuration")
+    expect(Object.fromEntries(configuration.url.searchParams)).toEqual({
+      contractRevision: installation.contractRevision, installationId: installation.installationId,
+      tenantId: installation.tenantId, teamObjectId: teamA,
+    })
+    expect([...configuration.url.searchParams]).toHaveLength(4)
+    configuration.resolve(json({ status: "ok", configuration: {
+      origin: "installation-team-store", profile: profile(teamA), configRevision: "configuration-read",
+      document: { version: 1, settings: { model: "approved/model", default_agent: "analyst" } },
+    } }))
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-configuration]")?.getAttribute("data-sf-team-configuration")).toBe("ready")
+    expect(view.host.querySelector<HTMLInputElement>("[data-sf-configuration-model]")?.value).toBe("approved/model")
+    expect(view.host.querySelector<HTMLInputElement>("[data-sf-configuration-agent]")?.value).toBe("analyst")
+    expect(view.host.querySelector<HTMLButtonElement>("[data-sf-configuration-read]")?.disabled).toBe(false)
+    view.click("[data-sf-configuration-close]")
+    await settle()
+    expect(view.host.querySelector("[data-sf-team-configuration]")).toBeNull()
+    expect(view.host.querySelector<HTMLButtonElement>(landing.adminRead)?.disabled).toBe(false)
+    expect(view.host.querySelectorAll(landing.refresh)).toHaveLength(1)
+    expect(view.host.querySelector(landing.dashboard)).toBeNull()
+    expect(view.host.querySelector(landing.newChat)).toBeNull()
+    expect(view.requests.filter((request) => request.method === "POST")).toHaveLength(0)
   } finally { view.close() }
 })
 test("G08 native disable sends the exact opaque CAS and rereads instead of inventing a successful row", async () => {

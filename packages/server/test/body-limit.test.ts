@@ -20,8 +20,17 @@ const read = Effect.gen(function* () {
   const request = yield* HttpServerRequest.HttpServerRequest
   return HttpServerResponse.text(String((yield* Effect.orDie(request.arrayBuffer)).byteLength))
 })
+// Match HttpApiBuilder's JSON path: text is bounded/cached, then JSON.parse can throw a SyntaxError defect.
+const readJson = Effect.gen(function* () {
+  const request = yield* HttpServerRequest.HttpServerRequest
+  const text = yield* Effect.orDie(request.text)
+  JSON.parse(text)
+  return HttpServerResponse.empty()
+})
 const routes = Layer.mergeAll(
   HttpRouter.add("POST", "/api/other", read),
+  HttpRouter.add("POST", "/api/json", readJson),
+  HttpRouter.add("POST", "/api/json-defect", readJson.pipe(Effect.andThen(Effect.die(new SyntaxError("handler defect"))))),
   HttpRouter.add("POST", "/api/session/ses_1/prompt", read),
   BodyLimit.layer,
 )
@@ -119,5 +128,31 @@ it.live("a chunked body with no declared length is cut off at the limit with 413
       ),
     )
     expect(received).toMatch(/^HTTP\/1\.1 413/)
+  }),
+)
+
+it.live("malformed JSON inside the body limit is a declared 400", () =>
+  Effect.gen(function* () {
+    const response = yield* HttpClientRequest.post("/api/json").pipe(
+      HttpClientRequest.bodyText("{invalid"),
+      HttpClientRequest.setHeader("content-type", "application/json; charset=utf-8"),
+      HttpClient.execute,
+    )
+    expect(response.status).toBe(400)
+    expect(yield* response.json).toEqual({
+      _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload",
+    })
+  }),
+)
+
+it.live("a handler SyntaxError with valid JSON remains a server defect", () =>
+  Effect.gen(function* () {
+    const response = yield* HttpClientRequest.post("/api/json-defect").pipe(
+      HttpClientRequest.bodyText('{"valid":true}'),
+      HttpClientRequest.setHeader("content-type", "application/json"),
+      HttpClient.execute,
+    )
+    expect(response.status).toBe(500)
+    yield* response.text
   }),
 )

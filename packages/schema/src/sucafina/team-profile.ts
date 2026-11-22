@@ -289,11 +289,28 @@ export type Projection = Schema.Schema.Type<typeof Projection>
  * authorityGeneration is the current durable authority generation, not the
  * Session's original creation generation or a browser's selection epoch.
  */
-export const SessionNamespace = Schema.Struct({
+/**
+ * Portable HTTP description of the namespace label. This structural codec is
+ * used by generated clients; it is never an authority decoder. Corporate
+ * consumers decode SessionNamespace below and compare it with their admitted
+ * owner and generation before accepting any response or event.
+ */
+export const SessionNamespaceTransport = Schema.Struct({
   version: Schema.Literal(1),
-  owner: Owner,
+  owner: Schema.Struct({ profile: Ref, principal: Principal })
+    .annotate({ parseOptions: { onExcessProperty: "error" } }),
   authorityGeneration: PositiveInt,
 }).annotate({
+  identifier: "Sucafina.TeamProfile.SessionNamespaceTransport",
+  parseOptions: { onExcessProperty: "error" },
+})
+export interface SessionNamespaceTransport extends Schema.Schema.Type<typeof SessionNamespaceTransport> {}
+
+/** Strict corporate decoder retains the cross-field resource-tenant check. */
+export const SessionNamespace = SessionNamespaceTransport.mapFields((fields) => ({
+  ...fields,
+  owner: Owner,
+})).annotate({
   identifier: "Sucafina.TeamProfile.SessionNamespace",
   parseOptions: { onExcessProperty: "error" },
 })

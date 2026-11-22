@@ -115,3 +115,9 @@ Somente digests, C/T, IDs estáveis, contagens e estados de cobertura são públ
 G08 requer os nove cenários Teams, U15/U39/U40 completos em suas invocações, F04 e todas as fases AZ02, mesmo candidato/tar G07, atores/grants reais, autorização das mutações e cleanup observado. A composição de ferramenta ou nove casos listados não satisfaz essa condição.
 
 A prova 222 (2) continua 4/4 no QA original atestado pelo handoff; seu backlink/SHA/tar não foi recuperado nesta frente e não é promovido ao candidato atual. Ver a [matriz de preparação](../../../../../docs/qa/sucafina/go-live/g08-teams-qa.md) e o [ledger](../../../../../docs/qa/sucafina/go-live/status.json). Evidências anteriores conservam seus SHAs e escopos.
+
+## Reconciliação do executor com a integração privada
+
+A composição preserva os controles complementares de #672 e #678: as nove obrigações têm mapeamento implementado, inclusive diferença de ações Session observada com dois principals no mesmo Team e cleanup restrito à invocação. A navegação de Chat espera lista e SSE originais antes da ação, decodifica toda a lista e seus owners e exige stream aberto. O administrador sem Team abre a configuração pela UI; o documento, a revisão e os campos são comparados com leitura independente. Disable/restore conserva os documentos dos Teams A e B e observa a revisão corrente sem rebobinar o CAS. Os dois controles de rascunho continuam em 320 px, sem POST. Os oito controles DOM originais são preservados.
+
+Esta reconciliação qualifica o executor. Todos os resultados instalados e os grupos U15/U39/U40/recuperação permanecem NOT_RUN até suas execuções próprias no tar e nos ambientes reservados. Os recibos anteriores pertencem às fontes em que foram produzidos.

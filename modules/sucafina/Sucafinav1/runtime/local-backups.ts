@@ -12,6 +12,17 @@ import { backup, backupBlobInventory, requireBackupManifest, restoreBackup } fro
 import type { BackupManifest, RestoreTransport } from "./operations.ts"
 
 export type BackupOperationOptions = { signal?: AbortSignal }
+export type BackupCaptureOptions = BackupOperationOptions & {
+  /** Recheck the original authority immediately before archive publication. */
+  verifyCurrent?: () => Promise<boolean>
+  /** Validate the exact captured copy; the callback cannot edit that copy. */
+  verifySnapshot?: (snapshot: Readonly<Snapshot>) => void
+  /** Corporate checkpoints are retained for the independent recovery observer. */
+  retainExisting?: boolean
+}
+export class BackupAuthorityError extends Error {
+  constructor() { super("Backup authority changed") }
+}
 export type BackupDependencies = {
   orphanStageAgeMs?: number
   io?: { beforeDurableWrite?: (path: string, signal?: AbortSignal) => Promise<void> }
@@ -28,7 +39,7 @@ const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
 const defaultOrphanStageAgeMs = 24 * 60 * 60 * 1000
 
 export async function createLocalBackups(directory: string, dependencies: BackupDependencies = {}): Promise<{
-  capture: (store: LocalStore, surface: Surface, at: string, tier?: "daily" | "monthly", options?: BackupOperationOptions) => Promise<{ id: string; manifest: BackupManifest }>
+  capture: (store: LocalStore, surface: Surface, at: string, tier?: "daily" | "monthly", options?: BackupCaptureOptions) => Promise<{ id: string; manifest: BackupManifest }>
   list: (surface: Surface, options?: BackupOperationOptions) => Promise<Array<{ id: string; at: string; assets: number; bytes: number; tier: "daily" | "monthly" }>>
   verify: (surface: Surface, id: string, at: string, options?: BackupOperationOptions) => Promise<{ at: string; durationMs: number }>
   source: RestoreTransport
@@ -174,6 +185,11 @@ export async function createLocalBackups(directory: string, dependencies: Backup
       requireSurface(surface)
       if (!Number.isFinite(Date.parse(at))) throw new Error("Invalid backup time")
       options.signal?.throwIfAborted()
+      const verifyCurrent = async () => {
+        if (options.verifyCurrent && !await options.verifyCurrent()) throw new BackupAuthorityError()
+        options.signal?.throwIfAborted()
+      }
+      await verifyCurrent()
       const parent = await surfaceDirectory(surface, true, options.signal)
       if (!parent) throw new Error("Missing backup directory")
       await cleanup(parent, options.signal)
@@ -184,6 +200,7 @@ export async function createLocalBackups(directory: string, dependencies: Backup
         commit: false,
         value: structuredClone(snapshot),
       }), { signal: options.signal })
+      options.verifySnapshot?.(structuredClone(captured))
       const readCapturedBlob = (key: string) => store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
         if (blobGeneration(snapshot, key) !== blobGeneration(captured, key)) throw new Error("Live blob changed during backup capture")
         return { commit: false, value: await blobs.get(key) }
@@ -240,6 +257,7 @@ export async function createLocalBackups(directory: string, dependencies: Backup
             await syncDirectory(staging, options.signal)
             options.signal?.throwIfAborted()
             await surfaceDirectory(surface, false, options.signal)
+            await verifyCurrent()
             await rename(staging, join(parent, id))
             published.value = true
             // Rename is the publication boundary. Once crossed, finish directory durability even if shutdown begins.
@@ -254,6 +272,8 @@ export async function createLocalBackups(directory: string, dependencies: Backup
           }
         },
         prune: async (requested, olderThan) => {
+          if (options.retainExisting) return
+          await verifyCurrent()
           const path = await surfaceDirectory(requested, false, options.signal)
           if (!path) return
           await cleanup(path, options.signal)
@@ -272,6 +292,7 @@ export async function createLocalBackups(directory: string, dependencies: Backup
             const verified = await verifyArchive(location, requested, id, options.signal)
             options.signal?.throwIfAborted()
             // Do not let cancellation turn one valid archive into a partial corrupt directory.
+            await verifyCurrent()
             for (const name of verified.files) {
               await privateFile(join(location, name))
               await unlink(join(location, name))

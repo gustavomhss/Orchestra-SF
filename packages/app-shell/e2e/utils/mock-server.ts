@@ -27,6 +27,8 @@ export interface MockServerConfig {
   onPrompt?: (input: { sessionID: string; body: unknown }) => void
   events?: () => unknown[]
   eventRetry?: number
+  // Finite response batches can represent one logical stream; reconnect fixtures keep the default greeting per response.
+  eventGreeting?: "once" | "always"
   todos?: (sessionID: string) => unknown[]
   permissions?: unknown[] | (() => unknown[])
   questions?: unknown[] | (() => unknown[])
@@ -47,6 +49,7 @@ export type PullRequestReply = { status: number; body: unknown }
 export async function mockOrchestraServer(page: Page, config: MockServerConfig) {
   if (!config.freshRail) await page.addInitScript(railDefaulted)
   const cursors = new Map<string, string>()
+  const greetedEventStreams = new Set<string>()
   let nextCursor = 0
   const staticRoutes: Record<string, unknown> = {
     "/path": {
@@ -75,12 +78,18 @@ export async function mockOrchestraServer(page: Page, config: MockServerConfig) 
     const path = url.pathname
     if (path === "/global/event" || path === "/event" || path === "/api/event") {
       const events = config.events?.()
+      const stream = url.origin + path
+      const greeting = config.eventGreeting !== "once" || !greetedEventStreams.has(stream)
+      greetedEventStreams.add(stream)
       return sse(
         route,
         path === "/api/event"
-          ? [{ id: "evt_mock_connected", type: "server.connected", data: {} }, ...(events?.map(currentEvent) ?? [])]
+          ? [
+              ...(greeting ? [{ id: "evt_mock_connected", type: "server.connected", data: {} }] : []),
+              ...(events?.map(currentEvent) ?? []),
+            ]
           : [
-              ...(path === "/global/event"
+              ...(path === "/global/event" && greeting
                 ? [{ payload: { id: "evt_mock_connected", type: "server.connected", properties: {} } }]
                 : []),
               ...(events ?? []),

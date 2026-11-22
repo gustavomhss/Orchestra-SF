@@ -2,7 +2,7 @@
 // These are DOM locators only; neither this module nor a visible link supplies authorization.
 export const landing = Object.freeze({
   shell: "[data-sf-teams-shell]",
-  picker: "[data-sf-teams-shell] main select",
+  picker: "[data-sf-teams-shell] [data-sf-team-picker]",
   dashboard: '[data-sf-teams-shell] main a[href$="/dashboard"]',
   refresh: "[data-sf-teams-shell] main > button:not([data-sf-admin-toggle])",
   adminToggle: "[data-sf-admin-toggle]",

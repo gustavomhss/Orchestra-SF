@@ -55,23 +55,24 @@ async function originalRequest(page: Page, url: string, method: "GET" | "POST" |
   return response
 }
 
-export async function uiReply(page: Page, url: string, method: "GET" | "POST", action: () => Promise<unknown>) {
+async function waitUIReply(page: Page, url: string, method: "GET" | "POST") {
   const expected = new URL(url)
-  const [request] = await Promise.all([
-    page.waitForRequest((entry) => {
-      const actual = new URL(entry.url())
-      return entry.method() === method && entry.frame() === page.mainFrame() &&
-        entry.headers()[observationHeader] === undefined &&
-        actual.origin === expected.origin && actual.pathname === expected.pathname &&
-        actual.searchParams.size === expected.searchParams.size &&
-        [...expected.searchParams].every(([key, value]) =>
-          actual.searchParams.getAll(key).length === 1 && actual.searchParams.get(key) === value)
-    }),
-    action(),
-  ])
+  const request = await page.waitForRequest((entry) => {
+    const actual = new URL(entry.url())
+    return entry.method() === method && entry.frame() === page.mainFrame() &&
+      entry.headers()[observationHeader] === undefined &&
+      actual.origin === expected.origin && actual.pathname === expected.pathname &&
+      actual.searchParams.size === expected.searchParams.size &&
+      [...expected.searchParams].every(([key, value]) =>
+        actual.searchParams.getAll(key).length === 1 && actual.searchParams.get(key) === value)
+  })
   const response = await request.response()
   if (!response) throw new Error("G08_ORIGINAL_UI_RESPONSE_REQUIRED")
   await requireBoundPeer(page, response)
+  return response
+}
+export async function uiReply(page: Page, url: string, method: "GET" | "POST", action: () => Promise<unknown>) {
+  const [response] = await Promise.all([waitUIReply(page, url, method), action()])
   return response
 }
 const actors = ["requester", "holder", "denied", "dashboardAdmin"] as const
@@ -179,7 +180,8 @@ export async function adminCatalog(page: Page, target: Target) {
   return adminCatalogValue(await originalRequest(page, adminURL(target)), target)
 }
 async function adminCatalogValue(response: Response, target: Target) {
-  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store")
+  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
     throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
   const catalog = Schema.decodeUnknownSync(AdminCatalog, strict)(await response.json())
   if (catalog.profiles.length > 10_000 ||
@@ -188,6 +190,27 @@ async function adminCatalogValue(response: Response, target: Target) {
       entry.profile.tenantId !== target.tenantId))
     throw new Error("G08_REAL_ADMIN_CATALOG_INVALID")
   return catalog
+}
+/** The optional action observes the UI's own GET; otherwise read through the original cookie jar. */
+export async function readTeamConfiguration(page: Page, target: Target, action?: () => Promise<unknown>) {
+  const url = new URL(adminURL(target))
+  url.pathname += "/configuration"
+  url.searchParams.set("teamObjectId", target.teamObjectId)
+  const response = action ? await uiReply(page, url.href, "GET", action) : await originalRequest(page, url.href)
+  if (response.headers()["cache-control"] !== "no-store" ||
+    !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
+    throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  const value = Schema.decodeUnknownSync(TeamProfile.ConfigurationReadResult, strict)(await response.json())
+  if (value.status === "not-found" && response.status() === 404) return value
+  if (value.status !== "ok" || response.status() !== 200) throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  expect(value.configuration.profile).toEqual(teamRef(target))
+  return value
+}
+export async function teamConfiguration(page: Page, target: Target) {
+  const value = await readTeamConfiguration(page, target)
+  // Revocation/restoration still requires an actual document before and after; absence is not preservation.
+  if (value.status !== "ok") throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  return value.configuration
 }
 export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: TeamProfile.ConfigRevision) {
   const response = await originalRequest(page, adminURL(target), "POST", {
@@ -311,16 +334,30 @@ export function chatHref(target: Target) {
 }
 /** The UI itself must fetch the original Session list after its original F02 action. */
 export async function chatAction(page: Page, target: Target, principal: string, action: () => Promise<unknown>) {
-  const url = new URL(target.mount + "/api/session", target.publicOrigin)
-  url.search = new URLSearchParams({ limit: "50", order: "desc" }).toString()
-  const response = await uiReply(page, url.href, "GET", () => switchTeam(page, target, principal, action))
-  if (response.request().headers()["x-sf-team-profile"] !== sessionSelector(target))
-    throw new Error("G08_NATIVE_CHAT_SELECTOR_CHANGED")
+  const listURL = new URL(target.mount + "/api/session", target.publicOrigin)
+  listURL.search = new URLSearchParams({ limit: "50", order: "desc" }).toString()
+  const eventURL = new URL(target.mount + "/api/event", target.publicOrigin)
+  // Register list and stream waits before navigation can issue either original UI request.
+  const [response, events, live] = await Promise.all([
+    waitUIReply(page, listURL.href, "GET"), waitUIReply(page, eventURL.href, "GET"),
+    switchTeam(page, target, principal, action),
+  ])
+  for (const reply of [response, events]) {
+    expect(reply.status()).toBe(200)
+    expect(reply.headers()["cache-control"]).toBe("no-store")
+    expect(reply.request().postData()).toBeNull()
+    expect(reply.request().headers()["authorization"]).toBeUndefined()
+    if (reply.request().headers()["x-sf-team-profile"] !== sessionSelector(target))
+      throw new Error("G08_NATIVE_CHAT_SELECTOR_CHANGED")
+  }
+  expect(events.headers()["content-type"]).toMatch(/^text\/event-stream(?:;|$)/i)
   const value = Schema.decodeUnknownSync(Schema.toCodecJson(SessionList), strict)(await sessionJSON(response))
   sessionOwner(value.namespace, target, principal)
   for (const entry of value.data) expect(entry.namespace).toEqual(value.namespace)
+  expect(value.namespace.owner).toEqual(live.stamp.team?.owner)
   await expect(page).toHaveURL(chatHref(target))
   await expect(page.locator(landing.workspace)).toHaveAttribute("data-sf-session-state", "ready")
+  await expect(page.locator(landing.workspace)).toHaveAttribute("data-sf-session-stream", "open")
   await expect(page.locator(landing.editor)).toBeEditable()
   return value.namespace
 }

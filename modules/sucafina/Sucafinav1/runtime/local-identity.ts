@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Session as NativeSession } from "@orchestra/schema/session"
 import { Schema } from "effect"
 import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsObservation, EntraTeamsResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 import { isTeamLandingNavigation, teamBusinessRoute } from "./team-profile-selector.ts"
@@ -426,13 +427,17 @@ function nativeTeamReturn(value: string | null, origin: string) {
       /[\\\u0000-\u0020\u007f]/.test(value)) return
   try { decodeURIComponent(value) } catch { return }
   const url = new URL(value, origin)
+  const sessionSegment = /^\/orchestra\/sf-sessions\/([A-Za-z0-9_-]{1,256})$/.exec(url.pathname)?.[1]
+  const sessionRoute = sessionSegment === "new" ||
+    sessionSegment !== undefined && Schema.is(NativeSession.ID)(sessionSegment)
   if (url.origin !== origin || url.username || url.password || url.hash ||
-      !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
-  if (!url.search) return url.pathname
+      !sessionRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
+  if (!url.search) return sessionRoute ? undefined : url.pathname
   const parameters = url.searchParams
   const keys = [...parameters.keys()]
   const required = ["contractRevision", "server", "installationId", "tenantId"]
-  if ((keys.length !== 4 && keys.length !== 5) || new Set(keys).size !== keys.length ||
+  if (sessionRoute && (keys.length !== 5 || !parameters.has("teamObjectId")) ||
+      (keys.length !== 4 && keys.length !== 5) || new Set(keys).size !== keys.length ||
       required.some((key) => !parameters.has(key)) ||
       keys.some((key) => !required.includes(key) && key !== "teamObjectId") ||
       parameters.get("server") !== origin) return
