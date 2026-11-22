@@ -57,7 +57,7 @@ jobs:
         working-directory: apps/cli
         run: |
           set -euo pipefail
-          bun test --reporter=junit --reporter-outfile "$SF_AZ02_EVIDENCE/reader.junit.xml" ./test/sucafina-product/team-native-procurement.test.ts 2>&1 | tee "$SF_AZ02_EVIDENCE/reader.log"
+          bun test --reporter=junit --reporter-outfile "$SF_AZ02_EVIDENCE/reader.junit.xml" ./test/sucafina-product/team-native-procurement.test.ts ./test/sucafina-native-procurement.test.ts 2>&1 | tee "$SF_AZ02_EVIDENCE/reader.log"
       - name: Typecheck the actual CLI source and focal reader
         working-directory: apps/cli
         run: |
@@ -83,7 +83,7 @@ jobs:
           const tap = read("node-controls.tap"), log = read("reader.log"), junit = read("reader.junit.xml")
           for (const [name, expected] of [["tests", 32], ["pass", 32], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
             assert(new RegExp("^# " + name + " " + expected + "$", "m").test(tap), "AZ02_NODE_INVENTORY_" + name)
-          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 5, "AZ02_ORIGINAL_READER_INVENTORY")
+          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 8, "AZ02_ORIGINAL_READER_INVENTORY")
           assert(!/<(?:failure|error|skipped)\b/.test(junit), "AZ02_READER_FAILURE_OR_SKIP")
           const controls = [...log.matchAll(/omni positive control \[([0-9a-f]{32})\]: (pass|not applicable|FAIL|off)/g)]
           assert(controls.length === 1 && controls[0][1] === process.env.ORCHESTRA_OMNI_CONTROL_NONCE &&
@@ -95,6 +95,7 @@ jobs:
             "apps/cli/src/sucafina-product/team-native-procurement.ts",
             "apps/cli/test/sucafina-product/team-native-procurement.test.ts",
             ".github/workflows/az02-teams-proof.yml",
+            "apps/cli/test/sucafina-native-procurement.test.ts",
             "apps/cli/src/sucafina-product/native-ui/procurement.ts",
             "modules/sucafina/Sucafinav1/runtime/application.ts",
             "modules/sucafina/Sucafinav1/runtime/procurement.ts",
@@ -114,6 +115,8 @@ jobs:
             guardBase: read("guard-base.txt").trim(), node: { passed: 32, failed: 0, skipped: 0 },
             originalReader: { passed: 5, failed: 0, skipped: 0, transport: "REAL_LOOPBACK_HTTP",
               persistence: "ORIGINAL_SQLITE", identity: "CONTROLLED_COMPONENT" },
+            preservedProjection: { passed: 3, failed: 0, skipped: 0, testBlob: "748ef34f030eafc4336f25da08bba0d1a4ca5387",
+              projectionBlob: "36c929a0446c4db3a6d14f3dd3c713ef892e521f", dependencySha: "5de5da393f029953a023aaab469edc7182a7dd19" },
             omni: { nonce: process.env.ORCHESTRA_OMNI_CONTROL_NONCE, verdict: controls[0][2] },
             liveQualified: false, installedTeamsProof: false, finalCandidate: false, g08Closed: false,
             operationalPhases: "NOT_RUN", inventory }
