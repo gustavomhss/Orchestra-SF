@@ -1,44 +1,80 @@
-# Decisions handoff
+# Decisions handoff — UI34–UI41 complete
 
-## Integration
+## Integration result
 
-Branch: `sf-twenty-decisions`.
-Base: `2a68bcb676ed0c159c5c48130c2413e0e5637a00`.
+**The eight-area implementation, complete 41-image gallery and scoped regression are qualified in their recorded states.** Product and tests are already integrated into `sf-design-twenty` at the root heads below. The final worker follow-up from `edd5c2eb62e2bea46143c214e8f738943f29004e` changes evidence/docs only; integrate its incremental file diff without copying stale host, registry or fixture files.
 
-Commits before this handoff:
-- `b4d2ef226fb9429a2ea24d6e66bf1463a2c3e434` — eight leaf compositions and scoped CSS.
-- `355e65d2fc06f11940c03b3ff3befa2e781a6479` — canonical post-start seed and labels.
-- The commit containing this file adds the executable journey, coverage disclosure refinement and durable review notes.
+| Item | Exact reference |
+| --- | --- |
+| Worker branch / original base | `sf-twenty-decisions` / `2a68bcb676ed0c159c5c48130c2413e0e5637a00` |
+| Last product/spec correction | `4978956b0ceeceec66df7c8f942c7495e83fa3e6` — procurement-case-read-scope and added UI35 focused qualification capture only |
+| Last regression/docs checkpoint | `edd5c2eb62e2bea46143c214e8f738943f29004e` — new case-scope test plus these docs |
+| Browser-qualified root product | `e5494ff044ee46cdd80c1d754131c284538d4d31` |
+| Root product with final regression | `0550c4bb8fc3b4b4e68561777010ca03483e2391` |
+| Upstream dev composition | `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` |
+| Browser run / snapshot | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) / `58def9db4b3aa4c156a041eb86fbbd41de95bba7` |
+| Gate17 run / snapshot | [44972927162](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) / `e6b7de08b4cbb7790a585e2292bb985a41e60902` |
 
-No individual PR is intended. The parent integrates these commits into `sf-design-twenty` and runs the consolidated Actions lane.
+No individual PR or merge is intended. Parent owns the final integration and CI. No local execution or user-machine operation occurred.
 
-## Fixture hook
+## Final evidence and exact coverage
 
-In `design-support/native-host.ts`, import both `seedWaveFourDecisionsPlanner` and `seedWaveFourDecisions` from `./wave-four-decisions-seed`.
+- Decisions14: one production Chromium test passed in 10.3m, one worker, retries 0, unchanged 780-second limit.
+- All 41 JPEGs and all 196 log parts are complete; no skipped/missing/extra capture. Total original preview bytes: 3,161,553. Original quality-78 bytes are preserved; canonical PNG attachments remain in the run artifact.
+- Each area has dark/light EN desktop 1440×1100, dark EN 390×844 and pt-BR dark desktop 1440×1100. Nine interaction images include the actual 320×800 comparison qualification and pt-BR review.
+- Own review: 33 images; independent Procurement light review: eight; independent root representative review: eight. No visual blocker.
+- The monitored source reads are 35 case projections, 11 current-choice, five analysis choices and five history reads, all HTTP 200. Twenty-one finish after 300 seconds; last case read is 200 at 453,279ms. Both page error/console arrays are empty, with no source-failure/probe event.
+- Gate17: 15 checks / 89 regression cases; app, E2E and full CLI typechecks pass with zero CLI diagnostics; source guards 78 rules/254 files/0 errors/21 warnings/0 approval requirements; palette parity passes.
+- New original case-read regression: two cases / 81 assertions. Decision/analysis health remain 24+19 passing cases; browser-condition Solid/codec regressions remain five passing cases.
 
-In the Planner transaction, use `seedWaveFourDecisionsPlanner(snapshot, actor, environment, year)` only for `four-decisions`, instead of the larger wave-three/four Planner seeds. It requires an empty Planner and uses only the original domain.execute boundary. The two minimal versions are created first, then each receives one USD service line and a producer-owned closed month.
+| Area | Capture count | Actual tested behavior | Preserved limit |
+| --- | ---: | --- | --- |
+| UI34 — Case summary | 6 | Retained edit/review/cancel/reopen, one decision-edit POST, exact case CAS and unchanged source references/criteria on original readback. | Source attachments are disclosed; no new evidence is invented. |
+| UI35 — Alternatives | 7 | Authorized empty alternative/choice state, actual two-source amounts and comparison, historical choice on the opaque case route. | The original producer does not admit current-choice preparation in this installation; no provenance, recalculation or promotion is fabricated. |
+| UI36 — Assumptions | 5 | Open assumptions, confirmed filter with genuine filtered-empty state, exact evidence detail, empty derived missing categories and original coverage divergences. | Review does not confirm or mutate an assumption. |
+| UI37 — Questions | 7 | Retained composer and review, one actual sf_question_prepare POST, unchanged case version/question list. | Preparation does not send or record a question. Optional cycle/recipient reads remain unavailable when unadmitted. |
+| UI38 — Current choice | 4 | Actual recorded choice and explicit producer preparation refusal. | No source provenance or successful recalculation is fabricated. |
+| UI39 — Prepared changes | 4 | Original empty prepared-change ledger. | Populated application/CAS/recovery paths are preserved but are not browser-qualified by this fixture. |
+| UI40 — Application result | 4 | Original empty application-receipt ledger. | No apply/recover request or receipt is invented; populated receipt detail remains unqualified. |
+| UI41 — Analysis | 4 | Original choices/list POST reads, real selector counts and history, objective input and actual catalog admission state. | No provider credential, model, run or output is fabricated. Prepare/start/cancel/output require separately admitted source configuration. |
 
-After `withNativeInstallation(...)` yields `installed`, before publishing browser metadata:
+Read [the final gallery](../evidence/decisions/README.md), [per-image manifest](../evidence/decisions/manifest.json), and [REVIEW.md](REVIEW.md) for exact provenance, visual notes, source diagnosis and qualifications. The gallery contains only Decisions14; earlier partial or diagnostic images are excluded.
+
+## Browser commands and authoritative checks
+
+UI34 executes exactly one decision-edit POST with a real original CAS reference and idempotency key. Review/cancel, close/reopen retention, source disclosure and hidden mounted fields are checked first. Original readback verifies the changed objective, increased version, and structurally identical sourceRefs/criteria. The narrow review asserts visible 44px actions.
+
+UI37 executes exactly one sf_question_prepare POST after retained review/cancel and original-source/criterion disclosure. Its native acknowledgement distinguishes preparation from sending/recording. Original readback verifies unchanged case version and questions. The localized 320px review is cancelled and retains the draft.
+
+No current-choice promotion, decision-apply or receipt recovery is emitted. UI41 reads original catalog/history POSTs and compares visible selectors against a fresh authorized API read independent of CDP response-body lifetime. A genuine empty model list keeps analysis preparation disabled. Its conditional prepared-input branch does not execute in the final run.
+
+## Required fixture hook — already integrated
+
+Keep `waveFourTest.use({ designWave: "four-decisions" })`. The Decisions-specific native fixture is needed for bounded canonical calculation data; the other wave-four journeys retain their own richer Planner fixture.
+
+`design-support/native-host.ts` imports both hooks from `./wave-four-decisions-seed`:
 
 ```ts
-if (decisionsWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
+seedWaveFourDecisionsPlanner(snapshot, actor, environment, year): void
+seedWaveFourDecisions(installed, year): Promise<void>
 ```
 
-Required shape:
+The first runs in the original Planner transaction with an empty Planner and uses domain.execute only. It creates two named versions, their USD service line and original closed month. The second runs after withNativeInstallation yields the installed authenticated boundary and before browser metadata is published:
 
 ```ts
 type Installed = {
   request(pathname: string, init?: RequestInit): Promise<Response>
 }
+
+if (decisionsWave) yield* Effect.promise(() => seedWaveFourDecisions(installed, year))
 ```
 
-Post-start return type is `Promise<void>`. The pre-start hook returns void and creates the version names in `waveFourDecisionsData.plannerBaseline` and `plannerCandidate`. IDs and source digests come from BI01 at runtime. There are no static reference IDs.
+BI01/source/choice IDs and digests are emitted at runtime; no static evidence ID or manual TrustedUiContext is installed. Keep the real default decision-controls path: adding procurement=attached or clearing its selection would hide the regression instead of proving the corrected boundary.
 
-Keep `waveFourTest.use({ designWave: "four-decisions" })` in this spec; other journeys run the standard four fixture. The browser discovers case routes from the actual UI33 list, lets the native route decode them, reads the admitted source reference from UI34 and verifies the original case projections.
+## Product/test ownership
 
-## Files
+Owned UI paths (prefix `packages/app-shell/src/orchestra/chapters/sucafina/`):
 
-Production leaves:
 - `decisions/intent/index.tsx`, `sources.tsx`, `request.ts`, `decision.css`
 - `decisions/alternatives/index.tsx`
 - `decisions/assumptions/index.tsx`
@@ -48,164 +84,55 @@ Production leaves:
 - `decisions/receipts/index.tsx`
 - `decisions/analyses/index.tsx`
 
-Prefix for all above: `packages/app-shell/src/orchestra/chapters/sucafina/`.
+Canonical fixture/browser regression:
 
-Test files:
 - `packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts`
-- `packages/app-shell/test-browser/sucafina-decision-command.test.ts`
 - `packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts`
 - `packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts`
+- `packages/app-shell/test-browser/sucafina-decision-command.test.ts` — five actual browser-condition Solid/schema/codec cases; requires the existing Happy DOM preloader and browser condition.
 
-Reserved catalogs `sf-u16`, `sf-u17`, `sf-u18`, `sf-u37` are unchanged.
+Native composition and business regression:
 
-## Required verification
-
-Run root's production Actions fixture with this exact spec and the other wave-four journeys. Inspect console diagnostics and screenshots; run app-shell typecheck, source guards and palette generation in the consolidated lane. No command has been executed locally. Include `test-browser/sucafina-decision-command.test.ts` with the browser condition and the existing Happy DOM preloader. Its five cases use real Solid tracking plus the unchanged native schemas/codecs; ordinary server-mode Solid would not reproduce the metadata regression.
-
-Watch the canonical seed for a producer refusal rather than weakening grants or replacing emitted evidence. UI35 must show the real historical choice on the opaque route. UI41 must issue the choices/list POSTs successfully; a UI-only unavailable placeholder is not proof.
-
-Read `REVIEW.md` for the state matrix and explicit limits. UI39/40 populated apply/receipt paths and UI41 execution/output are preserved but not browser-proven by the current fixture. Do not label them fully qualified without source-backed evidence.
-
-## Decisions6 composition follow-up
-
-The original current-choice GET and question-preparation workbench descriptor lacked native operational observations. Do not replace the existing historical-choice and question assertions with a fabricated unavailable/empty success. The leaf guards now leave loading when their read operation is unadmitted. The native context observer must also be installed.
-
-New files:
 - `apps/cli/src/sucafina-product/native-ui/decision-reading-health.ts`
-- `apps/cli/test/sucafina-decision-reading-health.test.ts`
+- `apps/cli/src/sucafina-product/native-ui/analysis-reading-health.ts`
+- `apps/cli/src/sucafina-product/procurement-case-read-scope.ts`
+- `apps/cli/test/sucafina-decision-reading-health.test.ts` — 24 cases.
+- `apps/cli/test/sucafina-analysis-reading-health.test.ts` — 19 cases.
+- `apps/cli/test/sucafina-case-read-scope.test.ts` — two cases / 81 assertions.
 
-The host contract's `nativeReadBinding` union adds exactly `decisions.choice.read` and `decisions.command.sf_question_prepare`. The mounting callback in `local/entry.ts` already returns the original generic product binding; it needs no new route or grant.
+Reserved catalogs sf-u16/UI34, sf-u17, sf-u18 and sf-u37 are unchanged. No new visible strings were needed. Existing source/state/reason values remain literal. UI33 is unchanged.
 
-Parent-owned `apps/cli/src/sucafina-product/host-context.ts` integration (apply to current root; do not copy the worker's older host file):
+## Parent-owned integration contracts
 
-```ts
-import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
+Do not overwrite the current `apps/cli/src/sucafina-product/host-context.ts` with this worker's earlier file. The root already installed both observers in the genuine native operational composition and added only these read bindings: decisions.choice.read, decisions.command.sf_question_prepare, intelligence.analysis.choices and intelligence.analysis.list.
 
-// Add to the nativeUiContext operational Promise.allSettled:
-observeSfDecisionReadingHealth({
-  ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-  binding: input.nativeReadBinding,
-  source: (operationId) => {
-    if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
-    if (operationId === "decisions.choice.read") {
-      if (!currentChoice || !input.currentChoiceFence) return undefined
-      return { producer: productHttp,
-        dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
-          business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
-          business.readSourceFences, input.persistence],
-        choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
-    }
-    return { producer: productHttp,
-      dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
-        business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
-      question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
-  },
-}, request, stamp),
-```
+The decision observer requires the effective dashboard route, original registered choice fence, both real metadata observations and final snapshot verification. Pinning includes nested persistence transaction/transactionAll/currentSnapshots methods and final binding identity after lease finish. The question observer requires the same original descriptor/schemas in the installed arrays plus cases/threads namespace authority. It never calls options/dispatch/prepare as a health probe.
 
-The source callback only captures actual installed identities. C08 namespace reads, original UI admission/validation and final revalidation establish infrastructure readiness. Question preparation requires the exact original descriptor in both arrays and cases/threads read authority; choice requires its registered real fence and cases/preferences read authority. No health probe calls options, dispatch, prepare, promote or receipt production. All acquired leases finish exactly once, and the binding is rechecked after finish.
+The analysis observer retains the original private analysis.prepare admission for choices and analysis.read for history; Cases/Contributions metadata and original source dependencies remain fenced. A missing optional model provider must not disable history; when present, its identity is captured. No prepare/start/cancel readiness is inferred.
 
-The initial health tests were expanded to 24 cases using the real isolated SQLite driver, UI authority, C08 state reader, source-lifecycle implementation and current-choice fence. They reject denial, missing namespace authority, copied fence/descriptor, dependency replacement, revision drift, source failure, abort, missing snapshot infrastructure and disposal during finish. Gate9 (44963051950) executed all 24 successfully. No test has been executed locally.
+The root owns all seven A15 effective route overrides to dashboard. Inputs are closed and lack surface; keep their methods/effects/fixed bodies/query/limits and the frozen catalog unchanged. F02 owns POST-read identity; command keys remain reserved for commands.
 
-## UI41 native catalog and history reads
+Shared frame/navigation/context menu, native fixture lifecycle, scope allowances and consolidated Actions remain root-owned. Final evidence/docs are safe to integrate incrementally from edd5c2eb.
 
-The follow-up adds `native-ui/analysis-reading-health.ts`, `apps/cli/test/sucafina-analysis-reading-health.test.ts` (19 original-boundary cases), and exactly two binding-union entries: `intelligence.analysis.choices` / `intelligence.analysis.list`. No preparation, start or cancellation readiness is inferred. A successful catalog response may contain no models and keeps preparation blocked.
+## Proven case-read bug and regression boundary
 
-Parent-owned host callsite:
+The original default decision-controls evidence picker invokes procurementSelections.create even for a Planner case. It releases the collection reference and lease while the global selected-period Map retains its five-minute object. Decisions13's finite disposable diagnostic proved global origin and selection-expired at transaction entry/egress. The old wrapper could therefore veto a canonical Planner case based on unrelated Procurement state.
 
-```ts
-import { observeSfAnalysisReadingHealth } from "./native-ui/analysis-reading-health.ts"
+The reviewed fix keeps common Request/signal/header, binding/input identity, authorization and C08 checks. It requires the full selection/expiry/reader fence only after the unchanged eligible planned-Procurement predicate and again at eligible egress. Other cases use the original canonical reader outside the SQLite scope. Writer, TTL, seed, proofs, source materialization, final checks, exceptions, grants and schemas remain intact.
 
-// Add to the nativeUiContext operational Promise.allSettled:
-observeSfAnalysisReadingHealth({
-  ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
-  binding: input.nativeReadBinding,
-  source: (operationId) => {
-    if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
-      services.analyses !== analyses || services.selected !== selected) return undefined
-    if (operationId === "intelligence.analysis.choices") return {
-      producer: productHttp,
-      dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models, ...(state.models ? [state.models] : []),
-        selected, nativeSearchDispatch, business.cases, business.cases.read, authority.human, authority.human.admit, input.persistence],
-    }
-    return { producer: productHttp,
-      dependencies: [analyses, analyses.list, business.cases, business.cases.read,
-        authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
-  },
-}, request, stamp),
-```
+The canonical positive test issues the Planner source/case and original global selection, advances only the controlled clock and obtains fresh leases. Case/evidence/C08 revision remain unchanged after expiry and unrelated-period replacement. Structural eligible Procurement negatives, common identity/header/input/lease/abort guards and revocation remain refused. Every structural guard refusal checks successful C08 read plus zero canonical reads, avoiding a false pass from a throwing stub.
 
-The original choices producer uses the private `analysis.prepare` action even though choices itself is a read. History uses `analysis.read`. The health observer retains these exact action admissions, verifies Cases/Contributions metadata through the canonical state reader, and never enumerates cases, queries a provider, prepares input or produces a run/output. Original source methods and the mounted product binding remain fenced across awaited reads and final lease disposal.
+All diagnostic/relay instrumentation remains confined to disposable diagnostic branches. None is integrated into the browser-qualified product. Decisions10's URL-method error and Decisions12's temporary relay parse error are invalid diagnostics; they are not source conclusions. No full positive C12 first-preparation/application test was found during focused review, so that coverage is not claimed.
 
-The UI41 test awaits the actual browser POST status and native view acknowledgement, then compares its visible selectors with a fresh authorized read of that same original endpoint through `page.request`. This API response retains its body independently of Chromium/CDP. Both responses must succeed. There is no intercepted response, fabricated catalog, grant or model. Selection/input preparation assertions remain conditional on actual native availability and the real catalog.
+## Remaining limits
 
-## Original choice-fence proof
+- UI35/UI38 show the actual recorded choice, but the original producer does not admit current-choice preparation. No missing-provenance cause is inferred beyond its returned refusal; recalculation and promotion are not browser-qualified.
+- UI36 reviews and filters assumptions; it does not confirm or mutate them. Producer codes and authored evidence remain literal.
+- UI37 prepares one proposal but does not record or send it. The optional cycle/recipient reads remain unavailable when not admitted; their populated states are not qualified.
+- UI39/UI40 have genuine empty prepared-change and application-receipt ledgers. Populated application, CAS conflict, recovery and receipt-detail states are preserved but not exercised by this browser fixture.
+- UI41 has original authorized cases, analysis options and an empty history, but no admitted model. Preparation review, start, cancel and output are not exercised; no provider credentials, model, run or result are fabricated.
+- The case-scope regression uses original authority, SQLite, sources and Planner producers with a bounded test identity provider. Its eligible Procurement negatives use an explicitly structural planned-change fixture; they do not prove an emitted C12 preparation, application or receipt.
+- Visual evidence is Chromium at 1440x1100, 390x844 and 320x800. It covers the recorded theme/locale states, not the full theme/locale/viewport cross-product, browser zoom, every browser or every preserved business state.
+- Producer-supplied Portuguese reasons and raw state/code values remain literal in an English UI. Existing EN/pt-BR UI catalogs were not rewritten.
 
-The effective registry overrides `decisions.choice.read` to `{mount}/dashboard`; the observer checks this final route. Its two metadata observations now run inside the original registered `CurrentChoiceFence.run` and require its final snapshot publication check. The exact nested persistence transaction/transactionAll/currentSnapshots methods are pinned across awaited reads. The 24 decision health tests now use the real isolated `openLocalStore` SQLite driver, preserving its transaction and snapshot methods; hooks only schedule revocation/corruption. Negative cases remove original snapshot support or replace a nested persistence method and must not publish readiness. The parent CLI gate must run these tests; no execution was performed locally.
-
-UI37 optional cycle/recipient selectors now leave loading when their own operation is unadmitted. The journey records those exact operation states and distinguishes unavailable from the empty response of an admitted producer. These optional Collaboration source paths are not claimed as positively qualified when no operational observation is published. The primary question preparation remains positively asserted through the original producer.
-
-## Consolidated verification after the native-read repairs
-
-Gate9, run [44963051950](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963051950), passed all 12 consolidated checks. Its official job log records all 24 decision-reading-health cases and all 19 analysis-reading-health cases passing, including the real SQLite fence, operation/namespace denials, revocation, dependency replacement and lease finalization. The five browser-condition command codec cases also remain in the passing gate.
-
-The follow-up fixture-only commit `96877de60ddecf1b60ad4eca96353c34ec4080e3` adds exact `Snapshot`/`BlobTransaction` callback annotations and explicitly guards the original SQLite snapshot methods. Full CLI audit5, run [44963827656](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963827656), then returned exactly the seven diagnostics already recorded on dev, with zero new diagnostics after normalizing only locations/timestamps. The full CLI audit itself remains failing on that established baseline; it is not represented as a clean typecheck.
-
-Decisions7, run [44963049158](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963049158), reached the real host with all four new read/preparation observations ready. Both actual current-choice GETs returned HTTP 200 (9,142ms and 9,878ms). UI34 completed its retained draft/review/save/CAS sequence; UI35 proved the authorized empty case and actual historical choice, comparison and 320px reflow. Console and page error collections were empty at failure.
-
-The run stopped in UI36 because an exact getByLabel selector for its nested select included option text and never located the filter. The failure was not a read timeout. The test now targets the named combobox; the existing visible labels explicitly name the selects in UI36, UI37 and UI41. Page actions have a 15-second default timeout, while the explicitly awaited original command/read responses retain a 40-second bound and the overall 780-second limit is unchanged. The source projection also proves no derived missing categories: unresolved migration coverage is an event divergence. The assertion now preserves that distinction by checking the original empty derived array, its empty message and the actual coverage divergence.
-
-The four successful official previews were visually inspected: UI34 desktop editor and 390px review, UI35 desktop empty choice and 320px comparison. The source-reference disclosure is compact, action targets and focus are readable, and no horizontal overflow is present. These four states are approved within the captured dark-theme scope. UI36 onward and the complete theme/locale matrix await the next journey; the eight-surface visual review is not complete.
-
-## Decisions8: closed analysis inputs require a bound native route
-
-[Run 44964845981](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964845981) passed the functional steps through UI40: the UI36 combobox/filter and source-detail assertions, the original UI37 question preparation, and the UI38 historical choice all completed. Three actual current-choice GETs returned HTTP 200 (7,411ms, 7,800ms and 3,999ms); the failure diagnostic still reported no console or page errors. UI41 then reached its unavailable state before any choices POST; its explicit 40-second response wait failed.
-
-The A15 inputs in packages/schema/src/sucafina/analyses.ts are closed and contain no surface field. Their effective registry entries still used {mount}/{surface}. F02 only resolves that placeholder from an admitted input.surface, so the otherwise valid choices({}) call failed route construction before HTTP. The original CLI analysis HTTP handler explicitly accepts the dashboard path and closes the choices body to action; the original history handler accepts only action and caseRef. Adding surface to those bodies or relaxing F02 would be incorrect.
-
-The integration agent owns the source-backed registry override for all seven A15 operations to {mount}/dashboard, retaining every original method, effect, query, action discriminator and request limit. This worker follow-up updates the two-read health guard to require that exact effective dashboard route. It must be integrated together with the registry override. It adds no analysis prepare/start/cancel readiness or grant and changes no schema, input or producer. The existing 19 health tests continue to require the real effective registry and original source/authority fences; no test literal needed adjustment. Decisions9 will qualify the combined route repair on the newly incorporated dev composition.
-
-## Visual refinement from the actual Decisions8 captures
-
-The UI36 source-detail capture exposed grid stretching: its short missing-category message was vertically separated from its heading by the much taller divergence column, and the Open status chip filled a grid track like an input. The scoped stylesheet now starts gap-section content at the top and keeps that status badge at its intrinsic width using native line/text tokens.
-
-The UI37 review capture exposed long technical references beside the question and criterion. The visible question, criterion description and recipient remain primary; the complete source references, criterion/recipient IDs and evidence levels now live in the existing localized Source scope disclosure with the actual source count. The journey opens it and asserts every original source reference plus the selected criterion ID before closing it. No source value, preparation input, draft lifecycle or action changes.
-
-The integration branch has since incorporated dev through 3ce1acd0. [Gate12 run 44965223657](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657), snapshot dacaec3b11b0dce7244268f7de1ade2a6df0aece on root 331cafc50bee2112f6366ff428658de938c6f58e, passed all 13 checks including the full CLI typecheck. This supersedes the earlier seven-diagnostic baseline limit after the upstream type fixes. The following consolidated gate and Decisions9 will cover the combined A15 route repair and these visual refinements.
-
-## Decisions9: functional progress, source loss and UI41 finishing
-
-[Gate13 run 44966016316](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966016316), snapshot 0849344a07285ae4eef3b362817f9fe8d017d6fb on product head 250e8faf80931c807a86c5f06c0e797de469adca, passed all 14 consolidated checks and 87 regression cases, including full CLI/app/E2E typechecks, the 24 decision health cases and the 19 analysis health cases. The effective dashboard route is included in this evidence.
-
-[Decisions9 run 44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444), snapshot 8cfd3eb141d31d18ee2b32dda629d67e7d44c10a on the same product head, passed the eight functional sequences. UI41 made the original choices/history POST reads, showed the actual authorized cases and analysis catalog, and retained the genuine absence of an admitted model. The EN dark desktop captures preserve those positive states. Visual inspection confirms that the UI36 gap/pill and UI37 source-disclosure refinements worked.
-
-The journey later failed. UI41's light desktop capture at 00:27:41Z already had no authorized cases; narrow and Portuguese captures then showed source refusals. Current-choice returned 200 through 00:27:16Z and 403 from 00:27:55Z. Console diagnostics contained original 503/403 responses; pageErrors was empty. These later captures are not approved visual evidence. The session/lease/source cause was not established by that log, so no expiration is asserted and the test is not split or its limits enlarged to hide the failure.
-
-The isolated E2E follow-up f64ca83a21d53916c9e8827ee5f6e5f7b649d5fd requires actual source-backed content on every screen before a positive capture. It observes case/current-choice/analysis read timings, stops at the first failed source and records only producer status/reason codes and original operation availability. Fresh read-only probes cannot turn the first failure into a pass. Decisions10 uses the unchanged product composition for this diagnosis.
-
-The positive UI41 dark capture also showed its editor extending across the full frame and touching the history section. A separate visual-only follow-up caps that editor at the native 760px stage, gives the authorized case its own full row, places analysis/model selectors in two columns, and adds 24px before history. The existing narrow single-column rule and hidden draft fields remain. This new CSS requires a subsequent real visual run; it is not represented by the Decisions9 captures.
-
-## 2026-11-22 — identified source refusal and scoped correction
-
-Decisions11 on product `218a5ee39935336c88abeb92b0a4d2cc980f21de` stopped at the first missing source-backed UI41 light state. Its original GET probe returned `503 unavailable / procurement-case-read-changed`; current-choice returned `403 denied / current-choice-case-unavailable`. The original context and required read operations remained available. Gate15 passed all fourteen checks and 87 regression cases on that product, including full CLI typechecking. UI41 EN/dark/desktop positively verifies the f9 editor width/grid/history spacing; it is partial evidence, not a complete gallery.
-
-Two diagnostic startup attempts were invalid: Decisions10 used an incorrect Playwright `request.url` member (root corrected it to `request.url()`); Decisions12 contained one extra parenthesis in the temporary stdout relay. Neither attempt is evidence about the business source.
-
-The corrected disposable diagnostic, [Decisions13](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970679515), used snapshot `7f49e5597c29f95f8f432a8ce0875d55a6aeef9e` over product218, with unchanged full browser assertions. Fixed enums proved `origin:global`, then `current:selection-expired` at both transaction entry and final egress. No request, identity or exception failure was reported. First expiry occurred at 01:25:44Z, after the last seed decision-controls response at 01:20:41Z.
-
-The writer is explicit in [decision-controls.ts at product218](https://github.com/gustavomhss/Orchestra-SF/blob/218a5ee39935336c88abeb92b0a4d2cc980f21de/apps/cli/src/sucafina-product/decision-controls.ts): its default Procurement evidence picker admits `sf_work_list` and calls the original `procurementSelections.create` for the case horizon, including a Planner case. Its finally block releases the collection reference and UI lease. The separate per-principal selected-period Map in BusinessServices retains the original five-minute value. The old case-read wrapper applied that unrelated selection's expiry before establishing whether the case entered the Procurement first-application path.
-
-Worker correction `4978956b0ceeceec66df7c8f942c7495e83fa3e6` preserves the common Request/signal/header, binding, input, authority and C08 checks. The original selection/expiry/reader fence is required after the same existing planned-Procurement eligibility predicate and at its final egress. Other cases retain the original canonical reader outside the SQLite scope. The proof, source materialization, revalidations, final receipt checks, catch behavior and canonical refusal are unchanged. Decision-controls, its selection writer, the five-minute TTL and the original seed are unchanged. All four diagnostic/relay files remain confined to disposable diagnostic branches; no logging is included in the product correction.
-
-### New focused regression and remaining qualification
-
-`apps/cli/test/sucafina-case-read-scope.test.ts` adds two scoped tests, written but not locally executed:
-
-- A real SQLite/source-persistence/ProductAuthority/BusinessServices/Atlas composition issues a Planner source and drafts a case through the original producers. It creates the real global Procurement selection under a consumed `sf_work_list` lease, releases the collection as decision-controls does, advances only the controlled test clock, then uses fresh original leases. It checks unchanged case/evidence/C08 revision after expiry and after replacing the unrelated period.
-- Real C08 and original authority surround the wrapper's negative boundaries. A clearly labeled structural planned-Procurement case fixture tests expiry, replacement, reader identity and final egress; each refusal asserts an actual successful C08 read and zero canonical case-reader calls. Canonical Planner controls prove that the harness delegates normally. Request identity, headers, input, lease closure, abort and authorization revocation remain refused. This is a guard regression, not proof that a C12 preparation, approval, application or receipt was emitted.
-
-The second test's planned change and unavailable preview are structural fixtures only. No existing small canonical positive first-application test was found during the focused review; no such coverage is claimed. The full eligible producer body remains unchanged, and populated application/recovery/receipt paths still require their own admitted journey.
-
-The final browser spec preserves every earlier assertion/capture and the root URL-method correction. It adds `UI35-dark-320-comparison-qualification-test-data`, scrolling the existing incomplete-comparison notice into the viewport and asserting that visibility. The expected no-model capture set is now 41 images. Producer-supplied Portuguese reasons remain literal in an English UI; they are source data, not newly translated UI copy.
-
-[Decisions14](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219), snapshot `58def9db4b3aa4c156a041eb86fbbd41de95bba7`, tests the correction on root product `e5494ff044ee46cdd80c1d754131c284538d4d31` / upstream dev2eeb. It was still running when this checkpoint was written. Final acceptance requires its complete source-positive matrix, final screenshot review/gallery, and the root technical gate including the new focused regression. No partial or diagnostic capture is promoted as the final gallery.
+The final gallery/docs commit does not change the browser-qualified product or test assertions. Requalification is needed only if integration changes product behavior or the tested contracts; the parent coordinates that decision.
