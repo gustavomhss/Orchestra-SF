@@ -981,9 +981,29 @@
     "measuredFinding": "Only2458ms accumulated in116502 calculated calls. Native pure calculation is not the dominant300s cost. Source/guard boundaries account for larger inclusive times, but inner copying/hashing/authority costs are not separately measured."
   },
   "candidateReadonlyBridge": {
-    "status": "candidate only; not integrated or tested in this map",
+    "status": "Candidate only, not integrated into the mapped runtime. Technical attempt1 completed with10new groups passing, CLI/E2E types passing,53regression passes/1ancestry deadline failure/2original UID skips; combined gate failed, including a raw-log guard finding. No installed result or latency claim.",
     "runtimeCandidate": "5bf37fc96c0d42cff073eee754bdc9a5543d85fa",
     "testCandidate": "a5dbf5f712136d73bb752f3fb84aa812d4332dff",
-    "scope": "Exact CurrentChoice-to-LocalStore readonly query and generic/Planner consumers; calculation root reobserves exact root identity in legitimate child scopes. No latency or installed pass claim."
+    "scope": "Exact CurrentChoice-to-LocalStore readonly query and generic/Planner consumers; calculation root reobserves exact root identity in legitimate child scopes. No latency or installed pass claim.",
+    "technical": {
+      "receipt": "readonly-authority/attempt-01.json",
+      "run": 45006460499,
+      "snapshot": "37417cdeda06111bec608e4839d458e49b39ae25",
+      "testJob": 137159049164,
+      "cleanupJob": 137160221040,
+      "conclusion": "failure",
+      "cleanupConclusion": "success",
+      "newGroupsPass": 10,
+      "regressions": {
+        "pass": 53,
+        "fail": 1,
+        "skip": 2,
+        "assertions": 974
+      },
+      "cliTypes": "success",
+      "e2eTypes": "success",
+      "guardrails": "failure-raw-log-file",
+      "ancestryCause": "unassigned pending unchanged-source control"
+    }
   }
 }
