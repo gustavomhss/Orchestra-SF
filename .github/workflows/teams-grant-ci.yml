@@ -1,0 +1,109 @@
+name: teams-checkpoint-grant
+
+on:
+  push:
+    branches: [teams-grant-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_OMNI_CONTROL: declared
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact checkpoint grant source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "2c27173bb983e8a609312795cbfa3068104e7cc6"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Record source and changed paths
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "2c27173bb983e8a609312795cbfa3068104e7cc6"
+          test "$(git rev-parse 'HEAD^{tree}')" = "ae97fdcefa5b0148fa8faad4086f196a0bb23e34"
+          mkdir -m 700 "$RUNNER_TEMP/teams-grant-controls"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/teams-grant-controls/refs.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/teams-grant-controls/workflow-sha.txt"
+          git diff --name-only "$(git merge-base HEAD origin/dev)" HEAD > "$RUNNER_TEMP/teams-grant-controls/changed-paths.txt"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD
+          while IFS= read -r file; do sha256sum "$file"; done < "$RUNNER_TEMP/teams-grant-controls/changed-paths.txt" > "$RUNNER_TEMP/teams-grant-controls/source.sha256"
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+      - name: Own the invocation nonce
+        run: |
+          set -euo pipefail
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          printf '%s\n' "$nonce" > "$RUNNER_TEMP/teams-grant-controls/omni-nonce.txt"
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$nonce" >> "$GITHUB_ENV"
+      - name: Exercise minimal private grants and original checkpoint/recovery boundaries
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          GITHUB_ACTIONS=false bun test \
+            ./Sucafinav1/test/teams-profile/private-session-policy.test.ts \
+            ./Sucafinav1/test/corporate-checkpoint-http.test.ts \
+            ./Sucafinav1/test/local-backups.test.ts \
+            ./Sucafinav1/test/corporate-restore-retention.test.ts \
+            ./Sucafinav1/test/corporate-recovery-register.test.ts \
+            --timeout 30000 --reporter=junit "--reporter-outfile=$RUNNER_TEMP/teams-grant-controls/report.xml" \
+            2>&1 | tee "$RUNNER_TEMP/teams-grant-controls/bun.log"
+      - name: Typecheck module
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/teams-grant-controls/typecheck.log"
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/teams-grant-controls/guards.log"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Verify original test report and write bounded component receipt
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, xml.etree.ElementTree as ET
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "teams-grant-controls"
+          cases = list(ET.parse(root / "report.xml").getroot().iter("testcase"))
+          assert cases and not any(c.find("failure") is not None or c.find("error") is not None for c in cases)
+          skipped = [c.attrib.get("name") for c in cases if c.find("skipped") is not None]
+          assert skipped == ["foreign-owned existing root rejects (requires root fixture privileges)"]
+          selected = [c for c in cases if c.attrib.get("name", "").startswith("corporate recovery ")]
+          assert len(selected) == 8 and not any(c.find("skipped") is not None for c in selected)
+          policy = [c for c in cases if c.attrib.get("name", "").startswith("private-session-policy:")]
+          assert len(policy) == 5 and not any(c.find("skipped") is not None for c in policy)
+          retained = [c for c in cases if c.attrib.get("name", "").startswith("external restore comparison rejects")]
+          assert len(retained) == 1 and retained[0].find("skipped") is None
+          nonce = (root / "omni-nonce.txt").read_text().strip()
+          verdicts = re.findall(r"omni positive control \[" + re.escape(nonce) + r"\]: ([^\r\n]+)", (root / "bun.log").read_text())
+          assert len(verdicts) == 1 and (verdicts[0].startswith("pass ") or verdicts[0].startswith("not applicable "))
+          receipt = {"schema": "sf-teams-checkpoint-grant-controls-v1", "sourceSha": "2c27173bb983e8a609312795cbfa3068104e7cc6",
+              "sourceTree": "ae97fdcefa5b0148fa8faad4086f196a0bb23e34", "workflowSha": os.environ["GITHUB_SHA"],
+              "runId": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "tests": len(cases), "privateGrantCases": len(policy), "newPolicyCases": len(selected), "originalRetentionCases": len(retained), "skipped": skipped,
+              "class": "PRIVATE_GRANT_AND_CHECKPOINT_RECOVERY_COMPONENT_CONTROLS",
+              "integrationBaseSha": "51278d55623f69f950785a9de8b8f1d0082bf62a", "identityProvider": "CONTROLLED_RECOVERY_ADMISSION",
+              "productSeed": "DECLARED_SQLITE_FIXTURE", "policyMutations": "ORIGINAL_POLICY_STORE_SQLITE",
+              "installedTeamsProof": False, "independentApproval": False,
+              "finalCandidate": False, "g05Closed": False, "g10Closed": False, "productionCutover": False,
+              "hashes": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps({"tests": len(cases), "newPolicyCases": len(selected), "originalRetentionCases": len(retained), "skipped": skipped}))
+          PY
+      - name: Preserve original evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: teams-checkpoint-grant-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/teams-grant-controls
+          if-no-files-found: error
+          retention-days: 14
