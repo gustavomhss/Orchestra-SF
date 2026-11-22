@@ -393,9 +393,8 @@ export function createSfProductState(input: {
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
         const selection = namespace === "cases" ? caseReads.get(read) : undefined
-        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
-        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
-          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+        const cases = selection ? caseIdentityMap(state) : undefined
+        const selected = selection && cases ? Object.getOwnPropertyDescriptor(cases, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined

@@ -1,3 +1,4 @@
+import { types } from "node:util"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { selectSfCase } from "../host-binding/state-provider.ts"
 import type { DecisionCase, CostCoverageAssessment, CostCoverageBasis } from "../contracts/decisions.ts"
@@ -26,7 +27,15 @@ export function createDecisionCoverageAccess(input: {
       if (!id.trim() || !incarnation.trim() || !alternativeId.trim() || !Number.isSafeInteger(version) || decisionCoverageRef({ id, incarnation }, alternativeId, version) !== reference) return { status: "needs-input", reason: "invalid-coverage-reference" }
       const source = input.host.requestFor(context)
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "coverage-access-unavailable" }
-      const read = async () => input.state.read(source, "cases", selectSfCase(id, context))
+      const read = async () => {
+        // Opaque contexts must not acquire new descriptor/freeze traps before C08 admission.
+        const binding = context && typeof context === "object" && !types.isProxy(context)
+          ? Object.getOwnPropertyDescriptor(context, "binding") : undefined
+        return input.state.read(source, "cases", binding && Object.hasOwn(binding, "value") &&
+          binding.value && typeof binding.value === "object" && !types.isProxy(binding.value)
+          ? selectSfCase(id, context)
+          : (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined)
+      }
       const current = await read()
       if (current.status !== "ok") return { status: "unavailable", reason: "coverage-unavailable" }
       const decision = current.value
