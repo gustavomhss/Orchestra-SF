@@ -18,7 +18,8 @@ test("pinned bicep compiles the Azure foundation", { timeout: 120_000 }, async (
   const template = compileBicep(await tool(pins().bicep, "bicep"), main)
   assert.ok(template.resources?.length > 0)
   assertParameters(template)
-  assertTopology(template)
+  assertTopology(mvpTemplate(template))
+  assertQualificationNetwork(template)
   assertBackup(template)
   assertCloud(template, script)
   assertBootstrap(script)
@@ -55,7 +56,7 @@ function variableValue(template, expression) {
 
 function assertParameters(template) {
   const parameters = template.parameters
-  assert.deepEqual(Object.keys(parameters).sort(), ["adminSshPublicKey", "adminUsername", "dataDiskSizeGiB", "imageVersion", "location", "vmSize"])
+  assert.deepEqual(Object.keys(parameters).sort(), ["adminSshPublicKey", "adminUsername", "cloneAdminEgressCidrs", "dataDiskSizeGiB", "imageVersion", "location", "networkProfile", "qaHttpsIngressCidrs", "vmSize"])
   assert.equal(parameters.location.defaultValue, "[resourceGroup().location]")
   assert.deepEqual(parameters.vmSize.allowedValues, ["Standard_D2as_v5", "Standard_D4as_v5"])
   assert.equal(Object.hasOwn(parameters.vmSize, "defaultValue"), false)
@@ -63,6 +64,13 @@ function assertParameters(template) {
   assert.equal(parameters.adminSshPublicKey.type, "securestring")
   assert.equal(Object.hasOwn(parameters.adminSshPublicKey, "defaultValue"), false)
   assert.equal(parameters.adminUsername.defaultValue, "sfadmin")
+  assert.deepEqual(parameters.networkProfile.allowedValues, ["mvp", "g08-qa", "g10-source", "g10-clone"])
+  assert.equal(parameters.networkProfile.defaultValue, "mvp")
+  for (const name of ["qaHttpsIngressCidrs", "cloneAdminEgressCidrs"]) {
+    assert.equal(parameters[name].type, "array")
+    assert.deepEqual(parameters[name].defaultValue, [])
+    assert.equal(parameters[name].maxLength, 32)
+  }
   assert.deepEqual(
     [parameters.dataDiskSizeGiB.type, parameters.dataDiskSizeGiB.defaultValue, parameters.dataDiskSizeGiB.minValue, parameters.dataDiskSizeGiB.maxValue],
     ["int", 64, 32, 1024],
@@ -73,6 +81,69 @@ function assertParameters(template) {
   const rendered = JSON.stringify(template.outputs)
   assert.equal(Object.values(template.outputs).every((output) => output.type.toLowerCase() !== "securestring"), true)
   assert.equal(/listKeys|listSecrets|password/i.test(rendered), false)
+}
+
+
+function mvpTemplate(template) {
+  // Select only the original, literal MVP branch. Do not evaluate arbitrary ARM.
+  const nsg = typed(template, "Microsoft.Network/networkSecurityGroups")
+  assert.equal(nsg.length, 1)
+  assert.equal(nsg[0].properties.securityRules,
+    "[if(equals(parameters('networkProfile'), 'mvp'), variables('mvpSecurityRules'), if(equals(parameters('networkProfile'), 'g10-clone'), concat(if(empty(parameters('cloneAdminEgressCidrs')), createArray(), variables('cloneAdminRules')), variables('cloneDenyRules')), variables('qaSecurityRules')))]")
+  assert.equal(Array.isArray(template.variables.mvpSecurityRules), true)
+  assert.deepEqual(template.variables.mvpSecurityRules.map((rule) => [rule.name, rule.properties.priority]), [
+    ["allow-http", 100], ["allow-https", 110], ["deny-inbound", 4096],
+  ])
+  const selected = structuredClone(template)
+  typed(selected, "Microsoft.Network/networkSecurityGroups")[0].properties.securityRules = template.variables.mvpSecurityRules
+  return selected
+}
+
+function assertQualificationNetwork(template) {
+  const rules = template.variables
+  assert.equal(Array.isArray(rules.qaSecurityRules), true)
+  assert.equal(rules.qaSecurityRules.length, 2)
+  const https = rules.qaSecurityRules[0]
+  assert.equal(https.name, "allow-qa-https")
+  assert.deepEqual(https.properties, {
+    priority: 110, access: "Allow", direction: "Inbound", protocol: "Tcp",
+    sourceAddressPrefixes: "[parameters('qaHttpsIngressCidrs')]",
+    sourcePortRange: "*", destinationAddressPrefix: "*", destinationPortRange: "443",
+  })
+  assert.deepEqual(rules.qaSecurityRules[1], rules.mvpSecurityRules[2])
+  assert.equal(Array.isArray(rules.cloneAdminRules), true)
+  assert.equal(rules.cloneAdminRules.length, 1)
+  assert.deepEqual(rules.cloneAdminRules[0], {
+    name: "allow-clone-admin-https",
+    properties: {
+      priority: 100, access: "Allow", direction: "Outbound", protocol: "Tcp",
+      sourceAddressPrefix: "*", sourcePortRange: "*",
+      destinationAddressPrefixes: "[parameters('cloneAdminEgressCidrs')]",
+      destinationPortRange: "443",
+    },
+  })
+  assert.equal(Array.isArray(rules.cloneDenyRules), true)
+  assert.equal(rules.cloneDenyRules.length, 3)
+  assert.deepEqual(rules.cloneDenyRules[0], rules.mvpSecurityRules[2])
+  for (const [index, name, priority, destination] of [
+    [1, "deny-platform-dns", 200, "AzurePlatformDNS"],
+    [2, "deny-outbound", 4096, "*"],
+  ]) {
+    assert.deepEqual(rules.cloneDenyRules[index], {
+      name,
+      properties: {
+        priority, access: "Deny", direction: "Outbound", protocol: "*",
+        sourceAddressPrefix: "*", sourcePortRange: "*",
+        destinationAddressPrefix: destination, destinationPortRange: "*",
+      },
+    })
+  }
+  // These rules override Azure's 65000+ inbound/outbound defaults. No broad allow is hidden above the fence.
+  assert.equal([...rules.qaSecurityRules, ...rules.cloneAdminRules, ...rules.cloneDenyRules]
+    .some((rule) => rule.properties.access === "Allow"
+      && /AzureCloud|VirtualNetwork|Internet/.test(JSON.stringify(rule.properties))), false)
+  assert.equal(typed(template, "Microsoft.Network/networkSecurityGroups/securityRules").length, 0)
+  assert.equal(resources(template).some((resource) => /locks|deploymentScripts|roleAssignments/i.test(resource.type)), false)
 }
 
 function assertTopology(template) {
