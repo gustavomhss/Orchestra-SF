@@ -1,5 +1,6 @@
 """Real filesystem/SQLite controls; these do not impersonate an installed Azure VM."""
-from datetime import datetime, timezone
+from contextlib import contextmanager
+from datetime import datetime, timedelta, timezone
 import hashlib
 import importlib.util
 import io
@@ -253,6 +254,171 @@ class CheckpointTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "post-cutover source C"):
             checkpoint.bind_releases({**reservation, "sourceRelease": wrong_source}, g07, source["sha"],
                                      {**installed, "archiveSha256": wrong_source["archiveSha256"]})
+
+    def admission_inputs(self, command="checkpoint", disposable=False):
+        # Root and private file admission are real; only IMDS is a component fixture.
+        reservation, _, _ = self.release_inputs()
+        return {
+            **reservation, "schema": "orchestra-sf.g10-reservation.v1", "action": command,
+            "environment": "isolated-qa", "disposable": disposable, "productionCutover": False,
+            "authorizationRef": "COMPONENT_FIXTURE_ONLY", "authorizedBy": "COMPONENT_FIXTURE_ONLY",
+            "expiresAtUtc": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
+            "vmResourceId": "/subscriptions/component/resourceGroups/component/providers/Microsoft.Compute/virtualMachines/source",
+            "fqdn": "component.invalid",
+        }
+
+    def test_checkpoint_admission_accepts_explicit_existing_and_disposable_sources(self):
+        for disposable in (False, True):
+            with self.subTest(disposable=disposable):
+                reservation = self.admission_inputs(disposable=disposable)
+                file = self.root / ("checkpoint-" + str(disposable) + ".json")
+                checkpoint.write_private(file, reservation)
+                original = file.read_bytes()
+                self.assertEqual(file.stat().st_uid, 0)
+                self.assertEqual(stat.S_IMODE(file.stat().st_mode), 0o600)
+                with patch.object(checkpoint, "azure_identity", return_value=reservation["vmResourceId"].lower()) as imds:
+                    admitted, observed = checkpoint.admission(file, "checkpoint")
+                imds.assert_called_once_with()
+                self.assertEqual(admitted, reservation)
+                self.assertIs(admitted["disposable"], disposable)
+                self.assertEqual(observed["reservationSha256"], hashlib.sha256(original).hexdigest())
+                self.assertEqual(observed["vm"]["resourceId"], reservation["vmResourceId"].lower())
+                self.assertEqual(file.read_bytes(), original)
+        self.assertEqual(list(self.destination.iterdir()), [])
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_clone_admission_still_requires_a_disposable_destination(self):
+        for disposable in (True, False):
+            with self.subTest(disposable=disposable):
+                reservation = self.admission_inputs("verify-clone", disposable)
+                file = self.root / ("clone-" + str(disposable) + ".json")
+                checkpoint.write_private(file, reservation)
+                with patch.object(checkpoint, "azure_identity", return_value=reservation["vmResourceId"].lower()) as imds:
+                    if disposable is True:
+                        admitted, _ = checkpoint.admission(file, "verify-clone")
+                        self.assertIs(admitted["disposable"], True)
+                        imds.assert_called_once_with()
+                    else:
+                        with self.assertRaisesRegex(ValueError, "action-bound isolated QA reservation"):
+                            checkpoint.admission(file, "verify-clone")
+                        imds.assert_not_called()
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_admission_refuses_missing_or_non_boolean_disposable_for_both_actions(self):
+        invalid = [
+            ("missing", None), ("null", None), ("zero", 0), ("one", 1),
+            ("float-zero", 0.0), ("float-one", 1.0), ("empty-string", ""),
+            ("false-string", "false"), ("true-string", "true"), ("list", []), ("object", {}),
+        ]
+        for command in ("checkpoint", "verify-clone"):
+            for name, value in invalid:
+                with self.subTest(command=command, value=name):
+                    reservation = self.admission_inputs(command, True)
+                    reservation["disposable"] = value
+                    if name == "missing":
+                        del reservation["disposable"]
+                    file = self.root / (command + "-" + name + ".json")
+                    checkpoint.write_private(file, reservation)
+                    with patch.object(checkpoint, "azure_identity") as imds:
+                        with self.assertRaisesRegex(ValueError, "action-bound isolated QA reservation"):
+                            checkpoint.admission(file, command)
+                        imds.assert_not_called()
+        self.assertEqual(list(self.destination.iterdir()), [])
+        self.assertEqual(list(self.clone.iterdir()), [])
+
+    def test_existing_source_still_requires_action_bound_QA_authorization(self):
+        reservation = self.admission_inputs()
+        cases = [
+            ("missing-" + key, {k: v for k, v in reservation.items() if k != key})
+            for key in ("schema", "environment", "action", "authorizationRef", "authorizedBy", "productionCutover")
+        ]
+        cases += [
+            ("changed-" + str(index), {**reservation, key: value})
+            for index, (key, value) in enumerate((
+                ("schema", "unknown"), ("environment", "production"), ("action", "verify-clone"),
+                ("authorizationRef", ""), ("authorizedBy", ""), ("productionCutover", True),
+                ("productionCutover", 0), ("productionCutover", None),
+            ))
+        ]
+        for name, changed in cases:
+            with self.subTest(name=name):
+                file = self.root / (name + ".json")
+                checkpoint.write_private(file, changed)
+                with patch.object(checkpoint, "azure_identity") as imds:
+                    with self.assertRaisesRegex(ValueError, "action-bound isolated QA reservation"):
+                        checkpoint.admission(file, "checkpoint")
+                    imds.assert_not_called()
+        self.assertEqual(list(self.destination.iterdir()), [])
+
+    def test_existing_source_still_requires_live_reservation_VM_and_exact_release_pins(self):
+        reservation = self.admission_inputs()
+        vm = reservation["vmResourceId"].lower()
+        cases = [
+            ("expired", {**reservation, "expiresAtUtc": "2000-01-01T00:00:00+00:00"}, vm, "expired"),
+            ("naive-expiry", {**reservation, "expiresAtUtc": "2099-01-01T00:00:00"}, vm, "expired"),
+            ("missing-expiry", {k: v for k, v in reservation.items() if k != "expiresAtUtc"}, vm, "isoformat"),
+            ("wrong-VM", reservation, vm + "-other", "not the reserved VM"),
+            ("candidate-sha", {**reservation, "candidate": {**reservation["candidate"], "sha": "invalid"}}, vm, "final C/T"),
+            ("candidate-tree", {**reservation, "candidate": {**reservation["candidate"], "tree": "invalid"}}, vm, "final C/T"),
+            ("candidate-tar", {**reservation, "archiveSha256": "invalid"}, vm, "final C/T"),
+        ]
+        cases += [
+            ("source-" + key, {**reservation, "sourceRelease": {**reservation["sourceRelease"], key: "invalid"}}, vm, "current source")
+            for key in ("sha", "archiveSha256", "manifestSha256")
+        ]
+        for name, changed, observed_vm, reason in cases:
+            with self.subTest(name=name):
+                file = self.root / (name + ".json")
+                checkpoint.write_private(file, changed)
+                with patch.object(checkpoint, "azure_identity", return_value=observed_vm):
+                    with self.assertRaisesRegex(ValueError, reason):
+                        checkpoint.admission(file, "checkpoint")
+        file = self.root / "unavailable-IMDS.json"
+        checkpoint.write_private(file, reservation)
+        with patch.object(checkpoint, "azure_identity", side_effect=ValueError("component IMDS unavailable")):
+            with self.assertRaisesRegex(ValueError, "component IMDS unavailable"):
+                checkpoint.admission(file, "checkpoint")
+        self.assertEqual(list(self.destination.iterdir()), [])
+
+    def test_existing_source_main_keeps_lock_and_maintenance_preflight_before_any_write(self):
+        reservation = self.admission_inputs()
+        file = self.root / "existing-source.json"
+        checkpoint.write_private(file, reservation)
+        events = []
+
+        @contextmanager
+        def locked():
+            events.append("lock-enter")
+            try:
+                yield
+            finally:
+                events.append("lock-exit")
+
+        def maintenance(fqdn):
+            self.assertEqual(events, ["lock-enter"])
+            self.assertEqual(fqdn, reservation["fqdn"])
+            raise ValueError("component maintenance refusal")
+
+        args = ["teams-checkpoint.py", "checkpoint", "--reservation", str(file),
+                "--g07-receipt", str(self.root / "not-read.json"), "--output-dir", str(self.destination)]
+        with patch.object(checkpoint.sys, "argv", args), \
+             patch.object(checkpoint, "azure_identity", return_value=reservation["vmResourceId"].lower()), \
+             patch.object(checkpoint, "installer_module") as installer, \
+             patch.object(checkpoint, "checkpoint_files") as backup, \
+             patch.object(checkpoint, "restore_reserved_clone") as clone:
+            installer.return_value.install_lock.side_effect = locked
+            installer.return_value.vm_preflight.side_effect = maintenance
+            with self.assertRaisesRegex(ValueError, "component maintenance refusal"):
+                checkpoint.main()
+            installer.assert_called_once_with()
+            installer.return_value.install_lock.assert_called_once_with()
+            installer.return_value.vm_preflight.assert_called_once_with(reservation["fqdn"])
+            installer.return_value.current_source.assert_not_called()
+            backup.assert_not_called()
+            clone.assert_not_called()
+        self.assertEqual(events, ["lock-enter", "lock-exit"])
+        self.assertEqual(list(self.destination.iterdir()), [])
+        self.assertEqual(list(self.clone.iterdir()), [])
 
     def clone_inputs(self, receipt, name):
         # These are component inputs only, never an observation of an Azure VM.
