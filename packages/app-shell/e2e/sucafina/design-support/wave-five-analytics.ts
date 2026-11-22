@@ -42,41 +42,47 @@ export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation
   expect(body.status).toBe("ok")
   return body.value
 }
-/** Report the actual native ctx.context reads without changing their admission. */
+/**
+ * Reopen the exact mounted ctx.context URL observed in the native journey.
+ * APIRequestContext retains its body across page navigations; collecting every
+ * CDP response body also collects requests cancelled by those navigations.
+ */
 export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
-  const reads: Promise<{ http: number; body: unknown; acquisitionFailure?: string }>[] = []
-  const onResponse = (response: Response) => {
-    if (response.request().method() !== "GET" || !new URL(response.url()).pathname.endsWith("/api/ui/context")) return
-    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body }))
-      .catch(() => ({ http: response.status(), body: undefined, acquisitionFailure: "native-context-body-unavailable" })))
+  const requests: string[] = []
+  const onRequest = (request: Request) => {
+    if (request.method() === "GET" && new URL(request.url()).pathname.endsWith("/api/ui/context"))
+      requests.push(request.url())
   }
-  page.on("response", onResponse)
+  page.on("request", onRequest)
   return async (stage: string, stop = false) => {
-    if (stop) page.off("response", onResponse)
-    expect(reads.length).toBeGreaterThan(0)
-    for (const pending of reads.splice(0)) {
-      const { http, body: raw, acquisitionFailure } = await pending
-      if (acquisitionFailure) console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, acquisitionFailure }))
-      expect(acquisitionFailure, "The actual native context body must be readable at its required diagnostic point").toBeUndefined()
-      const body = object(raw)
-      expect(http).toBe(200)
-      expect(body.status).toBe("ok")
-      const context = object(body.value)
-      expect(object(context.stamp)).toEqual(expect.objectContaining({
-        installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
-      }))
-      const resources = array(context.availability).map(object)
-        .filter((resource) => resource.family === "portfolio" || array(resource.operations).map(object)
-          .some((operation) => operation.operationId === "decisions.controls.read"))
-        .map((resource) => ({ family: resource.family, resource: resource.resource, state: resource.state,
-          operations: array(resource.operations).map(object)
-            .filter((operation) => String(operation.operationId).startsWith("portfolio.") ||
-              operation.operationId === "decisions.controls.read")
-            .map((operation) => ({ operationId: operation.operationId, state: operation.state,
-              operational: operation.operational, reason: operation.reason ?? null })) }))
-      console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, status: body.status,
-        ownerBinding: "exact", resources }))
-    }
+    if (stop) page.off("request", onRequest)
+    expect(requests.length, "The native journey must request its original context").toBeGreaterThan(0)
+    const url = new URL(sourceText(requests.at(-1)))
+    expect(url.origin).toBe(owner.publicOrigin)
+    expect(url.pathname).toBe(owner.mount + "/api/ui/context")
+    expect(url.searchParams.size).toBe(3)
+    expect(url.searchParams.get("installationId")).toBe(owner.installationId)
+    expect(url.searchParams.get("projectId")).toBe(owner.projectId)
+    expect(url.searchParams.get("hostId")).toBe(owner.hostId)
+    const response = await page.request.get(url.href)
+    const body = object(await response.json())
+    expect(response.status()).toBe(200)
+    expect(body.status).toBe("ok")
+    const context = object(body.value)
+    expect(object(context.stamp)).toEqual(expect.objectContaining({
+      installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+    }))
+    const resources = array(context.availability).map(object)
+      .filter((resource) => resource.family === "portfolio" || array(resource.operations).map(object)
+        .some((operation) => operation.operationId === "decisions.controls.read"))
+      .map((resource) => ({ family: resource.family, resource: resource.resource, state: resource.state,
+        operations: array(resource.operations).map(object)
+          .filter((operation) => String(operation.operationId).startsWith("portfolio.") ||
+            operation.operationId === "decisions.controls.read")
+          .map((operation) => ({ operationId: operation.operationId, state: operation.state,
+            operational: operation.operational, reason: operation.reason ?? null })) }))
+    console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http: response.status(), status: body.status,
+      acquisition: "authenticated-original-readback", ownerBinding: "exact", resources }))
   }
 }
 /** Bounded public response codes only; acquisition failures never create readiness. */

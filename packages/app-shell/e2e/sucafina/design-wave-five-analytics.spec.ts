@@ -400,6 +400,16 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     expect(requested.searchParams.get("referenceDigest")).toBe(selected.referenceDigest)
     const sourceLinks = array(object(await originalSourceResponse.json()).links).map(object)
     expect(sourceLinks.length).toBeGreaterThan(0)
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({
+      operation: "bi-source-original-destinations", selectedValueId: selected.valueId,
+      installedOrigin: owner.publicOrigin, installedMount: owner.mount,
+      links: sourceLinks.map((link) => {
+        const destination = new URL(sourceText(link.url), owner.publicOrigin + owner.mount + "/dashboard")
+        expect(destination.username).toBe("")
+        expect(destination.password).toBe("")
+        return { label: sourceText(link.label), url: destination.href }
+      }),
+    }))
     const navigation = catalog.getByRole("navigation", { name: "Authorized source links", exact: true })
     await expect(navigation).toBeVisible()
     await expect(navigation.getByRole("link")).toHaveCount(sourceLinks.length)
