@@ -1,5 +1,5 @@
 import type { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
-import type { SfExecutiveRecord } from "../../cross-links"
+import type { SfExecutiveRecord } from "../../cross-links/contract"
 
 type Signal = NonNullable<typeof SfDomainPageData.CAP01.Type.signals>[number]
 

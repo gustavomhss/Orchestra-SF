@@ -1,3 +1,4 @@
+import type { SfExecutiveRecord } from "./contract"
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
@@ -11,10 +12,7 @@ import { parseSfSignalPriorities } from "../dashboard/executive/signals"
  * label, note body, or a client-created authority token. These are only
  * candidate URLs; F01 must resolve/admit the actual destination again.
  */
-export type SfExecutiveRecord = Readonly<{
-  kind: "project" | "risk" | "stakeholder" | "topic"
-  ref: string
-}>
+export type { SfExecutiveRecord } from "./contract"
 export type SfExecutiveLink =
   | Readonly<{ kind: "agenda" | "projects" | "risks" | "stakeholders" | "topics" | "new-topic" }>
   | SfExecutiveRecord

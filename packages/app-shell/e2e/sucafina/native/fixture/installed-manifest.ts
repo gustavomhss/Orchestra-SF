@@ -1,4 +1,4 @@
-/** Original Microsoft pages -> closed private v2. Registration does not qualify a journey. */
+/** Original Microsoft pages -> a closed private manifest. Registration does not qualify a journey. */
 import path from "node:path"
 import { constants } from "node:fs"
 import { lstat, open, unlink } from "node:fs/promises"
@@ -6,8 +6,10 @@ import { Schema } from "effect"
 import { SfTeamContext } from "@orchestra/schema/sucafina/context"
 import type { Page } from "@playwright/test"
 import { privateText } from "../../../../../../script/sf-ci/g08-private-evidence.mjs"
-import { nativeTeamRef, serializeNativeManifest, validateNativeBoundaries, validateNativeInvocation, validateNativeManifest } from "./manifest-contract.ts"
-import type { NativeManifest, NativeTarget, NativeInvocation } from "./manifest-contract.ts"
+import { nativeTeamRef, validateNativeBoundaries, validateNativeInvocation } from "./manifest-contract.ts"
+import type { NativeTarget, NativeInvocation } from "./manifest-contract.ts"
+import { serializeInstalledNativeManifest, validateG08NativeBoundaries, validateInstalledNativeManifest } from "./g08-manifest-contract.ts"
+import type { InstalledNativeManifest as NativeManifest } from "./g08-manifest-contract.ts"
 import { observeNativeBinding, requireNativeInvocation, requirePrivateNativeRoot } from "./readiness.ts"
 import { nativeTargetInReservation, readNativeInstalledHost } from "./installed-host.ts"
 
@@ -40,13 +42,25 @@ export type NativeInstalledRegistration = Readonly<{
   scratchRoot: string; candidateSha: string; invocation: NativeInvocation
   target: NativeTarget; wrongServer: NativeTarget; wrongTeam: NativeTarget; wrongInstallation: NativeTarget
   actors: NativeActorPages
-  /** The original approved connection registry, not a callback returning env metadata. */
+  /** Observed original current-installation discovery, never a callback echoing plan metadata. */
   resolveApprovedConnection: (serverKey: string) => Promise<ApprovedConnection | undefined>
 }>
-export async function registerNativeInstalledManifest(input: NativeInstalledRegistration) {
+export type G08NativeInstalledRegistration = Omit<NativeInstalledRegistration, "wrongServer">
+/** Historical writer remains v2 and still requires the real foreign-server boundary. */
+export function registerNativeInstalledManifest(input: NativeInstalledRegistration) {
+  return registerObservedManifest(input, "sf2h.native-installed-manifest.v2")
+}
+export function registerG08NativeInstalledManifest(input: G08NativeInstalledRegistration) {
+  return registerObservedManifest(input, "sf-g08-native-installed-v1")
+}
+async function registerObservedManifest(
+  input: NativeInstalledRegistration | G08NativeInstalledRegistration, schema: NativeManifest["schema"],
+) {
   const root = await requirePrivateNativeRoot(input.scratchRoot)
   const host = await readNativeInstalledHost(root)
-  const boundaries = validateNativeBoundaries(input)
+  const boundaries = schema === "sf-g08-native-installed-v1" ? validateG08NativeBoundaries(input) :
+    "wrongServer" in input ? validateNativeBoundaries(input) : undefined
+  if (!boundaries) throw new Error("F04_REAL_HOST_BOUNDARIES_NOT_DISTINCT")
   nativeTargetInReservation(host, boundaries.target)
   const file = process.env.SF_NATIVE_INSTALLED_MANIFEST
   if (!file || path.dirname(file) !== root || path.resolve(file) !== file ||
@@ -64,8 +78,8 @@ export async function registerNativeInstalledManifest(input: NativeInstalledRegi
     if (value.authMode !== "microsoft" || value.stamp.principalRef !== host.plan.actors[names[index]!])
       throw new Error("F04_ORIGINAL_PRINCIPAL_NOT_RESERVED")
   }
-  const manifest = validateNativeManifest({
-    schema: "sf2h.native-installed-manifest.v2", candidateSha: input.candidateSha,
+  const manifest = validateInstalledNativeManifest({
+    schema, candidateSha: input.candidateSha,
     invocation: validateNativeInvocation(input.invocation), ...boundaries,
     actors: host.plan.actors, scratchRoot: root,
   })
@@ -76,9 +90,10 @@ export async function registerNativeInstalledManifest(input: NativeInstalledRegi
   const owned = await writeNativePrivate(root, name, manifest)
   try {
   const raw = await privateText(root, name, 65536)
-  if (raw !== serializeNativeManifest(manifest)) throw new Error("F04_MANIFEST_ROUND_TRIP_CHANGED")
+  if (raw !== serializeInstalledNativeManifest(manifest)) throw new Error("F04_MANIFEST_ROUND_TRIP_CHANGED")
   await writeNativePrivate(root, "native-context-observations.json", {
-    schema: "sf2h.native-context-observations.v2", candidateSha: manifest.candidateSha,
+    schema: manifest.schema === "sf2h.native-installed-manifest.v2" ?
+      "sf2h.native-context-observations.v2" : "sf-g08-native-context-observations-v1", candidateSha: manifest.candidateSha,
     invocation: manifest.invocation, profile: nativeTeamRef(manifest.target),
     contexts: Object.fromEntries(names.map((name, index) => [name, live[index]])),
   })
@@ -99,7 +114,8 @@ export async function readNativeContextObservation(manifest: NativeManifest) {
     Object.keys(value).sort().join() !== ["schema", "candidateSha", "invocation", "profile", "contexts"].sort().join() ||
     !value.contexts || typeof value.contexts !== "object" ||
     Object.keys(value.contexts).sort().join() !== ["requester", "holder", "denied", "dashboardAdmin"].sort().join() ||
-    raw !== JSON.stringify(value) + "\n" || value.schema !== "sf2h.native-context-observations.v2" ||
+    raw !== JSON.stringify(value) + "\n" || value.schema !== (manifest.schema === "sf2h.native-installed-manifest.v2" ?
+      "sf2h.native-context-observations.v2" : "sf-g08-native-context-observations-v1") ||
     value.candidateSha !== manifest.candidateSha || JSON.stringify(value.invocation) !== JSON.stringify(manifest.invocation) ||
     JSON.stringify(value.profile) !== JSON.stringify(nativeTeamRef(manifest.target)))
     throw new Error("F04_ORIGINAL_CONTEXT_OBSERVATION_BINDING_REQUIRED")

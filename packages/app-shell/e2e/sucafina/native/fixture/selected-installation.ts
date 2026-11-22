@@ -10,8 +10,10 @@ import { digest, privateText } from "../../../../../../script/sf-ci/g08-private-
 import { readSfTeamDomainIntent, resolveSfTeamDomainRoute } from "../../../../src/orchestra/chapters/sucafina/host/team-domain-route.ts"
 import { nativeCaseIntent, nativeRole, nativeSuiteCases, nativeSuiteCapability } from "./case-contract.ts"
 import type { NativeInstalledCase, NativeInstalledSuite } from "./case-contract.ts"
-import { nativeOwnerQuery, nativeTeamRef, validateNativeManifest, validateNativeTarget } from "./manifest-contract.ts"
-import type { NativeActor, NativeManifest, NativeTarget } from "./manifest-contract.ts"
+import { nativeOwnerQuery, nativeTeamRef, validateNativeTarget } from "./manifest-contract.ts"
+import type { NativeActor, NativeTarget } from "./manifest-contract.ts"
+import { validateInstalledNativeManifest as validateNativeManifest } from "./g08-manifest-contract.ts"
+import type { InstalledNativeManifest as NativeManifest } from "./g08-manifest-contract.ts"
 import { nativeJourneyEntryHref, requireNativeJourney } from "./journeys.ts"
 import type { NativeJourney, NativeJourneyIntent } from "./journeys.ts"
 import { observeNativeBinding, nativeTeamHeaders } from "./readiness.ts"
@@ -274,7 +276,9 @@ export function nativeSuiteFromChapter(manifest: NativeManifest): NativeInstalle
       (chapter.pathname === entry.pathname || suite === "U15" && chapter.pathname.startsWith(entry.pathname + "/"))
   })
 }
-export function u15RegisteredEnvironment(bundle: NativeSelectedInstallation): Record<string, string> {
+export function u15RegisteredEnvironment(bundle: Pick<NativeSelectedInstallation, "suite"> & Readonly<{
+  selections: readonly Pick<NativeSuiteSelection, "caseId" | "href">[]
+}>): Record<string, string> {
   need(bundle.suite === "U15", "F04_U15_BUNDLE_REQUIRED")
   return Object.fromEntries([["list", "SF_NATIVE_U15_LIST_URL"], ["editable", "SF_NATIVE_U15_EDIT_URL"],
     ["denied", "SF_NATIVE_U15_DENIED_URL"], ["stale", "SF_NATIVE_U15_STALE_URL"], ["lost", "SF_NATIVE_U15_LOST_RESPONSE_URL"]]
