@@ -160,7 +160,23 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(array(actualSensitivity.evaluated).length).toBeGreaterThan(0)
   expect(actualSensitivity.comparisonStatus).not.toBe("complete")
   expect(actualSensitivity.threshold).toBeNull()
-  expect(object(actualSensitivity.thresholdEvidence).state).toBe("unavailable")
+  const thresholdEvidence = object(actualSensitivity.thresholdEvidence)
+  expect(["sampled", "unavailable"]).toContain(thresholdEvidence.state)
+  const thresholdPanel = sensitivity.locator(".sf-u19-threshold")
+  if (thresholdEvidence.state === "sampled") {
+    await expect(thresholdPanel).toContainText("Sampled threshold interval")
+    const interval = object(thresholdEvidence.interval)
+    expect(typeof interval.minimum).toBe("number")
+    expect(typeof interval.maximum).toBe("number")
+    expect(interval.minimum as number).toBeLessThanOrEqual(interval.maximum as number)
+    await expect(thresholdPanel).toContainText(String(interval.minimum) + " — " + String(interval.maximum))
+  } else {
+    await expect(thresholdPanel).toContainText("Threshold unavailable")
+    await expect(thresholdPanel).toContainText(sourceText(thresholdEvidence.reason))
+  }
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "sensitivity-threshold-readback",
+    comparisonStatus: actualSensitivity.comparisonStatus, exactThreshold: actualSensitivity.threshold,
+    thresholdEvidence }))
   await expect(sensitivity.locator(".sf-u19-table-scroll tbody tr")).toHaveCount(array(actualSensitivity.evaluated).length)
   const sensitivityWrite = writes.find((request) => isOperation(request, "decision-sensitivity-evaluate"))!
   expect(object(sensitivityWrite.postDataJSON()).caseRef).toEqual(caseRef)
