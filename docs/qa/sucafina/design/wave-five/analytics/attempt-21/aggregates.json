@@ -1,0 +1,35 @@
+{
+  "schema": "sf-canonical-callers-aggregates-v1",
+  "label": "Portfolio24",
+  "runId": 45037289486,
+  "availability": "UNAVAILABLE_SETUP_FAILED_BEFORE_TESTS",
+  "measurementAvailable": false,
+  "canonicalDigest": {
+    "surfaceBreakdown": [],
+    "totalCalls": null,
+    "totalSettled": null,
+    "totalPending": null,
+    "totalInclusiveMs": null
+  },
+  "authorityPrincipal": null,
+  "contextIntegrity": null,
+  "caseSelector": null,
+  "snapshots": {
+    "observedPeriodicRecords": 0,
+    "observedFinalRecords": 0,
+    "observedBucketRecords": 0,
+    "observedKeys": [],
+    "elapsedMs": [],
+    "pending": null,
+    "drops": null,
+    "diagnosticErrors": null,
+    "skippedThresholds": null
+  },
+  "interpretation": [
+    "Run tests was skipped after Setup Bun failed with HTTP403.",
+    "Zero emitted records describes log acquisition only; runtime counts/times are unknown, not zero.",
+    "The intended one-span canonical.digest surface populations have no measurements in this run; no population total can be summed.",
+    "No bucket count, timing, or caller distribution is copied from Portfolio23.",
+    "This infrastructure failure establishes no native product pass/failure, timeout, causal performance result, or qualification."
+  ]
+}

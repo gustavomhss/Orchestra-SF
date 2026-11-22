@@ -1,0 +1,60 @@
+{
+  "schema": "sf-design-diagnostic-manifest-v1",
+  "label": "Portfolio24",
+  "archiveAttempt": "attempt-21",
+  "runId": 45037289486,
+  "jobId": 137253750631,
+  "classification": "SETUP_FAILURE_BEFORE_NATIVE_TEST_EXECUTION",
+  "qaBase": "bba7932c542be82d8b36d88bd7315eb7c1eafdd0",
+  "snapshot": "912deed79badd8684298ae9c3799f8ef5f15e016",
+  "measurementAvailable": false,
+  "rawLogArchived": false,
+  "observedEmissionCounts": {
+    "profiler": 0,
+    "source": 0,
+    "context": 0,
+    "capture": 0,
+    "stage": 0,
+    "diagnostics": 0,
+    "previewChunks": 0,
+    "jpegs": 0,
+    "totalStructuredSfLines": 0
+  },
+  "runtimeMeasurementCounts": null,
+  "structuredParseErrors": 0,
+  "chunkAudit": {
+    "status": "NOT_APPLICABLE_NO_CHUNKS_EMITTED",
+    "expectedPartNumbering": "1-based",
+    "images": [],
+    "byteReadbackPerformed": false
+  },
+  "visualReview": {
+    "status": "NOT_PERFORMED_NO_IMAGES_EMITTED",
+    "imagesViewed": 0,
+    "record": "visual-review.json"
+  },
+  "artifactsMetadataPreserved": true,
+  "artifactIds": [
+    14759824514
+  ],
+  "setupErrorEvidence": {
+    "receipt": "receipt.json",
+    "timestamp": "2026-11-22T15:15:54.1523321Z",
+    "sourceLine": 252
+  },
+  "files": [
+    "README.md",
+    "receipt.json",
+    "manifest.json",
+    "profile.json",
+    "aggregates.json",
+    "source-events.json",
+    "visual-review.json"
+  ],
+  "limitations": [
+    "Setup failed before the selected native test. No runtime performance or product outcome was measured.",
+    "The artifact metadata alone does not establish that Playwright ran; Run tests is explicitly skipped.",
+    "No images or profiler events from another run are substituted.",
+    "No global rollup, code, CI request or runtime overlay is part of this archive."
+  ]
+}
