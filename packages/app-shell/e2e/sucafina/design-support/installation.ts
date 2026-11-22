@@ -21,7 +21,7 @@ export type DesignInstallation = {
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" = "one") {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" = "one") {
   const support = path.dirname(fileURLToPath(import.meta.url))
   const repository = path.resolve(support, "../../../../..")
   // Test listing must not initialize the process graph.
@@ -63,14 +63,17 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       }))
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
-        if (/^SF_DESIGN_STAGE (build|installation)$/.test(line)) console.info(line)
+        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
         Effect.sync(() => { diagnostic.tail = (diagnostic.tail + "\n" + redact(line)).slice(-8192) }),
       )))
       yield* Deferred.await(ready).pipe(Effect.raceFirst(child.exitCode.pipe(Effect.flatMap((code) =>
-        Effect.fail(new Error("Native design host exited before readiness (" + code + "): " + diagnostic.tail)),
+        Effect.promise(async () => {
+          const saved = await readFile(path.join(root, "failure.txt"), "utf8").catch(() => "")
+          throw new Error("Native design host exited before readiness (" + code + "): " + redact(saved || diagnostic.tail))
+        }),
       ))))
       if (!(yield* child.isRunning)) throw new Error("Native design host stopped after readiness")
       const file = path.join(root, "installation.json")

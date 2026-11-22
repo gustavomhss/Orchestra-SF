@@ -198,7 +198,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
         onRetryRead={model.refresh}>
         <Show when={model.view.page}>
           {(inventory) => (
-            <section class="sf-u46-compare" data-sf-surface="CAP23-compare">
+            <section class="sf-u46-compare" data-sf-surface="CAP23-compare" data-sf-polish="planner" data-sf-wave="four">
               <SfContextBar
                 state={model.view.state}
                 selection={[{ control: "year", optionId: year() === undefined ? null : String(year()) }]}
@@ -214,7 +214,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
               />
               <div class="sf-u46-compare-select">
                 <label for="sf-u46-base">{copy.t(key("sf.u46.source"))}
-                  <select id="sf-u46-base" class="mx-input" value={comparison.left}
+                  <select id="sf-u46-base" class="mx-input" aria-label={copy.t(key("sf.u46.source"))} value={comparison.left}
                     disabled={choices().length < 2}
                     onChange={(event) => {
                       const candidate = choices().find((v) => v.id === event.currentTarget.value && v.id !== comparison.right)
@@ -227,7 +227,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                   </select>
                 </label>
                 <label for="sf-u46-candidate">{copy.t(key("sf.u46.target"))}
-                  <select id="sf-u46-candidate" class="mx-input" value={comparison.right}
+                  <select id="sf-u46-candidate" class="mx-input" aria-label={copy.t(key("sf.u46.target"))} value={comparison.right}
                     disabled={choices().length < 2}
                     onChange={(event) => {
                       const candidate = choices().find((v) => v.id === event.currentTarget.value && v.id !== comparison.left)
@@ -247,7 +247,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                 onRetryRead={() => setComparison("request", (n) => n + 1)}>
                 <Show when={left() && right()}>
                   <div class="sf-u46-compare-content">
-                    <div class="sf-u46-compare-scroll">
+                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u46.compare"))} tabIndex={0}>
                       <table>
                         <caption>{copy.t(key("sf.u46.compare"))}</caption>
                         <thead>
@@ -268,7 +268,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         </tbody>
                       </table>
                     </div>
-                    <div class="sf-u46-compare-scroll">
+                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u06.monthly"))} tabIndex={0}>
                       <table class="sf-u46-monthly">
                         <caption>{copy.t(key("sf.u06.budget"))}</caption>
                         <thead>

@@ -395,8 +395,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       ],
     } : null
   }
-  const proposed = (): SfReviewSnapshot => {
-    const intent = screen.intent!
+  const proposed = (intent: Intent): SfReviewSnapshot => {
     const value = currentValue()
     const original = oldSnapshot()
     return {
@@ -430,11 +429,12 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       density="comfortable" layout="work" onLayoutMode={() => undefined}
     >
       <SfStatePanel state={state()} messageKey={key(message())} onRetryRead={refresh}>
-        <div class="sf-n20-fx" data-sf-surface="CAP22">
+        <div class="sf-n20-fx" data-sf-surface="CAP22" data-sf-polish="planner" data-sf-wave="four">
+          <div class="sf-n20-fx-reading" hidden={!!currentValue() || !!screen.intent}>
           <div class="sf-n20-fx-toolbar">
             <label>
               <span>{language.t("sf.cap22.version")}</span>
-              <select class="mx-input" value={screen.versionId ?? selectedVersion()?.id ?? ""}
+              <select class="mx-input" aria-label={language.t("sf.cap22.version")} value={screen.versionId ?? selectedVersion()?.id ?? ""}
                 disabled={screen.busy || screen.lockedOutcome}
                 onChange={(event) => changeVersion(event.currentTarget.value)}>
                 <For each={screen.page?.value.data.versions ?? []}>
@@ -473,7 +473,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 { id: "cur", labelKey: key("sf.cap22.field.code.label"), align: "start",
                   widthPolicy: { kind: "flex", minPx: 110, weight: 1 }, sortKey: "cur",
                   render: (row) => <bdi>{row.cur}</bdi> },
-                { id: "rate", labelKey: key("sf.cap22.field.rate.label"), align: "start",
+                { id: "rate", labelKey: key("sf.cap22.field.rate.label"), align: "end",
                   widthPolicy: { kind: "flex", minPx: 120, weight: 2 }, sortKey: "rate",
                   render: (row) => <span data-sf-rate-state={row.rate === null ? "missing" : "known"}><bdi>{rateText(row.rate)}</bdi></span> },
                 { id: "provider", labelKey: key("sf.cap22.field.provider.label"), align: "start",
@@ -522,6 +522,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </ul>
             </Show>
           </section>
+          </div>
           <Show when={(!screen.intent && !screen.lockedOutcome) ? currentValue() : undefined}>
             {(value) => (
               <form class="mx-card sf-n20-fx-editor" onSubmit={(event) => {
@@ -553,7 +554,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                 </label>
                 <label>
                   <span>{language.t("sf.cap22.field.observedAt.label")}</span>
-                  <input class="mx-input" type="text" placeholder="2026-11-17T12:00:00Z"
+                  <input class="mx-input" name="observedAt" type="text" placeholder="2026-11-17T12:00:00Z"
                     value={value().observedAt}
                     onInput={(event) => draft()?.edit({ ...value(), observedAt: event.currentTarget.value })} />
                 </label>
@@ -569,18 +570,18 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               </form>
             )}
           </Show>
-          <Show when={screen.intent}>
+          <Show when={screen.intent} keyed>
             {(intent) => (
               <section class="sf-n20-fx-review" aria-label={language.t(
-                intent().kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete",
+                intent.kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete",
               )}>
                 <SfChangeReview
                   operation={{
-                    ref: intent().ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
-                    label: { key: key(intent().kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete") },
+                    ref: intent.ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
+                    label: { key: key(intent.kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete") },
                     scope: { kind: "data", text: activeVersionId() ?? "" },
                   }}
-                  base={oldSnapshot()} current={oldSnapshot()} proposed={proposed()}
+                  base={oldSnapshot()} current={oldSnapshot()} proposed={proposed(intent)}
                   effects={[]}
                   coverage={{
                     state: "partial", summary: { key: key("sf.common.partial") },
@@ -588,21 +589,22 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   }}
                   blockingReasons={[]}
                   confirmation={{
-                    kind: "admitted", labelKey: key(intent().kind === "save" ? "sf.cap22.action.save" : "sf.cap22.action.delete"),
-                    purpose: intent().kind,
+                    kind: "admitted", labelKey: key(intent.kind === "save" ? "sf.cap22.action.save" : "sf.cap22.action.delete"),
+                    purpose: intent.kind,
                     binding: {
                       kind: "catalog-command",
-                      operationId: intent().kind === "save" ? "domain.command.CAP22.save" : "domain.command.CAP22.delete",
-                      version: { kind: "record", expectedVersion: intent().version },
+                      operationId: intent.kind === "save" ? "domain.command.CAP22.save" : "domain.command.CAP22.delete",
+                      version: { kind: "record", expectedVersion: intent.version },
                       confirmation: "presentation-only",
                     },
                   }}
+                  busy={screen.busy}
                   state={screen.busy ? "loading" : "ready"}
                   onConfirm={() => { void submit() }}
                   onRevise={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                   onCancel={() => { draft()?.setPhase("dirty"); setScreen("intent", null) }}
                 />
-                <Show when={intent().kind === "delete"}>
+                <Show when={intent.kind === "delete"}>
                   <p>{language.t("sf.cap22.delete-warning")}</p>
                 </Show>
               </section>

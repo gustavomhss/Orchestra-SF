@@ -1,9 +1,10 @@
 import { A } from "@solidjs/router"
 import { sfPlannerSavedViewHref } from "./planner-view"
+import { savedViewCommandSnapshot } from "./command-snapshot"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
-import { SfViewsList, SfViewsOpen } from "@orchestra/schema/sucafina/work"
+import type { SfViewsList, SfViewsOpen } from "@orchestra/schema/sucafina/work"
 import type { SfCallOptions } from "@orchestra/client/sucafina/transport"
 import type { SfEditScopeKey, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { Schema } from "effect"
@@ -13,6 +14,7 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../shared/change-review"
+import "./views.css"
 
 type ListEntry = Extract<Schema.Schema.Type<typeof SfViewsList.Output>, { status: "ok" }>["value"][number]
 type RecordView = Extract<Schema.Schema.Type<typeof SfViewsOpen.Output>, { status: "ok" }>["value"]
@@ -203,7 +205,12 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     } else if (props.route.kind === "entry") {
       if (surface) open(props.route.params.viewId, surface)
       else setScreen("detailState", "unavailable")
-    } else loadList()
+    } else {
+      // This route has no selected view. Only the list is loading; an editor
+      // spinner must not remain active after the original list has returned.
+      setScreen("detailState", "empty")
+      loadList()
+    }
     onCleanup(() => {
       listRequest?.abort()
       detailRequest?.abort()
@@ -257,9 +264,9 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     const generation = owner.generation()
     const revision = ready.context.stamp.accessRevision
     const operationRef = crypto.randomUUID() as SfOperationRef
-    const payload = kind === "save"
+    const payload = savedViewCommandSnapshot(kind === "save"
       ? { surface: record.view.surface, action: "save" as const, input: { view: state.value, expectedVersion: record.version } }
-      : { surface: record.view.surface, action: "remove" as const, input: { id: record.view.id, expectedVersion: record.version } }
+      : { surface: record.view.surface, action: "remove" as const, input: { id: record.view.id, expectedVersion: record.version } })
     // Ephemeral UI fingerprint, not an authority or substitute for host CAS.
     const bytes = new TextEncoder().encode(JSON.stringify(payload))
     const hash = await crypto.subtle.digest("SHA-256", bytes)
@@ -270,17 +277,14 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     setScreen({ mutation: "submitting", error: null })
     try {
       const client = createSfWorkClient(ready.transport)
-      const result = kind === "save"
-        ? await client["views.save"]({ surface: record.view.surface, action: "save", input: {
-            view: state.value, expectedVersion: record.version,
-          } }, options)
-        : await client["views.remove"]({ surface: record.view.surface, action: "remove", input: {
-            id: record.view.id, expectedVersion: record.version,
-          } }, options)
+      const result = payload.action === "save"
+        ? await client["views.save"](payload, options)
+        : await client["views.remove"](payload, options)
       if (request.signal.aborted || generation !== owner.generation() || revision !== current()?.context.stamp.accessRevision) return
       if (result.kind !== "response") {
         if (result.reason !== "aborted") console.error("SF saved view mutation failed", result.reason)
-        setScreen("mutation", result.reason === "contract-unavailable" || result.reason === "contract-mismatch" ? "failed" : "outcome-unknown")
+        const rejected = result.reason === "contract-unavailable" || result.reason === "contract-mismatch"
+        setScreen({ mutation: rejected ? "failed" : "outcome-unknown", error: rejected ? "unavailable" : null })
         editor?.setPhase("outcome-unknown")
         return
       }
@@ -318,7 +322,13 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
     }
   }
   const retryList = () => loadList()
-  const reviewLabel = () => reviewKind() === "remove" ? "sf.ui32.confirmRemove" : "sf.ui32.confirmSave"
+  const reviewLabel = (kind: "save" | "remove") => kind === "remove" ? "sf.ui32.confirmRemove" : "sf.ui32.confirmSave"
+  const reviewContext = () => {
+    const kind = reviewKind()
+    const record = source()
+    const draft = activeDraft()
+    return kind && record && draft ? { kind, record, draft } : undefined
+  }
   const reviewState = () => screen.mutation === "outcome-unknown" ? "outcome-unknown" as const
     : screen.mutation === "conflict" ? "conflict" as const : "ready" as const
   const closeReview = () => {
@@ -338,19 +348,21 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <section class="mx-card min-w-0" aria-labelledby="sf-u43-legacy">
+      <div class="sf-saved-views" data-sf-surface="UI32" data-sf-polish="planner" data-sf-wave="four" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
+      <section class="sf-saved-view-collection" aria-labelledby="sf-u43-legacy">
         <h2 id="sf-u43-legacy">{t(key("sf.ui32.legacy"))}</h2>
         <p>{t(key("sf.ui32.legacyDescription"))}</p>
         <Show when={props.route.kind === "list"}>
+          <div hidden={!!screen.detail || screen.detailState === "loading"}>
           <SfStatePanel
             state={screen.listState}
             messageKey={key(screen.listState === "empty" ? "sf.common.empty" : screen.listState === "loading" ? "sf.common.loading" : screen.listState === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
             onRetryRead={retryList}
           >
-            <ul class="list-none">
+            <ul class="sf-saved-view-list">
               <For each={screen.list}>
                 {(item) => (
-                  <li class="py-2">
+                  <li>
                     <Show when={"view" in item} fallback={<span>{t(key("sf.ui32.inaccessible"))}</span>}>
                       <button class="mx-btn" type="button" disabled={!operationReady("views.open")} onClick={() => {
                         if ("view" in item) open(item.view.id, item.view.surface)
@@ -363,24 +375,31 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
               </For>
             </ul>
           </SfStatePanel>
+          </div>
         </Show>
         <Show when={props.route.kind === "entry" || screen.detailState === "ready" || screen.detailState === "loading"}>
           <SfStatePanel
             state={screen.detailState}
             messageKey={key(screen.detailState === "loading" ? "sf.common.loading" : screen.detailState === "denied" ? "sf.common.noAccess" : screen.detailState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable")}
           >
-            <Show when={screen.detail}>
+            <Show when={screen.detail} keyed>
               {(record) => (
-                <section aria-labelledby="sf-u43-editor" class="min-w-0">
-                  <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
-                  <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record().view.page}</bdi></p>
-                  <p>{t(key("sf.ui32.version"), { version: record().version })}</p>
-                  <Show when={restoreHref(record().view)}>
+                <section aria-labelledby="sf-u43-editor" class="sf-saved-view-editor" hidden={!!reviewKind()}>
+                  <div class="sf-saved-view-heading">
+                    <h3 id="sf-u43-editor">{t(key("sf.ui32.legacyEditor"))}</h3>
+                    <Show when={props.route.kind === "list"}>
+                      <button type="button" class="mx-btn" disabled={screen.mutation !== "idle" || !!activeDraft()?.pendingOperation}
+                        onClick={() => setScreen({ detail: null, detailState: "empty" })}>{t(key("sf.common.returnToList"))}</button>
+                    </Show>
+                  </div>
+                  <p>{t(key("sf.ui32.sourcePage"))}: <bdi>{record.view.page}</bdi></p>
+                  <p>{t(key("sf.ui32.version"), { version: record.version })}</p>
+                  <Show when={restoreHref(record.view)}>
                     {(href) => <A class="mx-btn" href={href()}>{t(key("sf.ui32.openSource"))}</A>}
                   </Show>
                   <Show when={activeDraft()}>
                     {(state) => (
-                      <div class="flex flex-col gap-3">
+                      <div class="sf-saved-view-fields">
                         <label class="block">
                           <span class="block">{t(key("sf.ui32.name"))}</span>
                           <input
@@ -388,7 +407,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                             class="mx-input w-full"
                             maxLength={120}
                             value={state().value.title}
-                            disabled={!operationReady("views.save") || !!state().pendingOperation}
+                            disabled={!mayMutate("views.save") || !!state().pendingOperation}
                             onInput={(event) => {
                               const active = activeDraft()
                               if (!active) return
@@ -400,8 +419,9 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                           <span class="block">{t(key("sf.ui32.density"))}</span>
                           <select
                             class="mx-input"
+                            aria-label={t(key("sf.ui32.density"))}
                             value={state().value.density ?? "comfortable"}
-                            disabled={!operationReady("views.save") || !!state().pendingOperation}
+                            disabled={!mayMutate("views.save") || !!state().pendingOperation}
                             onChange={(event) => {
                               const active = activeDraft()
                               const density = event.currentTarget.value
@@ -416,11 +436,11 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
                         <Show when={state().value.filters}>
                           <p>{t(key("sf.ui32.filtersPreserved"))}</p>
                         </Show>
-                        <div class="flex flex-wrap gap-2">
+                        <div class="sf-saved-view-actions">
                           <button type="button" class="mx-btn primary" disabled={!mayMutate("views.save") || !state().dirty || !!state().pendingOperation} onClick={reviewSave}>
                             {t(key("sf.ui32.reviewSave"))}
                           </button>
-                          <button type="button" class="mx-btn" disabled={!state().dirty || !!state().pendingOperation} onClick={() => editor?.discard()}>
+                          <button type="button" class="mx-btn" disabled={screen.mutation !== "idle" || !state().dirty || !!state().pendingOperation} onClick={() => editor?.discard()}>
                             {t(key("sf.common.discard"))}
                           </button>
                           <button type="button" class="mx-btn" disabled={!mayMutate("views.remove") || !!state().pendingOperation} onClick={reviewRemove}>
@@ -446,43 +466,46 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
         <Show when={screen.mutation === "submitting"}>
           <SfStatePanel state="loading" messageKey={key("sf.common.pending")} />
         </Show>
-        <Show when={reviewKind() && screen.detail && activeDraft()}>
+        <Show when={reviewContext()} keyed>
+          {(context) => (
           <SfChangeReview
             operation={{
-              ref: `ui32:${screen.detail!.view.id}` as SfOperationRef,
-              label: message(reviewLabel()),
-              scope: { kind: "data", text: screen.detail!.view.page },
+              ref: `ui32:${context.record.view.id}` as SfOperationRef,
+              label: message(reviewLabel(context.kind)),
+              scope: { kind: "data", text: context.record.view.page },
             }}
-            base={snapshot(screen.detail!, screen.detail!.view)}
-            current={snapshot(screen.detail!, screen.detail!.view)}
-            proposed={snapshot(screen.detail!, activeDraft()!.value)}
+            base={snapshot(context.record, context.record.view)}
+            current={snapshot(context.record, context.record.view)}
+            proposed={snapshot(context.record, context.draft.value)}
             effects={[]}
             coverage={{ state: "complete", summary: message("sf.ui32.legacyReviewScope"), reasons: [], knownCount: null, expectedCount: null }}
             blockingReasons={[]}
             confirmation={{
               kind: "admitted",
-              purpose: reviewKind() === "remove" ? "delete" : "save",
-              labelKey: key(reviewLabel()),
+              purpose: context.kind === "remove" ? "delete" : "save",
+              labelKey: key(reviewLabel(context.kind)),
               binding: {
                 kind: "catalog-command",
-                operationId: reviewKind() === "remove" ? "views.remove" : "views.save",
-                version: { kind: "record", expectedVersion: screen.detail!.version },
+                operationId: context.kind === "remove" ? "views.remove" : "views.save",
+                version: { kind: "record", expectedVersion: context.record.version },
                 confirmation: "presentation-only",
               },
             }}
             state={reviewState()}
-            onConfirm={() => { const kind = reviewKind(); if (kind) void submit(kind) }}
+            onConfirm={() => { void submit(context.kind) }}
             onRevise={closeReview}
             onCancel={closeReview}
           />
+          )}
         </Show>
       </section>
-      <section class="mx-card min-w-0" aria-labelledby="sf-u43-native">
+      <section class="sf-saved-view-availability" aria-labelledby="sf-u43-native">
         <h2 id="sf-u43-native">{t(key("sf.ui32.native"))}</h2>
         <SfStatePanel state="unavailable" messageKey={key("sf.ui32.nativeUnavailable")} />
-        <p>{t(key("sf.ui32.noPseudoView"))}</p>
-        <p>{t(key("sf.ui32.entryUnavailable"))}</p>
+        <details><summary>{t(key("sf.ui32.sourcePage"))}</summary><p>{t(key("sf.ui32.noPseudoView"))}</p>
+        <p>{t(key("sf.ui32.entryUnavailable"))}</p></details>
       </section>
+      </div>
     </SfPageFrame>
   )
 }

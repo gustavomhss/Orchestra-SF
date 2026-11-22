@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "group": "composition-planner-and-previous-six",
+  "status": "PASSED",
+  "run": 44965221018,
+  "job": 137032596814,
+  "snapshot": "fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8",
+  "productHead": "331cafc50bee2112f6366ff428658de938c6f58e",
+  "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-four-planner.spec.ts",
+      "e2e/sucafina/design-wave-one.spec.ts",
+      "e2e/sucafina/design-wave-two.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "observed": {
+    "jobConclusion": "success",
+    "runTestsStep": "success",
+    "uploadEvidenceStep": "success",
+    "cleanup": "success"
+  },
+  "logRetrieval": {
+    "status": "MCP_TRANSPORT_CLOSED",
+    "attempts": 2,
+    "note": "The decoded combined log was not available through the connector. No combined test, capture, diagnostic or write count is inferred."
+  },
+  "artifact": {
+    "id": 14730969977,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 122468172,
+    "digest": "sha256:e4c4e84237690f962b15fc6797c1750c6d909bbb1e7f2fe446e9e255141e7963",
+    "expiresAt": "2026-11-29T00:19:41Z"
+  },
+  "separateReviewedEvidence": [
+    {
+      "group": "planner",
+      "run": 44961772161,
+      "gallery": "../planner/README.md",
+      "captures": 40
+    },
+    {
+      "group": "previous-six",
+      "run": 44963871177,
+      "gallery": "../regression/README.md",
+      "captures": 67,
+      "persistedRepresentatives": 6
+    }
+  ]
+}

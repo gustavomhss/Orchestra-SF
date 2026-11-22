@@ -103,11 +103,14 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
+import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
 import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
+import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
+import { observeSfAnalysisReadingHealth } from "./native-ui/analysis-reading-health.ts"
 import { observeSfDecisionApplicationHealth } from "./native-ui/decision-application-health.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
@@ -1019,6 +1022,13 @@ export const createSfHostRuntimeWithRoutineNative = async (
           identity() && services.productHttp === productHttp && documents && input.assets
             ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
         }, request, stamp),
+        observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding, source: () =>
+            identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&
+              documents && services.documents === documents.documents && input.assets
+              ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets,
+                catalog: descriptors, dispatch: nativeSearchDispatch } : undefined,
+        }, request, stamp),
         observeSfReportHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfReviewThreadContextHealth({ ui: authority.ui, state: authority.state, source: extended.reviews }, request, stamp),
         observeSfDashboardDraftHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
@@ -1082,6 +1092,42 @@ export const createSfHostRuntimeWithRoutineNative = async (
               extended.bi.source, extended.bi.source.read, extended.bi.source.revalidate, business.plannerProduct,
               business.plannerProduct.versions, business.plannerProduct.issueSource, input.persistence] }
           } }, request, stamp),
+        observeSfDecisionReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding,
+          source: (operationId) => {
+            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch) return undefined
+            if (operationId === "decisions.choice.read") {
+              if (!currentChoice || !input.currentChoiceFence) return undefined
+              return { producer: productHttp,
+                dependencies: [currentChoiceHttp, currentChoice, currentChoice.options, business.withCase,
+                  business.cases, business.cases.read, business.plannerProduct, business.plannerProduct.issueSource,
+                  business.readSourceFences, input.persistence],
+                choice: { fence: input.currentChoiceFence, options: currentChoice.options } }
+            }
+            return { producer: productHttp,
+              dependencies: [services.dispatch, business.collaboration, business.collaboration.authority,
+                business.collaboration.authority.sources, business.cases, business.cases.read, input.persistence],
+              question: { catalog: descriptors, capabilities: business.collaboration.capabilities, dispatch: nativeSearchDispatch } }
+          },
+        }, request, stamp),
+        observeSfAnalysisReadingHealth({
+          ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
+          binding: input.nativeReadBinding,
+          source: (operationId) => {
+            if (!identity() || services.productHttp !== productHttp || services.dispatch !== nativeSearchDispatch ||
+              services.analyses !== analyses || services.selected !== selected) return undefined
+            if (operationId === "intelligence.analysis.choices") return {
+              producer: productHttp,
+              dependencies: [analysisHttp, readSfImportAnalysisChoices, services.models,
+                ...(state.models ? [state.models] : []), selected, nativeSearchDispatch, business.cases, business.cases.read,
+                authority.human, authority.human.admit, input.persistence],
+            }
+            return { producer: productHttp,
+              dependencies: [analyses, analyses.list, business.cases, business.cases.read,
+                authority.human, authority.human.admit, authority.human.authorize, input.persistence] }
+          },
+        }, request, stamp),
         observeSfDecisionApplicationHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
           humanActions: authority.humanActions, source: (operationId) => {
             if (services.productHttp !== productHttp || !identity()) return undefined
@@ -1136,6 +1182,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
       ? extended.reviews.readScope.run(request, () => handler(request)) : handler(request)
   }
   const productHttp: NonNullable<SfHostServices["productHttp"]> = async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationRequest(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface)
+  const nativeSearchDispatch = createSfProductDispatch({ descriptors, authority: authority.authority })
   const services: SfHostServices & { nativeUiProducts: typeof nativeUiProducts;
     routineEvidence: Pick<typeof nativePhases.services, "readExecution" | "openResult"> } = { ...authority, nativeUiProducts,
     ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
@@ -1145,7 +1192,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     routineRuns: nativePhases.services.routineRuns,
     routineEvidence: { readExecution: nativePhases.services.readExecution, openResult: nativePhases.services.openResult },
     productHttp,
-    selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+    selected, dispatch: nativeSearchDispatch, models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

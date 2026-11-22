@@ -1,0 +1,1920 @@
+{
+  "schemaVersion": 1,
+  "status": "IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-design-twenty",
+  "base": {
+    "ref": "dev",
+    "sha": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b"
+  },
+  "previousWave": {
+    "branch": "sf-design-fifteen",
+    "pr": 587,
+    "owner": "other session",
+    "status": "MERGED",
+    "mergeSha": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+    "validationDependencySha": "f6da3aaf613053309ea205786eabae11eb394c6c",
+    "note": "Actual dev merge composed into this isolated branch; upstream session branch was not changed."
+  },
+  "counts": {
+    "areas": 20,
+    "registeredRoutePatterns": 49,
+    "previousImplementedAreas": 21,
+    "remainingAfterImplementation": 29,
+    "reviewedCaptures": 146,
+    "separateRegressionSamples": 6
+  },
+  "areas": [
+    {
+      "id": "CAP20",
+      "label": "Headcount",
+      "owner": "planner",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/headcount"
+        },
+        {
+          "kind": "rates",
+          "pattern": "/orchestra/sf-planner/headcount/rates"
+        },
+        {
+          "kind": "roster-review",
+          "pattern": "/orchestra/sf-planner/headcount/roster-review"
+        },
+        {
+          "kind": "settings",
+          "pattern": "/orchestra/sf-planner/headcount/settings"
+        },
+        {
+          "kind": "position",
+          "pattern": "/orchestra/sf-planner/headcount/positions/:positionRef"
+        },
+        {
+          "kind": "position-edit",
+          "pattern": "/orchestra/sf-planner/headcount/positions/:positionRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "referenceBlob": "45badcf55818ed04351fda974ef713da0a0ef523",
+          "implementationBlob": "3357f14b20086aac70bf5f108651c129cb9c89db"
+        }
+      ],
+      "states": [
+        "source list",
+        "retained draft",
+        "change review",
+        "confirmed source readback",
+        "light and dark",
+        "en-US and pt-BR",
+        "320px reflow",
+        "unavailable roster impact"
+      ],
+      "captures": [
+        {
+          "name": "CAP20-list-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-list-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP20-list-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-list-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP20-list-light-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-list-light-320-test-data.jpg"
+        },
+        {
+          "name": "CAP20-dark-320-position-editor-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-dark-320-position-editor-test-data.jpg"
+        },
+        {
+          "name": "CAP20-dark-320-position-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-dark-320-position-review-test-data.jpg"
+        },
+        {
+          "name": "CAP20-dark-desktop-confirmed-source-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-dark-desktop-confirmed-source-test-data.jpg"
+        },
+        {
+          "name": "CAP20-dark-desktop-unavailable-roster-impact-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-dark-desktop-unavailable-roster-impact-test-data.jpg"
+        },
+        {
+          "name": "CAP20-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP20-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP20-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44961772161,
+      "visualReview": "planner/PLANNER9-REVIEW.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
+    },
+    {
+      "id": "CAP21",
+      "label": "Alocações",
+      "owner": "planner",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/allocations"
+        },
+        {
+          "kind": "entity",
+          "pattern": "/orchestra/sf-planner/allocations/entities/:entityRef"
+        },
+        {
+          "kind": "allocation",
+          "pattern": "/orchestra/sf-planner/allocations/entries/:allocationRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "referenceBlob": "06b02b7408b35b9e13442621ab45b35c23161d7f",
+          "implementationBlob": "32c42540b3c92f4fbef6f1fd6ec91c3914162c34"
+        }
+      ],
+      "states": [
+        "source list",
+        "retained draft",
+        "change review",
+        "confirmed source readback",
+        "light and dark",
+        "en-US and pt-BR",
+        "320px reflow"
+      ],
+      "captures": [
+        {
+          "name": "CAP21-shared-catalogs-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-shared-catalogs-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP21-shared-catalogs-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-shared-catalogs-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP21-shared-catalogs-light-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-shared-catalogs-light-320-test-data.jpg"
+        },
+        {
+          "name": "CAP21-dark-320-distribution-editor-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-dark-320-distribution-editor-test-data.jpg"
+        },
+        {
+          "name": "CAP21-dark-320-distribution-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-dark-320-distribution-review-test-data.jpg"
+        },
+        {
+          "name": "CAP21-dark-desktop-confirmed-distribution-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-dark-desktop-confirmed-distribution-test-data.jpg"
+        },
+        {
+          "name": "CAP21-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP21-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP21-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44961772161,
+      "visualReview": "planner/PLANNER9-REVIEW.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
+    },
+    {
+      "id": "CAP22",
+      "label": "Câmbio / FX",
+      "owner": "planner",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/fx"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+          "referenceBlob": "01c837c2379a3be78e402e9e82de9d63009ebd22",
+          "implementationBlob": "b3bf77199c16df20d80e0af8cf0b05e7930954fa"
+        }
+      ],
+      "states": [
+        "source list",
+        "retained draft",
+        "change review",
+        "confirmed source readback",
+        "light and dark",
+        "en-US and pt-BR",
+        "320px reflow",
+        "absent rate distinct from zero"
+      ],
+      "captures": [
+        {
+          "name": "CAP22-rates-and-provenance-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-rates-and-provenance-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP22-rates-and-provenance-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-rates-and-provenance-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP22-rates-and-provenance-light-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-rates-and-provenance-light-320-test-data.jpg"
+        },
+        {
+          "name": "CAP22-dark-320-rate-editor-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-dark-320-rate-editor-test-data.jpg"
+        },
+        {
+          "name": "CAP22-dark-320-provenance-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-dark-320-provenance-review-test-data.jpg"
+        },
+        {
+          "name": "CAP22-dark-desktop-confirmed-provenance-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-dark-desktop-confirmed-provenance-test-data.jpg"
+        },
+        {
+          "name": "CAP22-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP22-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP22-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44961772161,
+      "visualReview": "planner/PLANNER9-REVIEW.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
+    },
+    {
+      "id": "CAP23",
+      "label": "Versões e comparação",
+      "owner": "planner",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-planner/versions"
+        },
+        {
+          "kind": "compare",
+          "pattern": "/orchestra/sf-planner/versions/compare"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-planner/versions/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-planner/versions/:versionRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+          "referenceBlob": "da4e99a66b686aa263de0ecfae76ee7cd189271e",
+          "implementationBlob": "bdb0107e305f53add1503280b7e4b43525b703f1"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+          "referenceBlob": "c7332911b34925443dd65f2ee846ccb21f71eeea",
+          "implementationBlob": "2102c9264c0fad43324e3b24613861b94cb45a7f"
+        }
+      ],
+      "states": [
+        "source list",
+        "retained draft",
+        "change review",
+        "confirmed source readback",
+        "light and dark",
+        "en-US and pt-BR",
+        "320px reflow",
+        "copy",
+        "source comparison",
+        "twelve-month keyboard scroll"
+      ],
+      "captures": [
+        {
+          "name": "CAP23-version-ledger-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-version-ledger-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-version-ledger-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-version-ledger-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-version-ledger-light-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-version-ledger-light-320-test-data.jpg"
+        },
+        {
+          "name": "CAP23-dark-320-version-editor-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-dark-320-version-editor-test-data.jpg"
+        },
+        {
+          "name": "CAP23-dark-320-version-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-dark-320-version-review-test-data.jpg"
+        },
+        {
+          "name": "CAP23-dark-desktop-copy-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-dark-desktop-copy-review-test-data.jpg"
+        },
+        {
+          "name": "CAP23-dark-desktop-confirmed-copy-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-dark-desktop-confirmed-copy-test-data.jpg"
+        },
+        {
+          "name": "CAP23-source-comparison-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-source-comparison-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-source-comparison-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-source-comparison-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-source-comparison-light-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-source-comparison-light-320-test-data.jpg"
+        },
+        {
+          "name": "CAP23-dark-320-keyboard-monthly-scroll-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-dark-320-keyboard-monthly-scroll-test-data.jpg"
+        },
+        {
+          "name": "CAP23-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-pt-BR-dark-320-test-data.jpg"
+        },
+        {
+          "name": "CAP23-compare-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-compare-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP23-compare-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/planner/CAP23-compare-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44961772161,
+      "visualReview": "planner/PLANNER9-REVIEW.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965221018,
+      "workerBranch": "sf-twenty-planner",
+      "group": "planner"
+    },
+    {
+      "id": "CAP24",
+      "label": "Compras — visão geral",
+      "owner": "procurement",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/overview"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "referenceBlob": "a9107579d40e8a54741923831d487539c484c1da",
+          "implementationBlob": "e3e436d0fc0bc17524b3041185ea8045fa241004"
+        }
+      ],
+      "states": [
+        "original overview",
+        "status filter",
+        "seven source rows",
+        "absent estimate distinct from recorded zero",
+        "English desktop dark/light and320px",
+        "Portuguese desktop and320px"
+      ],
+      "captures": [
+        {
+          "name": "CAP24-dark-desktop-source-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP24-dark-desktop-source-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP24-light-desktop-source-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP24-light-desktop-source-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP24-light-320-source-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP24-light-320-source-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP24-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP24-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP24-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP24-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44965165654,
+      "finalQualificationRun": 44965165654,
+      "visualReview": "evidence/procurement/README.md",
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
+    },
+    {
+      "id": "CAP25",
+      "label": "Requisições, fila e sourcing",
+      "owner": "procurement",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/requests"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-procurement/requests/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef"
+        },
+        {
+          "kind": "history",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/history"
+        },
+        {
+          "kind": "po",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/po"
+        },
+        {
+          "kind": "requisition",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/requisition"
+        },
+        {
+          "kind": "sourcing",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/sourcing"
+        },
+        {
+          "kind": "quotes",
+          "pattern": "/orchestra/sf-procurement/requests/:requestRef/sourcing/compare"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+          "referenceBlob": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b",
+          "implementationBlob": "c13b809fe73f7d5f83a24e90aae6fa490ad93faf"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
+          "referenceBlob": "98a04c2608414744f44b2afa0326799a1023aa32",
+          "implementationBlob": "98a04c2608414744f44b2afa0326799a1023aa32"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "referenceBlob": "34234bee605bc368538dee797b29f0e4b29b20ec",
+          "implementationBlob": "134f6f705f05d87afd318aa9f7d0ff9aa1a080e2"
+        }
+      ],
+      "states": [
+        "source request list",
+        "retained edit/create drafts",
+        "explicit change reviews",
+        "create/save/submit requisition",
+        "recorded quote comparison",
+        "sourcing metadata and selected quote retention",
+        "purchase-order draft edit",
+        "fresh canonical readbacks",
+        "English desktop and320px",
+        "Portuguese desktop and320px"
+      ],
+      "captures": [
+        {
+          "name": "CAP25-dark-desktop-request-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-request-list-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-requisition-review-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-requisition-review-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-requisition-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-requisition-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-create-request-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-create-request-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-320-create-request-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-320-create-request-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-320-create-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-320-create-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-recorded-quote-comparison-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-recorded-quote-comparison-test-data.jpg"
+        },
+        {
+          "name": "CAP25-light-desktop-recorded-quote-comparison-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-light-desktop-recorded-quote-comparison-test-data.jpg"
+        },
+        {
+          "name": "CAP25-light-320-recorded-quote-comparison-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-light-320-recorded-quote-comparison-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-sourcing-review-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-sourcing-review-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-sourcing-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-sourcing-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP25-dark-desktop-confirmed-order-draft-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-dark-desktop-confirmed-order-draft-test-data.jpg"
+        },
+        {
+          "name": "CAP25-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP25-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP25-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44965165654,
+      "finalQualificationRun": 44965165654,
+      "visualReview": "evidence/procurement/README.md",
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
+    },
+    {
+      "id": "CAP26",
+      "label": "Aprovações",
+      "owner": "procurement",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/approvals"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/approvals/:requestRef"
+        },
+        {
+          "kind": "review",
+          "pattern": "/orchestra/sf-procurement/approvals/:requestRef/review"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "referenceBlob": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff",
+          "implementationBlob": "dda95a55eb9320a0f3d34b6900fece92bbe5689b"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+          "referenceBlob": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d",
+          "implementationBlob": "b4f6cae4fa2614960e7c999d19c8af49a515ba99"
+        }
+      ],
+      "states": [
+        "PR approval queue",
+        "source submitted facts",
+        "PR approval",
+        "sourcing approval",
+        "PO rejection",
+        "review actions at320px",
+        "fresh source status",
+        "Portuguese desktop and320px"
+      ],
+      "captures": [
+        {
+          "name": "CAP26-dark-desktop-pr-approval-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-dark-desktop-pr-approval-list-test-data.jpg"
+        },
+        {
+          "name": "CAP26-light-desktop-pr-approval-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-light-desktop-pr-approval-list-test-data.jpg"
+        },
+        {
+          "name": "CAP26-dark-320-pr-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-dark-320-pr-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP26-dark-desktop-sourcing-approval-detail-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-dark-desktop-sourcing-approval-detail-test-data.jpg"
+        },
+        {
+          "name": "CAP26-dark-desktop-po-decision-review-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-dark-desktop-po-decision-review-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP26-dark-desktop-po-decision-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-dark-desktop-po-decision-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP26-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP26-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP26-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44965165654,
+      "finalQualificationRun": 44965165654,
+      "visualReview": "evidence/procurement/README.md",
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
+    },
+    {
+      "id": "CAP27",
+      "label": "Fornecedores",
+      "owner": "procurement",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/suppliers"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-procurement/suppliers/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-procurement/suppliers/:supplierRef"
+        },
+        {
+          "kind": "edit",
+          "pattern": "/orchestra/sf-procurement/suppliers/:supplierRef/edit"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+          "referenceBlob": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90",
+          "implementationBlob": "ac06b58419f86affee8a438f937281cc108b031e"
+        }
+      ],
+      "states": [
+        "source supplier ledger",
+        "four-group create editor",
+        "cancel/resume",
+        "original create and edit",
+        "fresh supplier detail",
+        "English desktop dark/light and320px",
+        "Portuguese desktop and320px"
+      ],
+      "captures": [
+        {
+          "name": "CAP27-dark-desktop-supplier-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-dark-desktop-supplier-list-test-data.jpg"
+        },
+        {
+          "name": "CAP27-light-desktop-supplier-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-light-desktop-supplier-list-test-data.jpg"
+        },
+        {
+          "name": "CAP27-light-320-supplier-list-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-light-320-supplier-list-test-data.jpg"
+        },
+        {
+          "name": "CAP27-dark-desktop-create-supplier-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-dark-desktop-create-supplier-test-data.jpg"
+        },
+        {
+          "name": "CAP27-dark-desktop-supplier-review-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-dark-desktop-supplier-review-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP27-dark-320-supplier-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-dark-320-supplier-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP27-dark-desktop-confirmed-supplier-detail-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-dark-desktop-confirmed-supplier-detail-test-data.jpg"
+        },
+        {
+          "name": "CAP27-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP27-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP27-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44965165654,
+      "finalQualificationRun": 44965165654,
+      "visualReview": "evidence/procurement/README.md",
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
+    },
+    {
+      "id": "CAP28",
+      "label": "Configurações de compras",
+      "owner": "procurement",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-procurement/settings"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
+          "referenceBlob": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf",
+          "implementationBlob": "08ca2dcd4953d225ca6f7f3e43536a92271b11d5"
+        }
+      ],
+      "states": [
+        "seven-section original settings form",
+        "changed-field review",
+        "cancel draft retention",
+        "original save",
+        "fresh reminder9/minQuotes3/USD readback",
+        "English desktop dark/light and320px",
+        "Portuguese desktop and320px"
+      ],
+      "captures": [
+        {
+          "name": "CAP28-dark-desktop-settings-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-dark-desktop-settings-test-data.jpg"
+        },
+        {
+          "name": "CAP28-light-desktop-settings-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-light-desktop-settings-test-data.jpg"
+        },
+        {
+          "name": "CAP28-light-320-settings-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-light-320-settings-test-data.jpg"
+        },
+        {
+          "name": "CAP28-dark-desktop-settings-review-overview-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-dark-desktop-settings-review-overview-test-data.jpg"
+        },
+        {
+          "name": "CAP28-dark-320-settings-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-dark-320-settings-review-actions-test-data.jpg"
+        },
+        {
+          "name": "CAP28-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "CAP28-pt-BR-dark-320-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/procurement/CAP28-pt-BR-dark-320-test-data.jpg"
+        }
+      ],
+      "evidenceRun": 44965165654,
+      "finalQualificationRun": 44965165654,
+      "visualReview": "evidence/procurement/README.md",
+      "userAcceptance": "PENDING",
+      "workerBranch": "sf-twenty-procurement",
+      "group": "procurement"
+    },
+    {
+      "id": "UI30",
+      "label": "Meu trabalho",
+      "owner": "work",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "referenceBlob": "d012691ea65e0de4185f4942967c0d2ca9044161",
+          "implementationBlob": "51aa26bc26f5adb7d4c528d078efad06f78f18b7"
+        }
+      ],
+      "states": [
+        "explicit period selection",
+        "assigned original work list",
+        "authorized handoff detail",
+        "source owner and version",
+        "revalidate and open native Hot Topic destination",
+        "filtered empty state",
+        "English desktop dark/light",
+        "English320px",
+        "Brazilian Portuguese entry"
+      ],
+      "captures": [
+        {
+          "name": "UI30-dark-desktop-choose-period",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-choose-period.jpg"
+        },
+        {
+          "name": "UI30-dark-desktop-assigned-work",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-assigned-work.jpg"
+        },
+        {
+          "name": "UI30-dark-desktop-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-dark-desktop-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-desktop-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-desktop-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-320-authorized-detail",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-authorized-detail.jpg"
+        },
+        {
+          "name": "UI30-light-320-filtered-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-light-320-filtered-empty.jpg"
+        },
+        {
+          "name": "UI30-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI30-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44964988862,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
+    },
+    {
+      "id": "UI31",
+      "label": "Busca Sucafina",
+      "owner": "work",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-home/search"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+          "referenceBlob": "c64e321bf6212dc24494034ca29270285391e899",
+          "implementationBlob": "5c1dfd8f77631d315bdacc3fa976232d03ea18b4"
+        }
+      ],
+      "states": [
+        "before query",
+        "empty query validation",
+        "original private query",
+        "canonical empty result",
+        "English light and dark",
+        "English320px",
+        "Brazilian Portuguese desktop"
+      ],
+      "captures": [
+        {
+          "name": "UI31-dark-desktop-before-query",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-before-query.jpg"
+        },
+        {
+          "name": "UI31-dark-desktop-required-query",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-required-query.jpg"
+        },
+        {
+          "name": "UI31-dark-desktop-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-dark-desktop-source-empty.jpg"
+        },
+        {
+          "name": "UI31-light-desktop-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-desktop-source-empty.jpg"
+        },
+        {
+          "name": "UI31-light-320-source-empty",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-light-320-source-empty.jpg"
+        },
+        {
+          "name": "UI31-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI31-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44964042218,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
+    },
+    {
+      "id": "UI32",
+      "label": "Visões salvas",
+      "owner": "work",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-work/views"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-work/views/new"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-work/views/:viewId"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+          "referenceBlob": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5",
+          "implementationBlob": "d2065ccbf7e50d3aba85818ca76fd92922b31dce"
+        }
+      ],
+      "states": [
+        "existing V1 list",
+        "retained edit draft",
+        "review and revise",
+        "cancel review",
+        "one confirmed save",
+        "source Version2 exact readback",
+        "fresh route",
+        "remove review canceled",
+        "native V2 unavailable",
+        "English desktop light/dark",
+        "English320px review actions",
+        "Brazilian Portuguese list"
+      ],
+      "captures": [
+        {
+          "name": "UI32-dark-desktop-existing-view-list",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-list.jpg"
+        },
+        {
+          "name": "UI32-dark-desktop-existing-view-editor",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-editor.jpg"
+        },
+        {
+          "name": "UI32-dark-desktop-existing-view-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-dark-desktop-existing-view-review.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-existing-view-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-existing-view-review.jpg"
+        },
+        {
+          "name": "UI32-light-320-existing-view-review-actions",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-320-existing-view-review-actions.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-confirmed-view-readback",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-confirmed-view-readback.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-removal-review",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-removal-review.jpg"
+        },
+        {
+          "name": "UI32-light-desktop-native-v2-unavailable",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-light-desktop-native-v2-unavailable.jpg"
+        },
+        {
+          "name": "UI32-pt-BR-dark-desktop",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/work/UI32-pt-BR-dark-desktop.jpg"
+        }
+      ],
+      "evidenceRun": 44965705732,
+      "visualReview": "evidence/work/README.md",
+      "userAcceptance": "PENDING",
+      "finalQualificationRun": 44965705732,
+      "originalAssignment": "planner",
+      "workerBranch": "sf-twenty-work-finish",
+      "group": "work"
+    },
+    {
+      "id": "UI34",
+      "label": "Intenção do caso",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "referenceBlob": "d64e5c7ca7126d0397afd323a780bbab5725f774",
+          "implementationBlob": "f7f2bd567947d9ffd3f408b6600d13cac2beca21"
+        }
+      ],
+      "states": [
+        "original case summary",
+        "retained edit draft",
+        "review and cancel",
+        "close and reopen draft",
+        "one confirmed case edit",
+        "fresh original CAS/version/source/criteria readback",
+        "390px focused review actions",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI34-dark-desktop-editor-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-dark-desktop-editor-test-data.jpg"
+        },
+        {
+          "name": "UI34-dark-390-review-actions-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-dark-390-review-actions-test-data.jpg"
+        },
+        {
+          "name": "UI34-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI34-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI34-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI34-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI34-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "Source attachments are disclosed; no new evidence is invented."
+      ]
+    },
+    {
+      "id": "UI35",
+      "label": "Alternativas",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-decisions/:caseRef/alternatives/:alternativeRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "referenceBlob": "2a4472606a1fe05c8d96044c4dc979322d048349",
+          "implementationBlob": "f6e954f779f5080a831f59c3066922a942e4dfb4"
+        }
+      ],
+      "states": [
+        "authorized empty alternatives and choice",
+        "two original source alternatives and amounts",
+        "comparison with incomplete coverage qualification",
+        "recorded choice on opaque case route",
+        "320px comparison and focused limitation notice",
+        "original current-choice preparation refusal",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI35-dark-desktop-empty-choice-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-dark-desktop-empty-choice-test-data.jpg"
+        },
+        {
+          "name": "UI35-dark-320-comparison-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-dark-320-comparison-test-data.jpg"
+        },
+        {
+          "name": "UI35-dark-320-comparison-qualification-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-dark-320-comparison-qualification-test-data.jpg"
+        },
+        {
+          "name": "UI35-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI35-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI35-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI35-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI35-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "The original producer does not admit current-choice preparation in this installation; no provenance, recalculation or promotion is fabricated."
+      ]
+    },
+    {
+      "id": "UI36",
+      "label": "Premissas e divergências",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/assumptions"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+          "referenceBlob": "80297cb0719c05aa0241fa8023322853561678de",
+          "implementationBlob": "992ad31cbeb950b4fdaab9de3a620723d38dca24"
+        }
+      ],
+      "states": [
+        "open assumptions",
+        "confirmed filter",
+        "genuine filtered-empty state",
+        "original evidence detail",
+        "empty derived missing categories",
+        "original coverage divergences",
+        "no assumption mutation",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI36-dark-desktop-assumption-detail-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI36-dark-desktop-assumption-detail-test-data.jpg"
+        },
+        {
+          "name": "UI36-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI36-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI36-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI36-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI36-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI36-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI36-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI36-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "Review does not confirm or mutate an assumption."
+      ]
+    },
+    {
+      "id": "UI37",
+      "label": "Perguntas e respostas",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/questions"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+          "referenceBlob": "ca1a807d6d43bea5493b7d8545505988ee28dfd7",
+          "implementationBlob": "eedb5e7c9210690e3c70e3e5036d5552a10c0b6b"
+        }
+      ],
+      "states": [
+        "retained question composer",
+        "review and revise",
+        "one original question proposal preparation",
+        "unchanged case version and question list",
+        "optional question cycles and recipients unavailable",
+        "pt-BR 320px review",
+        "no question sent or recorded",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI37-dark-desktop-question-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-dark-desktop-question-review-test-data.jpg"
+        },
+        {
+          "name": "UI37-dark-desktop-prepared-proposal-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-dark-desktop-prepared-proposal-test-data.jpg"
+        },
+        {
+          "name": "UI37-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI37-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI37-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI37-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-pt-BR-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI37-pt-BR-dark-320-review-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI37-pt-BR-dark-320-review-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "Preparation does not send or record a question. Optional cycle/recipient reads remain unavailable when unadmitted."
+      ]
+    },
+    {
+      "id": "UI38",
+      "label": "Escolha da decisão",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/choice"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
+          "referenceBlob": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29",
+          "implementationBlob": "49e186efdd3e8da74414afd12fa88499cbe6386b"
+        }
+      ],
+      "states": [
+        "real recorded current choice",
+        "original source condition",
+        "explicit producer preparation refusal",
+        "preparation action disabled",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI38-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI38-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI38-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI38-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI38-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI38-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI38-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI38-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "No source provenance or successful recalculation is fabricated."
+      ]
+    },
+    {
+      "id": "UI39",
+      "label": "Alterações preparadas",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-decisions/:caseRef/changes"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/changes/:changeRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "referenceBlob": "0e531465198c208e53eadae54f128bc664300ec9",
+          "implementationBlob": "dbbf131007bbf8efe71952fdf3550c3b2be014f7"
+        }
+      ],
+      "states": [
+        "original empty prepared-change ledger",
+        "original producer unavailable",
+        "no prepared change or application synthesized",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI39-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI39-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI39-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI39-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI39-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI39-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI39-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI39-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "Populated application/CAS/recovery paths are preserved but are not browser-qualified by this fixture."
+      ]
+    },
+    {
+      "id": "UI40",
+      "label": "Histórico e recibos",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "history",
+          "pattern": "/orchestra/sf-decisions/:caseRef/history"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/receipts/:receiptRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+          "referenceBlob": "6571685621d4103c8da30dc769d1be61d43ab4bd",
+          "implementationBlob": "93b792fa9ebbe981f447ac2b4520623416f2244d"
+        }
+      ],
+      "states": [
+        "original empty application-receipt history",
+        "original producer unavailable",
+        "no application or recovery request",
+        "no receipt synthesized",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI40-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI40-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI40-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI40-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI40-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI40-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI40-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI40-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "No apply/recover request or receipt is invented; populated receipt detail remains unqualified."
+      ]
+    },
+    {
+      "id": "UI41",
+      "label": "Análises",
+      "owner": "decisions",
+      "status": "BROWSER_PASSED_VISUAL_REVIEWED",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-decisions/:caseRef/analyses"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-decisions/:caseRef/analyses/:analysisRef"
+        }
+      ],
+      "components": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "referenceBlob": "52d194c16837a41d19d2d535321483585bbef801",
+          "implementationBlob": "6a44140073afd88819c6de8c47daeb7303e199fc"
+        }
+      ],
+      "states": [
+        "original choices POST and history POST",
+        "selector counts checked against fresh source",
+        "real authorized case before every capture",
+        "analysis objective input",
+        "actual admitted analysis selection",
+        "empty model catalog and history",
+        "preparation disabled without admitted model",
+        "English dark desktop 1440×1100",
+        "English light desktop 1440×1100",
+        "English dark narrow 390×844",
+        "Brazilian Portuguese dark desktop 1440×1100"
+      ],
+      "captures": [
+        {
+          "name": "UI41-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI41-dark-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI41-light-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI41-light-desktop-test-data.jpg"
+        },
+        {
+          "name": "UI41-dark-390-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI41-dark-390-test-data.jpg"
+        },
+        {
+          "name": "UI41-pt-BR-dark-desktop-test-data",
+          "path": "docs/qa/sucafina/design/wave-four/evidence/decisions/UI41-pt-BR-dark-desktop-test-data.jpg"
+        }
+      ],
+      "workerBranch": "sf-twenty-decisions",
+      "group": "decisions",
+      "evidenceRun": 44972048219,
+      "finalQualificationRun": 44972048219,
+      "visualReview": "evidence/decisions/README.md",
+      "userAcceptance": "PENDING",
+      "limits": [
+        "No provider credential, model, run or output is fabricated. Prepare/start/cancel/output require separately admitted source configuration."
+      ]
+    }
+  ],
+  "verification": {
+    "runtime": "PASSED_WITH_DOCUMENTED_LIMITS",
+    "visual": "ALL_146_CAPTURES_REVIEWED",
+    "technical": "FIFTEEN_CHECKS_AND_89_REGRESSION_CASES_PASSED",
+    "regression": "FIRST_SIX_PASSED_AT_7C0CAF8D",
+    "userAcceptance": "PENDING",
+    "merge": "NOT_MERGED"
+  },
+  "technicalEvidence": {
+    "run": 44972927162,
+    "job": 137056417643,
+    "snapshot": "e6b7de08b4cbb7790a585e2292bb985a41e60902",
+    "productHead": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "checks": [
+      {
+        "name": "Application declarations",
+        "passed": true
+      },
+      {
+        "name": "Exact dev guardrails",
+        "passed": true
+      },
+      {
+        "name": "Palette byte parity",
+        "passed": true
+      },
+      {
+        "name": "E2E semantic types",
+        "passed": true
+      },
+      {
+        "name": "Portfolio CAS",
+        "passed": true
+      },
+      {
+        "name": "Vendor browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Decision browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Procurement browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Work/Search source health",
+        "passed": true
+      },
+      {
+        "name": "Original installed host",
+        "passed": true
+      },
+      {
+        "name": "Decision source health",
+        "passed": true
+      },
+      {
+        "name": "Analysis source health",
+        "passed": true
+      },
+      {
+        "name": "Full CLI package types",
+        "passed": true
+      },
+      {
+        "name": "Saved Views browser DTO",
+        "passed": true
+      },
+      {
+        "name": "Case-read scope canonical and negative-boundary regression",
+        "passed": true
+      }
+    ],
+    "regressionTests": 89,
+    "includesOriginalInstalledHost": true,
+    "guards": {
+      "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "rules": 78,
+      "files": 254,
+      "errors": 0,
+      "warnings": 21,
+      "approved": 0,
+      "touchesGuards": false
+    },
+    "fullCli": {
+      "status": "PASSED",
+      "run": 44972927162,
+      "diagnostics": 0,
+      "previousBaseline": {
+        "run": 44958162297,
+        "diagnostics": 7,
+        "status": "HISTORICAL"
+      }
+    },
+    "commandCases": {
+      "portfolioCAS": 3,
+      "vendorBrowserDTO": 4,
+      "decisionsBrowserDTO": 5,
+      "procurementBrowserDTO": 10,
+      "workAndSearchSourceHealth": 18,
+      "originalInstalledHost": 1,
+      "decisionSourceHealth": 24,
+      "analysisSourceHealth": 19,
+      "savedViewsBrowserDTO": 3,
+      "caseReadScope": 2
+    },
+    "palette": {
+      "generatedFiles": 7,
+      "changedFiles": 0
+    },
+    "caseReadScope": {
+      "tests": 2,
+      "assertions": 81,
+      "positive": "Original SQLite/source persistence/ProductAuthority/BusinessServices/Atlas composition, emitted Planner source and drafted case, original sf_work_list selection, controlled unit clock and newly admitted original leases.",
+      "negative": "Clearly labeled structural planned-Procurement fixture with real C08/authority, expired/replaced selection, reader and egress refusal; Request/header/input/lease/abort/revocation boundaries.",
+      "identityProvider": "Bounded test fixture, not enrollment.",
+      "notClaimed": [
+        "positive C12 producer-issued preparation",
+        "positive first application",
+        "application receipt"
+      ]
+    }
+  },
+  "regressionEvidence": {
+    "run": 44963871177,
+    "job": 137028409834,
+    "snapshot": "f6533b5856840c4722f38d3e5070204c8e4d4877",
+    "productHead": "7c0caf8da905a03579379c35ce1cd49375a87509",
+    "passedTests": 2,
+    "completeCaptures": 67,
+    "persistedRepresentativeCaptures": 6,
+    "gallery": "evidence/regression/README.md"
+  },
+  "initialBase": {
+    "ref": "dev",
+    "sha": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02"
+  },
+  "integration": {
+    "base": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+    "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+    "upstreamCommits": 10,
+    "upstreamFiles": 46,
+    "overlapPaths": [
+      "apps/cli/src/sucafina-product/host-context.ts"
+    ],
+    "resolution": "Exact upstream FSUtil dependency and outer service acquisition retained together with all native reading-health integration.",
+    "status": "BROWSER_AND_TECHNICAL_PASSED_VISUAL_REVIEW_COMPLETE",
+    "technicalRun": 44972927162,
+    "plannerAndPreviousSixRun": 44965221018,
+    "procurementRun": 44965165654,
+    "workRun": 44965705732,
+    "decisionsRun": 44972048219,
+    "plannerAndPreviousSixStatus": "PASSED",
+    "procurementStatus": "PASSED",
+    "workStatus": "PASSED",
+    "decisionsStatus": "PASSED",
+    "followupDevComposition": {
+      "prior": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "dev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "commits": 4,
+      "paths": 26,
+      "overlapPaths": [
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "resolution": "All six exact upstream reviewer-recall hunks applied uniquely to the current host context, retaining all native source-health and FSUtil changes.",
+      "notCommitted": false,
+      "head": "cb5b92074c64b7087abeeba75a1effe52b01eff5",
+      "tree": "41c2a4d71c7c58b7425a2130d81ee7d8a6d8abd0",
+      "status": "COMPOSED_AND_TECHNICALLY_VERIFIED",
+      "cumulativeFromPR587": {
+        "commits": 14,
+        "files": 65
+      },
+      "technicalStatus": "PASSED",
+      "technicalRun": 44968622344
+    },
+    "decisionsDiagnosticRun": 44970679515,
+    "decisionsDiagnosticStatus": "FAILED_JOURNEY_CONFIRMED_EXPIRY_BRANCH",
+    "thirdDevComposition": {
+      "prior": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "head": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+      "tree": "5cfa6cd22c4221be7cb96fd8720230744622dcbb",
+      "upstreamCommits": 7,
+      "upstreamPaths": 18,
+      "overlapPaths": [],
+      "resolution": "All18 upstream paths copied by their exact blob SHA; no own product overlap.",
+      "status": "COMPOSED_AND_TECHNICALLY_VERIFIED",
+      "technicalRun": 44971393754,
+      "decisionsDiagnosticSourceUnchanged": true,
+      "cumulativeFromPR587": {
+        "commits": 21,
+        "files": 80
+      },
+      "technicalStatus": "PASSED",
+      "finalTechnicalRun": 44972927162,
+      "decisionsRun": 44972048219
+    },
+    "currentProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "functionalProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "postQualificationDevObservation": {
+      "qualifiedBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "observedDev": "8bd7645767deb85b286b046a52a4e9f1db100262",
+      "upstreamCommits": 2,
+      "upstreamPaths": [
+        "apps/desktop/src/main/index.ts",
+        "apps/desktop/src/main/wsl/ipc.test.ts",
+        "apps/desktop/src/main/wsl/ipc.ts"
+      ],
+      "ownProductCompared": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "ownPaths": 251,
+      "compareTruncated": false,
+      "overlapPaths": [],
+      "integrated": false,
+      "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here."
+    },
+    "sourceCorrection": {
+      "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "browserRun": 44972048219,
+      "technicalRun": 44972927162,
+      "tests": 2,
+      "assertions": 81,
+      "report": "decisions-source-diagnostic.json"
+    }
+  },
+  "browserEvidence": {
+    "planner": {
+      "run": 44961772161,
+      "tests": 2,
+      "captures": 40
+    },
+    "procurement": {
+      "run": 44965165654,
+      "tests": 4,
+      "captures": 43
+    },
+    "work": {
+      "run": 44965705732,
+      "tests": 3,
+      "captures": 22,
+      "selectedImageSources": "See evidence/work/manifest.json"
+    },
+    "decisions": {
+      "run": 44972048219,
+      "job": 137053751021,
+      "snapshot": "58def9db4b3aa4c156a041eb86fbbd41de95bba7",
+      "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "tests": 1,
+      "status": "PASSED",
+      "captures": 41,
+      "parts": 196,
+      "skipped": 0,
+      "observedReads": 56,
+      "readStatuses": {
+        "200": 56
+      },
+      "readOperations": {
+        "projection.case": 35,
+        "current-choice": 11,
+        "analysis.choices": 5,
+        "analysis.list": 5
+      },
+      "readsAfter300000Ms": 21,
+      "lastObservedReadElapsedMs": 453279,
+      "closedPages": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "sourceFailureDiagnostics": 0,
+      "confirmedBrowserWrites": 1,
+      "originalPreparationCommands": 1
+    }
+  },
+  "qualifiedFunctionalSource": {
+    "browserProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "changedPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "docs/qa/sucafina/design/wave-four/DEV-COMPOSITION.md",
+      "docs/qa/sucafina/design/wave-four/TYPECHECK.md",
+      "docs/qa/sucafina/design/wave-four/VALIDATION.md",
+      "docs/qa/sucafina/design/wave-four/attempts.json",
+      "docs/qa/sucafina/design/wave-four/cli-type-audit.json",
+      "docs/qa/sucafina/design/wave-four/copy-audit.json",
+      "docs/qa/sucafina/design/wave-four/decisions-source-diagnostic.json",
+      "docs/qa/sucafina/design/wave-four/decisions/HANDOFF.md",
+      "docs/qa/sucafina/design/wave-four/decisions/REVIEW.md",
+      "docs/qa/sucafina/design/wave-four/evidence/README.md",
+      "docs/qa/sucafina/design/wave-four/scope.json",
+      "docs/qa/sucafina/design/wave-four/source-audit.json",
+      "docs/qa/sucafina/design/wave-four/technical-verification.json"
+    ],
+    "changedProductSourcePaths": [],
+    "changedTestPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts"
+    ],
+    "compareTruncated": false,
+    "functionalProductIdentical": true
+  },
+  "galleryIntegrity": {
+    "atCommit": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "groups": {
+      "planner": {
+        "captures": 40,
+        "actualJpegs": 40,
+        "bytes": 2829468,
+        "hashesChecked": 40,
+        "sizesChecked": 40
+      },
+      "procurement": {
+        "captures": 43,
+        "actualJpegs": 43,
+        "bytes": 3384360,
+        "hashesChecked": 43,
+        "sizesChecked": 43
+      },
+      "work": {
+        "captures": 22,
+        "actualJpegs": 22,
+        "bytes": 1736450,
+        "hashesChecked": 22,
+        "sizesChecked": 22
+      },
+      "decisions": {
+        "captures": 41,
+        "actualJpegs": 41,
+        "bytes": 3161553,
+        "hashesChecked": 41,
+        "sizesChecked": 41
+      },
+      "regression": {
+        "captures": 6,
+        "actualJpegs": 6,
+        "bytes": 541725,
+        "hashesChecked": 6,
+        "sizesChecked": 0
+      }
+    },
+    "newWaveCaptures": 146,
+    "regressionSamples": 6,
+    "totalPersistedJpegs": 152,
+    "missing": [],
+    "hashMismatches": [],
+    "sizeMismatches": [],
+    "extras": []
+  },
+  "finalEvidenceIntegration": {
+    "from": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "through": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "changedPaths": 45,
+    "allDocumentationOrEvidence": true,
+    "productSourceUnchanged": true,
+    "compareTruncated": false
+  },
+  "rootDecisionsReview": {
+    "run": 44972048219,
+    "reviewed": true,
+    "captures": [
+      "UI35-dark-320-comparison-qualification-test-data",
+      "UI41-dark-390-test-data",
+      "UI34-pt-BR-dark-desktop-test-data",
+      "UI36-pt-BR-dark-desktop-test-data",
+      "UI37-pt-BR-dark-desktop-test-data",
+      "UI38-pt-BR-dark-desktop-test-data",
+      "UI39-pt-BR-dark-desktop-test-data",
+      "UI40-pt-BR-dark-desktop-test-data"
+    ],
+    "observations": [
+      "UI35 focused narrow capture visibly retains the complete-comparison qualification and pending state; disabled current-choice action does not imply admission.",
+      "UI41 narrow preparation form retains a real authorized case and explicitly unavailable model, with disabled prepare action.",
+      "Portuguese desktop samples UI34/UI36/UI37/UI38/UI39/UI40 maintain native glass spacing and readable source state. Original fixture/source English is preserved.",
+      "UI37 original question-cycle unavailability, UI38 producer refusal, and UI39/UI40 empty canonical changes/receipts remain explicit; no fabricated successful state.",
+      "No new visual blocker observed in these eight final samples; full 41-capture review belongs to the Decisions manifest."
+    ]
+  }
+}

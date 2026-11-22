@@ -2,6 +2,7 @@ import { For, Show, type JSX } from "solid-js"
 import { useSfPresentation, sfCommonKey } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame"
 import type { Settings } from "./model"
+import { procurementNumberInput } from "../number-input"
 
 type DirectoryEntry = Readonly<{ id: string; name: string }>
 type Props = Readonly<{
@@ -15,11 +16,6 @@ const asText = (value: unknown): string => value == null ? "" : String(value)
 const asLines = (value: string | readonly string[] | undefined): string =>
   Array.isArray(value) ? value.join("\n") : typeof value === "string" ? value : ""
 const isChecked = (value: unknown): boolean => value === true || value === "true" || value === "on"
-const numericInput = (raw: string): Numeric => {
-  if (raw.trim() === "") return null // absence is never numeric zero
-  const value = Number(raw)
-  return Number.isFinite(value) ? value : raw // validation belongs to the producer
-}
 
 /** Exact CAP28 fieldnames only; no client policy/FX validator and no empty-to-zero coercion. */
 export function SfProcurementSettingsFields(props: Props): JSX.Element {
@@ -47,7 +43,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           <input id={id("field", name)} type={kind} step={kind === "number" ? "any" : undefined}
             disabled={props.disabled} value={asText(props.settings[name])}
             onInput={(event) => edit(name, kind === "number"
-              ? numericInput(event.currentTarget.value)
+              ? procurementNumberInput(event.currentTarget.value)
               : event.currentTarget.value)}
           />
         </Show>
@@ -117,7 +113,16 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
   )
   return (
     <div class="sf-n21-settings-groups">
-      <fieldset class="mx-card sf-n21-fieldset">
+      <nav class="sf-n21-settings-nav" aria-label={t(key("sf.cap28.title"))}>
+        <a href="#sf-procurement-settings-general">{t(key("sf.u36.general"))}</a>
+        <a href="#sf-procurement-settings-matrix">{t(key("sf.u36.matrix"))}</a>
+        <a href="#sf-procurement-settings-currencies">{t(key("sf.u36.currencies"))}</a>
+        <a href="#sf-procurement-settings-criteria">{t(key("sf.u36.technical"))}</a>
+        <a href="#sf-procurement-settings-commCriteria">{t(key("sf.u36.commercial"))}</a>
+        <a href="#sf-procurement-settings-payments">{t(key("sf.u36.payments"))}</a>
+        <a href="#sf-procurement-settings-attachments">{t(key("sf.u36.attachments"))}</a>
+      </nav>
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-general">
         <legend>{t(key("sf.u36.general"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("currency", "sf.u36.currency", "text")}
@@ -141,7 +146,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {toggle("requireActiveSupplier", "sf.u36.active")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-attachments">
         <legend>{t(key("sf.u36.attachments"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("uploadCap", "sf.u36.upload", "number")}
@@ -149,7 +154,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {scalar("escalationDays", "sf.u36.escalation", "number")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-matrix">
         <legend>{t(key("sf.u36.matrix"))}</legend>
         <div class="sf-n21-repeat">
           <For each={props.settings.levels ?? []}>{(row, index) => (
@@ -165,7 +170,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                 <input id={id("level", "threshold", index())} type="number" step="any"
                   value={numberText(row.threshold)} disabled={props.disabled}
                   onInput={(event) => changeLevel(index(), {
-                    threshold: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                    threshold: procurementNumberInput(event.currentTarget.value),
                   })} />
               </div>
               <div class="sf-n21-field">
@@ -186,7 +191,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           {addButton("levels")}
         </div>
       </fieldset>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-currencies">
         <legend>{t(key("sf.u36.currencies"))}</legend>
         <div class="sf-n21-repeat">
           <For each={props.settings.fxRates ?? []}>{(rate, index) => (
@@ -202,7 +207,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                 <input id={id("fx", "rate", index())} type="number" step="any"
                   value={numberText(rate.rate)} disabled={props.disabled}
                   onInput={(event) => changeRate(index(), {
-                    rate: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                    rate: procurementNumberInput(event.currentTarget.value),
                   })} />
               </div>
               {removeButton("fxRates", index())}
@@ -213,7 +218,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
         {scalar("fxUpdated", "sf.u36.rateDate", "date")}
       </fieldset>
       <For each={["criteria", "commCriteria"] as const}>{(group) => (
-        <fieldset class="mx-card sf-n21-fieldset">
+        <fieldset class="sf-n21-fieldset" id={"sf-procurement-settings-" + group}>
           <legend>{t(key(group === "criteria" ? "sf.u36.technical" : "sf.u36.commercial"))}</legend>
           <div class="sf-n21-repeat">
             <For each={props.settings[group] ?? []}>{(criterion, index) => (
@@ -229,7 +234,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
                   <input id={id(group, "weight", index())} type="number" step="any"
                     disabled={props.disabled} value={numberText(criterion.weight)}
                     onInput={(event) => changeCriterion(group, index(), {
-                      weight: event.currentTarget.value === "" ? null : event.currentTarget.value,
+                      weight: procurementNumberInput(event.currentTarget.value),
                     })} />
                 </div>
                 <Show when={group === "commCriteria" && ("auto" in criterion)}>
@@ -247,7 +252,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
           </div>
         </fieldset>
       )}</For>
-      <fieldset class="mx-card sf-n21-fieldset">
+      <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-payments">
         <legend>{t(key("sf.u36.payments"))}</legend>
         <div class="sf-n21-field-grid">
           {scalar("paymentTerms", "sf.u36.paymentTerms", "textarea")}

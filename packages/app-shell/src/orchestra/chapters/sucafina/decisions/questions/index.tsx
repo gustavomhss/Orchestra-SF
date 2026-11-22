@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
@@ -15,6 +16,7 @@ import { SfQuestionAnswer } from "./answer"
 import { SfQuestionCycles } from "./cycles"
 import { SfQuestionConsume } from "./consume"
 import "../cases/n24.css"
+import "../intent/decision.css"
 
 type RecipientsEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.recipients"]["output"]>
 type Recipient = Extract<RecipientsEnvelope, { status: "ok" }>["value"][number]
@@ -52,7 +54,11 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
     const ref = caseRef()
     setUi({ recipients: [], recipientState: active ? "loading" : "unavailable",
       phase: "editing", proposal: undefined, text: "", criterion: "", recipient: "", questionId: "" })
-    if (!active || !ref || !sfOperationReady(active.context, "collaboration.recipients")) return
+    if (!active || !ref) return
+    if (!sfOperationReady(active.context, "collaboration.recipients")) {
+      setUi("recipientState", "unavailable")
+      return
+    }
     const controller = new AbortController()
     onCleanup(() => controller.abort())
     void createSfCollaborationClient(active.transport)["collaboration.recipients"](
@@ -105,7 +111,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
       input: {
         caseRef: caseRef(),
         question: { text: ui.text.trim(), ...(ui.criterion ? { criterionRef: ui.criterion } : {}) },
-        sourceRefs: [...original.sourceRefs],
+        sourceRefs: snapshotDecisionRequest(original.sourceRefs),
         ...(ui.recipient ? { recipientRef: ui.recipient } : {}),
       },
     }
@@ -172,7 +178,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
         disabled: caseData.read.state === "loading", busy: false, onInvoke: () => caseData.reload(),
       }]}
     >
-      <div class="sf-n24">
+      <div class="sf-n24 sf-decision-page sf-decision-questions" data-sf-wave="four" data-sf-decision="UI37" data-sf-surface="UI37">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>
@@ -202,13 +208,14 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                 </ul>
               </Show>
             </section>
-            <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-new-question">
-              <h2 id="sf-n24-new-question">{t("sf.ui37.prepare")}</h2>
+            <details class="mx-card sf-n24-section sf-decision-composer" data-sf-question-composer>
+              <summary id="sf-n24-new-question">{t("sf.ui37.prepare")}</summary>
               <form onSubmit={(event) => {
                 event.preventDefault()
                 if (ui.phase === "reviewing") void prepare()
                 else preview()
               }}>
+                <div class="sf-decision-edit-fields" hidden={ui.phase === "reviewing" || ui.phase === "preparing" || ui.phase === "prepared"}>
                 <div class="sf-n24-form-grid">
                   <label class="sf-n24-field sf-n24-span">
                     <span>{t("sf.ui37.text")}</span>
@@ -217,8 +224,8 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                       onInput={(event) => setUi({ text: event.currentTarget.value, phase: "editing", message: "" })} />
                   </label>
                   <label class="sf-n24-field">
-                    <span>{t("sf.ui37.criterion")}</span>
-                    <select value={ui.criterion} onChange={(event) => setUi({ criterion: event.currentTarget.value, phase: "editing" })}
+                    <span id="sf-n24-question-criterion-label">{t("sf.ui37.criterion")}</span>
+                    <select aria-labelledby="sf-n24-question-criterion-label" value={ui.criterion} onChange={(event) => setUi({ criterion: event.currentTarget.value, phase: "editing" })}
                       disabled={ui.phase === "preparing" || ui.phase === "unknown" || ui.phase === "prepared"}>
                       <option value="">{t("sf.ui37.noCriterion")}</option>
                       <For each={current().criteria}>{(criterion) =>
@@ -227,8 +234,8 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </select>
                   </label>
                   <label class="sf-n24-field">
-                    <span>{t("sf.ui37.recipient")}</span>
-                    <select value={ui.recipient} onChange={(event) => setUi({ recipient: event.currentTarget.value, phase: "editing" })}
+                    <span id="sf-n24-question-recipient-label">{t("sf.ui37.recipient")}</span>
+                    <select aria-labelledby="sf-n24-question-recipient-label" value={ui.recipient} onChange={(event) => setUi({ recipient: event.currentTarget.value, phase: "editing" })}
                       disabled={ui.recipientState !== "ready" || ui.phase === "preparing" || ui.phase === "unknown" || ui.phase === "prepared"}>
                       <option value="">{t("sf.ui37.noRecipient")}</option>
                       <For each={ui.recipients}>{(recipient) =>
@@ -237,24 +244,30 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </select>
                   </label>
                 </div>
-                <section aria-labelledby="sf-n24-question-scope" class="sf-n24-review">
-                  <h3 id="sf-n24-question-scope">{t("sf.ui37.scope")}</h3>
+                <details class="sf-decision-source-scope">
+                  <summary id="sf-n24-question-scope">{t("sf.ui37.scope")}</summary>
                   <p><bdi>{current().id}</bdi> · {t("sf.ui35.version")}: {current().version}</p>
                   <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
                     <li><bdi>{source.refId}</bdi></li>}</For></ul>
-                </section>
-                <Show when={ui.phase === "reviewing"}>
-                  <div class="sf-n24-review" role="group" aria-label={t("sf.ui37.confirm")}>
+                </details>
+                </div>
+                <Show when={ui.phase === "reviewing" || ui.phase === "preparing"}>
+                  <div class="sf-n24-review sf-decision-review-stage" role="group" aria-label={t("sf.ui37.confirm")}>
+                    <h3>{t("sf.ui37.confirm")}</h3>
                     <p><bdi>{ui.text}</bdi></p>
                     <p>{t("sf.ui37.criterion")}: <bdi>{
                       current().criteria.find((item) => item.id === ui.criterion)?.description || t("sf.ui37.noCriterion")
-                    }</bdi><Show when={ui.criterion}>{" · "}<bdi>{ui.criterion}</bdi></Show></p>
+                    }</bdi></p>
                     <p>{t("sf.ui37.recipient")}: <bdi>{
                       ui.recipients.find((person) => person.id === ui.recipient)?.name || t("sf.ui37.noRecipient")
-                    }</bdi><Show when={ui.recipient}>{" · "}<bdi>{ui.recipient}</bdi></Show></p>
-                    <p>{t("sf.ui37.scope")}</p>
-                    <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
-                      <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi> · <bdi>{source.kind}</bdi></li>}</For></ul>
+                    }</bdi></p>
+                    <details class="sf-decision-source-scope">
+                      <summary>{t("sf.ui37.scope")} · {current().sourceRefs.length}</summary>
+                      <Show when={ui.criterion}><p>{t("sf.ui37.criterion")}: <bdi>{ui.criterion}</bdi></p></Show>
+                      <Show when={ui.recipient}><p>{t("sf.ui37.recipient")}: <bdi>{ui.recipient}</bdi></p></Show>
+                      <ul class="sf-n24-list"><For each={current().sourceRefs}>{(source) =>
+                        <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi> · <bdi>{source.kind}</bdi></li>}</For></ul>
+                    </details>
                   </div>
                 </Show>
                 <Show when={ui.message}><p role="status">{t(ui.message)}</p></Show>
@@ -267,11 +280,18 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </Show>
                   </div>}
                 </Show>
-                <button type="submit" class="mx-btn primary" disabled={!canPrepare()}>
-                  {t(ui.phase === "reviewing" ? "sf.ui37.confirm" : "sf.ui37.prepare")}
-                </button>
+                <div class="sf-n24-actions">
+                  <Show when={ui.phase !== "prepared"}>
+                    <button type="submit" class="mx-btn primary" disabled={!canPrepare()}>
+                      {t(ui.phase === "reviewing" || ui.phase === "preparing" ? "sf.ui37.confirm" : "sf.ui37.prepare")}
+                    </button>
+                  </Show>
+                  <Show when={ui.phase === "reviewing"}>
+                    <button type="button" class="mx-btn" onClick={() => setUi({ phase: "editing", message: "" })}>{t("sf.ui33.cancel")}</button>
+                  </Show>
+                </div>
               </form>
-            </section>
+            </details>
             <Show when={selectedQuestion()}>
               {(question) => <div id="sf-n24-answer-zone" tabIndex={-1}>
                 <SfQuestionAnswer owner={caseData.owner} question={question()} onConfirmed={() => caseData.reload()} />

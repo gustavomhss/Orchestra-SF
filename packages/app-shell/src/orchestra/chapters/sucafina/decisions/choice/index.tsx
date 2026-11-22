@@ -4,6 +4,7 @@
  */
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import type { SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useLanguage } from "@/context/language"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -20,6 +21,7 @@ import {
   u18Ref, u18TransportState, type SfChoiceOptions, type SfChoiceReview,
 } from "./model"
 import "./u18.css"
+import "../intent/decision.css"
 
 type View = {
   state: SfUiState
@@ -71,6 +73,10 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     const generation = owner.generation()
     if (!ready || owner.state().status !== "ready") {
       clearPrivate(currentState())
+      return
+    }
+    if (!sfOperationReady(ready.context, "decisions.choice.read")) {
+      clearPrivate("unavailable")
       return
     }
     readAbort?.abort()
@@ -148,7 +154,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     setView({ review: null, selectedChoiceId: choiceId, busy: true, outcome: "idle", operationRef: key })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.current-choice-prepare"](
-        choice.request, { signal: controller.signal, idempotencyKey: key },
+        snapshotDecisionRequest(choice.request), { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
@@ -196,7 +202,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     setView({ busy: true, operationRef: key })
     try {
       const result = await createSfDecisionsClient(ready.transport)["decisions.current-choice-promote"](
-        review.promotion, { signal: controller.signal, idempotencyKey: key },
+        snapshotDecisionRequest(review.promotion), { signal: controller.signal, idempotencyKey: key },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.status === 200 && result.body.status === "ok") {
@@ -271,21 +277,22 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="comparison"
       onLayoutMode={() => undefined}
     >
+      <div class="sf-decision-page sf-decision-choice" data-sf-wave="four" data-sf-decision="UI38" data-sf-surface="UI38">
       <SfStatePanel
         state={currentState()} messageKey={u18ErrorKey(currentState())}
         onRetryRead={view.outcome === "unknown" ? undefined : () => void read()}
       >
         <Show when={selected()}>
           {(caseData) => <>
-            <section aria-label={t("sf.u18.choice.current")}>
+            <section class="mx-card sf-u18-section sf-decision-choice-ledger" hidden={!!view.review} aria-label={t("sf.u18.choice.current")}>
               <h2>{t("sf.u18.choice.current")}</h2>
               <Show when={caseData().choices.length > 0} fallback={<p>{t("sf.u18.choice.noChoices")}</p>}>
                 <div class="sf-u18-choice-list">
                   <For each={caseData().choices}>
                     {(choice) => (
-                      <article class="mx-card sf-u18-choice" data-choice-id={choice.id}>
-                        <h3>{choice.title}</h3>
-                        <p>{choice.reason}</p>
+                      <article class="sf-u18-choice" data-choice-id={choice.id}>
+                        <div class="sf-decision-choice-identity"><h3><bdi>{choice.title}</bdi></h3>
+                        <p><bdi>{choice.reason}</bdi></p></div>
                         <button
                           type="button" class="mx-btn"
                           disabled={!choice.request || !canPrepare() || view.busy || view.outcome !== "idle"}
@@ -302,7 +309,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
               </Show>
             </section>
             <Show when={privacy() ? undefined : view.review}>
-              {(review) => <>
+              {(review) => <section class="sf-decision-review-stage">
                 <SfChangeReview
                   operation={{
                     ref: (view.operationRef ?? review().bindingDigest) as SfOperationRef,
@@ -321,8 +328,8 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                   onRevise={() => setView({ review: null, selectedChoiceId: null })}
                   onCancel={() => setView({ review: null, selectedChoiceId: null })}
                 />
-                <section class="mx-card">
-                  <h3>{t("sf.u18.choice.constraints")}</h3>
+                <details class="sf-decision-review-evidence">
+                  <summary>{t("sf.u18.choice.constraints")}</summary>
                   <ul>
                     <For each={[...review().current.unresolvedConditions, ...review().current.restrictions, ...review().current.costCoverage.issues]}>
                       {(condition) => <li>{condition}</li>}
@@ -336,8 +343,8 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                       </li>}
                     </For>
                   </ul>
-                </section>
-              </>}
+                </details>
+              </section>}
             </Show>
             <Show when={view.outcome === "confirmed"}>
               <p role="status" class="mx-card">{t("sf.u18.choice.promoted")}
@@ -351,6 +358,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
       <Show when={view.outcome === "unknown"}>
         <div role="alert" class="mx-card">{t("sf.u18.choice.unknown")}</div>
       </Show>
+      </div>
     </SfPageFrame>
   )
 }

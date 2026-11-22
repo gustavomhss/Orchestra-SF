@@ -1,39 +1,48 @@
-/* N20 U45: version-aware FX view, no global theme or table overrides. */
-.sf-n20-fx {
-  display: grid;
-  gap: 1.25rem;
-  min-width: 0;
-  width: 100%;
+@import "../versions/planning.css";
+
+/* CAP22 keeps the fixed base and source rates together; edits have their own stage. */
+.sf-n20-fx, .sf-n20-fx-reading { display: grid; gap: var(--sf-plan-gap); min-inline-size: 0; }
+.sf-n20-fx-toolbar, .sf-n20-fx-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; }
+.sf-n20-fx-toolbar > label { display: grid; gap: 6px; inline-size: min(100%, 280px); }
+.sf-n20-fx-toolbar :is(select, input) { inline-size: 100%; }
+.sf-n20-fx-toolbar p { font-size: var(--orchestra-font-size-sm); color: var(--orchestra-muted); }
+.sf-n20-fx-base {
+  display: grid; grid-template-columns: minmax(80px, .5fr) minmax(100px, .5fr) minmax(0, 2fr); align-items: center;
+  gap: 12px 20px; padding: 20px; background: var(--mx-raised);
+  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
-.sf-n20-fx-toolbar,
-.sf-n20-fx-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .75rem;
-  align-items: end;
+.sf-n20-fx-base strong { font-size: var(--orchestra-font-size-3xl); color: var(--orchestra-text); font-variant-numeric: tabular-nums; font-weight: 600; }
+.sf-n20-fx-base p { color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
+.sf-n20-fx-base [role="status"] { grid-column: 1 / -1; color: var(--orchestra-warm); }
+.sf-n20-fx-rates {
+  min-inline-size: 0; padding: 20px; background: var(--mx-raised);
+  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
-.sf-n20-fx-toolbar > label,
-.sf-n20-fx-editor > label { display: grid; gap: .375rem; min-width: min(100%, 13rem); }
-.sf-n20-fx-toolbar :is(select, input), .sf-n20-fx-editor input { max-width: 100%; min-width: 0; }
-.sf-n20-fx-base,
-.sf-n20-fx-usage,
-.sf-n20-fx-editor,
-.sf-n20-fx-review { display: grid; gap: .75rem; padding: 1.25rem; min-width: 0; }
-.sf-n20-fx-base h2, .sf-n20-fx-rates h2, .sf-n20-fx-usage h2 { margin-top: 0; }
-.sf-n20-fx-base strong { font-variant-numeric: tabular-nums; }
-.sf-n20-fx-rates { min-width: 0; }
-.sf-n20-fx-rates .sf-s01-table-viewport { max-width: 100%; overflow-x: auto; }
-.sf-n20-fx-usage ul { margin: 0; overflow-wrap: anywhere; }
-.sf-n20-fx-editor { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
-.sf-n20-fx-editor h2,
-.sf-n20-fx-editor p,
-.sf-n20-fx-editor .sf-n20-fx-actions { grid-column: 1 / -1; }
-.sf-n20-fx-error { color: var(--mx-danger, currentColor); overflow-wrap: anywhere; }
-.sf-n20-fx :is(input, select, button, a):focus-visible { outline: 2px solid var(--mx-focus, currentColor); outline-offset: 2px; }
-@media (max-width: 500px) {
-  .sf-n20-fx-toolbar > label, .sf-n20-fx-actions > button { width: 100%; }
-  .sf-n20-fx-base, .sf-n20-fx-usage, .sf-n20-fx-editor, .sf-n20-fx-review { padding: .75rem; }
+.sf-n20-fx-rates h2 { margin-block-end: 16px; }
+.sf-n20-fx-rates [data-sf-rate-state="missing"] { color: var(--orchestra-muted); }
+.sf-n20-fx-rates [data-sf-rate-state="known"] { font-variant-numeric: tabular-nums; }
+.sf-n20-fx-usage { display: grid; gap: 8px; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.sf-n20-fx-usage > p { max-inline-size: 84ch; color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
+.sf-n20-fx-usage > [role="status"] { color: var(--orchestra-warm); }
+.sf-n20-fx-usage ul { margin: 0; padding-inline-start: 20px; }
+.sf-n20-fx-editor {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+  inline-size: 100%; max-inline-size: var(--sf-plan-editor); box-sizing: border-box;
+  padding: 20px; background: var(--mx-raised); border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
 }
-@media (prefers-reduced-motion: reduce) {
-  .sf-n20-fx * { scroll-behavior: auto; animation: none; }
+.sf-n20-fx-editor > label { display: grid; gap: 6px; min-inline-size: 0; }
+.sf-n20-fx-editor input { inline-size: 100%; }
+.sf-n20-fx-editor > :is(h2, p, .sf-n20-fx-actions), .sf-n20-fx-editor > label:has([name="observedAt"]) { grid-column: 1 / -1; }
+.sf-n20-fx-editor > p { color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
+.sf-n20-fx-review { display: grid; gap: 16px; inline-size: 100%; max-inline-size: var(--sf-plan-editor); }
+.sf-n20-fx-error { color: var(--orchestra-danger); }
+@media (max-width: 619px) {
+  .sf-n20-fx-base { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .sf-n20-fx-base p { grid-column: 1 / -1; }
+  .sf-n20-fx-editor { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 479px) {
+  .sf-n20-fx-base, .sf-n20-fx-rates, .sf-n20-fx-editor { padding: 16px; }
+  .sf-n20-fx-toolbar, .sf-n20-fx-actions { flex-direction: column; align-items: stretch; }
+  .sf-n20-fx-toolbar > label, .sf-n20-fx-actions > * { inline-size: 100%; }
 }

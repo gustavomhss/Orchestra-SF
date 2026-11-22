@@ -32,6 +32,7 @@ import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
 import { createSfWorkProjectionHandlers, observeSfHome } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { observeSfWorkHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/work-health.ts"
 import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
@@ -203,7 +204,10 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       persistence: store,
       authenticate: identity.authenticate,
       environment: environmentFor,
-      ...(runtime ? { product } : {}),
+      ...(runtime ? { product,
+        productView: async (request: Request, surface: Surface, page: string | undefined) =>
+          runtime?.services?.()?.productView?.(request, surface, page),
+      } : {}),
       maxJsonBytes: 2 * 1024 * 1024,
       assets,
     }
@@ -281,6 +285,12 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
             return authority && nativeReadBinding && runtime?.identity() ? { application: nativeApplication, producer: business, authority } : undefined
           } }, request, stamp),
           observeSfHome(runtime?.services?.(), request, stamp),
+          observeSfWorkHealth({ source: () => {
+            const current = runtime?.services?.()
+            return current && nativeProjections && productBinding && runtime?.identity()
+              ? { runtime: current, application: nativeApplication, handlers: nativeHandlers,
+                projectionBinding: nativeProjections, productBinding } : undefined
+          } }, request, stamp),
           observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
           actions.operational(request, stamp),
         ])

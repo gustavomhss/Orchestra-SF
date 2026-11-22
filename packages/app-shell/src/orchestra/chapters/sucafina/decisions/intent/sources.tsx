@@ -1,5 +1,6 @@
 import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "./request"
 import { Option, Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { createSfBiClient } from "@orchestra/client/sucafina/bi"
@@ -24,6 +25,7 @@ type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "conflict" | "
 export function SfCaseSourcesEditor(props: Readonly<{
   projection: SfCaseProjection
   onSaved: () => void
+  onClose?: () => void
 }>) {
   const owner = useSfContext()
   const language = useLanguage()
@@ -64,7 +66,9 @@ export function SfCaseSourcesEditor(props: Readonly<{
       caseRef: { id: record.id, incarnation: record.incarnation, version: record.version },
       objective: draft.objective.trim(),
       criteria: draft.criteria.map(({ id, description, required }) => ({ id, description: description.trim(), required })),
-      horizon: { start: draft.start, end: draft.end }, currency: draft.currency, sourceRefs: sources,
+      horizon: { start: draft.start, end: draft.end }, currency: draft.currency,
+      // Keep Solid metadata outside the closed input schema; all source values remain exact.
+      sourceRefs: snapshotDecisionRequest(sources),
     })
   const discover = async () => {
     const ready = owner.ready(), record = props.projection.case
@@ -173,17 +177,25 @@ export function SfCaseSourcesEditor(props: Readonly<{
       if (pending === abort) pending = undefined
       props.onSaved()
     } catch (error) {
-      if (!abort.signal.aborted && current(generation, record))
+      if (pending === abort && !abort.signal.aborted && current(generation, record))
         setDraft({ phase: "unknown", message: "sf.ui34.editUnknown" })
     } finally {
-      if (!abort.signal.aborted && current(generation, record)) setDraft("busy", false)
+      // onSaved may dispose the Show accessor after releasing this completed request.
+      if (pending === abort && !abort.signal.aborted && current(generation, record)) setDraft("busy", false)
     }
   }
   return <section class="mx-card sf-n24-section" data-sf-decision-editor aria-labelledby="sf-case-edit-sources">
-    <h2 id="sf-case-edit-sources">{t("sf.ui34.edit")}</h2>
+    <header class="sf-decision-section-heading">
+      <h2 id="sf-case-edit-sources">{t("sf.ui34.edit")}</h2>
+      <Show when={props.onClose}>
+        <button class="mx-btn" type="button" disabled={draft.busy || draft.phase === "unknown"}
+          onClick={() => props.onClose?.()}>{t("sf.ui35.return")}</button>
+      </Show>
+    </header>
+    <div class="sf-decision-edit-fields" hidden={draft.phase === "reviewing" || draft.phase === "submitting"}>
     <div class="sf-n24-form-grid">
-      <label class="sf-n24-field"><span>{t("sf.ui33.objective")}</span>
-        <input value={draft.objective} disabled={!editing()} onInput={(event) => setDraft("objective", event.currentTarget.value)} />
+      <label class="sf-n24-field sf-n24-span"><span>{t("sf.ui33.objective")}</span>
+        <textarea rows={3} value={draft.objective} disabled={!editing()} onInput={(event) => setDraft("objective", event.currentTarget.value)} />
       </label>
       <label class="sf-n24-field"><span>{t("sf.ui33.start")}</span>
         <input type="date" value={draft.start} disabled={!editing()} onInput={(event) => setDraft("start", event.currentTarget.value)} />
@@ -195,7 +207,7 @@ export function SfCaseSourcesEditor(props: Readonly<{
         <input value={draft.currency} disabled={!editing()} maxLength={3}
           onInput={(event) => setDraft("currency", event.currentTarget.value.toUpperCase())} />
       </label>
-      <For each={draft.criteria}>{(criterion, index) => <label class="sf-n24-field">
+      <For each={draft.criteria}>{(criterion, index) => <label class="sf-n24-field sf-n24-span">
         <span>{t("sf.ui34.criteria")} {index() + 1}</span>
         <input value={criterion.description} disabled={!editing()}
           onInput={(event) => {
@@ -206,9 +218,12 @@ export function SfCaseSourcesEditor(props: Readonly<{
       </label>}</For>
     </div>
     <p>{t("sf.ui34.attachScope")}</p>
-    <ul data-sf-decision-sources><For each={draft.sources}>{(source) =>
-      <li>{source.kind === "record" ? source.target.recordType + " · " + source.target.recordId : source.kind} · {source.refId}</li>
-    }</For></ul>
+    <details class="sf-decision-source-scope">
+      <summary>{t("sf.ui34.sources")} · <bdi>{draft.sources.length}</bdi></summary>
+      <ul data-sf-decision-sources><For each={draft.sources}>{(source) =>
+        <li><bdi>{source.kind === "record" ? source.target.recordType + " · " + source.target.recordId : source.kind} · {source.refId}</bdi></li>
+      }</For></ul>
+    </details>
     <div class="sf-n24-actions">
       <button class="mx-btn" type="button" disabled={!editing() || !permitted("bi.bi-options")} onClick={() => void discover()}>
         {t("sf.ui34.findPlanner")}
@@ -230,19 +245,23 @@ export function SfCaseSourcesEditor(props: Readonly<{
     </section>}</Show>
     <button class="mx-btn" type="button" disabled={!editing() || !draft.inspected}
       onClick={attach}>{t("sf.ui34.attachSource")}</button>
-    <Show when={draft.phase === "reviewing"}>
-      <section role="group" aria-label={t("sf.ui34.reviewEdit")}>
+    </div>
+    <Show when={draft.phase === "reviewing" || draft.phase === "submitting"}>
+      <section class="sf-decision-review-stage" role="group" aria-label={t("sf.ui34.reviewEdit")}>
         <p>{t("sf.ui34.attachScope")}</p>
         <p>{t("sf.ui34.current")}: {props.projection.case.version}</p>
         <p>{draft.objective.trim()}</p>
         <p>{draft.start} – {draft.end} · {draft.currency}</p>
         <ol><For each={draft.criteria}>{(criterion) => <li>{criterion.description.trim()}</li>}</For></ol>
-        <ul><For each={draft.sources}>{(source) => <li>{source.refId}</li>}</For></ul>
+        <details class="sf-decision-source-scope">
+          <summary>{t("sf.ui34.sources")} · <bdi>{draft.sources.length}</bdi></summary>
+          <ul><For each={draft.sources}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
+        </details>
         <button class="mx-btn primary" type="button" disabled={draft.busy} onClick={() => void save()}>{t("sf.ui34.confirmEdit")}</button>
-        <button class="mx-btn" type="button" onClick={() => setDraft("phase", "editing")}>{t("sf.ui33.cancel")}</button>
+        <button class="mx-btn" type="button" disabled={draft.busy} onClick={() => setDraft("phase", "editing")}>{t("sf.ui33.cancel")}</button>
       </section>
     </Show>
-    <Show when={draft.phase !== "reviewing"}>
+    <Show when={draft.phase !== "reviewing" && draft.phase !== "submitting"}>
       <button class="mx-btn primary" type="button"
         disabled={!editing() || !permitted("decisions.decision-edit") || !changed()}
         onClick={review}>{t("sf.ui34.reviewEdit")}</button>

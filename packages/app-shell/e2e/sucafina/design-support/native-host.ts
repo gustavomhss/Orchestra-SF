@@ -13,6 +13,10 @@ import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runt
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
 import { DashboardPortfolio } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-portfolio"
 import { seedWaveThreeDashboard, seedWaveThreePlanner } from "./wave-three-seed"
+import { seedWaveFourPlanner } from "./wave-four-planner-seed"
+import { seedWaveFourProcurement } from "./wave-four-procurement-seed"
+import { seedWaveFourDecisions, seedWaveFourDecisionsPlanner } from "./wave-four-decisions-seed"
+import { loadLocalConfiguration } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-configuration"
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
 const privateRoot = process.argv[2]
@@ -21,7 +25,9 @@ if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
 const secondWave = process.argv[3] === "two"
-const thirdWave = process.argv[3] === "three"
+const decisionsWave = process.argv[3] === "four-decisions"
+const fourthWave = process.argv[3] === "four" || decisionsWave
+const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
 const year = now.getUTCFullYear()
 const month = now.getUTCMonth() + 1
@@ -33,6 +39,14 @@ const projectName = "Design test data · Regional delivery programme"
 const stop = new AbortController()
 process.once("SIGTERM", () => stop.abort())
 process.once("SIGINT", () => stop.abort())
+
+async function reportFailure(error: unknown) {
+  const message = error instanceof Error ? error.stack ?? error.message : String(error)
+  const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"\']+/g, "code=[redacted]").slice(-8192)
+  // Persist the bounded diagnostic before exit; the process exit event can beat stderr delivery.
+  await writeFile(path.join(privateRoot, "failure.txt"), safe, { mode: 0o600 }).catch(() => undefined)
+  process.stderr.write(safe + "\n")
+}
 
 const program = Effect.scoped(Effect.gen(function* () {
   const launcher = yield* AppProcess.Service
@@ -53,6 +67,18 @@ const program = Effect.scoped(Effect.gen(function* () {
     serverPassword,
     seed: async ({ config, store, actorId }) => {
       configuration = config
+      process.stdout.write("SF_DESIGN_STAGE configuration\n")
+      const loaded = await loadLocalConfiguration(config)
+      const operator = loaded.config.localOperator
+      if (fourthWave) {
+        if (!operator?.name) throw new Error("The native operator name is required for procurement")
+        // Configure the original installation policy before the real host starts.
+        // The original identity producer issues its roles; no grant or cookie is patched.
+        await writeFile(config, JSON.stringify({
+          ...loaded.config, localOperator: { ...operator, buyer: true },
+        }, null, 2) + "\n", { mode: 0o600 })
+      }
+      process.stdout.write("SF_DESIGN_STAGE dashboard-seed\n")
       await store.transaction("dashboard", async (snapshot) => {
         const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
         const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
@@ -145,13 +171,40 @@ const program = Effect.scoped(Effect.gen(function* () {
         if (thirdWave) seedWaveThreeDashboard(snapshot, actor, environment, year, month)
         return { commit: true, value: undefined }
       })
+      process.stdout.write("SF_DESIGN_STAGE planner-seed\n")
       if (thirdWave) await store.transaction("planner", async (snapshot) => {
-        seedWaveThreePlanner(snapshot, { id: actorId, roles: ["admin"], canWrite: true },
-          { at: now.toISOString(), id: randomUUID, directory: [] }, year)
+        const actor: Actor = { id: actorId, roles: ["admin"], canWrite: true }
+        const environment = { at: now.toISOString(), id: randomUUID, directory: [] }
+        if (decisionsWave) seedWaveFourDecisionsPlanner(snapshot, actor, environment, year)
+        else {
+          seedWaveThreePlanner(snapshot, actor, environment, year)
+          if (fourthWave) seedWaveFourPlanner(snapshot, actor, environment, year)
+        }
         return { commit: true, value: undefined }
       })
+      process.stdout.write("SF_DESIGN_STAGE procurement-seed\n")
+      if (fourthWave) await store.transaction("procurement", async (snapshot) => {
+        if (!operator?.name) throw new Error("Native procurement directory identity is unavailable")
+        seedWaveFourProcurement(snapshot, { id: actorId, roles: ["admin", "buyer"], canWrite: true },
+          { at: now.toISOString(), id: randomUUID, directory: [{ id: actorId, name: operator.name }] }, year)
+        return { commit: true, value: undefined }
+      })
+      process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
+  process.stdout.write("SF_DESIGN_STAGE native-ready\n")
+  if (decisionsWave) {
+    process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
+    yield* Effect.promise(async () => {
+      try { await seedWaveFourDecisions(installed, year) }
+      catch (error: unknown) {
+        // Record the source failure before scoped child-process cleanup starts.
+        await reportFailure(error)
+        throw error
+      }
+    })
+    process.stdout.write("SF_DESIGN_STAGE decisions-ready\n")
+  }
   if (!configuration) throw new Error("Native installation configuration was not observed")
   // The fixture consumed its own enrollment. Mint a new genuine one-use handoff
   // for the browser; no cookie, authority map or successful projection is invented.
@@ -179,8 +232,7 @@ try {
   await Effect.runPromise(program, { signal: stop.signal })
 } catch (error: unknown) {
   if (!stop.signal.aborted) {
-    const message = error instanceof Error ? error.stack ?? error.message : String(error)
-    process.stderr.write(message.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]").slice(-8192) + "\n")
+    await reportFailure(error)
     process.exitCode = 1
   }
 }

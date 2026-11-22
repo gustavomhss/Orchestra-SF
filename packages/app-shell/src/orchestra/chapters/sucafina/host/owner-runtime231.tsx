@@ -265,8 +265,8 @@ function MountedSurface(props: Readonly<{
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
   const polishedSurface = () => {
     const surface = current()?.surfaceId
-    return surface === "UI29" || surface === "UI33" ||
-      (surface !== undefined && /^CAP(?:0[1-9]|1[0-9])$/.test(surface))
+    return surface !== undefined &&
+      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|3[0-9]|4[01])$/.test(surface))
   }
   return (
     <>

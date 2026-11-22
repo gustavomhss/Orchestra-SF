@@ -25,6 +25,7 @@ import {
   u18Text, u18TransportState, type SfCase, type SfCaseChange, type SfDecisionReview,
 } from "../choice/model"
 import "../choice/u18.css"
+import "../intent/decision.css"
 
 type ApplyOutcome = Readonly<{ receiptId: string; surface: string; version: number; outcome: "applied" | "conflict" | "failed" }>
 type View = {
@@ -377,22 +378,24 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="work"
     onLayoutMode={() => undefined}
   >
+    <div class="sf-decision-page sf-decision-changes" data-sf-wave="four" data-sf-decision="UI39" data-sf-surface="UI39">
     <SfStatePanel state={active()} messageKey={u18ErrorKey(active())}
       coverage={selected() ? coverage() : undefined}
       onRetryRead={() => void read()}>
       <Show when={view.caseData}>
         {(data) => <>
-          <section class="sf-u18-section">
+          <section class="mx-card sf-u18-section sf-decision-change-ledger" hidden={!!view.review}>
             <h2>{t("sf.u18.changes.title")}</h2>
             <Show when={data().preparedChanges.length > 0} fallback={<p>{language.t("sf.common.empty")}</p>}>
               <ul class="sf-u18-change-list">
                 <For each={data().preparedChanges}>
                   {(change) => <li>
-                    <button class="mx-btn" type="button"
+                    <button class="mx-btn sf-decision-change-select" type="button"
                       disabled={view.busy || view.outcomeUnknown}
                       aria-current={selected()?.id === change.id ? "true" : undefined}
                       onClick={() => choose(change.id)}>
-                      {change.target.id} · {change.state} · v{change.expectedVersion}
+                      <strong><bdi>{change.target.id}</bdi></strong><span class="sf-decision-state">{change.state}</span>
+                      <span class="sf-decision-note">{t("sf.u18.changes.version")}: {change.expectedVersion}</span>
                     </button>
                   </li>}
                 </For>
@@ -401,7 +404,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
           </section>
           <Show when={selected()}>
             {(change) => <>
-              <section class="mx-card sf-u18-section">
+              <section class="mx-card sf-u18-section sf-decision-change-detail" hidden={!!view.review}>
                 <h3>{t("sf.u18.changes.current")}</h3>
                 <dl>
                   <dt>{t("sf.u18.changes.target")}</dt><dd>{change().target.id}</dd>
@@ -421,7 +424,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                 </Show>
               </section>
               <Show when={privateState() ? undefined : view.review}>
-                {(review) => <SfChangeReview
+                {(review) => <div class="sf-decision-review-stage"><SfChangeReview
                   operation={{
                     ref: (view.reviewIntent ?? change().operationRef) as SfOperationRef,
                     label: u18Message("sf.u18.changes.review"),
@@ -440,7 +443,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   onConfirm={() => void apply()}
                   onRevise={() => setView("review", null)}
                   onCancel={() => setView("review", null)}
-                />}
+                /></div>}
               </Show>
               <Show when={view.applyOutcome}>
                 {(outcome) => <div class="mx-card" role="status">
@@ -486,5 +489,6 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         {t("sf.u18.changes.recover")}
       </button>
     </Show>
+    </div>
   </SfPageFrame>
 }

@@ -8,12 +8,14 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
+import { sfCommonKey } from "../../shared/frame/presentation"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import { SfBoundAssets } from "../../shared/attachments/bound-assets"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
+import { procurementCommandSnapshot } from "../command-snapshot"
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
 import {
@@ -22,6 +24,7 @@ import {
   type SfPoEdit, type SfPrEdit, type SfRequest, type SfRequestCommand, type SfRequestsRead,
 } from "./model"
 import "./requests.css"
+import "../overview/presentation.css"
 
 type Key = keyof typeof SF_U11_REMAINING_COPY
 type Ready = Extract<SfRequestsRead, { kind: "ready" }>
@@ -73,7 +76,7 @@ function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): read
       path: kind + "." + field,
       label: message(("sf.u11.remaining.field." + field) as Key),
       value: actual === undefined || actual === null
-        ? { kind: "missing" as const, reason: message("sf.u11.remaining.noSource") }
+        ? { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } }
         : { kind: "text" as const, text: dataText(
           typeof actual === "object" ? JSON.stringify(actual) : String(actual),
         ) },
@@ -124,6 +127,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     read: undefined as Ready | undefined,
     selected: undefined as SfRef | undefined,
     creating: false,
+    showList: false,
     filter: "",
     sort: { kind: "none" } as SfSort,
     refresh: 0,
@@ -172,7 +176,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     for (const param of ["server", "project", "installation"])
       if (url.searchParams.has(param)) query.set(param, url.searchParams.get(param)!)
     return "/orchestra/sf-procurement/requests/" + encodeSfRouteRef(ref) +
-      (part === "detail" ? "" : "/" + part) + (query.size ? "?" + query.toString() : "")
+      (part === "detail" ? "" : part === "quotes" ? "/sourcing/compare" : "/" + part) +
+      (query.size ? "?" + query.toString() : "")
   }
 
   createEffect(() => {
@@ -362,8 +367,8 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         !stageAllowed(review.action) || !sourceAvailable() || view.sending) return
     if (review.action !== "create" && (!review.ref || version() !== review.version ||
         row()?.status !== review.status)) return
-    const pr = review.pr
-    const po = review.po
+    const pr = review.pr ? procurementCommandSnapshot(review.pr) : undefined
+    const po = review.po ? procurementCommandSnapshot(review.po) : undefined
     if (pr && (!activePr() || JSON.stringify(activePr()?.value) !== JSON.stringify(pr) ||
         (review.ref && activePr()?.baseVersion !== review.version))) return
     if (po && (!activePo() || JSON.stringify(activePo()?.value) !== JSON.stringify(po) ||
@@ -383,11 +388,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       ...(review.ref ? { id: review.ref } : {}) }
     const input = (() => {
       switch (review.action) {
-        case "create": return { ...base, action: "create" as const, values: { pr: review.pr! } }
-        case "save-pr": return { ...base, action: "save" as const, values: { pr: review.pr! } }
-        case "save-po": return { ...base, action: "save" as const, values: { po: review.po! } }
-        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: review.pr! } }
-        case "submit_po": return { ...base, action: "submit_po" as const, values: { po: review.po! } }
+        case "create": return { ...base, action: "create" as const, values: { pr: pr! } }
+        case "save-pr": return { ...base, action: "save" as const, values: { pr: pr! } }
+        case "save-po": return { ...base, action: "save" as const, values: { po: po! } }
+        case "submit_pr": return { ...base, action: "submit_pr" as const, values: { pr: pr! } }
+        case "submit_po": return { ...base, action: "submit_po" as const, values: { po: po! } }
         case "issue": return { ...base, action: "issue" as const, values: {} }
         case "cancel": return { ...base, action: "cancel" as const, values: { reason: review.reason } }
         case "delete": return { ...base, action: "delete" as const, values: {} }
@@ -467,15 +472,15 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       const result = await (async () => {
         switch (review.action) {
           case "create": return client["domain.command.CAP25.create"](
-            { ...base, action: "create", values: { pr: review.pr! } }, options)
+            { ...base, action: "create", values: { pr: pr! } }, options)
           case "save-pr": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { pr: review.pr! } }, options)
+            { ...base, action: "save", values: { pr: pr! } }, options)
           case "save-po": return client["domain.command.CAP25.save"](
-            { ...base, action: "save", values: { po: review.po! } }, options)
+            { ...base, action: "save", values: { po: po! } }, options)
           case "submit_pr": return client["domain.command.CAP25.submit_pr"](
-            { ...base, action: "submit_pr", values: { pr: review.pr! } }, options)
+            { ...base, action: "submit_pr", values: { pr: pr! } }, options)
           case "submit_po": return client["domain.command.CAP25.submit_po"](
-            { ...base, action: "submit_po", values: { po: review.po! } }, options)
+            { ...base, action: "submit_po", values: { po: po! } }, options)
           case "issue": return client["domain.command.CAP25.issue"](
             { ...base, action: "issue", values: {} }, options)
           case "cancel": return client["domain.command.CAP25.cancel"](
@@ -641,6 +646,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         purpose, binding: { kind: "catalog-command", operationId,
           version: { kind: "record", expectedVersion: intent.version },
           confirmation: "presentation-only" } }}
+      busy={view.sending}
       state={view.sending ? "loading" : "ready"}
       onConfirm={() => { void confirm() }}
       onRevise={cancelReview} onCancel={cancelReview}
@@ -662,7 +668,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       : current?.status === "sourcing" || current?.status === "src_rejected" ? "quote"
       : current?.status === "po_approved" || current?.status === "po_issued" ? "signed-po"
       : undefined
-    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined}>
+    return <article class="sf-u11-detail" data-sf-request-ref={ref ?? undefined} data-stage={view.reviewing ? "review" : "edit"}>
+      <button type="button" class="mx-link sf-procurement-back"
+        disabled={view.sending || view.outcomeUnknown || prPending() || poPending()}
+        onClick={() => setView("showList", true)}>{t("sf.u11.remaining.backList")}</button>
       <header class="sf-u11-detail-head">
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
         <Show when={!creating() && ref}>
@@ -705,6 +714,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </section>
         </Show>
       </header>
+      <div class="sf-u11-content" hidden={!!view.reviewing}>
       <Show when={current && ref}>
         <nav class="sf-u11-tabs" aria-label={t("sf.u11.remaining.progress")}>
           <a href={stageHref(ref!, "requisition")}>{t("sf.u11.remaining.pr")}</a>
@@ -834,30 +844,35 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </Show>
         </div>
       </Show>
+      </div>
       {reviewPane()}
     </article>
   }
 
-  return <section data-component="sf-requests-pr-po" aria-busy={view.sending}>
+  return <section class="sf-procurement-wave" data-component="sf-requests-pr-po" data-sf-surface="CAP25" aria-busy={view.sending}>
     <SfPageFrame
       titleKey={copyKey("sf.u11.remaining.list")}
       context={[]} tabs={[]} activeTab={null}
-      primaryAction={actionAllowed("create") ? {
-        id: "create", labelKey: copyKey("sf.u11.remaining.new"), tone: "primary",
+      primaryAction={actionAllowed("create") && (view.showList || (!row() && !creating())) ? {
+        id: "create", labelKey: copyKey(creating() ? "sf.u11.remaining.resumeDraft" : "sf.u11.remaining.new"), tone: "primary",
         disabled: view.sending || view.outcomeUnknown, busy: view.sending,
-        onInvoke: () => setView({ creating: true, selected: undefined,
-          newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined }),
+        onInvoke: () => {
+          if (creating()) { setView("showList", false); return }
+          setView({ creating: true, selected: undefined, showList: false,
+            newIntentRef: crypto.randomUUID() as SfIntentRef, reviewing: undefined })
+        },
       } : undefined}
       secondaryActions={[]} density="comfortable"
-      layout={view.layoutMode === "single" ? "reading" : "split"}
+      layout="work"
       onLayoutMode={(mode) => setView("layoutMode", mode)}
     >
+      <div class="sf-u11-surface" data-sf-wave="four">
       <Show when={sourceAvailable()} fallback={
         <SfStatePanel state={view.state} messageKey={copyKey("sf.u11.remaining.noSource")}
           onRetryRead={view.state === "denied" ? undefined : refresh} />
       }>
-        <div class="sf-u11-layout">
-          <div class="sf-u11-list">
+        <div class="sf-u11-layout" data-sf-wave="four" data-view={view.showList || (!row() && !creating()) ? "list" : "detail"}>
+          <div class="sf-u11-list" hidden={!view.showList && (!!row() || creating())}>
             <label for={searchId}>{t("sf.u11.remaining.filter")}</label>
             <div class="sf-u11-filters">
               <input id={searchId} type="search" placeholder={t("sf.u11.remaining.filterPlaceholder")}
@@ -868,13 +883,13 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
             <SfDataTable rows={rows()} getRowKey={(record) => requestRef(record)!}
               columns={columns} selectedKey={selectedRef()} sort={view.sort}
               page={{ kind: "none", total: rows().length }} onSort={(sort) => setView("sort", sort)}
-              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
+              onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined, showList: false })}
               rowActions={() => []} onRowAction={() => undefined}
               captionKey={tableKey("sf.u11.remaining.list")} density="comfortable"
               state={rows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
             />
           </div>
-          <div class="sf-u11-detail-wrap">
+          <div class="sf-u11-detail-wrap" hidden={view.showList || (!row() && !creating())}>
             <Show when={row() || creating()} fallback={<p role="status">{t("sf.u11.remaining.open")}</p>}>
               {renderDetail()}
             </Show>
@@ -887,6 +902,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           <button type="button" class="mx-btn" onClick={refresh}>{t("sf.u11.remaining.retry")}</button>
         </p>}
       </Show>
+      </div>
     </SfPageFrame>
   </section>
 }

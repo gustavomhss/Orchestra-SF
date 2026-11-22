@@ -58,27 +58,27 @@ waveThreeTest.afterEach(async ({ page }, info) => {
 })
 
 /** Absolute source URL; owner-bound bookmark navigation uses the real installed host. */
-export async function enter(page: Page, owner: Owner, href: string, title: string) {
+export async function enter(page: Page, owner: Owner, href: string, title: string, busyTimeoutMs = 10_000) {
   const target = new URL(href)
   target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
   target.searchParams.set("project", owner.projectId)
   target.searchParams.set("installation", owner.installationId)
   await page.goto(target.href)
-  await ready(page, title)
+  await ready(page, title, busyTimeoutMs)
   await expect(page).toHaveURL((url) => url.origin === target.origin && url.pathname === target.pathname &&
     url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
   await reflow(page)
   await scrollPageTop(page)
 }
 
-export async function ready(page: Page, title: string) {
+export async function ready(page: Page, title: string, busyTimeoutMs = 10_000) {
   const host = page.locator('[data-sf-host="owner-runtime231"]')
   await expect(host).toHaveCount(1)
   for (const attribute of ["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"])
     await expect(host).toHaveAttribute(attribute, "ready")
   await expect(host.getByRole("heading", { level: 1, name: title, exact: true })).toBeVisible()
   await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
-  await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
+  await expect(host.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: busyTimeoutMs })
 }
 
 export async function scheme(page: Page, expected: "dark" | "light") {

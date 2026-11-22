@@ -13,6 +13,8 @@ import type { SfReviewSnapshot, SfReviewField } from "../../shared/change-review
 import type { SfCopyKey, SfMessage, SfText, SfUiState } from "../../shared/frame"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-conflict"
+import { procurementCommandSnapshot } from "../command-snapshot"
+import { procurementNumberInput } from "../number-input"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
 import { isPoWritable } from "../requests/model"
 import {
@@ -21,6 +23,7 @@ import {
   type SourcingEdit, type SourcingRequest,
 } from "./model"
 import "./sourcing.css"
+import "../overview/presentation.css"
 
 type PageRead =
   | Readonly<{kind:"ok";page:Cap25PageOk}>
@@ -258,21 +261,22 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       position===index?{...item,[field]:next}:item)}))
   }
   const score=(index:number,kind:"scores"|"cscores",criterion:number,raw:string)=>{
+    const numeric=procurementNumberInput(raw)
     update((old)=>({...old,quotes:(old.quotes??[]).map((item,position)=>{
       if(position!==index)return item
       const scores=item[kind]
       if(scores==null){
         const created:Record<string,string|number|null>={}
-        created[String(criterion)]=raw
+        created[String(criterion)]=numeric
         return {...item,[kind]:created}
       }
       if(Array.isArray(scores)){
         const values=[...scores]
-        values[criterion]=raw
+        values[criterion]=numeric
         return {...item,[kind]:values}
       }
       const values={...scores} as Record<string,string|number|null>
-      values[String(criterion)]=raw
+      values[String(criterion)]=numeric
       return {...item,[kind]:values}
     })}))
   }
@@ -282,8 +286,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   }]}))
   const removeQuote=(index:number)=>update((old)=>({...old,quotes:(old.quotes??[]).filter((_,i)=>i!==index)}))
   const updateWeight=(field:"tech"|"comm",raw:string)=>
-    update((old)=>({...old,weights:{...old.weights,[field]:raw}}))
-  const updateCriterion=(kind:"criteria"|"commCriteria",index:number,field:"name"|"weight"|"auto",next:string|boolean)=>
+    update((old)=>({...old,weights:{...old.weights,[field]:procurementNumberInput(raw)}}))
+  const updateCriterion=(kind:"criteria"|"commCriteria",index:number,field:"name"|"weight"|"auto",next:string|number|boolean|null)=>
     update((old)=>({...old,weights:{...old.weights,[kind]:(old.weights?.[kind]??[]).map((entry,i)=>
       i===index?{...entry,[field]:next}:entry)}}))
   const addCriterion=(kind:"criteria"|"commCriteria")=>
@@ -372,7 +376,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
         {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
       ]),
-      {path:"quoteId",label:m("sf.u12.selectId"),value:toView(intent.quoteId)},
+      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(intent.sourcing.selectedId)},
     ]
   }
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({
@@ -441,10 +445,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     }
     const intentRef=crypto.randomUUID() as SfOperationRef
     const idempotencyKey=crypto.randomUUID()
+    const sourcing=procurementCommandSnapshot(intent.sourcing)
     const payload=intent.action==="select_quote"?{page:"Requests",action:"select_quote",
       id:intent.requestRef,version:intent.version,values:{quoteId:intent.quoteId}}:
       {page:"Requests",action:intent.action,id:intent.requestRef,
-       version:intent.version,values:{sourcing:intent.sourcing}}
+       version:intent.version,values:{sourcing}}
     const payloadJson=JSON.stringify(payload)
     let digest:string
     try{
@@ -488,9 +493,9 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           values:{quoteId:intent.quoteId!}},options)
         : intent.action==="submit_sourcing"
           ? await client["domain.command.CAP25.submit_sourcing"]({...requestBody,action:"submit_sourcing",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
           : await client["domain.command.CAP25.save"]({...requestBody,action:"save",
-            values:{sourcing:intent.sourcing}},options)
+            values:{sourcing}},options)
       if(controller.signal.aborted||authority()!==token)return
       if(response.kind==="transport-error"){
         controllerDraft.setPhase("outcome-unknown")
@@ -550,7 +555,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       <label>{t("sf.u12.criteriaName")}<input value={criterion.name??""}
         onInput={(event)=>updateCriterion(kind,index,"name",event.currentTarget.value)}/></label>
       <label>{t("sf.u12.criteriaWeight")}<input type="number" step="any" value={asString(criterion.weight)}
-        onInput={(event)=>updateCriterion(kind,index,"weight",event.currentTarget.value)}/></label>
+        onInput={(event)=>updateCriterion(kind,index,"weight",procurementNumberInput(event.currentTarget.value))}/></label>
       <label>{t("sf.u12.criteriaAutomatic")}<input type="checkbox" checked={truth(criterion.auto)}
         onChange={(event)=>updateCriterion(kind,index,"auto",event.currentTarget.checked)}/></label>
       <button class="mx-btn" type="button" onClick={()=>removeCriterion(kind,index)}>{t("sf.u12.removeCriterion")}</button>
@@ -581,7 +586,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
                 value={asString(quote[name])}
                 aria-invalid={refusal?"true":undefined}
                 aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+                onInput={(event)=>updateQuote(index,name,["total","qty","unitPrice"].includes(name)
+                  ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)}/>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
@@ -662,11 +668,13 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       </div>
       <div class="sf-u12-weights">
         <label>{t("sf.u12.technicalWeight")}
-          <input type="number" step="any" value={asString(current.weights?.tech??page()?.value.data.formSettings.techWeight)}
+          <input type="number" step="any" value={asString(current.weights?.tech === undefined
+            ? page()?.value.data.formSettings.techWeight : current.weights?.tech)}
             onInput={(event)=>updateWeight("tech",event.currentTarget.value)} />
         </label>
         <label>{t("sf.u12.commercialWeight")}
-          <input type="number" step="any" value={asString(current.weights?.comm??page()?.value.data.formSettings.commWeight)}
+          <input type="number" step="any" value={asString(current.weights?.comm === undefined
+            ? page()?.value.data.formSettings.commWeight : current.weights?.comm)}
             onInput={(event)=>updateWeight("comm",event.currentTarget.value)} />
         </label>
       </div>
@@ -681,9 +689,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <For each={current.quotes??[]}>{(quote,index)=>quoteEditor(quote,index())}</For>
         <button class="mx-btn" type="button" onClick={addQuote}>{t("sf.u12.addQuote")}</button>
       </section>
-      <p>{t("sf.u12.noBrowserCalculation")}</p>
+      <details class="sf-procurement-source"><summary>{t("sf.u12.coverage")}</summary>
+        <p>{t("sf.u12.noBrowserCalculation")}</p>
+      </details>
       <div class="sf-u12-actions">
-        <button class="mx-btn-primary" type="button" disabled={!state.dirty||!!state.conflict||active(ui.phase)||!can("save")}
+        <button class="mx-btn primary" type="button" disabled={!state.dirty||!!state.conflict||active(ui.phase)||!can("save")}
           onClick={()=>begin("save")}>{t("sf.u12.save")}</button>
         <button class="mx-btn" type="button" disabled={!!state.conflict||active(ui.phase)||!can("submit_sourcing")}
           onClick={()=>begin("submit_sourcing")}>{t("sf.u12.submit")}</button>
@@ -781,7 +791,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           }</For>
         </select>
       </label>
-      <button class="mx-btn-primary" type="button"
+      <button class="mx-btn primary" type="button"
         disabled={!can("select_quote")||!ui.quoteChoice||!quoteIsPersisted(row,ui.quoteChoice)||active(ui.phase)}
         onClick={()=>begin("select_quote")}>{t("sf.u12.select")}</button>
     </section>
@@ -790,12 +800,12 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     titleKey={k("sf.cap25.title")}
     subtitleKey={k("sf.u12.title")}
     context={[]} tabs={[]} activeTab={null}
-    density="comfortable" layout={ui.layoutMode==="single"?"reading":"split"}
+    density="comfortable" layout="work"
     onLayoutMode={(layout)=>setUi("layoutMode",layout)}
     secondaryActions={[{id:"refresh",labelKey:k("sf.u12.refresh"),tone:"secondary",disabled:active(ui.phase),busy:false,
       onInvoke:()=>{const token=authority();if(token)void refresh(token,ref()??undefined)}}]}
   >
-    <div class="sf-u12-root" data-confirmation-phase={ui.phase}>
+    <div class="sf-u12-root sf-procurement-wave" data-sf-surface="CAP25" data-sf-wave="four" data-confirmation-phase={ui.phase} data-view={ui.review ? "review" : ui.stage}>
       <For each={ui.sourceWarnings}>{(message)=><p role="alert">{message}</p>}</For>
       <Show when={state()==="ready"||state()==="empty"||state()==="filtered-empty"||state()==="outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(message())}
@@ -813,7 +823,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={ui.phase==="failed"}><p role="alert">{t("sf.u12.failed")}</p></Show>
         <Show when={!outcomeUnknown()}>
         <Show when={!ref()}>
-          <section><h3>{t("sf.u12.request")}</h3>
+          <section class="sf-u12-requests"><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
               <li><button type="button" class="mx-btn" onClick={()=>setUi("selected",row.number??null)}>
                 {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · {row.status}
@@ -824,7 +834,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={request()}>
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
-            <p>{t("sf.u12.stage")}: {request()?.status} · {t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            <p class="sf-u12-stage">{t("sf.u12.stage")}: {request()?.status}</p>
+            <details class="sf-procurement-source"><summary>{t("sf.u12.sourceOnly")}</summary>
+              <p>{t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
+            </details>
             <Show when={request()?.requestSummary}>
               <p data-request-summary={request()?.number}>{request()?.requestSummary}</p>
             </Show>
@@ -833,7 +846,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             </Show>
           </header>
           <Show when={request()?.status==="sourcing"||request()?.po}>
-            <section>
+            <section class="sf-u12-order" hidden={!!ui.review}>
               <Show when={request()?.po}>
                 <fieldset disabled>
                   <label>{t("sf.u12.quoteSupplier")}
@@ -854,7 +867,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
               </Show>
             </section>
           </Show>
-          <div class="sf-u12-switch">
+          <div class="sf-u12-switch" hidden={!!ui.review}>
             <button type="button" aria-pressed={ui.stage==="sourcing"} class="mx-btn"
               onClick={()=>setUi("stage","sourcing")}>{t("sf.u12.sourcing")}</button>
             <button type="button" aria-pressed={ui.stage==="quotes"} class="mx-btn"

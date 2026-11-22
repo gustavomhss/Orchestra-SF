@@ -131,7 +131,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   type Copy = keyof typeof SF_U41_COPY | "sf.common.loading" | "sf.common.empty" |
     "sf.common.filterEmpty" | "sf.common.unavailable" | "sf.common.noAccess" |
     "sf.common.invalidLink" | "sf.common.loginAgain" | "sf.common.stale" |
-    "sf.common.conflict" | "sf.common.operationUnknown" | "sf.common.partial"
+    "sf.common.conflict" | "sf.common.operationUnknown" | "sf.common.partial" | "sf.common.returnToList"
   type Key = Parameters<typeof SfPageFrame>[0]["titleKey"]
   const key = (copy: Copy): Key => copy as Key
   const tableKey = (copy: Copy): SfTableCopyKey => copy as unknown as SfTableCopyKey
@@ -374,7 +374,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       render: (row) => <span>{row.kind}</span> },
     { id: "state", labelKey: tableKey("sf.u41.state"), align: "start",
       widthPolicy: { kind: "content", minPx: 90, maxPx: 165 }, sortKey: "state",
-      render: (row) => <span>{row.state}</span> },
+      render: (row) => <span class="sf-work-state">{row.state}</span> },
     { id: "owner", labelKey: tableKey("sf.u41.owner"), align: "start",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 },
       render: (row) => <span>{row.ownerLabel ?? row.ownerRef}</span> },
@@ -398,7 +398,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         busy: detailState() === "loading", onInvoke: () => { const next = selectedRef() ?? items()?.[0]?.actionRef; if (next) void selectWork(next) },
       } : undefined}
     >
-      <section class="sf-work" data-sf-surface="UI30">
+      <section class="sf-work" data-sf-surface="UI30" data-sf-polish="planner" data-sf-wave="four">
         <Show when={owner.state().status === "ready"}>
           <form class="sf-work-filters" data-sf-work-period onSubmit={(event) => { event.preventDefault(); void loadWork() }}>
             <label>{t("sf.u41.start")}
@@ -417,15 +417,12 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         >
           <Show when={selection()} fallback={<p class="sf-work-help">{t("sf.u41.choosePeriod")}</p>}>
             {(selected) => (
-              <div class="sf-work-main">
-                <div class="sf-work-list">
-                  <p class="sf-work-scope">{t("sf.u41.selection")}: {selected().selectionRef}</p>
+              <div class="sf-work-main" data-sf-work-stage={selectedRef() ? "detail" : "list"}>
+                <div class="sf-work-list" hidden={!!selectedRef()}>
+                  <details class="sf-work-scope"><summary>{t("sf.u41.selection")}</summary><p><bdi>{selected().selectionRef}</bdi></p></details>
                   <label class="sf-work-search">{t("sf.u41.filter")}
                     <input type="search" data-sf-work-filter value={filter()} onInput={(event) => setFilter(event.currentTarget.value)} />
                   </label>
-                  <Show when={tableState() === "filtered-empty"}>
-                    <p role="status">{t("sf.common.filterEmpty")}</p>
-                  </Show>
                   <SfDataTable<WorkItem>
                     rows={visible()}
                     getRowKey={(row) => row.actionRef as SfRef}
@@ -446,6 +443,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                 <Show when={selectedRef()}>
                   {(actionRef) => (
                     <section class="sf-work-detail" aria-label={t("sf.u41.details")} data-sf-work-detail>
+                      <button class="mx-btn sf-work-back" type="button" disabled={detailState() === "loading" || destinationState() === "loading"} onClick={() => setSelectedRef(undefined)}>{t("sf.common.returnToList")}</button>
                       <SfStatePanel state={detailState()} messageKey={key(stateKey(detailState()))}
                         onRetryRead={() => void selectWork(actionRef())}>
                         <Show when={details()}>

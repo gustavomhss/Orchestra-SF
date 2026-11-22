@@ -1,0 +1,118 @@
+{
+  "run": 44972927162,
+  "job": 137056417643,
+  "snapshot": "e6b7de08b4cbb7790a585e2292bb985a41e60902",
+  "productHead": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+  "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+  "checks": [
+    {
+      "name": "Application declarations",
+      "passed": true
+    },
+    {
+      "name": "Exact dev guardrails",
+      "passed": true
+    },
+    {
+      "name": "Palette byte parity",
+      "passed": true
+    },
+    {
+      "name": "E2E semantic types",
+      "passed": true
+    },
+    {
+      "name": "Portfolio CAS",
+      "passed": true
+    },
+    {
+      "name": "Vendor browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Decision browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Procurement browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Work/Search source health",
+      "passed": true
+    },
+    {
+      "name": "Original installed host",
+      "passed": true
+    },
+    {
+      "name": "Decision source health",
+      "passed": true
+    },
+    {
+      "name": "Analysis source health",
+      "passed": true
+    },
+    {
+      "name": "Full CLI package types",
+      "passed": true
+    },
+    {
+      "name": "Saved Views browser DTO",
+      "passed": true
+    },
+    {
+      "name": "Case-read scope canonical and negative-boundary regression",
+      "passed": true
+    }
+  ],
+  "regressionTests": 89,
+  "includesOriginalInstalledHost": true,
+  "guards": {
+    "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "rules": 78,
+    "files": 254,
+    "errors": 0,
+    "warnings": 21,
+    "approved": 0,
+    "touchesGuards": false
+  },
+  "fullCli": {
+    "status": "PASSED",
+    "run": 44972927162,
+    "diagnostics": 0,
+    "previousBaseline": {
+      "run": 44958162297,
+      "diagnostics": 7,
+      "status": "HISTORICAL"
+    }
+  },
+  "commandCases": {
+    "portfolioCAS": 3,
+    "vendorBrowserDTO": 4,
+    "decisionsBrowserDTO": 5,
+    "procurementBrowserDTO": 10,
+    "workAndSearchSourceHealth": 18,
+    "originalInstalledHost": 1,
+    "decisionSourceHealth": 24,
+    "analysisSourceHealth": 19,
+    "savedViewsBrowserDTO": 3,
+    "caseReadScope": 2
+  },
+  "palette": {
+    "generatedFiles": 7,
+    "changedFiles": 0
+  },
+  "caseReadScope": {
+    "tests": 2,
+    "assertions": 81,
+    "positive": "Original SQLite/source persistence/ProductAuthority/BusinessServices/Atlas composition, emitted Planner source and drafted case, original sf_work_list selection, controlled unit clock and newly admitted original leases.",
+    "negative": "Clearly labeled structural planned-Procurement fixture with real C08/authority, expired/replaced selection, reader and egress refusal; Request/header/input/lease/abort/revocation boundaries.",
+    "identityProvider": "Bounded test fixture, not enrollment.",
+    "notClaimed": [
+      "positive C12 producer-issued preparation",
+      "positive first application",
+      "application receipt"
+    ]
+  }
+}

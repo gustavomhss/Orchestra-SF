@@ -1,5 +1,6 @@
 import { For, Show, createEffect, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
+import { snapshotDecisionRequest } from "../intent/request"
 import { SfAnalysisOutput } from "./output"
 import { useLanguage } from "@/context/language"
 import { SF_U37_COPY } from "@/i18n/orchestra-chapters/sf-u37"
@@ -12,6 +13,7 @@ import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import "./analyses.css"
+import "../intent/decision.css"
 
 type Choices = Extract<typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"]["Type"], { status: "ok" }>["value"]
 type Case = Choices["cases"][number]
@@ -90,6 +92,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
   }
   const authorized = (ticket: number, generation: number, signal: AbortSignal) =>
     !signal.aborted && ticket === epoch && generation === owner.generation() && privacy() === "ready" && !!owner.ready()
+  // F02 owns POST-read identity. Explicit intent keys belong only to commands.
   const callOptions = (signal: AbortSignal) => ({ signal, idempotencyKey: crypto.randomUUID() })
   const abortReads = () => { choicesAbort?.abort(); historyAbort?.abort(); runAbort?.abort(); outputAbort?.abort() }
   const invalidatePrepared = () => {
@@ -111,7 +114,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const generation = owner.generation()
     const ticket = epoch
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.choices"](
-      {}, callOptions(signal),
+      {}, { signal },
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal)) return
     if (!result || result.kind !== "response" || result.body.status !== "ok") {
@@ -159,7 +162,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       runRef: "", output: null, notice: null,
     })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.list"](
-      { caseRef: target.caseRef }, callOptions(signal),
+      { caseRef: { ...target.caseRef } }, { signal },
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) || view.caseKey !== caseKey(target.caseRef)) return
     if (!result || result.kind !== "response" || result.body.status !== "ok") {
@@ -186,7 +189,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const signal = runAbort.signal
     setView({ runRef, run: null, runState: "loading", output: null, outputState: "ready" })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.read"](
-      { runRef }, callOptions(signal),
+      { runRef }, { signal },
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) || view.runRef !== runRef) return
     if (!result || result.kind !== "response" || result.body.status !== "ok") {
@@ -212,7 +215,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const generation = owner.generation()
     setView({ outputState: "loading", output: null })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.output"](
-      { runRef: run.runRef }, callOptions(signal),
+      { runRef: run.runRef }, { signal },
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal) || view.run?.runRef !== run.runRef) return
     if (!result || result.kind !== "response" || result.body.status !== "ok") {
@@ -233,7 +236,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const chosen = selectedCase()
     if (!ready || !selected || !chosen) return
     const request: Request = {
-      caseRef: chosen.caseRef,
+      caseRef: { ...chosen.caseRef },
       objective: view.objective.trim(),
       profileId: selected.profileId,
       profileVersion: selected.profileVersion,
@@ -241,7 +244,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       skillVersion: selected.skillVersion,
       manifestDigest: selected.manifestDigest,
       outputSchemaVersion: selected.outputSchemaVersion,
-      requestedOperationScope: selected.requestedOperationScope,
+      requestedOperationScope: [...selected.requestedOperationScope],
     }
     commandAbort?.abort()
     commandAbort = new AbortController()
@@ -288,7 +291,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     const generation = owner.generation()
     setView({ phase: "starting", notice: null })
     const result = await createSfAnalysesClient(ready.transport)["intelligence.analysis.start"](
-      { input: { request, skillInput, model } }, callOptions(signal),
+      snapshotDecisionRequest({ input: { request, skillInput, model } }), callOptions(signal),
     ).catch(() => undefined)
     if (!authorized(ticket, generation, signal)) return
     if (!result || result.kind !== "response") {
@@ -369,7 +372,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     if (contextState() === "denied" || view.choicesState === "denied") return "sf.common.noAccess"
     if (contextState() === "loading" || view.choicesState === "loading") return "sf.common.loading"
     if (contextState() === "invalid") return "sf.common.invalidLink"
-    if (view.choicesState === "partial") return "sf.u37.noChoices"
+    if (view.choicesState === "partial") return !view.cases.length ? "sf.u37.noChoices" :
+      !view.analyses.length ? "sf.u37.noSkill" : "sf.u37.noModel"
     if (view.choicesState === "stale") return "sf.common.stale"
     return "sf.common.unavailable"
   }
@@ -377,12 +381,14 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     <SfPageFrame titleKey={k("sf.ui41.title")} density="comfortable" layout="work"
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       onLayoutMode={() => undefined}>
-      <section class="sf-analyses" data-sf-surface="UI41">
+      <section class="sf-analyses sf-decision-page sf-decision-analyses" data-sf-wave="four" data-sf-decision="UI41" data-sf-surface="UI41">
         <SfStatePanel state={viewState()} messageKey={k(message())}
           onRetryRead={() => { void loadChoices() }}>
+          <div class="mx-card sf-decision-analysis-editor" hidden={view.phase === "reviewing" || view.phase === "starting"}>
+          <div class="sf-decision-section-heading"><h2>{t("sf.u37.prepare")}</h2></div>
           <div class="sf-analyses-controls">
-            <label>{t("sf.u37.chooseCase")}
-              <select value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-case-label">{t("sf.u37.chooseCase")}</span>
+              <select aria-labelledby="sf-analysis-case-label" value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => {
                   const value = event.currentTarget.value
                   invalidatePrepared()
@@ -401,8 +407,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
-            <label>{t("sf.u37.chooseAnalysis")}
-              <select value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-type-label">{t("sf.u37.chooseAnalysis")}</span>
+              <select aria-labelledby="sf-analysis-type-label" value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("analysisKey", event.currentTarget.value) }}>
                 <option value="">{t("sf.u37.selectSkill")}</option>
                 <For each={view.analyses}>{(item) => (
@@ -410,8 +416,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
-            <label>{t("sf.u37.chooseModel")}
-              <select value={view.modelKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-model-label">{t("sf.u37.chooseModel")}</span>
+              <select aria-labelledby="sf-analysis-model-label" value={view.modelKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("modelKey", event.currentTarget.value) }}>
                 <option value="">{t("sf.u37.selectModel")}</option>
                 <For each={view.models}>{(item) => (
@@ -428,14 +434,15 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
             <button class="mx-btn" type="button" onClick={() => void loadChoices()}
               disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.refreshChoices")}</button>
           </div>
+          </div>
           <Show when={selectedAnalysis() && selectedAnalysis()!.skillId !== "sf-enquadrar-decisao"}>
             <p role="status" class="sf-analyses-note">{t("sf.u37.inputNotPublished")}</p>
           </Show>
           <Show when={view.phase === "preparing" || view.phase === "starting" || view.phase === "cancelling"}>
             <p role="status" aria-live="polite">{t("sf.u37.pending")}</p>
           </Show>
-          <Show when={view.phase === "reviewing" && view.prepared !== null && view.preparedRequest}>
-            <section class="sf-analyses-section" data-sf-analysis-review>
+          <Show when={(view.phase === "reviewing" || view.phase === "starting") && view.prepared !== null && view.preparedRequest}>
+            <section class="mx-card sf-analyses-section sf-decision-review-stage" data-sf-analysis-review>
               <h2>{t("sf.u37.reviewInput")}</h2>
               <dl class="sf-analyses-facts">
                 <dt>{t("sf.u37.case")}</dt><dd>{view.preparedRequest!.caseRef.id}</dd>
@@ -443,20 +450,22 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 <dt>{t("sf.u37.skill")}</dt><dd>{view.preparedRequest!.skillId}</dd>
                 <dt>{t("sf.u37.objective")}</dt><dd>{view.preparedRequest!.objective}</dd>
                 <dt>{t("sf.u37.requested")}</dt><dd>{view.preparedRequest!.requestedOperationScope.join(", ")}</dd>
-                <dt>caseRef.incarnation</dt><dd>{view.preparedRequest!.caseRef.incarnation}</dd>
+                <dt>{t("sf.u37.chooseModel")}</dt><dd>{selectedModel() ? selectedModel()!.providerID + "/" + selectedModel()!.id + (selectedModel()!.variant ? "/" + selectedModel()!.variant : "") : ""}</dd>
+              </dl>
+              <details class="sf-decision-source-scope"><summary>{t("sf.u37.source")}</summary>
+              <dl class="sf-analyses-facts"><dt>caseRef.incarnation</dt><dd>{view.preparedRequest!.caseRef.incarnation}</dd>
                 <dt>caseRef.version</dt><dd>{view.preparedRequest!.caseRef.version}</dd>
                 <dt>profileVersion</dt><dd>{view.preparedRequest!.profileVersion}</dd>
                 <dt>skillVersion</dt><dd>{view.preparedRequest!.skillVersion}</dd>
                 <dt>manifestDigest</dt><dd>{view.preparedRequest!.manifestDigest}</dd>
                 <dt>outputSchemaVersion</dt><dd>{view.preparedRequest!.outputSchemaVersion}</dd>
-                <dt>{t("sf.u37.chooseModel")}</dt><dd>{selectedModel() ? selectedModel()!.providerID + "/" + selectedModel()!.id + (selectedModel()!.variant ? "/" + selectedModel()!.variant : "") : ""}</dd>
                 <dt>skillInput</dt><dd><pre class="sf-analyses-original">{JSON.stringify(view.prepared)}</pre></dd>
-              </dl>
+              </dl></details>
               <p>{t("sf.u37.reviewSource")}</p>
               <p class="sf-analyses-note">{t("sf.u37.reviewWarning")}</p>
               <button class="mx-btn primary" type="button" disabled={!selectedModel() || !granted("intelligence.analysis.start") || commandSent}
                 onClick={() => void start()}>{t("sf.u37.confirmStart")}</button>
-              <button class="mx-btn" type="button" onClick={invalidatePrepared}>{t("sf.u37.returnToList")}</button>
+              <button class="mx-btn" type="button" disabled={view.phase === "starting"} onClick={invalidatePrepared}>{t("sf.u37.returnToList")}</button>
             </section>
           </Show>
           <Show when={view.notice}>
@@ -474,7 +483,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
             }}>{t("sf.u37.reconcile")}</button>
           </Show>
           <Show when={selectedCase()}>
-            <section class="sf-analyses-section">
+            <section class="mx-card sf-analyses-section sf-decision-analysis-history" hidden={view.phase === "reviewing" || view.phase === "starting"}>
               <h2>{t("sf.u37.list")}</h2>
               <button class="mx-btn" type="button" onClick={() => void loadHistory(selectedCase()!)}
                 disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.readList")}</button>
@@ -501,7 +510,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                     view.runState === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
                 onRetryRead={() => void readRun(view.runRef)}>
                 <Show when={view.run}>{(run) => (
-                  <section class="sf-analyses-section" data-sf-analysis-run>
+                  <section class="mx-card sf-analyses-section" data-sf-analysis-run>
                     <h2>{t("sf.u37.detail")}</h2>
                     <dl class="sf-analyses-facts">
                       <dt>{t("sf.u37.reference")}</dt><dd>{run().runRef}</dd>

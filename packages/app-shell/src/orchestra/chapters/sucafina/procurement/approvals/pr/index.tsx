@@ -13,6 +13,8 @@ import { SfListDetail, SfRecordDetail } from "../../../shared/detail"
 import { SfChangeReview } from "../../../shared/change-review"
 import { SfReceiptView } from "../../../shared/receipt"
 import type { SfU13CopyKey } from "./copy"
+import "./approvals.css"
+import "../../overview/presentation.css"
 import { acquirePrDecisionDraft, receivePrSourceVersion, PR_EDIT_SCOPE } from "./draft"
 import {
   findSubmittedPr, samePrReview, sourceChangedAfterIntent,
@@ -118,12 +120,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     return projection?.kind === "submitted-pr" ? projection : null
   }
 
-  const sourceRead = async (expected: string, ref: string | undefined, signal: AbortSignal): Promise<ReadResult> => {
+  // CAP26 admits a queue projection; record identity remains in the draft/model CAS checks.
+  const sourceRead = async (expected: string, signal: AbortSignal): Promise<ReadResult> => {
     const ready = host.ready()
     if (!ready || authority() !== expected) return { kind: "unavailable" }
     try {
       const response = await createSfProcurementClient(ready.transport)["domain.page.CAP26"](
-        ref ? { request: ref } : {}, { signal },
+        {}, { signal },
       )
       if (signal.aborted || authority() !== expected) return { kind: "unavailable" }
       if (response.kind === "transport-error") return { kind: "unavailable" }
@@ -144,12 +147,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     }
   }
 
-  const refresh = async (token: string, ref?: string): Promise<Cap26PageOk | null> => {
+  const refresh = async (token: string): Promise<Cap26PageOk | null> => {
     readController?.abort()
     const controller = new AbortController()
     readController = controller
     const sequence = ++readSequence
-    const result = await sourceRead(token, ref, controller.signal)
+    const result = await sourceRead(token, controller.signal)
     if (controller.signal.aborted || authority() !== token || sequence !== readSequence) return null
     if (result.kind !== "ok") {
       if (result.kind === "denied" || result.kind === "session-expired" || result.kind === "not-found") {
@@ -177,7 +180,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       review: null, pending: null, phase: "idle", failure: null,
     })
     if (token) {
-      void refresh(token, directRef).then((page) => {
+      void refresh(token).then((page) => {
         // A review deep link may open a read-only review of its *current*
         // submitted record, but never submits a command on navigation.
         if (!page || authority() !== token || props.route.kind !== "review") return
@@ -313,10 +316,21 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionController = controller
     setUi("phase", "checking")
     const ready = host.ready()
-    const before = ready && await sourceRead(token, intent.source.requestRef, controller.signal)
+    const before = ready && await sourceRead(token, controller.signal)
     if (!ready || controller.signal.aborted || authority() !== token) { actionBusy = false; return }
-    if (!before || before.kind !== "ok" ||
-        !samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
+    if (!before || before.kind !== "ok") {
+      // A refused/unavailable read is not evidence that the source version changed.
+      if (before?.kind === "stale") {
+        setUi("review", null)
+        setUi("phase", "conflict")
+      } else {
+        setUi("state", before?.kind ?? "unavailable")
+        setUi("phase", "reviewing")
+      }
+      actionBusy = false
+      return
+    }
+    if (!samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
       setUi("review", null)
       setUi("phase", "conflict")
       actionBusy = false
@@ -409,7 +423,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       if (draft && draft.snapshot().availability === "active") draft.discard()
       setUi("pending", (pending) => pending ? { ...pending, producerAcknowledged: true } : pending)
       setUi("phase", "verifying")
-      const refreshed = await sourceRead(token, intent.source.requestRef, controller.signal)
+      const refreshed = await sourceRead(token, controller.signal)
       if (controller.signal.aborted || authority() !== token) return
       if (refreshed.kind !== "ok") {
         // 200 is a command acknowledgement; refetch is still needed for display.
@@ -444,7 +458,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = true
     const controller = new AbortController()
     actionController = controller
-    const reread = await sourceRead(token, pending.source.requestRef, controller.signal)
+    const reread = await sourceRead(token, controller.signal)
     if (!controller.signal.aborted && authority() === token) {
       if (reread.kind === "ok") {
         setUi("page", null)
@@ -471,7 +485,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     actionBusy = true
     const controller = new AbortController()
     actionController = controller
-    const result = await sourceRead(token, source.requestRef, controller.signal)
+    const result = await sourceRead(token, controller.signal)
     if (!controller.signal.aborted && authority() === token) {
       if (result.kind === "ok") {
         setUi("page", null)
@@ -560,9 +574,10 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       activeTab={null}
       secondaryActions={[]}
       density="comfortable"
-      layout="split"
+      layout="work"
       onLayoutMode={(mode) => setUi("layoutMode", mode)}
     >
+      <div class="sf-procurement-wave" data-sf-wave="four">
       <SfStatePanel
         state={viewState()}
         messageKey={key(stateMessage())}
@@ -570,16 +585,17 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           if (ui.pending) { void reconcile(); return }
           if (orphanPending()) { void reconcileAbandoned(); return }
           const token = authority()
-          if (token) void refresh(token, routeRef() ?? undefined)
+          if (token) void refresh(token)
         }}
         onBack={onBack}
       >
         <Show when={authorizedPage()}>
-          <section class="flex min-w-0 flex-col gap-3" data-sf-cap26="submitted-pr">
-            <div class="flex flex-wrap items-end gap-3">
-              <label class="flex min-w-32 flex-col gap-1 text-sm">
+          <section class="sf-u13-pr sf-procurement-wave" data-sf-surface="CAP26" data-sf-wave="four" data-sf-cap26="submitted-pr">
+            <div class="sf-u13-browse" hidden={!!ui.review && !!selectedPr() && samePrReview(ui.review.source, selectedPr()!)}>
+            <div class="sf-u13-filters" hidden={!!selectedPr()}>
+              <label class="sf-u13-filter-group">
                 <span>{t("sf.u13.filtered")}</span>
-                <select class="rounded-md border border-border bg-background p-2 text-foreground"
+                <select class="sf-u13-input"
                   value={ui.group} onChange={(event) => setUi("group", event.currentTarget.value as PrGroup | "all")}>
                   <option value="all">{t("sf.u13.all")}</option>
                   <option value="you">{t("sf.u13.yourQueue")}</option>
@@ -587,13 +603,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   <option value="unassigned">{t("sf.u13.unassigned")}</option>
                 </select>
               </label>
-              <label class="flex min-w-44 flex-1 flex-col gap-1 text-sm">
+              <label class="sf-u13-filter-search">
                 <span>{t("sf.u13.search")}</span>
-                <input class="rounded-md border border-border bg-background p-2 text-foreground"
+                <input class="sf-u13-input"
                   type="search" value={ui.search} onInput={(event) => setUi("search", event.currentTarget.value)} />
               </label>
-              <button type="button" class="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => { const token = authority(); if (token) void refresh(token, routeRef() ?? undefined) }}>
+              <button type="button" class="mx-btn"
+                onClick={() => { const token = authority(); if (token) void refresh(token) }}>
                 {t("sf.u13.refresh")}
               </button>
             </div>
@@ -632,6 +648,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               detail={recordDetail()}
             />
             </Show>
+            </div>
             <Show when={(ui.review && selectedPr()) ? (samePrReview(ui.review.source, selectedPr()!) ? ui.review : undefined) : undefined}>
               {(_) => {
                 const review = ui.review!
@@ -650,10 +667,10 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   },
                 }
                 return (
-                  <section class="min-w-0 rounded-lg border border-border p-3" aria-label={t("sf.u13.decision")}>
-                    <label class="flex flex-col gap-1 text-sm">
+                  <section class="sf-u13-decision" aria-label={t("sf.u13.decision")}>
+                    <label class="sf-u13-comment-field">
                       <span>{t(approved ? "sf.u13.comment" : "sf.u13.reason")}</span>
-                      <textarea class="min-h-20 rounded-md border border-border bg-background p-2 text-foreground"
+                      <textarea class="sf-u13-comment"
                         value={approved ? decisionValue()?.comment ?? "" : decisionValue()?.reason ?? ""}
                         onInput={(event) => {
                           const draft = decisionDraft()
@@ -697,6 +714,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                       confirmation={canConfirm ? admitted : {
                         kind: "blocked", labelKey: key("sf.u13.review"), reasons: [label("sf.u13.reasonRequired")],
                       }}
+                      busy={ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "verifying"}
                       state={ui.phase === "submitting" || ui.phase === "checking" ? "loading" : "ready"}
                       onConfirm={(decision) => { void confirm(decision) }}
                       onRevise={() => setUi("phase", "reviewing")}
@@ -707,7 +725,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               }}
             </Show>
             <Show when={orphanPending()}>
-              <section class="rounded-lg border border-border p-3" role="status">
+              <section class="sf-u13-recovery" role="status">
                 <p>{t("sf.u13.unknown")}</p>
                 <p>{t("sf.u13.noReceipt")}</p>
                 <Show when={restoredOperation()}>
@@ -722,12 +740,12 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                     />
                   )}
                 </Show>
-                <button type="button" class="rounded-md border border-border px-3 py-2"
+                <button type="button" class="mx-btn"
                   onClick={() => { void reconcileAbandoned() }}>{t("sf.u13.reconcile")}</button>
               </section>
             </Show>
             <Show when={ui.pending}>
-              {(pending) => <div class="rounded-lg border border-border p-3" aria-live="polite">
+              {(pending) => <div class="sf-u13-recovery" aria-live="polite">
                 <p>{t(stateMessage())}</p>
                 <p>{t("sf.u13.noReceipt")}</p>
                 <SfReceiptView
@@ -738,13 +756,14 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                   state={ui.phase === "outcome-unknown" || ui.phase === "source-changed" ? "outcome-unknown" : "partial"}
                   onReconcileRead={() => { void reconcile() }}
                 />
-                <button type="button" class="mt-2 rounded-md border border-border px-3 py-2"
+                <button type="button" class="mx-btn"
                   onClick={() => { void reconcile() }}>{t("sf.u13.reconcile")}</button>
               </div>}
             </Show>
           </section>
         </Show>
       </SfStatePanel>
+      </div>
     </SfPageFrame>
   )
 }

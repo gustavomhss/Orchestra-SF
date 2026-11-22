@@ -56,9 +56,13 @@ const numberInput = (item: string | number | boolean | null | undefined): string
 const booleanInput = (item: string | boolean | undefined): boolean | "true" | "false" | "on" | undefined =>
   item === true || item === "true" || item === "on" ? true : item === false || item === "false" ? false : undefined
 
+/** JSON commands omit an absent field; null, zero, false and empty text retain their source meaning. */
+const presentFields = <Value extends object>(value: Value): Value =>
+  Object.fromEntries(Object.entries(value).filter(([, field]) => field !== undefined)) as Value
+
 export function prFromRecord(row?: SfRequest): SfPrEdit {
   const pr = row?.pr
-  return {
+  return presentFields({
     // Existing title belongs to W19. Never send it in a residual PR save.
     ...(row ? {} : { title: "" }),
     type: pr?.type, description: pr?.description,
@@ -68,7 +72,7 @@ export function prFromRecord(row?: SfRequest): SfPrEdit {
     recurring: booleanInput(pr?.recurring),
     frequency: pr?.frequency, estAnnual: numberInput(pr?.estAnnual),
     expenseType: pr?.expenseType, category: pr?.category,
-  }
+  })
 }
 export function postedPoLine(line: SfPoLine): SfPoLine {
   return {
@@ -82,7 +86,7 @@ export function postedPoLine(line: SfPoLine): SfPoLine {
 }
 export function poFromRecord(row: SfRequest): SfPoEdit {
   const po = row.po
-  return {
+  return presentFields({
     currency: po?.currency, expenseType: po?.expenseType,
     supplier: po?.supplier, supplierId: po?.supplierId,
     description: po?.description,
@@ -95,7 +99,7 @@ export function poFromRecord(row: SfRequest): SfPoEdit {
     assetRef: po?.assetRef, supplierContact: po?.supplierContact, quoteRef: po?.quoteRef,
     billingAddress: po?.billingAddress, deliveryAddress: po?.deliveryAddress,
     acceptance: po?.acceptance, warranty: po?.warranty, notes: po?.notes,
-  }
+  })
 }
 export function isPrWritable(row: SfRequest) {
   return (row.status === "draft" || row.status === "pr_rejected") &&

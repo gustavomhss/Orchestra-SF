@@ -1,5 +1,4 @@
-// N18 / U46: literal, source-locked Planner version copy. I00 registers these leaves.
-// Existing producer English copy has not been independently translated; it is preserved.
+// N18/U46 — Planner version copy. English remains source-locked; I00 registers both locales.
 export const SF_U46_COPY = {
   "sf.cap23.title": "Versions",
   "sf.cap23.primary": "Create version",
@@ -43,8 +42,43 @@ export const SF_U46_COPY = {
 } as const
 
 export const SF_U46_COPY_BR: Readonly<Record<keyof typeof SF_U46_COPY, string>> = {
-  ...SF_U46_COPY,
   "sf.cap23.title": "Versões",
   "sf.cap23.primary": "Criar versão",
+  "sf.u46.version": "Versão",
+  "sf.u46.versions": "Versões",
+  "sf.u46.year": "Ano",
+  "sf.u46.state": "Estado",
+  "sf.u46.actions": "Ações",
+  "sf.u46.name": "Nome",
+  "sf.u46.save": "Salvar",
+  "sf.u46.edit": "Editar versão",
+  "sf.u46.copy": "copiar",
+  "sf.u46.official": "oficial",
+  "sf.u46.lock": "bloquear",
+  "sf.u46.unlock": "desbloquear",
+  "sf.u46.delete": "excluir",
+  "sf.u46.locked": "Bloqueada",
+  "sf.u46.draft": "Rascunho",
+  "sf.u46.officialState": "Oficial",
+  "sf.u46.createFirst": "Criar primeira versão",
+  "sf.u46.firstDescription": "Crie o primeiro plano do exercício.",
+  "sf.u46.importWorkbook": "Importar planilha",
   "sf.u46.compare": "Comparar versões",
+  "sf.u46.select": "Selecione uma versão",
+  "sf.u46.source": "Versão de origem",
+  "sf.u46.target": "Comparar orçamento",
+  "sf.u46.budget": "Orçamento USD",
+  "sf.u46.fte": "FTE em dezembro",
+  "sf.u46.noComparison": "O plano comparado está indisponível ou pertence a outro exercício.",
+  "sf.u46.confirm": "Confirmar",
+  "sf.u46.reviewScope": "Revise a versão, o exercício, o estado da fonte e a revisão esperada antes de confirmar.",
+  "sf.u46.saveFields": "Nome e exercício",
+  "sf.u46.invalidYear": "Exercício inválido",
+  "sf.u46.outcomeUnknown": "A resposta foi perdida. Verifique o resultado antes de tentar novamente.",
+  "sf.u46.cannotCreateAnother": "Copie uma versão existente para criar outro plano do exercício.",
+  "sf.u46.noSource": "Nenhuma versão. Um administrador pode criar o primeiro plano em Versões.",
+  "sf.u46.current": "Atual",
+  "sf.u46.compared": "Comparado",
+  "sf.u46.noValue": "Indisponível",
+  "sf.u46.difference": "Comparação",
 }

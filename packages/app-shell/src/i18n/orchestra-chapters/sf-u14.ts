@@ -2,6 +2,8 @@
 export const SF_U14_COPY = {
   "sf.cap27.title": "Suppliers",
   "sf.cap27.primary": "New supplier",
+  "sf.u14.identityGroup": "Supplier identity",
+  "sf.u14.resumeDraft": "Resume draft",
   "sf.u14.search": "Search suppliers",
   "sf.u14.statusFilter": "Filter by status",
   "sf.u14.all": "All",
@@ -107,6 +109,8 @@ export const SF_U14_COPY = {
 export const SF_U14_COPY_BR: { [Key in keyof typeof SF_U14_COPY]: string } = {
   "sf.cap27.title": "Fornecedores",
   "sf.cap27.primary": "Novo fornecedor",
+  "sf.u14.identityGroup": "Identificação do fornecedor",
+  "sf.u14.resumeDraft": "Retomar rascunho",
   "sf.u14.search": "Buscar fornecedores",
   "sf.u14.statusFilter": "Filtrar por status",
   "sf.u14.all": "Todos",

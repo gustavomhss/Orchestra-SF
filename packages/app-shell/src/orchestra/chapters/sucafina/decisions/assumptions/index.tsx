@@ -8,6 +8,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
+import "../intent/decision.css"
 
 const k = (value: string) => value as SfCopyKey
 
@@ -56,7 +57,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
         onInvoke: () => caseData.reload(),
       }]}
     >
-      <div class="sf-n24">
+      <div class="sf-n24 sf-decision-page sf-decision-assumptions" data-sf-wave="four" data-sf-decision="UI36" data-sf-surface="UI36">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>
@@ -66,19 +67,20 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
             onRetryRead={() => caseData.reload()} />
         }>
           <>
+            <div class="sf-decision-assumptions-layout" classList={{ "has-selection": !!selected() }}>
             <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-assumptions">
-              <h2 id="sf-n24-assumptions">{t("sf.ui36.record")}</h2>
+              <header class="sf-decision-section-heading"><h2 id="sf-n24-assumptions">{t("sf.ui36.record")}</h2>
               <div class="sf-n24-toolbar">
                 <label class="sf-n24-field">
-                  <span>{t("sf.ui36.state")}</span>
-                  <select value={ui.filter} onChange={(event) => setUi("filter", event.currentTarget.value as typeof ui.filter)}>
+                  <span id="sf-n24-assumption-state-label">{t("sf.ui36.state")}</span>
+                  <select aria-labelledby="sf-n24-assumption-state-label" value={ui.filter} onChange={(event) => setUi("filter", event.currentTarget.value as typeof ui.filter)}>
                     <option value="all">{t("sf.ui36.record")}</option>
                     <option value="open">{t("sf.ui36.open")}</option>
                     <option value="confirmed">{t("sf.ui36.confirmed")}</option>
                     <option value="rejected">{t("sf.ui36.rejected")}</option>
                   </select>
                 </label>
-              </div>
+              </div></header>
               <Show when={filtered().length} fallback={
                 <SfStatePanel state={status()} messageKey={k("sf.ui36.noItems")} />
               }>
@@ -89,7 +91,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                         <span><bdi>{item.text}</bdi></span>
                         <span class="sf-n24-chip">{t(item.state === "open" ? "sf.ui36.open" : item.state === "confirmed" ? "sf.ui36.confirmed" : "sf.ui36.rejected")}</span>
                         <button type="button" class="mx-btn" aria-pressed={ui.selected === item.id}
-                          onClick={() => setUi("selected", item.id)}>{t("sf.ui36.primary")}</button>
+                          onClick={() => { setUi("selected", item.id); document.getElementById("sf-n24-assumption-detail")?.focus() }}>{t("sf.ui36.primary")}</button>
                       </div>
                     </li>}
                   </For>
@@ -110,14 +112,15 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                 <p role="status">{t("sf.ui36.noMutation")}</p>
               </section>}
             </Show>
-            <div class="sf-n24-grid">
-              <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-missing">
+            </div>
+            <div class="mx-card sf-decision-gap-band">
+              <section class="sf-n24-section" aria-labelledby="sf-n24-missing">
                 <h2 id="sf-n24-missing">{t("sf.ui36.missing")}</h2>
                 <Show when={missing().length} fallback={<p>{t("sf.ui36.noGaps")}</p>}>
                   <ul class="sf-n24-list"><For each={missing()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>
                 </Show>
               </section>
-              <section class="mx-card sf-n24-section" aria-labelledby="sf-n24-divergences">
+              <section class="sf-n24-section" aria-labelledby="sf-n24-divergences">
                 <h2 id="sf-n24-divergences">{t("sf.ui36.divergences")}</h2>
                 <Show when={divergences().length} fallback={<p>{t("sf.ui36.noDivergences")}</p>}>
                   <ul class="sf-n24-list"><For each={divergences()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>

@@ -1,4 +1,4 @@
-import { Match, Show, Switch } from "solid-js"
+import { Match, Switch } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import type { JSX } from "solid-js"
 import type { SfContext, SfResolvedQuery, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
@@ -32,7 +32,6 @@ import { SfPlannerCompareView } from "../planner/compare"
 import { SfVendorContractsPage } from "../procurement/contracts"
 import { SfProcurementOverviewView } from "../procurement/overview"
 import { SfRequestsPage } from "../procurement/requests/page"
-import { SfProcurementQueueView } from "../procurement/queues"
 import { SfSourcingView } from "../procurement/sourcing"
 import { SfPrApprovalView } from "../procurement/approvals/pr"
 import { SfRemainingApprovalsView } from "../procurement/approvals/remaining"
@@ -74,7 +73,6 @@ function SfProcurementPages(props: Readonly<{ route: SfResolvedRoute }>): JSX.El
     <Match when={props.route.surfaceId === "CAP24"}><SfProcurementOverviewView surfaceId="CAP24" route={props.route as SfSurfaceProps<"CAP24">["route"]} /></Match>
     <Match when={props.route.surfaceId === "CAP25" && (props.route.kind === "sourcing" || props.route.kind === "quotes")}><SfSourcingView surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} /></Match>
     <Match when={props.route.surfaceId === "CAP25"}>
-      <Show when={props.route.kind === "entry"}><SfProcurementQueueView surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} /></Show>
       <SfRequestsPage surfaceId="CAP25" route={props.route as SfSurfaceProps<"CAP25">["route"]} />
     </Match>
     <Match when={props.route.surfaceId === "CAP26" && props.route.kind === "review"}><SfRemainingApprovalsView surfaceId="CAP26" route={props.route as SfSurfaceProps<"CAP26">["route"]} /></Match>

@@ -48,9 +48,7 @@ const msg = (value: keyof typeof SF_U46_COPY, params?: Record<string, string | n
   ({ key: key(value), params })
 const data = (text: string) => ({ kind: "data" as const, text })
 const textValue = (text: string): SfDisplayValue => ({ kind: "text", text: data(text) })
-const yearValue = (value: number): SfDisplayValue => ({
-  kind: "number", value, fractionDigits: 0, unit: { kind: "unspecified", label: msg("sf.u46.year") },
-})
+const yearValue = (value: number): SfDisplayValue => textValue(String(value))
 
 function stateCopy(value: SfUiState): SfCopyKey {
   switch (value) {
@@ -510,7 +508,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         onRetryRead={model.refresh}>
         <Show when={page()}>
           {(loaded) => (
-            <section class="sf-u46" data-sf-surface="CAP23">
+            <section class="sf-u46" data-sf-surface="CAP23" data-sf-polish="planner" data-sf-wave="four" data-sf-version-stage={screen.review ? "review" : props.route.kind}>
               <SfContextBar
                 state={model.view.state}
                 selection={[{ control: "year", optionId: year() === undefined ? null : String(year()) }]}
@@ -540,40 +538,41 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                   </button>
                 </div>
               </Show>
-              <Show when={visibleReview() && screen.review}>
+              <Show when={visibleReview() && screen.review} keyed>
                 {(request) => (
                   <SfChangeReview
-                    operation={{ ref: request().ref, label: msg("sf.u46.reviewScope"), scope: data(request().versionId || copy.t(key("sf.u46.createFirst"))) }}
-                    base={reviewBase(request())}
-                    current={reviewBase(request())}
-                    proposed={reviewProposed(request())}
+                    operation={{ ref: request.ref, label: msg("sf.u46.reviewScope"), scope: data(request.versionId || copy.t(key("sf.u46.createFirst"))) }}
+                    base={reviewBase(request)}
+                    current={reviewBase(request)}
+                    proposed={reviewProposed(request)}
                     effects={[{
-                      id: request().ref, domain: "planner", title: data(copy.t(key("sf.u46." + request().action as keyof typeof SF_U46_COPY))),
+                      id: request.ref, domain: "planner", title: data(copy.t(key("sf.u46." + request.action as keyof typeof SF_U46_COPY))),
                       state: "proposed", details: [{
                         path: "action", label: msg("sf.u46.actions"),
-                        value: textValue(copy.t(key(("sf.u46." + request().action) as keyof typeof SF_U46_COPY))),
+                        value: textValue(copy.t(key(("sf.u46." + request.action) as keyof typeof SF_U46_COPY))),
                       }],
                     }]}
                     coverage={{ state: "complete", summary: msg("sf.u46.reviewScope"), reasons: [],
                       knownCount: 1, expectedCount: 1 }}
-                    blockingReasons={model.can(request().action) ? [] : [msg("sf.u46.reviewScope")]}
-                    confirmation={model.can(request().action) && screen.outcome === "idle" && !screen.busy && !screen.verified
-                      ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request()),
-                          binding: { kind: "catalog-command", operationId: op[request().action],
-                            version: { kind: "record", expectedVersion: request().expected }, confirmation: "presentation-only" } }
+                    blockingReasons={model.can(request.action) ? [] : [msg("sf.u46.reviewScope")]}
+                    confirmation={model.can(request.action) && screen.outcome === "idle" && !screen.busy && !screen.verified
+                      ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request),
+                          binding: { kind: "catalog-command", operationId: op[request.action],
+                            version: { kind: "record", expectedVersion: request.expected }, confirmation: "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.u46.confirm"), reasons: [msg("sf.u46.reviewScope")] }}
+                    busy={screen.busy || !!screen.verified}
                     state={screen.outcome === "unknown" ? "outcome-unknown" :
                       screen.outcome === "conflict" ? "conflict" : "ready"}
-                    onConfirm={() => { void submit(request()) }}
+                    onConfirm={() => { void submit(request) }}
                     onCancel={() => {
-                      if (request().action === "save") {
+                      if (request.action === "save") {
                         const snapshot = screen.draft?.snapshot()
                         if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
                       }
                       setScreen({ review: undefined, error: undefined })
                     }}
                     onRevise={() => {
-                      if (request().action === "save") {
+                      if (request.action === "save") {
                         const snapshot = screen.draft?.snapshot()
                         if (snapshot?.availability === "active") screen.draft?.setPhase(snapshot.dirty ? "dirty" : "clean")
                       }
@@ -615,7 +614,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                 <Show when={props.route.kind === "detail" && record()}>
                   {(selected) => detail(selected())}
                 </Show>
-                <Show when={props.route.kind === "entry"}>{table()}</Show>
+                <Show when={props.route.kind === "entry"}><section class="sf-u46-ledger" aria-label={copy.t(key("sf.u46.versions"))}>{table()}</section></Show>
               </Show>
             </section>
           )}

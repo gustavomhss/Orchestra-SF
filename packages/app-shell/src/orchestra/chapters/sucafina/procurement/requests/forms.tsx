@@ -1,4 +1,5 @@
 import { For, Show } from "solid-js"
+import { procurementNumberInput } from "../number-input"
 import { useLanguage } from "@/context/language"
 import { sfU11Label, SF_U11_REMAINING_COPY } from "./copy"
 import { postedPoLine, type SfPoEdit, type SfPoLine, type SfPrEdit } from "./model"
@@ -56,16 +57,17 @@ export function SfRequisitionForm(props: PrProps) {
                   step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
                   required={props.creating && field === "title"}
                   value={textValue(value())}
-                  onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+                  onInput={(event) => edit(field, field === "estAmount" || field === "estAnnual"
+                    ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)} />
               }>
                 <textarea name={`pr.${field}`} rows={3} value={textValue(value())}
                   onInput={(event) => edit(field, event.currentTarget.value)} />
               </Show>
             }>
               <select name="pr.type" value={textValue(value())} onChange={(event) => edit("type", event.currentTarget.value)}>
-                <option value="">Choose…</option>
-                <option value="product">product</option>
-                <option value="service">service</option>
+                <option value="">{copy("sf.u11.remaining.choose")}</option>
+                <option value="product">{copy("sf.u11.remaining.product")}</option>
+                <option value="service">{copy("sf.u11.remaining.service")}</option>
               </select>
             </Show>
           }>
@@ -86,7 +88,7 @@ export function SfPurchaseOrderForm(props: PoProps) {
   const copy = useCopy()
   const edit = (key: PoField, value: SfPoEdit[PoField]) =>
     !props.disabled && props.onEdit({ ...props.value, [key]: value })
-  const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string | null) => {
+  const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string | number | null) => {
     if (props.disabled || !Array.isArray(props.value.lines)) return
     props.onEdit({
       ...props.value,
@@ -139,8 +141,8 @@ export function SfPurchaseOrderForm(props: PoProps) {
                     step={field === "qty" || field === "unitPrice" ? "any" : undefined}
                     value={textValue(line[field])}
                     onInput={(event) => updateLine(index(), field,
-                      (field === "qty" || field === "unitPrice") && event.currentTarget.value === ""
-                        ? null : event.currentTarget.value)} />
+                      (field === "qty" || field === "unitPrice")
+                        ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)} />
                 </label>
               }</For>
             </div>

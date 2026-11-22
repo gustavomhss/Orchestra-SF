@@ -24,6 +24,7 @@ import {
   uniqueSupplier, type Cap27PageOk, type Supplier, type SupplierAction, type SupplierEdit,
 } from "./model"
 import "./suppliers.css"
+import "../overview/presentation.css"
 
 type Read =
   | Readonly<{ kind: "ok"; page: Cap27PageOk }>
@@ -66,6 +67,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     page: Cap27PageOk | null
     selected: string | null
     mode: Mode
+    showList: boolean
     search: string
     filter: string
     sort: SfSort
@@ -77,7 +79,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     confirmedMessage: string | null
     csvState: CsvState
   }>({
-    token: null, state: "loading", page: null, selected: null, mode: "detail",
+    token: null, state: "loading", page: null, selected: null, mode: "detail", showList: false,
     search: "", filter: "All", sort: { kind: "none" }, layoutMode: "split",
     phase: "idle", review: null, unknownOperation: null, error: null,
     confirmedMessage: null, csvState: "idle",
@@ -653,7 +655,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const isList = name === "categories" || name === "certifications"
     const shown = isList && Array.isArray(item) ? item.join("\n") : display(item)
     const locked = ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "outcome-unknown"
-    return <label class="sf-u14-field" for={"sf-u14-" + name}>
+    return <label class="sf-u14-field" data-field={name} for={"sf-u14-" + name}>
       <span>{language.t(fieldKey(name) as Parameters<typeof language.t>[0])}</span>
       <Show when={isBoolean} fallback={
         <Show when={isMultiline} fallback={<input
@@ -686,7 +688,17 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       <h2>{t(ui.mode === "new" ? "sf.u14.create" : bank ? "sf.u14.bank" : "sf.u14.general")}</h2>
       <Show when={bank} fallback={
         <>
-          <div class="sf-u14-fields">{generalFields.map((name) => field(name))}</div>
+          <For each={[
+            { title: "sf.u14.identityGroup", fields: ["legalName", "tradingName", "type", "country", "address", "taxId", "regNo"] },
+            { title: "sf.u14.contacts", fields: ["contactName", "contactEmail", "contactPhone", "financeEmail"] },
+            { title: "sf.u14.commercial", fields: ["paymentTerms", "currency", "incoterm", "categories", "notes"] },
+            { title: "sf.u14.compliance", fields: ["riskRating", "dueDiligence", "sanctionsDate", "nda", "dpa", "certifications"] },
+          ] as const}>{(group) =>
+            <fieldset class="sf-u14-group">
+              <legend>{t(group.title)}</legend>
+              <div class="sf-u14-fields">{generalFields.filter((name) => group.fields.some((field) => field === name)).map((name) => field(name))}</div>
+            </fieldset>
+          }</For>
           <span id="sf-u14-list-hint" class="sf-u14-hint">{t("sf.u14.categoriesHint")}</span>
           <section aria-label={t("sf.u14.contacts")}>
             <h3>{t("sf.u14.contacts")}</h3>
@@ -723,7 +735,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         </Show>
       </Show>
       <div class="sf-u14-controls">
-        <button class="mx-btn-primary" type="button"
+        <button class="mx-btn primary" type="button"
           disabled={!snapshot.dirty || !!snapshot.conflict || active(ui.phase) ||
             (bank ? !bankAuthorized() : !can(ui.mode === "new" ? "create" : "save"))}
           onClick={() => begin(bank ? "change-bank" : ui.mode === "new" ? "create" : "save")}>
@@ -792,7 +804,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
             busy:false,onInvoke:()=>begin("delete")}] : []),
         ]}
         sourceActions={[]}
-        onBack={()=>setUi("selected",null)}
+        onBack={()=>setUi("showList",true)}
         onOpenPage={()=>setUi("mode","detail")}
       />
       <Show when={version() !== null && supplier()?.id === id && supplier()?.attachments !== undefined}>
@@ -813,14 +825,14 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
   return <SfPageFrame
     titleKey={k("sf.cap27.title")}
     context={[]} tabs={[]} activeTab={null} density="comfortable"
-    layout={ui.layoutMode === "single" ? "reading" : "split"}
+    layout="work"
     onLayoutMode={(mode) => setUi("layoutMode",mode)}
-    primaryAction={can("create") ? {id:"create",labelKey:k("sf.cap27.primary"),tone:"primary",
+    primaryAction={can("create") && (ui.showList || (!supplier() && ui.mode !== "new")) ? {id:"create",labelKey:k(ui.mode === "new" ? "sf.u14.resumeDraft" : "sf.cap27.primary"),tone:"primary",
       disabled:active(ui.phase),busy:false,
-      onInvoke:()=>{setUi("mode","new");setUi("selected",null)}} : undefined}
+      onInvoke:()=>{setUi("mode","new");setUi("selected",null);setUi("showList",false)}} : undefined}
     secondaryActions={[]}
   >
-    <div class="sf-u14-layout">
+    <div class="sf-u14-layout sf-procurement-wave" data-sf-surface="CAP27" data-sf-wave="four" data-view={ui.review ? "review" : ui.mode}>
       <Show when={state() === "ready" || state() === "empty" || state() === "filtered-empty" || state() === "outcome-unknown"}
         fallback={<SfStatePanel state={state()} messageKey={k(stateKey())} onRetryRead={() => {
           const token = authority()
@@ -855,12 +867,13 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
           coverage={{state:"complete",summary:m("sf.u14.coverage"),reasons:[],knownCount:1,expectedCount:1}}
           blockingReasons={[]}
           confirmation={confirmation()}
+          busy={ui.phase === "checking" || ui.phase === "submitting" || ui.phase === "verifying"}
           state={ui.phase === "conflict" ? "conflict" : "ready"}
           onConfirm={(decision) => void confirm(decision as Extract<ReturnType<typeof confirmation>,{kind:"admitted"}>)}
           onRevise={()=>{setUi("review",null);setUi("phase","idle")}}
           onCancel={()=>{setUi("review",null);setUi("phase","idle")}}
         />}>
-          <div class="sf-u14-list">
+          <div class="sf-u14-list" hidden={!ui.showList && (ui.mode === "new" || !!supplier())}>
             <div class="sf-u14-filters">
               <label>{t("sf.u14.search")}
                 <input type="search" value={ui.search} onInput={(event) => setUi("search",event.currentTarget.value)} />
@@ -868,7 +881,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               <label>{t("sf.u14.statusFilter")}
                 <select value={ui.filter} onChange={(event) => setUi("filter",event.currentTarget.value)}>
                   <For each={["All","pending","active","blocked","inactive"]}>{(option) =>
-                    <option value={option}>{t(("sf.u14."+option) as SfU14CopyKey)}</option>
+                    <option value={option}>{t((option === "All" ? "sf.u14.all" : "sf.u14." + option) as SfU14CopyKey)}</option>
                   }</For>
                 </select>
               </label>
@@ -892,7 +905,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               onSort={(sort) => setUi("sort",sort)}
               onPage={()=>{}}
               onSelect={(selection) => {
-                setUi("selected", selection); setUi("mode", "detail")
+                setUi("selected", selection); setUi("mode", "detail"); setUi("showList", false)
                 const token = authority()
                 if (token && ref() === selection) void refresh(token, selection)
               }}
@@ -902,6 +915,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               onRowAction={(entry) => {
                 setUi("selected", entry.recordRef)
                 setUi("mode", "edit")
+                setUi("showList", false)
                 const token = authority()
                 if (token && ref() === entry.recordRef) void refresh(token, entry.recordRef)
               }}
@@ -913,10 +927,16 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
             <Show when={ui.csvState === "unavailable"}><p role="alert">{t("sf.u14.unavailable")}</p></Show>
             <Show when={ui.csvState === "stale"}><p role="alert">{t("sf.u14.stale")}</p></Show>
           </div>
+          <div class="sf-u14-stage" hidden={ui.showList}>
+          <Show when={ui.mode === "new" || ui.mode === "edit" || ui.mode === "bank"}>
+            <button class="mx-link sf-procurement-back" type="button" disabled={active(ui.phase)}
+              onClick={() => setUi("showList", true)}>{t("sf.u14.back")}</button>
+          </Show>
           <Show when={ui.mode === "new" || (supplier() && (ui.mode === "edit" || ui.mode === "bank"))}
             fallback={<Show when={supplier()}>{currentDetail()}</Show>}>
             {editor()}
           </Show>
+          </div>
         </Show>
         </Show>
       </Show>

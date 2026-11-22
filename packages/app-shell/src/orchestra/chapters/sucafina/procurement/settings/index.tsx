@@ -1,6 +1,7 @@
 import { createEffect, createMemo, onCleanup, Show, For, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
+import { procurementCommandSnapshot } from "../command-snapshot"
 import type { SfEditScopeKey, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -12,8 +13,10 @@ import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewConfirmation } from "../../shared/change-review"
 import { SfProcurementSettingsFields } from "./fields"
 import { SETTINGS_REF, changedSettings, settingsReview } from "./model"
+import { receiveSettingsSource } from "./draft"
 import type { Settings, SettingsProjection } from "./model"
 import "./settings.css"
+import "../overview/presentation.css"
 
 type ReviewMode = "save" | null
 const key = (value: string) => value as SfCopyKey
@@ -178,7 +181,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const controller = draft()
     const currentVersion = projection?.value.versions.settings?.version
     if (projection && controller && currentVersion !== undefined)
-      controller.receiveRemote({ baseVersion: currentVersion, value: projection.value.data.settings })
+      receiveSettingsSource(controller, { baseVersion: currentVersion, value: projection.value.data.settings })
   })
   const snapshot = () => draft()?.snapshot()
   const active = () => {
@@ -237,7 +240,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const generationAtReview = owner.generation()
     const command = {
       page: "Settings" as const, action: "save" as const,
-      version: page.value.versions.settings!.version, values: { settings: structuredClone(state.value) },
+      version: page.value.versions.settings!.version, values: { settings: procurementCommandSnapshot(state.value) },
     }
     const idempotencyKey = crypto.randomUUID()
     // F01/S03 binds the exact reviewed CAS, digest and idempotency key. Never
@@ -327,13 +330,13 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       context={[]}
       tabs={[]}
       activeTab={null}
-      primaryAction={primary()}
+      primaryAction={view.review ? undefined : primary()}
       secondaryActions={[]}
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-n21-settings" data-sf-surface="CAP28">
+      <div class="sf-n21-settings sf-procurement-wave" data-sf-surface="CAP28" data-sf-wave="four" data-view={view.review ? "review" : "settings"}>
         <Show when={view.confirmed && view.state === "ready"}>
           <p class="sf-n21-settings-notice" role="status">{t(sfCommonKey("sf.common.saved"))}</p>
         </Show>
@@ -399,6 +402,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                 }>
                   <SfChangeReview
                     {...reviewProps()!}
+                    busy={view.busy}
                     onConfirm={(admitted) => { void save(admitted) }}
                     onRevise={closeReview}
                     onCancel={closeReview}

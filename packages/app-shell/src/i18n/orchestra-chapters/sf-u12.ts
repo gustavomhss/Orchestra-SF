@@ -114,7 +114,7 @@ export const SF_U12_COPY_BR: { [Key in keyof typeof SF_U12_COPY]: string } = {
   "sf.u12.quoteSupplierId": "Fornecedor cadastrado",
   "sf.u12.quoteCurrency": "Moeda",
   "sf.u12.quoteTotal": "Total declarado",
-  "sf.u12.baseFx": "Base amount / FX",
+  "sf.u12.baseFx": "Valor-base / câmbio",
   "sf.u12.rank": "Ranking",
   "sf.u12.eligibility": "Elegibilidade",
   "sf.u12.technical": "Técnica",

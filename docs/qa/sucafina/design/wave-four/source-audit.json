@@ -1,0 +1,339 @@
+{
+  "status": "STATIC_PASS_WITH_DOCUMENTED_LIMITS",
+  "productHead": "250e8faf80931c807a86c5f06c0e797de469adca",
+  "base": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+  "reviewedBy": "independent Procurement agent",
+  "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+  "routeSetsEqual": true,
+  "areas": 20,
+  "routePatterns": 49,
+  "groups": {
+    "planner": {
+      "areas": 4,
+      "routes": 14
+    },
+    "procurement": {
+      "areas": 5,
+      "routes": 17
+    },
+    "work": {
+      "areas": 3,
+      "routes": 5
+    },
+    "decisions": {
+      "areas": 8,
+      "routes": 13
+    }
+  },
+  "comparedPaths": 188,
+  "productPaths": 78,
+  "testHarnessPaths": 23,
+  "documentationEvidencePaths": 87,
+  "compareTruncated": false,
+  "unchanged": [
+    "packages/core",
+    "packages/client",
+    "GitHub workflows",
+    "guard mechanisms",
+    "allowlists",
+    "seven generated palette files",
+    "route registry",
+    "legacy HTML console"
+  ],
+  "sourceChangesInclude": [
+    "native UI leaves and styles",
+    "original source projection forwarding",
+    "host binding and original reading health",
+    "seven A15 route descriptors"
+  ],
+  "noAddedProductDiagnostics": true,
+  "noAddedProductMocksOrBypasses": true,
+  "noAddedCssColorLiterals": true,
+  "galleryIntegrity": {
+    "atCommit": "58591b82cbec9fe57cc0f9813e9097164c6f8753",
+    "planner": 40,
+    "procurement": 43,
+    "work": 22,
+    "regressionSamples": 6,
+    "total": 111,
+    "missing": 0,
+    "hashMismatches": 0,
+    "sizeMismatches": 0
+  },
+  "notRuntimeQualification": true,
+  "notUserAcceptance": true,
+  "followupDeltaAudit": {
+    "status": "STATIC_PASS_WITH_DOCUMENTED_LIMITS",
+    "reviewedBy": "independent Procurement agent",
+    "previousProduct": "250e8faf80931c807a86c5f06c0e797de469adca",
+    "product": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "upstreamFrom": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "upstreamTo": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+    "comparedPaths": 102,
+    "upstreamPaths": 26,
+    "exactUpstreamBlobs": 25,
+    "overlap": {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "verification": "Product patch and upstream patch identical after removing only hunk offset headers; same additions, removals and context."
+    },
+    "ownPaths": 76,
+    "ownDocumentationPaths": 74,
+    "ownProductPaths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/decision.css"
+    ],
+    "ownTestPaths": [
+      "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts"
+    ],
+    "ownProductDelta": "UI41 editor width, history spacing, two-column control placement.",
+    "ownTestDelta": "Strict positive content assertions in eight areas and safe original refusal diagnostics; GET probes do not recover or replace a failed assertion; request.url() corrected.",
+    "scopeUnchanged": {
+      "areas": 20,
+      "routePatterns": 49,
+      "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572"
+    },
+    "noOwnChanges": [
+      "gates",
+      "workflows",
+      "authorization",
+      "guards",
+      "generated palettes",
+      "schemas",
+      "original producers",
+      "seed/harness",
+      "CI wrappers"
+    ],
+    "notRuntimeQualification": true
+  },
+  "thirdUpstreamComposition": {
+    "productHead": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "base": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "reviewedBy": "coordinator",
+    "upstreamCommits": 7,
+    "upstreamPaths": 18,
+    "overlapPaths": [],
+    "allUpstreamBlobsCopiedExactly": true,
+    "ownDeltaPathsCompared": 249,
+    "ownComparisonTruncated": false,
+    "changesToNativeDecisionSources": false,
+    "notRuntimeQualification": true
+  },
+  "caseScopeCorrection": {
+    "worker": "4978956b0ceeceec66df7c8f942c7495e83fa3e6",
+    "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "productPath": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+    "testPath": "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts",
+    "staticReview": "PASSED_COORDINATOR_AND_PROCUREMENT",
+    "sourceDiagnosisRun": 44970679515,
+    "runtimeRun": 44972048219,
+    "runtimeStatus": "PASSED",
+    "changes": "Common fences retained before eligibility; original Procurement selection/reader/expiry fences retained after the unchanged C12 predicate and at eligible egress. Focused UI35comparison notice capture added.",
+    "unchanged": [
+      "TTL",
+      "decision-controls",
+      "selection setters",
+      "authorization",
+      "original seed",
+      "canonical producer",
+      "all seven A15 contracts"
+    ],
+    "canonicalRegression": {
+      "status": "PASSED",
+      "run": 44972927162,
+      "tests": 2,
+      "assertions": 81,
+      "identityProvider": "Bounded test fixture",
+      "negativeFixture": "Explicit structural planned-Procurement case",
+      "notClaimed": [
+        "Positive producer-issued C12 preparation",
+        "First application",
+        "Application receipt"
+      ]
+    },
+    "temporaryDiagnosticInstrumentationIntegrated": false
+  },
+  "finalQualifiedProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+  "browserToTechnicalDelta": {
+    "browserProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "changedPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "docs/qa/sucafina/design/wave-four/DEV-COMPOSITION.md",
+      "docs/qa/sucafina/design/wave-four/TYPECHECK.md",
+      "docs/qa/sucafina/design/wave-four/VALIDATION.md",
+      "docs/qa/sucafina/design/wave-four/attempts.json",
+      "docs/qa/sucafina/design/wave-four/cli-type-audit.json",
+      "docs/qa/sucafina/design/wave-four/copy-audit.json",
+      "docs/qa/sucafina/design/wave-four/decisions-source-diagnostic.json",
+      "docs/qa/sucafina/design/wave-four/decisions/HANDOFF.md",
+      "docs/qa/sucafina/design/wave-four/decisions/REVIEW.md",
+      "docs/qa/sucafina/design/wave-four/evidence/README.md",
+      "docs/qa/sucafina/design/wave-four/scope.json",
+      "docs/qa/sucafina/design/wave-four/source-audit.json",
+      "docs/qa/sucafina/design/wave-four/technical-verification.json"
+    ],
+    "changedProductSourcePaths": [],
+    "changedTestPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts"
+    ],
+    "compareTruncated": false,
+    "functionalProductIdentical": true
+  },
+  "diagnosticIsolation": {
+    "ref": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "passed": true,
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "sha": "10dbebf4f41615907e86c52a04095bd4ed28a674",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "cb70563336ec16386f2d7cf6585423d0b34c7481",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "220d7d87d726d2c683f9ed2d5147a9859657de2b",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": ".ci-run.json",
+        "present": false
+      },
+      {
+        "path": "apps/cli/test/sucafina-design-verification.test.ts",
+        "present": false
+      }
+    ]
+  },
+  "postQualificationDevObservation": {
+    "qualifiedBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "observedDev": "8bd7645767deb85b286b046a52a4e9f1db100262",
+    "upstreamCommits": 2,
+    "upstreamPaths": [
+      "apps/desktop/src/main/index.ts",
+      "apps/desktop/src/main/wsl/ipc.test.ts",
+      "apps/desktop/src/main/wsl/ipc.ts"
+    ],
+    "ownProductCompared": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "ownPaths": 251,
+    "compareTruncated": false,
+    "overlapPaths": [],
+    "integrated": false,
+    "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here."
+  },
+  "finalGalleryIntegrity": {
+    "atCommit": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "groups": {
+      "planner": {
+        "captures": 40,
+        "actualJpegs": 40,
+        "bytes": 2829468,
+        "hashesChecked": 40,
+        "sizesChecked": 40
+      },
+      "procurement": {
+        "captures": 43,
+        "actualJpegs": 43,
+        "bytes": 3384360,
+        "hashesChecked": 43,
+        "sizesChecked": 43
+      },
+      "work": {
+        "captures": 22,
+        "actualJpegs": 22,
+        "bytes": 1736450,
+        "hashesChecked": 22,
+        "sizesChecked": 22
+      },
+      "decisions": {
+        "captures": 41,
+        "actualJpegs": 41,
+        "bytes": 3161553,
+        "hashesChecked": 41,
+        "sizesChecked": 41
+      },
+      "regression": {
+        "captures": 6,
+        "actualJpegs": 6,
+        "bytes": 541725,
+        "hashesChecked": 6,
+        "sizesChecked": 0
+      }
+    },
+    "newWaveCaptures": 146,
+    "regressionSamples": 6,
+    "totalPersistedJpegs": 152,
+    "missing": [],
+    "hashMismatches": [],
+    "sizeMismatches": [],
+    "extras": []
+  },
+  "finalEvidenceDelta": {
+    "from": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "through": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "changedPaths": 45,
+    "allDocumentationOrEvidence": true,
+    "productSourceUnchanged": true,
+    "compareTruncated": false
+  },
+  "finalVisualReview": {
+    "areas": 20,
+    "captures": 146,
+    "allManuallyReviewed": true,
+    "rootRepresentativesAcrossAllAreas": true,
+    "userAcceptance": "PENDING"
+  },
+  "finalDeliveryConsistencyReview": {
+    "status": "PASSED",
+    "reviewedBy": "independent Procurement agent",
+    "reviewedHead": "1aa90866e9955640b66221b99062ac01282a96af",
+    "uniqueAreas": 20,
+    "uniqueRoutes": 49,
+    "routeSetsMatchInventory": true,
+    "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "campaign": {
+      "implemented": 41,
+      "total": 70,
+      "merged": 21,
+      "pendingUserReview": 20,
+      "remaining": 29
+    },
+    "gallery": {
+      "waveCaptures": 146,
+      "separateRegressionSamples": 6,
+      "totalJpegs": 152
+    },
+    "technicalRecordsAgree": {
+      "run": 44972927162,
+      "checks": 15,
+      "cases": 89,
+      "scopeTests": 2,
+      "scopeAssertions": 81
+    },
+    "decisionsRecordsAgree": {
+      "run": 44972048219,
+      "captures": 41,
+      "sourceReadsHTTP200": 56,
+      "readsAfter300000Ms": 21,
+      "caseWrites": 1,
+      "questionPreparations": 1
+    },
+    "summaryLinks": {
+      "checked": 35,
+      "distinctDestinations": 20,
+      "missing": 0
+    },
+    "currentQualificationPendingLabels": 0,
+    "userAcceptancePending": true,
+    "failedAttemptsPreserved": true,
+    "laterDevExplicitlyNotQualified": true,
+    "extraExecutionPerformed": false
+  }
+}

@@ -1,7 +1,12 @@
 // N22 U11 remaining fields. W19 owns sf-u11.ts and sf.cap25.title/title-save.
-// Pinned legacy field labels are preserved verbatim in pt-BR (COPY-01).
+// Wave four supplies pt-BR field labels without changing the pinned English copy.
 // I00/125 owns the shared dictionary registration and merges this leaf once.
 export const SF_U11_REMAINING_COPY = {
+  "sf.u11.remaining.backList": "Back to requests",
+  "sf.u11.remaining.resumeDraft": "Resume draft",
+  "sf.u11.remaining.choose": "Choose…",
+  "sf.u11.remaining.product": "product",
+  "sf.u11.remaining.service": "service",
   "sf.u11.remaining.list": "Requests",
   "sf.u11.remaining.filter": "Search requests",
   "sf.u11.remaining.filterPlaceholder": "Number, title, status or requester",
@@ -107,7 +112,11 @@ export const SF_U11_REMAINING_COPY = {
 } as const
 
 export const SF_U11_REMAINING_COPY_BR: Record<keyof typeof SF_U11_REMAINING_COPY, string> = {
-  ...SF_U11_REMAINING_COPY,
+  "sf.u11.remaining.backList": "Voltar aos pedidos",
+  "sf.u11.remaining.resumeDraft": "Retomar rascunho",
+  "sf.u11.remaining.choose": "Escolha…",
+  "sf.u11.remaining.product": "produto",
+  "sf.u11.remaining.service": "serviço",
   "sf.u11.remaining.list": "Pedidos",
   "sf.u11.remaining.filter": "Pesquisar pedidos",
   "sf.u11.remaining.filterPlaceholder": "Número, título, status ou solicitante",
@@ -176,6 +185,40 @@ export const SF_U11_REMAINING_COPY_BR: Record<keyof typeof SF_U11_REMAINING_COPY
   "sf.u11.remaining.purchaseOrder": "Ordem de compra",
   "sf.u11.remaining.awaitingApproval": "Aguardando aprovação",
   "sf.u11.remaining.select": "Selecionar pedido",
+  "sf.u11.remaining.field.title": "Título",
+  "sf.u11.remaining.field.type": "Tipo",
+  "sf.u11.remaining.field.description": "Descrição",
+  "sf.u11.remaining.field.estAmount": "Valor estimado",
+  "sf.u11.remaining.field.costCenter": "Centro de custo",
+  "sf.u11.remaining.field.needBy": "Necessário até",
+  "sf.u11.remaining.field.justification": "Justificativa",
+  "sf.u11.remaining.field.recurring": "Recorrente",
+  "sf.u11.remaining.field.frequency": "Frequência",
+  "sf.u11.remaining.field.estAnnual": "Valor anual estimado",
+  "sf.u11.remaining.field.expenseType": "Tipo de despesa",
+  "sf.u11.remaining.field.category": "Categoria",
+  "sf.u11.remaining.field.currency": "Moeda",
+  "sf.u11.remaining.field.supplier": "Fornecedor",
+  "sf.u11.remaining.field.supplierId": "ID do fornecedor",
+  "sf.u11.remaining.field.lines": "Itens",
+  "sf.u11.remaining.field.paymentTerms": "Condições de pagamento",
+  "sf.u11.remaining.field.deliveryDate": "Data de entrega",
+  "sf.u11.remaining.field.deliveryConditions": "Condições de entrega",
+  "sf.u11.remaining.field.contractRef": "Referência do contrato",
+  "sf.u11.remaining.field.incoterm": "Incoterm",
+  "sf.u11.remaining.field.incoterms": "Incoterms",
+  "sf.u11.remaining.field.assetRef": "Referência do ativo",
+  "sf.u11.remaining.field.supplierContact": "Contato do fornecedor",
+  "sf.u11.remaining.field.quoteRef": "Referência da cotação selecionada",
+  "sf.u11.remaining.field.billingAddress": "Endereço de faturamento",
+  "sf.u11.remaining.field.deliveryAddress": "Endereço de entrega",
+  "sf.u11.remaining.field.acceptance": "Aceite",
+  "sf.u11.remaining.field.warranty": "Garantia",
+  "sf.u11.remaining.field.notes": "Observações",
+  "sf.u11.remaining.field.qty": "Quantidade",
+  "sf.u11.remaining.field.unitPrice": "Preço unitário",
+  "sf.u11.remaining.field.unit": "Unidade",
+  "sf.u11.remaining.field.desc": "Descrição do item",
 }
 
 /**

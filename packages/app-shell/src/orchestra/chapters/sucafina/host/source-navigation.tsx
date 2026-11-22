@@ -63,7 +63,7 @@ export function SfSourceNavigation(props: Readonly<{
   createEffect(() => {
     const surface = props.route()?.surfaceId
     void links()
-    if (!surface || !/^CAP(?:0[1-9]|1[0-9])$/.test(surface)) return
+    if (!surface || !/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface)) return
     const reveal = () => {
       const strip = navigation
       const active = strip?.querySelector<HTMLElement>('a[aria-current="page"]')
@@ -106,7 +106,8 @@ export function SfSourceNavigation(props: Readonly<{
   }
   return <Show when={links().length}>
     <nav ref={navigation} class="sf-source-navigation" aria-label={t(sfCommonKey("sf.common.moreViews"))}
-      data-sf-source-navigation={owner()?.chapter}>
+      data-sf-source-navigation={owner()?.chapter}
+      data-sf-source-polished={/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(props.route()?.surfaceId ?? "") ? "" : undefined}>
       <For each={links()}>{(link) => <a href={link.href}
         data-sf-capability={link.surfaceId}
         aria-current={props.route()?.surfaceId === link.surfaceId ? "page" : undefined}

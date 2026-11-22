@@ -9,6 +9,7 @@ import { useSfContext } from "../context"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
+import "./search.css"
 
 type Result = Extract<Schema.Schema.Type<typeof SfProjectionSearch.Output>, { status: "ok" }>["value"]
 type Match = Result["matches"][number]
@@ -179,13 +180,14 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <section class="mx-card min-w-0" aria-labelledby="sf-u42-query">
+      <div class="sf-search" data-sf-surface="UI31" data-sf-polish="planner" data-sf-wave="four">
+      <section class="sf-search-query" aria-labelledby="sf-u42-query">
         <h2 id="sf-u42-query">{t(key("sf.ui31.query"))}</h2>
         <Show when={owner.state().status === "ready" && !privateRouteReady()}>
           <p role="status" data-sf-search-privacy="blocked">{t(key("sf.ui31.privateRouteUnavailable"))}</p>
         </Show>
         <form onSubmit={(event) => { event.preventDefault(); submit() }}>
-          <div class="flex min-w-0 flex-col gap-3 sm:flex-row">
+          <div class="sf-search-form">
             <label class="min-w-0 flex-1">
               <span class="block">{t(key("sf.ui31.queryLabel"))}</span>
               <input
@@ -203,10 +205,11 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
             </button>
           </div>
         </form>
-        <label class="mt-3 block">
+        <label class="sf-search-filter">
           <span class="block">{t(key("sf.ui31.typeFilter"))}</span>
           <select
             class="mx-input"
+            aria-label={t(key("sf.ui31.typeFilter"))}
             value={screen.kind}
             disabled={!sourceReady()}
             onChange={(event) => {
@@ -220,7 +223,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           </select>
         </label>
       </section>
-      <section class="mx-card min-w-0" aria-labelledby="sf-u42-results">
+      <section class="sf-search-results" aria-labelledby="sf-u42-results">
         <h2 id="sf-u42-results">{t(key("sf.ui31.results"))}</h2>
         <Show when={screen.searched && screen.state === "ready" && selected().length > 0}>
           <p role="status">
@@ -230,7 +233,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           </p>
         </Show>
         <Show
-          when={owner.state().status === "ready" && sourceReady() && (!screen.searched || screen.state === "ready")}
+          when={owner.state().status === "ready" && sourceReady() && screen.state === "ready"}
           fallback={
             <SfStatePanel
               state={screen.state === "ready" ? "unavailable" : screen.state}
@@ -247,7 +250,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
             />
           </Show>
           <Show when={selected().length > 0}>
-            <ol class="list-decimal ps-5" data-sf-search-results="authorized">
+            <ol class="sf-search-matches" data-sf-search-results="authorized">
               <For each={selected()}>
                 {(match) => (
                   <li class="min-w-0 py-3" data-sf-match-kind={match.documentRef.kind}>
@@ -260,11 +263,11 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
                         ? `sf.ui31.evidence.${match.documentRef.evidenceLevel}`
                         : "sf.common.unknown"))}</dd>
                     </dl>
-                    <p>{t(key("sf.ui31.sourceNavigationRequiresAuth"))}</p>
                   </li>
                 )}
               </For>
             </ol>
+            <p class="sf-search-note">{t(key("sf.ui31.sourceNavigationRequiresAuth"))}</p>
           </Show>
           <Show when={screen.limitations.length > 0}>
             <h3>{t(key("sf.ui31.limitations"))}</h3>
@@ -274,13 +277,14 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
           </Show>
         </Show>
       </section>
-      <section class="mx-card min-w-0" aria-labelledby="sf-u42-source">
-        <h2 id="sf-u42-source">{t(key("sf.ui31.sourceContext"))}</h2>
+      <details class="sf-search-source">
+        <summary id="sf-u42-source">{t(key("sf.ui31.sourceContext"))}</summary>
         <p>{t(key("sf.ui31.sourceScope"))}</p>
         <Show when={screen.sourceRevision && screen.state === "ready"}>
           <p>{t(key("sf.ui31.authorityRevision"), { revision: screen.sourceRevision! })}</p>
         </Show>
-      </section>
+      </details>
+      </div>
     </SfPageFrame>
   )
 }

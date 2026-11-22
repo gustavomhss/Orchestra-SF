@@ -1,0 +1,155 @@
+{
+  "base": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+  "head": "0f762e71a00ceb6985b614462a579ba81997afbf",
+  "method": "Original English string literals compared byte for byte per key; all current keys require nonempty BR literals.",
+  "files": [
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+      "englishBefore": 57,
+      "englishAfter": 57,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u09.ts",
+      "englishBefore": 43,
+      "englishAfter": 43,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u45.ts",
+      "englishBefore": 39,
+      "englishAfter": 39,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u46.ts",
+      "englishBefore": 39,
+      "englishAfter": 39,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u14.ts",
+      "englishBefore": 102,
+      "englishAfter": 104,
+      "changedEnglish": [],
+      "addedEnglish": [
+        "sf.u14.identityGroup",
+        "sf.u14.resumeDraft"
+      ],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/copy.ts",
+      "englishBefore": 20,
+      "englishAfter": 22,
+      "changedEnglish": [],
+      "addedEnglish": [
+        "sf.n21.sourceTotals",
+        "sf.n21.sourceCoverage"
+      ],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/copy.ts",
+      "englishBefore": 102,
+      "englishAfter": 107,
+      "changedEnglish": [],
+      "addedEnglish": [
+        "sf.u11.remaining.backList",
+        "sf.u11.remaining.resumeDraft",
+        "sf.u11.remaining.choose",
+        "sf.u11.remaining.product",
+        "sf.u11.remaining.service"
+      ],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u12.ts",
+      "englishBefore": 89,
+      "englishAfter": 89,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u36.ts",
+      "englishBefore": 47,
+      "englishAfter": 47,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/copy.ts",
+      "englishBefore": 36,
+      "englishAfter": 36,
+      "changedEnglish": [],
+      "addedEnglish": [],
+      "missingPortuguese": [],
+      "extraPortuguese": []
+    }
+  ],
+  "verifiedUnchangedThrough": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+  "unchangedVerification": {
+    "method": "Exact GitHub comparisons0f762e71→250e8faf and250e8faf→218a5ee3 contain none of the ten audited catalog paths.",
+    "comparedAt": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "changedCatalogs": []
+  },
+  "carryForward": {
+    "auditedHead": "0f762e71a00ceb6985b614462a579ba81997afbf",
+    "unchangedThrough": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "latestDev": "699ad1a1f837ef4a918b73ba89b06aa9cc0a10db",
+    "changedCatalogPaths": [],
+    "totals": {
+      "catalogs": 10,
+      "existing": 574,
+      "current": 583,
+      "added": 9,
+      "changed": 0,
+      "missingBR": 0
+    },
+    "method": "Exact GitHub comparison from audited product to final code; all ten audited catalog paths unchanged."
+  },
+  "validThrough": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+  "thirdCompositionCarryForward": {
+    "from": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "through": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "upstream": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "upstreamPaths": 18,
+    "changedAuditedCatalogPaths": [],
+    "method": "All subsequent own changes were documentation; third composition has18nonoverlapping exact upstream blobs, none among the10audited catalogs."
+  },
+  "caseScopeCarryForward": {
+    "from": "d179d4abbc4c189d9135e5cc2d38487b6e4ba99c",
+    "through": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "changedPaths": [
+      "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts"
+    ],
+    "changedAuditedCatalogPaths": []
+  },
+  "finalTestDocumentationCarryForward": {
+    "from": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "through": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "changedAuditedCatalogPaths": [],
+    "method": "Exact GitHub comparison contains only documentation and the new case-read-scope regression; no product source or audited catalog path changed.",
+    "comparedPaths": 14
+  }
+}
