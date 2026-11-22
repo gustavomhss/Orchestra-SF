@@ -345,6 +345,7 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
           await expect(history).not.toHaveAttribute("hidden", /.*/)
           await expect(history).toBeVisible()
           await expect(recent).toContainText("No chats were found.")
+          await expect(history.getByText("No chats were found.", { exact: true })).toBeInViewport({ ratio: 1 })
           await capture(page, info, "chat-history-expanded", scheme)
           await historyToggle.click()
           await expect(historyToggle).toHaveAttribute("aria-expanded", "false")
