@@ -41,6 +41,7 @@ export async function microsoftHttpFixture(options: {
     teams: string[]
     graphCalls: string[]
     beforeGraphRequest?: (url: URL) => Promise<void>
+    observeRequest?: (request: Request) => void
     requests: number
     loopbackPeers: number
     ingressRequests: number
@@ -51,6 +52,7 @@ export async function microsoftHttpFixture(options: {
     hostname: "127.0.0.1", port: 0, idleTimeout: 0,
     async fetch(request, server) {
       state.requests += 1
+      state.observeRequest?.(request)
       if (server.requestIP(request)?.address !== "127.0.0.1")
         return new Response("Non-loopback proof peer", { status: 500 })
       state.loopbackPeers += 1
