@@ -1,10 +1,10 @@
 # Preparação do go-live — G05, G06, G07, G08 e G10
 
-**Os contratos de componente avançaram para `dev`; os cinco gates finais continuam abertos.** O candidato final ainda não foi fixado. Migração e #613 têm jornadas pendentes; faltam os dois ACKs para o mesmo SHA/árvore, o tar Linux verificado e as qualificações nas reservas QA e recuperação.
+**Os componentes de produto e execução avançaram para `dev`; os cinco gates finais continuam abertos.** Migração e #613 ainda têm casos pendentes. O coordenador G08 foi integrado, mas falta corrigir a admissão do próprio agregador antes de aceitar sua prova. C/T final, ACKs, tar e reservas continuam sem confirmação.
 
-Observação desta edição: **22/11/2026 às 14:39:16 em America/Sao_Paulo (17:39:16 UTC)**. Último `dev` observado: `9db779820a54d251890b399c7f97ed99b333e228`, árvore `b0e17cdcc1a88348399e1d1254bd306ac8235504`. Essa identidade é uma base de integração observada; não é o candidato final aprovado.
+Corte desta edição: **22/11/2026 às 15:49:13 em America/Sao_Paulo (18:49:13 UTC)**. Último `dev` observado: `b7776698e61934ed2cb820658408ff8a8207ec62`, árvore `364344c376a4feb35245d8089bde1941d025ebf9`. Essa identidade é uma base de integração observada; não é o candidato final aprovado. Alterações posteriores ao corte devem ser consultadas nas PRs originais.
 
-O [registro estruturado](status.json) vincula cada prova à fonte/árvore, run, artefato e recibo. O [registro de execução](execution-2026-11-22.md) preserva as edições anteriores e detalha esta atualização. As observações antigas de “PR pendente” continuam históricas; o estado atual dos merges está separado no ledger.
+O [registro estruturado](status.json) vincula cada prova à fonte/árvore, run, artefato e recibo. O [registro de execução](execution-2026-11-22.md) preserva as edições anteriores e detalha esta atualização. Os históricos e as 12 áreas já qualificadas do #613 permanecem preservados.
 
 ## Mandato, responsáveis e fronteiras
 
@@ -13,9 +13,9 @@ A [coordenação #657](https://github.com/gustavomhss/Orchestra-SF/pull/657#issu
 | Recorte | Responsável e estado |
 | --- | --- |
 | Integração final e G05/G06/G07/G08/G10 | Astra go-live; integra por PR revisado e recebe recibos completos |
-| G01–G04 e pool | `focal_migration`, [#673](https://github.com/gustavomhss/Orchestra-SF/pull/673); seis jobs recebidos antes de novos deltas |
+| G01–G04 e pool | `focal_migration`, [#673](https://github.com/gustavomhss/Orchestra-SF/pull/673); seis jobs originais e os dois jobs da composição 9612 recebidos antes de novos deltas |
 | UI42/UI43/UI44 e fechamento do design | Frente do [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613); permanece no PR existente, 12/15 áreas qualificadas |
-| Produto Teams | #665 integrada, complementada por #677/#685/#688/#689/#690; CAP03 em #691/#693 e jornadas em #694 |
+| Produto Teams | #665 e complementos integrados; CAP03/#691/#693 e jornadas/#694/#700 em dev; Teams mantém o follow-up de admissão do agregador |
 | Release e tar | Astra coordena a rota #668; C/T, ACKs dos dois papéis e operador do produtor ainda pendentes |
 | QA / Microsoft / grants | Reserva exclusiva, operador e identidades/sessões reais ainda sem confirmação |
 | Recuperação / backup / chave / observador | Reserva isolada e responsáveis operacionais ainda sem confirmação |
@@ -36,10 +36,22 @@ Revisão técnica entre assistentes, COMMENT pela conta compartilhada e merge de
 | [#688](https://github.com/gustavomhss/Orchestra-SF/pull/688) | `2fdc76d8b40cd62c2da4967a5b9533411af308df` | [45049241686](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45049241686): 33 Server e 1 factory CLI. Overflow tipado retorna 413; erro do handler não inicia nova leitura |
 | [#692](https://github.com/gustavomhss/Orchestra-SF/pull/692) | `51d1879122f39bf894b3fc7d25c361ef2336753a` | [45049839950](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45049839950): 183 controles no inventário daquela fonte. Preserva 32 históricos e exige 37 AZ02 atuais |
 | [#695](https://github.com/gustavomhss/Orchestra-SF/pull/695) | `9db779820a54d251890b399c7f97ed99b333e228` | [45050173497](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45050173497): 42 Node e 10 Bun/123 asserções; três paths, 78 guards limpos. Recusa exige JSON válido; MISSING_SELECTORS conserva media type JSON |
+| [#691](https://github.com/gustavomhss/Orchestra-SF/pull/691) | `7e3e5e2bfd24f2efe8f424a298e31e071763061f` | [45050299263](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45050299263): 79 DOM/1.501 asserções; prova na composição explícita ba91 + Client, distinta do head isolado 894 |
+| [#693](https://github.com/gustavomhss/Orchestra-SF/pull/693) | `70e3228cf2dbbe2ba1723ea4044ed855864dd516` | [45051010616](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051010616): 67 casos de domínio/Client/HTTP/Microsoft/G05 e nove cleanups; CAP03 original, identidade controlada |
+| [#694](https://github.com/gustavomhss/Orchestra-SF/pull/694) | `9804ee30848580787cc7e556d4a26269b3960656` | [45051200489](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051200489): 40 Node + 25 Bun; 50 jornadas apenas LISTED_NOT_RUN; F04 NOT_RUN |
+| [#697](https://github.com/gustavomhss/Orchestra-SF/pull/697) | `19fbe6542cdcc27139082c28acbc01bf070d60bd` | [45052572893](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45052572893): 42 Node + 49 Python; observador after-restart vincula os bytes originais, sem executar restart |
+| [#700](https://github.com/gustavomhss/Orchestra-SF/pull/700) | `327e95d552fa6edc742f8b87bc19efb0ca6a1dd6` | [45055263348](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055263348): 40 Node + 42 Bun + 21 DOM; registro original e manifesto aditivo, sem contextos Microsoft instalados |
+| [#701](https://github.com/gustavomhss/Orchestra-SF/pull/701) | `5cf8419032b544b3252b00bdee39afdbb366ffa6` | [45055493019](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055493019): 128 controles de proveniência e ZIP real de controle; nenhuma prova instalada é inferida |
+| [#699](https://github.com/gustavomhss/Orchestra-SF/pull/699) | `47fa6b594ce91058671d55a7104e1ed0264975c2` | [45055028234](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055028234): 40 Node + 54 Bun/188 asserções; recusa JSON original e descarte sem remover a rota passiva |
+| [#698](https://github.com/gustavomhss/Orchestra-SF/pull/698) | `b7776698e61934ed2cb820658408ff8a8207ec62` | [45055970646](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055970646): 254 Node + 5 Bun; cola dos 11 grupos. Admissão do agregador atual ainda pendente |
 
 As contagens são **de fontes distintas**. #692 foi qualificada antes dos nove controles Node adicionais de #695; seus 183 casos não são o inventário agregado corrente. O merge de #695 preserva os três arquivos de #692, mas a execução de 9f5198 não é apresentada como execução conjunta do merge.
 
 Os quatro achados da fronteira HTTP — limite real de bytes, semântica de JSON vazio, overflow tipado e erro sem consumo do corpo — estão entregues por #665/#688. Eles deixam de ser bloqueios de implementação; o replay completo do candidato final continua obrigatório.
+
+O merge de #699 foi relido: `response-faults.ts` conserva exatamente o runtime revisado e o `Pick<NativeManifest, "target">` de #700. A prova 45055028234 continua pertencendo à fonte 217e; ela não qualifica automaticamente a árvore integrada.
+
+**Pendência atual de G08:** o [readback de #698](https://github.com/gustavomhss/Orchestra-SF/pull/698#issuecomment-7083738993) exige observar SHA/árvore, limpeza tracked e o evento/runner/job do agregador atual. O [follow-up reservado a Teams](https://github.com/gustavomhss/Orchestra-SF/pull/698#issuecomment-7083785318) será integrado por nova PR revisada. A proveniência dos produtores anteriores não resolve, sozinha, essa fronteira.
 
 ## Estado por gate
 
@@ -48,31 +60,37 @@ Os quatro achados da fronteira HTTP — limite real de bytes, semântica de JSON
 | [G05](g05-g06-controls.md) | HTTP/SQLite reais, isolamento Team e 11 controles internos repetidos; fronteiras Web corrigidas. Os 409/409 históricos de coverage/auth/effect permanecem na fonte original | Fixar C/T e executar coverage/auth/effect e isolamento completo no inventário corrente, com recibos e cleanup |
 | [G06](g05-g06-controls.md) | [45046401550](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45046401550), fonte B4: 172 Node e 16 Bun/146.538 asserções; ClamD real, Imports privados, cinco fronteiras de política corrente e quatro fixtures limpas | Reexecutar a seleção completa sobre o candidato final; conferir payloads inválidos, autoridade, armazenamento, intake, indisponibilidade e ausência de efeitos indevidos |
 | [G07](g07-linux-package.md) | Verificador #640 e rota #668 integrados; B distinto de C, dois ACKs anteriores ao produtor e qualificação Q do tar original | ACKs Migração/Release para o mesmo C/T, operador real, produção e verificação do tar com proveniência |
-| [G08](g08-teams-qa.md) | Nove oráculos Teams preparados; UI/factory originais e executor AZ02 integrados; ledger exige 37 casos operacionais | Concluir CAP03/#691/#693 e jornadas/#694; reserva, Microsoft real, mesmos bytes G07 instalados, execução de todos os grupos e aceite |
+| [G08](g08-teams-qa.md) | CAP03, UI/factory, registro, jornadas, observador e proveniência em dev; coordenador ainda tem o follow-up de admissão | Fechar a admissão atual, receber C/T/tar/reserva e Microsoft real, executar as 99 obrigações e receber o aceite |
 | [G10](g10-cutover-rollback.md) | Backup/clone preservados; #677 qualifica política corrente e composição de 58 casos, incluindo 31 HTTP de checkpoint/recuperação | Reserva isolada, R instalado/retido, backup/chave, checkpoint lógico, corte ensaiado, restore, restart, retry, rollback e observador externo |
 
-Todas as nove obrigações Teams e os cinco grupos de acompanhamento permanecem **NOT_RUN na instalação**. O inventário exigido é **U15:6, U39:22, U40:22, F04:3 e AZ02:37**. F04 permanece Bun/HappyDOM; AZ02 é prova operacional LIVE transversal, em seis fases **16/14/2/2/2/1**, com os 32 IDs históricos retidos e cinco adições Team. AZ02 não é uma suíte Playwright. A rota `/recover` cobre somente dashboard Team; outras classes de recuperação continuam com suas provas próprias.
+As **99 obrigações permanecem NOT_RUN na instalação**, em **11 invocações**: Teams:9, U15:6, U39:22, U40:22, F04:3 e as seis fases AZ02, somando 37. F04 permanece Bun/HappyDOM; AZ02 é prova operacional LIVE transversal, em seis fases **16/14/2/2/2/1**, com os 32 IDs históricos retidos e cinco adições Team. AZ02 não é uma suíte Playwright. A rota `/recover` cobre somente dashboard Team; outras classes de recuperação continuam com suas provas próprias.
 
 ## Migração e #613
 
-O focal solicitado [45035419728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035419728), fonte `1c7070c348a6f5be8fed07b7138fce4b6d45827a` / árvore `7bbe9abde3faacb8684971b4ce4561b64349475f`, teve seus seis jobs e recibos recebidos antes das correções. O [manifesto de intake](https://github.com/gustavomhss/Orchestra-SF/pull/673) e o ledger preservam esse resultado e as iterações seguintes.
+O focal solicitado [45035419728](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035419728), fonte `1c7070c348a6f5be8fed07b7138fce4b6d45827a` / árvore `7bbe9abde3faacb8684971b4ce4561b64349475f`, teve seus seis jobs e recibos recebidos antes das correções. O [intake da Migração](migration-intake.json) preserva as 205 disposições e as iterações seguintes.
 
-O [último focal completo 45048445274](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048445274), fonte `c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5` / árvore `8e6d5f3113dd0fc3149877f0f2846302866a0956`, terminou com:
+O focal composto [45055109181](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45055109181) executou `9612e7db0319c41ea0161e3924f332d9d76b0f9b` / T `b1dc4bdc3b4a73667e9ee8011667616565d2f9bc`. Seus dois jobs, logs e quatro ZIPs foram recebidos antes do próximo delta; [recibo e limites](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083818853).
 
-| Job | Resultado recebido |
+| Recorte | Resultado observado nessa fonte |
 | --- | --- |
-| SF4 | 97/97 PASS |
-| SF5 | 156/156 PASS; inclui os 52 casos originais planner-runtime |
-| SF8 | 140/140 PASS |
-| Decisions | 3/5; dois helpers ainda divergem da navegação visível original |
-| Operations | 3/5; resposta GET200 CAP25 perde o corpo no cache do Chromium |
-| Pool | 208/209, mais recusa do hook; evento da resposta tardia 401 não observado em 5 s |
+| Decisions | 3/5 PASS; dois Compare excederam os 180 s originais; zero skip/flaky |
+| Limpeza das instalações dos dois timeouts | SIGTERM e dispose em 112/170 ms; nenhum EADDRINUSE, e os três casos seguintes passaram |
+| Geradores e sete typechecks principais | PASS |
+| Inclusão SF-E2E | FAIL: retorno Promise&lt;Disposable&gt;/Promise&lt;void&gt; e Window.api ausente nessa closure; 6.323 arquivos contabilizados |
+| Build Web | SKIPPED após o erro SF-E2E |
+| Guards | 78 regras; 0 gate findings/0 erros, **47 warnings contra origin/dev** e **69 contra a base histórica** |
 
-O [recibo dos seis jobs](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7082886558) registra a aquisição dos onze ZIPs, hashes, CRC e vínculos de fonte. No pool, a limpeza física passou — um Chrome, 48 aquisições/liberações, PID encerrado —, mas isso não converte a falha funcional em PASS. O pool 209/209 de [45045269481](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45045269481) continua restrito à fonte 385b13. A seleção canônica recomposta explica as novas contagens dos shards; não há substituição retroativa de cobertura. **Reports 11/11 do agregado 44987301540 permanece evidência histórica, reutilizável somente onde a fonte e a composição continuarem aplicáveis.**
+A causa dos dois Compare ainda não foi separada entre servidor e observação CDP. O abort de 10 s do probe anterior não é transferido para 9612. A correção da completude do observador não pode aumentar prazos, alterar retries, substituir bytes da resposta original ou promover indisponibilidade a PASS.
 
-O [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613) permanece em **12 de 15 áreas**. Os cinco controles da correção de escopo passaram em 45042892840 na fonte `0a1247db9a16f9eead04788a76d25723672c7e6a`; UI44 ainda falhou sem resposta no prazo original de 120 s em 45043532716. UI42/UI43 seguem sem preview de portfólio qualificado. O coletor de CPU 45045175421 estava sem recibo/artefato após mais de 50 minutos, com causa desconhecida.
+Operations tem **5/5** em [45051170458](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051170458), fonte bf1c680d; esse recibo não qualifica 9612. O focal anterior de seis jobs [45048445274](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048445274) continua histórico: shards97/97,156/156 e140/140, Decisions3/5, Operations3/5 e pool208/209 mais recusa do hook. O diagnóstico posterior com 209 corpos aprovados não substitui o pool original do candidato final.
 
-A tentativa C17 `6bec7f15` terminou [6/7 controles verdes](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7082905911), mas ancestry excedeu os 105 s originais; ciclo e recuperação/revogação não foram concluídos. Essa tentativa não foi aceita para composição. Os prazos e asserções originais permanecem preservados.
+**Reports 11/11 do agregado44987301540 conserva seus oráculos originais.** A comparação de fonte confirmou a especificação, manifesto e 16 helpers preservados, mas os consumidores local/entry, local-store e request-body mudaram. A qualificação final exige replay dos 11 casos sobre o candidato efetivo, após a composição com #613; nenhum PASS foi transferido.
+
+O [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613) permanece em **12 de 15 áreas**, head `0a1247db9a16f9eead04788a76d25723672c7e6a`. UI42/UI43 continuam sem preview de portfólio qualificado; UI44 permanece sem avaliação instalada aprovada. As provas das 12 áreas foram preservadas.
+
+A fonte de trabalho255 teve [8/10 verificações verdes](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083483010): houve falha de tipos no próprio driver e timeout do C17. O recheck 45054387720 corrigiu somente o driver e passou identidade/tipos/guards; não repetiu o C17. O [perfil original45054997790](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7083761451) foi baixado e verificado: ZIP14766639145, CRC de quatro arquivos e hashes completos. O teste continua **FAIL no prazo original 105 s**. O perfil censura o restante de ancestry e serve ao diagnóstico, sem comprovar ganho ou qualificar a instalação.
+
+O coletor antigo 45045175421 terminou cancelado, sem artefato; a leitura do log retornou 404. Sua causa permanece desconhecida. As tentativas 1480/6bec e os negativos anteriores continuam históricos, sem aceitação implícita ou promoção do head.
 
 ## Bloqueio operacional e responsáveis pela liberação
 
@@ -90,7 +108,7 @@ Nenhuma reserva foi registrada como confirmada e nenhum host foi alterado por es
 
 ## Ordem de qualificação final
 
-1. Integrar os recortes restantes por PR revisado, concluir G01–G04/pool e as jornadas do #613, preservando seus recibos.
+1. Integrar os recortes restantes por PR revisado, fechar a admissão do agregador G08, concluir G01–G04/pool/Reports e as jornadas do #613, preservando seus recibos.
 2. Fixar C/T e receber ACKs reais de Migração e Release para essa identidade, com operador confirmado.
 3. Executar G05 completo e G06 completo sobre C, com inventário, autoridade, efeitos e limpeza.
 4. Admitir B distinto de C; `release-build-<B>` em C aciona o produtor original. Q e `g07-qualify-<Q>` verificam o ZIP/tar original, proveniência e componentes.
@@ -99,4 +117,4 @@ Nenhuma reserva foi registrada como confirmada e nenhum host foi alterado por es
 
 O aceite **222 (2), 4/4**, continua válido no QA original; seu backlink com SHA/tar/reserva ainda precisa ser recuperado para qualquer vínculo adicional. O fechamento desta frente continua **0/5 gates finais, NOT_READY**, com C/T final, ACKs, tar, reservas, instalações e aprovações nulos.
 
-A edição histórica [#676](https://github.com/gustavomhss/Orchestra-SF/pull/676), fonte `dd878301673ef0566ff4298e52fa63b0afe089c5`, permanece preservada. Esta atualização altera somente README, status e registro de execução; os roteiros de execução e o intake têm seus próprios responsáveis.
+As edições históricas [#696](https://github.com/gustavomhss/Orchestra-SF/pull/696) e [#676](https://github.com/gustavomhss/Orchestra-SF/pull/676), fonte `dd878301673ef0566ff4298e52fa63b0afe089c5`, permanece preservada. Esta atualização altera somente README, status e registro de execução; os roteiros de execução e o intake têm seus próprios responsáveis.
