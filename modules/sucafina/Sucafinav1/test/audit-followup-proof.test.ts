@@ -317,3 +317,36 @@ for (const change of ["recipient", "period", "source"] as const) {
     } finally { await f.dispose() }
   }, 120_000)
 }
+
+test("diagnostic 9: a transient real reuse outage is not downgraded when sources recover", async () => {
+  const f = await fixture()
+  try {
+    const selected = await f.create()
+    const readThread = f.collaboration.threadReads.read
+    const readReuse = f.collaboration.answerReuse!.read
+    let armed = true
+    let observedReuse: string | undefined
+    f.collaboration.threadReads.read = async (...args) => {
+      const result = await readThread(...args)
+      if (armed && result.status === "ok") {
+        armed = false
+        f.availability.sources = false
+      }
+      return result
+    }
+    f.collaboration.answerReuse!.read = async (...args) => {
+      const result = await readReuse(...args)
+      observedReuse = result.status
+      // A transient outage ends before dispatch receives the real reuse result.
+      // Availability recovery does not make the missing observation valid.
+      f.availability.sources = true
+      return result
+    }
+    const result = (await f.answerRead(selected.thread.id)).result
+    expect(armed).toBe(false)
+    expect(observedReuse).toBe("unavailable")
+    expect(result.status).toBe("unavailable")
+    expect(JSON.stringify(result)).not.toContain(answer)
+    expect((await f.answerRead(selected.thread.id)).result.status).toBe("ok")
+  } finally { await f.dispose() }
+}, 120_000)
