@@ -142,10 +142,16 @@ export function createSfTeamNativeProcurement(input: SfTeamNativeProcurementInpu
         if (!end || !await current()) return denied()
         if (digestSfValue(end) !== digestSfValue(bound)) return stale()
         const retained = await application.persistence.transaction("procurement", async (snapshot) => {
+          if (!await current()) return { commit: false, value: false }
+          const preparedActor = await actorFor(application, request, snapshot)
+          if (!preparedActor || digestSfValue(preparedActor) !== observed.actorDigest ||
+              prepared && !await prepared.current(snapshot, preparedActor) || !await current())
+            return { commit: false, value: false }
+          // The original actor/ACL observation is last: a true current() or
+          // source check must not hide revocation during its own awaited IO.
           const actor = await actorFor(application, request, snapshot)
           return { commit: false, value: !!actor && digestSfValue(actor) === observed.actorDigest &&
-            digestSfValue(snapshot) === observed.sourceDigest &&
-            (!prepared || await prepared.current(snapshot, actor)) && await current() }
+            digestSfValue(snapshot) === observed.sourceDigest }
         }, { signal: request.signal })
         if (!retained) return stale()
         // No further IO may outlive the final original Procurement observation.

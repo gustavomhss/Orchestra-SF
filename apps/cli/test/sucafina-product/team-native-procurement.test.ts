@@ -17,7 +17,7 @@ async function fixture() {
   const store = await openLocalStore(root)
   const state = {
     current: true, role: "requester", revision: 1, contextReads: 0, authReads: 0,
-    loseAfterEnvironment: false, loseOnSecondAuth: false, mutateAfterFirstRead: false, loseOnSecondContext: false,
+    loseAfterEnvironment: false, loseOnSecondAuth: false, mutateAfterFirstRead: false, loseOnSecondContext: false, loseOnFinalCurrent: false,
     requests: new Set<Request>(), originalRequests: true, cleanup: false,
   }
   const profile = Schema.decodeUnknownSync(TeamProfile.Ref)({
@@ -64,7 +64,10 @@ async function fixture() {
       if (server.requestIP(request)?.address !== "127.0.0.1") throw new Error("Original loopback peer required")
       state.requests.add(request)
       const reader = createSfTeamNativeProcurement({
-        request, handler, binding, profile, current: async () => state.current,
+        request, handler, binding, profile, current: async () => {
+          if (state.loseOnFinalCurrent && state.contextReads >= 2) state.role = "none"
+          return state.current
+        },
         async readContext(original, query) {
           state.contextReads++
           if (state.loseOnSecondContext && state.contextReads === 2) state.role = "none"
@@ -143,8 +146,9 @@ test("Team CAP25 uses original HTTP writer, projection and versionRecord; CAS409
       [422, { "pr.constructor": "invalid original form field" }, version.version],
     ] as const) {
       const denied = await f.command({ page: "Requests", action: "save", id, version: submittedVersion, values })
-      expect(denied.status).toBe(expected)
-      expect(await denied.json()).toMatchObject({ ok: false })
+      const denial = await denied.text()
+      expect({ status: denied.status, response: denial, id, submittedVersion }).toMatchObject({ status: expected })
+      expect(JSON.parse(denial)).toMatchObject({ ok: false })
       const after = await f.read("?request=" + encodeURIComponent(id))
       expect(after.status).toBe(200)
       expect(await after.json()).toEqual(before)
@@ -227,7 +231,7 @@ test("Team CAP25 rejects an invented Application source and leaves unrelated rou
   } finally { await f.close() }
 })
 
-test("Team CAP25 rechecks Procurement after the final F02 await even when Dashboard revision is unchanged", async () => {
+for (const race of ["context", "current"] as const) test("Team CAP25 rechecks Procurement after final " + race + " IO with an unchanged Dashboard revision", async () => {
   const f = await fixture()
   try {
     const create = await f.command({ page: "Requests", action: "create", version: 0,
@@ -239,7 +243,8 @@ test("Team CAP25 rechecks Procurement after the final F02 await even when Dashbo
     expect(await admitted.text()).toContain("Private row before role revocation")
     const before = f.durable()
     f.state.contextReads = 0
-    f.state.loseOnSecondContext = true
+    f.state.loseOnSecondContext = race === "context"
+    f.state.loseOnFinalCurrent = race === "current"
     const response = await f.read()
     expect(response.status).toBe(409)
     expect(await response.json()).toEqual({ status: "stale", reason: "procurement-source-changed" })
