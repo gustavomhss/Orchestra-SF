@@ -1,5 +1,6 @@
 import { createSfTeamContractMcp, createSfTeamPurchaseMcp, createSfTeamSupplierMcp } from "../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts"
 import { LayerNode } from "@orchestra/core/effect/layer-node"
+import type { SessionOwner } from "@orchestra/core/session/owner"
 import { AppProcess } from "@orchestra/core/process"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
@@ -26,6 +27,7 @@ import { changed, object, rows } from "../runtime/contract.ts"
 import { teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { bindMicrosoftInstallation } from "../runtime/microsoft-configuration.ts"
+import type { MicrosoftConfiguration } from "../runtime/microsoft-configuration.ts"
 import { prepareMicrosoftInstallation } from "../runtime/microsoft-installation.ts"
 
 const listenerOrigin = "http://127.0.0.1:4110"
@@ -52,7 +54,8 @@ async function fixture(
   enabledTeamIds?: unknown,
   groups: LocalConfiguration["groups"] = { dashboard: {}, planner: {}, procurement: {} },
   teamDirectory?: "members",
-  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[]; supplierReview?: boolean; contractReview?: boolean } = {},
+  options: { nativeDecisions?: boolean; nativeRecovery?: boolean; nativeWeb?: boolean; purchasePrincipals?: readonly string[]; supplierReview?: boolean; contractReview?: boolean;
+    sessionGrants?: MicrosoftConfiguration["grants"]; loadTeamSessionHttp?: Parameters<typeof createMicrosoftInstallation>[0]["loadTeamSessionHttp"] } = {},
 ) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sf-microsoft-installation-"))
   const directory = join(root, "installation")
@@ -61,13 +64,13 @@ async function fixture(
   try {
     const file = await prepareLocalConfiguration(directory)
     await mkdir(workspaceDirectory, { mode: 0o700 })
-    const grants = options.nativeDecisions
+    const grants = options.sessionGrants ?? (options.nativeDecisions
       ? [{ principalRef: oid, namespaces: ["cases"], operations: ["sf_case_draft"], ...(options.nativeRecovery ? { migrationActions: ["recover"] } : {}) }]
       : options.purchasePrincipals?.map((principalRef) => ({ principalRef, operations: [
         "sf_request_read", "sf_sourcing_compare", ...(options.supplierReview ? ["sf_supplier_read"] : []),
         ...(options.contractReview ? ["sf_contract_read"] : []),
       ] })) ??
-        [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }]
+        [{ principalRef: grantPrincipal, operations: ["sf_case_read"] }])
     await writeFile(file, JSON.stringify({
       version: 1, deployment: "azure-https", authentication: "microsoft",
       origin, listenerOrigin, ingressOrigin, mount, tenantId, clientId, workspaceDirectory,
@@ -116,6 +119,7 @@ async function fixture(
     await expect(bindMicrosoftInstallation(directory, { ...prepared.loaded.config, tenantId: oid })).rejects
       .toThrow("Microsoft installation identity cannot change")
     const open = (nativeWeb = options.nativeWeb) => createMicrosoftInstallation({ origin: listenerOrigin,
+      ...(options.loadTeamSessionHttp ? { loadTeamSessionHttp: options.loadTeamSessionHttp } : {}),
       ...(options.purchasePrincipals ? { loadTeamPurchaseMcp: async () => createSfTeamPurchaseMcp } : {}),
       ...(options.supplierReview ? { loadTeamSupplierMcp: async () => createSfTeamSupplierMcp } : {}),
       ...(options.contractReview ? { loadTeamContractMcp: async () => createSfTeamContractMcp } : {}),
@@ -126,8 +130,12 @@ async function fixture(
     const state = { installation: await open() }
     return {
       get installation() { return state.installation },
-      directory, register,
+      directory, register, file, prepared,
       prepare,
+      async writeGrants(grants: MicrosoftConfiguration["grants"]) {
+        const current = await prepared.readCurrentConfiguration()
+        await writeFile(file, JSON.stringify({ ...current, grants }))
+      },
       async reopen(nativeWeb = options.nativeWeb) {
         await state.installation.dispose()
         state.installation = await open(nativeWeb)
@@ -159,6 +167,8 @@ const ingress = (relative: string, headers?: Record<string, string>, init?: Pick
 // Only the Microsoft HTTP transport is controlled; no identity or Team decision is stubbed.
 async function nativeNavigationFixture(options: {
   teams?: readonly string[]; enabledTeamIds?: readonly string[]; administrator?: boolean
+  sessionGrants?: MicrosoftConfiguration["grants"]
+  loadTeamSessionHttp?: Parameters<typeof createMicrosoftInstallation>[0]["loadTeamSessionHttp"]
 } = {}) {
   const keys = await generateKeyPair("RS256", { extractable: true })
   const jwk = await exportJWK(keys.publicKey)
@@ -220,7 +230,7 @@ async function nativeNavigationFixture(options: {
     throw new Error("Unexpected navigation Microsoft request")
   }, options.enabledTeamIds ?? [teamObjectId, secondTeamId], {
     dashboard: { viewer: "group:" + grantPrincipal }, planner: {}, procurement: {},
-  }, undefined, { nativeWeb: true })
+  }, undefined, { nativeWeb: true, sessionGrants: options.sessionGrants, loadTeamSessionHttp: options.loadTeamSessionHttp })
   try {
     const installed = await f.installation.discovery?.current(AbortSignal.timeout(1000))
     const binding = installed?.identity()
@@ -231,6 +241,7 @@ async function nativeNavigationFixture(options: {
     }
     return {
       selection, binding, membership, teamLookups, close: f.close, reopen: f.reopen,
+      directory: f.directory, file: f.file, prepared: f.prepared, writeGrants: f.writeGrants,
       get installation() { return f.installation },
       async signIn(returnTo: string, expected = returnTo, callbackReturnTo?: string) {
         const begin = await f.installation.handler(ingress("/auth/login?" + new URLSearchParams({ returnTo })))
@@ -285,7 +296,7 @@ async function expectRevokedTeamContext(response: Response | undefined) {
   expect(result.status).toBe("ok")
   if (result.status !== "ok") throw new Error("Expected an authenticated context without Team admission")
   expect(result.value.profile.status).toBe("authenticated")
-  expect(result.value.profile.principal).toEqual({ tenantId, principalObjectId: oid })
+  expect<unknown>(result.value.profile.principal).toEqual({ tenantId, principalObjectId: oid })
   expect(result.value.profile.teams).toEqual({ status: "revoked" })
   expect(result.value.stamp.team).toBeUndefined()
   expect(result.value.destinations).toEqual([])
@@ -365,7 +376,7 @@ test("A valid native login return never grants an ineligible Team and the instal
       const result = Schema.decodeUnknownSync(SfTeamContextResult)(await admitted!.json())
       if (result.status !== "ok") throw new Error("Expected the current eligible Team")
       expect(result.value.profile.teams).toMatchObject({ status: "ready", selected: { teamObjectId } })
-      expect(result.value.stamp.team?.owner).toEqual({
+      expect<unknown>(result.value.stamp.team?.owner).toEqual({
         profile: { installationId: f.selection.installationId, tenantId, teamObjectId },
         principal: { tenantId, principalObjectId: oid },
       })
@@ -450,7 +461,7 @@ test("Corporate profile administration uses the signed Microsoft identity withou
     expect(f.membership.reads).toBe(membershipReadsBeforeEnable)
     const committed = await list()
     expect(committed.configRevision).toBe(changed.configRevision)
-    expect(committed.profiles).toEqual([{ profile: profile(teamObjectId), enabled: true }])
+    expect<unknown>(committed.profiles).toEqual([{ profile: profile(teamObjectId), enabled: true }])
     await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
     expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
 
@@ -1391,5 +1402,173 @@ test("Corporate login reserves capacity before discovery and releases its slot o
     expect(blocked?.status).toBe(429)
     expect(blocked?.headers.get("set-cookie")).toBeNull()
     expect(provider.calls).toBe(101)
+  } finally { await f.close() }
+})
+
+
+test("Corporate native login preserves the new-chat and selected-session Team intents through real signed OIDC", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    for (const pathname of ["/orchestra/sf-sessions/new", "/orchestra/sf-sessions/ses_signed_navigation"]) {
+      const returnTo = pathname + "?" + new URLSearchParams({ ...f.selection, teamObjectId })
+      await f.signIn(returnTo, returnTo, "//foreign.example.test/replace")
+    }
+    f.membership.teams = []
+    const returnTo = "/orchestra/sf-sessions/new?" + new URLSearchParams({ ...f.selection, teamObjectId })
+    const cookie = await f.signIn(returnTo)
+    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
+  } finally { await f.close() }
+})
+
+test("Corporate native chat return refuses missing, duplicated, foreign and malformed selectors after real OIDC", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    const query = new URLSearchParams({ ...f.selection, teamObjectId }).toString()
+    const route = "/orchestra/sf-sessions/new"
+    for (const returnTo of [
+      route,
+      route + "?" + new URLSearchParams(f.selection),
+      route + "?" + new URLSearchParams({ contractRevision: "sf-team-profile/1", teamObjectId }),
+      route + "?" + query + "&teamObjectId=" + secondTeamId,
+      route + "?" + new URLSearchParams({ ...f.selection, teamObjectId, server: "https://foreign.example.test" }),
+      route + "?" + new URLSearchParams({ ...f.selection, teamObjectId, contractRevision: "sf-team-profile/2" }),
+      "/orchestra/sf-sessions/foreign-id?" + query,
+      "/orchestra/sf-sessions/ses_bad%2Fsegment?" + query,
+      "/orchestra/sf-sessions/ses_bad%252Fsegment?" + query,
+      "/orchestra/sf-sessions/ses_bad/segment?" + query,
+      "/orchestra/sf-sessions/?" + query,
+      route + "?" + query + "#replaced",
+    ]) await f.signIn(returnTo, mount + "/dashboard")
+  } finally { await f.close() }
+})
+
+// The real installed login, private policy, Team/role Graph readers and Admission are exercised.
+// Only the downstream Core HTTP factory is controlled so negative startup remains observable.
+test("Corporate session admission revalidates the real signed identity and lazy startup needs explicit actions plus exact Team configuration", async () => {
+  const loads = { count: 0, creates: 0, disposes: 0, handles: 0 }
+  const captured: { request: Request; admission: SessionOwner.Admission }[] = []
+  const empty = { principalRef: oid, namespaces: [], operations: [], sessionActions: [] }
+  const readable = { ...empty, sessionActions: ["read", "create"] }
+  const f = await nativeNavigationFixture({
+    sessionGrants: [empty],
+    loadTeamSessionHttp: async () => {
+      loads.count++
+      return async (options) => {
+        loads.creates++
+        return {
+          async handler(request) {
+            loads.handles++
+            const admission = await options.readAdmission(request)
+            if (!admission || !admission.configuration) throw new Error("Real private Admission required before controlled HTTP")
+            expect(await options.readAdmission(request)).toBe(admission)
+            expect(request.url).toBe(origin + mount + "/api/session")
+            const configuration = await Effect.runPromise(admission.configuration())
+            if (!configuration) throw new Error("Exact private Team configuration required")
+            expect(configuration.configRevision).toBe(admission.binding.revisions.configRevision)
+            expect(configuration.profile).toEqual(admission.binding.owner.profile)
+            captured.push({ request, admission })
+            return Response.json({
+              status: "observed", owner: admission.binding.owner,
+              read: await Effect.runPromise(admission.authorize("read")),
+              create: await Effect.runPromise(admission.authorize("create")),
+              configuration,
+            })
+          },
+          async dispose() { loads.disposes++ },
+        }
+      }
+    },
+  })
+  try {
+    const selector = JSON.stringify({ contractRevision: "sf-team-profile/1", kind: "team", profile: {
+      installationId: f.selection.installationId, tenantId, teamObjectId,
+    } })
+    const request = (cookie?: string, selected = selector) => ingress("/api/session", {
+      ...(cookie ? { cookie } : {}), "x-sf-team-profile": selected,
+    })
+    expect((await f.installation.handler(request()))?.status).toBe(401)
+    expect(loads.count).toBe(0)
+    expect(await Bun.file(join(f.directory, "host-data", "orchestra.db")).exists()).toBe(false)
+    const cookie = await f.signIn("/orchestra/sf-sessions/new?" + new URLSearchParams({ ...f.selection, teamObjectId }))
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    expect(loads.count).toBe(0)
+    await f.writeGrants([readable])
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(503)
+    expect(loads.count).toBe(0)
+
+    const adminQuery = new URLSearchParams({
+      contractRevision: f.selection.contractRevision, installationId: f.selection.installationId, tenantId,
+    }).toString()
+    const list = await f.installation.handler(ingress("/api/ui/team-profiles?" + adminQuery, { cookie }))
+    const catalog = Schema.decodeUnknownSync(TeamProfile.AdminListResult)(await list!.json())
+    if (catalog.status !== "ok") throw new Error("Current real administrator catalog required")
+    const configured = await f.installation.handler(ingress("/api/ui/team-profiles/configuration?" + adminQuery,
+      { cookie, origin, "content-type": "application/json" }, { method: "POST", body: JSON.stringify({
+        profile: { installationId: f.selection.installationId, tenantId, teamObjectId },
+        expectedRevision: catalog.configRevision, document: { version: 1, settings: {} },
+      }) }))
+    expect(configured?.status).toBe(200)
+    await f.writeGrants([empty])
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    expect(loads.count).toBe(0)
+    await f.writeGrants([readable])
+    const response = await f.installation.handler(request(cookie))
+    expect(response?.status).toBe(200)
+    expect(await response!.json()).toMatchObject({
+      status: "observed", read: true, create: false,
+      owner: { principal: { tenantId, principalObjectId: oid },
+        profile: { installationId: f.selection.installationId, tenantId, teamObjectId } },
+      configuration: { origin: "installation-team-store", document: { version: 1, settings: {} } },
+    })
+    expect(loads).toEqual({ count: 1, creates: 1, disposes: 0, handles: 1 })
+    const held = captured[0]
+    if (!held) throw new Error("Original request Admission must be retained")
+    expect(await Effect.runPromise(held.admission.verifyCurrent())).toBe(true)
+    // A claimed principal inside intent is rejected by the closed selector before Core startup.
+    expect((await f.installation.handler(request(cookie, JSON.stringify({ ...JSON.parse(selector), principal: { tenantId, principalObjectId: grantPrincipal } }))))?.status).toBe(401)
+    expect(loads.handles).toBe(1)
+
+    f.membership.administrator = false
+    expect(await Effect.runPromise(held.admission.verifyCurrent())).toBe(false)
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    expect(loads.handles).toBe(1)
+    f.membership.administrator = true
+    await f.writeGrants([empty])
+    expect(await Effect.runPromise(held.admission.verifyCurrent())).toBe(false)
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    expect(loads.handles).toBe(1)
+    await f.writeGrants([readable])
+    f.membership.teams = []
+    expect(await Effect.runPromise(held.admission.verifyCurrent())).toBe(false)
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    f.membership.teams = [teamObjectId, disabledTeamId]
+    expect((await f.installation.handler(ingress("/auth/logout", { cookie, origin }, { method: "POST" })))?.status).toBe(204)
+    const reads = { group: f.membership.groupReads, teams: f.membership.reads }
+    expect(await Effect.runPromise(held.admission.verifyCurrent())).toBe(false)
+    expect((await f.installation.handler(request(cookie)))?.status).toBe(401)
+    expect({ group: f.membership.groupReads, teams: f.membership.reads }).toEqual(reads)
+    expect(loads.handles).toBe(1)
+  } finally { await f.close() }
+  expect(loads.disposes).toBe(1)
+})
+
+test("Microsoft private session readers detect changed grants and key bytes without creating replacement credentials", async () => {
+  const f = await nativeNavigationFixture({ sessionGrants: [{ principalRef: oid, namespaces: [], operations: [] }] })
+  try {
+    const current = await f.prepared.readGrants()
+    expect(current[0]?.sessionActions).toEqual([])
+    expect(current[0]?.connectionActions).toEqual([])
+    const before = await f.prepared.readConnectionKey()
+    await f.writeGrants([{ principalRef: oid, namespaces: [], operations: [], sessionActions: ["read"] }])
+    expect((await f.prepared.readGrants())[0]?.sessionActions).toEqual(["read"])
+    expect(Object.isFrozen((await f.prepared.readGrants())[0]?.sessionActions)).toBe(true)
+    await f.writeGrants([{ principalRef: oid, namespaces: [], operations: [], sessionActions: ["read", "read"] }])
+    await expect(f.prepared.readGrants()).rejects.toThrow()
+    await writeFile(join(f.directory, "session.key"), new Uint8Array(32).fill(93))
+    await expect(f.prepared.readCurrentConfiguration()).rejects.toThrow("keys changed")
+    await expect(f.prepared.readConnectionKey()).rejects.toThrow("keys changed")
+    expect(new Uint8Array(await Bun.file(join(f.directory, "session.key")).arrayBuffer())).toEqual(new Uint8Array(32).fill(93))
+    expect(before.bytes).not.toEqual(new Uint8Array(32).fill(93))
   } finally { await f.close() }
 })

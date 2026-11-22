@@ -59,11 +59,13 @@ export function teamSessionPolicy(value: Record<string, unknown>) {
     const connectionResources = Schema.decodeUnknownSync(ConnectionAccess.Resources)(
       entry.connectionResources === undefined ? [] : entry.connectionResources,
     ).map((resource) => Object.freeze({ ...resource }))
+      .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
     const providerBindings = Schema.decodeUnknownSync(ProviderAccess.Bindings)(
       entry.providerBindings === undefined ? [] : entry.providerBindings,
     ).map((binding) => Object.freeze({ ...binding, profile: Object.freeze({ ...binding.profile }),
       connection: Object.freeze({ ...binding.connection }), models: Object.freeze(binding.models.map((model) =>
         Object.freeze({ ...model, limit: Object.freeze({ ...model.limit }) }))) }))
+      .toSorted((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)))
     return Object.freeze({ providerBindings: Object.freeze(providerBindings), principalRef: entry.principalRef.toLowerCase(), namespaces: Object.freeze(grantedNamespaces), operations: Object.freeze(operations), humanActions: Object.freeze(humanActions), sessionActions: Object.freeze(sessionActions), referenceActions: Object.freeze(referenceActions), migrationActions: Object.freeze(migrationActions), connectionActions: Object.freeze(connectionActions), connectionResources: Object.freeze(connectionResources) })
   })
   if (new Set(grants.map((grant) => grant.principalRef)).size !== grants.length) throw new Error("Ambiguous Microsoft product grant")
