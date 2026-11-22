@@ -18,12 +18,21 @@ these checks with the filesystem fixtures used by the component tests.
 
 ## Scope of the receipt
 
-The checkpoint receipt has schema `orchestra-sf.teams-checkpoint.v2`; the clone
-receipt has schema `orchestra-sf.teams-clone-integrity.v2`. Both explicitly retain
+The checkpoint receipt has schema `orchestra-sf.teams-checkpoint.v2`; the operational
+clone receipt has schema `orchestra-sf.teams-clone-integrity.v3`. Both explicitly retain
 `releaseQualified: false`, `businessRecovery: NOT_RUN` and `keyDecryption: NOT_RUN`.
 The checkpoint binds the target candidate SHA/tree/tar, current source release SHA/tar/manifest,
 VM identity, reservation digest and writer-fence evidence. Writer drain is an
 operator attestation; service inactivity and installation bytes are observations.
+
+The operational clone receipt preserves that source binding and adds a required
+`clone` block: the destination resource ID returned by Azure IMDS, its observation
+time, the SHA-256 of the exact private reservation bytes admitted for that action,
+and the completion time after file/SQLite verification. Isolation claims remain
+under `clone.isolation` with `source: OPERATOR_ATTESTATION`; they are not IMDS or
+network observations. A G10 host-clone proof requires this v3 receipt and its clone
+block. The earlier v2 file-only result, including component fixtures calling the
+file helper directly, does not establish the destination host or reservation.
 
 An available key is read only to establish that it is nonempty and included in the
 private inventory. This is not a successful credential-decryption proof. The full

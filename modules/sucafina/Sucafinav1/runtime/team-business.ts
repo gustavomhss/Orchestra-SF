@@ -141,6 +141,9 @@ export async function runTeamBusiness(input: {
       assets: { persistence, services: { signingKey: derive(keys.assets), scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
     })
     const response = await business(request)
+    // This request already proved Microsoft/Team admission. Revocation during the
+    // first role/roster await is forbidden even when no actor reached the module.
+    if (response?.status === 401 && !await admission.verifyCurrent().catch(() => false)) return denied()
     // Uncommitted conflicts and previews can include stored data too. Exports may
     // generate their bytes after the audit transaction, so they are checked again.
     if (response && authorized.actor && (!authorized.committed || request.method !== "POST") && !await reauthorize())

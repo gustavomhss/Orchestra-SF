@@ -27,10 +27,28 @@ export const expectedCases = Object.freeze([
   [files[2], "private import and supplier upload fail closed against the stopped owned real daemon"],
   [files[2], "real HTTP import preview rejects a benign malformed file after clean ClamD admission without durable preview effects"],
 ].map(Object.freeze))
-export function exactRequest() {
+export const microsoftFiles = Object.freeze([
+  ...files,
+  "Sucafinav1/test/product/teams-scanner/private-admission.check.ts",
+  "Sucafinav1/test/g05-http-team-isolation.test.ts",
+])
+export const microsoftCases = Object.freeze([
+  ...expectedCases,
+  [microsoftFiles[3], "Microsoft Team private upload persists clean bytes and rejects real EICAR with isolated storage"],
+  [microsoftFiles[3], "Microsoft Team private upload rejects wrong owners and revoked membership without durable effects"],
+  [microsoftFiles[3], "Microsoft Team private upload fails closed against the stopped owned real ClamD"],
+  [microsoftFiles[4], "G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team effects"],
+].map(Object.freeze))
+export function selectionInventory(selection = "controls") {
+  if (selection === "controls") return { files, cases: expectedCases, schema: "teams-profile-scanner-v1" }
+  if (selection === "controls-with-teams") return { files: microsoftFiles, cases: microsoftCases, schema: "teams-profile-scanner-v2" }
+  fail("unknown control selection")
+}
+export function exactRequest(selection = "controls") {
+  const selected = selectionInventory(selection)
   return {
     package: "sucafina", packageSelector: "packages/sucafina", directory: "modules/sucafina", runner: "bun",
-    args: [...files.map((file) => "./" + file), "--timeout", "120000"],
+    args: [...selected.files.map((file) => "./" + file), "--timeout", "120000"],
     env: { ORCHESTRA_CHANNEL: "prod", ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "strict" },
   }
 }
@@ -56,15 +74,17 @@ export function admitScanner(input, env, normalize = (body) => body) {
   requireHost(env)
   if (!input || typeof input !== "object" || Array.isArray(input)) fail("request object required")
   const envelope = input.teamsProfileScanner
+  const selected = selectionInventory(envelope?.selection)
+  const expected = exactRequest(envelope?.selection)
   const body = Object.fromEntries(Object.entries(input).filter(([key]) => key !== "teamsProfileScanner"))
-  if (!isDeepStrictEqual(body, exactRequest())) fail("exact three-control request required")
+  if (!isDeepStrictEqual(body, expected)) fail("exact control selection required")
   const request = JSON.parse(JSON.stringify(normalize(body)))
-  if (!isDeepStrictEqual(request, exactRequest())) fail("normalized control request changed")
+  if (!isDeepStrictEqual(request, expected)) fail("normalized control request changed")
   const requestSha256 = hash(canonical(request))
   if (!envelope || !sha(envelope.candidateSha) || !sha(envelope.candidateTree) ||
       !isDeepStrictEqual(envelope, {
-        schema: "teams-profile-scanner-v1", candidateSha: envelope.candidateSha,
-        candidateTree: envelope.candidateTree, requestSha256, selection: "controls",
+        schema: selected.schema, candidateSha: envelope.candidateSha,
+        candidateTree: envelope.candidateTree, requestSha256, selection: envelope.selection,
       })) fail("candidate and normalized request envelope mismatch")
   const branch = "^tp-scan-" + envelope.candidateSha.slice(0, 12) + requestSha256.slice(0, 12) + "[1-9][0-9]{0,2}$"
   if (!new RegExp(branch).test(env.GITHUB_REF_NAME ?? "") ||
@@ -83,6 +103,13 @@ const criticalFiles = Object.freeze([
   "script/sf2h/operations-scanner/cleanup.sh", "script/sf2h/operations-scanner/tools.lock.json",
   "modules/sucafina/bunfig.toml", ...files.map((file) => "modules/sucafina/" + file),
 ])
+function criticalFor(selection) {
+  selectionInventory(selection)
+  return selection === "controls" ? criticalFiles : [...criticalFiles,
+    "modules/sucafina/Sucafinav1/test/fixture/microsoft-http.ts",
+    ...microsoftFiles.slice(files.length).map((file) => "modules/sucafina/" + file),
+  ]
+}
 function fileAt(root, relative) {
   const name = path.resolve(root, relative)
   if (!name.startsWith(root + path.sep) || !statSync(name, { throwIfNoEntry: false })?.isFile() ||
@@ -94,9 +121,10 @@ const save = (file, value) => writeFileSync(file, JSON.stringify(value, null, 2)
 export function readTeamsScannerAdmission(root = realpathSync(process.env.GITHUB_WORKSPACE ?? "."), env = process.env) {
   requireHost(env)
   const receipt = JSON.parse(readFileSync(path.join(evidenceDirectory(root), "admission.json"), "utf8"))
+  const critical = criticalFor(receipt.envelope?.selection)
   if (receipt.schema !== "teams-profile-scanner-admission-v1" || !isDeepStrictEqual(receipt.execution, execution(env)) ||
-      !Array.isArray(receipt.integrity) || receipt.integrity.length !== criticalFiles.length ||
-      receipt.integrity.some((item, index) => item.path !== criticalFiles[index] || item.sha256 !== hash(readFileSync(fileAt(root, item.path)))))
+      !Array.isArray(receipt.integrity) || receipt.integrity.length !== critical.length ||
+      receipt.integrity.some((item, index) => item.path !== critical[index] || item.sha256 !== hash(readFileSync(fileAt(root, item.path)))))
     fail("admission or tracked source identity changed")
   const raw = readFileSync(fileAt(root, ".ci-run.json"), "utf8")
   if (hash(raw) !== receipt.rawRequestSha256) fail("raw request changed")
@@ -114,32 +142,33 @@ function productObservation(log, marker) {
   if (values.length !== 1) fail("missing or duplicated actual control: " + marker)
   try { return JSON.parse(values[0].slice(marker.length + 1)) } catch { fail("malformed actual control: " + marker) }
 }
-function sourceOf(entry, workspace) {
+function sourceOf(entry, workspace, selectedFiles) {
   for (const candidate of [entry.file, entry.classname]) {
     if (typeof candidate !== "string") continue
     const value = candidate.replaceAll("\\", "/").replace(/^\.\//, "")
-    for (const file of files) if ([file, "modules/sucafina/" + file, workspace + "/modules/sucafina/" + file].includes(value)) return file
+    for (const file of selectedFiles) if ([file, "modules/sucafina/" + file, workspace + "/modules/sucafina/" + file].includes(value)) return file
   }
 }
 export function verifyScannerEvidence(input) {
   const { admission, env, summary, report, log, nonce, setup, service, packageEvidence, databases, daemonControls, cleanup, lock } = input
   requireHost(env)
+  const selected = selectionInventory(admission.envelope.selection)
   if (!isDeepStrictEqual(admission.execution, execution(env)) || input.exitCode !== 0 ||
       env.ORCHESTRA_CHANNEL !== "prod" || env.ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER !== "strict" ||
       env.ORCHESTRA_OMNI_CONTROL !== "declared" || !/^[a-f0-9]{32}$/.test(nonce) ||
       env.ORCHESTRA_OMNI_CONTROL_NONCE !== nonce) fail("execution, source or strict invocation mismatch")
   if (summary.schema_version !== 1 || summary.status !== "PASS" || summary.report_sha256 !== hash(report) ||
       !Array.isArray(summary.issues) || summary.issues.length || !Array.isArray(summary.cases) ||
-      summary.counts.product_executed !== expectedCases.length ||
+      summary.counts.product_executed !== selected.cases.length ||
       ["failures", "errors", "skipped", "todo_identified"].some((key) => !zero(summary.counts[key])))
     fail("nonempty successful JUnit evidence required")
   const productCases = summary.cases.filter((entry) => entry.known_control_or_hook === 0)
-  if (productCases.length !== expectedCases.length ||
+  if (productCases.length !== selected.cases.length ||
       productCases.some((entry) => entry.executed !== 1 || entry.product_executed !== 1 ||
         ["failures", "errors", "skipped", "todo_identified"].some((key) => !zero(entry[key]))))
     fail("every declared product case must execute successfully")
-  const observed = productCases.map((entry) => JSON.stringify([sourceOf(entry, env.GITHUB_WORKSPACE), entry.name])).sort()
-  if (!isDeepStrictEqual(observed, expectedCases.map((entry) => JSON.stringify(entry)).sort()))
+  const observed = productCases.map((entry) => JSON.stringify([sourceOf(entry, env.GITHUB_WORKSPACE, selected.files), entry.name])).sort()
+  if (!isDeepStrictEqual(observed, selected.cases.map((entry) => JSON.stringify(entry)).sort()))
     fail("exact file and case inventory required")
   if (setup.schema !== "teams-profile-scanner-setup-v1" || setup.status !== "READY" || setup.syntheticDatabase !== false ||
       setup.productSnapshot !== env.GITHUB_SHA || setup.runId !== env.GITHUB_RUN_ID || setup.runAttempt !== env.GITHUB_RUN_ATTEMPT ||
@@ -209,17 +238,119 @@ export function verifyScannerEvidence(input) {
     .map((line) => JSON.parse(line.slice("G06_PRIVATE_CLEANUP ".length)))
   if (fixtureCleanup.length !== 4 || fixtureCleanup.some((item) => item.fixtures !== 1 || item.directories_removed !== true))
     fail("every real private HTTP fixture must be removed before a positive receipt")
+  const microsoftTeams = admission.envelope.selection === "controls-with-teams"
+    ? verifyMicrosoftTeamEvidence({ admission, env, service, log, g05: input.g05 }) : undefined
   const omni = controlVerdict({ name: "Teams scanner controls" }, "omni control nonce: " + nonce + "\n" + log)
   return {
     schema: "teams-profile-scanner-receipt-v1", status: "PASS", candidateSha: admission.envelope.candidateSha,
     candidateTree: admission.envelope.candidateTree, snapshotSha: env.GITHUB_SHA,
     requestSha256: admission.envelope.requestSha256, run: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT,
-    cases: expectedCases, omni, omniPositive: omni.startsWith("omni positive control: pass ("),
+    cases: selected.cases, legacyCases: expectedCases, omni, omniPositive: omni.startsWith("omni positive control: pass ("),
     proofClass: "COMPONENT_REAL_CLAMD", installedTeamsProof: false,
     malformedProtocol: malformed, malformedApplicationFile: malformedFile,
     privateFixtureCleanup: { completed: fixtureCleanup.length, directoriesRemoved: true },
+    finalCandidate: false, g06Closed: false,
+    ...(microsoftTeams ? { microsoftTeams } : {}),
   }
 }
+
+const teamControlIds = Object.freeze(["private-upload", "denied-owner", "scanner-outage"])
+const g05ControlIds = Object.freeze([
+  "anonymous-denied", "signed-session-admitted", "team-a-write", "team-b-write", "team-read-isolation",
+  "wrong-installation-denied", "wrong-tenant-denied", "selector-route-mismatch-denied",
+  "disabled-team-denied", "revoked-membership-denied", "denied-writes-have-no-effect",
+])
+const digestValue = (value) => typeof value === "string" && /^[a-f0-9]{64}$/.test(value)
+const guid = (value) => typeof value === "string" && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(value)
+function sameDurable(values, teams) {
+  return Array.isArray(values) && values.length === 2 &&
+    isDeepStrictEqual(values.map((value) => value.teamObjectId).sort(), [...teams].sort()) &&
+    values.every((value) => digestValue(value.before) && value.before === value.after)
+}
+function actualTransport(value) {
+  return value?.protocol === "http:" && value.listener === "127.0.0.1" &&
+    Number.isInteger(value.port) && value.port > 0 && value.port < 65536 &&
+    Number.isSafeInteger(value.requests) && value.requests > 0 &&
+    value.loopbackPeers === value.requests && value.ingressRequests === value.requests
+}
+export function verifyMicrosoftTeamEvidence({ admission, env, service, log, g05 }) {
+  if (admission.envelope.selection !== "controls-with-teams") fail("Microsoft selection required")
+  const controls = teamControlIds.map((id) =>
+    productObservation(log, "G06_MICROSOFT_TEAM_" + id.toUpperCase().replaceAll("-", "_")))
+  for (const [index, value] of controls.entries()) {
+    const daemon = index === 2 ? service.error : service.main
+    const teams = value.binding?.teamObjectIds
+    if (value.schema !== "orchestra.g06.microsoft-team-control/1" || value.control !== teamControlIds[index] ||
+        value.status !== "PASS" || value.sourceSha !== env.GITHUB_SHA || value.runId !== env.GITHUB_RUN_ID ||
+        value.runAttempt !== env.GITHUB_RUN_ATTEMPT || value.proofClass !== "COMPONENT_REAL_CLAMD" ||
+        value.composition !== "MICROSOFT_TEAM_FACTORY" || value.identityProvider !== "CONTROLLED_ENTRA_GRAPH" ||
+        value.runtimeFactory !== "createMicrosoftInstallation" || value.installedTeamsProof !== false || value.finalCandidate !== false ||
+        value.scanner?.host !== "127.0.0.1" || value.scanner.port !== daemon.port || value.scanner.pid !== daemon.pid ||
+        !digestValue(value.binding?.installationId) || !guid(value.binding?.tenantId) || !guid(value.binding?.principalObjectId) ||
+        !Array.isArray(teams) || teams.length !== 2 || !teams.every(guid) || new Set(teams).size !== 2 ||
+        !actualTransport(value.transport) || !value.graphRequests?.includes("/v1.0/me/joinedTeams") ||
+        value.cleanup?.completed !== true || value.cleanup.directoryRemoved !== true || value.result?.mainCleanAfter !== true)
+      fail("actual Microsoft Team factory, identity, transport, scanner or cleanup missing")
+  }
+  if (new Set(controls.map((value) => value.binding.installationId)).size !== 3)
+    fail("three independently cleaned Microsoft installations required")
+  const uploaded = controls[0]
+  const observations = uploaded.result.observations
+  if (!Array.isArray(observations) || observations.length !== 2 ||
+      !isDeepStrictEqual(observations.map((value) => value.teamObjectId).sort(), [...uploaded.binding.teamObjectIds].sort()))
+    fail("both Teams require private upload controls")
+  const eicarDigest = hash(Buffer.from("WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=", "base64"))
+  for (const value of observations) {
+    for (const accepted of [value.before, value.after]) {
+      if (accepted?.httpStatus !== 200 || !Number.isSafeInteger(accepted.bytes) || accepted.bytes < 1 ||
+          !digestValue(accepted.digest) || accepted.storedDigest !== accepted.digest ||
+          !Number.isSafeInteger(accepted.versionBefore) || accepted.versionBefore < 0 || accepted.versionAfter !== accepted.versionBefore + 1 ||
+          accepted.downloadStatus !== 200 || accepted.foreignDownloadStatus !== 403 ||
+          accepted.otherTeam?.teamObjectId !== uploaded.binding.teamObjectIds.find((id) => id !== value.teamObjectId) ||
+          !digestValue(accepted.otherTeam.before) || accepted.otherTeam.before !== accepted.otherTeam.after)
+        fail("clean Team upload, blob bytes, signed download or isolation missing")
+    }
+    if (value.rejected?.httpStatus !== 422 || value.rejected.bytes !== 68 || value.rejected.digest !== eicarDigest ||
+        !sameDurable(value.rejected.durable, uploaded.binding.teamObjectIds))
+      fail("real EICAR Team refusal without durable effects required")
+  }
+  const denied = controls[1]
+  if (!Array.isArray(denied.result.attempts) ||
+      !isDeepStrictEqual(denied.result.attempts.map((value) => value.kind).sort(),
+        ["wrong-installation", "wrong-tenant", "selector-route-mismatch", "disabled-team", "revoked-membership"].sort()) ||
+      denied.result.attempts.some((value) => value.httpStatus !== 403 || !sameDurable(value.durable, denied.binding.teamObjectIds)))
+    fail("every Team owner and revocation refusal must preserve both complete stores")
+  const outage = controls[2]
+  if (outage.result.connectionRefused !== true || !Array.isArray(outage.result.attempts) || outage.result.attempts.length !== 2 ||
+      !isDeepStrictEqual(outage.result.attempts.map((value) => value.teamObjectId).sort(), [...outage.binding.teamObjectIds].sort()) ||
+      outage.result.attempts.some((value) => value.httpStatus !== 422 || !digestValue(value.digest) ||
+        !Number.isSafeInteger(value.bytes) || value.bytes < 1 || !sameDurable(value.durable, outage.binding.teamObjectIds)))
+    fail("owned real daemon outage must refuse both Teams without durable effects")
+  if (g05?.schema !== "orchestra.g05.team-http/1" || g05.sourceSha !== env.GITHUB_SHA ||
+      !sha(env.G05_SOURCE_TREE) || g05.sourceTree !== env.G05_SOURCE_TREE ||
+      g05.runId !== env.GITHUB_RUN_ID || g05.runAttempt !== env.GITHUB_RUN_ATTEMPT ||
+      g05.proofClass !== "HTTP_LOOPBACK_MICROSOFT_COMPONENT" || g05.identityProvider !== "CONTROLLED_ENTRA_GRAPH" ||
+      g05.runtimeFactory !== "createMicrosoftInstallation" || g05.installedTeamsProof !== false || g05.finalCandidate !== false ||
+      g05.cleanup?.completed !== true || !actualTransport(g05.transport) ||
+      !g05.graphRequests?.includes("/v1.0/me/joinedTeams") ||
+      g05.summary?.expected !== 11 || g05.summary.pass !== 11 || g05.summary.pending !== 0 ||
+      !Array.isArray(g05.cases) || !isDeepStrictEqual(g05.cases.map((value) => value.id).sort(), [...g05ControlIds].sort()) ||
+      g05.cases.some((value) => value.status !== "pass") ||
+      !sameDurable(g05.durableComparison?.teams, controls[0].binding.teamObjectIds))
+    fail("all eleven original G05 Team controls and their current receipt must survive extraction")
+  return {
+    schema: "teams-profile-scanner-microsoft-receipt-v1", status: "PASS",
+    candidateSha: admission.envelope.candidateSha, candidateTree: admission.envelope.candidateTree,
+    snapshotSha: env.GITHUB_SHA, snapshotTree: env.G05_SOURCE_TREE, requestSha256: admission.envelope.requestSha256,
+    run: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT,
+    proofClass: "COMPONENT_REAL_CLAMD", composition: "MICROSOFT_TEAM_FACTORY", identityProvider: "CONTROLLED_ENTRA_GRAPH",
+    installedTeamsProof: false, finalCandidate: false, g06Closed: false,
+    controls, g05Controls: g05ControlIds,
+    teamsPrivateImportProof: false,
+    blocker: "Native private import-admit/import-preview is not mounted by runTeamBusiness; supplier uploads do not replace that obligation.",
+  }
+}
+
 async function cli() {
   const [action, file] = process.argv.slice(2)
   const root = realpathSync(process.env.GITHUB_WORKSPACE ?? ".")
@@ -233,7 +364,7 @@ async function cli() {
     const admission = admitScanner(input, process.env, (body) =>
       validateRequest(body, (file) => statSync(path.resolve(root, file), { throwIfNoEntry: false })?.isFile() ?? false,
         (selector) => locateTestPackage(root, selector)))
-    const integrity = criticalFiles.map((file) => ({ path: file, sha256: hash(readFileSync(fileAt(root, file))) }))
+    const integrity = criticalFor(admission.envelope.selection).map((file) => ({ path: file, sha256: hash(readFileSync(fileAt(root, file))) }))
     mkdirSync(directory, { mode: 0o700 })
     save(path.join(directory, "admission.json"), { ...admission, integrity, rawRequestSha256: hash(raw) })
     appendFileSync(process.env.GITHUB_ENV, "ORCHESTRA_CHANNEL=prod\nORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict\nORCHESTRA_OMNI_CONTROL=declared\n")
@@ -243,6 +374,7 @@ async function cli() {
   }
   const admission = readTeamsScannerAdmission(root)
   if (action === "integrity") return
+  if (action === "arguments") { process.stdout.write(admission.request.args.join("\n") + "\n"); return }
   if (action !== "verify") fail("unknown action")
   const read = (name) => JSON.parse(readFileSync(path.join(directory, name), "utf8"))
   const scanner = realpathSync(process.env.SF_OPERATIONS_SCANNER_EVIDENCE ?? "")
@@ -255,12 +387,15 @@ async function cli() {
   if (!/^(0|[1-9][0-9]{0,2})$/.test(rawExit) || Number(rawExit) > 255) fail("actual test exit status required")
   const receipt = verifyScannerEvidence({
     admission, env: process.env, summary: read("summary.json"), report, log, exitCode: Number(rawExit),
+    ...(admission.envelope.selection === "controls-with-teams" ? { g05: read("g05-team-http.json") } : {}),
     nonce: readFileSync(path.join(directory, "omni-nonce.txt"), "utf8").trim(),
     setup: daemon("setup.json"), service: daemon("service.json"), packageEvidence: daemon("package.json"),
     databases: daemon("databases.json"), daemonControls: daemon("daemon-controls.json"), cleanup: daemon("cleanup.json"),
     lock: JSON.parse(readFileSync(fileAt(root, "script/sf2h/operations-scanner/tools.lock.json"), "utf8")),
   })
-  receipt.evidence = ["report.xml", "summary.json", "bun.log", "exit-code.txt", "omni-nonce.txt", "admission.json"]
+  if (receipt.microsoftTeams) save(path.join(directory, "microsoft-teams-receipt.json"), receipt.microsoftTeams)
+  receipt.evidence = ["report.xml", "summary.json", "bun.log", "exit-code.txt", "omni-nonce.txt", "admission.json", "arguments.txt",
+    ...(receipt.microsoftTeams ? ["g05-team-http.json", "microsoft-teams-receipt.json"] : [])]
     .map((name) => ({ path: name, sha256: hash(readFileSync(path.join(directory, name))) }))
   receipt.scannerEvidence = ["setup.json", "service.json", "package.json", "databases.json", "daemon-controls.json", "cleanup.json", "configuration.json", "tools.lock.json"]
     .map((name) => ({ path: name, sha256: hash(readFileSync(path.join(scanner, name))) }))
