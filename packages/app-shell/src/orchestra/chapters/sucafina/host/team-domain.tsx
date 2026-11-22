@@ -16,11 +16,14 @@ import { createSfDraft } from "../shared/draft"
 import { SfVendorContractsPage } from "../procurement/contracts"
 import { SfDashboardOpexView } from "../dashboard/opex"
 import { SfDashboardCapexView } from "../dashboard/capex"
+import { SfDashboardBudgetView } from "../dashboard/budget"
+import type { SfBudgetPeriodPort } from "../navigation-state/budget-period"
+import type { SfNativeTransitionResult } from "../navigation-state"
 import { revalidateVendorContractDraft } from "./draft-revalidation-vendor"
 import { revalidateBudgetDraft } from "./draft-revalidation-budget"
 import {
   normalizeSfTeamDomainNavigation, readSfTeamDomainIntent, resolveSfTeamDomainRoute,
-  sfTeamDomainCurrent, sfTeamDomainHref, sfTeamDomainSelection,
+  sfTeamDomainCurrent, sfTeamDomainHref, sfTeamDomainSelection, sfTeamBudgetPeriodHref,
   type SfTeamDomainCapability, type SfTeamDomainRoute,
 } from "./team-domain-route"
 
@@ -77,6 +80,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
   fetch: SfTransportFetch
   reload: () => Promise<void>
   onAccessRevoked?: () => void
+  changeBudgetPeriod?: SfBudgetPeriodPort
 }>) {
   const [store, setStore] = createStore({ generation: 0, stateRevision: 0 })
   // Closed wire DTOs stay entirely outside the store: even an immutable outer
@@ -214,6 +218,7 @@ export function createSfTeamDomainOwner(options: Readonly<{
     hasDirtyDrafts: () => drafts?.dirty() === true,
     discardDrafts: () => drafts?.discardAll() === true,
     reload: options.reload, invalidate: retire,
+    ...(options.changeBudgetPeriod ? { changeBudgetPeriod: options.changeBudgetPeriod } : {}),
   })
   const dispose = () => {
     if (disposed) return
@@ -233,12 +238,12 @@ export type SfTeamDomainHostProps = Readonly<{
   href: () => string
   fetch: SfTransportFetch
   reload: () => Promise<void>
-  navigate: (href: string, replace?: boolean) => Promise<boolean>
+  navigate: (href: string, replace?: boolean, signal?: AbortSignal) => Promise<boolean>
   confirmDiscard: () => Promise<boolean>
   onLifecycle: (lifecycle: SfTeamDomainLifecycle | undefined) => void
 }>
-const titles = { CAP14: "sf.cap14.title", CAP04: "sf.cap04.title", CAP05: "sf.cap05.title" } as const
-const capabilities: readonly SfTeamDomainCapability[] = ["CAP14", "CAP04", "CAP05"]
+const titles = { CAP14: "sf.cap14.title", CAP04: "sf.cap04.title", CAP05: "sf.cap05.title", CAP03: "sf.cap03.title" } as const
+const capabilities: readonly SfTeamDomainCapability[] = ["CAP14", "CAP04", "CAP05", "CAP03"]
 
 /** Keep mounted across loading/focus/expiry; the shell retires it explicitly on logout or owner loss. */
 export function SfTeamDomainHost(props: SfTeamDomainHostProps): JSX.Element {
@@ -276,7 +281,8 @@ export function SfTeamDomainHost(props: SfTeamDomainHostProps): JSX.Element {
       if (!current) { owner?.suspend(); return }
       if (!owner) {
         owner = createSfTeamDomainOwner({ initial: current, current: props.current, fetch: props.fetch,
-          reload: props.reload, onAccessRevoked: () => setView("notice", true) })
+          reload: props.reload, onAccessRevoked: () => setView("notice", true),
+          changeBudgetPeriod: (from, period, signal) => changeBudgetPeriod(from, period, signal) })
         setView("initialized", true)
       }
       void owner.activate(current).catch((error: unknown) => { owner?.retire("revoked"); fail(error) })
@@ -293,13 +299,30 @@ export function SfTeamDomainHost(props: SfTeamDomainHostProps): JSX.Element {
     const intent = readSfTeamDomainIntent(url, current.binding)
     return { owner, current, epoch, href, route: resolveSfTeamDomainRoute(url, current.binding, current.context), domainPath: !!intent }
   })
-  const navigate = async (capture: NonNullable<ReturnType<typeof ready>>, href: string, replace?: boolean) => {
-    if (ready() !== capture || !capture.owner.handle.ready()) return
+  const navigate = async (
+    capture: NonNullable<ReturnType<typeof ready>>, href: string, replace?: boolean, signal?: AbortSignal,
+  ): Promise<SfNativeTransitionResult["status"]> => {
+    if (signal?.aborted || ready() !== capture || !capture.owner.handle.ready()) return "aborted"
     const target = normalizeSfTeamDomainNavigation(href, capture.current.binding, capture.current.context)
-    if (!target) { fail(); return }
-    if (!await leave() || ready() !== capture || capture.owner.handle.generation() !== capture.epoch) return
+    if (!target) { fail(); return "invalid-link" }
+    if (!await leave()) return "kept-editing"
+    if (signal?.aborted || ready() !== capture || capture.owner.handle.generation() !== capture.epoch) return "aborted"
     setView("notice", false)
-    try { if (!await props.navigate(target, replace)) fail() } catch (error) { fail(error) }
+    try {
+      if (await props.navigate(target, replace, signal)) return "committed"
+      if (signal?.aborted) return "aborted"
+      fail()
+      return "unavailable"
+    } catch (error) { fail(error); return "unavailable" }
+  }
+  const changeBudgetPeriod: SfBudgetPeriodPort = async (from, period, signal) => {
+    if (signal.aborted) return "aborted"
+    const capture = ready()
+    if (!capture) return "unavailable"
+    if (capture.route?.surfaceId !== "CAP03" || capture.route.href !== from.href) return "denied"
+    const target = sfTeamBudgetPeriodHref(from, period, capture.current.binding, capture.current.context)
+    if (!target) return "invalid-link"
+    return navigate(capture, target, false, signal)
   }
   onCleanup(() => {
     props.onLifecycle(undefined)
@@ -330,7 +353,7 @@ function SfTeamDomainPage(props: Readonly<{
   route: SfTeamDomainRoute
   handle: SfContextHandle<SfTeamContext>
   current: SfTeamDomainSession
-  navigate: (href: string, replace?: boolean) => Promise<void>
+  navigate: (href: string, replace?: boolean) => Promise<SfNativeTransitionResult["status"]>
 }>): JSX.Element {
   const history = createMemoryHistory()
   history.set({ value: props.route.href, replace: true, scroll: false })
@@ -349,7 +372,8 @@ function SfTeamDomainPage(props: Readonly<{
     <div data-sf-team-domain-page={props.route.surfaceId} onClick={click}>
       {props.route.surfaceId === "CAP14" ? <SfVendorContractsPage surfaceId="CAP14" route={props.route} /> :
         props.route.surfaceId === "CAP04" ? <SfDashboardOpexView surfaceId="CAP04" route={props.route} /> :
-          <SfDashboardCapexView surfaceId="CAP05" route={props.route} />}
+          props.route.surfaceId === "CAP05" ? <SfDashboardCapexView surfaceId="CAP05" route={props.route} /> :
+            <SfDashboardBudgetView surfaceId="CAP03" route={props.route} />}
     </div>
   </SfContextHandleProvider>}><Route path="/*path" component={() => null} /></MemoryRouter>
 }

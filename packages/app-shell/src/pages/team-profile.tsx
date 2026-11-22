@@ -266,14 +266,15 @@ export function SfTeamWebApp() {
     if (!unchanged() || domain && !await domain.leave()) return false
     return unchanged()
   }
-  const goDomain = async (href: string, replace = false): Promise<boolean> => {
+  const goDomain = async (href: string, replace = false, signal?: AbortSignal): Promise<boolean> => {
+    if (signal?.aborted) return false
     const current = authenticated(), profile = current?.context.stamp.team?.owner.profile
     if (!current || !profile) return false
     const url = new URL(href, current.binding.publicOrigin)
     const target = readSfTeamDomainIntent(url, current.binding)
     if (!target || target.selector.profile.teamObjectId !== profile.teamObjectId ||
         !resolveSfTeamDomainRoute(url, current.binding, current.context) || !await leaveWorkspaces()) return false
-    if (!writeNavigation(url, !replace)) return false
+    if (signal?.aborted || !writeNavigation(url, !replace)) return false
     await load()
     const fresh = authenticated()
     return window.location.href === url.href && !!fresh &&
