@@ -260,3 +260,9 @@ Inspection also exposed an existing ineffective Open record action in the combin
 | [Original proof refusal](attempt-06/UI42-proof-refusal-outcome-unknown.jpg) | First submitted evaluation 503; outcome-unknown state |
 
 This is a failed persistence qualification with successful preceding history and preview evidence. It does not qualify UI43, UI44, the next selection fixture or the post-attempt disclosure correction.
+
+## Attempt 7 — original selection registered; preview wait expired
+
+The corrected fixture registered the original human portfolio selection once and verified its canonical returned receipt plus fresh controls/comparison readbacks. Run [44988453838](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44988453838), job `137104076041`, failed at the first 60-second native preview response wait; no preview response/body was observed before teardown. UI43/UI44 were not reached and no evaluation was submitted. This is not another recorded 503 refusal.
+
+Seven original JPEGs are durable; only the configured selection and pending preview were actually inspected in this attempt. The other five are marked unreviewed. The exact source/snapshot/spec/artifact identities, original response sequence, limits of the timing evidence and focal next diagnostic are in [Attempt 7](attempt-07/README.md) and its [manifest](attempt-07/manifest.json).
