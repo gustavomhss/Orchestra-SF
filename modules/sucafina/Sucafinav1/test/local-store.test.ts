@@ -253,6 +253,60 @@ test("fingerprints oversized SQLite rows without accepting a same-length replace
   })
 })
 
+test("large structured snapshots keep detached byte identities across all three surfaces", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const observed = "A".repeat(80)
+    const records = Array.from({ length: 22_000 }, (_, id) => ({ id, observed, source: "original-source" }))
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.records = records
+      snapshot.data.edge = { optional: undefined, negativeZero: -0, sentinel: ["undefined"] }
+      return { commit: true, value: undefined }
+    })
+    for (const surface of ["planner", "procurement"] as const) {
+      await store.transaction(surface, async (snapshot) => {
+        snapshot.data.material = surface.repeat(100_000)
+        return { commit: true, value: undefined }
+      })
+    }
+    await store.dispose()
+
+    const reopened = await open()
+    if (!reopened.readSnapshotRoot) throw new Error("LocalStore must provide a read snapshot root")
+    const inspect = (expected: string) => reopened.readSnapshotRoot!(async () => {
+      const identity = reopened.currentSnapshotScope?.()?.bytesIdentity
+      const first = reopened.currentSnapshot?.("dashboard")
+      if (!identity || !first || !Array.isArray(first.data.records)) throw new Error("Structured source unavailable")
+      expect(first.data.records).toHaveLength(records.length)
+      expect(first.data.records[0]).toEqual({ id: 0, observed: expected, source: "original-source" })
+      expect(first.data.records.at(-1)).toEqual(records.at(-1))
+      expect(first.data.edge).toEqual({ optional: undefined, negativeZero: -0, sentinel: ["undefined"] })
+      first.data.records[0].observed = "detached"
+      first.data.edge = null
+      const second = reopened.currentSnapshot?.("dashboard")
+      if (!second || !Array.isArray(second.data.records)) throw new Error("Independent source unavailable")
+      expect(second.data.records[0].observed).toBe(expected)
+      expect(second.data.edge).toEqual({ optional: undefined, negativeZero: -0, sentinel: ["undefined"] })
+      for (const surface of ["planner", "procurement"] as const)
+        expect(reopened.currentSnapshot?.(surface)?.data.material).toBe(surface.repeat(100_000))
+      return identity
+    })
+    const first = await inspect(observed)
+    // Reopening SQL roots must retain all three exact byte identities, rather
+    // than evicting and rebuilding the large structured plan on every read.
+    expect(await inspect(observed)).toBe(first)
+    const replacement = "B".repeat(observed.length)
+    await reopened.transaction("dashboard", async (snapshot) => {
+      if (!Array.isArray(snapshot.data.records)) throw new Error("Stored records unavailable")
+      snapshot.data.records[0].observed = replacement
+      return { commit: true, value: undefined }
+    })
+    const changed = await inspect(replacement)
+    expect(changed === first).toBe(false)
+    expect(await inspect(replacement)).toBe(changed)
+  })
+})
+
 test("codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined", async () => {
   await fixture(async (_directory, open) => {
     const store = await open()
