@@ -15,7 +15,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const contextReads = observeAnalyticsContext(page, owner)
-  observeAnalyticsOperations(page)
+  observeAnalyticsOperations(page, owner)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (isOperation(request, "decision-portfolio-evaluate") || isOperation(request, "decision-sensitivity-evaluate")) writes.push(request)
@@ -262,7 +262,55 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   }))
 })
 
-async function assertBiSource(page: Page, url: string, view: string, captured?: { http: number; body: unknown }) {
+function readLocalizedScalar(text: string, locale: string): number {
+  const parts = new Intl.NumberFormat(locale).formatToParts(-12345.6)
+  let normalized = text.trim()
+  for (const group of new Set(parts.filter((part) => part.type === "group").map((part) => part.value)))
+    normalized = normalized.split(group).join("")
+  const decimal = parts.find((part) => part.type === "decimal")?.value
+  const minus = parts.find((part) => part.type === "minusSign")?.value
+  if (decimal) normalized = normalized.replace(decimal, ".")
+  if (minus) normalized = normalized.replace(minus, "-")
+  expect(normalized, "A scalar cell must contain a localized number, without a currency fallback").toMatch(/^-?\d+(?:\.\d+)?$/)
+  const value = Number(normalized)
+  expect(Number.isFinite(value)).toBe(true)
+  return value
+}
+
+async function assertOriginalScalars(page: Page, body: Record<string, unknown>, locale: string) {
+  const projection = object(body.projection)
+  const currency = sourceText(object(projection.context).currency)
+  const values = array(projection.values).map(object)
+  const observations: { id: string; original: number; table: number; plot: number; unit: string }[] = []
+  for (const series of array(object(body.presentation).series).map(object)) {
+    const unit = sourceText(series.unit)
+    if (unit === currency) continue
+    for (const id of array(series.valueIds)) {
+      const value = values.find((entry) => entry.id === id)
+      if (!value || value.evidenceState === "absent" || typeof value.value !== "number" || !Number.isFinite(value.value)) continue
+      const row = page.locator(".sf-chart-table tbody tr[data-sf-row=" + JSON.stringify(String(series.id) + ":" + String(id)) + "]")
+      await expect(row).toHaveCount(1)
+      const cells = row.locator("td")
+      await expect(cells.nth(2)).toHaveText(unit)
+      const tableText = sourceText(await cells.nth(1).textContent())
+      const mark = page.locator(".sf-bi-series [data-sf-value-id=" + JSON.stringify(String(id)) + "] .sf-bi-axis-value")
+      await expect(mark).toHaveCount(1)
+      const plotText = sourceText(await mark.textContent())
+      expect(plotText).toBe(tableText)
+      const table = readLocalizedScalar(tableText, locale)
+      const plot = readLocalizedScalar(plotText, locale)
+      for (const shown of [table, plot]) {
+        expect(Math.sign(shown), "The original scalar sign, including nonzero, must survive display").toBe(Math.sign(value.value))
+        if (Number.isInteger(value.value)) expect(shown).toBe(value.value)
+        else expect(Math.abs(shown - value.value) / Math.abs(value.value)).toBeLessThanOrEqual(0.00001)
+      }
+      observations.push({ id: String(id), original: value.value, table, plot, unit })
+    }
+  }
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-original-scalar-dom", locale, observations }))
+}
+
+async function assertBiSource(page: Page, url: string, view: string, captured?: { http: number; body: unknown }, locale = "en-US") {
   const received = captured ?? await (async () => {
     const response = await page.request.get(url)
     return { http: response.status(), body: await response.json() as unknown }
@@ -298,8 +346,9 @@ async function assertBiSource(page: Page, url: string, view: string, captured?: 
   const numeric = values.filter((entry) => valueIds.includes(entry.id) && entry.evidenceState !== "absent" && typeof entry.value === "number")
   const expectedRows = series.flatMap((entry) => array(entry.valueIds).map((id) => String(entry.id) + ":" + String(id)))
   expect(await page.locator(".sf-chart-table tbody tr").evaluateAll((rows) => rows.map((row) => row.getAttribute("data-sf-row")))).toEqual(expectedRows)
-  for (const value of numeric)
-    await expect(page.locator(".sf-chart-table")).toContainText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value.value as number))
+  for (const value of numeric.filter((entry) => entry.unit === object(projection.context).currency))
+    await expect(page.locator(".sf-chart-table")).toContainText(new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value.value as number))
+  await assertOriginalScalars(page, body, locale)
   const expectedPoints = series.flatMap((entry) => array(entry.valueIds).map((id) => {
     const value = values.find((value) => value.id === id)!
     expect(value).toBeDefined()
@@ -522,6 +571,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     ages: ages.map((value) => ({ id: value.id, value: value.value, unit: value.unit, period: value.period, evidenceState: value.evidenceState })) }))
   await catalog.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
+  await captureModes(page, info, "UI46-operations-original-values", catalog.locator(".sf-bi-series").first())
   await captureModes(page, info, "UI46-operations-original-table", catalog.locator(".sf-chart-table-region"))
   await page.setViewportSize({ width: 320, height: 800 })
   await catalog.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
@@ -638,15 +688,52 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await localized.getByRole("button", { name: "Escolher contexto", exact: true }).click()
     expect((await operationalOptions).status()).toBe(200)
     await localized.locator('[data-sf-field="selection"]').selectOption({ index: 1 })
-    const operationalData = localized.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
+    const operationalData = localized.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06"
+    }).then(async (response) => ({ response, body: await response.json().then(
+      (value: unknown) => ({ status: "ok" as const, value }), () => ({ status: "unavailable" as const }),
+    ) }))
     await localized.getByRole("button", { name: "Ver dados", exact: true }).click()
-    expect((await operationalData).status()).toBe(200)
+    const localizedOperations = await operationalData
+    expect(localizedOperations.response.status()).toBe(200)
+    const localizedOperationsUrl = new URL(localizedOperations.response.url())
+    expect(localizedOperationsUrl.origin).toBe(owner.publicOrigin)
+    expect(localizedOperationsUrl.pathname).toBe(owner.mount + "/dashboard")
+    expect(localizedOperationsUrl.searchParams.get("selectionRef")).toBe(await localized.locator('[data-sf-field="selection"]').inputValue())
+    const localizedOperationsBody = localizedOperations.body.status === "ok" ? localizedOperations.body.value : await (async () => {
+      const reread = await localized.request.get(localizedOperationsUrl.href)
+      expect(reread.url()).toBe(localizedOperationsUrl.href)
+      expect(reread.status()).toBe(localizedOperations.response.status())
+      return reread.json() as Promise<unknown>
+    })()
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition", view: "BI06", locale: "pt-BR",
+      http: localizedOperations.response.status(), acquisition: localizedOperations.body.status === "ok"
+        ? "native-response" : "authenticated-original-readback" }))
     await expect(localized.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
+    await assertBiSource(localized, localizedOperationsUrl.href, "BI06",
+      { http: localizedOperations.response.status(), body: localizedOperationsBody }, "pt-BR")
     await localized.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-desktop-operations-test-data")
     await localized.setViewportSize({ width: 320, height: 800 })
     await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-test-data")
+    const localizedPlot = localized.locator(".sf-bi-plot-region").first()
+    await localizedPlot.scrollIntoViewIfNeeded()
+    await localizedPlot.evaluate((element) => { element.scrollLeft = element.scrollWidth })
+    expect(await localizedPlot.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
+    await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-scrolled-values-test-data")
+    const localizedTable = localized.locator(".sf-chart-table-region")
+    await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
+    await localizedTable.focus()
+    await localized.keyboard.press("ArrowRight")
+    await localizedTable.evaluate((element) => {
+      const unit = element.querySelector("thead th:nth-child(3)")
+      if (!unit) throw new Error("The original unit column is missing")
+      element.scrollLeft += unit.getBoundingClientRect().left - element.getBoundingClientRect().left
+    })
+    expect(await localizedTable.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
+    await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-scrolled-units-test-data")
     expect(localizedDiagnostics.pageErrors).toEqual([])
     expect(localizedDiagnostics.consoleErrors).toEqual([])
   })
