@@ -6,40 +6,76 @@ import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navig
 import type { Account } from "./runtime"
 
 export function sourcingStage(page: Page) {
-  return page.locator(".sf-u12-heading p").filter({ hasText: /^Stage: .* · Source version:/ })
+  return page.locator(".sf-u12-heading .sf-u12-stage")
+}
+
+export async function sourcingSourceVersion(page: Page) {
+  const source = page.locator(".sf-u12-heading details.sf-procurement-source")
+  await expect(source).toHaveCount(1)
+  if (await source.getAttribute("open") === null) await source.locator("summary").click()
+  const line = source.locator("p")
+  await expect(line).toHaveText(/^Source version: [1-9]\d*$/)
+  return (await line.innerText()).replace("Source version: ", "")
 }
 
 export async function queueIdentity(page: Page, account: Account, id: string, moneySentence: string, monetaryState: string | null, options?: { reload: true }) {
   const listPath = "/orchestra/sf-procurement/requests"
-  const navigation = options?.reload ? await page.reload() : await page.goto(listPath)
-  expect(navigation?.status()).toBe(200)
-  const table = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Value basis", exact: true }) })
-  await expect(table).toHaveCount(1)
-  const link = table.getByRole("link", { name: id, exact: true })
-  const row = table.getByRole("row").filter({ has: page.getByRole("link", { name: id, exact: true }) })
-  await expect(row).toHaveCount(1)
-  if (monetaryState) await expect(row.getByRole("cell", { name: monetaryState, exact: true })).toHaveCount(1)
-  await expect(link).toHaveAttribute("href", `?request=${id}#${id}`)
-  await expect(link).toHaveAttribute("data-source-ref", /^[a-f0-9-]{36}$/)
-  await expect(link).toHaveAttribute("data-source-digest", /^[a-f0-9]{64}$/)
-  await expect(link).toHaveAttribute("data-source-version", /^[1-9]\d*$/)
-  const identity = { sourceRef: await link.getAttribute("data-source-ref"), sourceDigest: await link.getAttribute("data-source-digest"),
-    sourceVersion: Number(await link.getAttribute("data-source-version")) }
-  const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP25?" + new URLSearchParams({ request: id }), { maxRetries: 0 })
-  expect(response.status()).toBe(200)
-  const projection = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP25"].output)(await response.json())
-  if (projection.status !== "ok") throw new Error("The authorized C02 drilldown is unavailable")
-  expect(projection.context).toMatchObject({ principalRef: account.principal, installationId: account.installationId, projectId: account.projectId })
-  expect(projection.value.selection).toEqual({ request: id })
-  const matching = projection.value.data.requests.filter((record) => record.number === id)
-  expect(matching).toHaveLength(1)
-  expect(matching[0]).toMatchObject({ ...identity, moneySentence, monetaryState })
-  if (!options?.reload) await link.click()
-  await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === listPath &&
-    url.searchParams.get("request") === id && decodeURIComponent(url.hash.slice(1)) === id)
-  await expect(page.getByText(moneySentence, { exact: true })).toBeVisible()
-  return { ...identity, domainVersion: projection.value.versions["requests:" + id]?.version,
-    selectedQuoteId: matching[0]?.sourcing?.selectedId, selectionJustification: matching[0]?.sourcing?.selectionJustification }
+  const detailPath = listPath + "/" + encodeSfRouteRef(id)
+  const endpoint = new URL(account.baseURL + "/api/ui/pages/CAP25")
+  const decode = async (response: { status(): number; json(): Promise<unknown> }, selected: boolean) => {
+    expect(response.status()).toBe(200)
+    const projection = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP25"].output)(await response.json())
+    if (projection.status !== "ok") throw new Error("The authorized C02 projection is unavailable")
+    expect(projection.context).toMatchObject({ principalRef: account.principal, installationId: account.installationId, projectId: account.projectId })
+    expect(projection.value.selection).toEqual(selected ? { request: id } : {})
+    const matching = projection.value.data.requests.filter((record) => record.number === id)
+    expect(matching).toHaveLength(1)
+    const record = matching[0]!
+    expect(record).toMatchObject({ moneySentence, monetaryState })
+    expect(record.sourceRef).toMatch(/^[a-f0-9-]{36}$/)
+    expect(record.sourceDigest).toMatch(/^[a-f0-9]{64}$/)
+    expect(record.sourceVersion).toBeGreaterThan(0)
+    return { sourceRef: record.sourceRef, sourceDigest: record.sourceDigest, sourceVersion: record.sourceVersion,
+      domainVersion: projection.value.versions["requests:" + id]?.version,
+      selectedQuoteId: record.sourcing?.selectedId, selectionJustification: record.sourcing?.selectionJustification }
+  }
+  const navigate = async (selected: boolean, reload = false) => {
+    const pending = page.waitForResponse((response) => {
+      const url = new URL(response.url())
+      return response.request().method() === "GET" && url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
+        url.searchParams.size === (selected ? 1 : 0) && url.searchParams.get("request") === (selected ? id : null)
+    })
+    void pending.catch(() => undefined)
+    const navigation = reload ? await page.reload() : await page.goto(selected ? detailPath : listPath)
+    expect(navigation?.status()).toBe(200)
+    return decode(await pending, selected)
+  }
+  const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
+  let listed: Awaited<ReturnType<typeof decode>>
+  let drilled: Awaited<ReturnType<typeof decode>>
+  if (options?.reload) {
+    await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === detailPath)
+    drilled = await navigate(true, true)
+    // Compare the reloaded UI's actual response with the independently authorized list.
+    listed = await decode(await page.request.get(endpoint.href, { maxRetries: 0 }), false)
+  } else {
+    listed = await navigate(false)
+    const table = page.getByRole("table", { name: "Requests", exact: true })
+    await expect(table).toHaveCount(1)
+    const row = table.locator(`tr[data-sf-row="${id}"]`)
+    await expect(row).toHaveCount(1)
+    await expect(row.getByText(id, { exact: true })).toBeVisible()
+    await row.getByRole("button", { name: "Open record", exact: true }).click()
+    // The native list opens its record locally; the stage links own deep navigation.
+    await expect(detail).toBeVisible()
+    await expect(detail.locator("[data-request-money]")).toHaveText(moneySentence)
+    drilled = await navigate(true)
+  }
+  expect(drilled).toEqual(listed)
+  await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === detailPath)
+  await expect(detail).toBeVisible()
+  await expect(detail.locator("[data-request-money]")).toHaveText(moneySentence)
+  return drilled
 }
 
 export async function captureProcurementCommand(page: Page, account: Account, confirm: Locator, expected: {

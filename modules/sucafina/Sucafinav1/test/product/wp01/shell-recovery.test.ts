@@ -46,7 +46,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const persistence = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, createId: randomUUID })
     const fault: Fault = { used: false, posts: [] }
     const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
-    const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
+    // Keep the partial response open beyond the client 10s body deadline.
+    // Bun's connection idle timeout must not masquerade as the client abort.
+    const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
     const origin = server.url.origin
     const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator: { installationId: randomUUID(), uid: 1000, name: "Shell recovery operator" }, secrets: driver.secrets, key: randomBytes(32) })
     const authenticate: typeof identity.authenticate = async (request, context) => {
@@ -224,10 +226,18 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await form.getByLabel("Deviation notes").fill("Confirmed only in the domain")
       fixture.fault.action = "save-deviation"
       fixture.fault.mode = "body-timeout"
+      const aborted = fixture.page.waitForEvent("requestfailed", {
+        predicate: (request) => request.method() === "POST" &&
+          new URL(request.url()).pathname === "/sucafina/dashboard" &&
+          request.postDataJSON()?.action === "save-deviation",
+        timeout: 15_000,
+      })
+      void aborted.catch(() => undefined)
       const started = performance.now()
       await form.getByRole("button", { name: "Save deviation", exact: true }).click()
       await fixture.page.getByText("The save response was lost or could not be verified.", { exact: false }).waitFor({ timeout: 15_000 })
       expect(performance.now() - started).toBeGreaterThanOrEqual(9_000)
+      expect((await aborted).failure()?.errorText).toBe("net::ERR_ABORTED")
       expect(await form.getByLabel("Deviation notes").inputValue()).toBe("Confirmed only in the domain")
       expect(await form.getAttribute("data-result-uncertain")).toBe("true")
       expect(fixture.fault.posts.filter((entry) => entry.action === "save-deviation")).toHaveLength(1)

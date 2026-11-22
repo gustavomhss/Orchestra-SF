@@ -15,12 +15,11 @@ export async function createRequisition(page: Page, origin: string, observations
   // Regression: a fresh installation must serve a functional Requests form,
   // not the previously observed 503 swallowed as a missing form.
   expect(entry?.status()).toBe(200)
-  const chapter = page.locator('[data-component="sf-requests-pr-po"]')
-  await expect(chapter.getByRole("heading", { name: "Requests", exact: true }), "The real Procurement chapter must own the form").toBeVisible()
-  await expect(page.locator(".mx-heading").getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
+  await expect(page.getByRole("region", { name: "Requests", exact: true }).getByRole("heading", { name: "Requests", exact: true }), "The real Procurement chapter must own the form").toBeVisible()
   const article = page.locator("article.sf-u11-detail")
   const form = article.locator('form[data-command="create"][data-page="Requests"]')
   await expect(form).toHaveCount(1)
+  await expect(form.getByRole("button", { name: "Create request", exact: true })).toBeEnabled()
   const title = "CI Decisions — explicit requisition proposal"
   await form.getByLabel("Title", { exact: true }).fill(title)
   const type = form.locator('select[name="pr.type"]')

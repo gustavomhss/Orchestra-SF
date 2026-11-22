@@ -3,7 +3,7 @@ import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { approveRequest, captureProcurementCommand, confirmCommand, createRequest, fillEnabledScores, openCommandReview, queueIdentity, sourcingStage } from "./procurement"
+import { approveRequest, captureProcurementCommand, confirmCommand, createRequest, fillEnabledScores, openCommandReview, queueIdentity, sourcingSourceVersion, sourcingStage } from "./procurement"
 import { forwardOnce, login, observation, readManifest } from "./runtime"
 
 export async function missingFxRefusal(page: Page, info: TestInfo) {
@@ -44,7 +44,8 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   })
   expect(saved.status).toBe(200)
   expect(saved.body).toMatchObject({ ok: true })
-  await expect(sourcingStage(page)).toHaveText("Stage: sourcing · Source version: " + (saveVersion + 1))
+  await expect(sourcingStage(page)).toHaveText("Stage: sourcing")
+  expect(await sourcingSourceVersion(page)).toBe(String(saveVersion + 1))
   await expect(page.getByRole("textbox", { name: "Selection justification", exact: true })).toHaveValue("Selected quotation still requires a configured FX rate")
   const quoteId = ((await page.locator("fieldset.sf-u12-quote legend").first().innerText()).split(" · ")[1] ?? "").trim()
   expect(quoteId).not.toBe("")
@@ -122,7 +123,8 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(currency).toHaveAttribute("aria-describedby", "sf-u12-currency-0")
   await expect(page.locator("#sf-u12-currency-0")).toHaveText(producer)
   await expect(currency).toHaveAccessibleDescription(producer)
-  await expect(sourcingStage(page)).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(sourcingStage(page)).toHaveText("Stage: sourcing")
+  expect(await sourcingSourceVersion(page)).toBe(version)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText(summary)
   await expect(page.locator(`article[data-sf-request-ref="${id}"] p`).filter({ hasText: /^Status:/ })).toHaveText("Status: sourcing")
@@ -136,7 +138,8 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
   await expect(page.getByRole("alert").getByText("The submitted stage, holder or amount is incomplete.", { exact: true })).toBeVisible()
   await expect(page.getByRole("button", { name: "Approve PR", exact: true })).toHaveCount(0)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-  await expect(sourcingStage(page)).toHaveText("Stage: sourcing · Source version: " + version)
+  await expect(sourcingStage(page)).toHaveText("Stage: sourcing")
+  expect(await sourcingSourceVersion(page)).toBe(version)
   await expect(page.locator("fieldset.sf-u12-quote legend").first()).toContainText(quoteId)
   await expect(page.locator("fieldset.sf-u12-quote").first().getByRole("combobox", { name: "Registered supplier", exact: true })).toHaveValue(supplier)
   await page.getByRole("button", { name: "Compare quotations", exact: true }).click()
@@ -147,7 +150,6 @@ export async function missingFxRefusal(page: Page, info: TestInfo) {
 }
 
 async function sourceVersion(page: Page) {
-  const line = sourcingStage(page)
-  await expect(line).toHaveText(/^Stage: \S+ · Source version: [1-9]\d*$/)
-  return (await line.innerText()).replace(/^Stage: \S+ · Source version: /, "")
+  await expect(sourcingStage(page)).toHaveText(/^Stage: \S+$/)
+  return sourcingSourceVersion(page)
 }

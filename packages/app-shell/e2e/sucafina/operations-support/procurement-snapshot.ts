@@ -3,7 +3,7 @@ import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { approveRequest, captureProcurementCommand, confirmCommand, createRequest, fillEnabledScores, openCommandReview, queueIdentity, sourcingStage } from "./procurement"
+import { approveRequest, captureProcurementCommand, confirmCommand, createRequest, fillEnabledScores, openCommandReview, queueIdentity, sourcingSourceVersion, sourcingStage } from "./procurement"
 import { forwardOnce, login, observation, readManifest } from "./runtime"
 import type { Account } from "./runtime"
 
@@ -60,8 +60,8 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   await page.getByRole("button", { name: "Sourcing", exact: true }).click()
   await confirmCommand(page, account, "submit_sourcing", id, page.getByRole("button", { name: "Submit sourcing", exact: true }), "Confirm once")
   const stage = sourcingStage(page)
-  await expect(stage).toHaveText(/^Stage: src_pending · Source version: [1-9]\d*$/)
-  const pendingVersion = (await stage.innerText()).replace("Stage: src_pending · Source version: ", "")
+  await expect(stage).toHaveText("Stage: src_pending")
+  const pendingVersion = await sourcingSourceVersion(page)
   await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
   await expect(detail.locator("p").filter({ hasText: /^Status:/ })).toHaveText("Status: src_pending")
   await expect(detail.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
@@ -77,7 +77,8 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
   try {
     await setEurRate(page, account, "1.08", "2", () => { restore = true })
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing`)
-    await expect(stage).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
+    await expect(stage).toHaveText("Stage: src_pending")
+    expect(await sourcingSourceVersion(page)).toBe(pendingVersion)
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("30240 USD")
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText(submitted)
@@ -88,10 +89,12 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
     await expect(page.locator("section.sf-u12-comparison").getByRole("cell", { name: "30240 USD (submitted FX: 1.08)", exact: true })).toHaveCount(1)
-    await expect(stage).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
+    await expect(stage).toHaveText("Stage: src_pending")
+    expect(await sourcingSourceVersion(page)).toBe(pendingVersion)
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText(submitted)
     await page.reload()
-    await expect(stage).toHaveText("Stage: src_pending · Source version: " + pendingVersion)
+    await expect(stage).toHaveText("Stage: src_pending")
+    expect(await sourcingSourceVersion(page)).toBe(pendingVersion)
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText(submitted)
     const after = await queueIdentity(page, account, id, submitted, "pending-approval")
     expect(after.domainVersion).toBe(before.domainVersion)

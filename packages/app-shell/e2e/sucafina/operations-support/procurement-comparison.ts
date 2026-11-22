@@ -22,9 +22,12 @@ export async function procurementComparison(page: Page, info: TestInfo) {
     { label: "Browser quote C · USD 29000", cells: ["Browser quote C", "Not compliant", "USD", "29000", "29000 USD (base: 1)", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "", "Technically ineligible"] },
   ] as const
   for (const expected of quotes) {
-    const row = table.getByRole("row").filter({ has: page.getByRole("cell", { name: expected.cells[0], exact: true }) })
+    const row = table.getByRole("row").filter({ has: page.getByText(expected.cells[0], { exact: true }) })
     await expect(row).toHaveCount(1)
-    for (const [index, cell] of expected.cells.entries()) await expect(row.getByRole("cell").nth(index)).toHaveText(cell)
+    for (const [index, cell] of expected.cells.entries()) {
+      const value = index === 0 ? row.getByRole("cell").first().locator(".sf-s01-cell-value") : row.getByRole("cell").nth(index)
+      await expect(value).toHaveText(cell)
+    }
     await expect(comparison.getByRole("combobox", { name: "Selected quotation", exact: true }).locator("option").filter({ hasText: expected.label })).toHaveCount(1)
   }
   await expect(comparison.getByRole("status").filter({ hasText: "Rank 1: Browser quote A" })).toHaveText("Rank 1: Browser quote A")

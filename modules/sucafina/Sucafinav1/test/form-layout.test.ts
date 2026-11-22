@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -8,6 +9,7 @@ import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
 import type { Page } from "@playwright/test"
 import { captureBrowserPng, withinBrowserDeadline } from "./fixture/browser-evidence.ts"
+import { launchBrowserDriver } from "./product/wp02/browser-driver-fixture.ts"
 
 const peopleLabels = ["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"]
 
@@ -31,7 +33,9 @@ function measureMetrics(page: Page) {
 }
 
 
+// Internal local-renderer coverage; native public route qualification is separate.
 test("All editor screens keep readable field widths and ordered configuration sections", async () => {
+  expectSpawn(import.meta.path)
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
   const environment = {
     ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
@@ -41,7 +45,7 @@ test("All editor screens keep readable field widths and ordered configuration se
   }
   const resources: {
     installation?: Awaited<ReturnType<typeof createLocalInstallation>>
-    browser?: import("@playwright/test").Browser
+    browserDriver?: Awaited<ReturnType<typeof launchBrowserDriver>>
   } = {}
   const server = Bun.serve({
     hostname: "127.0.0.1", port: 0,
@@ -49,6 +53,7 @@ test("All editor screens keep readable field widths and ordered configuration se
   })
   const origin = `http://127.0.0.1:${server.port}`
   const failures: string[] = []
+  let completed = false
   const phase = async <T>(label: string, operation: () => Promise<T>) => {
     console.info("browser form layout: phase start", label)
     const result = await withinBrowserDeadline(label, operation, 8_000)
@@ -59,9 +64,8 @@ test("All editor screens keep readable field widths and ordered configuration se
     const file = await prepareLocalConfiguration(root, origin)
     const access = await prepareOperatorAccess(file, true)
     resources.installation = await createLocalInstallation({ origin }, file, environment)
-    const { chromium } = await import("@playwright/test")
-    resources.browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 8000 })
-    const page = await resources.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    resources.browserDriver = await launchBrowserDriver("form-layout", { signal: new AbortController().signal, timeoutMs: 8000 })
+    const page = await resources.browserDriver.browser.newPage({ viewport: { width: 1440, height: 1000 } })
     page.setDefaultTimeout(8000)
     page.setDefaultNavigationTimeout(8000)
     page.on("pageerror", (error) => { failures.push(error.message) })
@@ -194,6 +198,7 @@ test("All editor screens keep readable field widths and ordered configuration se
       }
     }
     expect(failures).toEqual([])
+    completed = true
   } catch (error) {
     console.error("browser form layout: failed before cleanup", error)
     throw error
@@ -201,7 +206,11 @@ test("All editor screens keep readable field widths and ordered configuration se
     console.info("browser form layout: cleanup start")
     await server.stop(true)
     try {
-      if (resources.browser) await withinBrowserDeadline("form layout browser close", () => resources.browser!.close(), 2_000)
+      if (resources.browserDriver) {
+        // The shared driver owns and awaits its bounded process finalizer.
+        await resources.browserDriver.close()
+        if (completed) resources.browserDriver.report()
+      }
     } finally {
       try {
         await resources.installation?.dispose()
