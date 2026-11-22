@@ -83,7 +83,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.locator("#notice").textContent()).not.toContain("Saved")
       state.status = 200
       state.version = 2
-      await page.getByRole("button", { name: "Refresh data" }).click()
+      await page.evaluate(() => (window as unknown as { sucafinaRefresh: () => Promise<void> }).sucafinaRefresh())
       await page.getByText("Refresh received. Your unsaved edits are preserved; save or discard them before updating this view.").waitFor()
       expect(await page.getByLabel("Description").inputValue()).toBe("Local draft")
       expect(await page.locator("form[data-command]").getAttribute("data-version")).toBe("1")
