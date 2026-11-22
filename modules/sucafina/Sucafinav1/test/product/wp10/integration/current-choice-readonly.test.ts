@@ -299,9 +299,13 @@ test("CurrentChoice readonly calculation roots close escaped parent and child co
       const root = createSfPlannerCalculationRoot({ host: fixture.authority.host })
       const releaseParent = Promise.withResolvers<void>(), releaseChild = Promise.withResolvers<void>()
       let parentLate: Promise<boolean> | undefined, childLate: Promise<boolean> | undefined
+      let escapedChild: Awaited<ReturnType<typeof root.prepare>>, firstScope: ReturnType<typeof currentSfReadonlySnapshotScope>
       const prepared = await root.prepare(call, async () => true, () => true)
       if (!prepared) throw new Error("Original calculation root unavailable")
       expect(await prepared.run(async () => {
+        firstScope = currentSfReadonlySnapshotScope(fixture.persistence)
+        escapedChild = await root.prepare(call, async () => { throw new Error("Child initializer must not run") }, () => true)
+        expect(escapedChild).toBeDefined()
         parentLate = releaseParent.promise.then(() => root.allows(call))
         await fixture.persistence.transaction("dashboard", async () => {
           expect(root.allows(call)).toBe(true)
@@ -315,6 +319,33 @@ test("CurrentChoice readonly calculation roots close escaped parent and child co
       releaseChild.resolve()
       expect(await parentLate).toBe(false)
       expect(await childLate).toBe(false)
+      await fixture.persistence.readSnapshotRoot!(async () => {
+        const secondScope = currentSfReadonlySnapshotScope(fixture.persistence)
+        expect(firstScope?.identity).toBeDefined()
+        expect(secondScope?.identity).not.toBe(firstScope?.identity)
+        expect(secondScope?.bytesIdentity).toBe(firstScope?.bytesIdentity)
+        expect(secondScope?.current()).toBe(true)
+        if (!escapedChild) throw new Error("No original descendant was retained")
+        expect(await escapedChild.run(async () => { throw new Error("A new root must not admit an old child") }))
+          .toEqual({ status: "unavailable", reason: "calculation-read-root-unavailable" })
+      })
+      const closedChild = await root.prepare(call, async () => true, () => true)
+      if (!closedChild) throw new Error("Fresh calculation root unavailable")
+      let escapedWhileParentOpen: Promise<boolean> | undefined
+      const releaseClosedChild = Promise.withResolvers<void>()
+      expect(await closedChild.run(async () => {
+        await fixture.persistence.transaction("dashboard", async () => {
+          escapedWhileParentOpen = releaseClosedChild.promise.then(() => root.allows(call))
+          return { commit: false, value: undefined }
+        })
+        expect(root.allows(call)).toBe(true)
+        releaseClosedChild.resolve()
+        expect(await escapedWhileParentOpen).toBe(false)
+        // A proof queried from an already closed child invalidates this owner
+        // even though its parent callback is still physically open.
+        expect(root.allows(call)).toBe(false)
+        return { status: "ok", value: "closed child must not publish" }
+      })).toEqual({ status: "unavailable", reason: "calculation-read-root-unavailable" })
       const poisoned = await root.prepare(call, async () => true, () => true)
       if (!poisoned) throw new Error("Fresh original calculation root unavailable")
       let work = 0
