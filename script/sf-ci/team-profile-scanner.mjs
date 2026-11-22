@@ -192,12 +192,19 @@ export function verifyScannerEvidence(input) {
         (item.status === "ABSENT" || item.status === "STOPPED" && item.pid === service[kind].pid && String(item.startTime) === String(service[kind].start_time))).length !== 1))
     fail("owned daemon cleanup must complete before a positive receipt")
   if (malformedFile.sha !== env.GITHUB_SHA || malformedFile.run !== env.GITHUB_RUN_ID ||
-      malformedFile.transport !== "loopback-http" || malformedFile.benign !== true ||
-      !/^[a-f0-9]{64}$/.test(malformedFile.digest) || !Number.isSafeInteger(malformedFile.bytes) || malformedFile.bytes < 1 ||
-      malformedFile.scanner_accepted !== true || malformedFile.staged !== true ||
-      malformedFile.preview_status !== 400 || malformedFile.preview_result !== "needs-input" ||
-      malformedFile.preview_durable_effects !== 0 || malformedFile.main_clean_after !== true)
-    fail("benign malformed file must traverse real scanner admission and be refused by HTTP preview without durable effects")
+      malformedFile.transport !== "loopback-http" || malformedFile.main_clean_after !== true ||
+      !Array.isArray(malformedFile.inputs) || malformedFile.inputs.length !== 2 ||
+      !isDeepStrictEqual(malformedFile.inputs.map((item) => item.kind).sort(), ["format-mismatch", "truncated-xlsx"]) ||
+      malformedFile.inputs.some((item) => item.benign !== true || !/^[a-f0-9]{64}$/.test(item.digest) ||
+        !Number.isSafeInteger(item.bytes) || item.bytes < 1 || item.durable_effects !== 0 ||
+        !(item.scanner_accepted === true && item.staged === true && item.rejected_at === "preview" &&
+          item.http_status === 400 && item.result === "needs-input" ||
+          item.kind === "truncated-xlsx" && item.scanner_accepted === false && item.staged === false &&
+          item.rejected_at === "admission" && item.http_status === 403 && item.result === "denied")) ||
+      malformedFile.truncated_removed_bytes !== 22 ||
+      !/^[a-f0-9]{64}$/.test(malformedFile.truncated_source_digest) ||
+      malformedFile.truncated_source_bytes !== malformedFile.inputs.find((item) => item.kind === "truncated-xlsx")?.bytes + 22)
+    fail("both benign malformed inputs require actual scanner and HTTP rejection boundaries without durable effects")
   const fixtureCleanup = log.split(/\r?\n/).filter((line) => line.startsWith("G06_PRIVATE_CLEANUP "))
     .map((line) => JSON.parse(line.slice("G06_PRIVATE_CLEANUP ".length)))
   if (fixtureCleanup.length !== 4 || fixtureCleanup.some((item) => item.fixtures !== 1 || item.directories_removed !== true))

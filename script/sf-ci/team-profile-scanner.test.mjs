@@ -46,9 +46,12 @@ function fixture() {
     OPERATIONS75_PRIVATE_IMPORT: { clean: true, eicar: false, clean_after: true, denied_durable_effects: 0 },
     OPERATIONS75_PRIVATE_UPLOAD: { clean: true, eicar: false, clean_after: true, denied_durable_effects: 0 },
     OPERATIONS75_PRIVATE_DOWN: { connection_refused: true, import_admitted: false, upload_admitted: false, denied_durable_effects: 0, main_clean: true },
-    G06_MALFORMED_FILE: { sha: snapshotSha, run: "123", transport: "loopback-http", benign: true,
-      digest: "7".repeat(64), bytes: 100, scanner_accepted: true, staged: true, preview_status: 400,
-      preview_result: "needs-input", preview_durable_effects: 0, main_clean_after: true },
+    G06_MALFORMED_FILE: { sha: snapshotSha, run: "123", transport: "loopback-http",
+      inputs: ["format-mismatch", "truncated-xlsx"].map((kind) => ({ kind, benign: true,
+        digest: "7".repeat(64), bytes: 100, scanner_accepted: true, staged: true,
+        rejected_at: "preview", http_status: 400, result: "needs-input", durable_effects: 0 })),
+      truncated_source_bytes: 122, truncated_source_digest: "8".repeat(64),
+      truncated_removed_bytes: 22, main_clean_after: true },
   }
   const log = Object.entries(records).map(([name, value]) => name + " " + JSON.stringify(value)).join("\n") +
     "\n" + Array.from({ length: 4 }, () => 'G06_PRIVATE_CLEANUP {"fixtures":1,"directories_removed":true}').join("\n") +
@@ -148,8 +151,10 @@ for (const [name, mutate] of [
   ["duplicate product evidence", (e) => { e.log += "\n" + e.log.split("\n")[0] }],
   ["missing benign malformed file", (e) => { e.log = e.log.split("\n").filter((line) => !line.startsWith("G06_MALFORMED_FILE ")).join("\n") }],
   ["malformed file bypassed scanner", (e) => { e.log = e.log.replace('"scanner_accepted":true', '"scanner_accepted":false') }],
-  ["malformed file accepted as preview", (e) => { e.log = e.log.replace('"preview_status":400', '"preview_status":200') }],
-  ["malformed file durable effect", (e) => { e.log = e.log.replace('"preview_durable_effects":0', '"preview_durable_effects":1') }],
+  ["malformed file accepted as preview", (e) => { e.log = e.log.replace('"http_status":400', '"http_status":200') }],
+  ["malformed file durable effect", (e) => { e.log = e.log.replace('"durable_effects":0', '"durable_effects":1') }],
+  ["truncation mislabeled as other input", (e) => { e.log = e.log.replace('"kind":"truncated-xlsx"', '"kind":"format-mismatch"') }],
+  ["truncated bytes mismatch", (e) => { e.log = e.log.replace('"truncated_source_bytes":122', '"truncated_source_bytes":200') }],
   ["malformed file in-process shortcut", (e) => { e.log = e.log.replace('"transport":"loopback-http"', '"transport":"direct-handler"') }],
   ["private fixture not removed", (e) => { e.log = e.log.replace('"directories_removed":true', '"directories_removed":false') }],
   ["missing private fixture cleanup", (e) => { e.log = e.log.split("\n").filter((line) => !line.startsWith("G06_PRIVATE_CLEANUP ")).join("\n") }],
@@ -173,4 +178,20 @@ test("Bun classname and absolute file spellings still identify only the exact so
     evidence.summary.cases[index].classname = ""
   }
   assert.equal(verifyScannerEvidence(evidence).status, "PASS")
+})
+
+test("truncated XLSX refusal preserves an observed scanner boundary without inventing parser coverage", () => {
+  const { evidence } = fixture()
+  evidence.log = evidence.log.split("\n").map((line) => {
+    if (!line.startsWith("G06_MALFORMED_FILE ")) return line
+    const record = JSON.parse(line.slice("G06_MALFORMED_FILE ".length))
+    Object.assign(record.inputs[1], { scanner_accepted: false, staged: false,
+      rejected_at: "admission", http_status: 403, result: "denied" })
+    return "G06_MALFORMED_FILE " + JSON.stringify(record)
+  }).join("\n")
+  const result = verifyScannerEvidence(evidence)
+  assert.equal(result.malformedApplicationFile.inputs[0].rejected_at, "preview")
+  assert.equal(result.malformedApplicationFile.inputs[1].rejected_at, "admission")
+  assert.equal(result.proofClass, "COMPONENT_REAL_CLAMD")
+  assert.equal(result.installedTeamsProof, false)
 })

@@ -186,8 +186,8 @@ async function importFile(f: Fixture, bytes: Uint8Array) {
   return f.call("planner", { sf: "import-admit" }, { method: "POST", headers: { "Idempotency-Key": randomUUID() }, body: form })
 }
 
-async function acceptedImport(f: Fixture, bytes: Uint8Array) {
-  const response = await importFile(f, bytes)
+async function acceptedImport(f: Fixture, bytes: Uint8Array, admitted?: Response) {
+  const response = admitted ?? await importFile(f, bytes)
   expect(response.status).toBe(200)
   const body = object(await response.json())
   expect(body.status).toBe("ok")
@@ -280,32 +280,64 @@ test("real private supplier upload commits clean bytes and rejects EICAR before 
 
 test("real HTTP import preview rejects a benign malformed file after clean ClamD admission without durable preview effects", async () => {
   const f = await fixture(endpoint("SF_OPERATIONS_CLAMD_PORT"))
-  // This is benign text mislabeled XLSX, not EICAR and not a malformed ClamD command.
-  // Admission must run the real scanner; syntax validation belongs to import-preview.
-  const bytes = new TextEncoder().encode("G06 benign malformed workbook: no ZIP/XLSX structure.\n")
-  const digest = createHash("sha256").update(bytes).digest("hex")
-  const scans = f.scannerObservations().length
-  const ref = await acceptedImport(f, bytes)
-  expect(f.scannerObservations()).toHaveLength(scans + 1)
-  expect(f.scannerObservations().at(-1)).toEqual({ digest, size: bytes.byteLength, accepted: true })
-  // Private staging above is intentional. Snapshot AFTER admission proves preview
-  // creates no manifest, further blob, domain commit or durable success receipt.
-  const before = durable(f)
-  const response = await f.call("planner", { sf: "import-preview" }, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Idempotency-Key": randomUUID() },
-    body: JSON.stringify({ admittedFileRef: ref, format: "xlsx", options: {} }),
-  })
-  expect(response.status).toBe(400)
-  expect(await response.json()).toEqual({ status: "needs-input" })
-  expect(durable(f)).toEqual(before)
-  expect(f.scannerObservations()).toHaveLength(scans + 1)
-  expect(await scanLocalFile(new TextEncoder().encode("Clean after malformed workbook\n"), endpoint("SF_OPERATIONS_CLAMD_PORT"))).toBe(true)
+  const valid = await workbook()
+  expect(Buffer.from(valid.subarray(0, 4)).toString("hex")).toBe("504b0304")
+  expect(valid.byteLength).toBeGreaterThan(22)
+  const inputs = [
+    { kind: "format-mismatch", bytes: new TextEncoder().encode("G06 benign malformed workbook: no ZIP/XLSX structure.\n") },
+    // Remove the ZIP end-of-central-directory record from an actual clean workbook.
+    // The XLSX signature remains valid so an admitted file reaches the workbook parser.
+    { kind: "truncated-xlsx", bytes: valid.slice(0, -22) },
+  ]
+  const observations: {
+    kind: string; benign: boolean; digest: string; bytes: number; scanner_accepted: boolean;
+    staged: boolean; rejected_at: string; http_status: number; result: string; durable_effects: number;
+  }[] = []
+  for (const input of inputs) {
+    const digest = createHash("sha256").update(input.bytes).digest("hex")
+    const scans = f.scannerObservations().length
+    const beforeAdmission = durable(f)
+    const admission = await importFile(f, input.bytes)
+    expect(f.scannerObservations()).toHaveLength(scans + 1)
+    const scan = f.scannerObservations().at(-1)
+    expect(scan).toMatchObject({ digest, size: input.bytes.byteLength })
+    if (!scan) throw new Error("G06_REAL_SCANNER_OBSERVATION_MISSING")
+    // Plain benign text must discriminate clean AV admission from file-format refusal.
+    if (input.kind === "format-mismatch") expect(scan.accepted).toBe(true)
+    if (!scan.accepted) {
+      // A real scanner may reject a broken container. Preserve that actual boundary;
+      // do not relabel it as successful parser coverage or override the scanner.
+      expect(admission.status).toBe(403)
+      expect(await admission.json()).toEqual({ status: "denied" })
+      expect(durable(f)).toEqual(beforeAdmission)
+      observations.push({ kind: input.kind, benign: true, digest, bytes: input.bytes.byteLength,
+        scanner_accepted: false, staged: false, rejected_at: "admission",
+        http_status: admission.status, result: "denied", durable_effects: 0 })
+      continue
+    }
+    const ref = await acceptedImport(f, input.bytes, admission)
+    // Staging is intentional. Snapshot AFTER admission proves preview creates no
+    // manifest, further blob, domain commit or durable success receipt.
+    const beforePreview = durable(f)
+    const response = await f.call("planner", { sf: "import-preview" }, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Idempotency-Key": randomUUID() },
+      body: JSON.stringify({ admittedFileRef: ref, format: "xlsx", options: {} }),
+    })
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ status: "needs-input" })
+    expect(durable(f)).toEqual(beforePreview)
+    expect(f.scannerObservations()).toHaveLength(scans + 1)
+    observations.push({ kind: input.kind, benign: true, digest, bytes: input.bytes.byteLength,
+      scanner_accepted: true, staged: true, rejected_at: "preview",
+      http_status: response.status, result: "needs-input", durable_effects: 0 })
+  }
+  expect(await scanLocalFile(new TextEncoder().encode("Clean after malformed workbooks\n"), endpoint("SF_OPERATIONS_CLAMD_PORT"))).toBe(true)
   console.info("G06_MALFORMED_FILE " + JSON.stringify({
-    sha: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
-    transport: "loopback-http", benign: true, digest, bytes: bytes.byteLength,
-    scanner_accepted: true, staged: true, preview_status: response.status,
-    preview_result: "needs-input", preview_durable_effects: 0, main_clean_after: true,
+    sha: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID, transport: "loopback-http",
+    inputs: observations, truncated_source_bytes: valid.byteLength,
+    truncated_source_digest: createHash("sha256").update(valid).digest("hex"),
+    truncated_removed_bytes: 22, main_clean_after: true,
   }))
 })
 
