@@ -2,7 +2,8 @@ name: sf-migration-compare-probe
 
 # Snapshot-only driver: this branch tree contains only this workflow.
 # Logs bind the source snapshot SHA/tree; the driver SHA is separate.
-# Diagnostic only: original five Decisions cases, no positive gate receipt.
+# UI diagnostic only: original five Decisions cases, no positive gate receipt.
+# Static/contracts runs separately against the original source C, without the overlay.
 on:
   push:
     branches: [migration-compare-probe]
@@ -19,8 +20,8 @@ concurrency:
 env:
   CI: "true"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-  SF_FOCAL_SOURCE: 8f6f3a02a83f466be76bce88bb93ed97a83a88e2
-  SF_FOCAL_TREE: 400d3d0bb8f2d292439463abbf42286257152225
+  SF_FOCAL_SOURCE: 57cc9db21c009fc42c1fa6c39a4c0434bada5034
+  SF_FOCAL_TREE: 776c2921400912e55d092a02c3a13d85a52f6375
   SF_BASE_CANDIDATE: 44334fe4d785ea79d9d92179e61ecbdbf40a6a84
   SF_BASE_CANDIDATE_TREE: a19a0a9ffce71788dd7f813656d129010e4fdb8c
   SF_DRIVER_EVENT_SHA: ${{ github.sha }}
@@ -69,7 +70,7 @@ jobs:
           admission="$GITHUB_WORKSPACE/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$admission"
           git diff --name-only "$SF_BASE_CANDIDATE" "$SF_FOCAL_SOURCE" > "$admission/overlay-paths.txt"
-          node --input-type=module -e 'import {readFileSync,writeFileSync} from "node:fs"; const expected=["apps/cli/src/sucafina-product/decision-domain-http.ts","modules/sucafina/Sucafinav1/product/decisions/comparison.ts","packages/app-shell/e2e/sucafina/decisions-support/journey.ts"]; const actual=readFileSync(process.argv[1],"utf8").trim().split("\n").sort(); if(JSON.stringify(actual)!==JSON.stringify(expected)) throw new Error("Unexpected diagnostic overlay paths"); writeFileSync(process.argv[2], JSON.stringify({schema:"sf-source-driver-admission-v1",qualification:false,baseCandidateSha:process.env.SF_BASE_CANDIDATE,baseCandidateTree:process.env.SF_BASE_CANDIDATE_TREE,sourceSha:process.env.SF_FOCAL_SOURCE,sourceTree:process.env.SF_FOCAL_TREE,driverEventSha:process.env.SF_DRIVER_EVENT_SHA,driverWorkflowSha:process.env.SF_DRIVER_WORKFLOW_SHA,originalGithubSha:process.env.GITHUB_SHA,runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,runnerOs:process.env.RUNNER_OS,runnerArch:process.env.RUNNER_ARCH,eventName:process.env.GITHUB_EVENT_NAME,overlayPaths:expected},null,2)+"\n")' "$admission/overlay-paths.txt" "$admission/driver-admission.json"
+          node --input-type=module -e 'import {readFileSync,writeFileSync} from "node:fs"; const expected=["apps/cli/src/sucafina-product/decision-controls.ts","apps/cli/src/sucafina-product/decision-domain-http.ts","apps/cli/src/sucafina-product/portfolio-authority.ts","modules/sucafina/Sucafinav1/product/decisions/comparison.ts","modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts","modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts","packages/app-shell/e2e/sucafina/decisions-support/journey.ts"]; const actual=readFileSync(process.argv[1],"utf8").trim().split("\n").sort(); if(JSON.stringify(actual)!==JSON.stringify(expected)) throw new Error("Unexpected diagnostic overlay paths"); writeFileSync(process.argv[2], JSON.stringify({schema:"sf-source-driver-admission-v1",qualification:false,baseCandidateSha:process.env.SF_BASE_CANDIDATE,baseCandidateTree:process.env.SF_BASE_CANDIDATE_TREE,sourceSha:process.env.SF_FOCAL_SOURCE,sourceTree:process.env.SF_FOCAL_TREE,driverEventSha:process.env.SF_DRIVER_EVENT_SHA,driverWorkflowSha:process.env.SF_DRIVER_WORKFLOW_SHA,originalGithubSha:process.env.GITHUB_SHA,runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,runnerOs:process.env.RUNNER_OS,runnerArch:process.env.RUNNER_ARCH,eventName:process.env.GITHUB_EVENT_NAME,overlayPaths:expected},null,2)+"\n")' "$admission/overlay-paths.txt" "$admission/driver-admission.json"
           printf 'source=%s tree=%s workflow=%s run=%s attempt=%s\n' "$SF_FOCAL_SOURCE" "$SF_FOCAL_TREE" "$GITHUB_WORKFLOW_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
           archive="$RUNNER_TEMP/sf-focal-omni.zip"
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14740432844/zip" > "$archive"
@@ -102,7 +103,7 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID"
           mkdir -p "$evidence"
-          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync(process.argv[1], JSON.stringify({schemaVersion:1,qualification:false,diagnostic:"Original Decisions Compare server/CDP phases",baseSha:process.env.SF_BASE_CANDIDATE,baseTree:process.env.SF_BASE_CANDIDATE_TREE,sourceSha:process.env.SF_FOCAL_SOURCE,sourceTree:process.env.SF_FOCAL_TREE,driverEventSha:process.env.SF_DRIVER_EVENT_SHA,driverWorkflowSha:process.env.SF_DRIVER_WORKFLOW_SHA,runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,changedPaths:["apps/cli/src/sucafina-product/decision-domain-http.ts","modules/sucafina/Sucafinav1/product/decisions/comparison.ts","packages/app-shell/e2e/sucafina/decisions-support/journey.ts"],expectedCases:5,testTimeoutMs:180000,productDeadlineMs:10000,retries:0,omni:true,limit:"Diagnostic only; no positive qualification receipt will be generated and logging can affect elapsed time"},null,2)+"\n")' "$evidence/diagnostic-source.json"
+          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync(process.argv[1], JSON.stringify({schemaVersion:1,qualification:false,diagnostic:"Original Decisions Compare metric phases and attached-source discovery lifecycle",baseSha:process.env.SF_BASE_CANDIDATE,baseTree:process.env.SF_BASE_CANDIDATE_TREE,sourceSha:process.env.SF_FOCAL_SOURCE,sourceTree:process.env.SF_FOCAL_TREE,driverEventSha:process.env.SF_DRIVER_EVENT_SHA,driverWorkflowSha:process.env.SF_DRIVER_WORKFLOW_SHA,runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,changedPaths:["apps/cli/src/sucafina-product/decision-controls.ts","apps/cli/src/sucafina-product/decision-domain-http.ts","apps/cli/src/sucafina-product/portfolio-authority.ts","modules/sucafina/Sucafinav1/product/decisions/comparison.ts","modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts","modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts","packages/app-shell/e2e/sucafina/decisions-support/journey.ts"],expectedCases:5,testTimeoutMs:180000,productDeadlineMs:10000,retries:0,omni:true,limit:"Diagnostic only; no positive qualification receipt will be generated and logging can affect elapsed time"},null,2)+"\n")' "$evidence/diagnostic-source.json"
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
@@ -158,3 +159,173 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  static:
+    name: sf/static-and-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    env:
+      SF_FOCAL_SOURCE: 44334fe4d785ea79d9d92179e61ecbdbf40a6a84
+      SF_FOCAL_TREE: a19a0a9ffce71788dd7f813656d129010e4fdb8c
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ env.SF_FOCAL_SOURCE }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact source and record original driver identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY_ID" = 1455724710
+          test "$GITHUB_REF_NAME" = migration-compare-probe
+          test "$GITHUB_EVENT_NAME" = push
+          test "$GITHUB_SHA" = "$GITHUB_WORKFLOW_SHA"
+          test "$SF_DRIVER_EVENT_SHA" = "$GITHUB_SHA"
+          test "$SF_DRIVER_WORKFLOW_SHA" = "$GITHUB_WORKFLOW_SHA"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          test "$(git rev-parse HEAD)" = "$SF_FOCAL_SOURCE"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$SF_FOCAL_TREE"
+          printf 'source=%s tree=%s event=%s workflow=%s run=%s attempt=%s\n' "$SF_FOCAL_SOURCE" "$SF_FOCAL_TREE" "$GITHUB_SHA" "$GITHUB_WORKFLOW_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          evidence="$RUNNER_TEMP/sf-e2e-typecheck-evidence"
+          mkdir -p "$evidence"
+          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync(process.argv[1], JSON.stringify({schema:"sf-source-driver-admission-v1",sourceSha:process.env.SF_FOCAL_SOURCE,sourceTree:process.env.SF_FOCAL_TREE,driverEventSha:process.env.SF_DRIVER_EVENT_SHA,driverWorkflowSha:process.env.SF_DRIVER_WORKFLOW_SHA,originalGithubSha:process.env.GITHUB_SHA,runId:process.env.GITHUB_RUN_ID,attempt:process.env.GITHUB_RUN_ATTEMPT,runnerOs:process.env.RUNNER_OS,runnerArch:process.env.RUNNER_ARCH,eventName:process.env.GITHUB_EVENT_NAME,qualification:false},null,2)+"\n")' "$evidence/driver-admission.json"
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Verify generated business boundaries (generation and clean tree)
+        run: |
+          set -euo pipefail
+          export GITHUB_SHA="$SF_FOCAL_SOURCE"
+          # Do not replace the historical generator execution with check-only.
+          (cd modules/atlas/boundary && bun run check:generated && bun run generate && git diff --exit-code -- .)
+          (cd packages/client && bun run check:generated)
+
+      - name: Typecheck runtime, host, product and app
+        run: |
+          set -euo pipefail
+          export GITHUB_SHA="$SF_FOCAL_SOURCE"
+          (cd modules/atlas/boundary && bun run typecheck)
+          (cd modules/sucafina && bun run typecheck)
+          (cd packages/core && bun run typecheck)
+          (cd packages/server && bun run typecheck)
+          (cd packages/client && bun run typecheck)
+          (cd apps/cli && bun run typecheck)
+          (cd packages/app-shell && bun run typecheck)
+      - name: Prove Sucafina E2E compiler inclusion even after another typecheck RED
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GITHUB_SHA="$SF_FOCAL_SOURCE"
+          evidence="$RUNNER_TEMP/sf-e2e-typecheck-evidence"
+          mkdir -p "$evidence"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
+          SF_PRODUCT_TREE="$(git rev-parse 'HEAD^{tree}')"
+          export SF_PRODUCT_TREE
+          bun --version > "$evidence/bun-version.txt"
+          cd packages/app-shell
+          set +e
+          bun run typecheck:sf-e2e --showConfig > "$evidence/effective-config.json" 2> "$evidence/config.stderr.log"
+          config_status=$?
+          bun run typecheck:sf-e2e --listFiles --pretty false > "$evidence/typecheck.log" 2>&1
+          typecheck_status=$?
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          set +e
+          node script/sf2h/final-bundle/verify-e2e-typecheck.mjs \
+            --config "$evidence/effective-config.json" \
+            --log "$evidence/typecheck.log" \
+            --config-status "$config_status" \
+            --typecheck-status "$typecheck_status" \
+            --output "$evidence/inclusion.json"
+          verification_status=$?
+          set -e
+          printf '{"config_status":%d,"typecheck_status":%d,"verification_status":%d}\n' \
+            "$config_status" "$typecheck_status" "$verification_status" > "$evidence/command-statuses.json"
+          sha256sum "$evidence/bun-version.txt" "$evidence/effective-config.json" \
+            "$evidence/config.stderr.log" "$evidence/typecheck.log" > "$evidence/sha256sums.txt"
+          grep -E 'error TS[0-9]+:' "$evidence/typecheck.log" || true
+          test "$config_status" -eq 0 && test "$typecheck_status" -eq 0 && test "$verification_status" -eq 0
+      - name: Publish E2E compiler inclusion proof (including RED evidence)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-e2e-inclusion-${{ env.SF_FOCAL_SOURCE }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf-e2e-typecheck-evidence
+          if-no-files-found: error
+          retention-days: 14
+      - name: Verify Linux web production build
+        run: |
+          export GITHUB_SHA="$SF_FOCAL_SOURCE"
+          (cd apps/web && bun run build)
+
+      - name: Security and dependency guards for current dev and the candidate base
+        if: ${{ !cancelled() }}
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GITHUB_SHA="$SF_FOCAL_SOURCE"
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          evidence_dir="$RUNNER_TEMP/guard-evidence"
+          mkdir -p "$evidence_dir"
+          # checkout has persist-credentials:false; the read-only token exists
+          # only for this fetch and is never saved in git config or artifacts.
+          auth="$(printf 'x-access-token:%s' "$GH_READ_TOKEN" | base64 -w0)"
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraheader \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $auth" \
+            git fetch --no-tags origin +refs/heads/dev:refs/remotes/origin/dev
+          SF_PR_BASE="8bd7645767deb85b286b046a52a4e9f1db100262"
+          git merge-base --is-ancestor "$SF_PR_BASE" HEAD
+          unset auth GH_READ_TOKEN
+          git cat-file -e "$SF_PR_BASE^{commit}"
+          dev_sha="$(git rev-parse 'origin/dev^{commit}')"
+          test -n "$dev_sha"
+          set +e
+          bun run check:spawn-imports > "$evidence_dir/spawn.log" 2>&1
+          spawn_status=$?
+          bun run check:guards --base origin/dev > "$evidence_dir/guard-dev.log" 2>&1
+          dev_status=$?
+          bun run check:guards --base "$SF_PR_BASE" > "$evidence_dir/guard-pr-base.log" 2>&1
+          pr_status=$?
+          set -e
+          SF_GUARD_DEV_SHA="$dev_sha" SF_GUARD_PR_SHA="$SF_PR_BASE" \
+          SF_SPAWN_STATUS="$spawn_status" SF_GUARD_DEV_STATUS="$dev_status" SF_GUARD_PR_STATUS="$pr_status" \
+            node --input-type=module -e '
+              import { writeFileSync } from "node:fs"
+              import { execFileSync } from "node:child_process"
+              const sha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+              const tree = execFileSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }).trim()
+              if (sha !== process.env.GITHUB_SHA) process.exit(2)
+              const receipt = {
+                schema: "sf-ci-guard-bases-v1", candidate: sha, tree,
+                run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+                runner_os: process.env.RUNNER_OS, runner_arch: process.env.RUNNER_ARCH,
+                canonical_base: process.env.SF_GUARD_DEV_SHA,
+                pr_base: process.env.SF_GUARD_PR_SHA,
+                commands: [
+                  { command: "bun run check:spawn-imports", status: Number(process.env.SF_SPAWN_STATUS) },
+                  { command: "bun run check:guards --base origin/dev", status: Number(process.env.SF_GUARD_DEV_STATUS) },
+                  { command: "bun run check:guards --base <PR base SHA>", status: Number(process.env.SF_GUARD_PR_STATUS) },
+                ],
+              }
+              writeFileSync(process.env.RUNNER_TEMP + "/guard-evidence/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+            '
+          sha256sum "$evidence_dir"/{spawn,guard-dev,guard-pr-base}.log "$evidence_dir"/receipt.json \
+            > "$evidence_dir/sha256sums.txt"
+          printf 'guards canonical dev=%s status=%s; PR base=%s status=%s; spawn=%s\n' \
+            "$dev_sha" "$dev_status" "$SF_PR_BASE" "$pr_status" "$spawn_status"
+          test "$spawn_status" -eq 0 && test "$dev_status" -eq 0 && test "$pr_status" -eq 0
+      - name: Publish independent guard-base evidence (including RED)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-guard-bases-${{ env.SF_FOCAL_SOURCE }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/guard-evidence
+          if-no-files-found: error
+          retention-days: 14
