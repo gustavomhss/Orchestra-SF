@@ -50,11 +50,16 @@ export function createSfPortfolioAuthority(input: {
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
-    const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
-      const observation = structuredClone(await scenarios.resolve(reference, context))
-      observed.set(reference, observation)
-      return observation
-    } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
+    const pair = { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }
+    // Reuse the original closed-pair observation for this comparison only.
+    // Every canonical reader still executes; unsupported adapters retain their
+    // complete reads, and changed authority or sources cannot replay the work.
+    const result = await business.withPlannerObservation(pair, call, () =>
+      compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+        const observation = structuredClone(await scenarios.resolve(reference, context))
+        observed.set(reference, observation)
+        return observation
+      } } }, pair, call))
     if (result.status !== "ok") return result
     const baseline = observed.get(captured.baselineRef!)
     const candidate = observed.get(captured.scenarioRef)

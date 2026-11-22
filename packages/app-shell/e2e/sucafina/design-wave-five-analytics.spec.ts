@@ -15,7 +15,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const contextReads = observeAnalyticsContext(page, owner)
-  observeAnalyticsOperations(page)
+  observeAnalyticsOperations(page, owner)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (isOperation(request, "decision-portfolio-evaluate") || isOperation(request, "decision-sensitivity-evaluate")) writes.push(request)

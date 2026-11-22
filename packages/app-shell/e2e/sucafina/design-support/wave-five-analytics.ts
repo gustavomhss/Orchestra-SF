@@ -32,12 +32,15 @@ export async function controls(page: Page, owner: AnalyticsOwner, reference?: st
   return object(body.value)
 }
 export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation: string, input: unknown) {
+  const started = performance.now()
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "source-request", method: "POST", ownerBinding: "exact" }))
   const response = await page.request.post(owner.publicOrigin + owner.mount + "/dashboard?sf=" + operation, {
     headers: { origin: owner.publicOrigin, "content-type": "application/json", "idempotency-key": crypto.randomUUID() },
     data: input,
   })
   const body = object(await response.json())
-  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, http: response.status(), status: body.status, reason: body.reason }))
+  console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, http: response.status(), status: body.status,
+    reason: body.reason, elapsedMs: Math.round(performance.now() - started) }))
   expect(response.status()).toBe(200)
   expect(body.status).toBe("ok")
   return body.value
@@ -85,19 +88,38 @@ export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
       acquisition: "authenticated-original-readback", ownerBinding: "exact", resources }))
   }
 }
-/** Bounded public response codes only; acquisition failures never create readiness. */
-export function observeAnalyticsOperations(page: Page) {
+/** Bounded original request timing and public codes; acquisition failures never create readiness. */
+export function observeAnalyticsOperations(page: Page, owner: AnalyticsOwner) {
   const modes = new Set(["decision-portfolio-preview", "decision-portfolio-evaluate", "decision-portfolio-results",
     "decision-portfolio-read", "decision-sensitivity-units", "decision-sensitivity-read", "decision-sensitivity-evaluate"])
+  const pending = new WeakMap<Request, { operation: string; started: number; sequence: number; ownerBinding: string }>()
+  let sequence = 0
+  page.on("request", (request) => {
+    const url = new URL(request.url()), operation = url.searchParams.get("sf")
+    if (request.method() !== "POST" || !operation || !modes.has(operation)) return
+    const observed = { operation, started: performance.now(), sequence: ++sequence,
+      ownerBinding: url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" ? "exact" : "mismatch" }
+    pending.set(request, observed)
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "native-request", sequence: observed.sequence,
+      method: request.method(), ownerBinding: observed.ownerBinding }))
+  })
+  page.on("requestfailed", (request) => {
+    const observed = pending.get(request)
+    if (!observed) return
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: observed.operation, phase: "native-request-failed",
+      sequence: observed.sequence, ownerBinding: observed.ownerBinding, elapsedMs: Math.round(performance.now() - observed.started) }))
+  })
   page.on("response", (response) => {
-    const operation = new URL(response.url()).searchParams.get("sf")
-    if (!operation || !modes.has(operation)) return
+    const observed = pending.get(response.request())
+    if (!observed) return
+    const timing = { sequence: observed.sequence, ownerBinding: observed.ownerBinding,
+      elapsedMs: Math.round(performance.now() - observed.started) }
     void response.json().then((raw: unknown) => {
       const body = object(raw)
-      console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "native-response",
+      console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: observed.operation, phase: "native-response", ...timing,
         http: response.status(), status: body.status, reason: body.reason ?? null,
         valueShape: Array.isArray(body.value) ? "array" : typeof body.value }))
-    }).catch(() => console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation, phase: "native-response",
+    }).catch(() => console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: observed.operation, phase: "native-response", ...timing,
       http: response.status(), acquisitionFailure: "response-body-unavailable" })))
   })
 }

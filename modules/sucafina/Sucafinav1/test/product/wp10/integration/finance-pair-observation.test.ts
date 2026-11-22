@@ -7,6 +7,7 @@ import { expect, test } from "bun:test"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfPortfolioAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-authority.ts"
 import { createSfPortfolioCoverageAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
@@ -25,7 +26,7 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 type Counts = { physical: number; roots: number; work: number; afterClose?: { root: number; work: number; outside: boolean } }
 
-test("Finance uses the wired coverage pair and closes on revocation or source change", async () => {
+test("Finance and criterion metrics use original pair reads and close on revocation or source change", async () => {
   const deadline = compositionTestDeadline("finance-pair-observation")
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-finance-pair-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
@@ -110,7 +111,7 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
       } } }
     })
     const decision: DecisionCase = { ...ref, state: "comparing", objective: "Compare forecasts", horizon: period, currency: "USD",
-      criteria: [], participants: ["person"], sourceRefs: basis.sourceRefs, alternatives: [], costCoverageBases: [basis],
+      criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], participants: ["person"], sourceRefs: basis.sourceRefs, alternatives: [], costCoverageBases: [basis],
       assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     const seed = await authority.state.transaction(request(), { namespace: "cases", expectedStorageVersion: 0,
       targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
@@ -215,20 +216,84 @@ test("Finance uses the wired coverage pair and closes on revocation or source ch
       business.results.readHistoricalScenario = readHistorical
       business.withPlannerObservation = observe
     }
-    const revoked = await measure(true, async () => { control.active = false })
+    // Exercise the real criterion consumer with the same published scenarios.
+    // The scalar control runs the complete producer without grouping; no result
+    // or source resolver is stubbed in either measurement.
+    const portfolio = createSfPortfolioAuthority({ authority, business, proposalCoverageWrites, proof: () => undefined })
+    const metricRequest = { caseRef: ref, criterionId: "cost", ruleRef: "fixture-rule", ruleVersion: 1,
+      metricRef: "planner:known-subtotal-difference", baselineRef: results[0]!.reference, scenarioRef: results[1]!.reference }
+    const metricPair = { scenarioRefs: [metricRequest.baselineRef, metricRequest.scenarioRef], criteria: [] }
+    const measureMetric = async (mode: "scalar" | "grouped" | "unsupported", afterRoot?: () => Promise<void>) => {
+      const counts: Counts = { physical: 0, roots: 0, work: 0 }
+      const call = ok(await authority.ui.admit(request(), "sf_scenario_simulate", admissionDigest))
+      const resolve = scenarios.resolve, readRoot = persistence.readSnapshotRoot
+      let observations = 0
+      const started = performance.now()
+      scenarios.resolve = async (reference, binding) => {
+        counts.work++
+        return resolve(reference, binding)
+      }
+      business.withPlannerObservation = (incoming, binding, work) => {
+        observations++
+        expect(incoming).toEqual(metricPair)
+        expect(binding).toBe(call)
+        return mode === "scalar" ? work() : observe(incoming, binding, work)
+      }
+      if (mode === "unsupported") persistence.readSnapshotRoot = undefined
+      try {
+        expect(await authority.ui.validate(call, "sf_scenario_simulate", admissionDigest)).toBe(true)
+        const result = await business.withCase(call, ref, {}, async () => {
+          control.counts = counts
+          control.afterRoot = afterRoot
+          try { return await portfolio.readMetric(metricRequest, call) }
+          finally { control.counts = undefined; control.afterRoot = undefined }
+        })
+        const elapsedMs = Math.round(performance.now() - started)
+        console.info("SF_METRIC_OBSERVATION", JSON.stringify({ mode, status: result.status, elapsedMs, observations, ...counts }))
+        return { result, counts, observations }
+      } finally {
+        scenarios.resolve = resolve
+        business.withPlannerObservation = observe
+        persistence.readSnapshotRoot = readRoot
+        authority.ui.finish(call)
+      }
+    }
+    const metricScalar = await measureMetric("scalar")
+    const metricGrouped = await measureMetric("grouped")
+    const metricValue = ok(metricScalar.result)
+    expect(metricValue).toMatchObject({ ...metricRequest, state: "conditioned", unit: "USD", period,
+      value: results[1]!.alternative.result.knownSubtotal! - results[0]!.alternative.result.knownSubtotal! })
+    expect(ok(metricGrouped.result)).toEqual(metricValue)
+    expect(metricScalar.observations).toBe(1)
+    expect(metricGrouped.observations).toBe(1)
+    expect(metricScalar.counts.roots).toBe(0)
+    expect(metricGrouped.counts.roots).toBe(2)
+    expect(metricGrouped.counts.work).toBeGreaterThan(0)
+    expect(metricGrouped.counts.work).toBe(metricScalar.counts.work)
+    expect(metricGrouped.counts.physical).toBeLessThan(metricScalar.counts.physical)
+    const metricRepeated = await measureMetric("grouped")
+    expect(ok(metricRepeated.result)).toEqual(metricValue)
+    expect(metricRepeated.counts).toEqual(metricGrouped.counts)
+    const metricUnsupported = await measureMetric("unsupported")
+    expect(ok(metricUnsupported.result)).toEqual(metricValue)
+    expect(metricUnsupported.observations).toBe(1)
+    expect(metricUnsupported.counts.roots).toBe(0)
+    expect(metricUnsupported.counts.work).toBe(metricScalar.counts.work)
+    expect(metricUnsupported.counts.physical).toBe(metricScalar.counts.physical)
+    const revoked = await measureMetric("grouped", async () => { control.active = false })
     expect(revoked.result.status).not.toBe("ok")
-    expect(revoked.counts.work).toBe(1)
-    expect(revoked.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
+    expect(revoked.counts.work).toBe(metricGrouped.counts.work)
+    expect(revoked.counts.afterClose).toEqual({ root: 1, work: metricGrouped.counts.work, outside: true })
     control.active = true
-    const changed = await measure(true, async () => {
+    const changed = await measureMetric("grouped", async () => {
       await persistence.transaction("planner", async (snapshot) => {
         baselineAmounts(snapshot.data)[0] = 999
         return { commit: true, value: undefined }
       })
     })
     expect(changed.result.status).not.toBe("ok")
-    expect(changed.counts.work).toBe(1)
-    expect(changed.counts.afterClose).toEqual({ root: 1, work: 1, outside: true })
+    expect(changed.counts.work).toBe(metricGrouped.counts.work)
+    expect(changed.counts.afterClose).toEqual({ root: 1, work: metricGrouped.counts.work, outside: true })
     expect(await persistence.transaction("planner", async (snapshot) => ({
       commit: false, value: baselineAmounts(snapshot.data)[0],
     }))).toBe(999)
