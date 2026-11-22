@@ -10,7 +10,14 @@ import { directory, fixture, location } from "./work-service-fixture"
 
 fixture("stored Inbox reads the installation without provider acquisition or legacy adoption", ({ inbox, db, calls }) =>
   Effect.gen(function* () {
-    yield* inbox.connect({ source: "jira", token: "fixture-read", site: "https://example.atlassian.net", email: "owner@example.com" })
+    // Keep Jira eligible for acquisition so a provider call would hit the fixture transport.
+    const jira = {
+      source: "jira",
+      token: "fixture-read",
+      site: "https://example.atlassian.net",
+      email: "owner@example.com",
+    } as const
+    yield* inbox.connect(jira)
     const stored = yield* inbox.upsert({
       source: "mail", externalId: "stored", actor: "owner", snippet: "Pending", threadId: "stored", reply: true,
     })
