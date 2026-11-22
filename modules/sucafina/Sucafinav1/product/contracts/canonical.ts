@@ -1,6 +1,7 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 
 const canonicalStringify = JSON.stringify
 
@@ -16,7 +17,10 @@ export function canonicalSfValue(value: unknown): string {
 }
 
 export function digestSfValue(value: unknown): string {
-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+  const diagnostic = beginSfReadonlyDiagnostic("canonical.digest.total")
+  try {
+    return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+  } finally { endSfReadonlyDiagnostic(diagnostic) }
 }
 
 /** Integrity of the whole reference; authentication remains in the source resolver. */

@@ -1,0 +1,31 @@
+{
+  "schema": "sf-diagnostic-reversible-edits-v1",
+  "purpose": "Snapshot-only diagnostic 21; never integrate into the product",
+  "sourceCommit": "cad315298856419c6da18f561e593688d38ec982",
+  "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+  "baseBlob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
+  "overlayBlob": "577932b728e278501c38960d650f4119c20884bb",
+  "helper": {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts",
+    "blob": "81792fc1fba96de5b4cc0b93a2213862a2d2bc2a"
+  },
+  "edits": [
+    {
+      "before": "import type { ContributionEnvelope } from \"./resident-ai.ts\"\n",
+      "after": "import type { ContributionEnvelope } from \"./resident-ai.ts\"\nimport { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from \"../portfolio/diagnostic-timing.ts\"\n"
+    },
+    {
+      "before": "export function digestSfValue(value: unknown): string {\n  return new Bun.CryptoHasher(\"sha256\").update(canonicalSfValue(value)).digest(\"hex\")\n}\n",
+      "after": "export function digestSfValue(value: unknown): string {\n  const diagnostic = beginSfReadonlyDiagnostic(\"canonical.digest.total\")\n  try {\n    return new Bun.CryptoHasher(\"sha256\").update(canonicalSfValue(value)).digest(\"hex\")\n  } finally { endSfReadonlyDiagnostic(diagnostic) }\n}\n"
+    }
+  ],
+  "verification": {
+    "reversedBytesEqualBase": true,
+    "originalDigestExpressionUnchanged": true,
+    "additionalOriginalCalls": 0,
+    "providersReassigned": false,
+    "canonicalSfValueUnchanged": true,
+    "noRuntimeOrCIExecuted": true
+  },
+  "semantics": "canonical.digest.total measures the unchanged digestSfValue expression inclusively, including canonicalization, JSON serialization, CryptoHasher construction/update/hex; it does not isolate crypto, record input bytes, or memoize values. Original synchronous exceptions propagate through the diagnostic finally."
+}
