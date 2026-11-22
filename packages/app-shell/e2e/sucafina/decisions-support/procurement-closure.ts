@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, isCommand, readReply, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, isCommand, openInstalledWorkbenchCase, readReply } from "./journey"
 import { initialAlternativesJourney } from "./initial-alternatives"
 import { sourceNames } from "./planner-sources"
 import { registerKnownIncreaseRule } from "./comparison-rule"
@@ -10,7 +10,7 @@ import { applyRecoveryJourney } from "./apply-recovery"
 export async function procurementClosureJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
   const requestId = await test.step("create the real requisition through its human form", () => createRequisition(page, installation.origin, observations))
   const selection = await initialAlternativesJourney(page, installation, observations)
-  await reopenCase(page, selection.reference, selection.objective)
+  await openInstalledWorkbenchCase(page, installation.origin, selection.reference, selection.objective)
   const source = await attachRequisition(page, selection.reference, requestId, observations)
   const titles = { baseline: "Requisition proposal for 120 USD", candidate: "Requisition proposal for 140 USD" }
   await typedAlternative(page, selection.sources.baseline, sourceNames.baseline, source, titles.baseline, 120, observations)

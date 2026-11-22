@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test"
 import type { startPlannerInstallation } from "../wp03/installation-fixture"
 import {
   asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench,
-  fillDecision, isCommand, readCase, reopenCase,
+  fillDecision, isCommand, openCreatedDecision, readCase, reopenCase,
 } from "./journey"
 import { loseCreationResponse } from "./lost-response"
 
@@ -22,7 +22,7 @@ export async function caseLifecycleJourney(page: Page, installation: Installatio
     expect(request.headers()["idempotency-key"]).toMatch(/^[a-f0-9-]{36}$/)
     expect(typeof result.outputRef).toBe("string")
     caseIdentity(result.outputRef as string)
-    await form.getByRole("link", { name: "Open decision", exact: true }).click()
+    await openCreatedDecision(page, form, result.outputRef as string)
     return result.outputRef as string
   })
   await test.step("read the exact saved case and preserve its identity after reload", async () => {

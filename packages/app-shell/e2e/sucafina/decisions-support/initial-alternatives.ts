@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, openCreatedDecision, openInstalledWorkbenchCase } from "./journey"
 import { createPlannerSources, sourceNames } from "./planner-sources"
 import { loseAlternativeResponse } from "./alternative-response"
 
@@ -11,12 +11,13 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
   await enterWorkbench(page, installation.origin)
   const objective = `${draft.objective} — initial alternatives`
-  const form = await fillDecision(page, objective)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(knownIncreaseCriterion)
-  const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+  const form = await fillDecision(page, objective, [knownIncreaseCriterion])
+  const created = await clickCommand(page, form.getByRole("button", { name: "Confirm this decision creation", exact: true }), "workbench-command", observations)
   expect(typeof created.outputRef).toBe("string")
   const reference = created.outputRef as string
   const identity = caseIdentity(reference)
+  await openCreatedDecision(page, form, reference)
+  await openInstalledWorkbenchCase(page, installation.origin, reference, objective)
   await currentCase(page, reference, objective, 1, "draft")
 
   await test.step("discover and inspect authorized sources before attaching them to the saved case", async () => {
@@ -126,7 +127,7 @@ export async function initialAlternativesJourney(page: Page, installation: { ori
     await test.step("reopen the exact alternatives and consume them in the current comparison", async () => {
       await page.reload()
       await currentCase(page, reference, objective, 4, "comparing")
-      await reopenCase(page, reference, objective)
+      await openInstalledWorkbenchCase(page, installation.origin, reference, objective)
       await currentCase(page, reference, objective, 4, "comparing")
       await expect(alternativeArticles(page)).toHaveCount(2)
       await assertAlternative(page, titles.baseline, 1200)

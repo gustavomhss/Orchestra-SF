@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page, type Request } from "@playwright/test"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
-import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
+import { asRecord, caseIdentity, clickCommand, isCommand, openInstalledWorkbenchCase, readReply } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 
 /** Consume the published C12 path only after the caller proves a compatible domain approval. */
@@ -106,7 +106,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
     })
     const revisedObjective = `${selection.objective} — concurrent note after application`
     const editedRef = await test.step("edit the same case in another page while the original Apply remains uncertain", async () => {
-      await openCase(audit, origin, selection.reference, selection.objective)
+      await openInstalledWorkbenchCase(audit, origin, selection.reference, selection.objective)
       await audit.getByText("Edit decision", { exact: true }).click()
       const editor = audit.locator("form[data-decision-edit]")
       await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
@@ -124,7 +124,7 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
     })
     await test.step("recover the original receipt under a fresh admission without sending another Apply", async () => {
       // A new page never held the first Apply's body, key or review token.
-      await openCase(fresh, origin, selection.reference, revisedObjective)
+      await openInstalledWorkbenchCase(fresh, origin, selection.reference, revisedObjective)
       const recoveredEntry = fresh.locator("[data-decision-apply]")
       await expect(recoveredEntry).toHaveCount(1)
       await expect(recoveredEntry).toHaveAttribute("data-sf-apply-ready", "true")
@@ -169,15 +169,6 @@ export async function applyRecoveryJourney(page: Page, origin: string, selection
 function procurementCommand(request: Request, origin: string, action: string) {
   const url = new URL(request.url())
   return request.method() === "POST" && url.origin === origin && url.pathname === "/sucafina/procurement" && url.searchParams.get("sf") === action
-}
-
-async function openCase(page: Page, origin: string, reference: string, objective: string) {
-  await enterWorkbench(page, origin)
-  const link = page.getByRole("link", { name: objective, exact: true })
-  await expect(link).toHaveCount(1)
-  expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(reference)
-  await link.click()
-  await expect(page.getByRole("heading", { name: objective, exact: true })).toBeVisible()
 }
 
 async function openRequest(page: Page, origin: string, id: string) {

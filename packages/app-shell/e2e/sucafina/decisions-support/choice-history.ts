@@ -1,5 +1,5 @@
 import { expect, test, type Page, type Request } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, reopenCase } from "./journey"
+import { asRecord, caseIdentity, clickCommand, draft, isCommand, openInstalledWorkbenchCase } from "./journey"
 import { loseClosureResponse } from "./closure-response"
 import { changePlannerSource } from "./planner-sources"
 import { registerKnownIncreaseRule } from "./comparison-rule"
@@ -15,7 +15,7 @@ type Selection = {
 export async function choiceHistoryJourney(page: Page, installation: { origin: string }, selection: Selection, observations: Record<string, unknown>[]) {
   const identity = caseIdentity(selection.reference)
   const reason = "I choose the candidate under the recorded pending cost conditions. This choice does not approve any financial change."
-  await reopenCase(page, selection.reference, selection.objective)
+  await openInstalledWorkbenchCase(page, installation.origin, selection.reference, selection.objective)
   const choice = page.locator("form[data-decision-choice]")
   await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
   const before = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
@@ -112,14 +112,10 @@ export async function choiceHistoryJourney(page: Page, installation: { origin: s
     await test.step("reopen the same choice and retain its historical values after the real Planner source changes", async () => {
       await page.reload()
       expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
-      await reopenCase(page, selection.reference, selection.objective)
+      await openInstalledWorkbenchCase(page, installation.origin, selection.reference, selection.objective)
       expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
       await changePlannerSource(page, installation.origin, selection.sources.candidate, 3600, observations)
-      await enterWorkbench(page, installation.origin)
-      const link = page.getByRole("link", { name: selection.objective, exact: true })
-      await expect(link).toHaveCount(1)
-      expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(selection.reference)
-      await link.click()
+      await openInstalledWorkbenchCase(page, installation.origin, selection.reference, selection.objective)
       const historical = await currentChoice(page, selection.reference, selection.objective)
       expect(historical.caseRef).toEqual({ ...identity, version: 5 })
       // Compare the complete emitted immutable record, not only its title or subtotal.

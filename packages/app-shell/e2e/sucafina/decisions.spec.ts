@@ -3,7 +3,7 @@
 // Keep the original executable contracts until the same authenticated native
 // host can produce an equivalent observation; a route/200 is not parity.
 import { expect, test } from "@playwright/test"
-import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, withInstallation } from "./decisions-support/journey"
+import { asRecord, caseIdentity, clickCommand, draft, enterInstalledWorkbench, enterWorkbench, fillDecision, isCommand, openCreatedDecision, withInstallation } from "./decisions-support/journey"
 import { caseLifecycleJourney, lostCreationJourney } from "./decisions-support/case-lifecycle"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
 import { choiceHistoryJourney } from "./decisions-support/choice-history"
@@ -52,14 +52,11 @@ test("CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalo
   await withInstallation(page, info, async (installation, observations) => {
     await enterWorkbench(page, installation.origin)
     const form = await fillDecision(page, draft.objective)
-    const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+    const created = await clickCommand(page, form.getByRole("button", { name: "Confirm this decision creation", exact: true }), "workbench-command", observations)
     expect(typeof created.outputRef).toBe("string")
     const reference = created.outputRef as string
-    // This test isolates discovery. Browser Back returns from the submitted case;
-    // the separate case test owns assertions about successful case rendering.
-    await expect(page).toHaveURL((url) => url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
-    await page.goBack()
-    await expect(page.getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
+    await openCreatedDecision(page, form, reference)
+    await enterInstalledWorkbench(page, installation.origin)
     await page.getByText("Explore a portfolio", { exact: true }).click()
     const portfolio = page.locator("section[data-portfolio]")
     await expect(portfolio).toHaveCount(1)

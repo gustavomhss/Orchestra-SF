@@ -89,7 +89,7 @@ export async function enterWorkbench(page: Page, origin: string) {
   await expect(page.getByRole("button", { name: "New case", exact: true })).toBeEnabled()
 }
 
-export async function fillDecision(page: Page, objective: string) {
+export async function fillDecision(page: Page, objective: string, criteria = draft.criteria) {
   await page.getByRole("button", { name: "New case", exact: true }).click()
   const form = page.locator("section.sf-n24-create form")
   await expect(form).toHaveCount(1)
@@ -98,15 +98,49 @@ export async function fillDecision(page: Page, objective: string) {
   await form.getByLabel("Start", { exact: true }).fill(draft.horizon.start)
   await form.getByLabel("End", { exact: true }).fill(draft.horizon.end)
   await form.getByLabel("Currency", { exact: true }).fill(draft.currency)
-  await form.getByLabel("Criteria, one per line", { exact: true }).fill(draft.criteria.join("\n"))
+  await form.getByLabel("Criteria, one per line", { exact: true }).fill(criteria.join("\n"))
   const review = form.getByRole("button", { name: "Review creation", exact: true })
   await expect(review).toBeEnabled()
   await review.click()
   const proposed = form.getByRole("group", { name: "Review creation", exact: true })
   await expect(proposed).toContainText(objective)
-  for (const criterion of draft.criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
+  for (const criterion of criteria) await expect(proposed.getByRole("listitem").filter({ hasText: criterion })).toHaveText(criterion)
   await expect(form.getByRole("button", { name: "Confirm this decision creation", exact: true })).toBeEnabled()
   return form
+}
+
+export async function openCreatedDecision(page: Page, form: Locator, reference: string) {
+  const link = form.getByRole("link", { name: "Open decision", exact: true })
+  const href = await link.getAttribute("href")
+  expect(href).toBeTruthy()
+  const url = new URL(href!, page.url())
+  expect(url.origin).toBe(new URL(page.url()).origin)
+  expect(url.pathname).toBe("/orchestra/sf-decisions/" + encodeSfRouteRef(reference))
+  await link.click()
+  await expect(page).toHaveURL(url.href)
+}
+
+export async function enterInstalledWorkbench(page: Page, origin: string) {
+  expect(origin).toBe(decisionsInstallationOrigin)
+  const url = new URL("/sucafina/dashboard?sf=workbench", origin)
+  const response = await page.goto(url.href)
+  expect(response?.status()).toBe(200)
+  await expect(page).toHaveURL(url.href)
+  await expect(page.getByRole("heading", { name: "Decisions", exact: true })).toBeVisible()
+}
+
+/** These preserved controls consume the same case through the installed Workbench. */
+export async function openInstalledWorkbenchCase(page: Page, origin: string, reference: string, objective: string) {
+  await enterInstalledWorkbench(page, origin)
+  const link = page.getByRole("link", { name: objective, exact: true })
+  await expect(link).toHaveCount(1)
+  const url = new URL("/sucafina/dashboard", origin)
+  url.searchParams.set("sf", "workbench-case")
+  url.searchParams.set("caseRef", reference)
+  expect(new URL((await link.getAttribute("href"))!, page.url()).href).toBe(url.href)
+  await link.click()
+  await expect(page).toHaveURL(url.href)
+  await expect(page.getByRole("heading", { name: objective, exact: true })).toBeVisible()
 }
 
 type PausedCommand = {
