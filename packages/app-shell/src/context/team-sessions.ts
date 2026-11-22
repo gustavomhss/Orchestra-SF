@@ -86,7 +86,6 @@ type Scope = {
   listSerial: number
 }
 type Quarantine = {
-  key: string
   context: SfTeamContext; namespace: TeamProfile.SessionNamespace
   drafts: Map<string, PromptInputV2PersistedState>
 }
@@ -162,7 +161,7 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     if (previous) {
       if (!purge) { saveDraft(); persist(previous) }
       if (reason === "refresh" && previous.namespace) quarantine = {
-        key: previous.key, context: previous.context, namespace: previous.namespace, drafts,
+        context: previous.context, namespace: previous.namespace, drafts,
       }
       else quarantine = undefined
       active = undefined
@@ -180,7 +179,8 @@ export function createTeamSessionsWorkspace(input: Readonly<{
   }
   const invalidate = (scope: Scope, reason: SfTeamSessionFailure | "stream") => {
     if (active !== scope) return
-    retire("revoked")
+    // A disconnected stream retires IO/content, but cannot prove that an in-flight write did not apply.
+    retire(reason === "stream" ? "stream" : "revoked")
     setState({ status: "unavailable", reason })
     input.notice(reason === "stream" ? "sf.teams.chatUpdatesStopped" : "sf.teams.chatUnavailable")
     if (reason === "unauthenticated") input.unauthenticated()
@@ -431,7 +431,8 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     } catch (error) { failure(scope, error); if (valid(scope)) input.notice("sf.teams.pending") }
     return false
   }
-  const unresolved = () => state.pending.length > 0 || !!(quarantine && hints.get(quarantine.key)?.pending.length)
+  const unresolved = () => state.pending.length > 0 || !!(lastOwner &&
+    hints.get(teamPrivateKey(lastOwner, "session-hints", input.window.id))?.pending.length)
   return Object.freeze({
     state, prompt,
     hasPendingRequests: unresolved,
