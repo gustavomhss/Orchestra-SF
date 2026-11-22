@@ -198,7 +198,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Fora do escopo: único hunk adiciona HUSKY=0 ao passo de instalação do workflow histórico, ausente em dev. Não altera artefato ou runtime; G09/factory permanecem na frente estabelecida."
     },
     {
       "path": "apps/cli/script/distribution-payload.ts",
@@ -927,7 +928,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Fora do escopo somente os hunks do console paralelo: seleção ?page=, installed-console, asset=page/admission e resposta de probe. O runtime atual continua ativo, autentica e verifica papéis/páginas, chama domain.view antes de render e preserva mutações/exports. Destino da interface nativa573."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
@@ -950,7 +952,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Capacidade de Reports/backup já oferecida por application.fileControls e downloads/createReport (563). Hunk349 somente acrescenta outra posição do formulário HTML; não altera cálculo de orçamento."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/installed-console.ts",
@@ -961,7 +964,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Fora do escopo: renderer histórico GET/HEAD de HTML/navegação/evidências, sem nova regra de domínio, mutação ou serializador. Não restaurar uma superfície paralela à interface nativa563/573/579."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
@@ -972,7 +976,8 @@
       "inventoryRows": [
         "I24"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "The old identity-level config.groups fallback is superseded by current producers: local bootstrap writes roleMap only when absent after configured-admin membership/person checks; intentionally empty/edited maps stay intact. Microsoft uses separate microsoft-entry/runTeamBusiness, constructing rolePolicy from config.groups and verifying current actor before/after, at commit and egress (#547). Existing source/tests inspected, no new Teams qualification."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
@@ -995,7 +1000,8 @@
       "inventoryRows": [
         "I24"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "The old identity-level config.groups fallback is superseded by current producers: local bootstrap writes roleMap only when absent after configured-admin membership/person checks; intentionally empty/edited maps stay intact. Microsoft uses separate microsoft-entry/runTeamBusiness, constructing rolePolicy from config.groups and verifying current actor before/after, at commit and egress (#547). Existing source/tests inspected, no new Teams qualification."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
@@ -1006,7 +1012,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "O destino cross-site mount/dashboard já é usado por dev para todo enrollment. A mudança histórica de redirect same-origin para / pertence ao console legado; consumo do token, sessão, cookie e revogação não mudam nesse hunk."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
@@ -1017,7 +1024,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Fora do escopo a adaptação plannerPageData para renderer receber dados brutos do fragmento HTML histórico. O percurso atual já chama domain.view e passa versions antes do render; XLSX usa workbooks. Nenhum cálculo/mutação alterado pelo hunk."
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
@@ -1028,7 +1036,8 @@
       "inventoryRows": [
         "I28"
       ],
-      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f"
+      "checkedDev": "90861699b40d7093adbba70a69ac866eb517090f",
+      "dispositionNote": "Wrapper de dados brutos, abertura automática de um supplier e disposição de upload são adições de console. O atual privateFileControls já confere supplier ID/version/canWrite/papel; native Documents/Suppliers579 cobre o percurso relevante. Nenhum delta histórico de mutação/serializador."
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
@@ -2241,6 +2250,14 @@
       "merge": "79912446753af5bb291fc2581543732eb4c83057",
       "head": "0bcbcb41a62d73da308630a1dffbee363e31f25b",
       "base": "dev"
+    },
+    {
+      "n": 547,
+      "title": "feat(teams): authorize corporate business flows by Team",
+      "merge": "6d9e67e634cd860fc91819707aca53f6fa7e33ab",
+      "head": "bae4782203ab3b76ab4479ea5bade427f3a4798e",
+      "merged": "2026-11-21T04:00:09Z",
+      "base": "dev"
     }
   ],
   "currentDev": "90861699b40d7093adbba70a69ac866eb517090f",
@@ -2637,13 +2654,15 @@
       "historicalEvidence": "#569 já integrou a proveniência de carregamento governado. #566/#570/#573 substituem o antigo console local. `routine-native-phase-origin.ts` e `routine-native-phase-fence.ts` ainda têm blobs da base.",
       "originalDestination": "**Parcial.** Recorte `phase-origin-proof` para origem absoluta e fixture com raiz física. Usar contrato atual de #569; reaproveitar apenas assertions de login/audit em `native-fixtures` sobre a factory real.",
       "prs": [
-        569
+        547,
+        569,
+        560
       ],
       "candidates": [
         6
       ],
       "state": "partial",
-      "proof": "Governed skill-load provenance integrated569. Real current factory proof confirms installed origin incompatibility; normalization is insufficient. Candidate6 remains pending owner acceptance/delivery237; positive sibling fixture is not installed qualification."
+      "proof": "Governed skill-load provenance integrated569. Real current factory proof confirms installed origin incompatibility; normalization is insufficient. Candidate6 remains pending owner acceptance/delivery237; positive sibling fixture is not installed qualification. Historical group fallback is superseded by authenticated local bootstrap and Microsoft runTeamBusiness/config.groups (#547), preserving intentionally empty/edited role maps; no new Teams qualification claimed."
     },
     {
       "id": "I25",
@@ -2707,7 +2726,12 @@
       "historicalEvidence": "O #349 adiciona console instalado auxiliar, preload e vários fixtures ausentes em dev. O #563 usa a instalação de produção no Reports, e #573/#579 montam o host que os cenários atuais abrem. Os probes no handoff registram candidatos históricos e gates específicos.",
       "originalDestination": "**Infraestrutura histórica substituída.** Recortes de teste por comportamento, junto a cada delta de runtime acima. Preservar provas antigas como evidência; não portar um console paralelo, o workflow histórico ou resultados de perf como code paths.",
       "state": "out-of-scope",
-      "proof": "Original inventory explicitly replaces console PAGE, installed-console/preload, historical workflow and performance probes with current native production host. Historical refs preserved; tests are mapped to behavioral rows rather than ported as a parallel interface."
+      "proof": "Original inventory excludes historical console/fragment/probe additions, not entire active runtime files. Per-hunk inspection: application still authenticates/views/renders; reports fileControls and supplier privateFileControls already exist; planner/procurement wrappers only adapt legacy raw HTML input; operator cross-site redirect already current; old workflow hunk onlyHUSKY=0. Native destinations563/573/579 preserved.",
+      "prs": [
+        563,
+        573,
+        579
+      ]
     }
   ],
   "reconciliationStatus": "Execution checkpoint: 11 candidates reconciled with28 original behavior rows and160 historical paths. Five candidates integrated and one absorbed; five candidates remain pending. Three complementary fixes integrated; sensitivity and PO composition remain pending. No accepted transfer is inferred from a request.",
@@ -2790,7 +2814,13 @@
       "Kept Context/core full-typecheck and schema baseline diagnostics explicit, and retained gate-level reuse limits for625/626."
     ],
     "terminalPRMetadataChecked": 41,
-    "initialExactReviewsChecked": 9
+    "initialExactReviewsChecked": 9,
+    "additionalReview": {
+      "reviewer": "Astra/context_epoch",
+      "scope": "I28 hunks and I24 identity/group composition",
+      "source": "d572060d8164607f6981e6d42635a854a6fa23a4",
+      "finding": "No additional product gap. Clarified active runtime vs excluded old console additions; authenticated bootstrap and actual runTeamBusiness/groups547 replace old identity-level fallback. Phase failure limited to Local Operator; Microsoft/G09 not inferred."
+    }
   },
   "ciLimits": [
     "No local build, test or typecheck; all executable gates used existing GitHub Actions test-ci in isolated snapshots.",
