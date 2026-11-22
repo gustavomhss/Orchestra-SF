@@ -27,6 +27,7 @@ import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "..
 import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
 import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { selectSfCaseIdentity } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { createSfDecisionResultStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
 import { createDecisionScenarioLookup } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts"
 import { createDecisionCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/decisions/capabilities.ts"
@@ -258,12 +259,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
       !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
     const captured = structuredClone(selected)
-    const current = await input.authority.state.read(request, "cases", (state, actor) => {
-      const value = state.cases[captured.id]
-      return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
-        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
-        ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
-    })
+    const current = await input.authority.state.read(request, "cases", selectSfCaseIdentity(captured, call))
     const valid = await host.revalidate(call)
     const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
