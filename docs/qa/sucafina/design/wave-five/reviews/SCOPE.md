@@ -6,7 +6,7 @@ Owned areas: UI47 meeting agenda; UI48 preserved review list, detail and present
 
 The page roots opt into the established 1160px frame with `data-sf-wave="five"`. The review workbench separates source discovery from agenda order. Preservation uses its existing explicit review stage. Review reading and presentation are distinct stages and the discussion remains mounted. Comparison pairs the two references before reading either source. Reports expose one Office format selector and the original section selection; the former unused title and duplicate format form are removed. A known review reference can be opened through an owner-bound route, without fabricating list data. Proposals retain source-bound preparation, current producer review and original receipt behavior.
 
-Source limits observed in code: no native authorized preserved-review list; no native report list. These are presented as unavailable, never as a fabricated empty or populated list. Runtime availability of preservation, review reads, comparison and proposals is still to be qualified through the existing test-ci workflow.
+Source limits observed in code: no native authorized preserved-review list; no native report list. These are presented as unavailable, never as a fabricated empty or populated list. The original agenda discovery also assigns one shared dashboard section identity across source pages. The native agenda preserves that identity; multiple-section reordering remains unavailable in this fixture. Runtime availability of preservation, review reads, comparison and proposals is still to be qualified through the existing test-ci workflow.
 
 Catalog ownership: sf-u25.ts, sf-u32.ts, sf-u33.ts, sf-u38.ts. Existing English key/value pairs are preserved. New copy is English and Brazilian Portuguese. Native fonts, quiet raised fills and role tokens remain authoritative. Controls are 44px, panels 20px/16px, and focused work stages cap at 760px.
 
@@ -14,4 +14,4 @@ No producer, source schema, guard, authorization, workflow or delivery behavior 
 
 ## Validation status
 
-Pending real installed grouped journey, screenshot inspection, source diagnostics and integration checks. Evidence and failed attempts will be recorded beside this file.
+Attempt 1 built the production app and read original dashboard projections, then exposed the shared section-identity boundary. Two diagnostic screenshots were manually inspected; the complete corrected journey, multilingual capture matrix and integration checks remain pending. Evidence and failed attempts will be recorded beside this file.

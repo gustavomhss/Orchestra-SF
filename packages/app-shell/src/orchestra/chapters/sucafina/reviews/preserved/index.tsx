@@ -253,6 +253,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                 <button type="button" class="mx-btn" onClick={() => { void update() }}
                   disabled={store.updateStatus === "loading" || store.status !== "ready"}>{t("sf.u32.update")}</button>
               </div>
+              </div>
               <Show when={store.successor}>
                 {(next) => <section class="mx-card sf-n28-section" data-sf-successor-availability={next().available}>
                   <p role="status">{t(next().available ? "sf.u32.updateReady" : "sf.u32.updateBlocked")}</p>
@@ -265,7 +266,6 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
               <Show when={store.updateStatus !== "ready" && store.updateStatus !== "loading"}>
                 <p role="alert">{t(successorMessage(store.updateStatus))}</p>
               </Show>
-              </div>
             </article>}
           </Show>
         </SfStatePanel>
@@ -309,15 +309,17 @@ function SfPreservedMeeting(props: {
           <Show when={sources().length}>
             <ul aria-label={t("sf.u32.sourceNav")}>
               <For each={sources()}>{(source) => <li>
-                <button type="button" onClick={() => props.onSource(source.refId)}>{language.t("sf.u32.openSource", { reference: source.refId })}</button>
+                <button type="button" class="mx-btn" onClick={() => props.onSource(source.refId)}>{language.t("sf.u32.openSource", { reference: source.refId })}</button>
               </li>}</For>
             </ul>
           </Show>
         </>}
       </Show>
-      <button type="button" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{t("sf.u32.previousTopic")}</button>
-      <button type="button" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{t("sf.u32.nextTopic")}</button>
-      <button type="button" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{t("sf.u32.checkUpdates")}</button>
+      <div class="sf-n28-actions">
+      <button type="button" class="mx-btn" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{t("sf.u32.previousTopic")}</button>
+      <button type="button" class="mx-btn" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{t("sf.u32.nextTopic")}</button>
+      <button type="button" class="mx-btn" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{t("sf.u32.checkUpdates")}</button>
+      </div>
     </section>
   )
 }

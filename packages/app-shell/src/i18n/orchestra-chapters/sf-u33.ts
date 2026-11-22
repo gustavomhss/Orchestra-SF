@@ -30,7 +30,7 @@ export const SF_U33_COPY = {
   "sf.u33.prepareHeading": "Prepare a report from preserved content",
   "sf.u33.prepareHint": "Open an existing preserved review to choose its authorized sections and Office format.",
   "sf.u33.openReview": "Open report source",
-  "sf.u33.selectionHint": "Choose the preserved sections to include. The original producer controls the available file and its download.",
+  "sf.u33.selectionHint": "Choose the preserved sections to include, then select the file format.",
 } as const
 export const SF_U33_COPY_BR: Readonly<Record<keyof typeof SF_U33_COPY, string>> = {
   "sf.ui50.title": "Relatório",
@@ -63,5 +63,5 @@ export const SF_U33_COPY_BR: Readonly<Record<keyof typeof SF_U33_COPY, string>> 
   "sf.u33.prepareHeading": "Prepare um relatório com conteúdo preservado",
   "sf.u33.prepareHint": "Abra uma revisão preservada existente para escolher as seções autorizadas e o formato Office.",
   "sf.u33.openReview": "Abrir origem do relatório",
-  "sf.u33.selectionHint": "Escolha as seções preservadas que deseja incluir. O produtor original controla o arquivo disponível e seu download.",
+  "sf.u33.selectionHint": "Escolha as seções preservadas que deseja incluir e selecione o formato do arquivo.",
 }

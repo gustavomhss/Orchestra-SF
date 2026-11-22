@@ -10,7 +10,7 @@
   display: grid;
   gap: var(--sf-review-gap);
   min-inline-size: 0;
-  color: var(--mx-text);
+  color: var(--orchestra-body);
   font-family: var(--mx-sans);
   font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
@@ -48,6 +48,8 @@
   gap: var(--sf-review-panel);
   min-inline-size: 0;
 }
+.sf-n28[data-sf-wave="five"] .sf-review-discussion label { display: grid; gap: var(--sf-review-field-gap); }
+.sf-n28[data-sf-wave="five"] .sf-review-discussion button { justify-self: start; }
 .sf-n28[data-sf-wave="five"] .sf-review-empty {
   display: grid;
   gap: var(--sf-review-field-gap);
@@ -62,6 +64,7 @@
 }
 .sf-n28[data-sf-wave="five"] .sf-review-compare-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .sf-n28[data-sf-wave="five"] .sf-review-compare-form > button { grid-column: 1 / -1; justify-self: start; }
+.sf-n28[data-sf-wave="five"] .sf-review-source .sf-state-content { display: grid; gap: var(--sf-review-panel); }
 .sf-n28[data-sf-wave="five"] .sf-review-source-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sf-review-field-gap); }
 .sf-n28[data-sf-wave="five"] .sf-review-source-form > button { justify-self: start; margin-block-start: var(--sf-review-field-gap); }
 .sf-n28[data-sf-wave="five"] .sf-n28-field { gap: var(--sf-review-field-gap); color: var(--mx-dim); }
