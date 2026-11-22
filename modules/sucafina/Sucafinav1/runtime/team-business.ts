@@ -1,4 +1,6 @@
 import { createHmac, randomUUID } from "node:crypto"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Schema } from "effect"
 import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import path from "node:path"
 import { createModule } from "../index.ts"
@@ -179,9 +181,13 @@ export async function readTeamBusinessContext(input: {
   const { readSfApplicationContext } = await import("./application.ts")
   const { sfContextDestinationsFromPages } = await import("../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts")
   const source = teamBusinessSource(input)
+  const admittedOwner = Schema.decodeUnknownSync(TeamProfile.Owner)({
+    profile: input.admission.profile,
+    principal: { tenantId: input.admission.profile.tenantId, principalObjectId: input.admission.principalObjectId },
+  })
   const owner = Object.freeze({
-    profile: Object.freeze({ ...input.admission.profile }),
-    principal: Object.freeze({ tenantId: input.admission.profile.tenantId, principalObjectId: input.admission.principalObjectId }),
+    profile: Object.freeze(admittedOwner.profile),
+    principal: Object.freeze(admittedOwner.principal),
   })
   const observe = async () => {
     if (input.request.signal.aborted || !await input.admission.verifyCurrent()) return undefined
