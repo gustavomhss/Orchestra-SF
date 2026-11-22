@@ -67,6 +67,7 @@ export function teamNavigationURL(url: URL, binding: SfTeamInstallationDescripto
     contractRevision: binding.contractRevision, server: binding.publicOrigin,
     installationId: profile.installationId, tenantId: profile.tenantId, teamObjectId: profile.teamObjectId,
     ...(domain?.query.year === undefined ? {} : { year: String(domain.query.year) }),
+    ...(domain?.query.month === undefined ? {} : { month: String(domain.query.month) }),
   }).toString()
   return readTeamNavigationIntent(result, binding)?.kind === "team" ? result : undefined
 }

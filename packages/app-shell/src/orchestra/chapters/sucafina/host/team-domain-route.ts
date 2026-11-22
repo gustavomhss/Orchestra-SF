@@ -1,20 +1,23 @@
 import { Option, Schema } from "effect"
 import type {
-  SfHref, SfOwnerSelection, SfRef, SfResolvedRoute, SfServerKey,
+  SfHref, SfOwnerSelection, SfRef, SfResolvedQuery, SfResolvedRoute, SfServerKey,
   SfTeamContext, SfTeamInstallationDescriptor,
 } from "@orchestra/schema/sucafina/context"
 import { SfDomainReadSelection } from "@orchestra/schema/sucafina/domain"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
+import { parseDashboardRouteQuery } from "./dashboard-route"
+import type { SfBudgetPeriod } from "../navigation-state/budget-period"
 
-export type SfTeamDomainCapability = "CAP14" | "CAP04" | "CAP05"
+export type SfTeamDomainCapability = "CAP14" | "CAP04" | "CAP05" | "CAP03"
 export type SfTeamDomainRoute = SfResolvedRoute<SfTeamDomainCapability>
 const names = ["contractRevision", "server", "installationId", "tenantId", "teamObjectId"]
-const pages = { CAP14: "Vendor Contracts", CAP04: "OPEX Detail", CAP05: "CAPEX Projects" } as const
+const pages = { CAP14: "Vendor Contracts", CAP04: "OPEX Detail", CAP05: "CAPEX Projects", CAP03: "Budget Overview" } as const
 const paths = {
   CAP14: "/orchestra/sf-procurement/contracts",
   CAP04: "/orchestra/sf-dashboard/opex",
   CAP05: "/orchestra/sf-dashboard/capex",
+  CAP03: "/orchestra/sf-dashboard/budget",
 } as const
 
 function candidateFor(url: URL): SfNativeRouteCandidate | undefined {
@@ -34,9 +37,10 @@ export function readSfTeamDomainIntent(url: URL, binding: SfTeamInstallationDesc
   if (!candidate || !sameOrigin(url, binding)) return
   const budget = candidate.surfaceId !== "CAP14"
   const params = url.searchParams
-  const allowed = budget ? [...names, "year"] : names
-  if (params.size !== allowed.length || [...params.keys()].some((key) =>
-    !allowed.includes(key) || params.getAll(key).length !== 1) ||
+  const allowed = candidate.surfaceId === "CAP03" ? [...names, "year", "month"] : budget ? [...names, "year"] : names
+  if (names.some((key) => params.getAll(key).length !== 1) ||
+    candidate.surfaceId !== "CAP03" && params.size !== allowed.length || [...params.keys()].some((key) =>
+      !allowed.includes(key) || params.getAll(key).length !== 1) ||
     params.get("server") !== binding.publicOrigin) return
   const parsed = Schema.decodeUnknownOption(TeamProfile.Selector, { onExcessProperty: "error" })({
     contractRevision: params.get("contractRevision"), kind: "team",
@@ -48,9 +52,17 @@ export function readSfTeamDomainIntent(url: URL, binding: SfTeamInstallationDesc
   if (Option.isNone(parsed) || parsed.value.kind !== "team" ||
       parsed.value.profile.installationId !== binding.installationId ||
       parsed.value.profile.tenantId !== binding.tenantId) return
+  if (candidate.surfaceId === "CAP03") {
+    const period = new URLSearchParams()
+    for (const key of ["year", "month"]) if (params.has(key)) period.set(key, params.get(key)!)
+    // The original CAP03 parser owns optional periods and their canonical numeric syntax.
+    const query = parseDashboardRouteQuery(period, candidate)
+    if (!query) return
+    return { candidate, selector: parsed.value, query }
+  }
   const rawYear = params.get("year")
   if (budget && (rawYear === null || !/^\d{4}$/.test(rawYear))) return
-  const input = budget ? { year: Number(rawYear) } : {}
+  const input: SfResolvedQuery = budget ? { year: Number(rawYear) } : {}
   const selection = Schema.decodeUnknownOption(SfDomainReadSelection, { onExcessProperty: "error" })(input)
   if (Option.isNone(selection)) return
   return { candidate, selector: parsed.value, query: input }
@@ -101,6 +113,8 @@ export function resolveSfTeamDomainRoute(
   const common = { ownerSelection: sfTeamDomainSelection(binding), href: (url.pathname + url.search) as SfHref,
     pathname: url.pathname, query }
   const { kind, parameters } = candidate
+  if (candidate.surfaceId === "CAP03" && kind === "entry" && sfTeamDomainAvailable(context, "CAP03"))
+    return { ...common, surfaceId: "CAP03", kind, params: {} }
   if (candidate.surfaceId === "CAP14" && sfTeamDomainAvailable(context, "CAP14")) {
     if (kind === "entry" || kind === "new") return { ...common, surfaceId: "CAP14", kind, params: {} }
     if ((kind === "detail" || kind === "edit") && parameters.contractRef)
@@ -118,11 +132,12 @@ export function resolveSfTeamDomainRoute(
   }
 }
 
-function teamQuery(binding: SfTeamInstallationDescriptor, profile: TeamProfile.Ref, year?: number) {
+function teamQuery(binding: SfTeamInstallationDescriptor, profile: TeamProfile.Ref, year?: number, month?: number) {
   return new URLSearchParams({
     contractRevision: binding.contractRevision, server: binding.publicOrigin,
     installationId: profile.installationId, tenantId: profile.tenantId, teamObjectId: profile.teamObjectId,
     ...(year === undefined ? {} : { year: String(year) }),
+    ...(month === undefined ? {} : { month: String(month) }),
   })
 }
 
@@ -151,14 +166,42 @@ export function normalizeSfTeamDomainNavigation(
   const candidate = candidateFor(url)
   if (!candidate) return
   const params = url.searchParams
-  const allowed = candidate.surfaceId === "CAP14" ? ["server", "project", "installation"] : ["server", "project", "installation", "year"]
+  const allowed = candidate.surfaceId === "CAP14" ? ["server", "project", "installation"] :
+    ["server", "project", "installation", "year", ...(candidate.surfaceId === "CAP03" ? ["month"] : [])]
   if ([...params.keys()].some((key) => !allowed.includes(key) || params.getAll(key).length !== 1) ||
       params.has("server") && params.get("server") !== binding.publicOrigin ||
       params.has("project") && params.get("project") !== binding.projectId ||
       params.has("installation") && params.get("installation") !== binding.installationId) return
-  const rawYear = params.get("year")
-  if (candidate.surfaceId !== "CAP14" && (rawYear === null || !/^\d{4}$/.test(rawYear))) return
+  const rawYear = params.get("year"), rawMonth = params.get("month")
+  if ((candidate.surfaceId === "CAP04" || candidate.surfaceId === "CAP05") && rawYear === null ||
+    rawYear !== null && !/^\d{4}$/.test(rawYear) ||
+    rawMonth !== null && !/^(?:[1-9]|1[0-2])$/.test(rawMonth)) return
   url.search = teamQuery(binding, context.stamp.team!.owner.profile,
-    candidate.surfaceId === "CAP14" ? undefined : Number(rawYear)).toString()
+    rawYear === null ? undefined : Number(rawYear), rawMonth === null ? undefined : Number(rawMonth)).toString()
+  return resolveSfTeamDomainRoute(url, binding, context) ? url.pathname + url.search : undefined
+}
+
+/** Preserve a committed Team CAP03 owner while changing only the original period selection. */
+export function sfTeamBudgetPeriodHref(
+  from: SfResolvedRoute<"CAP03">, period: SfBudgetPeriod,
+  binding: SfTeamInstallationDescriptor, context: SfTeamContext,
+): string | undefined {
+  if (from.surfaceId !== "CAP03" || from.kind !== "entry" || from.pathname !== paths.CAP03 ||
+    Object.keys(from.params).length || Object.keys(from.query).some((key) => key !== "year" && key !== "month") ||
+    Object.keys(period).some((key) => key !== "year" && key !== "month") ||
+    period.year !== undefined && typeof period.year !== "number" ||
+    period.month !== undefined && typeof period.month !== "number") return
+  let url: URL
+  try { url = new URL(from.href, binding.publicOrigin) } catch { return }
+  const current = resolveSfTeamDomainRoute(url, binding, context)
+  if (!current || current.surfaceId !== "CAP03" || current.href !== from.href ||
+    current.ownerSelection.serverKey !== from.ownerSelection.serverKey ||
+    current.ownerSelection.projectId !== from.ownerSelection.projectId ||
+    current.ownerSelection.installationId !== from.ownerSelection.installationId ||
+    current.query.year !== from.query.year || current.query.month !== from.query.month) return
+  url.searchParams.delete("year")
+  url.searchParams.delete("month")
+  if (period.year !== undefined) url.searchParams.set("year", String(period.year))
+  if (period.month !== undefined) url.searchParams.set("month", String(period.month))
   return resolveSfTeamDomainRoute(url, binding, context) ? url.pathname + url.search : undefined
 }
