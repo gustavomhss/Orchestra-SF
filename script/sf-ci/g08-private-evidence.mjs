@@ -8,23 +8,38 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 export const cases = Object.freeze([
-  { id: "same-team-distinct-grants", title: "Two distinct Microsoft accounts enter the same installed Team with their own authority" },
+  { id: "same-team-principal-binding", title: "Two original Microsoft principals select the same Team without claiming different grants" },
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
-  { id: "admin-without-team", title: "A Microsoft configuration administrator without Teams cannot acquire business access" },
-  { id: "narrow-keyboard-draft", title: "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner" },
-  { id: "draft-cancel-discard", title: "A Team switch keeps a canceled chat draft and discards it only on confirmation" },
+  { id: "admin-api-without-team", title: "Original Microsoft administration works without granting Team business access" },
   { id: "real-revoke-restore", title: "Real administration revokes a disposable Team and restores its original configuration" },
   { id: "logout-original-context", title: "Logout invalidates the original Microsoft browser context and preserves the other account" },
 ])
+export const preservedTeams = Object.freeze([
+  "same-team-distinct-grants", "aba-two-windows", "account-without-team", "foreign-deep-link-reload",
+  "admin-without-team", "narrow-keyboard-draft", "draft-cancel-discard", "real-revoke-restore", "logout-original-context",
+])
+export const completeMappings = Object.freeze({
+  "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
+  "foreign-deep-link-reload": "foreign-deep-link-reload", "real-revoke-restore": "real-revoke-restore",
+  "logout-original-context": "logout-original-context",
+})
+export const obligationPath = "packages/app-shell/e2e/sucafina/g08/obligations.json"
 export const pendingGroups = Object.freeze(["U15", "U39", "U40", "F04", "AZ02"])
+export const productContractPaths = Object.freeze([
+  "packages/app-shell/src/context/team-profile-navigation.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-profile-http.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-profile-store.ts",
+])
 export const sourcePaths = Object.freeze([
-  ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs",
+  ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs", obligationPath,
   "script/sf-ci/g08-installed-preflight.py", "script/sf-ci/g08-private-run.sh",
   "packages/app-shell/e2e/sucafina/g08/playwright.config.ts",
   "packages/app-shell/e2e/sucafina/g08/installed-fixture.ts",
   "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
+  "packages/app-shell/e2e/sucafina/g08/landing-contract.ts",
+  "packages/app-shell/e2e/sucafina/g08/landing-contract.test.ts",
 ])
 /** @param {unknown} value @returns {Record<string, unknown>} */
 export function record(value) {
@@ -94,14 +109,13 @@ export function target(value) {
     !result.mount.endsWith("/"), "G08_MOUNT_INVALID")
   const url = new URL(result.chapterHref, result.shellOrigin)
   assert(result.chapterHref.startsWith("/") && !result.chapterHref.startsWith("//") &&
-    url.origin === result.shellOrigin && url.pathname.startsWith("/orchestra/sf-") &&
+    url.origin === result.shellOrigin && ["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname) &&
     !url.hash && !url.username && !url.password, "G08_ORIGINAL_CHAPTER_REQUIRED")
   const expected = new URLSearchParams({ contractRevision: "sf-team-profile/1", server: result.serverKey,
     installationId: result.installationId, tenantId: result.tenantId, teamObjectId: result.teamObjectId })
   assert([...url.searchParams.keys()].every((key) => url.searchParams.getAll(key).length === 1 &&
-    (expected.has(key) || key === "year")), "G08_CLOSED_OWNER_QUERY_REQUIRED")
+    expected.has(key)), "G08_CLOSED_OWNER_QUERY_REQUIRED")
   for (const [key, entry] of expected) assert.equal(url.searchParams.get(key), entry, "G08_CHAPTER_OWNER_MISMATCH")
-  if (url.searchParams.has("year")) assert(/^(?:202[4-9]|20[3-9][0-9]|2100)$/.test(url.searchParams.get("year") ?? ""), "G08_YEAR_INVALID")
   return result
 }
 /** @param {unknown} value */
@@ -292,7 +306,7 @@ export function reportSpecs(value) {
 /** @param {unknown} value @param {boolean} executed */
 export function verifyReport(value, executed) {
   const report = record(value), specs = reportSpecs(report), config = record(report.config)
-  assert.deepEqual(specs.map((spec) => spec.title).sort(), cases.map((item) => item.title).sort(), "G08_EXACT_NINE_CASE_INVENTORY_REQUIRED")
+  assert.deepEqual(specs.map((spec) => spec.title).sort(), cases.map((item) => item.title).sort(), "G08_EXACT_CURRENT_CASE_INVENTORY_REQUIRED")
   assert.deepEqual(report.errors ?? [], [], "G08_REPORT_ERRORS")
   assert.equal(config.workers, 1, "G08_WORKERS_ONE_REQUIRED")
   assert(Array.isArray(config.projects) && config.projects.length === 1, "G08_SINGLE_PROJECT_REQUIRED")
@@ -318,6 +332,81 @@ export function verifyReport(value, executed) {
   }
   return cases.map(({ id }) => ({ id, status: executed ? "PASS" : "LISTED_NOT_RUN" }))
 }
+/** Keep the original obligations separate from the narrower executable selection.
+ * @param {unknown} value @param {boolean} executed
+ */
+export function coverageLedger(value, executed = false) {
+  const ledger = record(value), original = record(ledger.originalTeams)
+  assert(ledger.schema === "sf-g08-obligations-v1" && ledger.gateClosed === false &&
+    ledger.productionCutover === false, "G08_PRESERVED_OBLIGATIONS_REQUIRED")
+  assert(Array.isArray(original.obligations) && original.expectedCount === 9, "G08_ORIGINAL_NINE_OBLIGATIONS_REQUIRED")
+  const obligations = original.obligations.map(record)
+  assert.deepEqual(obligations.map((entry) => entry.id), preservedTeams, "G08_ORIGINAL_OBLIGATION_REMOVED_OR_RENAMED")
+  assert(Array.isArray(ledger.groups), "G08_REQUIRED_GROUPS_MISSING")
+  const groups = ledger.groups.map(record)
+  assert.deepEqual(groups.map((entry) => entry.id), pendingGroups, "G08_REQUIRED_GROUP_REMOVED_OR_RENAMED")
+  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32], "G08_ORIGINAL_GROUP_INVENTORY_CHANGED")
+  for (const group of groups) {
+    assert(group.required === true && group.separateInvocation === true && group.state === "NOT_RUN" &&
+      typeof group.blocker === "string" && group.blocker.startsWith("BLOCKED_"), "G08_GROUP_NOT_EXECUTED")
+    if (group.id !== "AZ02") {
+      assert(Array.isArray(group.originalTitles) && group.originalTitles.length === group.expectedCount &&
+        new Set(group.originalTitles).size === group.originalTitles.length, "G08_ORIGINAL_GROUP_CASES_REQUIRED")
+    } else {
+      assert.deepEqual(group.phases, [
+        { id: "preflight", count: 14 }, { id: "actors", count: 11 }, { id: "producer", count: 2 },
+        { id: "after-revoke", count: 2 }, { id: "logout", count: 2 }, { id: "after-restart", count: 1 },
+      ], "G08_AZ02_PHASES_REQUIRED")
+    }
+  }
+  const teamCoverage = obligations.map((entry) => {
+    assert(entry.required === true && entry.state === "NOT_RUN" && Array.isArray(entry.implementedCases) &&
+      entry.implementedCases.every((id) => cases.some((item) => item.id === id)), "G08_INVALID_OBLIGATION_MAPPING")
+    assert(["none", "partial", "complete"].includes(text(entry.coverage)), "G08_COVERAGE_KIND_INVALID")
+    // Full mappings are versioned here. The list of passing cases cannot promote unmapped obligations.
+    const complete = Object.entries(completeMappings).find(([id]) => id === entry.id)
+    assert(!!complete === (entry.coverage === "complete"), "G08_UNSUPPORTED_OBLIGATION_CLAIM")
+    assert(entry.id !== "narrow-keyboard-draft" || entry.coverage === "none", "G08_LANDING_IS_NOT_A_CHAT_DRAFT")
+    if (entry.coverage !== "complete") assert(text(entry.blocker).startsWith("BLOCKED_BY_PRODUCT_"), "G08_PRODUCT_BLOCKER_REQUIRED")
+    else assert(entry.blocker === null && complete && JSON.stringify(entry.implementedCases) === JSON.stringify([complete[1]]), "G08_COMPLETE_MAPPING_INVALID")
+    return { id: entry.id, status: executed && entry.coverage === "complete" ? "PASS" :
+      executed && entry.coverage === "partial" ? "PARTIAL" : "NOT_RUN", blocker: entry.blocker,
+      implementedCases: entry.implementedCases }
+  })
+  return { schema: "sf-g08-coverage-v1", originalTeams: teamCoverage,
+    groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN", expectedCount: entry.expectedCount, blocker: entry.blocker })),
+    complete: false }
+}
+/** Shape/completeness guard only; callers must already have verified original proof provenance.
+ * This CLI derives coverage from its verified report and never accepts a manual completion document.
+ * @param {unknown} value
+ */
+export function requireCompleteGate(value) {
+  const coverage = record(value)
+  exact(coverage, ["schema", "originalTeams", "groups", "complete"])
+  assert(coverage.schema === "sf-g08-coverage-v1" && coverage.complete === true &&
+    Array.isArray(coverage.originalTeams) && Array.isArray(coverage.groups), "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
+  const original = coverage.originalTeams.map(record), groups = coverage.groups.map(record)
+  assert.deepEqual(original.map((entry) => entry.id), preservedTeams, "G08_EXACT_CLOSING_TEAMS_INVENTORY_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.id), pendingGroups, "G08_EXACT_CLOSING_GROUP_INVENTORY_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
+  assert(original.every((entry) => entry.status === "PASS") && groups.every((entry) => entry.status === "PASS"),
+    "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
+}
+/** @param {boolean} executed */
+async function readCoverage(executed) {
+  return coverageLedger(JSON.parse(await readFile(obligationPath, "utf8")), executed)
+}
+
+
+/** Source presence is an early prerequisite only; authority/composition are still observed live.
+ * @param {string} root
+ */
+export async function requireProductContracts(root = process.cwd()) {
+  for (const file of productContractPaths)
+    await readFile(path.join(root, file)).catch(() => { throw new Error("G08_PRODUCT_CONTRACT_NOT_INTEGRATED") })
+}
+
 /** @param {string} root */
 export async function sourceInventory(root = process.cwd()) {
   return Promise.all(sourcePaths.map(async (file) => ({ path: file, sha256: digest(await readFile(path.join(root, file))) })))
@@ -326,19 +415,29 @@ async function main() {
   const command = process.argv[2]
   if (command === "verify-list") {
     const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v1", status: "EXECUTOR_INVENTORY_VERIFIED",
+    const receipt = { schema: "sf-g08-executor-inventory-v2", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
-      cases: inventory, sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
-    await mkdir("g08-tooling-evidence", { recursive: true })
-    await writeFile("g08-tooling-evidence/inventory.json", JSON.stringify(receipt, null, 2) + "\n")
+      cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
+    const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
+    assert(path.isAbsolute(output) && path.resolve(output) === output &&
+      (!workspace || !(output === workspace || output.startsWith(path.resolve(workspace) + path.sep))),
+      "G08_TOOLING_OUTPUT_OUTSIDE_CHECKOUT_REQUIRED")
+    await mkdir(output, { recursive: true })
+    await writeFile(path.join(output, "inventory.json"), JSON.stringify(receipt, null, 2) + "\n")
     console.log(JSON.stringify(receipt))
     return
   }
+  if (command === "require-closed-gate") { requireCompleteGate(await readCoverage(true)); return }
   const root = text(process.env.SF_G08_PRIVATE_ROOT), plan = await readPlan(root)
   const packageText = await privateText(root, "package-receipt.json")
   assert.equal(digest(packageText), plan.packageReceiptSha256, "G08_G07_RECEIPT_BYTES_MISMATCH")
   const receipt = validatePackage(JSON.parse(packageText), plan)
-  if (command === "admit") { await writePrivate(root, "source-before.json", await sourceInventory()); return }
+  if (command === "admit") {
+    await requireProductContracts()
+    await readCoverage(false)
+    await writePrivate(root, "source-before.json", await sourceInventory())
+    return
+  }
   assert.equal(command, "verify", "G08_COMMAND_INVALID")
   assert.equal(await privateText(root, "exit-code.txt", 64), "0\n", "G08_PLAYWRIGHT_EXIT_NOT_ZERO")
   const reportText = await privateText(root, "playwright.json", 25_000_000), report = JSON.parse(reportText)
@@ -370,19 +469,19 @@ async function main() {
   }
   const archive = record(receipt.archive)
   const publicReceipt = {
-    schema: "sf-g08-core-installed-v1", status: "CORE_TEAMS_INSTALLED_VERIFIED",
+    schema: "sf-g08-current-installed-v2", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
     candidate: plan.candidate, archive: { file: archive.file, sha256: archive.sha256, bytes: archive.bytes },
-    packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, sources,
+    packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, coverage: await readCoverage(true), sources,
     evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), cleanup },
     installed: true, g08Closed: false, pendingGroups, productionCutover: false,
-    limits: ["Core Teams cases only; U15/U39/U40/F04/AZ02 require separate original producers and installed receipts.",
+    limits: ["Seven current-contract controls only; distinct business grants, native administration UI, chat/draft and U15/U39/U40/F04/AZ02 remain mandatory.",
       "Logout proves original context invalidation, not raw token replay or Entra global sign-out.",
       "Reservation and actor references are operator-supplied authorization metadata, never inferred role grants."],
   }
-  await writePrivate(root, "core-receipt.json", publicReceipt)
+  await writePrivate(root, "current-receipt.json", publicReceipt)
   await mkdir("g08-public", { recursive: true, mode: 0o700 })
   await writeFile("g08-public/receipt.json", JSON.stringify(publicReceipt, null, 2) + "\n", { flag: "wx", mode: 0o600 })
-  console.log("G08_CORE_TEAMS_INSTALLED_VERIFIED_G08_REMAINS_OPEN")
+  console.log("G08_CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED_G08_REMAINS_OPEN")
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url))
   main().catch((error) => {
