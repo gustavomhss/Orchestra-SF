@@ -310,9 +310,11 @@ test("S1-proc five entries stay in order, detail is not a sixth page, and the sc
     "theirs",
   ])
   expect(requestList(listed, actor("bea", ["buyer"]), "Closed").map((item) => item.number)).toEqual(["closed"])
-  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr")).toEqual([])
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "edr").map((item) => item.number)).toEqual(["mine"])
   expect(requestList(listed, actor("bea", ["buyer"]), "Open", "EDR").map((item) => item.number)).toEqual(["mine"])
-  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada")).toEqual([])
+  expect(requestList(listed, actor("ada", ["requester"]), "Open", "ada").map((item) => item.number)).toEqual(["mine"])
+  expect(requestList(listed, actor("ada", ["requester"]), "Open", "bea")).toEqual([])
+  expect(requestList(listed, actor("bea", ["buyer"]), "Open", "nonexistent")).toEqual([])
 
   const exported = exportRegister([
     {

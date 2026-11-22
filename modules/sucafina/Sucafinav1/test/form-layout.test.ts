@@ -44,7 +44,15 @@ test("All editor screens keep readable field widths and ordered configuration se
     ])
     expect(enrollment.status()).toBe(303)
     await page.waitForURL(`${origin}/sucafina/dashboard`)
-    await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
+    const artifacts = path.join(import.meta.dir, "artifacts")
+    await mkdir(artifacts, { recursive: true })
+    const navigate = async (destination: URL) => {
+      const response = await page.goto(destination.href, { waitUntil: "domcontentloaded" })
+      expect({ status: response?.status(), url: page.url() }).toEqual({ status: 200, url: destination.href })
+    }
+    const capture = (name: string) => page.screenshot({
+      path: path.join(artifacts, name), fullPage: true, timeout: 8000, animations: "disabled",
+    })
     // Exercise populated planner layouts through the same durable command path as the UI.
     // This is isolated test data, never a write to the owner's installation.
     const plan = await page.request.post(`${origin}/sucafina/planner`, {
@@ -61,8 +69,8 @@ test("All editor screens keep readable field widths and ordered configuration se
     })
     expect(topic.ok()).toBe(true)
     expect(await topic.json()).toMatchObject({ ok: true })
-    await page.goto(`${origin}/sucafina/dashboard?page=Executive+Dashboard`)
-    await page.screenshot({ path: path.join(import.meta.dir, "artifacts", "forms-dashboard-desktop.png"), fullPage: true })
+    await navigate(new URL("/sucafina/dashboard?page=Executive+Dashboard", origin))
+    console.info("browser form layout: executive dashboard loaded")
     const metrics = page.locator(".metric")
     const first = await metrics.nth(0).boundingBox()
     const third = await metrics.nth(2).boundingBox()
@@ -79,10 +87,11 @@ test("All editor screens keep readable field widths and ordered configuration se
     expect(Math.max(...people.map((box) => box!.y)) - Math.min(...people.map((box) => box!.y))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.width)) - Math.min(...people.map((box) => box!.width))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.height)) - Math.min(...people.map((box) => box!.height))).toBeLessThanOrEqual(2)
+    await capture("forms-dashboard-desktop.png")
     for (const width of [1440, 1024, 390]) {
       await page.setViewportSize({ width, height: 1000 })
       for (const surface of ["dashboard", "planner", "procurement"]) {
-        await page.goto(`${origin}/sucafina/${surface}`)
+        await navigate(new URL(`/sucafina/${surface}`, origin))
         const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
@@ -95,14 +104,14 @@ test("All editor screens keep readable field widths and ordered configuration se
           expect(Math.max(...cards.map((box) => box!.height)) - Math.min(...cards.map((box) => box!.height))).toBeLessThanOrEqual(2)
           expect(Math.min(...cards.map((box) => box!.height))).toBeGreaterThanOrEqual(100)
         }
-        await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${width}.png`), fullPage: true })
+        await capture(`forms-${surface}-${width}.png`)
         for (const href of hrefs) {
-          const response = await page.goto(new URL(href, `${origin}/sucafina/${surface}`).href)
-          expect(response?.status()).toBe(200)
+          const destination = new URL(href, `${origin}/sucafina/${surface}`)
+          await navigate(destination)
           for (const summary of await page.locator('details.editor-panel > summary').all()) {
             if (await summary.locator('..').getAttribute('open') === null) await summary.click()
           }
-          const expectedPage = new URL(href, page.url()).searchParams.get("page")!
+          const expectedPage = destination.searchParams.get("page")!
           expect(await page.locator("main").getAttribute("data-page")).toBe(expectedPage)
           expect(await page.locator("h1").innerText()).toBe(expectedPage)
           expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
@@ -124,7 +133,7 @@ test("All editor screens keep readable field widths and ordered configuration se
             await page.getByRole("button", { name: "Edit", exact: true }).click()
             const editor = page.getByRole("dialog", { name: "Edit record", exact: true })
             expect(await editor.isVisible()).toBe(true)
-            await editor.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-row-editor-${width}.png`) })
+            await editor.screenshot({ path: path.join(artifacts, `forms-row-editor-${width}.png`), timeout: 8000, animations: "disabled" })
             const dialog = await editor.boundingBox()
             expect(dialog!.width).toBeLessThanOrEqual(width - 20)
             expect(await editor.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true)
@@ -157,7 +166,7 @@ test("All editor screens keep readable field widths and ordered configuration se
           if (width === 1440) {
             const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
             await page.evaluate(() => scrollTo(0, 0))
-            await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${name}.png`), fullPage: true })
+            await capture(`forms-${surface}-${name}.png`)
           }
         }
       }
