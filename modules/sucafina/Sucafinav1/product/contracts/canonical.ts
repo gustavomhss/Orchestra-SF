@@ -22,7 +22,10 @@ export function canonicalSfValue(value: unknown, caller: unknown = undefined): s
 
 export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): string {
   const label = caller === "principal.direct" || caller === "source.scope-validation" || caller === "source.other" ||
-    caller === "finance.current" || caller === "finance.other" ? caller : "unlabelled"
+    caller === "finance.current" || caller === "finance.other" ||
+    caller === "bcs.planner.projection-period" || caller === "bcs.planner.expected-period" ||
+    caller === "bcs.planner.source-ref" || caller === "bcs.planner.expected-ref" ||
+    caller === "canonical.evidence-ref" ? caller : "unlabelled"
   const measured = beginSfReadonlyDiagnostic("canonical.digest", label)
   try {
     return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value, diagnosticDigestCanonicalCall)).digest("hex")
@@ -31,7 +34,7 @@ export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): s
 
 /** Integrity of the whole reference; authentication remains in the source resolver. */
 export function digestSfEvidenceRef(reference: BusinessEvidenceRef): string {
-  return digestSfValue(Object.fromEntries(Object.entries(reference).filter(([key]) => key !== "refDigest")))
+  return digestSfValue(Object.fromEntries(Object.entries(reference).filter(([key]) => key !== "refDigest")), "canonical.evidence-ref")
 }
 
 /** The digest field itself is excluded; all other envelope fields are bound to this revision. */
