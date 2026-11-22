@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "IN_PROGRESS_NOT_VERIFIED",
+  "status": "PARTIALLY_VERIFIED_PENDING_COMPLETION",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
@@ -58,7 +58,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
     },
     {
       "id": "UI43",
@@ -72,7 +72,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
     },
     {
       "id": "UI44",
@@ -90,7 +90,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "FULL_JOURNEY_QUALIFICATION_PENDING"
     },
     {
       "id": "UI45",
@@ -104,7 +104,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI46",
@@ -118,7 +118,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI47",
@@ -132,7 +132,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI48",
@@ -154,7 +154,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI49",
@@ -168,7 +168,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI50",
@@ -186,7 +186,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI51",
@@ -208,7 +208,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
     },
     {
       "id": "UI52",
@@ -222,7 +222,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
     },
     {
       "id": "UI53",
@@ -236,7 +236,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
     },
     {
       "id": "UI54",
@@ -250,7 +250,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW"
     },
     {
       "id": "UI55",
@@ -264,7 +264,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
     },
     {
       "id": "UI56",
@@ -278,7 +278,7 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
       ],
-      "status": "IN_PROGRESS_NOT_VERIFIED"
+      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
     }
   ],
   "constraints": {
@@ -291,9 +291,12 @@
     "showRealCapturesBeforeMerge": true
   },
   "verification": {
-    "status": "NOT_RUN",
-    "captures": 0,
+    "status": "PARTIALLY_VERIFIED",
+    "technicalEvidence": "technical-verification.json",
+    "qualifiedAreas": 7,
+    "blockFullyQualified": false,
     "userApproval": "PENDING",
-    "merged": false
+    "merged": false,
+    "inventoryAcceptedAndMergedAreas": 41
   }
 }

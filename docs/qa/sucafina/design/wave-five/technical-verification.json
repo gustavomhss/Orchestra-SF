@@ -1,13 +1,9 @@
 {
-  "schemaVersion": 1,
-  "status": "PASSED",
+  "schemaVersion": 2,
+  "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
-  "snapshot": "d3cb92d71c89a42531a40a617d8f5863b40c17ac",
-  "run": 44981671317,
-  "job": 137083298996,
-  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317",
+  "product": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -16,324 +12,239 @@
     "omni": "strict",
     "localTests": false
   },
-  "checks": 12,
-  "checksPassed": 12,
-  "checksFailed": 0,
-  "regressionCases": 94,
-  "regressions": {
-    "workAndSearch": 18,
-    "analysisReading": 19,
-    "collaborationReading": 18,
-    "portfolioReading": 24,
-    "portfolioReadinessAndSensitivityUnits": 11,
-    "reviewAndFilesRouting": 4
-  },
-  "types": {
-    "appShell": "PASSED",
-    "e2e": "PASSED",
-    "cli": "PASSED",
-    "cliDiagnostics": 0
-  },
-  "guards": {
-    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
-    "rules": 78,
-    "files": 69,
-    "errors": 0,
-    "approved": 0,
-    "warnings": 32,
-    "warningRules": [
-      "test-timeout-raised"
-    ],
-    "touchesGuards": false,
-    "report": "guard-report.json"
-  },
-  "palettes": {
-    "files": 7,
-    "byteChanges": 0
-  },
-  "copy": {
-    "catalogs": [
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
-        "preserved": 59,
-        "added": 12
+  "interpretation": "Each row identifies its exact tested product and snapshot. This is a composed evidence matrix, not a claim that one workflow passed every gate on the final branch.",
+  "gates": [
+    {
+      "name": "app-shell types",
+      "status": "PASSED",
+      "attempt": 12,
+      "run": 44989840123,
+      "product": "796c7f27634dca55e25087cb44d1a0fe45a06cf9",
+      "snapshot": "b4896d460a32549f0eb37be3c21564968fd2cda9",
+      "equivalence": [
+        {
+          "ref": "796c7f27634dca55e25087cb44d1a0fe45a06cf9",
+          "files": [
+            {
+              "name": "package.json",
+              "sha": "32567c3e0d67a3cceacab355bb34e291cd419c26"
+            },
+            {
+              "name": "src",
+              "sha": "08199a59373811ba18f806bcabcd614c62bb81c2"
+            },
+            {
+              "name": "tsconfig.json",
+              "sha": "8604188dee0f1ce9978cae39366d1850f5e97e7f"
+            }
+          ]
+        },
+        {
+          "ref": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+          "files": [
+            {
+              "name": "package.json",
+              "sha": "32567c3e0d67a3cceacab355bb34e291cd419c26"
+            },
+            {
+              "name": "src",
+              "sha": "08199a59373811ba18f806bcabcd614c62bb81c2"
+            },
+            {
+              "name": "tsconfig.json",
+              "sha": "8604188dee0f1ce9978cae39366d1850f5e97e7f"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CLI and permanent E2E types",
+      "status": "PASSED",
+      "attempt": 13,
+      "run": 44992366975,
+      "product": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+      "snapshot": "d35ac5c04ae92a89757a181b0412f234d2828911",
+      "scope": "Exact revised operational phase helper, host/local compositions, thirteen boundary tests, and permanent analytics spec 7d4af62590e256ed9f034fd8a00bbce5694f1c25."
+    },
+    {
+      "name": "original guardrails",
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "attempt": 14,
+      "run": 44992777997,
+      "product": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+      "snapshot": "aeed6a28af2ed7d9653de72f8821160db28384f9",
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 457,
+      "warnings": 36,
+      "errors": 0,
+      "approved": 0,
+      "touchesGuards": false,
+      "report": "technical-attempts/14-guard-report.json"
+    },
+    {
+      "name": "original palettes and bilingual catalog parity",
+      "status": "PASSED",
+      "attempt": 9,
+      "run": 44987972780,
+      "product": "6703cc5ba71709f0616b186383ab63f779c22dfb",
+      "snapshot": "8c9b9ee96b33321412458690978ecf935c443a08",
+      "palettes": {
+        "files": 7,
+        "byteChanges": 0
       },
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
-        "preserved": 31,
-        "added": 6
+      "copy": {
+        "existingEnglishUnchanged": 357,
+        "newEnglishWithExplicitPortuguese": 48,
+        "missingPortuguese": 0
       },
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
-        "preserved": 100,
-        "added": 12
-      },
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
-        "preserved": 27,
-        "added": 4
-      },
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
-        "preserved": 73,
-        "added": 2
-      },
-      {
-        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
-        "preserved": 67,
-        "added": 7
-      }
-    ],
-    "existingEnglishUnchanged": 357,
-    "newEnglishWithExplicitPortuguese": 43,
-    "missingPortuguese": 0
-  },
-  "commands": [
-    {
-      "gate": "app-shell typecheck",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "typecheck"
-      ],
-      "cwd": "packages/app-shell",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "fetch pinned guard base",
-      "command": [
-        "git",
-        "fetch",
-        "--no-tags",
-        "--depth=1",
-        "origin",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "resolve pinned guard base",
-      "command": [
-        "git",
-        "rev-parse",
-        "--verify",
-        "refs/remotes/origin/dev^{commit}"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "guardrails",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "run",
-        "check:guards",
-        "--base",
-        "origin/dev",
-        "--json"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "palette generation",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "run",
-        "script/orchestra-palettes.ts"
-      ],
-      "cwd": "packages/app-shell",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "app-shell e2e typecheck",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "run",
-        "typecheck:e2e"
-      ],
-      "cwd": "packages/app-shell",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "native work and search source health",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "./test/sucafina-work-health.test.ts"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "native analysis source health",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "./test/sucafina-analysis-reading-health.test.ts"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "native collaboration source health",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "./test/sucafina-collaboration-reading-health.test.ts"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "native portfolio source health",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "./test/sucafina-portfolio-reading-health.test.ts"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "CLI native host typecheck",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "run",
-        "typecheck"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "portfolio readiness and sensitivity units regressions",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "--conditions=solid",
-        "--preload",
-        "./happydom.ts",
-        "./src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
-        "./src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts"
-      ],
-      "cwd": "packages/app-shell",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "review and Files routing regression",
-      "command": [
-        "/home/runner/.bun/bin/bun",
-        "test",
-        "./test/sucafina-review-routing.test.ts",
-        "./test/sucafina-files-routing.test.ts"
-      ],
-      "cwd": "apps/cli",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u23",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u25",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u32",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u33",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u38",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
-    },
-    {
-      "gate": "read pinned English source sf-u44",
-      "command": [
-        "git",
-        "show",
-        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts"
-      ],
-      "cwd": ".",
-      "exitCode": 0,
-      "stdoutTruncated": false,
-      "stderrTruncated": false
+      "note": "Presentation catalogs and palette generation inputs have no later change in this checkpoint. Attempt 9's unrelated CLI test type failure was fixed and passed in attempts 10, 12 and 13."
     }
   ],
-  "wrapper": {
-    "path": "apps/cli/test/sucafina-design-verification.test.ts",
-    "snapshotOnly": true,
-    "integratedIntoProduct": false
+  "focusedRegressions": [
+    {
+      "name": "original source-health, portfolio readiness/units and review/Files routing baseline",
+      "status": "PASSED_ON_RECORDED_PRODUCT",
+      "attempt": 4,
+      "product": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
+      "snapshot": "d3cb92d71c89a42531a40a617d8f5863b40c17ac",
+      "run": 44981671317,
+      "cases": 94,
+      "scope": {
+        "workAndSearch": 18,
+        "analysisReading": 19,
+        "collaborationReading": 18,
+        "portfolioReading": 24,
+        "portfolioReadinessAndSensitivityUnits": 11,
+        "reviewAndFilesRouting": 4
+      },
+      "note": "Historical baseline; subsequent changed areas have focused receipts below."
+    },
+    {
+      "name": "reactive input whole-payload boundary",
+      "run": 44986712960,
+      "cases": 18,
+      "assertions": 147,
+      "status": "PASSED"
+    },
+    {
+      "name": "bounded SQLite snapshot materialization",
+      "run": 44987840434,
+      "cases": 42,
+      "assertions": 512,
+      "preexistingSkippedCases": 2,
+      "status": "PASSED"
+    },
+    {
+      "name": "BI06 original observation instant",
+      "run": 44987754031,
+      "groups": 7,
+      "assertions": 119,
+      "status": "PASSED"
+    },
+    {
+      "name": "criterion metric original pair observation",
+      "run": 44990184354,
+      "cases": 1,
+      "assertions": 62,
+      "status": "PASSED"
+    },
+    {
+      "name": "operational phase boundary plus original collaboration and portfolio readers",
+      "run": 44992111577,
+      "snapshot": "42b31d39fefa76d0c3f20949694e6d971fcfabc0",
+      "cases": 61,
+      "assertions": 524,
+      "breakdown": {
+        "operationalPhase": 13,
+        "collaboration": 24,
+        "portfolio": 24
+      },
+      "status": "PASSED"
+    }
+  ],
+  "installedEvidence": [
+    {
+      "areas": [
+        "UI45",
+        "UI46"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "runs": [
+        44989634639,
+        44990477521
+      ],
+      "evidence": "reviews/BI-NATIVE-HANDOFF.md"
+    },
+    {
+      "areas": [
+        "UI47",
+        "UI48",
+        "UI49",
+        "UI50"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "runs": [
+        44983842825
+      ],
+      "evidence": "reviews/REVIEW-GALLERY.md",
+      "limitation": "The grouped reviews declaration passed. That workflow failed separately in the UI54 declaration; its entire run is not described as green."
+    },
+    {
+      "areas": [
+        "UI54"
+      ],
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "runs": [
+        44984801462
+      ],
+      "evidence": "reviews/REVIEW-GALLERY.md"
+    },
+    {
+      "areas": [
+        "UI55",
+        "UI56"
+      ],
+      "status": "DIAGNOSTIC_JOURNEY_PASSED_CLEAN_REPEAT_PENDING",
+      "runs": [
+        44992278999,
+        44992688529
+      ],
+      "limitation": "Exact states matched across all 24 original observer groups and the diagnostic journey passed. The first clean repeat passed original UI56 admission but failed the unchanged 10s refresh heading expectation."
+    },
+    {
+      "areas": [
+        "UI51",
+        "UI52",
+        "UI53"
+      ],
+      "status": "CLEAN_REPEAT_PENDING",
+      "runs": [
+        44992785649
+      ],
+      "limitation": "Original confirmation completed; Chromium released the response body before the test consumed it. A test-only original-byte observation correction is being qualified."
+    },
+    {
+      "areas": [
+        "UI42",
+        "UI43",
+        "UI44"
+      ],
+      "status": "FULL_PERSISTENCE_AND_SENSITIVITY_NOT_QUALIFIED",
+      "runs": [
+        44991578651
+      ],
+      "limitation": "The original preview exceeded its 60s test expectation and the same request later returned 403 decision-authority-changed at about 300s. No successful persisted result or sensitivity is claimed."
+    }
+  ],
+  "references": {
+    "attempts": "technical-attempts.json",
+    "protectedSources": "protected-source-audit.json",
+    "sourceIntegration": "SOURCE-INTEGRATION.md",
+    "rootVisualReview": "root-visual-review.json"
   },
   "userAcceptance": "PENDING",
-  "merge": "NOT_REQUESTED_FOR_THIS_WAVE"
+  "merged": false,
+  "inventoryAcceptedAndMergedAreas": 41
 }
