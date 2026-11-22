@@ -2783,6 +2783,15 @@
       ],
       "behavior": "Mount monthly controls through the existing idempotent attach/MutationObserver. Existing sfMonthlyReady and dirty form guards remain authoritative.",
       "regression": "OPEX and CAPEX use the real module renderer and real SQLite fixture; two clean shell refreshes retain exactly one functional grid, a dirty draft prevents replacement, and one preview is sent after later remount."
+    },
+    "workspaceDiscovery": {
+      "failureJobId": 137258101315,
+      "changes": [
+        "packages/app-shell/e2e/sucafina/installed-shell.ts",
+        "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts"
+      ],
+      "behavior": "The Bun setup consumes prepareSfLocalWorkspace and issues a private receipt. The Node fixture verifies its owner-only physical child path. Discovery and project picker use workspace; credentials/configuration remain under private root. No production admission fallback."
     }
   }
 }

@@ -18,7 +18,7 @@ export function installedShellOrigin() {
  * Callers disable traces because enrollment and connection are authenticated.
  */
 export async function connectInstalledShell(page: Page, installation: {
-  root: string; origin: string; mount: string; actorId: string
+  root: string; workspace: string; origin: string; mount: string; actorId: string
 }) {
   const file = path.join(installation.root, "host-state", "orchestra", "password")
   const metadata = await lstat(file)
@@ -28,7 +28,7 @@ export async function connectInstalledShell(page: Page, installation: {
   const password = await readFile(file, "utf8")
   if (!password) throw new Error("The isolated host has no issued credential")
   const discovery = new URL("/api/sucafina/installations", installation.origin)
-  discovery.search = new URLSearchParams({ select: "location", "location[directory]": installation.root }).toString()
+  discovery.search = new URLSearchParams({ select: "location", "location[directory]": installation.workspace }).toString()
   console.info("[sf-installed] Reading authenticated host discovery")
   const response = await fetch(discovery, {
     headers: { Authorization: "Basic " + Buffer.from("orchestra:" + password).toString("base64") },
@@ -87,8 +87,8 @@ export async function connectInstalledShell(page: Page, installation: {
   await profile.click({ timeout: 10_000 })
   await page.locator('[data-component="orchestra-profile-picker"]').getByRole("menuitem", { name: "Add project", exact: true }).click({ timeout: 10_000 })
   const folders = page.getByRole("dialog")
-  await folders.getByPlaceholder("Search folders", { exact: true }).fill(installation.root, { timeout: 10_000 })
-  await folders.locator(`[data-directory-path=${JSON.stringify(installation.root)}]`).click({ timeout: 10_000 })
-  await expect(profile.locator("small")).toHaveAttribute("title", installation.root, { timeout: 10_000 })
+  await folders.getByPlaceholder("Search folders", { exact: true }).fill(installation.workspace, { timeout: 10_000 })
+  await folders.locator(`[data-directory-path=${JSON.stringify(installation.workspace)}]`).click({ timeout: 10_000 })
+  await expect(profile.locator("small")).toHaveAttribute("title", installation.workspace, { timeout: 10_000 })
   return { binding, context: context.value }
 }

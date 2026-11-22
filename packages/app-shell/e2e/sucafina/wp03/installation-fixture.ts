@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { spawn, execFile } from "node:child_process"
-import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+import { chmod, lstat, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -50,6 +50,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     XDG_STATE_HOME: path.join(directory, "host-state"),
   }
   let enrollment: URL
+  let workspace: string
   try {
     // The child runtime can initialize XDG directories before the setup entry runs.
     await Promise.all(["host-data", "host-config", "host-cache", "host-state", "host-tmp", "business"]
@@ -57,6 +58,20 @@ export async function startPlannerInstallation(info: TestInfo) {
     await run("bun", ["run", path.join(here, "installation-setup.ts"), directory, origin], {
       cwd: repository, env: environment, timeout: 30_000, encoding: "utf8",
     })
+    const workspaceFile = path.join(directory, "wp03-workspace.json")
+    const receiptMetadata = await lstat(workspaceFile)
+    if (!receiptMetadata.isFile() || receiptMetadata.isSymbolicLink() || (receiptMetadata.mode & 0o077) !== 0 ||
+        process.getuid && receiptMetadata.uid !== process.getuid())
+      throw new Error("The workspace producer must issue an owner-only receipt")
+    const receipt = JSON.parse(await readFile(workspaceFile, "utf8")) as { workspace?: unknown }
+    if (typeof receipt.workspace !== "string" || !path.isAbsolute(receipt.workspace) ||
+        path.dirname(receipt.workspace) !== directory || await realpath(receipt.workspace) !== receipt.workspace)
+      throw new Error("The canonical workspace must be a physical child of the private installation")
+    workspace = receipt.workspace
+    const workspaceMetadata = await lstat(workspace)
+    if (!workspaceMetadata.isDirectory() || workspaceMetadata.isSymbolicLink() || (workspaceMetadata.mode & 0o077) !== 0 ||
+        process.getuid && workspaceMetadata.uid !== process.getuid())
+      throw new Error("The canonical workspace must remain an owner-only directory")
     const handoff = (await readFile(path.join(directory, "open-local.html"), "utf8")).match(/location\.replace\(("[^"\r\n]*")\)/)?.[1]
     if (!handoff) throw new Error("Production enrollment artifact is malformed")
     enrollment = new URL(JSON.parse(handoff) as string)
@@ -127,7 +142,7 @@ export async function startPlannerInstallation(info: TestInfo) {
     return { origin, cookie, actorId, stop,
       signIn: async (page: Page) => {
         await page.context().addCookies([cookie])
-        return connectInstalledShell(page, { root: directory, origin, mount: "/sucafina", actorId })
+        return connectInstalledShell(page, { root: directory, workspace, origin, mount: "/sucafina", actorId })
       },
     }
   } catch (error) {
