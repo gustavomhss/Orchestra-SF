@@ -94,7 +94,7 @@ async function fixture(opaque: boolean) {
     try { return await coverage(reference, context) }
     finally { globalThis.structuredClone = original }
   }
-  return { call, control, stats, events, snapshot, stored, selected, run, finish: () => ui.finish(call) }
+  return { call, control, stats, events, snapshot, stored, selected, state, run, finish: () => ui.finish(call) }
 }
 
 for (const mode of ["frozen", "mutable", "binding-accessor"] as const) {
@@ -242,7 +242,7 @@ test("a mutable coverage binding is read after the current C08 admission", async
     try {
       const context = { ...f.call, binding: { ...f.call.binding } }
       f.control.beforeAuthority = (count) => { if (count === 1) context.binding.accessRevision = "changed" }
-      expect(await f.run(context)).toEqual({ status: "unavailable", reason: "coverage-unavailable" })
+      expect(await f.run(context)).toEqual({ status: "denied", reason: "coverage-access-unavailable" })
       expect(f.stats.reads).toBe(1)
       expect(f.stats.authority).toBe(2)
       expect(f.stats.wholeClones).toBe(1)
@@ -251,4 +251,30 @@ test("a mutable coverage binding is read after the current C08 admission", async
     } finally { f.finish() }
   }
   expect(outcomes[0]).toEqual(outcomes[1])
+})
+
+test("coverage resolves an opaque read getter before proving the context selector", async () => {
+  for (const opaque of [false, true]) {
+    const f = await fixture(opaque)
+    try {
+      const context = { ...f.call, binding: { ...f.call.binding } }
+      let traps = 0
+      const binding = new Proxy(context.binding, {
+        getOwnPropertyDescriptor() { traps++; throw new Error("binding descriptor before C08") },
+        isExtensible() { traps++; throw new Error("binding freeze probe before C08") },
+      })
+      const read = f.state.read
+      Object.defineProperty(f.state, "read", { configurable: true, get() {
+        f.events.push("read-get")
+        context.binding = binding
+        Object.freeze(context)
+        return read
+      } })
+      f.control.denyC08 = true
+      expect(await f.run(context)).toEqual({ status: "unavailable", reason: "coverage-unavailable" })
+      expect(traps).toBe(0)
+      expect(f.stats).toEqual({ reads: 1, authority: 1, cases: 0, evidence: 0, wholeClones: 0, caseClones: 0 })
+      expect(f.events).toEqual(["host", "read-get", "read-1", "authority-1"])
+    } finally { f.finish() }
+  }
 })
