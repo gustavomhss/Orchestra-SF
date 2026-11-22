@@ -52,9 +52,9 @@ test("editable amount contracts retain producer-supported text, null and explici
     expect(Schema.decodeUnknownSync(SfDomainCommandCap04Save.input)(domainInput)).toEqual(domainInput)
   }
   const line = { page: "OPEX", action: "save", version: 0,
-    values: { versionId: "v", annual: "123.45", a0: null, f0: "0", b0: "12.5" } }
+    values: { versionId: "v", annual: "123.45", a0: null, f0: "0", b0: "12.5" } } as const
   expect(Schema.decodeUnknownSync(SfDomainCommandCap18Save.input)(line)).toEqual(line)
-  const fx = { page: "FX rates", action: "save", version: 0, values: { versionId: "v", cur: "BRL", rate: "5,125" } }
+  const fx = { page: "FX rates", action: "save", version: 0, values: { versionId: "v", cur: "BRL", rate: "5,125" } } as const
   expect(Schema.decodeUnknownSync(SfDomainCommandCap22Save.input)(fx)).toEqual(fx)
   expect(plannerMonthlyAmount(null)).toBeNull()
   expect(plannerMonthlyAmount("")).toBeNull()
