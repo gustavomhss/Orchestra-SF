@@ -165,7 +165,7 @@ test("web source maps stay in the builder and out of the published archive", asy
   const unpacked = await new Bun.Archive(bytes).files()
   expect([...unpacked.keys()].sort()).toEqual(published.filter((entry) => entry.kind === "file").map((entry) => entry.path).sort())
   for (const entry of published.filter((item) => item.kind === "file")) {
-    expect(Buffer.from(await unpacked.get(entry.path)!.arrayBuffer())).toEqual(entry.bytes)
+    expect(Buffer.from(await unpacked.get(entry.path)!.arrayBuffer()).equals(entry.bytes)).toBe(true)
   }
   expect(Buffer.from(await unpacked.get("bin/web/assets/app.js")!.arrayBuffer())).toEqual(appJs)
   expect(Buffer.from(await unpacked.get("bin/web/index.html")!.arrayBuffer())).toEqual(indexHtml)
