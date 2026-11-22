@@ -1,0 +1,95 @@
+{
+  "schema": "sf2-final-ci-requests-v1",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "candidate_C": null,
+  "status": "PREPARED_NOT_RUN",
+  "recipes": [
+    {
+      "id": "CI-SF",
+      "request": {
+        "package": "sucafina",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "modules/sucafina"
+    },
+    {
+      "id": "CI-CLI",
+      "request": {
+        "package": "cli",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "apps/cli"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": []
+      },
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "request": {
+        "package": "app",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ]
+      },
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "request": {
+        "package": "atlas-boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ]
+      },
+      "directory": "modules/atlas/boundary"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "request": {
+        "package": "app",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ]
+      },
+      "directory": "packages/app-shell"
+    }
+  ]
+}

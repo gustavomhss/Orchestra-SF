@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "product": "Orchestra-SF",
+  "target": {
+    "os": "Linux",
+    "arch": "X64",
+    "hosting": "Azure Linux VM",
+    "releaseArtifact": "web + Linux native runtime"
+  },
+  "provenance": {
+    "approvedPlan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "candidateBase": "ae7850a7e397e8f0e60033ae4c5eca5e11b77c7f"
+  },
+  "suites": [
+    {
+      "id": "CI-SF",
+      "kind": "bun",
+      "directory": "modules/sucafina",
+      "selection": {
+        "kind": "full-except-release-only",
+        "releaseOnlyFiles": [
+          "Sucafinav1/test/parity-pitr.test.ts"
+        ],
+        "reason": "macOS local-operator Litestream continuity; Azure Linux backup/restore requires a distinct real release proof",
+        "testDirectory": ".",
+        "harnessOwnedFiles": [
+          "Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+          "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+          "Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+          "Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+          "Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+          "Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+          "Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+          "Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+          "Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+          "Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+          "Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+          "Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+          "Sucafinav1/test/product/ui-split/ui-work/exact-confirmation.test.ts",
+          "Sucafinav1/test/product/ui-split/ui-work/reply-identity.test.ts",
+          "Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts",
+          "Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+          "Sucafinav1/test/product/work-split/work-reuse/confirmation-diagnostic.test.ts",
+          "Sucafinav1/test/product/wp01/bi-browser.test.ts",
+          "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+          "Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+          "Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+          "Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/meeting-number.test.ts",
+          "Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/question-recipients.test.ts",
+          "Sucafinav1/test/product/wp01/record-search.test.ts",
+          "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+          "Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+          "Sucafinav1/test/product/wp01/view-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts"
+        ],
+        "harnessOwnedReason": "WP01's ordered browser pool needs startup first and finalizer last in one Bun process, and Bun schedules test files itself; these proofs need an integrator-owned lane.",
+        "harnessEntryFiles": [
+          "Sucafinav1/test/product/wp01/browser-selection.test.ts"
+        ]
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
+    },
+    {
+      "id": "CI-CLI",
+      "kind": "bun",
+      "directory": "apps/cli",
+      "selection": {
+        "kind": "explicit",
+        "testFiles": [
+          "test/sucafina-host-context.test.ts",
+          "test/sucafina-installation.test.ts",
+          "test/sucafina-native-phase-wiring.test.ts",
+          "test/listener-host-wiring.test.ts",
+          "test/listener-hosts.test.ts",
+          "test/product-host-parity.test.ts",
+          "test/product-host.test.ts",
+          "test/native-execution.test.ts",
+          "test/schema-files.test.ts",
+          "test/web.test.ts",
+          "test/daemon-port.test.ts",
+          "test/daemon-password.test.ts"
+        ],
+        "coverage": "Installed SF host and authorization, not universal CLI distribution"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272990498
+        },
+        "minimumCases": 34,
+        "minimumFiles": 12,
+        "filesSha256": "94186ae7778943b4f507a6eef10b6d40dd60ffe4ee61068fdf49f57ac16e943b",
+        "casesSha256": "ba2803a69ee0d03659ff60768872a89b24933fcba77d5298b72baea65f15b4d0"
+      }
+    },
+    {
+      "id": "CI-APP-SRC",
+      "kind": "bun",
+      "directory": "packages/app-shell",
+      "selection": {
+        "kind": "directory",
+        "testDirectory": "src",
+        "coverage": "All app-shell unit tests under src; no explicit allowlist"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272652674
+        },
+        "minimumCases": 2408,
+        "minimumFiles": 273,
+        "filesSha256": "38dd26efc44420d6d5ed0f3c96af6efaadd98b1a5ab71c7144a87536ea024f79",
+        "casesSha256": "40328173decad6fae7051c29dbc6dfb4b528cb51f610a48dba9c206cf7c0d058"
+      }
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "kind": "bun",
+      "directory": "packages/app-shell",
+      "selection": {
+        "kind": "directory",
+        "testDirectory": "test-browser/sucafina-native",
+        "coverage": "All installed SF browser/host boundary tests, including new tests under this directory; excludes unrelated Orchestra canonical browser tests",
+        "releaseOnlyFiles": [
+          "test-browser/sucafina-native/transport-integration.test.ts"
+        ],
+        "releaseReason": "F04 installed-host live manifest and authenticated public origin are release-owned, not a PR Bun-only fixture"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "44108456878",
+          "attempt": "1",
+          "testedSha": "b7fa913c456f4da5e81c279f02a11374de4b8bbc",
+          "prHeadSha": "bc798e50a72c5a770a15668365233e730cdb59a0",
+          "artifactId": 14339647205,
+          "corroboratedRunId": "44106951614"
+        },
+        "minimumCases": 114,
+        "minimumFiles": 32,
+        "filesSha256": "cc8f60ff9b60b0c69978aff799c1b28cdd2486533d6aa406cac2908938771544",
+        "casesSha256": "add8372a11e452d9ffbf064dd1c12e43362596aa7644c45eef046da10a20b951"
+      }
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "kind": "bun",
+      "directory": "modules/atlas/boundary",
+      "selection": {
+        "kind": "explicit",
+        "testFiles": [
+          "test/business-memory-ports.test.ts",
+          "test/catalog.test.ts",
+          "test/surface.test.ts",
+          "test/scanner-clock.test.ts"
+        ],
+        "coverage": "SF business memory boundary, surface, catalog and scanner-clock; generated check static"
+      },
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "43956369500",
+          "attempt": "1",
+          "testedSha": "30e8495c6e27114c8900619f4cca68191965f4f4",
+          "artifactId": 14272915730
+        },
+        "minimumCases": 8,
+        "minimumFiles": 4,
+        "filesSha256": "760c4bae39e017f6978274532edb90ffe15144f87b3063e4b3c20d8880556645",
+        "casesSha256": "eed8d896627fb9626137fdd5e2154d011a62489aac9441e902e35e187384954d"
+      }
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/operations.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "source": {
+          "runId": "44088622888",
+          "attempt": "1",
+          "testedSha": "988d7410e7e0d66928cd94d0194d9287375fe4fd",
+          "prHeadSha": "79b29cdeaf8f85b9dbe77f97eb91b080a49d2059",
+          "artifactId": 14330767431
+        },
+        "minimumCases": 5,
+        "minimumFiles": 1,
+        "filesSha256": "de4248268984c8dba0e47df9ac1e0c78ab5923c0a71671c771038fa2202820a5",
+        "casesSha256": "b496e2830894a5d724a009aafde93135ff01383632267805f5092fc3797a7e23"
+      }
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/decisions.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "kind": "playwright",
+      "directory": "packages/app-shell",
+      "specFile": "e2e/sucafina/reports.spec.ts",
+      "coverageBaseline": {
+        "schemaVersion": 1,
+        "status": "PENDING_REAL_COMPLETE_RUN",
+        "reason": "No successful complete raw case/file inventory was available; do not invent counts, case IDs or a PASS. Produce candidate evidence on an authentic Linux run, independently review, then version a baseline."
+      }
+    }
+  ],
+  "separateReleaseProofs": [
+    "AM01",
+    "AM02",
+    "AM03",
+    "AM04",
+    "AM05",
+    "AM06"
+  ],
+  "policy": {
+    "emptySelection": "FAIL",
+    "missingSuite": "FAIL",
+    "cancelledJob": "FAIL",
+    "differentSha": "FAIL",
+    "skippedTests": "FAIL",
+    "azureRelease": "BLOCKED_UNTIL_REAL_ENVIRONMENT"
+  }
+}
