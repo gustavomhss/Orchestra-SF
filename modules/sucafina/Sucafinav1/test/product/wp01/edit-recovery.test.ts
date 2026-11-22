@@ -1,6 +1,12 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser, BrowserContext, Page } from "@playwright/test"
 import { plannerMonthlyScript } from "../../../product/ui/planner-monthly.ts"
+import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { createModule } from "../../../index.ts"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import { domain as plannerDomain } from "../../../runtime/planner.ts"
 import { caseQuestionScript, caseQuestionThreads } from "../../../product/ui/work-collaboration.ts"
 import { forecastAnalysisScript } from "../../../product/ui/forecast-analysis.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
@@ -38,9 +44,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     return operation
   }
 
-  async function browserCase(body: string, post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void, pathname = "/sucafina/dashboard") {
+  async function browserCase(body: string | ((request: Request) => Response | Promise<Response>), post: (request: Request) => Response | Promise<Response>, check: (page: Page) => Promise<void>, release?: () => void, pathname = "/sucafina/dashboard") {
     const server = Bun.serve({ hostname: "localhost", port: 0, idleTimeout: 30, fetch: (request) => request.method === "GET"
-      ? new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+      ? typeof body === "function" ? body(request) : new Response(`<!doctype html><html><head><meta charset="utf-8"></head><body>${body}</body></html>`, { headers: { "Content-Type": "text/html; charset=utf-8" } })
       : post(request) })
     let context: BrowserContext | undefined
     let page: Page | undefined
@@ -146,6 +152,85 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await page.locator('form[data-command="save"][data-record="line"]').count()).toBe(1)
       expect(await page.getByRole("button", { name: "Save row", exact: true }).isVisible()).toBe(true)
     })
+  }, 30_000)
+
+  test.each(["OPEX", "CAPEX"] as const)("the real %s shell remounts one monthly grid after refresh and preserves a dirty draft", async (pageName) => {
+    const directory = await mkdtemp(join(await realpath(tmpdir()), "planner-monthly-shell-"))
+    const persistence = await openLocalStore(directory)
+    const actor = { id: "monthly-shell-operator", canWrite: true, roles: ["admin"] }
+    const environment = { at: "2026-11-22T12:00:00Z", id: () => "monthly-shell-id", directory: [] }
+    const previews: unknown[] = []
+    try {
+      await persistence.transaction("planner", async (snapshot) => {
+        snapshot.data = {
+          versions: [{ id: "v1", name: "Plan", year: 2027, locked: false, closed: 0, lines: [],
+            projects: [{ id: "project", name: "Project", code: "CPX-1" }],
+            hc: { positions: [], rates: [], inc: 0, incMonth: 1, hrAF: {} }, fx: [], lists: {} }],
+          officials: {}, entities: [], allocations: [], roster: [],
+        }
+        expect(plannerDomain.execute(snapshot, actor, {
+          page: pageName, action: "save", id: "line", version: 0,
+          values: { versionId: "v1", name: "Planning line", annual: 1200, ...(pageName === "CAPEX" ? { proj: "project" } : {}) },
+        }, environment)).toMatchObject({ ok: true })
+        return { commit: true, value: undefined }
+      })
+      const application = createModule("/sucafina", {
+        persistence, authenticate: async () => ({ ...actor, roles: [{ surface: "planner", role: "admin" }] }),
+        environment: async () => environment, plannerMonthlyAvailable: () => true, maxJsonBytes: 100_000,
+      })
+      await browserCase(async (request) => await application(request) ?? new Response(null, { status: 404 }), async (request) => {
+        const body = await request.json() as { action: string; input: { page: string; drafts: unknown[] } }
+        expect(new URL(request.url).search).toBe("?sf=workbench-planner")
+        expect(body.action).toBe("preview")
+        expect(body.input.page).toBe(pageName)
+        previews.push(body)
+        return Response.json({ status: "ok", value: { rows: body.input.drafts.map((draft) => ({ draft, errors: [], result: { ok: true } })) } })
+      }, async (page) => {
+        const grid = page.getByRole("heading", { name: "Edit monthly values together", exact: true })
+        const cell = page.locator('section input[data-row="line"][data-month="1"]')
+        await grid.waitFor()
+        expect(await grid.count()).toBe(1)
+        expect(await cell.inputValue()).toBe("100")
+        const refresh = () => page.evaluate(async () => {
+          const host = window as Window & { sucafinaRefresh?: () => Promise<void> }
+          if (!host.sucafinaRefresh) throw new Error("The real shell refresh is unavailable")
+          await host.sucafinaRefresh()
+        })
+        for (let attempt = 0; attempt < 2; attempt++) {
+          await page.locator("main").evaluate((main) => { main.setAttribute("data-prior-monthly-main", "true") })
+          await refresh()
+          await page.locator("main[data-prior-monthly-main]").waitFor({ state: "detached" })
+          await grid.waitFor()
+          expect(await grid.count()).toBe(1)
+          expect(await cell.isEnabled()).toBe(true)
+          expect(await cell.inputValue()).toBe("100")
+        }
+        await cell.fill("42")
+        await page.locator("main h1").click()
+        await page.locator("main").evaluate((main) => { main.setAttribute("data-prior-monthly-main", "dirty") })
+        await refresh()
+        expect(await page.locator("main").getAttribute("data-prior-monthly-main")).toBe("dirty")
+        expect(await cell.inputValue()).toBe("42")
+        expect(await page.locator('form[data-dirty="true"]').count()).toBe(1)
+
+        // Discarding by restoring the original value allows the held refresh to install.
+        await cell.fill("100")
+        await page.locator("main h1").click()
+        await refresh()
+        await page.locator("main[data-prior-monthly-main]").waitFor({ state: "detached" })
+        await grid.waitFor()
+        expect(await grid.count()).toBe(1)
+        await cell.fill("43")
+        await page.getByRole("button", { name: "Preview changes", exact: true }).click()
+        await page.getByText("Preview complete. Review the entries and save when ready.", { exact: true }).waitFor()
+        expect(previews).toHaveLength(1)
+        expect(await page.getByRole("button", { name: "Save changes", exact: true }).isEnabled()).toBe(true)
+        expect(await cell.inputValue()).toBe("43")
+      }, undefined, "/sucafina/planner?page=" + pageName + "&versionId=v1")
+    } finally {
+      await persistence.dispose()
+      await rm(directory, { recursive: true, force: true })
+    }
   }, 30_000)
 
   test("monthly apply times out while reading an unfinished response body and retries the identical request", async () => {

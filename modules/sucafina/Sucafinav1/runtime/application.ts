@@ -493,9 +493,10 @@ export function createApplication(mount: string, application: Application) {
       const personalViews = application.personalViewsAvailable?.() === true
       const workbench = surface === "dashboard" && application.dashboardWorkbenchAvailable?.() === true
       const contextualDecision = surface === "dashboard" && page === "Vendor Contracts" && actor.canWrite && Boolean(application.product)
-      const widgetScript = personalViews || workbench || contextualDecision
+      const widgetScript = monthlyScript || personalViews || workbench || contextualDecision
         ? `;(() => {
   const attach = () => {
+    ${monthlyScript ?? ""}
     ${personalViews ? personalViewsScript : ""}
     ${workbench ? dashboardWorkbenchScript : ""}
     ${contextualDecision ? contextualDecisionScript : ""}
@@ -505,7 +506,7 @@ export function createApplication(mount: string, application: Application) {
   if (content) new MutationObserver(attach).observe(content, { childList: true });
 })();`
         : undefined
-      const appScript = [recordSearchScript, monthlyScript, widgetScript]
+      const appScript = [recordSearchScript, widgetScript]
         .filter(Boolean).join("\n")
       const shell = documentHtml(
         surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",

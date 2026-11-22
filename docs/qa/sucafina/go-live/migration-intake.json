@@ -2774,6 +2774,15 @@
       ],
       "behavior": "Preserve consumed intent; bind acknowledgement to applied row value/revision, version state and dataset revision; conflict on superseded or pre-fence receipt without mutation.",
       "regression": "Existing real SQLite replay test has restart, private backup/restore, same-row edit and legacy-receipt variants. Restore and subsequent retries retain the consumed receipt and do not append audit or reapply."
+    },
+    "monthlyRemount": {
+      "finding": "Normal shell refresh replaced main and removed the monthly grid without mounting its successor.",
+      "changes": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts"
+      ],
+      "behavior": "Mount monthly controls through the existing idempotent attach/MutationObserver. Existing sfMonthlyReady and dirty form guards remain authoritative.",
+      "regression": "OPEX and CAPEX use the real module renderer and real SQLite fixture; two clean shell refreshes retain exactly one functional grid, a dirty draft prevents replacement, and one preview is sent after later remount."
     }
   }
 }
