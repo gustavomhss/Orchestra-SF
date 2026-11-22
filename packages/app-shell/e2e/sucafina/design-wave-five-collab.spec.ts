@@ -7,6 +7,7 @@ import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { collabTest, capture, enter, observePage, ready, reflow, scheme, scrollPageTop } from "./design-support/wave-five-collab"
 import { seedWaveFiveCollab, waveFiveCollabData } from "./design-support/wave-five-collab-seed"
+import { captureOriginalImportPreview } from "./design-support/wave-five-collab-imports"
 import { waveFourTest } from "./design-support/wave-four"
 import { waveThreeData } from "./design-support/wave-three-data"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
@@ -39,6 +40,12 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
           resource.operations.filter((operation) => reads.includes(operation.operationId))) }))
     } catch { /* A navigation can close an already superseded response. */ }
   })
+  for (const event of ["requestfinished", "requestfailed"] as const) page.on(event, (request) => {
+    const selected = new URL(request.url()), mode = selected.searchParams.get("sf")
+    if (selected.origin !== installation.origin || !mode?.startsWith("import-")) return
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "original-import-request", event, mode,
+      method: request.method(), failure: request.failure()?.errorText ?? null }))
+  })
   const sourceRequest = async (pathname: string, init?: RequestInit) => {
     const headers = new Headers(init?.headers)
     if (init?.method === "POST") headers.set("Origin", installation.origin)
@@ -49,12 +56,6 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     return new Response(new Uint8Array(await response.body()), { status: response.status(), headers: response.headers() })
   }
   const url = (pathname: string) => new URL(pathname, installation.origin).href
-  const mode = (operation: string) => (response: { url(): string; request(): { method(): string } }) => {
-    const selected = new URL(response.url())
-    return selected.origin === installation.origin && selected.pathname.startsWith(installation.mount + "/") &&
-      selected.searchParams.get("sf") === operation && response.request().method() === "POST"
-  }
-
   await collabTest.step("UI55 opens a native source and file setup without admitting bytes", async () => {
     await enter(page, owner, url("/orchestra/sf-imports/new"), "Import file")
     const surface = page.locator('[data-sf-surface="UI55"]')
@@ -112,21 +113,14 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await expect(surface.getByLabel("Create a new Planner version", { exact: true })).not.toBeChecked()
     await expect(surface.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
     await capture(page, info, "UI55-dark-desktop-selected-file-options")
-    const admission = page.waitForResponse(mode("import-admit"))
-    const preview = page.waitForResponse(mode("import-preview"))
-    const reference = page.waitForRequest((request) => {
-      const selected = new URL(request.url())
-      return selected.origin === installation.origin && selected.pathname.startsWith(installation.mount + "/") &&
-        selected.searchParams.get("sf") === "import-reference" && request.method() === "GET"
-    })
-    await surface.getByRole("button", { name: "Generate preview", exact: true }).click()
-    expect((await admission).status()).toBe(200)
-    expect((await preview).status()).toBe(200)
-    // Read the producer-issued reference used by the original controller. Chromium
-    // may release an upload response body; no acknowledgement payload is inferred.
-    const referenceUrl = new URL((await reference).url())
-    manifestId = referenceUrl.searchParams.get("importPreviewRef") ?? ""
+    const [prepared] = await Promise.all([
+      captureOriginalImportPreview(page, { origin: installation.origin, mount: installation.mount, sourceDigest,
+        generate: surface.getByRole("button", { name: "Generate preview", exact: true }) }),
+      expect(surface).toHaveAttribute("data-sf-phase", "reviewing", { timeout: 90_000 }),
+    ])
+    manifestId = prepared.manifest.id
     expect(manifestId).not.toBe("")
+    // The fresh authenticated source read is independent of the delivered response.
     const originalPreview = await sourceRequest("/planner?" + new URLSearchParams({
       sf: "import-reference", importPreviewRef: manifestId,
     }))
