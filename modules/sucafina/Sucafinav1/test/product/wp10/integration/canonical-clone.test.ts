@@ -14,10 +14,12 @@ function descriptor(value: PropertyDescriptor): PropertyDescriptor {
 }
 function withProperty<Value>(owner: object, key: PropertyKey, replacement: PropertyDescriptor, work: () => Value): Value {
   const saved = property(owner, key)
+  const savedLength = owner === Array.prototype ? property(owner, "length") : undefined
   define(owner, key, descriptor(replacement))
   try { return work() } finally {
     if (saved) define(owner, key, descriptor(saved))
     else remove(owner, key)
+    if (savedLength) define(owner, "length", descriptor(savedLength))
   }
 }
 function withValue<Value>(owner: object, key: PropertyKey, value: unknown, work: () => Value): Value {
