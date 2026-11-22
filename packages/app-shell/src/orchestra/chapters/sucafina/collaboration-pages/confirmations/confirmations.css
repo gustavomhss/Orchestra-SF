@@ -25,3 +25,11 @@
   .sf-u44-confirm[data-sf-wave="five"] .sf-u44-material-content > dl,
   .sf-u44-confirm[data-sf-wave="five"] .sf-u44-receipt > dl { grid-template-columns: minmax(0,1fr); }
 }
+
+.sf-u44-confirm[data-sf-wave="five"] details > summary { justify-content: space-between; gap: 12px; }
+.sf-u44-confirm[data-sf-wave="five"] details > summary::after {
+  content: ""; flex: none; inline-size: 7px; block-size: 7px;
+  margin-inline-end: 4px; border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor; transform: rotate(45deg);
+}
+.sf-u44-confirm[data-sf-wave="five"] details[open] > summary::after { transform: rotate(225deg); }

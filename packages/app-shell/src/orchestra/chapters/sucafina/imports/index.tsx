@@ -606,9 +606,12 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         data-sf-wave={designed() ? "five" : undefined} data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <Show when={designed()}>
           <ol class="sf-files-steps" aria-label={t("sf.u23.importStages")}>
-            <li data-current={!state.manifest && !state.file}><span>1</span>{t("sf.u23.chooseDestination")}</li>
-            <li data-current={!state.manifest && !!state.file}><span>2</span>{t("sf.u23.chooseFile")}</li>
-            <li data-current={!!state.manifest}><span>3</span>{t("sf.u23.reviewPreview")}</li>
+            <li data-current={isImport() && !state.manifest && !selectedTarget()}
+              aria-current={isImport() && !state.manifest && !selectedTarget() ? "step" : undefined}><span>1</span>{t("sf.u23.chooseDestination")}</li>
+            <li data-current={isImport() && !state.manifest && !!selectedTarget()}
+              aria-current={isImport() && !state.manifest && !!selectedTarget() ? "step" : undefined}><span>2</span>{t("sf.u23.chooseFile")}</li>
+            <li data-current={isReference() || !!state.manifest}
+              aria-current={isReference() || !!state.manifest ? "step" : undefined}><span>3</span>{t("sf.u23.reviewPreview")}</li>
           </ol>
         </Show>
         <SfStatePanel state={state.status} messageKey={key(message())}

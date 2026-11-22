@@ -133,8 +133,11 @@ async function fixture() {
   let selected: Operation | undefined
   const input: Input = {
     ui, state, persistence, source: (id) => !selected || selected === id ? sources[id] : undefined,
-    binding: (id, producer) => controls.installed && operations.some((operation) => operation === id) && sources[id]?.producer === producer
-      ? installed : undefined,
+    binding: (id, producer) => {
+      const mountedOperation = operations.find((operation) => operation === id)
+      return controls.installed && mountedOperation && sources[mountedOperation]?.producer === producer
+        ? installed : undefined
+    },
   }
   const observe = (operation?: Operation) => {
     selected = operation
