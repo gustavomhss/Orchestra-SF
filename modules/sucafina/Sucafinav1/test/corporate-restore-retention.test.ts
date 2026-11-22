@@ -168,9 +168,16 @@ test("external restore comparison rejects a stale effect frontier and restore ke
       verifyCurrent: async () => true,
       signal: AbortSignal.abort(cancelled),
     })).rejects.toThrow(cancelled)
+    const policyStore = await openLocalStore(join(directory, "business-microsoft"), {
+      teamProfilePolicy: {
+        binding: { installationId, tenantId: config.tenantId }, bootstrapEnabledTeamIds: config.enabledTeamIds,
+      },
+    })
+    stores.push(policyStore)
+    if (!policyStore.teamProfiles) throw new Error("Expected the original Team policy store")
     const register = await openCorporateRecoveryRegister(registerFile, directory, process.getuid?.())
     const recovery = createCorporateRecoveryHttp({
-      config, directory, register, now: () => new Date(at),
+      config, directory, register, profilePolicy: policyStore.teamProfiles, now: () => new Date(at),
       identity: {
         prepare: async () => {},
         observeCorporateRecoveryActor: async (request, group) =>
@@ -219,3 +226,174 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     await rm(root, { recursive: true, force: true })
   }
 })
+
+
+test("corporate recovery admits a Team enabled after HTTP bootstrap without requiring Team membership", async () => {
+  const fixture = await recoveryPolicyFixture([])
+  try {
+    expect((await fixture.post())?.status).toBe(403)
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    await fixture.mutate("enable")
+    expect((await fixture.post())?.status).toBe(204)
+    expect((await fixture.snapshot()).data.restoreMarker).toBe("checkpoint")
+    expect(await fixture.readAsset()).toEqual(asset)
+    expect(fixture.verification.calls).toBe(3)
+  } finally { await fixture.close() }
+})
+
+test.each(["disable", "remove"] as const)("corporate recovery rejects a Team after dynamic %s despite its bootstrap seed", async (action) => {
+  const fixture = await recoveryPolicyFixture()
+  try {
+    const before = await fixture.profilePolicy.read()
+    await fixture.mutate(action)
+    expect((await fixture.profilePolicy.read()).configRevision).not.toBe(before.configRevision)
+    expect((await fixture.post())?.status).toBe(403)
+    expect(fixture.verification.calls).toBe(0)
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    expect(await fixture.readAsset()).toBeUndefined()
+  } finally { await fixture.close() }
+})
+
+test.each(["disable", "remove", "revision"] as const)("corporate recovery rolls back staged restore when policy changes at commit: %s", async (change) => {
+  const fixture = await recoveryPolicyFixture()
+  try {
+    const before = await fixture.profilePolicy.read()
+    // The third original authorization is restoreBackup's final writer check,
+    // after its real blob/data/audit staging and before SQLite COMMIT.
+    fixture.verification.before = async (call) => {
+      if (call === 3) await fixture.mutate(change === "revision" ? "enable" : change,
+        change === "revision" ? "10000000-0000-4000-8000-000000000005" : teamObjectId)
+    }
+    expect((await fixture.post())?.status).toBe(403)
+    expect(fixture.verification.calls).toBe(3)
+    const current = await fixture.profilePolicy.read()
+    expect(current.configRevision).not.toBe(before.configRevision)
+    expect(current.profiles.some((entry) => entry.profile.teamObjectId === teamObjectId && entry.enabled))
+      .toBe(change === "revision")
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    expect(await fixture.readAsset()).toBeUndefined()
+  } finally { await fixture.close() }
+})
+
+test("corporate recovery never falls back to bootstrap when current policy is unavailable", async () => {
+  const fixture = await recoveryPolicyFixture()
+  try {
+    await fixture.policyStore.dispose()
+    expect((await fixture.post())?.status).toBe(503)
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    expect(await fixture.readAsset()).toBeUndefined()
+  } finally { await fixture.close() }
+})
+
+test("corporate recovery keeps recover authority separate from checkpoint authority", async () => {
+  const fixture = await recoveryPolicyFixture()
+  try {
+    const recovery = createCorporateRecoveryHttp({
+      ...fixture.input,
+      config: { ...fixture.input.config, grants: [{ principalRef: actor.id, migrationActions: ["checkpoint"] }] },
+    })
+    expect((await fixture.post(recovery))?.status).toBe(403)
+    expect(fixture.verification.calls).toBe(0)
+    expect(await fixture.snapshot()).toEqual(fixture.current)
+    expect(await fixture.readAsset()).toBeUndefined()
+  } finally { await fixture.close() }
+})
+
+async function recoveryPolicyFixture(bootstrapEnabledTeamIds: readonly string[] = [teamObjectId]) {
+  const root = await mkdtemp(join(await realpath(tmpdir()), "sucafina-recovery-policy-"))
+  const directory = join(root, "installation")
+  await mkdir(directory, { mode: 0o700 })
+  const installationId = teamProfileInstallationId({ ...config, directory })
+  const installationDigest = digestSfValue({ installationId, tenantId: config.tenantId, clientId: config.clientId })
+  const partition = digestSfValue({ installationId, tenantId: config.tenantId, teamObjectId })
+  const stores: LocalStore[] = []
+  const registerFile = join(root, "independent-control.sqlite")
+  const control = new Database(registerFile, { strict: true })
+  const close = async () => {
+    control.close()
+    try { await Promise.all(stores.map((store) => store.dispose())) }
+    finally { await rm(root, { recursive: true, force: true }) }
+  }
+  try {
+    const policyStore = await openLocalStore(join(directory, "business-microsoft"), {
+      teamProfilePolicy: { binding: { installationId, tenantId: config.tenantId }, bootstrapEnabledTeamIds },
+    })
+    stores.push(policyStore)
+    const profilePolicy = policyStore.teamProfiles
+    if (!profilePolicy) throw new Error("Expected the original Team policy store")
+    const store = await openLocalStore(join(directory, "business-teams", partition))
+    stores.push(store)
+    const assets: AssetPersistence = store
+    await initializeAbsentSfProductState(store, () => "product-incarnation")
+    await assets.transaction("dashboard", async (snapshot, blobs) => {
+      snapshot.data.restoreMarker = "checkpoint"
+      snapshot.data.assets = [{ key: assetKey, bytes: asset.length }]
+      await blobs.put(assetKey, asset, "application/octet-stream")
+      return { commit: true, value: undefined }
+    })
+    const backups = await createLocalBackups(join(directory, "backups-teams", partition))
+    const archive = await backups.capture(store, "dashboard", at)
+    const loaded = await backups.source.load("dashboard", archive.id)
+    if (!loaded) throw new Error("Expected the real checkpoint archive")
+    await assets.transaction("dashboard", async (snapshot, blobs) => {
+      snapshot.data.restoreMarker = "later"
+      snapshot.data.assets = []
+      await blobs.remove(assetKey)
+      return { commit: true, value: undefined }
+    })
+    const current = await read(store)
+    const frontier = inspectSfProductRestoreFrontier(current)
+    if (!frontier) throw new Error("Expected the real product frontier")
+    // Registry publication remains an independent controlled observer in this fixture,
+    // outside both the installation and the checkpoint; the HTTP route cannot pin.
+    control.exec("CREATE TABLE recovery_pins (installation_digest TEXT, partition_digest TEXT, generation INTEGER, checkpoint_digest TEXT, frontier_digest TEXT, archive_digest TEXT) STRICT")
+    control.query("INSERT INTO recovery_pins VALUES (?, ?, ?, ?, ?, ?)").run(
+      installationDigest, partition, 1, digestSfValue(loaded.snapshot), digestSfValue(frontier),
+      digestSfValue({ checkpointId: archive.id, manifest: archive.manifest }),
+    )
+    const register = await openCorporateRecoveryRegister(registerFile, directory, process.getuid?.())
+    const verification: { calls: number; before: (call: number) => Promise<void> } = {
+      calls: 0, before: async () => {},
+    }
+    const fixtureConfig = { ...config, enabledTeamIds: [...bootstrapEnabledTeamIds] }
+    const input: Parameters<typeof createCorporateRecoveryHttp>[0] = {
+      config: fixtureConfig,
+      directory, register, profilePolicy, now: () => new Date(at),
+      // This controlled administrator has no Team-directory admission. Recovery
+      // still observes its original dedicated identity capability and explicit grant.
+      identity: {
+        prepare: async () => {},
+        observeCorporateRecoveryActor: async (request, group) =>
+          group === config.supremeAdminGroupId && request.headers.get("cookie") === "verified-fixture"
+            ? { principalId: actor.id, verifyCurrent: async () => {
+                await verification.before(++verification.calls)
+                return true
+              } } : undefined,
+      },
+    }
+    const recovery = createCorporateRecoveryHttp(input)
+    const post = (http = recovery) => http(new Request(config.origin + config.mount + "/api/ui/team-profile-migration/recover", {
+      method: "POST", headers: { origin: config.origin, "content-type": "application/json", cookie: "verified-fixture" },
+      body: JSON.stringify({ teamObjectId, checkpointId: archive.id, expectedVersion: current.versions.dataset?.version ?? 0, confirm: true }),
+    }))
+    const mutate = async (action: "enable" | "disable" | "remove", id = teamObjectId) => {
+      const catalog = await profilePolicy.read()
+      const result = await profilePolicy.mutate({
+        principal: { tenantId: config.tenantId, principalObjectId: "10000000-0000-4000-8000-000000000006" },
+        at: Date.parse(at), authorize: async () => true,
+        command: { action, profile: { installationId, tenantId: config.tenantId, teamObjectId: id },
+          expectedRevision: catalog.configRevision },
+      })
+      if (result.status !== "ok" || !result.changed) throw new Error("Expected a real changed Team policy")
+    }
+    return {
+      input, post, mutate, policyStore, profilePolicy, verification, current,
+      snapshot: () => read(store),
+      readAsset: () => assets.transaction("dashboard", async (_snapshot, blobs) => ({ commit: false, value: await blobs.get(assetKey) })),
+      close,
+    }
+  } catch (error) {
+    await close()
+    throw error
+  }
+}
