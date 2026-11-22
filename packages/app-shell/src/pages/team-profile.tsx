@@ -9,6 +9,8 @@ import type { TeamSessionRetirement } from "../context/team-session-lifetime"
 import { acquireTeamWindowIdentity, type TeamHintStorage, type TeamWindowIdentity } from "../utils/team-profile-storage"
 import { useLanguage } from "../context/language"
 import { TeamProfileAdministration, type TeamAdministrationNotice } from "../components/team-profile-administration"
+import { SfTeamDomainHost, type SfTeamDomainLifecycle, type SfTeamDomainSession } from "../orchestra/chapters/sucafina/host/team-domain"
+import { readSfTeamDomainIntent, resolveSfTeamDomainRoute } from "../orchestra/chapters/sucafina/host/team-domain-route"
 
 const selectionHref = () => "/"
 const SfTeamSessionWorkspace = lazy(() => import("./team-session").then((module) => ({ default: module.SfTeamSessionWorkspace })))
@@ -24,6 +26,7 @@ export function SfTeamWebApp() {
   const [state, setState] = createSignal<TeamWebState>({ status: "loading" })
   const [logoutFailed, setLogoutFailed] = createSignal(false)
   const [signingOut, setSigningOut] = createSignal(false)
+  const [domainHref, setDomainHref] = createSignal(window.location.href)
   const [administration, setAdministration] = createStore<{
     openFor?: string; notice?: { scope: string; key: TeamAdministrationNotice }
   }>({})
@@ -39,6 +42,7 @@ export function SfTeamWebApp() {
     get length() { return window.sessionStorage.length },
   }
   let runtime: TeamSessionRuntime | undefined
+  let domain: SfTeamDomainLifecycle | undefined
   let identity: TeamWindowIdentity | undefined
   let acquiringIdentity: Promise<TeamWindowIdentity | undefined> | undefined
   let confirmedHref: string | undefined
@@ -71,6 +75,15 @@ export function SfTeamWebApp() {
     if (current && pending && !pending.signal.aborted)
       return { context: current.context, generation, signal: pending.signal }
   }
+  const currentDomain = (): SfTeamDomainSession | undefined => {
+    const current = authenticated()
+    if (current && current.context.profile.teams.status === "ready" && pending && !pending.signal.aborted)
+      return { binding: current.binding, context: current.context, generation, signal: pending.signal }
+  }
+  const domainRoute = () => {
+    const current = binding()
+    return current && readSfTeamDomainIntent(new URL(domainHref()), current)
+  }
   const sessionRoute = () => {
     const current = authenticated()
     return current && readTeamSessionNavigation(new URL(window.location.href), current.binding)
@@ -99,6 +112,10 @@ export function SfTeamWebApp() {
   const begin = (reason: TeamSessionRetirement = "refresh") => {
     closeConsent()
     runtime?.sessions.retire(reason)
+    if (reason === "logout") domain?.retire("logout")
+    else if (reason === "revoked") domain?.retire("revoked")
+    else if (reason === "profile-change" || reason === "principal-change" || reason === "dispose")
+      domain?.retire("owner-changed")
     setChat({ ready: false, busy: false, ...(reason !== "refresh" ? { notice: undefined } : {}) })
     generation++
     pending?.abort()
@@ -107,9 +124,10 @@ export function SfTeamWebApp() {
     return pending.signal
   }
   const writeNavigation = (url: URL, push = false) => {
-    if (window.location.href === url.href) return true
+    if (window.location.href === url.href) { setDomainHref(url.href); return true }
     try {
       window.history[push ? "pushState" : "replaceState"](null, "", url.href)
+      setDomainHref(url.href)
       return true
     } catch (error) {
       console.error("Could not update the Team navigation URL", error)
@@ -119,6 +137,7 @@ export function SfTeamWebApp() {
   const load = async (teamObjectId?: string, push = false, reason: TeamSessionRetirement = "refresh"): Promise<void> => {
     if (signingOut()) return
     const href = window.location.href
+    setDomainHref(href)
     pendingNavigation = { href, teamObjectId, push }
     const signal = begin(reason)
     const epoch = generation
@@ -152,13 +171,17 @@ export function SfTeamWebApp() {
       const principal = JSON.stringify([current, result.value.profile.principal])
       if (previousPrincipal && previousPrincipal !== principal) {
         runtime?.sessions.retire("principal-change")
+        domain?.retire("owner-changed")
         setChat("notice", undefined)
       }
       previousPrincipal = principal
       confirmedHref = window.location.href
       setState({ status: "authenticated", binding: current, context: result.value })
       if (teams.status !== "ready") {
-        if (teams.status !== "unavailable") runtime?.sessions.retire("revoked")
+        if (teams.status !== "unavailable") {
+          runtime?.sessions.retire("revoked")
+          domain?.retire("revoked")
+        }
         return
       }
       const route = readTeamSessionNavigation(new URL(confirmedHref), current)
@@ -166,6 +189,7 @@ export function SfTeamWebApp() {
       return
     }
     runtime?.sessions.retire("revoked")
+    domain?.retire(result.status === "unauthenticated" ? "session-expired" : "revoked")
     setChat("notice", undefined)
     setState({ status: result.status, binding: current })
   }
@@ -200,6 +224,7 @@ export function SfTeamWebApp() {
         refresh: async () => { await refresh() }, confirmDiscard, notice: notify,
         unauthenticated: () => {
           closeConsent()
+          domain?.retire("session-expired")
           generation++
           pending?.abort()
           setChat({ ready: false, busy: false, notice: undefined })
@@ -234,11 +259,32 @@ export function SfTeamWebApp() {
       notify("sf.teams.actionFailed")
     } finally { if (epoch === generation && current === runtime) setChat("busy", false) }
   }
+  const leaveWorkspaces = async (leaveChat = true): Promise<boolean> => {
+    const source = state(), epoch = generation, href = window.location.href
+    const unchanged = () => state() === source && generation === epoch && window.location.href === href
+    if (leaveChat && runtime && !await runtime.leave()) return false
+    if (!unchanged() || domain && !await domain.leave()) return false
+    return unchanged()
+  }
+  const goDomain = async (href: string, replace = false): Promise<boolean> => {
+    const current = authenticated(), profile = current?.context.stamp.team?.owner.profile
+    if (!current || !profile) return false
+    const url = new URL(href, current.binding.publicOrigin)
+    const target = readSfTeamDomainIntent(url, current.binding)
+    if (!target || target.selector.profile.teamObjectId !== profile.teamObjectId ||
+        !resolveSfTeamDomainRoute(url, current.binding, current.context) || !await leaveWorkspaces()) return false
+    if (!writeNavigation(url, !replace)) return false
+    await load()
+    const fresh = authenticated()
+    return window.location.href === url.href && !!fresh &&
+      !!resolveSfTeamDomainRoute(url, fresh.binding, fresh.context)
+  }
   const goSession = async (href: string) => {
     const current = authenticated(), profile = current?.context.stamp.team?.owner.profile
     if (!current || !profile) return
     const target = readTeamSessionNavigation(new URL(href, current.binding.publicOrigin), current.binding)
     if (!target || target.profile.teamObjectId !== profile.teamObjectId) return
+    if (!await leaveWorkspaces(false)) return
     if (runtime && chat.ready) {
       const epoch = generation
       if (await runtime.sessions.open(target.sessionID) && epoch === generation && !commitSession(target.sessionID, true)) {
@@ -251,30 +297,35 @@ export function SfTeamWebApp() {
     if (url && writeNavigation(url, true)) await load()
   }
   const selectTeam = async (teamObjectId: string) => {
-    if (runtime && !await runtime.leave()) return
+    if (!await leaveWorkspaces()) return
     await load(teamObjectId, true, "profile-change")
   }
   const navigation = () => {
     const current = authenticated(), href = window.location.href, previous = confirmedHref
+    // Hide a private leaf as soon as history changes, before any discard dialog
+    // or fresh admission. Its registry stays mounted and can restore on cancel.
+    setDomainHref(href)
     const target = current && readTeamSessionNavigation(new URL(href), current.binding)
     const sameTeam = target && target.profile.teamObjectId === current?.context.stamp.team?.owner.profile.teamObjectId
-    if (!runtime || !runtime.sessions.hasDirtyDrafts() || sameTeam) { void load(); return }
-    void runtime.leave().then((discarded) => {
+    const chatDirty = runtime?.sessions.hasDirtyDrafts() === true && !sameTeam
+    const domainDirty = domain?.hasDirtyDrafts() === true && href !== previous
+    if (!chatDirty && !domainDirty) { void load(); return }
+    void leaveWorkspaces(!sameTeam).then((discarded) => {
       if (window.location.href !== href) return
       if (discarded) { void load(undefined, false, "profile-change"); return }
       if (previous && writeNavigation(new URL(previous))) void load()
     })
   }
   const leavePage = (event: MouseEvent) => {
-    if (!runtime?.sessions.hasDirtyDrafts()) return
+    if (!runtime?.sessions.hasDirtyDrafts() && !domain?.hasDirtyDrafts()) return
     const anchor = event.currentTarget
     if (!(anchor instanceof HTMLAnchorElement)) return
     event.preventDefault()
     const href = anchor.href
-    void runtime.leave().then((discarded) => { if (discarded) window.location.assign(href) })
+    void leaveWorkspaces().then((discarded) => { if (discarded) window.location.assign(href) })
   }
   const beforeUnload = (event: BeforeUnloadEvent) => {
-    if (!runtime?.sessions.hasDirtyDrafts()) return
+    if (!runtime?.sessions.hasDirtyDrafts() && !domain?.hasDirtyDrafts()) return
     event.preventDefault()
     event.returnValue = ""
   }
@@ -304,7 +355,8 @@ export function SfTeamWebApp() {
       previousPrincipal = undefined
       confirmedHref = undefined
       const url = new URL(window.location.href)
-      if (url.pathname.startsWith("/orchestra/sf-sessions/")) url.pathname = selectionHref()
+      if (url.pathname.startsWith("/orchestra/sf-sessions/") || readSfTeamDomainIntent(url, current))
+        url.pathname = selectionHref()
       url.search = ""
       url.hash = ""
       if (writeNavigation(url)) return setState({ status: "unauthenticated", binding: current })
@@ -339,6 +391,7 @@ export function SfTeamWebApp() {
   onCleanup(() => {
     closeConsent()
     runtime?.sessions.retire("dispose")
+    domain?.retire("owner-changed")
     lifetime.abort()
     identity?.dispose()
     generation++
@@ -352,7 +405,7 @@ export function SfTeamWebApp() {
 
   return (
     <div class="mx-auto flex h-full w-full flex-col gap-6 overflow-y-auto p-6"
-      classList={{ "max-w-3xl": !sessionRoute(), "max-w-screen-2xl": !!sessionRoute() }}
+      classList={{ "max-w-3xl": !sessionRoute() && !domainRoute(), "max-w-screen-2xl": !!sessionRoute() || !!domainRoute() }}
       data-sf-teams-shell data-sf-teams-state={state().status}
       data-sf-team-selected={selected()?.profile.teamObjectId}>
       <header class="flex items-center justify-between gap-4">
@@ -435,6 +488,10 @@ export function SfTeamWebApp() {
               go={(href) => { void act(() => goSession(href)) }} notice={notify} />
           </Suspense>
         }</Show>
+        <SfTeamDomainHost current={currentDomain} href={domainHref}
+          fetch={(input, init) => fetch(input, init)} reload={refresh}
+          navigate={goDomain} confirmDiscard={confirmDiscard}
+          onLifecycle={(value) => { domain = value }} />
         <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
           <button type="button" class="mx-btn" onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
         </Show>

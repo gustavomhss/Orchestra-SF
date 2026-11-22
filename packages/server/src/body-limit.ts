@@ -1,7 +1,8 @@
 export * as BodyLimit from "./body-limit"
 
-import { Effect, FileSystem, Stream } from "effect"
+import { Effect, FileSystem } from "effect"
 import { HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { boundedWebRequest, cancelUnreadWebBody } from "./web-body-limit"
 
 const MiB = 1024 * 1024
 
@@ -24,8 +25,8 @@ export function limitFor(pathname: string) {
 
 /**
  * Caps every request body. A declared `Content-Length` over the limit is refused with 413 before a byte is read; a body
- * with no length is cut off while reading. Node uses `MaxBodySize`; the Web adapter gets a bounded lazy view over the
- * same original Request, because its text/arrayBuffer accessors do not enforce that service.
+ * with no or inaccurate length is counted while reading. Node uses MaxBodySize;
+ * Web readers share a bounded cache over the original Request body.
  */
 export const withLimit = (override?: (request: HttpServerRequest.HttpServerRequest) => number | undefined) => HttpRouter.middleware(
   (effect) =>
@@ -33,12 +34,16 @@ export const withLimit = (override?: (request: HttpServerRequest.HttpServerReque
       const request = yield* HttpServerRequest.HttpServerRequest
       const limit = override?.(request) ?? limitFor(request.url.split("?", 1)[0])
       const declared = Number(request.headers["content-length"])
-      if (declared > limit) return tooLarge(limit)
-      const bounded = request.source instanceof Request ? yield* boundedWebRequest(request, limit) : request
+      if (declared > limit) {
+        cancelUnreadWebBody(request)
+        return tooLarge(limit)
+      }
+      const observed: { text?: string } = {}
+      const bounded = observeTextRead(boundedWebRequest(request, limit), observed)
       return yield* effect.pipe(
         Effect.catch((error) => exceeded(error) ? Effect.succeed(tooLarge(limit)) : Effect.fail(error)),
         // The API reads its payload with `orDie`, and JSON syntax failures also arrive as defects.
-        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(bounded, defect))),
+        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(bounded, observed.text, defect))),
         Effect.provideService(HttpServerRequest.HttpServerRequest, bounded),
         Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(limit)),
       )
@@ -63,21 +68,30 @@ function exceeded(defect: unknown) {
   )
 }
 
-function malformedJson(request: HttpServerRequest.HttpServerRequest, defect: unknown) {
-  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
-  if (!(defect instanceof SyntaxError) || contentType !== "application/json") return Effect.die(defect)
-  // The API has already cached this bounded text. Confirm syntax so a handler's own SyntaxError stays a 500.
-  return Effect.flatMap(Effect.orDie(request.text), (text) => {
-    // HttpApiBuilder treats an empty body as no payload, so it cannot explain a handler defect.
-    if (text === "") return Effect.die(defect)
-    try { JSON.parse(text) } catch (error) {
-      if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
-        { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
-        { status: 400 },
-      ))
-    }
-    return Effect.die(defect)
+/** Only a completed read can tie a SyntaxError to request JSON. The catch path never starts IO. */
+function observeTextRead(request: HttpServerRequest.HttpServerRequest, observed: { text?: string }): HttpServerRequest.HttpServerRequest {
+  return new Proxy(request, {
+    get(target, property, receiver) {
+      if (property === "text") return Effect.tap(target.text, (value) => Effect.sync(() => { observed.text = value }))
+      if (property === "modify") return (options: Parameters<HttpServerRequest.HttpServerRequest["modify"]>[0]) =>
+        observeTextRead(target.modify(options), observed)
+      return Reflect.get(target, property, receiver)
+    },
   })
+}
+
+function malformedJson(request: HttpServerRequest.HttpServerRequest, text: string | undefined, defect: unknown) {
+  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
+  if (!(defect instanceof SyntaxError) || contentType !== "application/json" || text === undefined || text === "")
+    return Effect.die(defect)
+  // The original decoder consumed this bounded text before failing. A payload-free handler cannot supply it.
+  try { JSON.parse(text) } catch (error) {
+    if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
+      { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
+      { status: 400 },
+    ))
+  }
+  return Effect.die(defect)
 }
 
 function tooLarge(limit: number) {
@@ -87,40 +101,3 @@ function tooLarge(limit: number) {
     { status: 413, headers: { connection: "close" } },
   )
 }
-
-/**
- * Preserve the original Web Request and all routing/authority metadata. Body
- * access stays lazy, shares one bounded cache and survives Effect's modify()
- * views; the original multipart/json parsers therefore consume the same limit.
- */
-const boundedWebRequest = (request: HttpServerRequest.HttpServerRequest, limit: number) => Effect.gen(function* () {
-  const source = request.source
-  if (!(source instanceof Request)) return request
-  const stream = Stream.suspend(() => {
-    let size = 0
-    return request.stream.pipe(Stream.mapEffect((chunk) => {
-      size += chunk.byteLength
-      return size <= limit ? Effect.succeed(chunk) : Effect.fail(new HttpServerError.HttpServerError({
-        reason: new HttpServerError.RequestParseError({ request, cause: new Error("maxBytes exceeded") }),
-      }))
-    }))
-  })
-  // The stream finalizer cancels the upstream reader at the first excess chunk.
-  // No unbounded source.text(), arrayBuffer(), clone() or tee() is used.
-  const bytes = yield* Effect.cached(source.body === null ? Effect.succeed(new Uint8Array(0)) : Stream.mkUint8Array(stream))
-  const text = Effect.map(bytes, (value) => new TextDecoder().decode(value))
-  const arrayBuffer = Effect.map(bytes, (value) => value.slice().buffer)
-  const wrap = (view: HttpServerRequest.HttpServerRequest): HttpServerRequest.HttpServerRequest => new Proxy(view, {
-    get(target, property, receiver) {
-      if (property === "stream") return stream
-      if (property === "text") return text
-      if (property === "arrayBuffer") return arrayBuffer
-      if (property === "modify") {
-        const modify: HttpServerRequest.HttpServerRequest["modify"] = (options) => wrap(target.modify(options))
-        return modify
-      }
-      return Reflect.get(target, property, receiver)
-    },
-  })
-  return wrap(request)
-})

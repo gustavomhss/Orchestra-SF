@@ -43,4 +43,3 @@ export async function revalidateVendorContractDraft(
   if (version === undefined) return { status: "unavailable" }
   return { status: "authorized", authority: "unchanged", stamp: fresh.stamp, sourceVersion: version }
 }
-

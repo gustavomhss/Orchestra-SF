@@ -2,20 +2,58 @@
 
 ## Estado, escopo e donos
 
-- Estado desta frente: **SUBCONJUNTO DO EXECUTOR INTEGRADO E CONTROLES VERIFICADOS — HOMOLOGAÇÃO INSTALADA NOT_RUN; G08 ABERTO**.
-- Data da atualização: 22/11/2026.
-- Dono da preparação: sessão Astra responsável por G05/G06/G07/G08/G10.
-- Integração G01–G04 e pool: sessão **Retomar migração para Microsoft Teams**, conforme o handoff.
-- Donos nominais da reserva QA, do host, das sessões Entra e dos dados: **NOT_CONFIRMED** nas fontes consultadas.
-- Pin de triagem histórica: `79912446753af5bb291fc2581543732eb4c83057`; árvore `5c32cd72537799632e7d2583c1775df1d88b8780`.
-- Fonte testada da adaptação atual: `0c40f0c26c4a9a56c3825d9bb4538fffb104ade4`; árvore `449b0d99afaf8d84aa4066fb255a88f040260e49`; integração da [PR #659](https://github.com/gustavomhss/Orchestra-SF/pull/659) em `a71033f21b2c0f7da508c96f302506a9e73fd145`.
-- SHA/árvore finais confirmados por Migração e Release, tar final, execução G08 e aprovação: **NOT_OBSERVED / NOT_RUN / NOT_APPROVED**.
+**NOVE CONTROLES TEAMS IMPLEMENTADOS E LISTADOS; COMPONENTES VERIFICADOS NA COMPOSIÇÃO DECLARADA; HOMOLOGAÇÃO INSTALADA NOT_RUN; G08 ABERTO.** A preparação é desta sessão Astra. O mandato ampliado inclui coordenar a integração, Release e reservas, preservando os escritores de produto/Migração e G09/#588/#349. Donos operacionais de QA/host/Entra/dados e a reserva exclusiva continuam **não confirmados**.
 
-Este documento prepara a homologação no ambiente isolado autorizado. A aprovação de G08 vale somente para o SHA, a árvore e os bytes do tar efetivamente instalados. O SHA da ferramenta e o merge da #659 não constituem o candidato final confirmado. A virada de produção depende de aprovação específica da janela e de go/no-go.
+A [#672](https://github.com/gustavomhss/Orchestra-SF/pull/672) foi revisada tecnicamente e aguarda a conclusão da integração #665 antes do merge. A base Teams #657 já foi integrada em `ad6d245119ef2d69fb96471edd62dd6413ae185f`; isso não integra automaticamente os produtores posteriores de Session e Chat. SHA/árvore finais confirmados por Migração e Release, tar final e aprovação G08 continuam ausentes.
 
-A #659 adapta o executor da [PR #644](https://github.com/gustavomhss/Orchestra-SF/pull/644) ao produto e aos contratos de navegação/administração observados, preservando a prova histórica dessa PR. Há **sete controles executáveis**. Das **nove obrigações originais**, cinco têm implementação integral condicionada à integração dos contratos; duas têm implementação parcial; duas não têm implementação. **Todas as nove obrigações e todos os grupos permanecem NOT_RUN no ambiente instalado.** Nenhum host QA, identidade Microsoft, grant ou dado de negócio foi alterado por esta frente. Não houve assinatura de aprovação final.
+A aprovação vale somente para C/T e os bytes do tar efetivamente instalados. **Todas as nove obrigações e os cinco grupos permanecem NOT_RUN em ambiente instalado.** Nenhum host QA, sessão Microsoft ou grant real foi alterado por esta prova. A virada de produção depende de janela e decisão específicas.
 
-## Executor atual e prova da #659
+## Adaptação atual e prova da #672
+
+A composição de teste reúne o produto original da #665 com exatamente nove blobs do executor G08. As identidades são distintas:
+
+| Identidade | Valor e alcance |
+| --- | --- |
+| Head da #672, D | `0b68b5d5cae2dc17267558702caa6536b45bc6d7`, árvore `ca3b800f3ba6ab97e280e87d2768d29f0090e339` |
+| Fonte de produto, S | #665 em `fde191dfc1970d37021d82370cccac657efac246` |
+| Checkout realmente testado, C/T | `90a8fced96f6cf0dfd408b0e3c393308fd5d50ce` / `53f0d767b4b90bd64004ec2789c9803d43bc361f` |
+| Composição | S + nove blobs G08 exatamente iguais a D, confirmados por compare API |
+| Run / tentativa | [45038080944](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038080944), 1 |
+| Jobs | Controles `137256156567` **SUCCESS**; instalado `137256157449` **SKIPPED** |
+| Artefato | [14760243491](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038080944/artifacts/14760243491), 7.689 bytes |
+| ZIP SHA-256 | `b415fd156b11b75b8bf4afe55aa11264ff5a71666e8a49c26cdcabeac4b033ce` |
+| `inventory.json` SHA-256 | `c148adbff0fa05a204cd3aa021c4a2147a38a54ace8dd125cbcf99c3b874df65` |
+| DOM JUnit SHA-256 | `0d1dab53d24556ca167b584a8f1e6f63f0056bfd210805bf5e6d07d619442f84` |
+
+A coordenação adquiriu o ZIP e conferiu digest, tamanho, CRC, inventário e relatório. O run aprovou **134 controles Node**, **28 Python**, **oito casos DOM/243 asserções** e typecheck. O Playwright apenas importou/listou **nove casos**; não abriu uma instalação. Guards: 78 regras, 105 paths da composição, zero gates/erros e **um aviso** `js-empty-catch` em `tooling/httpapi-codegen/src/index.ts:517`, pertencente ao produtor integrado. Esse aviso foi preservado; o resultado não é “zero findings” nem substitui o [gate do integrador que recusou a prova limpa](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081262811).
+
+O recibo `sf-g08-executor-inventory-v3` tem status `CURRENT_CONTRACT_INVENTORY_VERIFIED`, `proofScope:current-teams-subset`, `installed:false`, `g08Closed:false` e `productionCutover:false`. A contagem nove descreve controles implementados e listados. Os testes DOM usam componentes/clientes originais e rede controlada; não são OIDC corporativo, QA real ou prova de grants do tenant.
+
+### Nove obrigações implementadas, ainda não executadas no host
+
+| Obrigação | Oráculo do executor atual | Estado instalado |
+| --- | --- | --- |
+| `same-team-distinct-grants` | Dois contextos originais no mesmo Team leem seus namespaces Session; requester cria e relê um ID novo; holder recebe 401 na mesma operação e conserva seu inventário; limpeza remove apenas os dois IDs desta invocação e relê ambos. | NOT_RUN |
+| `aba-two-windows` | F02 da ação real em A → B → A, URL/owner corretos e janela irmã preservada em A após reload. | NOT_RUN |
+| `account-without-team` | F02 identifica o principal no-teams; seleção explícita revoked sem owner/dados e rota de negócio 403. | NOT_RUN |
+| `foreign-deep-link-reload` | Deep link próprio admitido; instalação estrangeira permanece invalid sem F02 de Team, inclusive após reload. | NOT_RUN |
+| `admin-without-team` | Painel nativo da landing e GET emitido pela própria UI concordam; F02 administrativo available e negócio recusado. | NOT_RUN |
+| `narrow-keyboard-draft` | Em 320 px, Tab/Enter abrem o Chat real; F02/lista Session vinculam owner e PromptInputV2 recebe rascunho sem submit, modelo ou novo registro. | NOT_RUN |
+| `draft-cancel-discard` | Diálogo nativo: cancelar preserva texto/URL/owner; confirmar navega para B e descarta; voltar a A não ressuscita o texto; inventários intactos e nenhum prompt enviado. | NOT_RUN |
+| `real-revoke-restore` | Painel original desabilita com CAS observado; catálogo/F02/403 confirmam corte e B intacto; restaura com revisão corrente e verifica cleanup. | NOT_RUN |
+| `logout-original-context` | POST original 204; contexto e janela antiga recebem 401 após reload; holder permanece admitido. Replay da mesma cookie após logout/restart permanece separado em AZ02. | NOT_RUN |
+
+Grants distintos são observados por autorização efetiva da mesma operação, com efeito e releitura; identidades diferentes ou um 403 genérico não bastam. A configuração deve conceder read/create/write ao requester e read sem create ao holder, por autoridades reais da reserva. Não há grant concedido automaticamente pelo executor. Resultados incertos são reconciliados por leitura, sem repetir mutações; limpeza incompleta impede recibo positivo.
+
+### Contrato instalado atual v3
+
+O [contrato da #672](https://github.com/gustavomhss/Orchestra-SF/blob/0b68b5d5cae2dc17267558702caa6536b45bc6d7/packages/app-shell/e2e/sucafina/g08/README.md) preserva os quatro contextos Microsoft originais, sem cópia de cookies/tokens/storageState. O fetch ocorre no browser original; nonce apenas correlaciona a resposta real e o peer HTTPS 443. F02 e listas emitidos pelas ações da UI são observados antes da releitura independente. O witness liga C/T/tar ao current, arquivos, PID/exe/factory, hostId, IMDS, listener e Caddy ativo antes/depois.
+
+O job `installed-teams-current` exige reserva exclusiva, autorização dos atores e das mutações temporárias (logout, disable/restore e criação/remoção dos IDs Session próprios). Label de runner e environment não constituem reserva. O transcript de grants fica privado e só seu hash vai ao recibo público. Não há chamada de modelo, prompt enviado ou payload de produção.
+
+Somente nove resultados reais sem skip/filtro/shard/retry, com host antes/depois e cleanup integral, podem produzir `sf-g08-current-installed-v3 / CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED`. **Esse recibo não foi produzido.** Mesmo esse futuro positivo manterá `g08Closed:false` enquanto U15/U39/U40/F04/AZ02 estiverem pendentes. O CLI não aceita conclusão manual como substituto dos relatórios originais.
+
+## Prova histórica da #659 — sete controles, alcance preservado
 
 A fonte testada é `0c40f0c26c4a9a56c3825d9bb4538fffb104ade4`, árvore `449b0d99afaf8d84aa4066fb255a88f040260e49`. O merge `a71033f21b2c0f7da508c96f302506a9e73fd145` registra sua integração em `dev`; o run abaixo continua vinculado à fonte testada, sem promoção automática de prova para outro SHA.
 
@@ -44,9 +82,9 @@ A coordenação adquiriu o ZIP e verificou independentemente digest, tamanho, CR
 
 Os warnings de remoção de declarações/assertions históricas e uso de `globalThis` foram mantidos e revisados. As obrigações removidas da seleção executável continuam obrigatórias no ledger; o transporte controlado pertence somente ao teste DOM de componente. Não houve waiver de guard, lista de exclusão ou conversão de obrigação pendente em skip aprovado. Omni foi `not applicable`, sem spawn ou delegação; esse run não produz prova Omni.
 
-O recibo atual declara `proofScope:"current-teams-subset"`, **sete casos `LISTED_NOT_RUN`**, todas as nove obrigações e os cinco grupos `NOT_RUN`, `coverage.complete:false`, `installed:false`, `g08Closed:false` e `productionCutover:false`. O resultado não comprova login corporativo, integração Microsoft instalada, grants reais, revogação real ou qualificação do tar.
+O recibo dessa versão declara `proofScope:"current-teams-subset"`, **sete casos `LISTED_NOT_RUN`**, todas as nove obrigações e os cinco grupos `NOT_RUN`, `coverage.complete:false`, `installed:false`, `g08Closed:false` e `productionCutover:false`. O resultado não comprova login corporativo, integração Microsoft instalada, grants reais, revogação real ou qualificação do tar.
 
-### Mapa das nove obrigações preservadas
+### Mapa histórico das nove obrigações na #659
 
 O [ledger de obrigações da #659](https://github.com/gustavomhss/Orchestra-SF/blob/0c40f0c26c4a9a56c3825d9bb4538fffb104ade4/packages/app-shell/e2e/sucafina/g08/obligations.json) conserva os IDs e títulos originais. “Integral” nesta tabela descreve a implementação disponível **depois de integrar os contratos exigidos**. Não significa PASS observado. Os sete IDs de controles aparecem na coluna central; os dois cenários ausentes não foram renomeados para controles da landing.
 
@@ -60,11 +98,11 @@ O [ledger de obrigações da #659](https://github.com/gustavomhss/Orchestra-SF/b
 | `narrow-keyboard-draft` | Sem controle executável equivalente. | **Ausente — NOT_RUN / BLOCKED_BY_PRODUCT_TEAM_CHAT_NOT_COMPOSED.** Chat e draft por teclado em Web estreita permanecem obrigatórios; a landing não os substitui. |
 | `draft-cancel-discard` | Sem controle executável equivalente. | **Ausente — NOT_RUN / BLOCKED_BY_PRODUCT_DRAFT_DISCARD_NOT_COMPOSED.** Cancelar deve preservar draft/Team; confirmar descarte deve mudar o owner sem transportar ou ressuscitar conteúdo. |
 | `real-revoke-restore` | `real-revoke-restore`: admin original executa disable com CAS observado; catálogo e F02 comprovam a revogação de A para ambos os atores, negócio 403 e B intacto; enable, releitura e cleanup restauram a configuração. | **Integral condicionada — NOT_RUN.** Requer política/admin realmente montados e autorização explícita para a mutação temporária. JSON/status manual não substitui revogação observada. |
-| `logout-original-context` | `logout-original-context`: POST original 204; contexto original e janela antiga após reload recebem 401; holder distinto permanece admitido. | **Integral no seu escopo — NOT_RUN.** Replay bruto de token, logout global Entra e restart continuam obrigações separadas de AZ02. |
+| `logout-original-context` | `logout-original-context`: POST original 204; contexto original e janela antiga após reload recebem 401; holder distinto permanece admitido. | **Integral no seu escopo — NOT_RUN.** AZ02 conserva logout da aplicação, limpeza das duas cookies e tentativa da mesma cookie de sessão após logout/restart; não exige logout global Entra. |
 
 O CAS administrativo usa a revisão exata retornada pelo produtor, inclusive tokens opacos. Após disable, a revisão da resposta deve coincidir com a do catálogo relido e diferir da anterior; restore usa a revisão corrente observada, sem aritmética `+1/+2` ou retry de mutação. Uma leitura original reconcilia resultado incerto somente com estados admitidos; falha de restauração impede o recibo.
 
-### Contrato instalado e limite do subconjunto
+### Contrato histórico v2 da #659
 
 A implementação e o contrato privado estão em [packages/app-shell/e2e/sucafina/g08/README.md](../../../../packages/app-shell/e2e/sucafina/g08/README.md). O job manual `installed-teams-current` da [workflow G08](../../../../.github/workflows/g08-private-preflight.yml) usa runner dedicado `[self-hosted, Linux, X64, orchestra-sf-g08-qa]` e ambiente `g08-isolated-qa`. Nomear runner/ambiente não cria a reserva nem a autoridade.
 
@@ -74,7 +112,7 @@ O browser se conecta a quatro contextos Microsoft originais distintos por CDP pr
 
 Revogação e logout exigem autorização da reserva; restauração do Team usa a revisão observada e cleanup obrigatório. Relatório bruto e plano permanecem privados; o recibo público contém apenas a lista permitida de fontes, casos, C/T/tar e hashes. O plano continua `sf-g08-private-plan-v1`, com referência da reserva, janela, VM, autorizações de atores e mutação, invocação, C/T, recibo G07, targets A/B/instalação estrangeira e os quatro atores reais.
 
-Somente uma execução instalada integral dos sete controles, com host antes/depois, relatório exato e cleanup, poderá produzir `sf-g08-current-installed-v2 / CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED`. **Esse recibo ainda não foi produzido.** Mesmo quando produzido, manterá `proofScope:"current-teams-subset"` e `g08Closed:false`: grants distintos, UI administrativa, chat/draft e U15/U39/U40/F04/AZ02 conservam suas obrigações e recibos. O verificador de fechamento recusa o subconjunto; não aceita documento manual de conclusão para substituir provas.
+Na versão #659, somente uma execução instalada integral dos sete controles, com host antes/depois, relatório exato e cleanup, poderá produzir `sf-g08-current-installed-v2 / CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED`. **Esse recibo ainda não foi produzido.** Mesmo quando produzido, manterá `proofScope:"current-teams-subset"` e `g08Closed:false`: grants distintos, UI administrativa, chat/draft e U15/U39/U40/F04/AZ02 conservam suas obrigações e recibos. O verificador de fechamento recusa o subconjunto; não aceita documento manual de conclusão para substituir provas.
 
 ## Prova histórica da #644
 
@@ -98,9 +136,9 @@ Essa prova certifica controles e inventário daquela ferramenta. A #659 substitu
 
 Os metadados e descrições dos PRs históricos foram lidos; aquelas execuções não foram repetidas por esta subfrente. As fontes históricas abaixo são insumos de preparação, sem herança de aprovação.
 
-## Primeiro bloqueio específico: composição de produto e reserva
+## Dependências atuais e referências da composição
 
-A #659 corrige o executor para o seletor nativo e os contratos observados de navegação e administração. Sua base de reconciliação foi `37931c77eb07aecf01610bb0ee7d717276b85539`. As fontes externas lidas foram:
+A #672 acrescenta os quatro oráculos que faltavam ou eram parciais na #659. Sua prova usa a composição explícita da tabela acima; o head puro da PR e o dev não foram apresentados como executados por esse run. A #665 ainda precisa concluir a integração do produto e ser revalidada antes do C final. A base histórica de reconciliação da #659 foi `37931c77eb07aecf01610bb0ee7d717276b85539`. As fontes externas lidas foram:
 
 - [Navegação #654 em 174ac4024c745e95d731daa23774c6afa79b21d5](https://github.com/gustavomhss/Orchestra-SF/blob/174ac4024c745e95d731daa23774c6afa79b21d5/packages/app-shell/src/pages/team-profile.tsx): seleção nativa, URL validada, intenção explícita, reload/history e logout.
 - [Projeção autenticada em 295eb0f01777657608cdceff2180f5efb7d8646b](https://github.com/gustavomhss/Orchestra-SF/blob/295eb0f01777657608cdceff2180f5efb7d8646b/modules/sucafina/Sucafinav1/runtime/team-profile-access.ts): principal em no-teams/revoked e autoridade administrativa independente da autorização de negócio.
@@ -108,9 +146,9 @@ A #659 corrige o executor para o seletor nativo e os contratos observados de nav
 
 Essas fontes são contratos observados, não um ACK do candidato final. Sua composição no C efetivamente instalado deve ser confirmada: presença de arquivo não prova rota montada nem autoridade. O preflight recusa pré-requisitos de fonte ausentes antes de conectar os browsers; F02, catálogo, ações e restauração precisam ser observados durante a execução.
 
-Os primeiros bloqueios específicos que permanecem nas fontes inspecionadas são **grants de negócio distintos observáveis**, **UI administrativa sem Team**, **chat/draft e cancelamento/descarte**, além da composição e seleção completas de **U15/U39/U40/F04/AZ02**. Uma API administrativa positiva não fecha a UI original; dois principais distintos não fecham grants distintos; a landing não fecha chat. As lacunas permanecem como bloqueios do produto, sem produtor sintético ou skip para aparentar conclusão.
+Os quatro oráculos de grants efetivos distintos, UI administrativa, Chat estreito e cancelamento/descarte estão implementados na #672 e reconciliados com os produtores da #665. O que permanece é integrar e qualificar essa composição no candidato final, reconciliar e executar integralmente **U15/U39/U40/F04/AZ02**, e observar o host e as autoridades reais. Nove controles listados e testes DOM controlados não encerram essas obrigações.
 
-Ainda faltam pin final, tar G07, reserva e atores/grants originais. A ausência de reserva operacional é independente dessas lacunas técnicas. O levantamento abaixo descreve consultas históricas de caminhos; não afirma a inexistência de qualquer outra rota e não nega a implementação atual em `g08/`.
+Os novos domínios Teams/CAPs e seus produtores de jornada pertencem a uma entrega posterior isolada; não estão declarados como entregues nem executados nesta publicação. Ainda faltam pin final, tar G07, reserva e atores/grants originais. A reserva operacional ainda não foi confirmada. A consulta Azure registrada no [índice de execução](execution-2026-11-22.md) foi bloqueada antes do login; não demonstrou inexistência de hosts ou reservas. O levantamento abaixo descreve consultas históricas de caminhos; não afirma a inexistência de qualquer outra rota e não nega a implementação atual em `g08/`.
 
 ### Levantamento histórico
 
@@ -157,7 +195,7 @@ O pin final é dependência global: Migração e Release devem confirmar SHA/ár
 | Ator autorizado nos dois Teams para A/B/A e duas janelas | Dono da autorização | Não confirmado |
 | Atores/ações de revogação, restauração de autorização e limpeza | Dono Entra/QA | Não confirmados |
 | Dados sintéticos por caso, escritores e política de limpeza | Dono dos dados QA | Não confirmados |
-| Executor, seletores exatos, captura e verificador | Astra + Migração | #659 integrada com sete controles; contratos devem compor o C instalado; nove obrigações originais e grupos completos permanecem pendentes |
+| Executor, seletores exatos, captura e verificador | Astra + integração Teams | #672 revisada com nove controles, testada na composição declarada; merge depende de #665. Contratos precisam compor C instalado; execução das nove obrigações e dos grupos completos permanece pendente |
 
 Aliases de ator e variáveis de ambiente não concedem autoridade. O host deve observar a sessão corporativa atual e os grants de cada principal. A prova de 222 (2) não reserva automaticamente o mesmo slot para esta frente.
 
@@ -189,6 +227,8 @@ O spec histórico `08fa179…` cobre partes de P03/P04/P05/P06/P07/P08 e navega�
 
 ### Seleções obrigatórias além do subconjunto atual
 
+A atribuição vem do [plano 736a](https://github.com/gustavomhss/Orchestra-SF/blob/736a5087c223629be4d73c8a4535d615fcafd96a/docs/architecture/teams-profile-test-plan.json): U15/U39/U40 e F04 têm `qualification.required:true` e `primaryGate:G08-NATIVE-TEAMS`; OVR-NATIVE exige invocações separadas e afirma que Teams as complementa. AZ02 é a dependência operacional LIVE transversal anexada a G08 e à agregação final. O ledger usa cinco grupos de acompanhamento; isso não os transforma em cinco suítes Playwright.
+
 O [inventário preservado](https://github.com/gustavomhss/Orchestra-SF/blob/0c40f0c26c4a9a56c3825d9bb4538fffb104ade4/packages/app-shell/e2e/sucafina/g08/obligations.json) registra os títulos, caminhos e blobs de origem em `687759276c2c9121c2cfd20a5994b277ceb7ee4d`. As contagens abaixo são obrigações preservadas; **nenhuma representa execução instalada nesta frente**.
 
 | Grupo | Inventário preservado | Dependência e evidência necessárias | Estado |
@@ -199,13 +239,13 @@ O [inventário preservado](https://github.com/gustavomhss/Orchestra-SF/blob/0c40
 | F04 | 3 controles originais | Guest no ingresso real; seletor moderno malformado recusado; cliente real com geração vencida comprova zero requests. Manifest instalado e invocação Bun/Happy DOM próprios. | NOT_RUN |
 | AZ02 | 6 fases, 32 registros de origem: preflight 14, actors 11, producer 2, after-revoke 2, logout 2, after-restart 1 | Adaptação tenant/Team/host/revisões; CAS 409 e validação 422 sem alteração de estado; revogação, cookies/replay e restart real do mesmo C/T/tar. | NOT_RUN |
 
-A rota reconciliada deve executar separadamente os papéis `teams`, `u15`, `u39` e `u40`, cada um com seu manifest/bundle privado admitido, inventário esperado, relatório privado e recibo. Os sete controles em `e2e/sucafina/g08/teams-installed.spec.ts` são o subconjunto atual de Teams e não fecham, sozinhos, o papel completo.
+A rota reconciliada deve executar separadamente os papéis `teams`, `u15`, `u39` e `u40`, cada um com seu manifest/bundle privado admitido, inventário esperado, relatório privado e recibo. Os nove controles da #672 em `e2e/sucafina/g08/teams-installed.spec.ts` são o subconjunto atual de Teams e não fecham, sozinhos, o papel completo.
 
 Os seletores históricos são `e2e/sucafina/native/teams-profile-linux.spec.ts`, `e2e/sucafina/native/journeys/u15.spec.ts`, `e2e/sucafina/native/journeys/u39.spec.ts` e `e2e/sucafina/native/journeys/u40.spec.ts`. São referências de reconciliação, não comandos atuais confirmados. Os caminhos de journeys/native manifest não existem na árvore base inspecionada da #659. Disponibilidade, composição e compatibilidade devem ser verificadas no candidato; nenhuma dependência legada foi importada nem console antigo reativado por esta adaptação.
 
 Nas invocações Playwright dos papéis `teams`, `u15`, `u39` e `u40`, a seleção completa exige `--workers=1 --retries=0 --repeat-each=1 --reporter=json`, sem filtro ou shard que reduza os casos obrigatórios. F04 mantém sua invocação Bun/Happy DOM, e AZ02 mantém suas seis fases no executor correspondente. Não reutilizar o bundle de um papel para validar outro. Conferir writer/reader do manifest, registry e callbacks por caso no executor final; os bloqueios históricos não provam o estado desses componentes em outro candidato.
 
-O agregado do plano também exige o quinto papel, `recovery`, além de Teams/U15/U39/U40 e F04/AZ02. Esse papel permanece com a frente responsável por G09; esta subfrente não assume seu dono nem emite seu recibo. G01–G04/pool, #349 e G09/#588 seguem fora desta escrita.
+O plano tem cinco papéis nativos: `teams`, `u15`, `u39`, `u40` e `recovery`. O papel `recovery` pertence a **G10**. F04 mantém sua execução Bun/Happy DOM; AZ02 é uma prova operacional LIVE transversal vinculada a G08 e ao agregado final, com 32 registros em seis fases, e não um quinto papel Playwright. O teste unitário de AZ02 pertence a G01 e não substitui a prova LIVE. G01–G04/pool preservam seus escritores ativos; #349 e G09/#588 seguem fora desta escrita.
 
 As fases AZ02 devem conservar os controles de origem/CSRF, identidade, negativas, revogação, logout e replay após restart, adaptados ao contexto Teams. Um restart de identidade não satisfaz sozinho o restore/rollback de G10.
 
@@ -230,33 +270,33 @@ O verificador deve consumir o resultado real, preservar o exit code e rejeitar s
 
 Relatórios brutos e material de autenticação ficam no fluxo privado autorizado: diretórios próprios 0700 e arquivos regulares 0600, sem symlinks conforme o contrato histórico. O recibo público deve usar uma lista explícita de campos permitidos; não copiar cookies, tokens, storageState, endpoint CDP, URLs privadas, payloads de negócio, screenshots, traces ou mensagens brutas que possam expô-los.
 
-O executor atual implementa captura privada e verificação estrita dos **sete controles**, além do ledger das **nove obrigações originais** e dos **cinco grupos**. O relatório instalado deve conter os sete resultados originais, workers 1, retries 0, sem filtro, shard, skip, falha ou resultado ausente, com exit code zero e cleanup completo. O verificador de fechamento exige inventários completos e únicos por ID, contagens exatas e PASS de todas as obrigações; rejeita listas vazias/parciais, duplicatas e IDs desconhecidos. Essa validação de completude não dispensa a proveniência: o CLI não aceita documento manual para promover execução não observada.
+O executor da #672 implementa captura privada e verificação estrita dos **nove controles**, mapeados às **nove obrigações originais**, e preserva os **cinco grupos no ledger como NOT_RUN**. O relatório instalado deve conter os nove resultados originais, workers 1, retries 0, sem filtro, shard, skip, falha ou resultado ausente, com exit code zero e cleanup completo. O verificador de fechamento exige inventários completos e únicos por ID, contagens exatas e PASS de todas as obrigações; rejeita listas vazias/parciais, duplicatas e IDs desconhecidos. Essa validação de completude não dispensa a proveniência: o CLI não aceita documento manual para promover execução não observada.
 
-A captura e seleção dos grupos mais amplos ainda exigem reconciliação e recibos próprios; o verde do job de ferramentas não os cobre. Os outputs de ferramentas da #659 ficam em RUNNER_TEMP, fora do checkout; os caminhos de evidência instalada continuam privados.
+A captura e seleção dos grupos mais amplos ainda exigem reconciliação e recibos próprios; o verde do job de ferramentas não os cobre. Os outputs de ferramentas ficam em RUNNER_TEMP, fora do checkout; os caminhos de evidência instalada continuam privados.
 
 ## Fechamento e sequência
 
-1. Confirmar no candidato da Migração os contratos de navegação e administração consumidos pela #659; compor grants distintos, UI administrativa, chat/draft e os grupos completos sem apagar obrigações pendentes.
+1. Concluir a integração #665 e incorporar a adaptação #672; confirmar no candidato os produtores originais de navegação, administração, Session e Chat/rascunhos. Reconciliar os cinco grupos completos sem apagar obrigações pendentes.
 2. Receber o pin final confirmado por Migração e Release e os gates prévios pertinentes.
 3. Confirmar reserva, Entra, atores/grants, dados e callbacks autorizados.
 4. Receber G07 verificado e instalar exatamente o tar atestado.
 5. Executar a matriz admitida, validar resultados e registrar a limpeza.
 6. Vincular o recibo ao G10 do mesmo tar para o fechamento agregado exigido pelo plano.
 
-G08 e G10 podem executar em paralelo após G07, em ambientes isolados autorizados. G08 recebe aprovação somente com as nove obrigações integralmente comprovadas, U15/U39/U40 completos em suas invocações, F04 e todas as fases AZ02, mesmo C/T/tar G07, atores/grants reais e cleanup/restauração observados. Sete controles instalados verdes ainda não satisfariam essa condição. A aprovação não libera a virada de produção.
+G08 e G10 podem executar em paralelo após G07, em ambientes isolados autorizados. G08 recebe aprovação somente com as nove obrigações integralmente comprovadas, U15/U39/U40 completos em suas invocações, F04 e todas as fases AZ02, mesmo C/T/tar G07, atores/grants reais e cleanup/restauração observados. Os nove controles Teams instalados verdes ainda precisariam dos cinco grupos completos e seus recibos para satisfazer essa condição. A reunião dos nove casos e cinco grupos não fecha automaticamente G01–G10 nem decide go/no-go. A aprovação de G08 não libera a virada de produção.
 
 ### Checkpoint
 
 | Campo | Registro |
 | --- | --- |
 | Dono | Astra preparação; dono operacional QA/Entra não confirmado |
-| SHA/árvore testados | `0c40f0c26c4a9a56c3825d9bb4538fffb104ade4` / `449b0d99afaf8d84aa4066fb255a88f040260e49`; candidato final pendente |
-| Integração | #659, merge `a71033f21b2c0f7da508c96f302506a9e73fd145`; não constitui ACK final |
-| Run/artefato | `45031917038`, tentativa 1, artefato `14758301449`; ZIP e inventário adquiridos e verificados independentemente |
+| SHA/árvore testados | Composição `90a8fced96f6cf0dfd408b0e3c393308fd5d50ce` / `53f0d767b4b90bd64004ec2789c9803d43bc361f`; candidato final pendente |
+| Integração | #659 permanece integrada; #672 revisada, com nove blobs do head `0b68b5d5cae2dc17267558702caa6536b45bc6d7`, aguardando #665. Nenhum ACK final implícito |
+| Run/artefato | `45038080944`, tentativa 1, artefato `14760243491`; ZIP/CRC, inventário e relatório DOM conferidos independentemente |
 | Artefato G07 / instalação | Tar final não recebido; nenhuma instalação comprovada nesta frente |
-| Recibo atual | `CURRENT_CONTRACT_INVENTORY_VERIFIED`; sete controles `LISTED_NOT_RUN`; nove obrigações e cinco grupos `NOT_RUN`; `installed:false`, `g08Closed:false` |
-| Cobertura implementada | Cinco obrigações integrais condicionadas, duas parciais, duas ausentes; nenhuma aprovada em ambiente instalado |
+| Recibo atual | `sf-g08-executor-inventory-v3 / CURRENT_CONTRACT_INVENTORY_VERIFIED`; nove controles `LISTED_NOT_RUN`; nove obrigações e cinco grupos `NOT_RUN`; `installed:false`, `g08Closed:false` |
+| Cobertura implementada | Nove obrigações com controles implementados e listados na composição declarada; nenhuma aprovada em ambiente instalado |
 | Prova reaproveitada | Compras 222 (2) preservada conforme briefing; #644 histórica e provas técnicas #586/#592/#604 mantidas nos seus SHAs e alcances |
-| Primeiro bloqueio específico | Grants distintos, UI administrativa, chat/draft e composição dos grupos completos; contratos do subconjunto ainda devem ser observados no C instalado |
+| Primeiro bloqueio específico | Integração #665/#672, qualificação dos cinco grupos, pin final e observação da composição no tar instalado |
 | Dependências operacionais | Pin final Migração + Release, G07, reserva QA, identidades/grants e callbacks/mutações autorizados |
 | Aprovação / produção | Nenhuma aprovação G08 emitida; `productionCutover:false`; janela e go/no-go de produção exigem decisão específica |

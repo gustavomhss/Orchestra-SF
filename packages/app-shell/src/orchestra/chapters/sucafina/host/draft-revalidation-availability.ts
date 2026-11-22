@@ -17,4 +17,3 @@ export function draftAvailability(
     return { status: "unavailable" }
   return
 }
-
