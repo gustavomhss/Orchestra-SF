@@ -44,11 +44,14 @@ const actions = new Set([
 
 /** The admitted Team supplies persistence and the original Entra Request. This mounts only the C17 journey. */
 export function createSfTeamCurrentChoice() {
-  const manifest: { skills: readonly { id: string; version: string; sourceDigest: string }[] } = JSON.parse(residentManifest)
+  // Bun loads the manifest as text, while the typechecker resolves the JSON object type.
+  const manifestText: unknown = residentManifest
+  if (typeof manifestText !== "string") throw new Error("SF_RESIDENT_MANIFEST_TEXT_REQUIRED")
+  const manifest: { skills: readonly { id: string; version: string; sourceDigest: string }[] } = JSON.parse(manifestText)
   const atlasVersions = {
     boundaryVersion: atlasPackage.version,
     schemaVersion: freeze.canonicalSha256,
-    manifestVersion: createHash("sha256").update(residentManifest).digest("hex"),
+    manifestVersion: createHash("sha256").update(manifestText).digest("hex"),
     skillVersion: digestSfValue(manifest.skills.map((skill) => ({
       id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest,
     }))),

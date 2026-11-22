@@ -1,0 +1,8 @@
+{
+  "id": "sf-vendor-review-gateway",
+  "name": "SF Supplier Review Gateway",
+  "description": "Read a supplier's number, legal name and registered status through the SF Gateway.",
+  "contracts": { "tools": ["sf-vendor-review__sf_read_vendor_review"] },
+  "activation": { "onStartup": true },
+  "configSchema": { "type": "object", "additionalProperties": false }
+}

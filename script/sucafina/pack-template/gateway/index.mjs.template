@@ -1,0 +1,58 @@
+import { Client } from "@modelcontextprotocol/sdk/client/index.js"
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js"
+import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry"
+
+const status = (value) => ({ content: [{ type: "text", text: JSON.stringify({ status: value }) }], isError: true })
+
+export default definePluginEntry({
+  id: "__PLUGIN__",
+  name: "SF __SLUG__ Gateway",
+  description: "Expose the __SLUG__ read tool through the SF Gateway.",
+  register(api) {
+    api.registerTool((context) => ({
+      name: "__GATEWAY_TOOL__",
+      label: "Read __SLUG__ record",
+      description: "Read a record visible to the paired SF session.",
+      parameters: {
+        type: "object",
+        properties: { recordRef: { type: "string", minLength: 1, maxLength: 512 } },
+        required: ["recordRef"],
+        additionalProperties: false,
+      },
+      async execute(_callId, args, signal) {
+        if (!args || Object.keys(args).length !== 1 || typeof args.recordRef !== "string" ||
+            !args.recordRef.trim() || args.recordRef.length > 512) return status("invalid")
+
+        const config = context.getRuntimeConfig?.() ?? context.runtimeConfig ?? context.config
+        const server = config?.mcp?.servers?.["__SERVER__"]
+        const token = process.env.__TOKEN_ENV__
+        if (server?.enabled !== true || server.transport !== "streamable-http" ||
+            server.toolFilter?.include?.length !== 1 || server.toolFilter.include[0] !== "__MCP_TOOL__" ||
+            server.toolFilter.exclude?.length || !token || !/^[a-f0-9]{64}$/.test(token) ||
+            !URL.canParse(server.url)) return status("unavailable")
+
+        const endpoint = new URL(server.url)
+        if (endpoint.protocol !== "https:" || endpoint.pathname !== "__MCP_PATH__" ||
+            endpoint.username || endpoint.password || endpoint.search || endpoint.hash) return status("unavailable")
+
+        const timeout = 60_000
+        const deadline = AbortSignal.timeout(timeout)
+        const requestSignal = signal ? AbortSignal.any([signal, deadline]) : deadline
+        const transport = new StreamableHTTPClientTransport(endpoint, {
+          requestInit: { headers: { Authorization: `Bearer ${token}` } },
+          fetch: (input, init) => fetch(input, { ...init, redirect: "error", signal: requestSignal }),
+        })
+        const client = new Client({ name: "__PLUGIN__", version: "1" })
+        try {
+          await client.connect(transport, { signal: requestSignal, timeout })
+          return await client.callTool({ name: "__MCP_TOOL__", arguments: { recordRef: args.recordRef } },
+            undefined, { signal: requestSignal, timeout })
+        } catch {
+          return status("unavailable")
+        } finally {
+          await client.close().catch(() => undefined)
+        }
+      },
+    }), { names: ["__GATEWAY_TOOL__"], optional: true })
+  },
+})

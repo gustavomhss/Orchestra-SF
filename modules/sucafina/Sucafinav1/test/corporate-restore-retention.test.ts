@@ -10,6 +10,7 @@ import {
   inspectSfProductRestoreFrontier,
 } from "../product/host-binding/state-provider.ts"
 import { publicSfData, SF_PROCUREMENT_CREATE_RECEIPTS } from "../product/integration/public-state.ts"
+import type { AssetPersistence } from "../runtime/assets.ts"
 import { createCorporateRecoveryHttp } from "../runtime/corporate-recovery-http.ts"
 import { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
 import { createLocalBackups } from "../runtime/local-backups.ts"
@@ -57,9 +58,10 @@ test("external restore comparison rejects a stale effect frontier and restore ke
   const control = new Database(registerFile, { strict: true })
   try {
     const store = await open()
+    const assets: AssetPersistence = store
     const backups = await createLocalBackups(join(directory, "backups-teams", partition))
     await initializeAbsentSfProductState(store, () => "product-incarnation")
-    await store.transaction("dashboard", async (snapshot, blobs) => {
+    await assets.transaction("dashboard", async (snapshot, blobs) => {
       snapshot.data.restoreMarker = "checkpoint"
       snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "former-admin" }]
       snapshot.data.access = { former: { assigned: ["Operations"] } }
@@ -95,7 +97,7 @@ test("external restore comparison rejects a stale effect frontier and restore ke
       return { commit: true, value: "confirmed-1" }
     })
     expect(original).toMatchObject({ status: "ok", storageVersion: 1, aggregateRevision: 1, value: "confirmed-1" })
-    await store.transaction("dashboard", async (snapshot, blobs) => {
+    await assets.transaction("dashboard", async (snapshot, blobs) => {
       Object.assign(snapshot.data, policy, { restoreMarker: "later" })
       delete snapshot.data.summaries
       snapshot.data[SF_PROCUREMENT_CREATE_RECEIPTS] = { confirmed: true }
@@ -143,7 +145,7 @@ test("external restore comparison rejects a stale effect frontier and restore ke
     expect(inspectSfProductRestoreFrontier(proposed)).toEqual(frontier)
     expect(await read(store)).toEqual(current)
 
-    const readAsset = () => store.transaction("dashboard", async (_snapshot, blobs) =>
+    const readAsset = () => assets.transaction("dashboard", async (_snapshot, blobs) =>
       ({ commit: false, value: await blobs.get(assetKey) }))
     const restore = (verifyCurrent: () => Promise<boolean>) =>
       restoreBackup(store, backups.source, "dashboard", archive.id, actor, true, current.versions.dataset?.version ?? 0, at, {

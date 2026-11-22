@@ -3,6 +3,7 @@ import { AbsolutePath } from "@orchestra/schema/schema"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import type { SfHostServices } from "../product/contracts/host-context.ts"
 import type { Application } from "./application.ts"
+import type { AssetPersistence } from "./assets.ts"
 import { object } from "./contract.ts"
 import { createDecisionCasePort } from "../product/decisions/case-port.ts"
 import { draftCase } from "../product/decisions/capabilities.ts"
@@ -31,19 +32,21 @@ export async function runTeamDecisions(input: {
     location: Object.freeze({ directory: AbsolutePath.make(directory) }),
   })
   const unavailable = () => Promise.reject(new Error("Team Decisions evidence provider unavailable"))
+  const assets: AssetPersistence = persistence
+  const guardedPersistence = {
+    ...persistence,
+    transaction: (surface, work, options) => assets.transaction(surface, async (snapshot, blobs) => {
+      const result = await work(snapshot, blobs)
+      if (result.commit && !await current()) throw new Error("Team Decisions authority changed before commit")
+      return result
+    }, options),
+  } satisfies AssetPersistence
   const authority = createSfProductAuthority({
     identity: () => hostIdentity,
     installationId: partition,
     origin,
     policyVersion: "sf-product-v1",
-    persistence: {
-      ...persistence,
-      transaction: (surface, work, options) => persistence.transaction(surface, async (snapshot, blobs) => {
-        const result = await work(snapshot, blobs)
-        if (result.commit && !await current()) throw new Error("Team Decisions authority changed before commit")
-        return result
-      }, options),
-    },
+    persistence: guardedPersistence,
     authenticate,
     environment: async () => ({ at: at(), id: randomUUID, directory: [] }),
     grants: [{ principalRef: principalId, namespaces: ["cases"], operations: ["sf_case_draft"] }],

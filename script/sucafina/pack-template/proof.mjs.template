@@ -1,0 +1,20 @@
+import assert from "node:assert/strict"
+import { registerTool } from "./mcp/index.mjs"
+
+const refs = { A: "TEST-A", B: "TEST-B" }
+
+export const gatewayProof = {
+  pack: new URL("./", import.meta.url),
+  serverId: "__SERVER__",
+  requestKey: "recordRef",
+  refs,
+  register(server, schemas, actor, observe) {
+    registerTool(server, schemas, async (ref) => {
+      observe(ref)
+      if (refs[actor] === ref) return { ref, title: `Fixture ${actor}`, privateNote: "Never returned" }
+    })
+  },
+  assertOwn(payload, actor) {
+    assert.deepEqual(payload, { status: "ok", record: { ref: refs[actor], title: `Fixture ${actor}` } })
+  },
+}

@@ -150,11 +150,19 @@ const layer = Layer.effect(
       const session = yield* sessions.get(sessionID)
       if (!session) return yield* new SessionV2.NotFoundError({ sessionID })
       const agent = yield* agents.resolve(agentID ?? session.agent)
-      return agent?.permissions ?? missingAgentPermissions
+      const sessionRules = yield* sessions.permissions(sessionID)
+      return [agent?.permissions ?? missingAgentPermissions, sessionRules] as const
     })
 
-    function denied(input: AssertInput, rules: Permission.Ruleset) {
-      return input.resources.some((resource) => evaluate(input.action, resource, rules).effect === "deny")
+    function denied(input: AssertInput, rulesets: readonly Permission.Ruleset[]) {
+      // Each configured ruleset keeps its order. An effective deny in either
+      // ruleset blocks permission granted by another ruleset or saved approval.
+      return (
+        input.resources.length === 0 ||
+        rulesets.some((rules) =>
+          input.resources.some((resource) => evaluate(input.action, resource, rules).effect === "deny"),
+        )
+      )
     }
 
     function relevant(input: AssertInput, rules: Permission.Ruleset) {
@@ -162,8 +170,9 @@ const layer = Layer.effect(
     }
 
     const evaluateInput = EffectRuntime.fnUntraced(function* (input: AssertInput) {
-      const rules = yield* configured(input.sessionID, input.agent)
-      if (denied(input, rules)) return { effect: "deny" as const, rules }
+      const configuredRules = yield* configured(input.sessionID, input.agent)
+      const rules = configuredRules.flat()
+      if (denied(input, configuredRules)) return { effect: "deny" as const, rules }
       const all = [...rules, ...(yield* savedRules())]
       const effects = input.resources.map((resource) => evaluate(input.action, resource, all).effect)
       const effect: Permission.Effect = effects.includes("deny") ? "deny" : effects.includes("ask") ? "ask" : "allow"
@@ -258,7 +267,7 @@ const layer = Layer.effect(
       EffectRuntime.uninterruptibleMask((restore) =>
         EffectRuntime.gen(function* () {
           const rules = yield* configured(input.sessionID, input.agent)
-          if (denied(input, rules)) return yield* new BlockedError({ rules: relevant(input, rules) })
+          if (denied(input, rules)) return yield* new BlockedError({ rules: relevant(input, rules.flat()) })
           const item = yield* create(request(input, true), input.agent, true)
           return yield* restore(Deferred.await(item.deferred)).pipe(
             EffectRuntime.onInterrupt(() => cancel(item.request.id)),
@@ -318,10 +327,9 @@ const layer = Layer.effect(
             )
             if (!rules) continue
             if (denied(input, rules)) continue
-            const effective = [...rules, ...rememberedRules]
             if (
               !item.request.resources.every(
-                (resource) => evaluate(item.request.action, resource, effective).effect === "allow",
+                (resource) => evaluate(item.request.action, resource, ...rules, rememberedRules).effect === "allow",
               )
             )
               continue

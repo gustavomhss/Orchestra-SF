@@ -1,19 +1,25 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import path from "node:path"
 import { AbsolutePath } from "@orchestra/schema/schema"
+import { registerTool } from "../../../../modules/sucafina/Sucafinav1/product/ai/packs/vendor-review/mcp/index.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import { createSfClawMcpHandler } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/claw-mcp.ts"
+import { createSfClawMcpHandler, createSfMcpRequestHandler } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/claw-mcp.ts"
 import { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { projectSfProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+import type { AssetPersistence } from "../../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
+import { rows } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { LocalIdentity, LocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
 import { openLocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import type { MicrosoftConfiguration } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts"
+import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { readRequestBody } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
 import type { createTeamProfileAccess } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-access.ts"
 import { emptyMap } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
+import type { ResolvedActor } from "../../../../modules/sucafina/Sucafinav1/src/identity.ts"
+import { openProcurement } from "../../../../modules/sucafina/Sucafinav1/src/nav.ts"
 import { createSfBusinessServices } from "./business-services.ts"
 import { createSfProductDispatch } from "./contribution.ts"
 import { sfNativeLocationRef } from "./native-identity.ts"
@@ -27,17 +33,75 @@ const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
 const denied = () => new Response(null, { status: 403, headers })
 const hash = (token: string) => createHash("sha256").update(token).digest("hex")
 
-export function createSfTeamPurchaseMcp(input: {
+type TeamMcpInput = {
   config: MicrosoftConfiguration
   directory: string
-  period: Readonly<Period>
   identity: Pick<LocalIdentity, "authenticate">
   authorizeTeam: TeamAccess
   now: () => Date
+}
+
+type PairedRequest = {
+  actor: ResolvedActor
+  current: () => Promise<boolean>
+  publishable: () => Promise<boolean>
+  request: Request
+  team: string
+  partition: string
+  directory: string
+  store: LocalStore
+}
+
+export function createSfTeamPurchaseMcp(input: TeamMcpInput & { period: Readonly<Period> }) {
+  return createPairedProcurementMcp(input, {
+    purpose: "purchases", path: "/api/claw", operations,
+    handle: (scope) => purchaseRuntime({
+      ...scope, origin: input.config.origin, mount: input.config.mount, period: input.period,
+      principal: scope.actor.id, now: input.now, current: scope.publishable,
+      authenticate: async (request, context) =>
+        request === scope.request && context?.surface === "procurement" && await scope.current() ? scope.actor : null,
+    })(scope.request),
+  })
+}
+
+export function createSfTeamSupplierMcp(input: TeamMcpInput) {
+  const path = "/api/claw/vendor-review"
+  return createPairedProcurementMcp(input, {
+    purpose: "vendor-review", path, operations: ["sf_supplier_read"],
+    handle: (scope) => createSfMcpRequestHandler({
+      origin: input.config.origin,
+      pathname: input.config.mount + path + "/mcp",
+      authenticate: async (request) => request === scope.request && await scope.current(),
+      register(server, _request, schemas) {
+        registerTool(server, schemas, async (ref, signal) => {
+          const roles = scope.actor.roles.filter((role) => role.surface === "procurement").map((role) => role.role)
+          if (!openProcurement("Suppliers", { roles }).drawn) return undefined
+          return scope.store.transaction("procurement", async (snapshot) => {
+            if (signal.aborted || !await scope.current()) return { commit: false, value: undefined }
+            const view = domain.view(snapshot, { id: scope.actor.id, roles, canWrite: false }, {
+              at: input.now().toISOString(), id: randomUUID, directory: [], directoryScope: "team",
+            })
+            const matches = rows(view.data.suppliers).filter((supplier) => supplier.number === ref)
+            const [supplier] = matches
+            const value = matches.length === 1 && typeof supplier?.legalName === "string" &&
+              typeof supplier.status === "string" ? { ref, legalName: supplier.legalName, status: supplier.status } : undefined
+            return { commit: false, value }
+          }, { signal, sealedRead: true })
+        })
+      },
+    })(scope.request),
+  })
+}
+
+function createPairedProcurementMcp(input: TeamMcpInput, pack: {
+  purpose: string
+  path: string
+  operations: readonly string[]
+  handle: (request: PairedRequest) => Promise<Response | undefined>
 }) {
   const { config, identity, authorizeTeam, now } = input
-  const connectPath = config.mount + "/api/claw/connect"
-  const mcpPath = config.mount + "/api/claw/mcp"
+  const connectPath = config.mount + pack.path + "/connect"
+  const mcpPath = config.mount + pack.path + "/mcp"
   const roles = emptyMap().filter((row) => row.surface === "procurement")
     .map((row) => ({ ...row, entra: config.groups.procurement[row.role] ?? null }))
   const credentials = new Map<string, { cookie: string; expiresAt: number; principal: string; team: string; partition: string }>()
@@ -59,7 +123,7 @@ export function createSfTeamPurchaseMcp(input: {
     const matching = config.grants.filter((grant) => grant.principalRef === principal)
     const [grant] = matching
     const configured = grant?.operations
-    return matching.length === 1 && Array.isArray(configured) && operations.every((operation) => configured.includes(operation))
+    return matching.length === 1 && Array.isArray(configured) && pack.operations.every((operation) => configured.includes(operation))
   }
 
   return async (request: Request) => {
@@ -70,7 +134,7 @@ export function createSfTeamPurchaseMcp(input: {
       request.headers.get("sec-fetch-site") === "cross-site") return denied()
     if (url.pathname === connectPath) {
       if (request.headers.has("authorization") || request.headers.get("origin") !== config.origin ||
-        request.headers.get("x-sf-claw-purpose") !== "purchases") return denied()
+        request.headers.get("x-sf-claw-purpose") !== pack.purpose) return denied()
       const cookies = (request.headers.get("cookie") ?? "").split(";").map((cookie) => cookie.trim())
         .filter((cookie) => /^__Secure-sucafina_[0-9a-f]{12}_session=[0-9a-f]{64}$/.test(cookie))
       if (cookies.length !== 1 || (await readRequestBody(request, 0).catch(() => undefined)) === undefined) return denied()
@@ -117,10 +181,8 @@ export function createSfTeamPurchaseMcp(input: {
     const directory = path.join(input.directory, "business-teams", credential.partition)
     const store = await openLocalStore(directory)
     try {
-      const handle = purchaseRuntime({ origin: config.origin, mount: config.mount, period: input.period,
-        directory, partition: credential.partition, team: credential.team, principal: credential.principal, request: admitted, store,
-        authenticate: async (original, purpose) => original === admitted && purpose?.surface === "procurement" && await current() ? actor : null, current: publishable, now })
-      const response = await handle(admitted)
+      const response = await pack.handle({ actor, current, publishable, request: admitted, directory,
+        partition: credential.partition, team: credential.team, store })
       if (await publishable()) return response
       void response?.body?.cancel().catch(() => undefined)
       return denied()
@@ -138,10 +200,11 @@ function purchaseRuntime(input: {
   const identity = Object.freeze({ installationId: input.partition, projectId: input.partition,
     hostId: digestSfValue({ partition: input.partition, capability: "purchase-mcp" }),
     location: sfNativeLocationRef({ directory: AbsolutePath.make(input.directory) }) })
+  const assets: AssetPersistence = input.store
   const persistence = createSfSourcePersistence({
     persistence: {
       ...input.store,
-      transaction: (surface, work, options) => input.store.transaction(surface, async (snapshot, blobs) => {
+      transaction: (surface, work, options) => assets.transaction(surface, async (snapshot, blobs) => {
         const result = await work(snapshot, blobs)
         // Only scoped source observations can write, and only under the live pairing.
         if (result.commit && !await input.current()) throw new Error("Purchase MCP authority changed")

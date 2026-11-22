@@ -889,12 +889,13 @@ export const createSfHostRuntimeWithRoutineNative = async (
     } })
   const node = makeGlobalNode({
     name: "sucafina/host-context",
-    deps: [ProjectV2.node, SessionStore.node, LocationServiceMap.node, AppProcess.node],
+    deps: [ProjectV2.node, SessionStore.node, LocationServiceMap.node, AppProcess.node, FSUtil.node],
     layer: Layer.effectDiscard(Effect.gen(function* () {
       const projects = yield* ProjectV2.Service
       const store = yield* SessionStore.Service
       const locations = yield* LocationServiceMap.Service
       const process = yield* AppProcess.Service
+      const fs = yield* FSUtil.Service
       const scanner = yield* Effect.promise(() => probeSfAtlasScanner(process))
       business.initializeAtlas(scanner, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
         manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
@@ -956,7 +957,6 @@ export const createSfHostRuntimeWithRoutineNative = async (
           if (!facts || facts.sessionID !== session.id || facts.skillName !== SF_ROUTINE_PHASE_PLAYBOOK ||
             !facts.source.reserved || facts.source.key !== source.key ||
             facts.source.location !== winner.location || !/^[a-f0-9]{64}$/.test(facts.source.contentDigest)) return false
-          const fs = yield* FSUtil.Service
           const currentMaterial = yield* SkillTool.load(fs, winner, SkillV2.children(catalog, winner))
           const delivered = yield* resources.store.message(facts.loadedMessageID)
           yield* skills.list()

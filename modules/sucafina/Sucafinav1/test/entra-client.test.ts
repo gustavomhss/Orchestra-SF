@@ -678,7 +678,7 @@ for (const scenario of [
   { name: "foreign team tenant", data: { value: [teamRow(), { ...teamRow(teamB), tenantId: other }] }, reason: "invalid_response" },
   { name: "duplicate team identity", data: { value: [teamRow(), teamRow(teamA.toUpperCase())] }, reason: "invalid_response" },
   { name: "incomplete total", data: { value: [teamRow()], "@odata.count": 2 }, reason: "incomplete" },
-]) {
+] as const) {
   test(`Teams rejects ${scenario.name} without returning partial membership`, async () => {
     const f = await fixture({ teams: "direct", grantedScopes: teamScope, route: (request) =>
       request.url === joinedUrl ? Response.json(scenario.data) : undefined })

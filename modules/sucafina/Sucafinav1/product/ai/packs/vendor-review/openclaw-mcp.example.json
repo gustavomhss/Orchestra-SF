@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "url": "https://sf.example.invalid/sucafina/api/claw/vendor-review/mcp",
+  "transport": "streamable-http",
+  "headers": { "Authorization": "Bearer ${SF_VENDOR_REVIEW_TOKEN}" },
+  "toolFilter": { "include": ["sf_read_vendor_review"] }
+}
