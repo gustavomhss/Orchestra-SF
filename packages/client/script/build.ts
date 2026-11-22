@@ -27,12 +27,12 @@ await Effect.runPromise(
           splitGroups,
           outputTypes: {
             "sessions.events": {
-              name: "SessionEventEncoded",
-              import: 'import type { SessionEventEncoded } from "../wire"',
+              name: "SessionEventTransportEncoded",
+              import: 'import type { SessionEventTransportEncoded } from "../wire"',
             },
             "events.subscribe": {
-              name: "OrchestraEventEncoded",
-              import: 'import type { OrchestraEventEncoded } from "@orchestra/protocol/groups/event"',
+              name: "OrchestraEventTransportEncoded",
+              import: 'import type { OrchestraEventTransportEncoded } from "@orchestra/protocol/groups/event"',
             },
           },
         }),

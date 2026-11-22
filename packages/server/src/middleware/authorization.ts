@@ -1,4 +1,6 @@
 import { ServerAuth } from "../auth"
+import type { SessionOwner } from "@orchestra/core/session/owner"
+import { guardSessionEndpoint, unauthorized } from "../session-access"
 import { UnauthorizedError } from "@orchestra/protocol/errors"
 import { Authorization } from "@orchestra/protocol/middleware/authorization"
 export { Authorization } from "@orchestra/protocol/middleware/authorization"
@@ -39,22 +41,30 @@ function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
   return Effect.succeed(emptyCredential())
 }
 
-export const authorizationLayer = Layer.effect(
+export const authorizationLayerWith = (owners?: SessionOwner.Interface) => Layer.effect(
   Authorization,
   Effect.gen(function* () {
     const config = yield* ServerAuth.Config
-    if (!ServerAuth.required(config)) return Authorization.of((effect) => effect)
-    return Authorization.of((effect) =>
+    const protect = <A, E, R>(effect: Effect.Effect<A, E, R>, group: string, endpoint: string) =>
+      Effect.gen(function* () {
+        if (!owners || group === "server.health") return yield* effect
+        const scope = yield* owners.open().pipe(Effect.mapError(unauthorized))
+        const value = yield* guardSessionEndpoint(owners, group, endpoint, effect)
+        yield* owners.verify(scope).pipe(Effect.mapError(unauthorized))
+        return value
+      })
+    return Authorization.of((effect, options) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
         // Browsers cannot set headers on WebSocket upgrades, so a ticketed PTY connect skips
         // credential checks here; the connect handler consumes and validates the ticket.
         const url = new URL(request.url, "http://localhost")
-        if (hasPtyConnectTicketURL(url)) return yield* effect
+        if (hasPtyConnectTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         // Media elements cannot send headers either; the content handler verifies the HMAC ticket.
-        if (hasCapabilityContentTicketURL(url)) return yield* effect
+        if (hasCapabilityContentTicketURL(url)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
+        if (!ServerAuth.required(config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         const credential = yield* credentialFromRequest(request)
-        if (ServerAuth.authorized(credential, config)) return yield* effect
+        if (ServerAuth.authorized(credential, config)) return yield* protect(effect, options.group.identifier, options.endpoint.name)
         yield* HttpEffect.appendPreResponseHandler((_request, response) =>
           Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
         )
@@ -63,3 +73,5 @@ export const authorizationLayer = Layer.effect(
     )
   }),
 )
+
+export const authorizationLayer = authorizationLayerWith()

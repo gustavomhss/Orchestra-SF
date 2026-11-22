@@ -8,7 +8,7 @@ import type { SfCallOptions } from "@orchestra/client/sucafina/transport"
 import type {
   SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef, SfResolvedRoute, SfOperationId,
 } from "@orchestra/schema/sucafina/context"
-import { useSfContext } from "../../context"
+import { useSfReadableContext as useSfContext } from "../../context"
 import type { SfPublicDraftController } from "../../context/contracts"
 import {
   SfPageFrame, type SfAction, type SfCopyKey, type SfDisplayValue,

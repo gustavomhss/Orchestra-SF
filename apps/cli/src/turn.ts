@@ -1,9 +1,16 @@
 import type { Orchestra, PermissionsListRequestsOutput, SessionsEventsOutput } from "@orchestra/client"
 
 type Client = ReturnType<typeof Orchestra.make>
-export type Event = SessionsEventsOutput
+export type Event = Exclude<SessionsEventsOutput, { readonly namespace: unknown }>
 export type PermissionRequest = PermissionsListRequestsOutput["data"][number]
 export type Reply = "once" | "always" | "reject"
+
+class TeamSessionUnsupportedError extends Error {
+  constructor() { super("Team sessions require a client that validates their owner and authority generation") }
+}
+function technicalNamespace(namespace: unknown) {
+  if (namespace !== undefined) throw new TeamSessionUnsupportedError()
+}
 
 /**
  * Drives one admitted prompt (or command) to completion: streams the session's durable events from before the prompt,
@@ -24,7 +31,8 @@ export async function runTurn(
 ) {
   const baseline = await lastSeq(client, input.sessionID)
   const state = { seq: baseline ?? -1, promoted: new Set<string>() }
-  const deliver = (event: Event) => {
+  const deliver = (event: SessionsEventsOutput) => {
+    if ("namespace" in event) throw new TeamSessionUnsupportedError()
     const seq = event.durable?.seq
     if (seq !== undefined) {
       if (seq <= state.seq) return
@@ -35,37 +43,40 @@ export async function runTurn(
   }
 
   const stop = new AbortController()
-  input.signal?.addEventListener("abort", () => stop.abort(), { once: true })
+  const onAbort = () => stop.abort()
+  input.signal?.addEventListener("abort", onAbort, { once: true })
+  const failure: { error?: TeamSessionUnsupportedError } = {}
   const stream = (async () => {
     for await (const event of client.sessions.events({ sessionID: input.sessionID, after: baseline }, { signal: stop.signal })) deliver(event)
-  })().catch(() => undefined)
+  })().catch((error: unknown) => {
+    if (error instanceof TeamSessionUnsupportedError) { failure.error = error; stop.abort() }
+  })
   const permissions = answerPermissions(client, input.sessionID, input.location, stop.signal, input.onPermission)
 
-  const admitted = await input.submit().catch((error) => (error instanceof Error ? error : new Error(JSON.stringify(error))))
-  if (admitted instanceof Error) {
-    stop.abort()
-    await Promise.all([stream, permissions])
-    throw admitted
-  }
-
-  const finished = await (async () => {
+  try {
+    if (failure.error) throw failure.error
+    const admitted = await input.submit()
     for (let attempt = 0; attempt < 40; attempt++) {
+      if (failure.error) throw failure.error
       await client.sessions.wait({ sessionID: input.sessionID })
+      if (failure.error) throw failure.error
       await flush(client, input.sessionID, state, deliver)
       if (state.promoted.has(admitted.id)) return true
       await Bun.sleep(250)
     }
     return false
-  })()
-  stop.abort()
-  await Promise.all([stream, permissions])
-  return finished
+  } finally {
+    stop.abort()
+    input.signal?.removeEventListener("abort", onAbort)
+    await Promise.all([stream, permissions])
+  }
 }
 
 async function lastSeq(client: Client, sessionID: string) {
   let after: number | undefined
   while (true) {
     const page = await client.sessions.history({ sessionID, after })
+    technicalNamespace(page.namespace)
     after = page.data.at(-1)?.durable?.seq ?? after
     if (!page.hasMore) return after
   }
@@ -74,6 +85,7 @@ async function lastSeq(client: Client, sessionID: string) {
 async function flush(client: Client, sessionID: string, state: { seq: number }, deliver: (event: Event) => void) {
   while (true) {
     const page = await client.sessions.history({ sessionID, after: state.seq < 0 ? undefined : state.seq })
+    technicalNamespace(page.namespace)
     page.data.forEach((event) => deliver(event as Event))
     if (!page.hasMore) return
   }

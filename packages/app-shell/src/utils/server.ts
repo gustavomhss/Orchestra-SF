@@ -1,4 +1,4 @@
-import { Orchestra } from "@orchestra/client"
+import { ClientError, Orchestra } from "@orchestra/client"
 import type { ServerConnection } from "@/context/server"
 import type {
   RequestOptions,
@@ -73,7 +73,14 @@ function buildServerApi(input: {
         orchestra.sessions.list(value, requestOptions),
       create: (value?: Parameters<typeof orchestra.sessions.create>[0], requestOptions?: Parameters<typeof orchestra.sessions.create>[1]) =>
         orchestra.sessions.create(value, requestOptions),
-      active: (requestOptions?: Parameters<typeof orchestra.sessions.active>[0]) => orchestra.sessions.active(requestOptions),
+      active: (requestOptions?: Parameters<typeof orchestra.sessions.active>[0]) =>
+        orchestra.sessions.active(requestOptions).then((response) => {
+          // This technical consumer has no admitted owner with which to validate a corporate namespace.
+          if (response === null || typeof response !== "object" || "namespace" in response ||
+              response.data === null || typeof response.data !== "object" || Array.isArray(response.data))
+            throw new ClientError("MalformedResponse")
+          return response.data
+        }),
       get: (value: Parameters<typeof orchestra.sessions.get>[0], requestOptions?: Parameters<typeof orchestra.sessions.get>[1]) =>
         orchestra.sessions.get(value, requestOptions),
       remove: (value: Parameters<typeof orchestra.sessions.remove>[0], requestOptions?: Parameters<typeof orchestra.sessions.remove>[1]) =>

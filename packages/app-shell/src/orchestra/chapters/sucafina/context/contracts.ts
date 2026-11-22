@@ -1,6 +1,6 @@
 import type { Accessor, JSX } from "solid-js"
 import type {
-  SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
+  SfContext, SfReadableContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
   SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId, SfOperationRef,
 } from "@orchestra/schema/sucafina/context"
@@ -13,7 +13,7 @@ import type { SfTodayResumePort } from "../home"
 import type { SfBudgetPeriodPort } from "../navigation-state/budget-period"
 
 export type {
-  SfContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
+  SfContext, SfReadableContext, SfContextResult, SfContextStamp, SfEditScopeKey, SfExpectedContextBinding,
   SfInstallationDescriptor, SfInstallationList, SfOwnerKey, SfOwnerSelection,
   SfResolvedRoute, SfVersion, SurfaceId, SfRef,
 } from "@orchestra/schema/sucafina/context"
@@ -31,14 +31,14 @@ export type SfOwnerIdentity = Readonly<{
   principalRef: string
   authEpoch: number
 }>
-export type SfContextState =
+export type SfContextState<Context extends SfReadableContext = SfContext> =
   | Readonly<{ status: "resolving"; selection: SfOwnerSelection }>
   | Readonly<{ status: "choose-installation"; selection: SfOwnerSelection; installations: readonly SfInstallationDescriptor[] }>
   | Readonly<{ status: "unauthenticated"; selection: SfOwnerSelection; binding: SfInstallationDescriptor }>
   | Readonly<{ status: "denied"; selection: SfOwnerSelection }>
   | Readonly<{ status: "unavailable"; selection: SfOwnerSelection; reason: "installation-unavailable" | "identity-unavailable" | "host-unavailable" | "connection-auth-unavailable" | "connection-unapproved" | "network" | "contract-mismatch" }>
   | Readonly<{ status: "context-mismatch"; selection: SfOwnerSelection }>
-  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: SfContext }>
+  | Readonly<{ status: "ready"; selection: SfOwnerSelection; ownerKey: SfOwnerKey; owner: SfOwnerIdentity; binding: SfInstallationDescriptor; context: Context }>
 
 export type SfPublicDraftController<Value> = Pick<
   SfDraftController<Value>, "snapshot" | "edit" | "discard" | "receiveRemote" | "setPhase" | "setPending" | "confirmSave" | "rejectSave"
@@ -69,6 +69,11 @@ export type SfDraftRevalidation =
   | Readonly<{ status: "authorized"; stamp: SfContextStamp; authority: "unchanged"; sourceVersion: SfVersion | null }>
   | Readonly<{ status: "denied" | "authority-changed" }>
   | Readonly<{ status: "unavailable" }>
+/** The original ephemeral registry can revalidate either admitted context version. */
+export type SfDraftDependencies<Context extends SfReadableContext = SfContext> = Readonly<{
+  createDraft<Value>(input: SfDraftInput<Value>): SfDraftController<Value>
+  revalidateDraft(input: SfDraftRevalidationInput, fresh: Context, transport: SfTransport, signal: AbortSignal): Promise<SfDraftRevalidation>
+}>
 export type SfContextDependencies = Readonly<{
   listInstallations(selection: SfOwnerSelection, signal: AbortSignal): Promise<SfInstallationList>
   loadContext(binding: SfInstallationDescriptor, signal: AbortSignal): Promise<SfContextResult>
@@ -86,14 +91,14 @@ export type SfContextProviderProps = Readonly<{
   dependencies: SfContextDependencies
   children: JSX.Element
 }>
-export type SfContextHandle = Readonly<{
-  state: Accessor<SfContextState>
+export type SfContextHandle<Context extends SfReadableContext = SfContext> = Readonly<{
+  state: Accessor<SfContextState<Context>>
   generation: Accessor<number>
   /** Reads the original owner draft registry, including quarantined edits. */
   hasDirtyDrafts: () => boolean
   /** Only after explicit consent; quarantined unsent drafts may be purged, never pending/unknown operations. */
   discardDrafts: () => boolean
-  ready: Accessor<Readonly<{ context: SfContext; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
+  ready: Accessor<Readonly<{ context: Context; transport: SfTransport; drafts: SfDraftRegistry }> | undefined>
   reload: () => Promise<void>
   /** Session expiry quarantines for same-owner revalidation; other reasons purge. */
   invalidate: (reason: "logout" | "revoked" | "session-expired" | "owner-changed" | "host-changed") => void
@@ -112,3 +117,4 @@ export type SfContextHandle = Readonly<{
     returnRoute: SfResolvedRoute<"UI29">
   }>) => boolean
 }>
+

@@ -1,0 +1,1179 @@
+{
+  "schema": "sf-teams-native-chat-component-evidence-v1",
+  "status": "COMPONENT_VERIFIED",
+  "scope": "Private native Team Chat, shared Team configuration, owner-scoped HTTP/SSE and current Microsoft installation composition",
+  "product": {
+    "sha": "4fffd0fe36407bd83cdb81ffc61a832bcf6b292e",
+    "tree": "3e5bcac6ea4ab4970c42aa8d8496cc0c3fb9d57a",
+    "baseDevSHA": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8"
+  },
+  "pullRequest": 665,
+  "precedingRun": {
+    "runId": 45037362513,
+    "jobId": 137253976844,
+    "overallConclusion": "FAIL",
+    "reason": "Two runtime cases and one generator cleanup-comment guard warning required closure; passing component results below are retained with their exact source.",
+    "proof": {
+      "schema": "sf-teams-complete-integration-proof-v1",
+      "dependencyLayout": "canonical-workflow-workspaces",
+      "sourceSHA": "fde191dfc1970d37021d82370cccac657efac246",
+      "sourceTreeSHA": "526530b5fdf335b07ff00dbcf008b39b905e001d",
+      "runnerSHA": "d28d75bf4e5c71436cd952a5c5550c9f9115800a",
+      "runId": "45037362513",
+      "runAttempt": "1",
+      "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+      "observedDevSHA": "0df66a7929168ccc98e3a5b2e6c45f574801902e",
+      "suites": [
+        {
+          "name": "Microsoft private admission and encrypted connection store",
+          "selected": [
+            {
+              "path": "modules/sucafina/Sucafinav1/test/local-identity.test.ts",
+              "sha256": "4b24f436cce2382891ee9c4a883dada08423ddd8b023d711be2a4d2647295c28"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/microsoft-installation.test.ts",
+              "sha256": "297fd7998db76f619fc73507f3c0facbef08b03a1748d719e7b6b3669655536a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-connection-store.test.ts",
+              "sha256": "5b4c1a4b697a6ed99578817b4b557514532566bf56d6f8ffec21f0b1a8269ed0"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-session-policy.test.ts",
+              "sha256": "63185ff472061b236629e5af1cf01ce51dccf2c560a04ddc0b315b2973d46d46"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/teams-profile/private-session-admission.test.ts",
+              "sha256": "2d70670181c1f4becacbe44149c6486b3f26e892bb421aa4dabb570963518e39"
+            }
+          ],
+          "verdict": "omni positive control: pass (declared: 1 test(s) in test/microsoft-installation.test.ts); 3 omni spawn(s), 0 delegated.",
+          "summary": [
+            "56 pass",
+            "0 fail",
+            "4673 expect() calls"
+          ]
+        },
+        {
+          "name": "Private provider and real technical Session HTTP",
+          "selected": [
+            {
+              "path": "packages/core/test/team-provider-native.test.ts",
+              "sha256": "bc8b08ce4e27d714c81c5a037266ea2c37e4d4a83786ea643df614a9a0a727a4"
+            },
+            {
+              "path": "packages/core/test/session-team-owner.test.ts",
+              "sha256": "65c7e1e60320bb9786ba49ac24510f82910c0326c2d80e0d4d06b7e51fc1636c"
+            },
+            {
+              "path": "packages/core/test/config/team-configuration.test.ts",
+              "sha256": "d4d4146b7478bd97bfcf10517e680d4e5f5ef630660776f47b8fedcf549199c6"
+            },
+            {
+              "path": "packages/core/test/session-archive-http.test.ts",
+              "sha256": "6b55c1f5c73b5f553dfeaa53532a6e103f642683953536f9e27d03e12ba542fe"
+            },
+            {
+              "path": "packages/core/test/tool-task-http.test.ts",
+              "sha256": "95415ffd845ad59ce2bded7dbd3008a3e02bc1b54c51cb0b0c6a65f00b391e76"
+            }
+          ],
+          "verdict": "omni positive control: pass (declared: 3 test(s) in test/session-archive-http.test.ts, test/tool-task-http.test.ts); 64 omni spawn(s), 0 delegated.",
+          "summary": [
+            "43 pass",
+            "0 fail",
+            "291 expect() calls"
+          ]
+        },
+        {
+          "name": "Private provider and Team schema contracts",
+          "selected": [
+            {
+              "path": "packages/schema/test/provider-access.test.ts",
+              "sha256": "98a102e9573edd19f0da99011290e11ceeceb40ad3f395cf551bcf31c68997aa"
+            },
+            {
+              "path": "packages/schema/test/sucafina-team-context.test.ts",
+              "sha256": "8817e83a2a984c259eb05a00b5f93b98ab83c071ecc56ec5a16efdb18ce504bd"
+            },
+            {
+              "path": "packages/schema/test/sucafina-team-identity.test.ts",
+              "sha256": "48ebb592bce44eaf9ad4f6211c89a5a41efb6d988972ab86e8cde1e381bdb621"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "31 pass",
+            "0 fail",
+            "189 expect() calls"
+          ]
+        },
+        {
+          "name": "Official Team session client transport",
+          "selected": [
+            {
+              "path": "packages/client/test/sucafina/team-sessions.test.ts",
+              "sha256": "f9936650b7742e5da4292ebfeff81e617d09d4684d531f3e631d818e5ba2283c"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "13 pass",
+            "0 fail",
+            "98 expect() calls"
+          ]
+        },
+        {
+          "name": "Team administration, configuration and Chat browser lifecycle",
+          "selected": [
+            {
+              "path": "packages/app-shell/test-browser/team-profile.test.ts",
+              "sha256": "cdf5d3503e86c8e84de5b39a548b240489c26ce0cdd40cf8bf88171a29c61195"
+            },
+            {
+              "path": "packages/app-shell/test-browser/team-profile-navigation.test.ts",
+              "sha256": "50fbbde310b017057d8cb9c9e3fd4ad73f744b0f94d29a4bc504290252b4381e"
+            },
+            {
+              "path": "packages/app-shell/test-browser/team-profile-configuration.test.ts",
+              "sha256": "5bbb064764d54162b8e4787163d54e5bdf1db519d46f491506bb5ac187479905"
+            },
+            {
+              "path": "packages/app-shell/test-browser/team-sessions.test.ts",
+              "sha256": "9eebd7ec62646882826eef94cc589d9ea6b6c967a50c864172504b55547b9557"
+            },
+            {
+              "path": "packages/app-shell/test-browser/team-session-page.test.ts",
+              "sha256": "e67f5e2faf0d4f5254278bfa3109b5086d0fadcb508a8c1d9e1ea078a2146414"
+            },
+            {
+              "path": "packages/app-shell/src/context/team-session-live.test.ts",
+              "sha256": "9fa1f3f1c2bca3fd453311cf356049353ecc99c89c64b8c8200dae631ad8e869"
+            },
+            {
+              "path": "packages/app-shell/src/utils/team-profile-storage.test.ts",
+              "sha256": "89c971147d22a8d048bde6798d068de6f42376c3c61e1e1c88138675272f8228"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "75 pass",
+            "0 fail",
+            "1277 expect() calls"
+          ]
+        },
+        {
+          "name": "Portable callable fetch generation",
+          "selected": [
+            {
+              "path": "tooling/httpapi-codegen/test/generate.test.ts",
+              "sha256": "bba573339f28cb313cdaac0e8c8061324bb75ae8dd94b9187c1d2dd91fc7bbe7"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "60 pass",
+            "0 fail",
+            "113 expect() calls"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "directory": "packages/schema",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/core",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/protocol",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/client",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/server",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/app-shell",
+          "status": "pass"
+        },
+        {
+          "directory": "modules/sucafina/Sucafinav1",
+          "status": "pass"
+        },
+        {
+          "directory": "apps/cli",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/tui",
+          "status": "pass"
+        },
+        {
+          "directory": "tooling/httpapi-codegen",
+          "status": "pass"
+        }
+      ],
+      "liveMicrosoftProof": false,
+      "installedQualification": false,
+      "migrationExecuted": false,
+      "productionChanged": false,
+      "generatedClient": "bun run check:generated passed"
+    }
+  },
+  "closureRun": {
+    "runId": 45039523637,
+    "jobId": 137260633773,
+    "overallConclusion": "SUCCESS",
+    "proof": {
+      "schema": "sf-teams-focused-closure-proof-v1",
+      "precedingComponentRunId": 45037362513,
+      "dependencyLayout": "canonical-workflow-workspaces",
+      "sourceSHA": "d4daba81866166c1363563faa2b6156db0765b63",
+      "sourceTreeSHA": "a41c9c7b859b30ab1d4d8cf0284a871cf8a2b7fe",
+      "runnerSHA": "5117581495d7ece34d96b5d5a79be9f79d5b0f80",
+      "runId": "45039523637",
+      "runAttempt": "1",
+      "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+      "observedDevSHA": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+      "suites": [
+        {
+          "name": "Bounded JSON and real owner Session HTTP",
+          "selected": [
+            {
+              "path": "packages/server/test/body-limit.test.ts",
+              "sha256": "7ed087fe23684782965ab3c627e4c468b890180dde19830fcac59e5236fb38ba"
+            },
+            {
+              "path": "packages/server/test/session-owner-http.test.ts",
+              "sha256": "9765273b4b9dfcf5cb1527c6b5d62ecea8dddab2875dcb4b96e6475676215c79"
+            },
+            {
+              "path": "packages/server/test/session-owner-events.test.ts",
+              "sha256": "b84856180fb1a231c5f654756964153962d531a3630c10dd091d48894a6a2c9b"
+            },
+            {
+              "path": "packages/server/test/session-owner-technical-http.test.ts",
+              "sha256": "ac4c11e2d21b6678c3851c644044c8bf1f4c66a02fd78f60495e5a9f93dd0945"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "25 pass",
+            "0 fail",
+            "204 expect() calls"
+          ]
+        },
+        {
+          "name": "Real CLI factory stream disposal",
+          "selected": [
+            {
+              "path": "apps/cli/test/team-session-factory.test.ts",
+              "sha256": "69f435e0d2ea500f1cc3e53fe455de3bf6756181630cb032b70e63f53e72939b"
+            }
+          ],
+          "verdict": "omni positive control: pass (declared: 1 test(s) in test/team-session-factory.test.ts); 1 omni spawn(s), 0 delegated.",
+          "summary": [
+            "1 pass",
+            "0 fail",
+            "3 expect() calls"
+          ]
+        },
+        {
+          "name": "Uncertain operations and native Chat lifecycle",
+          "selected": [
+            {
+              "path": "packages/app-shell/test-browser/team-sessions.test.ts",
+              "sha256": "9e0e6c762b2fa0798a33c9f774c5b13cc0215ae74119c3e96cb9854c36f5f304"
+            },
+            {
+              "path": "packages/app-shell/test-browser/team-session-page.test.ts",
+              "sha256": "e67f5e2faf0d4f5254278bfa3109b5086d0fadcb508a8c1d9e1ea078a2146414"
+            },
+            {
+              "path": "packages/app-shell/src/context/team-session-live.test.ts",
+              "sha256": "9fa1f3f1c2bca3fd453311cf356049353ecc99c89c64b8c8200dae631ad8e869"
+            }
+          ],
+          "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "summary": [
+            "29 pass",
+            "0 fail",
+            "272 expect() calls"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "directory": "packages/server",
+          "status": "pass"
+        },
+        {
+          "directory": "apps/cli",
+          "status": "pass"
+        },
+        {
+          "directory": "packages/app-shell",
+          "status": "pass"
+        }
+      ],
+      "guards": "guards: 78 rules, 97 changed paths, 0 gate and 0 warn findings, 0 errors.",
+      "liveMicrosoftProof": false,
+      "installedQualification": false,
+      "migrationExecuted": false,
+      "productionChanged": false,
+      "generatedClient": "bun run check:generated passed"
+    }
+  },
+  "compositionRun": {
+    "runId": 45039881113,
+    "jobId": 137261724555,
+    "overallConclusion": "SUCCESS",
+    "proof": {
+      "schema": "sf-teams-concurrent-composition-proof-v1",
+      "precedingComponentRunIds": [
+        45037362513,
+        45039523637
+      ],
+      "integratedDevSHA": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+      "dependencyLayout": "canonical-workflow-workspaces",
+      "sourceSHA": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+      "sourceTreeSHA": "a64eb0f6d173036ea9b380ce81e80efbaec730f0",
+      "runnerSHA": "7c8e4cbffcbb4c192f6167e657d115e91d769c38",
+      "runId": "45039881113",
+      "runAttempt": "1",
+      "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+      "observedDevSHA": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+      "suites": [
+        {
+          "name": "Microsoft installation composes private Chat, checkpoint and recovery routes",
+          "selected": [
+            {
+              "path": "modules/sucafina/Sucafinav1/test/microsoft-installation.test.ts",
+              "sha256": "297fd7998db76f619fc73507f3c0facbef08b03a1748d719e7b6b3669655536a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/corporate-checkpoint-http.test.ts",
+              "sha256": "59da0afd46f4f8d15c4649a9738997d84334039ce213df80f767ba5445be90a4"
+            }
+          ],
+          "verdict": "omni positive control: pass (declared: 1 test(s) in test/microsoft-installation.test.ts); 3 omni spawn(s), 0 delegated.",
+          "summary": [
+            "21 pass",
+            "0 fail",
+            "4601 expect() calls"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "directory": "modules/sucafina/Sucafinav1",
+          "status": "pass"
+        },
+        {
+          "directory": "apps/cli",
+          "status": "pass"
+        }
+      ],
+      "guards": "guards: 78 rules, 97 changed paths, 0 gate and 0 warn findings, 0 errors.",
+      "liveMicrosoftProof": false,
+      "installedQualification": false,
+      "migrationExecuted": false,
+      "productionChanged": false
+    }
+  },
+  "sourceReviews": [
+    {
+      "source": "a9261162ed78b0f4dd3560cfb7e5b4892d980c0d",
+      "result": "STATIC_REVIEW_PASS",
+      "scope": "protocol and foreign namespace retirement preserves only previous owner-bound opaque operation IDs, purges content, confirmed denial still purges all, reconciliation GET only",
+      "executed": false
+    },
+    {
+      "source": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+      "tree": "a64eb0f6d173036ea9b380ce81e80efbaec730f0",
+      "result": "STATIC_REVIEW_PASS",
+      "scope": "Current Microsoft Chat/import/checkpoint/recovery routing, independent authority, current Team policy and disposal",
+      "executed": false
+    }
+  ],
+  "generation": {
+    "command": "bun run generate",
+    "route": "packages/client canonical generator in GitHub Actions",
+    "latestRunId": 45038097702,
+    "jobId": 137256208223,
+    "generatorSourceSHA": "97fec95042f956f741b61daf00f6b57ff469b0e9",
+    "exactOutputs": [
+      {
+        "path": "packages/client/src/generated/client.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ef448e7d84844ceeec3d5e4870c988fc24b686ac"
+      }
+    ],
+    "earlierGenerationRuns": [
+      45033809865,
+      45035196492,
+      45037129347
+    ],
+    "exactGitBlobHashesVerified": true,
+    "generatedConsistencyRunId": 45039523637
+  },
+  "corrections": [
+    "Invalid application/json bodies return the original 400 InvalidRequestError classification after bounded body verification; handler SyntaxError with valid JSON remains 500.",
+    "Adapter disposal signals private streaming bodies before graph disposal; the actual CLI process drains buffered frames and requires normal EOF under one deadline.",
+    "Unknown protocol/namespace outcomes preserve only original owner/window-bound operation IDs, purge transcript/drafts, and reconcile through GET. Explicit denial, logout and principal change still purge private state.",
+    "Solid store collections and detached command values keep the original native composer/configuration codecs observable without weakening validation.",
+    "The canonical generated fetch option is a callable transport, without a Bun-specific static preconnect requirement."
+  ],
+  "verificationLimits": [
+    "Results are scoped to the source SHA recorded by each run; no single all-green full suite on the final product is claimed.",
+    "The final composition adds independently verified current dev importer/checkpoint/recovery; the Microsoft boundary and affected package types were rerun for that concrete integration risk.",
+    "Selected checks are component qualification. A test CI result is not a LIVE Microsoft identity, installed QA, final-candidate ACK or production deployment.",
+    "Direct Team model tests exercise ChatCompletions, not C15 Responses interoperability.",
+    "Canonical migration schema consistency was checked; no installed migration execution is claimed.",
+    "G08 v4 completes the nine scenario contract mappings, not their installed execution or the separate U15/U39/U40/F04/AZ02 groups.",
+    "Later runtime changes after the performance source are the backend Team projection; the measured generic app/benchmark code is unchanged. Each measurement retains its actual source SHA."
+  ],
+  "runtimePrerequisites": [
+    "Current original Microsoft identity and Team membership",
+    "Explicit private operation grants",
+    "Persisted shared configuration with an explicitly selected model",
+    "Owner-scoped personal provider connection for model dispatch",
+    "Initialized private Core storage and operator-managed migration"
+  ],
+  "operationalQualification": {
+    "liveMicrosoft": false,
+    "installedG08": false,
+    "installedG10": false,
+    "productionCutover": false,
+    "g09FormalPass": false
+  },
+  "g09": "Technical closure remains #647; diagnostic scanner counts were not reopened.",
+  "performanceEvidence": "./teams-native-performance/README.md",
+  "checkpointGrantIntegration": {
+    "sourceSHA": "a675a5792b9260054d043624dc45d60a5adb8dbf",
+    "sourceTreeSHA": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+    "aggregateMergeSHA": "4bee9c656034bb6771929a3d1eb893bc65af6a7a",
+    "runId": 45040408446,
+    "jobId": 137263353207,
+    "status": "SUCCESS",
+    "passed": 46,
+    "existingRootOnlySkips": 1,
+    "failed": 0,
+    "guards": "78 rules, 97 changed paths, 0 gate and 0 warn findings, 0 errors",
+    "installed": false,
+    "scope": "Least-privilege checkpoint/recovery grant normalization; no Session or business authority by omission"
+  },
+  "g08Executor": {
+    "pullRequests": [
+      678,
+      686
+    ],
+    "aggregateMerges": [
+      "31295e3a745c4ddffe49b921207671de976b1446",
+      "287b08b2afb4f9aeb4442b800d620fbd5ddf9204"
+    ],
+    "currentRun": {
+      "runId": 45043491974,
+      "jobId": 137272872179,
+      "overallConclusion": "SUCCESS",
+      "proof": {
+        "schema": "sf-g08-final-controls-proof-v1",
+        "status": "CONTROLS_PASSED_NOT_LIVE",
+        "dependencyLayout": "canonical-workflow-workspaces",
+        "sourceSHA": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
+        "sourceTreeSHA": "c314a0bbb51d22bd592e5581e8af512ca7ee4b6c",
+        "productBaseSHA": "c57fccd8868d3b950bc4c1e04ecaf256e2cd2f64",
+        "productBaseTreeSHA": "983a36fc5aeb7be79f05543aec31b7de6f84d453",
+        "authorHeadSHA": "8dbc5e198d0bc85e11b8362b4dfd578035c5a669",
+        "inspectedF02ProducerSHA": "0d4876dd457da3ddf7d8dc4b122215eb772a14dc",
+        "precedingG08ControlsRunId": 45040781203,
+        "runnerSHA": "f67e0a16cc8136c1b6895611bb343ce5c0d53921",
+        "runId": "45043491974",
+        "runAttempt": "1",
+        "observedDevSHA": "c00ce0a9f60865ddcec15b52261c5da297dbd1ac",
+        "sourceFiles": [
+          {
+            "path": "script/sf-ci/g08-private-evidence.mjs",
+            "blob": "bd8b15f81981a8b8bc1b7a3a8fc10fcbb04fc7b0",
+            "sha256": "1f31ed7fd3b26d077a97137c4d3ab948b201517198868d627c8818b8363f39a7"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
+            "blob": "827ca9ca7bf630def7680752fe89226729c64abd",
+            "sha256": "0cbb7ae4fc4bb0b31eb241a4c033ce95e1725b8fbb87348253b92da604e37c8d"
+          },
+          {
+            "path": "script/sf-ci/g08-private-evidence.test.mjs",
+            "blob": "6e224d69d254f813e965b27781dad5022255f114",
+            "sha256": "a52d980d44cec0a208d1c007a1b1412b88f61439e156db09d7bae21bc85be188"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/g08/obligations.json",
+            "blob": "1c07cf4f1768abbe289cd273f0edfc3fdae7ef2c",
+            "sha256": "5a38e6ada1a300f9c1e07c1df2a99daec5955d14a7363f332d3bd9b4c84b6134"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/g08/README.md",
+            "blob": "48da776fd0d063726040f01059fc0d54e17bed04",
+            "sha256": "bc3b4acb74e27f2a2640e18b7f35331c4f705d66c1379c8124c6a17e059d83bc"
+          }
+        ],
+        "provenance": true,
+        "commands": [
+          {
+            "label": "evidence contracts",
+            "directory": "",
+            "command": [
+              "node",
+              "--test",
+              "--test-reporter=tap",
+              "script/sf-ci/g08-private-evidence.test.mjs"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "c7dd0faa24f7f50815a1ab8a84d3d4c1d455722b70a2c619a1a81f5f43fc547c",
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "host observer controls",
+            "directory": "",
+            "command": [
+              "python3",
+              "script/sf-ci/test_g08_installed_preflight.py"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "e1892f47fc3730cc8714fd3c1dcbbbc4f3473ac4add06a1bfd141fa13d6dec2e"
+          },
+          {
+            "label": "driver syntax",
+            "directory": "",
+            "command": [
+              "bash",
+              "-n",
+              "script/sf-ci/g08-private-run.sh"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "executor typecheck",
+            "directory": "packages/app-shell/e2e/sucafina/g08",
+            "command": [
+              "bun",
+              "typecheck"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "3a97d3a5dae84b7aa8c043fb202285060c32d2769989a6f9ad8a0dc09f947dd4"
+          },
+          {
+            "label": "landing DOM controls",
+            "directory": "packages/app-shell",
+            "command": [
+              "bun",
+              "test",
+              "--conditions=browser",
+              "--preload",
+              "../../script/test-omni-control.ts",
+              "--preload",
+              "./happydom.ts",
+              "--reporter=junit",
+              "--reporter-outfile",
+              "/tmp/g08-final-controls-u789Mb/evidence/landing-dom.junit.xml",
+              "./e2e/sucafina/g08/landing-contract.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "bc9926b1ca0d73f5c6f30e4bb0667209fc65ac5f3413c60d3ed0a7572488e50d",
+            "stderrSha256": "a811840e9f6d670a582aa1e45ebf4338ad65849607fdff5cb310bad07577d85d"
+          },
+          {
+            "label": "Playwright list only",
+            "directory": "packages/app-shell",
+            "command": [
+              "bun",
+              "x",
+              "--no-install",
+              "playwright",
+              "test",
+              "--config",
+              "e2e/sucafina/g08/playwright.config.ts",
+              "--list"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "82d669017038e15d46236d2474cbfcabf85103d6b88286921d0241cad49ea868",
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "verify Playwright list",
+            "directory": "",
+            "command": [
+              "node",
+              "script/sf-ci/g08-private-evidence.mjs",
+              "verify-list",
+              "/tmp/g08-final-controls-u789Mb/evidence/list.json"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "0252cccf0de31261be4d538ca9c4780c895d6a80f58052e68341d96d18a35ab7",
+            "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "label": "canonical source guards",
+            "directory": "",
+            "command": [
+              "bun",
+              "run",
+              "check:guards",
+              "--base",
+              "origin/dev"
+            ],
+            "status": 0,
+            "signal": null,
+            "stdoutSha256": "88c71a2d7dbd7f5aaaff9f5e057384ae84c3b93fafbfbfdc1e8dfcfa8835e437",
+            "stderrSha256": "b700ae49ae0cff3d8e1d465ed0d5182ea2583d9c9b81d3d0efa238f1d68591ce"
+          }
+        ],
+        "controls": [
+          {
+            "name": "evidence contracts",
+            "status": "pass",
+            "counts": {
+              "tests": 118,
+              "pass": 118,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          },
+          {
+            "name": "host observer controls",
+            "status": "pass",
+            "tests": 28,
+            "skipped": 0,
+            "failures": 0
+          },
+          {
+            "name": "driver syntax",
+            "status": "pass",
+            "executedDriver": false
+          },
+          {
+            "name": "executor typecheck",
+            "status": "pass"
+          },
+          {
+            "name": "landing DOM controls",
+            "status": "pass",
+            "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+            "summary": [
+              "5 pass",
+              "0 fail",
+              "165 expect() calls"
+            ],
+            "junitSha256": "e2bee95d41e78884185a37781670b1b2ab1629394cd46e618f9d87a247b73d09"
+          },
+          {
+            "name": "Playwright inventory and verifier",
+            "status": "pass",
+            "listed": 9,
+            "executed": 0
+          },
+          {
+            "name": "canonical source guards",
+            "status": "pass",
+            "summary": "guards: 78 rules, 113 changed paths, 0 gate and 0 warn findings, 0 errors."
+          }
+        ],
+        "inventory": {
+          "candidate": {
+            "sha": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
+            "tree": "c314a0bbb51d22bd592e5581e8af512ca7ee4b6c"
+          },
+          "metadata": {
+            "candidateSha": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
+            "candidateTree": "c314a0bbb51d22bd592e5581e8af512ca7ee4b6c",
+            "runId": "45043491974",
+            "runAttempt": "1"
+          },
+          "cases": [
+            {
+              "id": "same-team-distinct-grants",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "aba-two-windows",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "account-without-team",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "foreign-deep-link-reload",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "admin-without-team",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "narrow-keyboard-draft",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "draft-cancel-discard",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "real-revoke-restore",
+              "status": "LISTED_NOT_RUN"
+            },
+            {
+              "id": "logout-original-context",
+              "status": "LISTED_NOT_RUN"
+            }
+          ],
+          "coverage": {
+            "schema": "sf-g08-coverage-v1",
+            "originalTeams": [
+              {
+                "id": "same-team-distinct-grants",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "same-team-distinct-grants"
+                ]
+              },
+              {
+                "id": "aba-two-windows",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "aba-two-windows"
+                ]
+              },
+              {
+                "id": "account-without-team",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "account-without-team"
+                ]
+              },
+              {
+                "id": "foreign-deep-link-reload",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "foreign-deep-link-reload"
+                ]
+              },
+              {
+                "id": "admin-without-team",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "admin-without-team"
+                ]
+              },
+              {
+                "id": "narrow-keyboard-draft",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "narrow-keyboard-draft"
+                ]
+              },
+              {
+                "id": "draft-cancel-discard",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "draft-cancel-discard"
+                ]
+              },
+              {
+                "id": "real-revoke-restore",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "real-revoke-restore"
+                ]
+              },
+              {
+                "id": "logout-original-context",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "logout-original-context"
+                ]
+              }
+            ],
+            "groups": [
+              {
+                "id": "U15",
+                "status": "NOT_RUN",
+                "expectedCount": 6,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "U39",
+                "status": "NOT_RUN",
+                "expectedCount": 22,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "U40",
+                "status": "NOT_RUN",
+                "expectedCount": 22,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "F04",
+                "status": "NOT_RUN",
+                "expectedCount": 3,
+                "blocker": "BLOCKED_BY_PRODUCT_MODERN_INSTALLED_TRANSPORT_COMPOSITION"
+              },
+              {
+                "id": "AZ02",
+                "status": "NOT_RUN",
+                "expectedCount": 32,
+                "blocker": "BLOCKED_BY_PRODUCT_MODERN_PHASE_PRODUCER_AND_RESERVED_HOST"
+              }
+            ],
+            "complete": false
+          },
+          "reportSha256": "f353893e90bae5c71752961c9059fc426c06151ed9fcbdc45c9cb3d5cb064bf6",
+          "inventorySha256": "33b423abab5fe595d8da78be11510f674ed2931fc6febc15c493623dfafeaf65",
+          "sources": [
+            {
+              "path": ".github/workflows/g08-private-preflight.yml",
+              "sha256": "3ae6a6e283d02bfd8ee949430aaf475789eaebdf31bf96d1ee94bb02f0f33d98"
+            },
+            {
+              "path": "script/sf-ci/g08-private-evidence.mjs",
+              "sha256": "1f31ed7fd3b26d077a97137c4d3ab948b201517198868d627c8818b8363f39a7"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/obligations.json",
+              "sha256": "5a38e6ada1a300f9c1e07c1df2a99daec5955d14a7363f332d3bd9b4c84b6134"
+            },
+            {
+              "path": "script/sf-ci/g08-installed-preflight.py",
+              "sha256": "15a330ce7a1834b8bdaca9685a06376bf3fbb315b7a863fa40c6d9012af1dbe0"
+            },
+            {
+              "path": "script/sf-ci/g08-private-run.sh",
+              "sha256": "c68259effd656f2efadac77c154788b67a7a8db04e5650f01d96627d738629cf"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/playwright.config.ts",
+              "sha256": "e152bb71202fb6341571f9fcd856fd59bbf6776ca36759378ee9c0e624e2daba"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/installed-fixture.ts",
+              "sha256": "cbcf27464b4ca634b6d624df99377a51b7d3f8fc0fc0d8e94660df09365ef0b7"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
+              "sha256": "0cbb7ae4fc4bb0b31eb241a4c033ce95e1725b8fbb87348253b92da604e37c8d"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/landing-contract.ts",
+              "sha256": "40efde926463079c1d8db6ca52d9bc17f3a42922c990d7a435a9205b0ad90837"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/g08/landing-contract.test.ts",
+              "sha256": "a9b0f8d086601bed9d75fb1e4121b2a677ba89019209ccfc16913f38f7040a9c"
+            }
+          ]
+        },
+        "guards": "guards: 78 rules, 113 changed paths, 0 gate and 0 warn findings, 0 errors.",
+        "installed": false,
+        "g08Closed": false,
+        "liveMicrosoftProof": false,
+        "migrationExecuted": false,
+        "productionChanged": false
+      }
+    },
+    "precedingRun": {
+      "runId": 45040781203,
+      "status": "CONTROLS_PASSED_NOT_LIVE"
+    },
+    "originalTeamObligations": 9,
+    "contractMappingsComplete": 9,
+    "installedCasesExecuted": 0,
+    "installedStates": "NOT_RUN",
+    "distinctGrantsOracle": "Original canonical destination pages and permissions must differ for two distinct principals of the same Team, match independent reads and remain correct after both reloads. Principal, revision, availability, ordering or two empty lists cannot prove this difference.",
+    "originalOtherGroups": [
+      "U15",
+      "U39",
+      "U40",
+      "F04",
+      "AZ02"
+    ],
+    "g08Closed": false
+  },
+  "activeSessionAdapter": {
+    "sourceSHA": "bbdd1d67b715bee8a8130aac001a365cae99f53f",
+    "productionBlob": "d25ba1096baf4cf6a4f25821bbf917170dfb1784",
+    "firstRun": {
+      "runId": 45042018659,
+      "jobId": 137268338212,
+      "overallConclusion": "FAIL",
+      "reason": "All26runtime tests, Client types and guards passed; only a new fixture's widened string literal failed App types.",
+      "proof": {
+        "schema": "sf-active-session-adapter-proof-v1",
+        "precedingComponentRunIds": [
+          45039881113,
+          45040781203,
+          45040408446
+        ],
+        "dependencyLayout": "canonical-workflow-workspaces",
+        "sourceSHA": "bf9b3b03be1fb295999acc3bb7051392f0a89efd",
+        "sourceTreeSHA": "4f76b0657a344ba031a31dfbaf0253c080e2e6cd",
+        "runnerSHA": "b21e8e195c249bc4dad9ac50e5d646584fb4d17b",
+        "runId": "45042018659",
+        "runAttempt": "1",
+        "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+        "observedDevSHA": "2169b64039855ffa10b36053d6ff41d57b7b4ee7",
+        "suites": [
+          {
+            "name": "Technical generated-client active envelope and original sync consumers",
+            "selected": [
+              {
+                "path": "packages/app-shell/src/utils/server.test.ts",
+                "sha256": "7b3f00fc1f4b4761ffd3ccd9f263eaa81b0fed787e62fd0ed169cb624cce7a78"
+              },
+              {
+                "path": "packages/app-shell/src/context/server-sync.test.ts",
+                "sha256": "3e156fdb0538198c966536b0190c6e06bca6203915738cb04b4cb4c0c071dcae"
+              }
+            ],
+            "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+            "summary": [
+              "26 pass",
+              "0 fail",
+              "56 expect() calls"
+            ]
+          }
+        ],
+        "types": [
+          {
+            "directory": "packages/client",
+            "status": "pass"
+          }
+        ],
+        "guards": "guards: 78 rules, 109 changed paths, 0 gate and 0 warn findings, 0 errors.",
+        "liveMicrosoftProof": false,
+        "installedQualification": false,
+        "migrationExecuted": false,
+        "productionChanged": false
+      }
+    },
+    "typeClosure": {
+      "runId": 45042522483,
+      "jobId": 137269908676,
+      "overallConclusion": "SUCCESS",
+      "proof": {
+        "schema": "sf-active-session-adapter-type-closure-v1",
+        "precedingComponentRunId": 45042018659,
+        "dependencyLayout": "canonical-workflow-workspaces",
+        "sourceSHA": "bbdd1d67b715bee8a8130aac001a365cae99f53f",
+        "sourceTreeSHA": "8d09df1426f491e60ef508dd7192c74c7e7a7874",
+        "runnerSHA": "88a8a5170bc1b0951ea87da877041af586b001fe",
+        "runId": "45042522483",
+        "runAttempt": "1",
+        "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+        "observedDevSHA": "2169b64039855ffa10b36053d6ff41d57b7b4ee7",
+        "suites": [],
+        "types": [
+          {
+            "directory": "packages/app-shell",
+            "status": "pass"
+          }
+        ],
+        "guards": "guards: 78 rules, 109 changed paths, 0 gate and 0 warn findings, 0 errors.",
+        "liveMicrosoftProof": false,
+        "installedQualification": false,
+        "migrationExecuted": false,
+        "productionChanged": false
+      }
+    },
+    "behavior": "Unwrap the current active-session envelope into the original technical map; reject any present corporate namespace and malformed maps."
+  },
+  "businessProjection": {
+    "authorSHA": "0d4876dd457da3ddf7d8dc4b122215eb772a14dc",
+    "canonicalFixSHA": "9a54c7b7afcff336fa881cc5161f616780e8c59b",
+    "initialRun": {
+      "runId": 45043257899,
+      "jobId": 137272165661,
+      "overallConclusion": "FAIL",
+      "passedMicrosoft": 26,
+      "failedMicrosoft": 1,
+      "reason": "New logout fixture expected303 instead of the original POST204; canonical Owner/Ref brands required original decoding. Five original HTTP/extraction cases and CLI types passed.",
+      "proof": {
+        "schema": "sf-team-business-projection-proof-v1",
+        "precedingComponentRunIds": [
+          45039881113,
+          45042018659,
+          45042522483
+        ],
+        "authorSourceSHA": "0d4876dd457da3ddf7d8dc4b122215eb772a14dc",
+        "dependencyLayout": "canonical-workflow-workspaces",
+        "sourceSHA": "c57fccd8868d3b950bc4c1e04ecaf256e2cd2f64",
+        "sourceTreeSHA": "983a36fc5aeb7be79f05543aec31b7de6f84d453",
+        "runnerSHA": "89bfb4aa34f15de3edbd8fb9146f27febb2174e0",
+        "runId": "45043257899",
+        "runAttempt": "1",
+        "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+        "observedDevSHA": "c00ce0a9f60865ddcec15b52261c5da297dbd1ac",
+        "suites": [
+          {
+            "name": "Original HTTP authorization and readonly context extraction (five selected cases)",
+            "selected": [
+              {
+                "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
+                "sha256": "828d42ef643a4b2de0ab5f39fd6f7a0d86ae7b67c1bdb461e57fea49b01e0849"
+              }
+            ],
+            "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+            "command": [
+              "bun",
+              "test",
+              "./test/runtime-http.test.ts",
+              "-t",
+              "^(HTTP|The original)",
+              "--timeout",
+              "120000"
+            ],
+            "summary": [
+              "5 pass",
+              "0 fail",
+              "41 expect() calls"
+            ]
+          }
+        ],
+        "types": [
+          {
+            "directory": "apps/cli",
+            "status": "pass"
+          }
+        ],
+        "guards": "guards: 78 rules, 113 changed paths, 0 gate and 0 warn findings, 0 errors.",
+        "liveMicrosoftProof": false,
+        "installedQualification": false,
+        "migrationExecuted": false,
+        "productionChanged": false
+      }
+    },
+    "closureRun": {
+      "runId": 45044092978,
+      "jobId": 137274759369,
+      "overallConclusion": "SUCCESS",
+      "proof": {
+        "schema": "sf-team-business-projection-closure-v1",
+        "precedingComponentRunIds": [
+          45043257899,
+          45043491974
+        ],
+        "authorSourceSHA": "9a54c7b7afcff336fa881cc5161f616780e8c59b",
+        "dependencyLayout": "canonical-workflow-workspaces",
+        "sourceSHA": "4fffd0fe36407bd83cdb81ffc61a832bcf6b292e",
+        "sourceTreeSHA": "3e5bcac6ea4ab4970c42aa8d8496cc0c3fb9d57a",
+        "runnerSHA": "8341481758cc0d1718499f404617be69765615ea",
+        "runId": "45044092978",
+        "runAttempt": "1",
+        "scopeBaseSHA": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+        "observedDevSHA": "c00ce0a9f60865ddcec15b52261c5da297dbd1ac",
+        "suites": [
+          {
+            "name": "Original Microsoft Team business projection and current policy closure",
+            "selected": [
+              {
+                "path": "modules/sucafina/Sucafinav1/test/microsoft-installation.test.ts",
+                "sha256": "9161b9bb6fab42548084699de1b8070efd17188828162238ed7a715320a8b89a"
+              },
+              {
+                "path": "modules/sucafina/Sucafinav1/test/teams-profile/access-policy.test.ts",
+                "sha256": "8463e924e41dd87b4df3d102b49f3b1bab9209c7c0ba572f65e493b913271d98"
+              }
+            ],
+            "verdict": "omni positive control: pass (declared: 1 test(s) in test/microsoft-installation.test.ts); 3 omni spawn(s), 0 delegated.",
+            "command": [
+              "bun",
+              "test",
+              "./test/microsoft-installation.test.ts",
+              "./test/teams-profile/access-policy.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "summary": [
+              "27 pass",
+              "0 fail",
+              "5531 expect() calls"
+            ]
+          }
+        ],
+        "types": [
+          {
+            "directory": "modules/sucafina/Sucafinav1",
+            "status": "pass"
+          }
+        ],
+        "guards": "guards: 78 rules, 113 changed paths, 0 gate and 0 warn findings, 0 errors.",
+        "liveMicrosoftProof": false,
+        "installedQualification": false,
+        "migrationExecuted": false,
+        "productionChanged": false
+      }
+    },
+    "review": {
+      "source": "0d4876dd457da3ddf7d8dc4b122215eb772a14dc",
+      "aggregate": "c57fccd8868d3b950bc4c1e04ecaf256e2cd2f64",
+      "result": "STATIC_REVIEW_PASS",
+      "reviewers": [
+        "next_release_status author",
+        "release_candidate_pin authority boundary",
+        "release_live_inputs extraction and persistence",
+        "root patches and fixtures"
+      ],
+      "executed": false,
+      "scope": "Original HTTP authorization equivalence, unchanged Request, full Team owner, current roles/ACL under one read root, source wrappers, final reread, commit=false and disposal"
+    },
+    "contract": "Original Request, same Team partition and role policy, original HTTP page and ACL predicates, snapshot-root-held final authority checks and a fresh final revision comparison.",
+    "withheldClaims": [
+      "No native action binding was observed, so allowedActionIds remains empty.",
+      "No operational binding was observed, so availability remains empty.",
+      "Team membership, supreme administration and Session grants do not create business pages."
+    ]
+  },
+  "performance": {
+    "comparison": "./teams-native-performance/comparison.json",
+    "readme": "./teams-native-performance/README.md",
+    "runId": 45042022479,
+    "jobId": 137268350176,
+    "status": "18_CASES_PASS",
+    "measuredSource": "bf9b3b03be1fb295999acc3bb7051392f0a89efd",
+    "claim": "The earlier slowdown did not recur in this observation; different runners prevent exclusive causal attribution to the patch."
+  }
+}

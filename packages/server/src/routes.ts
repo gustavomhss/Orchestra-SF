@@ -18,6 +18,7 @@ import { PermissionSaved } from "@orchestra/core/permission/saved"
 import { PtyTicket } from "@orchestra/core/pty/ticket"
 import { ScheduledTask } from "@orchestra/core/scheduled-task"
 import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
 import { SessionProcess } from "@orchestra/core/session-process"
 import { MoveSession } from "@orchestra/core/control-plane/move-session"
 import { TaskBackground } from "@orchestra/core/tool/task-background"
@@ -29,7 +30,7 @@ import { ToolOutputStore } from "@orchestra/core/tool-output-store"
 import { ResearchArtifacts } from "@orchestra/core/research/artifacts"
 import { HttpRouter, HttpServer, HttpServerRequest } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
-import { Layer, Option } from "effect"
+import { Effect, Layer, Option } from "effect"
 import { Api } from "./api"
 import { ServerAuth } from "./auth"
 import { BodyLimit } from "./body-limit"
@@ -37,7 +38,7 @@ import { corsLayer } from "./cors"
 import { hostPolicyLayer } from "./host-policy"
 import { handlers } from "./handlers"
 import { SfInstallationSource, type SfTrustedInstallationSource } from "./sucafina-installations"
-import { authorizationLayer } from "./middleware/authorization"
+import { authorizationLayerWith } from "./middleware/authorization"
 import { schemaErrorLayer } from "./middleware/schema-error"
 import { PtyEnvironment } from "@orchestra/core/host/pty-environment"
 import { layer as inboxLocationLayer } from "./inbox-location"
@@ -58,6 +59,7 @@ const applicationServices = LayerNode.group([
   ToolOutputStore.cleanupNode,
   ResearchArtifacts.node,
   SessionV2.node,
+  SessionOwner.node,
   SessionExecution.node,
   SessionSubagentModels.node,
   SessionProcess.node,
@@ -139,7 +141,7 @@ function makeRoutes<AuthError, AuthServices>(
     Layer.provide(sessionLocationLayer),
     Layer.provide(inboxLocationLayer),
     Layer.provide(locationLayer),
-    Layer.provide(authorizationLayer),
+    Layer.provide(Layer.unwrap(Effect.map(SessionOwner.Service, authorizationLayerWith))),
     Layer.provide(capabilityAuthorizationLayer),
     Layer.provide(schemaErrorLayer),
     Layer.provide(auth),

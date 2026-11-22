@@ -1,8 +1,10 @@
 import { expect, test } from "bun:test"
 import { Schema } from "effect"
+import { Session } from "@orchestra/schema/session"
 import { SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
-import { readTeamNavigationIntent, teamNavigationReturnTo, teamNavigationURL } from "../src/context/team-profile-navigation"
+import { readTeamNavigationIntent, readTeamSessionNavigation, teamNavigationReturnTo, teamNavigationURL,
+  teamSessionNavigationURL } from "../src/context/team-profile-navigation"
 
 const binding = Schema.decodeUnknownSync(SfTeamInstallationDescriptor)({
   installationId: "installation-one",
@@ -28,7 +30,7 @@ function target(teamObjectId?: string) {
   return url
 }
 
-test("only the three supported same-origin Team entry paths carry a closed selection or Team intent", () => {
+test("the three context entry paths retain their closed selection and Team intent contract", () => {
   for (const pathname of ["/", "/orchestra/sf-home", "/orchestra/sf-home/context"]) {
     const empty = new URL(pathname, binding.publicOrigin)
     expect(readTeamNavigationIntent(empty, binding)).toEqual({
@@ -73,7 +75,7 @@ test("foreign, duplicate, partial, legacy and malformed Team URLs are refused wi
     url.searchParams.set(key, "injected")
     invalid.push(url)
   }
-  for (const pathname of ["/orchestra/sf-home/administration", "/orchestra/sf-sessions/new", "/orchestra/sf-home/", "/unknown"]) {
+  for (const pathname of ["/orchestra/sf-home/administration", "/orchestra/sf-sessions", "/orchestra/sf-home/", "/unknown"]) {
     const url = target(teamA.teamObjectId)
     url.pathname = pathname
     invalid.push(url)
@@ -112,4 +114,53 @@ test("the URL writer changes only the admitted profile intent and never shares s
   expect(changed?.searchParams.has("accessRevision")).toBe(false)
   const foreign = Schema.decodeUnknownSync(TeamProfile.Ref)({ ...teamA, installationId: "foreign" })
   expect(teamNavigationURL(left, binding, foreign)).toBeUndefined()
+})
+
+test("native new-chat and Session ID paths require complete same-origin Team intent across login return URLs", () => {
+  for (const id of [undefined, Session.ID.create()]) {
+    const url = teamSessionNavigationURL(binding, teamA, id)
+    expect(url).toBeDefined()
+    if (!url) throw new Error("Expected supported Session URL")
+    expect(url.pathname).toBe("/orchestra/sf-sessions/" + (id ?? "new"))
+    expect(url.searchParams.size).toBe(5)
+    expect(readTeamNavigationIntent(url, binding)).toEqual({
+      contractRevision: "sf-team-profile/1", kind: "team", profile: teamA,
+    })
+    expect(readTeamSessionNavigation(url, binding)).toEqual({
+      kind: "session", profile: teamA, ...(id ? { sessionID: id } : {}),
+    })
+    expect(teamNavigationReturnTo(url, binding)).toBe(url.pathname + url.search)
+    expect(readTeamNavigationIntent(new URL(url.pathname, binding.publicOrigin), binding)).toBeUndefined()
+    const invalid: URL[] = []
+    for (const key of ["contractRevision", "server", "installationId", "tenantId", "teamObjectId"]) {
+      const partial = new URL(url); partial.searchParams.delete(key); invalid.push(partial)
+      const duplicate = new URL(url); duplicate.searchParams.append(key, duplicate.searchParams.get(key)!); invalid.push(duplicate)
+    }
+    for (const [key, value] of [
+      ["server", "https://foreign.example.test"], ["installationId", "foreign"],
+      ["tenantId", "21111111-2222-4333-8444-555555555555"], ["principalObjectId", "injected"],
+      ["authorityGeneration", "1"], ["directory", "/technical"],
+    ]) {
+      const foreign = new URL(url); foreign.searchParams.set(key!, value!); invalid.push(foreign)
+    }
+    const foreignOrigin = new URL(url); foreignOrigin.hostname = "foreign.example.test"; invalid.push(foreignOrigin)
+    const fragment = new URL(url); fragment.hash = "ignored"; invalid.push(fragment)
+    invalid.push(new URL(url.href.replace("installation-one", "installation%")))
+    invalid.push(new URL(url.href + "&installation%49d=installation-one"))
+    for (const candidate of invalid) {
+      expect(readTeamNavigationIntent(candidate, binding)).toBeUndefined()
+      expect(readTeamSessionNavigation(candidate, binding)).toBeUndefined()
+      expect(teamNavigationReturnTo(candidate, binding)).toBeUndefined()
+    }
+  }
+  const valid = teamSessionNavigationURL(binding, teamA, "ses_url")!
+  for (const path of ["/orchestra/sf-sessions/other", "/orchestra/sf-sessions/new/",
+    "/orchestra/sf-sessions/ses_a%2Fb", "/orchestra/sf-sessions/ses_a%5Cb", "/orchestra/sf-sessions/ses_a/extra"]) {
+    const invalid = new URL(valid); invalid.pathname = path
+    expect(readTeamNavigationIntent(invalid, binding)).toBeUndefined()
+    expect(teamNavigationReturnTo(invalid, binding)).toBeUndefined()
+  }
+  expect(teamSessionNavigationURL(binding, teamA, "../sf-home")).toBeUndefined()
+  const foreign = Schema.decodeUnknownSync(TeamProfile.Ref)({ ...teamA, installationId: "foreign" })
+  expect(teamSessionNavigationURL(binding, foreign)).toBeUndefined()
 })

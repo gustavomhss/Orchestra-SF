@@ -2,7 +2,7 @@ name: g08-private-preflight
 
 on:
   push:
-    branches: ["teams-qa-executor", "teams-landing-proof"]
+    branches: ["teams-qa-executor", "teams-landing-proof", "teams-admin-check"]
   workflow_dispatch:
     inputs:
       mode:
@@ -69,7 +69,7 @@ jobs:
       - name: Typecheck the isolated installed QA executor through its package script
         working-directory: packages/app-shell/e2e/sucafina/g08
         run: bun typecheck
-      - name: Exercise the real landing DOM and HTTP reader with controlled transport
+      - name: Exercise the real landing, administration and native draft DOM with controlled transport
         working-directory: packages/app-shell
         env:
           ORCHESTRA_OMNI_CONTROL: declared
@@ -82,7 +82,7 @@ jobs:
       - name: Load the real Playwright fixture and list every case without attaching a browser
         working-directory: packages/app-shell
         run: bunx --no-install playwright test --config e2e/sucafina/g08/playwright.config.ts --list
-      - name: Require the exact seven-case subset and preserve every original obligation
+      - name: Require the exact nine Teams cases and preserve all separate groups
         run: node script/sf-ci/g08-private-evidence.mjs verify-list "$SF_G08_TOOLING_EVIDENCE/list.json"
       - name: Check all guards against origin dev
         run: bun run check:guards --base origin/dev

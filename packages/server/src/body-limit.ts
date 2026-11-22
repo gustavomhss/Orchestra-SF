@@ -2,6 +2,7 @@ export * as BodyLimit from "./body-limit"
 
 import { Effect, FileSystem } from "effect"
 import { HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { boundedWebRequest, cancelUnreadWebBody } from "./web-body-limit"
 
 const MiB = 1024 * 1024
 
@@ -24,8 +25,8 @@ export function limitFor(pathname: string) {
 
 /**
  * Caps every request body. A declared `Content-Length` over the limit is refused with 413 before a byte is read; a body
- * with no length (chunked) is cut off once it passes the limit through `HttpServerRequest.MaxBodySize`, which the Node
- * server enforces while it reads, so memory stays bounded either way.
+ * with no or inaccurate length is counted while reading. Node uses MaxBodySize;
+ * Web readers share a bounded cache over the original Request body.
  */
 export const withLimit = (override?: (request: HttpServerRequest.HttpServerRequest) => number | undefined) => HttpRouter.middleware(
   (effect) =>
@@ -33,15 +34,26 @@ export const withLimit = (override?: (request: HttpServerRequest.HttpServerReque
       const request = yield* HttpServerRequest.HttpServerRequest
       const limit = override?.(request) ?? limitFor(request.url.split("?", 1)[0])
       const declared = Number(request.headers["content-length"])
-      if (declared > limit) return tooLarge(limit)
+      if (declared > limit) {
+        cancelUnreadWebBody(request)
+        return tooLarge(limit)
+      }
+      const bounded = boundedWebRequest(request, limit)
       return yield* effect.pipe(
+        // The API reads its payload with `orDie`, and JSON syntax failures also arrive as defects.
+        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : malformedJson(bounded, defect))),
+        Effect.provideService(HttpServerRequest.HttpServerRequest, bounded),
         Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(limit)),
-        // The API reads its payload with `orDie`, so the cut-off arrives as a defect.
-        Effect.catchDefect((defect) => (exceeded(defect) ? Effect.succeed(tooLarge(limit)) : Effect.die(defect))),
       )
     }),
   { global: true },
 )
+
+/** Preserve the canonical upload cap when the installed adapter prefixes its routes. */
+export const layerWithMount = (mount: string) => withLimit((request) => {
+  const pathname = request.url.split("?", 1)[0]!
+  return limitFor(pathname.startsWith(mount + "/") ? pathname.slice(mount.length) : pathname)
+})
 
 export const layer = withLimit()
 
@@ -52,6 +64,23 @@ function exceeded(defect: unknown) {
     defect.reason.cause instanceof Error &&
     defect.reason.cause.message === "maxBytes exceeded"
   )
+}
+
+function malformedJson(request: HttpServerRequest.HttpServerRequest, defect: unknown) {
+  const contentType = request.headers["content-type"]?.split(";", 1)[0]?.trim().toLowerCase()
+  if (!(defect instanceof SyntaxError) || contentType !== "application/json") return Effect.die(defect)
+  // The API has already cached this bounded text. Confirm syntax so a handler's own SyntaxError stays a 500.
+  return Effect.flatMap(Effect.orDie(request.text), (text) => {
+    // HttpApiBuilder Json accepts an empty body before JSON.parse in the pinned producer.
+    if (text === "") return Effect.die(defect)
+    try { JSON.parse(text) } catch (error) {
+      if (error instanceof SyntaxError) return Effect.succeed(HttpServerResponse.jsonUnsafe(
+        { _tag: "InvalidRequestError", message: "Invalid JSON request body", kind: "Payload" },
+        { status: 400 },
+      ))
+    }
+    return Effect.die(defect)
+  })
 }
 
 function tooLarge(limit: number) {

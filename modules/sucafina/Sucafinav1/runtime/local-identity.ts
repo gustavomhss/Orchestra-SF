@@ -1,6 +1,8 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { SfDomainReadSelection } from "@orchestra/schema/sucafina/domain"
+import { Session as NativeSession } from "@orchestra/schema/session"
 import { Schema } from "effect"
 import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsObservation, EntraTeamsResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 import { isTeamLandingNavigation, teamBusinessRoute } from "./team-profile-selector.ts"
@@ -426,16 +428,27 @@ function nativeTeamReturn(value: string | null, origin: string) {
       /[\\\u0000-\u0020\u007f]/.test(value)) return
   try { decodeURIComponent(value) } catch { return }
   const url = new URL(value, origin)
+  const sessionSegment = /^\/orchestra\/sf-sessions\/([A-Za-z0-9_-]{1,256})$/.exec(url.pathname)?.[1]
+  const sessionRoute = sessionSegment === "new" ||
+    sessionSegment !== undefined && Schema.is(NativeSession.ID)(sessionSegment)
+  const domain = nativeTeamDomainPath(url.pathname)
+  const budgetRoute = domain === "budget"
+  const domainRoute = domain !== undefined
   if (url.origin !== origin || url.username || url.password || url.hash ||
-      !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
-  if (!url.search) return url.pathname
+      !sessionRoute && !domainRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
+  if (!url.search) return sessionRoute || domainRoute ? undefined : url.pathname
   const parameters = url.searchParams
   const keys = [...parameters.keys()]
-  const required = ["contractRevision", "server", "installationId", "tenantId"]
-  if ((keys.length !== 4 && keys.length !== 5) || new Set(keys).size !== keys.length ||
-      required.some((key) => !parameters.has(key)) ||
+  const required = ["contractRevision", "server", "installationId", "tenantId",
+    ...(sessionRoute || domainRoute ? ["teamObjectId"] : []), ...(budgetRoute ? ["year"] : [])]
+  if (new Set(keys).size !== keys.length || required.some((key) => !parameters.has(key)) ||
       keys.some((key) => !required.includes(key) && key !== "teamObjectId") ||
       parameters.get("server") !== origin) return
+  if (budgetRoute) {
+    const year = parameters.get("year")!
+    // The Team budget URL requires a year; its allowed values remain the original domain codec.
+    if (!/^[0-9]{4}$/.test(year) || !Schema.is(SfDomainReadSelection)({ year: Number(year) })) return
+  }
   const installationId = parameters.get("installationId")
   const tenantId = parameters.get("tenantId")
   const contractRevision = parameters.get("contractRevision")
@@ -444,4 +457,24 @@ function nativeTeamReturn(value: string | null, origin: string) {
     : { contractRevision, kind: "selection", installationId, tenantId }
   if (!Schema.is(TeamProfile.Selector)(intent)) return
   return url.pathname + url.search
+}
+
+/** The original native route registry's closed entry/new/detail/edit syntax. */
+function nativeTeamDomainPath(pathname: string) {
+  const match = /^\/orchestra\/(sf-procurement\/contracts|sf-dashboard\/(?:opex|capex))(?:\/(new|r_[A-Za-z0-9_-]+)(\/edit)?)?$/.exec(pathname)
+  if (!match) return
+  const [, base, reference, edit] = match
+  if (reference === "new" && edit) return
+  if (reference && reference !== "new") {
+    // Same canonical UTF-8/base64url codec as decodeSfRouteRef; decoded refs are only route intent.
+    try {
+      const body = reference.slice(2).replace(/-/g, "+").replace(/_/g, "/")
+      const bytes = Uint8Array.from(atob(body.padEnd(Math.ceil(body.length / 4) * 4, "=")), (byte) => byte.charCodeAt(0))
+      const value = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+      const binary = Array.from(new TextEncoder().encode(value), (byte) => String.fromCharCode(byte)).join("")
+      const canonical = "r_" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "")
+      if (!value || canonical !== reference) return
+    } catch { return }
+  }
+  return base === "sf-procurement/contracts" ? "contracts" : "budget"
 }

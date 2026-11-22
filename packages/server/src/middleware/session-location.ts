@@ -3,20 +3,22 @@ import { LocationServiceMap } from "@orchestra/core/location-services"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
+import { SessionOwner } from "@orchestra/core/session/owner"
+import { openSessionAccess, verifySessionAccess } from "../session-access"
 import { SessionTable } from "@orchestra/core/session/sql"
 import { WorkspaceV2 } from "@orchestra/core/workspace"
 import { eq } from "drizzle-orm"
 import { Effect, Layer, Schema } from "effect"
 import { HttpRouter } from "effect/unstable/http"
 import { HttpApiMiddleware } from "effect/unstable/httpapi"
-import { InvalidRequestError, SessionNotFoundError } from "@orchestra/protocol/errors"
+import { InvalidRequestError, SessionNotFoundError, UnauthorizedError } from "@orchestra/protocol/errors"
 import { bootLocation, type LocationServices } from "../location"
 
 export class SessionLocationMiddleware extends HttpApiMiddleware.Service<
   SessionLocationMiddleware,
   { provides: LocationServices }
 >()("@orchestra/HttpApiSessionLocation", {
-  error: [InvalidRequestError, SessionNotFoundError],
+  error: [InvalidRequestError, SessionNotFoundError, UnauthorizedError],
 }) {}
 
 const decodeSessionID = Schema.decodeUnknownEffect(SessionV2.ID)
@@ -26,8 +28,9 @@ export const sessionLocationLayer = Layer.effect(
   Effect.gen(function* () {
     const { db } = yield* Database.Service
     const locations = yield* LocationServiceMap.Service
+    const owners = yield* SessionOwner.Service
 
-    return SessionLocationMiddleware.of((effect) =>
+    return SessionLocationMiddleware.of((effect, options) =>
       Effect.gen(function* () {
         const route = yield* HttpRouter.RouteContext
         const sessionID = yield* decodeSessionID(route.params.sessionID).pipe(
@@ -39,6 +42,7 @@ export const sessionLocationLayer = Layer.effect(
               }),
           ),
         )
+        const scope = yield* openSessionAccess(owners, options.endpoint.name, sessionID)
         const row = yield* db
           .select({ directory: SessionTable.directory, workspaceID: SessionTable.workspace_id })
           .from(SessionTable)
@@ -55,7 +59,13 @@ export const sessionLocationLayer = Layer.effect(
           directory: AbsolutePath.make(row.directory),
           workspaceID: row.workspaceID ? WorkspaceV2.ID.make(row.workspaceID) : undefined,
         })
-        return yield* effect.pipe(Effect.provide(bootLocation(locations.get(location), location)))
+        yield* verifySessionAccess(owners, scope, options.endpoint.name, sessionID)
+        const result = yield* verifySessionAccess(owners, scope, options.endpoint.name, sessionID).pipe(
+          Effect.andThen(effect),
+          Effect.provide(bootLocation(locations.get(location), location)),
+        )
+        yield* verifySessionAccess(owners, scope, options.endpoint.name, sessionID)
+        return result
       }),
     )
   }),
