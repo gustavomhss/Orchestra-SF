@@ -407,7 +407,7 @@ for (const [name, body, media] of invalidRefusalBodies)
     }
   });
 
-test("restart rejects an unproven final denial after observing a real process change", async () => {
+test("restart rejects an unproven final denial after the controlled observer reports a process change", async () => {
   for (const [name, body, media] of invalidRefusalBodies) {
     const f = fixture(configuration(), ({ route, result }) =>
       f.state.restarted && route.includes("/api/ui/context")
