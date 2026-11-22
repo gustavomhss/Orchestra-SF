@@ -10,7 +10,7 @@ Referência de leitura: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore 
 
 ## Pendência operacional desta edição
 
-Dono da coordenação e execução do ensaio: Astra go-live. Não há recibo instalado novo de backup/corte/retomada/rollback. A configuração Azure observada continua bloqueada antes do login, conforme o [registro atualizado](README.md#acesso-operacional). A reserva, os acessos ao host/clone, o release R retido, a chave utilizável e o observador externo ainda precisam ser materializados com os responsáveis pelos recursos.
+Dono da coordenação e execução do ensaio: Astra go-live. Não há recibo instalado novo de backup/corte/retomada/rollback. O [inventário Azure 45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414) passou login e as 12 observações; o bloqueio anterior de configuração está resolvido. A reserva, os acessos ao host/clone, o release R retido, a chave utilizável e o observador externo ainda precisam ser materializados com os responsáveis pelos recursos.
 
 O tar G07 deve ser o mesmo usado em G08; a execução paralela começa apenas depois da verificação e em reservas separadas. O observador de restart #697 pertence à cadeia AZ02/G08; ele não substitui o ensaio de recuperação nem comanda reinício. G10 continua exigindo backup real, prova de leitura da chave, efeito posterior ao checkpoint, registro monotônico independente, corte, restore/restart/retry sem duplicação e rollback R com recibos próprios. Os negativos e as medições RPO/RTO deste runbook permanecem obrigatórios.
 
@@ -100,7 +100,7 @@ Os responsáveis históricos A7/VM, A8/Identidade e A10/Release aparecem em [#24
 
 ## Observação operacional e reserva ainda pendentes
 
-O inventário somente leitura das PRs #666/#671 não chegou ao login Azure: no run [45036787201](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201), as quatro variáveis Azure vieram vazias antes da autenticação, que ficou SKIPPED. O environment `azure-mvp` existe; runners e nomes de variáveis ficaram não observáveis pelo token. A UI de Settings estava deslogada e o único desktop inventariado era um Mac offline. Esses fatos bloqueiam a descoberta operacional pelos caminhos tentados; **não comprovam ausência de reservas, hosts, dados ou chaves**. Os hashes e limites estão no [registro de execução](execution-2026-11-22.md). Nenhum parâmetro privado histórico foi reutilizado como reserva atual.
+O negativo histórico das PRs #666/#671 permanece no run [45036787201](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201), com quatro variáveis vazias e login SKIPPED naquela tentativa. Ele foi superado pelo [inventário 45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414), tentativa 1, fonte `f2b129b1610a218b7104dbc2c4bf6b07befae5af`: login bem-sucedido e 12 observações ARM completas. As quatro configurações estão válidas. Runners e nomes de variáveis não foram observáveis pelo token; isso não comprova ausência de recursos ou acesso. O inventário não atribui finalidade, exclusividade, janela ou operador aos hosts; `reservationConfirmed`, `guestObserved`, `installedQualification` e `productionCutover` permanecem false. Os hashes e limites estão no [registro de execução](execution-2026-11-22.md). Nenhum parâmetro privado histórico foi reutilizado como reserva atual.
 
 ## Inventário antes de tocar os dados
 
