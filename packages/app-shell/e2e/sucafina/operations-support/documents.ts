@@ -108,6 +108,50 @@ async function captureCommandResponse(page: Page, account: Account, expected: { 
   }
 }
 
+async function captureSupplierUpload(page: Page, account: Account, supplier: string, version: number, filename: string, button: Locator) {
+  const endpoint = new URL(account.baseURL + "/procurement")
+  const session = await page.context().newCDPSession(page)
+  const producer = Promise.withResolvers<{ status: number; result: { ok?: boolean; errors?: unknown } }>()
+  void producer.promise.catch(() => undefined)
+  let posts = 0
+  session.on("Fetch.requestPaused", async (event) => {
+    const url = new URL(event.request.url)
+    const status = event.responseStatusCode
+    const continueRequest = () => status === undefined && event.responseErrorReason === undefined
+      ? session.send("Fetch.continueRequest", { requestId: event.requestId })
+      : session.send("Fetch.continueResponse", { requestId: event.requestId })
+    try {
+      if (url.origin !== endpoint.origin || url.pathname !== endpoint.pathname || event.request.method !== "POST" ||
+          url.searchParams.get("upload") !== "supplier" || url.searchParams.get("record") !== supplier) {
+        await continueRequest()
+        return
+      }
+      expect(++posts, "one supplier upload POST per confirmation").toBe(1)
+      expect(url.searchParams.get("recordVersion")).toBe(String(version))
+      expect(url.searchParams.get("name")).toBe(filename)
+      const contentType = Object.entries(event.request.headers).find(([name]) => name.toLowerCase() === "content-type")
+      expect(contentType?.[1]).toBe("text/plain")
+      if (status === undefined) throw new Error("Supplier upload did not receive HTTP headers")
+      // Read the producer response before Chromium can evict it, without forwarding or replaying the uploaded bytes.
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      const result = JSON.parse(raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body) as { ok?: boolean; errors?: unknown }
+      await continueRequest()
+      producer.resolve({ status, result })
+    } catch (error) {
+      producer.reject(error)
+      await continueRequest().catch(() => undefined)
+    }
+  })
+  try {
+    await session.send("Fetch.enable", { patterns: [{ urlPattern: endpoint.href + "\\?*", requestStage: "Response" }] })
+    const [response] = await Promise.all([producer.promise, button.click()])
+    expect(posts).toBe(1)
+    return response
+  } finally {
+    await session.detach()
+  }
+}
+
 async function valueOf<T>(response: APIResponse | Response): Promise<T> {
   expect(response.status()).toBe(200)
   const body = await response.json() as { status: string; value: T }
@@ -204,14 +248,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
     .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const supplierPage = account.baseURL + "/api/ui/pages/CAP27?" + new URLSearchParams({ supplier })
   const reconciled = await observe(page, supplierPage)
-  const uploaded = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
-  }).then(async (response) => ({ response, result: await response.json() as { ok?: boolean; errors?: unknown } }))
-  const [{ response: uploadResponse, result: uploadResult }] = await Promise.all([
-    uploaded, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
-  ])
-  if (uploadResponse.status() !== 200) {
+  const uploaded = await captureSupplierUpload(page, account, supplier, beforeVersion, filename,
+    upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }))
+  if (uploaded.status !== 200) {
     const knownErrors = new Set([
       "Attachment limit is not configured.",
       "Attachment exceeds the configured limit.",
@@ -220,17 +259,16 @@ export async function documentJourney(page: Page, info: TestInfo) {
       "Unsupported file.",
     ])
     await observation(info, "operations-document-upload-blocked", {
-      stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
-      producerErrors: Array.isArray(uploadResult.errors)
-        ? uploadResult.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
+      stage: "supplier-private-upload", httpStatus: uploaded.status,
+      producerErrors: Array.isArray(uploaded.result.errors)
+        ? uploaded.result.errors.filter((value): value is string => typeof value === "string" && knownErrors.has(value))
         : [],
       scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
       bypassedScanner: false,
     })
   }
-  expect(uploadResponse.status()).toBe(200)
-  expect(new URL(uploadResponse.url()).searchParams.get("recordVersion")).toBe(String(beforeVersion))
-  expect(uploadResult).toMatchObject({ ok: true })
+  expect(uploaded.status).toBe(200)
+  expect(uploaded.result).toMatchObject({ ok: true })
   const { response: supplierRead } = await reconciled.completed
   expect(supplierRead.status()).toBe(200)
   const projectionAfterUpload = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await supplierRead.json())
@@ -293,8 +331,10 @@ export async function documentJourney(page: Page, info: TestInfo) {
   page.on("request", requestObserved)
   page.on("requestfailed", requestFailed)
   page.on("response", responseObserved)
-  const issuedLink = page.waitForResponse((response) =>
-    response.request().method() === "GET" && response.url() === linkURL.href).then(async (response) => {
+  const linkRead = await observe(page, linkURL.href, "GET", async (response) => {
+    phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
+  })
+  const issuedLink = linkRead.completed.then(async ({ response }) => {
     expect(response.status()).toBe(200)
     const link = await response.json() as { ok?: boolean; query?: string }
     phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
