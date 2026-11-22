@@ -67,7 +67,8 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       }))
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
-        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line) ||
+          line.startsWith("SF_PORTFOLIO_READONLY {") && line.endsWith("}") && line.length <= 4096) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>

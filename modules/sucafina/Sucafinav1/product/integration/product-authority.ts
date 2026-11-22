@@ -1,3 +1,4 @@
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import { types } from "node:util"
 import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./source-lifecycle.ts"
@@ -127,41 +128,44 @@ export function createSfProductAuthority(input: {
   }
   const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
     supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
-    const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
-    const snapshots = supplied ?? projection?.snapshots ?? currentSfSiblingSnapshots(input.persistence)
-    const currentRead = suppliedCurrent ?? projection?.current
-    if (!snapshots) return undefined
-    const current = identity()
-    if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
-      (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
-    const identityDigest = digestSfValue(current)
-    const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+    const measured = beginSfReadonlyDiagnostic("authority.principal")
+    try {
+      const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
+      const snapshots = supplied ?? projection?.snapshots ?? currentSfSiblingSnapshots(input.persistence)
+      const currentRead = suppliedCurrent ?? projection?.current
+      if (!snapshots) return undefined
+      const current = identity()
+      if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
+        (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
+      const identityDigest = digestSfValue(current)
+      const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+        if (currentRead && !currentRead()) return undefined
+        const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+        if (!actor || (currentRead && !currentRead())) return undefined
+        const access = object(object(snapshot.data.access)[actor.id])
+        if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
+          (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
+          throw new Error("SF_PRODUCT_ACCESS_SCOPE_INVALID")
+        return { actor, surface, assigned: Array.isArray(access.assigned) ? [...access.assigned].toSorted() : [],
+          domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
+      }
+      const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
       if (currentRead && !currentRead()) return undefined
-      const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!actor || (currentRead && !currentRead())) return undefined
-      const access = object(object(snapshot.data.access)[actor.id])
-      if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
-        (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
-        throw new Error("SF_PRODUCT_ACCESS_SCOPE_INVALID")
-      return { actor, surface, assigned: Array.isArray(access.assigned) ? [...access.assigned].toSorted() : [],
-        domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
-    }
-    const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
-    if (currentRead && !currentRead()) return undefined
-    const present = observed.filter((entry) => entry !== undefined)
-    const first = present[0]?.actor
-    if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
-    const grant = grants.find((entry) => entry.principalRef === first.id)
-    if (!grant) return undefined
-    const roles = present.flatMap((entry) => entry.actor.roles.filter((role) => role.surface === entry.surface))
-      .map((role) => ({ surface: role.surface, role: role.role })).toSorted((a, b) => `${a.surface}:${a.role}`.localeCompare(`${b.surface}:${b.role}`))
-    if (!roles.length) return undefined
-    const canWrite = present.some((entry) => entry.actor.canWrite)
-    const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
-    const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
-      principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
-    return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
+      const present = observed.filter((entry) => entry !== undefined)
+      const first = present[0]?.actor
+      if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
+      const grant = grants.find((entry) => entry.principalRef === first.id)
+      if (!grant) return undefined
+      const roles = present.flatMap((entry) => entry.actor.roles.filter((role) => role.surface === entry.surface))
+        .map((role) => ({ surface: role.surface, role: role.role })).toSorted((a, b) => `${a.surface}:${a.role}`.localeCompare(`${b.surface}:${b.role}`))
+      if (!roles.length) return undefined
+      const canWrite = present.some((entry) => entry.actor.canWrite)
+      const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
+      const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
+        principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
+      if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
+      return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
+    } finally { endSfReadonlyDiagnostic(measured) }
   }
   const resolve = async (request: Request) => {
     const observed = observeAuthority(surfaces) ?? authorityData(surfaces)

@@ -1,0 +1,14 @@
+{
+  "package": "app",
+  "packageSelector": "@orchestra/app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "args": [
+    "e2e/sucafina/design-wave-five-analytics.spec.ts"
+  ],
+  "config": "e2e/playwright.production.config.ts",
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}

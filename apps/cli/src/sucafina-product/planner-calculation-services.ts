@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { countSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -229,9 +230,11 @@ export function createSfPlannerCalculationServices(input: {
           // run their producer in a single root, like local mixed closures.
           const inheritedOwner = !!parent?.open && parent.call === call && parent.request === request &&
             parent.requestDigest === requestDigest && parent.binding === binding
+          countSfReadonlyDiagnostic("root.caller.considered", "Root")
           if (call.kind === "ui" && (!parent || inheritedOwner) && input.host === rootHost &&
             input.state === rootState && input.results === rootResults && input.sources === rootSources &&
             rootSources.resolveForecastSource === sourceReader && rootSources.resolveForecastCoverage === coverageReader) {
+            countSfReadonlyDiagnostic("root.caller.host-eligible", "Root")
             const preparedInput = decodeSfOperationInput("sf_scenario_simulate", object(selection.request).request)
             const records = preparedInput.ok && !preparedInput.value.assumptions.length &&
               !preparedInput.value.operations.some((operation) => operation.replacementRef) ? plannerRecordSources(selection.stored) : undefined
@@ -240,6 +243,7 @@ export function createSfPlannerCalculationServices(input: {
               !preparedInput.value.operations.some((operation) => operation.replacementRef) &&
               input.replayScenario === rootReplay && input.evidence === rootEvidence
             if (preparedInput.ok && ((inheritedOwner || cited) && records || mixed)) {
+              countSfReadonlyDiagnostic("root.caller.source-eligible", "Root")
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const evidenceResolve = rootEvidence.resolve, evidenceContext = rootEvidence.context
               const sameOwner = () => scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
@@ -263,11 +267,15 @@ export function createSfPlannerCalculationServices(input: {
                 const coverage = await coverageReader(preparedInput.value.baseRef, call)
                 return coverage.status === "ok" && sameReaders()
               }
+              countSfReadonlyDiagnostic("root.caller.prepare-initial", "Root")
               preparedRoot = await readRoot.prepare(call, initialize, sameReaders, sameOwner)
               if (!preparedRoot) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
-              if (sealFinish && mixed) prepareFinish = () => readRoot.prepare(call, initialize, sameReaders, sameOwner)
-            }
-          }
+              if (sealFinish && mixed) prepareFinish = () => {
+                countSfReadonlyDiagnostic("root.caller.prepare-finish", "Root")
+                return readRoot.prepare(call, initialize, sameReaders, sameOwner)
+              }
+            } else countSfReadonlyDiagnostic(records ? "root.caller.record-direct-bypass" : "root.caller.source-bypass", "Root")
+          } else countSfReadonlyDiagnostic("root.caller.host-bypass", "Root")
           if (verifyRegistration && !preparedRoot) {
             const registered = await verifyRegistration()
             if (registered.status !== "ok") return registered
