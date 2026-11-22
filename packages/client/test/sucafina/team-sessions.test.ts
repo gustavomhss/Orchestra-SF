@@ -161,7 +161,12 @@ test("late headers and body after a profile switch never publish private data", 
     await expect(pending).rejects.toThrow()
     expect(g.client.namespace()).toBeUndefined()
     expect(cancelled).toBe(true)
-  } finally { try { stream.close() } catch {} g.close() }
+  } finally {
+    try { stream.close() } catch {
+      // Retirement already cancelled the controlled response stream; there is nothing left to close.
+    }
+    g.close()
+  }
 }))
 
 test("only namespace-checked corporate event envelopes leave the official SDK iterator", async () => browser(async () => {
