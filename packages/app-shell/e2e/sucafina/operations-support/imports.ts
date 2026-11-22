@@ -452,10 +452,18 @@ export async function importJourney(page: Page, info: TestInfo) {
   ])
   expect(afterRecovery).toEqual(after)
   expect(recoveryTokens).toEqual(afterTokens)
-  // The Files transport preflights context before issuing a receipt read after cross-tab logout.
-  const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
-  await reader.getByRole("button", { name: "Sign out", exact: true }).click()
-  expect((await signedOut).status()).toBe(204)
+  // Open the installed Planner shell's sign-out control in the reader tab.
+  // The Files tab stays on its receipt so its next read exercises context preflight.
+  const planner = account.baseURL + "/planner"
+  expect((await reader.goto(planner))?.status()).toBe(200)
+  await expect(reader).toHaveURL(planner)
+  const signOut = reader.getByRole("button", { name: "Sign out", exact: true })
+  await expect(signOut).toBeEnabled()
+  const [signedOut] = await Promise.all([
+    reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST", { timeout: 15_000 }),
+    signOut.click(),
+  ])
+  expect(signedOut.status()).toBe(204)
   const { response: revoked } = await forwardedRead(page, context.url(), () => refreshReceipt.click())
   expect(revoked.status()).toBe(401)
   expect(await revoked.json()).toEqual({ status: "unauthenticated" })
