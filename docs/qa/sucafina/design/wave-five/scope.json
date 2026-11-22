@@ -322,7 +322,7 @@
     "pendingFinalTestTypes": [],
     "latestTechnicalAttempt": 19,
     "latestInstalledFailures": {
-      "portfolioDiagnostic": 45013832359,
+      "portfolioDiagnostic": 45015314625,
       "isolatedSensitivity": 45003432183,
       "cleanPortfolio": 45008412557
     },
@@ -338,13 +338,19 @@
       "guardRun": 45007665762,
       "installedQualification": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED"
     },
-    "latestInstalledDiagnosticEvidence": "analytics/attempt-16/README.md",
-    "diagnosticInProgress": {
+    "latestInstalledDiagnosticEvidence": "analytics/attempt-17/README.md",
+    "latestDiagnostic": {
       "label": "Portfolio20",
-      "status": "IN_PROGRESS_AT_CHECKPOINT_NO_OUTCOME_RECORDED",
+      "status": "FAILED_ORIGINAL60S_PARTIAL_COMPLETE_SAMPLES_THROUGH50S",
       "run": 45015314625,
       "job": 137186259049,
-      "snapshot": "cad315298856419c6da18f561e593688d38ec982"
+      "cleanupJob": 137188589158,
+      "cleanupStatus": "SUCCESS",
+      "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+      "samples": 5,
+      "lastSampleMs": 50000,
+      "finalObserved": false,
+      "qualificationAdded": 0
     }
   }
 }

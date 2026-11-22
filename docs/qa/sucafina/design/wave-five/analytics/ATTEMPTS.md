@@ -333,3 +333,14 @@ Original A04/rule preparation and exact selection readbacks passed; comparisons 
 Profiler acquisition is **incomplete**: ten valid scalar records comprise one started event and nine root markers, with zero periodic/final snapshots and zero bucket records. Five sealed callback entries and four exits were observed; the fifth has no exit. No hit/miss totals, drops, pending counts or cost attribution to line 619 can be inferred. Missing snapshots do not mean zero activity. The candidate change to 619 was not included.
 
 All seven original JPEGs were actually viewed: six readable list/configuration states and one pending-preview failure image. [Receipt and visual review](attempt-16/README.md), [manifest](attempt-16/manifest.json), [actual profile records](attempt-16/profile.json) and [source events](attempt-16/source-events.json) preserve this failed diagnostic. No full UI42–44 qualification is added; wave status remains 12/15.
+
+
+## Attempt 17 — Portfolio20 complete periodic samples, original timeout
+
+[Run 45015314625](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45015314625), snapshot `cad315298856419c6da18f561e593688d38ec982`, changes only the collector against19; product runtime remains `2d3abae`. Test `137186259049` failed at the original first-preview wait, 60,000 ms; cleanup `137188589158` passed. Full preparation and exact readbacks passed, both histories were 200/ok, and the one preview had no observed response. No replay, extended wait or explicit evaluation occurred.
+
+Five settled-span checkpoints at 10,002/20,001/30,001/40,001/50,000 ms each contain 102 unique buckets. All 510 rows satisfy calls=settled+pending and the pending sums match; skips/drops/errors are zero. The last cumulative sample is partial at50s with four pending spans and no final summary. Later root markers are preserved separately.
+
+The installed bridge and source-fence memo were used: 9,065 prepared Choice hits, 1,276 legitimate non-readonly misses, and 550 fence memo hits/1 miss. The raw-only guard has 6,568 registration misses, but all measured guard digests total951ms through50s, including ineligible paths. That cost does not justify treating619 as the dominant cause; its candidate was not executed. Planner source1/source2 have7,256/7,274ms inclusive, without exclusive residual inferred by subtracting nested rows.
+
+All seven original JPEGs were actually viewed. [Receipt and findings](attempt-17/README.md), [manifest](attempt-17/manifest.json), [profile](attempt-17/profile.json), [last-sample aggregates](attempt-17/aggregates.json) and [source events](attempt-17/source-events.json) preserve the result. These partial states do not qualify UI42–44; the wave remains12/15.

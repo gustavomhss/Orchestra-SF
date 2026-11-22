@@ -1,0 +1,116 @@
+{
+  "schema": "sf-design-wave-five-diagnostic-root-review-v1",
+  "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+  "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+  "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+  "run": 45015314625,
+  "testJob": 137186259049,
+  "cleanupJob": 137188589158,
+  "archiveWorker": "b4443c57ac6aac1ea9be7e74aa5169f0868a8317",
+  "outcome": "FAILED_ORIGINAL_FIRST_PREVIEW_60000MS_NO_RESPONSE_OBSERVED",
+  "cleanup": "SUCCESS",
+  "parity": {
+    "profile": {
+      "exactOriginalRecords": true,
+      "records": 533,
+      "rootParsedErrors": 0
+    },
+    "events": {
+      "records": true,
+      "stages": true,
+      "diagnostics": true
+    },
+    "images": [
+      {
+        "name": "UI42-list-dark-desktop-test-data",
+        "parts": 5,
+        "sha": "00f7a8e0c3e6dbe30eb393b18f16e20bacb69ec5",
+        "equal": true
+      },
+      {
+        "name": "UI42-list-light-desktop-test-data",
+        "parts": 5,
+        "sha": "422050c6ffa8cfb1b406737c301411aa0ce060cb",
+        "equal": true
+      },
+      {
+        "name": "UI42-list-dark-390-test-data",
+        "parts": 2,
+        "sha": "ef564297b53f614b50a9a9f182dc824a64364ede",
+        "equal": true
+      },
+      {
+        "name": "UI42-list-light-320-test-data",
+        "parts": 2,
+        "sha": "f458db1164b281d1059381d7808d7a2bab57ef8c",
+        "equal": true
+      },
+      {
+        "name": "UI42-empty-authorized-case-test-data",
+        "parts": 6,
+        "sha": "1116fad9a92e5cefed9ca91fb7ecbf63a9d71f8f",
+        "equal": true
+      },
+      {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "parts": 6,
+        "sha": "cd71b3bc34b05c137d096c65c84a0648921ee716",
+        "equal": true
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 7,
+        "sha": "8cc51b0f8b4f8feb6d8d3955b18a4f01b04c3d5b",
+        "equal": true
+      }
+    ],
+    "lastSampleBuckets": {
+      "exactOriginal": true,
+      "count": 102
+    }
+  },
+  "sampling": {
+    "samples": 5,
+    "elapsedMs": [
+      10002,
+      20001,
+      30001,
+      40001,
+      50000
+    ],
+    "sameKeysEachSample": 102,
+    "callsEqualSettledPlusPending": true,
+    "cumulativeMonotonic": true,
+    "pending": [
+      2,
+      2,
+      6,
+      2,
+      4
+    ],
+    "drops": 0,
+    "errors": 0,
+    "skippedThresholds": 0,
+    "finalObserved": false
+  },
+  "rootVisualReview": [
+    {
+      "file": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "finding": "Original three scenarios; one candidate and version-2 criterion selected, monthly hypothesis unselected, limit4 focus visible; no result claim."
+    },
+    {
+      "file": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "finding": "Running, disabled controls, pending skeleton and empty history; no connection banner or completed result."
+    }
+  ],
+  "interpretation": [
+    "All 533 original profile records, 32 source/context/capture records, 46 fixture stages and 3 diagnostics match the completed job log.",
+    "All 7 remote JPEGs match the 33 original chunks exactly; root viewed 2 and analytics reviewer viewed 7.",
+    "Snapshot 5 alone provides counters through 50000 ms; later root markers do not extend bucket coverage. Four nested spans remain pending.",
+    "The 951 ms guard-digest subtotal includes ineligible paths and does not estimate candidate 619 savings. Candidate 619 remains held, unexecuted and unintegrated.",
+    "Recognition and fence memo have positive evidence. No read-scope.* event was observed; FinancePairObservation owns a separate witness and does not call PlannerCalculationReadScope.",
+    "No additional qualification; latest clean attempt remains Portfolio18; accepted/merged 41, qualified 12/15, UI42/UI43/UI44 pending."
+  ],
+  "userApproval": "PENDING",
+  "merged": false
+}
