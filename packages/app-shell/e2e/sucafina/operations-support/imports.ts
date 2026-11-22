@@ -4,7 +4,7 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
@@ -227,10 +227,42 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   }
   expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
   const surface = page.locator('[data-sf-surface="CAP23"]')
-  await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
-  // CAP23 acknowledges the save; read the single record from this isolated installation.
+  const reads: { event: string; method: string; path: string; status?: number; failure?: string }[] = []
+  const versionRead = (request: Request) => {
+    const url = new URL(request.url())
+    return request.method() === "GET" && url.origin === account.origin &&
+      url.pathname === new URL(account.baseURL).pathname + "/planner" && url.searchParams.get("page") === "Versions"
+  }
+  const requested = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "request", method: request.method(), path: new URL(request.url()).pathname })
+  }
+  const responded = (response: Response) => {
+    if (versionRead(response.request())) reads.push({ event: "response", method: response.request().method(),
+      path: new URL(response.url()).pathname, status: response.status() })
+  }
+  const failed = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "failed", method: request.method(),
+      path: new URL(request.url()).pathname, failure: request.failure()?.errorText })
+  }
+  page.on("request", requested)
+  page.on("response", responded)
+  page.on("requestfailed", failed)
   const createdRow = surface.locator("tr[data-sf-row]")
-  await expect(createdRow).toHaveCount(1)
+  try {
+    await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
+    // The original UI must finish its authorized readback; no reload, timeout extension or substitute read can pass this.
+    await expect(createdRow).toHaveCount(1)
+  } finally {
+    page.off("request", requested)
+    page.off("response", responded)
+    page.off("requestfailed", failed)
+    await observation(info, "operations-first-version-readback", {
+      path: new URL(page.url()).pathname, year: new URL(page.url()).searchParams.get("year"), reads,
+      states: await page.locator("[data-sf-state]").evaluateAll((panels) => panels.map((panel) => ({
+        state: panel.getAttribute("data-sf-state"), text: panel.textContent?.trim().slice(0, 240),
+      }))),
+    })
+  }
   await expect(createdRow).toHaveAttribute("data-sf-row", /\S+/)
   const version = (await createdRow.getAttribute("data-sf-row"))!
   await createdRow.getByRole("button", { name: "Open record", exact: true }).click()
@@ -243,7 +275,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   const nameField = versionDetail.locator("#sf-u46-name")
   await expect(nameField).toBeEnabled()
   await nameField.fill(name)
-  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save", exact: true }), { id: version, version: 1, values: { name } })
+  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save version", exact: true }), { id: version, version: 1, values: { name } })
   await expect(versionDetail.locator("#sf-u46-name")).toHaveValue(name)
   await expect(versionDetail.getByRole("heading", { name, exact: true })).toBeVisible()
   const fiscalYear = await year.inputValue()

@@ -152,7 +152,7 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
     values: { supplier: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } },
   })
   await expect(suppliers.getByRole("status").filter({ hasText:
-    "The producer acknowledged the command; no synthetic receipt was created.",
+    "Operation accepted.",
   })).toBeVisible()
   const supplierRow = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(supplierRow).toHaveCount(1)
@@ -522,7 +522,7 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   expect(deleted.body).toMatchObject({ ok: true })
   expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
   await expect(reader.locator(".sf-u14-layout").getByRole("status").filter({ hasText:
-    "The producer acknowledged the command; no synthetic receipt was created.",
+    "Operation accepted.",
   })).toBeVisible()
   await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
   await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
