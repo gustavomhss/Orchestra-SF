@@ -9,7 +9,8 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { preservedMeetingLine, readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
-import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { PeriodText, StatusText, WhenText } from "../labels"
+import { SfPreservedEvidence, SfPreservedLiteral } from "./value"
 import "./preserved.css"
 import "../wave-five.css"
 import { SfOpenReviewReference } from "../open-reference"
@@ -192,13 +193,13 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                           <h4>{t("sf.u32.values")}</h4>
                           <dl class="sf-n28-values">
                             <For each={projection().values}>
-                              {(value) => <div>
+                              {(value) => <div data-sf-preserved-value-id={value.id}>
                                 <dt>{value.id}</dt>
                                 <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} />}</span>
-                                  <Show when={value.unit}><span> {value.unit}</span></Show>
-                                  <Show when={value.currency}><span> {value.currency}</span></Show>
-                                  <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
+                                  <span><SfPreservedLiteral value={value.value} /></span>
+                                  <Show when={value.unit}><small>{t("sf.u32.unit")}: {value.unit}</small></Show>
+                                  <Show when={value.currency}><small>{t("sf.u32.currency")}: {value.currency}</small></Show>
+                                  <small> {t("sf.u32.evidence")}: <SfPreservedEvidence value={value.evidenceState} /></small>
                                 </dd>
                               </div>}
                             </For>
@@ -297,14 +298,30 @@ function SfPreservedMeeting(props: {
   return (
     <section class="mx-card sf-n28-section sf-review-meeting" aria-label={t("sf.u32.meeting")}>
       <p role="status">{language.t("sf.u32.meetingSummary", { reference: props.review.id, version: props.review.version, createdAt: props.review.createdAt })}</p>
+      <div class="sf-n28-actions">
+      <button type="button" class="mx-btn" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{t("sf.u32.previousTopic")}</button>
+      <button type="button" class="mx-btn" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{t("sf.u32.nextTopic")}</button>
+      <button type="button" class="mx-btn" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{t("sf.u32.checkUpdates")}</button>
+      </div>
       <Show when={section()}>
         {(current) => <>
           <h2>{current().title}</h2>
           <p>{language.t("sf.u32.meetingPeriod", { start: current().period.start, end: current().period.end, count: current().count })}</p>
           <Show when={projection()} fallback={<p>{t("sf.u32.materialUnavailable")}</p>}>
-            {(shown) => <ul>
-              <For each={shown().values}>{(value) => <li>{preservedMeetingLine(value)}</li>}</For>
-            </ul>}
+            {(shown) => <dl class="sf-review-meeting-values">
+              <For each={shown().values}>{(value) => <div>
+                <dt>{value.id}</dt>
+                <dd>
+                  <strong><SfPreservedLiteral value={value.value} /></strong>
+                  <Show when={value.unit || value.currency}><span>{[value.unit, value.currency].filter(Boolean).join(" · ")}</span></Show>
+                  <small>{t("sf.u32.evidence")}: <SfPreservedEvidence value={value.evidenceState} /></small>
+                  <details>
+                    <summary>{t("sf.u32.sources")}</summary>
+                    <p>{preservedMeetingLine(value)}</p>
+                  </details>
+                </dd>
+              </div>}</For>
+            </dl>}
           </Show>
           <Show when={sources().length}>
             <ul aria-label={t("sf.u32.sourceNav")}>
@@ -315,11 +332,6 @@ function SfPreservedMeeting(props: {
           </Show>
         </>}
       </Show>
-      <div class="sf-n28-actions">
-      <button type="button" class="mx-btn" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{t("sf.u32.previousTopic")}</button>
-      <button type="button" class="mx-btn" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{t("sf.u32.nextTopic")}</button>
-      <button type="button" class="mx-btn" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{t("sf.u32.checkUpdates")}</button>
-      </div>
     </section>
   )
 }

@@ -1,4 +1,4 @@
-import { expect, type Browser, type Page, type Request, type TestInfo } from "@playwright/test"
+import { expect, type Browser, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
 import { waveFourTest, capture, enter, reflow, scheme, scrollPageTop } from "./wave-four"
 
@@ -42,6 +42,38 @@ export async function readPortfolio(page: Page, owner: AnalyticsOwner, operation
   expect(body.status).toBe("ok")
   return body.value
 }
+/** Report the actual native ctx.context reads without changing their admission. */
+export function observeAnalyticsContext(page: Page, owner: AnalyticsOwner) {
+  const reads: Promise<{ http: number; body: unknown }>[] = []
+  page.on("response", (response) => {
+    if (response.request().method() !== "GET" || !new URL(response.url()).pathname.endsWith("/api/ui/context")) return
+    reads.push(response.json().then((body: unknown) => ({ http: response.status(), body })))
+  })
+  return async (stage: string) => {
+    expect(reads.length).toBeGreaterThan(0)
+    for (const pending of reads.splice(0)) {
+      const { http, body: raw } = await pending
+      const body = object(raw)
+      expect(http).toBe(200)
+      expect(body.status).toBe("ok")
+      const context = object(body.value)
+      expect(object(context.stamp)).toEqual(expect.objectContaining({
+        installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+      }))
+      const resources = array(context.availability).map(object)
+        .filter((resource) => resource.family === "portfolio" || array(resource.operations).map(object)
+          .some((operation) => operation.operationId === "decisions.controls.read"))
+        .map((resource) => ({ family: resource.family, resource: resource.resource, state: resource.state,
+          operations: array(resource.operations).map(object)
+            .filter((operation) => String(operation.operationId).startsWith("portfolio.") ||
+              operation.operationId === "decisions.controls.read")
+            .map((operation) => ({ operationId: operation.operationId, state: operation.state,
+              operational: operation.operational, reason: operation.reason ?? null })) }))
+      console.info("SF_ANALYTICS_CONTEXT " + JSON.stringify({ stage, http, status: body.status,
+        ownerBinding: "exact", resources }))
+    }
+  }
+}
 export async function captureAnalytics(page: Page, info: TestInfo, name: string) {
   await reflow(page)
   const root = page.locator('[data-sf-wave="five"]')
@@ -52,24 +84,26 @@ export async function captureAnalytics(page: Page, info: TestInfo, name: string)
   console.info("SF_ANALYTICS_CAPTURE " + JSON.stringify({ name, width: page.viewportSize()?.width,
     surface: await root.getAttribute("data-sf-surface"), stage: await root.getAttribute("data-sf-stage") }))
 }
-export async function captureModes(page: Page, info: TestInfo, prefix: string) {
+export async function captureModes(page: Page, info: TestInfo, prefix: string, focus?: Locator) {
+  const captureMode = async (suffix: string) => {
+    await scrollPageTop(page)
+    if (focus) await focus.scrollIntoViewIfNeeded()
+    await captureAnalytics(page, info, prefix + suffix + "-test-data")
+  }
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-dark-desktop-test-data")
+  await captureMode("-dark-desktop")
   await scheme(page, "light")
-  await captureAnalytics(page, info, prefix + "-light-desktop-test-data")
+  await captureMode("-light-desktop")
   // The native shell places its theme toggle outside the compact navigation.
   // Choose each actual theme while that control is visible, then measure narrow CSS reflow.
   await scheme(page, "dark")
   await page.setViewportSize({ width: 390, height: 844 })
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-dark-390-test-data")
+  await captureMode("-dark-390")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "light")
   await page.setViewportSize({ width: 320, height: 800 })
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-light-320-test-data")
+  await captureMode("-light-320")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")
 }

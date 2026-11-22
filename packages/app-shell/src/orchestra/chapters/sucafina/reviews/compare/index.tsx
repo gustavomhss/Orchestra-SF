@@ -8,7 +8,8 @@ import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
-import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { PeriodText, WhenText } from "../labels"
+import { SfPreservedEvidence, SfPreservedLiteral } from "../preserved/value"
 import "../preserved/preserved.css"
 import "../wave-five.css"
 
@@ -74,10 +75,10 @@ function ChangeKinds(props: {
 function ValueCell(props: { entry: PreservedValue | undefined; projection: ReviewProjection; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().value} currency={entry().currency} />}</strong>
+      <strong><SfPreservedLiteral value={entry().value} /></strong>
       <span>{props.t("sf.u32.currency")}: {entry().currency ?? props.t("sf.u32.notProvided")}</span>
       <span>{props.t("sf.u32.unit")}: {entry().unit ?? props.t("sf.u32.notProvided")}</span>
-      <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
+      <span>{props.t("sf.u32.evidence")}: <SfPreservedEvidence value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.completeness")}: {props.projection.missing.length > 0
         ? props.t("sf.u32.declaredGaps") : props.t("sf.u32.noDeclaredGaps")}</span>
       <Show when={entry().sourceRefs.length > 0 || entry().drilldown !== null}>
@@ -94,9 +95,9 @@ function ValueCell(props: { entry: PreservedValue | undefined; projection: Revie
 function ComponentCell(props: { entry: PreservedComponent | undefined; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().amount === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().amount} currency={entry().currency} />}</strong>
+      <strong><SfPreservedLiteral value={entry().amount} /></strong>
       <span>{props.t("sf.u32.currency")}: {entry().currency}</span>
-      <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
+      <span>{props.t("sf.u32.evidence")}: <SfPreservedEvidence value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.sources")}:</span>
       <SourceRefList sources={entry().sourceRefs} t={props.t} />
     </div>}
@@ -238,7 +239,7 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         <SfStatePanel state={store.state} messageKey={key(store.reason || "sf.u32.reviewUnavailable")}
           onRetryRead={() => { void read() }}>
           <Show when={store.previous && store.current}>
-            <section data-sf-comparison-compatibility={compatible() ? "compatible" : "incompatible"}>
+            <section class="sf-n28-section" data-sf-comparison-compatibility={compatible() ? "compatible" : "incompatible"}>
               <h2>{t(compatible() ? "sf.u32.compatible" : "sf.u32.incompatible")}</h2>
               <dl class="sf-n28-dual">
                 <div class="mx-card">

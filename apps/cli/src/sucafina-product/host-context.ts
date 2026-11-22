@@ -1144,16 +1144,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
                 dependencies.push(product.http.evaluate, product.contribution.persistent,
                   product.contribution.persistent.evaluateAndStore, portfolio.portfolioBindings); break
               case "portfolio.decision-sensitivity-units":
-                if (!portfolio.units) return undefined
-                dependencies.push(product.http.sensitivityUnits, portfolio.units, portfolio.units.issue); break
+                dependencies.push(product.http.sensitivityUnits, product.issueSensitivityUnits); break
               case "portfolio.decision-sensitivity-read":
                 if (!product.contribution.persistentSensitivity) return undefined
                 dependencies.push(product.http.readSensitivity, product.contribution.persistentSensitivity,
                   product.contribution.persistentSensitivity.read); break
               case "portfolio.decision-sensitivity-evaluate":
-                if (!product.contribution.persistentSensitivity || !portfolio.units) return undefined
+                if (!product.contribution.persistentSensitivity) return undefined
                 dependencies.push(product.http.sensitivity, product.contribution.persistentSensitivity,
-                  product.contribution.persistentSensitivity.evaluateAndStore, portfolio.units, portfolio.units.issue); break
+                  product.contribution.persistentSensitivity.evaluateAndStore, product.issueSensitivityUnits, product.sensitivity); break
             }
             return { producer: productHttp, dependencies }
           },

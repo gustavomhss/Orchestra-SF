@@ -1,13 +1,17 @@
-import { expect, test } from "bun:test"
+import { afterEach, expect, test } from "bun:test"
+import { mkdtemp, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import path from "node:path"
 import type { TrustedUiContext } from "../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { createSfProductState } from "../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { createSfSourcePersistence } from "../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createSfUiAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
-import type { AssetPersistence, BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
+import type { BlobTransaction } from "../../../modules/sucafina/Sucafinav1/runtime/assets.ts"
 import { object, type Snapshot } from "../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Surface } from "../../../modules/sucafina/Sucafinav1/src/identity.ts"
-import { empty, testPersistence } from "../../../modules/sucafina/Sucafinav1/test/fixture/persistence.ts"
+import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { observeSfPortfolioReadingHealth } from "../src/sucafina-product/native-ui/portfolio-reading-health.ts"
 
 type Input = Parameters<typeof observeSfPortfolioReadingHealth>[0]
@@ -23,24 +27,32 @@ const stamp = Object.freeze({
   principalRef: "portfolio-health-person", policyVersion: "portfolio-health-policy", accessRevision: "portfolio-health-access",
 })
 
-/** Original UI leases, C08 reader and source lifecycle; only external revocation is controlled. */
+const cleanups: (() => Promise<void>)[] = []
+afterEach(async () => { for (const cleanup of cleanups.splice(0)) await cleanup() })
+
+/** Original SQLite, current-choice wrappers, source lifecycle, C08 and UI leases. No result or authority receipt is installed. */
 async function fixture() {
   const controls: { allowed: boolean; revision: string; installed: boolean; calls: number; deniedOperation: string; deniedNamespace: string; canWrite: boolean } = {
     allowed: true, revision: stamp.accessRevision, installed: true, calls: 0, deniedOperation: "", deniedNamespace: "", canWrite: true,
   }
   const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void>; finish?: () => void } = {}
-  const memory = testPersistence({ dashboard: empty(), planner: empty(), procurement: empty() })
+  const directory = await mkdtemp(path.join(tmpdir(), "sf-portfolio-health-"))
+  const storage = await openLocalStore(directory)
+  cleanups.push(async () => { await storage.dispose(); await rm(directory, { recursive: true, force: true }) })
   const never = async (): Promise<never> => {
     controls.calls++
     throw new Error("Health must not invoke scenario, preview, evaluation, persistence, dispatch, receipts or blobs")
   }
-  const blobs: BlobTransaction = { get: never, put: never, remove: never }
-  const driver: AssetPersistence = {
-    transaction: (surface, work, options) => memory.persistence.transaction(surface, async (snapshot) => {
+  const driver: Parameters<typeof createSfSourcePersistence>[0]["persistence"] = {
+    ...storage,
+    transaction: (surface, work, options) => storage.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
       await hooks.read?.(surface, snapshot)
       return work(snapshot, blobs)
     }, options),
   }
+  const allSnapshots = storage.transactionAll
+  if (typeof allSnapshots !== "function") throw new Error("Original SQLite snapshot transaction required")
+  const snapshotDigest = () => allSnapshots(async (snapshots) => ({ commit: false, value: digestSfValue(snapshots) }))
   let ids = 0
   const identity = () => controls.allowed ? {
     installationId: stamp.installationId, projectId: stamp.projectId, principalRef: stamp.principalRef,
@@ -66,10 +78,32 @@ async function fixture() {
       hooks.finish?.()
     },
   }
-  const persistence = createSfSourcePersistence({
-    persistence: driver, enumerate: () => [], createId: () => "source-" + ++ids,
+  const choiceFence = createCurrentChoiceFence({
+    persistence: driver,
+    host: () => { throw new Error("Metadata health must not enter a case execution scope") },
+    operationIdentity: () => undefined,
+    identity: () => ({ installationId: stamp.installationId, projectId: stamp.projectId }),
   })
-  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+  if (!currentChoiceOwnsSnapshotTransactions(choiceFence, driver))
+    throw new Error("Original current-choice transaction ownership required")
+  const sourcePersistence = createSfSourcePersistence({
+    persistence: choiceFence.persistence, enumerate: () => [], createId: () => "source-" + ++ids,
+  })
+  const transactionAll = sourcePersistence.transactionAll, holdTargetPreimage = storage.holdTargetPreimage
+  if (typeof transactionAll !== "function" || typeof holdTargetPreimage !== "function")
+    throw new Error("Original SQLite installed snapshot capabilities required")
+  const persistence = {
+    ...sourcePersistence,
+    dashboardSourceFence: Object.freeze({
+      transaction: sourcePersistence.transaction, transactionAll,
+      currentSnapshots: sourcePersistence.currentSnapshots, currentSnapshot: sourcePersistence.currentSnapshot,
+      observeAuthority: sourcePersistence.observeAuthority, readSealed: sourcePersistence.readSealed,
+      hasSnapshotRoot: sourcePersistence.hasSnapshotRoot, readDashboardAuthority: sourcePersistence.readDashboardAuthority,
+      holdTargetPreimage,
+      current: () => currentChoiceOwnsSnapshotTransactions(choiceFence, driver),
+    }),
+  }
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await sourcePersistence.initializeSources(surface)
   const controller = new AbortController()
   const request = new Request("https://portfolio-health.example/sucafina/api/ui/context", { signal: controller.signal })
   const state = createSfProductState({
@@ -112,17 +146,17 @@ async function fixture() {
     for (const lease of admitted) expect(originalUi.requestFor(lease)).toBeUndefined()
     expect(controls.calls).toBe(0)
   }
-  return { observe, controls, hooks, sources, memory, admitted, finished, terminal, request, controller, input, persistence }
+  return { observe, controls, hooks, sources, storage, snapshotDigest, admitted, finished, terminal, request, controller, input, persistence }
 }
 
 test("portfolio health observes the seven installed boundaries without producing a result or write", async () => {
   const context = await fixture()
-  const before = digestSfValue(context.memory.state)
+  const before = await context.snapshotDigest()
   expect(await context.observe()).toEqual(operations.map((operationId) => ({
     operationId, state: "ready", reason: null, operational: true,
   })))
   expect(context.admitted).toHaveLength(7)
-  expect(digestSfValue(context.memory.state)).toBe(before)
+  expect(await context.snapshotDigest()).toBe(before)
   context.terminal()
 })
 
@@ -216,7 +250,10 @@ test("portfolio health publishes no readiness when finish disposes the installat
 
 test("portfolio health requires initialized canonical C08 state", async () => {
   const context = await fixture()
-  delete context.memory.state.dashboard.data.__sfProductV1
+  await context.storage.transaction("dashboard", async (snapshot: Snapshot) => {
+    delete snapshot.data.__sfProductV1
+    return { commit: true, value: true }
+  })
   expect(await context.observe(history)).toEqual([])
   expect(context.admitted).toHaveLength(1)
   context.terminal()

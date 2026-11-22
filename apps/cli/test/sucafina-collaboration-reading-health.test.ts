@@ -44,8 +44,10 @@ afterEach(async () => { for (const cleanup of cleanups.splice(0)) await cleanup(
 
 /** Original SQLite storage, C08 reader, source lifecycle and UI leases. No producer response or receipt is installed. */
 async function fixture() {
-  const controls = { allowed: true, canWrite: true, revision: stamp.accessRevision, installed: true,
-    calls: 0, deniedOperation: "", deniedNamespace: "" }
+  const controls: { allowed: boolean; canWrite: boolean; revision: string; installed: boolean; calls: number; deniedOperation: string; deniedNamespace: string } = {
+    allowed: true, canWrite: true, revision: stamp.accessRevision, installed: true,
+    calls: 0, deniedOperation: "", deniedNamespace: "",
+  }
   const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void>; finish?: () => void } = {}
   const directory = await mkdtemp(path.join(tmpdir(), "sf-collaboration-health-"))
   const storage = await openLocalStore(directory)

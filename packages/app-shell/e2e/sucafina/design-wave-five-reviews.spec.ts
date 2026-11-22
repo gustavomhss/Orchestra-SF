@@ -1,7 +1,7 @@
-import { expect, type Page, type Request } from "@playwright/test"
+import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
-import { SfReviewDomainProjection } from "@orchestra/schema/sucafina/reviews"
-import { readPreservedProjection } from "../../src/orchestra/chapters/sucafina/reviews/preserved/model"
+import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
+import { preservedValueRows, readPreservedProjection } from "../../src/orchestra/chapters/sucafina/reviews/preserved/model"
 import { seedWaveFiveReviewProposal } from "./design-support/wave-five-reviews-seed"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { waveFourTest, enter, observePage, scheme, reflow, capture, scrollPageTop } from "./design-support/wave-four"
@@ -29,6 +29,20 @@ function monitor(page: Page) {
     }).catch(() => undefined)
   })
   return reads
+}
+function guardExternalWrites(page: Page, writes: Request[] = []) {
+  page.on("request", (request) => {
+    const mode = new URL(request.url()).searchParams.get("sf") ?? ""
+    if (request.method() === "POST" &&
+      /collaboration|notify|send|review-report|report-prepare|hot-topic-prepare|hot-topic-apply/.test(mode))
+      writes.push(request)
+  })
+  return writes
+}
+async function captureValues(page: Page, info: TestInfo, name: string, presenting: boolean) {
+  const selector = presenting ? ".sf-review-meeting-values > div" : "[data-sf-review-sequence] .sf-n28-values > div"
+  await page.locator(selector).first().scrollIntoViewIfNeeded()
+  await capture(page, info, name)
 }
 async function screen(page: Page, owner: Owner, selected: Screen, br = false) {
   await enter(page, owner, selected.href, br ? selected.titleBr : selected.title, 40_000)
@@ -68,19 +82,70 @@ async function preserve(page: Page) {
   return reference
 }
 
-waveFourTest("wave five reviews: original agenda, preserved sources, comparison and proposal boundaries", async ({ page, browser, installation, owner }, info) => {
+waveFourTest("wave five proposals: original draft and missing-source boundaries", async ({ page, browser, installation, owner }, info) => {
+  waveFourTest.setTimeout(420_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  expect(info.config.workers).toBe(1)
+  const diagnostics = observePage(page)
+  const reads = monitor(page)
+  const externalWrites = guardExternalWrites(page)
+  const draft = await seedWaveFiveReviewProposal(page.request, installation)
+  const proposal: Screen = { id: "UI54",
+    href: installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(draft.draftRef),
+    title: "Follow-up proposal", titleBr: "Proposta de encaminhamento", state: "ready" }
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await screen(page, owner, proposal)
+  await expect(page.locator('[data-sf-surface="UI54"]')).toContainText(draft.action)
+  await expect(page.locator('[data-component="sf-change-review"]')).toHaveCount(0)
+  await capture(page, info, "UI54-dark-desktop-original-draft-test-data")
+  await scheme(page, "light")
+  await capture(page, info, "UI54-light-desktop-original-draft-test-data")
+  await scheme(page, "dark")
+  await page.setViewportSize({ width: 320, height: 800 })
+  await reflow(page)
+  await capture(page, info, "UI54-dark-320-original-draft-test-data")
+  // Missing selector is a real negative source read, never a synthetic proposal success.
+  await screen(page, owner, { ...proposal, href: installation.origin +
+    "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef("design-test-missing-proposal"), state: "not-found" })
+  await capture(page, info, "UI54-dark-320-missing-source-test-data")
+
+
+  const cookies = await page.context().cookies(installation.origin + installation.mount)
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+    reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: { cookies, origins: [{ origin: installation.origin,
+      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    const localizedDiagnostics = observePage(localized)
+    guardExternalWrites(localized, externalWrites)
+    await screen(localized, owner, proposal, true)
+    await capture(localized, info, "UI54-pt-BR-dark-desktop-original-draft-test-data")
+    expect(localizedDiagnostics.pageErrors).toEqual([])
+  } finally { await portuguese.close() }
+  expect(externalWrites).toHaveLength(0)
+  expect(diagnostics.pageErrors).toEqual([])
+  await info.attach("wave-five-proposals-source-manifest", { contentType: "application/json", body: JSON.stringify({
+    surfaces: ["UI54"], proposalDraftRef: draft.draftRef, reads,
+    originalFixture: "Independent test-scoped installation; source draft created through original registered producers.",
+    limitations: ["No recorded current choice; preparation, apply and receipt remain unavailable.",
+      "No proposal applied; no collaboration or notification sent.",
+      "Narrow reflow is not actual browser zoom."],
+  }, null, 2) })
+})
+
+waveFourTest("wave five reviews: original agenda, preserved sources, comparison and report selection", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(720_000)
   page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const reads = monitor(page)
-  const externalWrites: Request[] = []
-  page.on("request", (request) => {
-    const mode = new URL(request.url()).searchParams.get("sf") ?? ""
-    if (request.method() === "POST" && /collaboration|notify|send|review-report|report-prepare/.test(mode))
-      externalWrites.push(request)
-  })
+  const externalWrites = guardExternalWrites(page)
   const base = installation.origin + "/orchestra/sf-reviews/"
   await enter(page, owner, base + "agenda?year=" + installation.year, "Meeting agenda")
   await expect(page.locator('[data-sf-surface="UI47"] .sf-state-panel')).toHaveAttribute("data-sf-state", "empty")
@@ -109,7 +174,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   expect(sourceRead.status()).toBe(200)
   const sourceBody = object(await sourceRead.json())
   expect(sourceBody.status).toBe("ok")
-  const originalReview = object(sourceBody.value)
+  const originalReview = Schema.decodeUnknownSync(SfReviewPreserved)(sourceBody.value)
   const originalSections = originalReview.sections
   if (!Array.isArray(originalSections)) throw new Error("Original preserved sections required")
   const originalContent = object(object(originalSections[0]).content)
@@ -143,10 +208,25 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   }
   await page.locator("[data-sf-preserved-confirmed]").getByRole("button", { name: "Open preserved review", exact: true }).click()
   await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(first))
-  await expect(page.locator('[data-sf-surface="UI48"] .sf-n28-values > div')).toHaveCount(decoded.values.length)
+  const renderedValues = page.locator('[data-sf-review-sequence] .sf-n28-values > div')
+  await expect(renderedValues).toHaveCount(decoded.values.length)
+  await expect(renderedValues.locator("[data-sf-preserved-scalar]")).toHaveText(decoded.values.map((value) =>
+    value.value === null ? "Explicit null value" : String(value.value)))
+  await expect(renderedValues.locator('[data-sf-evidence-state="confirmed"]')).toHaveText(
+    decoded.values.filter((value) => value.evidenceState === "confirmed").map(() => "Confirmed"))
   await selectAgenda(page, owner, installation.origin, installation.year)
   const second = await preserve(page)
   expect(first).not.toBe(second)
+  const secondRead = await page.request.get(installation.origin + installation.mount + "/dashboard",
+    { params: { sf: "dashboard-review", id: second } })
+  expect(secondRead.status()).toBe(200)
+  const secondBody = object(await secondRead.json())
+  expect(secondBody.status).toBe("ok")
+  const secondReview = Schema.decodeUnknownSync(SfReviewPreserved)(secondBody.value)
+  const comparisonRows = originalReview.sections.flatMap((before) => {
+    const after = secondReview.sections.find((section) => section.id === before.id)
+    return after ? preservedValueRows(before, after) : []
+  })
 
   const entries: Screen[] = [
     { id: "UI48", href: base + "reviews", title: "Preserved review", titleBr: "Revisão preservada", state: "unavailable" },
@@ -170,6 +250,15 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
         await expect(page.locator("[data-sf-comparison-compatibility]")).toHaveAttribute("data-sf-comparison-compatibility", "compatible", { timeout: 40_000 })
         await expect(page.getByText("Section order changed between preserved revisions.", { exact: true })).toHaveCount(0)
         await expect(page.locator('[data-change-numeric="true"]')).toHaveCount(0)
+        const renderedRows = page.locator("tr[data-sf-value-id]")
+        await expect(renderedRows).toHaveCount(comparisonRows.length)
+        for (const [rowIndex, expected] of comparisonRows.entries()) {
+          const row = renderedRows.nth(rowIndex)
+          await expect(row).toHaveAttribute("data-sf-value-id", expected.id)
+          await expect(row.locator("[data-sf-preserved-scalar]")).toHaveText(
+            [expected.before, expected.after].flatMap((entry) => entry
+              ? [entry.value === null ? "Explicit null value" : String(entry.value)] : []))
+        }
       }
       if (index === 2) {
         await expect(page.locator(".sf-review-presentation")).toBeVisible()
@@ -189,6 +278,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       }
       await scrollPageTop(page)
       await capture(page, info, names[index] + "-" + color + "-desktop-test-data")
+      if (index === 1 || index === 2) await captureValues(page, info, names[index] + "-values-" + color + "-desktop-test-data", index === 2)
     }
   }
   await scheme(page, "dark")
@@ -225,27 +315,8 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       await expect(page.locator("[data-sf-comparison-compatibility]")).toBeVisible({ timeout: 40_000 })
     }
     await capture(page, info, names[index] + "-dark-390-test-data")
+    if (index === 1 || index === 2) await captureValues(page, info, names[index] + "-values-dark-390-test-data", index === 2)
   }
-
-  const draft = await seedWaveFiveReviewProposal(page.request, installation)
-  const proposal: Screen = { id: "UI54",
-    href: installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(draft.draftRef),
-    title: "Follow-up proposal", titleBr: "Proposta de encaminhamento", state: "ready" }
-  await page.setViewportSize({ width: 1440, height: 1100 })
-  await screen(page, owner, proposal)
-  await expect(page.locator('[data-sf-surface="UI54"]')).toContainText(draft.action)
-  await expect(page.locator('[data-component="sf-change-review"]')).toHaveCount(0)
-  await capture(page, info, "UI54-dark-desktop-original-draft-test-data")
-  await scheme(page, "light")
-  await capture(page, info, "UI54-light-desktop-original-draft-test-data")
-  await scheme(page, "dark")
-  await page.setViewportSize({ width: 320, height: 800 })
-  await reflow(page)
-  await capture(page, info, "UI54-dark-320-original-draft-test-data")
-  // Missing selector is a real negative source read, never a synthetic proposal success.
-  await screen(page, owner, { ...proposal, href: installation.origin +
-    "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef("design-test-missing-proposal"), state: "not-found" })
-  await capture(page, info, "UI54-dark-320-missing-source-test-data")
 
   const cookies = await page.context().cookies(installation.origin + installation.mount)
   const portuguese = await browser.newContext({
@@ -257,7 +328,8 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   })
   try {
     const localized = await portuguese.newPage()
-    observePage(localized)
+    const localizedDiagnostics = observePage(localized)
+    guardExternalWrites(localized, externalWrites)
     await selectAgenda(localized, owner, installation.origin, installation.year, true)
     await capture(localized, info, "UI47-pt-BR-dark-desktop-test-data")
     for (const [index, entry] of entries.entries()) {
@@ -268,18 +340,18 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
         await expect(localized.locator("[data-sf-comparison-compatibility]")).toBeVisible({ timeout: 40_000 })
       }
       await capture(localized, info, names[index] + "-pt-BR-dark-desktop-test-data")
+      if (index === 1 || index === 2) await captureValues(localized, info, names[index] + "-values-pt-BR-dark-desktop-test-data", index === 2)
     }
-    await screen(localized, owner, proposal, true)
-    await capture(localized, info, "UI54-pt-BR-dark-desktop-original-draft-test-data")
+    expect(localizedDiagnostics.pageErrors).toEqual([])
   } finally { await portuguese.close() }
   expect(externalWrites).toHaveLength(0)
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("wave-five-reviews-source-manifest", { contentType: "application/json", body: JSON.stringify({
-    surfaces: ["UI47", "UI48", "UI49", "UI50", "UI54"],
-    producerPreservations: 2, originalReviewRefs: [first, second], proposalDraftRef: draft.draftRef, reads,
+    surfaces: ["UI47", "UI48", "UI49", "UI50"],
+    producerPreservations: 2, originalReviewRefs: [first, second],
+    originalComparisonValueRows: comparisonRows.length, reads,
     limitations: ["No authorized review-list or report-list operation exists.",
       "The producer emits one shared dashboard section identity; multiple native agenda sections and reordering cannot be exercised without changing it.",
-      "UI54 uses an original registered draft, with no recorded current choice; preparation, apply and receipt remain unavailable.",
       "No report generated or published; no collaboration or notification sent.",
       "Narrow reflow is not actual browser zoom."],
   }, null, 2) })

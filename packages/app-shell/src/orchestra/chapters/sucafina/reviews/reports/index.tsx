@@ -219,9 +219,9 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
               <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
             </dl>
-            <div class="mx-card sf-n28-form sf-review-report-format">
-              <label class="sf-n28-field" for={uid + "-format"}>{t("sf.u33.format")}
-                <select id={uid + "-format"} value={store.format}
+            <div class="mx-card sf-review-report-format">
+              <label for={uid + "-format"}>{t("sf.u33.format")}</label>
+                <select id={uid + "-format"} aria-label={t("sf.u33.format")} value={store.format}
                   disabled={store.busy || !!recovery() || store.marker !== null}
                   onChange={(event) => {
                     if (store.busy || recovery() || store.marker !== null) return
@@ -230,7 +230,6 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                   <option value="docx">{t("sf.u33.docx")}</option>
                   <option value="pptx">{t("sf.u33.pptx")}</option>
                 </select>
-              </label>
             </div>
             <section class="sf-n28-section" aria-label={t("sf.u33.contents")}>
               <h2>{t("sf.u33.contents")}</h2>
