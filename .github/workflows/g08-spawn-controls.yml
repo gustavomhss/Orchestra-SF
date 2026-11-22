@@ -1,0 +1,274 @@
+name: g08-spawn-controls
+
+on:
+  push:
+    branches: [g08-spawn-next]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ""
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_CHANNEL: prod
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "579a226bd9112c066b52255bc411dadf6a145147"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Observe the exact source and original inventory
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "579a226bd9112c066b52255bc411dadf6a145147"
+          test "$(git rev-parse 'HEAD^{tree}')" = "c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"
+          test "$(git rev-parse HEAD:.github/workflows/g08-installed-complete.yml)" = "6035b60476c4fce49b83ce7503ef03367ffc2d28"
+          git merge-base --is-ancestor "579a226bd9112c066b52255bc411dadf6a145147" "$GITHUB_SHA"
+          test "$(git diff --name-only "579a226bd9112c066b52255bc411dadf6a145147" "$GITHUB_SHA")" = ".github/workflows/g08-spawn-controls.yml"
+          mkdir -m700 "$RUNNER_TEMP/g08-spawn" "$RUNNER_TEMP/g08-spawn-zips"
+          printf 'SF_G08_PROVENANCE_EVIDENCE=%s\n' "$RUNNER_TEMP/g08-spawn" >> "$GITHUB_ENV"
+          printf 'SF_G08_PROVENANCE_ZIPS=%s\n' "$RUNNER_TEMP/g08-spawn-zips" >> "$GITHUB_ENV"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/g08-spawn/source.refs"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD 2>&1 | tee "$RUNNER_TEMP/g08-spawn/whitespace.log"
+          bash -n script/sf-ci/g08-installed-run.sh
+      - uses: ./.github/actions/setup-bun
+        id: install
+        with:
+          reuse-node: "true"
+      - name: Prepare the original Omni control
+        uses: ./.github/actions/omni-binaries
+      - name: Generate independent ZIP fixtures with the Python standard library
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import io, json, os, pathlib, zipfile, zlib
+          root = pathlib.Path(os.environ["SF_G08_PROVENANCE_ZIPS"])
+          receipt = (json.dumps({"schema":"sf-g08-zip-control-v1","source":"standard-library-control","installed":False}, separators=(",",":")) + "\n").encode()
+          (root / "receipt.raw").write_bytes(receipt)
+          (root / "receipt.json").write_bytes(receipt)
+          (root / "fixture-manifest.json").write_text(json.dumps({"receiptCrc32":format(zlib.crc32(receipt) & 0xffffffff,"08x")}) + "\n")
+          class Streaming(io.BytesIO):
+              def seekable(self): return False
+              def seek(self, *args): raise io.UnsupportedOperation("streaming-control")
+          for name, method, stream in [("stored",zipfile.ZIP_STORED,False),("deflated",zipfile.ZIP_DEFLATED,False),("streamed",zipfile.ZIP_DEFLATED,True)]:
+              output = Streaming() if stream else io.BytesIO()
+              with zipfile.ZipFile(output,"w",compression=method) as archive:
+                  archive.writestr("receipt.json",receipt)
+              (root / (name + ".zip")).write_bytes(output.getvalue())
+          for name, member, mode, second, zip64 in [
+              ("two-files","receipt.json",0o100600,True,False),
+              ("wrong-path","../receipt.json",0o100600,False,False),
+              ("symlink","receipt.json",0o120777,False,False),
+              ("zip64","receipt.json",0o100600,False,True),
+          ]:
+              output = io.BytesIO()
+              with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_DEFLATED) as archive:
+                  entry = zipfile.ZipInfo(member); entry.create_system = 3; entry.external_attr = mode << 16
+                  with archive.open(entry,"w",force_zip64=zip64) as writer: writer.write(receipt)
+                  if second: archive.writestr("extra.json",b"{}")
+              (root / (name + ".zip")).write_bytes(output.getvalue())
+          PY
+      - name: Observe the actual reviewed checkout without installed authority
+        run: |
+          set -euo pipefail
+          bun --eval '
+          import { writeFile } from "node:fs/promises"
+          import { observeAggregateCheckout } from "./script/sf-ci/g08-installed-evidence.mjs"
+          const checkout = await observeAggregateCheckout({sha:"579a226bd9112c066b52255bc411dadf6a145147",tree:"c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"})
+          await writeFile(process.env.RUNNER_TEMP + "/g08-spawn/checkout-before.json", JSON.stringify({
+            class:"ACTUAL_CHECKOUT_ONLY",...checkout,installed:false,liveQualified:false,finalCandidate:false,g08Closed:false,productionCutover:false
+          }) + "\n", {flag:"wx",mode:0o600})
+          '
+      - name: Exercise original nine-evidence controls and complete-group refusal boundaries
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/g08-spawn/controls.xml" script/sf-ci/g08-private-evidence.test.mjs script/sf-ci/g08-installed-evidence.test.mjs 2>&1 | tee "$RUNNER_TEMP/g08-spawn/controls.log"
+      - name: Exercise original native routes and the actual registration and provenance imports
+        if: always() && steps.install.outcome == 'success'
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL=declared ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict ORCHESTRA_CHANNEL=prod
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$RUNNER_TEMP/g08-spawn/adapters-omni-nonce.txt"
+          bun test --preload ./script/test-omni-control.ts --reporter=junit --reporter-outfile="$RUNNER_TEMP/g08-spawn/adapters.xml" ./script/sf-ci/g08-installed-adapters.test.ts 2>&1 | tee "$RUNNER_TEMP/g08-spawn/adapters.log"
+      - name: Exercise all original provenance controls and the current aggregate admission
+        if: always() && steps.install.outcome == 'success'
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+          ORCHESTRA_CHANNEL: prod
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$SF_G08_PROVENANCE_EVIDENCE/provenance-omni-nonce.txt"
+          bun test --preload ./script/test-guard.ts --preload ./script/test-omni-control.ts --reporter=junit --reporter-outfile "$SF_G08_PROVENANCE_EVIDENCE/controls.junit.xml" ./script/sf-ci/g08-proof-provenance.test.mjs 2>&1 | tee "$SF_G08_PROVENANCE_EVIDENCE/provenance-controls.log"
+      - name: Exercise original G08 processes through Omni without installed authority
+        if: always() && steps.install.outcome == 'success'
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL=declared ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict ORCHESTRA_CHANNEL=prod
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+          printf '%s\n' "$ORCHESTRA_OMNI_CONTROL_NONCE" > "$RUNNER_TEMP/g08-spawn/process-omni-nonce.txt"
+          bun test --preload ./script/test-guard.ts --preload ./script/test-omni-control.ts --reporter=junit --reporter-outfile="$RUNNER_TEMP/g08-spawn/process.xml" ./script/sf-ci/g08-process.test.ts 2>&1 | tee "$RUNNER_TEMP/g08-spawn/process.log"
+      - name: Enforce the original spawn import guard with its unchanged allowlist
+        if: always() && steps.install.outcome == 'success'
+        run: |
+          set -euo pipefail
+          bun run check:spawn-imports 2>&1 | tee "$RUNNER_TEMP/g08-spawn/spawn-imports.log"
+      - name: Require both closed workflow roles, clean checkout and canonical guards
+        if: always() && steps.install.outcome == 'success'
+        run: |
+          set -euo pipefail
+          bun -e 'const { aggregateJob, inspectOriginalWorkflow, verifyAggregateExecution, verifyExecutionAuthorization, verifyOriginalProducer, verifyDatasetCleanupAuthority } = await import("./script/sf-ci/g08-proof-provenance.mjs"); const { executeRegistration, validateU15RegisteredEnvironment } = await import("./script/sf2h/proofs/installed/execute-registration.ts"); for (const fn of [verifyAggregateExecution, verifyExecutionAuthorization, verifyOriginalProducer, verifyDatasetCleanupAuthority, executeRegistration, validateU15RegisteredEnvironment]) if (typeof fn !== "function") throw Error("G08_ORIGINAL_DEPENDENCY_EXPORT_REQUIRED"); const original = await Bun.file(".github/workflows/g08-installed-complete.yml").text(); for (const role of ["installed-group", aggregateJob]) console.log(JSON.stringify(inspectOriginalWorkflow(original, role))); const { verifyOmni } = await import("./script/sf-ci/g08-native-journeys.mjs"); verifyOmni(await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/adapters.log").text(), (await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/adapters-omni-nonce.txt").text()).trim()); verifyOmni(await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/provenance-controls.log").text(), (await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/provenance-omni-nonce.txt").text()).trim()); verifyOmni(await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/process.log").text(), (await Bun.file(process.env.RUNNER_TEMP + "/g08-spawn/process-omni-nonce.txt").text()).trim()); console.log("Original registration exports and both canonical workflow roles verified; no installed dispatch.");' 2>&1 | tee "$RUNNER_TEMP/g08-spawn/workflow.log"
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g08-spawn/guards.log"
+          bun --eval '
+          import { writeFile } from "node:fs/promises"
+          import { observeAggregateCheckout } from "./script/sf-ci/g08-installed-evidence.mjs"
+          const checkout = await observeAggregateCheckout({sha:"579a226bd9112c066b52255bc411dadf6a145147",tree:"c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"})
+          await writeFile(process.env.RUNNER_TEMP + "/g08-spawn/checkout-after.json", JSON.stringify({
+            class:"ACTUAL_CHECKOUT_ONLY",...checkout,installed:false,liveQualified:false,finalCandidate:false,g08Closed:false,productionCutover:false
+          }) + "\n", {flag:"wx",mode:0o600})
+          '
+      - name: Publish the synthetic one-file control through the original GitHub artifact service
+        id: zip
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-spawn-zip-control-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ env.SF_G08_PROVENANCE_ZIPS }}/receipt.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Verify the actual GitHub ZIP format without claiming producer qualification
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SF_G08_ZIP_ID: ${{ steps.zip.outputs.artifact-id }}
+          SF_G08_ZIP_DIGEST: ${{ steps.zip.outputs.artifact-digest }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import assert from "node:assert/strict"
+          import { readFile, writeFile } from "node:fs/promises"
+          import { verifyReceiptArchive, repository, repositoryId } from "./script/sf-ci/g08-proof-provenance.mjs"
+          try {
+            const id = process.env.SF_G08_ZIP_ID
+            assert(/^[1-9][0-9]*$/.test(id), "CONTROL_ARTIFACT_ID_REQUIRED")
+            const url = "https://api.github.com/repos/" + repository + "/actions/artifacts/" + id
+            const headers = { Accept:"application/vnd.github+json", Authorization:"Bearer " + process.env.GH_TOKEN, "X-GitHub-Api-Version":"2022-11-28" }
+            const metadataResponse = await fetch(url, { headers, redirect:"error", signal:AbortSignal.timeout(30000) })
+            assert.equal(metadataResponse.status,200)
+            const metadata = await metadataResponse.json()
+            assert.equal(String(metadata.id),id)
+            assert.equal(String(metadata.workflow_run.id),process.env.GITHUB_RUN_ID)
+            assert.equal(String(metadata.workflow_run.repository_id),repositoryId)
+            assert.equal(metadata.workflow_run.head_sha,process.env.GITHUB_SHA)
+            assert.equal(metadata.digest,"sha256:" + process.env.SF_G08_ZIP_DIGEST)
+            assert(metadata.size_in_bytes > 0 && metadata.size_in_bytes <= 2 * 1024 * 1024)
+            const redirected = await fetch(url + "/zip", { headers, redirect:"manual", signal:AbortSignal.timeout(30000) })
+            assert.equal(redirected.status,302)
+            const storage = new URL(redirected.headers.get("location"))
+            assert(storage.protocol === "https:" && !storage.username && !storage.password && !storage.hash &&
+              (storage.hostname.endsWith(".blob.core.windows.net") || storage.hostname.endsWith(".actions.githubusercontent.com") ||
+              storage.hostname.endsWith(".githubusercontent.com") || storage.hostname.endsWith(".s3.amazonaws.com") ||
+              /^[a-z0-9.-]+\.s3\.[a-z0-9-]+\.amazonaws\.com$/.test(storage.hostname)))
+            const download = await fetch(storage, { redirect:"error", signal:AbortSignal.timeout(60000) })
+            assert.equal(download.status,200)
+            let count=0; const chunks=[]
+            for await (const chunk of download.body) { count+=chunk.length; assert(count<=metadata.size_in_bytes); chunks.push(Buffer.from(chunk)) }
+            const receipt = await readFile(process.env.SF_G08_PROVENANCE_ZIPS + "/receipt.raw")
+            const result = verifyReceiptArchive(Buffer.concat(chunks),receipt,{zipBytes:metadata.size_in_bytes,zipSha256:process.env.SF_G08_ZIP_DIGEST})
+            await writeFile(process.env.SF_G08_PROVENANCE_EVIDENCE + "/zip-roundtrip.json", JSON.stringify({
+              schema:"sf-g08-original-zip-control-v1",class:"CONTROL_ARTIFACT_BYTES_ONLY",artifactId:id,
+              source:"579a226bd9112c066b52255bc411dadf6a145147",snapshot:process.env.GITHUB_SHA,...result,installed:false,liveQualified:false,finalCandidate:false,g08Closed:false,productionCutover:false
+            }) + "\n", {flag:"wx",mode:0o600})
+          } catch { throw new Error("G08_ORIGINAL_GITHUB_ZIP_CONTROL_FAILED") }
+          JS
+      - name: Preserve exact source-bound component receipt
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess,xml.etree.ElementTree as ET
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"g08-spawn"
+          report=ET.parse(root/"controls.xml").getroot()
+          cases=list(report.iter("testcase"))
+          assert len(cases)==280,(len(cases),"expected150 original private +104 original aggregate +26 checkout controls")
+          assert not any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"])
+          names=[case.attrib["name"] for case in cases]
+          assert len(names)==len(set(names))
+          assert "joining all groups permits different explicitly bound actors per invocation" in names
+          assert "complete join refuses AZ02 cookie replaced" in names
+          adapters=list(ET.parse(root/"adapters.xml").getroot().iter("testcase"))
+          assert len(adapters)==5
+          assert not any(case.find(tag) is not None for case in adapters for tag in ["failure","error","skipped"])
+          assert len({case.attrib["name"] for case in adapters})==5
+          provenance=list(ET.parse(root/"controls.junit.xml").getroot().iter("testcase"))
+          assert len(provenance)==205,(len(provenance),"expected128 original provenance +77 aggregate admission controls")
+          assert not any(case.find(tag) is not None for case in provenance for tag in ["failure","error","skipped"])
+          assert len({case.attrib["name"] for case in provenance})==205
+          assert "execution authorization observes original permission and current runner window before archive or CDP" in {case.attrib["name"] for case in provenance}
+          assert "aggregate admission reads its own six-step workflow and current job after the producer reservation has ended" in {case.attrib["name"] for case in provenance}
+          process_cases=list(ET.parse(root/"process.xml").getroot().iter("testcase"))
+          assert len(process_cases)==8
+          assert not any(case.find(tag) is not None for case in process_cases for tag in ["failure","error","skipped"])
+          assert len({case.attrib["name"] for case in process_cases})==8
+          spawn_log=(root/"spawn-imports.log").read_text()
+          assert "spawn-imports:" in spawn_log and "ERROR " not in spawn_log
+          checkouts=[json.loads((root/("checkout-"+phase+".json")).read_text()) for phase in ["before","after"]]
+          for observed in checkouts:
+              assert observed["class"]=="ACTUAL_CHECKOUT_ONLY" and observed["trackedClean"]
+              assert observed["candidate"]=={"sha":"579a226bd9112c066b52255bc411dadf6a145147","tree":"c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"}
+              assert all(observed[name] is False for name in ["installed","liveQualified","finalCandidate","g08Closed","productionCutover"])
+          roundtrip=json.loads((root/"zip-roundtrip.json").read_text())
+          assert roundtrip["class"]=="CONTROL_ARTIFACT_BYTES_ONLY" and roundtrip["source"]=="579a226bd9112c066b52255bc411dadf6a145147" and roundtrip["snapshot"]==os.environ["GITHUB_SHA"]
+          assert all(roundtrip[name] is False for name in ["installed","liveQualified","finalCandidate","g08Closed","productionCutover"])
+          refs=(root/"source.refs").read_text().splitlines()
+          assert refs[:2]==["579a226bd9112c066b52255bc411dadf6a145147","c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"]
+          paths=["script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-installed-evidence.mjs",
+            "script/sf-ci/g08-installed-evidence.test.mjs","script/sf-ci/g08-installed-adapters.test.ts","script/sf-ci/g08-installed-run.sh",
+            ".github/workflows/g08-installed-complete.yml","docs/qa/sucafina/go-live/g08-installed-execution.md",
+            "script/sf-ci/fixtures/g08-process-child.ts","script/sf-ci/g08-process.test.ts",
+            "script/sf-ci/g08-private-evidence.test.mjs","script/sf-ci/g08-native-journeys.mjs",
+            "sf/azure/identity/az02-proof.cjs","packages/app-shell/e2e/sucafina/g08/obligations.json",
+            "script/sf-ci/g08-proof-provenance.mjs","script/sf-ci/g08-proof-provenance.test.mjs",".github/workflows/g08-proof-provenance.yml",
+            "script/sf2h/proofs/installed/execute-registration.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/g08-manifest-contract.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/selected-installation.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+            "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts"]
+          files=[{"path":p,"sha256":hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest(),
+            "gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip()} for p in paths]
+          reports=[{"path":p.name,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()]
+          receipt={"schema":"sf-g08-spawn-controls-v1","status":"COMPONENT_CONTROLS_VERIFIED",
+            "source":{"sha":"579a226bd9112c066b52255bc411dadf6a145147","tree":"c1ab48bd10c9dde73d1c6c8110d6952fe5b1578e"},"snapshot":os.environ["GITHUB_SHA"],
+            "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"],"workflowSha":os.environ["GITHUB_WORKFLOW_SHA"]},
+            "guardBase":refs[2],"cases":490+8,"processControls":8,"nodeControls":280,"originalPrivateControls":150,"originalAggregateControls":104,
+            "checkoutControls":26,"adapterControls":5,"provenanceControls":205,"originalProvenanceControls":128,"aggregateAdmissionControls":77,
+            "checkoutObservations":checkouts,"zipRoundtrip":roundtrip,
+            "failures":0,"skips":0,"sources":files,"reports":reports,
+            "installed":False,"liveQualified":False,"finalCandidate":False,"g08Closed":False,"productionCutover":False,
+            "limits":["Synthetic parser, composition and refusal controls only.",
+              "Operational adapter, original producer provenance and restart observer dependencies retain their own qualification.",
+              "No installed invocation, final candidate, tar or environment reservation has been created."]}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print("280 Node +5 Bun adapter +205 Bun provenance +8 real process controls verified; no installed qualification or gate closure")
+          PY
+      - name: Preserve original hosted controls, including failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-spawn-controls-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g08-spawn/
+          if-no-files-found: error
+          retention-days: 30
