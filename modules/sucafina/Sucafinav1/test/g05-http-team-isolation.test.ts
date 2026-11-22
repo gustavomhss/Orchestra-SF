@@ -139,7 +139,10 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
 
     const anonymous = await request("/teams/" + teamA + "/procurement")
     expect(anonymous.status).toBe(303)
-    expect(anonymous.headers.get("location")).toBe(mount + "/auth/login")
+    const loginRedirect = new URL(anonymous.headers.get("location")!, origin)
+    expect(loginRedirect.origin).toBe(origin)
+    expect(loginRedirect.pathname).toBe(mount + "/auth/login")
+    expect(loginRedirect.searchParams.get("returnTo")).toBe(mount + "/teams/" + teamA + "/procurement")
     await anonymous.body?.cancel()
     passed("anonymous-denied")
 

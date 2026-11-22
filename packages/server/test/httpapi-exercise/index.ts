@@ -59,6 +59,22 @@ import { sessionOperationScenarios } from "./session-operations"
 import { ragStudioScenarios } from "./rag-studio"
 
 export const scenarios: Scenario[] = [
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.current.unconfigured")
+    .at(() => ({ path: "/api/sucafina/installations?select=current&contractRevision=sf-team-profile%2F1" }))
+    .json(200, (body) => {
+      object(body)
+      array(body.installations)
+      check(body.installations.length === 0, "an unconfigured server must not invent a Microsoft installation")
+    }, "none"),
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.selector.required")
+    .at(() => ({ path: "/api/sucafina/installations" }))
+    .json(400, object, "status"),
+  http.protected
+    .get("/api/sucafina/installations", "v2.sucafina.installations.caller-owner.denied")
+    .at(() => ({ path: "/api/sucafina/installations?select=current&contractRevision=sf-team-profile%2F1&installationId=caller" }))
+    .json(400, object, "status"),
   ...globalConfigScenarios,
   ...vcsScenarios,
   ...skillScenarios,
