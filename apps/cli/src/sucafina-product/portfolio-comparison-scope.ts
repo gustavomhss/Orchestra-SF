@@ -19,7 +19,7 @@ type Compare = ReturnType<typeof createDecisionComparisonService>
 type Value = Extract<Awaited<ReturnType<Compare>>, { status: "ok" }>["value"]
 type ScenarioValue = Extract<Awaited<ReturnType<PlannerScenarioHost["resolve"]>>, { status: "ok" }>["value"]
 type Scope = { request: Request; binding: string; criteria: boolean; readersCurrent: () => boolean; proofs: Map<string, { fence: string; value: Value }>;
-  scenarios: Map<string, { fence: string; value: ScenarioValue }>; reading: Set<string> }
+  scenarios: Map<string, { fence: string; value: ScenarioValue }> }
 export type SfComparisonInvocation = <T>(call: TrustedDomainContext, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
 
 /** Completed canonical comparisons may be reused only inside one lexical invocation.
@@ -36,6 +36,7 @@ export function createSfPortfolioComparisonScope(input: {
   const host = input.authority.host
   const active = new WeakMap<TrustedDomainContext, Scope>()
   const execution = new AsyncLocalStorage<Scope>()
+  const reading = new AsyncLocalStorage<{ scope: Scope; keys: ReadonlySet<string> }>()
   const current = (call: TrustedDomainContext, scope: Scope) => active.get(call) === scope && execution.getStore() === scope &&
     scope.readersCurrent() && host.requestFor(call) === scope.request && !scope.request.signal.aborted && scope.binding === digestSfValue([call.kind, call.binding])
   const environment = async (request: Request) => {
@@ -128,11 +129,12 @@ export function createSfPortfolioComparisonScope(input: {
     const selected = await input.business.selectedCase(call)
     if (selected.status !== "ok" || !current(call, scope)) return denied()
     const key = digestSfValue({ reference, caseRef: selected.value, binding: scope.binding })
-    // Only completed data is reusable. A recursive request never waits on the
-    // in-flight producer or receives its unfinished result.
-    if (scope.reading.has(key)) return denied()
-    scope.reading.add(key)
-    try {
+    // Each asynchronous branch owns its read ancestry. Canonical sensitivity
+    // revalidates sibling samples in parallel, including the same baseline.
+    // Siblings reopen independently; recursion never consumes unfinished data.
+    const parent = reading.getStore(), ancestors = parent?.scope === scope ? parent.keys : undefined
+    if (ancestors?.has(key)) return denied()
+    return reading.run({ scope, keys: new Set([...(ancestors ?? []), key]) }, async () => {
       const before = await scenarioFence(reference, call, scope, selected.value)
       if (!current(call, scope)) return denied()
       const proof = scope.scenarios.get(key)
@@ -150,7 +152,7 @@ export function createSfPortfolioComparisonScope(input: {
       if (after !== before) return { status: "stale", reason: "portfolio-scenario-proof-changed" }
       scope.scenarios.set(key, { fence: after, value: structuredClone(result.value) })
       return result
-    } finally { scope.reading.delete(key) }
+    })
   }
   const resolveMany: NonNullable<PlannerScenarioHost["resolveMany"]> = async (references, call) => {
     const captured = [...references]
@@ -166,9 +168,9 @@ export function createSfPortfolioComparisonScope(input: {
       const result = await resolvePlannerScenarioBatch(scenarios, captured, call)
       return current(call, scope) && digestSfValue(references) === digestSfValue(captured) ? result : captured.map(denied)
     }
-    if (keys.some((key) => scope.reading.has(key))) return captured.map(denied)
-    for (const key of keys) scope.reading.add(key)
-    try {
+    const parent = reading.getStore(), ancestors = parent?.scope === scope ? parent.keys : undefined
+    if (keys.some((key) => ancestors?.has(key))) return captured.map(denied)
+    return reading.run({ scope, keys: new Set([...(ancestors ?? []), ...keys]) }, async () => {
       const before = await scenarioFences(captured, call, scope, selected.value)
       if (!current(call, scope) || digestSfValue(references) !== digestSfValue(captured)) return captured.map(denied)
       const proofs = keys.map((key) => scope.scenarios.get(key))
@@ -190,7 +192,7 @@ export function createSfPortfolioComparisonScope(input: {
         if (result.status === "ok") scope.scenarios.set(keys[index]!, { fence: after[index]!, value: structuredClone(result.value) })
       }
       return current(call, scope) && digestSfValue(references) === digestSfValue(captured) ? results : captured.map(denied)
-    } finally { for (const key of keys) scope.reading.delete(key) }
+    })
   }
   const compare: Compare = async (request, call) => {
     const captured = structuredClone(request)
@@ -243,7 +245,7 @@ export function createSfPortfolioComparisonScope(input: {
       input.rules === rules && rules?.resolve === resolveRule && input.business.plannerSources === source &&
       source.resolveForecastSource === forecast && source.resolveForecastCoverage === coverage
     const scope: Scope = { request, binding: digestSfValue([call.kind, call.binding]), criteria, readersCurrent,
-      proofs: new Map(), scenarios: new Map(), reading: new Set() }
+      proofs: new Map(), scenarios: new Map() }
     active.set(call, scope)
     return execution.run(scope, async () => {
       try {

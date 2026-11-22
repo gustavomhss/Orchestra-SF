@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { projectionDigest, type ResolvedScenario } from "../../../../product/planner/scenario-comparison-port.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
 import { sensitivityObservationFixture, sensitivityOk } from "./sensitivity-observation-fixture.ts"
@@ -173,5 +174,70 @@ test("a warm Portfolio observation cannot survive real UI authority revocation",
       }))
     expect(warmed).toBe(true)
     expect(result.status).not.toBe("ok")
+  } finally { await deadline.close() }
+}, 120_000)
+
+
+test("sibling sensitivity reads independently reopen one baseline while recursive reads remain refused", async () => {
+  const deadline = compositionTestDeadline("portfolio-sibling-scenarios")
+  try {
+    const fixture = await sensitivityObservationFixture(deadline)
+    const scenarios = fixture.business.plannerProduct.scenarios
+    const reader = fixture.portfolio.observedScenarios
+    if (!scenarios || !reader?.resolveMany) throw new Error("Real scalar and batch scenario readers are required")
+    const within = <T>(work: () => Promise<PortResult<T>>) => fixture.business.withCase(fixture.call, fixture.caseRef, {}, work)
+    const reference = fixture.references[0]!
+    const observed = (value: ResolvedScenario) => ({ ...value, projection: projectionDigest(value.projection) })
+    const original = observed(sensitivityOk(await within(() => scenarios.resolve(reference, fixture.call))))
+    const resolve = scenarios.resolve
+    let entered!: () => void, release!: () => void
+    const started = new Promise<void>((ready) => { entered = ready })
+    const waiting = new Promise<void>((ready) => { release = ready })
+    let calls = 0
+    scenarios.resolve = async (...args) => {
+      calls++
+      if (calls === 1) { entered(); await waiting }
+      return resolve(...args)
+    }
+    try {
+      sensitivityOk(await within(() => fixture.portfolio.withComparisonObservation(fixture.call, async () => {
+        const pending = reader.resolve(reference, fixture.call)
+        await started
+        let sibling: Awaited<typeof pending>
+        try { sibling = await reader.resolve(reference, fixture.call) }
+        finally { release() }
+        const first = sensitivityOk(await pending)
+        expect(observed(sensitivityOk(sibling))).toEqual(original)
+        expect(observed(first)).toEqual(original)
+        expect(calls).toBe(2)
+        // Both completed scalar and batch consumers retain their own values.
+        const [scalar, batch] = await Promise.all([
+          reader.resolve(reference, fixture.call),
+          reader.resolveMany!([...fixture.references], fixture.call),
+        ])
+        expect(observed(sensitivityOk(scalar))).toEqual(original)
+        expect(batch).toHaveLength(fixture.references.length)
+        expect(batch.every((value) => value.status === "ok")).toBe(true)
+        const copied = sensitivityOk(batch[0]!)
+        Object.assign(copied.result, { knownSubtotal: 999 })
+        expect(observed(sensitivityOk(scalar))).toEqual(original)
+        return { status: "ok" as const, value: true }
+      })))
+    } finally { release(); scenarios.resolve = resolve }
+
+    // A reader that recursively calls the same facade is not a sibling.
+    let recursion: PortResult<unknown> | undefined
+    scenarios.resolve = async (...args) => {
+      recursion = await reader.resolve(...args)
+      return resolve(...args)
+    }
+    try {
+      sensitivityOk(await within(() => fixture.portfolio.withComparisonObservation(fixture.call, async () => {
+        const value = await reader.resolve(reference, fixture.call)
+        expect(recursion).toEqual({ status: "denied", reason: "portfolio-comparison-invocation-unavailable" })
+        expect(observed(sensitivityOk(value))).toEqual(original)
+        return { status: "ok" as const, value: true }
+      })))
+    } finally { scenarios.resolve = resolve }
   } finally { await deadline.close() }
 }, 120_000)
