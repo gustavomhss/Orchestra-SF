@@ -1,0 +1,89 @@
+name: G09 TUI preserved evidence inspection
+on:
+  push:
+    branches:
+      - g09-tui-inspection
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect-editor-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Inspect the frozen TUI evidence without executing the candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/g09-tui-inspection"
+          mkdir -m 0700 "$evidence"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14737454915" > "$evidence/artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44981995573" > "$evidence/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/44981995573/attempts/1/jobs?per_page=100" > "$evidence/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14737454915/zip" > "$evidence/artifact.zip"
+          python3 -B - <<'PY'
+          import hashlib, json, os, zipfile
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"]) / "g09-tui-inspection"
+          assert os.environ["GITHUB_ACTIONS"] == "true"
+          assert os.environ["GITHUB_REPOSITORY"] == "gustavomhss/Orchestra-SF"
+          assert os.environ["GITHUB_REF"] == "refs/heads/g09-tui-inspection"
+          source = "63beecc4011bd2695f0ecca23ed4a5f390a5a2b7"
+          artifact = json.loads((root / "artifact.json").read_text())
+          run = json.loads((root / "run.json").read_text())
+          jobs = json.loads((root / "jobs.json").read_text())
+          assert (run["id"], run["run_attempt"], run["head_sha"], run["head_branch"], run["path"]) == (
+              44981995573, 1, source, "g09-next-candidate", ".github/workflows/g09-candidate.yml")
+          assert run["repository"]["id"] == 1455724710
+          assert run["repository"]["full_name"] == os.environ["GITHUB_REPOSITORY"]
+          assert jobs["total_count"] == len(jobs["jobs"])
+          selected = [job for job in jobs["jobs"] if job["id"] == 137086312035]
+          assert len(selected) == 1
+          job = selected[0]
+          assert (job["name"], job["run_id"], job["head_sha"], job["status"], job["conclusion"]) == (
+              "candidate-tui-journeys", 44981995573, source, "completed", "failure")
+          expected_zip = "b4d7f7e0ea5f6bb9b93c14e9eb0999e6f469a5b3e4a791f594fb04679c7f759a"
+          assert (artifact["id"], artifact["name"], artifact["size_in_bytes"], artifact["digest"], artifact["expired"]) == (
+              14737454915, "g09-candidate-tui-44981995573-1", 5096724, "sha256:" + expected_zip, False)
+          linked = artifact["workflow_run"]
+          assert (linked["id"], linked["repository_id"], linked["head_repository_id"], linked["head_sha"]) == (
+              44981995573, 1455724710, 1455724710, source)
+          zipped = (root / "artifact.zip").read_bytes()
+          assert len(zipped) == artifact["size_in_bytes"]
+          assert hashlib.sha256(zipped).hexdigest() == expected_zip
+          print(json.dumps({"inspectionRunId": os.environ["GITHUB_RUN_ID"],
+                            "inspectionWorkflowSHA": os.environ["GITHUB_SHA"], "candidateExecuted": False,
+                            "preservedRunId": "44981995573", "preservedJobId": "137086312035",
+                            "sourceSHA": source, "artifactId": "14737454915", "artifactZipSha256": expected_zip}))
+          with zipfile.ZipFile(root / "artifact.zip") as archive:
+              def read_unique(suffix, limit):
+                  found = [item for item in archive.infolist() if item.filename.endswith(suffix)]
+                  assert len(found) == 1, ("member not unique", suffix)
+                  member = found[0]
+                  assert not member.is_dir() and 0 <= member.file_size <= limit
+                  raw = archive.read(member)
+                  assert len(raw) == member.file_size
+                  return member.filename, raw
+              name, raw = read_unique("/07/editor-observations.json", 522)
+              digest = hashlib.sha256(raw).hexdigest()
+              assert len(raw) == 522
+              assert digest == "6db6ab5aa2b665af164eb5536bbc89067fe8f4208805c2f9475f1fde38079329"
+              print("EDITOR_OBSERVATIONS_VERIFIED " + json.dumps({"path": name, "bytes": len(raw), "sha256": digest}))
+              print(raw.decode("utf-8"))
+              proof_name, proof_raw = read_unique("/tui-journeys-proof.json", 65536)
+              proof = json.loads(proof_raw)
+              assert (proof["sourceSHA"], proof["workflowSHA"], proof["sourceTreeSHA"], proof["runId"], proof["jobId"]) == (
+                  source, source, "b1fe2323c8829a8991ad87c4b2d30343db5ef600", "44981995573", "137086312035")
+              assert proof["candidateInputsUnchanged"] is True and len(proof["cases"]) == 8
+              case = proof["cases"][6]
+              assert case["failure"] == "EDITOR_WRONG_SESSION_WORKTREE_OR_INPUT"
+              assert case["tui"]["editorObservations"]["sha256"] == digest
+              assert case["tui"]["editorObservations"]["bytes"] == len(raw)
+              print("CASE_07_FROM_VERIFIED_RECEIPT " + json.dumps(case, sort_keys=True))
+              keyboard_name, keyboard_raw = read_unique("/07/keyboard-actions.json", 16384)
+              print("KEYBOARD_07 " + json.dumps({"path": keyboard_name, "bytes": len(keyboard_raw),
+                                                "sha256": hashlib.sha256(keyboard_raw).hexdigest()}))
+              print(keyboard_raw.decode("utf-8"))
+          PY
