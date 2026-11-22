@@ -38,7 +38,7 @@ for (const scheme of ["dark", "light"] as const) {
     // A lead agent is any agent that is not a subagent; the card says "Specialist" for the rest.
     expect.soft(await plan.locator(".agent-role").textContent()).toBe("Lead agent")
     expect.soft(await card(page, "research").locator(".agent-role").textContent()).toBe("Specialist")
-    expect.soft(await card(page, "review").locator(".agent-role").textContent()).toBe("Lead agent")
+    await expect(card(page, "review").locator(".agent-role")).toHaveText("Lead and specialist")
     expect.soft(await plan.locator(".agent-desc").textContent()).toBe("Plans repository work")
     await expect(plan.locator(".agent-model")).toHaveText("Reasoner")
     await expect(plan.locator(".agent-model")).toHaveAttribute("title", "example/reasoner")
