@@ -57,7 +57,31 @@
     "serverOwnerClaim": null,
     "filesOperationsOwnerClaim": null,
     "installedRunnerOwnerClaim": null,
-    "requests": []
+    "requests": [
+      {
+        "target": "Migração Teams / reservas QA e recuperação / vínculo da prova 222 (2)",
+        "pr": 628,
+        "commentId": 7074623731,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074623731",
+        "status": "PUBLISHED_AWAITING_ACK"
+      },
+      {
+        "target": "Release atual: confirmar responsável e mesmo C/T",
+        "pr": 247,
+        "commentId": 7074623941,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7074623941",
+        "status": "PUBLISHED_AWAITING_ACK",
+        "historicalThread": true
+      },
+      {
+        "target": "Executor do pacote Microsoft; preservar claim genérico do Astra #349",
+        "pr": 257,
+        "commentId": 7074624125,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074624125",
+        "status": "PUBLISHED_AWAITING_ACK",
+        "historicalThread": true
+      }
+    ]
   },
   "gates": [
     {
@@ -346,5 +370,23 @@
     "requiredFinalGates": 5,
     "goNoGoReadiness": "NOT_READY",
     "formalProductionDecision": null
+  },
+  "publication": {
+    "pullRequest": 628,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
+    "state": "DRAFT",
+    "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8"
+  },
+  "latestDevObserved": {
+    "sha": "079d86766f9c324924e024d53722c09e018c23d2",
+    "tree": "5612d7ba3a613b00b583588f0eba24a5d067739a",
+    "observedAtUtc": "2026-11-22T05:13:39Z",
+    "notFinalCandidate": true,
+    "changedPathsSinceTriage": [
+      "docs/guides/settings.md",
+      "packages/app-shell/src/components/settings-v2/view/capabilities-section.tsx",
+      "packages/app-shell/src/orchestra/chapters/agents-view.tsx",
+      "packages/app-shell/test-browser/settings-agent-state.test.ts"
+    ]
   }
 }

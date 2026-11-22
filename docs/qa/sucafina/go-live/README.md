@@ -82,6 +82,10 @@ Os pedidos de coordenação devem trazer respostas concretas, sem assinatura ger
 
 As solicitações e eventuais respostas ficam no PR desta branch e no campo `coordination.requests` de `status.json`. Uma solicitação publicada é pendência; não é aceite recebido.
 
+Pedidos publicados e relidos: [Migração/reservas/222 (2)](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074623731), [Release](https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7074623941) e [pacote Microsoft](https://github.com/gustavomhss/Orchestra-SF/pull/257#issuecomment-7074624125). Ainda não há ACK recebido nesta frente. O PR documental é [#628](https://github.com/gustavomhss/Orchestra-SF/pull/628), draft.
+
+Durante a publicação, dev avançou para `079d86766f9c324924e024d53722c09e018c23d2`. O status registra esse movimento; a análise de fontes permanece vinculada ao pin de triagem indicado e nenhum desses heads foi adotado como candidato final.
+
 ## Revisão e verificação deste pacote
 
 Três subfrentes reais trabalharam em paralelo e fizeram revisão cruzada dos documentos. Foram corrigidos quatro pontos materiais antes da integração:
