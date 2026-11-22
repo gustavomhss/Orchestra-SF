@@ -58,7 +58,7 @@ Root's pure decoder memo correction retains the same 8 Mi UTF-16-unit budget, fr
 
 The [bounded profile](attempts/import-trace-09-profile.json) shows 228 detached snapshot materializations per group, approximately 1.19–1.40 s, six fresh observations and zero new plans or fallback clones. The first post-preview group and later Refresh groups have the same plan counts; no memo churn or artificial warming is established as the cause. The full-state callback contract prevents narrowing opaque state.read clones to a namespace.
 
-[Trace10](attempts/import-trace-10.json) measures only numeric primitive-string leaf counts and sizes during the original materialization planner. It will determine whether a pure immutable-string optimization is applicable before any runtime edit. No values, field paths, private headers, credentials or source bodies are emitted.
+[Trace10](attempts/import-trace-10.json) passes the diagnostic journey and disproves the large-string hypothesis. Its heavy plan contains 134,462 nodes and 110,262 primitive strings, with a maximum string length of 131 UTF-16 units and zero strings at the 64 KiB threshold. All 52 observed plans have zero large string leaves. No string extraction optimization was applied. The existing assertion observes the preview at 9.944 s; first DOM visibility was not continuously sampled. These are numeric counts only, with no values, field paths, private headers, credentials or source bodies.
 
 The remaining work is to resolve the measured residual copy cost, pass the unchanged clean UI55/56 journey, inspect its final actual captures, and confirm final composed source parity/technical gates. UI51–53 do not need another run merely because their unchanged evidence is integrated.
 
