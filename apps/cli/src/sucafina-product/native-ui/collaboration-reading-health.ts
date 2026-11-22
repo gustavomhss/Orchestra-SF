@@ -38,7 +38,7 @@ export async function observeSfCollaborationReadingHealth(input: {
   const observations = await Promise.allSettled(candidates.map(async (candidate) => {
     const metadata = SfOperationRegistry[candidate.id]
     if (!sfHasOperationalResource(candidate.id) || metadata.method !== "POST" ||
-      metadata.pathTemplate !== "{mount}/{surface}" || metadata.responseMode !== "json" ||
+      metadata.pathTemplate !== "{mount}/dashboard" || metadata.responseMode !== "json" ||
       metadata.fixedQuery.sf !== candidate.id.replace("collaboration.", "collaboration-") ||
       metadata.effect !== (candidate.write ? "mutation" : "read") ||
       candidate.write && !isInstalledSfStateTransaction(state.read, state.transaction)) return undefined

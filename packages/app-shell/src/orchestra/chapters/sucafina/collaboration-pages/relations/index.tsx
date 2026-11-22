@@ -323,7 +323,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
           onRetryRead={() => { if (props.route.kind === "entry") void readReference(props.route.params.relationRef); else void read(source()) }}>
           <Show when={source()}>
             <div ref={relationList}>
-            <Show when={presentation.listEpoch} keyed>{() => <SfRelations
+            <Show when={presentation.listEpoch} keyed>{(_epoch) => <SfRelations
               sourceRef={source() as SfRef}
               relations={visibleRelations()}
               candidates={candidates()}
