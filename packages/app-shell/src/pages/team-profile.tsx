@@ -4,6 +4,8 @@ import { readCurrentTeamInstallation, readTeamWebContext } from "../context/team
 import { readTeamNavigationIntent, teamNavigationReturnTo, teamNavigationURL } from "../context/team-profile-navigation"
 import { useLanguage } from "../context/language"
 
+const selectionHref = "/"
+
 type TeamWebState =
   | { status: "loading" | "unavailable" | "invalid" }
   | { status: "unauthenticated" | "denied"; binding: SfTeamInstallationDescriptor }
@@ -164,7 +166,7 @@ export function SfTeamWebApp() {
         </Show>
         <Show when={logoutFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
         <Show when={state().status === "invalid" || state().status === "denied"}>
-          <a class="mx-btn" href="/">{language.t("sf.teams.select")}</a>
+          <a class="mx-btn" href={selectionHref}>{language.t("sf.teams.select")}</a>
         </Show>
         <Show when={state().status === "unauthenticated" && signInHref()} keyed>{(href) =>
           <a class="mx-btn" href={href}>{language.t("sf.teams.signIn")}</a>
