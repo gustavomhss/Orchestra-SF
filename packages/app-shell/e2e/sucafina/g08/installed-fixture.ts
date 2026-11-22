@@ -1,6 +1,7 @@
 // Original installed Microsoft sessions only. No launch, storageState, cookie copying or mocked producer.
 import { chromium, expect, test } from "@playwright/test"
-import type { BrowserContext, Page } from "@playwright/test"
+import type { BrowserContext, Page, Response } from "@playwright/test"
+import { randomUUID } from "node:crypto"
 import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
@@ -10,7 +11,63 @@ export type Plan = Awaited<ReturnType<typeof readPlan>>
 export type Target = Plan["target"]
 export type Actor = keyof Plan["actors"]
 const strict = { onExcessProperty: "error" } as const
-const requestOptions = { maxRedirects: 0, maxRetries: 0, timeout: 30_000 }
+const observationHeader = "x-sf-g08-observation"
+// Network provenance only. These values neither supply nor alter actor authority.
+const contextBindings = new WeakMap<BrowserContext, { origin: string; addresses: readonly string[] }>()
+
+export async function requireBoundPeer(page: Page, response: Response) {
+  const binding = contextBindings.get(page.context())
+  if (!binding || new URL(response.url()).origin !== binding.origin || response.fromServiceWorker() ||
+    response.frame().page() !== page) throw new Error("G08_ORIGINAL_BROWSER_RESPONSE_REQUIRED")
+  const peer = await response.serverAddr()
+  if (!peer || peer.port !== 443 || !binding.addresses.includes(canonicalAddress(peer.ipAddress)))
+    throw new Error("G08_BROWSER_INGRESS_NOT_RESERVED_VM")
+}
+
+async function originalRequest(page: Page, url: string, method: "GET" | "POST" = "GET", body?: unknown) {
+  const binding = contextBindings.get(page.context())
+  if (!binding || new URL(page.url()).origin !== binding.origin || new URL(url).origin !== binding.origin)
+    throw new Error("G08_ORIGINAL_BROWSER_ORIGIN_REQUIRED")
+  // The nonce identifies this observation only; the browser supplies its own original cookie jar.
+  const nonce = randomUUID()
+  const [response] = await Promise.all([
+    page.waitForResponse((reply) => reply.url() === url && reply.request().method() === method &&
+      reply.request().headers()[observationHeader] === nonce),
+    page.evaluate(async ({ requestURL, requestMethod, requestBody, requestNonce, header }) => {
+      await fetch(requestURL, {
+        method: requestMethod, credentials: "same-origin", redirect: "manual", cache: "no-store",
+        signal: AbortSignal.timeout(30_000),
+        headers: { [header]: requestNonce, ...(requestMethod === "POST" ? { "content-type": "application/json" } : {}) },
+        ...(requestMethod === "POST" ? { body: JSON.stringify(requestBody) } : {}),
+      })
+    }, { requestURL: url, requestMethod: method, requestBody: body, requestNonce: nonce, header: observationHeader }),
+  ])
+  // Read the original network Response after peer validation, never a body supplied by page JavaScript.
+  if (method === "POST" && response.request().postData() !== JSON.stringify(body))
+    throw new Error("G08_ORIGINAL_ADMIN_COMMAND_CHANGED")
+  await requireBoundPeer(page, response)
+  return response
+}
+
+export async function uiReply(page: Page, url: string, method: "GET" | "POST", action: () => Promise<unknown>) {
+  const expected = new URL(url)
+  const [request] = await Promise.all([
+    page.waitForRequest((entry) => {
+      const actual = new URL(entry.url())
+      return entry.method() === method && entry.frame() === page.mainFrame() &&
+        entry.headers()[observationHeader] === undefined &&
+        actual.origin === expected.origin && actual.pathname === expected.pathname &&
+        actual.searchParams.size === expected.searchParams.size &&
+        [...expected.searchParams].every(([key, value]) =>
+          actual.searchParams.getAll(key).length === 1 && actual.searchParams.get(key) === value)
+    }),
+    action(),
+  ])
+  const response = await request.response()
+  if (!response) throw new Error("G08_ORIGINAL_UI_RESPONSE_REQUIRED")
+  await requireBoundPeer(page, response)
+  return response
+}
 const actors = ["requester", "holder", "denied", "dashboardAdmin"] as const
 
 export function teamRef(target: Target) {
@@ -30,13 +87,13 @@ export function contextURL(target: Target, selection = false) {
   return url.href
 }
 export async function contextReply(page: Page, target: Target, selection = false) {
-  return page.request.get(contextURL(target, selection), requestOptions)
+  return originalRequest(page, contextURL(target, selection))
 }
 export async function observe(page: Page, target: Target, selection = false) {
   if (new URL(page.url()).origin !== target.shellOrigin) throw new Error("G08_ACTOR_OUTSIDE_INSTALLED_SHELL")
   const discovery = new URL("/api/sucafina/installations", target.discoveryOrigin)
   discovery.search = new URLSearchParams({ select: "current", contractRevision: "sf-team-profile/1" }).toString()
-  const response = await page.request.get(discovery.href, requestOptions)
+  const response = await originalRequest(page, discovery.href)
   if (response.status() !== 200) throw new Error("G08_ORIGINAL_DISCOVERY_UNAVAILABLE")
   const value = Schema.decodeUnknownSync(Schema.toCodecJson(SfInstallationList), strict)(await response.json())
   if (value.installations.length !== 1) throw new Error("G08_DISCOVERY_OWNER_NOT_UNIQUE")
@@ -46,7 +103,9 @@ export async function observe(page: Page, target: Target, selection = false) {
     descriptor.tenantId !== target.tenantId || descriptor.projectId !== target.projectId ||
     descriptor.hostId !== target.hostId || descriptor.publicOrigin !== target.publicOrigin || descriptor.mount !== target.mount)
     throw new Error("G08_DISCOVERY_OWNER_MISMATCH")
-  const reply = await contextReply(page, target, selection)
+  return contextValue(await contextReply(page, target, selection), target, selection)
+}
+async function contextValue(reply: Response, target: Target, selection = false) {
   if (reply.status() !== 200) throw new Error("G08_ORIGINAL_CONTEXT_UNAVAILABLE")
   const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), strict)(await reply.json())
   if (result.status !== "ok") throw new Error("G08_ORIGINAL_MICROSOFT_CONTEXT_REQUIRED")
@@ -71,23 +130,23 @@ export async function selected(page: Page, target: Target, principal: string) {
   expect(live.destinations.some((entry) => entry.canRead)).toBe(true)
   return live
 }
+export async function uiContext(page: Page, target: Target, action: () => Promise<unknown>) {
+  return contextValue(await uiReply(page, contextURL(target), "GET", action), target)
+}
+export async function switchTeam(page: Page, target: Target, principal: string, action: () => Promise<unknown>) {
+  const changed = await uiContext(page, target, action)
+  expect(changed.stamp.principalRef).toBe(principal)
+  expect(changed.profile.teams.status).toBe("ready")
+  expect(changed.stamp.team?.owner.profile).toEqual(teamRef(target))
+  expect(changed.destinations.some((entry) => entry.canRead)).toBe(true)
+  // The action's original F02 response and the independent re-read must both have the selected owner.
+  return selected(page, target, principal)
+}
 export async function focusRefresh(page: Page, target: Target) {
-  const expected = new URL(contextURL(target))
   const documentStart = await page.evaluate(() => performance.timeOrigin)
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return response.request().method() === "GET" && url.origin === expected.origin &&
-        url.pathname === expected.pathname && url.searchParams.size === expected.searchParams.size &&
-        [...expected.searchParams].every(([key, value]) => url.searchParams.getAll(key).length === 1 && url.searchParams.get(key) === value)
-    }),
-    page.evaluate(() => window.dispatchEvent(new FocusEvent("focus"))),
-  ])
-  expect(reply.status()).toBe(200)
+  const live = await uiContext(page, target, () => page.evaluate(() => window.dispatchEvent(new FocusEvent("focus"))))
   expect(await page.evaluate(() => performance.timeOrigin)).toBe(documentStart)
-  const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), strict)(await reply.json())
-  if (result.status !== "ok") throw new Error("G08_FOCUS_CONTEXT_NOT_AUTHENTICATED")
-  return result.value
+  return live
 }
 
 // Original HTTP contract from 08fa1796. Missing route blocks this case; nothing here registers a handler.
@@ -103,7 +162,7 @@ function adminURL(target: Target) {
   return url.href
 }
 export async function adminCatalog(page: Page, target: Target) {
-  const response = await page.request.get(adminURL(target), requestOptions)
+  const response = await originalRequest(page, adminURL(target))
   if (response.status() !== 200) throw new Error("G08_REAL_ADMIN_ROUTE_NOT_AVAILABLE")
   const catalog = Schema.decodeUnknownSync(AdminCatalog, strict)(await response.json())
   if (!Number.isSafeInteger(catalog.configRevision) || catalog.configRevision < 0 ||
@@ -114,8 +173,8 @@ export async function adminCatalog(page: Page, target: Target) {
   return catalog
 }
 export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: number) {
-  const response = await page.request.post(adminURL(target), {
-    ...requestOptions, headers: { origin: target.publicOrigin }, data: { action, profile: teamRef(target), expectedRevision },
+  const response = await originalRequest(page, adminURL(target), "POST", {
+    action, profile: teamRef(target), expectedRevision,
   })
   if (response.status() !== 200) throw new Error("G08_ADMIN_MUTATION_OUTCOME_REQUIRES_ORIGINAL_READ")
   const result = Schema.decodeUnknownSync(AdminResult, strict)(await response.json())
@@ -124,7 +183,7 @@ export async function configureTeam(page: Page, target: Target, action: "enable"
   return result
 }
 
-async function attach(plan: Plan) {
+async function attach(plan: Plan, addresses: readonly string[]) {
   const endpoint = (await privateText(plan.scratchRoot, "browser-endpoint.txt", 4096)).trim()
   const url = new URL(endpoint)
   if (!["ws:", "http:"].includes(url.protocol) || !["127.0.0.1", "localhost", "[::1]"].includes(url.hostname) ||
@@ -134,6 +193,7 @@ async function attach(plan: Plan) {
     if (browser.contexts().length !== 4) throw new Error("G08_EXACT_FOUR_ORIGINAL_CONTEXTS_REQUIRED")
     const found: Partial<Record<Actor, BrowserContext>> = {}
     for (const context of browser.contexts()) {
+      contextBindings.set(context, { origin: plan.target.publicOrigin, addresses })
       const pages = context.pages().filter((page) => {
         try { return new URL(page.url()).origin === plan.target.shellOrigin } catch { return false }
       })
@@ -145,7 +205,11 @@ async function attach(plan: Plan) {
     }
     if (actors.some((actor) => !found[actor])) throw new Error("G08_FOUR_REAL_ACTORS_REQUIRED")
     return { browser, contexts: found }
-  } catch (error) { await browser.close(); throw error }
+  } catch (error) {
+    for (const context of browser.contexts()) contextBindings.delete(context)
+    await browser.close()
+    throw error
+  }
 }
 type Harness = {
   plan: Plan
@@ -164,7 +228,7 @@ export const installedTest = test.extend<{ harness: Harness }>({
     const ingressAddresses = Schema.decodeUnknownSync(Schema.Array(Schema.String))(record(host.binding).ingressAddresses).map(canonicalAddress)
     const entry = cases.find((item) => item.title === info.title)
     if (!entry) throw new Error("G08_UNREGISTERED_CASE")
-    const session = await attach(plan)
+    const session = await attach(plan, ingressAddresses)
     const pages: Page[] = []
     const boundDocuments = new Set<Page>()
     const ingressErrors: string[] = []
@@ -194,11 +258,7 @@ export const installedTest = test.extend<{ harness: Harness }>({
             const resource = response.request().resourceType()
             if (!["document", "script", "stylesheet"].includes(resource)) return
             const check = (async () => {
-              if (new URL(response.url()).origin !== plan.target.publicOrigin || response.fromServiceWorker())
-                throw new Error("G08_BROWSER_CONTENT_OUTSIDE_ORIGINAL_INGRESS")
-              const peer = await response.serverAddr()
-              if (!peer || peer.port !== 443 || !ingressAddresses.includes(canonicalAddress(peer.ipAddress)))
-                throw new Error("G08_BROWSER_INGRESS_NOT_RESERVED_VM")
+              await requireBoundPeer(page, response)
               delivery.resources++
               if (resource === "document" && response.frame() === page.mainFrame()) boundDocuments.add(page)
             })().catch(() => { ingressErrors.push("G08_BROWSER_INGRESS_NOT_PROVEN") })
@@ -212,6 +272,7 @@ export const installedTest = test.extend<{ harness: Harness }>({
       const closed = await Promise.allSettled(pages.map((page) => page.close()))
       await Promise.all(responseChecks)
       const contextCount = session.browser.contexts().length
+      for (const context of session.browser.contexts()) contextBindings.delete(context)
       await session.browser.close()
       await writePrivate(root, "cleanup-" + entry.id + ".json", {
         schema: "sf-g08-cleanup-v1", caseId: entry.id, invocationId: plan.invocation.id,

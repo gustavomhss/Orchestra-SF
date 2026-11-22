@@ -1,10 +1,8 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { Schema } from "effect"
-import { SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import {
-  adminCatalog, configureTeam, contextReply, contextURL, focusRefresh, installedTest,
-  observe, ownerQuery, selected, teamRef,
+  adminCatalog, configureTeam, contextReply, focusRefresh, installedTest,
+  observe, ownerQuery, selected, switchTeam, teamRef, uiContext, uiReply,
 } from "./installed-fixture.ts"
 import type { Target } from "./installed-fixture.ts"
 
@@ -55,12 +53,11 @@ test("An explicit A B A Team switch leaves the sibling window on its own Team", 
   expect(before.profile.teams.choices.some((choice) => choice.profile.teamObjectId === teamB.teamObjectId)).toBe(true)
   const picker = page.locator("[data-sf-team-picker]:visible")
   await expect(picker).toHaveValue(target.teamObjectId)
-  await picker.selectOption(teamB.teamObjectId)
-  await selected(page, teamB, actors.requester)
+  await switchTeam(page, teamB, actors.requester, () => picker.selectOption(teamB.teamObjectId))
   await expect(sibling).toHaveURL(href(target))
   expect((await selected(sibling, target, actors.requester)).stamp.team?.owner).toEqual(siblingBefore.stamp.team?.owner)
-  await picker.selectOption(target.teamObjectId)
-  expect(grants(await selected(page, target, actors.requester))).toEqual(grants(before))
+  expect(grants(await switchTeam(page, target, actors.requester, () => picker.selectOption(target.teamObjectId))))
+    .toEqual(grants(before))
   await sibling.reload()
   expect((await selected(sibling, target, actors.requester)).stamp.team?.owner).toEqual(siblingBefore.stamp.team?.owner)
 })
@@ -144,20 +141,8 @@ test("Keyboard navigation opens a new Team chat draft on narrow Web without chan
   await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
   const newChat = workspace.locator("button[data-sf-new-chat]")
   await expect(newChat).toBeEnabled()
-  const expected = new URL(contextURL(target))
-  expected.searchParams.sort()
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      url.searchParams.sort()
-      return response.request().method() === "GET" && url.href === expected.href
-    }),
-    newChat.press("Enter"),
-  ])
-  expect(reply.status()).toBe(200)
-  const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), { onExcessProperty: "error" })(await reply.json())
-  if (result.status !== "ok") throw new Error("G08_CHAT_REVALIDATION_FAILED")
-  expect(result.value.stamp).toEqual(live.stamp)
+  const revalidated = await uiContext(page, target, () => newChat.press("Enter"))
+  expect(revalidated.stamp).toEqual(live.stamp)
   await expect(workspace.locator("[data-sf-session-transcript] .sf-team-session-empty")).toBeVisible()
   await expect(workspace.locator(".sf-team-session-compose").getByRole("textbox")).toBeEditable()
   expect(await page.evaluate(() => "api" in window)).toBe(false)
@@ -187,12 +172,10 @@ test("A Team switch keeps a canceled chat draft and discards it only on confirma
   await expect(picker).toHaveValue(target.teamObjectId)
   await picker.selectOption(teamB.teamObjectId)
   await expect(dialog).toBeVisible()
-  await dialog.locator("[data-sf-confirm-discard]").click()
+  await switchTeam(page, teamB, actors.requester, () => dialog.locator("[data-sf-confirm-discard]").click())
   await expect(dialog).toHaveCount(0)
-  await selected(page, teamB, actors.requester)
   await expect(editor).toHaveCount(0)
-  await picker.selectOption(target.teamObjectId)
-  await selected(page, target, actors.requester)
+  await switchTeam(page, target, actors.requester, () => picker.selectOption(target.teamObjectId))
   await page.locator("[data-sf-open-chat]:visible").click()
   await page.locator("[data-sf-new-chat]").click()
   await expect(editor).toBeEditable()
@@ -257,10 +240,8 @@ test("Logout invalidates the original Microsoft browser context and preserves th
   await selected(stale, target, actors.requester)
   const holderBefore = await selected(holder, target, actors.holder)
   const logout = new URL(target.mount + "/auth/logout", target.publicOrigin).href
-  const [reply] = await Promise.all([
-    page.waitForResponse((response) => response.url() === logout && response.request().method() === "POST"),
-    page.locator(shell).locator("header").getByRole("button", { name: /^(Sign out|Sair)$/ }).click(),
-  ])
+  const reply = await uiReply(page, logout, "POST", () =>
+    page.locator(shell).locator("header").getByRole("button", { name: /^(Sign out|Sair)$/ }).click())
   expect(reply.status()).toBe(204)
   await expect(page.locator(shell)).toHaveAttribute("data-sf-teams-state", "unauthenticated")
   expect((await contextReply(page, target)).status()).toBe(401)

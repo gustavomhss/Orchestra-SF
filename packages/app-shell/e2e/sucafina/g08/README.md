@@ -21,12 +21,12 @@ The [fixed handoff](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d
 | Case | Original observation required |
 | --- | --- |
 | same-team-distinct-grants | Two original Microsoft contexts, distinct principals, same installed Team owner, actually different grants; opposite-order reload preserves each authority. |
-| aba-two-windows | A → B → A in one window, with the sibling remaining A and retaining its owner after reload. |
+| aba-two-windows | A → B → A in one window; each action's original F02 request/response and a separate original re-read must identify its owner. The sibling remains A and retains its owner after reload. |
 | account-without-team | Authenticated denied account, no Team stamp/destinations/availability, visible denial, chat entry disabled. |
 | foreign-deep-link-reload | Foreign-installation link and reload retain the denied owner state; returning to the valid link restores A. |
 | admin-without-team | Real configuration admin, no Team/business authority, original administration UI available, business chapter denied. |
 | narrow-keyboard-draft | Narrow Web keyboard navigation opens an unsent draft, with original F02 revalidation and unchanged owner. |
-| draft-cancel-discard | Cancel preserves the draft and A; explicit discard changes to B; returning to A starts an empty draft. |
+| draft-cancel-discard | Cancel preserves the draft and A; explicit discard changes to B with the action's original F02 response; returning to A repeats that observation and starts an empty draft. |
 | real-revoke-restore | Real admin disables only disposable A, both original accounts lose A, B stays available; original catalog read and one CAS restore A. |
 | logout-original-context | Real logout returns 204; original requester context and stale sibling return 401 on F02; distinct holder stays authorized. |
 
@@ -51,7 +51,7 @@ The observer reads only the existing private `ingress-secret.txt` needed for an 
 
 For public content delivery, the observer reads the **active** Caddy configuration through its existing private Unix administration socket, verifies the socket's kernel peer credentials against the actual Caddy unit/PID, and observes its HTTPS TCP/UDP listeners. The supported minimum is the repository's exclusive hostname and original reverse proxy: content-producing handlers must route to the installed loopback listener; static success bodies, file servers, alternate upstreams and response-body interception are refused. This checks the running configuration, not the unrendered template. If the authorized topology uses a separate gateway, it requires an original adapter and independent proof; metadata cannot waive this check.
 
-Runner-owned pages disable their own network cache and bypass service workers. Document, script and stylesheet responses must report port 443 at an assigned VM address. Every opened page needs an observed original document. This prevents accepting an unrelated public frontend or silently reusing a previous candidate's cached shell. The private host operator must have read access to the required process metadata, private descriptor/ingress proof and Caddy socket; missing access blocks execution.
+Runner-owned pages disable their own network cache and bypass service workers. Document, script and stylesheet responses must report port 443 at an assigned VM address. Independent discovery/context/admin reads and CAS writes invoke a real same-origin browser fetch in the original context, using a fresh header nonce only to correlate the network observation. They read the actual Playwright network Response after verifying the same peer and refusing service-worker responses; the page's returned JavaScript body is never an authority source. The browser supplies its original cookie jar and POST origin. Logout and the F02 requests emitted by Team switch, discard, focus refresh and new-chat actions use the same peer check; request waits are registered before the action and exclude the observer nonce. Every opened page needs an observed original document. This prevents accepting an unrelated public frontend or silently reusing a previous candidate's cached shell. The private host operator must have read access to the required process metadata, private descriptor/ingress proof and Caddy socket; missing access blocks execution.
 
 Host metadata, principal labels and the private plan do not grant authority.
 
