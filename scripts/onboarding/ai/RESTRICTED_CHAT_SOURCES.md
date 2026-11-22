@@ -84,3 +84,9 @@ The media transport variant keeps the original full artifact and copies original
 proof bytes unchanged. It adds the two explicit restriction proof files to its
 whitelist and uses the distinct new example identity. It never changes playback
 speed, freezes/replays frames, or creates product states.
+
+## Targeted editorial retake after completed take3
+
+Take3 (45063603551 / e4bbc8e5f06591d35c0ad95fa6b9aa16eb97ec79) completed genuine inference, but its answer was not selected for the final edit: it merely restated the staffing difference and assigned an unsupported “general team” to a vague future review. The next prompt explicitly asks about service coverage, missing quotation evidence and one concrete human verification, and prohibits invented roles. The underlying factual example, original Maestro role, supported permission restriction, model weights, sampling, deadlines and nine completion checks remain unchanged.
+
+The capture also adds a stronger observed-identity attachment. It asserts that the complete actual assistant DOM body, normalized by the existing helper, equals the persisted answer. The original raw `actual-chat-answer-identity.json` attachment records same-session/message identity, exact DOM text and hashes; the compact transport copies it unchanged. This supplements film-report digest redaction without rewriting the film report, substituting a response or weakening the original completion checks.

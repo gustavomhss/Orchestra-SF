@@ -37,7 +37,7 @@ const assets = {
   },
 } as const
 
-export const localModelPrompt = "Using only these supplied examples, prepare a regional IT review. Staffing: one infrastructure position is planned at 1.0 FTE; 0.9 FTE is proposed. Separately, a support purchase has three quotations; one is selected, and final approval is pending. Quote prices, specifications, and vendor evidence have not been supplied. Return exactly three short bullets: one staffing review question; which missing evidence to request for the selected quotation; and the next human review step before approval. Keep staffing and the purchase separate. Do not use tools, change records, or claim you read the business system."
+export const localModelPrompt = "Prepare a regional IT review using only these facts. Staffing: a regional infrastructure position is planned at 1.0 FTE; 0.9 FTE is proposed. The reviewer needs to assess support coverage. Separately, a support purchase has three quotations; one is selected and approval is pending. Prices, specifications and vendor evidence have not been provided. Return exactly three concise Markdown bullets: a staffing coverage question; which missing evidence to request for the selected quotation; one concrete check the human reviewer must perform before deciding on approval. Start each line with a dash. Do not invent people, roles, costs or evidence. Keep staffing and the purchase separate. Do not use tools, change records, or claim you read the business system."
 
 export type LocalModelRecording = {
   providerId: string

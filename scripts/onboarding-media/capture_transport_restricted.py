@@ -30,6 +30,7 @@ PROOF_NAMES = (
     "local-model-failure.json",
     "restricted-agent-configuration.json",
     "restricted-agent-confirmation.json",
+    "actual-chat-answer-identity.json",
 )
 MAX_PROOF_BYTES = 16 * 1024 * 1024
 

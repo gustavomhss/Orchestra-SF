@@ -142,7 +142,7 @@ async function chatChapters(film: Film, local: LocalModelRecording, restricted: 
       model: await model.innerText(), permissionControlInDraft: await page.locator('[data-action="prompt-permissions"]').count(),
       permissionModeChanged: false, draftPolicyBasis: "fresh original context; publicly configured project tool denial; no auto-accept action",
       operatorConfiguredToolRestriction: true })
-    // The visible 612-character example needs at least 21.42s at the original
+    // The visible 759-character example needs at least 26.57s at the original
     // 35ms typing cadence. Extend only this input operation, then restore the
     // shared film helper's original 20s default for all subsequent UI actions.
     page.setDefaultTimeout(45_000)
@@ -223,8 +223,31 @@ async function chatChapters(film: Film, local: LocalModelRecording, restricted: 
       autoAccept: await permission.getAttribute("aria-pressed"), changedByRecording: false })
     const rendered = page.locator('[data-component="orchestra-turn"][data-role="assistant"] [data-slot="orchestra-turn-body"]').last()
     await expect(rendered).toBeVisible()
-    await expect.poll(async () => normalizeVisible(await rendered.innerText())).toContain(fragments[0]!.slice(0, 120))
+    // The original turn body includes author/time metadata. The source-pinned
+    // text-part body contains only PacedMarkdown; copy/model/duration are sibling
+    // nodes. OrchestraTurn is emitted per part, so collect all actual visible
+    // assistant text parts in this fresh one-prompt/two-message session.
+    expect(object(proof.pagination).messageCount).toBe(2)
+    const answerParts = page.locator('[data-component="orchestra-turn"][data-role="assistant"] [data-component="text-part"] > [data-slot="text-part-body"]:visible')
+    await expect.poll(() => answerParts.count()).toBeGreaterThan(0)
+    await expect.poll(async () => normalizeVisible((await answerParts.allInnerTexts()).join("\n\n")), { timeout: 30_000 })
+      .toBe(normalizeVisible(answer))
+    const renderedText = (await answerParts.allInnerTexts()).join("\n\n")
+    expect(normalizeVisible(renderedText)).toBe(normalizeVisible(answer))
     await film.focus(rendered, "Read the actual completed Maestro answer")
+    await record("actual-chat-answer-identity", {
+      schema: "sf-actual-chat-answer-identity-v1", sessionId,
+      assistantMessageId: proof.assistantMessageId,
+      persistedAnswerSha256: digest(answer),
+      normalizedPersistedAnswerSha256: digest(normalizeVisible(answer)),
+      renderedText, renderedTextSha256: digest(renderedText),
+      normalizedRenderedTextSha256: digest(normalizeVisible(renderedText)),
+      exactNormalizedMatch: true, responseSubstituted: false,
+      selector: '[data-component="orchestra-turn"][data-role="assistant"] [data-component="text-part"] > [data-slot="text-part-body"]:visible',
+      textPartCount: await answerParts.count(), messageCount: object(proof.pagination).messageCount,
+      selectedTurn: "all visible assistant text parts in the fresh one-prompt session",
+      normalization: "original normalizeVisible helper",
+    })
     film.proof({ kind: "actual-chat-answer-visible", sessionId, persistedAnswerSha256: digest(answer),
       visibleFragments: fragments, responseSubstituted: false, productionProviderClaimed: false,
       modelLabel: "Local demonstration model", toolAccessLabel: "Provided facts · Tool access denied" })
@@ -238,7 +261,7 @@ async function preserveTransportProof(info: TestInfo, example: string) {
   if (example !== "C-chat-restricted-context") throw new Error("Unexpected focused Chat capture identity")
   const allowed = new Set([example + "-film-report", example + "-video-source",
     "local-model-setup-started", "local-model-ready", "local-model-chat-proof", "local-model-failure",
-    "restricted-agent-configuration", "restricted-agent-confirmation"])
+    "restricted-agent-configuration", "restricted-agent-confirmation", "actual-chat-answer-identity"])
   const selected = info.attachments.filter((attachment) => allowed.has(attachment.name) && attachment.contentType === "application/json")
   if (new Set(selected.map((attachment) => attachment.name)).size !== selected.length)
     throw new Error("Ambiguous original proof attachments")
