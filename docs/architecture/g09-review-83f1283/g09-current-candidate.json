@@ -1,0 +1,889 @@
+{
+  "schema": "sf-g09-current-candidate-checkpoint-v1",
+  "status": "INSTALLED_TUI_PASS_G09_UNQUALIFIED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Owner-authorized partial product merges and fresh Linux candidate; exact G09 qualification is still incomplete.",
+  "sourceRepairs": [
+    {
+      "pr": 617,
+      "merged": true,
+      "mergeSHA": "6118495582672d41129cde7cd1749790e42da04c",
+      "sourceSHA": "1839ed2b0ebe1efd67f9cfc92c9daf14fb73576c",
+      "scope": "Render built-in slot fallbacks without a plugin host.",
+      "sourceRunId": "44980275760",
+      "sourceJobId": "137079056053",
+      "tests": {
+        "pass": 5,
+        "fail": 0,
+        "assertions": 15
+      },
+      "typecheck": "PASS",
+      "guards": {
+        "rules": 78,
+        "gate": 0,
+        "warn": 0,
+        "errors": 0
+      }
+    },
+    {
+      "pr": 621,
+      "merged": true,
+      "mergeSHA": "4c19971bc6a4c5a1f95c5e049666a44f0c43d5cd",
+      "sourceSHA": "162451955d375eb5a5b91d7962a06bdc5c0b261d",
+      "baseSHA": "888669d395a196ef95979d340d00304fa16256ab",
+      "scope": "Synchronize input.plainText and extmarks before opening the external editor.",
+      "sourceRunId": "44983966623",
+      "sourceJobId": "137090357327",
+      "snapshotSHA": "3ab9051de89ce8457902741a0795daee11016084",
+      "changedFiles": 1,
+      "addedLines": 5,
+      "tests": {
+        "pass": 5,
+        "fail": 0,
+        "assertions": 6
+      },
+      "typecheck": "PASS",
+      "guards": {
+        "rules": 78,
+        "gate": 0,
+        "warn": 0,
+        "errors": 0
+      }
+    }
+  ],
+  "candidate": {
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "producerJobId": "137088492396",
+    "producerCheckRunId": "137088492396",
+    "artifactId": "14738902174",
+    "artifactDigest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+    "tarSha256": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+    "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+    "compileProvenanceSha256": "e3bb4bf66f3b55617768596ccec2d00aeea1ee272be0736f0470a8b1628f37f2",
+    "candidateBindingSha256": "917e096260b553ce9c2d362408c3dc041ac2a30cd2f6e62be42ad83cebb9a0e0",
+    "artifacts": [
+      {
+        "id": 14739297277,
+        "name": "g09-candidate-tui-44983358294-1",
+        "size_in_bytes": 5096405,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739297277",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14739297277/zip",
+        "expired": false,
+        "created_at": "2026-11-22T04:17:18Z",
+        "expires_at": "2026-12-22T04:17:16Z",
+        "updated_at": "2026-11-22T04:17:18Z",
+        "digest": "sha256:805d8d70bd67c1fe591cfaa1d77ae1b31a83cd99f884d5685453e718367f6736",
+        "workflow_run": {
+          "id": 44983358294,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "g09-next-candidate",
+          "head_sha": "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+        }
+      },
+      {
+        "id": 14738902174,
+        "name": "orchestra-sf-entra-linux-83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+        "size_in_bytes": 125389096,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738902174",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738902174/zip",
+        "expired": false,
+        "created_at": "2026-11-22T04:15:43Z",
+        "expires_at": "2026-12-22T04:15:39Z",
+        "updated_at": "2026-11-22T04:15:43Z",
+        "digest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+        "workflow_run": {
+          "id": 44983358294,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "g09-next-candidate",
+          "head_sha": "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+        }
+      },
+      {
+        "id": 14738453502,
+        "name": "g09-diagnostic-83f1283f8e39cd5863d9806b9a48f0573f44eaff-1",
+        "size_in_bytes": 60136214,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738453502",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14738453502/zip",
+        "expired": false,
+        "created_at": "2026-11-22T04:17:10Z",
+        "expires_at": "2026-12-22T04:17:04Z",
+        "updated_at": "2026-11-22T04:17:10Z",
+        "digest": "sha256:2d25388879050ce5c943bc7324f0b98162d1e6a7fc5277caf994c5f41c5e7bfd",
+        "workflow_run": {
+          "id": 44983358294,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "g09-next-candidate",
+          "head_sha": "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+        }
+      }
+    ],
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44983358294"
+  },
+  "producer": {
+    "status": "PASS",
+    "typechecks": [
+      "packages/tui",
+      "apps/cli"
+    ],
+    "slotTests": {
+      "pass": 5,
+      "fail": 0,
+      "assertions": 15
+    },
+    "paletteTest": {
+      "path": "packages/app-shell/src/orchestra/palette/palette.test.ts",
+      "caseName": "the shipped stylesheets are exactly the generator's output",
+      "pass": 1,
+      "fail": 0,
+      "assertions": 9
+    },
+    "checks": [
+      "prod/Sucafina build inputs",
+      "native CLI/Web/factory build",
+      "compiler map-to-ELF binding",
+      "temporary installation and idempotence",
+      "installed native Web and Team admission",
+      "installed C17 CurrentChoice and persisted Planner scenario",
+      "installed Tree-sitter TypeScript/Python",
+      "canonical archive inventory and extracted-byte receipt"
+    ],
+    "guards": {
+      "rules": 78,
+      "changedPaths": 19,
+      "gate": 0,
+      "warn": 7,
+      "errors": 0
+    },
+    "warnings": "Seven deliberate CI proof milestone console.log calls, retained and reported; no guard/ignore/approval label changed.",
+    "limitations": [
+      "Entra and Graph transport was substituted for the local installed proof.",
+      "No real tenant or Azure deployment is claimed."
+    ]
+  },
+  "installedTui": {
+    "artifactDigest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+    "artifactId": "14738902174",
+    "artifactZipSha256": "f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+    "bootstrapHelperBlob": "730a87e0d06c1e3091a1ac72d0472a058d15f233",
+    "bootstrapHelperSha256": "cc79c0b4cdbe6be65bc6998b7b0be24c8ea1bf7c47fb36991c544c5553bb5751",
+    "candidateBindingSchema": "sf-g09-candidate-binding-v1",
+    "candidateBindingSha256": "917e096260b553ce9c2d362408c3dc041ac2a30cd2f6e62be42ad83cebb9a0e0",
+    "candidateInputsSha256": {
+      "/home/runner/work/_temp/g09-candidate-release/bin/orchestra": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+      "/home/runner/work/_temp/g09-candidate/artifact.zip": "f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+      "/home/runner/work/_temp/g09-candidate/candidate-binding.json": "917e096260b553ce9c2d362408c3dc041ac2a30cd2f6e62be42ad83cebb9a0e0",
+      "/home/runner/work/_temp/g09-candidate/package/cli-source-map-index.json": "b0708c88c3ff6c6daebbb4aed72e23f7bffc8f5decd2b345b758dc71bc6b8edb",
+      "/home/runner/work/_temp/g09-candidate/package/cli-source-maps.tar.gz": "b1f8ed8d2ad04119103baf179e45601bddf7625894008d541b8bb93caacc1f51",
+      "/home/runner/work/_temp/g09-candidate/package/compile-evidence.json": "a6cafaee1e0563f573bfba666043f28a435b8cf28d9ec0638edc339f14570704",
+      "/home/runner/work/_temp/g09-candidate/package/compile-provenance.json": "e3bb4bf66f3b55617768596ccec2d00aeea1ee272be0736f0470a8b1628f37f2",
+      "/home/runner/work/_temp/g09-candidate/package/g09-artifact-receipt.json": "974fcfd809c5ab9e3b2646611e7a75306e9a2fb989f25c9cb56d945c5e06d9e6",
+      "/home/runner/work/_temp/g09-candidate/package/orchestra-sf-entra-linux-x64-baseline.tar.gz": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+      "/home/runner/work/_temp/g09-candidate/package/orchestra-sf-entra-linux-x64-baseline.tar.gz.inventory.json": "9c9a8694d1425015e12c53b88e7b70fe78fe218190e7fc65fb3ee7e68746f2ac",
+      "/home/runner/work/_temp/g09-candidate/package/orchestra-sf-entra-package-receipt.json": "ecda5e8620dd0d6d092baa9d7efa7d79d4a0fba52acc160e36bb5a64fc5b9f12"
+    },
+    "candidateInputsUnchanged": true,
+    "candidateOrigin": "same-run-teams-profile-artifact",
+    "cases": [
+      {
+        "caseName": "TUI Session fork preserves source identity and placement",
+        "createdSession": "ses_dfe87b736ffeQa21vk1vJGM0m0",
+        "creationBranch": "App --session --fork; New session navigation alone does not persist a Session",
+        "formalG09Pass": false,
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "setupEnd": 18,
+        "setupStart": 13,
+        "sourceSession": "ses_dfe87bdcaffeHIQN43RDWdJlOG",
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1427555,
+            "file": "tui.network.json",
+            "sha256": "270e587ed4baf9cf3bf5e002807ef64a8942c12d9bd160829534debf05e74a98"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:36143",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+              "--session",
+              "ses_dfe87bdcaffeHIQN43RDWdJlOG",
+              "--fork"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 152
+          },
+          "screen": {
+            "bytes": 787,
+            "file": "final-screen.txt",
+            "sha256": "e31831b7fccd4c8132221f14ea22385eabae1453fe27bdfef3367ec5bf41351f"
+          },
+          "terminal": {
+            "bytes": 58168,
+            "file": "tui.pty.raw",
+            "sha256": "652176779b690f93fe66a204784bd519ac7e3ca63151944676f7f5940edf98bf"
+          },
+          "unexpectedResponseIndices": []
+        },
+        "tuiRequestIndex": 24
+      },
+      {
+        "caseName": "TUI project session list excludes another project",
+        "directoryFilteredQuery": {
+          "limit": [
+            "100"
+          ],
+          "order": [
+            "desc"
+          ],
+          "project": [
+            "49b516e150ad5271ecb8fa86b0f65d98a7ecec58"
+          ],
+          "subpath": [
+            "scoped-directory"
+          ]
+        },
+        "excludedSession": "ses_dfe87ad87ffedW541w4hU6kGR4",
+        "formalG09Pass": false,
+        "initialSession": "ses_dfe87af75ffe0uWkkwPWy0rNDp",
+        "navigationRequestIndex": 33,
+        "projectWideQuery": {
+          "limit": [
+            "100"
+          ],
+          "order": [
+            "desc"
+          ],
+          "project": [
+            "49b516e150ad5271ecb8fa86b0f65d98a7ecec58"
+          ]
+        },
+        "qualification": "Directory/project filtering under one Basic operator; not a per-project authorization claim",
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "selectedSession": "ses_dfe87adbcffeS8F4iFJVRIVznY",
+        "setupEnd": 34,
+        "setupStart": 18,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1442146,
+            "file": "tui.network.json",
+            "sha256": "306c0e269cb13c5c33010a0205691cb41cd92878c173e31afc21900d1ddaf092"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:33919",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository/scoped-directory",
+              "--session",
+              "ses_dfe87af75ffe0uWkkwPWy0rNDp"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 329
+          },
+          "screen": {
+            "bytes": 969,
+            "file": "final-screen.txt",
+            "sha256": "43aa5161c32c33eb203faf4934aa18a6abcc3e26760e1b42a54d6cd50bd93181"
+          },
+          "terminal": {
+            "bytes": 150696,
+            "file": "tui.pty.raw",
+            "sha256": "eef2aba1479441120175ee950a30c256f50b43e111c235ba8e0e894d6427f7a2"
+          },
+          "unexpectedResponseIndices": []
+        }
+      },
+      {
+        "caseName": "TUI creates a Git worktree and moves the selected Session",
+        "destination": "/home/runner/work/_temp/g09-candidate-tui-runtime/tui-03/data/orchestra/worktree/49b516/stellar-panda",
+        "formalG09Pass": false,
+        "gitCommonDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository/.git",
+        "gitWorktreeRegistered": true,
+        "modelExecution": "All providers denied by fixture policy; model.default verified null",
+        "requestIndices": [
+          32,
+          33,
+          42
+        ],
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "sessionID": "ses_dfe879932ffeD4Jf0yq0mgO7Ie",
+        "setupEnd": 43,
+        "setupStart": 34,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1551483,
+            "file": "tui.network.json",
+            "sha256": "e704b74f65910ba61da169b0a84082f448dfccc36e61e07824a257fcb942d6ad"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:36553",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+              "--session",
+              "ses_dfe879932ffeD4Jf0yq0mgO7Ie"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 409
+          },
+          "screen": {
+            "bytes": 969,
+            "file": "final-screen.txt",
+            "sha256": "b93af725b69b18902b69fa3706439cb43f3828e386bb83d081f910646d6e19c6"
+          },
+          "terminal": {
+            "bytes": 88573,
+            "file": "tui.pty.raw",
+            "sha256": "f77496fdfc5ef6a38aeaca3d03fbf755d8a7bed0801c808445e6812220615d44"
+          },
+          "unexpectedResponseIndices": []
+        }
+      },
+      {
+        "cancelledWithoutMutation": true,
+        "caseName": "TUI cancels and confirms moving a Session with file changes",
+        "confirmedRequestIndex": 35,
+        "destination": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/move-existing",
+        "formalG09Pass": false,
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "sessionID": "ses_dfe87820affe7EbTJtTCaYty7x",
+        "setupEnd": 49,
+        "setupStart": 43,
+        "sourceRestored": true,
+        "status": "pass",
+        "targetContainsChanges": true,
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1552678,
+            "file": "tui.network.json",
+            "sha256": "18498324bc252b6d435827128dad072d51dee13324d14a348f3defa62cc43fab"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:37725",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+              "--session",
+              "ses_dfe87820affe7EbTJtTCaYty7x"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 628
+          },
+          "screen": {
+            "bytes": 968,
+            "file": "final-screen.txt",
+            "sha256": "da6ee3dbd15d6c45afc4c80d3fc34383e4359c5afff2856423a64b39d07db792"
+          },
+          "terminal": {
+            "bytes": 136450,
+            "file": "tui.pty.raw",
+            "sha256": "7731e338e36784410e89372fd78c8bc4377e3ef9bf49c5fd315182fd1cf40649"
+          },
+          "unexpectedResponseIndices": []
+        }
+      },
+      {
+        "caseName": "TUI normal removal requires confirmation and preserves other copies",
+        "confirmedRequestIndex": 31,
+        "firstActivationDidNotMutate": true,
+        "force": false,
+        "formalG09Pass": false,
+        "gitState": {
+          "mainAndPeerCommonDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository/.git",
+          "mainAndPeerHead": "49b516e150ad5271ecb8fa86b0f65d98a7ecec58",
+          "remainingGitDirectories": [
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/move-existing",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-clean-peer",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/tui-03/data/orchestra/worktree/49b516/stellar-panda"
+          ]
+        },
+        "preservedDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-clean-peer",
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "selectedDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-clean",
+        "setupEnd": 62,
+        "setupStart": 49,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1433878,
+            "file": "tui.network.json",
+            "sha256": "ae1370d2e439b6b1ab462d0adb0527df613bfc84aad8d5c5c450e05d6590d70e"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:39239",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+              "--session",
+              "ses_dfe876239ffe80ClCD09Ybacms"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 936
+          },
+          "screen": {
+            "bytes": 780,
+            "file": "final-screen.txt",
+            "sha256": "25d728596ea0df3372b0ac875a6ad3ebc0b02864dbfa8ec97ac36a716371ddec"
+          },
+          "terminal": {
+            "bytes": 85150,
+            "file": "tui.pty.raw",
+            "sha256": "e5f924d1677868ee7ba31ae3c2c4799fb60075028914be462e50de9c1088f96d"
+          },
+          "unexpectedResponseIndices": []
+        }
+      },
+      {
+        "cancelledWithoutDeletion": true,
+        "caseName": "TUI forced removal distinguishes cancellation and confirmation",
+        "forcedRequest": 47,
+        "formalG09Pass": false,
+        "gitState": {
+          "mainAndPeerCommonDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository/.git",
+          "mainAndPeerHead": "49b516e150ad5271ecb8fa86b0f65d98a7ecec58",
+          "remainingGitDirectories": [
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/move-existing",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-clean-peer",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-dirty-peer",
+            "/home/runner/work/_temp/g09-candidate-tui-runtime/tui-03/data/orchestra/worktree/49b516/stellar-panda"
+          ]
+        },
+        "normalRejectedRequest": 31,
+        "preservedDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-dirty-peer",
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "selectedDirectory": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/remove-dirty",
+        "setupEnd": 75,
+        "setupStart": 62,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1560104,
+            "file": "tui.network.json",
+            "sha256": "fd1878662a5bbce97ff8f920d1c875015bfff4dc559e911e330319ec7d9dda85"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:46411",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository",
+              "--session",
+              "ses_dfe874d19ffebXsM42Ky8FwkAp"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 1098
+          },
+          "screen": {
+            "bytes": 780,
+            "file": "final-screen.txt",
+            "sha256": "d94a878d0cbae3a4bf905b37c334cec8a5f590518cbeaced80360e0cede782a3"
+          },
+          "terminal": {
+            "bytes": 154620,
+            "file": "tui.pty.raw",
+            "sha256": "91f1d07be94934ed725b4d80e5c15c38f0bab66b55108e4b9973fb1b6942583f"
+          },
+          "unexpectedResponseIndices": []
+        }
+      },
+      {
+        "cancelledWithoutExport": true,
+        "caseName": "TUI editor and export preserve selected Session and worktree binding",
+        "editorContract": "Real configured observer program: invocation, parent ELF, cwd, temporary input and returned bytes",
+        "exportPath": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/editor-selected/g09-export-pnSBGNXc.md",
+        "exportSha256": "c1e82cfedd2394cfe511d4fbe24cf9f5664c739f8aff10695aec46abc4702b05",
+        "formalG09Pass": false,
+        "notProven": "Post-move editor cwd when attach stays in an older directory; visual experience of a full editor",
+        "openWithoutSavingCreatedNoArtifact": true,
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "sessionID": "ses_dfe872af6ffeDOWmaPpnSBGNXc",
+        "setupEnd": 80,
+        "setupStart": 75,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 0,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 1942,
+            "file": "editor-observations.json",
+            "sha256": "b380275da177220d2a6186fc74dd843fdc3c4fbf7e5df435217383e19f17a52b"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": 0,
+          "network": {
+            "bytes": 1431891,
+            "file": "tui.network.json",
+            "sha256": "857760141cc80248f5a11ff4238b394c219c6339475361d8f99a673765f96c45"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:34943",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/editor-selected",
+              "--session",
+              "ses_dfe872af6ffeDOWmaPpnSBGNXc"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 1443
+          },
+          "screen": {
+            "bytes": 1172,
+            "file": "final-screen.txt",
+            "sha256": "31c055181ac7d4fcd0ee26f92d606ba816320d4fec2c03120a3e74b20c67b583"
+          },
+          "terminal": {
+            "bytes": 175812,
+            "file": "tui.pty.raw",
+            "sha256": "960eeeb30044f8c1d2e10454d36a739351b935af32ef657766fe09696c6c820f"
+          },
+          "unexpectedResponseIndices": []
+        },
+        "worktree": "/home/runner/work/_temp/g09-candidate-tui-runtime/setup-copies/editor-selected"
+      },
+      {
+        "actualTuiExitCode": 1,
+        "authorizationBoundary": "Missing generic Basic authority; not a per-project ACL or PermissionV2 result",
+        "caseName": "TUI bootstrap without Basic authority cannot read or mutate project state",
+        "formalG09Pass": false,
+        "scope": "Observed named branch only; no inferred ID dispositions",
+        "setupEnd": 84,
+        "setupStart": 80,
+        "status": "pass",
+        "tui": {
+          "actualExitCode": 1,
+          "cleanupComplete": true,
+          "cleanupErrors": [],
+          "cleanupSignalsRequired": false,
+          "editorObservations": {
+            "bytes": 3,
+            "file": "editor-observations.json",
+            "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+          },
+          "forwardingErrors": [],
+          "keyboardQuitExitCode": null,
+          "network": {
+            "bytes": 3600,
+            "file": "tui.network.json",
+            "sha256": "8508496a93584169fda145421b6b515f450d8a69ae63af73b8e481160749352f"
+          },
+          "process": {
+            "argv": [
+              "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+              "attach",
+              "http://127.0.0.1:36495",
+              "--dir",
+              "/home/runner/work/_temp/g09-candidate-tui-runtime/main-repository"
+            ],
+            "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+            "pid": 1502
+          },
+          "screen": {
+            "bytes": 236,
+            "file": "final-screen.txt",
+            "sha256": "036a31ef539c7f39562e3e96fb1cbd1070a14362ddca3aa42f25b39b6aba5d73"
+          },
+          "terminal": {
+            "bytes": 761,
+            "file": "tui.pty.raw",
+            "sha256": "12a7cd2d7468cd4cc8bd863b3818bffbf6985a15bd67b30ca123849e0b26e400"
+          },
+          "unexpectedResponseIndices": []
+        },
+        "upstreamStatuses": [
+          401,
+          401,
+          401,
+          401,
+          401,
+          401,
+          401
+        ]
+      }
+    ],
+    "checkRunId": "137091279851",
+    "classifiedFindingIds": [],
+    "classifiedOccurrenceIds": [],
+    "compileProvenanceSha256": "e3bb4bf66f3b55617768596ccec2d00aeea1ee272be0736f0470a8b1628f37f2",
+    "editorObserverSha256": "3211928f910a74e97831c98f91193b3d4fa525cfbc30402bc3444124d300cab4",
+    "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+    "formalG09Pass": false,
+    "harnessSha256": "216d1ffdce087b0c096cb0abc4424fdf8833ee4626d8504a49845371ca4a4212",
+    "jobId": "137091279851",
+    "notProven": [
+      "Formal G09 acceptance",
+      "PermissionV2 correctness",
+      "Saved-permission DataProvider consumer",
+      "Microsoft/Teams authorization",
+      "Every branch of the 33 Solid findings"
+    ],
+    "processes": [
+      {
+        "pid": 15,
+        "waitStatus": 36608
+      },
+      {
+        "pid": 152,
+        "waitStatus": 0
+      },
+      {
+        "pid": 329,
+        "waitStatus": 0
+      },
+      {
+        "pid": 409,
+        "waitStatus": 0
+      },
+      {
+        "pid": 628,
+        "waitStatus": 0
+      },
+      {
+        "pid": 936,
+        "waitStatus": 0
+      },
+      {
+        "pid": 1098,
+        "waitStatus": 0
+      },
+      {
+        "pid": 1443,
+        "waitStatus": 0
+      },
+      {
+        "pid": 1502,
+        "waitStatus": 256
+      }
+    ],
+    "producerCheckRunId": "137088492396",
+    "producerJobId": "137088492396",
+    "providerPolicy": {
+      "experimental": {
+        "policies": [
+          {
+            "action": "provider.use",
+            "effect": "deny",
+            "resource": "*"
+          }
+        ]
+      }
+    },
+    "rebuiltDuringJourneys": false,
+    "runAttempt": "1",
+    "runId": "44983358294",
+    "schema": "g09-candidate-tui-journeys-v1",
+    "serverProcess": {
+      "argv": [
+        "/home/runner/work/_temp/g09-candidate-release/bin/orchestra",
+        "serve",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        "58345"
+      ],
+      "elfSha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+      "pid": 15
+    },
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "status": "pass",
+    "tarSha256": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+    "temporaryRuntimeRemoved": true,
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff"
+  },
+  "diagnostic": {
+    "jobId": "137091279832",
+    "diagnosticCompleted": true,
+    "formalG09Pass": false,
+    "status": "DIAGNOSTIC_UNQUALIFIED",
+    "counts": {
+      "occurrences": 19882,
+      "classified": 0,
+      "unknownOccurrences": 19882,
+      "unknownReachability": 3159,
+      "unclassified": 23041,
+      "activeLegacy": 0,
+      "orphan": 0
+    },
+    "blockers": [
+      "independent-current-source-review-missing",
+      "unclassified-occurrences-or-reachability",
+      "executed-test-obligations-missing"
+    ],
+    "binding": {
+      "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+      "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+      "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+      "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+      "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+      "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+      "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+    },
+    "reportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+    "canonicalScannerBlob": "10ae99ab085821f0e312ee05479cad3fb723c7b0",
+    "canonicalTestsBlob": "1c96c20dffc38eff3b1f3f2b62fedfff37d284e2",
+    "canonicalCatalogBlob": "b7fd3d80f40905c058deec057414e9e995cacaf4",
+    "controls": {
+      "pass": 17,
+      "fail": 0,
+      "skip": 0,
+      "cancelled": 0,
+      "mandatoryNegativeControls": 16
+    },
+    "zeroCategoryCountsCaveat": "With zero formal dispositions, activeLegacy=0 and orphan=0 do not establish absence. All 23041 IDs are unclassified.",
+    "navigation": {
+      "commit": "423956fda19bffb24f1afa7e80ecb6b548385fa9",
+      "runId": "44984675361",
+      "pages": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "filesWithReviewItems": 3722,
+      "findingsRead": 3159,
+      "credit": 0
+    }
+  },
+  "preserved": [
+    {
+      "kind": "original",
+      "sourceSHA": "3ef84da65d6b8ad7cd3250412bbcabdf90924172",
+      "artifactId": "14722264806",
+      "elfSha256": "ff145b04dc0897b32b7cdd904cf3bba7d793cf4a391d3c02325d3c6125006a9f",
+      "tuiRunId": "44977473580",
+      "pass": 2,
+      "fail": 6,
+      "defect": "Uninitialized optional plugin slots suppressed the built-in Prompt/title.",
+      "evidencePr": 610
+    },
+    {
+      "kind": "first-new-candidate",
+      "sourceSHA": "63beecc4011bd2695f0ecca23ed4a5f390a5a2b7",
+      "artifactId": "14738193420",
+      "elfSha256": "25a1913852d1f1b8dfe0d3be49d4089b31eb4f31ce250f23aaaddfdd064ec944",
+      "runId": "44981995573",
+      "pass": 7,
+      "fail": 1,
+      "defect": "Rapid typing/editor shortcut captured the stale derived store before the content-change microtask.",
+      "inspectionRunId": "44982991303",
+      "editorObservationSha256": "6db6ab5aa2b665af164eb5536bbc89067fe8f4208805c2f9475f1fde38079329"
+    }
+  ],
+  "remaining": {
+    "formalG09Pass": false,
+    "required": [
+      "Exact independent semantic dispositions for every occurrence and reachability finding",
+      "Applicable executed per-disposition obligations",
+      "Independent reviewer and obligation-producer authentication using separately provisioned host trust anchors",
+      "Final validation with truthful source/archive/workflow/execution bindings"
+    ],
+    "inProgress": [
+      "Installed Microsoft host exclusion of generic saved-permission routes",
+      "Exact CSS and JavaScript visual contexts from real archive bytes",
+      "Nested Atlas product/test build-resolution findings"
+    ],
+    "prohibitedShortcuts": [
+      "No classification by filename/directory alone",
+      "No fake signatures or manufactured independent authority",
+      "No forged same-run environment",
+      "No transfer of old ELF IDs without exact byte identity",
+      "No assertion or canonical scanner weakening"
+    ],
+    "notPerformed": [
+      "Full sf-ci",
+      "Deployment"
+    ],
+    "separateAcceptance": "G09 residue qualification alone is not proof of full native journeys, a real Microsoft tenant, migration/restore or go-live."
+  }
+}

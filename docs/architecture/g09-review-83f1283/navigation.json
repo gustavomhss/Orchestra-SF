@@ -1,0 +1,439 @@
+{
+  "schema": "sf-g09-v2-review-navigation-checkpoint-v1",
+  "navigationOnly": true,
+  "scannerReexecuted": false,
+  "formalG09Pass": false,
+  "assignedDispositions": 0,
+  "identities": {
+    "schema": "sf-g09-review-navigation-input-v1",
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "diagnosticJobId": "137091279832",
+    "producerJobId": "137088492396",
+    "producerCheckRunId": "137088492396",
+    "reportArtifactId": "14738453502",
+    "reportArtifactDigest": "sha256:2d25388879050ce5c943bc7324f0b98162d1e6a7fc5277caf994c5f41c5e7bfd",
+    "producerArtifactId": "14738902174",
+    "producerArtifactDigest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9"
+  },
+  "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+  "binding": {
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+    "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+    "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+    "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+    "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+  },
+  "reader": {
+    "commit": "423956fda19bffb24f1afa7e80ecb6b548385fa9",
+    "branch": "g09-review-pages",
+    "runId": "44984675361",
+    "runAttempt": "1",
+    "status": "success",
+    "helperGitBlob": "e08a0c2e51b6d3e4eaadf0aa739a42e186ebce79",
+    "inputGitBlob": "402b6e7648df9d1538602f6fb7f7b5733515ff5c",
+    "workflowGitBlob": "488883bf33a16ae1f66f89d9bcd50d6d7b226633"
+  },
+  "pageFormat": "JSONL; each line is array of at most25 records. files: header objects, findings: [finding,fileId,id,details].",
+  "pages": [
+    {
+      "jobId": "137092529176",
+      "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+      "binding": {
+        "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+        "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+        "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+        "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+        "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+        "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+        "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+      },
+      "page": 0,
+      "stream": "files",
+      "file": "0000-files.jsonl",
+      "bytes": 837549,
+      "sha256": "1593583413996c6ce6109bdc046746ec8a6f39a21bb2725a31f24ff487f8b3a8",
+      "records": 2750,
+      "gitBlob": "22e3489cb32a2a7a6cb96c13c3c4d9f990e2bd2a"
+    },
+    {
+      "jobId": "137092529161",
+      "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+      "binding": {
+        "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+        "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+        "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+        "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+        "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+        "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+        "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+      },
+      "page": 1,
+      "stream": "files",
+      "file": "0001-files.jsonl",
+      "bytes": 288517,
+      "sha256": "d00020c2577f9583b42783b001ab17fa51a9c10cc7b7248889593a7bd559453e",
+      "records": 972,
+      "gitBlob": "272a22a39b1a67d2834e35d30a2721f7c949a2ba"
+    },
+    {
+      "jobId": "137092529264",
+      "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+      "binding": {
+        "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+        "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+        "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+        "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+        "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+        "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+        "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+      },
+      "page": 5,
+      "stream": "findings",
+      "file": "0005-findings.jsonl",
+      "bytes": 830492,
+      "sha256": "16e17f080462c9a79401a58b12f87f3f7f09800465415f988c8f520773e785d1",
+      "records": 1875,
+      "gitBlob": "e580f98b9d96faa1172b31757238701dde16bb6b"
+    },
+    {
+      "jobId": "137092528984",
+      "sourceReportSha256": "211422a64e4c713e4e3f96b5a88489fba76e099d26ea6d8001794ce019e7ff34",
+      "binding": {
+        "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+        "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+        "catalogSha256": "5780a2f9cafec15d16d87b0b31b1465d162e2caf3f4551448586f5ce15d3082b",
+        "inventorySha256": "67d69a7c4c3a13b30ff5dfee35838a0fd27e9eb0fdd9464c747aee1a849970e1",
+        "occurrencesSha256": "c6ea8f9a337fecdce5436884b5df2086bb02c9a7dc1f8fdbd163471e5b2a425a",
+        "graphSha256": "8906caad49eefcd479d508c2c94f9e4ef456a1ba16b2f919c0d6b34e2351fce7",
+        "gapsSha256": "f9aacdaa58b8152b1ab13dd78c668c1bc94f5d016bc91b9f754d21d8f3cc5a92"
+      },
+      "page": 6,
+      "stream": "findings",
+      "file": "0006-findings.jsonl",
+      "bytes": 620542,
+      "sha256": "26a2e0dc929f20606d495528c2aab6cd18baa9e64e74a081dd386d62c04bf567",
+      "records": 1284,
+      "gitBlob": "75d2dfd0ed9e06fd0a6e1d107b8348dd1a23be99"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "14739188298",
+      "name": "g09-review-page-1-44984675361-1",
+      "bytes": 67392,
+      "digest": "sha256:9f003a1fa6e01e0bd1c68184e1f06836976ff5005c5daebdff6b7bcb0ba9d6f4",
+      "headSha": "423956fda19bffb24f1afa7e80ecb6b548385fa9"
+    },
+    {
+      "id": "14739093681",
+      "name": "g09-review-page-0-44984675361-1",
+      "bytes": 169264,
+      "digest": "sha256:cee15216804a3d46467c180d099180ae31520a4753fa65337f9facc4fcc58057",
+      "headSha": "423956fda19bffb24f1afa7e80ecb6b548385fa9"
+    },
+    {
+      "id": "14739009041",
+      "name": "g09-review-page-6-44984675361-1",
+      "bytes": 148115,
+      "digest": "sha256:23e757748e59ad80ef606a5981d16f19df52f5d2e5d7f4b91525fe0b9a3c50c1",
+      "headSha": "423956fda19bffb24f1afa7e80ecb6b548385fa9"
+    },
+    {
+      "id": "14738804565",
+      "name": "g09-review-page-5-44984675361-1",
+      "bytes": 193949,
+      "digest": "sha256:64a0f4b3ffad07a00e9bb9c586397b616eac086b201c29a6c145a0822b6de8bc",
+      "headSha": "423956fda19bffb24f1afa7e80ecb6b548385fa9"
+    }
+  ],
+  "counts": {
+    "reviewFiles": 3722,
+    "occurrences": 19882,
+    "findings": 3159
+  },
+  "sourceFamilies": [
+    {
+      "name": "AppShell",
+      "files": 545,
+      "occurrences": 4163,
+      "findings": 168,
+      "seeds": {
+        "worktree": 1231,
+        "repo-": 30,
+        "projectID": 284,
+        ".orchestra": 1875,
+        "orchestra.json": 133,
+        "profileProject": 13,
+        "projectId": 358,
+        "home.selection": 20,
+        "project.open": 85,
+        "directoryKey": 51,
+        "serverWorkspace": 23,
+        "selectProject": 12,
+        "tabMatchesProfile": 10,
+        "HomeProjectSelection": 26,
+        "McpProjectConfig": 1,
+        "appDockProfile": 9,
+        "trusted_projects": 1,
+        "project_id": 1
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 165,
+        "tsconfig-extends-requires-review": 1,
+        "symlink-target-not-followed": 1,
+        "source-parse-diagnostics": 1
+      },
+      "ids": 4331
+    },
+    {
+      "name": "Atlas",
+      "files": 1012,
+      "occurrences": 688,
+      "findings": 2540,
+      "seeds": {
+        "worktree": 197,
+        ".orchestra": 49,
+        "repo-": 270,
+        "projectId": 159,
+        "projectID": 13
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 2524,
+        "tsconfig-extends-requires-review": 16
+      },
+      "ids": 3228
+    },
+    {
+      "name": "Core",
+      "files": 461,
+      "occurrences": 2936,
+      "findings": 59,
+      "seeds": {
+        "project_id": 684,
+        "worktree": 907,
+        "repo_project_id": 23,
+        "location_id": 41,
+        "projectID": 839,
+        "projectId": 7,
+        "repo-": 24,
+        ".orchestra": 121,
+        "trusted_projects": 30,
+        "orchestra.json": 190,
+        "trustedProjects": 15,
+        "McpProjectConfig": 37,
+        "Project.resolve": 1,
+        "profileDirectory": 5,
+        "LeanProfilePreferences": 12
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 58,
+        "tsconfig-extends-requires-review": 1
+      },
+      "ids": 2995
+    },
+    {
+      "name": "Documentação e specs",
+      "files": 380,
+      "occurrences": 1324,
+      "findings": 0,
+      "seeds": {
+        "worktree": 899,
+        ".orchestra": 116,
+        "repo-": 97,
+        "projectID": 67,
+        "orchestra.json": 19,
+        "trusted_projects": 7,
+        "projectId": 92,
+        "project_id": 17,
+        "Project.resolve": 3,
+        "repo_project_id": 1,
+        "location_id": 5,
+        "serverWorkspace": 1
+      },
+      "findingKinds": {},
+      "ids": 1324
+    },
+    {
+      "name": "Maestro",
+      "files": 177,
+      "occurrences": 1115,
+      "findings": 11,
+      "seeds": {
+        "projectID": 536,
+        "repo-": 52,
+        "worktree": 396,
+        "project_id": 31,
+        ".orchestra": 23,
+        "orchestra.json": 15,
+        "trusted_projects": 7,
+        "projectId": 46,
+        "repo_project_id": 8,
+        "ProjectID.global": 1
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 10,
+        "tsconfig-extends-requires-review": 1
+      },
+      "ids": 1126
+    },
+    {
+      "name": "Relay",
+      "files": 44,
+      "occurrences": 822,
+      "findings": 2,
+      "seeds": {
+        "worktree": 10,
+        ".orchestra": 1,
+        "projectID": 7,
+        "repo-": 801,
+        "project_id": 3
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 1,
+        "tsconfig-extends-requires-review": 1
+      },
+      "ids": 824
+    },
+    {
+      "name": "Sucafina",
+      "files": 173,
+      "occurrences": 772,
+      "findings": 3,
+      "seeds": {
+        "worktree": 1,
+        "projectId": 754,
+        ".orchestra": 7,
+        "projectID": 10
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 3
+      },
+      "ids": 775
+    },
+    {
+      "name": "Demais componentes",
+      "files": 217,
+      "occurrences": 613,
+      "findings": 65,
+      "seeds": {
+        "repo_project_id": 3,
+        "project_id": 19,
+        ".orchestra": 107,
+        "worktree": 153,
+        "projectID": 118,
+        "orchestra.json": 32,
+        "repo-": 44,
+        "Project.resolve": 7,
+        "trusted_projects": 11,
+        "projectId": 37,
+        "LeanProfilePreferences": 5,
+        "location_id": 48,
+        "ProjectID.global": 3,
+        "profileProject": 4,
+        "HomeProjectSelection": 2,
+        "appDockProfile": 2,
+        "tabMatchesProfile": 2,
+        "selectProject": 2,
+        "project.open": 2,
+        "home.selection": 2,
+        "directoryKey": 2,
+        "serverWorkspace": 2,
+        "McpProjectConfig": 2,
+        "trustedProjects": 2,
+        "profileDirectory": 2
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 43,
+        "tsconfig-extends-requires-review": 22
+      },
+      "ids": 678
+    },
+    {
+      "name": "CLI e TUI",
+      "files": 150,
+      "occurrences": 571,
+      "findings": 6,
+      "seeds": {
+        ".orchestra": 24,
+        "worktree": 54,
+        "projectID": 137,
+        "projectId": 350,
+        "orchestra.json": 6
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 4,
+        "tsconfig-extends-requires-review": 2
+      },
+      "ids": 577
+    },
+    {
+      "name": "Schema protocolo client",
+      "files": 70,
+      "occurrences": 319,
+      "findings": 3,
+      "seeds": {
+        "projectID": 159,
+        "projectId": 121,
+        "worktree": 24,
+        ".orchestra": 9,
+        "trusted_projects": 2,
+        "project_id": 1,
+        "repo-": 3
+      },
+      "findingKinds": {
+        "tsconfig-extends-requires-review": 3
+      },
+      "ids": 322
+    },
+    {
+      "name": "Desktop",
+      "files": 69,
+      "occurrences": 243,
+      "findings": 28,
+      "seeds": {
+        "worktree": 61,
+        ".orchestra": 157,
+        "repo-": 10,
+        "appDockProfile": 15
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 26,
+        "tsconfig-extends-requires-review": 2
+      },
+      "ids": 271
+    },
+    {
+      "name": "Web",
+      "files": 3,
+      "occurrences": 1,
+      "findings": 4,
+      "seeds": {
+        ".orchestra": 1
+      },
+      "findingKinds": {
+        "unresolved-import-or-content-edge": 3,
+        "tsconfig-extends-requires-review": 1
+      },
+      "ids": 5
+    }
+  ],
+  "visualHeadersBlob": "84b599cc9098adf5772700a5498a0fb7cf450b09",
+  "sourceAndArchiveCounts": {
+    "source": {
+      "files": 3301,
+      "occurrences": 13567,
+      "findings": 2889
+    },
+    "archive": {
+      "files": 421,
+      "occurrences": 6315,
+      "findings": 270
+    }
+  }
+}
