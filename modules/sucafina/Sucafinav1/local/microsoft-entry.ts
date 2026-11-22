@@ -1,5 +1,6 @@
 import path from "node:path"
 import { randomUUID } from "node:crypto"
+import { Effect } from "effect"
 import type { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
 import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
@@ -104,6 +105,18 @@ export async function createMicrosoftInstallation(
       if (!admission || request.signal.aborted)
         return Response.json({ _tag: "UnauthorizedError", message: "Current session authority required" }, { status: 401, headers })
       try {
+        const action = request.method === "POST" && pathname === config.mount + "/api/session" ? "create" : "read"
+        if (!await Effect.runPromise(admission.authorize(action)) ||
+          !await Effect.runPromise(admission.verifyCurrent()) || request.signal.aborted)
+          return Response.json({ _tag: "UnauthorizedError", message: "Current session authority required" }, { status: 401, headers })
+        const configuration = await Effect.runPromise(admission.configuration?.() ?? Effect.succeed(undefined))
+        const profile = admission.binding.owner.profile
+        if (!configuration || configuration.origin !== "installation-team-store" ||
+          configuration.configRevision !== admission.binding.revisions.configRevision ||
+          configuration.profile.installationId !== profile.installationId ||
+          configuration.profile.tenantId !== profile.tenantId ||
+          configuration.profile.teamObjectId !== profile.teamObjectId ||
+          !await Effect.runPromise(admission.verifyCurrent()) || request.signal.aborted) return unavailable()
         // Only a current private Microsoft/Team grant can load and start the Core graph.
         // Each actual HTTP operation still captures and verifies its own opaque owner lease.
         if (!sessionRuntime) {
