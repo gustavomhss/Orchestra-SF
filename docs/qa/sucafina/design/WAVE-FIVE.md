@@ -99,7 +99,7 @@ Os três registros abaixo são diagnósticos separados sobre o mesmo produto `e4
 | 26 | [Portfolio25, run 45037958471](wave-five/analytics/attempt-22/README.md) | A primeira prévia falhou no waiter original de 60.000 ms, sem resposta observada ou snapshot final. Foram preservados 211 registros de perfil, cinco snapshots com 41 chaves e sete JPEGs originais. |
 | 27 | [Portfolio26, run 45040443689](wave-five/analytics/attempt-23/README.md) | A primeira prévia falhou no mesmo waiter original de 60.000 ms, sem resposta observada ou snapshot final. Foram preservados 236 registros de perfil, cinco snapshots com 46 chaves e sete JPEGs originais. |
 
-Os cleanups dos três runs passaram. **Portfolio26 é o diagnóstico executado mais recente.** Portfolio22 continua sendo a última tentativa instalada limpa, e UI44 isolada 03 continua sendo a última tentativa isolada de sensibilidade. Nenhum desses diagnósticos acrescenta qualificação ou um gate técnico aprovado.
+Os cleanups dos três runs passaram. **Neste checkpoint histórico, Portfolio26 era o diagnóstico concluído mais recente.** Portfolio22 continua sendo a última tentativa instalada limpa, e UI44 isolada 03 continua sendo a última tentativa isolada de sensibilidade. Nenhum desses diagnósticos acrescenta qualificação ou um gate técnico aprovado.
 
 No Portfolio25, seis populações de digest somam 697.487 chamadas / 16.167 ms inclusivos aos 50.041 ms; chamadas canônicas diretas fora do digest somam 1.167 / 428 ms. Há três spans pendentes, possivelmente aninhados. No Portfolio26, os cinco rótulos adicionais preservam os dois hashes originais de período por projeção alcançada e os dois hashes de referência por valor que passa a guarda de comprimento. Aos **50.008 ms**, as onze populações são:
 
@@ -127,6 +127,20 @@ O primeiro History nativo de Portfolio26 teve `native-request-failed` e HTTP 200
 As [revisões de root para 24](wave-five/analytics/attempt-21/root-review.json), [25](wave-five/analytics/attempt-22/root-review.json) e [26](wave-five/analytics/attempt-23/root-review.json) conferem os arquivos contra os logs completos. Portfolio24 não possui imagens. Em 25 e 26, o agente viu todos os sete JPEGs de cada execução; root conferiu todos os bytes e viu somente configuração e falha de cada uma. As falhas mostram Running, prévia indisponível e histórico vazio. Isso não é aceite visual do usuário.
 
 O guard **45032261331 / tentativa técnica 23** permanece aprovado somente para seu checkpoint original, QA `b17cb0b20251fe485db79ab3e8de80b7aa560e4b` e snapshot `ae98de00a9b49ee74b47aca83a8d36a808b86dc2`. **Ele não cobre os arquivos de Portfolio24–26 nem estas adições aos rollups.** Nenhum guard, teste ou CI novo foi executado para esta consolidação. Permanecem **41 aceitas/mescladas, 12/15 qualificadas (UI45–UI56), UI42–UI44 pendentes, aceite do usuário pendente e nenhum merge**.
+
+## Diagnóstico concluído mais recente: Portfolio27
+
+[Portfolio27](wave-five/analytics/attempt-24/README.md), **tentativa técnica 28 / run 45042950403**, executou o snapshot `e3062c97b3b32bcf28a1005cb6a0fd0f6fa6d951` sobre o produto `e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d`. O delta acrescenta dez rótulos literais em dezenove chamadas originais de digest e um span síncrono condicional para a verificação estável de BCS. Os operandos, callbacks, guardas, fixtures e prazos originais foram preservados.
+
+A preparação chegou aos dois History nativos, ambos com HTTP 200 e corpo `status: ok` (420 ms e 810 ms). A primeira prévia continuou sem resposta observada e falhou no **waiter original de 60.000 ms**. O test job 137271221351 falhou; o cleanup 137273862287 passou. Não foram alcançadas a prévia concluída, as releituras de UI43 ou a jornada de sensibilidade UI44.
+
+Aos **50.001 ms**, as dezoito populações observadas de digest somam **1.139.046 chamadas / 17.732 ms inclusivos**. O hash de fontes de contexto `bcs.capture.sources` registra **979 / 5.182 ms**; `unlabelled` ainda registra **82.289 / 1.937 ms**. O par de referências de BCS soma **616.068 / 3.931 ms**, e o par de períodos soma **3.924 / 6 ms**. A tabela completa e os limites de interpretação permanecem no [arquivo de agregados](wave-five/analytics/attempt-24/aggregates.json). Esses tempos se sobrepõem a outras famílias e não estimam CPU exclusiva ou ganho de uma correção.
+
+Dos 21 rótulos declarados, `bcs.capture.snapshots`, `bcs.capture.extras` e `bcs.capture.captures` não aparecem no prefixo emitido. O span condicional `bcs.capture.stable` também não aparece. Ausência nesse prefixo não é uma medição de zero para a requisição inteira. Há três entradas pendentes — HTTP, principal e leitura de estado — que podem estar aninhadas. Não houve snapshot final.
+
+Foram preservadas **385 emissões**: 271 de perfil, 81 eventos nativos e 33 chunks que recompõem sete JPEGs originais, totalizando 536.415 bytes. Os cinco checkpoints possuem 53 chaves, contagens equilibradas e zero perdas, erros ou limiares pulados registrados. O agente inspecionou as sete imagens; root conferiu todos os bytes e payloads e viu somente configuração e falha, conforme a [revisão independente](wave-five/analytics/attempt-24/root-review.json). A falha mostra Running, prévia indisponível e histórico vazio; isso não comprova conclusão interna ou persistência.
+
+Portfolio27 passa a ser o último diagnóstico **concluído**. Portfolio22 e sensibilidade isolada 03 continuam sendo as últimas tentativas instaladas limpas nos seus respectivos escopos. O guard 45032261331 cobre somente seu checkpoint histórico e **não cobre os arquivos de Portfolio24–27 nem suas adições aos rollups**; um novo guard permanece pendente. Nenhuma nova execução foi disparada por esta consolidação. Continuam **41 áreas aceitas/mescladas, 12/15 qualificadas e UI42–UI44 pendentes**, com aceite visual do usuário pendente e nenhum merge.
 
 ## Aceite
 

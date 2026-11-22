@@ -320,9 +320,9 @@
     "merged": false,
     "inventoryAcceptedAndMergedAreas": 41,
     "pendingFinalTestTypes": [],
-    "latestTechnicalAttempt": 27,
+    "latestTechnicalAttempt": 28,
     "latestInstalledFailures": {
-      "portfolioDiagnostic": 45040443689,
+      "portfolioDiagnostic": 45042950403,
       "isolatedSensitivity": 45029259117,
       "cleanPortfolio": 45029253108,
       "portfolioInfrastructure": 45037289486
@@ -348,139 +348,237 @@
       "guardRun": 45007665762,
       "installedQualification": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED"
     },
-    "latestInstalledDiagnosticEvidence": "analytics/attempt-23/README.md",
+    "latestInstalledDiagnosticEvidence": "analytics/attempt-24/README.md",
     "latestDiagnostic": {
-      "label": "Portfolio26",
+      "label": "Portfolio27",
       "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
-      "run": 45040443689,
-      "job": 137263467188,
-      "cleanupJob": 137266432739,
+      "run": 45042950403,
+      "job": 137271221351,
+      "cleanupJob": 137273862287,
       "cleanupStatus": "SUCCESS",
       "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
-      "snapshot": "48faf8ddcc242ed1ffb10d01f4619534b169a52b",
+      "snapshot": "e3062c97b3b32bcf28a1005cb6a0fd0f6fa6d951",
       "samples": 5,
-      "lastSampleMs": 50008,
+      "lastSampleMs": 50001,
       "scopeOrigin": "before-human-admit",
       "finalObserved": false,
       "measurementAvailable": true,
       "qualificationAdded": 0,
-      "evidence": "analytics/attempt-23/README.md",
-      "receipt": "analytics/attempt-23/receipt.json",
-      "rootReview": "analytics/attempt-23/root-review.json",
-      "technicalAttempt": 27,
+      "evidence": "analytics/attempt-24/README.md",
+      "receipt": "analytics/attempt-24/receipt.json",
+      "rootReview": "analytics/attempt-24/root-review.json",
+      "technicalAttempt": 28,
       "canonical": {
         "digestPopulations": [
           {
             "surface": "unlabelled",
-            "calls": 133332,
-            "settled": 133332,
+            "calls": 82289,
+            "settled": 82289,
             "pending": 0,
-            "inclusiveMs": 7506
+            "inclusiveMs": 1937
           },
           {
             "surface": "principal.direct",
-            "calls": 106491,
-            "settled": 106491,
+            "calls": 153763,
+            "settled": 153763,
             "pending": 0,
-            "inclusiveMs": 1672
+            "inclusiveMs": 1684
           },
           {
             "surface": "source.scope-validation",
-            "calls": 68920,
-            "settled": 68920,
+            "calls": 99496,
+            "settled": 99496,
             "pending": 0,
-            "inclusiveMs": 585
+            "inclusiveMs": 499
           },
           {
             "surface": "source.other",
-            "calls": 41978,
-            "settled": 41978,
+            "calls": 60038,
+            "settled": 60038,
             "pending": 0,
-            "inclusiveMs": 2545
+            "inclusiveMs": 2547
           },
           {
             "surface": "canonical.evidence-ref",
-            "calls": 8167,
-            "settled": 8167,
+            "calls": 11797,
+            "settled": 11797,
             "pending": 0,
-            "inclusiveMs": 97
+            "inclusiveMs": 108
+          },
+          {
+            "surface": "planner.source.role-map",
+            "calls": 43000,
+            "settled": 43000,
+            "pending": 0,
+            "inclusiveMs": 331
+          },
+          {
+            "surface": "planner.source.selector",
+            "calls": 42960,
+            "settled": 42960,
+            "pending": 0,
+            "inclusiveMs": 98
+          },
+          {
+            "surface": "planner.source.projection",
+            "calls": 5390,
+            "settled": 5390,
+            "pending": 0,
+            "inclusiveMs": 221
+          },
+          {
+            "surface": "planner.source.envelope",
+            "calls": 10740,
+            "settled": 10740,
+            "pending": 0,
+            "inclusiveMs": 443
+          },
+          {
+            "surface": "planner.evidence.projection",
+            "calls": 6858,
+            "settled": 6858,
+            "pending": 0,
+            "inclusiveMs": 267
           },
           {
             "surface": "bcs.planner.projection-period",
-            "calls": 1357,
-            "settled": 1357,
+            "calls": 1962,
+            "settled": 1962,
             "pending": 0,
             "inclusiveMs": 3
           },
           {
             "surface": "bcs.planner.expected-period",
-            "calls": 1357,
-            "settled": 1357,
+            "calls": 1962,
+            "settled": 1962,
             "pending": 0,
             "inclusiveMs": 3
           },
           {
             "surface": "bcs.planner.source-ref",
-            "calls": 213005,
-            "settled": 213005,
+            "calls": 308034,
+            "settled": 308034,
             "pending": 0,
-            "inclusiveMs": 1728
+            "inclusiveMs": 1912
           },
           {
             "surface": "bcs.planner.expected-ref",
-            "calls": 213004,
-            "settled": 213004,
+            "calls": 308034,
+            "settled": 308034,
             "pending": 0,
-            "inclusiveMs": 1772
+            "inclusiveMs": 2019
+          },
+          {
+            "surface": "bcs.capture.sources",
+            "calls": 979,
+            "settled": 979,
+            "pending": 0,
+            "inclusiveMs": 5182
+          },
+          {
+            "surface": "source.run-fence",
+            "calls": 291,
+            "settled": 291,
+            "pending": 0,
+            "inclusiveMs": 120
           },
           {
             "surface": "finance.other",
-            "calls": 493,
-            "settled": 493,
+            "calls": 705,
+            "settled": 705,
             "pending": 0,
-            "inclusiveMs": 333
+            "inclusiveMs": 356
           },
           {
             "surface": "finance.current",
-            "calls": 525,
-            "settled": 525,
+            "calls": 748,
+            "settled": 748,
             "pending": 0,
             "inclusiveMs": 2
           }
         ],
         "digestTotal": {
-          "calls": 788629,
-          "settled": 788629,
-          "pending": 0,
-          "inclusiveMs": 16246
+          "calls": 1139046,
+          "inclusiveMs": 17732,
+          "settled": 1139046,
+          "pending": 0
         },
         "directOutsideDigest": {
-          "calls": 1316,
-          "settled": 1316,
+          "calls": 1917,
+          "settled": 1917,
           "pending": 0,
-          "inclusiveMs": 402
+          "inclusiveMs": 489
         },
-        "interpretation": "Only sum the eleven canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or treat it as CPU time."
+        "declaredDigestLabels": 21,
+        "emittedDigestLabels": 18,
+        "absentDigestLabels": [
+          "bcs.capture.snapshots",
+          "bcs.capture.extras",
+          "bcs.capture.captures"
+        ],
+        "interpretation": "Only the eighteen observed canonical.digest populations are summed for the digest invocation total. Three declared populations were not emitted in this prefix. Inclusive duration is not exclusive CPU or a prediction of saved time."
       },
       "bcsPlanner": {
         "referenceLoop": {
-          "calls": 426009,
-          "inclusiveMs": 3500
+          "calls": 616068,
+          "inclusiveMs": 3931
         },
         "periodPair": {
-          "calls": 2714,
+          "calls": 3924,
           "inclusiveMs": 6
         },
         "allFourSites": {
-          "calls": 428723,
-          "inclusiveMs": 3506
+          "calls": 619992,
+          "inclusiveMs": 3937
         },
-        "interpretation": "The two period digests execute once per reached projection, outside every; the two reference digests execute per visited value. The final settled-span checkpoint contains one more source-ref than expected-ref call because it can cut between the two expressions. This is not evidence of a mismatch or a speedup."
+        "interpretation": "The two period hash sites remain outside every, followed by the two original reference hash sites per visited value. Equal source/expected prefix counts do not prove completed comparisons, accepted results or causal savings."
+      },
+      "bcsCapture": {
+        "sources": {
+          "request": 1,
+          "phase": "bucket",
+          "snapshot": 5,
+          "snapshotPhase": "periodic",
+          "elapsedMs": 50001,
+          "trigger": "settled-span",
+          "dueMs": 50000,
+          "name": "canonical.digest",
+          "origin": "none",
+          "surface": "bcs.capture.sources",
+          "calls": 979,
+          "settled": 979,
+          "pending": 0,
+          "inclusiveMs": 5182
+        },
+        "snapshots": {
+          "status": "not-emitted-in-observed-prefix",
+          "calls": null,
+          "inclusiveMs": null
+        },
+        "extras": {
+          "status": "not-emitted-in-observed-prefix",
+          "calls": null,
+          "inclusiveMs": null
+        },
+        "captures": {
+          "status": "not-emitted-in-observed-prefix",
+          "calls": null,
+          "inclusiveMs": null
+        },
+        "stable": {
+          "status": "not-emitted-in-observed-prefix",
+          "calls": null,
+          "settled": null,
+          "pending": null,
+          "inclusiveMs": null,
+          "semantics": "sync captureObservations.read stable body; conditional on readSfMemoryCaptureIntegrity use; includes currentSnapshots and argument work when reached; nested digest durations overlap; initial snapshot capture excluded"
+        },
+        "interpretation": "The sources label retains its original initial-capture and conditional stable-check hash sites. No stable span is emitted in the frame prefix; do not infer a request-wide zero, individual object provenance, exclusive CPU cost, or a safe memoization/copy optimization."
       },
       "preparatoryHistory": {
-        "sequence1": "native-request-failed at line 1211; HTTP 200 at line 1213 with acquisitionFailure=response-body-unavailable; status ok was not observed for this response",
-        "sequence2": "HTTP 200/status ok at line 1249",
-        "preview": "Sequence 3 POST at line 1247, 2026-11-22T15:59:25.7399373Z; no corresponding response"
+        "sequence1": "HTTP 200/status ok at line 1195; 420 ms",
+        "sequence2": "HTTP 200/status ok at line 1231; 810 ms",
+        "preview": "Sequence 3 POST at line 1229, 2026-11-22T16:24:55.4113636Z; no corresponding response"
       }
     },
     "contextIntegrity": {
@@ -510,6 +608,140 @@
       "sensitivity": "collab/sensitivity-isolated-03/README.md"
     },
     "previousDiagnostics": [
+      {
+        "label": "Portfolio26",
+        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+        "run": 45040443689,
+        "job": 137263467188,
+        "cleanupJob": 137266432739,
+        "cleanupStatus": "SUCCESS",
+        "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "48faf8ddcc242ed1ffb10d01f4619534b169a52b",
+        "samples": 5,
+        "lastSampleMs": 50008,
+        "scopeOrigin": "before-human-admit",
+        "finalObserved": false,
+        "measurementAvailable": true,
+        "qualificationAdded": 0,
+        "evidence": "analytics/attempt-23/README.md",
+        "receipt": "analytics/attempt-23/receipt.json",
+        "rootReview": "analytics/attempt-23/root-review.json",
+        "technicalAttempt": 27,
+        "canonical": {
+          "digestPopulations": [
+            {
+              "surface": "unlabelled",
+              "calls": 133332,
+              "settled": 133332,
+              "pending": 0,
+              "inclusiveMs": 7506
+            },
+            {
+              "surface": "principal.direct",
+              "calls": 106491,
+              "settled": 106491,
+              "pending": 0,
+              "inclusiveMs": 1672
+            },
+            {
+              "surface": "source.scope-validation",
+              "calls": 68920,
+              "settled": 68920,
+              "pending": 0,
+              "inclusiveMs": 585
+            },
+            {
+              "surface": "source.other",
+              "calls": 41978,
+              "settled": 41978,
+              "pending": 0,
+              "inclusiveMs": 2545
+            },
+            {
+              "surface": "canonical.evidence-ref",
+              "calls": 8167,
+              "settled": 8167,
+              "pending": 0,
+              "inclusiveMs": 97
+            },
+            {
+              "surface": "bcs.planner.projection-period",
+              "calls": 1357,
+              "settled": 1357,
+              "pending": 0,
+              "inclusiveMs": 3
+            },
+            {
+              "surface": "bcs.planner.expected-period",
+              "calls": 1357,
+              "settled": 1357,
+              "pending": 0,
+              "inclusiveMs": 3
+            },
+            {
+              "surface": "bcs.planner.source-ref",
+              "calls": 213005,
+              "settled": 213005,
+              "pending": 0,
+              "inclusiveMs": 1728
+            },
+            {
+              "surface": "bcs.planner.expected-ref",
+              "calls": 213004,
+              "settled": 213004,
+              "pending": 0,
+              "inclusiveMs": 1772
+            },
+            {
+              "surface": "finance.other",
+              "calls": 493,
+              "settled": 493,
+              "pending": 0,
+              "inclusiveMs": 333
+            },
+            {
+              "surface": "finance.current",
+              "calls": 525,
+              "settled": 525,
+              "pending": 0,
+              "inclusiveMs": 2
+            }
+          ],
+          "digestTotal": {
+            "calls": 788629,
+            "settled": 788629,
+            "pending": 0,
+            "inclusiveMs": 16246
+          },
+          "directOutsideDigest": {
+            "calls": 1316,
+            "settled": 1316,
+            "pending": 0,
+            "inclusiveMs": 402
+          },
+          "interpretation": "Only sum the eleven canonical.digest surface populations for the digest invocation total. Do not add that inclusive duration to other spans or treat it as CPU time."
+        },
+        "bcsPlanner": {
+          "referenceLoop": {
+            "calls": 426009,
+            "inclusiveMs": 3500
+          },
+          "periodPair": {
+            "calls": 2714,
+            "inclusiveMs": 6
+          },
+          "allFourSites": {
+            "calls": 428723,
+            "inclusiveMs": 3506
+          },
+          "interpretation": "The two period digests execute once per reached projection, outside every; the two reference digests execute per visited value. The final settled-span checkpoint contains one more source-ref than expected-ref call because it can cut between the two expressions. This is not evidence of a mismatch or a speedup."
+        },
+        "preparatoryHistory": {
+          "sequence1": "native-request-failed at line 1211; HTTP 200 at line 1213 with acquisitionFailure=response-body-unavailable; status ok was not observed for this response",
+          "sequence2": "HTTP 200/status ok at line 1249",
+          "preview": "Sequence 3 POST at line 1247, 2026-11-22T15:59:25.7399373Z; no corresponding response"
+        }
+      },
       {
         "label": "Portfolio25",
         "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
@@ -638,7 +870,7 @@
         "reexecuted": false,
         "qa": "b17cb0b20251fe485db79ab3e8de80b7aa560e4b",
         "snapshot": "ae98de00a9b49ee74b47aca83a8d36a808b86dc2",
-        "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–26 archives or these rollup additions; no new guard result is claimed."
+        "scope": "Previously reviewed context QA checkpoint only. This run does not cover Portfolio24–27 archives or their rollup additions; no new guard result is claimed."
       },
       "newGuardRun": null,
       "coveredByRetainedGuard": false
