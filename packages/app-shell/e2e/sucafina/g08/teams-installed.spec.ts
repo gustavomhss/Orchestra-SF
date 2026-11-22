@@ -2,7 +2,7 @@ import { expect } from "@playwright/test"
 import type { Page, Request } from "@playwright/test"
 import {
   adminCatalog, businessReply, configureTeam, contextReply, contextURL, draftURL, expectUnauthenticated,
-  focusRefresh, installedTest, observe, ownerQuery, selected, switchTeam, teamConfiguration, uiAdminCatalog,
+  focusRefresh, installedTest, observe, ownerQuery, readTeamConfiguration, selected, switchTeam, teamConfiguration, uiAdminCatalog,
   uiContext, uiDraft, uiReply,
 } from "./installed-fixture.ts"
 import type { Target } from "./installed-fixture.ts"
@@ -159,6 +159,22 @@ test("A Microsoft configuration administrator without Teams cannot acquire busin
   await expect(admin.locator(landing.refresh)).toHaveCount(1)
   expect(catalog.profiles.some((entry) => entry.enabled && entry.profile.teamObjectId === target.teamObjectId)).toBe(true)
   expect(await adminCatalog(admin, target)).toEqual(catalog)
+  await withoutPosts(admin, async () => {
+    const open = admin.locator('[data-sf-admin-team="' + target.teamObjectId + '"] [data-sf-admin-configuration]')
+    await expect(open).toBeEnabled()
+    const displayed = await readTeamConfiguration(admin, target, () => open.click())
+    const editor = admin.locator("[data-sf-team-configuration]")
+    await expect(editor).toHaveAttribute("data-sf-team-configuration", "ready")
+    expect(await readTeamConfiguration(admin, target)).toEqual(displayed)
+    if (displayed.status === "not-found") expect(await adminCatalog(admin, target)).toEqual(catalog)
+    const document = displayed.status === "ok" ? displayed.configuration.document : undefined
+    await expect(editor.locator("[data-sf-configuration-model]")).toHaveValue(document?.settings.model ?? "")
+    await expect(editor.locator("[data-sf-configuration-agent]")).toHaveValue(document?.settings.default_agent ?? "")
+    await expect(editor.locator("[data-sf-configuration-read]")).toBeEnabled()
+    await editor.locator("[data-sf-configuration-close]").click()
+    await expect(editor).toHaveCount(0)
+    await expect(admin.locator(landing.adminRead)).toBeEnabled()
+  })
   await expect(admin.locator(landing.newChat)).toHaveCount(0)
   await expect(admin.locator(landing.workspace)).toHaveCount(0)
   await expect(admin.locator(landing.dashboard)).toHaveCount(0)

@@ -227,17 +227,25 @@ export async function adminCatalog(page: Page, target: Target) {
 export async function uiAdminCatalog(page: Page, target: Target, action: () => Promise<unknown>) {
   return adminCatalogValue(await uiReply(page, adminURL(target), "GET", action), target)
 }
-export async function teamConfiguration(page: Page, target: Target) {
+/** The optional action observes the UI's own GET; otherwise read through the original cookie jar. */
+export async function readTeamConfiguration(page: Page, target: Target, action?: () => Promise<unknown>) {
   const url = new URL(adminURL(target))
   url.pathname += "/configuration"
   url.searchParams.set("teamObjectId", target.teamObjectId)
-  const response = await originalRequest(page, url.href)
-  if (response.status() !== 200 || response.headers()["cache-control"] !== "no-store" ||
+  const response = action ? await uiReply(page, url.href, "GET", action) : await originalRequest(page, url.href)
+  if (response.headers()["cache-control"] !== "no-store" ||
     !/^application\/json(?:;|$)/i.test(response.headers()["content-type"] ?? ""))
     throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
   const value = Schema.decodeUnknownSync(TeamProfile.ConfigurationReadResult, strict)(await response.json())
-  if (value.status !== "ok") throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
+  if (value.status === "not-found" && response.status() === 404) return value
+  if (value.status !== "ok" || response.status() !== 200) throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
   expect(value.configuration.profile).toEqual(teamRef(target))
+  return value
+}
+export async function teamConfiguration(page: Page, target: Target) {
+  const value = await readTeamConfiguration(page, target)
+  // Revocation/restoration still requires an actual document before and after; absence is not preservation.
+  if (value.status !== "ok") throw new Error("G08_ORIGINAL_SHARED_CONFIGURATION_REQUIRED")
   return value.configuration
 }
 export async function configureTeam(page: Page, target: Target, action: "enable" | "disable", expectedRevision: TeamProfile.ConfigRevision) {
