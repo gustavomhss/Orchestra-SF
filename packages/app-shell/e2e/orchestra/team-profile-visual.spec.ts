@@ -303,11 +303,54 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
         await expect(shell).toHaveAttribute("data-sf-team-selected", teamsVisualTeams[0].id)
         await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
         await expect(workspace).toHaveAttribute("data-sf-session-stream", "connecting")
-        await expect(workspace.getByRole("complementary", { name: "Recent chats", exact: true })).toContainText("No chats were found.")
         const editor = workspace.locator('[data-component="prompt-input-v2"] [data-component="prompt-input"]')
         await expect(editor).toBeEditable()
         await expect(editor).toHaveText("")
+        const recent = workspace.getByRole("complementary", { name: "Recent chats", exact: true })
+        const history = recent.locator("[data-sf-history-panel]")
+        const historyToggle = recent.locator("[data-sf-history-toggle]")
+        if (mode.viewport.width <= 980) {
+          await namedControl(historyToggle, "Recent chats")
+          await expect(historyToggle).toHaveAttribute("aria-expanded", "false")
+          await expect(history).toHaveAttribute("hidden", "")
+          await expect(history).toBeHidden()
+          const historyID = await history.getAttribute("id")
+          expect(historyID).not.toBeNull()
+          await expect(historyToggle).toHaveAttribute("aria-controls", historyID!)
+        } else {
+          await expect(historyToggle).toHaveCount(0)
+          await expect(history).toBeVisible()
+          await expect(history).not.toHaveAttribute("hidden", /.*/)
+          await expect(recent).toContainText("No chats were found.")
+        }
+        // The closed history must expose writing immediately, before any focus,
+        // fill, scrolling or interaction with the history toggle.
+        await expect(editor).toBeInViewport({ ratio: 1 })
+        await expect(workspace.locator('[data-action="prompt-submit"]')).toBeInViewport({ ratio: 1 })
+        const entry = await composerGeometry(page)
+        expect(entry.targets.map((target) => target.visible), "Composer and submit are visible on entry").toEqual([true, true])
+        if (mode.viewport.width <= 767) {
+          const submit = entry.targets.find((target) => target.name === "submit")!
+          expect(submit.rect.right - submit.rect.left, "Mobile submit hit width").toBeGreaterThanOrEqual(44)
+          expect(submit.rect.bottom - submit.rect.top, "Mobile submit hit height").toBeGreaterThanOrEqual(44)
+        }
+        await info.attach("COMPONENT-VISUAL-Teams-composer-on-entry", {
+          contentType: "application/json",
+          body: JSON.stringify({ classification: "COMPONENT VISUAL / not Microsoft live", scheme, ...entry }, null, 2),
+        })
         await capture(page, info, "chat-empty-stream-connecting", scheme)
+        if (mode.viewport.width <= 980) {
+          await historyToggle.click()
+          await expect(historyToggle).toHaveAttribute("aria-expanded", "true")
+          await expect(history).not.toHaveAttribute("hidden", /.*/)
+          await expect(history).toBeVisible()
+          await expect(recent).toContainText("No chats were found.")
+          await capture(page, info, "chat-history-expanded", scheme)
+          await historyToggle.click()
+          await expect(historyToggle).toHaveAttribute("aria-expanded", "false")
+          await expect(history).toHaveAttribute("hidden", "")
+          await expect(history).toBeHidden()
+        }
         await reachComposerNormally(page, info, scheme)
 
         await editor.fill("Component visual: keep this unsent Team draft.")
