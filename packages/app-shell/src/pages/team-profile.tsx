@@ -14,6 +14,7 @@ export function SfTeamWebApp() {
   const [logoutFailed, setLogoutFailed] = createSignal(false)
   const [signingOut, setSigningOut] = createSignal(false)
   let pending: AbortController | undefined
+  let pendingTeamObjectId: string | undefined
   const binding = () => {
     const current = state()
     return "binding" in current ? current.binding : undefined
@@ -44,20 +45,23 @@ export function SfTeamWebApp() {
   }
   const load = async (teamObjectId?: string) => {
     if (signingOut()) return
+    pendingTeamObjectId = teamObjectId
     const signal = begin()
     const current = await readCurrentTeamInstallation(signal)
     const result = current && await readTeamWebContext(current, signal, teamObjectId)
     if (signal.aborted) return
+    pendingTeamObjectId = undefined
     if (!current || !result) return setState({ status: "unavailable" })
     if (result.status === "ok") return setState({ status: "authenticated", binding: current, context: result.value })
     setState({ status: result.status, binding: current })
   }
-  const refresh = () => { void load(selected()?.profile.teamObjectId) }
+  const refresh = () => { void load(selected()?.profile.teamObjectId ?? pendingTeamObjectId) }
   const logout = async () => {
     const current = binding()
     if (!current || signingOut()) return
     setLogoutFailed(false)
     setSigningOut(true)
+    pendingTeamObjectId = undefined
     const signal = begin()
     const response = await fetch(current.mount + "/auth/logout", {
       method: "POST",
