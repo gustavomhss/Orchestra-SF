@@ -1600,17 +1600,18 @@ test("Microsoft private session readers detect changed grants and key bytes with
 })
 
 // These actors have no native mutation assignment. The contributor can read
-// CAP14; the viewer's original summaries do not include any of these three CAPs.
+// CAP14; the viewer's original summaries do not include these native CAPs.
 const deniedNativeDestinations = [
   { capabilityId: "CAP14", surface: "dashboard", page: "Vendor Contracts", canRead: false, allowedActionIds: [] },
   { capabilityId: "CAP04", surface: "dashboard", page: "OPEX Detail", canRead: false, allowedActionIds: [] },
   { capabilityId: "CAP05", surface: "dashboard", page: "CAPEX Projects", canRead: false, allowedActionIds: [] },
+  { capabilityId: "CAP03", surface: "dashboard", page: "Budget Overview", canRead: false, allowedActionIds: [] },
 ] as const
 function expectNativeReadBindings(context: SfTeamContext, contractsReadable = false) {
   const expected = deniedNativeDestinations.map((destination) => ({
     ...destination, canRead: destination.capabilityId === "CAP14" && contractsReadable,
   }))
-  expect(context.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))).toEqual(expected)
+  expect(context.destinations.filter((item) => ["CAP14", "CAP04", "CAP05", "CAP03"].includes(item.capabilityId))).toEqual(expected)
   expect<unknown>(context.availability).toEqual(expected.map((destination) => ({
     family: "domain-read", resource: destination.capabilityId, state: destination.canRead ? "partial" : "denied",
     operations: Object.keys(SfOperationRegistry)
@@ -1622,7 +1623,7 @@ function expectNativeReadBindings(context: SfTeamContext, contractsReadable = fa
       }),
   })))
   // Every other family keeps the same original read-only projection.
-  expect(context.destinations.filter((item) => !["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))
+  expect(context.destinations.filter((item) => !["CAP14", "CAP04", "CAP05", "CAP03"].includes(item.capabilityId))
     .every((item) => item.canRead && item.allowedActionIds.length === 0)).toBe(true)
 }
 
@@ -1676,7 +1677,7 @@ test("Corporate Team contexts project the original per-principal pages and Team 
     ])
     expect(other.destinations.map((item) => item.page)).toEqual([
       "Portfolio Dashboard", "All Projects", "IT Operations", "IT Security KPIs", "IT Risks",
-      "Vendor Contracts", "OPEX Detail", "CAPEX Projects",
+      "Vendor Contracts", "OPEX Detail", "CAPEX Projects", "Budget Overview",
     ])
     expect(other.destinations).not.toEqual(a.destinations)
     const businessPage = (cookie: string, page: string) => f.installation.handler(ingress(
@@ -1948,5 +1949,49 @@ test("Corporate native login preserves canonical original detail and edit refere
         await f.signIn(base + suffix + "?" + query, mount + "/dashboard")
       }
     }
+  } finally { await f.close() }
+})
+
+
+test("Corporate native Budget source return preserves optional original periods and refuses expanded authority", async () => {
+  const f = await nativeNavigationFixture()
+  const base = "/orchestra/sf-dashboard/budget"
+  try {
+    const selector = { ...f.selection, teamObjectId }
+    const periods: readonly Record<string, string>[] = [
+      {}, { year: "2024" }, { year: "2026" }, { year: "2027" },
+      { month: "1" }, { month: "12" }, { year: "2025", month: "2" },
+    ]
+    for (const period of periods) {
+      const returnTo = base + "?" + new URLSearchParams({ ...selector, ...period })
+      await f.signIn(returnTo, returnTo, "//foreign.example.test/replace")
+    }
+    const query = new URLSearchParams(selector).toString()
+    for (const returnTo of [
+      base, base + "?" + new URLSearchParams(f.selection),
+      base + "?" + query + "&teamObjectId=" + secondTeamId,
+      base + "?" + query + "&month=1&month=2",
+      base + "?" + query + "&year=2026&year=2027",
+      base + "?" + query + "&%6donth=1&month=2",
+      base + "?" + query + "&principalRef=" + oid,
+      base + "?" + query + "&accessRevision=claimed",
+      base + "?" + query + "&hostId=claimed",
+      base + "?" + query + "&projectId=claimed",
+      base + "?" + query + "&owner=claimed",
+      base + "?" + query + "#replaced",
+      base + "?" + new URLSearchParams({ ...selector, server: "https://foreign.example.test" }),
+      base + "?" + new URLSearchParams({ ...selector, contractRevision: "sf-native-ui/1" }),
+      ...["/new", "/r_YQ", "/r_YQ/edit", "/", "/extra"].map((suffix) => base + suffix + "?" + query),
+      ...["", "2023", "2028", "02026", "2026.0", "-2026", "2026suffix"].map((year) =>
+        base + "?" + new URLSearchParams({ ...selector, year })),
+      ...["", "0", "13", "01", "1.0", "-1", "2suffix"].map((month) =>
+        base + "?" + new URLSearchParams({ ...selector, month })),
+    ]) await f.signIn(returnTo, mount + "/dashboard")
+    // This read-only return target never admits another Team on its own.
+    f.membership.teams = []
+    const returnTo = base + "?" + new URLSearchParams({ ...selector, year: "2026", month: "2" })
+    const cookie = await f.signIn(returnTo)
+    await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
+    expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
   } finally { await f.close() }
 })

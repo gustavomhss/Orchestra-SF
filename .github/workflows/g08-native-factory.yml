@@ -2,7 +2,7 @@ name: g08-native-factory
 
 on:
   push:
-    branches: ["team-factory-hooks"]
+    branches: ["team-factory-hooks", "budget-source-read"]
   workflow_dispatch:
 
 permissions:
@@ -49,8 +49,9 @@ jobs:
           git rev-parse origin/dev > "$proof_output/guards-base.sha"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git rev-parse HEAD:modules/sucafina/Sucafinav1/runtime/application.ts)" = "27c21e4c1df0ee4748f762a324f52ff1a02f7105"
-          test "$(git rev-parse HEAD:apps/cli/src/sucafina-product/team-native-domain.ts)" = "d50edfad433903e6af82e83bd1e73a9d1173f56c"
+          test "$(git rev-parse HEAD:apps/cli/src/sucafina-product/team-native-domain.ts)" = "42337429dd7ecb6be8bb9496c955e3e73d2f0193"
           test "$(git rev-parse HEAD:apps/cli/src/sucafina-product/team-native-procurement.ts)" = "71f1b768a8b5969087b0400a64bc39930c7722af"
+          test "$(git rev-parse HEAD:packages/client/src/sucafina/team-domain.ts)" = "db7df64e426d1fa59f0ceed63dae3e72f16dff2f"
       - uses: ./.github/actions/setup-bun
         id: install
         with:
@@ -58,6 +59,20 @@ jobs:
       - name: Prepare the original Omni addon and supervisor
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         uses: ./.github/actions/omni-binaries
+      - name: Exercise original Domain source reads and mutation fences
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          bun test --timeout 60000 --reporter=junit --reporter-outfile "$SF_G08_FACTORY_EVIDENCE/domain.junit.xml" ./test/team-native-domain.test.ts 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/domain.log"
+      - name: Exercise original Team Client wire and read-only Budget source
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: packages/client
+        run: |
+          set -euo pipefail
+          export ORCHESTRA_OMNI_CONTROL_NONCE="$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')"
+          bun test --preload ../../script/test-omni-control.ts --timeout 60000 --reporter=junit --reporter-outfile "$SF_G08_FACTORY_EVIDENCE/client.junit.xml" ./test/sucafina-team-domain.test.ts 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/client.log"
       - name: Exercise native factory and signed Microsoft HTTP paths
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: modules/sucafina/Sucafinav1
@@ -85,6 +100,12 @@ jobs:
         run: |
           set -euo pipefail
           bun typecheck 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/cli-types.log"
+      - name: Typecheck the original Client composition
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        working-directory: packages/client
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/client-types.log"
       - name: Typecheck Microsoft runtime and all original test consumers
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: modules/sucafina/Sucafinav1
@@ -95,7 +116,7 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           set -euo pipefail
-          git diff --check
+          git diff --check origin/dev...HEAD
           bun run check:guards --base origin/dev 2>&1 | tee "$SF_G08_FACTORY_EVIDENCE/guards.log"
       - name: Require exact reports HTTP cleanup and source provenance
         run: |
@@ -108,8 +129,10 @@ jobs:
           output = Path(os.environ["SF_G08_FACTORY_EVIDENCE"])
           prefix = "modules/sucafina/Sucafinav1/"
           suites = [
-              ("native", prefix + "test/team-native-domain-http.test.ts", 8),
-              ("microsoft", prefix + "test/microsoft-installation.test.ts", 28),
+              ("domain", "apps/cli/test/team-native-domain.test.ts", 15),
+              ("client", "packages/client/test/sucafina-team-domain.test.ts", 13),
+              ("native", prefix + "test/team-native-domain-http.test.ts", 9),
+              ("microsoft", prefix + "test/microsoft-installation.test.ts", 29),
               ("default", prefix + "test/g05-http-team-isolation.test.ts", 1),
           ]
           reports = []
@@ -137,7 +160,7 @@ jobs:
           cleanups = [json.loads(line.split("G08_NATIVE_FACTORY_CLEANUP ", 1)[1])
               for line in (output / "native.log").read_text().splitlines() if "G08_NATIVE_FACTORY_CLEANUP " in line]
           ids = ["native-readers", "native-writers", "native-negatives", "current-policy",
-              "inflight-authority", "source-cas", "route-guards", "native-opt-in"]
+              "inflight-authority", "source-cas", "route-guards", "native-opt-in", "budget-source"]
           if sorted(item["id"] for item in cleanups) != sorted(ids) or any(
               item["cleanup"] is not True or not isinstance(item["requests"], int) or item["requests"] <= 0
               or item["loopbackPeers"] != item["requests"] or item["ingressRequests"] != item["requests"]
@@ -152,7 +175,9 @@ jobs:
               prefix + "runtime/team-business.ts", prefix + "local/microsoft-entry.ts",
               prefix + "test/fixture/microsoft-http.ts", prefix + "test/microsoft-installation.test.ts",
               prefix + "test/team-native-domain-http.test.ts", ".github/workflows/g08-native-factory.yml",
-              prefix + "runtime/application.ts", "apps/cli/src/sucafina-product/team-native-domain.ts",
+              prefix + "runtime/application.ts", prefix + "runtime/local-identity.ts",
+              "apps/cli/src/sucafina-product/team-native-domain.ts", "apps/cli/test/team-native-domain.test.ts",
+              "packages/client/src/sucafina/team-domain.ts", "packages/client/test/sucafina-team-domain.test.ts",
               "apps/cli/src/sucafina-product/team-native-procurement.ts",
           ]
           receipt = {
@@ -161,7 +186,7 @@ jobs:
                   "tree": (output / "source.tree").read_text().strip()},
               "run": {"id": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"]},
               "composition": {"parents": (output / "source.parents").read_text().split()[1:],
-                  "integrationBase": "f8981f8051edfc3647a368af44cbc41563680c2e",
+                  "integrationBase": "d9194fc04428da9a6c0ebf348e84633968f77b51",
                   "currentPolicySource": "b4d1315876cd03c358741bbe2e6438569c843e47",
                   "procurementSource": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a"},
               "files": [{"path": name, "sha256": hashlib.sha256((root / name).read_bytes()).hexdigest()} for name in paths],
@@ -171,6 +196,8 @@ jobs:
               "proofScope": "HTTP_LOOPBACK_MICROSOFT_COMPONENT",
               "identityProvider": "CONTROLLED_ENTRA_JWKS_GRAPH",
               "runtimeFactory": "createMicrosoftInstallation",
+              "budgetSource": {"capabilityId": "CAP03", "operationId": "domain.page.CAP03",
+                  "nativeReadOnly": True, "periodSelection": "ORIGINAL_YEAR_MONTH_OPTIONAL"},
               "factoryHooksIntegrated": True, "installedTeamsProof": False, "finalCandidate": False,
               "g08Closed": False, "productionCutover": False,
           }

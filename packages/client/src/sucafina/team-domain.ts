@@ -5,12 +5,12 @@ import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-regist
 import type { SfOperation, SfTransportFailure, SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfCallOptions, SfTransport, SfTransportFetch } from "./transport"
 
-const capabilities = ["CAP14", "CAP04", "CAP05"] as const
+const capabilities = ["CAP14", "CAP04", "CAP05", "CAP03"] as const
 const failure = (reason: SfTransportFailure["reason"]): SfTransportFailure => ({ kind: "transport-error", reason })
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 
 /**
- * Browser-only Team transport for the existing three domain families. The
+ * Browser-only Team transport for the existing domain families and budget source. The
  * current context is an observation, never authorization: each operation first
  * re-reads the original Team F02, and the server independently re-admits it.
  */
@@ -45,6 +45,9 @@ export function createSfTeamDomainTransport(options: Readonly<{
       if (!Object.is(operation, canonical)) return failure("contract-mismatch")
       const metadata = SfOperationRegistry[operation.operationId]
       const mutating = metadata.method === "POST"
+      // CAP03 only supplies the original source read. Even a forged mutable F02
+      // cannot expand this transport into its legacy budget-edit operations.
+      if (selected === "CAP03" && mutating) return failure("contract-unavailable")
       if (metadata.responseMode !== "json" || (mutating ? metadata.effect !== "mutation" ||
         metadata.pathTemplate !== "{mount}/dashboard" : metadata.method !== "GET" || metadata.effect !== "read" ||
         metadata.pathTemplate !== "{mount}/api/ui/pages/" + selected)) return failure("contract-unavailable")

@@ -19,12 +19,13 @@ import { dashboardPages, sidebarYear } from "../../../../modules/sucafina/Sucafi
 import { readTeamProfileIntent } from "../../../../modules/sucafina/Sucafinav1/runtime/team-profile-selector.ts"
 import { SF_DOMAIN_PAGES, projectSfDomainData, projectSfDomainVersions } from "./native-ui/domain/projection.ts"
 
-const capabilities = ["CAP14", "CAP04", "CAP05"] as const
+const capabilities = ["CAP14", "CAP04", "CAP05", "CAP03"] as const
 type Capability = typeof capabilities[number]
 const pageOperations = {
   CAP14: SfDomain.operations["domain.page.CAP14"],
   CAP04: SfDomain.operations["domain.page.CAP04"],
   CAP05: SfDomain.operations["domain.page.CAP05"],
+  CAP03: SfDomain.operations["domain.page.CAP03"],
 } as const
 const budgetActions = ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount"] as const
 const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } as const
@@ -129,7 +130,7 @@ export function createSfTeamNativeDomain(input: SfTeamNativeDomainInput) {
     const after = await observe(afterEnvironment)
     if (!after || digestSfValue(before) !== digestSfValue(after)) return denied()
     // The original F02 is the single revision producer. Require its installed
-    // three bindings to agree with a new original Application observation; never
+    // native bindings to agree with a new original Application observation; never
     // replace other families or manufacture a second context revision here.
     const destinations = capabilities.map((id) => fresh.value.destinations.filter((item) => item.capabilityId === id))
     const availability = capabilities.map((id) => fresh.value.availability.filter((item) => item.family === "domain-read" && item.resource === id))
@@ -283,7 +284,9 @@ async function authority(application: Application, request: Request, principalRe
     const actual = application.domains.dashboard.find((item) => item.pages.includes(page))
     const domain = capabilityId === "CAP14" ? DashboardPortfolio.domain : DashboardBudget.domain
     const canRead = !!actual && actual.domain === domain && pages.includes(page)
-    const allowedActionIds = !canRead || !named ? [] : capabilityId === "CAP14"
+    // Budget Overview is a source projection in this Team bridge. Its existing
+    // legacy mutations are not admitted by this native read-only capability.
+    const allowedActionIds = !canRead || !named || capabilityId === "CAP03" ? [] : capabilityId === "CAP14"
       ? portfolioCanWrite(actor, "contracts") ? ["save", "delete"] : []
       : budgetAdminCanWrite(actor) || budgetCanEditAnyLine(snapshot, actor, capabilityId === "CAP04" ? "opexOwners" : "capexProjects")
         ? [...budgetActions, ...(capabilityId === "CAP04" && budgetAdminCanWrite(actor) ? ["import"] : [])] : []
