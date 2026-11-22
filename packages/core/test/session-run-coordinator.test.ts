@@ -629,6 +629,42 @@ describe("SessionRunCoordinator", () => {
     })),
   )
 
+  for (const outcome of ["success", "failure", "interruption"] as const) {
+    it.effect(`publishes exclusive ${outcome} only after its own active ownership settles`, () =>
+      Effect.scoped(Effect.gen(function* () {
+        const started = yield* Deferred.make<void>()
+        const gate = yield* Deferred.make<void>()
+        const failure = new Error("exclusive failure")
+        const coordinator = yield* SessionRunCoordinator.make<string, never>({ drain: () => Effect.void })
+        yield* Effect.addFinalizer(() => Deferred.succeed(gate, undefined))
+        const operation = Deferred.succeed(started, undefined).pipe(
+          Effect.andThen(Deferred.await(gate)),
+          Effect.andThen(outcome === "success" ? Effect.succeed("held") : outcome === "failure" ? Effect.fail(failure) : Effect.interrupt),
+        )
+        const waiter = yield* coordinator.exclusive("session", operation).pipe(
+          Effect.exit,
+          Effect.flatMap((exit) => coordinator.active.pipe(Effect.map((active) => ({ exit, active })))),
+          Effect.forkChild,
+        )
+        yield* Deferred.await(started)
+        expect(yield* coordinator.active).toEqual(new Set(["session"]))
+        yield* Deferred.succeed(gate, undefined)
+        const observed = yield* Fiber.join(waiter)
+        expect(observed.active).toEqual(new Set())
+        if (outcome === "success") {
+          expect(Exit.isSuccess(observed.exit) && Option.getOrThrow(observed.exit.value)).toBe("held")
+        } else {
+          expect(Exit.isFailure(observed.exit)).toBeTrue()
+          if (Exit.isFailure(observed.exit)) {
+            if (outcome === "interruption") expect(Cause.hasInterruptsOnly(observed.exit.cause)).toBeTrue()
+            else expect(Cause.squash(observed.exit.cause)).toBe(failure)
+          }
+        }
+        expect(Option.getOrThrow(yield* coordinator.exclusive("session", Effect.succeed("next")))).toBe("next")
+      })),
+    )
+  }
+
   it.effect("coalesces wakes held by a successful exclusive operation into one non-forced drain", () =>
     Effect.scoped(
       Effect.gen(function* () {
