@@ -206,7 +206,7 @@ async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Pag
 waveFourTest("wave four decisions: real sources, retained drafts, uncertainty and native review", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(780_000)
   page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle).toBe("production")
+  expect(info.config.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostic = observePage(page)
   const testEnteredAt = Date.now()

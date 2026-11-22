@@ -13,7 +13,7 @@ const screens = [
 for (const area of screens) waveFourTest(area.id + " · native work, private search and saved views use their admitted producer", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle).toBe("production")
+  expect(info.config.metadata.bundle).toBe("production")
   const diagnostics = observePage(page)
   const writes: string[] = []
   const searchRequests: { method: string; url: string; body: string | null }[] = []

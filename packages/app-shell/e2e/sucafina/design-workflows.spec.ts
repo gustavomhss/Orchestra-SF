@@ -1,6 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
-import { waveFourTest as test, enter, observePage } from "./design-support/wave-four"
-import { captureWorkflowState as capture } from "./design-support/workflow-polish-capture"
+import { waveFourTest, enter, observePage } from "./design-support/wave-four"
+import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import { workflowPolishCoverage } from "./design-support/workflow-polish-coverage"
 import { workflowCase, settledSurface, sourceObject, sourceText, sourceArray, type WorkflowOwner } from "./design-support/workflow-polish-source"
 import { seedWorkflowCollab, workflowCollabData } from "./design-support/workflow-polish-collab-seed"
@@ -8,9 +8,9 @@ import { seedWorkflowProposal } from "./design-support/workflow-polish-proposal-
 import { forwardOnce } from "./operations-support/runtime"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
-test.use({ designWave: "four-decisions" })
-test.beforeEach(async ({}, info) => {
-  expect(info.project.metadata.bundle).toBe("production")
+waveFourTest.use({ designWave: "four-decisions" })
+waveFourTest.beforeEach(async ({}, info) => {
+  expect(info.config.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   await info.attach("workflow-polish-intended-scope", { contentType: "application/json",
     body: JSON.stringify(workflowPolishCoverage, null, 2) })
@@ -22,11 +22,11 @@ async function open(page: Page, owner: WorkflowOwner, path: string, title: strin
 }
 async function record(page: Page, info: TestInfo, surface: string, state: string, evidence: string, focus?: string) {
   await settledSurface(page, surface)
-  await capture(page, info, { surface, state, evidence, focus })
+  await captureWorkflowState(page, info, { surface, state, evidence, focus })
 }
 
-test("workflow polish: original portfolio inputs and contextual analytics", async ({ page, installation, owner }, info) => {
-  test.setTimeout(660_000)
+waveFourTest("workflow polish: original portfolio inputs and contextual analytics", async ({ page, installation, owner }, info) => {
+  waveFourTest.setTimeout(660_000)
   const diagnostics = observePage(page)
   const selected = await workflowCase(page, owner)
   const encoded = encodeSfRouteRef(selected.ref)
@@ -88,11 +88,11 @@ test("workflow polish: original portfolio inputs and contextual analytics", asyn
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("portfolio-qualification-limit", { contentType: "text/plain",
-    body: "UI42 inputs and UI44 parameters are visual coverage only. UI43 is a missing-result negative control. Portfolio/sensitivity evaluation remains outside this visual test." })
+    body: "UI42 inputs and UI44 parameters are visual coverage only. UI43 is a missing-result negative control. Portfolio/sensitivity evaluation remains outside this visual waveFourTest." })
 })
 
-test("workflow polish: original agenda, preserved review, comparison and report selection", async ({ page, installation, owner }, info) => {
-  test.setTimeout(720_000)
+waveFourTest("workflow polish: original agenda, preserved review, comparison and report selection", async ({ page, installation, owner }, info) => {
+  waveFourTest.setTimeout(720_000)
   const diagnostics = observePage(page)
   const agendaPath = "/orchestra/sf-reviews/agenda?year=" + installation.year
   const agenda = await open(page, owner, agendaPath, "Meeting agenda", "UI47")
@@ -165,8 +165,8 @@ test("workflow polish: original agenda, preserved review, comparison and report 
   expect(diagnostics.pageErrors).toEqual([])
 })
 
-test("workflow polish: original relationships, discussion, confirmation and follow-up draft", async ({ page, installation, owner }, info) => {
-  test.setTimeout(720_000)
+waveFourTest("workflow polish: original relationships, discussion, confirmation and follow-up draft", async ({ page, installation, owner }, info) => {
+  waveFourTest.setTimeout(720_000)
   const diagnostics = observePage(page)
   const sourceRequest = async (pathname: string, init?: RequestInit) => {
     const headers = new Headers(init?.headers)
@@ -225,8 +225,8 @@ test("workflow polish: original relationships, discussion, confirmation and foll
   expect(diagnostics.pageErrors).toEqual([])
 })
 
-test("workflow polish: original memory inputs and explicit missing observations", async ({ page, owner }, info) => {
-  test.setTimeout(480_000)
+waveFourTest("workflow polish: original memory inputs and explicit missing observations", async ({ page, owner }, info) => {
+  waveFourTest.setTimeout(480_000)
   const diagnostics = observePage(page)
   const selected = await workflowCase(page, owner)
   for (const screen of [
@@ -272,8 +272,8 @@ test("workflow polish: original memory inputs and explicit missing observations"
   expect(diagnostics.pageErrors).toEqual([])
 })
 
-test("workflow polish: routines, schedules, exports and local context", async ({ page, installation, owner }, info) => {
-  test.setTimeout(660_000)
+waveFourTest("workflow polish: routines, schedules, exports and local context", async ({ page, installation, owner }, info) => {
+  waveFourTest.setTimeout(660_000)
   const diagnostics = observePage(page)
   await open(page, owner, "/orchestra/sf-routines", "Routines", "UI64")
   await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
