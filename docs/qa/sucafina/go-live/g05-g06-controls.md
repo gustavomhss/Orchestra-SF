@@ -2,7 +2,7 @@
 
 ## Estado e donos
 
-Esta sessão Astra implementou as rotas de prova [G05 #637](https://github.com/gustavomhss/Orchestra-SF/pull/637), [G06 #638](https://github.com/gustavomhss/Orchestra-SF/pull/638) e o [suplemento Microsoft/Team #660](https://github.com/gustavomhss/Orchestra-SF/pull/660), preservando a integração G01–G04/pool com a Migração. O dono desta frente mantém os controles e recibos de G05/G06; Migração e Release confirmam o candidato final. Os SHAs, árvores, runs, artefatos, hashes e merges estão neste documento, no [registro de execução](execution-2026-11-22.md) e em [status.json](status.json).
+Esta sessão Astra coordena a integração do candidato, a rota Release e as reservas QA/G10 conforme o mandato ampliado de Gustavo, preservando os escritores ativos de G01–G04/pool e as frentes #349/G09/#588. Implementou as rotas de prova [G05 #637](https://github.com/gustavomhss/Orchestra-SF/pull/637), [G06 #638](https://github.com/gustavomhss/Orchestra-SF/pull/638), o [suplemento Microsoft/Team #660](https://github.com/gustavomhss/Orchestra-SF/pull/660) e a [composição nativa de Imports #670](https://github.com/gustavomhss/Orchestra-SF/pull/670). O dono desta frente mantém os controles e recibos de G05/G06; Migração e Release confirmam o candidato final. Os SHAs, árvores, runs, artefatos, hashes e merges estão neste documento, no [registro de execução](execution-2026-11-22.md) e em [status.json](status.json).
 
 As execuções são de candidatos de trabalho. **Nenhum resultado é herdado automaticamente pelo SHA final.** Antes do tar de produção, Migração e Release devem confirmar C/T; ambos os gates precisam de novos recibos compatíveis com esse candidato.
 
@@ -26,7 +26,7 @@ O relatório mantém o catálogo esperado, seleção, resultado por caso, fonte,
 
 ### Execução de trabalho e limites
 
-A fonte exata e o último run estão no registro de execução. O [run 45024901473](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024901473) aprovou os cinco jobs no head `db896193346305fb1fee2d0d389cfc0b73077a01`, árvore `027c26022afe0ef74ae61f40c21e8e5b0b3995c6`: 409/409 por modo, 11 controles Teams/123 asserções, zero falha/skip/missing/extra, tipos e guards limpos. Os cinco ZIPs e 39 hashes internos dos quatro bundles foram conferidos. A PR #637 foi integrada em `48768330ce2bdd6dc6673cd0b4926b61778e3bd4` depois da repetição completa que incluiu a correção de cleanup. **Um PASS anterior não aprova um head posterior.**
+A fonte exata e o último run completo dos três modos estão no registro de execução. O [run 45024901473](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024901473) aprovou os cinco jobs no head `db896193346305fb1fee2d0d389cfc0b73077a01`, árvore `027c26022afe0ef74ae61f40c21e8e5b0b3995c6`: 409/409 por modo, 11 controles Teams/123 asserções, zero falha/skip/missing/extra, tipos e guards limpos. Os cinco ZIPs e 39 hashes internos dos quatro bundles foram conferidos. A PR #637 foi integrada em `48768330ce2bdd6dc6673cd0b4926b61778e3bd4` depois da repetição completa que incluiu a correção de cleanup. **Um PASS anterior não aprova um head posterior.**
 
 A PR #660 extraiu a fixture Microsoft HTTP de G05 para `modules/sucafina/Sucafinav1/test/fixture/microsoft-http.ts`, compartilhada com o suplemento G06. O [run 45031531759](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45031531759) reexecutou o caso G05 e aprovou seus 11 controles no candidato `c7d90669f3b2b7fd3c6a35c9ec2fc5322d9f8898`, usando o snapshot de solicitação identificado na seção G06 abaixo. Os modos coverage/auth/effect não foram repetidos nessa extração: a prova de 409 casos por modo continua vinculada ao head `db896193346305fb1fee2d0d389cfc0b73077a01` da #637. A aprovação do caso Team na #660 não transporta o PASS desses três modos para outro candidato.
 
@@ -137,35 +137,73 @@ O aviso `test-assertions-removed` foi emitido para `g05-http-team-isolation.test
 
 A skill `guardrail-usage` classifica WARN como consultivo. A movimentação foi conferida em revisão e registrada na PR; nenhum ignore ou label de aprovação foi adicionado. O helper extraído também foi vinculado pelo inventário de hashes críticos.
 
-#### Alcance e bloqueio do importador privado
+#### Alcance histórico da #660 e lacuna resolvida separadamente
 
 Os recibos da #660 mantêm `proofClass:COMPONENT_REAL_CLAMD`, `composition:MICROSOFT_TEAM_FACTORY`, `identityProvider:CONTROLLED_ENTRA_GRAPH`, `installedTeamsProof:false`, `finalCandidate:false`, `g06Closed:false` e `teamsPrivateImportProof:false`.
 
-**O suplemento comprova upload privado de fornecedor por Microsoft/Team. Ele não substitui a importação privada nativa nem fecha G06.** No candidato C examinado, `runTeamBusiness` configura o scanner de assets, mas não monta o produtor nativo `import-admit/import-preview` utilizado pelos controles de Operações. Uma recusa 415 antes dessa admissão, ou o preview legado de workbook, não comprova essa obrigação. O controle de arquivo malformado após staging continua ligado à composição local-operator dos casos legados.
+**O suplemento da #660 comprova upload privado de fornecedor por Microsoft/Team. Ele não substitui a importação privada nativa nem fecha G06.** No candidato histórico `c7d90669…`, `runTeamBusiness` configura o scanner de assets, mas não monta o produtor nativo `import-admit/import-preview` utilizado pelos controles de Operações. Uma recusa 415 antes dessa admissão, ou o preview legado de workbook, não comprova essa obrigação. O controle de arquivo malformado após staging continua ligado à composição local-operator dos casos legados.
 
-A integração do importador na composição pertinente precisa ser coordenada com o dono de produto/Imports e a Migração. Esta frente não altera esses caminhos compartilhados nem substitui sua autoridade por fixture. Depois da integração e do pin final, executar os três controles na composição pertinente e registrar sua identidade, fonte e resultados reais.
+A lacuna de composição descrita nessa prova foi assumida posteriormente com posse exclusiva dos caminhos e coordenação com a integração. A #670 abaixo acrescenta e testa a montagem nativa; o recibo histórico da #660 conserva `teamsPrivateImportProof:false`. Nenhuma prova antiga foi reclassificada.
+
+
+### Composição nativa Microsoft/Team executada — #670
+
+A [PR #670](https://github.com/gustavomhss/Orchestra-SF/pull/670) monta os produtores originais de admissão e preview privado por Team, sem alterar o protocolo gerado ou conceder permissões padrão. Fonte **C** `39cbd8f4505d45c4b5014f280cb4413c47603bbb`, árvore **T** `3b07c51dbdfa88821881eb139badcef8062453ce`, merge em dev `84ec2655cfbe9d138d8b61d7a025c62df05946cc`. O snapshot de solicitação **S** `d247cd3acb6e4cfbe67a906b914096fa31afa5b3`, árvore `7258270b8e9cd201602ba31f4856e4f3d95c6b30`, tem C como pai único e muda somente `.ci-run.json`.
+
+O hook mínimo em `runtime/team-business.ts` chama `apps/cli/src/sucafina-product/team-imports.ts`. A composição reaproveita HTTP, serviços, decoders, authority, source adapter, LocalStore e scanner originais. O contexto é o da requisição admitida; a autorização é reobservada antes de publicar efeito. O limite de duas admissões concorrentes permanece compartilhado durante as requisições ativas, com autoridade isolada por requisição. O fence de preview entra no handler depois do consumo original da lease, preservando os decoders e recibos do produtor.
+
+| Registro | Evidência observada |
+| --- | --- |
+| Execução | [45037391139](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139), tentativa 1, job `137254063616`, **SUCCESS** |
+| Seleção | `teams-profile-scanner-v3 / controls-with-imports`; seis arquivos, oito casos legados + três Microsoft/Team + um G05 com seus 11 controles + quatro Imports |
+| Resultado | 162 controles Node; **16 casos Bun**, 126.359 asserções; zero falha/skip/TODO |
+| Tipos e guards | Sucafina e CLI aprovados; 78 regras, dez paths, zero gate/warn/erro |
+| Omni | Nonce novo observado; quatro declarações, cinco spawns, zero delegações |
+| Artefato | [14760321903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139/artifacts/14760321903), 46.721 bytes |
+| ZIP SHA-256 | `ccec82ebf0f6ac466ad79d8bf1027dedcd1f0a01ec93d281eeae709ae1f72b74` |
+| `receipt.json` SHA-256 | `f4ae4d7920e49ef6300d4e06be02f9a96105006c0a34f70aeca1d5b3808eec34` |
+| `microsoft-imports-receipt.json` SHA-256 | `214a468892fb61b54a9580079504f4efb9e47df4427df3512b2b503e5ea9c1a4` |
+| `microsoft-teams-receipt.json` SHA-256 | `066961ee071ff64c644e9da14d140ffac57fcb50e658afcd808ce7b73eb4c7a6` |
+| `g05-team-http.json` SHA-256 | `19d0fce0d41444cf74782de655bd1c48ec3f3e0c55afeb228671bab114e04fe3` |
+| JUnit SHA-256 | `37660759194be83784d8a20869b06901aa9370feda1fd85b0325fe36c93d13fc` |
+| Request normalizado SHA-256 | `7a677934d05907fda7d1e718360be7b2ec1ed31966ec90fa767778cdd9368023` |
+
+A coordenação adquiriu o ZIP e verificou tamanho, digest, CRC, **18 hashes internos**, JUnit, C/T/S, limpeza e os 11 controles G05. A revisão independente de código corrigiu o lifetime do contador de intake e o fence de contexto antes do replay final. Não houve waiver de guard. O aviso de extração de assertions da #660 permanece reconciliado no seu próprio run; este run #670 não teve findings.
+
+| Controle novo | Prova original observada |
+| --- | --- |
+| Admissão, scanner e isolamento | Limpo → EICAR → novo limpo em A/B; staging, proof e catálogo relidos no SQLite/blobs; owner estrangeiro preservado. Dois corpos TCP incompletos ocupam os slots, o terceiro recebe 503/busy e Retry-After 1; os dois originais encerram em 400 e a admissão seguinte volta a funcionar. |
+| Payload inválido depois do scanner | Texto benigno de 49 bytes e XLSX real truncado de 6.581 para 6.559 bytes são aceitos pelo scanner e staged com 200; o parser original recusa ambos no preview com 400/needs-input, sem novos efeitos duráveis depois do staging. |
+| Autoridade e referências privadas | Instalação/tenant/seletor divergentes e membership revogado recebem 403; referência estrangeira recebe 503; ausência explícita de grants recebe 403 em fixture própria. Snapshots/blobs completos de A/B permanecem iguais nas negativas. |
+| Daemon indisponível | O controle legado original observa e para o daemon secundário pertencente ao job; o novo controle observa ECONNREFUSED, recusa a admissão em ambos os Teams com 403 e confirma o daemon principal saudável. |
+
+Os quatro casos observaram, respectivamente, 16, 10, 12 e 8 requisições HTTP. Marcadores positivos dependem de `close()` e de ausência dos diretórios próprios; o agregado exige também o cleanup dos daemons originais.
+
+A prova declara `COMPONENT_REAL_CLAMD`, `MICROSOFT_TEAM_NATIVE_IMPORT` e `CONTROLLED_ENTRA_GRAPH`; `componentPrivateImportProof:true`, `installedTeamsProof:false`, `finalCandidate:false` e `g06Closed:false`. Ela resolve a composição de componente antes ausente e prova os controles de admissão/preview descritos. Não comprova login no tenant real, instalação, importação válida aplicada ao negócio nem corrida de revogação de target reproduzida durante o scan. A revisão do fence não foi apresentada como execução dessa corrida.
+
+Os runs [45036662670](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036662670) e [45036971290](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036971290) permanecem falhos no histórico: primeiro, fixture enviava PID ao schema de scanner host/port; depois, dois previews eram recusados por entrada antecipada no fence. As correções preservaram o schema e a autoridade originais. O verde acima pertence apenas a C/T/S registrados. Coverage/auth/effect de G05 **não foram repetidos** nesse complemento.
 
 ### Rota para o candidato final
 
-Arquivos integrados: `.github/workflows/sf-operations-scanner.yml`, admission/verificador `script/sf-ci/team-profile-scanner.mjs` e seus controles, setup/service/cleanup/tools.lock/parser em `script/sf2h/operations-scanner/`, os três arquivos legados, o suplemento Microsoft/Team, o caso G05 e a fixture compartilhada.
+Arquivos integrados: `.github/workflows/sf-operations-scanner.yml`, admission/verificador `script/sf-ci/team-profile-scanner.mjs` e seus controles, setup/service/cleanup/tools.lock/parser em `script/sf2h/operations-scanner/`, os três arquivos legados, o suplemento Microsoft/Team, os quatro controles nativos de Imports, o caso G05 e a fixture compartilhada.
 
-1. Confirmar C/T com Migração e Release. C deve conter a rota, a integração e a composição pertinentes; a prova de trabalho da #660 não aprova automaticamente seu merge ou qualquer descendente.
-2. Criar snapshot S com parent único C e única alteração `.ci-run.json`. Para conservar o suplemento Microsoft/Team, usar o envelope `teamsProfileScanner` de schema `teams-profile-scanner-v2` e seleção `controls-with-teams`. A seleção legada `teams-profile-scanner-v1`/`controls` continua disponível para os oito casos originais, com alcance local-operator, e não substitui a seleção ampliada.
-3. Gerar e normalizar o request pelos contratos presentes em C. O digest observado da seleção ampliada é `34c69603a855eb6b85952c53621140803262a70e86a71809257e35da754796de`; o digest histórico da seleção legada é `5d8d0ef32b33cc90cb86cd02484927e53585cda803cacddaf57d6bc96204d610`. Recalcular os valores se o contrato ou inventário mudar. O admission verifica parent, árvore, branch, request, arquivos críticos e ausência de outras mudanças.
-4. Executar em Actions os três arquivos legados, seguidos pelo suplemento Microsoft/Team e pelo caso G05. A invocação ampliada observada contém 12 casos em cinco arquivos. O primeiro arquivo verifica e para o daemon de erro que os controles privados posteriores observam. Usar binário e bases oficiais íntegros, daemons próprios e loopback; manter nonce novo e o controle Omni.
-5. Guardar relatório JUnit, inventário exato, logs/exit code, argumentos, setup, package/databases/service/daemon-controls, cleanup, summary, admission e recibos agregado, Microsoft e G05. O verificador recusa casos obrigatórios ausentes, pulados, extras ou cancelados, além de divergências de identidade, transporte, armazenamento ou cleanup. Preservar separadamente C/T, S/árvore do snapshot e o hash do request.
+1. Confirmar C/T com Migração e Release. C deve conter a rota, a integração e a composição pertinentes; as provas de trabalho de #660 e #670 não aprovam automaticamente os merges ou seus descendentes.
+2. Criar snapshot S com parent único C e única alteração `.ci-run.json`. Para conservar os controles Microsoft/Team e Imports, usar o envelope `teamsProfileScanner` de schema `teams-profile-scanner-v3` e seleção `controls-with-imports`. As seleções históricas v1/`controls` e v2/`controls-with-teams` conservam seus alcances e não substituem o inventário ampliado atual.
+3. Gerar e normalizar o request pelos contratos presentes em C. O digest observado da seleção v3 é `7a677934d05907fda7d1e718360be7b2ec1ed31966ec90fa767778cdd9368023`; os digests v2 e v1 históricos permanecem, respectivamente, `34c69603a855eb6b85952c53621140803262a70e86a71809257e35da754796de` e `5d8d0ef32b33cc90cb86cd02484927e53585cda803cacddaf57d6bc96204d610`. Recalcular os valores se o contrato ou inventário mudar. O admission verifica parent, árvore, branch, request, arquivos críticos e ausência de outras mudanças.
+4. Executar em Actions os três arquivos legados, seguidos pelo suplemento Microsoft/Team, pelo caso G05 e pelos controles nativos de Imports. A invocação ampliada observada contém 16 casos em seis arquivos. O primeiro arquivo verifica e para o daemon de erro que os controles privados posteriores observam. Usar binário e bases oficiais íntegros, daemons próprios e loopback; manter nonce novo e o controle Omni.
+5. Guardar relatório JUnit, inventário exato, logs/exit code, argumentos, setup, package/databases/service/daemon-controls, cleanup, summary, admission e recibos agregado, Microsoft/Team, Microsoft/Imports e G05. O verificador recusa casos obrigatórios ausentes, pulados, extras ou cancelados, além de divergências de identidade, transporte, armazenamento ou cleanup. Preservar separadamente C/T, S/árvore do snapshot e o hash do request.
 6. Observar cleanup mesmo em falha. Um recibo positivo exige cleanup concluído e evidência preservada. Adquirir o artefato e conferir ZIP, CRC, tamanho e hashes internos antes de registrar o aceite daquele C.
 
-O workflow fornece `CI=true`, canal prod, Omni strict/declared, nonce novo e a identidade real de Actions. Não fabricar variáveis de run/runner fora de Actions para satisfazer admission. A identidade dos casos legados é local-operator; a dos casos adicionais é Microsoft com autoridade Entra/Graph controlada. Conservar os dois alcances explícitos. Se C alterar a composição ou acrescentar o importador nativo de Teams, adaptar a seleção e os oráculos à integração original e requalificar sem bypass de identidade.
+O workflow fornece `CI=true`, canal prod, Omni strict/declared, nonce novo e a identidade real de Actions. Não fabricar variáveis de run/runner fora de Actions para satisfazer admission. A identidade dos casos legados é local-operator; a dos casos adicionais é Microsoft com autoridade Entra/Graph controlada. Conservar os dois alcances explícitos. Se C alterar a composição, reconciliar a seleção e os oráculos com os produtores originais e requalificar sem bypass de identidade.
 
 O caso G05 incluído nessa invocação serve à regressão da fixture compartilhada. Para fechar G05 no C final, executar também sua rota completa de coverage/auth/effect descrita acima.
 
-**Fechamento G06:** scanner real, payload benigno inválido, admissões privadas e ausência de efeito indevido aprovados no C/T final pertinente, com inventário completo, integridade e cleanup. **Bloqueios finais:** pin conjunto C/T, integração/prova do importador privado na composição pertinente e reexecução completa sobre esse C. A homologação Microsoft instalada continua G08.
+**Fechamento G06:** scanner real, payload benigno inválido, admissões privadas e ausência de efeito indevido aprovados no C/T final pertinente, com inventário completo, integridade e cleanup. **Bloqueios finais:** integração do candidato conjunto, pin Migração/Release e reexecução completa sobre esse C, sem transportar o resultado de componente para o host instalado. A homologação Microsoft instalada continua G08.
 
 ## Referências históricas e coordenação
 
 O run histórico [44684352036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036), fonte `6f9b66a2aaa8b057653244c94183254bb6f008b2`, preserva os sete controles de origem, 59 controles do verificador e 162 asserções; seu artefato e alcance permanecem no registro estruturado. A nova prova não altera o recibo histórico.
 
-O agregado da Migração registrado na preparação inicial, [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, terminou com falhas, inclusive pool/SF4/SF5/SF8/UI. Sua correção e integração continuam com a Migração.
+O agregado da Migração registrado na preparação inicial, [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, terminou com falhas, inclusive pool/SF4/SF5/SF8/UI. O intake posterior #673, mantido por `focal_migration` sob coordenação desta sessão, reconcilia essas fontes; o run de origem 45035419728 conserva falhas em SF8, UI Decisions/Operations e pool. A integração Teams #665 segue com seus escritores ativos. Nenhuma dessas fontes fornece ACK final.
 
 Compras 222 (2) mantém seu aceite original de QA. G07 usa o mesmo C/T final confirmado, e G08/G10 qualificam o tar instalado em ambientes isolados cuja reserva e autorização tenham sido confirmadas. Nenhum resultado de componente ou roteiro libera produção.

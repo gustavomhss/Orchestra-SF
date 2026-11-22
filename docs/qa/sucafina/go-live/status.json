@@ -1,9 +1,9 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-22T14:22:35Z",
+  "observedAtUtc": "2026-11-22T15:43:21Z",
   "repository": "gustavomhss/Orchestra-SF",
-  "branch": "go-live-readiness",
+  "branch": "readiness-reconciliation",
   "base": {
     "sha": "79912446753af5bb291fc2581543732eb4c83057",
     "tree": "5c32cd72537799632e7d2583c1775df1d88b8780",
@@ -17,8 +17,7 @@
     "G10"
   ],
   "excludedOwnership": {
-    "G01-G04-and-pool": "Retomar migração para Microsoft Teams",
-    "#349": "Astra da frente audit-residual-bundle",
+    "#349": "Astra já responsável pela frente audit-residual-bundle",
     "G09-and-588": "Gustavo e Astra já responsável"
   },
   "authorization": {
@@ -26,7 +25,20 @@
     "coordination": true,
     "qualificationOnlyInAuthorizedIsolatedEnvironments": true,
     "productionWindowApproval": null,
-    "productionGoNoGoDecision": null
+    "productionGoNoGoDecision": null,
+    "expandedMandate": {
+      "date": "2026-11-22",
+      "owner": "Astra go-live",
+      "items": [
+        "Coordenar a integração do candidato, consumindo entregas e preservando escritores ativos de G01–G04/pool e produto.",
+        "Confirmar e executar a rota Release admitida após C/T e dois ACKs reais.",
+        "Obter e conferir as reservas QA/G10, operadores, atores/grants/callbacks e observador."
+      ],
+      "coordinationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080753498",
+      "isCandidateAcknowledgement": false,
+      "isReservation": false,
+      "isProductionApproval": false
+    }
   },
   "finalCandidate": {
     "sha": null,
@@ -50,6 +62,59 @@
       "backupOwner": null,
       "externalEffectObserver": null,
       "authorizationRef": null
+    },
+    "discovery": {
+      "status": "BLOCKED_BEFORE_AZURE_LOGIN",
+      "environment": "azure-mvp",
+      "environmentExists": true,
+      "protectionPoliciesObserved": [],
+      "azureVariablesObservedEmptyAtPrelogin": [
+        "AZURE_CLIENT_ID",
+        "AZURE_TENANT_ID",
+        "AZURE_SUBSCRIPTION_ID",
+        "AZURE_RESOURCE_GROUP"
+      ],
+      "azureLogin": "SKIPPED",
+      "azureArmCommandsExecuted": false,
+      "runnerInventory": {
+        "httpStatus": 403,
+        "status": "NOT_OBSERVABLE"
+      },
+      "variableNames": {
+        "httpStatus": 403,
+        "status": "NOT_OBSERVABLE"
+      },
+      "branchPolicy": {
+        "httpStatus": 404,
+        "status": "NOT_OBSERVABLE"
+      },
+      "githubSettingsBrowser": "SIGNED_OUT",
+      "desktopInventory": {
+        "devicesObserved": 1,
+        "platform": "macOS",
+        "online": false,
+        "readOnly": true
+      },
+      "runId": 45036787201,
+      "jobId": 137252212765,
+      "artifact": {
+        "id": 14760385059,
+        "zipBytes": 877,
+        "zipSha256": "672b98c1718bd66d97375571724981108db9fdbabcba08d634b13764dce01a64",
+        "independentlyDownloadedAndHashVerified": true,
+        "crcVerified": true
+      },
+      "receiptSha256": "4ec3f609af032496424ad7bd76c37828e157b4d848ff1a02a4a4f5dd20b72864",
+      "metadataSha256": "d4f3caee711ec59696ab32a27fb7c206f8118bc45637bacd6c5ac51dc96f028f",
+      "reservationConfirmed": false,
+      "guestObserved": false,
+      "installedQualification": false,
+      "inferenceLimit": "Acesso/configuração não observados pelo caminho tentado; não comprova ausência de infraestrutura, donos ou reservas. Nenhum parâmetro privado histórico foi publicado.",
+      "priorOperationalRun": 45036258206,
+      "toolingPullRequests": [
+        666,
+        671
+      ]
     }
   },
   "coordination": {
@@ -61,18 +126,20 @@
     },
     "filesOperationsOwnerClaim": {
       "owner": "Astra go-live",
-      "scope": "G06 real scanner controls, malformed-payload controls and Microsoft Team upload proof; native importer integration remains a dependency",
+      "scope": "Controles reais G06, upload Microsoft/Team e montagem/prova nativa de Imports; identidade controlada de componente, instalado=false.",
       "pullRequests": [
         638,
-        660
+        660,
+        670
       ]
     },
     "installedRunnerOwnerClaim": {
       "owner": "Astra go-live",
-      "scope": "G08 current-contract subset executor and complete obligation ledger; no QA reservation claimed",
+      "scope": "Nove oráculos Teams implementados e ledger de cinco grupos; #672 testada em composição explícita e pendente de integração #665; sem reserva afirmada.",
       "pullRequests": [
         644,
-        659
+        659,
+        672
       ]
     },
     "requests": [
@@ -141,9 +208,53 @@
         "commentId": 7080225251,
         "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080225251",
         "status": "PUBLISHED_AWAITING_INTEGRATED_CONTRACTS"
+      },
+      {
+        "target": "Mandato ampliado de integração, Release e reservas, preservando slices ativos",
+        "pr": 657,
+        "commentId": 7080753498,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080753498",
+        "status": "MANDATE_RECORDED_NOT_FINAL_ACK"
+      },
+      {
+        "target": "Imports nativo e recibo completo para integração #665",
+        "pr": 665,
+        "commentId": 7081246847,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081246847",
+        "status": "IMPLEMENTED_MERGED_670_FINAL_REPLAY_PENDING"
+      },
+      {
+        "target": "Checkpoint lógico integrado; admitir checkpoint no decoder de #665",
+        "pr": 665,
+        "commentId": 7081417452,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081417452",
+        "status": "CHECKPOINT_MERGED_DECODER_RECONCILIATION_PENDING"
       }
     ],
     "latestRead": {
+      "observedAtUtc": "2026-11-22T15:43:21Z",
+      "channels": [
+        628,
+        665,
+        669,
+        672,
+        673,
+        674
+      ],
+      "apiAvailable": true,
+      "newFinalCandidateAcknowledgementsFound": false,
+      "operationalReservationsConfirmed": false,
+      "meaning": "Entregas de componente e coordenação observadas; não há C/T final ou reserva confirmada. Inventário Azure bloqueado antes do login não demonstra inexistência de ambiente."
+    },
+    "integrationCoordinator": "Astra go-live",
+    "migrationWriter": {
+      "owner": "focal_migration",
+      "pullRequest": 673,
+      "scope": "Intake e fechamento de G01–G04/pool; provas por fonte, sem ACK final presumido.",
+      "claimRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7081090598"
+    },
+    "releaseCoordinator": "Astra go-live — mandato ampliado; operador real e ACK para C/T ainda pendentes",
+    "previousRead": {
       "observedAtUtc": "2026-11-22T14:20:00Z",
       "channels": [
         628,
@@ -173,9 +284,10 @@
         "handoff",
         "teams-plan",
         "g05-work-proof-2026-11-22",
-        "g06-microsoft-followup-2026-11-22"
+        "g06-microsoft-followup-2026-11-22",
+        "g06-native-import-followup-2026-11-22"
       ],
-      "firstBlocker": "C/T final sem ACK conjunto da Migração e Release; executar replay completo nesse candidato integrado.",
+      "firstBlocker": "Concluir integração e obter C/T confirmado por Migração e Release; repetir coverage/auth/effect e Team sobre o catálogo corrente desse candidato.",
       "remaining": [
         "Confirmar e executar coverage/auth/effect e isolamento Team sobre C/T final; reconciliar inventário se C mudar endpoints.",
         "Conservar recibos completos, hashes, veredito Omni real, cleanup e aprovação para o candidato efetivo."
@@ -337,6 +449,38 @@
           },
           "installedTeamsProof": false,
           "finalCandidateApproval": false
+        },
+        {
+          "sourceSha": "39cbd8f4505d45c4b5014f280cb4413c47603bbb",
+          "sourceTree": "3b07c51dbdfa88821881eb139badcef8062453ce",
+          "snapshotSha": "d247cd3acb6e4cfbe67a906b914096fa31afa5b3",
+          "snapshotTree": "7258270b8e9cd201602ba31f4856e4f3d95c6b30",
+          "snapshotOnlyChange": ".ci-run.json",
+          "pullRequest": 670,
+          "mergeCommit": "84ec2655cfbe9d138d8b61d7a025c62df05946cc",
+          "runId": 45037391139,
+          "runAttempt": 1,
+          "jobId": 137254063616,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139",
+          "artifact": {
+            "id": 14760321903,
+            "zipBytes": 46721,
+            "zipSha256": "ccec82ebf0f6ac466ad79d8bf1027dedcd1f0a01ec93d281eeae709ae1f72b74",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 18
+          },
+          "installedTeamsProof": false,
+          "finalCandidateApproval": false,
+          "status": "TEAM_COMPONENT_PASS_INTEGRATED",
+          "scope": "G05 Team de 11 controles repetido com fixture compartilhada; coverage/auth/effect não executados neste run.",
+          "receipt": {
+            "schema": "orchestra.g05.team-http/1",
+            "sha256": "19d0fce0d41444cf74782de655bd1c48ec3f3e0c55afeb228671bab114e04fe3",
+            "expected": 11,
+            "pass": 11,
+            "pending": 0
+          }
         }
       ]
     },
@@ -355,14 +499,16 @@
       "evidenceRefs": [
         "clamav-component-reference",
         "g06-work-proof-2026-11-22",
-        "g06-microsoft-followup-2026-11-22"
+        "g06-microsoft-followup-2026-11-22",
+        "g06-native-import-followup-2026-11-22"
       ],
-      "firstBlocker": "Integrar o importador privado na composição Microsoft e fixar C/T final; a prova Microsoft atual cobre uploads privados de fornecedor.",
-      "coverageGap": "A prova legada monta Operations/local-operator. Na composição Microsoft/Team observada em 37931c77, upload privado usa ClamAV, mas import-targets/import-admit/import-preview não estão montados por Application.product. O suplemento Teams integrado, qualificado como componente, não substitui o controle de arquivo malformado após a admissão privada do importador.",
+      "firstBlocker": "Pin conjunto C/T e reexecução completa da seleção v3 sobre o candidato integrado; prova da instalação Microsoft não herdada de componente.",
+      "coverageGap": null,
       "remaining": [
-        "Confirmar o contrato e integrar import-admit/import-preview na composição Microsoft; preservar controles de arquivo malformado na composição original enquanto isso.",
-        "Executar a seleção expandida completa e as obrigações pertinentes sobre C/T final, com scanner real, origem de identidade explícita, integridade, negativas e cleanup.",
-        "Manter o limite entre fixture local, factory Microsoft com provedor controlado e instalação real; nenhuma prova atual aprova o gate final."
+        "Concluir a integração do candidato e confirmar C/T com Migração/Release.",
+        "Executar teams-profile-scanner-v3 / controls-with-imports completo: oito legados, três Microsoft/Team, caso G05 com 11 controles e quatro Imports, em seis arquivos.",
+        "Conferir scanner real, payload inválido após staging, autoridade/isolamento, armazenamento, limite de intake, indisponibilidade e cleanup; conferir artefato/recibos originais.",
+        "Conservar a distinção entre local-operator, Microsoft/Graph controlados e instalação real; nenhum resultado atual aprova o gate final."
       ],
       "closure": "Scanner real, arquivo malformado e admissão privada qualificados no candidato final; negativos sem efeitos duráveis.",
       "workProof": {
@@ -509,6 +655,134 @@
             "action": "COMMENT"
           },
           "finalCandidateApproval": false
+        },
+        {
+          "sourceSha": "39cbd8f4505d45c4b5014f280cb4413c47603bbb",
+          "sourceTree": "3b07c51dbdfa88821881eb139badcef8062453ce",
+          "snapshotSha": "d247cd3acb6e4cfbe67a906b914096fa31afa5b3",
+          "snapshotTree": "7258270b8e9cd201602ba31f4856e4f3d95c6b30",
+          "snapshotOnlyChange": ".ci-run.json",
+          "pullRequest": 670,
+          "mergeCommit": "84ec2655cfbe9d138d8b61d7a025c62df05946cc",
+          "runId": 45037391139,
+          "runAttempt": 1,
+          "jobId": 137254063616,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139",
+          "artifact": {
+            "id": 14760321903,
+            "zipBytes": 46721,
+            "zipSha256": "ccec82ebf0f6ac466ad79d8bf1027dedcd1f0a01ec93d281eeae709ae1f72b74",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 18
+          },
+          "installedTeamsProof": false,
+          "finalCandidateApproval": false,
+          "status": "NATIVE_MICROSOFT_IMPORT_COMPONENT_PASS_INTEGRATED",
+          "selection": {
+            "schema": "teams-profile-scanner-v3",
+            "mode": "controls-with-imports",
+            "requestSha256": "7a677934d05907fda7d1e718360be7b2ec1ed31966ec90fa767778cdd9368023",
+            "files": 6,
+            "legacyCases": 8,
+            "microsoftTeamUploadCases": 3,
+            "g05BunCases": 1,
+            "g05InternalControls": 11,
+            "nativeImportCases": 4,
+            "totalBunCases": 16
+          },
+          "counts": {
+            "nodeControls": 162,
+            "bunCases": 16,
+            "assertions": 126359,
+            "fail": 0,
+            "skip": 0,
+            "todo": 0,
+            "guards": 78,
+            "changedPaths": 10,
+            "gateFindings": 0,
+            "warnings": 0,
+            "errors": 0
+          },
+          "validation": {
+            "cliTypecheck": "PASS",
+            "sucafinaTypecheck": "PASS",
+            "omni": {
+              "freshNonce": true,
+              "declared": 4,
+              "spawns": 5,
+              "delegations": 0
+            },
+            "cleanup": "VERIFIED"
+          },
+          "receipt": {
+            "sha256": "f4ae4d7920e49ef6300d4e06be02f9a96105006c0a34f70aeca1d5b3808eec34",
+            "proofClass": "COMPONENT_REAL_CLAMD",
+            "composition": "MICROSOFT_TEAM_NATIVE_IMPORT",
+            "identityProvider": "CONTROLLED_ENTRA_GRAPH",
+            "componentPrivateImportProof": true,
+            "installedTeamsProof": false,
+            "finalCandidate": false,
+            "g06Closed": false
+          },
+          "supplementReceipts": {
+            "nativeImports": "214a468892fb61b54a9580079504f4efb9e47df4427df3512b2b503e5ea9c1a4",
+            "microsoftTeams": "066961ee071ff64c644e9da14d140ffac57fcb50e658afcd808ce7b73eb4c7a6",
+            "g05Team": "19d0fce0d41444cf74782de655bd1c48ec3f3e0c55afeb228671bab114e04fe3",
+            "junit": "37660759194be83784d8a20869b06901aa9370feda1fd85b0325fe36c93d13fc"
+          },
+          "newControls": [
+            {
+              "id": "private-admission-clean-eicar-isolation-and-intake-limit",
+              "httpRequests": 16,
+              "observed": "Clean/EICAR/clean A/B; full store readback; two active TCP intakes, third503/busy with Retry-After1; original requests400 and subsequent admission recovers."
+            },
+            {
+              "id": "malformed-benign-payload-after-real-scanner",
+              "httpRequests": 10,
+              "observed": "49-byte benign text and XLSX6581→6559 bytes; scanner/staging200 then original preview400/needs-input, no additional durable effect."
+            },
+            {
+              "id": "owner-grant-membership-negatives",
+              "httpRequests": 12,
+              "observed": "Wrong installation/tenant/selector403, revoked membership403, foreign reference503, explicit empty grants403; A/B snapshots/blobs equal."
+            },
+            {
+              "id": "real-owned-daemon-unavailable",
+              "httpRequests": 8,
+              "observed": "Original owned daemon stopped and ECONNREFUSED observed; import admission403 in both Teams; healthy main daemon."
+            }
+          ],
+          "limits": [
+            "Sem OIDC/tenant ou host instalado real.",
+            "Sem prova de importação válida aplicada ao negócio.",
+            "Corrida target/scan não reproduzida; fence revisado estaticamente e fluxos descritos executados.",
+            "Sem replay de coverage/auth/effect G05."
+          ],
+          "priorFailedRuns": [
+            {
+              "runId": 45036662670,
+              "artifactId": 14759933470,
+              "zipBytes": 29426,
+              "zipSha256": "6273eaa2648d5cf916095bb7018cda231f0ccfaf21c712c119154d8d199b019b",
+              "reason": "Fixture enviava PID ao schema scanner host/port; corrigido sem relaxar decoder."
+            },
+            {
+              "runId": 45036971290,
+              "artifactId": 14760525441,
+              "zipBytes": 30654,
+              "zipSha256": "ea0d02ad9d401a758d4fcbfd0e86302157537a7d7fb1189913352742551f888b",
+              "reason": "Dois previews403 por fence antes do consumo original da lease; handler original corrigido."
+            }
+          ]
+        }
+      ],
+      "resolvedCoverageGaps": [
+        {
+          "previousDescription": "A prova legada monta Operations/local-operator. Na composição Microsoft/Team observada em 37931c77, upload privado usa ClamAV, mas import-targets/import-admit/import-preview não estão montados por Application.product. O suplemento Teams integrado, qualificado como componente, não substitui o controle de arquivo malformado após a admissão privada do importador.",
+          "resolvedByPullRequest": 670,
+          "evidenceRef": "g06-native-import-followup-2026-11-22",
+          "scope": "Montagem e controles nativos de admissão/preview Microsoft/Team no candidato de componente, não qualificação instalada."
         }
       ]
     },
@@ -517,7 +791,7 @@
       "title": "Pacote Linux x64",
       "owner": "Astra go-live (preparação e coordenação)",
       "componentOwner": "Astra go-live — tooling and component proof",
-      "status": "VERIFIER_PASS_INTEGRATED_FINAL_TAR_BLOCKED",
+      "status": "RELEASE_ROUTE_AND_VERIFIER_PASS_INTEGRATED_FINAL_TAR_BLOCKED",
       "candidateSha": null,
       "candidateTree": null,
       "artifact": null,
@@ -526,14 +800,15 @@
       "document": "g07-linux-package.md",
       "evidenceRefs": [
         "entra-prod-package-reference",
-        "g07-work-proof-2026-11-22"
+        "g07-work-proof-2026-11-22",
+        "g07-release-route-followup-2026-11-22"
       ],
-      "firstBlocker": "Faltam ACKs de C/T pela Migração e Release anteriores ao produtor, executor Release e toolchain fixados.",
+      "firstBlocker": "Rota admitida disponível; faltam C/T final, dois ACKs reais anteriores ao produtor e operador confirmado.",
       "remaining": [
-        "Reconciliar com a Release o disparo do produtor existente em C: g09-final.yml permanece restrito à branch histórica g09-final-review.",
-        "Obter confirmação real do mesmo C/T e executar o produtor Microsoft da Release depois dos ACKs.",
-        "Admitir a requisição versionada com fontes reais de ACKs/run/artefato; verificar ZIP original e tar pelo instalador de C.",
-        "Vincular manifesto/roster/factory e instalação real dos mesmos bytes a G08/G10."
+        "Confirmar C/T, papéis e operador real; vincular ACKs originais e, quando textual, attestation técnica sf-g07-pin-attestation-v1.",
+        "Criar B imutável distinto de C e release-build-<B> exatamente em C; admitir antes de build e revalidar imediatamente antes do tar original.",
+        "Após o artefato, criar Q e g07-qualify-<Q> em C, ou dispatch admitido; verificar ZIP/tar/proveniência pelo instalador original de C.",
+        "Vincular os mesmos bytes, manifesto/roster/factory e observações instaladas a G08/G10; sem reconstrução entre gates."
       ],
       "closure": "Tar verificável vinculado ao mesmo SHA/árvore, hashes e instalação comprovados; nenhuma reconstrução entre gates.",
       "workProof": {
@@ -563,14 +838,72 @@
         "receipt": null,
         "logsVerified": true,
         "actualFinalTarVerified": false
-      }
+      },
+      "followUpProofs": [
+        {
+          "sourceSha": "37f67919c4e6345760cd2dafdea1a07977e1eb4d",
+          "sourceTree": "e54fdd06a76a3042c01594331e6ca69af1bde2cf",
+          "pullRequest": 668,
+          "mergeCommit": "0df66a7929168ccc98e3a5b2e6c45f574801902e",
+          "mergeTree": "f6eca523b5319d9c38ca44a1a22a3857ecdd50de",
+          "runId": 45035835391,
+          "runAttempt": 1,
+          "jobId": 137249288305,
+          "status": "TOOLING_COMPONENT_PASS_INTEGRATED",
+          "qualifyJob": {
+            "id": 137249472312,
+            "status": "SKIPPED"
+          },
+          "counts": {
+            "node": 68,
+            "python": 18,
+            "guards": 78,
+            "changedPaths": 4,
+            "findings": 0
+          },
+          "artifact": {
+            "id": 14759253519,
+            "zipBytes": 3997,
+            "zipSha256": "5cd87310a51b13c00de99ee4092ff5a208602bfc690e7cd37ab501e6647e3e9e",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "logHashesVerified": 3,
+            "sourceHashesVerified": 7
+          },
+          "receiptSha256": "97dd0f59461e223c5de8978aaab022a356be411541c45f3eee097baef6519d23",
+          "eventMergeSha": "00b2435b0e7153779b81b90ffddab1cc0df26a7a",
+          "eventMergeIsTestedSource": false,
+          "contract": {
+            "requestCommitB": "sf-g07-build-request-v1; B != C",
+            "buildRef": "release-build-<B completo> points exactly to C",
+            "qualificationCommitQ": "sf-g07-request-v1 with actual producer/artifact",
+            "qualificationRef": "g07-qualify-<Q completo> points exactly to C",
+            "textualAckAttestationRequired": true,
+            "ackAttestationSchema": "sf-g07-pin-attestation-v1",
+            "operator": "actual producer triggering_actor",
+            "sameLoginMayHoldBothRoles": true,
+            "independentPeopleOrSessionsInferred": false
+          },
+          "toolchain": {
+            "node": "24.15",
+            "bun": "1.4.1 baseline",
+            "bunRevision": "4661e494f052c83c80dade1318e5710238340be6",
+            "bunArchiveSha256": "a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646"
+          },
+          "finalCandidateApproval": false,
+          "actualFinalTarVerified": false,
+          "installation": null,
+          "g07Closed": false,
+          "productionCutover": false
+        }
+      ]
     },
     {
       "gate": "G08",
       "title": "Homologação Teams em QA",
       "owner": "Astra go-live (preparação e coordenação)",
       "componentOwner": "Astra go-live — tooling and component proof",
-      "status": "EXECUTOR_PASS_INTEGRATED_INSTALLED_NOT_RUN",
+      "status": "EXECUTOR_COMPONENT_PASS_COMPOSITION_PENDING_INTEGRATION_INSTALLED_NOT_RUN",
       "candidateSha": null,
       "candidateTree": null,
       "artifact": null,
@@ -582,16 +915,17 @@
         "purchases-technical",
         "qa-historical-support",
         "g08-work-proof-2026-11-22",
-        "g08-current-followup-2026-11-22"
+        "g08-current-followup-2026-11-22",
+        "g08-nine-obligation-composition-2026-11-22"
       ],
-      "firstBlocker": "Integrar os contratos atuais de produto, completar as obrigações pendentes e obter C/T, tar e reserva/atores reais.",
+      "firstBlocker": "Concluir #665 e integrar #672; pin C/T, tar, reserva e quatro contextos reais; executar os nove casos e os grupos obrigatórios.",
       "remaining": [
-        "Integrar navegação/admin e autoridade propostas em #654/#655/#657; confirmar montagem real no candidato instalado.",
-        "Compor grants distintos, UI administrativa, chat/rascunho e descarte; o executor atual conserva essas obrigações como parciais ou ausentes.",
-        "Confirmar reserva QA, operador e quatro contextos Microsoft originais com Teams/grants/mutações autorizados.",
-        "Instalar exatamente o tar G07 e executar os sete controles atuais, completando as nove obrigações originais; preservar host/processo/HTTPS antes/depois e limpeza.",
-        "Reconciliar/executar U15/U39/U40/F04/AZ02 e demais obrigações da matriz com seleções e recibos próprios.",
-        "Vincular o aceite 222 (2) somente ao QA original; obter backlink sem estendê-lo ao tar novo."
+        "Integrar #665/#672 e confirmar montagem original de navegação, admin, Session/grants e Chat/rascunhos no mesmo C instalado.",
+        "Confirmar reserva exclusiva, operador, quatro contextos Microsoft originais e autorização de logout, disable/restore e fixtures Session descartáveis.",
+        "Instalar exatamente o tar G07 e executar os nove controles, com host/processo/HTTPS antes/depois e cleanup integral.",
+        "Reconciliar/executar U15/U39/U40 e F04 como obrigações diretas G08; executar a prova LIVE transversal AZ02 de 32 registros/seis fases em executor próprio, sem classificá-la como Playwright.",
+        "Conservar recovery como quinto papel nativo de G10 e os demais gates com seus donos; nove casos/cinco grupos não fecham o agregado G01–G10.",
+        "Preservar aceite 222 (2) no QA original, sem promoção para outro tar; recuperar seu backlink."
       ],
       "closure": "Homologação real comprovada no tar G07 instalado; evidência sanitizada e cleanup concluído.",
       "workProof": {
@@ -817,6 +1151,200 @@
           },
           "resolvedReviewFinding": "P2 empty coverage inventory; ten negative controls now require exact nonempty identities and counts.",
           "finalCandidateApproval": false
+        },
+        {
+          "sourceSha": "0b68b5d5cae2dc17267558702caa6536b45bc6d7",
+          "sourceTree": "ca3b800f3ba6ab97e280e87d2768d29f0090e339",
+          "pullRequest": 672,
+          "mergeCommit": null,
+          "integrationStatus": "READY_REVIEWED_PENDING_665",
+          "productSourceSha": "fde191dfc1970d37021d82370cccac657efac246",
+          "testedCompositionSha": "90a8fced96f6cf0dfd408b0e3c393308fd5d50ce",
+          "testedCompositionTree": "53f0d767b4b90bd64004ec2789c9803d43bc361f",
+          "composition": "#665 S plus exactly nine G08 blobs equal to D, compare API verified",
+          "purePrHeadExecuted": false,
+          "devExecuted": false,
+          "runId": 45038080944,
+          "runAttempt": 1,
+          "jobId": 137256156567,
+          "status": "COMPONENT_AND_INVENTORY_PASS_ON_DECLARED_COMPOSITION",
+          "installedJob": {
+            "id": 137256157449,
+            "status": "SKIPPED"
+          },
+          "counts": {
+            "node": 134,
+            "nodeFailures": 0,
+            "nodeSkips": 0,
+            "python": 28,
+            "dom": 8,
+            "domAssertions": 243,
+            "playwrightListed": 9,
+            "playwrightExecuted": 0,
+            "guards": 78,
+            "changedPaths": 105,
+            "gateFindings": 0,
+            "warnings": 1,
+            "errors": 0
+          },
+          "guardWarning": {
+            "rule": "js-empty-catch",
+            "path": "tooling/httpapi-codegen/src/index.ts",
+            "line": 517,
+            "scope": "preexisting product generator in composition",
+            "integratorRefusalRef": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081262811"
+          },
+          "artifact": {
+            "id": 14760243491,
+            "zipBytes": 7689,
+            "zipSha256": "b415fd156b11b75b8bf4afe55aa11264ff5a71666e8a49c26cdcabeac4b033ce",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true
+          },
+          "receipt": {
+            "schema": "sf-g08-executor-inventory-v3",
+            "status": "CURRENT_CONTRACT_INVENTORY_VERIFIED",
+            "sha256": "c148adbff0fa05a204cd3aa021c4a2147a38a54ace8dd125cbcf99c3b874df65",
+            "proofScope": "current-teams-subset",
+            "installed": false,
+            "g08Closed": false,
+            "productionCutover": false
+          },
+          "domJUnitSha256": "0d1dab53d24556ca167b584a8f1e6f63f0056bfd210805bf5e6d07d619442f84",
+          "review": {
+            "id": 6013022868,
+            "action": "COMMENT",
+            "formalGateApproval": false
+          },
+          "originalObligationImplementation": {
+            "complete": 9,
+            "partial": 0,
+            "missing": 0,
+            "allInstalledStatuses": "NOT_RUN"
+          },
+          "originalObligationCases": [
+            {
+              "id": "same-team-distinct-grants",
+              "implementedCases": [
+                "same-team-distinct-grants"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "aba-two-windows",
+              "implementedCases": [
+                "aba-two-windows"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "account-without-team",
+              "implementedCases": [
+                "account-without-team"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "foreign-deep-link-reload",
+              "implementedCases": [
+                "foreign-deep-link-reload"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "admin-without-team",
+              "implementedCases": [
+                "admin-without-team"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "narrow-keyboard-draft",
+              "implementedCases": [
+                "narrow-keyboard-draft"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "draft-cancel-discard",
+              "implementedCases": [
+                "draft-cancel-discard"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "real-revoke-restore",
+              "implementedCases": [
+                "real-revoke-restore"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            },
+            {
+              "id": "logout-original-context",
+              "implementedCases": [
+                "logout-original-context"
+              ],
+              "coverage": "complete",
+              "installedState": "NOT_RUN"
+            }
+          ],
+          "groups": [
+            {
+              "id": "U15",
+              "expectedCount": 6,
+              "role": "DIRECT_G08",
+              "state": "NOT_RUN"
+            },
+            {
+              "id": "U39",
+              "expectedCount": 22,
+              "role": "DIRECT_G08",
+              "state": "NOT_RUN"
+            },
+            {
+              "id": "U40",
+              "expectedCount": 22,
+              "role": "DIRECT_G08",
+              "state": "NOT_RUN"
+            },
+            {
+              "id": "F04",
+              "expectedCount": 3,
+              "role": "DIRECT_G08_BUN_HAPPYDOM",
+              "state": "NOT_RUN"
+            },
+            {
+              "id": "AZ02",
+              "expectedCount": 32,
+              "role": "TRANSVERSAL_LIVE_OPERATIONAL_REQUIRED",
+              "state": "NOT_RUN"
+            }
+          ],
+          "normativeScope": {
+            "nativeRoles": [
+              "teams",
+              "u15",
+              "u39",
+              "u40",
+              "recovery"
+            ],
+            "recoveryGate": "G10",
+            "AZ02": "LIVE operational transversal; application logout clears two cookies and same session cookie is retried after logout/restart; no global Entra logout required",
+            "allGatesClosureImplied": false
+          },
+          "coverage": {
+            "complete": false,
+            "installed": false
+          },
+          "finalCandidateApproval": false
         }
       ]
     },
@@ -825,7 +1353,7 @@
       "title": "Virada, retomada e rollback",
       "owner": "Astra go-live (preparação e coordenação)",
       "componentOwner": "Astra go-live — tooling and component proof",
-      "status": "BACKUP_COMPONENT_PASS_INTEGRATED_REHEARSAL_NOT_RUN",
+      "status": "LOGICAL_AND_BACKUP_COMPONENT_PASS_INTEGRATED_REHEARSAL_NOT_RUN",
       "candidateSha": null,
       "candidateTree": null,
       "artifact": null,
@@ -836,16 +1364,17 @@
         "recovery-component-reference",
         "current-installer",
         "g10-work-proof-2026-11-22",
-        "g10-clone-followup-2026-11-22"
+        "g10-clone-followup-2026-11-22",
+        "g10-logical-checkpoint-policy-2026-11-22"
       ],
-      "firstBlocker": "Confirmar operação instalada de checkpoint lógico, além de C/T/tar finais e reservas de origem/clone com operadores, chave e observador.",
+      "firstBlocker": "Admitir checkpoint explicitamente no decoder da integração #665 e preservar hooks/política; obter C/T/tar e reservas/atores/chave/observador para o ensaio.",
       "remaining": [
         "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
         "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
         "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
         "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
         "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team.",
-        "Confirmar a operação de captura do checkpoint lógico e leitura da versão/fronteira no tar Microsoft; API TS interna e tar físico não substituem essa rota."
+        "Confirmar no C instalado checkpoint-observe/checkpoint com grant explícito, versão/snapshot/frontier reais, recover com política corrente e a reconciliação do decoder privado da #665; nenhuma fixture aprova o registro externo."
       ],
       "closure": "Ensaio isolado comprovado no tar final: backup, corte, retomada e rollback, incluindo efeitos e recibos posteriores ao checkpoint.",
       "workProof": {
@@ -929,6 +1458,111 @@
             45030692679
           ],
           "finalCandidateApproval": false
+        },
+        {
+          "pullRequests": [
+            669,
+            674
+          ],
+          "sourceSha": "32f06e47407e31c98d84babb31a1565d8aedbd4c",
+          "sourceTree": "4d01afacc5287eea5f6fd8a81c523ec83c484c7f",
+          "snapshotSha": "237f9bec632e1aeb6b7e6559f2451ca81f989ee7",
+          "finalSourceSha": "f84f9c0fbdf8d93ede8c0d14eeed270771bbd519",
+          "finalSourceTree": "d9d329d4d55a08ca3c969c2565d11665b85f5b05",
+          "finalSourceDifference": "Only Microsoft guide differs from tested product D",
+          "dependencyMerge": "f84f9c0fbdf8d93ede8c0d14eeed270771bbd519",
+          "mergeCommit": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+          "mergeTree": "3179c5c01ce287353fbef02b698c983a8f845f84",
+          "mergeSourceBlobsPreserved": 7,
+          "runId": 45038388189,
+          "runAttempt": 1,
+          "jobId": 137257131236,
+          "status": "COMPONENT_PASS_INTEGRATED_WITH_EXPLICIT_PREEXISTING_SKIP",
+          "counts": {
+            "cases": 42,
+            "pass": 41,
+            "skip": 1,
+            "fail": 0,
+            "assertions": 403,
+            "newCasesPass": 8,
+            "files": 4,
+            "guards": 78,
+            "changedPaths": 7,
+            "findings": 0
+          },
+          "skipReason": "Preexisting ownership control requiring root; not promoted to PASS",
+          "typecheck": "PASS",
+          "omni": "NOT_APPLICABLE",
+          "artifact": {
+            "id": 14760886449,
+            "zipBytes": 6863,
+            "zipSha256": "6d51d4e9e7d2303395dc3081aeb111f9071961cb197252248cff9257cbf9cb24",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 9,
+            "sourceHashesVerified": 7
+          },
+          "receiptSha256": "748b66fbd215b243f62ebcef992f34eec19f89287bada04a237a934da3aa2875",
+          "finalGuard": {
+            "run": 45038822594,
+            "job": 137258474958,
+            "S": "60ca68083b83660c46a6286a5494a23b21b85f7e",
+            "artifact": 14760034604,
+            "bytes": 1892,
+            "zip": "919b291c31c4a609a990eab49b1415bd18b75c29a437a806ce5b13a757502e49",
+            "receipt": "9e84040c5fe47e458d77b7ecff5a3dfc9f9e2ce9b0f421d0a295e0cfe1b8d4ea",
+            "internalHashes": 4,
+            "guards": 78,
+            "changedPaths": 7,
+            "findings": 0,
+            "crcVerified": true,
+            "independentlyDownloadedAndHashVerified": true
+          },
+          "reviews": [
+            {
+              "id": 6013028788,
+              "pullRequest": 674,
+              "action": "COMMENT"
+            },
+            {
+              "id": 6013043654,
+              "pullRequest": 669,
+              "action": "COMMENT"
+            }
+          ],
+          "actualComponents": [
+            "original factory and HTTP",
+            "SQLite",
+            "blobs and backups",
+            "persistent Team policy.mutate"
+          ],
+          "controlledInputs": [
+            "Microsoft/Graph identity",
+            "declared product seed",
+            "external pin publication"
+          ],
+          "contract": {
+            "checkpointGrant": "explicit migrationActions:[checkpoint]; recover-only unchanged",
+            "checkpointObserve": "POST <mount>/api/ui/team-profile-migration/checkpoint-observe",
+            "checkpointCapture": "POST <mount>/api/ui/team-profile-migration/checkpoint",
+            "captureResponse": 201,
+            "independentApproval": false,
+            "recovery": "current persistent enabled Team and stable policy revision inside independent pin and before restore commit",
+            "initialEnabledTeamIdsRole": "seed only"
+          },
+          "priorFailedRuns": [
+            {
+              "runId": 45038117675,
+              "reason": "41 tests already passed; fixture branded IDs failed TypeScript, fixed with original types without product change"
+            }
+          ],
+          "installedTeamsProof": false,
+          "finalCandidateApproval": false,
+          "hostBackup": "NOT_RUN",
+          "keyDecryption": "NOT_RUN",
+          "cutover": "NOT_RUN",
+          "actualServiceRestart": "NOT_RUN",
+          "compatibleCodeRollback": "NOT_RUN"
         }
       ]
     }
@@ -1133,6 +1767,72 @@
       "detailsGate": "G10",
       "scope": "Operational clone receipt destination binding prepared; no actual reserved Azure clone run.",
       "finalCandidateApproval": false
+    },
+    {
+      "id": "g06-native-import-followup-2026-11-22",
+      "kind": "COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 670,
+      "sourceSha": "39cbd8f4505d45c4b5014f280cb4413c47603bbb",
+      "sourceTree": "3b07c51dbdfa88821881eb139badcef8062453ce",
+      "runId": 45037391139,
+      "detailsGate": "G06",
+      "scope": "Microsoft/Team native import controls and G05 Team regression; controlled identity, not installed.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g07-release-route-followup-2026-11-22",
+      "kind": "TOOLING_EXECUTION_REFERENCE",
+      "pullRequest": 668,
+      "sourceSha": "37f67919c4e6345760cd2dafdea1a07977e1eb4d",
+      "sourceTree": "e54fdd06a76a3042c01594331e6ca69af1bde2cf",
+      "runId": 45035835391,
+      "detailsGate": "G07",
+      "scope": "Actual ACK admission and original producer route, not final tar qualification.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035835391",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g08-nine-obligation-composition-2026-11-22",
+      "kind": "COMPOSITION_COMPONENT_EXECUTION_REFERENCE",
+      "pullRequest": 672,
+      "sourceSha": "0b68b5d5cae2dc17267558702caa6536b45bc6d7",
+      "sourceTree": "ca3b800f3ba6ab97e280e87d2768d29f0090e339",
+      "testedCompositionSha": "90a8fced96f6cf0dfd408b0e3c393308fd5d50ce",
+      "testedCompositionTree": "53f0d767b4b90bd64004ec2789c9803d43bc361f",
+      "runId": 45038080944,
+      "detailsGate": "G08",
+      "scope": "Nine obligations implemented/listed; controlled DOM proof, every installed obligation/group NOT_RUN.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038080944",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g10-logical-checkpoint-policy-2026-11-22",
+      "kind": "COMPONENT_EXECUTION_REFERENCE",
+      "pullRequests": [
+        669,
+        674
+      ],
+      "sourceSha": "32f06e47407e31c98d84babb31a1565d8aedbd4c",
+      "sourceTree": "4d01afacc5287eea5f6fd8a81c523ec83c484c7f",
+      "runId": 45038388189,
+      "detailsGate": "G10",
+      "scope": "Logical capture and current-policy recovery;41PASS/1preexisting skip, not installed rehearsal.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038388189",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "operational-inventory-blocked-2026-11-22",
+      "kind": "READ_ONLY_OPERATIONAL_OBSERVATION",
+      "pullRequests": [
+        666,
+        671
+      ],
+      "runId": 45036787201,
+      "detailsField": "environments.discovery",
+      "scope": "Pre-login configuration empty, Azure login skipped; not evidence of absent reservations.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201",
+      "finalCandidateApproval": false
     }
   ],
   "migrationObservations": [
@@ -1150,7 +1850,7 @@
       "status": "completed",
       "conclusion": "failure",
       "observedAtUtc": "2026-11-22T13:06:55Z",
-      "scope": "Latest observed g03-g04-repair run; integration belongs to Migration.",
+      "scope": "Historical g03-g04-repair run; not the newer #673 intake or final candidate.",
       "observedFailedJobs": [
         137101012346,
         137101012416,
@@ -1161,6 +1861,75 @@
         137106205840
       ],
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540"
+    },
+    {
+      "pullRequest": 673,
+      "writer": "focal_migration",
+      "intakeSourceSha": "f382029d7be3f4e31440814f7b3e16038ad65329",
+      "intakePaths": 205,
+      "manifest": "https://github.com/gustavomhss/Orchestra-SF/blob/f382029d7be3f4e31440814f7b3e16038ad65329/docs/qa/sucafina/go-live/migration-intake.json",
+      "status": "IN_PROGRESS_NOT_QUALIFIED",
+      "sourceSha": "1c7070c348a6f5be8fed07b7138fce4b6d45827a",
+      "sourceTree": "7bbe9abde3faacb8684971b4ce4561b64349475f",
+      "driverSha": "cb60d25cfc0032be098f46f530bc61f1ff4337cb",
+      "runId": 45035419728,
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035419728",
+      "sourceJobs": [
+        {
+          "name": "SF4",
+          "jobId": 137247972017,
+          "pass": 82,
+          "total": 82,
+          "status": "success",
+          "artifactId": 14758944819
+        },
+        {
+          "name": "SF5",
+          "jobId": 137247972148,
+          "pass": 104,
+          "total": 104,
+          "status": "success",
+          "artifactId": 14759068547
+        },
+        {
+          "name": "SF8",
+          "jobId": 137247972064,
+          "pass": 41,
+          "total": 42,
+          "status": "failure",
+          "artifactId": 14759053603,
+          "reason": "Chromium pipe startup limit8s"
+        },
+        {
+          "name": "Decisions",
+          "jobId": 137247972114,
+          "pass": 2,
+          "total": 5,
+          "status": "failure",
+          "artifactId": 14760016189,
+          "reason": "Localized year / Procurement heading / immutable create revision oracles"
+        },
+        {
+          "name": "Operations",
+          "jobId": 137247971802,
+          "pass": 2,
+          "total": 5,
+          "status": "failure",
+          "artifactId": 14759728390,
+          "reason": "Comparison cell / Open record and command timeouts with no POST"
+        },
+        {
+          "name": "pool",
+          "jobId": 137247972070,
+          "pass": 205,
+          "total": 207,
+          "status": "failure",
+          "artifactId": 14759956193,
+          "reason": "One timed case8934.2ms versus>=9000ms plus fail-closed finalizer"
+        }
+      ],
+      "finalCandidateAcknowledgement": null
     }
   ],
   "review": {
@@ -1179,10 +1948,15 @@
       "G08 #659: actual native selector and original administrative API with opaque CAS replace unsupported executable DOM assumptions; every original obligation remains mandatory.",
       "G08 #659: closing coverage refuses empty, partial, duplicate, unknown and wrong-count inventories; ten negative controls preserve this boundary.",
       "G08 #659: tooling outputs moved outside the checkout; canonical guards run without waivers.",
-      "G06 #660: shared Microsoft HTTP fixture preserves all 11 G05 controls and all 35 expect sites; three new actual Team upload/scanner cases supplement unchanged legacy import proof."
+      "G06 #660: shared Microsoft HTTP fixture preserves all 11 G05 controls and all 35 expect sites; three new actual Team upload/scanner cases supplement unchanged legacy import proof.",
+      "G06 #670: intake counter lifetime shared while active; original request authority isolated; preview fence enters after original lease consumption.",
+      "G07 #668: textual ACK requires original technical attestation binding URL/body/author/statement hashes; no fabricated or repeated approval.",
+      "G08 #672: effective grants, original administration UI and native Chat/draft controls restore all nine implemented obligations without claiming installed execution.",
+      "G08 documentation: AZ02 is transversal LIVE application-cookie logout/replay evidence; native recovery role is G10, not G09.",
+      "G10 #669/#674: logical capture is separate from independent approval; restore uses current persistent policy and stable revision. Decoder checkpoint in #665 remains explicit integration work."
     ],
-    "documentReview": "Independent review of the current follow-up completed. Evidence catalog, publication metadata, complete G05 receipt obligations, cleanup scope, G10 count and Playwright-only invocation wording corrected; no material finding remaining.",
-    "previousDocumentReview": "Seven files reviewed independently; no material finding after the G05 status and G10 attestation corrections."
+    "documentReview": "Rascunho atual: revisão independente G07/G10 e G08 concluída com correções de attestation, decoder e escopo AZ02; ledger/README/execution aguardam revisão da coordenação e guards em Actions.",
+    "previousDocumentReview": "Independent review of the current follow-up completed. Evidence catalog, publication metadata, complete G05 receipt obligations, cleanup scope, G10 count and Playwright-only invocation wording corrected; no material finding remaining."
   },
   "executionThisFront": {
     "testsStarted": [
@@ -1201,9 +1975,20 @@
       45031742724,
       45031917038,
       45031531759,
-      45031272242
+      45031272242,
+      45035892320,
+      45035540926,
+      45036567797,
+      45035835391,
+      45036662670,
+      45036971290,
+      45037391139,
+      45038080944,
+      45038117675,
+      45038388189,
+      45038822594
     ],
-    "testInventoryScope": "Selected current and superseded reference runs; exact source/result is in each gate workProof and followUpProofs. Intermediate CI-driver failures remain linked in the PRs.",
+    "testInventoryScope": "Selected current/superseded runs. Exact sources and scopes are recorded per proof; G08 was tested on explicit composition. No result is promoted to final C/T.",
     "buildsStarted": [],
     "tarsGenerated": [],
     "environmentsMutated": [],
@@ -1218,46 +2003,149 @@
       644,
       658,
       659,
-      660
+      660,
+      666,
+      668,
+      669,
+      670,
+      671,
+      674
     ],
     "executionEnvironmentScope": "GitHub-hosted ephemeral component jobs; no reserved installed QA/recovery host was mutated.",
-    "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs."
+    "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs.",
+    "readOnlyOperationalRuns": [
+      45036258206,
+      45036787201
+    ],
+    "preparedCodePendingIntegration": [
+      {
+        "pullRequest": 672,
+        "reviewed": true,
+        "dependencyPullRequest": 665
+      }
+    ]
   },
   "overall": {
-    "preparation": "IMPLEMENTED_TESTED_INTEGRATED_WITH_EXPLICIT_FINAL_DEPENDENCIES",
+    "preparation": "COMPONENT_ROUTES_IMPLEMENTED_AND_TESTED_INTEGRATION_AND_OPERATIONAL_ACCESS_PENDING",
     "qualifiedFinalGates": 0,
     "requiredFinalGates": 5,
     "goNoGoReadiness": "NOT_READY",
     "formalProductionDecision": null
   },
   "publication": {
-    "pullRequest": 662,
-    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/662",
-    "recordKind": "PR_PUBLICATION_REFERENCE",
-    "scope": "Seven repository documents consolidating merged preparation and exact follow-up evidence.",
-    "sourceIdentitySource": "Exact reviewed head/tree, canonical guard run and merge readback are recorded in PR #662 metadata and review; this file does not embed its own commit SHA.",
-    "stateSource": "Live GitHub PR metadata; open/merged state is not duplicated in this immutable source.",
-    "previousConsolidation": {
-      "pullRequest": 628,
-      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
-      "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8",
-      "sourceSha": "db18aa7882f7e3a87ac04c51ce450338fe69f7ee",
-      "mergeCommit": "6b03ea2b55ffa1959d9fcfca0031db51fda48f96"
-    }
+    "pullRequest": null,
+    "branch": "readiness-reconciliation",
+    "recordKind": "DRAFT_DOCUMENT_CONSOLIDATION",
+    "scope": "Exatamente sete documentos go-live; migration-intake.json e guia Microsoft fora do lease.",
+    "sourceIdentitySource": "Commit/tree/run/review da publicação virão da metadata original da PR; sem SHA autorreferente inventado.",
+    "stateSource": "PR nova e validação final ainda não criadas neste rascunho.",
+    "baseSha": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+    "baseTree": "3179c5c01ce287353fbef02b698c983a8f845f84"
   },
   "latestDevObserved": {
-    "sha": "a71033f21b2c0f7da508c96f302506a9e73fd145",
-    "tree": "d86fa6c35359fd1437504435a48b0a4363ac8122",
-    "observedAtUtc": "2026-11-22T14:22:35Z",
+    "sha": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+    "tree": "3179c5c01ce287353fbef02b698c983a8f845f84",
+    "observedAtUtc": "2026-11-22T15:43:21Z",
     "notFinalCandidate": true
   },
   "integrationObservation": {
-    "pullRequest": 657,
-    "sourceSha": "95aa3a01915ebc9543957c267b57ab2ace9ee19f",
-    "sourceTree": "36be087efa65d1ba2c55022126eec02eb46c61c2",
-    "observedAtUtc": "2026-11-22T14:20:00Z",
-    "state": "OPEN_DRAFT_NOT_INTEGRATED",
-    "overlapWith659And660": [],
-    "finalCandidate": false
-  }
+    "pullRequest": 665,
+    "state": "OPEN_DRAFT_REPAIRS_ACTIVE",
+    "snapshotKind": "LAST_COMPLETED_INTEGRATED_REPLAY_NOT_LATEST_REPAIR_HEAD",
+    "sourceSha": "fde191dfc1970d37021d82370cccac657efac246",
+    "sourceTree": "526530b5fdf335b07ff00dbcf008b39b905e001d",
+    "snapshotSha": "d28d75bf4e5c71436cd952a5c5550c9f9115800a",
+    "runId": 45037362513,
+    "jobId": 137253976844,
+    "conclusion": "failure",
+    "gates": {
+      "pass": 19,
+      "total": 22,
+      "pending": 3,
+      "failedTestCases": 2
+    },
+    "typechecksPassed": 10,
+    "classificationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081262811",
+    "remainingAtReplay": [
+      {
+        "path": "packages/server/test/session-owner-http.test.ts",
+        "line": 226,
+        "observed": "Invalid JSON returns500 expected400"
+      },
+      {
+        "path": "apps/cli/test/fixture/team-session-factory.ts",
+        "line": 55,
+        "observed": "Reader received chunk after dispose; SSE completion oracle needs bounded proof"
+      },
+      {
+        "path": "tooling/httpapi-codegen/src/index.ts",
+        "line": 517,
+        "observed": "js-empty-catch warning; driver refused clean proof"
+      }
+    ],
+    "focalG08DoesNotReplaceReplay": true,
+    "finalCandidateAcknowledgement": null,
+    "repairHeads": "Consultar metadata viva; não atribuir o resultado fde191 aos reparos posteriores.",
+    "latestRepairHeadObserved": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+    "latestRepairIncludes": [
+      670,
+      669,
+      674
+    ],
+    "latestRepairIsFinalCandidate": false,
+    "checkpointDecoderFollowup": {
+      "pullRequest": 675,
+      "sourceSha": "2c27173bb983e8a609312795cbfa3068104e7cc6",
+      "sourceTree": "ae97fdcefa5b0148fa8faad4086f196a0bb23e34",
+      "snapshotSha": "2127c9112ee09a78a897c7b2dc7fb68ef5de2d36",
+      "status": "CI_PENDING",
+      "scope": "Explicit checkpoint separate from recover; omitted namespaces/operations normalize to empty without Session/business authority."
+    }
+  },
+  "ownershipHistory": [
+    {
+      "observedAtUtc": "2026-11-22T14:22:35Z",
+      "excludedOwnership": {
+        "G01-G04-and-pool": "Retomar migração para Microsoft Teams",
+        "#349": "Astra da frente audit-residual-bundle",
+        "G09-and-588": "Gustavo e Astra já responsável"
+      }
+    }
+  ],
+  "integrationHistory": [
+    {
+      "pullRequest": 657,
+      "sourceSha": "95aa3a01915ebc9543957c267b57ab2ace9ee19f",
+      "sourceTree": "36be087efa65d1ba2c55022126eec02eb46c61c2",
+      "observedAtUtc": "2026-11-22T14:20:00Z",
+      "state": "OPEN_DRAFT_NOT_INTEGRATED",
+      "overlapWith659And660": [],
+      "finalCandidate": false
+    },
+    {
+      "pullRequest": 657,
+      "state": "MERGED",
+      "sourceSha": "dd8a7ce7cda006ab3a6a23b6cdeb4e633bbc8826",
+      "mergeCommit": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
+      "completionRunId": 45034291003,
+      "scope": "First Teams integration slice; no final ACK or subsequent Session/Chat proof"
+    }
+  ],
+  "publicationHistory": [
+    {
+      "pullRequest": 662,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/662",
+      "recordKind": "PR_PUBLICATION_REFERENCE",
+      "scope": "Seven repository documents consolidating merged preparation and exact follow-up evidence.",
+      "sourceIdentitySource": "Exact reviewed head/tree, canonical guard run and merge readback are recorded in PR #662 metadata and review; this file does not embed its own commit SHA.",
+      "stateSource": "Live GitHub PR metadata; open/merged state is not duplicated in this immutable source.",
+      "previousConsolidation": {
+        "pullRequest": 628,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
+        "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8",
+        "sourceSha": "db18aa7882f7e3a87ac04c51ce450338fe69f7ee",
+        "mergeCommit": "6b03ea2b55ffa1959d9fcfca0031db51fda48f96"
+      }
+    }
+  ]
 }
