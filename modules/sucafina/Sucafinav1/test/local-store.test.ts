@@ -206,7 +206,7 @@ test("CurrentChoice readonly keeps mutable roots, writer preimages and opaque dr
     await store.readSnapshotRoot(async () => {
       expect(currentLocalReadonlyAuthorityData(store, ["planner"])).toBeDefined()
       expect(currentChoiceReadonlyAuthorityData(opaque.fence.persistence, ["planner"])).toBeUndefined()
-      expect(await opaque.fence.persistence.transaction("planner", async (snapshot) => ({
+      expect<Snapshot | undefined>(await opaque.fence.persistence.transaction("planner", async (snapshot) => ({
         commit: false, value: structuredClone(snapshot),
       }))).toEqual(store.currentSnapshot?.("planner"))
     })
