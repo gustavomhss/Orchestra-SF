@@ -25,7 +25,7 @@ import { color, printHeader, printResults, writeReceipt } from "./report"
 import { coverageResult, parseOptions, routeKey, routeKeys, selectedScenarios } from "./routing"
 import { runScenario } from "./runner"
 import { type ExerciseApp } from "./backend"
-import { type Scenario } from "./types"
+import { type Result, type Scenario } from "./types"
 import { globalConfigScenarios } from "./global-config"
 import { vcsScenarios } from "./vcs"
 import { skillScenarios } from "./skill"
@@ -593,17 +593,23 @@ export const scenarios: Scenario[] = [
 export function main(args: string[]) {
   return Effect.gen(function* () {
     const shared: { auth: ExerciseApp | undefined } = { auth: undefined }
-    yield* Effect.addFinalizer(() =>
-      Effect.promise(async () => {
-        await shared.auth?.dispose().catch(() => undefined)
-        await cleanupExercisePaths()
-      }),
-    )
     const options = parseOptions(args)
     const apiRoutes = routeKeys(OpenApi.fromApi(Api))
     const selected = selectedScenarios(options, scenarios)
     const missing = apiRoutes.filter((route) => !scenarios.some((scenario) => route === routeKey(scenario)))
     const extra = scenarios.filter((scenario) => !apiRoutes.includes(routeKey(scenario)))
+    const evidence = { results: [] as Result[], cleanupComplete: false }
+    yield* Effect.addFinalizer(() =>
+      Effect.promise(async () => {
+        try {
+          await shared.auth?.dispose()
+          await cleanupExercisePaths()
+          evidence.cleanupComplete = true
+        } finally {
+          await writeReceipt(options, apiRoutes, scenarios, evidence.results, missing, extra, evidence.cleanupComplete)
+        }
+      }),
+    )
 
     printHeader(options, apiRoutes, selected, missing, extra, { database: ":memory:", global: exerciseGlobalRoot })
 
@@ -620,7 +626,7 @@ export function main(args: string[]) {
             { concurrency: 1 },
           )
     printResults(results, missing, extra)
-    yield* Effect.promise(() => writeReceipt(options, apiRoutes, scenarios, results, missing, extra))
+    evidence.results = results
 
     if (results.length === 0) return yield* Effect.fail(new Error("no scenarios selected"))
     if (results.some((result) => result.status === "fail"))

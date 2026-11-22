@@ -67,7 +67,7 @@ function routeKey(scenario: Scenario) {
 }
 
 /** Machine-readable evidence includes every selected case, never only the summary. */
-export async function writeReceipt(options: Options, routes: string[], catalog: Scenario[], results: Result[], missing: string[], extra: Scenario[]) {
+export async function writeReceipt(options: Options, routes: string[], catalog: Scenario[], results: Result[], missing: string[], extra: Scenario[], cleanupComplete: boolean) {
   const destination = process.env.ORCHESTRA_HTTPAPI_EXERCISE_RECEIPT
   if (!destination) return
   const transport = transportEvidence()
@@ -85,6 +85,7 @@ export async function writeReceipt(options: Options, routes: string[], catalog: 
     failOnMissing: options.failOnMissing,
     failOnSkip: options.failOnSkip,
     transport,
+    cleanup: { completed: cleanupComplete, allListenersClosed: transport.listeners === transport.closedListeners },
     routes,
     missing,
     extra: extra.map((scenario) => ({ method: scenario.method, path: scenario.path, name: scenario.name })),

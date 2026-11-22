@@ -60,32 +60,71 @@ jobs:
           echo "G05_SOURCE_TREE=$tree" >> "$GITHUB_ENV"
           echo "ORCHESTRA_HTTPAPI_EXERCISE_RECEIPT=$RUNNER_TEMP/g05-evidence/$G05_MODE/receipt.json" >> "$GITHUB_ENV"
           echo "G05_TEAM_RECEIPT=$RUNNER_TEMP/g05-evidence/$G05_MODE/receipt.json" >> "$GITHUB_ENV"
+          echo "G05_OMNI_RECEIPT=$RUNNER_TEMP/g05-evidence/$G05_MODE/omni-script.json" >> "$GITHUB_ENV"
           jq -n --arg sha "$GITHUB_SHA" --arg tree "$tree" --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" --arg mode "$G05_MODE" \
             '{schema:"orchestra.g05.source/1",sourceSha:$sha,sourceTree:$tree,workflowSha:$sha,runId:$run,runAttempt:$attempt,mode:$mode,finalCandidate:false,installedTeamsProof:false}' \
             > "$RUNNER_TEMP/g05-evidence/$G05_MODE/source.json"
+      - name: Fresh Omni control nonce
+        id: control_nonce
+        run: |
+          nonce=$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')
+          echo "nonce=$nonce" >> "$GITHUB_OUTPUT"
+          echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
       - name: Run full selected control
         id: control
         run: |
           set -euo pipefail
           evidence="$RUNNER_TEMP/g05-evidence/$G05_MODE"
+          set +e
           if [ "$G05_MODE" = teams ]; then
             cd modules/sucafina/Sucafinav1
             printf '%s\n' 'bun test ./test/g05-http-team-isolation.test.ts --timeout 60000' > "$evidence/command.txt"
             GITHUB_ACTIONS=false bun test ./test/g05-http-team-isolation.test.ts --timeout 60000 2>&1 | tee "$evidence/output.log"
+            g05_control_status=${PIPESTATUS[0]}
           else
             cd packages/server
             printf '%s\n' "bun run script/httpapi-exercise.ts --mode $G05_MODE --fail-on-missing --fail-on-skip --progress" > "$evidence/command.txt"
             bun run script/httpapi-exercise.ts --mode "$G05_MODE" --fail-on-missing --fail-on-skip --progress 2>&1 | tee "$evidence/output.log"
+            g05_control_status=${PIPESTATUS[0]}
           fi
+          set -e
+          printf '%s\n' "$g05_control_status" > "$evidence/exit-code.txt"
+          exit "$g05_control_status"
       - name: Require complete inventory and real transport evidence
         if: ${{ !cancelled() }}
+        env:
+          G05_EXPECTED_NONCE: ${{ steps.control_nonce.outputs.nonce }}
         run: |
           set -euo pipefail
           node --input-type=module <<'JS'
-          import { readFileSync } from "node:fs"
+          import { readFileSync, writeFileSync, existsSync } from "node:fs"
+          import { createHash } from "node:crypto"
           const mode = process.env.G05_MODE
-          const report = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/g05-evidence/" + mode + "/receipt.json", "utf8"))
+          const directory = process.env.RUNNER_TEMP + "/g05-evidence/" + mode + "/"
+          const report = JSON.parse(readFileSync(directory + "receipt.json", "utf8"))
+          const output = readFileSync(directory + "output.log", "utf8")
+          const status = Number(readFileSync(directory + "exit-code.txt", "utf8").trim())
+          const control = [...output.matchAll(/omni positive control \[([0-9a-f]{32})\]: (pass|not applicable|FAIL|off)/g)]
+          const bound = control.length === 1 && control[0][1] === process.env.G05_EXPECTED_NONCE
+          const inventory = report.cases.map(({ method, path, name, auth, id }) => ({ method, path, name, auth, id }))
+          const write = (file, body) => writeFileSync(directory + file, JSON.stringify(body, null, 2) + "\n")
+          write("case-inventory.json", inventory)
+          write("api-catalog.json", { routes: report.routes ?? [], missing: report.missing ?? [], extra: report.extra ?? [] })
+          write("status.json", { exitCode: status, cleanup: report.cleanup, sourceSha: report.sourceSha, sourceTree: report.sourceTree })
+          write("omni-control.json", { scope: mode === "teams" ? "BUN_TEST_DECLARED" : "HTTPAPI_SCRIPT", nonceBound: bound, verdict: control[0]?.[2] ?? "MISSING", observation: control[0]?.[0] ?? null })
+          const files = ["source.json", "command.txt", "output.log", "receipt.json", "case-inventory.json", "api-catalog.json", "status.json", "exit-code.txt", "omni-control.json", ...(existsSync(directory + "omni-script.json") ? ["omni-script.json"] : [])]
+          write("sha256.json", Object.fromEntries(files.map((file) => [file, createHash("sha256").update(readFileSync(directory + file)).digest("hex")])))
           const require = (ok, message) => { if (!ok) throw new Error(message) }
+          require(status === 0, "Control process failed")
+          require(report.cleanup?.completed === true, "Cleanup did not complete")
+          require(bound && output.split("omni positive control").length === 2 && ["pass", "not applicable"].includes(control[0][2]), "Fresh unique Omni control missing or failed")
+          if (mode !== "teams") {
+            const omni = JSON.parse(readFileSync(directory + "omni-script.json", "utf8"))
+            require(omni.scope === "HTTPAPI_SCRIPT" && omni.nonce === process.env.G05_EXPECTED_NONCE && omni.sourceSha === report.sourceSha && omni.sourceTree === report.sourceTree, "Script Omni provenance mismatch")
+            require(omni.exerciseSucceeded && omni.problem === null && omni.verdict === control[0][2], "Script Omni control failed")
+            if (mode === "effect") require(omni.expectedSpawn && omni.counts.spawns > 0 && omni.verdict === "pass", "Effect mode made no Omni spawn")
+            require(report.cleanup.allListenersClosed === true, "Exercise listener disposal incomplete")
+          }
           require(report.sourceSha === process.env.GITHUB_SHA && report.sourceTree === process.env.G05_SOURCE_TREE, "Source identity mismatch")
           require(report.finalCandidate === false && report.installedTeamsProof === false, "Unexpected proof promotion")
           require(report.cases.length > 0 && report.cases.every((entry) => entry.status === "pass"), "Not all inventoried cases passed")
@@ -93,6 +132,7 @@ jobs:
             require(report.identityProvider === "CONTROLLED_ENTRA_GRAPH" && report.proofClass === "HTTP_LOOPBACK_MICROSOFT_COMPONENT", "Team proof boundary changed")
             require(report.summary.expected === 11 && report.summary.pass === 11 && report.summary.pending === 0, "Incomplete Team controls")
             require(report.transport.ingressRequests === report.transport.requests, "Microsoft ingress was not traversed")
+            require(report.durableComparison?.teams?.length === 2 && report.durableComparison.teams.every((team) => team.before === team.after), "Denied requests changed Team business storage")
           } else {
             require(report.mode === mode && report.fullInventory && report.failOnMissing && report.failOnSkip, "Filtered or permissive exercise")
             require(report.summary.selected === report.summary.catalog && report.summary.fail === 0 && report.summary.skip === 0, "Incomplete route controls")

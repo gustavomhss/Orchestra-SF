@@ -11,7 +11,7 @@ const credentials = { username: "orchestra", password: "secret" }
 
 const transport = process.env.ORCHESTRA_HTTPAPI_EXERCISE_TRANSPORT ?? "handler"
 if (transport !== "handler" && transport !== "loopback") throw new Error("Unknown HttpApi exercise transport")
-const witness = { transport, listeners: 0, requests: 0, responses: 0, loopbackPeers: 0 }
+const witness = { transport, listeners: 0, closedListeners: 0, requests: 0, responses: 0, loopbackPeers: 0 }
 export const transportEvidence = () => ({ ...witness })
 
 // Deadlines, not waits: a response that arrives returns at once and never sleeps on these.
@@ -62,6 +62,7 @@ export function makeApp(options: { auth: boolean }): ExerciseApp {
     async dispose() {
       await server.stop(true)
       await web.dispose()
+      witness.closedListeners += 1
     },
     request(input, init) {
       const request = input instanceof Request ? input : new Request(new URL(input, "http://localhost"), init)

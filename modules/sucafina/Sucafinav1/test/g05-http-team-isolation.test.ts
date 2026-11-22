@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { Database } from "bun:sqlite"
 import { exportJWK, generateKeyPair, SignJWT } from "jose"
 import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -36,7 +37,9 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
     requests: number
     loopbackPeers: number
     ingressRequests: number
-  } = { nonce: "", teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0, loopbackPeers: 0, ingressRequests: 0 }
+    cleanupComplete: boolean
+    durableComparison: { teamObjectId: string; before: string; after: string }[]
+  } = { nonce: "", teams: [teamA, teamB, disabledTeam], graphCalls: [], requests: 0, loopbackPeers: 0, ingressRequests: 0, cleanupComplete: false, durableComparison: [] }
   const cases = [
     "anonymous-denied",
     "signed-session-admitted",
@@ -68,8 +71,9 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
       return await state.installation?.handler(request) ?? new Response(null, { status: 404 })
     },
   })
+  const listenerPort = listener.port
   const listenerOrigin = listener.url.origin
-  const ingressOrigin = "http://sf-ingress.example.test:" + listener.port
+  const ingressOrigin = "http://sf-ingress.example.test:" + listenerPort
   const request = (path: string, headers: Record<string, string> = {}, init: Pick<RequestInit, "method" | "body"> = {}) =>
     fetch(new URL(mount + path, listener.url), {
       ...init,
@@ -128,7 +132,7 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
         if (url.origin === "https://graph.microsoft.com") {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-g05-access")
           state.graphCalls.push(url.pathname)
-          if (url.href === graph + "/me") return Response.json({ id: principalId, displayName: "Controlled G05 actor" })
+          if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled G05 actor" })
           if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: [groupId] })
           if (url.href === graph + "/me/joinedTeams")
             return Response.json({ value: state.teams.map((id) => ({ id, tenantId, displayName: id, isArchived: false })) })
@@ -199,6 +203,22 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
     }
     passed("team-read-isolation")
 
+    // Observe all business snapshots and blob bytes independently, without reading authentication payloads.
+    const durableState = () => [teamA, teamB].map((teamObjectId) => {
+      const partition = digestSfValue({ installationId, tenantId, teamObjectId })
+      const database = new Database(join(directory, "business-teams", partition, "installation.sqlite"), { readonly: true })
+      try {
+        database.exec("BEGIN")
+        const snapshots = database.query("SELECT surface, payload FROM snapshots ORDER BY surface").all()
+        const blobs = database.query("SELECT surface, key, hex(payload) AS payload, type FROM blobs ORDER BY surface, key").all()
+        database.exec("COMMIT")
+        return { teamObjectId, snapshots, blobs }
+      } finally {
+        database.close()
+      }
+    })
+    const durableBefore = durableState()
+
     for (const [id, target] of [
       ["wrong-installation-denied", { ...profile, installationId: "foreign-installation" }],
       ["wrong-tenant-denied", { ...profile, tenantId: clientId }],
@@ -225,6 +245,11 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
     state.teams = [teamA, teamB, disabledTeam]
     expect(await read(teamA)).toBe(beforeA)
     expect(await read(teamB)).toBe(beforeB)
+    const durableAfter = durableState()
+    expect(durableAfter).toEqual(durableBefore)
+    state.durableComparison = durableBefore.map((before, index) => ({
+      teamObjectId: before.teamObjectId, before: digestSfValue(before), after: digestSfValue(durableAfter[index]),
+    }))
     passed("denied-writes-have-no-effect")
     expect(state.graphCalls).toContain("/v1.0/me/joinedTeams")
     expect(state.requests).toBeGreaterThan(0)
@@ -232,26 +257,32 @@ test("G05 loopback HTTP admits Teams and rejects wrong owners without cross-Team
     expect(state.ingressRequests).toBe(state.requests)
     expect(cases.every((entry) => entry.status === "pass")).toBe(true)
   } finally {
-    const receipt = {
-      schema: "orchestra.g05.team-http/1",
-      sourceSha: process.env.GITHUB_SHA ?? null,
-      sourceTree: process.env.G05_SOURCE_TREE ?? null,
-      runId: process.env.GITHUB_RUN_ID ?? null,
-      runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
-      proofClass: "HTTP_LOOPBACK_MICROSOFT_COMPONENT",
-      identityProvider: "CONTROLLED_ENTRA_GRAPH",
-      installedTeamsProof: false,
-      finalCandidate: false,
-      runtimeFactory: "createMicrosoftInstallation",
-      transport: { protocol: "http:", listener: "127.0.0.1", port: listener.port, requests: state.requests, loopbackPeers: state.loopbackPeers, ingressRequests: state.ingressRequests },
-      graphRequests: state.graphCalls,
-      cases,
-      summary: { expected: cases.length, pass: cases.filter((entry) => entry.status === "pass").length, pending: cases.filter((entry) => entry.status === "pending").length },
+    try {
+      await listener.stop(true)
+      await state.installation?.dispose()
+      await rm(root, { recursive: true, force: true })
+      state.cleanupComplete = true
+    } finally {
+      const receipt = {
+        schema: "orchestra.g05.team-http/1",
+        sourceSha: process.env.GITHUB_SHA ?? null,
+        sourceTree: process.env.G05_SOURCE_TREE ?? null,
+        runId: process.env.GITHUB_RUN_ID ?? null,
+        runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? null,
+        proofClass: "HTTP_LOOPBACK_MICROSOFT_COMPONENT",
+        identityProvider: "CONTROLLED_ENTRA_GRAPH",
+        installedTeamsProof: false,
+        finalCandidate: false,
+        runtimeFactory: "createMicrosoftInstallation",
+        cleanup: { completed: state.cleanupComplete },
+        transport: { protocol: "http:", listener: "127.0.0.1", port: listenerPort, requests: state.requests, loopbackPeers: state.loopbackPeers, ingressRequests: state.ingressRequests },
+        graphRequests: state.graphCalls,
+        durableComparison: { scope: "all Team A/B business snapshots and blobs; authentication payloads excluded", teams: state.durableComparison },
+        cases,
+        summary: { expected: cases.length, pass: cases.filter((entry) => entry.status === "pass").length, pending: cases.filter((entry) => entry.status === "pending").length },
+      }
+      const destination = process.env.G05_TEAM_RECEIPT
+      if (destination) await Bun.write(destination, JSON.stringify(receipt, null, 2) + "\n")
     }
-    const destination = process.env.G05_TEAM_RECEIPT
-    if (destination) await Bun.write(destination, JSON.stringify(receipt, null, 2) + "\n")
-    await listener.stop(true)
-    await state.installation?.dispose()
-    await rm(root, { recursive: true, force: true })
   }
 }, 60_000)
