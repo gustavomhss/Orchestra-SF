@@ -100,6 +100,12 @@ O custo mensal de cada posição e o orçamento total de pessoal são calculados
 
 A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
 
+## Confirmar sem alteração
+
+Antes de confirmar, confira a **Impressão digital do escopo**, a **Versão de armazenamento** e a lista completa de **Dependências materiais**. Cada dependência mostra a referência, a encarnação, a versão, os campos, o período e a data de observação usados na operação. Quando não há dependências, a tela informa isso explicitamente.
+
+O clique envia o material preparado que aparece nessa revisão. Se a fonte ou a versão de armazenamento mudar depois da leitura, a confirmação é recusada e exige nova leitura. Uma repetição da mesma operação conserva o recibo original.
+
 ## Leitura em telas menores
 
 As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.
