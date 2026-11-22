@@ -1,0 +1,195 @@
+{
+  "schema": "sucafina-canonical-clones-root-review-v1",
+  "reviewer": "/root",
+  "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+  "testedProduct": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+  "testedSnapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+  "run": 45048665481,
+  "staticReview": {
+    "allHelperAndDedicatedTestRead": true,
+    "canonicalInverseExact": true,
+    "businessContextInverseExact": true,
+    "peerReviewers": [
+      "/root/read_path",
+      "/root/root_cost"
+    ],
+    "originalCandidate": "1bea7c484a6e46a12e515ad807bf31b0dc162ab8",
+    "compositionBase": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "testRestoration": {
+      "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+      "blob": "cc29b57c10f0851827ecbefc66c5694890de199c",
+      "addedLines": 2,
+      "previousTestRecoveredExactly": true
+    }
+  },
+  "completedLogReview": {
+    "sourceLocators": 102,
+    "parsedPayloads": 39,
+    "errors": [],
+    "controlNonceAbsent": true,
+    "guardExact": true,
+    "eightPass": true,
+    "c17Complete": true,
+    "canonicalPass": true,
+    "cleanQualificationAbsent": true
+  },
+  "sourceReadback": {
+    "testedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "sha": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "sha": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "sha": "0d9094ae67866a919573c9c172176ca2bc88d4dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "sha": "0672f8cf6e982b7d2c4c67708442b2cf16269e09"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+        "sha": "51dc68c5e4dced64641e265344aa3099e1301946"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/canonical-native.test.ts",
+        "sha": "0f6a69f8ea36ba6fb04c9346b91246bd536216b2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "sha": "cc29b57c10f0851827ecbefc66c5694890de199c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-criteria-invocation.test.ts",
+        "sha": "abcf80346b94fe2dd5fa727b3aba212b21dd4a1d"
+      }
+    ],
+    "allEightBlobIdentitiesMatchedSnapshot": true
+  },
+  "technicalOutcome": {
+    "wrapper": {
+      "pass": 8,
+      "fail": 0,
+      "filteredOut": 13,
+      "expectCalls": 12,
+      "reportedDurationSeconds": 313.28
+    },
+    "composition": {
+      "pass": 54,
+      "fail": 0,
+      "skip": 2,
+      "expectCalls": 990
+    },
+    "c17": {
+      "pass": true,
+      "allSevenPhasesReturned": true,
+      "durationSeconds": 95.71575
+    },
+    "finance": {
+      "pass": true,
+      "durationSeconds": 44.99467
+    },
+    "immutable": {
+      "pass": 7,
+      "fail": 0,
+      "expectCalls": 100
+    },
+    "canonical": {
+      "pass": 15,
+      "fail": 0,
+      "expectCalls": 301,
+      "originalCases": 2,
+      "newCases": 13
+    },
+    "portfolio": {
+      "pass": 4,
+      "fail": 0,
+      "expectCalls": 75
+    },
+    "typechecks": [
+      {
+        "path": "apps/cli",
+        "command": [
+          "bun",
+          "run",
+          "typecheck"
+        ],
+        "status": "pass"
+      },
+      {
+        "path": "packages/app-shell",
+        "config": "e2e/tsconfig.json",
+        "command": [
+          "bun",
+          "run",
+          "typecheck:e2e"
+        ],
+        "status": "pass"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1",
+        "command": [
+          "bun",
+          "run",
+          "typecheck"
+        ],
+        "status": "pass"
+      }
+    ],
+    "guard": {
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 1029,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 38,
+      "preExistingWarnings": 37,
+      "candidateAddedWarnings": 1,
+      "touchesGuards": false
+    },
+    "omni": {
+      "status": "pass",
+      "declaredTests": 8,
+      "spawns": 10,
+      "delegated": 0
+    }
+  },
+  "postTestChange": {
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "helperBlob": "6e816722f84445545e66b91c55eb690d00cb6a55",
+    "previousHelperBlob": "215dcbaf74fd459b7da2f7592f54f4d61ea29099",
+    "scope": "Only explanatory catch comment and formatting; original executable statements recovered literally.",
+    "peerInverseConfirmed": true,
+    "guardWarningAddressed": "js-empty-catch",
+    "finalGuardPending": true
+  },
+  "installed": {
+    "run": 45049647711,
+    "snapshot": "cd68b7226780d58cca96e6a821071df3feb8517a",
+    "product": "9bb7eeff9ba5a5ed501514144b4fd629b46f5ee0",
+    "status": "PENDING",
+    "sourceReviewAndRootPreflight": "Exact two original clean overlays; complete first declaration; current native workspace helpers retained.",
+    "logsRead": false,
+    "qualificationAdded": 0
+  },
+  "limits": [
+    "No causal performance gain is established by one composed run.",
+    "The native origin proof requires the pinned Bun implementation and trusted bootstrap.",
+    "Traversal/expansion limits do not cap the initial native ownKeys or structuredClone allocation.",
+    "Browser review covered a bounded 282-file circuit on e4; actual composed build remains pending.",
+    "Technical results remain bound to d6/c18. Later comment and QA additions have their own pending original guard.",
+    "Earlier Portfolio23–27 archives and rollups remain on their separate QA branch and were not part of this CI snapshot."
+  ],
+  "acceptance": {
+    "qualifiedAreas": 12,
+    "acceptedAndMergedAreas": 41,
+    "userVisualAcceptance": "PENDING",
+    "merged": false
+  },
+  "rawLogsCommitted": false,
+  "controlNonceCommitted": false
+}

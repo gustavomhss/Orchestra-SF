@@ -1,0 +1,622 @@
+{
+  "schema": "sf-canonical-clones-source-review-v1",
+  "classification": "Revisão estática de candidato; validação de execução pendente; sem incremento de qualificação.",
+  "reviewer": "/root/read_path",
+  "reviewDate": "2026-11-22",
+  "repository": "gustavomhss/Orchestra-SF",
+  "staticDecision": {
+    "status": "PASS_STATIC_SCOPED",
+    "runtimeValidated": false,
+    "performanceGainEstablished": false,
+    "globalCompatibilityEstablished": false
+  },
+  "artifactScope": {
+    "baseProduct": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "baseTree": "2f116d57da463439f0280a3323187954e9ed0eba",
+    "paths": [
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/source-review.json",
+      "docs/qa/sucafina/design/wave-five/analytics/canonical-clones/README.md"
+    ],
+    "rollupsModified": false,
+    "rawLogsIncluded": false,
+    "qualificationIncrement": 0
+  },
+  "reviewedCandidate": {
+    "commit": "1bea7c484a6e46a12e515ad807bf31b0dc162ab8",
+    "parent": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "tree": "880dd0950151368e2f9dbeba5713fc8a757236af",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+        "originalCandidateBlob": "215dcbaf74fd459b7da2f7592f54f4d61ea29099",
+        "currentProductBlob": "215dcbaf74fd459b7da2f7592f54f4d61ea29099",
+        "originalCandidateUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/1bea7c484a6e46a12e515ad807bf31b0dc162ab8/modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+        "currentProductUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d6bce5d81d0fd578a190b9bacac2a1a4250109a1/modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "originalCandidateBlob": "eba57a83872208a34eb13abdd5b7e390962cf202",
+        "currentProductBlob": "eba57a83872208a34eb13abdd5b7e390962cf202",
+        "originalCandidateUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/1bea7c484a6e46a12e515ad807bf31b0dc162ab8/modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "currentProductUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d6bce5d81d0fd578a190b9bacac2a1a4250109a1/modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "originalCandidateBlob": "f64b2b5354964701ba834a41cdf18438cb838407",
+        "currentProductBlob": "f64b2b5354964701ba834a41cdf18438cb838407",
+        "originalCandidateUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/1bea7c484a6e46a12e515ad807bf31b0dc162ab8/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "currentProductUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d6bce5d81d0fd578a190b9bacac2a1a4250109a1/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "originalCandidateBlob": "79c36842675cda6139d9b056271e8907997632ca",
+        "currentProductBlob": "cc29b57c10f0851827ecbefc66c5694890de199c",
+        "originalCandidateUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/1bea7c484a6e46a12e515ad807bf31b0dc162ab8/modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "currentProductUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d6bce5d81d0fd578a190b9bacac2a1a4250109a1/modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts"
+      }
+    ],
+    "helperLines": 201,
+    "testCases": 13,
+    "originalTestLines": 464,
+    "integrations": {
+      "canonicalInverseExact": true,
+      "canonicalOriginalBlob": "d52aca01250ccff4c3811cee95f8a341fa3335c8",
+      "businessContextInverseExact": true,
+      "businessContextOriginalBlob": "475988ccece7446332c7594da061a4f72318cebe",
+      "hashChainUnchanged": true,
+      "authorityAndProviderCallsUnchanged": true
+    }
+  },
+  "composition": {
+    "base": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "baseCanonicalAndBusinessContextEqualOriginal": true,
+    "candidateComposition": {
+      "commit": "472633abc5fc9113f9baa38cf55598a2aa3b1f8b",
+      "parent": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "tree": "34c9fa4b79a6e70d601ad3b0cd2b88e8aac8633d",
+      "changedPaths": 4,
+      "fourOriginalCandidateBlobsExact": true
+    },
+    "testAdjustment": {
+      "commit": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+      "parent": "472633abc5fc9113f9baa38cf55598a2aa3b1f8b",
+      "tree": "2f116d57da463439f0280a3323187954e9ed0eba",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+      "previousBlob": "79c36842675cda6139d9b056271e8907997632ca",
+      "blob": "cc29b57c10f0851827ecbefc66c5694890de199c",
+      "addedLines": 2,
+      "removedLines": 0,
+      "inverseExact": true,
+      "testCasesStill13": true,
+      "productionFilesUnchanged": true,
+      "meaning": "O helper de teste guarda o descriptor length quando owner é Array.prototype e o restaura no finally após restaurar/remover a propriedade temporária. Instalar índice 0 altera length; assertions e corpos dos casos permanecem idênticos."
+    },
+    "unrelatedBaseChangesReviewed": false,
+    "compatibilityScope": "Conferência dos quatro blobs e das duas integrações originais. Não constitui revisão global dos demais cenários, Teams, pacotes ou rotas presentes na base atual."
+  },
+  "nativeImplementationProof": {
+    "requiredBunVersion": "1.3.14",
+    "requiredBunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "examinedWebKitRevision": "5488984d20e0dbfe4be2c3ba8fb18eb81a5e0e8b",
+    "gate": "O helper compara descriptors de dados próprios de globalThis.Bun, version e revision com o objeto e os literais capturados. Versão/revisão divergentes ou descriptor não admitido fecham a otimização.",
+    "fullRevision": "Bun.revision recebe Bun__version_sha = Environment.git_sha = build_options.sha; o banner e os campos short têm abreviações separadas.",
+    "baselineAssumption": "As identidades nativas no carregamento do módulo são confiáveis, como nas provas já existentes. Capturar uma função arbitrária sob preload adversarial não prova natividade.",
+    "ordinaryBirth": "A marca é emitida apenas após a chamada real do structuredClone nativo e a prova de alocação do map nativo. Nos caminhos examinados, objetos/arrays ordinários são novas identidades produzidas por desserialização, com dados instalados diretamente e aliases recuperados do pool do clone.",
+    "nativeExotics": "SAB, ArrayBuffer e views são excluídos por marcas nativas; outros wrappers nativos não têm os protótipos admitidos no nascimento. Um wrapper excluído e depois reparentado não ganha origem. O compartilhamento de backing de BlockList/SAB não autoriza memo de seu conteúdo.",
+    "customClassInventory": {
+      "pinnedTreeComplete": true,
+      "filesReviewed": 30,
+      "allBlobShasMatched": true,
+      "onlyStructuredCloneDeclarations": [
+        "Blob: tag 254",
+        "BlockList: tag 251"
+      ],
+      "files": [
+        {
+          "path": "src/jsc/resolve_message.classes.ts",
+          "blob": "a3ef7c1f90ba5181e297287efbce1cc1cfe0a3d6",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/Archive.classes.ts",
+          "blob": "45afe3a6170ad888e05dd09f72ef3e87f2a57e22",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/BunObject.classes.ts",
+          "blob": "cf0fca728bc5c7ab1ca9f1ff62fdaf678dfb3357",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/Glob.classes.ts",
+          "blob": "d4aa9c681ca5620bbc127b4eda51d37fe0f18a66",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/JSBundler.classes.ts",
+          "blob": "664502a34bc5041bdf3f2187ff0ba70ac3bcde16",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/ParsedShellScript.classes.ts",
+          "blob": "f6cac6c75609f56e5f94ee1cc912d47f87c9fae9",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/ResumableSink.classes.ts",
+          "blob": "44e44617611c7227ce400b5e92cdd8b43a80dd51",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/S3Client.classes.ts",
+          "blob": "bc90261204cac7d6f28272f6820c67990aebef0a",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/S3Stat.classes.ts",
+          "blob": "e2339a014ef19d4ca0e5683bf10c0d9967316386",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/SecureContext.classes.ts",
+          "blob": "dd23aaa6ec720fd743451d6df518d4589898714c",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/Shell.classes.ts",
+          "blob": "c806f045930338260d113ed0c8dba20ddfac6596",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/Terminal.classes.ts",
+          "blob": "c313e33b225a423683eb8714124acf8b7e51de50",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/cron.classes.ts",
+          "blob": "5925d5b073de6e590142cca978835700400fb781",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/filesystem_router.classes.ts",
+          "blob": "99ec5c56c4673bed06131f4079f488dc619eaee8",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/h2.classes.ts",
+          "blob": "1dacd59f15d0b447199c41e4b37d506a3bf7ad1d",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/html_rewriter.classes.ts",
+          "blob": "2e8808402b69f6a29ce67bda712ce7002ae9c964",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/sourcemap.classes.ts",
+          "blob": "0b976214721fa98389f1def27a27a2c5bc6454bd",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/sql.classes.ts",
+          "blob": "ee1405ca47c6ed8ae9e22a8265083e658d21f689",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/streams.classes.ts",
+          "blob": "43d90c007863daf010dc037210abf816f2e7fcd1",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/api/zlib.classes.ts",
+          "blob": "0475f1d2b4dab0378a10e8af7b7d3fa86db9755d",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/crypto/crypto.classes.ts",
+          "blob": "9f64ec1f0e3e1d888715481991543c2714eb0e88",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/ffi/ffi.classes.ts",
+          "blob": "a0708ac854052a78aa645d735363d8c40568367f",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/image/Image.classes.ts",
+          "blob": "3ee7809a0a87df492c03285d380e949f29bb5a6d",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/node/node.classes.ts",
+          "blob": "5375cf37f78b43914f2e328a6c4dfc81dc874f44",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/server/server.classes.ts",
+          "blob": "6eb83cff9322c754359061ef45741f00d5669625",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/socket/sockets.classes.ts",
+          "blob": "e484b7ec574b3a95749834fd72a9e15e5163e91e",
+          "hasStructuredCloneDeclaration": true
+        },
+        {
+          "path": "src/runtime/valkey_jsc/valkey.classes.ts",
+          "blob": "07d8e16a4301a5315a9c4a36095acc864ae20961",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/webcore/encoding.classes.ts",
+          "blob": "b26078ccc1fa34a9a0b1fc46238a81998787ba81",
+          "hasStructuredCloneDeclaration": false
+        },
+        {
+          "path": "src/runtime/webcore/response.classes.ts",
+          "blob": "90ebaa12cc952f43a81c8052db40ba7d6d3c49c4",
+          "hasStructuredCloneDeclaration": true
+        },
+        {
+          "path": "src/test_runner/jest.classes.ts",
+          "blob": "782632e16cf2e9bb98d9fe1621c10cad85c70bfc",
+          "hasStructuredCloneDeclaration": false
+        }
+      ]
+    },
+    "sources": [
+      {
+        "id": "bun-global-clone-binding",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/ZigGlobalObject.lut.txt",
+        "blob": "9ccc124f252cf0a65c3abceaf5a17dc70cb50cf0",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/ZigGlobalObject.lut.txt",
+        "reviewedLines": [
+          "23",
+          "27"
+        ],
+        "supports": "structuredClone aponta para WebCore::jsFunctionStructuredClone; Bun é CellProperty|DontDelete|ReadOnly."
+      },
+      {
+        "id": "bun-structured-clone-entry",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/webcore/StructuredClone.cpp",
+        "blob": "f58a16f32f63fb8e8fa3389278e375a54a2d5e96",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/webcore/StructuredClone.cpp",
+        "reviewedLines": [
+          "119-164"
+        ],
+        "supports": "A chamada nativa de um argumento serializa e desserializa o valor; o helper mantém essa chamada original."
+      },
+      {
+        "id": "bun-serializer-and-deserializer",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/webcore/SerializedScriptValue.cpp",
+        "blob": "f1e72f3fa24448606e844831d28b6ea7cdc03e1a",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/webcore/SerializedScriptValue.cpp",
+        "reviewedLines": [
+          "3530-3537",
+          "4760-4769",
+          "4992-4999",
+          "5075-5089",
+          "5122-5146",
+          "5304-5314",
+          "5358-5365",
+          "6518-6535",
+          "6608-6664"
+        ],
+        "supports": "ObjectTag/ArrayTag e rotas rápidas criam novos objetos/arrays; propriedades são instaladas diretamente; referências do pool preservam aliases entre os clones. SAB/views e outros tags nativos possuem rotas próprias."
+      },
+      {
+        "id": "bun-generated-host-wrappers",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/codegen/generate-classes.ts",
+        "blob": "29024f9bf797f4cb0feb8482bc98405c4f45fc90",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/codegen/generate-classes.ts",
+        "reviewedLines": [
+          "1901-1919",
+          "2393-2395",
+          "2460-2468",
+          "2572-2575",
+          "2864-2881"
+        ],
+        "supports": "Os tags customizados gerados usam desserializadores e novos wrappers com estruturas/protótipos próprios; não devolvem o objeto JS de entrada como objeto ordinário."
+      },
+      {
+        "id": "bun-blob-clone-declaration",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/runtime/webcore/response.classes.ts",
+        "blob": "90ebaa12cc952f43a81c8052db40ba7d6d3c49c4",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/webcore/response.classes.ts",
+        "reviewedLines": [
+          "134-148"
+        ],
+        "supports": "Declara Blob com tag de clone 254."
+      },
+      {
+        "id": "bun-blocklist-clone-declaration",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/runtime/socket/sockets.classes.ts",
+        "blob": "e484b7ec574b3a95749834fd72a9e15e5163e91e",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/socket/sockets.classes.ts",
+        "reviewedLines": [
+          "465-499"
+        ],
+        "supports": "Declara BlockList com tag de clone 251."
+      },
+      {
+        "id": "bun-blob-deserialize",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/runtime/webcore/Blob.zig",
+        "blob": "6cf5c04755456786ee5c0d3b44a2481b732f52ec",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/webcore/Blob.zig",
+        "reviewedLines": [
+          "516-526",
+          "666-686",
+          "3708-3718"
+        ],
+        "supports": "A desserialização e toJS produzem wrappers de Blob/S3File; a marca privada não admite esses protótipos."
+      },
+      {
+        "id": "bun-blocklist-deserialize",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/runtime/node/net/BlockList.zig",
+        "blob": "2ffcafe7c4a0670217293699e6a604c17606f876",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/node/net/BlockList.zig",
+        "reviewedLines": [
+          "7",
+          "189-229"
+        ],
+        "supports": "O backing nativo de BlockList pode ser compartilhado, mas a desserialização passa por toJS e cria outro wrapper; isso não o torna objeto ordinário admitido."
+      },
+      {
+        "id": "bun-keyobject-structure",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/node/crypto/JSKeyObject.cpp",
+        "blob": "fecf27d7e52b1e6308bf52a494956e23c05a895d",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/node/crypto/JSKeyObject.cpp",
+        "reviewedLines": [
+          "32-44"
+        ],
+        "supports": "KeyObject cria estrutura com protótipo nativo próprio."
+      },
+      {
+        "id": "bun-secret-keyobject-structure",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/node/crypto/JSSecretKeyObject.cpp",
+        "blob": "d125fb90ac3d30bffc46feb88cf432d9d0ca77b7",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/node/crypto/JSSecretKeyObject.cpp",
+        "reviewedLines": [
+          "32-45"
+        ],
+        "supports": "SecretKeyObject cria estrutura com protótipo nativo próprio."
+      },
+      {
+        "id": "bun-x509-structure",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/JSX509Certificate.cpp",
+        "blob": "e5fe404bd4b2daa2796ea2e204ab48cc7f15dc21",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/JSX509Certificate.cpp",
+        "reviewedLines": [
+          "1154-1166"
+        ],
+        "supports": "X509Certificate cria estrutura com protótipo nativo próprio."
+      },
+      {
+        "id": "bun-version-revision-binding",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/jsc/bindings/BunObject.cpp",
+        "blob": "92a006ed7237f124e7a575f61a09063f070d1259",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/jsc/bindings/BunObject.cpp",
+        "reviewedLines": [
+          "284-296",
+          "1028",
+          "1049"
+        ],
+        "supports": "version remove apenas o prefixo v; revision usa Bun__version_sha sem abreviação. Os dois bindings são ReadOnly|DontDelete|PropertyCallback."
+      },
+      {
+        "id": "bun-full-revision-export",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/runtime/node/node_process.zig",
+        "blob": "16fd5f8ba33b78c9622fc0ad8e9ceec4a856fa0c",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/node/node_process.zig",
+        "reviewedLines": [
+          "363-369"
+        ],
+        "supports": "Bun__version_sha é exportado diretamente de bun.Environment.git_sha."
+      },
+      {
+        "id": "bun-full-revision-build-value",
+        "repository": "oven-sh/bun",
+        "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+        "path": "src/bun_core/env.zig",
+        "blob": "59f64e6dd144c60852234ede6aa2830c43608b85",
+        "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/bun_core/env.zig",
+        "reviewedLines": [
+          "50-52"
+        ],
+        "supports": "git_sha é build_options.sha; somente git_sha_short e git_sha_shorter recebem slices."
+      },
+      {
+        "id": "webkit-lazy-data-reification",
+        "repository": "oven-sh/WebKit",
+        "commit": "5488984d20e0dbfe4be2c3ba8fb18eb81a5e0e8b",
+        "path": "Source/JavaScriptCore/runtime/Lookup.h",
+        "blob": "e2a95e996d1e12826c7315f165ae5426fd586e09",
+        "url": "https://github.com/oven-sh/WebKit/blob/5488984d20e0dbfe4be2c3ba8fb18eb81a5e0e8b/Source/JavaScriptCore/runtime/Lookup.h",
+        "reviewedLines": [
+          "523-542"
+        ],
+        "supports": "CellProperty e PropertyCallback reificam o resultado com putDirect; não são accessors JS de versão/revisão."
+      },
+      {
+        "id": "webkit-custom-value-descriptor-limit",
+        "repository": "oven-sh/WebKit",
+        "commit": "5488984d20e0dbfe4be2c3ba8fb18eb81a5e0e8b",
+        "path": "Source/JavaScriptCore/runtime/PropertyDescriptor.cpp",
+        "blob": "6d2deee6b0221ce0840d79e965c1f4bda6315039",
+        "url": "https://github.com/oven-sh/WebKit/blob/5488984d20e0dbfe4be2c3ba8fb18eb81a5e0e8b/Source/JavaScriptCore/runtime/PropertyDescriptor.cpp",
+        "reviewedLines": [
+          "153-174",
+          "291-310"
+        ],
+        "supports": "A apresentação de um descriptor de dados pode envolver um CustomValue nativo. Protótipo plain e descriptor de dados, isoladamente, não provam origem ordinária nem ausência de efeitos nativos."
+      }
+    ]
+  },
+  "identityAndMutation": {
+    "privateRegistry": "WeakSet privado guarda somente identidade de nascimento; não guarda autoridade, descriptor, imutabilidade, projeção, resultado, bytes ou digest.",
+    "noArbitraryRegistrar": true,
+    "originBeforeChildReflection": true,
+    "currentAdmission": "Cada chamada relê protótipos e descriptors próprios. Exige arrays densos e dados enumeráveis, grafos acíclicos, números finitos, protótipos admitidos, ausência de métodos/constructor/species próprios que alterem a rota e ambiente canônico preservado.",
+    "mutation": "Mutações primitivas e remoções são observadas novamente. Filhos novos sem registro, Proxy, accessors, ciclos, valores não suportados ou ambiente alterado recusam a árvore. A recusa usa o canonicalizador original.",
+    "processEnvBoundary": "Não se admite um objeto só porque seu protótipo parece plain ou seu descriptor parece de dados. Um objeto host inserido após o clone não tem origem privada. Um clone nativo que realmente o converta em objeto ordinário é uma identidade diferente."
+  },
+  "canonicalSemantics": {
+    "perCallMemo": "WeakMap local compartilha apenas subárvores tagged de aliases na mesma caminhada. Uma chamada posterior cria outro memo e outra árvore.",
+    "exactBytesBasis": "As tags existentes, chaves ordenadas e distinções absent/null/-0 são conservadas. JSON.stringify nativo continua responsável por escaping, Unicode e expansão final dos aliases.",
+    "hashEvaluationOrder": [
+      "new Bun.CryptoHasher(\"sha256\")",
+      "lookup de update",
+      "canonicalSfValue",
+      "chamada de update",
+      "lookup e chamada de digest(\"hex\")"
+    ],
+    "noDigestOmitted": true,
+    "fallback": "O corpo literal JSON.stringify(canonical(value)) permanece. A admissão não invoca getters ou traps de filhos opacos antes do fallback. Unsupported, ciclo ou budget recusam a árvore; não antecipam um erro novo.",
+    "hooks": "Pins do ambiente e captura de intrinsics preservam o fallback quando clone, map, constructor/species, Object, Number, Array, JSON ou Reflect estão alterados. Hooks que se restauram na invocação não recebem origem retroativa. Hashers continuam sendo construídos e chamados originalmente.",
+    "bookkeeping": "Métodos privados capturados e defineProperty com descriptor de protótipo nulo evitam chamadas extras a setters numéricos ou get/set herdados. A prova de alocação do array de map ocorre antes de callbacks/element getters.",
+    "synchronousBoundary": "A reutilização de subárvore depende da admissão de uma caminhada síncrona sem getters, Proxy, callbacks externos ou await entre as leituras admitidas; não é um cache entre leituras."
+  },
+  "budgets": {
+    "maximumUniqueNodes": 4096,
+    "maximumOwnProperties": 32768,
+    "maximumDepth": 64,
+    "maximumExpandedOccurrences": 65536,
+    "maximumEstimatedUtf16Units": 4194304,
+    "conservativeStringMultiplier": 6,
+    "refusalBehavior": "undefined da árvore otimizada e execução do fallback original.",
+    "ownKeysLimit": "Reflect.ownKeys produz sua lista antes da comparação com o budget. Os limites não são um teto antecipado da alocação/custo nativo de ownKeys, do clone original ou do fallback.",
+    "performanceLimit": "Registro, inspeção, construção da árvore e serializer têm custo. A revisão não mede nem promete redução do tempo do preview."
+  },
+  "testSourceReview": {
+    "executedByThisReviewer": false,
+    "coverage": [
+      "bytes e SHA de referência; absent/null/-0/Unicode",
+      "clones independentes e aliases internos de sourceRefs/drilldown",
+      "memo local e mutações posteriores",
+      "recusa de getters/Proxy sem efeitos antecipados",
+      "arrays esparsos e map/constructor/species",
+      "hooks transitórios de clone/map e serializer",
+      "hooks Object/Number/Array/JSON e toJSON herdado",
+      "setters numéricos e get/set herdados em descriptors",
+      "getter transitório de update em hasher nativo com serializer alterado",
+      "ciclos, nonfinite, BigInt e exóticos nativos",
+      "SAB/views com comparação do outcome do clone nativo e recusa após reparent",
+      "budgets de nós/propriedades/profundidade/unidades/expansão"
+    ],
+    "nativeCloneOracle": "SAB/views com sucesso do clone nativo exigem retorno equivalente e árvore recusada. Se o clone nativo falhar, o teste compara o erro normalizado do helper; não marca a situação como skip.",
+    "pending": "Assertions e suporte efetivo no Bun instalado ainda dependem da execução. A leitura de fonte não é resultado de teste."
+  },
+  "browserBoundaryReview": {
+    "reviewer": "/root/root_cost",
+    "attribution": "Levantamento reportado pelo peer; o fechamento de 282 arquivos não foi repetido por /root/read_path.",
+    "commit": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "counts": {
+      "appShellSucafinaNonTestSources": 228,
+      "schemaSucafina": 32,
+      "clientSucafina": 22,
+      "total": 282
+    },
+    "completePinnedTrees": true,
+    "readErrorsReported": 0,
+    "examinedChain": "apps/web entry → app-shell app → chapter-route → SfOwnerRuntime231 → client/schema Sucafina.",
+    "observed": "Não foi localizado import runtime do canonical de modules/Sucafinav1 nesse circuito. decision-create.ts é consumido no host por interface/http.ts, que injeta strings de script/HTML em Response.",
+    "locators": [
+      {
+        "path": "apps/web/src/entry.tsx",
+        "blob": "533aae78fa506e1163f05b73096415ea24e5399e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/apps/web/src/entry.tsx"
+      },
+      {
+        "path": "packages/app-shell/src/app.tsx",
+        "blob": "7cdcea2d2a15998c2996c94337decfa5b94ab152",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/packages/app-shell/src/app.tsx"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapter-route.tsx",
+        "blob": "c774d836601ce352490a6a6ce947625bd2a33592",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/packages/app-shell/src/orchestra/chapter-route.tsx"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+        "blob": "7f261bc6a4351560bc9e1218669de2172eb7ba5a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "blob": "db4364fa0e76c81a509f5adfa1c29a344750707b",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/modules/sucafina/Sucafinav1/product/interface/http.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+        "blob": "d1d12abb1a4c460bdcd9ccf26353f7d0b4a74afb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d/modules/sucafina/Sucafinav1/product/ui/decision-create.ts"
+      }
+    ],
+    "remainingRisk": "canonical.ts agora importa node:util transitivamente. types.isProxy é lido no bootstrap, antes do gate Bun; o fallback do gate não protege um import browser incompatível. As duas configurações Vite lidas pelo peer não mostraram polyfill node:util.",
+    "globalClosure": false,
+    "buildExecuted": false,
+    "limitation": "Não fecha outros imports, pacotes ou rotas, nem adapta automaticamente o levantamento de e4 a toda a base atual. Build instalado e gates na composição atual permanecem necessários."
+  },
+  "ci": {
+    "status": "PENDING",
+    "resultsIncluded": false,
+    "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+    "parent": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "tree": "5d27a56966875726be2f00a098543d9998b248bd",
+    "overlays": [
+      {
+        "path": ".ci-run.json",
+        "blob": "55333918cc23b55bfce82623c5ff45bb0a61909c"
+      },
+      {
+        "path": "apps/cli/test/sucafina-design-verification.test.ts",
+        "blob": "2e3012a05a66a14104c3f5d080c730fba91b414d"
+      }
+    ],
+    "run": 45048665481,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481",
+    "headBranch": "ci-run-sf5clones01",
+    "metadataObservation": {
+      "headSha": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "logsReadForThisDocument": false,
+    "interpretation": "Registro fechado como pendente nesta revisão. Não contém resultado de CI, aprovação runtime, qualificação de UI42–44 ou previsão de ganho."
+  },
+  "limitations": [
+    "PASS estático do recorte descrito; não é PASS runtime, aceite visual ou incremento de área.",
+    "A prova de outputs ordinários é específica da implementação nativa examinada e pressupõe intrinsics confiáveis no bootstrap.",
+    "A marca de origem não afirma imutabilidade; toda admissão depende do grafo atual e do ambiente atual.",
+    "OwnKeys e clone nativos não têm custo antecipadamente limitado pelos budgets do walker.",
+    "A revisão browser é limitada e atribuída ao peer; não constitui compatibilidade global ou build.",
+    "A composição conserva os quatro blobs revisados e a correção de duas linhas do teste; alterações não relacionadas da nova base não foram integralmente revisadas aqui.",
+    "Nenhum log bruto, resultado de CI, nova qualificação, rollup ou merge faz parte destes dois arquivos."
+  ]
+}

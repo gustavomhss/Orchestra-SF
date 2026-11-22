@@ -1,0 +1,544 @@
+{
+  "schema": "sucafina-canonical-clones-technical-receipt-v1",
+  "attempt": "technical-01",
+  "classification": "PASSED all eight selected technical gates; no installed UI or browser-build qualification",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "product": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "productTree": "2f116d57da463439f0280a3323187954e9ed0eba",
+    "snapshot": "c18b97d8a316992b95abcbb57ef9b6c6754b1518",
+    "snapshotTree": "5d27a56966875726be2f00a098543d9998b248bd",
+    "snapshotParentIsTestedProduct": true,
+    "productFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+        "sha": "215dcbaf74fd459b7da2f7592f54f4d61ea29099"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "sha": "eba57a83872208a34eb13abdd5b7e390962cf202"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "sha": "f64b2b5354964701ba834a41cdf18438cb838407"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "sha": "cc29b57c10f0851827ecbefc66c5694890de199c"
+      }
+    ],
+    "request": {
+      "path": ".ci-run.json",
+      "sha": "55333918cc23b55bfce82623c5ff45bb0a61909c",
+      "value": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "360000",
+          "-t",
+          "CurrentChoice readonly composition|CLI package typecheck|permanent e2e typecheck|guardrails|immutable UI context integrity|Sucafina package typecheck|canonical clone reuse|portfolio sibling scenario reads"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "wrapper": {
+      "path": "apps/cli/test/sucafina-design-verification.test.ts",
+      "sha": "2e3012a05a66a14104c3f5d080c730fba91b414d",
+      "literalPrefixBlob": "f28bdc1b08fe74eeb7937c1b1fd2fe948677c413",
+      "literalPrefixSnapshot": "0e62f4e66dc000bddf4f73cbc2bf4de7ffbab7d5",
+      "literalPrefixPreserved": true,
+      "appendedGates": 2
+    },
+    "snapshotDelta": [
+      "add .ci-run.json",
+      "add apps/cli/test/sucafina-design-verification.test.ts"
+    ],
+    "testedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "sha": "e9a1f32896f8094edaf71a519430c9dc0c70f8f4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "sha": "6c836317f08ea0f36b734bcd26c7ab0c4e5350bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "sha": "0d9094ae67866a919573c9c172176ca2bc88d4dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "sha": "0672f8cf6e982b7d2c4c67708442b2cf16269e09"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-context-integrity.test.ts",
+        "sha": "51dc68c5e4dced64641e265344aa3099e1301946"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/canonical-native.test.ts",
+        "sha": "0f6a69f8ea36ba6fb04c9346b91246bd536216b2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "sha": "cc29b57c10f0851827ecbefc66c5694890de199c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-criteria-invocation.test.ts",
+        "sha": "abcf80346b94fe2dd5fa727b3aba212b21dd4a1d"
+      }
+    ]
+  },
+  "actions": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflowBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "runner": "ubuntu-24.04",
+    "branch": "ci-run-sf5clones01",
+    "run": 45048665481,
+    "runAttempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-22T17:18:11Z",
+    "updatedAt": "2026-11-22T17:24:13Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45048665481",
+    "jobs": [
+      {
+        "id": 137288740391,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T17:18:12Z",
+        "completedAt": "2026-11-22T17:24:06Z",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:13Z",
+            "completedAt": "2026-11-22T17:18:14Z"
+          },
+          {
+            "number": 2,
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:14Z",
+            "completedAt": "2026-11-22T17:18:22Z"
+          },
+          {
+            "number": 3,
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:22Z",
+            "completedAt": "2026-11-22T17:18:22Z"
+          },
+          {
+            "number": 4,
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:22Z",
+            "completedAt": "2026-11-22T17:18:22Z"
+          },
+          {
+            "number": 5,
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:22Z",
+            "completedAt": "2026-11-22T17:18:26Z"
+          },
+          {
+            "number": 6,
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:26Z",
+            "completedAt": "2026-11-22T17:18:26Z"
+          },
+          {
+            "number": 7,
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:26Z",
+            "completedAt": "2026-11-22T17:18:26Z"
+          },
+          {
+            "number": 8,
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:26Z",
+            "completedAt": "2026-11-22T17:18:40Z"
+          },
+          {
+            "number": 9,
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:40Z",
+            "completedAt": "2026-11-22T17:18:40Z"
+          },
+          {
+            "number": 10,
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:40Z",
+            "completedAt": "2026-11-22T17:18:40Z"
+          },
+          {
+            "number": 11,
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:40Z",
+            "completedAt": "2026-11-22T17:18:40Z"
+          },
+          {
+            "number": 12,
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:40Z",
+            "completedAt": "2026-11-22T17:18:50Z"
+          },
+          {
+            "number": 13,
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:50Z",
+            "completedAt": "2026-11-22T17:18:50Z"
+          },
+          {
+            "number": 14,
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:50Z",
+            "completedAt": "2026-11-22T17:18:50Z"
+          },
+          {
+            "number": 15,
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:50Z",
+            "completedAt": "2026-11-22T17:18:50Z"
+          },
+          {
+            "number": 16,
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:50Z",
+            "completedAt": "2026-11-22T17:18:50Z"
+          },
+          {
+            "number": 17,
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:50Z",
+            "completedAt": "2026-11-22T17:18:51Z"
+          },
+          {
+            "number": 18,
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:51Z",
+            "completedAt": "2026-11-22T17:18:51Z"
+          },
+          {
+            "number": 19,
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:18:51Z",
+            "completedAt": "2026-11-22T17:18:51Z"
+          },
+          {
+            "number": 20,
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:51Z",
+            "completedAt": "2026-11-22T17:18:51Z"
+          },
+          {
+            "number": 21,
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:18:51Z",
+            "completedAt": "2026-11-22T17:24:04Z"
+          },
+          {
+            "number": 22,
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:24:04Z",
+            "completedAt": "2026-11-22T17:24:04Z"
+          },
+          {
+            "number": 23,
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-22T17:24:04Z",
+            "completedAt": "2026-11-22T17:24:04Z"
+          },
+          {
+            "number": 44,
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:04Z",
+            "completedAt": "2026-11-22T17:24:04Z"
+          },
+          {
+            "number": 45,
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:04Z",
+            "completedAt": "2026-11-22T17:24:05Z"
+          },
+          {
+            "number": 46,
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:05Z",
+            "completedAt": "2026-11-22T17:24:05Z"
+          },
+          {
+            "number": 47,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:05Z",
+            "completedAt": "2026-11-22T17:24:05Z"
+          }
+        ]
+      },
+      {
+        "id": 137290462975,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-22T17:24:08Z",
+        "completedAt": "2026-11-22T17:24:13Z",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:09Z",
+            "completedAt": "2026-11-22T17:24:09Z"
+          },
+          {
+            "number": 2,
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:09Z",
+            "completedAt": "2026-11-22T17:24:10Z"
+          },
+          {
+            "number": 3,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-22T17:24:10Z",
+            "completedAt": "2026-11-22T17:24:10Z"
+          }
+        ]
+      }
+    ],
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "bun": {
+      "version": "1.3.14",
+      "revisionPrefix": "0d9b296a",
+      "evidence": {
+        "sourceLine": 725,
+        "timestamp": "2026-11-22T17:18:51.4041014Z",
+        "originalPayload": "bun test v1.3.14 (0d9b296a)"
+      }
+    },
+    "artifacts": {
+      "query": "GET /repos/gustavomhss/Orchestra-SF/actions/runs/45048665481/artifacts",
+      "items": [],
+      "observation": "The final run artifact listing returned an empty artifacts array. Both preview/e2e upload steps were skipped."
+    },
+    "cleanup": {
+      "job": 137290462975,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "finalLogErrorsObserved": false,
+      "remoteRefReadbackPerformed": false
+    },
+    "rerun": false
+  },
+  "budgetsMs": {
+    "requestBunTimeout": 360000,
+    "compositionCommand": 300000,
+    "compositionGate": 360000,
+    "c17BunTest": 120000,
+    "financeBunTest": 120000,
+    "immutableCommand": 120000,
+    "immutableGate": 180000,
+    "canonicalCommand": 120000,
+    "canonicalGate": 180000,
+    "portfolioCommand": 120000,
+    "portfolioGate": 180000,
+    "typecheckCommand": 240000,
+    "typecheckGate": 300000,
+    "originalBudgetsChanged": false
+  },
+  "results": {
+    "wrapper": {
+      "pass": 8,
+      "fail": 0,
+      "filteredOut": 13,
+      "expectCalls": 12,
+      "reportedDurationSeconds": 313.28
+    },
+    "composition": {
+      "pass": 54,
+      "fail": 0,
+      "skip": 2,
+      "expectCalls": 990
+    },
+    "c17": {
+      "pass": true,
+      "allSevenPhasesReturned": true,
+      "durationSeconds": 95.71575
+    },
+    "finance": {
+      "pass": true,
+      "durationSeconds": 44.99467
+    },
+    "immutable": {
+      "pass": 7,
+      "fail": 0,
+      "expectCalls": 100
+    },
+    "canonical": {
+      "pass": 15,
+      "fail": 0,
+      "expectCalls": 301,
+      "originalCases": 2,
+      "newCases": 13
+    },
+    "portfolio": {
+      "pass": 4,
+      "fail": 0,
+      "expectCalls": 75
+    },
+    "typechecks": [
+      {
+        "path": "apps/cli",
+        "command": [
+          "bun",
+          "run",
+          "typecheck"
+        ],
+        "status": "pass"
+      },
+      {
+        "path": "packages/app-shell",
+        "config": "e2e/tsconfig.json",
+        "command": [
+          "bun",
+          "run",
+          "typecheck:e2e"
+        ],
+        "status": "pass"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1",
+        "command": [
+          "bun",
+          "run",
+          "typecheck"
+        ],
+        "status": "pass"
+      }
+    ],
+    "guard": {
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 1029,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 38,
+      "preExistingWarnings": 37,
+      "candidateAddedWarnings": 1,
+      "touchesGuards": false
+    },
+    "omni": {
+      "status": "pass",
+      "declaredTests": 8,
+      "spawns": 10,
+      "delegated": 0
+    }
+  },
+  "evidence": {
+    "details": "verification.json",
+    "acquiredOnlyAfterJobsCompleted": true,
+    "testJobLog": {
+      "characters": 107989,
+      "lines": 984,
+      "rawLogArchived": false
+    },
+    "cleanupJobLog": {
+      "characters": 2284,
+      "lines": 40,
+      "rawLogArchived": false
+    },
+    "controlNonceArchived": false,
+    "selectedPayloadsIncludeSourceLineAndTimestamp": true,
+    "allSubprocessEvidenceUntruncated": true
+  },
+  "qualification": {
+    "selectedTechnicalGatesPassed": true,
+    "webBuildExecuted": false,
+    "installedUiJourneyExecuted": false,
+    "visualQualification": false,
+    "ui42": "not qualified by this run",
+    "ui43": "not qualified by this run",
+    "ui44": "not qualified by this run",
+    "globalCountChanges": false,
+    "causalPerformanceGainEstablished": false,
+    "futureProductRevisionCovered": false
+  },
+  "archive": {
+    "qaOnly": true,
+    "baseProduct": "d6bce5d81d0fd578a190b9bacac2a1a4250109a1",
+    "baseTree": "2f116d57da463439f0280a3323187954e9ed0eba",
+    "rawLogsCommitted": false,
+    "nonceCommitted": false,
+    "runtimeOrTestChanges": false,
+    "newCiExecution": false,
+    "commitCreated": false,
+    "refUpdated": false
+  }
+}
