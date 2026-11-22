@@ -13,8 +13,8 @@ import type { DesignInstallation } from "./installation"
 const sourceBase = "55d332a2451d2146e825d494b87878875d63b1c7"
 const providerId = "onboarding-local"
 const modelId = "qwen35-demo"
-const modelName = "Qwen3.5-0.8B · local demo"
-const contextTokens = 196_608
+const modelName = "Qwen3.5-9B · local demo"
+const contextTokens = 16_384
 const modelThreads = Math.max(1, Math.min(4, availableParallelism()))
 const assets = {
   server: {
@@ -27,12 +27,14 @@ const assets = {
     license: "MIT",
   },
   model: {
-    file: "Qwen3.5-0.8B-Q8_0.gguf",
-    url: "https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/resolve/316dea3b5462fd5755862bcec45a2f901bc0ba6b/Qwen3.5-0.8B-Q8_0.gguf",
-    sha256: "37ae482d336108d23516fa35e8e0c4126688d81018b87178a18d752a1357814f",
-    bytes: 833592096,
-    sourceCommit: "316dea3b5462fd5755862bcec45a2f901bc0ba6b",
-    upstreamModelCommit: "2fc06364715b967f1860aea9cf38778875588b17",
+    file: "Qwen3.5-9B-Q4_K_M.gguf",
+    url: "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/3885219b6810b007914f3a7950a8d1b469d598a5/Qwen3.5-9B-Q4_K_M.gguf",
+    sha256: "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    bytes: 5680522464,
+    sourceCommit: "3885219b6810b007914f3a7950a8d1b469d598a5",
+    upstreamModelCommit: null, // Exact conversion ancestry is not documented by this quantization publisher.
+    documentedBaseModel: "Qwen/Qwen3.5-9B",
+    architectureConfigCommit: "21eca8a083a2121a92fba681f4a7c72cf20ff1a7",
     license: "Apache-2.0",
   },
 } as const
@@ -148,14 +150,15 @@ export async function withLocalModel<T>(
   const telemetryStartedAt = Date.now()
   let latestPrefill: PrefillProgress | undefined
   // Preserve the original Maestro role and let ordinary configured permissions
-  // determine available guidance/tools. Keep the pinned native-context model unchanged.
+  // determine available guidance/tools. The separately pinned9B model uses a
+  // standard16384-token configured context; no request content is pruned.
   const memoryBeforeLoad = { totalBytes: totalmem(), freeBytes: freemem() }
-  // Pinned Qwen config: six full-attention layers, two KV heads, dim 256.
+  // Verified Qwen9B architecture: eight full-attention layers, four KV heads, dim256.
   // Two GiB of additional room cover hybrid state, batches and process overhead.
-  const estimatedF16KVBytes = 6 * 2 * 256 * 2 * 2 * contextTokens
+  const estimatedF16KVBytes = 8 * 4 * 256 * 2 * 2 * contextTokens
   const requiredFreeBytes = estimatedF16KVBytes + assets.model.bytes + 2 * 1024 ** 3
   if (memoryBeforeLoad.freeBytes < requiredFreeBytes)
-    throw new Error("Runner lacks measured RAM for the 196608-token local context: free=" + memoryBeforeLoad.freeBytes + ", required=" + requiredFreeBytes)
+    throw new Error("Runner lacks measured RAM for the " + contextTokens + "-token local context: free=" + memoryBeforeLoad.freeBytes + ", required=" + requiredFreeBytes)
   let stage = "download"
   let modelReady = false
   return Effect.runPromise(Effect.scoped(Effect.gen(function* () {

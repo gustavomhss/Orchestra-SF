@@ -133,7 +133,7 @@ async function chatChapters(film: Film, local: LocalModelRecording, restricted: 
     const model = page.locator('[data-action="prompt-model"]')
     await expect(model).toBeEnabled()
     await film.click(model, "Inspect and select the actual local demonstration model")
-    await film.input(page.getByPlaceholder("Search models", { exact: true }), "Qwen3.5-0.8B", "Find the admitted demonstration model")
+    await film.input(page.getByPlaceholder("Search models", { exact: true }), "Qwen3.5-9B", "Find the admitted demonstration model")
     await film.click(page.locator('[data-option-key=' + JSON.stringify(local.providerId + ":" + local.modelId) + ']'), "Choose the real Qwen3.5 local model")
     await expect(model).toContainText(local.modelName)
     // AI3 observed this exact draft UI: it has model/subagent controls and

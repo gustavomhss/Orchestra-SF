@@ -1,0 +1,88 @@
+{
+  "schema": "sf-onboarding-model-candidate-v1",
+  "researchedAtDate": "2026-11-22",
+  "candidate": {
+    "publisher": "Unsloth",
+    "repository": "unsloth/Qwen3.5-9B-GGUF",
+    "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+    "file": "Qwen3.5-9B-Q4_K_M.gguf",
+    "bytes": 5680522464,
+    "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8",
+    "fileUploadCommit": "99a1b2185534379e6e8b5ec869da25d3e7b3f73c",
+    "downloadUrl": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/3885219b6810b007914f3a7950a8d1b469d598a5/Qwen3.5-9B-Q4_K_M.gguf",
+    "license": "Apache-2.0",
+    "licenseEvidence": "Pinned quantization model card declares apache-2.0 and links Qwen's license.",
+    "baseModelRepository": "Qwen/Qwen3.5-9B",
+    "exactUpstreamRevisionOfQuantization": null,
+    "ancestryBoundary": "The pinned publisher card documents the base model repository, not an exact upstream conversion revision. The separately inspected Qwen config revision is architecture evidence, not claimed quantization ancestry."
+  },
+  "architecture": {
+    "configurationSourceRevision": "21eca8a083a2121a92fba681f4a7c72cf20ff1a7",
+    "nativeContextTokens": 262144,
+    "layers": 32,
+    "fullAttentionInterval": 4,
+    "fullAttentionLayers": 8,
+    "keyValueHeads": 4,
+    "headDimension": 256,
+    "proposedConfiguredContextTokens": 16384,
+    "configurationExtendsNativeWindow": false
+  },
+  "memoryAssessment": {
+    "kind": "arithmetic estimate, not measured model residency",
+    "fullAttentionKeyValueCacheType": "F16",
+    "fullAttentionKvFormula": "16384 * 8 * 4 * 256 * 2 * 2",
+    "fullAttentionKvBytes": 536870912,
+    "weightFileBytes": 5680522464,
+    "weightsPlusFullAttentionKvBytes": 6217393376,
+    "excluded": "Recurrent-state buffers, computation workspaces, allocator overhead, server, browser and Orchestra processes.",
+    "conclusion": "Plausible within a 16 GB runner when the measured free-memory guard leaves conservative additional headroom; no loaded-model or peak-memory claim.",
+    "availableCpusForPlannedRun": 4,
+    "inferenceSpeedMeasured": false,
+    "responseQualityQualified": false
+  },
+  "runtimePlan": {
+    "binaryFamily": "existing pinned llama.cpp b12632",
+    "compatibilityBoundary": "Same qwen35 architecture family as the working 0.8B take. The exact 9B artifact still requires normal runtime loading, metadata/readiness checks and actual response qualification.",
+    "thinking": "Retain the existing explicit non-thinking configuration; 9B upstream card says thinking is the default.",
+    "prompt": "Retain the unchanged 759-character take4 supplied-facts prompt and original Maestro core/system.",
+    "permission": "Retain the ordinary project-specific wildcard-deny configuration and existing Ask mode.",
+    "completion": "Retain all nine actual-completion checks and full text-only DOM identity proof.",
+    "context": "16384 is the intentional configured server limit; 262144 is documented native capacity. Do not label them interchangeably."
+  },
+  "primarySources": [
+    {
+      "kind": "immutable weight LFS pointer",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/raw/3885219b6810b007914f3a7950a8d1b469d598a5/Qwen3.5-9B-Q4_K_M.gguf"
+    },
+    {
+      "kind": "immutable publisher card; base repository and license",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/blob/3885219b6810b007914f3a7950a8d1b469d598a5/README.md"
+    },
+    {
+      "kind": "repository commit",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/commit/3885219b6810b007914f3a7950a8d1b469d598a5"
+    },
+    {
+      "kind": "weight upload commit",
+      "url": "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/commit/99a1b2185534379e6e8b5ec869da25d3e7b3f73c"
+    },
+    {
+      "kind": "official architecture configuration",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-9B/raw/21eca8a083a2121a92fba681f4a7c72cf20ff1a7/config.json"
+    },
+    {
+      "kind": "official upstream model card",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-9B"
+    }
+  ],
+  "earlierRequestedPublishers": {
+    "repositories": [
+      "ggml-org/Qwen3.5-9B-GGUF",
+      "Qwen/Qwen3.5-9B-GGUF"
+    ],
+    "finding": "Not accessible through the web tool. No exact revision or hash was inferred, and no assertion of nonexistence is made."
+  },
+  "noWeightsDownloaded": true,
+  "noInferenceExecuted": true,
+  "noGitHubMutation": true
+}

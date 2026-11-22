@@ -1,4 +1,30 @@
-# Actual local model for the onboarding recording
+# Current model qualification for the onboarding recording
+
+The current, separately qualified candidate is **Qwen3.5-9B · local demo**. Earlier0.8B captures are retained as rejected historical attempts; none supplies the final answer. This section supersedes the historical active-model settings below. A successful runtime and an accurate, actually rendered response are required before selection.
+
+| Asset | Immutable pin | SHA256 | Bytes | License |
+|---|---|---|---:|---|
+| Unsloth Qwen3.5-9B Q4_K_M | `unsloth/Qwen3.5-9B-GGUF@3885219b6810b007914f3a7950a8d1b469d598a5` | `03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8` |5680522464|Apache2.0|
+| Official llama.cpp CPU server | `b12632@8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052` | `3fe2107f1f58d7fb77c514d65b5873dc68ffe999f8e7fd3789a4448d477eb6e2` |23226195|MIT|
+
+Primary evidence checked2026-11-22:
+
+- [Immutable model LFS pointer](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/raw/3885219b6810b007914f3a7950a8d1b469d598a5/Qwen3.5-9B-Q4_K_M.gguf) supplies the exact object SHA and size.
+- [Immutable quantization publisher card](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/blob/3885219b6810b007914f3a7950a8d1b469d598a5/README.md) identifies Apache2.0 and base modelQwen/Qwen3.5-9B. **The exact upstream conversion commit is not documented.**
+- [Official architecture configuration](https://huggingface.co/Qwen/Qwen3.5-9B/blob/21eca8a083a2121a92fba681f4a7c72cf20ff1a7/config.json) is independent architecture evidence, not proven conversion ancestry.
+
+The original supported agent-file configuration denies tool execution in one explicitly trusted isolated workspace. The full original Maestro core/system remains; permission-dependent guidance changes normally. The same provided-facts prompt is submitted through the real model picker and Send control.
+
+The9B server is configured for16384tokens and must report its actual native262144 capacity; there is no truncation or edited request payload. Eight full-attention layers × four KV heads ×256dimensions × key/value × two bytes ×16384tokens estimates512MiB F16 KV. Together with the model and existing2GiB reserve, the measured preload threshold is8364877024bytes. Other buffers and actual runtime memory still require observation.
+
+Thinking is explicitly disabled through the existing real chat-template flags. The original CPU binary, four-thread cap, single slot, sampling/default384output, full-text identity capture, nine completion gates and20/30/40minute bounds remain. The360s streaming verified download and120s startup guard remain. No latency or answer-quality guarantee follows from these source checks.
+
+A concise machine-readable evidence record is retained in `ai/model-metadata/qwen35-9b-q4-k-m-provenance.json`.
+
+---
+
+# Historical0.8B model configuration and rejected attempts
+
 
 This helper belongs only to the isolated `onboarding-recording` branch. It prepares a real CPU model in the ephemeral GitHub Actions recording job and connects it through Orchestra's supported provider configuration API. The final answer must be submitted, streamed, and shown by the actual Chat UI. No response is injected, replaced, replayed, or hardcoded.
 
