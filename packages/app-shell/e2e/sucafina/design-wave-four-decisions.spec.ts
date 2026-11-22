@@ -351,6 +351,10 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await reflow(page)
     await scrollPageTop(page)
     await capture(page, info, "UI35-dark-320-comparison-test-data")
+    const qualification = page.getByText("A complete numerical comparison is not authorized for these bases, periods or currencies.", { exact: true })
+    await qualification.scrollIntoViewIfNeeded()
+    await expect(qualification).toBeInViewport()
+    await capture(page, info, "UI35-dark-320-comparison-qualification-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
   })
 

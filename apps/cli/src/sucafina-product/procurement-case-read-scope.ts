@@ -30,23 +30,27 @@ export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort
     if (!selection || !reader) return input.read(incoming, call)
     const requestDigest = requestIdentity(request), binding = digestSfValue([call.kind, call.binding])
     const incomingDigest = digestSfValue(incoming), selectionDigest = digestSfValue(selection)
-    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
-      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(incoming) === incomingDigest &&
-      input.selection(call) === selection && selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest && input.readerIdentity() === reader
+    // Request, input and authority fences apply to every case. The Procurement
+    // selection belongs only to the first-application path established below.
+    const requestCurrent = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
+      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(incoming) === incomingDigest
+    const current = () => requestCurrent() && input.selection(call) === selection &&
+      selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest && input.readerIdentity() === reader
+    let procurementEligible = false
     try {
       const result = await input.host.persistence.transaction<ReadResult | typeof unsupported>("dashboard", async () => {
-        if (!current() || !await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+        if (!requestCurrent() || !await input.host.revalidate(call) || !requestCurrent()) return { commit: false, value: changed() }
         const selected = await input.state.read(request, "cases", (state, actor) => {
           const value = state.cases[ref.id]
           return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
             actor.policyVersion === call.binding.policyVersion && value?.id === ref.id && value.incarnation === ref.incarnation &&
             value.participants.includes(actor.principalRef) ? value : undefined
         })
-        if (!current()) return { commit: false, value: changed() }
+        if (!requestCurrent()) return { commit: false, value: changed() }
         if (selected.status !== "ok" || !selected.value) {
           // Eligibility has not been established. Preserve the real case
           // reader's missing-case, participant and C08 refusal contracts.
-          if (!await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+          if (!await input.host.revalidate(call) || !requestCurrent()) return { commit: false, value: changed() }
           return { commit: false, value: unsupported }
         }
         // C12 review/first-application reads only. An ordinary chosen case keeps
@@ -54,6 +58,8 @@ export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort
         if (!selected.value.preparedChanges.length || selected.value.receipts.length || selected.value.preparedChanges.some((change) =>
           change.state !== "planned" || change.target.surface !== "procurement" || change.receipt !== undefined))
           return { commit: false, value: unsupported }
+        procurementEligible = true
+        if (!current()) return { commit: false, value: changed() }
         const scope = proofFor(selected.value, call)
         if (!scope) return { commit: false, value: unsupported }
         try {
@@ -87,7 +93,9 @@ export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort
           return { commit: false, value: structuredClone(value) }
         } finally { scope.close() }
       }, { signal: request.signal })
-      if (!current()) return changed()
+      // An unrelated selected period cannot veto the canonical non-Procurement
+      // reader. Eligible Procurement cases retain the same final selection fence.
+      if (procurementEligible ? !current() : !requestCurrent()) return changed()
       return result === unsupported ? input.read(incoming, call) : result
     } catch { return changed() }
   }
