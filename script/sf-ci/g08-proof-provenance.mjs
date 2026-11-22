@@ -292,7 +292,8 @@ function observedProducerSteps(job, active, observedAt) {
   if (active) {
     const publications = job.steps.filter((step) => step.name === publicationStep)
     need(publications.length <= 1 && publications.every((step) => step.number > previousNumber &&
-      job.steps.indexOf(step) > previousPosition && step.status === "queued" && step.conclusion === null),
+      job.steps.indexOf(step) > previousPosition && ["pending", "queued"].includes(step.status) &&
+      step.conclusion === null && step.started_at === null && step.completed_at === null),
       "PUBLICATION_BEFORE_ORIGINAL_DRIVER_COMPLETION")
   }
   return observed

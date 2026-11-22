@@ -120,7 +120,8 @@ async function fixture(zipName = "deflated.zip") {
       job.status = "in_progress"; job.conclusion = null; job.completed_at = null
       job.steps = job.steps.slice(0, 7)
       Object.assign(job.steps[5], { status: "in_progress", conclusion: null, completed_at: null })
-      Object.assign(job.steps[6], { status: "queued", conclusion: null, started_at: null, completed_at: null })
+      // GitHub original job137308970818/run45055263348 exposes future steps as pending with null timestamps.
+      Object.assign(job.steps[6], { status: "pending", conclusion: null, started_at: null, completed_at: null })
       data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[0] = structuredClone(job)
     },
     changeAuthorization(change) {
@@ -177,6 +178,11 @@ test("execution authorization observes original permission and current runner wi
   assert(f.calls.includes(base + "/actions/jobs/200"))
   assert.equal(f.downloads.length, 0)
   assert(!f.calls.some((name) => name.includes("/actions/artifacts/")))
+})
+test("pre-execution also accepts a queued publication only while every timestamp remains null", async () => {
+  const f = await fixture(); f.activate(); f.job.steps[6].status = "queued"
+  isControl(await exerciseAuthorizationControl(f.authInput, f.api, f.env, now))
+  assert.equal(f.downloads.length, 0)
 })
 test("real exports do not accept an injected API or produce source proof from hosted controls", async () => {
   const f = await fixture()
@@ -351,6 +357,8 @@ for (const [name, modify, time] of [
   assert.equal(f.calls.length, 0); assert.equal(f.downloads.length, 0)
 })
 const activeRefusals = [
+  ["publication has already started", (f) => { f.job.steps[6].started_at = "2026-01-01T01:04:00Z" }, "PUBLICATION_BEFORE_ORIGINAL_DRIVER_COMPLETION"],
+  ["publication has already completed", (f) => { Object.assign(f.job.steps[6], { status: "completed", conclusion: "success", started_at: "2026-01-01T01:03:00Z", completed_at: "2026-01-01T01:04:00Z" }) }, "PUBLICATION_BEFORE_ORIGINAL_DRIVER_COMPLETION"],
   ["authorization created after job start", (f) => { f.comment.created_at = f.comment.updated_at = "2026-01-01T01:02:00Z" }, "AUTHORIZATION_AFTER_PRODUCER_START"],
   ["authorization edited between job start and admission", (f) => { f.comment.updated_at = "2026-01-01T01:02:00Z" }, "AUTHORIZATION_AFTER_PRODUCER_START"],
   ["completed run replayed before execution", (f) => { f.run.status = "completed"; f.run.conclusion = "success" }, "ORIGINAL_ACTIVE_RUN_REQUIRED"],
