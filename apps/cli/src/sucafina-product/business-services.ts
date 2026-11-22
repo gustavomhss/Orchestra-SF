@@ -90,8 +90,21 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
   const procurementRequest = input.procurementRequest
   const requestPeriod = procurementRequest && { period: structuredClone(procurementRequest.period), expiresAt: Date.now() + 60_000 }
-  const selectedPeriod = (call: TrustedDomainContext) => pagePeriods.get(call) ?? periods.get(key(call)) ??
-    (procurementRequest && host.requestFor(call) === procurementRequest.request ? requestPeriod : undefined)
+  // SNAPSHOT_ONLY_DIAGNOSTIC: origin enum only; preserve the original nullish lookup order.
+  const diagnosticOrigins = new WeakMap<TrustedDomainContext, "page" | "global" | "request" | "none">()
+  const noteOrigin = (call: TrustedDomainContext, origin: "page" | "global" | "request" | "none") => {
+    if (diagnosticOrigins.get(call) !== origin) console.info("SF_DECISIONS_DIAGNOSTIC origin:" + origin)
+    diagnosticOrigins.set(call, origin)
+  }
+  const selectedPeriod = (call: TrustedDomainContext) => {
+    const page = pagePeriods.get(call)
+    if (page != null) { noteOrigin(call, "page"); return page }
+    const global = periods.get(key(call))
+    if (global != null) { noteOrigin(call, "global"); return global }
+    const request = procurementRequest && host.requestFor(call) === procurementRequest.request ? requestPeriod : undefined
+    noteOrigin(call, request != null ? "request" : "none")
+    return request
+  }
   const contextFor = async (call: TrustedDomainContext) => {
     const request = host.requestFor(call)
     const selected = selectedPeriod(call)

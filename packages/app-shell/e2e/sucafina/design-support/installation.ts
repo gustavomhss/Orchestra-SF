@@ -64,6 +64,8 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+        // SNAPSHOT_ONLY_DIAGNOSTIC: no raw child output or exception buffers.
+        if (/^SF_DECISIONS_DIAGNOSTIC (?:origin:(?:page|global|request|none)|fallback:(?:no-selection|no-reader)|current:(?:request-identity|request-aborted|request-digest|binding|incoming|selection-identity|selection-expired|selection-digest|reader-identity)|changed:(?:entry-request-missing|entry-request-aborted|transaction-entry|case-read|case-unavailable|fence-before|snapshots|principal|fence-admitted|fence-after|transaction-egress|exception)|exception:(?:transaction|revalidation|case-read|scope-before|snapshots|authenticate|materialized|scope-admitted|canonical-read|scope-after|scope-close|transaction-egress))$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>

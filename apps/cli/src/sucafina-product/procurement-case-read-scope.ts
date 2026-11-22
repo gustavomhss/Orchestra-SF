@@ -20,33 +20,51 @@ type ReadResult = Awaited<ReturnType<DecisionCasePort["read"]>>
 export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort["read"] {
   const proofFor = createSfScenarioProcurementProofScope(input)
   const unsupported = Symbol("procurement-case-read-unsupported")
-  const changed = () => ({ status: "unavailable" as const, reason: "procurement-case-read-changed" })
+  // SNAPSHOT_ONLY_DIAGNOSTIC: fixed branch enums; never emit input, identity or exception data.
+  const changed = (stage: string) => {
+    console.info("SF_DECISIONS_DIAGNOSTIC changed:" + stage)
+    return { status: "unavailable" as const, reason: "procurement-case-read-changed" }
+  }
   return async (incoming, call) => {
     if (call.kind !== "ui" || !input.host.persistence.currentSnapshots) return input.read(incoming, call)
     const ref = parseCaseRef(incoming.caseRef)
     if (!ref) return input.read(incoming, call)
     const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
-    if (!request || request.signal.aborted) return changed()
-    if (!selection || !reader) return input.read(incoming, call)
+    if (!request || request.signal.aborted) return changed(request ? "entry-request-aborted" : "entry-request-missing")
+    if (!selection || !reader) {
+      console.info("SF_DECISIONS_DIAGNOSTIC fallback:" + (!selection ? "no-selection" : "no-reader"))
+      return input.read(incoming, call)
+    }
     const requestDigest = requestIdentity(request), binding = digestSfValue([call.kind, call.binding])
     const incomingDigest = digestSfValue(incoming), selectionDigest = digestSfValue(selection)
-    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
-      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(incoming) === incomingDigest &&
-      input.selection(call) === selection && selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest && input.readerIdentity() === reader
+    const checked = (value: boolean, stage: string) => {
+      if (!value) console.info("SF_DECISIONS_DIAGNOSTIC current:" + stage)
+      return value
+    }
+    // Evaluate each original expression once, in its original short-circuit order.
+    const current = () => checked(input.host.requestFor(call) === request, "request-identity") &&
+      checked(!request.signal.aborted, "request-aborted") && checked(requestIdentity(request) === requestDigest, "request-digest") &&
+      checked(digestSfValue([call.kind, call.binding]) === binding, "binding") && checked(digestSfValue(incoming) === incomingDigest, "incoming") &&
+      checked(input.selection(call) === selection, "selection-identity") && checked(selection.expiresAt > Date.now(), "selection-expired") &&
+      checked(digestSfValue(selection) === selectionDigest, "selection-digest") && checked(input.readerIdentity() === reader, "reader-identity")
+    let diagnosticStage = "transaction"
     try {
       const result = await input.host.persistence.transaction<ReadResult | typeof unsupported>("dashboard", async () => {
-        if (!current() || !await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+        diagnosticStage = "revalidation"
+        if (!current() || !await input.host.revalidate(call) || !current()) return { commit: false, value: changed("transaction-entry") }
+        diagnosticStage = "case-read"
         const selected = await input.state.read(request, "cases", (state, actor) => {
           const value = state.cases[ref.id]
           return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
             actor.policyVersion === call.binding.policyVersion && value?.id === ref.id && value.incarnation === ref.incarnation &&
             value.participants.includes(actor.principalRef) ? value : undefined
         })
-        if (!current()) return { commit: false, value: changed() }
+        if (!current()) return { commit: false, value: changed("case-read") }
         if (selected.status !== "ok" || !selected.value) {
           // Eligibility has not been established. Preserve the real case
           // reader's missing-case, participant and C08 refusal contracts.
-          if (!await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+          diagnosticStage = "revalidation"
+          if (!await input.host.revalidate(call) || !current()) return { commit: false, value: changed("case-unavailable") }
           return { commit: false, value: unsupported }
         }
         // C12 review/first-application reads only. An ordinary chosen case keeps
@@ -54,42 +72,58 @@ export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort
         if (!selected.value.preparedChanges.length || selected.value.receipts.length || selected.value.preparedChanges.some((change) =>
           change.state !== "planned" || change.target.surface !== "procurement" || change.receipt !== undefined))
           return { commit: false, value: unsupported }
+        diagnosticStage = "scope-before"
         const scope = proofFor(selected.value, call)
         if (!scope) return { commit: false, value: unsupported }
         try {
           const before = await scope.snapshot()
           if (before.kind === "unsupported") return { commit: false, value: unsupported }
-          if (before.kind !== "sf-scenario-procurement-fence" || !current() || !scope.current()) return { commit: false, value: changed() }
+          if (before.kind !== "sf-scenario-procurement-fence" || !current() || !scope.current()) return { commit: false, value: changed("fence-before") }
+          diagnosticStage = "snapshots"
           const snapshots = input.host.persistence.currentSnapshots?.()
-          if (!snapshots) return { commit: false, value: changed() }
+          if (!snapshots) return { commit: false, value: changed("snapshots") }
           const snapshotDigest = digestSfValue(snapshots)
+          diagnosticStage = "authenticate"
           const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshots.procurement, "procurement") })
           if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") ||
             !await input.host.revalidate(call) || !current() || !scope.current() ||
-            digestSfValue(input.host.persistence.currentSnapshots?.()) !== snapshotDigest) return { commit: false, value: changed() }
+            digestSfValue(input.host.persistence.currentSnapshots?.()) !== snapshotDigest) return { commit: false, value: changed("principal") }
           const roles = principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role)
           // isCurrent alone also accepts another actor's or a legacy field scope.
           // A protected archive causes the producer to issueForActor even for a
           // fresh reference. Admit only the exact scope it would reissue unchanged.
+          diagnosticStage = "materialized"
           if (!materialized(selected.value, call, snapshots.procurement, selection.period, roles, principal.canWrite))
             return { commit: false, value: unsupported }
+          diagnosticStage = "scope-admitted"
           const admitted = await scope.snapshot()
           if (admitted.kind !== "sf-scenario-procurement-fence" || admitted.digest !== before.digest || !current() || !scope.current())
-            return { commit: false, value: changed() }
+            return { commit: false, value: changed("fence-admitted") }
+          diagnosticStage = "canonical-read"
           const value = await input.read(incoming, call)
           // Never retry a canonical refusal or a nested writer outside this lock.
           if (value.status !== "ok") return { commit: false, value }
+          diagnosticStage = "scope-after"
           const after = await scope.snapshot()
           if (after.kind !== "sf-scenario-procurement-fence" || after.digest !== before.digest || !current() || !scope.current() ||
             value.value.case.id !== ref.id || value.value.case.incarnation !== ref.incarnation || value.value.case.version !== selected.value.version)
-            return { commit: false, value: changed() }
+            return { commit: false, value: changed("fence-after") }
           // preparedChanges/receipts are canonical public views, not raw C08 bytes.
           return { commit: false, value: structuredClone(value) }
-        } finally { scope.close() }
+        } finally {
+          const pendingStage = diagnosticStage
+          diagnosticStage = "scope-close"
+          scope.close()
+          diagnosticStage = pendingStage
+        }
       }, { signal: request.signal })
-      if (!current()) return changed()
+      diagnosticStage = "transaction-egress"
+      if (!current()) return changed("transaction-egress")
       return result === unsupported ? input.read(incoming, call) : result
-    } catch { return changed() }
+    } catch {
+      console.info("SF_DECISIONS_DIAGNOSTIC exception:" + diagnosticStage)
+      return changed("exception")
+    }
   }
 }
 
