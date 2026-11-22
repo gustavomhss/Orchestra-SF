@@ -41,7 +41,7 @@ export const sha256Lines = (items) => createHash("sha256").update([...items].sor
  */
 const BROWSER_POOL_ENTRY = "wp01/browser-fixture.ts"
 
-function staticImports(file) {
+function staticImports(file, unresolved) {
   let text
   try { text = readFileSync(file, "utf8") } catch { fail("shard input is unreadable: " + file) }
   const found = []
@@ -53,18 +53,19 @@ function staticImports(file) {
     if (/\.js$/.test(target)) candidates.push(target.replace(/\.js$/, ".ts"), target.replace(/\.js$/, ".tsx"))
     const candidate = candidates.find((entry) => existsSync(entry) && statSync(entry).isFile())
     if (candidate) found.push(candidate)
+    else unresolved?.add(path.relative(process.cwd(), file) + " → " + specifier)
   }
   return found
 }
 
 /** Whole static graph reachable from the selection; missing/cycle edges never decide alone. */
-function staticGraph(files, root) {
+function staticGraph(files, root, unresolved) {
   const graph = new Map()
   const queue = files.map((file) => path.resolve(root, file))
   while (queue.length) {
     const file = queue.pop()
     if (graph.has(file)) continue
-    const imports = staticImports(file)
+    const imports = staticImports(file, unresolved)
     graph.set(file, imports)
     for (const next of imports) if (!graph.has(next)) queue.push(next)
   }
@@ -634,7 +635,13 @@ function cli() {
       fail("qualification inputs missing from this candidate (" + missing.size + "):\n" + [...missing].sort().join("\n"))
     }
     for (const suite of suites) selectSuiteFiles(manifest, suite.id)
-    loadPoolInventory(process.cwd())
+    const root = process.cwd()
+    const pool = loadPoolInventory(root)
+    const unresolved = new Set()
+    staticGraph([pool.entry.path, ...pool.sources.map((source) => source.path)], root, unresolved)
+    if (unresolved.size) {
+      fail("unresolved relative imports in ordered pool (" + unresolved.size + "):\n" + [...unresolved].sort().join("\n"))
+    }
     console.log("SF_CI_QUALIFICATION_INPUTS_PRESENT")
     return
   }
