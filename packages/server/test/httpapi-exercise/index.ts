@@ -592,6 +592,8 @@ export const scenarios: Scenario[] = [
 
 export function main(args: string[]) {
   return Effect.gen(function* () {
+    if (!exerciseGlobalRoot) throw new Error("HttpApi exercise requires a non-empty global storage path")
+    const ownsGlobal = process.env.ORCHESTRA_HTTPAPI_EXERCISE_GLOBAL === undefined
     const shared: { auth: ExerciseApp | undefined } = { auth: undefined }
     const options = parseOptions(args)
     const apiRoutes = routeKeys(OpenApi.fromApi(Api))
@@ -605,7 +607,7 @@ export function main(args: string[]) {
           await shared.auth?.dispose()
           await cleanupExercisePaths()
           const { lstat } = await import("node:fs/promises")
-          for (const owned of [exerciseProbeDirectory, ...(!process.env.ORCHESTRA_HTTPAPI_EXERCISE_GLOBAL ? [exerciseGlobalRoot] : [])])
+          for (const owned of [exerciseProbeDirectory, ...(ownsGlobal ? [exerciseGlobalRoot] : [])])
             await lstat(owned).then(() => { throw new Error("HttpApi owned temporary storage cleanup incomplete") }, (error: unknown) => {
               if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error
             })
