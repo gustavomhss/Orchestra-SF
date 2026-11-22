@@ -135,13 +135,29 @@ export function createSfPortfolioCoverage(input: {
     return { status: "ok", value: entries }
   }
   const evidence: Evidence = {
-    entries: (scenario, baseline, call) => captureEntries(scenario, baseline, call),
+    entries: async (scenario, baseline, call) => {
+      const held = selections.get(call)
+      if (!held) return unavailable()
+      if (!held.value.scenario.operations.length && !held.value.scenario.assumptions.length) {
+        const proof = proofs.get(call), run = execution.getStore()
+        if (!proof || !run || proof.run !== run || run.call !== call || proof.source !== held.source ||
+          proof.binding !== held.binding || !same(proof.selection, held.value) || !same(proof.expected, scenario)) return unavailable()
+        // prepareNoop proved this exact source result. Reopen every reader and
+        // fence again, retaining only its authenticated evidence order.
+        return captureEntries(scenario, baseline, call, structuredClone(proof.expected.costCoverage.evaluatedSourceRefs))
+      }
+      return captureEntries(scenario, baseline, call)
+    },
     resolve: async (refs, call) => {
       const proof = proofs.get(call)
       if (!active || !proof || proof.source !== host.requestFor(call) || proof.source.signal.aborted || proof.binding !== binding(call) ||
         proof.run && !currentRun(proof.run) ||
         await readState(proof.selection, call) !== proof.state || !same(await business.readSourceFences(call), proof.sources)) return []
-      return await fresh(refs, call) ?? []
+      const order = proof.expected.costCoverage.evaluatedSourceRefs
+      // Reopen the exact producer order after proving a bijection of full evidence identities.
+      if (refs.length !== order.length || refs.some((ref, index) => refs.findIndex((other) => same(other, ref)) !== index) ||
+        order.some((ref, index) => order.findIndex((other) => same(other, ref)) !== index || !refs.some((other) => same(other, ref)))) return []
+      return await fresh(structuredClone(order), call) ?? []
     },
     supports: (entry, resolutions) => {
       const classification = classifications.get(entry)
