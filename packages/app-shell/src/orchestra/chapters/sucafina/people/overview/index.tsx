@@ -20,7 +20,7 @@ const key = (value: string) => value as SfCopyKey
  * no frontend recomputation of attrition, staff ratio, tenure or headcount.
  */
 export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const navigate = useNavigate()
   const session = createPeopleSession<HeadcountData>("CAP06", () => props.route.href,
     (transport, signal) => {
@@ -46,7 +46,7 @@ export function SfPeopleOverviewView(props: SfSurfaceProps<"CAP06">): JSX.Elemen
     <Show when={value !== undefined}>
       <div class="sf-people-stat">
         <dt>{t(key(labelKey))}</dt>
-        <dd>{value}</dd>
+        <dd>{typeof value === "number" ? new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value) : value}</dd>
       </div>
     </Show>
   )

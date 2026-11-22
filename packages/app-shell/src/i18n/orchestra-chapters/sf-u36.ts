@@ -26,6 +26,9 @@ export const SF_U36_COPY = {
   "sf.u36.self": "Block self approval",
   "sf.u36.active": "Require active supplier",
   "sf.u36.upload": "Attachment limit (bytes)",
+  "sf.u36.uploadReadable": "Equivalent to {{size}} MiB (1 MiB = 1,048,576 bytes).",
+  "sf.u36.enabled": "Enabled",
+  "sf.u36.disabled": "Disabled",
   "sf.u36.reminder": "Reminder after days",
   "sf.u36.escalation": "Escalation after days",
   "sf.u36.name": "Name",
@@ -44,14 +47,14 @@ export const SF_U36_COPY = {
   "sf.u36.requestState": "Requested state",
   "sf.u36.status": "Status",
   "sf.u36.addHolder": "Add row",
-  "sf.u36.first": "first",
-  "sf.u36.matrixOption": "matrix",
+  "sf.u36.first": "First approval level",
+  "sf.u36.matrixOption": "Approval matrix",
   "sf.u36.error": "Invalid matrix or currencies",
   "sf.u36.resetUnavailable": "Restore baseline unavailable without the authorized default-settings projection",
   "sf.u36.outcome": "Checking the outcome…"
 } as const
 
-export const SF_U36_COPY_BR = {
+export const SF_U36_COPY_BR: Readonly<Record<keyof typeof SF_U36_COPY, string>> = {
   "sf.cap28.title": "Configuração",
   "sf.cap28.primary": "Revisar configurações",
   "sf.u36.general": "Política geral",
@@ -76,6 +79,9 @@ export const SF_U36_COPY_BR = {
   "sf.u36.self": "Bloquear autoaprovação",
   "sf.u36.active": "Exigir fornecedor ativo",
   "sf.u36.upload": "Limite de anexos (bytes)",
+  "sf.u36.uploadReadable": "Equivale a {{size}} MiB (1 MiB = 1.048.576 bytes).",
+  "sf.u36.enabled": "Ativado",
+  "sf.u36.disabled": "Desativado",
   "sf.u36.reminder": "Lembrar após quantos dias",
   "sf.u36.escalation": "Escalar após quantos dias",
   "sf.u36.name": "Nome",
@@ -94,8 +100,8 @@ export const SF_U36_COPY_BR = {
   "sf.u36.requestState": "Estado solicitado",
   "sf.u36.status": "Status",
   "sf.u36.addHolder": "Adicionar linha",
-  "sf.u36.first": "Primeiro nível",
-  "sf.u36.matrixOption": "Por matriz",
+  "sf.u36.first": "Primeiro nível de aprovação",
+  "sf.u36.matrixOption": "Matriz de aprovação",
   "sf.u36.error": "Matriz ou moedas inválidas",
   "sf.u36.resetUnavailable": "Restauração indisponível sem a projeção autorizada das configurações iniciais",
   "sf.u36.outcome": "Verificando o resultado…"

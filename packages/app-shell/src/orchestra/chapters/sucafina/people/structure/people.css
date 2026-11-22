@@ -250,3 +250,7 @@
 @media (prefers-reduced-motion:reduce) {
   .sf-people-workspace * { scroll-behavior: auto; transition: none; animation: none; }
 }
+
+.sf-people-workspace .sf-people-field-help { color: var(--mx-dim); font-size: var(--orchestra-font-size-xs); line-height: 1.5; }
+.sf-people-workspace .sf-people-table-region { scrollbar-width: thin; scrollbar-color: var(--mx-line) transparent; padding-block-end: 8px; }
+.sf-people-workspace[data-sf-surface="CAP06"] .sf-people-table :is(th, td):first-child { position: sticky; inset-inline-start: 0; z-index: 1; background: var(--orchestra-surface); }

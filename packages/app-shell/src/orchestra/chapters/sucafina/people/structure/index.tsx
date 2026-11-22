@@ -67,7 +67,7 @@ const toValues = (value: object, fields: readonly PeopleField[]): PeopleFormValu
 }
 
 export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const navigate = useNavigate()
   const session = createPeopleSession<StructureData>("CAP07", () => props.route.href,
     (transport, signal) => createSfPeopleClient(transport)["domain.page.CAP07"]({
@@ -270,6 +270,8 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
   const fieldValue = (field: string, value: unknown) => {
     if (value === undefined || value === null || value === "") return t(key("sf.u03.design.notRecorded"))
     if (field === "leaderId") return nameForLeader(String(value))
+    if ((field === "start" || field === "end") && typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)))
+      return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value + "T00:00:00Z"))
     const labels: Readonly<Record<string, SfCopyKey>> = {
       Active: key("sf.u03.active"), "On Leave": key("sf.u03.onLeave"),
       Terminated: key("sf.u03.terminated"), Employee: key("sf.u03.employee"), Contractor: key("sf.u03.contractor"),
@@ -313,7 +315,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
                   </div>
                   <dl class="sf-people-profile-meta">
                     <div><dt>{t(key("sf.u03.location"))}</dt><dd>{data().cio.location || t(key("sf.u03.design.notRecorded"))}</dd></div>
-                    <div><dt>{t(key("sf.u03.start"))}</dt><dd>{data().cio.start || t(key("sf.u03.design.notRecorded"))}</dd></div>
+                    <div><dt>{t(key("sf.u03.start"))}</dt><dd>{fieldValue("start", data().cio.start)}</dd></div>
                   </dl>
                 </section>
                 <section class="sf-people-section" aria-label={t(key("sf.u03.leaders"))}>

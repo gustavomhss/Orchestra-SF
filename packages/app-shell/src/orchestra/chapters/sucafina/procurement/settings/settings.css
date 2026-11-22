@@ -26,3 +26,9 @@
   .sf-n21-settings-footer { align-items: stretch; }
   .sf-n21-settings-footer .mx-btn { inline-size: 100%; }
 }
+
+.sf-n21-settings-nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 8px; }
+.sf-n21-settings-nav a { padding: 8px 12px; border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); font-size: var(--orchestra-font-size-sm); }
+.sf-n21-settings-nav a:is(:hover, :focus-visible) { background: var(--mx-raised); text-decoration: none; }
+.sf-n21-fieldset:target > legend { color: var(--orchestra-accent); }
+.sf-n21-field-help { color: var(--mx-dim); font-size: var(--orchestra-font-size-xs); line-height: 1.5; }

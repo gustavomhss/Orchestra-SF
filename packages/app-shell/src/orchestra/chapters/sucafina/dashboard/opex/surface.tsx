@@ -91,6 +91,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
     : <span class="sf-budget-number">{new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(value)}</span>
   const monthName = (month: number) => new Intl.DateTimeFormat(locale(), { month: "short", timeZone: "UTC" })
     .format(new Date(Date.UTC(year(), month - 1, 1)))
+  const monthPeriod = (month: number) => Number.isInteger(month) && month >= 1 && month <= 12
+    ? new Intl.DateTimeFormat(locale(), { month: "long", year: "numeric", timeZone: "UTC" })
+      .format(new Date(Date.UTC(year(), month - 1, 1)))
+    : String(month)
   const flagLabel = (flag: string | undefined) => props.capability === "CAP05"
     ? flag === "dev-green" ? t(capexKey("sf.u40.flagGreen")) : flag === "dev-amber" ? t(capexKey("sf.u40.flagAmber")) :
       flag === "dev-red" ? t(capexKey("sf.u40.flagRed")) : flag ?? t(key("missing"))
@@ -521,7 +525,10 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
       value: value.length ? ({ kind: "text", text: { kind: "data", text:
         (props.capability === "CAP04" || props.capability === "CAP05") && label === "flag" ? flagLabel(value) :
         (props.capability === "CAP04" || props.capability === "CAP05") && label === "field" &&
-          (value === "budget" || value === "actual" || value === "forecast") ? t(key(value)) : value,
+          (value === "budget" || value === "actual" || value === "forecast") ? t(key(value)) :
+        label === "month" ? monthPeriod(Number(value)) :
+        ["budget", "actual", "forecast", "annual", "annualBudget", "yearAmount"].includes(label) && numberPresent(value)
+          ? new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(Number(value)) : value,
       } } as SfDisplayValue) :
         ({ kind: "missing", reason: { key: key("missing") } } as SfDisplayValue),
     }))
@@ -885,7 +892,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         <Show when={editor.action === "save-entry"}>
           <div class="sf-opex-field sf-opex-month-field" style={fieldDisplay()}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
-          <input id={formId + "-month"} type="number" value={form().month} readOnly />
+          <input id={formId + "-month"} type="text" value={monthPeriod(form().month)} readOnly />
           </div>
           <For each={["budget", "actual", "forecast"] as const}>{(field) => (
             <div class="sf-opex-field" style={fieldDisplay()}>
@@ -897,7 +904,7 @@ export function SfBudgetSurface(props: SfBudgetSurfaceProps): JSX.Element {
         <Show when={editor.action === "save-deviation"}>
           <div class="sf-opex-field sf-opex-month-field" style={fieldDisplay()}>
           <label for={formId + "-month"}>{t(key("month"))}</label>
-          <input id={formId + "-month"} type="number" value={form().month} readOnly />
+          <input id={formId + "-month"} type="text" value={monthPeriod(form().month)} readOnly />
           </div><div class="sf-opex-field" style={fieldDisplay()}>
           <label for={formId + "-flag"}>{t(key("flag"))}</label>
           <select id={formId + "-flag"} value={form().flag} disabled={fieldsLocked()} onChange={(event) => updateField("flag", event.currentTarget.value)}>

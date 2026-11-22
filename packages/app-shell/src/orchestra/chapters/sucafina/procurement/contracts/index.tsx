@@ -459,7 +459,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       coverage={{ state: "complete", summary: message("sf.u15.reviewSummary"),
         reasons: [], knownCount: fields.length, expectedCount: fields.length }}
       blockingReasons={[]}
-      confirmation={{ kind: "admitted", labelKey: key("sf.u15.confirm"),
+      confirmation={{ kind: "admitted", labelKey: key(actionKey),
         purpose: review.action, binding: { kind: "catalog-command",
           operationId: review.action === "save" ? "domain.command.CAP14.save" : "domain.command.CAP14.delete",
           version: { kind: "record", expectedVersion: review.version },
