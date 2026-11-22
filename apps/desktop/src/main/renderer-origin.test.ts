@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test"
+import { EventEmitter } from "node:events"
 import {
+  guardRendererRedirects,
   isRendererOrigin,
   rendererCsp,
   rendererCspReportOnly,
@@ -46,6 +48,35 @@ test("only the renderer's own origin is trusted", () => {
   expect(isRendererOrigin(undefined, dev)).toBe(false)
   expect(isRendererOrigin("", dev)).toBe(false)
 })
+
+test("a privileged renderer cancels external redirects and permits its own origin", () => {
+  for (const packaged of [true, false]) {
+    const contents = new EventEmitter()
+    const devUrl = rendererDevUrl(packaged, "http://localhost:5173")
+    guardRendererRedirects(contents, (url) => isRendererOrigin(url, devUrl))
+
+    expect(redirectCancelled(contents, "oc://renderer/index.html")).toBe(false)
+    expect(redirectCancelled(contents, "http://localhost:5173/index.html")).toBe(packaged)
+    expect(redirectCancelled(contents, "http://localhost:5174/index.html")).toBe(true)
+    expect(redirectCancelled(contents, "https://outside.example/")).toBe(true)
+    expect(redirectCancelled(contents, "oc://other/index.html")).toBe(true)
+  }
+})
+
+test("the dedicated capture renderer cancels redirects even to a local renderer URL", () => {
+  const contents = new EventEmitter()
+  guardRendererRedirects(contents)
+
+  expect(redirectCancelled(contents, "oc://renderer/index.html")).toBe(true)
+  expect(redirectCancelled(contents, "https://outside.example/")).toBe(true)
+})
+
+function redirectCancelled(contents: EventEmitter, url: string) {
+  let cancelled = false
+  const emitted = contents.emit("will-redirect", { url, preventDefault: () => { cancelled = true } })
+  expect(emitted).toBe(true)
+  return cancelled
+}
 
 test("the enforced policy is the safe subset and the full one stays report-only", () => {
   expect(rendererCsp).toBe("object-src 'none'; base-uri 'self'")

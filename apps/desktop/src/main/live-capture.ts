@@ -1,6 +1,7 @@
 import { BrowserWindow, desktopCapturer, session } from "electron"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { guardRendererRedirects } from "./renderer-origin"
 
 // Microphone and system-audio capture for the live seat, in a hidden window on its own session so its media
 // permissions and display-media handler never reach the app's windows. System audio is Electron's display-media
@@ -51,6 +52,7 @@ export async function startCapture(handlers: CaptureHandlers, want = { microphon
   )
   contents.setWindowOpenHandler(() => ({ action: "deny" }))
   contents.on("will-navigate", (event) => event.preventDefault())
+  guardRendererRedirects(contents)
   contents.ipc.on("live-capture:audio", (_, me: Float32Array, them: Float32Array) => handlers.audio(me, them))
   contents.ipc.on("live-capture:status", (_, sense, status, reason) => handlers.status(sense, status, String(reason)))
   contents.ipc.on("live-capture:state", (_, state, reason) => handlers.state(state, String(reason)))

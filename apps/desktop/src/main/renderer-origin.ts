@@ -22,6 +22,18 @@ export function isRendererOrigin(value: string | undefined, devUrl: string | und
   return url.origin === new URL(devUrl).origin
 }
 
+type RedirectDetails = { url: string; preventDefault(): void }
+
+/** Cancel redirects before these windows can load a document outside their renderer policy. */
+export function guardRendererRedirects(
+  contents: { on(event: "will-redirect", listener: (details: RedirectDetails) => void): unknown },
+  allows?: (url: string) => boolean,
+) {
+  contents.on("will-redirect", (details) => {
+    if (!allows?.(details.url)) details.preventDefault()
+  })
+}
+
 /**
  * The webRequest filter for dev server responses, or none for a packaged app. Every listener runs in the main process
  * for each matching request, so it is never left unfiltered: SSE and API calls would all round-trip through main. The
