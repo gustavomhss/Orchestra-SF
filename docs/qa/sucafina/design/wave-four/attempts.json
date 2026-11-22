@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22 01:38:18 UTC",
-  "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
+  "updatedThrough": "2026-11-22T02:04:58Z",
+  "note": "All 68 recorded attempts are resolved. Failed and invalid diagnostic attempts remain explicit; successful technical or visual evidence is attributed only to its exact source snapshot. User acceptance and merge remain pending.",
   "attempts": [
     {
       "group": "technical",
@@ -1275,11 +1275,60 @@
         }
       },
       "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
-      "status": "running",
+      "status": "passed",
       "cause": "Minimal Procurement case-read eligibility scoping fix; original common and eligible Procurement fences preserved. Full source-positive journey unchanged plusfocused UI35comparison qualification capture. No snapshot diagnostic source logging.",
       "diagnosticSourceLogging": false,
       "run": 44972048219,
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219"
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219",
+      "job": 137053751021,
+      "tests": 1,
+      "captures": 41,
+      "skippedCaptures": 0,
+      "observedSourceReads": 56,
+      "readsAfterSelectionTTL": 21,
+      "sourceFailures": 0,
+      "pageErrors": [],
+      "consoleErrors": []
+    },
+    {
+      "group": "technical",
+      "attempt": 17,
+      "head": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "snapshot": "e6b7de08b4cbb7790a585e2292bb985a41e60902",
+      "branch": "ci-run-sf20gates17",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "status": "passed",
+      "checks": 15,
+      "expectedRegressionTests": 89,
+      "cause": "Final existing14 checks/87cases plus2focused case-read-scope tests on corrected product; canonical Planner source/selection expiry and structural negative Procurement/common-fence boundaries. Same functional product as Decisions14; later changes onlytest/docs.",
+      "run": 44972927162,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162",
+      "job": 137056417643,
+      "passedChecks": 15,
+      "regressionTests": 89,
+      "caseScopeAssertions": 81,
+      "fullCliTypecheck": "passed"
     }
-  ]
+  ],
+  "finalQualification": {
+    "technicalRun": 44972927162,
+    "technicalChecks": 15,
+    "regressionCases": 89,
+    "decisionsRun": 44972048219,
+    "allAttemptsResolved": true
+  }
 }

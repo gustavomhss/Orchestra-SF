@@ -1,12 +1,14 @@
 # Technical verification and typechecks
 
-## Latest completed composed candidate
+## Final qualified candidate
 
-[Gate16 / run 44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754) passed all **14 checks / 87 regression cases** on snapshot `1fe0927db37e63f6e9d70537c524ec5f6ead6ac0`, product `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`, after incorporating exact dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. Application declarations, E2E semantics and full CLI types each exited 0. Exact-dev guards passed 78 rules with 0 errors, 21 warnings and 0 approvals; all 7 generated palette files remained byte-identical.
+[Gate17 / run 44972927162](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) passed all **15 checks / 89 regression cases** on snapshot `e6b7de08b4cbb7790a585e2292bb985a41e60902`, product `0550c4bb8fc3b4b4e68561777010ca03483e2391`, incorporating exact dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. Application declarations, E2E semantics and full CLI types each exited 0. Exact-dev guards passed 78 rules over 254 files with 0 errors, 21 warnings and 0 approvals; all 7 generated palette files remained byte-identical.
 
-The subsequent case-read scoping correction at `e5494ff044ee46cdd80c1d754131c284538d4d31` and its forthcoming regression require the final technical gate. Gate16 is not relabeled as validation of later source edits.
+The final gate includes the case-read scoping correction at `e5494ff044ee46cdd80c1d754131c284538d4d31` and its two new regression tests, with 81 assertions. The tests distinguish the canonical Planner/source path under controlled unit time from explicitly structural negative Procurement fixtures. Identity is supplied by a bounded unit fixture; positive C12 preparation, first application and receipts are not claimed. The 21 existing warnings did not increase.
 
-Gate14's diagnostic URL method-access mistake was corrected and verified by Gate15, which also included the final UI41 CSS. The historical CLI diagnostics below were corrected by incorporated upstream commits and remain history, not a current baseline limitation.
+The same functional product passed the complete Decisions14 browser journey using real enrollment and the unmodified clock. The later changes from browser parent e5494ff0 to technical parent 0550c4bb are test/documentation only.
+
+Historically, Gate16 passed the complete third dev composition before the case-read correction. Gate14's diagnostic URL method-access mistake was corrected and verified by Gate15, which also included the final UI41 CSS. Earlier full-CLI diagnostics were corrected by incorporated upstream commits and remain history, not a current baseline limitation.
 
 ## E2E typecheck boundary
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "FAILED_FULL_JOURNEY_NOT_ACCEPTED",
+  "status": "RESOLVED_AND_REGRESSION_VERIFIED",
   "run": 44968620170,
   "job": 137043213784,
   "snapshot": "47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab",
@@ -41,15 +41,6 @@
     "The wrapper shares its reason across request, identity, selection, authority and persistence failures.",
     "No session expiration or scanner TTL inferred."
   ],
-  "nextVerification": {
-    "run": 44970274302,
-    "snapshot": "a73d8ff8ab8c01fd3520e0b4421d49f91ae86f68",
-    "diagnosticCommit": "05fa231a25874f97a3c82cae8b176228368ec307",
-    "sourceProduct": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
-    "kind": "SNAPSHOT_ONLY_SAFE_BRANCH_ENUMS",
-    "peerReview": "PASSED_STATIC",
-    "noProductIntegration": true
-  },
   "resolvedByDiagnostic": {
     "run": 44970679515,
     "job": 137049552677,
@@ -75,7 +66,7 @@
       "reader-identity failure",
       "caught exception"
     ],
-    "productFix": "PENDING_SCOPED_CORRECTION_AND_CANONICAL_REGRESSION",
+    "productFix": "VERIFIED_BY_DECISIONS14_AND_GATE17",
     "failedScreen": "UI38",
     "elapsedSinceTestEntryMs": 300561
   },
@@ -92,7 +83,7 @@
     "worker": "4978956b0ceeceec66df7c8f942c7495e83fa3e6",
     "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
     "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
-    "status": "IMPLEMENTED_STATIC_PEER_REVIEW_PASSED_RUNTIME_PENDING",
+    "status": "IMPLEMENTED_STATIC_PEER_REVIEW_BROWSER_AND_REGRESSION_PASSED",
     "description": "Apply request/input/call/authority/C08 fences to all cases; apply selection/expiry/reader fences after original C12 eligibility and retain them through eligible Procurement egress. Noneligible cases use the original canonical reader outside the lock.",
     "unchanged": [
       "selection TTL",
@@ -103,6 +94,110 @@
       "source responses",
       "canonical producer",
       "F02"
-    ]
+    ],
+    "browser": {
+      "run": 44972048219,
+      "job": 137053751021,
+      "snapshot": "58def9db4b3aa4c156a041eb86fbbd41de95bba7",
+      "product": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+      "dev": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+      "tests": 1,
+      "status": "PASSED",
+      "captures": 41,
+      "parts": 196,
+      "skipped": 0,
+      "observedReads": 56,
+      "readStatuses": {
+        "200": 56
+      },
+      "readOperations": {
+        "projection.case": 35,
+        "current-choice": 11,
+        "analysis.choices": 5,
+        "analysis.list": 5
+      },
+      "readsAfter300000Ms": 21,
+      "lastObservedReadElapsedMs": 453279,
+      "closedPages": [
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ],
+      "sourceFailureDiagnostics": 0
+    },
+    "technical": {
+      "run": 44972927162,
+      "snapshot": "e6b7de08b4cbb7790a585e2292bb985a41e60902",
+      "product": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "checks": 15,
+      "cases": 89,
+      "scopeTests": 2,
+      "scopeAssertions": 81
+    },
+    "regressionLimits": {
+      "tests": 2,
+      "assertions": 81,
+      "positive": "Original SQLite/source persistence/ProductAuthority/BusinessServices/Atlas composition, emitted Planner source and drafted case, original sf_work_list selection, controlled unit clock and newly admitted original leases.",
+      "negative": "Clearly labeled structural planned-Procurement fixture with real C08/authority, expired/replaced selection, reader and egress refusal; Request/header/input/lease/abort/revocation boundaries.",
+      "identityProvider": "Bounded test fixture, not enrollment.",
+      "notClaimed": [
+        "positive C12 producer-issued preparation",
+        "positive first application",
+        "application receipt"
+      ]
+    },
+    "diagnosticIsolation": {
+      "ref": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+      "passed": true,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+          "sha": "10dbebf4f41615907e86c52a04095bd4ed28a674",
+          "temporaryDiagnosticMarkers": 0
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "sha": "cb70563336ec16386f2d7cf6585423d0b34c7481",
+          "temporaryDiagnosticMarkers": 0
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "temporaryDiagnosticMarkers": 0
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "sha": "220d7d87d726d2c683f9ed2d5147a9859657de2b",
+          "temporaryDiagnosticMarkers": 0
+        },
+        {
+          "path": ".ci-run.json",
+          "present": false
+        },
+        {
+          "path": "apps/cli/test/sucafina-design-verification.test.ts",
+          "present": false
+        }
+      ]
+    }
+  },
+  "initialObservationStatus": "FAILED_FULL_JOURNEY_NOT_ACCEPTED",
+  "diagnosticAttempt12": {
+    "run": 44970274302,
+    "snapshot": "a73d8ff8ab8c01fd3520e0b4421d49f91ae86f68",
+    "diagnosticCommit": "05fa231a25874f97a3c82cae8b176228368ec307",
+    "sourceProduct": "218a5ee39935336c88abeb92b0a4d2cc980f21de",
+    "kind": "SNAPSHOT_ONLY_SAFE_BRANCH_ENUMS",
+    "peerReview": "PASSED_STATIC",
+    "noProductIntegration": true,
+    "status": "INVALID_DIAGNOSTIC_STARTUP",
+    "reason": "A forwarding syntax error prevented installation startup; not counted as original source evidence."
   }
 }

@@ -125,7 +125,7 @@
     "staticReview": "PASSED_COORDINATOR_AND_PROCUREMENT",
     "sourceDiagnosisRun": 44970679515,
     "runtimeRun": 44972048219,
-    "runtimeStatus": "RUNNING",
+    "runtimeStatus": "PASSED",
     "changes": "Common fences retained before eligibility; original Procurement selection/reader/expiry fences retained after the unchanged C12 predicate and at eligible egress. Focused UI35comparison notice capture added.",
     "unchanged": [
       "TTL",
@@ -136,7 +136,158 @@
       "canonical producer",
       "all seven A15 contracts"
     ],
-    "temporaryDiagnosticFilesIntegrated": false,
-    "canonicalRegression": "PENDING"
+    "canonicalRegression": {
+      "status": "PASSED",
+      "run": 44972927162,
+      "tests": 2,
+      "assertions": 81,
+      "identityProvider": "Bounded test fixture",
+      "negativeFixture": "Explicit structural planned-Procurement case",
+      "notClaimed": [
+        "Positive producer-issued C12 preparation",
+        "First application",
+        "Application receipt"
+      ]
+    },
+    "temporaryDiagnosticInstrumentationIntegrated": false
+  },
+  "finalQualifiedProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+  "browserToTechnicalDelta": {
+    "browserProduct": "e5494ff044ee46cdd80c1d754131c284538d4d31",
+    "technicalProduct": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "changedPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts",
+      "docs/qa/sucafina/design/wave-four/DEV-COMPOSITION.md",
+      "docs/qa/sucafina/design/wave-four/TYPECHECK.md",
+      "docs/qa/sucafina/design/wave-four/VALIDATION.md",
+      "docs/qa/sucafina/design/wave-four/attempts.json",
+      "docs/qa/sucafina/design/wave-four/cli-type-audit.json",
+      "docs/qa/sucafina/design/wave-four/copy-audit.json",
+      "docs/qa/sucafina/design/wave-four/decisions-source-diagnostic.json",
+      "docs/qa/sucafina/design/wave-four/decisions/HANDOFF.md",
+      "docs/qa/sucafina/design/wave-four/decisions/REVIEW.md",
+      "docs/qa/sucafina/design/wave-four/evidence/README.md",
+      "docs/qa/sucafina/design/wave-four/scope.json",
+      "docs/qa/sucafina/design/wave-four/source-audit.json",
+      "docs/qa/sucafina/design/wave-four/technical-verification.json"
+    ],
+    "changedProductSourcePaths": [],
+    "changedTestPaths": [
+      "apps/cli/test/sucafina-case-read-scope.test.ts"
+    ],
+    "compareTruncated": false,
+    "functionalProductIdentical": true
+  },
+  "diagnosticIsolation": {
+    "ref": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "passed": true,
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "sha": "10dbebf4f41615907e86c52a04095bd4ed28a674",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "cb70563336ec16386f2d7cf6585423d0b34c7481",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "220d7d87d726d2c683f9ed2d5147a9859657de2b",
+        "temporaryDiagnosticMarkers": 0
+      },
+      {
+        "path": ".ci-run.json",
+        "present": false
+      },
+      {
+        "path": "apps/cli/test/sucafina-design-verification.test.ts",
+        "present": false
+      }
+    ]
+  },
+  "postQualificationDevObservation": {
+    "qualifiedBase": "2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b",
+    "observedDev": "8bd7645767deb85b286b046a52a4e9f1db100262",
+    "upstreamCommits": 2,
+    "upstreamPaths": [
+      "apps/desktop/src/main/index.ts",
+      "apps/desktop/src/main/wsl/ipc.test.ts",
+      "apps/desktop/src/main/wsl/ipc.ts"
+    ],
+    "ownProductCompared": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "ownPaths": 251,
+    "compareTruncated": false,
+    "overlapPaths": [],
+    "integrated": false,
+    "decision": "Retain the explicitly qualified base. Later PR607 is confined to desktop WSL IPC and its tests, has no overlap with this wave, and does not change native Sucafina or the browser/CLI paths qualified here."
+  },
+  "finalGalleryIntegrity": {
+    "atCommit": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "groups": {
+      "planner": {
+        "captures": 40,
+        "actualJpegs": 40,
+        "bytes": 2829468,
+        "hashesChecked": 40,
+        "sizesChecked": 40
+      },
+      "procurement": {
+        "captures": 43,
+        "actualJpegs": 43,
+        "bytes": 3384360,
+        "hashesChecked": 43,
+        "sizesChecked": 43
+      },
+      "work": {
+        "captures": 22,
+        "actualJpegs": 22,
+        "bytes": 1736450,
+        "hashesChecked": 22,
+        "sizesChecked": 22
+      },
+      "decisions": {
+        "captures": 41,
+        "actualJpegs": 41,
+        "bytes": 3161553,
+        "hashesChecked": 41,
+        "sizesChecked": 41
+      },
+      "regression": {
+        "captures": 6,
+        "actualJpegs": 6,
+        "bytes": 541725,
+        "hashesChecked": 6,
+        "sizesChecked": 0
+      }
+    },
+    "newWaveCaptures": 146,
+    "regressionSamples": 6,
+    "totalPersistedJpegs": 152,
+    "missing": [],
+    "hashMismatches": [],
+    "sizeMismatches": [],
+    "extras": []
+  },
+  "finalEvidenceDelta": {
+    "from": "0550c4bb8fc3b4b4e68561777010ca03483e2391",
+    "through": "fa9a44040ec130e04580159c24cd158d97ab7caa",
+    "changedPaths": 45,
+    "allDocumentationOrEvidence": true,
+    "productSourceUnchanged": true,
+    "compareTruncated": false
+  },
+  "finalVisualReview": {
+    "areas": 20,
+    "captures": 146,
+    "allManuallyReviewed": true,
+    "rootRepresentativesAcrossAllAreas": true,
+    "userAcceptance": "PENDING"
   }
 }

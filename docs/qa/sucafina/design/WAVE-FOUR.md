@@ -1,61 +1,44 @@
-# Wave four — twenty native Sucafina areas
+# Quarta rodada — vinte áreas nativas da Sucafina
 
-Status: **IN_PROGRESS**. User instruction: “a outra sessao esta mergeando o que ja tinha feito. Preciso que voce pegue o proximo bloco de 20 pra fazer”.
+Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588), branch `sf-design-twenty`. O bloco está implementado e qualificado para revisão, sem merge ou aceite do usuário.
 
-Branch `sf-design-twenty` starts from `dev@2a68bcb676ed0c159c5c48130c2413e0e5637a00`. The separate session owns the merge of PR #587. Its fifteen areas are outside this implementation's ownership. The isolated candidate composes the exact prior-wave dependency `f6da3aaf613053309ea205786eabae11eb394c6c` while that merge is owned by the other session. PR #587 subsequently merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`. This candidate now incorporates that real dev merge, preserving its final documentation and Finance response-observation fix. No changes were made to the other session’s branch.
+## Entrega
 
-## Exact scope
+As próximas vinte áreas do inventário são CAP20–CAP28, UI30–UI32 e UI34–UI41. Elas abrangem **49 padrões de rota existentes**. Somadas às 21 áreas anteriores já mescladas, a campanha passa a **41 implementadas de 70**, com **29 restantes**. Os 20 itens atuais permanecem pendentes de revisão.
 
-The next twenty previously unredesigned inventory areas are CAP20–CAP28, UI30–UI32 and UI34–UI41: **20 areas / 49 registered route patterns**. Routes, states, captures, acceptance and merge are separate measures. The earlier 21 areas plus this implementation will total 41/70, leaving 29 areas; that future count is not a completion claim.
+| Grupo | Áreas | Rotas existentes | Evidência |
+| --- | --- | ---: | --- |
+| Planejamento | CAP20 Headcount; CAP21 Alocações; CAP22 FX; CAP23 Versões/Comparação | 14 | [Galeria](wave-four/evidence/planner/README.md) |
+| Compras | CAP24 Visão geral; CAP25 Requisições/Fila/Sourcing; CAP26 Aprovações; CAP27 Fornecedores; CAP28 Configurações | 17 | [Galeria](wave-four/evidence/procurement/README.md) |
+| Trabalho | UI30 Meu trabalho; UI31 Busca; UI32 Visões salvas | 5 | [Galeria](wave-four/evidence/work/README.md) |
+| Decisões | UI34 Intenção; UI35 Alternativas; UI36 Premissas; UI37 Perguntas; UI38 Escolha; UI39 Alterações; UI40 Histórico/Recibos; UI41 Análises | 13 | [Galeria](wave-four/evidence/decisions/README.md) |
 
-| Owner | Branch | Areas |
-| --- | --- | --- |
-| Planner | `sf-twenty-planner` | CAP20–CAP23 (4 areas) |
-| Work, Search and Saved Views | `sf-twenty-work-finish` | UI30–UI32 (3 areas) |
-| Procurement | `sf-twenty-procurement` | CAP24–CAP28 (5 areas) |
-| Decisions | `sf-twenty-decisions` | UI34–UI41 (8 areas) |
+[Galeria consolidada](wave-four/evidence/README.md) · [Validação completa](wave-four/VALIDATION.md) · [Mapa exato](wave-four/scope.json) · [Inventário geral](inventory.json)
 
-- **CAP20 — Headcount**: `/orchestra/sf-planner/headcount`
-- **CAP21 — Alocações**: `/orchestra/sf-planner/allocations`
-- **CAP22 — Câmbio / FX**: `/orchestra/sf-planner/fx`
-- **CAP23 — Versões e comparação**: `/orchestra/sf-planner/versions`
-- **CAP24 — Compras — visão geral**: `/orchestra/sf-procurement/overview`
-- **CAP25 — Requisições, fila e sourcing**: `/orchestra/sf-procurement/requests`
-- **CAP26 — Aprovações**: `/orchestra/sf-procurement/approvals`
-- **CAP27 — Fornecedores**: `/orchestra/sf-procurement/suppliers`
-- **CAP28 — Configurações de compras**: `/orchestra/sf-procurement/settings`
-- **UI30 — Meu trabalho**: `/orchestra/sf-work`
-- **UI31 — Busca Sucafina**: `/orchestra/sf-home/search`
-- **UI32 — Visões salvas**: `/orchestra/sf-work/views`
-- **UI34 — Intenção do caso**: `/orchestra/sf-decisions/:caseRef`
-- **UI35 — Alternativas**: `/orchestra/sf-decisions/:caseRef/alternatives`
-- **UI36 — Premissas e divergências**: `/orchestra/sf-decisions/:caseRef/assumptions`
-- **UI37 — Perguntas e respostas**: `/orchestra/sf-decisions/:caseRef/questions`
-- **UI38 — Escolha da decisão**: `/orchestra/sf-decisions/:caseRef/choice`
-- **UI39 — Alterações preparadas**: `/orchestra/sf-decisions/:caseRef/changes`
-- **UI40 — Histórico e recibos**: `/orchestra/sf-decisions/:caseRef/history`
-- **UI41 — Análises**: `/orchestra/sf-decisions/:caseRef/analyses`
+## Composição e comportamento
 
-The machine-readable scope is [wave-four/scope.json](wave-four/scope.json). Root owns shared frame/navigation integration, shared installation/harness, E2E type coverage, consolidated evidence and inventory. Workers own only their enumerated page subtrees, page styles, coordinated catalogs, group journey files and group reports. Shared files have a single writer.
+A composição mantém o sistema visual nativo: eixo de conteúdo de 1160px, espaçamento de 32/24/16, controles de 44px, painéis compactos e etapas claras de lista, edição e revisão. Tabelas densas usam rolagem interna; referências longas ficam em disclosures acessíveis quando secundárias. Os textos ingleses existentes continuam literais, com português explícito nas novas mensagens.
 
-## Design contract
+Planejamento reúne as fontes, proveniência, editor e confirmação sem perder o contexto. Compras diferencia fatos submetidos, fonte atual e proposta; preserva cotação selecionada, notas e versões. Trabalho mostra o contexto antes da navegação autorizada; Visões salvas preserva os filtros e o período na gravação. Decisões apresenta evidências, lacunas, divergências, escolhas e histórico com a incerteza que a fonte realmente retorna.
 
-Use `.claude/skills/orchestra-design-system/SKILL.md`, `.claude/skills/orchestra-visual-qa/SKILL.md`, app AGENTS and current `packages/app-shell/src/orchestra/DESIGN.md`. Current quiet-glass and approved Sucafina specifications override old generic material guidance. Keep native fonts, roles, geometry and theme architecture; use the 1160px axis, 32/24/16px gutters, 44px controls, 20px panel rhythm and focused editor/review stages. Compose each destination around its work, with clear list/detail/edit/review boundaries, source honesty and useful narrow records or named keyboard-scrollable ledgers.
+A qualificação encontrou e corrigiu problemas funcionais na integração: metadados reativos do Solid chegando a schemas fechados, perda de projeções nativas, seleção de período nas aprovações, realimentação reativa nas configurações, readiness das leituras originais os descritores A15 cuja rota exigia um campo ausente do input e uma seleção expirada de Compras que bloqueava indevidamente a leitura de casos Planner após cinco minutos. Esses reparos mantêm CAS, idempotência, grants, produtores originais e rejeição de entradas inválidas.
 
-Preserve original routes, owner fencing, source values, provenance links, grants, CAS, idempotency, drafts, pending/unknown recovery, explicit confirmations and receipts. Do not manufacture currency, totals, absence-as-zero, approval or permissions. Existing English keys/text remain unchanged; any new copy has English and Brazilian Portuguese. The legacy white/green console and HuGR native core remain outside scope.
+Os dados de teste das jornadas são identificados e criados pelos produtores originais. Os estados vazios e indisponíveis preservam o retorno das fontes; nenhum resultado ou recibo foi fabricado. Busca foi validada com resultado canônico vazio; visões V2 continuam indisponíveis; detalhes de execução e limitações de fontes estão no relatório.
 
-## Verification contract
+## Verificação
 
-All repository operations use GitHub MCP. No shell, local builds/tests or owner-machine runtime. Execute scoped snapshots through the existing test-ci Actions workflow; do not run sf-ci, apply epic labels or change workflow/guard mechanisms. Use real isolated native installations, original enrollment and canonical producer commands. No mocked authentication, grants, business responses or receipts.
+O candidato técnico `0550c4bb8fc3b4b4e68561777010ca03483e2391` incorpora `dev 2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. [Gate17](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) passou **15 checks / 89 regressões**, com tipos da aplicação, E2E e CLI, zero erros de guardrails e paridade dos sete arquivos de paleta. As duas novas regressões de escopo somam 81 asserções; o teste negativo de Compras usa um fixture estrutural identificado e não qualifica uma primeira aplicação C12.
 
-Exercise all twenty areas and meaningful lists, details, editors, reviews and special states. Capture actual dark/light, Portuguese and narrow application output, inspect screenshots and fix observed faults. Distinguish CSS reflow from actual browser zoom and state explicitly what was not exercised. Verify application/E2E types, guards, palette parity and preserved English copy. Runtime/source defects must be repaired at their actual boundary without hiding failures.
+A galeria reúne **146 capturas revisadas**: 40 de Planejamento, 43 de Compras, 22 de Trabalho e 41 de Decisões. O [Decisions14](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) concluiu a jornada completa; as 56 leituras monitoradas retornaram HTTP 200, incluindo 21 depois de cinco minutos. As asserções também exigem conteúdo real no caso. A correção mantém TTL e autorização originais e aplica a exigência de seleção somente aos casos elegíveis para esse fluxo de Compras.
 
-Current implementation, runtime, visual review and acceptance are **not yet complete**. The final report will cite exact source commits, Actions runs, state/capture maps and unresolved limits.
+As jornadas reais e a revisão visual estão identificadas por grupo, snapshot e commit na [validação](wave-four/VALIDATION.md). Cada galeria mantém a origem exata das imagens. Chromium e viewports estreitos não são apresentados como cobertura de todos os navegadores, zoom real ou todas as combinações de estado.
 
-## Composition with the later dev updates
+A [auditoria de cópia](wave-four/copy-audit.json) preserva 574 textos ingleses existentes em dez catálogos; os nove textos novos têm português explícito. As 583 chaves atuais têm valor BR. O [registro A15](wave-four/A15-REVIEW.md) distingue a mudança de descritor de rota das formas de input/output, que permanecem intactas.
 
-While the native journeys were running, dev advanced from `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02` to `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`: ten commits across46 paths. The candidate incorporates all ten commits at `331cafc50bee2112f6366ff428658de938c6f58e`. Only `apps/cli/src/sucafina-product/host-context.ts` overlapped this wave: its exact upstream FSUtil dependency and outer service acquisition were retained together with the native reading-health observers. The other45 upstream files were carried unchanged.
+## Integração anterior e aceite
 
-The upstream changes include recorded permission denials, CLI type corrections, Apply receipt resume, the Finance pair observation and Gateway pack work. Those source changes belong to dev; the redesign does not rewrite or claim authorship of them. The original API schemas, source fences and grants remain authoritative. [Composition record](wave-four/DEV-COMPOSITION.md).
+A outra sessão concluiu o PR #587, mesclado em `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`. Esta branch incorporou o merge real e, depois, 21 commits de dev com 80 caminhos distintos, em três composições. O único caminho sobreposto nas duas primeiras composições foi host-context.ts; as alterações de FSUtil e reviewer recall do upstream foram preservadas junto dos observadores nativos. A terceira composição copiou 18 caminhos por seus hashes exatos, sem sobreposição com o trabalho deste bloco. [Registro da composição](wave-four/DEV-COMPOSITION.md). Uma inspeção posterior encontrou o PR #607, limitado ao IPC de WSL do desktop e sem sobreposição; a base explicitamente qualificada permanece dev2eeb.
 
-Validation of this composed candidate is in progress through the original test-ci workflow: full application/E2E/CLI types and native source regressions, Planner plus the prior six native areas, and the remaining group journeys. Earlier passing captures retain their original source SHA; they are not silently relabeled as captures of the new composition.
+Nenhuma branch da outra sessão foi alterada. O núcleo HuGR, o console legado branco/verde, workflows, guardrails e allowlists não foram modificados por este redesign. A execução ocorreu exclusivamente em snapshots do test-ci existente.
+
+O PR permanece em rascunho. A autorização anterior de merge cobre os blocos anteriores; o aceite destas vinte áreas continua pendente.

@@ -1,10 +1,11 @@
 # Wave four — validation
 
-Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete browser journeys and visual review. The source refusal in Decisions is now diagnosed: an expired global Procurement selection was checked before case eligibility, vetoing an unrelated Planner read. The minimal correction has passed independent static review. Decisions14 is running on that correction; the scoped canonical regression is being completed.
+Status: **IMPLEMENTED_VERIFIED_PENDING_USER_REVIEW**. All twenty areas have passed their scoped original browser journeys and visual review. The persistent galleries contain **146 reviewed captures** for this block. Final technical verification passed **15 checks and 89 regression cases**. User acceptance remains pending; the draft PR is not merged.
 
 ## Candidate and scope
 
-- Product code: `e5494ff044ee46cdd80c1d754131c284538d4d31`.
+- Final functional product: `e5494ff044ee46cdd80c1d754131c284538d4d31` (Decisions14 browser parent).
+- Final technical candidate: `0550c4bb8fc3b4b4e68561777010ca03483e2391` (adds the canonical case-scope regression and documentation; functional source unchanged).
 - Incorporated dev: `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`.
 - Isolated branch: `sf-design-twenty`; [draft PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588).
 - Earlier block: PR #587 merged as `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`.
@@ -36,14 +37,14 @@ Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete brows
 
 ## Hosted technical verification
 
-[Gate16 / run 44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754), job `137051745585`, snapshot `1fe0927db37e63f6e9d70537c524ec5f6ead6ac0`, passed **14 checks / 87 regression cases** on product `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`, including the third upstream composition. The subsequent case-read correction and its new regression require the final technical gate.
+[Gate17 / run 44972927162](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162), job `137056417643`, snapshot `e6b7de08b4cbb7790a585e2292bb985a41e60902`, passed **15 checks / 89 regression cases** on product `0550c4bb8fc3b4b4e68561777010ca03483e2391`. It includes the third upstream composition, the corrected case-read scope and its new regression.
 
 | Check | Result |
 | --- | --- |
 | Application declaration build | PASS |
 | E2E semantic typecheck | PASS |
 | Full CLI package typecheck | PASS, zero diagnostics |
-| Exact-dev repository guards | PASS: 78 rules, 0 errors, 21 warnings, 0 approvals |
+| Exact-dev repository guards | PASS: 78 rules, 254 files, 0 errors, 21 warnings, 0 approvals |
 | Generated palette parity | PASS: all 7 files byte-identical |
 | Portfolio CAS | 3 cases passed |
 | Vendor browser DTO | 4 cases passed |
@@ -54,8 +55,13 @@ Status: **IN_PROGRESS**. Twelve of twenty areas have passed their complete brows
 | Decision source health | 24 cases passed |
 | Analysis source health | 19 cases passed |
 | Saved Views browser DTO | 3 cases passed |
+| Case-read scope: canonical Planner and negative boundaries | 2 tests, 81 assertions passed |
 
-Twenty guard warnings concern bounded canonical I/O timeouts. The remaining double-cast warning is inherited from the original CAP20 expression; the diff changes its signal access, not the cast's meaning. No warning approval was used. Guards, workflow definitions and allowlists were unchanged.
+Twenty guard warnings concern bounded canonical I/O timeouts. The remaining double-cast warning is inherited from the original CAP20 expression; the diff changes its signal access, not the cast's meaning. The new regression adds no guard warning. No warning approval was used. Guards, workflow definitions and allowlists were unchanged.
+
+The new case-scope positive uses the original SQLite/source persistence, ProductAuthority, BusinessServices and Atlas composition; Planner emits a source, a real case is drafted, and an original sf_work_list selection is created. A controlled unit clock advances beyond its five-minute validity, and each read uses a fresh original Request and lease. Case content, evidence/source references and C08 revision remain equal after expiry and period replacement. The clock is restored in finally.
+
+The second test explicitly labels its planned-Procurement case as a structural negative fixture. It exercises expired/replaced selection, reader and egress refusal, plus common Request, header, input, lease, abort and revocation boundaries. Blocked cases require a real C08 read and zero calls to the canonical reader. The identity provider is a bounded unit fixture, not enrollment. Neither test claims producer-issued C12 preparation, first application or an application receipt. The browser journey separately uses real enrollment and an unmodified clock.
 
 The E2E project retains strict semantic checking and noEmit, with declaration emission/composite disabled for that test project. The independent application declaration build remains enabled. Historical full-CLI diagnostics were fixed by incorporated upstream commits; they are not a current limitation. See [TYPECHECK.md](TYPECHECK.md), [cli-type-audit.json](cli-type-audit.json) and [technical-verification.json](technical-verification.json).
 
@@ -67,8 +73,8 @@ The E2E project retains strict semantic checking and noEmit, with declaration em
 | Procurement | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | `7f3de0206fc25b2925d7c55947d9b5785bdfe7ba` | `331cafc50bee2112f6366ff428658de938c6f58e` | 4 passed; 11 POSTs/readbacks; 43 captures |
 | Work/Search/Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | `6bff36e3308c4ac205a59011827c8f19c06c5873` | `87a738830c83bf1fa9ee30c32b38fb1e297b30f8` | 3 passed; 1 view save/readback; 22 captures |
 | Decisions | [44966014444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44966014444) | `8cfd3eb141d31d18ee2b32dda629d67e7d44c10a` | `250e8faf80931c807a86c5f06c0e797de469adca` | Failed from UI41 light original-source coverage onward; followed by diagnostic Decisions11 |
-| Decisions diagnostic11 | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | `47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab` | `218a5ee39935336c88abeb92b0a4d2cc980f21de` | Failed on UI41 light real-content assertion; original503 reason identified; guard discriminator pending |
-| Decisions corrected journey14 | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | `58def9db4b3aa4c156a041eb86fbbd41de95bba7` | `e5494ff044ee46cdd80c1d754131c284538d4d31` | Running after the minimal case-read scope correction; includes focused UI35 comparison notice |
+| Decisions diagnostic11 | [44968620170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44968620170) | `47cbbb5eb1f9b8518f3cada5838429fcb4d4a5ab` | `218a5ee39935336c88abeb92b0a4d2cc980f21de` | Failed on UI41 light real-content assertion; original 503 reason identified; later resolved by diagnostic13 and correction14 |
+| Decisions corrected journey14 | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | `58def9db4b3aa4c156a041eb86fbbd41de95bba7` | `e5494ff044ee46cdd80c1d754131c284538d4d31` | 1 passed (10.3m); 41 complete captures; 56 source reads HTTP 200, including 21 after 300s |
 | Previous six native areas | [44963871177](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44963871177) | `f6533b5856840c4722f38d3e5070204c8e4d4877` | `7c0caf8da905a03579379c35ce1cd49375a87509` | 2 passed; 67 complete previews; 6 representative JPEGs persisted |
 | Planner + previous six after dev composition | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | `fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8` | `331cafc50bee2112f6366ff428658de938c6f58e` | Workflow and Run tests step PASS; combined decoded log unavailable |
 
@@ -102,15 +108,21 @@ Saved Views edits an original V1 view, reviews/cancels/revises, confirms one sav
 
 ### Decisions — UI34–UI41
 
-Complete qualification remains pending. The original Decisions11 case probe returned HTTP503 / unavailable / procurement-case-read-changed, followed by current-choice403 / current-choice-case-unavailable. Context remained200 and the four required operations remained ready.
+[Decisions14](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) passed the complete eight-area journey in 10.3 minutes. All 41 captures arrived in 196 complete chunks, with no missing, extra or skipped capture. The two page closures reported no console or page errors. All 56 monitored source reads returned HTTP 200: 35 case projections, 11 current-choice reads, 5 analysis.choices and 5 analysis.list. Twenty-one reads occurred after 300,000ms from test entry; the final case read succeeded at 453,279ms. Strict assertions require real content in all eight areas and a nonempty authorized case option before each UI41 capture; HTTP 200 with cases:[] cannot pass.
 
-The disposable diagnostic [Decisions13](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970679515) then identified the first false predicate: selection-expired on a global Procurement selection. Its log contains 63 global-origin observations and 10 expiry failures at transaction entry/egress, with no competing request, identity or exception failure. The original decision-controls reader creates that selection through an admitted sf_work_list using the case horizon, even for a Planner case. Its cleanup releases the collection reference and child lease, while the global period entry remains for five minutes. This establishes both the selection's real origin and the failing branch.
+The journey edits the original case once and independently reads back its content/version. It reviews and prepares a question through the original producer, checks its returned proposal and rereads the source; preparing that proposal is not sending a question thread or external notification. The galleries show retained review drafts, original alternatives and conditional cost coverage, assumptions/divergences, current choice, empty changes and receipts, and the original analysis catalog/history.
 
-The correction in procurement-case-read-scope.ts preserves common Request, signal, binding/input digests, authority and C08 actor/participant checks. It applies the original selection, reader and expiry checks after the unchanged C12 eligibility predicate and retains them through eligible Procurement egress. Noneligible cases return to the canonical reader outside the SQLite lock. TTL, original controls, source/authorization contracts and seed are unchanged. Independent static review passed; runtime and the new scoped regression remain pending. The regression will distinguish a canonical Planner positive from structural negative Procurement guard fixtures; no positive C12 preparation/application coverage is inferred.
+All 41 final images were manually reviewed, including English desktop light/dark, narrow samples at 320px and 390px, and Brazilian Portuguese dark desktop. The coordinator independently inspected eight final samples across all eight areas, including the focused UI35 comparison notice at 320px and UI41's real authorized case with unavailable model at 390px. No visual blocker remained. Original fixture/source English and the Portuguese producer reason inside English chrome are preserved. The [Decisions gallery and exact limits](evidence/decisions/README.md) identify every image and review.
 
-The original source and fixture instrumentation used for diagnosis is absent from the product. Decisions12 failed before startup because of a diagnostic forwarding syntax error and is explicitly not source evidence. The [diagnostic record](decisions-source-diagnostic.json) and [attempt ledger](attempts.json) retain these distinctions.
+The earlier Decisions11 case probe returned HTTP 503 / unavailable / procurement-case-read-changed, followed by current-choice 403 / current-choice-case-unavailable. Context remained 200 and all four required operations remained ready. Disposable [diagnostic13](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44970679515) then identified selection-expired as the first false predicate: 63 global-origin observations and 10 expiry failures at transaction entry/egress, without a competing request, identity or exception failure.
 
-The coordinator reviewed ten source-positive partial images from Decisions11 across all eight areas, finding no visual blocker. UI35's final journey adds a focused 320px capture of the original comparison limitation notice. Partial images from a failed journey do not qualify later light/narrow/Portuguese states. UI38 retains a Portuguese producer-provided reason in the English chrome; that original source copy is not rewritten as a catalog literal. [A15 contract review](A15-REVIEW.md) remains separate from runtime evidence.
+The original decision-controls reader creates a global Procurement selection through admitted sf_work_list using the case horizon, including for a Planner case. Cleanup releases the collection reference and child lease while the global period remains for five minutes. The wrapper had enforced that expiry before establishing case eligibility.
+
+The correction in procurement-case-read-scope.ts preserves common Request, signal, binding/input digests, authority and C08 actor/participant checks. It applies the original selection, reader and expiry checks after the unchanged C12 eligibility predicate and retains them through eligible Procurement egress. Noneligible cases use the canonical reader outside the SQLite lock. TTL, original controls, selection setters, authorization contracts, seed and canonical producers are unchanged. Independent static review, the full browser journey and both new scoped regression tests passed.
+
+All temporary diagnostic/relay instrumentation remains confined to disposable snapshots. The final product has no diagnostic markers in the four inspected paths, no .ci-run.json and no temporary verification wrapper. Decisions12 failed before startup because of a diagnostic forwarding syntax error and is not source evidence. The [diagnostic record](decisions-source-diagnostic.json) and [attempt ledger](attempts.json) retain the failed attempts rather than relabeling them as successful.
+
+UI37 question cycles and the UI38 choice preparation remain unavailable when their original producer refuses them. UI39/UI40 contain genuine empty changes/receipts. UI41 proves real catalog/history and case availability, not an admitted analysis model or execution. No positive C12 first application, analysis prepare/start/cancel, run read/output or application receipt is claimed. [A15 contract review](A15-REVIEW.md) remains distinct from runtime evidence.
 
 ## Implementation boundaries and corrective work
 
@@ -123,13 +135,15 @@ All 574 preexisting English literals across the ten audited catalogs are unchang
 ## Limits and review status
 
 - Chromium only; desktop and narrow CSS viewport samples. Actual browser zoom and measured contrast ratios were not tested.
-- Planner/Procurement include pt-BR narrow samples. Work has pt-BR desktop initial states, not pt-BR 320px.
+- Planner/Procurement include pt-BR narrow samples. Work has pt-BR desktop initial states, not pt-BR 320px. Decisions has English 320/390px samples, pt-BR dark desktop and one UI37 pt-BR 320px review; no full narrow locale cross-product is claimed.
 - The 49 route patterns are source inventory, not a route × state × locale × theme cross-product.
 - Work's successful destination is the genuine Hot Topic path. Earlier original Procurement-detail calls returned HTTP 503; that successful path is not qualified, and its cause is not established. C58/clock/source fences remain unchanged.
 - No supplier bank write, activation, policy reset, external order delivery or external notification was exercised.
 - Original unavailable analysis models/operations must remain unavailable; catalog/history success cannot qualify prepare/start/cancel/read/output without their own real operation/run evidence.
-- No original changes or application receipts are fabricated to populate UI39/UI40.
+- No original changes or application receipts are fabricated to populate UI39/UI40; structural negative unit fixtures do not qualify positive C12 preparation/application.
 - All runtime work used existing test-ci snapshots through GitHub. No owner-machine runtime, alternate CI lane, workflow change, authorization bypass or response mock was used.
 - This block remains in draft PR #588. Prior acceptance of 21 earlier areas does not approve these twenty.
+
+The qualified base remains dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b`. A later inspection found PR #607 at dev `8bd7645767deb85b286b046a52a4e9f1db100262`, confined to three desktop WSL IPC paths with no overlap in the 251-path qualified own delta. It was not incorporated or attributed to these test runs. [Composition and final observation](DEV-COMPOSITION.md).
 
 The complete attempt ledger, including failures and corrections, is [attempts.json](attempts.json).

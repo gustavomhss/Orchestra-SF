@@ -1,6 +1,6 @@
-# Composition with dev2eeb1142
+# Composition with qualified dev `2eeb1142`
 
-Status: **TECHNICAL_COMPOSITION_PASSED; CASE_SCOPE_CORRECTION_QUALIFICATION_PENDING**. Current product `e5494ff044ee46cdd80c1d754131c284538d4d31` incorporates upstream dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` through composition `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, twenty-one upstream commits changed 80 distinct paths in three stages. Stage counts below are not added as distinct-file counts because some paths recur.
+Status: **COMPOSED_AND_VERIFIED_PENDING_USER_REVIEW**. Final technical candidate `0550c4bb8fc3b4b4e68561777010ca03483e2391` and functional product `e5494ff044ee46cdd80c1d754131c284538d4d31` incorporate dev `2eeb114266f8b9c9df9bb8f78a02ccf242cdc68b` through composition `d179d4abbc4c189d9135e5cc2d38487b6e4ba99c`. Since the actual PR #587 merge `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02`, 21 upstream commits changed 80 distinct paths in three stages. Stage path counts are not added as distinct-file counts because some paths recur.
 
 ## Stage one — dev3ce1acd0
 
@@ -50,20 +50,26 @@ No workflow, guard, allowlist or permission mechanism was changed by the redesig
 
 | Scope | Run | State |
 | --- | --- | --- |
-| Application/E2E/full CLI types, exact-dev guards, palette parity and 87 regressions | [44971393754](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44971393754) | PASS; 14 checks / 87 regression cases; product d179d4ab / dev2eeb1142 |
+| Application/E2E/full CLI types, exact-dev guards, palette parity and 89 regressions | [44972927162](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972927162) | PASS; 15 checks / 89 regression cases; product 0550c4bb / dev2eeb1142 |
 | Planner and previous six native areas | [44965221018](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018) | Workflow and Run tests step PASS; combined log unavailable |
 | Procurement five-area journey | [44965165654](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654) | PASS; 4 original journeys, 11 POSTs/readbacks |
 | Work, Search and Saved Views | [44965705732](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965705732) | PASS; 3 original journeys |
-| Decisions corrected journey | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | Running on product e5494ff0 after the minimal case-read scoping correction |
+| Decisions corrected journey | [44972048219](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44972048219) | PASS on product e5494ff0; 41 captures, 56 successful source reads and 21 reads after 300 seconds |
 
 The combined Planner/previous-six workflow on the first composition (dev3ce1acd0) completed successfully, including the original test step and evidence upload. Two MCP attempts to retrieve its decoded log returned Transport closed. We do not infer a combined test/capture/write/error count. The [composition manifest](evidence/composition/manifest.json) records artifact identity and the exact selected specs; separately read Planner9 and Regression2 evidence retains its own source snapshots.
 
-Gate16 passed the complete third composition before the case-scope correction. That later correction requires its final technical gate and the running Decisions14 journey. The temporary diagnostic source edits from Decisions12/13 were never integrated.
+Gate16 passed the complete third composition before the case-scope correction. Gate17 then passed the corrected product and both new case-scope tests (81 assertions), while Decisions14 passed the complete browser journey with the same functional code. The additional changes between browser parent e5494ff0 and technical parent 0550c4bb are tests/documentation only. All temporary diagnostic/relay instrumentation from Decisions12/13 remained confined to disposable snapshots; final source inspection found no markers or temporary CI wrapper in the product.
 
 Historically, Gate15 tested the complete second composition, the final UI41 layout adjustment and the corrected diagnostic URL accessor. Application declarations, E2E semantics, full CLI types, exact-dev guards, palette parity and all 87 regression cases passed. The earlier Gate14 failure was confined to the new E2E diagnostic passing a URL method instead of calling it; the one-line correction is verified by Gate15.
 
 The current composed full CLI typecheck passed with zero diagnostics. Its earlier seven diagnostics belonged to the previous dev baseline and were fixed by the incorporated upstream commits. No suppression or compiler flag change was used to accept them. Historical failures remain in [attempts.json](attempts.json).
 
-The copy audit remains valid through product `e5494ff044ee46cdd80c1d754131c284538d4d31`: none of its ten catalog paths changed after the audited `0f762e71` source. The ten catalogs preserve 574 existing English literals, add 9 English literals with explicit Portuguese, and contain 583 current keys with no missing Portuguese literal. Other source paths are not counted by this catalog audit.
+The copy audit remains valid through technical candidate `0550c4bb8fc3b4b4e68561777010ca03483e2391`: none of its ten catalog paths changed after the audited `0f762e71` source. The ten catalogs preserve 574 existing English literals, add 9 English literals with explicit Portuguese, and contain 583 current keys with no missing Portuguese literal. Other source paths are not counted by this catalog audit.
 
-The candidate is not merged and has no user acceptance for this block. Final qualification belongs in [VALIDATION.md](VALIDATION.md).
+## Later dev observation
+
+After qualification, dev advanced to `8bd7645767deb85b286b046a52a4e9f1db100262` through PR #607 (two commits). Its three changed paths are apps/desktop/src/main/index.ts, apps/desktop/src/main/wsl/ipc.ts and apps/desktop/src/main/wsl/ipc.test.ts. The exact comparison against the 251 paths in the qualified own delta was untruncated and found no overlap. These changes are confined to desktop WSL IPC sender validation and its tests, outside the native Sucafina/browser/CLI paths qualified here.
+
+The final candidate retains its explicitly tested dev2eeb base. PR #607 was not incorporated or attributed to Gate17 or Decisions14. This observation prevents an unrelated advancing dev branch from being represented as an already tested composition.
+
+The candidate is not merged and has no user acceptance for this block. Final qualification and material coverage limits are in [VALIDATION.md](VALIDATION.md).

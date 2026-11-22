@@ -37,4 +37,4 @@ An empty model catalog is a valid source result. Catalog/history success does no
 - [Reading health](../../../../../apps/cli/src/sucafina-product/native-ui/analysis-reading-health.ts)
 - [Host binding](../../../../../apps/cli/src/sucafina-product/host-context.ts)
 
-The final runtime result belongs in [VALIDATION.md](VALIDATION.md); Decisions9 later lost original case availability during its longer narrow/localized sequence and is not counted as a passing full journey.
+Final runtime evidence is in [VALIDATION.md](VALIDATION.md): Decisions14 passed the complete eight-area journey on product e5494ff0, including five successful analysis.choices reads and five successful analysis.list reads with a real authorized case. The original catalog has no admitted model; prepare/start/cancel and run read/output remain unqualified. Gate17 also passed all 19 Analysis source-health tests. Earlier Decisions9/11 source failures remain historical failures and are not counted as successful full journeys.
