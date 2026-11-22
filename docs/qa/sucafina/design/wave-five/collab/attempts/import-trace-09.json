@@ -531,5 +531,35 @@
     "No clean UI56 pass claimed",
     "Opaque state.read callback receives the entire product state; namespace-only cloning is not contract-compatible"
   ],
-  "next": "Review original detached materialization cost and then qualify the unchanged clean import journey."
+  "next": "Review original detached materialization cost and then qualify the unchanged clean import journey.",
+  "reviewedProvenanceCaptures": [
+    {
+      "index": 10,
+      "name": "UI55-dark-desktop-field-change",
+      "parts": 10,
+      "at": "2026-11-22T06:29:21.5011274Z",
+      "base64Length": 229584,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/import-trace-09-UI55-dark-desktop-field-change.jpg",
+      "sha": "3dbc3276baff74db462deda9d8a9e3ba035d9027",
+      "visualReview": "Actual screenshot inspected. First original field delta and source cell are fully inside viewport; no resize/crop/data replacement."
+    },
+    {
+      "index": 17,
+      "name": "UI56-dark-desktop-field-provenance",
+      "parts": 10,
+      "at": "2026-11-22T06:29:44.2887050Z",
+      "base64Length": 229904,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/import-trace-09-UI56-dark-desktop-field-provenance.jpg",
+      "sha": "54b1f0a2b08337d65b0ad0fedb78a8924141c580",
+      "visualReview": "Actual screenshot inspected. First original field delta and source cell are fully inside viewport; no resize/crop/data replacement."
+    }
+  ],
+  "independentRootVisualReview": {
+    "captures": [
+      "gallery/import-trace-09-UI55-dark-desktop-field-change.jpg",
+      "gallery/import-trace-09-UI56-dark-desktop-field-provenance.jpg"
+    ],
+    "result": "First original9800→11200 field delta and OPEX/row2/column6/F2 source are completely within viewport; accepted as diagnostic framing evidence only.",
+    "limits": "Does not qualify the whole expanded impact or promote this diagnostic run to clean qualification."
+  }
 }

@@ -1,0 +1,63 @@
+{
+  "schema": "sf-criterion-comparison-qualification-v1",
+  "attempt": 1,
+  "kind": "hosted scoped technical measurement",
+  "productBase": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
+  "snapshot": "b24e62bd3183b0e3133079730cd23b1fd613a4ff",
+  "tree": "5b583867aa2b74d4a09b04efd4bf7dddb7e7479e",
+  "branch": "ci-run-sf5comparison1",
+  "run": 44995762589,
+  "testJob": 137126329368,
+  "testConclusion": "failure",
+  "cleanupJob": 137126731879,
+  "cleanupConclusion": "success",
+  "gates": [
+    {
+      "name": "CLI typecheck",
+      "result": "pass"
+    },
+    {
+      "name": "permanent E2E typecheck",
+      "result": "pass",
+      "includesCollaborationSpec": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
+    },
+    {
+      "name": "real Finance integration extended",
+      "result": "fail",
+      "assertionsBeforeFailure": 70,
+      "failure": "Expected 2 roots for direct scenario comparison; observed 0 because test cleared counters before awaited promise completed",
+      "correction": "return await original comparison before finally, preserving root assertion"
+    }
+  ],
+  "validCanonicalComparisons": [
+    {
+      "mode": "scalar",
+      "status": "ok",
+      "physicalReads": 10616,
+      "roots": 0,
+      "canonicalMetricResolves": 8,
+      "elapsedMs": 5532
+    },
+    {
+      "mode": "grouped",
+      "status": "ok",
+      "physicalReads": 1137,
+      "roots": 2,
+      "canonicalMetricResolves": 8,
+      "elapsedMs": 5250
+    }
+  ],
+  "invalidCounters": [
+    "all three scenarios route measurements from attempt 1; measurement finally ended before the promise"
+  ],
+  "sourceEquivalence": "Canonical original entire comparison output equality passed before the counter failure.",
+  "staticReviewFollowup": {
+    "reviewer": "design_reviews",
+    "findings": [
+      "adapter must recheck current after observation egress",
+      "criteria owner host must remain authority.host/business.host"
+    ],
+    "correctionWorker": "0a0078c4e2493e0df445f6e22b9667ec9174312b"
+  },
+  "uiQualification": false
+}

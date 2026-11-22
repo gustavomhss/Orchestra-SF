@@ -32,7 +32,7 @@ export async function observeSfCollaborationReadingHealth(input: {
   source: (id: Operation) => Source | undefined
 }, request: Request, stamp: SfContextStamp): Promise<readonly SfOperationAvailability[]> {
   const sourceFor = input.source, bindingFor = input.binding, ui = input.ui, state = input.state
-  const persistence = input.persistence, finish = ui.finish
+  const persistence = input.persistence, finish = ui.finish, readState = state.read
   if (!bindingFor || request.signal.aborted || !isSfProductStateReader(state, persistence)) return []
   const expected = Object.freeze({ ...stamp }), stampDigest = digestSfValue(expected)
   type Candidate = typeof candidates[number]
@@ -100,7 +100,7 @@ export async function observeSfCollaborationReadingHealth(input: {
     observations = admitted.flatMap((entry) =>
       entry.status === "fulfilled" && entry.value ? [entry.value] : [])
 
-    const read = (namespace: Namespace) => state.read(request, namespace, (stored, authority) =>
+    const read = (namespace: Namespace) => readState(request, namespace, (stored, authority) =>
       authority.principalRef === expected.principalRef && authority.policyVersion === expected.policyVersion &&
       authority.accessRevision === expected.accessRevision
         ? { storageVersion: stored.versions[namespace], aggregateRevision: stored.revision, incarnation: stored.incarnation }

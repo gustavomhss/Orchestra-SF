@@ -452,7 +452,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
-  const withPlannerObservation = createSfFinancePairObservation({
+  const plannerObservationInput: Parameters<typeof createSfFinancePairObservation>[0] = {
     host, state: input.authority.state, lockedSourceFences,
     selectedScope: (call) => {
       const scope = caseBindings.get(call)
@@ -467,7 +467,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
         decisionDomain.current?.proposalCoverage, baselineCoverage].flatMap((reader) =>
         reader ? [reader, ...Object.entries(reader).flat()] : [reader])],
-  })
+  }
+  const withPlannerObservation = createSfFinancePairObservation(plannerObservationInput)
+  const createPlannerCriteriaObservation = (criteria: NonNullable<Parameters<typeof createSfFinancePairObservation>[0]["criteria"]>) =>
+    createSfFinancePairObservation({ ...plannerObservationInput, criteria })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
@@ -761,7 +764,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementScenarios, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
-    withMemoryObservation, withPlannerObservation, biObservation,
+    withMemoryObservation, withPlannerObservation, createPlannerCriteriaObservation, biObservation,
     bindReviewCollaboration: reviewCollaboration.bind,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")

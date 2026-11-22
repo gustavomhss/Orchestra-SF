@@ -295,3 +295,119 @@ test("portfolio health requires final revalidation of its actual UI lease", asyn
   expect(context.admitted).toHaveLength(1)
   context.terminal()
 })
+
+test("portfolio metadata is read separately by mode and twice per invocation without retained promises", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface) => { if (surface === "dashboard") reads++ }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
+  expect(reads).toBe(8)
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
+  expect(reads).toBe(16)
+  expect(context.admitted).toHaveLength(operations.length * 2)
+  context.terminal()
+})
+
+test("a denied portfolio action cannot inherit another candidate's shared metadata", async () => {
+  const context = await fixture()
+  context.controls.deniedOperation = human(evaluation)
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== evaluation))
+  expect(context.admitted).toHaveLength(operations.length - 1)
+  context.terminal()
+})
+
+test("shared portfolio reads preserve each candidate's exact dependency identity", async () => {
+  const context = await fixture()
+  context.hooks.read = async () => {
+    const source = context.sources[history]!
+    context.sources[history] = { ...source, dependencies: [...source.dependencies.slice(0, -1), {}] }
+  }
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== history))
+  context.terminal()
+})
+
+test("a replaced portfolio producer cannot inherit a shared source proof", async () => {
+  const context = await fixture()
+  const units = "portfolio.decision-sensitivity-units"
+  const replacement = async () => {
+    context.controls.calls++
+    throw new Error("Replacement producer must not be invoked")
+  }
+  context.hooks.read = async () => {
+    const source = context.sources[units]!
+    context.sources[units] = { ...source, producer: replacement }
+  }
+  expect((await context.observe()).map((entry) => entry.operationId))
+    .toEqual(operations.filter((id) => id !== units))
+  context.terminal()
+})
+
+test("revocation between shared portfolio phases invalidates every original lease", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface) => {
+    if (surface === "dashboard" && ++reads > 4) context.controls.revision = "revoked-between-phases"
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBeGreaterThan(4)
+  expect(context.admitted).toHaveLength(operations.length)
+  context.terminal()
+})
+
+test("a rejected shared read stays isolated by mode and is not retained in a later invocation", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface) => {
+    if (surface === "dashboard" && ++reads === 1) throw new Error("Original read metadata unavailable")
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([evaluation, sensitivity])
+  expect(reads).toBe(5)
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
+  expect(reads).toBe(13)
+  expect(context.admitted).toHaveLength(operations.length * 2)
+  context.terminal()
+})
+
+test("changed portfolio namespace versions cannot cross the two metadata phases", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (surface, snapshot) => {
+    if (surface !== "dashboard" || ++reads <= 4) return
+    const versions = object(object(snapshot.data.__sfProductV1).versions)
+    versions.preferences = Number(versions.preferences) + 1
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBe(8)
+  context.terminal()
+})
+
+test("abort during a shared portfolio read closes every admitted candidate", async () => {
+  const context = await fixture()
+  context.hooks.read = async () => { await Promise.resolve(); context.controller.abort() }
+  expect(await context.observe()).toEqual([])
+  expect(context.admitted).toHaveLength(operations.length)
+  context.terminal()
+})
+
+test("queued portfolio reads keep the original reader after a scoped sibling replaces state.read", async () => {
+  const context = await fixture()
+  const root = context.storage.readSnapshotRoot
+  if (typeof root !== "function") throw new Error("Original SQLite readonly root required")
+  const original = context.input.state.read
+  let replaced = false, replacementCalls = 0
+  context.hooks.read = async (surface) => {
+    if (surface !== "dashboard" || replaced) return
+    replaced = true
+    context.input.state.read = (...args) => {
+      replacementCalls++
+      return original(...args)
+    }
+  }
+  expect(await root(async () => context.observe())).toEqual([])
+  expect(replaced).toBe(true)
+  expect(replacementCalls).toBe(0)
+  expect(context.admitted).toHaveLength(operations.length)
+  context.terminal()
+})

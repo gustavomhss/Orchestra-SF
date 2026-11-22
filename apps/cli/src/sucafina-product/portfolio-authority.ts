@@ -14,6 +14,7 @@ import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
+import { createSfPortfolioComparisonObservation } from "./portfolio-comparison-observation.ts"
 
 /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
 export function createSfPortfolioAuthority(input: {
@@ -85,8 +86,9 @@ export function createSfPortfolioAuthority(input: {
       return current.status === "ok" && digestSfValue(current.value) === digestSfValue(metric) && await fresh(metric.evidenceRefs, call)
     },
   })
+  const observation = createSfPortfolioComparisonObservation({ authority, business, rules })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
-    compareScenarios({ host, sources: business.plannerSources,
+    observation.scenarios(request, call, () => compareScenarios({ host, sources: business.plannerSources,
       // A selected criterion is outside the planner-only comparison cache. Its
       // scope probe always declines and performs redundant full C08 reads;
       // preserve the canonical scenario producer and all comparison checks.
@@ -94,8 +96,9 @@ export function createSfPortfolioAuthority(input: {
       criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
-    } } }, request, call) : business.planner.compareScenarios }
-  const compareCanonical = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
+    } } }, request, call)) : business.planner.compareScenarios }
+  const originalCompare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
+  const compareCanonical: typeof originalCompare = (request, call) => observation.alternatives(request, call, () => originalCompare(request, call))
   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios })
   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,

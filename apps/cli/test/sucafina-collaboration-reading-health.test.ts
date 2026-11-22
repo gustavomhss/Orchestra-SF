@@ -349,3 +349,24 @@ test("changed namespace versions between phases reject only dependent operations
   expect(reads).toBe(6)
   context.terminal()
 })
+
+test("queued collaboration reads keep the original reader after a scoped sibling replaces state.read", async () => {
+  const context = await fixture()
+  const root = context.storage.readSnapshotRoot
+  if (typeof root !== "function") throw new Error("Original SQLite readonly root required")
+  const original = context.input.state.read
+  let replaced = false, replacementCalls = 0
+  context.hooks.read = async (surface) => {
+    if (surface !== "dashboard" || replaced) return
+    replaced = true
+    context.input.state.read = (...args) => {
+      replacementCalls++
+      return original(...args)
+    }
+  }
+  expect(await root(async () => context.observe())).toEqual([])
+  expect(replaced).toBe(true)
+  expect(replacementCalls).toBe(0)
+  expect(context.admitted).toHaveLength(operations.length)
+  context.terminal()
+})

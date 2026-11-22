@@ -3,7 +3,7 @@
   "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "2ce50f35bce43d1e2b0bf22d14a83e7a4a3b6d9f",
+  "product": "d4b9c4d5857755f2c8edee33690b91c453a7292a",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -103,10 +103,26 @@
     },
     {
       "name": "permanent E2E types after original acknowledgement observation and provenance capture alignment",
-      "status": "PENDING",
+      "status": "PASSED",
       "spec": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
       "blob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
-      "runtimeChange": false
+      "runtimeChange": false,
+      "run": 44995762589,
+      "job": 137126329368,
+      "snapshot": "b24e62bd3183b0e3133079730cd23b1fd613a4ff",
+      "note": "The E2E type gate passed. That whole workflow failed separately in the integration counter's missing await, preserved in analytics/comparison-observation."
+    },
+    {
+      "name": "CLI types after comparison observation egress fixes",
+      "status": "PASSED",
+      "run": 44996040345,
+      "job": 137127174416,
+      "snapshot": "e89f34c8a94bbece6e4443c77f561aee977b71c0",
+      "candidate": "0a0078c4e2493e0df445f6e22b9667ec9174312b"
+    },
+    {
+      "name": "composed CLI/E2E types and guards after both observation corrections",
+      "status": "PENDING"
     }
   ],
   "focusedRegressions": [
@@ -169,6 +185,37 @@
         "portfolio": 24
       },
       "status": "PASSED"
+    },
+    {
+      "name": "extended original Finance and criterion comparison observation",
+      "run": 44996040345,
+      "snapshot": "e89f34c8a94bbece6e4443c77f561aee977b71c0",
+      "cases": 1,
+      "assertions": 109,
+      "status": "PASSED",
+      "supersedesAssertions": 62,
+      "note": "The109 assertions include the prior62; do not add overlapping counts."
+    },
+    {
+      "name": "pinned metadata readers plus original operational phase boundary",
+      "run": 44996210905,
+      "job": 137127697907,
+      "cases": 71,
+      "assertions": 680,
+      "status": "PASSED",
+      "breakdown": {
+        "operationalPhase": 13,
+        "collaboration": 25,
+        "portfolio": 33
+      },
+      "control": {
+        "run": 44996212778,
+        "job": 137127702858,
+        "snapshot": "272d07dc98aefad3cd452e919cf8affdfc7f0826",
+        "passed": 56,
+        "failed": 2,
+        "expectedFailure": "The previous readers invoke the replacement twice in collaboration and once in portfolio. The same two negative cases pass with pinned readers."
+      }
     }
   ],
   "installedEvidence": [
