@@ -54,7 +54,7 @@ function fixture(config = configuration(), mutate) {
   const cookies = Object.fromEntries(Object.entries(values).map(([role, char]) => [role, "__Secure-sucafina_012345abcdef_session=" + char.repeat(64)]));
   const bodies = {
     [config.isolated.cas409BodyFile]: JSON.stringify({ page: "Requests", action: "save", id: "PR-0001", version: 99, values: { pr: { title: "Do not publish" } } }),
-    [config.isolated.validation422BodyFile]: JSON.stringify({ page: "Requests", action: "save", id: "PR-0001", version: 7, values: { constructor: "invalid original form field" } }),
+    [config.isolated.validation422BodyFile]: JSON.stringify({ page: "Requests", action: "save", id: "PR-0001", version: 7, values: { "pr.constructor": "invalid original form field" } }),
   };
   const state = { requests: [], loggedOut: false, revoked: false, clock: 0, restarted: false, restartEnabled: true, probes: 0 };
   const roleFor = (headers) => Object.keys(cookies).find((role) => cookies[role] === headers.Cookie);

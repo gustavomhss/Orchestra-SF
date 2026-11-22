@@ -41,7 +41,8 @@ async function fixture() {
     async environment(request) {
       state.originalRequests &&= state.requests.has(request)
       if (state.loseAfterEnvironment) state.current = false
-      return { at: "2026-11-22T12:00:00Z", id: () => "component-id", directory: [] }
+      return { at: "2026-11-22T12:00:00Z", id: () => "component-id",
+        directory: [{ id: principal.principalObjectId, name: "Controlled Procurement actor" }] }
     },
     maxJsonBytes: 2 * 1024 * 1024,
   })
@@ -131,7 +132,7 @@ test("Team CAP25 uses original HTTP writer, projection and versionRecord; CAS409
     const durable = f.durable()
     for (const [expected, values, submittedVersion] of [
       [409, { pr: { title: "Must not persist" } }, version.version + 10],
-      [422, { constructor: "invalid original form field" }, version.version],
+      [422, { "pr.constructor": "invalid original form field" }, version.version],
     ] as const) {
       const denied = await f.command({ page: "Requests", action: "save", id, version: submittedVersion, values })
       expect(denied.status).toBe(expected)
