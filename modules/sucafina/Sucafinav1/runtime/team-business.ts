@@ -2,6 +2,8 @@ import { createHmac, randomUUID } from "node:crypto"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { Schema } from "effect"
 import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
+import type { SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
+import type { SfTeamNativeDomainInput, SfTeamNativeDomainBindings } from "../../../../apps/cli/src/sucafina-product/team-native-domain.ts"
 import path from "node:path"
 import { createModule } from "../index.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -31,6 +33,7 @@ export async function runTeamBusiness(input: {
   now: () => Date
   teamCurrentChoice?: SfTeamCurrentChoice
   decisionIntentions?: Pick<LocalStore, "transaction">
+  nativeDomain?: Pick<SfTeamNativeDomainInput, "binding" | "readContext">
 }) {
   const { request, route, admission, identity, keys } = input
   const policy = await readTeamBusinessPolicy(input).catch(() => undefined)
@@ -146,14 +149,32 @@ export async function runTeamBusiness(input: {
       authMount: config.mount,
       authenticate: async () => {
         const actor = await currentActor()
-        if (actor?.roles.length) authorized.actor = actor
+        if (actor?.roles.length && !authorized.actor) authorized.actor = actor
         return actor
       },
       environment,
       maxJsonBytes: 2 * 1024 * 1024,
       assets: { persistence, services },
     })
-    const response = await business(request)
+    const native = input.nativeDomain && await (async () => {
+      // The original module and every native fence hold the same first role
+      // observation. Repeated authentication cannot replace that authority.
+      const actor = await currentActor()
+      if (!actor?.roles.length) return denied()
+      authorized.actor = actor
+      const { createSfTeamNativeDomain } = await import("../../../../apps/cli/src/sucafina-product/team-native-domain.ts")
+      const domain = await createSfTeamNativeDomain({
+        request, handler: business, ...input.nativeDomain, profile: admission.profile,
+        current: () => reauthorize({ refreshSession: false }),
+      }).handle()
+      if (domain) return domain
+      const { createSfTeamNativeProcurement } = await import("../../../../apps/cli/src/sucafina-product/team-native-procurement.ts")
+      return createSfTeamNativeProcurement({
+        request, handler: business, ...input.nativeDomain, profile: admission.profile,
+        current: () => reauthorize({ refreshSession: false }),
+      }).handle()
+    })()
+    const response = native || await business(request)
     // This request already proved Microsoft/Team admission. Revocation during the
     // first role/roster await is forbidden even when no actor reached the module.
     if (response?.status === 401 && (!await admission.verifyCurrent().catch(() => false) || !await configurationCurrent())) return denied()
@@ -182,6 +203,7 @@ export async function readTeamBusinessContext(input: {
   directory: string
   now: () => Date
   teamCurrentChoice?: SfTeamCurrentChoice
+  nativeDomain?: SfTeamInstallationDescriptor
 }): Promise<TeamBusinessContext | undefined> {
   const policy = await readTeamBusinessPolicy(input).catch(() => undefined)
   if (!policy || policy.config.teams !== "direct") return undefined
@@ -215,27 +237,48 @@ export async function readTeamBusinessContext(input: {
         },
         maxJsonBytes: 2 * 1024 * 1024,
       })
-      const observed = await readSfApplicationContext(application, input.request, input.admission.principalObjectId,
-        authorityCurrent)
-      if (!observed || !await authorityCurrent()) return undefined
+      const native = input.nativeDomain
+        ? await import("../../../../apps/cli/src/sucafina-product/team-native-domain.ts") : undefined
+      const captured: { native?: SfTeamNativeDomainBindings } = {}
+      const observed = await readSfApplicationContext(application, input.request, input.admission.principalObjectId, async () => {
+        if (!await authorityCurrent()) return false
+        if (!input.nativeDomain || !native) return true
+        const heldRoot = persistence.currentSnapshotScope?.()
+        if (!heldRoot?.readOnly || heldRoot.poisoned) return false
+        captured.native = await native.readSfTeamNativeDomainBindings({
+          request: input.request, handler: application, binding: input.nativeDomain,
+          profile: input.admission.profile, principalObjectId: input.admission.principalObjectId,
+          current: authorityCurrent, heldRoot: heldRoot.identity,
+        })
+        return !!captured.native
+      })
+      if (!observed || input.request.signal.aborted || input.nativeDomain && !captured.native) return undefined
+      // The final business observation runs inside the original held read root;
+      // no later private-policy await can outlive its roles/ACL observation.
       const destinations = sfContextDestinationsFromPages(observed.pages)
       if (!destinations) return undefined
-      return { accessRevision: digestSfValue({
-        owner, configuration: policy.configurationDigest, business: observed.accessRevision,
-      }), destinations }
+      const replaced = new Set(captured.native?.destinations.map((entry) => entry.capabilityId))
+      return {
+        accessRevision: digestSfValue({
+          owner, configuration: policy.configurationDigest, business: observed.accessRevision,
+          ...(captured.native ? { native: captured.native.accessRevision } : {}),
+        }),
+        destinations: captured.native
+          ? [...destinations.filter((entry) => !replaced.has(entry.capabilityId)), ...captured.native.destinations]
+          : destinations,
+        availability: captured.native?.availability ?? [],
+      }
     } finally { await store.dispose() }
   }
   const observed = await observe()
   if (!observed) return undefined
   return {
     owner, ...observed,
-    // The Microsoft composition has not observed native page/action bindings.
-    // Read permission is real; no command or operational readiness is inferred.
-    availability: [],
     verifyCurrent: async () => {
       const current = await observe()
       return !!current && current.accessRevision === observed.accessRevision &&
-        digestSfValue(current.destinations) === digestSfValue(observed.destinations) && !input.request.signal.aborted
+        digestSfValue(current.destinations) === digestSfValue(observed.destinations) &&
+        digestSfValue(current.availability) === digestSfValue(observed.availability) && !input.request.signal.aborted
     },
   }
 }
