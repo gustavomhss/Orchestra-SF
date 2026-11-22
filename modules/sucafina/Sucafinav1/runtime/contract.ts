@@ -35,6 +35,8 @@ export type Snapshot = {
   sfPlannerMonthlyReceipts?: Record<string, {
     requestDigest: string
     authorityDigest: string
+    // Pre-fence receipts remain consumed, but cannot acknowledge a current result.
+    resultDigest?: string
     rows: import("../product/planner/monthly-host.ts").MonthlyResult["rows"]
   }>
   // Host-private blob generations survive deletion and are updated atomically with blob bytes.

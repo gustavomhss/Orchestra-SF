@@ -63,6 +63,10 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
         if (!version || saved.rows.some((row) => row.result && visible.filter((line) => line.id === row.draft.rowId &&
             line.sec === (request.page === "OPEX" ? "opex" : "capex")).length !== 1))
           return { commit: false, value: { status: "denied" as const, reason: "monthly-replay-row-unavailable" } }
+        // A consumed intent remains consumed after recovery or a later edit. Its old
+        // acknowledgement is valid only while the exact applied rows and revisions survive.
+        if (!saved.resultDigest || saved.resultDigest !== monthlyResultDigest(snapshot, initialView, request))
+          return { commit: false, value: { status: "conflict" as const, reason: "monthly-applied-state-changed" } }
         return { commit: false, value: {
           status: "ok" as const, value: { rows: saved.rows, view: monthlyView(initialView, actor) },
         } }
@@ -132,7 +136,10 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
       const response = { rows: results.map((row) => ({ draft: row.draft, errors: row.errors, ...(row.result ? { result: row.result } : {}) })), view: monthlyView(domain.view(snapshot, actor, environment), actor) }
       if (commit && receiptKey && requestDigest && authorityDigest) {
         snapshot.sfPlannerMonthlyReceipts ??= {}
-        snapshot.sfPlannerMonthlyReceipts[receiptKey] = { requestDigest, authorityDigest, rows: response.rows }
+        snapshot.sfPlannerMonthlyReceipts[receiptKey] = {
+          requestDigest, authorityDigest, resultDigest: monthlyResultDigest(snapshot, response.view, request),
+          rows: response.rows,
+        }
       }
       return { commit, value: { status: "ok" as const, value: response } }
     }, { signal: http.signal }).catch(() => ({ status: "unavailable" as const, reason: "monthly-storage-unavailable" }))
@@ -177,6 +184,23 @@ export function validMonthlyRequest(request: MonthlyRequest) {
 
 function validEntityValues(values: Record<string, unknown>) {
   return Object.values(values).every((value) => value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number" && Number.isFinite(value) || Array.isArray(value) && value.every((item) => item === null || typeof item === "number" && Number.isFinite(item)))
+}
+
+function monthlyResultDigest(snapshot: Snapshot, view: View, request: MonthlyRequest) {
+  const version = rows(view.data.versions).find((entry) => entry.id === request.versionId)
+  const visible = rows(object(version?.summary).lines)
+  return digestSfValue({
+    versionId: request.versionId, page: request.page,
+    // restoreBackup advances dataset and record revisions even when bytes recur.
+    datasetRevision: snapshot.versions.dataset?.version ?? 0,
+    versionRevision: snapshot.versions[`versions:${request.versionId}`]?.version ?? 0,
+    locked: version?.locked, closed: version?.closed,
+    rows: (request.drafts ?? []).map((draft) => ({
+      rowId: draft.rowId,
+      revision: snapshot.versions[`${request.versionId}:${draft.rowId.startsWith("HR:") ? "hrAF" : "lines"}:${draft.rowId}`]?.version ?? 0,
+      value: visible.filter((line) => line.id === draft.rowId && line.sec === (request.page === "OPEX" ? "opex" : "capex")),
+    })),
+  })
 }
 
 function monthlyView(view: View, actor: Actor): View {

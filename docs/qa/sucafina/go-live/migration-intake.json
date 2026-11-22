@@ -124,10 +124,2472 @@
     "publicLegacyRoutes": "No public route is reopened by this intake. Existing installed-native restrictions must pass on the composed candidate.",
     "internalRenderer": "form-layout and the WP01 pool exercise internal local renderer fixtures. They do not qualify the native installed experience, real Microsoft identities, G08 or final G01-G04 without their separate candidate-bound evidence."
   },
+  "files": [
+    {
+      "path": ".github/workflows/sf-ci.yml",
+      "base": null,
+      "candidate": "2c8b3a6428073773206bd861112302f307776760",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "base": "50b4b913a3905ddfe5ead10ea38107fd71f6f7d6",
+      "candidate": "90a0e2ec4170c5f18689ae89a312c3efc7dafbfc",
+      "dev": "50b4b913a3905ddfe5ead10ea38107fd71f6f7d6",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "base": "84d232eb2c759ce59b1fb2009fac6bc66b6b1e53",
+      "candidate": "9376c281c5fbda0c47214408d92273a739ba0027",
+      "dev": "cb3a26cfce9ba8359bc1afe37190c09a2d2c7cf3",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Expose caseWorkSelection only when the private caseSelection adapter is mounted; retain all newer dev host services."
+      }
+    },
+    {
+      "path": "apps/cli/test/native-execution.test.ts",
+      "base": null,
+      "candidate": "fa2b095cd1e4f65dff5b877edad43b3d1c642aa9",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "apps/cli/test/sucafina-host-context.test.ts",
+      "base": null,
+      "candidate": "35c60e952f05a8035794541815d13d7f73a1dbdf",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "apps/cli/test/sucafina-installation.test.ts",
+      "base": "486a4348923b0aecdec490b8d84b61e928b42fbe",
+      "candidate": "a4e3f10514297a82c40480098809d171e97bd56c",
+      "dev": "486a4348923b0aecdec490b8d84b61e928b42fbe",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "apps/cli/test/sucafina-native-phase-wiring.test.ts",
+      "base": null,
+      "candidate": "c7e82f3436403b68525beb874f9531a1b4b3483b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "docs/guides/sucafina-native-dashboard.md",
+      "base": "c40197855a2c779f01e1969afce2f487853c5465",
+      "candidate": "46b84626c69c8637935b30795a865d1f84b146e1",
+      "dev": "193e81425565d839891a15a13fb4fc35b1eb2fff",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "preserve-dev",
+        "reason": "The historical additional guide section advertises legacy local widgets; retain the current native operator guide and public legacy-route closure."
+      }
+    },
+    {
+      "path": "modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "base": null,
+      "candidate": "22d2bad87dd87cfb7dd7b2c08c0da6ca75da6238",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "base": "c047dbe807dd0f34e04e4f0bb29ed46c5bfca685",
+      "candidate": "ba450be2635fa72277222f1c9c54176fcc23b0d1",
+      "dev": "329a500051ff1ef3ad576e21a6dde4e76339f489",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Add three internal availability callbacks and preserve productView, native composition, workspace and PO observations; no public routing change."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "base": "4865e3c937132e68af72d0fbe9589e1f0910d00a",
+      "candidate": "63331f9bbb1afaa4cbc23c17268839bbd50cd944",
+      "dev": "91e7af8d343d32e9ad3ca7de6cdb320e6667a1b2",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Add optional caseWorkSelection marker without changing current operational observation contracts."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "base": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "candidate": "545556d9c3824c1e6e4985fdf1b60bdb685b5b1f",
+      "dev": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "base": null,
+      "candidate": "f3ea1b99b97811eb0fabcea266b2cb201dfab543",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "base": "db4364fa0e76c81a509f5adfa1c29a344750707b",
+      "candidate": "942371c7ee8c7f057e1a193eb145bc761e871309",
+      "dev": "db4364fa0e76c81a509f5adfa1c29a344750707b",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+      "base": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+      "candidate": "7b0b57011cee331da2be7883bf2b5a4f4060984b",
+      "dev": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "base": "7033a3ee78929a1aafaf1dc8e7733368f4235793",
+      "candidate": "0763dad938ed32e75930a0161c3fbb88e8675212",
+      "dev": "7033a3ee78929a1aafaf1dc8e7733368f4235793",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "base": null,
+      "candidate": "499c1ad39507a737d3fdad4f824870ab89ae19d6",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contextual-decision.ts",
+      "base": null,
+      "candidate": "fb509c9af5051aa0344f84c15214ad9c3d10e5ab",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "base": "e69befea13a8b1bf597492a0b3c5a0ecd00d7c91",
+      "candidate": "5726d16e7e325bbec315294ce1dc41e4324ff332",
+      "dev": "e69befea13a8b1bf597492a0b3c5a0ecd00d7c91",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "base": "e986698541231327e226a0125c0671c0ad719cb5",
+      "candidate": "74b6cbb9fc508c533fb27537380fcdcb379c8021",
+      "dev": "e986698541231327e226a0125c0671c0ad719cb5",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "base": "1c4bd231075bf149a31924cf651063bf1c3ef6d3",
+      "candidate": "e8fbfb5fe3d9979ffb91f4392a03e19c01c3eaf9",
+      "dev": "1c4bd231075bf149a31924cf651063bf1c3ef6d3",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "base": "860f7d6f03277b15468927ed390b0133a095e032",
+      "candidate": "75d0f2b64727bd4d507c539037de8d0b1d7c9814",
+      "dev": "860f7d6f03277b15468927ed390b0133a095e032",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+      "base": "656adc5d1a261470d7c259220d82063cfc032b5d",
+      "candidate": "1ff147d9b84a33c77c96969fa8ef1ad9dced303d",
+      "dev": "656adc5d1a261470d7c259220d82063cfc032b5d",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+      "base": null,
+      "candidate": "d5cb835f66228365f4b45a0ca5529a3a2545571a",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+      "base": "86d52447424073e543f4b7ae28581e851ffc208a",
+      "candidate": "fae837cd1ac6e5882a15e4ca350c38353018bc78",
+      "dev": "86d52447424073e543f4b7ae28581e851ffc208a",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/record-search.ts",
+      "base": null,
+      "candidate": "8cc644a6ff2b3b11bcae94afa085e04f8b3776b1",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "base": "943e664b5fe37b5c1e8096033d01abab8eca954e",
+      "candidate": "1d0979805d5fd6b05f88a5f4e9d6133d582da2ab",
+      "dev": "943e664b5fe37b5c1e8096033d01abab8eca954e",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "base": "649ccb941b1a1cac32aefb963b565ed3020fc1a6",
+      "candidate": "859e90eff094437606f659e971129ebdef6d8403",
+      "dev": "cbb83bc6a13a437243622fa87c4dfa10cbb6808a",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Compose original pool recovery widgets while preserving application provenance and current dev projection/transaction behavior."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "base": "10bba42977c33b11bf9b2426a5de765c49b92d9b",
+      "candidate": "b6861043f543a883af5b87e744cf829926c9c232",
+      "dev": "10bba42977c33b11bf9b2426a5de765c49b92d9b",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "base": "21e1a63b3a88db673c79170cdf873be0c9949a27",
+      "candidate": "e3e0e9017443ec925e4163bfb5ac1849a8de0290",
+      "dev": "21e1a63b3a88db673c79170cdf873be0c9949a27",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "base": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "candidate": "9aefb1e4ced8e7c146dcd59e82c913ed01f9123d",
+      "dev": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "base": "d85611c400a63e4871399cbec76fec60175d9870",
+      "candidate": "1e09e98d1d2b3bc0b7237d69a4749f0f74aa24ca",
+      "dev": "d85611c400a63e4871399cbec76fec60175d9870",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/business-browser.test.ts",
+      "base": "e68e29cd3e18e3ac5cb3b7aac266ae06f05a4593",
+      "candidate": "6a036f4eeed2762ec3c981628e317f051635a0c4",
+      "dev": "e68e29cd3e18e3ac5cb3b7aac266ae06f05a4593",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/dashboard-budget-runtime.test.ts",
+      "base": "82eae346d91803da482f73974a3d9cee747361d0",
+      "candidate": "f2d2d7c50bc1bf4726a75865b1707ff29a641318",
+      "dev": "82eae346d91803da482f73974a3d9cee747361d0",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/fixture/browser-evidence.ts",
+      "base": null,
+      "candidate": "3f83c11febdb65892e643994724a75e7ef58bb62",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/fixture/foreign-owner.ts",
+      "base": null,
+      "candidate": "588eaba792089511ab7833c44d0a1d188bdf0247",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "base": "ef8e8efdbffacafb5979430bcb8310bc8233ae25",
+      "candidate": "332a282cd9a9ef7d60646da3cbde3ecd2c79ab6d",
+      "dev": "ef8e8efdbffacafb5979430bcb8310bc8233ae25",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/installation.test.ts",
+      "base": "09e975001b47230b532be425c676cfbdc593a876",
+      "candidate": "2d484a5d554ce9afdce2a4770b1df02d360ac49a",
+      "dev": "09e975001b47230b532be425c676cfbdc593a876",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/io-browser.test.ts",
+      "base": "fc30a146430c99160784744cedfc74cd7257e25e",
+      "candidate": "8b61d2d4480351a9b9af9f5dbbdd0392081c3e08",
+      "dev": "fc30a146430c99160784744cedfc74cd7257e25e",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+      "base": "4cba06cae367a9466d200401375f68748bf0aab7",
+      "candidate": "ff1842befbadb68fd31a2ed5a98ed6a8fa8f0d10",
+      "dev": "4cba06cae367a9466d200401375f68748bf0aab7",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-bootstrap.test.ts",
+      "base": "e39ae63c0dca64e490343c8297b93a3639ecceec",
+      "candidate": "408e0790f8d7ad97a230a4a2c3b051e9a2cf53ce",
+      "dev": "e39ae63c0dca64e490343c8297b93a3639ecceec",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "base": "2875f552e35196e4de2b4602bf4310d8823f0c13",
+      "candidate": "63e504f20dca94e1eb59945e3189e203c628d4bb",
+      "dev": "2875f552e35196e4de2b4602bf4310d8823f0c13",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+      "base": "ebd533a78e4ecc093625f5f42fae6bcdee30c670",
+      "candidate": "abb869ab7c70952267a53dc09d390204faf53fec",
+      "dev": "ebd533a78e4ecc093625f5f42fae6bcdee30c670",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "base": "56f9274f5d570be609dfa89d7bca7817728a76d4",
+      "candidate": "ed50b540b1e01db67d158cdd0c670521836ccd6a",
+      "dev": "56f9274f5d570be609dfa89d7bca7817728a76d4",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/presentation.test.ts",
+      "base": "508abc274426891f838dca87709734d2a3d19d8a",
+      "candidate": "2f458278edd2a094ba9767fc7eddc154a99f2b14",
+      "dev": "508abc274426891f838dca87709734d2a3d19d8a",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "base": "7f68785901418d39054f743a99ddce3c8c28670e",
+      "candidate": "180e88b7f17f333eb64cc56c3416578507adba0b",
+      "dev": "7f68785901418d39054f743a99ddce3c8c28670e",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+      "base": null,
+      "candidate": "0bb3d489fb625d36302ae932b3f49165fac5176a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "base": null,
+      "candidate": "7879352d79435ad39ca3a082d494a7787d601653",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/controls.ts",
+      "base": null,
+      "candidate": "c72f26d769276275d2124b39723bdf287eb9ebdc",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/fixture.ts",
+      "base": null,
+      "candidate": "1e1639b98d2d241d67ca63b46101ddfdbc463990",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+      "base": null,
+      "candidate": "48c3f0eeb6b20ac7b4e9ebdb0f9bce086a03a875",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/journey.ts",
+      "base": null,
+      "candidate": "bb70fd8e7da9db90fdd4851078beade6191ad507",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+      "base": null,
+      "candidate": "f5acf0e377eab744b968bd57142dbba4316b766b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+      "base": null,
+      "candidate": "503f1150b9091310b1d260cce87f14915a05ed7d",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+      "base": null,
+      "candidate": "3b03bf1be732df98c54acfc070fc31a2cb62e535",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/browser-fixture.ts",
+      "base": null,
+      "candidate": "8cc9bb99ff7168b6e2a8ada7eb0176966f963e48",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+      "base": null,
+      "candidate": "a5a0dbefb10a385f159cdaaf238bbff92b2165ba",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/proof-helpers.ts",
+      "base": null,
+      "candidate": "eeed611acf96b058777a5974b7b5a41b53035392",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "base": null,
+      "candidate": "ab171ddc06ba93171021669c52e3f1b0e802caef",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "base": null,
+      "candidate": "a79731cdbc759509f6b38f0d3f4cf9e6fc0c5ab8",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+      "base": null,
+      "candidate": "dcaf8311b402e5b1ee5229c7a6bc62ad136e98c5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/browser-steps.ts",
+      "base": null,
+      "candidate": "bc3e8abaf52732faed066b7bd4b1d402bf9a5b7a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/meeting-fixture.ts",
+      "base": null,
+      "candidate": "860e0c9f8ecbf96af1e7c1d9ff5271d7db42d48c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+      "base": null,
+      "candidate": "2f1ed132999701b7012ad78866eaea1c5cbd4647",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+      "base": null,
+      "candidate": "6409fbce4f73c28a35435fd54643a885086ec3ff",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts",
+      "base": null,
+      "candidate": "e288b497deddfdd21a9fc8697854ce5cd95958c6",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/browser-host-fixture.ts",
+      "base": null,
+      "candidate": "18ba7779f90df14eae5d8ea59ab667b09671aa5a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/domain-fixture.ts",
+      "base": null,
+      "candidate": "53255306057c717f1204b9277e05e1976dd25960",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/exact-confirmation.test.ts",
+      "base": null,
+      "candidate": "4087dc32900073b44bae75fae4d7f78f2ab868a2",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/reply-identity.test.ts",
+      "base": null,
+      "candidate": "9c421d9ce01161a88085f962a7b4f7a5a01cb3a6",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts",
+      "base": null,
+      "candidate": "4307146cd3e06c3a3310144356ede59cde961751",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+      "base": null,
+      "candidate": "d9ac270440393a0c73e5bad8892d01569e3c61d3",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/browser-host-fixture.ts",
+      "base": null,
+      "candidate": "1d830560e179c25b16a773650e1ef42cc0a0c721",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/confirmation-diagnostic.test.ts",
+      "base": null,
+      "candidate": "2ff8da1d3bdd71e216da4221a3a1abed56706acd",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/timing-fixture.ts",
+      "base": null,
+      "candidate": "8183746fe24af18605866bdeb3c88faedbb8c286",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "base": null,
+      "candidate": "eb46a6dab6e351cc51d7bcda8a48e2f6087f6c7f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "base": null,
+      "candidate": "2fc2dc11756961034e2d6091d2d8728635728ffb",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "base": null,
+      "candidate": "41bbc8ee2014f5dc952944ff77839df7e33c7258",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-pool-registration.ts",
+      "base": null,
+      "candidate": "2cec02fcb4c7d7e4c4ab9ab51ce8b03c4a98bb2e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-selection.test.ts",
+      "base": null,
+      "candidate": "68d693ec09b1ef94c9c8c5475dcb27edd2b4ef32",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "base": null,
+      "candidate": "21da6b5fb13a79b40151cac1288f79f0676d6f34",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+      "base": null,
+      "candidate": "e52d70c52e5c499430f7f3082c1d523f231c4a7c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "base": null,
+      "candidate": "d2455e3901f366b2152a5e351d8e10dee0110581",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "base": null,
+      "candidate": "980165339a51f672493b0916062cb5ba05e27b36",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "base": null,
+      "candidate": "ce9714e29d73a0137c6348e891ce2ee1c365218f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "base": null,
+      "candidate": "b3ac26b29ebab49e1e9982e4856e499bef980358",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "base": null,
+      "candidate": "e6713eb6b3728590373e71fd9b9004385c0a24e5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "base": null,
+      "candidate": "29062933a1b13b99d84a544a6d99c3ec6c37151c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "base": null,
+      "candidate": "e4bd624b1d9c9e0125bedddb7d2218f57f3d7417",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts",
+      "base": null,
+      "candidate": "c0017ee1b77d218972dc05a3eeb0edec0203997f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "base": null,
+      "candidate": "fa92bb29a5421ac8b891358b1e89492324dffc0c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "base": null,
+      "candidate": "8fbab9fac6c8906785b4ade14688eaa14f2ea785",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "base": null,
+      "candidate": "6c813b4d0ca22dc7e75dbc6ad61fd3004d368976",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "base": null,
+      "candidate": "d991c090346268101c074e33aadc0d3a4a6eabbd",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+      "base": null,
+      "candidate": "fa5ea273fa3542e2c9b448717cc702eca7f32a00",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "base": null,
+      "candidate": "629667233d9e17112a3017fb2d8923e46dfef23a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "base": null,
+      "candidate": "a7da2254c180812f7377ac00276258cc55b0ad03",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "base": null,
+      "candidate": "a3f29dfe412c5889a4a6a80797b5a86a5ed42229",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "base": null,
+      "candidate": "68657f8ba17b6d8c215930a47fb286e86e84110f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "base": null,
+      "candidate": "65b6f9543c06b0d1281c896bb44743da86e8048b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "base": null,
+      "candidate": "b1b4ec472620a6f22725ecf811d4aee7c26b803e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "base": null,
+      "candidate": "167b08a271ec5bddb27ae6421384fff4fd53bed5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+      "base": null,
+      "candidate": "7294b6c3240ae4b2858dd1603b12e49b0067041f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+      "base": null,
+      "candidate": "7bfef66585f96fea1f474f9eda2d279a4ab2bd52",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "base": null,
+      "candidate": "91ef8a3879176ef8aca7c08b315544487403e0e9",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "base": null,
+      "candidate": "ed5c1305e2330abade3fa5af229953da5eb7774b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-fixture.ts",
+      "base": null,
+      "candidate": "e5923470873762513850d88e54deeeb20922f043",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "base": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "candidate": "0f275d83469c22a2154d728edbc3bbec4ae4f6ee",
+      "dev": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+      "base": null,
+      "candidate": "4197f1d5b7d1a21c1bad44b58252f15964bed060",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts",
+      "base": null,
+      "candidate": "a18e07aab852a0d4dbfb996d158a69c742c08c2f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "base": null,
+      "candidate": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "base": "355f8006e9a527ddc3d6499933fc758645c9c573",
+      "candidate": "3c204b4cb72df65607d9c5ad5fa91b4f5e6b59cc",
+      "dev": "355f8006e9a527ddc3d6499933fc758645c9c573",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
+      "base": "15b567600088057268834ac70204e201d8e863dc",
+      "candidate": "90d872a0767e6e27cb055b77793d8606711ca1ed",
+      "dev": "15b567600088057268834ac70204e201d8e863dc",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/s1.test.ts",
+      "base": "508edc8974bee32b98f4981366ce0d90e1d8a0b2",
+      "candidate": "b96eb46a0ec426d0994f555b13b36e72f493eedb",
+      "dev": "508edc8974bee32b98f4981366ce0d90e1d8a0b2",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/screen.test.ts",
+      "base": "8727f2ef9e8d438824c09fa2d19ed8621e686b74",
+      "candidate": "f15cadf2de3e57f1043da9b227665524c87386a9",
+      "dev": "8727f2ef9e8d438824c09fa2d19ed8621e686b74",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "base": "9724c9412a19fdbcf45ebe55873e49501c63639a",
+      "candidate": "97eb144f46510a3b84ecf0c3f94113f4e561be60",
+      "dev": "9724c9412a19fdbcf45ebe55873e49501c63639a",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/alternative-response.ts",
+      "base": null,
+      "candidate": "7e7122698568a4ced5aed789a4d2ac743cd6db2c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+      "base": null,
+      "candidate": "c176ffdbb139416052f0817ed8bf3a66662ce104",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/case-lifecycle.ts",
+      "base": null,
+      "candidate": "f5a6c41b5bdaf297bcc57a7e297bcfd4db164ed7",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "base": null,
+      "candidate": "782b8f35fe065626908f0af98f6a4eda26498c86",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "base": null,
+      "candidate": "fa509e9d7a7da9d0024c9487975f7b26b3b29146",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "base": null,
+      "candidate": "84e5ef716e29446368744ec4950ad84eb244d1a8",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "base": null,
+      "candidate": "bd95f7decc816485df40863ba9efcc626f3a130c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "base": null,
+      "candidate": "f87b355f3ffd9e72c886090d0f52619229bc7d3a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "base": null,
+      "candidate": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "base": null,
+      "candidate": "7ed877b9e1fd3055dc3cf750d5d070b765486f63",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+      "base": null,
+      "candidate": "30e3ab9c05423e695e32fc2f70a245596d85b7f3",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+      "base": null,
+      "candidate": "4e5f243bc52cdc6806e6af0ab6c8843d60eeea2e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "base": null,
+      "candidate": "4507f1e495739153ff44da04ed84499176a900c5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/installed-shell.ts",
+      "base": null,
+      "candidate": "93d4c69f05b94142e101a8da980b023cc2cb207a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "base": null,
+      "candidate": "66e269a78af8262764228557e2eeccd29bca1a36",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts",
+      "base": null,
+      "candidate": "122a31917565d2de51ba63e646cc20000c239670",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "base": null,
+      "candidate": "4986e2d7b7a9021b1338f031d81d3e3eed2fe8cb",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "base": null,
+      "candidate": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "base": null,
+      "candidate": "048f1dd16063a79cf59481e20d9000b09f7b2208",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "base": "2c8b66ccbab985ed0bd5775e156386a20f4c8715",
+      "candidate": "626f3e5fb44029c56f4233c50068b4bec4cdfb47",
+      "dev": "2c8b66ccbab985ed0bd5775e156386a20f4c8715",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "base": "9302fb45ed9a3b1636ba98f2143b0c3fdca3e04b",
+      "candidate": "edf705a65aeaa3ca49e8ab1fcd0ea089e6258251",
+      "dev": "9302fb45ed9a3b1636ba98f2143b0c3fdca3e04b",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "base": null,
+      "candidate": "8398900df0449ead740afe63a261d47da86787ca",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "base": null,
+      "candidate": "50ec85a29b4a2981a9143feea2cebad9c1a7d6a4",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "base": null,
+      "candidate": "494c86abcf9b24bc5c8f4d645d02c24fc8edb2ef",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "base": null,
+      "candidate": "16d6a5bad41e8ad84cb552852af0b18110dd5844",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "base": "a1c2fe13d983c44a226570e575242458e60a2b58",
+      "candidate": "db36fc94b00552fcb9862989c40c0d237e70b0bd",
+      "dev": "a1c2fe13d983c44a226570e575242458e60a2b58",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "base": null,
+      "candidate": "0b90e866c7519e89c84f94891886273c807708c4",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+      "base": null,
+      "candidate": "15489ae174954ae765bd8e9850daa62863b02393",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "base": "f610924d4da591ed389b0e1293cab2350e36e0dd",
+      "candidate": "d77242699291f1a0ff8544bc98c18613adee0e6f",
+      "dev": "f610924d4da591ed389b0e1293cab2350e36e0dd",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "base": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "candidate": "25e013b9e8e3c227525378400a005cd0ab82b8bd",
+      "dev": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+      "base": "8a262d7f78e08d785a0e26ab3f297af5979c5202",
+      "candidate": "cd290320986d5a9795c14badd47f9aa499577f9b",
+      "dev": "8a262d7f78e08d785a0e26ab3f297af5979c5202",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+      "base": "71ac5b253ab8e8bbc8591bfceda2ee2b2175a430",
+      "candidate": "0c8a191b2a205d047bda2c0738ce6c00a29525b3",
+      "dev": "71ac5b253ab8e8bbc8591bfceda2ee2b2175a430",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx",
+      "base": "6d4a7eb1bdc86149a9d9b054685fc72201c28a93",
+      "candidate": "b56775de1f9508be6c149a6e69e980d020820ca6",
+      "dev": "4c4af2f8e9d6be097c6118fa16b4d26a0b06d79b",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "preserve-dev",
+        "reason": "Current procurementNumberInput already supplies numeric/null input, preserving translations and PO number handling."
+      }
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+      "base": "ff5f04a77bd25f3ffe0019d5f7350fc24a33d272",
+      "candidate": "21c0c36d5a84b8df0690aa493d55d524fd2bc08b",
+      "dev": "134f6f705f05d87afd318aa9f7d0ff9aa1a080e2",
+      "status": "BOTH_CHANGED",
+      "type": "product",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Only fill skipped score-array indices with null before assignment; retain dev numeric input, detached command DTO, review and presentation."
+      }
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/navigation.test.ts",
+      "base": "e806e50198f1142c350fe7b3ae90051a4a4e39bd",
+      "candidate": "c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85",
+      "dev": "e806e50198f1142c350fe7b3ae90051a4a4e39bd",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+      "base": null,
+      "candidate": "d5850e540e0fc9c2c2674edc9bb41b7cb636a42b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts",
+      "base": null,
+      "candidate": "fa6e13f3bb0c2b73c8d0b67da8aac9584c9d5985",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts",
+      "base": null,
+      "candidate": "beb1314c7217720f1e819ddb9ae268f041dc549a",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts",
+      "base": null,
+      "candidate": "fff3b0ccf6248ce6206434ffe7979ff8e63a00cb",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/files-route.test.ts",
+      "base": null,
+      "candidate": "59b8917de5dd5a85d3b45a850ebfd2a6386284eb",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "base": null,
+      "candidate": "238d8329bc5677cdc98b9fa238426783bf4add65",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "base": null,
+      "candidate": "c4c4db3c8542f1cda9e83afad026266335e4e141",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts",
+      "base": null,
+      "candidate": "f026c54dfdf8d5434aaea91edba82ed570eab204",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts",
+      "base": null,
+      "candidate": "9821bf2abae2355129e3952ae136b4d68291340f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/import-form-state.test.ts",
+      "base": null,
+      "candidate": "322aea511bbc05f969a8e9407f1167c45768487d",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/memory-route.test.ts",
+      "base": null,
+      "candidate": "9c34f7434f1e7e4deb512a13e9d4799a78b7d330",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/operations-route.test.ts",
+      "base": null,
+      "candidate": "79fec9dd8d0f2cff359abfdc2af1ae8f4151bb38",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts",
+      "base": null,
+      "candidate": "e0da88f9b5c9eacf33ccf44b5e245dce17888ece",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "base": null,
+      "candidate": "92024c7caa2f5e10d243c6feff71abb4b2a1b7f0",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/people-route.test.ts",
+      "base": null,
+      "candidate": "f00cb8515d3a70e106ec734d84ea00ad9b40be2c",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/planner-pages-preflight.test.ts",
+      "base": null,
+      "candidate": "fb6ef11b9bc2672048bfd5208cd8a50a080902f2",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts",
+      "base": null,
+      "candidate": "6528528c2208ac50218b7f97147efd2ca3634183",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "base": null,
+      "candidate": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts",
+      "base": null,
+      "candidate": "6135a6f426a54040ab5190f34c73d79051dc9435",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/procurement-draft-leaves.test.ts",
+      "base": null,
+      "candidate": "ae5bcf613190468300a6706e1b1b56ec54fd08fa",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/request-title-races.test.ts",
+      "base": null,
+      "candidate": "3183dea65b6e01b68fc73e6b3de6671476fee0ab",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/request-title.test.ts",
+      "base": null,
+      "candidate": "806f30b0fab5d94d84ef304946dfad6132013a8b",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts",
+      "base": null,
+      "candidate": "aa21c0ef1ee0ad8ddaa53fc8b685c0102e2f6230",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/routines-route.test.ts",
+      "base": null,
+      "candidate": "3c7edd08e0ed08d1bfc0224216dd27542450e4e5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "base": null,
+      "candidate": "f07bb3371702d5b00c481bcfed89d682eecd1699",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "base": null,
+      "candidate": "ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+      "base": null,
+      "candidate": "fbc5e62bf762f92433536ede01e6ab2e67408f00",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+      "base": null,
+      "candidate": "f62bf03c887b83cd1b10573d65589f01c023c2e7",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "base": null,
+      "candidate": "313372865426a047cc500d1dba891a75cb8fa047",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts",
+      "base": null,
+      "candidate": "5cfab26e9f171097994b3ec72c53c587b87268a5",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts",
+      "base": null,
+      "candidate": "9fae974a321af6c863c8749600d42e5271bfa63f",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-contract.test.ts",
+      "base": null,
+      "candidate": "f96f09d8602c1a6142e83e7d8680bffeceecce73",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts",
+      "base": null,
+      "candidate": "a067b9fd835920ad864174461617778700021fa3",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/transport-original-catalog.json",
+      "base": null,
+      "candidate": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/work-route.test.ts",
+      "base": null,
+      "candidate": "913650b3e8667127234a406b7f34e712d3cf7740",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/test/sucafina-native/source-context-fixture.ts",
+      "base": null,
+      "candidate": "eea862b6b7391c12bfefacb94fa61886a6f0b141",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "base": null,
+      "candidate": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+      "dev": null,
+      "status": "NEW",
+      "type": "product",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "packages/client/src/sucafina/transport.ts",
+      "base": "5ce42b03cf854cf32b6bcd5aa2eb089ad634f256",
+      "candidate": "0aad446c0ffb44173faea24fa2e79b64f1c15114",
+      "dev": "5ce42b03cf854cf32b6bcd5aa2eb089ad634f256",
+      "status": "UNCHANGED_BASE",
+      "type": "product",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/core/test/inbox/work-service-fixture.ts",
+      "base": "6a2d316c5193f8cea88710e5085985ea1fc8b3b6",
+      "candidate": "b1a3f2bbcb83bb50ea832c804e8240152fda2276",
+      "dev": "6a2d316c5193f8cea88710e5085985ea1fc8b3b6",
+      "status": "UNCHANGED_BASE",
+      "type": "test",
+      "disposition": {
+        "action": "apply-original-delta",
+        "reason": "Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."
+      }
+    },
+    {
+      "path": "packages/core/test/inbox/work-service.test.ts",
+      "base": "c50171f6a1b560adf0abc9b51d1450484cba8f1e",
+      "candidate": "470162b822bff4ddfd1813fe3c33ac248af8a164",
+      "dev": "dd51155f4ad53999a370ddd396b36a805c004f99",
+      "status": "BOTH_CHANGED",
+      "type": "test",
+      "disposition": {
+        "action": "merge-hunk",
+        "reason": "Seed eligible Jira credentials using current remote.connect(credentials,installOwner,{email,...}), preserving provider-acquisition canary after public connect removed email."
+      }
+    },
+    {
+      "path": "script/sf-ci/browser-pool.d.mts",
+      "base": null,
+      "candidate": "5f66647c7b575449283011f2393157ecc99547f9",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/browser-pool.mjs",
+      "base": null,
+      "candidate": "e14053bfe4dbf4bee796dff389e0b993c0fb943d",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/browser-pool.test.mjs",
+      "base": null,
+      "candidate": "3501a0539cc9e09510c59b6ef72f17d66878350e",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/gate.mjs",
+      "base": null,
+      "candidate": "d67d7c0c1e083dcd73587f1d95dc260a46aaeb13",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/gate.test.mjs",
+      "base": null,
+      "candidate": "6aaf3616eabb8209f5d05d061eea54020b79baeb",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/shard-plan.mjs",
+      "base": null,
+      "candidate": "afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/shard-plan.test.mjs",
+      "base": null,
+      "candidate": "859ff15c2950ffdadae18a63627fc4a33a3aa266",
+      "dev": null,
+      "status": "NEW",
+      "type": "test",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf-ci/workflow-contract.mjs",
+      "base": null,
+      "candidate": "2ab6c4171b3246dc12c38a0189009fb19c16cd6b",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf2h/final-bundle/requests.json",
+      "base": null,
+      "candidate": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-bun-report.py",
+      "base": null,
+      "candidate": "9cef4f356f3b93c58f8b21ef9b1d76f342396851",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "base": null,
+      "candidate": "308ae602016d3b9afae3c90cb9b20663aba9341e",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "sf/ci/browser-pool-sources.json",
+      "base": null,
+      "candidate": "04a6262bc3211deeaa3666d8961fec472fcaf520",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "sf/ci/shard-costs.json",
+      "base": null,
+      "candidate": "508a62d91c00758e18cffa06db5459a138acb4cd",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    },
+    {
+      "path": "sf/ci/suites.json",
+      "base": null,
+      "candidate": "e9b4d19d2b2b027416e337ad0d8a787d18165475",
+      "dev": null,
+      "status": "NEW",
+      "type": "ci",
+      "disposition": {
+        "action": "add-original-source",
+        "reason": "Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."
+      }
+    }
+  ],
   "focalCorrections": {
     "parentSha": "f382029d7be3f4e31440814f7b3e16038ad65329",
     "evidenceRun": "45035419728",
-    "status": "PENDING_PINNED_ACTIONS_VALIDATION",
+    "status": "SIX_JOBS_RECEIVED_FURTHER_CORRECTIONS_REQUIRED",
     "changes": [
       "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
       "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
@@ -148,211 +2610,170 @@
       "existingProductFix": "No speculative Procurement product patch: current dev already detaches reviewed Solid-store DTOs before strict codec/dispatch. The focal run must establish whether this resolves the observed zero-POST failures."
     }
   },
-  "files": [
-    {"path":".github/workflows/sf-ci.yml","base":null,"candidate":"2c8b3a6428073773206bd861112302f307776760","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"apps/cli/src/sucafina-product/decision-domain-http.ts","base":"50b4b913a3905ddfe5ead10ea38107fd71f6f7d6","candidate":"90a0e2ec4170c5f18689ae89a312c3efc7dafbfc","dev":"50b4b913a3905ddfe5ead10ea38107fd71f6f7d6","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"apps/cli/src/sucafina-product/host-context.ts","base":"84d232eb2c759ce59b1fb2009fac6bc66b6b1e53","candidate":"9376c281c5fbda0c47214408d92273a739ba0027","dev":"cb3a26cfce9ba8359bc1afe37190c09a2d2c7cf3","status":"BOTH_CHANGED","type":"product","disposition":{"action":"merge-hunk","reason":"Expose caseWorkSelection only when the private caseSelection adapter is mounted; retain all newer dev host services."}},
-    {"path":"apps/cli/test/native-execution.test.ts","base":null,"candidate":"fa2b095cd1e4f65dff5b877edad43b3d1c642aa9","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"apps/cli/test/sucafina-host-context.test.ts","base":null,"candidate":"35c60e952f05a8035794541815d13d7f73a1dbdf","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"apps/cli/test/sucafina-installation.test.ts","base":"486a4348923b0aecdec490b8d84b61e928b42fbe","candidate":"a4e3f10514297a82c40480098809d171e97bd56c","dev":"486a4348923b0aecdec490b8d84b61e928b42fbe","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"apps/cli/test/sucafina-native-phase-wiring.test.ts","base":null,"candidate":"c7e82f3436403b68525beb874f9531a1b4b3483b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"docs/guides/sucafina-native-dashboard.md","base":"c40197855a2c779f01e1969afce2f487853c5465","candidate":"46b84626c69c8637935b30795a865d1f84b146e1","dev":"193e81425565d839891a15a13fb4fc35b1eb2fff","status":"BOTH_CHANGED","type":"product","disposition":{"action":"preserve-dev","reason":"The historical additional guide section advertises legacy local widgets; retain the current native operator guide and public legacy-route closure."}},
-    {"path":"modules/atlas/boundary/test/business-memory-ports.test.ts","base":null,"candidate":"22d2bad87dd87cfb7dd7b2c08c0da6ca75da6238","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/local/entry.ts","base":"c047dbe807dd0f34e04e4f0bb29ed46c5bfca685","candidate":"ba450be2635fa72277222f1c9c54176fcc23b0d1","dev":"329a500051ff1ef3ad576e21a6dde4e76339f489","status":"BOTH_CHANGED","type":"product","disposition":{"action":"merge-hunk","reason":"Add three internal availability callbacks and preserve productView, native composition, workspace and PO observations; no public routing change."}},
-    {"path":"modules/sucafina/Sucafinav1/product/contracts/host-context.ts","base":"4865e3c937132e68af72d0fbe9589e1f0910d00a","candidate":"63331f9bbb1afaa4cbc23c17268839bbd50cd944","dev":"91e7af8d343d32e9ad3ca7de6cdb320e6667a1b2","status":"BOTH_CHANGED","type":"product","disposition":{"action":"merge-hunk","reason":"Add optional caseWorkSelection marker without changing current operational observation contracts."}},
-    {"path":"modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts","base":"c00afe5f9bec072c6236441e1b650327d26853ea","candidate":"545556d9c3824c1e6e4985fdf1b60bdb685b5b1f","dev":"c00afe5f9bec072c6236441e1b650327d26853ea","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts","base":null,"candidate":"f3ea1b99b97811eb0fabcea266b2cb201dfab543","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/product/interface/http.ts","base":"db4364fa0e76c81a509f5adfa1c29a344750707b","candidate":"942371c7ee8c7f057e1a193eb145bc761e871309","dev":"db4364fa0e76c81a509f5adfa1c29a344750707b","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/planner/monthly-host.ts","base":"b8bdf6ef06a9883952faa010efdec80f8d3b69d5","candidate":"7b0b57011cee331da2be7883bf2b5a4f4060984b","dev":"b8bdf6ef06a9883952faa010efdec80f8d3b69d5","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/procurement/decision-http.ts","base":"7033a3ee78929a1aafaf1dc8e7733368f4235793","candidate":"0763dad938ed32e75930a0161c3fbb88e8675212","dev":"7033a3ee78929a1aafaf1dc8e7733368f4235793","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts","base":null,"candidate":"499c1ad39507a737d3fdad4f824870ab89ae19d6","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/contextual-decision.ts","base":null,"candidate":"fb509c9af5051aa0344f84c15214ad9c3d10e5ab","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts","base":"e69befea13a8b1bf597492a0b3c5a0ecd00d7c91","candidate":"5726d16e7e325bbec315294ce1dc41e4324ff332","dev":"e69befea13a8b1bf597492a0b3c5a0ecd00d7c91","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/decision-apply.ts","base":"e986698541231327e226a0125c0671c0ad719cb5","candidate":"74b6cbb9fc508c533fb27537380fcdcb379c8021","dev":"e986698541231327e226a0125c0671c0ad719cb5","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/decision-edit.ts","base":"1c4bd231075bf149a31924cf651063bf1c3ef6d3","candidate":"e8fbfb5fe3d9979ffb91f4392a03e19c01c3eaf9","dev":"1c4bd231075bf149a31924cf651063bf1c3ef6d3","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts","base":"860f7d6f03277b15468927ed390b0133a095e032","candidate":"75d0f2b64727bd4d507c539037de8d0b1d7c9814","dev":"860f7d6f03277b15468927ed390b0133a095e032","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/personal-views.ts","base":"656adc5d1a261470d7c259220d82063cfc032b5d","candidate":"1ff147d9b84a33c77c96969fa8ef1ad9dced303d","dev":"656adc5d1a261470d7c259220d82063cfc032b5d","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts","base":null,"candidate":"d5cb835f66228365f4b45a0ca5529a3a2545571a","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/portfolio.ts","base":"86d52447424073e543f4b7ae28581e851ffc208a","candidate":"fae837cd1ac6e5882a15e4ca350c38353018bc78","dev":"86d52447424073e543f4b7ae28581e851ffc208a","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/record-search.ts","base":null,"candidate":"8cc644a6ff2b3b11bcae94afa085e04f8b3776b1","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts","base":"943e664b5fe37b5c1e8096033d01abab8eca954e","candidate":"1d0979805d5fd6b05f88a5f4e9d6133d582da2ab","dev":"943e664b5fe37b5c1e8096033d01abab8eca954e","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/runtime/application.ts","base":"649ccb941b1a1cac32aefb963b565ed3020fc1a6","candidate":"859e90eff094437606f659e971129ebdef6d8403","dev":"cbb83bc6a13a437243622fa87c4dfa10cbb6808a","status":"BOTH_CHANGED","type":"product","disposition":{"action":"merge-hunk","reason":"Compose original pool recovery widgets while preserving application provenance and current dev projection/transaction behavior."}},
-    {"path":"modules/sucafina/Sucafinav1/runtime/contract.ts","base":"10bba42977c33b11bf9b2426a5de765c49b92d9b","candidate":"b6861043f543a883af5b87e744cf829926c9c232","dev":"10bba42977c33b11bf9b2426a5de765c49b92d9b","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts","base":"21e1a63b3a88db673c79170cdf873be0c9949a27","candidate":"e3e0e9017443ec925e4163bfb5ac1849a8de0290","dev":"21e1a63b3a88db673c79170cdf873be0c9949a27","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/runtime/ui.ts","base":"2d59a6d4a5cb4b87590c326ada84347aa85c094e","candidate":"9aefb1e4ced8e7c146dcd59e82c913ed01f9123d","dev":"2d59a6d4a5cb4b87590c326ada84347aa85c094e","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/src/screen-shell.ts","base":"d85611c400a63e4871399cbec76fec60175d9870","candidate":"1e09e98d1d2b3bc0b7237d69a4749f0f74aa24ca","dev":"d85611c400a63e4871399cbec76fec60175d9870","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/business-browser.test.ts","base":"e68e29cd3e18e3ac5cb3b7aac266ae06f05a4593","candidate":"6a036f4eeed2762ec3c981628e317f051635a0c4","dev":"e68e29cd3e18e3ac5cb3b7aac266ae06f05a4593","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/dashboard-budget-runtime.test.ts","base":"82eae346d91803da482f73974a3d9cee747361d0","candidate":"f2d2d7c50bc1bf4726a75865b1707ff29a641318","dev":"82eae346d91803da482f73974a3d9cee747361d0","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/fixture/browser-evidence.ts","base":null,"candidate":"3f83c11febdb65892e643994724a75e7ef58bb62","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/fixture/foreign-owner.ts","base":null,"candidate":"588eaba792089511ab7833c44d0a1d188bdf0247","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/form-layout.test.ts","base":"ef8e8efdbffacafb5979430bcb8310bc8233ae25","candidate":"332a282cd9a9ef7d60646da3cbde3ecd2c79ab6d","dev":"ef8e8efdbffacafb5979430bcb8310bc8233ae25","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/installation.test.ts","base":"09e975001b47230b532be425c676cfbdc593a876","candidate":"2d484a5d554ce9afdce2a4770b1df02d360ac49a","dev":"09e975001b47230b532be425c676cfbdc593a876","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/io-browser.test.ts","base":"fc30a146430c99160784744cedfc74cd7257e25e","candidate":"8b61d2d4480351a9b9af9f5dbbdd0392081c3e08","dev":"fc30a146430c99160784744cedfc74cd7257e25e","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/local-backups.test.ts","base":"4cba06cae367a9466d200401375f68748bf0aab7","candidate":"ff1842befbadb68fd31a2ed5a98ed6a8fa8f0d10","dev":"4cba06cae367a9466d200401375f68748bf0aab7","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/local-bootstrap.test.ts","base":"e39ae63c0dca64e490343c8297b93a3639ecceec","candidate":"408e0790f8d7ad97a230a4a2c3b051e9a2cf53ce","dev":"e39ae63c0dca64e490343c8297b93a3639ecceec","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/local-store.test.ts","base":"2875f552e35196e4de2b4602bf4310d8823f0c13","candidate":"63e504f20dca94e1eb59945e3189e203c628d4bb","dev":"2875f552e35196e4de2b4602bf4310d8823f0c13","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/parity-reports.test.ts","base":"ebd533a78e4ecc093625f5f42fae6bcdee30c670","candidate":"abb869ab7c70952267a53dc09d390204faf53fec","dev":"ebd533a78e4ecc093625f5f42fae6bcdee30c670","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/planner-runtime.test.ts","base":"56f9274f5d570be609dfa89d7bca7817728a76d4","candidate":"ed50b540b1e01db67d158cdd0c670521836ccd6a","dev":"56f9274f5d570be609dfa89d7bca7817728a76d4","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/presentation.test.ts","base":"508abc274426891f838dca87709734d2a3d19d8a","candidate":"2f458278edd2a094ba9767fc7eddc154a99f2b14","dev":"508abc274426891f838dca87709734d2a3d19d8a","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts","base":"7f68785901418d39054f743a99ddce3c8c28670e","candidate":"180e88b7f17f333eb64cc56c3416578507adba0b","dev":"7f68785901418d39054f743a99ddce3c8c28670e","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts","base":null,"candidate":"0bb3d489fb625d36302ae932b3f49165fac5176a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts","base":null,"candidate":"7879352d79435ad39ca3a082d494a7787d601653","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/controls.ts","base":null,"candidate":"c72f26d769276275d2124b39723bdf287eb9ebdc","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/fixture.ts","base":null,"candidate":"1e1639b98d2d241d67ca63b46101ddfdbc463990","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts","base":null,"candidate":"48c3f0eeb6b20ac7b4e9ebdb0f9bce086a03a875","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/journey.ts","base":null,"candidate":"bb70fd8e7da9db90fdd4851078beade6191ad507","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts","base":null,"candidate":"f5acf0e377eab744b968bd57142dbba4316b766b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts","base":null,"candidate":"503f1150b9091310b1d260cce87f14915a05ed7d","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts","base":null,"candidate":"3b03bf1be732df98c54acfc070fc31a2cb62e535","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/browser-fixture.ts","base":null,"candidate":"8cc9bb99ff7168b6e2a8ada7eb0176966f963e48","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts","base":null,"candidate":"a5a0dbefb10a385f159cdaaf238bbff92b2165ba","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/proof-helpers.ts","base":null,"candidate":"eeed611acf96b058777a5974b7b5a41b53035392","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts","base":null,"candidate":"ab171ddc06ba93171021669c52e3f1b0e802caef","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts","base":null,"candidate":"a79731cdbc759509f6b38f0d3f4cf9e6fc0c5ab8","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts","base":null,"candidate":"dcaf8311b402e5b1ee5229c7a6bc62ad136e98c5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/browser-steps.ts","base":null,"candidate":"bc3e8abaf52732faed066b7bd4b1d402bf9a5b7a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/meeting-fixture.ts","base":null,"candidate":"860e0c9f8ecbf96af1e7c1d9ff5271d7db42d48c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts","base":null,"candidate":"2f1ed132999701b7012ad78866eaea1c5cbd4647","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts","base":null,"candidate":"6409fbce4f73c28a35435fd54643a885086ec3ff","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts","base":null,"candidate":"e288b497deddfdd21a9fc8697854ce5cd95958c6","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/browser-host-fixture.ts","base":null,"candidate":"18ba7779f90df14eae5d8ea59ab667b09671aa5a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/domain-fixture.ts","base":null,"candidate":"53255306057c717f1204b9277e05e1976dd25960","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/exact-confirmation.test.ts","base":null,"candidate":"4087dc32900073b44bae75fae4d7f78f2ab868a2","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/reply-identity.test.ts","base":null,"candidate":"9c421d9ce01161a88085f962a7b4f7a5a01cb3a6","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts","base":null,"candidate":"4307146cd3e06c3a3310144356ede59cde961751","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts","base":null,"candidate":"d9ac270440393a0c73e5bad8892d01569e3c61d3","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/browser-host-fixture.ts","base":null,"candidate":"1d830560e179c25b16a773650e1ef42cc0a0c721","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/confirmation-diagnostic.test.ts","base":null,"candidate":"2ff8da1d3bdd71e216da4221a3a1abed56706acd","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/timing-fixture.ts","base":null,"candidate":"8183746fe24af18605866bdeb3c88faedbb8c286","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts","base":null,"candidate":"eb46a6dab6e351cc51d7bcda8a48e2f6087f6c7f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts","base":null,"candidate":"2fc2dc11756961034e2d6091d2d8728635728ffb","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts","base":null,"candidate":"41bbc8ee2014f5dc952944ff77839df7e33c7258","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/browser-pool-registration.ts","base":null,"candidate":"2cec02fcb4c7d7e4c4ab9ab51ce8b03c4a98bb2e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/browser-selection.test.ts","base":null,"candidate":"68d693ec09b1ef94c9c8c5475dcb27edd2b4ef32","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts","base":null,"candidate":"21da6b5fb13a79b40151cac1288f79f0676d6f34","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts","base":null,"candidate":"e52d70c52e5c499430f7f3082c1d523f231c4a7c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts","base":null,"candidate":"d2455e3901f366b2152a5e351d8e10dee0110581","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts","base":null,"candidate":"980165339a51f672493b0916062cb5ba05e27b36","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts","base":null,"candidate":"ce9714e29d73a0137c6348e891ce2ee1c365218f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts","base":null,"candidate":"b3ac26b29ebab49e1e9982e4856e499bef980358","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts","base":null,"candidate":"e6713eb6b3728590373e71fd9b9004385c0a24e5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts","base":null,"candidate":"29062933a1b13b99d84a544a6d99c3ec6c37151c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts","base":null,"candidate":"e4bd624b1d9c9e0125bedddb7d2218f57f3d7417","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts","base":null,"candidate":"c0017ee1b77d218972dc05a3eeb0edec0203997f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts","base":null,"candidate":"fa92bb29a5421ac8b891358b1e89492324dffc0c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts","base":null,"candidate":"8fbab9fac6c8906785b4ade14688eaa14f2ea785","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts","base":null,"candidate":"6c813b4d0ca22dc7e75dbc6ad61fd3004d368976","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts","base":null,"candidate":"d991c090346268101c074e33aadc0d3a4a6eabbd","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts","base":null,"candidate":"fa5ea273fa3542e2c9b448717cc702eca7f32a00","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts","base":null,"candidate":"629667233d9e17112a3017fb2d8923e46dfef23a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts","base":null,"candidate":"a7da2254c180812f7377ac00276258cc55b0ad03","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts","base":null,"candidate":"a3f29dfe412c5889a4a6a80797b5a86a5ed42229","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts","base":null,"candidate":"68657f8ba17b6d8c215930a47fb286e86e84110f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts","base":null,"candidate":"65b6f9543c06b0d1281c896bb44743da86e8048b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts","base":null,"candidate":"b1b4ec472620a6f22725ecf811d4aee7c26b803e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts","base":null,"candidate":"167b08a271ec5bddb27ae6421384fff4fd53bed5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts","base":null,"candidate":"7294b6c3240ae4b2858dd1603b12e49b0067041f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts","base":null,"candidate":"7bfef66585f96fea1f474f9eda2d279a4ab2bd52","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts","base":null,"candidate":"91ef8a3879176ef8aca7c08b315544487403e0e9","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts","base":null,"candidate":"ed5c1305e2330abade3fa5af229953da5eb7774b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-fixture.ts","base":null,"candidate":"e5923470873762513850d88e54deeeb20922f043","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts","base":"0d9094ae67866a919573c9c172176ca2bc88d4dc","candidate":"0f275d83469c22a2154d728edbc3bbec4ae4f6ee","dev":"0d9094ae67866a919573c9c172176ca2bc88d4dc","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts","base":null,"candidate":"4197f1d5b7d1a21c1bad44b58252f15964bed060","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts","base":null,"candidate":"a18e07aab852a0d4dbfb996d158a69c742c08c2f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts","base":null,"candidate":"5d528e810ab79fb1e3beb571dcb216192d551e91","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"modules/sucafina/Sucafinav1/test/reports-runtime.test.ts","base":"355f8006e9a527ddc3d6499933fc758645c9c573","candidate":"3c204b4cb72df65607d9c5ad5fa91b4f5e6b59cc","dev":"355f8006e9a527ddc3d6499933fc758645c9c573","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/runtime-http.test.ts","base":"15b567600088057268834ac70204e201d8e863dc","candidate":"90d872a0767e6e27cb055b77793d8606711ca1ed","dev":"15b567600088057268834ac70204e201d8e863dc","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/s1.test.ts","base":"508edc8974bee32b98f4981366ce0d90e1d8a0b2","candidate":"b96eb46a0ec426d0994f555b13b36e72f493eedb","dev":"508edc8974bee32b98f4981366ce0d90e1d8a0b2","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"modules/sucafina/Sucafinav1/test/screen.test.ts","base":"8727f2ef9e8d438824c09fa2d19ed8621e686b74","candidate":"f15cadf2de3e57f1043da9b227665524c87386a9","dev":"8727f2ef9e8d438824c09fa2d19ed8621e686b74","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/e2e/playwright.production.config.ts","base":"9724c9412a19fdbcf45ebe55873e49501c63639a","candidate":"97eb144f46510a3b84ecf0c3f94113f4e561be60","dev":"9724c9412a19fdbcf45ebe55873e49501c63639a","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/alternative-response.ts","base":null,"candidate":"7e7122698568a4ced5aed789a4d2ac743cd6db2c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts","base":null,"candidate":"c176ffdbb139416052f0817ed8bf3a66662ce104","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/case-lifecycle.ts","base":null,"candidate":"f5a6c41b5bdaf297bcc57a7e297bcfd4db164ed7","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts","base":null,"candidate":"782b8f35fe065626908f0af98f6a4eda26498c86","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts","base":null,"candidate":"fa509e9d7a7da9d0024c9487975f7b26b3b29146","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts","base":null,"candidate":"84e5ef716e29446368744ec4950ad84eb244d1a8","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts","base":null,"candidate":"bd95f7decc816485df40863ba9efcc626f3a130c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/journey.ts","base":null,"candidate":"f87b355f3ffd9e72c886090d0f52619229bc7d3a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts","base":null,"candidate":"c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts","base":null,"candidate":"7ed877b9e1fd3055dc3cf750d5d070b765486f63","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts","base":null,"candidate":"30e3ab9c05423e695e32fc2f70a245596d85b7f3","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts","base":null,"candidate":"4e5f243bc52cdc6806e6af0ab6c8843d60eeea2e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/decisions.spec.ts","base":null,"candidate":"4507f1e495739153ff44da04ed84499176a900c5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/installed-shell.ts","base":null,"candidate":"93d4c69f05b94142e101a8da980b023cc2cb207a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/native/fixture/journeys.ts","base":null,"candidate":"66e269a78af8262764228557e2eeccd29bca1a36","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/native/fixture/manifest-contract.ts","base":null,"candidate":"122a31917565d2de51ba63e646cc20000c239670","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/native/fixture/readiness.ts","base":null,"candidate":"4986e2d7b7a9021b1338f031d81d3e3eed2fe8cb","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts","base":null,"candidate":"71adbaaf679331a5a201aae663123ba87bc4a0b5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/native/fixture/selection.ts","base":null,"candidate":"048f1dd16063a79cf59481e20d9000b09f7b2208","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/documents.ts","base":"2c8b66ccbab985ed0bd5775e156386a20f4c8715","candidate":"626f3e5fb44029c56f4233c50068b4bec4cdfb47","dev":"2c8b66ccbab985ed0bd5775e156386a20f4c8715","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/imports.ts","base":"9302fb45ed9a3b1636ba98f2143b0c3fdca3e04b","candidate":"edf705a65aeaa3ca49e8ab1fcd0ea089e6258251","dev":"9302fb45ed9a3b1636ba98f2143b0c3fdca3e04b","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts","base":null,"candidate":"8398900df0449ead740afe63a261d47da86787ca","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts","base":null,"candidate":"50ec85a29b4a2981a9143feea2cebad9c1a7d6a4","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts","base":null,"candidate":"494c86abcf9b24bc5c8f4d645d02c24fc8edb2ef","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations-support/procurement.ts","base":null,"candidate":"16d6a5bad41e8ad84cb552852af0b18110dd5844","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/operations.spec.ts","base":"a1c2fe13d983c44a226570e575242458e60a2b58","candidate":"db36fc94b00552fcb9862989c40c0d237e70b0bd","dev":"a1c2fe13d983c44a226570e575242458e60a2b58","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts","base":null,"candidate":"0b90e866c7519e89c84f94891886273c807708c4","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/wp03/installation-setup.ts","base":null,"candidate":"15489ae174954ae765bd8e9850daa62863b02393","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/e2e/sucafina/wp04/host.ts","base":"f610924d4da591ed389b0e1293cab2350e36e0dd","candidate":"d77242699291f1a0ff8544bc98c18613adee0e6f","dev":"f610924d4da591ed389b0e1293cab2350e36e0dd","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/package.json","base":"32567c3e0d67a3cceacab355bb34e291cd419c26","candidate":"25e013b9e8e3c227525378400a005cd0ab82b8bd","dev":"32567c3e0d67a3cceacab355bb34e291cd419c26","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts","base":"8a262d7f78e08d785a0e26ab3f297af5979c5202","candidate":"cd290320986d5a9795c14badd47f9aa499577f9b","dev":"8a262d7f78e08d785a0e26ab3f297af5979c5202","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx","base":"71ac5b253ab8e8bbc8591bfceda2ee2b2175a430","candidate":"0c8a191b2a205d047bda2c0738ce6c00a29525b3","dev":"71ac5b253ab8e8bbc8591bfceda2ee2b2175a430","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx","base":"6d4a7eb1bdc86149a9d9b054685fc72201c28a93","candidate":"b56775de1f9508be6c149a6e69e980d020820ca6","dev":"4c4af2f8e9d6be097c6118fa16b4d26a0b06d79b","status":"BOTH_CHANGED","type":"product","disposition":{"action":"preserve-dev","reason":"Current procurementNumberInput already supplies numeric/null input, preserving translations and PO number handling."}},
-    {"path":"packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx","base":"ff5f04a77bd25f3ffe0019d5f7350fc24a33d272","candidate":"21c0c36d5a84b8df0690aa493d55d524fd2bc08b","dev":"134f6f705f05d87afd318aa9f7d0ff9aa1a080e2","status":"BOTH_CHANGED","type":"product","disposition":{"action":"merge-hunk","reason":"Only fill skipped score-array indices with null before assignment; retain dev numeric input, detached command DTO, review and presentation."}},
-    {"path":"packages/app-shell/src/orchestra/navigation.test.ts","base":"e806e50198f1142c350fe7b3ae90051a4a4e39bd","candidate":"c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85","dev":"e806e50198f1142c350fe7b3ae90051a4a4e39bd","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/context.test.ts","base":null,"candidate":"d5850e540e0fc9c2c2674edc9bb41b7cb636a42b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/decisions-pages-route.test.ts","base":null,"candidate":"fa6e13f3bb0c2b73c8d0b67da8aac9584c9d5985","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/draft-quarantine.test.ts","base":null,"candidate":"beb1314c7217720f1e819ddb9ae268f041dc549a","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/extended-routes.test.ts","base":null,"candidate":"fff3b0ccf6248ce6206434ffe7979ff8e63a00cb","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/files-route.test.ts","base":null,"candidate":"59b8917de5dd5a85d3b45a850ebfd2a6386284eb","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts","base":null,"candidate":"238d8329bc5677cdc98b9fa238426783bf4add65","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts","base":null,"candidate":"c4c4db3c8542f1cda9e83afad026266335e4e141","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/home-pages-route.test.ts","base":null,"candidate":"f026c54dfdf8d5434aaea91edba82ed570eab204","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/host-binding231.test.ts","base":null,"candidate":"9821bf2abae2355129e3952ae136b4d68291340f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/import-form-state.test.ts","base":null,"candidate":"322aea511bbc05f969a8e9407f1167c45768487d","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/memory-route.test.ts","base":null,"candidate":"9c34f7434f1e7e4deb512a13e9d4799a78b7d330","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/operations-route.test.ts","base":null,"candidate":"79fec9dd8d0f2cff359abfdc2af1ae8f4151bb38","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/owner-mount-integration.test.ts","base":null,"candidate":"e0da88f9b5c9eacf33ccf44b5e245dce17888ece","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/page-frame.test.ts","base":null,"candidate":"92024c7caa2f5e10d243c6feff71abb4b2a1b7f0","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/people-route.test.ts","base":null,"candidate":"f00cb8515d3a70e106ec734d84ea00ad9b40be2c","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/planner-pages-preflight.test.ts","base":null,"candidate":"fb6ef11b9bc2672048bfd5208cd8a50a080902f2","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/planner-pages-route.test.ts","base":null,"candidate":"6528528c2208ac50218b7f97147efd2ca3634183","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/platform-fixture.ts","base":null,"candidate":"72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/portfolio-route.test.ts","base":null,"candidate":"6135a6f426a54040ab5190f34c73d79051dc9435","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/procurement-draft-leaves.test.ts","base":null,"candidate":"ae5bcf613190468300a6706e1b1b56ec54fd08fa","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/request-title-races.test.ts","base":null,"candidate":"3183dea65b6e01b68fc73e6b3de6671476fee0ab","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/request-title.test.ts","base":null,"candidate":"806f30b0fab5d94d84ef304946dfad6132013a8b","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/reviews-route.test.ts","base":null,"candidate":"aa21c0ef1ee0ad8ddaa53fc8b685c0102e2f6230","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/routines-route.test.ts","base":null,"candidate":"3c7edd08e0ed08d1bfc0224216dd27542450e4e5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/s01.test.ts","base":null,"candidate":"f07bb3371702d5b00c481bcfed89d682eecd1699","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/s02.test.ts","base":null,"candidate":"ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/s03.test.ts","base":null,"candidate":"fbc5e62bf762f92433536ede01e6ab2e67408f00","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/s04.test.ts","base":null,"candidate":"f62bf03c887b83cd1b10573d65589f01c023c2e7","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/s05.test.ts","base":null,"candidate":"313372865426a047cc500d1dba891a75cb8fa047","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/shell-guard237.test.ts","base":null,"candidate":"5cfab26e9f171097994b3ec72c53c587b87268a5","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/today-resume227.test.ts","base":null,"candidate":"9fae974a321af6c863c8749600d42e5271bfa63f","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/transport-contract.test.ts","base":null,"candidate":"f96f09d8602c1a6142e83e7d8680bffeceecce73","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts","base":null,"candidate":"a067b9fd835920ad864174461617778700021fa3","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/transport-original-catalog.json","base":null,"candidate":"31dbec1726fd8147156b01dc545726650ffd49e1","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test-browser/sucafina-native/work-route.test.ts","base":null,"candidate":"913650b3e8667127234a406b7f34e712d3cf7740","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/test/sucafina-native/source-context-fixture.ts","base":null,"candidate":"eea862b6b7391c12bfefacb94fa61886a6f0b141","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/app-shell/tsconfig.sf-e2e.json","base":null,"candidate":"93740e51cc01a84c2fd97771aa9ca5707e7e63a1","dev":null,"status":"NEW","type":"product","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"packages/client/src/sucafina/transport.ts","base":"5ce42b03cf854cf32b6bcd5aa2eb089ad634f256","candidate":"0aad446c0ffb44173faea24fa2e79b64f1c15114","dev":"5ce42b03cf854cf32b6bcd5aa2eb089ad634f256","status":"UNCHANGED_BASE","type":"product","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/core/test/inbox/work-service-fixture.ts","base":"6a2d316c5193f8cea88710e5085985ea1fc8b3b6","candidate":"b1a3f2bbcb83bb50ea832c804e8240152fda2276","dev":"6a2d316c5193f8cea88710e5085985ea1fc8b3b6","status":"UNCHANGED_BASE","type":"test","disposition":{"action":"apply-original-delta","reason":"Current dev blob equals merge-base blob; source delta cannot overwrite newer changes in this path."}},
-    {"path":"packages/core/test/inbox/work-service.test.ts","base":"c50171f6a1b560adf0abc9b51d1450484cba8f1e","candidate":"470162b822bff4ddfd1813fe3c33ac248af8a164","dev":"dd51155f4ad53999a370ddd396b36a805c004f99","status":"BOTH_CHANGED","type":"test","disposition":{"action":"merge-hunk","reason":"Seed eligible Jira credentials using current remote.connect(credentials,installOwner,{email,...}), preserving provider-acquisition canary after public connect removed email."}},
-    {"path":"script/sf-ci/browser-pool.d.mts","base":null,"candidate":"5f66647c7b575449283011f2393157ecc99547f9","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/browser-pool.mjs","base":null,"candidate":"e14053bfe4dbf4bee796dff389e0b993c0fb943d","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/browser-pool.test.mjs","base":null,"candidate":"3501a0539cc9e09510c59b6ef72f17d66878350e","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/gate.mjs","base":null,"candidate":"d67d7c0c1e083dcd73587f1d95dc260a46aaeb13","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/gate.test.mjs","base":null,"candidate":"6aaf3616eabb8209f5d05d061eea54020b79baeb","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/shard-plan.mjs","base":null,"candidate":"afa82dbec794ca607f64dd2fe3a6fb7cdfcd8dd2","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/shard-plan.test.mjs","base":null,"candidate":"859ff15c2950ffdadae18a63627fc4a33a3aa266","dev":null,"status":"NEW","type":"test","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf-ci/workflow-contract.mjs","base":null,"candidate":"2ab6c4171b3246dc12c38a0189009fb19c16cd6b","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf2h/final-bundle/requests.json","base":null,"candidate":"3ff28507d6ae6b874f021fb8acf5088d61442c80","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf2h/final-bundle/verify-bun-report.py","base":null,"candidate":"9cef4f356f3b93c58f8b21ef9b1d76f342396851","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"script/sf2h/final-bundle/verify-e2e-typecheck.mjs","base":null,"candidate":"308ae602016d3b9afae3c90cb9b20663aba9341e","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"sf/ci/browser-pool-sources.json","base":null,"candidate":"04a6262bc3211deeaa3666d8961fec472fcaf520","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"sf/ci/shard-costs.json","base":null,"candidate":"508a62d91c00758e18cffa06db5459a138acb4cd","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}},
-    {"path":"sf/ci/suites.json","base":null,"candidate":"e9b4d19d2b2b027416e337ad0d8a787d18165475","dev":null,"status":"NEW","type":"ci","disposition":{"action":"add-original-source","reason":"Absent in current dev and merge base; preserve original qualification case/producer with source blob provenance."}}
-  ]
+  "latestFocal": {
+    "runId": "45038699571",
+    "attempt": 1,
+    "sourceSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
+    "treeSha": "bd93e2a0431b8ec465c81c0715237dcd79891b75",
+    "driverSha": "9c53dce33afad3ea4896b0441ec4b5bd84577640",
+    "driverTreeSha": "e8b89d938102fba0b9247153bf979976216c8aab",
+    "allSixJobsReceived": true,
+    "jobs": [
+      {
+        "jobId": 137258101534,
+        "name": "CI-SF-shard-4",
+        "status": "FAIL",
+        "passed": 79,
+        "failed": 1,
+        "files": 12,
+        "assertions": 671,
+        "failure": "SQLITE_PROTOCOL in authentication secrets.get during parity-polling-browser"
+      },
+      {
+        "jobId": 137258101511,
+        "name": "CI-SF-shard-5",
+        "status": "PASS",
+        "passed": 64,
+        "failed": 0,
+        "files": 13,
+        "assertions": 411
+      },
+      {
+        "jobId": 137258101699,
+        "name": "CI-SF-shard-8",
+        "status": "FAIL",
+        "passed": 97,
+        "failed": 1,
+        "files": 13,
+        "assertions": 4855,
+        "failure": "Omni stdout EBADF before Chromium PID during form-layout Node bridge"
+      },
+      {
+        "jobId": 137258101315,
+        "name": "CI-UI-DECISIONS",
+        "status": "FAIL",
+        "passed": 0,
+        "failed": 5,
+        "failure": "Fixture selects private root instead of canonical installed workspace; no journey reached"
+      },
+      {
+        "jobId": 137258101503,
+        "name": "CI-UI-OPERATIONS",
+        "status": "FAIL",
+        "passed": 2,
+        "failed": 3,
+        "failure": "Sourcing read-contract assertions require trace-guided reconciliation"
+      },
+      {
+        "jobId": 137258101465,
+        "name": "G04-ORDERED-BROWSER-POOL",
+        "status": "PASS",
+        "passed": 206,
+        "failed": 0,
+        "originalSourceCount": 40,
+        "assertions": 3122,
+        "proofClass": "COMPONENT_BROWSER_REGRESSION",
+        "installedTeamsProof": false,
+        "omniSpawns": 1,
+        "delegated": 0,
+        "acquisitions": 48,
+        "releases": 48
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14761330134,
+        "name": "sf-candidate-CI-SF-shard-8",
+        "sha256": "a9dd748d85deb5004f28f0356d9d10aa381b4009f215e55e428a949e97e4ca4e",
+        "bytes": 12362,
+        "receipts": {
+          "execution.txt": "0f829169d9da1c2219df06c8c57ac0a7fa23a098e13a68513852f32875a761c0"
+        }
+      },
+      {
+        "id": 14761066352,
+        "name": "sf-candidate-CI-SF-shard-4",
+        "sha256": "c08380a5f88e00815f627289ab6fec966770bd42929c755f2b48d8b3dc71aa8d",
+        "bytes": 8873,
+        "receipts": {
+          "execution.txt": "c298fcbaae9129a4aeb5c011d9b9757296697a549ae2d556d11937eee00eea7a"
+        }
+      },
+      {
+        "id": 14760975837,
+        "name": "sf-evidence-CI-SF-shard-5",
+        "sha256": "9c804c815bca5f89ee3c4380b2b4ddf5068c0c797b3b6be6b02d8e60b19cf5f6",
+        "bytes": 4465,
+        "receipts": {
+          "receipt.json": "17c25d38864e21bc450dbf99687cd087e6bf0621579cc7a14823d5e621ed7ea6"
+        }
+      },
+      {
+        "id": 14760633257,
+        "name": "sf-ui-failure-CI-UI-DECISIONS",
+        "sha256": "06681b32c89125cb0900b97291066e21874ce33e521edfff87d2ce5fc880518f",
+        "bytes": 16851,
+        "receipts": {}
+      },
+      {
+        "id": 14760249977,
+        "name": "sf-candidate-CI-UI-DECISIONS",
+        "sha256": "7a42aaea355180231da3f3d1e05832bef0fd39f0b41b0f848a2f5d63ebb4aabb",
+        "bytes": 8633,
+        "receipts": {
+          "execution.txt": "41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6"
+        }
+      },
+      {
+        "id": 14760039300,
+        "name": "sf-candidate-CI-SF-shard-5",
+        "sha256": "2f8765ca097502e35d703a62304605995aa19cf0c7338b35f1991459b0d8544b",
+        "bytes": 12809,
+        "receipts": {
+          "execution.txt": "4e37bd4ea25c9f38e28b40f641fcedb71e6a377dc6ca7ba1b85293d8195cf8ca"
+        }
+      },
+      {
+        "id": 14761510074,
+        "name": "sf-candidate-CI-UI-OPERATIONS",
+        "sha256": "7eb58a453fe47924b264de25b677790583e27d6e80432e3eadd1a3d8bb3d6ead",
+        "bytes": 38071,
+        "receipts": {
+          "execution.txt": "41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6"
+        }
+      },
+      {
+        "id": 14760668799,
+        "name": "teams-profile-evidence-G04",
+        "sha256": "987cce00fb83e3160e9879be4418ac9b03283545b2a33894ef0fdb47821c6624",
+        "bytes": 100036,
+        "receipts": {
+          "receipt.json": "ca5d54a11be3717b1caf1942051af4a5e46c786cc83843a040b69ea236170cdd"
+        }
+      },
+      {
+        "id": 14760504500,
+        "name": "sf-ui-failure-CI-UI-OPERATIONS",
+        "sha256": "34a462a07df78323a7e5ddcab60558c6b314be2ee6d3967f2b5a899efb815fc6",
+        "bytes": 13851588,
+        "receipts": {}
+      }
+    ],
+    "integrity": "ZIP SHA256 and CRC verified. Pool raw report/log/Chrome hashes and canonical JSON summary/journal hashes match the receipt.",
+    "qualification": "Evidence applies only to this exact candidate. Focal failure and independent review findings block integration and gate qualification."
+  },
+  "reviewCorrections": {
+    "parentSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
+    "status": "PENDING_FOCAL_AND_INDEPENDENT_REVIEW",
+    "monthlyReplay": {
+      "finding": "A durable receipt previously acknowledged a result reverted by restoreBackup.",
+      "changes": [
+        "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+        "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts"
+      ],
+      "behavior": "Preserve consumed intent; bind acknowledgement to applied row value/revision, version state and dataset revision; conflict on superseded or pre-fence receipt without mutation.",
+      "regression": "Existing real SQLite replay test has restart, private backup/restore, same-row edit and legacy-receipt variants. Restore and subsequent retries retain the consumed receipt and do not append audit or reapply."
+    }
+  }
 }

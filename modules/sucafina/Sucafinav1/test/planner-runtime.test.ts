@@ -6,6 +6,8 @@ import { createPlannerMonthlyHost } from "../product/planner/monthly-host.ts"
 import type { MonthlyRequest } from "../product/planner/monthly-host.ts"
 import type { TrustedUiContext } from "../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
+import { createLocalBackups } from "../runtime/local-backups.ts"
+import { restoreBackup } from "../runtime/operations.ts"
 import { domain, pages, render } from "../runtime/planner.ts"
 import type { Snapshot } from "../runtime/contract.ts"
 const actor = { id: "directory-admin", canWrite: true, roles: ["admin"] }
@@ -102,7 +104,7 @@ function run(
     environment,
   )
 }
-test("monthly apply replays the committed receipt after reopening SQLite without another write", async () => {
+test.each(["restart", "restore", "edit", "legacy"] as const)("monthly replay after %s preserves the consumed intent and acknowledges only its current result", async (change) => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "planner-monthly-replay-"))
   const fixture = { store: await openLocalStore(directory) }
   const request = new Request("http://localhost/sucafina/planner?sf=workbench-planner", {
@@ -141,15 +143,22 @@ test("monthly apply replays the committed receipt after reopening SQLite without
       expect(run(current, "OPEX", "save", "l", { annual: 1200 })).toMatchObject({ ok: true })
       return { commit: true, value: undefined }
     })
+    const before = await readSnapshot()
+    const backups = change === "restore" ? await createLocalBackups(join(directory, "archives")) : undefined
+    const archive = backups ? await backups.capture(fixture.store, "planner", at) : undefined
+    // The durable apply succeeds, but the client has not received its acknowledgement.
     const first = await host().apply(input, context)
     expect(first).toMatchObject({ status: "ok", value: { rows: [{ result: { ok: true } }] } })
     const committed = await readSnapshot()
     expect(Object.keys(committed.sfPlannerMonthlyReceipts ?? {})).toHaveLength(1)
+    expect(Object.values(committed.sfPlannerMonthlyReceipts ?? {})[0]!.resultDigest).toMatch(/^[a-f0-9]{64}$/)
+    expect(JSON.stringify(first)).not.toContain("sfPlannerMonthlyReceipts")
+    expect(JSON.stringify(domain.view(committed, actor, environment))).not.toContain("sfPlannerMonthlyReceipts")
 
     await fixture.store.dispose()
     fixture.store = await openLocalStore(directory)
     const retry = { ...context, binding: { ...context.binding, requestId: "planner-retry-request" } }
-    expect(await host().apply(input, retry)).toEqual(first)
+    if (change !== "restore") expect(await host().apply(input, retry)).toEqual(first)
     expect(await host().apply({
       ...input, drafts: [{ rowId: "l", revision: 1, cells: [{ measure: "budget", month: 1, text: "89" }] }],
     }, retry)).toMatchObject({ status: "conflict", reason: "monthly-idempotency-content-changed" })
@@ -157,6 +166,37 @@ test("monthly apply replays the committed receipt after reopening SQLite without
       ...retry, binding: { ...retry.binding, accessRevision: "changed" },
     })).toMatchObject({ status: "denied" })
     expect(await readSnapshot()).toEqual(committed)
+    if (change === "restart") return
+
+    if (change === "restore") {
+      expect(await restoreBackup(
+        fixture.store, backups!.source, "planner", archive!.id, actor, true,
+        committed.versions.dataset?.version ?? 0, at,
+      )).toEqual({ ok: true })
+      const restored = await readSnapshot()
+      expect(restored.data).toEqual(before.data)
+      expect(restored.sfPlannerMonthlyReceipts).toEqual(committed.sfPlannerMonthlyReceipts)
+      expect(restored.versions["v:lines:l"]!.version).toBeGreaterThan(committed.versions["v:lines:l"]!.version)
+    } else {
+      await fixture.store.transaction("planner", async (current) => {
+        if (change === "edit") {
+          expect(run(current, "OPEX", "save", "l", { a0: 7 }, current.versions["v:lines:l"]!.version))
+            .toMatchObject({ ok: true })
+        } else {
+          // A pre-upgrade receipt is retained and refused; removing it would permit replay.
+          for (const receipt of Object.values(current.sfPlannerMonthlyReceipts ?? {})) delete receipt.resultDigest
+        }
+        return { commit: true, value: undefined }
+      })
+    }
+    await fixture.store.dispose()
+    fixture.store = await openLocalStore(directory)
+    const superseded = await readSnapshot()
+    for (let attempt = 0; attempt < 2; attempt++) {
+      expect(await host().apply(input, retry)).toEqual({ status: "conflict", reason: "monthly-applied-state-changed" })
+      // Neither retry reapplies the old intent, discards its receipt, nor adds an audit write.
+      expect(await readSnapshot()).toEqual(superseded)
+    }
   } finally {
     try { await fixture.store.dispose() } finally { await rm(directory, { recursive: true, force: true }) }
   }
