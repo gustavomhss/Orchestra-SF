@@ -1,0 +1,53 @@
+{
+  "schema": "sf-g09-host-boundary-input-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "repositoryId": "1455724710",
+  "producer": {
+    "sourceSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "sourceTreeSHA": "3dc5e13e4368c0452fa54481878965295f77405e",
+    "workflowSHA": "83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "workflowPath": ".github/workflows/g09-candidate.yml",
+    "branch": "g09-next-candidate",
+    "event": "push",
+    "runId": "44983358294",
+    "runAttempt": "1",
+    "job": "teams-profile-artifact",
+    "jobId": "137088492396",
+    "checkRunId": "137088492396"
+  },
+  "artifact": {
+    "id": "14738902174",
+    "name": "orchestra-sf-entra-linux-83f1283f8e39cd5863d9806b9a48f0573f44eaff",
+    "digest": "sha256:f080447b290086cc2b4fa0229204568876ee76f4cba5a98e608e0ba0aa1312a9",
+    "bytes": 125389096
+  },
+  "archive": {
+    "file": "orchestra-sf-entra-linux-x64-baseline.tar.gz",
+    "sha256": "af312871e79307bd281e7d46a162feeb44bc0112db0e67cb59f8be55db20a109",
+    "target": "linux-x64-baseline",
+    "binaryPath": "bin/orchestra",
+    "binarySha256": "724894cb17c5781a9fd7a23be6de2f191fb1d62abdfa51835c74b5c88a4ad242",
+    "factoryPath": "bin/local/entry.mjs"
+  },
+  "fixture": {
+    "tenantId": "11111111-1111-4111-8111-111111111111",
+    "clientId": "22222222-2222-4222-8222-222222222222",
+    "allowedPrincipal": "33333333-3333-4333-8333-333333333333",
+    "deniedPrincipal": "33333333-3333-4333-8333-333333333334",
+    "teamObjectId": "44444444-4444-4444-8444-444444444444",
+    "groupId": "55555555-5555-4555-8555-555555555555",
+    "suppliedSavedPermissionId": "psv_g09_host_boundary_supplied_identifier"
+  },
+  "sourceFiles": {
+    "script/sf-ci/team-profile-residue.mjs": "10ae99ab085821f0e312ee05479cad3fb723c7b0",
+    ".github/ci/entra-native-provider.mjs": "064d50d56cdade310aa99d50e7fdf670afd698b5",
+    ".github/ci/entra-native-http.mjs": "00a9cc6e4662fda415f9963c860737a6c4116a12",
+    ".github/ci/g09-installation-modes.py": "7d2d15b1f424347615994e92c5e116f5b00b6873",
+    "sf/azure/vm/install-factory-distribution.py": "17345366812c79944928731d4fe188b3bced7342",
+    "modules/sucafina/Sucafinav1/runtime/local-configuration.ts": "e668536926c3b3a384f4f7846bfeae5d5d30360b",
+    "modules/sucafina/Sucafinav1/src/identity.ts": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+    "modules/sucafina/Sucafinav1/src/records.ts": "f769274f2887a187fbdad8688c2bb3ae5ad4a1e5",
+    "apps/cli/src/sucafina-product/installation.ts": "1d0459efa7a42dae3b93ffb0eb4299460e373989",
+    "packages/schema/src/permission-saved.ts": "969a6dc25cad87bff7309ad7444f5c997ad0913b"
+  }
+}
