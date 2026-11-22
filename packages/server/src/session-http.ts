@@ -7,8 +7,8 @@ import { makeSessionGroup } from "@orchestra/protocol/groups/session"
 import { MessageGroup } from "@orchestra/protocol/groups/message"
 import { EventGroup } from "@orchestra/protocol/groups/event"
 import { ReferenceGroup } from "@orchestra/protocol/groups/reference"
-import { Context, Effect, Layer, Schema, Scope } from "effect"
-import { HttpEffect, HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { Context, Deferred, Effect, Layer, Schema, Scope, Stream } from "effect"
+import { HttpBody, HttpEffect, HttpRouter, HttpServer, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApi, HttpApiBuilder } from "effect/unstable/httpapi"
 import { BodyLimit } from "./body-limit"
 import { EventHandler } from "./handlers/event"
@@ -49,11 +49,23 @@ export const isInstalledSessionPath = (pathname: string, mount: string) =>
 export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Effect.gen(function* () {
   const services = (yield* Effect.context<Host.RuntimeServices>()).pipe(Context.omit(Scope.Scope))
   const owners = yield* SessionOwner.Service
+  const closed = yield* Deferred.make<void>()
   const authorization = Layer.succeed(Authorization, Authorization.of((effect, metadata) => Effect.gen(function* () {
     const request = yield* HttpServerRequest.HttpServerRequest
-    yield* HttpEffect.appendPreResponseHandler((_request, response) => Effect.succeed(
-      HttpServerResponse.setHeaders(response, { "cache-control": "no-store", "x-content-type-options": "nosniff" }),
-    ))
+    yield* HttpEffect.appendPreResponseHandler((_request, response) => {
+      const body = response.body
+      // Each Web response has its own scope; tie its stream lifetime to this adapter's disposal.
+      const owned = body._tag === "Stream"
+        ? HttpServerResponse.setBody(response, HttpBody.stream(
+            body.stream.pipe(Stream.interruptWhen(Deferred.await(closed))),
+            body.contentType,
+            body.contentLength,
+          ))
+        : response
+      return Effect.succeed(HttpServerResponse.setHeaders(owned, {
+        "cache-control": "no-store", "x-content-type-options": "nosniff",
+      }))
+    })
     const original = request.source
     if (!(original instanceof Request) || original.signal.aborted) return yield* unauthorized()
     const url = new URL(original.url)
@@ -96,7 +108,9 @@ export const makeInstalledSessionHttp = (options: InstalledSessionOptions) => Ef
   )
   const http = yield* Effect.acquireRelease(
     Effect.sync(() => HttpRouter.toWebHandler(routes, { disableLogger: true })),
-    (value) => Effect.promise(() => value.dispose()),
+    (value) => Deferred.succeed(closed, undefined).pipe(
+      Effect.andThen(Effect.promise(() => value.dispose())),
+    ),
   )
   return (original: Request) => http.handler(original, services)
 })
