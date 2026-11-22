@@ -6,6 +6,12 @@ Esta sessão Astra coordena a integração do candidato, a rota Release e as res
 
 As execuções são de candidatos de trabalho. **Nenhum resultado é herdado automaticamente pelo SHA final.** Antes do tar de produção, Migração e Release devem confirmar C/T; ambos os gates precisam de novos recibos compatíveis com esse candidato.
 
+## Situação integrada desta edição
+
+A [#693](https://github.com/gustavomhss/Orchestra-SF/pull/693) integrou o reader/Client/factory/OIDC de CAP03 somente de leitura em `70e3228cf2dbbe2ba1723ea4044ed855864dd516`. Seu [run 45051010616](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45051010616) aprovou 67 casos, incluindo HTTP nativo e o caso G05 com11 obrigações internas. O artefato 14766250203, ZIP `703e236eb96aff4a395e8cf0897a82e1f50b4312dd119463eb7a14063a8b7445`, tem receipt `e3b100fc77df82f9741e0fc6ce1c0360475f58878dae095919775a9af8721c87`. Essa prova permanece no C821b7eb/T442cd934, com identidade Microsoft controlada; não substitui o gate final.
+
+As fronteiras Web/JSON de #665/#688 e a política privada corrente de #677 estão em dev. O verde ClamD real no B4 e os demais recibos abaixo continuam restritos às fontes em que foram executados. O próximo trabalho é receber o C/T final e reexecutar os inventários completos originais; não há implementação HTTP/ClamAV duplicada a iniciar a partir de um diagnóstico já resolvido. Dono: Astra go-live. SHA, artefato, recibo e aceite finais de G05/G06 continuam nulos em [status.json](status.json).
+
 ## G05 — HTTP real e isolamento por Team
 
 ### O que foi implementado

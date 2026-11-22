@@ -197,12 +197,18 @@ export function validatePlan(value) {
       workflowSha: hex(invocation.workflowSha, 40) },
     target: a, teamB: b, foreignInstallation: foreign, actors: principals, scratchRoot }
 }
-/** @param {ReturnType<typeof validatePlan>} plan @param {NodeJS.ProcessEnv} env @param {number} now */
-export function requireInvocation(plan, env = process.env, now = Date.now()) {
+/** Shared runner admission; retrospective reads do not create or renew a producer reservation.
+ * @param {NodeJS.ProcessEnv} env
+ */
+export function requirePrivateActionsRunner(env = process.env) {
   assert(env.GITHUB_ACTIONS === "true" && env.CI === "true" &&
     env.GITHUB_REPOSITORY === "gustavomhss/Orchestra-SF" && env.GITHUB_REPOSITORY_ID === "1455724710" &&
     env.RUNNER_ENVIRONMENT === "self-hosted" && env.RUNNER_OS === "Linux" && env.RUNNER_ARCH === "X64",
     "G08_PRIVATE_LINUX_ACTIONS_RUNNER_REQUIRED")
+}
+/** @param {ReturnType<typeof validatePlan>} plan @param {NodeJS.ProcessEnv} env @param {number} now */
+export function requireInvocation(plan, env = process.env, now = Date.now()) {
+  requirePrivateActionsRunner(env)
   assert(env.SF_G08_CANDIDATE_SHA === plan.candidate.sha && env.SF_G08_CANDIDATE_TREE === plan.candidate.tree &&
     env.GITHUB_RUN_ID === plan.invocation.runId && env.GITHUB_RUN_ATTEMPT === plan.invocation.runAttempt &&
     env.GITHUB_WORKFLOW_SHA === plan.invocation.workflowSha && env.SF_G08_INVOCATION_ID === plan.invocation.id,
