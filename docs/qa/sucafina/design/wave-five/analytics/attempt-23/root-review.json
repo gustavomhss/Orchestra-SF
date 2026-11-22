@@ -1,0 +1,320 @@
+{
+  "schema": "sf-root-archive-review-v1",
+  "reviewer": "/root",
+  "attempt": "Portfolio26",
+  "recordedAt": "2026-11-22 16:12:39 UTC",
+  "run": 45040443689,
+  "job": 137263467188,
+  "snapshot": "48faf8ddcc242ed1ffb10d01f4619534b169a52b",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "source": "Completed original test-job logs and GitHub QA files at 160c14f29265e9033f1295a6b55fa2b40fe202c3",
+  "eventsExact": {
+    "profile": true,
+    "nativeEvents": true,
+    "originalPayloadTimestampsAndSourceLines": true
+  },
+  "counts": {
+    "profile": 236,
+    "nativeEvents": 82,
+    "previewChunks": 33,
+    "totalStructuredEmissionLines": 351
+  },
+  "imageChunks": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "sha": "ca2b973f7bc4405bfc06f99b121ac7e8a7ba5ce3",
+      "complete": true,
+      "parts": 5,
+      "bytes": 80513,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "sha": "48a28fde8ea86c381e831f1cc83541b64d960cd2",
+      "complete": true,
+      "parts": 5,
+      "bytes": 85798,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "sha": "ea94ca8f13a9b2679a778000cf71e96d70ac9144",
+      "complete": true,
+      "parts": 2,
+      "bytes": 28672,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "sha": "0a7d71e99d0f8d7e5c253304e0722d3bbc09ea4c",
+      "complete": true,
+      "parts": 2,
+      "bytes": 27434,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "sha": "162d6bef6d0419084003f58457f22517b92409d4",
+      "complete": true,
+      "parts": 6,
+      "bytes": 97845,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": false
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "sha": "592a908f7dd3ec13da3dd994f9883c62a35d4393",
+      "complete": true,
+      "parts": 6,
+      "bytes": 106284,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "09b43ff0bf01746b352bfc705a35b9a767d9f776",
+      "complete": true,
+      "parts": 7,
+      "bytes": 110106,
+      "remoteOriginalBytesEqual": true,
+      "viewedByRoot": true
+    }
+  ],
+  "totalJpegBytes": 536652,
+  "rootActuallyViewed": [
+    "592a908f7dd3ec13da3dd994f9883c62a35d4393",
+    "09b43ff0bf01746b352bfc705a35b9a767d9f776"
+  ],
+  "workerReview": "All seven original images were separately inspected by /root/root_cost; root viewed only the two named frames.",
+  "profileReview": {
+    "pass": true,
+    "records": 236,
+    "started": 1,
+    "buckets": 230,
+    "snapshots": 5,
+    "keysPerSnapshot": 46,
+    "lastMs": 50008,
+    "finalObserved": false,
+    "audits": [
+      {
+        "snapshot": 1,
+        "elapsedMs": 10000,
+        "keys": 46,
+        "unique": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 2,
+        "elapsedMs": 20000,
+        "keys": 46,
+        "unique": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 3,
+        "elapsedMs": 30000,
+        "keys": 46,
+        "unique": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 4,
+        "elapsedMs": 40000,
+        "keys": 46,
+        "unique": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      },
+      {
+        "snapshot": 5,
+        "elapsedMs": 50008,
+        "keys": 46,
+        "unique": true,
+        "balanced": true,
+        "pendingExact": true,
+        "monotone": true,
+        "lossless": true
+      }
+    ],
+    "digestPopulations": [
+      {
+        "surface": "unlabelled",
+        "calls": 133332,
+        "settled": 133332,
+        "pending": 0,
+        "inclusiveMs": 7506
+      },
+      {
+        "surface": "principal.direct",
+        "calls": 106491,
+        "settled": 106491,
+        "pending": 0,
+        "inclusiveMs": 1672
+      },
+      {
+        "surface": "source.scope-validation",
+        "calls": 68920,
+        "settled": 68920,
+        "pending": 0,
+        "inclusiveMs": 585
+      },
+      {
+        "surface": "source.other",
+        "calls": 41978,
+        "settled": 41978,
+        "pending": 0,
+        "inclusiveMs": 2545
+      },
+      {
+        "surface": "canonical.evidence-ref",
+        "calls": 8167,
+        "settled": 8167,
+        "pending": 0,
+        "inclusiveMs": 97
+      },
+      {
+        "surface": "bcs.planner.projection-period",
+        "calls": 1357,
+        "settled": 1357,
+        "pending": 0,
+        "inclusiveMs": 3
+      },
+      {
+        "surface": "bcs.planner.expected-period",
+        "calls": 1357,
+        "settled": 1357,
+        "pending": 0,
+        "inclusiveMs": 3
+      },
+      {
+        "surface": "bcs.planner.source-ref",
+        "calls": 213005,
+        "settled": 213005,
+        "pending": 0,
+        "inclusiveMs": 1728
+      },
+      {
+        "surface": "bcs.planner.expected-ref",
+        "calls": 213004,
+        "settled": 213004,
+        "pending": 0,
+        "inclusiveMs": 1772
+      },
+      {
+        "surface": "finance.other",
+        "calls": 493,
+        "settled": 493,
+        "pending": 0,
+        "inclusiveMs": 333
+      },
+      {
+        "surface": "finance.current",
+        "calls": 525,
+        "settled": 525,
+        "pending": 0,
+        "inclusiveMs": 2
+      }
+    ],
+    "digestTotal": {
+      "calls": 788629,
+      "inclusiveMs": 16246
+    },
+    "canonicalDirect": {
+      "request": 1,
+      "phase": "bucket",
+      "snapshot": 5,
+      "snapshotPhase": "periodic",
+      "elapsedMs": 50008,
+      "trigger": "settled-span",
+      "dueMs": 50000,
+      "name": "canonical.direct",
+      "origin": "none",
+      "surface": "none",
+      "calls": 1316,
+      "settled": 1316,
+      "pending": 0,
+      "inclusiveMs": 402
+    },
+    "pending": [
+      {
+        "request": 1,
+        "phase": "bucket",
+        "snapshot": 5,
+        "snapshotPhase": "periodic",
+        "elapsedMs": 50008,
+        "trigger": "settled-span",
+        "dueMs": 50000,
+        "name": "http.preview",
+        "origin": "none",
+        "surface": "none",
+        "calls": 1,
+        "settled": 0,
+        "pending": 1,
+        "inclusiveMs": 0
+      }
+    ],
+    "bcsPlanner": {
+      "referenceLoop": {
+        "calls": 426009,
+        "inclusiveMs": 3500
+      },
+      "periodPair": {
+        "calls": 2714,
+        "inclusiveMs": 6
+      },
+      "allFourSites": {
+        "calls": 428723,
+        "inclusiveMs": 3506
+      },
+      "interpretation": "The two period digests execute once per reached projection, outside every; the two reference digests execute per visited value. The final settled-span checkpoint contains one more source-ref than expected-ref call because it can cut between the two expressions. This is not evidence of a mismatch or a speedup."
+    }
+  },
+  "qualification": "FAILED original 60000 ms preview response wait; diagnostic prefix only; no qualification or global count increment.",
+  "visualFindings": [
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "findings": [
+        "Case version 6, selected candidate version 1 and selected constraint version 2; exploration limit 4 has visible focus outline.",
+        "Preview action is available before submission; history has no recorded results."
+      ],
+      "scope": "configuration only"
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "findings": [
+        "Preview action remains Running and form controls are dimmed.",
+        "Preview is not yet available with placeholders; history has no recorded results."
+      ],
+      "scope": "pending preview at timeout; no completed producer response inferred"
+    }
+  ],
+  "limitations": [
+    "Inclusive durations overlap across bucket families and are not a total CPU or wall-time decomposition.",
+    "Direct-caller labels do not describe complete ancestry; 133332 unlabelled digest calls / 7506 inclusive ms remain unattributed at the last checkpoint.",
+    "The BCS reference-loop group measures 426009 calls / 3500 inclusive ms in this instrumented prefix; no saved-time or qualifying product change is established.",
+    "There is one pending HTTP entry at the last checkpoint, no final snapshot and no evidence of complete backend unwind.",
+    "A stable source-ref/expected-ref count equality is not required at a checkpoint triggered inside one digest settlement.",
+    "The native journey did not reach completed preview, UI43 result or UI44 sensitivity readbacks.",
+    "This internal evidence review is not user visual acceptance."
+  ],
+  "preparatoryHistory": {
+    "sequence1": "native-request-failed at line 1211; HTTP 200 at line 1213 with acquisitionFailure=response-body-unavailable; status ok was not observed for this response",
+    "sequence2": "HTTP 200/status ok at line 1249",
+    "preview": "Sequence 3 POST at line 1247, 2026-11-22T15:59:25.7399373Z; no corresponding response"
+  }
+}
