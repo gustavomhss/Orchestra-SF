@@ -1,0 +1,21 @@
+2026-11-22T08:44:44.8255857Z 
+2026-11-22T08:44:44.8415393Z 
+2026-11-22T08:44:44.8416499Z SF_DESIGN_DIAGNOSTICS {"kind":"wave-three-page-closed","consoleErrors":[],"pageErrors":[]}
+2026-11-22T08:44:44.8417002Z 
+2026-11-22T08:44:47.0566485Z   1) [chromium] › e2e/sucafina/design-wave-five-sensitivity.spec.ts:11:1 › wave five sensitivity: native units, evaluation and recorded samples 
+2026-11-22T08:44:47.0567127Z 
+2026-11-22T08:44:47.0567545Z     TimeoutError: page.waitForResponse: Timeout 120000ms exceeded while waiting for event "response"
+2026-11-22T08:44:47.0567969Z 
+2026-11-22T08:44:47.0568736Z       113 |   await review.getByRole("button", { name: "Confirm sensitivity evaluation", exact: true }).scrollIntoViewIfNeeded()
+2026-11-22T08:44:47.0569606Z       114 |   await captureAnalytics(page, info, "UI44-dark-320-review-actions-test-data")
+2026-11-22T08:44:47.0570677Z     > 115 |   const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), "decision-sensitivity-evaluate"), { timeout: 120_000 })
+2026-11-22T08:44:47.0571492Z           |                                  ^
+2026-11-22T08:44:47.0572091Z       116 |   await review.getByRole("button", { name: "Confirm sensitivity evaluation", exact: true }).click()
+2026-11-22T08:44:47.0572748Z       117 |   const evaluated = await evaluatedResponse
+2026-11-22T08:44:47.0573561Z       118 |   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "decision-sensitivity-evaluate", http: evaluated.status() }))
+2026-11-22T08:44:47.0574635Z         at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-sensitivity.spec.ts:115:34
+2026-11-22T08:44:47.0575202Z 
+2026-11-22T08:44:47.0576003Z     attachment #1: UI44-no-source-scenarios-test-data (image/png) ──────────────────────────────────
+2026-11-22T08:44:47.0577184Z     e2e/test-results/sucafina-design-wave-five--9c91a-uation-and-recorded-samples-chromium/attachments/UI44-no-source-scenarios-test-data-4a026b7d21f19bf4301619c360a005b4c9bbda65.png
+2026-11-22T08:44:47.0578298Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+2026-11-22T08:44:47.0578513Z 
