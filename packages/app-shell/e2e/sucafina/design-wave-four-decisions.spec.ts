@@ -40,7 +40,7 @@ function resultCodes(value: unknown) {
   return { status: code(body.status), reason: code(body.reason) }
 }
 function readOperation(request: Request) {
-  const url = new URL(request.url)
+  const url = new URL(request.url())
   if (request.method() === "GET" && url.pathname.endsWith("/api/ui/projections/case")) return "projection.case"
   if (request.method() === "GET" && url.searchParams.get("sf") === "current-choice") return "current-choice"
   if (request.method() === "POST" && url.searchParams.get("sf") === "workbench-analysis") {
