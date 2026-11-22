@@ -16,6 +16,7 @@ import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
 import { plannerMonthlyScript } from "../product/ui/planner-monthly.ts"
+import { recordSearchScript, recordSearchWidget } from "../product/ui/record-search.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -477,6 +478,7 @@ export function createApplication(mount: string, application: Application) {
       const nav = allowed.map((key, index) => ({ key, index }))
       const monthlyScript = surface === "planner" && (page === "OPEX" || page === "CAPEX") && actor.canWrite &&
         application.plannerMonthlyAvailable?.() ? plannerMonthlyScript : undefined
+      const appScript = monthlyScript ? recordSearchScript + "\n" + monthlyScript : recordSearchScript
       const shell = documentHtml(
         surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",
         surface,
@@ -486,7 +488,8 @@ export function createApplication(mount: string, application: Application) {
           content +
             controls(snapshot, surface, page, actor, environment, !application.rolePolicy) +
             privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
-            auditControls(actor, snapshot, url.searchParams),
+            auditControls(actor, snapshot, url.searchParams) +
+            recordSearchWidget(surface),
         ),
         fileControls(surface, page, actor, snapshot.versions.dataset?.version ?? 0, allowed, sidebar),
         surface === "dashboard"
@@ -494,12 +497,12 @@ export function createApplication(mount: string, application: Application) {
           : "",
         application.authMount,
       )
-      const html = monthlyScript ? shell.replace("</body>", () => `<script>${monthlyScript}</script></body>`) : shell
+      const html = shell.replace("</body>", () => `<script>${appScript}</script></body>`)
       return {
         commit: snapshot.audit.length !== auditBefore,
         value: reply(request.method === "HEAD" ? null : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(html, monthlyScript),
+          "Content-Security-Policy": htmlPolicy(html, appScript),
         }),
       }
     })
