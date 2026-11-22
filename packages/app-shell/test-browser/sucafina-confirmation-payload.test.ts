@@ -125,6 +125,7 @@ async function fixture(dependency = true) {
       ].map((operationId) => ({ operationId, state: "ready", reason: null, operational: true })) }],
     }) }
   })
+  const events: { operation: string; result?: unknown; error?: string }[] = []
   const commands: ConfirmationCommand[] = []
   const outcomes: Awaited<ReturnType<typeof confirmation.confirm>>[] = []
   const commit = async (command: ConfirmationCommand) => {
@@ -135,6 +136,9 @@ async function fixture(dependency = true) {
   }
   const transport: SfTransport = {
     async execute(operation, input) {
+      const event: { operation: string; result?: unknown; error?: string } = { operation: operation.operationId }
+      events.push(event)
+      try {
       let result: unknown
       if (operation.operationId === "collaboration.confirmation-project") {
         const payload = Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.confirmation-project"].input)(input)
@@ -150,10 +154,12 @@ async function fixture(dependency = true) {
         outcomes.push(outcome)
         result = outcome
       } else throw new Error("Unexpected UI operation: " + operation.operationId)
+      event.result = result
       return { kind: "response", status: 200, headers: {}, body: Schema.decodeUnknownSync(operation.output)(result) }
+      } catch (error) { event.error = String(error); throw error }
     },
   }
-  return { ...prepared, transport, commands, outcomes, commit, save, control,
+  return { ...prepared, transport, commands, outcomes, commit, save, control, events,
     storage: () => read({ purpose: "read-version" }, (call) => business.collaboration.storageVersion("confirmations", call)).then(ok),
     close: async () => { business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }
@@ -238,7 +244,7 @@ function mount(value: Fixture, language: "en" | "pt-BR", reference = value.obser
 }
 async function until(predicate: () => boolean) {
   for (let attempt = 0; attempt < 300 && !predicate(); attempt++) await new Promise((resolve) => setTimeout(resolve, 10))
-  expect(predicate()).toBe(true)
+  if (!predicate()) throw new Error("Confirmation DOM did not settle: " + document.body.innerHTML + "\n" + JSON.stringify(active?.events))
 }
 function confirm(host: HTMLElement) {
   const button = host.querySelector<HTMLButtonElement>("[data-sf-component=confirmation] button.primary")
