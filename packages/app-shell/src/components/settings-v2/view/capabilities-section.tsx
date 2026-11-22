@@ -1,6 +1,10 @@
 import { useNavigate } from "@solidjs/router"
+import { useQuery } from "@tanstack/solid-query"
 import { createMemo, createSignal, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
+import type { Agent } from "@/v2-wire"
+import { modelUnavailable } from "@/components/subagent-model-rules"
+import { directoryKey } from "@/context/global-sync/utils"
 import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { ServerConnection } from "@/context/server"
@@ -37,6 +41,28 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
   const [opening, setOpening] = createSignal(false)
   const store = () => serverSync().child(props.directory)[0]
   const agents = createMemo(() => agentRoster(store().agent))
+  const providers = useQuery(() => serverSync().queryOptions.providers(directoryKey(props.directory)))
+  const connected = createMemo(() => new Set(providers.isSuccess ? providers.data.connected : []))
+  const availability = (agent: Agent) => {
+    if (!providers.isSuccess) return
+    const provider = agent.model?.providerID
+    if (agent.model && provider && connected().has(provider)) {
+      const issue = modelUnavailable(providers.data.all.get(provider)?.models[agent.model.modelID])
+      if (issue)
+        return {
+          ok: false,
+          title: language.t(`orchestra.agents.model.${issue}`, { model: `${provider}/${agent.model.modelID}` }),
+        }
+    }
+    if (provider ? connected().has(provider) : connected().size > 0)
+      return { ok: true, title: language.t("orchestra.settings.agents.available") }
+    return {
+      ok: false,
+      title: provider
+        ? language.t("orchestra.agents.providerMissingTitle", { provider })
+        : language.t("orchestra.agents.noProviderTitle"),
+    }
+  }
   const openChat = () => {
     setOpening(true)
     void tabs
@@ -57,7 +83,7 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
       description={language.t("orchestra.settings.agents.description")}
       action={
         <button type="button" class="mx-btn" onClick={() => navigate("/orchestra/agents")}>
-          {language.t("orchestra.settings.agents.create")}
+          {language.t("orchestra.agents.roster")}
         </button>
       }
     >
@@ -90,7 +116,9 @@ export function AgentsSection(props: { server: ServerConnection.Any; directory: 
                   <Show when={item.agent.steps}>
                     {(steps) => <MxBadge>{language.t("orchestra.settings.agents.steps", { count: steps() })}</MxBadge>}
                   </Show>
-                  <MxBadge tone="good">{language.t("orchestra.settings.agents.available")}</MxBadge>
+                  <Show when={availability(item.agent)}>
+                    {(status) => <MxBadge tone={status().ok ? "good" : "bad"}>{status().title}</MxBadge>}
+                  </Show>
                 </div>
                 <footer class="mx-card-foot">
                   <button type="button" class="mx-btn" onClick={() => navigate("/orchestra/agents")}>
