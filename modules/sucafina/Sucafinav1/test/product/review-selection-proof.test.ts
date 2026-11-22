@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import type { TrustedUiContext } from "../../product/contracts/sf-execution.ts"
 import { createReviewPort } from "../../product/reviews/port.ts"
-import type { ReviewHost, ReviewSection } from "../../product/reviews/port.ts"
+import type { HistoricalSelectionProof, ReviewHost, ReviewSection } from "../../product/reviews/port.ts"
 import { createReviewRoutineSelection } from "../../product/reviews/routine-selection.ts"
 import type { RoutineReviewResult } from "../../product/routines/review-result.ts"
 
@@ -48,6 +48,7 @@ async function fixture() {
     afterSelect: () => {},
     onRead: () => {},
     selected: (sections: readonly ReviewSection[]) => sections,
+    proof: (proof: HistoricalSelectionProof) => proof,
   }
   const allow = async () => true
   const routine = createReviewRoutineSelection({
@@ -74,7 +75,10 @@ async function fixture() {
       controls.afterSelect()
       return selected.status === "ok" ? { ...selected, value: controls.selected(selected.value) } : selected
     },
-    historicalSelectionProof: routine.historicalSelectionProof,
+    historicalSelectionProof: async (...args) => {
+      const proof = await routine.historicalSelectionProof(...args)
+      return proof && controls.proof(proof)
+    },
     authorizeSections: allow, authorizeComments: allow, authorizeOutcomeComparison: allow,
     authorizeOutcome: allow, authorizeDecision: allow, authorizeSensitivity: allow,
     revalidate: allow, revalidateEvidence: allow,
@@ -93,6 +97,16 @@ test("historical Reports selection cannot authorize altered content with the sam
   sample.controls.selected = (sections) => sections.map((entry) => ({ ...entry, title: "Altered" }))
   expect(await sample.preview()).toEqual({ status: "denied", reason: "context-mismatch" })
   expect(sample.controls.reads).toBe(3)
+})
+
+test("historical Reports selection refuses a proof issued for another selection", async () => {
+  const sample = await fixture()
+  const other = await sample.routine.create(request, context)
+  if (other.status !== "ok") throw new Error(other.reason)
+  const proof = await sample.routine.historicalSelectionProof(other.value.selectionRef, context)
+  if (!proof) throw new Error("Missing proof for the second selection")
+  sample.controls.proof = () => proof
+  expect(await sample.preview()).toEqual({ status: "denied", reason: "context-mismatch" })
 })
 
 for (const failure of ["digest", "access", "expiration", "release"] as const) {
