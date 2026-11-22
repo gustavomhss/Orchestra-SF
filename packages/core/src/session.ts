@@ -100,6 +100,8 @@ type CreateInput = {
   agent?: AgentV2.ID
   model?: ModelV2.Ref
   location: Location.Ref
+  /** False refuses an existing Session even when location, agent, and parent match. */
+  adopt?: boolean
 }
 
 export class NotFoundError extends Schema.TaggedErrorClass<NotFoundError>()("Session.NotFoundError", {
@@ -133,6 +135,35 @@ export class PromptConflictError extends Schema.TaggedErrorClass<PromptConflictE
   sessionID: SessionSchema.ID,
   messageID: SessionMessage.ID,
 }) {}
+/** Reusing a Session ID with a different location, agent, or parent, or refusing adoption of an existing Session. */
+export class ConflictError extends Schema.TaggedErrorClass<ConflictError>()("Session.ConflictError", {
+  sessionID: SessionSchema.ID,
+  message: Schema.String,
+}) {}
+
+function reuse(recorded: SessionSchema.Info, input: CreateInput) {
+  if (
+    recorded.location.directory !== input.location.directory ||
+    recorded.location.workspaceID !== input.location.workspaceID ||
+    recorded.parentID !== input.parentID ||
+    (input.agent !== undefined && recorded.agent !== input.agent)
+  )
+    return Effect.die(
+      new ConflictError({
+        sessionID: recorded.id,
+        message: `Session ${recorded.id} already exists with a different location, agent, or parent`,
+      }),
+    )
+  if (input.adopt === false)
+    return Effect.die(
+      new ConflictError({
+        sessionID: recorded.id,
+        message: `Session ${recorded.id} was not created for this request`,
+      }),
+    )
+  return Effect.succeed(recorded)
+}
+
 /** A pre-admission prompt observer or installed hook refused; `detail` is what the person reads. */
 export class PromptBlockedError extends Schema.TaggedErrorClass<PromptBlockedError>()("Session.PromptBlockedError", {
   sessionID: SessionSchema.ID,
@@ -376,7 +407,8 @@ const layer = Layer.effect(
       create: Effect.fn("V2Session.create")(function* (input) {
         const sessionID = input.id ?? SessionSchema.ID.create()
         const recorded = yield* store.get(sessionID)
-        if (recorded) return recorded
+        // Exact retry returns the recorded Session. A different location, agent, or parent never adopts it.
+        if (recorded) return yield* reuse(recorded, input)
         if (input.parentID) yield* result.get(input.parentID)
         const project = yield* projects.resolve(input.location.directory)
         yield* ProjectV2.record(db, events, project)
@@ -414,12 +446,14 @@ const layer = Layer.effect(
               if (!(defect instanceof SessionProjector.SessionAlreadyProjected)) {
                 return Effect.die(defect)
               }
-              // Concurrent creation lost the projection race. The existing Session identity wins.
+              // Concurrent creation lost the projection race. The winner is returned only when it is this request.
               return store
                 .get(sessionID)
                 .pipe(
                   Effect.flatMap((session) =>
-                    session ? Effect.succeed({ type: "existing", session } as const) : Effect.die(defect),
+                    session
+                      ? reuse(session, input).pipe(Effect.map((existing) => ({ type: "existing", session: existing } as const)))
+                      : Effect.die(defect),
                   ),
                 )
             }),

@@ -360,6 +360,67 @@ describe("ScheduledTask capability revisions", () => {
 })
 
 describe("ScheduledTask capability manual runs", () => {
+  it.effect("a wake failure cannot turn a mismatched durable delivery into a started receipt", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const { db } = yield* Database.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      const key = "invocation:msg_assistant:call_delivery"
+      const ids = ScheduledTaskModel.slotIDs(`${created.id}:manual:${key}`, start)
+
+      hook.onWake = db
+        .update(SessionInputTable)
+        .set({ delivery: "queue" })
+        .where(eq(SessionInputTable.id, SessionMessage.ID.make(ids.message)))
+        .run()
+        .pipe(Effect.asVoid, Effect.orDie)
+      hook.failWake = true
+
+      const result = yield* tasks.capability.run(owner, created.id, key).pipe(Effect.flip)
+      expect(result).toBeInstanceOf(ScheduledTask.RunError)
+      expect(yield* inputs).toMatchObject([{ id: ids.message, session_id: ids.session, delivery: "queue" }])
+      expect(yield* runRows).toEqual([])
+    }),
+  )
+
+  it.effect("refuses to reuse a manual claim with a different durable prompt before and after takeover", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(start)
+      const tasks = yield* ScheduledTask.Service
+      const sessions = yield* SessionV2.Service
+      const { db } = yield* Database.Service
+      const owner = yield* ownerSession()
+      const created = yield* tasks.capability.create(owner, hourly)
+      const key = "invocation:msg_assistant:call_stopped"
+      const ids = ScheduledTaskModel.slotIDs(`${created.id}:manual:${key}`, start)
+      const session = yield* sessions.create({ id: SessionV2.ID.make(ids.session), agent: owner.agentID, location })
+      const messageID = SessionMessage.ID.make(ids.message)
+      yield* sessions.prompt({ id: messageID, sessionID: session.id, prompt: { text: "A different prompt." }, resume: false })
+      yield* db.insert(ScheduledTaskRunTable).values({
+        id: "stopped-manual",
+        task_id: created.id,
+        revision: 0,
+        manual_key: key,
+        state: "running",
+        session_id: session.id,
+        message_id: messageID,
+        prompt: created.prompt,
+        owner: "stopped-process",
+        time_claimed: start - ScheduledTask.LEASE - 1,
+      }).run().pipe(Effect.orDie)
+
+      const run = tasks.capability.run(owner, created.id, key).pipe(Effect.flip)
+      expect(yield* run).toBeInstanceOf(ScheduledTask.RunError)
+      yield* tasks.tick
+      expect(yield* run).toBeInstanceOf(ScheduledTask.RunError)
+      expect(wakes).toEqual([])
+      expect(yield* inputs).toHaveLength(1)
+      expect(yield* runRows).toMatchObject([{ state: "failed", session_id: session.id }])
+    }),
+  )
+
   it.effect("a manual run dedupes on its key and never moves next or counts", () =>
     Effect.gen(function* () {
       yield* TestClock.setTime(start)

@@ -149,10 +149,10 @@ const layer = Layer.effect(
         }),
       )
 
-    // The path a user prompt takes: the Session (adopted when its ID exists), durable admission, then a wake.
+    // A fresh claim creates the Session, then admits. An existing Session is not this task's, so the prompt must
+    // not land there. A takeover (`admitted`) only reconciles a prompt already admitted to that same Session.
     // Legacy runs are Maestro Sessions in the task's directory. A capability run uses its owner's agent and
-    // placement, and only while the owner Session still exists there with that agent. `admitted` is a takeover
-    // retrying a prompt that is already durable, which only reconciles and wakes.
+    // placement, and only while the owner Session still exists there with that agent.
     const dispatch = (claimed: Claim, admitted = false) =>
       Effect.gen(function* () {
         const owner = claimed.task.policy === "capability" ? claimed.task.owner : undefined
@@ -161,24 +161,36 @@ const layer = Layer.effect(
         // Checked before the Session too, so a void claim leaves no empty Session behind.
         const checked = claimed.task.policy === "capability" && !admitted
         if (checked && !(yield* cap.holds(claimed))) return { type: "void" } as const
+        if (admitted) {
+          const durable = yield* SessionInput.find(db, claimed.messageID)
+          if (!durable || !ScheduledTaskShared.matchesPrompt(durable, claimed.sessionID, claimed.prompt)) return { type: "failed", error: ScheduledTaskShared.PROMPT_MISMATCH } as const
+        }
         const session = yield* sessions.create({
           id: claimed.sessionID,
           agent: owner?.agentID ?? AgentV2.defaultID,
           location: owner?.location ?? { directory: claimed.task.directory },
+          adopt: admitted,
         })
+        if (session.id !== claimed.sessionID)
+          return { type: "failed", error: "Scheduled prompt refused: session was not created for this task" } as const
         // An edit, pause or removal since the claim voids it before admission. What remains is the window from this
         // read to the durable admission inside `sessions.prompt` (its prompt hooks included); a claim revoked in it
         // still settles with an honest `started` receipt.
         if (checked && !(yield* cap.holds(claimed))) return { type: "void" } as const
-        yield* sessions.prompt({ id: claimed.messageID, sessionID: session.id, prompt: { text: claimed.prompt } })
-        return { type: "started", sessionID: session.id } as const
+        yield* sessions.prompt({ id: claimed.messageID, sessionID: claimed.sessionID, prompt: { text: claimed.prompt }, delivery: "steer" })
+        return { type: "started", sessionID: claimed.sessionID } as const
       }).pipe(
         Effect.catchCause((cause) =>
           Effect.gen(function* () {
-            // A capability prompt that was admitted before the failure (a wake that failed, say) did start.
+            const error = Cause.squash(cause)
+            if (error instanceof SessionV2.ConflictError || error instanceof SessionV2.PromptConflictError)
+              return { type: "failed", error: reason(cause) } as const
+            // A wake can fail after exact durable admission. The run already started in that case.
             const durable =
-              claimed.task.policy === "capability" ? yield* SessionInput.find(db, claimed.messageID) : undefined
-            if (durable) return { type: "started", sessionID: durable.sessionID } as const
+              admitted || claimed.task.policy === "capability"
+                ? yield* SessionInput.find(db, claimed.messageID)
+                : undefined
+            if (durable && ScheduledTaskShared.matchesPrompt(durable, claimed.sessionID, claimed.prompt)) return { type: "started", sessionID: claimed.sessionID } as const
             return { type: "failed", error: reason(cause) } as const
           }),
         ),
@@ -296,9 +308,13 @@ const layer = Layer.effect(
       if (!claimed) return
       const admitted = yield* SessionInput.find(db, claimed.messageID)
       if (!admitted) return yield* settle(claimed, { type: "void" })
+      if (!ScheduledTaskShared.matchesPrompt(admitted, claimed.sessionID, claimed.prompt))
+        return yield* settle(claimed, { type: "failed", error: ScheduledTaskShared.PROMPT_MISMATCH })
       const retried = yield* dispatch(claimed, true)
+      if (retried.type === "failed") return yield* settle(claimed, retried)
       if (retried.type !== "started") yield* Effect.logWarning("Scheduled run retry failed", retried)
-      yield* settle(claimed, { type: "started", sessionID: admitted.sessionID })
+      // An exact prompt already counted as admitted even if its owner has since been revoked.
+      yield* settle(claimed, { type: "started", sessionID: claimed.sessionID })
     })
 
     const tick = Effect.gen(function* () {
@@ -548,6 +564,7 @@ function reason(cause: Cause.Cause<unknown>) {
   const error = Cause.squash(cause)
   if (error instanceof SessionV2.PromptConflictError)
     return `Prompt ${error.messageID} conflicts with an earlier prompt in ${error.sessionID}`
+  if (error instanceof SessionV2.ConflictError) return error.message
   if (error instanceof SessionV2.NotFoundError) return `Session not found: ${error.sessionID}`
   if (error instanceof Error && error.message) return error.message
   return String(error)

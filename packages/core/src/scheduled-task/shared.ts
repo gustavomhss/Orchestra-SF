@@ -6,7 +6,9 @@ import type { ScheduledTask } from "@orchestra/schema/scheduled-task"
 import type { Database } from "../database/database"
 import type { AbsolutePath } from "../schema"
 import { SessionV2 } from "../session"
+import { SessionInput } from "../session/input"
 import { SessionMessage } from "../session/message"
+import { Prompt } from "../session/prompt"
 import { ScheduledTaskModel } from "./model"
 import { ScheduledTaskRunTable, ScheduledTaskTable } from "./sql"
 
@@ -42,6 +44,11 @@ export type Outcome =
   | { type: "failed"; error: string }
   | { type: "revoked" }
   | { type: "void" }
+
+export const PROMPT_MISMATCH = "Scheduled prompt refused: the admitted prompt does not match this run"
+
+export const matchesPrompt = (durable: SessionInput.Admitted, sessionID: SessionV2.ID, text: string) =>
+  SessionInput.equivalent(durable, { sessionID, prompt: Prompt.make({ text }), delivery: "steer" })
 
 export const LEGACY = eq(ScheduledTaskTable.policy, "legacy-browser")
 
