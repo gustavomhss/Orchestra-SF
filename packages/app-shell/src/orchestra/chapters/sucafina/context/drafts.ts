@@ -230,4 +230,3 @@ function accessDeniedProof(proof: SfDraftRevalidation | undefined): boolean {
   return detail.httpStatus === 401 || detail.httpStatus === 403
     || detail.reason === "denied" || detail.reason === "unauthenticated"
 }
-
