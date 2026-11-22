@@ -4,6 +4,7 @@ import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
 const canonicalStringify = JSON.stringify
+const diagnosticDigestCanonicalCall = {}
 
 /** Memoized canonical bytes require the original serializer and plain tagged arrays. */
 export function sfCanonicalSerializerUnhooked() {
@@ -12,8 +13,11 @@ export function sfCanonicalSerializerUnhooked() {
     !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
 }
 
-export function canonicalSfValue(value: unknown): string {
-  return JSON.stringify(canonical(value))
+export function canonicalSfValue(value: unknown, caller: unknown = undefined): string {
+  const measured = caller === diagnosticDigestCanonicalCall ? undefined : beginSfReadonlyDiagnostic("canonical.direct")
+  try {
+    return JSON.stringify(canonical(value))
+  } finally { endSfReadonlyDiagnostic(measured) }
 }
 
 export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): string {
@@ -21,7 +25,7 @@ export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): s
     caller === "finance.current" || caller === "finance.other" ? caller : "unlabelled"
   const measured = beginSfReadonlyDiagnostic("canonical.digest", label)
   try {
-    return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+    return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value, diagnosticDigestCanonicalCall)).digest("hex")
   } finally { endSfReadonlyDiagnostic(measured) }
 }
 

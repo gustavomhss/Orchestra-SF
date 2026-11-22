@@ -139,6 +139,7 @@ export function withSfReadonlyDiagnostic<Value>(request: Request, operation: str
   return frames.run(frame, async () => {
     emit(frame, { phase: "started", operation, schema: "sf-portfolio-readonly-v2", scopeOrigin: "before-human-admit",
       canonicalDigestSurface: { meaning: "direct-caller-label", labels: ["principal.direct", "source.scope-validation", "source.other", "finance.current", "finance.other", "unlabelled"] },
+      canonicalDirect: "direct canonicalSfValue calls; internal digest canonicalization excluded",
       originalObservationWindowMs: 60000, maximumBuckets, maximumRoots, maximumLines, maximumLineLength,
       periodicThresholdsMs: [10000, 20000, 30000, 40000, 50000], checkpointModes: ["timer", "settled-span"] })
     const timer = setInterval(() => {
