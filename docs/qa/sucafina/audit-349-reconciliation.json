@@ -8,17 +8,31 @@
       "id": 1,
       "name": "Context Epoch",
       "owner": "Astra/context_epoch",
-      "state": "open",
+      "state": "integrated",
       "pr": 626,
-      "head": "b22f08218f33b1374cb0552866c624f2c31f7a09"
+      "head": "4c42fd816c049a879eb51be359b49cc251903d15",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/626#pullrequestreview-6010506642",
+      "merge": "c6ddf9c7b80dad49aaa42f419dd336126eefed56",
+      "ci": [
+        44988743502,
+        44989026751
+      ],
+      "proof": "159 tests/548 assertions on exact4c42 source: first/update/compaction meeting data, shell replay, real durable EventV2+SQL unique sequence replay, baseline/prompt admission. Runtime typecheck green. FinalCI verifies full core diagnostics equal base (only existing Jira fixtureTS2353 tracked593);78guards/11paths clean. Merge parents67bb+approved4c42 confirmed."
     },
     {
       "id": 2,
       "name": "Provider Agents/Settings V2",
       "owner": "Astra/provider_state",
-      "state": "open",
+      "state": "integrated",
       "pr": 625,
-      "head": "d6836074e188236557faff39de40b16ff7b1a9b0"
+      "head": "d6836074e188236557faff39de40b16ff7b1a9b0",
+      "merge": "079d86766f9c324924e024d53722c09e018c23d2",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/625#pullrequestreview-6010499833",
+      "ci": [
+        44988169984,
+        44988002304
+      ],
+      "proof": "DOM base: 0 pass / 2 fail; approved head: 3 pass / 42 assertions. Existing Agents 18 tests /77 assertions, app-shell typecheck and 78 guard rules/4 paths clean. Merge parents confirmed: old dev799124 and approved d6836074."
     },
     {
       "id": 3,
@@ -32,17 +46,34 @@
       "id": 4,
       "name": "Domain/Planner numeric contracts",
       "owner": "Astra/planner_contracts",
-      "state": "open",
+      "state": "integrated",
       "pr": 624,
-      "head": "c094966fe97382f12e71a5d581cadf7641bf2ab8"
+      "head": "98f509fcf3eca40e62e0a771223a6d12ee32507f",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/624#pullrequestreview-6010509958",
+      "merge": "a0b162822d0b62621095dbae4117f781409d0377",
+      "ci": [
+        44988764759
+      ],
+      "proof": "Actual project import CAS accepts supported numeric/decimal legacy revisions; malformed versions rejected422/no writes; valid retry409. Editable amount strings/null and invalid measure-label drafts retained. Base3pass1fail; head4pass69assertions. Production schema typecheck/full Sucafina pass; complete schema3 pre-existing Teams diagnostics identical.78 guards clean. Merge approved98f509 into current dev02af, confirmed parents."
     },
     {
       "id": 5,
       "name": "Hot Topic correlation",
       "owner": "Astra/reconciliation",
-      "state": "verification",
+      "state": "absorbed",
       "pr": 560,
-      "merge": "3d19bbcc30c6d6ea62c717c891b7bed51a2b41fc"
+      "merge": "3d19bbcc30c6d6ea62c717c891b7bed51a2b41fc",
+      "sourcePR": 358,
+      "sourceHead": "f286c1cb69ef038e96b67770e7aa18d9d1fad042",
+      "proof": "Current HotTopic producer blob4fab9abb226fc8921c52a503e939fc3a3d556d51 is identical to PR358. HotTopic host differs only by one blank line. Current transaction-scoped creation binder preserves metadata, uniqueness, original incarnation/digest, finish-time replacement rejection and final authorization; readonly preimage path cannot commit. Current composition checks recipient at commit. Historical Actions44562370162/job135694822161:9pass/105asserts including real SQLite create/reopen, same correlation, ABA/reused ID, revoked source, withdrawn human admission rollback and expired/tampered reservation. Historical CI is invariant evidence, not a new claim of full current-dev qualification. #452 private editor paths do not overlap this backend scope.",
+      "ci": [
+        44562370162
+      ],
+      "verification": {
+        "checkedDev": "79912446753af5bb291fc2581543732eb4c83057",
+        "producerCommit": "90d5468325c853a879dc131b220933501e63e0ac",
+        "hostCommit": "fa6605e0ffbdff5ba7e7e88f612b930ca2cb21dd"
+      }
     },
     {
       "id": 6,
@@ -56,19 +87,32 @@
       "id": 7,
       "name": "Planner source reads",
       "owner": "Astra/planner_contracts",
-      "state": "verification"
+      "state": "integrated-core-gap",
+      "head": "bb42be286373e17db67a82ecde8836fda1df141f",
+      "pr": 627,
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/627#pullrequestreview-6010507432",
+      "merge": "67bb104bb36f1c4766f05ae3124f68bc513647e5",
+      "ci": [
+        44988766599
+      ],
+      "proof": "Existing real Finance composition reproduces late reader replacement on base; head1test35assertions passes, including typed denials, scope/pair/source/revocation and restored reader. Full CLI/Sucafina types green,78guards clean. Approved headbb42 was merged and parents a0b162+bb42 confirmed.",
+      "remaining": "Complementary historical Planner paths still under reconciliation; main candidate runtime fix integrated."
     },
     {
       "id": 8,
       "name": "Coverage proof order",
       "owner": "Astra/planner_contracts",
-      "state": "verification"
+      "state": "open",
+      "pr": 632,
+      "head": "54434da3cdbbaba0a5162d09e02b6e93820ec682"
     },
     {
       "id": 9,
       "name": "Non-C05 follow-up",
       "owner": "Migration G04 ownership reconciliation",
-      "state": "ownership-pending"
+      "state": "ownership-pending",
+      "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7074704506",
+      "proof": "Static read confirms generic pre/post thread and recipient guards; historical dispatch fallback would weaken unavailable. Non-C05 specific proof and migration ownership still pending, no edit."
     },
     {
       "id": 10,
@@ -81,8 +125,24 @@
     {
       "id": 11,
       "name": "UI state copy and currency",
-      "owner": "Astra",
-      "state": "verification"
+      "owner": "Astra/provider_state",
+      "state": "implementation",
+      "subparts": {
+        "headcount": {
+          "pr": 630,
+          "head": "d16d97ccff572510bb9cc5aab1cbc4fd58b4a07c",
+          "state": "approved-ci-pending",
+          "review": "https://github.com/gustavomhss/Orchestra-SF/pull/630#pullrequestreview-6010540923",
+          "proof": "Real CAP20 producer/mapper FX proves USD calculated months and HR total; source currency only annual rate cards."
+        },
+        "talent": "denied/empty and enum copy already mapped in current UI; source PR evidence pending",
+        "crossLinks": "confirmed denied swallowed and labels outside catalog; overlap reconciliation in progress",
+        "imports": {
+          "state": "ownership-pending",
+          "pr": 613,
+          "coordination": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7074751579"
+        }
+      }
     }
   ],
   "paths": [
@@ -90,961 +150,1620 @@
       "path": ".github/workflows/sf-factory-package.yml",
       "historicalBlob": "1f68937c0c253621ef5b0e380b04513ae5a6429d",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 1,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "apps/cli/script/distribution-payload.ts",
       "historicalBlob": "059bd6f3f44894f9f2a062f1230b38a0e184fb51",
       "currentBlob": "ca9edcafc0e654c57b3cbfca224878c38f0359a2",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 2,
+      "inventoryRows": [
+        "I16"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
       "historicalBlob": "8b4f14a51c966fe1a318b7d9349488c0a44cd4b9",
       "currentBlob": "c678a85ec8e930b96c8880d0c220fb172f9447e8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 3,
+      "inventoryRows": [
+        "I26"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/bi-services.ts",
       "historicalBlob": "8e45ef1bdcdab9b459711bb2b04a7758212fb66b",
       "currentBlob": "24cb859d3508309c0cfe7476907f5421be9149a8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 4,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/business-services.ts",
       "historicalBlob": "7e7edcdfb65762a8b5b48b4c57cc8eec7ff6a5ff",
       "currentBlob": "e6035264bcc4fbce8da5aefa3dec9a43589d0970",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 5,
+      "inventoryRows": [
+        "I25",
+        "I26"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
       "historicalBlob": "c7448b4f7f2156e8b4d818c8582298cc06022777",
       "currentBlob": "a2997d77f01283b426f7940e604f1569effa5bbd",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 6,
+      "inventoryRows": [
+        "I23"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
       "historicalBlob": "ca5b0827164296da5c4041e8469bd6e9404888e7",
       "currentBlob": "829be830c777435f21cdabe3b521acc4fd7b5124",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 7,
+      "inventoryRows": [
+        "I01"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
       "historicalBlob": "77db6454d6370d0a4952119561d228c6cdc6b21a",
       "currentBlob": "13153182e357b716a12d2554654905d54fa30ee4",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 8,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
       "historicalBlob": "a5c059946a8d3b0d3be6570f36b4eb484cf1af29",
       "currentBlob": "fd5e40da9a982d445259606629b7dbdf581b42af",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 9,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
       "historicalBlob": "135a172c067da8caaaadc295e9e0f94f065cad5a",
       "currentBlob": "881ce4672d9d0e641d1cc849663c0980c118774d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 10,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-bridge.ts",
       "historicalBlob": "6b7c20fa2e7093f027c15dbeb78319ab0085d640",
       "currentBlob": "19d13c68633fc390d63fb6685e7a4f06f5780925",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 11,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-fence.ts",
       "historicalBlob": "8c168312071fe6d93678c1d4b35e6ac325ff1c28",
       "currentBlob": "d917d8c52ef4129d069839483e12e1f13d5daa61",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 12,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/routine-native-phase-origin.ts",
       "historicalBlob": "9a2ef9b49c8102a169c59785a1647bf6c1c8f6f3",
       "currentBlob": "a046bc883784777b10a22a67872f58782efff2d1",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 13,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
       "historicalBlob": "82ab5fd3000baffb1c96ef3af53c588cc22bb4ab",
       "currentBlob": "a59f695365a71614f6189eb6f2c2737c83ba233d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 14,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "apps/cli/test/distribution-web-native.test.ts",
       "historicalBlob": "2c72db84605c33bd19d04ea5eb023d271f2578f1",
       "currentBlob": "550a84c826aebd935d3d4c6ab6a5e2b64c523728",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 15,
+      "inventoryRows": [
+        "I16"
+      ]
     },
     {
       "path": "apps/cli/test/distribution-web.test.ts",
       "historicalBlob": "74ce1253e30c52d15369360114f8cab4e3b77936",
       "currentBlob": "8ceef2a78929e16af952d95c15d79d9b159d895d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 16,
+      "inventoryRows": [
+        "I16"
+      ]
     },
     {
       "path": "apps/cli/test/factory-distribution-linux.test.ts",
       "historicalBlob": "379695a97ab5855769f2358dab989206e75dad89",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 17,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "apps/desktop/src/main/app-dock-linux-live.test.ts",
       "historicalBlob": "c64b32a7402e771f7b3e3524222e119d1f6bc10d",
       "currentBlob": "51540e247a30688fe693292d2d28ae7909375ade",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 18,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/app-dock.ts",
       "historicalBlob": "a246c08e6840b5844bc7cf125b412d7f19563c8a",
       "currentBlob": "e67d046dd9ac9a69af5e589c453db7af5b25ff99",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 19,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/live-capture.ts",
       "historicalBlob": "656d828583620c837318ff68f62eebda9061a3dd",
       "currentBlob": "48f274c5022d5cba8f3480b393803fdaafc12ea8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 20,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/live-ipc.test.ts",
       "historicalBlob": "f03abc3f87b9c9ae89935039d7ede884187cd6d2",
       "currentBlob": "a7aeba46cd4e51c4a87bbf2d793405946df7aa7d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 21,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/live-ipc.ts",
       "historicalBlob": "fbca3814de6200971b629c2d93b9046c5624a63b",
       "currentBlob": "71b1a1611aef001255f9831fc13df4ab88544d00",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 22,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/live-overlay.ts",
       "historicalBlob": "778223ffb2768d0b640a0b7305a16c6d2679c6d5",
       "currentBlob": "37f0dda5eb46ce4754a69cd4c2aae46447dff561",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 23,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/live-transport-log.ts",
       "historicalBlob": "2a6824712e4426e1daa56e0c23590f7af0aa329a",
       "currentBlob": "e39dbb654e8302659acba5cc02f2942831ae56e7",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 24,
+      "inventoryRows": [
+        "I14"
+      ]
     },
     {
       "path": "apps/desktop/src/main/log-redact.ts",
       "historicalBlob": "b52e4d98d0af87013249d94b4ecada7ce046bcd3",
       "currentBlob": "f1f806879086aa64ac59942ba9c3020a8a52cbfd",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 25,
+      "inventoryRows": [
+        "I14"
+      ]
     },
     {
       "path": "apps/desktop/src/main/logging.ts",
       "historicalBlob": "24786535cd9d527a23d42a4663460f36dbf5ed04",
       "currentBlob": "813a210bf053bf928703344cec2b23119f3d4ee4",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 26,
+      "inventoryRows": [
+        "I14"
+      ]
     },
     {
       "path": "apps/desktop/src/main/windows.ts",
       "historicalBlob": "62685ee6aed3752af199df0af4655b1fd3cffc53",
       "currentBlob": "43746ac81f3761dfbb9553958672edc91fcd324a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 27,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "apps/desktop/src/main/wsl/ipc.ts",
       "historicalBlob": "792b24e5d30b817951c7cbbfbaf6ee2d34d96025",
       "currentBlob": "165e60f6f72e05181237d98d0574bb43a372dca8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 28,
+      "inventoryRows": [
+        "I13"
+      ]
     },
     {
       "path": "docs/handoff/HANDOFF-audit-one.md",
       "historicalBlob": "dc6cc471bfbefe21593b4fa4d63d64445a4b4172",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 29,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/engine-adapters/claude-code/src/v2/host.ts",
       "historicalBlob": "9d1e124a908e268230f54527dee81e3c93dcb87d",
       "currentBlob": "dd441b07ab150ed5f03148568e168dfba69f3cca",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 30,
+      "inventoryRows": [
+        "I09"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/local/entry.ts",
       "historicalBlob": "1aa1678159e54659c1840ee201e4afab9966e43a",
       "currentBlob": "5969791636a00bfbbb25e1f479b6ab64909691ae",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 31,
+      "inventoryRows": [
+        "I01",
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
       "historicalBlob": "4da4fa30855ab04fdb7799916bdd05651581b4fd",
       "currentBlob": "4da4fa30855ab04fdb7799916bdd05651581b4fd",
-      "blobRelation": "identical"
+      "blobRelation": "identical",
+      "ordinal": 32,
+      "inventoryRows": [
+        "I07"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
       "historicalBlob": "e0db261171f77ecb8cd71f1d7da9c78035b6a76b",
       "currentBlob": "ac3440f4d7cc9b2350ce42f02c9ca478e354de0a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 33,
+      "inventoryRows": [
+        "I05",
+        "I22",
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
       "historicalBlob": "e51c053fccad7d917f9be48f65d0687d73cdb1a7",
       "currentBlob": "bf8cf5289917d996c86df170a0e0c5ab4d43c812",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 34,
+      "inventoryRows": [
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
       "historicalBlob": "f78e26ac73cc6e879de1b5f9e32295d18fc7e99f",
       "currentBlob": "a523b3359b71f927d9ff60a37cf28d19c409c136",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 35,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
       "historicalBlob": "e933f4d5fd70ff82bbc3596b82b18a74f99563de",
       "currentBlob": "df3b285512f34a82df4260b8e443aaeafd0ae617",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 36,
+      "inventoryRows": [
+        "I05",
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
       "historicalBlob": "0ef118f5496b6608cd5b847a052942274ac47feb",
       "currentBlob": "a02bcc1e09602922ab9a2eed5da12b6832a91a52",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 37,
+      "inventoryRows": [
+        "I05",
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
       "historicalBlob": "e3bfb4a9fe2adc7809877db237efb7d4de9ffe42",
       "currentBlob": "4fab9abb226fc8921c52a503e939fc3a3d556d51",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 38,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
       "historicalBlob": "966ea0128d54da647c61567285990450f6e0f764",
       "currentBlob": "09625842cb19dd56b147cdcf0624804bff351d68",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 39,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
       "historicalBlob": "f3382646180a2756be1dd0cdfca3080ddb2689f7",
       "currentBlob": "07a19dcaf10f9ee612e9ba1496d4abc60967e29a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 40,
+      "inventoryRows": [
+        "I19"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
       "historicalBlob": "6a53bd03d6af6936e41e132ae1967bf27e32ce1c",
       "currentBlob": "e90713d5c7c4e7f977641a28b436c314c635cc33",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 41,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
       "historicalBlob": "b74b526717ba4bca91c53eb591ae09c12da69671",
       "currentBlob": "78cfacb69c0e83c04c55d593a005bccff75f6282",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 42,
+      "inventoryRows": [
+        "I06",
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
       "historicalBlob": "f5a9ded6c4d133a08268943d3cdcae0aa0355aa5",
       "currentBlob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 43,
+      "inventoryRows": [
+        "I06"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
       "historicalBlob": "26bd56fdf87b7f729779448032a8fd4f1d39a1e5",
       "currentBlob": "dd3a92ed3586ac3de5bc7981e220be9d52379048",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 44,
+      "inventoryRows": [
+        "I19"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
       "historicalBlob": "7fdd57190ac0eb5fcd5233abfb42b82e59bf13e5",
       "currentBlob": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 45,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
       "historicalBlob": "fa60cc862eb7b90b9ec0bda1cd913b3d4011e7b3",
       "currentBlob": "1c6a03d65acfc4386da90720ec7161b2f9582cd0",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 46,
+      "inventoryRows": [
+        "I23"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
       "historicalBlob": "19657ce2ab758a9cbf46e3b0aad916bbdc1c10e6",
       "currentBlob": "e95faf6c5d980111a80aa638c4ee02fdc47f9908",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 47,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
       "historicalBlob": "dcf9cc0da6b6727e88fae842ecf16595046d6204",
       "currentBlob": "b8f7b22413a9c6ae912b97e546186a7441794d52",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 48,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
       "historicalBlob": "0c0fda7fe6f35b48f84ac757d385c957bd1dddf8",
       "currentBlob": "2c44f063c0a9f2bfcb0aec313bd5d57f07056414",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 49,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
       "historicalBlob": "c7c6b0a1088838f3c0cc32274398be768ab91e1c",
       "currentBlob": "ac2d7219d3dbeae866d8c81220a841acfde59214",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 50,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
       "historicalBlob": "2471cf048c28d9c84acba3bd68d2829bfd2cd9a2",
       "currentBlob": "eb2ac067e45f5917e782d9a36267a64ae9998896",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 51,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
       "historicalBlob": "78524ac85b50f007d650bc6e6fefdb55094078ed",
       "currentBlob": "048b87031d28d95b63ea753d380c23e867ffbd34",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 52,
+      "inventoryRows": [
+        "I21"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
       "historicalBlob": "02e340c660dd1833575fb32fed4cbc12c8880204",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 53,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
       "historicalBlob": "e9df3a358d35a009c71f276fd30d1523de8d6262",
       "currentBlob": "b4aa7ae69195da98a84d2c77efbc9b634c1346a8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 54,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
       "historicalBlob": "9b713ae5662af7c0f4974d87a84d8895df588155",
       "currentBlob": "6f5e6c9aaa5687f76b113e232f03fb433fc0c0aa",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 55,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
       "historicalBlob": "05eb28a407e03ca2d551f05cce479d69c588e4fe",
       "currentBlob": "630ebaa2c8f36535884d85a6151b4c13ecfda704",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 56,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
       "historicalBlob": "7fbe74766c6e08a63e8cd133997b7716a78fbd4a",
       "currentBlob": "529e29806b3faf15f88eec009c198e783f4248a3",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 57,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
       "historicalBlob": "17a4b2ff8c2f2db9cafc8c915b41289e5b6ae798",
       "currentBlob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 58,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
       "historicalBlob": "18aa7062e1e8de577700d1705ae5ed0cbdb5e617",
       "currentBlob": "cf579731aefe6389fdbbc17fcfc266353bdfba22",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 59,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
       "historicalBlob": "1ab1e21b2c25b7f185dd1b06647571e224b139c1",
       "currentBlob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 60,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
       "historicalBlob": "f1b94175ef167c2483d3a1aa58ae917ee498cc4e",
       "currentBlob": "50c261bf5bb70b0089057b5093803c5f8867cec2",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 61,
+      "inventoryRows": [
+        "I04"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
       "historicalBlob": "ef1cca25821f7830b39e1df8ec29e3a8c15bce4f",
       "currentBlob": "83b9fc13c70f464de17946b442ad59e2d40bb765",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 62,
+      "inventoryRows": [
+        "I04"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
       "historicalBlob": "f840ab6049df00515e87d2e486d163d5e198d9fb",
       "currentBlob": "56c33df7b818307f32b9d8bbd03b27e7891904a0",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 63,
+      "inventoryRows": [
+        "I20"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
       "historicalBlob": "6bf0bfc9a50b503389cb3bac25f3f74c637db2ee",
       "currentBlob": "846318874c8838e5410091d8ac54439bae1a3465",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 64,
+      "inventoryRows": [
+        "I03"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/routine-selection.ts",
       "historicalBlob": "0da6a79264192c3c618d19109d2939825436196d",
       "currentBlob": "d5055c71b0f3e3b1adc2a4b3758bb5b2fc990f4c",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 65,
+      "inventoryRows": [
+        "I20"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
       "historicalBlob": "2efedb5bb9c5d920a4fa61412b8944f75a51797d",
       "currentBlob": "649ccb941b1a1cac32aefb963b565ed3020fc1a6",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 66,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
       "historicalBlob": "ffdf65307aed5846010a6e832980c169677c14a7",
       "currentBlob": "10bba42977c33b11bf9b2426a5de765c49b92d9b",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 67,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
       "historicalBlob": "d301f212112235b985bf1c08e25de6c3f0a8feb6",
       "currentBlob": "21e1a63b3a88db673c79170cdf873be0c9949a27",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 68,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/installed-console.ts",
       "historicalBlob": "9f9ce95db8b692feeca0876b0d49442c9e89084f",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 69,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
       "historicalBlob": "a4bf814a7a951d83e851afbda87f9007e37ceaa0",
       "currentBlob": "0bd5099c6f303d189f65cb1483730c7af03676b5",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 70,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
       "historicalBlob": "83f513c9b9c3c9a7f4497eea80c9e4aa896c9be9",
       "currentBlob": "8cccd5bcc8c814b9909a693e279234b9d45b4d42",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 71,
+      "inventoryRows": [
+        "I04",
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
       "historicalBlob": "6e8bf2e4101946268bf04eefda9058ffe7805361",
       "currentBlob": "97424780a064ff6128b1ec3e3d101d59bbc163d5",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 72,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
       "historicalBlob": "e1f9b25472a74cd7152a0c61df801a05e68d517f",
       "currentBlob": "4845de24285df2459991da7d9895aad95eb93b19",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 73,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
       "historicalBlob": "167be44583c4c00bfa4bcf69fe7590765662b982",
       "currentBlob": "2d5d9d29889b937cbf47df44dbd7a37912fd3e9a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 74,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
       "historicalBlob": "26fe8e6f9b54d5d06908d435da72dd72aa14086d",
       "currentBlob": "a36a7cb892b90a1cb905e704f60897de3abde4d0",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 75,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
       "historicalBlob": "e58dac03c25af436a6f411014de5a79cbdd789b4",
       "currentBlob": "82f9ad8ca215e115a6a901eefe5ddfd4b99c686a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 76,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
       "historicalBlob": "64e1eb0a2ca24c3256e87fd2faf30f1608a11121",
       "currentBlob": "ef8e8efdbffacafb5979430bcb8310bc8233ae25",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 77,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts",
       "historicalBlob": "5febc9e3a3798a7880f874744c93dd66b1504bc6",
       "currentBlob": "47ec264082c1ddbef933c7b7cf9fb99c28257d8c",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 78,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-entry.test.ts",
       "historicalBlob": "eb530bbaec12de7e69cf154f0edea72ddfa9f4da",
       "currentBlob": "f574311b0be4124d58d7bd311f439a605bfa5296",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 79,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
       "historicalBlob": "4572151e5bcd63d340ce520155267bf36b0113f5",
       "currentBlob": "2875f552e35196e4de2b4602bf4310d8823f0c13",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 80,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
       "historicalBlob": "504602e1d295b4299c2d53fb7c29d380da0f5ec9",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 81,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-first-login.test.ts",
       "historicalBlob": "355053d456ef2dd5fe8feea9df7aa5905bbf0dd9",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 82,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
       "historicalBlob": "04e8fae2d097a726598d3c54dd8b3e91e0c672d0",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 83,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
       "historicalBlob": "0ab08f70761351547fb8ce11a7dfd27afabfaa99",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 84,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
       "historicalBlob": "feddcf4c9e3f73edc6ccbe7f5750b59628d6c077",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 85,
+      "inventoryRows": [
+        "I24",
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/operator-browser.test.ts",
       "historicalBlob": "ec5b33349f146eab0cd5d3c8b28702012b273b4d",
       "currentBlob": "b354bd253788dfd08f38c1a236e8d1e5a8e1b245",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 86,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/parity-pitr.test.ts",
       "historicalBlob": "b21e1e4227f4e51df7f0e90cd91c2b3b58712e13",
       "currentBlob": "e20dc20d98e2fb20122c844008a747b955613b40",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 87,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
       "historicalBlob": "7f4c50586acbe857b69cc551e43d45aef0c70b5d",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 88,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/decision-compare-performance/current-case-observations.test.ts",
       "historicalBlob": "75b2cfe947ffd0c3997a62d81ab3abd4ae2cabc1",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 89,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/docx-continuation130/table-flow.test.ts",
       "historicalBlob": "8e280521437ff2573ca809522c5b240919e8162a",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 90,
+      "inventoryRows": [
+        "I03"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/result-materialization.test.ts",
       "historicalBlob": "01e02e0e16d8105bb49206780e75444fb1780347",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 91,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
       "historicalBlob": "172b155444a797af751516e38ad865d88899d160",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 92,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/fixture.ts",
       "historicalBlob": "834586844cb94b252d0d66c795156a4b41574d79",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 93,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/native-phase-bridge/native-fixture.ts",
       "historicalBlob": "64ac6da439fec90714f7fe8e6625b2dc8aaa9032",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 94,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-fixture.ts",
       "historicalBlob": "c685a5aa326da6133d7a4d9bdb2093e6c81c938f",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 95,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-verification-pairs.test.ts",
       "historicalBlob": "364f55137d3e6e34e984c90564ee30575fabb99a",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 96,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
       "historicalBlob": "d354eb333508305d60285d94b69e120a404d21e3",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 97,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
       "historicalBlob": "8697c256be40c5a88db2c8046ab37a4a98e8d075",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 98,
+      "inventoryRows": [
+        "I04",
+        "I19"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
       "historicalBlob": "8a642ccb20406821c2033d5f168e75a0a75ea69e",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 99,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-source/source-identity.test.ts",
       "historicalBlob": "381c514aa329c1ab31b7193a6dc5733f498eee63",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 100,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
       "historicalBlob": "52bd4ee4532aa21d5a0f3ee8f8019ebe592a673f",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 101,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
       "historicalBlob": "3a9844639c4bbd5925cdfee5662b392d71f2553c",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 102,
+      "inventoryRows": [
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/operation-verifier.test.ts",
       "historicalBlob": "d68b41022893f8bc50ea796a22fa78b7e9be4905",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 103,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
       "historicalBlob": "7e0c6beedf6c7290e09ad663c8a360ece5ba1241",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 104,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-issuer.test.ts",
       "historicalBlob": "d43fd34937fec7c626c3910ae6b168a5db49f680",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 105,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/projection-access.test.ts",
       "historicalBlob": "72c147f618e49e8fb791136c9da19ef34af1c1fb",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 106,
+      "inventoryRows": [
+        "I03"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp08/record-read-observation.test.ts",
       "historicalBlob": "48821d786ede37ecf3b8b1a18aada299534bcd2c",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 107,
+      "inventoryRows": [
+        "I22"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp09/followup-consumer.test.ts",
       "historicalBlob": "9865cc94cc6d6988da4d7b16ac83e6d5358c0c1c",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 108,
+      "inventoryRows": [
+        "I26"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
       "historicalBlob": "41d5da4d38800a89806519d3fbb03ff32f9a8068",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 109,
+      "inventoryRows": [
+        "I22",
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
       "historicalBlob": "b7ac1a2ce7b285e46cafeaa3b63b0181f2bdbde4",
       "currentBlob": "095f57136c09b9c418435e98662e2c0cc55087a4",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 110,
+      "inventoryRows": [
+        "I21"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
       "historicalBlob": "d50742e65e53e9ecc89e179aa774a1589d799625",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 111,
+      "inventoryRows": [
+        "I23"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
       "historicalBlob": "2ffdf7d78655b1a21fe4765dd6a66d5db05fe13d",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 112,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
       "historicalBlob": "fa8bac594cf753f20fe294adda9a641cbeed04f5",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 113,
+      "inventoryRows": [
+        "I24"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
       "historicalBlob": "90b09e30f999bcbc262cf69875731119788f8643",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 114,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
       "historicalBlob": "2233b0c1825a81789ef94f655495a1a7a902154c",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 115,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
       "historicalBlob": "59756ace4ed97c0d90c29b933da01bb466a20430",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 116,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
       "historicalBlob": "320fc52274e331a5ed07c6a7bf33a141fa273954",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 117,
+      "inventoryRows": [
+        "I18"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/runtime-http.test.ts",
       "historicalBlob": "d88ffc8ddf0d888251c68691d9ebb190fdd1f1d6",
       "currentBlob": "15b567600088057268834ac70204e201d8e863dc",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 118,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
       "historicalBlob": "7d9cf8ff1c0aa1640f3e39acf692703338be02b1",
       "currentBlob": "4f3f35b5381c68b82230ee2635b7ae4170e21898",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 119,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/installed-console-preload.ts",
       "historicalBlob": "a36adbd05b197b1c82d75e637aa66095a00e5304",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 120,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/installed-console.ts",
       "historicalBlob": "bb98618d6b3b02c886d4d23891f4a4cd6c7884a2",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 121,
+      "inventoryRows": [
+        "I28"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
       "historicalBlob": "a7967accce606017e666dc0585562754d3a535b5",
       "currentBlob": "48d080f69bc23c4a3f02bd3ff345e725686ac070",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 122,
+      "inventoryRows": [
+        "I02"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
       "historicalBlob": "a268cb05f00f0b4251e04fb1f6ee12ed369c04a3",
       "currentBlob": "14864c9bbd4d561b7aeffa8491a3093b191914a2",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 123,
+      "inventoryRows": [
+        "I03"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
       "historicalBlob": "23e01ae668bb6046082a001b8397ff7ae9e42c0b",
       "currentBlob": "75a76a1ef7f8fc4b9339b7f8a55d3cf308116f74",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 124,
+      "inventoryRows": [
+        "I03"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
       "historicalBlob": "7a4903088376890997cd73c97cd6dba74f24f345",
       "currentBlob": null,
-      "blobRelation": "absent"
+      "blobRelation": "absent",
+      "ordinal": 125,
+      "inventoryRows": [
+        "I25"
+      ]
     },
     {
       "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
       "historicalBlob": "dc3ed3a09ae0cfea6429710e0ca30290e9e61d2b",
       "currentBlob": "f610924d4da591ed389b0e1293cab2350e36e0dd",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 126,
+      "inventoryRows": [
+        "I02"
+      ]
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/capabilities-section.tsx",
       "historicalBlob": "7d903bc2ca1c93543fc346e81cc0e87f1d89bbe9",
       "currentBlob": "46b14c7264c25372473588420ef2fca5a67554c3",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 127,
+      "inventoryRows": [
+        "I15"
+      ]
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-data.test.ts",
       "historicalBlob": "21b391ae0dfb93388f5ecb4dfc91f3bd84577b6d",
       "currentBlob": "2e307ed289f0c25a7a3fc5aa344c3196b2bedb0f",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 128,
+      "inventoryRows": [
+        "I15"
+      ]
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-data.ts",
       "historicalBlob": "bd8b15131239af05ba8f33927231feb1b8d07189",
       "currentBlob": "dcf0405b20ccbacc48dbb6de49e69b1232fc2162",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 129,
+      "inventoryRows": [
+        "I15"
+      ]
     },
     {
       "path": "packages/app-shell/src/components/settings-v2/view/settings-view.tsx",
       "historicalBlob": "3bdda10400e1f4fc0583472361e117df02aa3b3c",
       "currentBlob": "13a483e1b2c848598355c650062fe9e81f7780b6",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 130,
+      "inventoryRows": [
+        "I15"
+      ]
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-cross.ts",
       "historicalBlob": "a92311c7a5e6990cd4735d2169cc5a882ce8d7f6",
       "currentBlob": "13d31052d3857dadf959136eba15301aa6cc9b9b",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 131,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
       "historicalBlob": "f1ff523731e0f17a9e05545b7796e4107b2fd3d2",
       "currentBlob": "a2cf0fed6c71660955f53d564abd245d6f29f55e",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 132,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
       "historicalBlob": "eace17e5b5c13c5ce043f8e698551ce194b33a4c",
       "currentBlob": "5099ce391a96929259df3ce5d0bc9aa2d5717b17",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 133,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
       "historicalBlob": "d2e519693019ff06d6e2bdd723916054906e8a03",
       "currentBlob": "a3c1399f29c27dcea965bfc677dc79d5ef7cea14",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 134,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/agents-view.tsx",
       "historicalBlob": "675ae1f7d104a6158c4a1c3059ac6f2406451043",
       "currentBlob": "7c27c5aa810c1f3811e1ddcf719344c1ca11a1cc",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 135,
+      "inventoryRows": [
+        "I15"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
       "historicalBlob": "fdc6c303a468bd2bb6aaacc5d12a6f8dda33cafe",
       "currentBlob": "fd198d9ac14d91e6ceae77ebbccc458a5fa273dc",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 136,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/cross-links/view.tsx",
       "historicalBlob": "8b8809ef956f8f7cbfea41358c3ecb8faa1616c0",
       "currentBlob": "c482bde9ed8fdd4c277464caaf8cde3113c05a3d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 137,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
       "historicalBlob": "bcbaed29aec8ed5ea183b7e1dd1659623dac6579",
       "currentBlob": "f83d1b9df785a6c2abaae2d5d032e3c7f1da0687",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 138,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
       "historicalBlob": "870809e13518984eba3d6610d60c0109b9d073d3",
       "currentBlob": "48f3bc53be4559e55ed684a84cacd22db38e9402",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 139,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
       "historicalBlob": "49a96d87b37d1d3aedae479debf30b8235b96218",
       "currentBlob": "29aec81cc8b0dbf7e385ddbe9a1bd73f4c76c4bd",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 140,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
       "historicalBlob": "ae99b53209b0fe15b4aedd1982cf16dd3bab3d21",
       "currentBlob": "3357f14b20086aac70bf5f108651c129cb9c89db",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 141,
+      "inventoryRows": [
+        "I27"
+      ]
     },
     {
       "path": "packages/client/src/sucafina/bindings.ts",
       "historicalBlob": "4663f1c6d42d672e2568d32872cace53423c5ab2",
       "currentBlob": "dcf4229af5745da305906a2c1f7ce42427fd62bd",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 142,
+      "inventoryRows": [
+        "I01"
+      ]
     },
     {
       "path": "packages/client/src/sucafina/transport.ts",
       "historicalBlob": "15fa83665492f5c951d24b6a499e9fc260f96003",
       "currentBlob": "5ce42b03cf854cf32b6bcd5aa2eb089ad634f256",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 143,
+      "inventoryRows": [
+        "I17"
+      ]
     },
     {
       "path": "packages/core/src/permission.ts",
       "historicalBlob": "bdfe4658e1c27ead16f568fb38d8cb5fa212ecf6",
       "currentBlob": "b1baeae5de82fdfe6f5d41fe2da770eb020dfc30",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 144,
+      "inventoryRows": [
+        "I08"
+      ]
     },
     {
       "path": "packages/core/src/scheduled-task.ts",
       "historicalBlob": "734121f4c381d36bb7a6fea4b315de726e3b38fe",
       "currentBlob": "1edb089ca37cbbb31a7ce382b7d2820cd3802e0d",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 145,
+      "inventoryRows": [
+        "I10"
+      ]
     },
     {
       "path": "packages/core/src/session.ts",
       "historicalBlob": "2072224bfd78e7cc55e07a02d0b16da0171d7fe7",
       "currentBlob": "d6493c3a54cbd8c91347d19131dd0e05b6dd2798",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 146,
+      "inventoryRows": [
+        "I10"
+      ]
     },
     {
       "path": "packages/core/src/session/context-epoch.ts",
       "historicalBlob": "9b933cd66e7018a8acad021b2a65eb82feda8afa",
       "currentBlob": "65b17a86a4fb131d427e12d489cec2c06a088094",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 147,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/meeting-briefing.ts",
       "historicalBlob": "f28d83fbea0ad7502492428781b2f4aab35a5734",
       "currentBlob": "279b07e4a8ad9c0297abf15a5e072a2ee0f4cc3a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 148,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/meeting-context.ts",
       "historicalBlob": "b5e8184210ea73c9947ab27adb8d84af138a1306",
       "currentBlob": "23e12c5a9b611b298674c919559229f0e101b65a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 149,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/message-updater.ts",
       "historicalBlob": "cb3fd373d4c4c69934a97f1d73f651a1ca3823a8",
       "currentBlob": "4333586a8fb15f638096987b3a1d75baaf19a6be",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 150,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/run-coordinator.ts",
       "historicalBlob": "71843b7d7642e7538c7bef8f18b9f2e872f2de64",
       "currentBlob": "71843b7d7642e7538c7bef8f18b9f2e872f2de64",
-      "blobRelation": "identical"
+      "blobRelation": "identical",
+      "ordinal": 151,
+      "inventoryRows": [
+        "I12"
+      ]
     },
     {
       "path": "packages/core/src/session/runner/direct-commands.ts",
       "historicalBlob": "ac0c8bc4b630fa0a9524ce9b5e47a439a339b504",
       "currentBlob": "93e4de0452ed534467900539eedbacd7ee0f6ff5",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 152,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/runner/llm.ts",
       "historicalBlob": "479fb5b355b58983a9c37a972e0242faa12bdd9f",
       "currentBlob": "bd019e1a7176d9fc780de30c1d8ef1484a7cfc6a",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 153,
+      "inventoryRows": [
+        "I08",
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/session/runner/to-llm-message.ts",
       "historicalBlob": "0f166b9752919063c9b33d71e2abe82161c5319c",
       "currentBlob": "8728799459cc8b61fd781526ad7c2f9a0c18341c",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 154,
+      "inventoryRows": [
+        "I11"
+      ]
     },
     {
       "path": "packages/core/src/tool/task-permission.ts",
       "historicalBlob": "7896a82070bb208298796bccec658aa61d6e83c0",
       "currentBlob": "1a3c81a3a321a22509730275814c4339059f4115",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 155,
+      "inventoryRows": [
+        "I08"
+      ]
     },
     {
       "path": "packages/core/src/tool/task.ts",
       "historicalBlob": "9c94b629abf52b36eba6c1195252a323002775be",
       "currentBlob": "80c2215b73afca686443669e26ad9e655961d8e1",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 156,
+      "inventoryRows": [
+        "I08",
+        "I10"
+      ]
     },
     {
       "path": "packages/core/test/session-run-coordinator.test.ts",
       "historicalBlob": "795b229305421ae990f0b101f7b92ffb2831aa57",
       "currentBlob": "795b229305421ae990f0b101f7b92ffb2831aa57",
-      "blobRelation": "identical"
+      "blobRelation": "identical",
+      "ordinal": 157,
+      "inventoryRows": [
+        "I12"
+      ]
     },
     {
       "path": "packages/schema/src/sucafina/domain/fields.ts",
       "historicalBlob": "02665af4cb6e9d9a3f85e38a9c9a4d9dfdcfdaa1",
       "currentBlob": "cdb09915b945861ebba3b7337a5182e962e199a8",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 158,
+      "inventoryRows": [
+        "I18"
+      ]
     },
     {
       "path": "packages/schema/src/sucafina/files/structures.ts",
       "historicalBlob": "fef3a3b416719e783b8890382cd3f86bdeaa69b7",
       "currentBlob": "72c31c9889c7ddf4d3ff35adf703233da59e6db5",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 159,
+      "inventoryRows": [
+        "I17"
+      ]
     },
     {
       "path": "packages/schema/src/sucafina/planner.ts",
       "historicalBlob": "dfdcc46f329a23eb87811436d6574eb80023e7a9",
       "currentBlob": "1fb53c214274381b82da12a52e259442d08cce01",
-      "blobRelation": "different"
+      "blobRelation": "different",
+      "ordinal": 160,
+      "inventoryRows": [
+        "I18"
+      ]
     }
   ],
   "historicalDestinations": [
@@ -1264,5 +1983,380 @@
       "head": "e32bd1186d966de218d49825aca00728d2e87175",
       "base": "dev"
     }
-  ]
+  ],
+  "currentDev": "c6ddf9c7b80dad49aaa42f419dd336126eefed56",
+  "supplementary": [
+    {
+      "id": "S1",
+      "name": "AppDock subframe navigation",
+      "inventoryRow": "I13",
+      "state": "approved-ci-pending",
+      "owner": "Astra/context_epoch",
+      "paths": [
+        "apps/desktop/src/main/app-dock.ts",
+        "apps/desktop/src/main/app-dock-linux-live.test.ts"
+      ],
+      "proof": "Historical349 adds HTTPS guard for subframes. Current dev only intercepts external URI callback on will-frame-navigate; #608 protects different renderer paths. Separate small fix in progress, no current overlapping writer observed.",
+      "pr": 631,
+      "head": "42d111ae930aebfe9ce236fdd8ae7805b5e34429",
+      "review": "https://github.com/gustavomhss/Orchestra-SF/pull/631#pullrequestreview-6010534179"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "I01",
+      "behavior": "Seletor de instalação, shell Web e projeções nativas",
+      "historicalEvidence": "#566, #570, #572 e #573 compõem descoberta, contexto e shell. `apps/web/src/entry.tsx` usa a instalação selecionada. #581 monta a entrada Web autenticada por Team.",
+      "originalDestination": "**Absorvido no fluxo nativo.** Usar essa composição como base para qualquer fixture residual.",
+      "prs": [
+        566,
+        570,
+        572,
+        573,
+        581
+      ],
+      "state": "absorbed",
+      "proof": "Discovery, native context/client/shell and authenticated Team Web entry are merged into dev."
+    },
+    {
+      "id": "I02",
+      "behavior": "Files, retomada de importação, arquivo assinado e catálogo",
+      "historicalEvidence": "#575 e #579 estão no dev. `packages/client/src/sucafina/transport.ts:375–500` preserva ownership, abort, recusa tipada e decodificação de bytes. O #579 exercitou os cenários instalados de Imports e Documents.",
+      "originalDestination": "**Jornadas absorvidas.** Validar separadamente os limites de saída e contratos abaixo.",
+      "prs": [
+        575,
+        579
+      ],
+      "state": "absorbed",
+      "proof": "Native Files/Imports/Documents preserve ownership, abort, denied responses and signed bytes; empty downloads are separately I17."
+    },
+    {
+      "id": "I03",
+      "behavior": "Reports C05, anexos Office e navegação",
+      "historicalEvidence": "#563 está no dev. `src/screen-shell.ts:6,26` monta `shellPreviewScript`. O fluxo de entrega, replay e revogação está na composição C05 do #563.",
+      "originalDestination": "**Jornada absorvida.** Excluir o console substituto e os probes de performance antigos dessa integração.",
+      "prs": [
+        563
+      ],
+      "state": "absorbed",
+      "proof": "Native Reports/C05 journey replaces historical parallel console; historical export-style marker/probes do not define an additional product interface."
+    },
+    {
+      "id": "I04",
+      "behavior": "CurrentChoice C17, ancestry, SQLite e Team",
+      "historicalEvidence": "#562, #582 e #585 estão no dev. `apps/cli/src/sucafina-product/team-current-choice.ts:35,94–95` registra as operações e verifica ações. A factory Microsoft usa a composição Team.",
+      "originalDestination": "**Jornada absorvida.** Preservar os contratos de C17 atuais. A retomada de Apply legado é tratada abaixo.",
+      "prs": [
+        562,
+        582,
+        585
+      ],
+      "state": "partial",
+      "proof": "CurrentChoice ancestry/reopen/Team journeys integrated. Complementary historical procurement financial-approval flag hunks are still being reconciled."
+    },
+    {
+      "id": "I05",
+      "behavior": "Grant do destinatário e revisão C05 no commit",
+      "historicalEvidence": "#563 adicionou `product/collaboration/authority.ts:281`; `threads.ts:53–63,131,226` confirma o guard de destinatário e identidade do provedor.",
+      "originalDestination": "**Absorvido para C05.** Conferir o ramo distinto de follow-up não C05 antes de portar alterações de `dispatch.ts` ou `thread-reads.ts`.",
+      "prs": [
+        563
+      ],
+      "candidates": [
+        9
+      ],
+      "state": "partial",
+      "proof": "Recipient grant at C05 commit is integrated; non-C05 follow-up has a separate pending candidate."
+    },
+    {
+      "id": "I06",
+      "behavior": "Cobertura completa sem produtor de evidência",
+      "historicalEvidence": "`product/decisions/mutations.ts:120,125` já recusa um resultado completo sem `coverageEvidence` e liga `verifySnapshot` ao commit.",
+      "originalDestination": "**Recusa básica absorvida.** A prova privada para no-op e o ordenamento seguem no recorte Finance.",
+      "prs": [
+        560
+      ],
+      "candidates": [
+        8
+      ],
+      "state": "partial",
+      "proof": "Mutation refuses complete coverage without producer evidence; private no-op ordering is candidate8."
+    },
+    {
+      "id": "I07",
+      "behavior": "Projeção analítica compartilhada",
+      "historicalEvidence": "`product/analytics/view.ts` tem o blob final do #349.",
+      "originalDestination": "**Absorvido literalmente.**",
+      "state": "absorbed-literal",
+      "proof": "product/analytics/view.ts current blob equals #349 final blob."
+    },
+    {
+      "id": "I08",
+      "behavior": "Core V2, recurso vazio e precedência de deny",
+      "historicalEvidence": "`packages/core/src/permission.ts:156–171` ainda usa `evaluate` por recurso e cai em `allow` quando a lista está vazia. A resolução de pendências em `permission.ts:304–323` não contém a guarda equivalente do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `core-permission-deny`, a partir de `95ad84fc64` limitado a Permission e consumidores task. Reprovar recurso vazio e preservar o deny configurado.",
+      "prs": [
+        589
+      ],
+      "state": "absorbed",
+      "proof": "Empty resource refusal and configured deny precedence integrated."
+    },
+    {
+      "id": "I09",
+      "behavior": "Claude tool sem recurso tipado",
+      "historicalEvidence": "`modules/engine-adapters/claude-code/src/v2/host.ts:243,799–802` ainda fornece wildcard para chamada mapeada sem texto. O ramo de ferramentas sem mapeamento tem contrato distinto.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `claude-resource-required` de `97407e0db8`, limitado ao adaptador e seu teste de admissão.",
+      "prs": [
+        602
+      ],
+      "state": "absorbed",
+      "proof": "Mapped Claude tool requires typed resource; unknown-tool contract preserved."
+    },
+    {
+      "id": "I10",
+      "behavior": "Reuso de Session ID e prompts agendados",
+      "historicalEvidence": "`packages/core/src/session.ts:417–435` ainda devolve a sessão existente na corrida. `scheduled-task.ts` e `tool/task.ts` mantêm os blobs da base histórica, sem as proteções de adoção/reconciliação do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `session-adoption` de `95ad84fc64`. Exercitar localização, agente, parent e posse do prompt em retomada.",
+      "prs": [
+        605
+      ],
+      "state": "absorbed",
+      "proof": "Session ownership/adoption and scheduled prompt reconciliation integrated."
+    },
+    {
+      "id": "I11",
+      "behavior": "Reunião e shell como dados no Context Epoch",
+      "historicalEvidence": "Em dev, `context-epoch.ts`, `meeting-context.ts`, `meeting-briefing.ts`, `message-updater.ts`, `direct-commands.ts` e `to-llm-message.ts` são os blobs anteriores ao delta. O #349 separa dados de baseline/instrução e preserva eventos de replay.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `context-epoch-data` de `6be0951806` mais correções de dependência de `fbe62fb53a` e `86f6e9f99b`. Preservar semântica de baseline/admissão e uma chamada LLM por turno.",
+      "candidates": [
+        1
+      ],
+      "state": "integrated",
+      "proof": "Context Epoch handled in626; exact merge and proof referenced by candidate1."
+    },
+    {
+      "id": "I12",
+      "behavior": "Publicação do resultado exclusivo após liberar a posse",
+      "historicalEvidence": "`packages/core/src/session/run-coordinator.ts` e seu teste mantêm o blob da base. O resultado é publicado no onExit do trabalho antes do settle do dono.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `exclusive-settlement` de `7e42b794e6` com o teste `81b45523df`.",
+      "prs": [
+        616
+      ],
+      "state": "absorbed",
+      "proof": "Exclusive result is published only after owner settlement."
+    },
+    {
+      "id": "I13",
+      "behavior": "Electron, origem de IPC e redirecionamento",
+      "historicalEvidence": "`live-ipc.ts` e `wsl/ipc.ts` mantêm os blobs da base. `windows.ts` diverge e já tem navegação própria, mas o #349 acrescenta validação de sender/origem e cancelamento de redirecionamento para janelas privilegiadas.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `desktop-ipc-origin` de `f6f2be6426`. Conferir os redirects já tratados em App Dock e manter as validações existentes de permissões e canais.",
+      "prs": [
+        606,
+        607,
+        608
+      ],
+      "supplementary": [
+        "S1"
+      ],
+      "state": "partial",
+      "proof": "Live/WSL origin and privileged renderer redirects integrated; AppDock subframe guard found by160-path check is supplemental631."
+    },
+    {
+      "id": "I14",
+      "behavior": "Redação de credenciais em logs ao gravar",
+      "historicalEvidence": "`apps/desktop/src/main/logging.ts:195` redige no export. `logging.ts` e `live-transport-log.ts` continuam iguais à base, sem redação antes das escritas usuais do #349.",
+      "originalDestination": "**Resíduo de runtime.** Recorte `desktop-log-redaction` de `f6f2be6426`, separado do IPC. Testar escrita e export.",
+      "prs": [
+        609
+      ],
+      "state": "absorbed",
+      "proof": "Credential redaction at writes/export integrated."
+    },
+    {
+      "id": "I15",
+      "behavior": "Settings V2, round-trip de permissões e estados MCP/Agents",
+      "historicalEvidence": "Os quatro arquivos de `settings-v2/view/` e `agents-view.tsx` mantêm os blobs da base histórica. `ea518dbbea` normaliza regras objeto/lista, preserva padrões, expõe status de provider e separa ação MCP de login/retry/toggle.",
+      "originalDestination": "**Resíduo de UI.** Dividir em `settings-permission-roundtrip` e `settings-agent-mcp-state`. O MCP de compras #586 é do host Microsoft e não resolve o comportamento desta tela.",
+      "prs": [
+        622,
+        623,
+        625
+      ],
+      "candidates": [
+        2
+      ],
+      "state": "integrated",
+      "proof": "Permissions round-trip, MCP actions and provider/roster state integrated."
+    },
+    {
+      "id": "I16",
+      "behavior": "Empacotamento Web genérico sem sourcemaps",
+      "historicalEvidence": "`apps/cli/script/distribution-payload.ts:34–46` ainda captura todos os assets Web. O arquivo tem o blob da base. O fluxo Entra tem empacotador próprio e a prova ELF histórica trabalha com sidecars separados.",
+      "originalDestination": "**Resíduo do empacotador compartilhado.** Reconciliar com o [#254](https://github.com/gustavomhss/Orchestra-SF/pull/254), aberto na base histórica. O #254 toca o mesmo empacotador e os dois testes Web, além do wrapper Deno. Reconciliar os guards de `7217133495` e portar somente as diferenças que faltarem, com mapa externo/comprimido, mapa inline e verificação do payload.",
+      "candidates": [
+        3
+      ],
+      "state": "ownership-pending",
+      "proof": "Generic sourcemap guard absent from dev; historical254→257 acceptance exists, current dev destination requested."
+    },
+    {
+      "id": "I17",
+      "behavior": "Contrato Files de download vazio, negação e MIME",
+      "historicalEvidence": "O transporte recusa MIME inválido e conserva 401/403, mas `transport.ts:395–410,475–482` pode completar com zero bytes e `files/structures.ts:245` aceita qualquer Uint8Array.",
+      "originalDestination": "**Resíduo de contrato.** Recorte `files-nonempty-download` de `bb53193cba` sobre #572/#575/#579. Manter erro tipado e testar Web e IPC.",
+      "prs": [
+        612
+      ],
+      "state": "absorbed",
+      "proof": "Nonempty downloads and typed Web/IPC failure boundaries integrated."
+    },
+    {
+      "id": "I18",
+      "behavior": "Contratos Domain/Planner de versão, quantia e rótulo de medida",
+      "historicalEvidence": "`domain/fields.ts:17` ainda aceita string livre em `SfDomainVersionInput`. `planner.ts` divergiu com os contratos nativos. Os inputs de quantia editável precisam manter o formato observado no produtor.",
+      "originalDestination": "**Resíduo de contrato.** Recorte `native-numeric-contracts`, apenas guards compatíveis de `bb53193cba` e `41493a3b27`. Validar consumidores antes de restringir wire. Os três contratos de produtor explicitamente excluídos na descrição do #349 continuam fora desse porte.",
+      "prs": [
+        624
+      ],
+      "candidates": [
+        4
+      ],
+      "state": "integrated",
+      "proof": "Producer-backed numeric revisions in project import; supported text/null amount wire preserved, invalid measure labels rejected without mutation."
+    },
+    {
+      "id": "I19",
+      "behavior": "Preparação de Apply e replay com recibo anterior",
+      "historicalEvidence": "#560 trouxe o Apply, porém `product/decisions/receipt-review-binding.ts` conserva a base e não contém `preparedResumeIntentState`. O CurrentChoice #585 cobre outro replay.",
+      "originalDestination": "**Resíduo de runtime.** O [#392](https://github.com/gustavomhss/Orchestra-SF/pull/392) tem cobertura de navegador e UI, sem o produtor de Apply. Usar suas asserções e extrair de `d4ce0d4eb5` o recorte `apply-receipt-resume`, que retém a intenção/digest originais e valida versão/incarnação sem novo dispatch.",
+      "prs": [
+        590
+      ],
+      "state": "absorbed",
+      "proof": "Original Apply intent/digest and receipt are retained on resume."
+    },
+    {
+      "id": "I20",
+      "behavior": "Agenda/Reports, selo histórico de seleção",
+      "historicalEvidence": "`product/reviews/routine-selection.ts:83–86` usa registry, TTL e binding. `product/reviews/port.ts:46` ainda espera boolean; o pedido do #349 relê o resultado emitido e confere stamps individuais.",
+      "originalDestination": "**Resíduo de autoridade.** Recorte `report-selection-proof` sobre #563. Portar prova e seam juntos, com revogação, alteração de digest e comparação de stamps.",
+      "prs": [
+        614
+      ],
+      "state": "absorbed",
+      "proof": "Historical Reports selection seal checks actual issued proof and individual stamps."
+    },
+    {
+      "id": "I21",
+      "behavior": "UI Authority, tempo inválido e comando consumido",
+      "historicalEvidence": "`product/integration/ui-authority.ts:19–34,45` revoga a admissão ao atingir TTL em vez do recheck do comando consumido de `420c1dae91`. Timeout/revogação de Reports e Files já têm gates próprios.",
+      "originalDestination": "**Resíduo de autoridade.** Recorte `ui-command-clock`, isolando relógio finito e reautorização depois da expiração. Preservar TTL de download e caminhos de recusa atuais.",
+      "prs": [
+        615
+      ],
+      "state": "absorbed",
+      "proof": "Finite clock and consumed-command authorization beyond TTL integrated."
+    },
+    {
+      "id": "I22",
+      "behavior": "Observação de registro/projeção e correlação Hot Topic",
+      "historicalEvidence": "`product/dashboard/sources.ts` contém boa parte da projeção de #349 em dev, com diferenças no vínculo Request/lease e egress. `collaboration/composition.ts` e `source-lifecycle.ts` não têm o mesmo wiring da identidade recém-criada.",
+      "originalDestination": "**Parcial.** Recorte `record-observation-fence` com `3f3543206e`, `420c1dae91` e assert WP08. A correlação de Hot Topic de `9bc24e341d` entra em recorte próprio depois de comparar #563 e o shape de source identity atual.",
+      "prs": [
+        560,
+        563
+      ],
+      "candidates": [
+        5
+      ],
+      "state": "absorbed",
+      "proof": "Dashboard record projection plus transactional HotTopic identity/correlation and commit authorization; see candidate5 equality and historical negative proof."
+    },
+    {
+      "id": "I23",
+      "behavior": "Recall Atlas por owner vivo",
+      "historicalEvidence": "Os blobs de `memory-case-read-scope.ts` e `host-binding/atlas-memory.ts` mudaram em dev, mas não contêm o par `withSfAtlasRecallObservation` do #349. A escrita Atlas do C17 por Team já existe.",
+      "originalDestination": "**Resíduo de recall.** Recorte `atlas-live-recall` de `f4ed9e86d4`, somente observação/leitura e testes de revogação. Verificar a API atual de Atlas antes de portar.",
+      "prs": [
+        620
+      ],
+      "state": "absorbed",
+      "proof": "Atlas recall observes current owner/source authority."
+    },
+    {
+      "id": "I24",
+      "behavior": "Phase bridge, origem física, skill load e login local",
+      "historicalEvidence": "#569 já integrou a proveniência de carregamento governado. #566/#570/#573 substituem o antigo console local. `routine-native-phase-origin.ts` e `routine-native-phase-fence.ts` ainda têm blobs da base.",
+      "originalDestination": "**Parcial.** Recorte `phase-origin-proof` para origem absoluta e fixture com raiz física. Usar contrato atual de #569; reaproveitar apenas assertions de login/audit em `native-fixtures` sobre a factory real.",
+      "prs": [
+        569
+      ],
+      "candidates": [
+        6
+      ],
+      "state": "partial",
+      "proof": "Governed skill-load provenance integrated; physical installed origin proof and ownership237 pending. Legacy login/console probes are references, not release qualification."
+    },
+    {
+      "id": "I25",
+      "behavior": "Planner/BI e Finance, prova exata e pares de caso",
+      "historicalEvidence": "#562/#582/#585 fecham ancestry e CurrentChoice nos fluxos aceitos. `planner-evidence.ts`, `scenario-operation-access.ts`, `portfolio-coverage.ts`, `cost-coverage.ts` e `stored-scenarios.ts` não carregam o pacote de observação de `15fd6f34cc`–`887d25a227`. `result-store.ts` divergiu no caminho C17.",
+      "originalDestination": "**Parcial.** Separar `planner-source-reads`, `coverage-proof-order` e `finance-case-observe`. O [#517](https://github.com/gustavomhss/Orchestra-SF/pull/517) toca apenas `portfolio-coverage-authority.ts`. Tratar sua seleção de pares como sobreposição de contrato. Portar observação inicial/final, digest e clones só após comparar com a API atual. A falta do fixture antigo não demonstra regressão de C17.",
+      "prs": [
+        562,
+        582,
+        585,
+        596,
+        597,
+        627
+      ],
+      "candidates": [
+        7,
+        8
+      ],
+      "state": "partial",
+      "proof": "CurrentChoice and Finance pair integrated; stored reader fence integrated; coverage order and complementary Planner paths still under reconciliation."
+    },
+    {
+      "id": "I26",
+      "behavior": "Análise indisponível e follow-up fora de C05",
+      "historicalEvidence": "`analysis-host-services.ts` preserva o blob da base e não preserva o motivo de indisponibilidade da fonte no recorte `2f272331bc`. `collaboration/dispatch.ts` e `thread-reads.ts` divergem após #563, que cobre uma trilha de Reports.",
+      "originalDestination": "**Resíduo estreito de análise; equivalência pendente no follow-up.** Recortes `analysis-source-status` e `followup-observation`. Primeiro manter status `unavailable` vs recusa; no segundo requerer reproduzir o ramo real ainda sem prova antes de portar.",
+      "prs": [
+        618
+      ],
+      "candidates": [
+        9
+      ],
+      "state": "partial",
+      "proof": "Analysis source unavailability integrated; non-C05 follow-up awaiting migration ownership and focal proof."
+    },
+    {
+      "id": "I27",
+      "behavior": "UI Sucafina, negativa, moeda, texto e confirmação",
+      "historicalEvidence": "#573/#579/#583 mudaram o shell, Imports e Executive. `confirmations/index.tsx`, `talent/index.tsx`, `headcount/index.tsx` e os quatro arquivos de i18n ainda têm os blobs da base.",
+      "originalDestination": "**Parcial.** Recortes `sf-confirmation-payload` (fingerprint, versão e dependências do que será enviado) e `sf-ui-status-copy` (denied vs empty, moeda real e catálogo). Revalidar os atalhos do fornecedor e a apresentação de importação contra #579 e Executive contra #583 antes de transferir qualquer hunk.",
+      "prs": [
+        573,
+        579,
+        583
+      ],
+      "candidates": [
+        10,
+        11
+      ],
+      "state": "partial",
+      "proof": "Current native journeys preserved; confirmation/Imports overlap613, Headcount and free cross-links copy handled independently."
+    },
+    {
+      "id": "I28",
+      "behavior": "Console PAGE legado, fixtures, provas de relatório e handoff",
+      "historicalEvidence": "O #349 adiciona console instalado auxiliar, preload e vários fixtures ausentes em dev. O #563 usa a instalação de produção no Reports, e #573/#579 montam o host que os cenários atuais abrem. Os probes no handoff registram candidatos históricos e gates específicos.",
+      "originalDestination": "**Infraestrutura histórica substituída.** Recortes de teste por comportamento, junto a cada delta de runtime acima. Preservar provas antigas como evidência; não portar um console paralelo, o workflow histórico ou resultados de perf como code paths.",
+      "state": "out-of-scope",
+      "proof": "Original inventory explicitly replaces console PAGE, installed-console/preload, historical workflow and performance probes with current native production host. Historical refs preserved; tests are mapped to behavioral rows rather than ported as a parallel interface."
+    }
+  ],
+  "reconciliationStatus": "In progress: mapped28 behavior rows and160 historical paths; mapping is not a completion claim.",
+  "readyToClose": false
 }
