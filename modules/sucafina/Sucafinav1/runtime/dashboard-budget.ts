@@ -915,6 +915,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
               const pct = deviation !== null && budget ? (deviation / budget) * 100 : null
               const utilization = budget !== null && budget > 0 && actual !== null ? (actual / budget) * 100 : null
               const utilizationTone = utilization === null ? "neutral" : utilization > 110 ? "red" : utilization > 90 ? "amber" : "teal"
+              const utilizationColor = { red: "#dc2626", amber: "#b45309", teal: "#0f766e", neutral: "" }[utilizationTone]
               const deviationId = `${capex ? "capex" : "opex"}-${id}-${context.year}-${index + 1}`
               const saved = object(object(data.deviations)[deviationId])
               const flag =
@@ -931,7 +932,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                 forecast === null ? "Not available" : money(forecast),
                 deviation === null ? "Not available" : `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
                 esc(flag),
-                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
+                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}"${utilizationColor ? ` style="color:${utilizationColor}"` : ""}>${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
                   control(
                     "save-deviation",
                     id,

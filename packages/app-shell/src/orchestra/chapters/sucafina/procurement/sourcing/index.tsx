@@ -272,6 +272,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(Array.isArray(scores)){
         const values=[...scores]
+        while(values.length<=criterion)values.push(null)
         values[criterion]=numeric
         return {...item,[kind]:values}
       }

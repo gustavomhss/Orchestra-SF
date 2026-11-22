@@ -4,6 +4,7 @@ import { expect } from "@playwright/test"
 import type { Locator, Page } from "@playwright/test"
 import path from "node:path"
 import { localBrowser } from "./fixture/local-browser.ts"
+import { captureBrowserPng, withinBrowserDeadline } from "./fixture/browser-evidence.ts"
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
   console.info("browser IO: opening private installation")
@@ -60,7 +61,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
       page.waitForResponse((response) => response.request().method() === "POST", { timeout: 10000 }),
       planner.locator('input[type="file"]').setInputFiles(plannerFile),
     ])
-    const previewBody = await previewResponse.json()
+    const previewBody = await withinBrowserDeadline("Planner workbook preview body", () => previewResponse.json())
     console.info("browser IO: Planner preview response", previewResponse.status())
     expect(previewResponse.status(), JSON.stringify(previewBody)).toBe(200)
     expect(previewBody).toMatchObject({ ok: true })
@@ -83,7 +84,7 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     expect(budget).toBeDefined()
     expect(budget!.slice(9, 21)).toEqual(Array.from({ length: 12 }, () => 125))
     expect(budget![21]).toMatchObject({ formula: expect.stringMatching(/^SUM\(J\d+:U\d+\)$/), result: 1500 })
-    await page.screenshot({ path: path.join(import.meta.dir, "artifacts/browser-business-opex.png"), fullPage: true, timeout: 10000, animations: "disabled" })
+    await captureBrowserPng(page, path.join(import.meta.dir, "artifacts/browser-business-opex.png"))
 
     expect(fixture.errors).toEqual([])
   } catch (error) {
@@ -151,7 +152,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
       page.waitForResponse((response) => response.request().method() === "POST", { timeout: 10000 }),
       members.locator('input[type="file"]').setInputFiles(memberFile),
     ])
-    const memberBody = await memberResponse.json()
+    const memberBody = await withinBrowserDeadline("Members workbook preview body", () => memberResponse.json())
     console.info("browser IO: Members preview response", memberResponse.status())
     expect(memberResponse.status(), JSON.stringify(memberBody)).toBe(200)
     expect(memberBody).toMatchObject({ ok: true })
@@ -159,6 +160,9 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await expect(members.locator("[data-import-notice]")).toContainText("All Members (1)")
     await submit(page, members)
     await expect(page.getByRole("row").filter({ hasText: "Browser acceptance member fixture" })).toHaveCount(1)
+    // Capture the verified post-import document before triggering the browser download.
+    const capturedMembers = await captureBrowserPng(page, path.join(import.meta.dir, "artifacts/browser-business-members.png"))
+      .then(() => ({ ok: true as const }), (error: unknown) => ({ ok: false as const, error }))
     const membersExport = new Workbook()
     const memberDownload = await expectDownload(page, page.getByRole("link", { name: "Export All Members", exact: true }))
     console.info("browser IO: Members XLSX parse starting")
@@ -168,7 +172,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     expect(allMembers?.rowCount).toBe(2)
     expect(allMembers!.getCell("A2").text).toBe("Browser acceptance member fixture")
     expect(allMembers!.getCell("I2").text).toBe("Active")
-    await page.screenshot({ path: path.join(import.meta.dir, "artifacts/browser-business-members.png"), fullPage: true, timeout: 10000, animations: "disabled" })
+    if (!capturedMembers.ok) throw capturedMembers.error
     expect(fixture.errors).toEqual([])
   } catch (error) {
     console.error("browser IO: failed before cleanup", error)
@@ -193,7 +197,7 @@ async function submit(page: Page, form: Locator) {
     form.locator('button[type="submit"]').click(),
   ])
   console.info("browser IO: submit response", JSON.stringify(command), saved.status())
-  const payload = await saved.json()
+  const payload = await withinBrowserDeadline("saved command body", () => saved.json())
   if (saved.status() !== 200) console.error("browser acceptance response", JSON.stringify({ ...command, status: saved.status(), response: payload }))
   expect(saved.status(), `${command.page} / ${command.action}: ${JSON.stringify(payload)}`).toBe(200)
   expect(payload).toMatchObject({ ok: true })
@@ -207,8 +211,9 @@ async function expectDownload(page: Page, link: Locator) {
     link.click(),
   ])
   console.info("browser IO: download event received", downloaded.suggestedFilename())
-  expect(await downloaded.failure()).toBeNull()
-  const file = await downloaded.path()
+  const deadline = performance.now() + 10_000
+  expect(await withinBrowserDeadline("download completion", () => downloaded.failure(), deadline - performance.now())).toBeNull()
+  const file = await withinBrowserDeadline("downloaded file path", () => downloaded.path(), deadline - performance.now())
   expect(file).not.toBeNull()
   console.info("browser IO: downloaded", downloaded.suggestedFilename())
   return Bun.file(file!)

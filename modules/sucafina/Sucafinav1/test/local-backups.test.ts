@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { createHash } from "node:crypto"
-import { chmod, chown, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, symlink, writeFile } from "node:fs/promises"
+import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, join } from "node:path"
 import type { Surface } from "../src/identity.ts"
@@ -11,6 +11,7 @@ import { sfReviewArtifactBlobKey } from "../runtime/artifact.ts"
 import { createLocalBackups } from "../runtime/local-backups.ts"
 import { decodeSnapshot, openLocalStore } from "../runtime/local-store.ts"
 import { backupBlobInventory, restoreBackup } from "../runtime/operations.ts"
+import { canSetForeignFixtureOwner, withForeignFixtureOwner } from "./fixture/foreign-owner.ts"
 
 const bytes = new Uint8Array([0, 255, 17, 128])
 const key = "../../private/日本語/document"
@@ -334,13 +335,13 @@ test("relative roots, permissive existing roots and symlink ancestors reject wit
   })
 })
 
-test.skipIf(process.getuid?.() !== 0)("foreign-owned existing root rejects (requires root fixture privileges)", async () => {
+test.skipIf(!canSetForeignFixtureOwner())("foreign-owned existing root rejects (requires root fixture privileges)", async () => {
   await fixture(async (root) => {
     const directory = join(root, "foreign")
     await mkdir(directory, { mode: 0o700 })
-    await chown(directory, 65534, 65534)
-    try { await expect(createLocalBackups(directory)).rejects.toThrow() }
-    finally { await chown(directory, 0, 0) }
+    await withForeignFixtureOwner(root, directory, import.meta.path, async () => {
+      await expect(createLocalBackups(directory)).rejects.toThrow("Backup directory must be owned and private (0700)")
+    })
   })
 })
 

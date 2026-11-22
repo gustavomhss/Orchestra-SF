@@ -2,6 +2,7 @@ import { afterEach, expect, test } from "bun:test"
 import { chmod, lstat, mkdtemp, realpath, rm, symlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
+import { createLocalInstallation } from "../local/entry.ts"
 import { loadLocalConfiguration, prepareLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
@@ -83,15 +84,19 @@ test("startup refuses insecure or aliased temporary directories and incompatible
   const root = await directory()
   const file = await prepareLocalConfiguration(root)
   const config = await Bun.file(file).json()
+  config.origin = "http://example.invalid:4111"
+  await Bun.write(file, JSON.stringify(config))
+  await expect(loadLocalConfiguration(file)).rejects.toThrow("Explicit HTTP loopback installation origin required")
   config.origin = "http://localhost:4111"
   await Bun.write(file, JSON.stringify(config))
-  await expect(loadLocalConfiguration(file)).rejects.toThrow()
+  expect((await loadLocalConfiguration(file)).config.origin).toBe(config.origin)
   const environment = {
     ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
     ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
     TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
     XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
   }
+  await expect(createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)).rejects.toThrow("Installation origin mismatch")
   await chmod(path.join(root, "host-tmp"), 0o755)
   await expect(requireLocalIsolation(root, environment)).rejects.toThrow()
   await rm(path.join(root, "host-tmp"), { recursive: true })

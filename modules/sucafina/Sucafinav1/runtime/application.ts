@@ -15,6 +15,11 @@ import { esc } from "../src/screen-shell.ts"
 import type { RenderContext } from "./ui.ts"
 import { handleDashboardPreview } from "../product/integration/dashboard-preview.ts"
 import { publicSfData } from "../product/integration/public-state.ts"
+import { plannerMonthlyScript } from "../product/ui/planner-monthly.ts"
+import { recordSearchScript, recordSearchWidget } from "../product/ui/record-search.ts"
+import { contextualDecisionScript } from "../product/ui/contextual-decision.ts"
+import { personalViewsScript, personalViewsWidget } from "../product/ui/personal-views.ts"
+import { dashboardWorkbenchScript, dashboardWorkbenchWidget } from "../product/interface/dashboard-workbench.ts"
 
 export type Contribution = {
   pages: readonly string[]
@@ -39,6 +44,9 @@ export type Application = {
   maxJsonBytes: number
   workbookLimits?: Partial<WorkbookLimits>
   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+  plannerMonthlyAvailable?: () => boolean
+  personalViewsAvailable?: () => boolean
+  dashboardWorkbenchAvailable?: () => boolean
   productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
   assets?: { persistence: AssetPersistence; services: AssetServices }
 }
@@ -480,7 +488,26 @@ export function createApplication(mount: string, application: Application) {
           value: reply("Page implementation unavailable", 503),
         }
       const nav = allowed.map((key, index) => ({ key, index }))
-      const html = documentHtml(
+      const monthlyScript = surface === "planner" && (page === "OPEX" || page === "CAPEX") && actor.canWrite &&
+        application.plannerMonthlyAvailable?.() ? plannerMonthlyScript : undefined
+      const personalViews = application.personalViewsAvailable?.() === true
+      const workbench = surface === "dashboard" && application.dashboardWorkbenchAvailable?.() === true
+      const contextualDecision = surface === "dashboard" && page === "Vendor Contracts" && actor.canWrite && Boolean(application.product)
+      const widgetScript = personalViews || workbench || contextualDecision
+        ? `;(() => {
+  const attach = () => {
+    ${personalViews ? personalViewsScript : ""}
+    ${workbench ? dashboardWorkbenchScript : ""}
+    ${contextualDecision ? contextualDecisionScript : ""}
+  };
+  attach();
+  const content = document.querySelector("#content");
+  if (content) new MutationObserver(attach).observe(content, { childList: true });
+})();`
+        : undefined
+      const appScript = [recordSearchScript, monthlyScript, widgetScript]
+        .filter(Boolean).join("\n")
+      const shell = documentHtml(
         surface === "dashboard" ? "CIO Dashboard" : surface === "planner" ? "IT Budget Planner" : "IT Procurement",
         surface,
         links(nav),
@@ -489,7 +516,10 @@ export function createApplication(mount: string, application: Application) {
           content +
             controls(snapshot, surface, page, actor, environment, !application.rolePolicy) +
             privateFileControls(surface, page, actor, snapshot, environment, application.assets?.services) +
-            auditControls(actor, snapshot, url.searchParams),
+            auditControls(actor, snapshot, url.searchParams) +
+            recordSearchWidget(surface) +
+            (personalViews ? personalViewsWidget({ surface, page }) : "") +
+            (workbench ? dashboardWorkbenchWidget(page) : ""),
         ),
         fileControls(surface, page, actor, snapshot.versions.dataset?.version ?? 0, allowed, sidebar),
         surface === "dashboard"
@@ -497,11 +527,12 @@ export function createApplication(mount: string, application: Application) {
           : "",
         application.authMount,
       )
+      const html = shell.replace("</body>", () => `<script>${appScript}</script></body>`)
       return {
         commit: snapshot.audit.length !== auditBefore,
         value: reply(request.method === "HEAD" ? null : html, 200, {
           "Content-Type": "text/html; charset=utf-8",
-          "Content-Security-Policy": htmlPolicy(html),
+          "Content-Security-Policy": htmlPolicy(html, appScript),
         }),
       }
     })

@@ -44,7 +44,9 @@ function unfinishedPost(hostname: string, port: number, route: string, headers: 
   })
 }
 
-const serveInstallation = (trusted: boolean) => () =>
+type InstallationDispatch = (route: string, init?: RequestInit) => Promise<Response>
+
+const serveInstallation = (trusted: boolean, verify?: (dispatch: InstallationDispatch, origin: string) => Promise<void>) => () =>
   Effect.scoped(Effect.gen(function* () {
     const directory = yield* Effect.acquireRelease(
       Effect.promise(() => mkdtemp(path.join(tmpdir(), "sf-serve-"))),
@@ -88,6 +90,10 @@ const serveInstallation = (trusted: boolean) => () =>
 
     yield* Effect.promise(async () => {
       const dispatch = (route: string, init?: RequestInit) => fetch(origin + route, { ...init, signal: AbortSignal.timeout(8_000) })
+      if (verify) {
+        await verify(dispatch, origin)
+        return
+      }
       if (trusted) {
         expect(await Bun.file(path.join(directory, "orchestra.db")).exists()).toBe(false)
         const host = `teams-ingress.example.test:${port}`
@@ -195,6 +201,50 @@ const serveInstallation = (trusted: boolean) => () =>
     yield* child.exitCode.pipe(Effect.timeout("8 seconds"))
     expect(yield* Effect.promise(() => Bun.file(path.join(directory, "installation-disposed")).text())).toBe("yes")
   }))
+
+it.live.skipIf(process.platform === "win32")(
+  "Sucafina registers its base and subtree once for every method",
+  serveInstallation(false, async (dispatch, origin) => {
+    for (const method of ["GET", "HEAD", "POST", "ACL"]) {
+      for (const route of ["/sucafina", "/sucafina/", "/sucafina/planner", "/sucafina/procurement"]) {
+        const response = await dispatch(route, { method })
+        expect(response.status).toBe(200)
+        if (method === "HEAD") {
+          expect(await response.text()).toBe("")
+        } else {
+          expect(await response.json()).toMatchObject({ origin, path: route, method })
+        }
+      }
+    }
+  }), { timeout: 70_000 },
+)
+
+it.live.skipIf(process.platform === "win32")(
+  "Sucafina mount retains the host fence and leaves neighboring paths unclaimed",
+  serveInstallation(false, async (dispatch, origin) => {
+    const denied = await dispatch("/sucafina/planner", { headers: { host: "different.example" } })
+    // An unrelated hostname is rejected by the listener before the installation route.
+    expect(denied.status).toBe(421)
+    expect(await denied.text()).toBe("")
+    for (const route of ["/sucafina-other", "/outside", "/sucafina-extra/dashboard"]) {
+      expect((await dispatch(route, { redirect: "manual" })).status).toBe(404)
+    }
+
+    // The synthetic installation handler is credential-free. The adjacent
+    // daemon API still requires its independent launch credential.
+    for (const route of ["/sucafina/status", "/sucafina/auth/login", "/sucafina/planner", "/sucafina/procurement"]) {
+      const response = await dispatch(route)
+      expect(response.status).toBe(200)
+      expect(await response.json()).toMatchObject({ origin, path: route, method: "GET" })
+    }
+    const dashboard = await dispatch("/sucafina/dashboard")
+    expect(dashboard.status).toBe(200)
+    expect(await dashboard.json()).toBe(0)
+    const privateApi = await dispatch("/api/sucafina/installations?select=ids&installationId=x&projectId=y")
+    expect(privateApi.status).toBe(401)
+    expect(privateApi.headers.get("www-authenticate")).toBe('Basic realm="Secure Area"')
+  }), { timeout: 70_000 },
+)
 
 it.live.skipIf(process.platform === "win32")(
   "serve mounts the factory on the Node listener and disposes it on SIGTERM",

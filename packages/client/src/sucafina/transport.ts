@@ -251,9 +251,12 @@ export function createSfTransport(options: Readonly<{
       if (draftOutcomeRead && (!postRead || metadata.effect !== "read" || !stamp))
         return failure("contract-unavailable")
       const mutating = metadata.method === "POST" && !postRead
+      const replayable = HUMAN_RETRY_OPERATIONS.has(operation.operationId) ||
+        operation.operationId === "planner.monthly.apply" &&
+        Array.isArray(asJsonObject(asJsonObject(wireInput)?.input)?.drafts)
       const humanRetry = call.retry === "same-intent"
       if (call.retry !== undefined &&
-          (call.retry !== "same-intent" || !mutating || !HUMAN_RETRY_OPERATIONS.has(operation.operationId)))
+          (call.retry !== "same-intent" || !mutating || !replayable))
         return failure("contract-mismatch")
       if (postRead && !draftOutcomeRead && call.idempotencyKey !== undefined) return failure("contract-mismatch")
       const key = metadata.method === "POST"
@@ -359,7 +362,7 @@ export function createSfTransport(options: Readonly<{
       if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
       let dispatched = false
       const rememberIntent = () => {
-        if (mutating && !humanRetry && mutationOwner && HUMAN_RETRY_OPERATIONS.has(operation.operationId))
+        if (mutating && !humanRetry && mutationOwner && replayable)
           retained.set(operation.operationId, {
             key: key!, digest: digest!, owner: mutationOwner, confirmed: false,
           })

@@ -1,8 +1,9 @@
 import { expect, test } from "bun:test"
 import { Database } from "bun:sqlite"
-import { chmod, chown, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
+import { chmod, link, mkdir, mkdtemp, realpath, rename, rm, stat, symlink, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
+import { canSetForeignFixtureOwner, withForeignFixtureOwner } from "./fixture/foreign-owner.ts"
 import { observeLocalSnapshotStability, openLocalStore } from "../runtime/local-store.ts"
 import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
 import type { TrustedDomainContext } from "../product/contracts/sf-execution.ts"
@@ -660,17 +661,16 @@ test("creating nested private directories preserves existing parent permissions"
 })
 
 for (const target of ["directory", "database"] as const) {
-  test.skipIf(process.getuid?.() !== 0)(`rejects foreign UID ${target} (requires root fixture privileges)`, async () => {
+  test.skipIf(!canSetForeignFixtureOwner())(`rejects foreign UID ${target} (requires root fixture privileges)`, async () => {
     await fixture(async (directory, open) => {
       const store = await open()
       await store.dispose()
       const path = target === "directory" ? directory : join(directory, "installation.sqlite")
-      await chown(path, 65534, 65534)
-      try {
-        await expect(open()).rejects.toThrow()
-      } finally {
-        await chown(path, 0, 0)
-      }
+      await withForeignFixtureOwner(dirname(directory), path, import.meta.path, async () => {
+        await expect(open()).rejects.toThrow(target === "directory"
+          ? "Local storage directory must be private (0700)"
+          : "Local database must be a private regular file")
+      })
     })
   })
 }

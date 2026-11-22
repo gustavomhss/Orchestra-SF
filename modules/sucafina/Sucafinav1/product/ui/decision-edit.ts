@@ -44,7 +44,7 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
   let procurementOptions = []; let inspectedProcurement
   const names = ['objective', 'start', 'end', 'currency']
   const editable = () => [...form.querySelectorAll('input')].filter((input) => names.includes(input.name) || input.dataset.criterionId)
-  const disabled = new Map(editable().map((input) => [input, input.disabled])); const removedDrafts = new Map()
+  const disabled = new Map([...form.querySelectorAll('input, select, textarea, button')].map((control) => [control, control.disabled])); const removedDrafts = new Map()
   let refs = [...context.sourceRefs]; let options = []; let inspected; let pending; let comparison; let reviewed; let needsReview = false; let completed = false
   const draft = () => ({ fields: Object.fromEntries(names.map((name) => [name, form.elements.namedItem(name).value])), criteria: new Map(editable().filter((input) => input.dataset.criterionId).map((input) => [input.dataset.criterionId, { value: input.value, disabled: disabled.get(input) }])) })
   const scopeMatches = () => form.elements.namedItem('start').value === context.horizon.start && form.elements.namedItem('end').value === context.horizon.end && form.elements.namedItem('currency').value.trim() === context.currency
@@ -57,9 +57,8 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
   const controls = () => {
     if (!live()) return
     const locked = busy || !!pending || completed
-    form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = locked })
+    form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = locked || disabled.get(control) === true })
     if (!locked) {
-      editable().forEach((input) => { input.disabled = disabled.get(input) || false })
       source.disabled = !options.length || !scopeMatches(); inspect.disabled = !source.value || !scopeMatches(); attach.disabled = !inspected || !scopeMatches(); submit.disabled = needsReview
       procurementSource.disabled = !procurementOptions.length || !scopeMatches(); procurementInspect.disabled = !procurementSource.value || !scopeMatches(); procurementAttach.disabled = !inspectedProcurement || !scopeMatches()
     }

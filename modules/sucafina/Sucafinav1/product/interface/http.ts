@@ -11,19 +11,22 @@ import { isSfPeriod } from "../contracts/validation.ts"
 import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
 import { handleSfPlannerMonthly } from "./planner-http.ts"
 import { handleSfForecastInput } from "./forecast-http.ts"
-import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
+import { forecastAnalysisForm, forecastAnalysisScript, intentAnalysisForm, scenarioAnalysisForm } from "../ui/forecast-analysis.ts"
 import { decisionEditForm, decisionEditScript } from "../ui/decision-edit.ts"
+import { decisionAlternativesForm, decisionAlternativesScript } from "../ui/decision-alternatives.ts"
 import { decisionChoiceForm, decisionChoiceScript } from "../ui/decision-choice.ts"
 import { handleSfViews } from "./views-http.ts"
 import { personalViewsScript, personalViewsWidget } from "../ui/personal-views.ts"
 import { documentSearchScript } from "../ui/document-search.ts"
 import { portfolioHistory, portfolioScript, portfolioWidget } from "../ui/portfolio.ts"
+import { contextualCaseReturn, handleContextualDecision } from "./contextual-decision.ts"
 import { decisionApplyForms, decisionApplyScript } from "../ui/decision-apply.ts"
+import { caseWorkSelectionForm, caseWorkSelectionScript } from "../ui/case-work-selection.ts"
 import { caseQuestionForm, caseQuestionScript, caseQuestionThreads, workDestinationScript } from "../ui/work-collaboration.ts"
 
 /** Mount in the existing authenticated application; authority remains private to the host. */
 export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
-  const modes = ["workbench", "workbench-case", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
+  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
@@ -32,6 +35,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
     if (url.origin !== input.origin || !["dashboard", "planner", "procurement"].includes(surface) || url.pathname !== `${input.mount}/${surface}`) return reply({ status: "denied" }, 403)
     const runtime = input.runtime()
     if (!runtime) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+    if (mode === "workbench-context") return handleContextualDecision(request, { ...input, surface, runtime })
     if (mode === "workbench-analysis") {
       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
       return handleSfAnalysis(request, input.origin, runtime)
@@ -52,15 +56,27 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
       if ([...url.searchParams.keys()].some((key) => !["sf", "start", "end"].includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
       const period = { start: url.searchParams.get("start") ?? "", end: url.searchParams.get("end") ?? "" }
-      if (!isSfPeriod(period)) return reply({ status: "invalid" }, 400)
-      if (!runtime.procurementSelections) return reply({ status: "unavailable" }, 503)
+      const selectionUnavailable = (status: 400 | 503) => {
+        // Restore only individually valid dates.
+        const date = (value: string) => isSfPeriod({ start: value, end: value }) ? value : ""
+        const body = '<h2>Work selection unavailable</h2><p>Review the period and retry when the current source is available.</p>' +
+          '<form method="get"><input type="hidden" name="sf" value="workbench-work-select">' +
+          '<label>Start<input name="start" type="date" required value="' + esc(date(period.start)) + '"></label>' +
+          '<label>End<input name="end" type="date" required value="' + esc(date(period.end)) + '"></label><button>Retry this selection</button></form>'
+        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "")
+        return new Response(request.method === "HEAD" ? null : html, { status, headers: {
+          "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff",
+        } })
+      }
+      if (!isSfPeriod(period)) return selectionUnavailable(400)
+      if (!runtime.procurementSelections) return selectionUnavailable(503)
       const digest = digestSfValue({ purpose: "work-selection", period })
       const access = await runtime.ui.admit(request, "sf_work_list", digest)
       if (access.status !== "ok") return reply({ status: access.status }, 403)
       try {
         if (!await runtime.ui.validate(access.value, "sf_work_list", digest)) return reply({ status: "denied" }, 403)
         const selection = await runtime.procurementSelections.create(access.value, period).catch(() => undefined)
-        if (!selection || selection.status !== "ok") return reply({ status: selection?.status ?? "unavailable" }, selection?.status === "denied" ? 403 : 503)
+        if (!selection || selection.status !== "ok") return selection?.status === "denied" ? reply({ status: "denied" }, 403) : selectionUnavailable(503)
         if (!await runtime.ui.revalidate(access.value)) return reply({ status: "denied" }, 403)
         const query = new URLSearchParams({ sf: "workbench-work", selectionRef: selection.value.selectionRef, start: selection.value.period.start, end: selection.value.period.end })
         const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>Work selection</h2><p><a href="?${esc(query.toString())}">${esc(selection.value.label)}</a> · ${esc(selection.value.period.start)} – ${esc(selection.value.period.end)}</p>`
@@ -70,7 +86,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
     }
     if (mode === "workbench-command") return handleSfWorkbenchCommand(request, input.origin, runtime)
     if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "denied" }, 405)
-    const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
+    const allowed = mode === "workbench" ? ["sf"] : mode === "workbench-case" ? ["sf", "caseRef", "returnTo"] : mode === "workbench-work" ? ["sf", "selectionRef", "start", "end"] : mode === "workbench-search" ? ["sf", "q"] : ["sf", "runRef"]
     if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
     const operation = mode === "workbench" || mode === "workbench-case" ? "sf_case_read" : mode === "workbench-search" ? "sf_knowledge_search" : mode === "workbench-routine" ? "sf_routine_status" : "sf_work_list"
     const payload = mode === "workbench-case" ? { caseRef: url.searchParams.get("caseRef") ?? "" } : mode === "workbench-search" ? { query: url.searchParams.get("q") ?? "", limit: 20 } : mode === "workbench-routine" ? { runRef: url.searchParams.get("runRef") ?? "" } : { selectionRef: url.searchParams.get("selectionRef") ?? "", period: { start: url.searchParams.get("start") ?? "", end: url.searchParams.get("end") ?? "" } }
@@ -94,8 +110,8 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
         if (!work) return reply({ status: "unavailable" }, 503)
         if (work.status !== "ok") return reply({ status: work.status }, work.status === "denied" ? 403 : work.status === "stale" || work.status === "conflict" ? 409 : 503)
         if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-        const body = `<p><a href="?sf=workbench">Workbench</a></p><h2>My work</h2>${work.value.items.length ? `<ul>${work.value.items.map((item) => `<li><strong>${esc(item.title ?? "Work item")}</strong> · ${esc(item.state)}${item.ownerLabel ? ` · ${esc(item.ownerLabel)}` : ""}${item.due ? ` · Due ${esc(item.due)}` : ""}${item.period ? ` · ${esc(item.period.start)} – ${esc(item.period.end)}` : ""}${item.observedVersion === undefined ? "" : ` · Observed version ${item.observedVersion}`}${item.sourceVersion === undefined ? "" : ` · Current version ${item.sourceVersion}`}${item.destination ? ` <button type="button" data-work-destination data-selection="${esc(JSON.stringify(selection.value))}" data-action-ref="${esc(item.actionRef)}" data-mount="${esc(input.mount.replace(/\/$/, ""))}">Open work</button><span role="status" aria-live="polite"></span>` : ""}</li>`).join("")}</ul>` : "<p>No work is currently assigned in this selection.</p>"}`
-        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "").replace("</body>", `<script>${workDestinationScript}</script></body>`)
+        const body = `<p><a href="?sf=workbench">Workbench</a></p><section data-work-list><h2>My work</h2>${work.value.items.length ? `<ul>${work.value.items.map((item) => `<li><strong>${esc(item.title ?? "Work item")}</strong> · ${esc(item.state)}${item.ownerLabel ? ` · ${esc(item.ownerLabel)}` : ""}${item.due ? ` · Due ${esc(item.due)}` : ""}${item.period ? ` · ${esc(item.period.start)} – ${esc(item.period.end)}` : ""}${item.observedVersion === undefined ? "" : ` · Observed version ${item.observedVersion}`}${item.sourceVersion === undefined ? "" : ` · Current version ${item.sourceVersion}`}${item.destination ? ` <button type="button" data-work-destination data-selection="${esc(JSON.stringify(selection.value))}" data-action-ref="${esc(item.actionRef)}" data-mount="${esc(input.mount.replace(/\/$/, ""))}">Open work</button><span role="status" aria-live="polite"></span>` : ""}</li>`).join("")}</ul>` : "<p>No work is currently assigned in this selection.</p>"}</section>`
+        const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, body), "").replace("</script>", `${workDestinationScript}</script>`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
       }
       const search = `<form method="get"><input type="hidden" name="sf" value="workbench-search"><label>Search documents<input name="q" required></label><button>Search</button></form>`
@@ -134,13 +150,19 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
       if (output && !output.ok) return reply({ status: "unavailable" }, 503)
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
       const caseOutput = operation === "sf_case_read" && result?.status === "ok" ? decodeSfOperationOutput("sf_case_read", result.result) : undefined
+      const returnTo = url.searchParams.get("returnTo")
+      const contextualReturn = returnTo && caseOutput?.ok ? contextualCaseReturn({
+        origin: input.origin, mount: input.mount, returnTo, sourceRefs: caseOutput.value.case.sourceRefs,
+      }) : undefined
+      if (url.searchParams.has("returnTo") && !contextualReturn) return reply({ status: "invalid", reason: "invalid-context-return" }, 400)
       const workOutput = operation === "sf_work_list" && result?.status === "ok" ? decodeSfOperationOutput("sf_work_list", result.result) : undefined
       const routineOutput = operation === "sf_routine_status" && result?.status === "ok" ? decodeSfOperationOutput("sf_routine_status", result.result) : undefined
       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
-      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+      const workSelection = runtime.caseWorkSelection && caseOutput?.ok ? caseWorkSelectionForm(caseOutput.value) : ""
+      const body = caseOutput?.ok ? decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + workSelection + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : workOutput?.ok ? workList(workOutput.value) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
-      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "").replace("</script>", `${script}</script>`)
+      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionAlternativesScript}${decisionChoiceScript}${decisionApplyScript}${caseQuestionScript}${workSelection ? caseWorkSelectionScript : ""}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+      const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${contextualReturn ? `<p><a href="${esc(contextualReturn)}">Return to contract</a></p>` : ""}${body}`), "").replace("</script>", `${script}</script>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { runtime.ui.finish(admitted.value) }
   }

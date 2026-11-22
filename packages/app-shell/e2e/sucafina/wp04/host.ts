@@ -68,8 +68,11 @@ const persistence = currentChoiceFence?.persistence ?? driver
 const store = { ...persistence, ...createSfSourcePersistence({ persistence, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at), createId: randomUUID }) }
 for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
 await initializeAbsentSfProductState(store, randomUUID)
-const manifest = approvalDirectory ? path.join(directory, "decision-approval-manifest.json") : process.env.SF_OPERATIONS_MANIFEST
-if (!manifest || !path.isAbsolute(manifest)) throw new Error("Files qualification requires its private host manifest")
+const manifest = (() => {
+  const filename = approvalDirectory ? path.join(directory, "decision-approval-manifest.json") : process.env.SF_OPERATIONS_MANIFEST
+  if (!filename || !path.isAbsolute(filename)) throw new Error("Files qualification requires its private host manifest")
+  return filename
+})()
 const installationId = randomUUID()
 const mount = "/sucafina"
 const configurations = [
@@ -153,7 +156,8 @@ const installation = await createOperationsInstallation({
     principalRef: person.id,
     namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const,
     operations: freeze.operations.map((operation) => operation.operation),
-    humanActions: index === 0 ? sfHumanActions : ["decisions.procurement-proposal.review", "decisions.procurement-proposal.advance"] as const,
+    // Procurement approval uses the operator's domain role, separate from Decisions human actions.
+    humanActions: index === 0 ? sfHumanActions : [],
   })) } : {}),
   persistence: store, authenticate,
   isAuthenticated: async (request) => Boolean(await sessionAccount(request)),

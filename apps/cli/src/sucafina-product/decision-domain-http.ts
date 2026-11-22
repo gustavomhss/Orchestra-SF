@@ -1,4 +1,5 @@
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
@@ -20,9 +21,31 @@ export function createSfDecisionDomainHttp(input: { origin: string; mount: strin
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (!mode || !Object.hasOwn(actions, mode) && mode !== "decision-controls") return undefined
+    if (!mode || !Object.hasOwn(actions, mode) && mode !== "decision-controls" && mode !== "decision-list") return undefined
     const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement" || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}` || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+    if (mode === "decision-list") {
+      if (request.method !== "GET") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+      const origin = request.headers.get("origin")
+      if (origin !== null && origin !== input.origin) return reply({ status: "denied" }, 403)
+      if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1)
+        return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
+      const runtime = input.runtime()
+      if (!runtime) return reply({ status: "unavailable" }, 503)
+      const digest = digestSfValue({})
+      const admitted = await runtime.authority.ui.admit(request, "sf_case_read", digest).catch(() => undefined)
+      if (!admitted) return reply({ status: "unavailable", reason: "decision-list-unavailable" }, 503)
+      if (admitted.status !== "ok") return reply(admitted, replyStatus(admitted))
+      try {
+        if (!await runtime.authority.ui.validate(admitted.value, "sf_case_read", digest) ||
+            runtime.authority.ui.requestFor(admitted.value) !== request) return reply({ status: "denied" }, 403)
+        const result = await runtime.domain.management.list(admitted.value)
+        if (!await runtime.authority.host.revalidate(admitted.value) ||
+            runtime.authority.ui.requestFor(admitted.value) !== request) return reply({ status: "denied" }, 403)
+        return reply(result, replyStatus(result))
+      } catch { return reply({ status: "unavailable", reason: "decision-list-unavailable" }, 503) }
+      finally { runtime.authority.ui.finish(admitted.value) }
+    }
     if (mode === "decision-controls") {
       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
       const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "procurement", "format"]

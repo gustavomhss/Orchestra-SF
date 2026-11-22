@@ -3,11 +3,14 @@ import { defineConfig } from "@playwright/test"
 import config from "../playwright.config"
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
-const files = process.argv.slice(2).some((argument) => {
-  const filename = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
-  return filename.endsWith("e2e/sucafina/operations.spec.ts") || filename.endsWith("e2e/sucafina/operations.spec.ts$")
-})
-const runFiles = files && !process.argv.includes("--list")
+const selected = process.argv.slice(2).map((argument) =>
+  argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+    .replace(/\$$/, ""))
+const files = selected.some((filename) => filename.endsWith("e2e/sucafina/operations.spec.ts"))
+const decisions = selected.some((filename) => filename.endsWith("e2e/sucafina/decisions.spec.ts"))
+const listing = process.argv.includes("--list")
+const runFiles = files && !listing
+const runDecisions = decisions && !listing
 if (runFiles) {
   if (port !== 3000 || process.env.GITHUB_ACTIONS !== "true" || !process.env.RUNNER_TEMP || process.env.SF_OPERATIONS_CLAMD_PORT !== "3310")
     throw new Error("Files qualification requires the hosted loopback Web and ClamD fixtures")
@@ -31,7 +34,7 @@ export default defineConfig({
     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
     reuseExistingServer: false,
-    ...(runFiles ? { env: {
+    ...(runFiles || runDecisions ? { env: {
       VITE_ORCHESTRA_SERVER_HOST: "", VITE_ORCHESTRA_SERVER_PORT: "",
       ORCHESTRA_SF_E2E_UPSTREAM: "http://127.0.0.1:4174",
     } } : {}),

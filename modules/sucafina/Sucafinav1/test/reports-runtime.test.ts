@@ -11,7 +11,7 @@ const environment = {
   directory: [],
 }
 
-test("PowerPoint contains the server's twelve-month totals and at most twelve table rows per slide", async () => {
+test("PowerPoint contains the server's twelve-month totals and paginates all topic records in order", async () => {
   const snapshot = empty()
   snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]
   snapshot.data.opexEntries = [
@@ -40,10 +40,16 @@ test("PowerPoint contains the server's twelve-month totals and at most twelve ta
   const zip = await JSZip.loadAsync(result.bytes)
   const executive = await zip.file("ppt/slides/slide1.xml")!.async("string")
   expect(executive).toContain("$1600")
-  const topics = await zip.file("ppt/slides/slide2.xml")!.async("string")
-  expect((topics.match(/<a:tr\b/g) ?? []).length).toBeLessThanOrEqual(12)
-  expect(topics).toContain("Topic 11")
-  expect(topics).not.toContain("Topic 12")
+  const slides = Object.keys(zip.files).filter((name) => /^ppt\/slides\/slide\d+\.xml$/.test(name))
+    .sort((left, right) => left.localeCompare(right, "en", { numeric: true }))
+  const pages = await Promise.all(slides.map(async (name) => {
+    const xml = await zip.file(name)!.async("string")
+    return [...xml.matchAll(/<a:t>Topic (\d+) · open · normal · <\/a:t>/g)].map((match) => Number(match[1]))
+  }))
+  const topicPages = pages.filter((records) => records.length)
+  expect(topicPages.length).toBeGreaterThan(1)
+  expect(topicPages.every((records) => records.length <= 12)).toBe(true)
+  expect(topicPages.flat()).toEqual(Array.from({ length: 30 }, (_, index) => index))
 })
 
 test("Word is an actual DOCX presenter script with all bullets rather than slide limits", async () => {

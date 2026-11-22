@@ -6,7 +6,7 @@
 import { useNavigate } from "@solidjs/router"
 import { Icon } from "@orchestra/ui/icon"
 import { createEffect, createMemo, createUniqueId, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import type { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { createSfPlannerClient } from "@orchestra/client/sucafina/planner"
@@ -60,6 +60,11 @@ type Review = Readonly<{
   kind: ReviewKind; id: string; revision: number; operationRef: SfOperationRef;
   target?: string; through?: number; nextSplit?: boolean; draft?: LineDraft;
 }>
+type MonthlyIntent = Readonly<{
+  input: SfPlannerMonthlyDraftInput
+  key: string
+  paste: Extract<SfPasteState, { phase: "review" | "applying" | "partial" | "conflict" | "failed" }>
+}>
 const key = (s: string) => s as SfCopyKey
 const msg = (s: string): SfMessage => ({ key: key(s) })
 const gridMsg = (s: string): SfGridMessage => ({ key: s as SfGridMessage["key"] })
@@ -107,6 +112,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     restored: null as SfPlannerSavedView | null,
     busy: false,
     uncertainty: false,
+    monthlyRetry: false,
     error: "",
     refresh: 0,
     selected: "" as string,
@@ -123,6 +129,17 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   const editors = new Map<string, SfPublicDraftController<Edit>>()
   const monthlyDrafts = new Map<string, SfPublicDraftController<Readonly<Record<string,string>>>>()
   let lastIdentity = ""
+  let monthlyIntent: MonthlyIntent | undefined
+  let monthlyController: AbortController | undefined
+  const clearMonthly = () => {
+    if (monthlyController) {
+      monthlyController.abort()
+      monthlyController = undefined
+      setState("busy", false)
+    }
+    monthlyIntent = undefined
+  }
+  onCleanup(clearMonthly)
 
   const isOpex = () => props.surfaceId === "CAP18"
   const projectRows = () => { const data = state.page?.data; return data && "projects" in data ? data.projects : [] }
@@ -189,10 +206,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     state.refresh
     const identity = ready ? JSON.stringify([generation, ready.context.stamp, route]) : ""
     if (lastIdentity !== identity) {
+      clearMonthly()
       editors.clear()
       monthlyDrafts.clear()
       setState({ selected: "", chosenVersion: "", paste: { phase: "idle" }, pasteInput: null, review: null,
-        uncertainty: false, create: blankLine() })
+        uncertainty: false, monthlyRetry: false, create: blankLine() })
       lastIdentity = identity
     }
     if (!ready || !contextDest()?.canRead) {
@@ -280,9 +298,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
   })
   createEffect(() => {
     if (owner.state().status !== "ready") {
+      clearMonthly()
       editors.clear()
       monthlyDrafts.clear()
-      setState({ page: null, restored: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null, create: blankLine() })
+      setState({ page: null, restored: null, selected: "", paste: { phase: "idle" }, pasteInput: null, review: null,
+        uncertainty: false, monthlyRetry: false, create: blankLine() })
     }
   })
 
@@ -495,11 +515,113 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     setState({ paste, pasteInput: prepared.input })
     void previewRows(prepared.input,paste)
   }
-  const applyPaste = async (rows: readonly SfPasteRow[]) => {
+  const sendMonthly = async (intent: MonthlyIntent, retry: boolean) => {
     const ready = owner.ready()
+    const identity = lastIdentity
+    const generation = owner.generation()
+    const destination = contextDest()
+    if (!ready || monthlyIntent !== intent || state.busy || !state.page?.allowedActionIds.includes("save") ||
+        !destination?.canRead || !destination.allowedActionIds.includes("save") || intent.input.versionId !== versionId()) return
+    const controller = new AbortController()
+    monthlyController = controller
+    const live = () => monthlyIntent === intent && monthlyController === controller && identity === lastIdentity &&
+      generation === owner.generation() && owner.ready()?.transport === ready.transport
+    const unknown = () => setState({
+      uncertainty: true, monthlyRetry: true, error: t("sf.u07.monthlyOutcomeUnknown"),
+      paste: { ...intent.paste, phase: "failed" },
+    })
+    const holdConflict = (paste: SfPasteState) => {
+      monthlyIntent = undefined
+      setState({ uncertainty: true, monthlyRetry: false, paste, phase: "conflict", error: t("sf.u07.monthlyUnreconciled") })
+    }
+    setState({ busy: true, monthlyRetry: false, paste: { ...intent.paste, phase: "applying" } })
+    let timer: ReturnType<typeof setTimeout> | undefined
+    try {
+      const response = await Promise.race([
+        createSfPlannerClient(ready.transport)["planner.monthly.apply"](
+          { action: "apply", input: intent.input },
+          { signal: controller.signal, idempotencyKey: intent.key, ...(retry ? { retry: "same-intent" as const } : {}) },
+        ),
+        // The deadline includes a response whose headers arrived but body did not finish.
+        new Promise<{ kind: "transport-error"; reason: "outcome-unknown" }>((resolve) => {
+          timer = setTimeout(() => {
+            controller.abort()
+            resolve({ kind: "transport-error", reason: "outcome-unknown" })
+          }, 10_000)
+        }),
+      ])
+      if (!live()) return
+      if (response.kind === "response" && (response.status === 401 || response.status === 403 || response.body.status === "denied")) {
+        monthlyIntent = undefined
+        setState({ uncertainty: false, page: null, paste: { phase: "idle" }, pasteInput: null,
+          error: "", phase: response.status === 401 ? "session-expired" : "denied" })
+        owner.invalidate(response.status === 401 ? "session-expired" : "revoked")
+        return
+      }
+      if (response.kind === "response" && (response.status === 409 ||
+          response.body.status === "conflict" || response.body.status === "provider-conflict")) {
+        if (retry) holdConflict({ ...intent.paste, phase: "conflict" })
+        else {
+          monthlyIntent = undefined
+          setState({ paste: { ...intent.paste, phase: "conflict" }, phase: "conflict", error: t("sf.common.conflict") })
+        }
+        return
+      }
+      const remaining = unresolvedSfPlannerMonthlyRows(intent.input, response)
+      if (remaining.status === "outcome-unknown") {
+        unknown()
+        return
+      }
+      if (response.kind !== "response" || response.status !== 200 || response.body.status !== "ok") {
+        if (retry) {
+          unknown()
+          return
+        }
+        monthlyIntent = undefined
+        setState({ paste: { ...intent.paste, phase: "failed" },
+          error: t(remaining.status === "unavailable" ? "sf.common.unavailable" : "sf.common.failed") })
+        return
+      }
+      const receipt = response.body.value.rows
+      if (receipt.length !== intent.input.drafts.length || new Set(receipt.map((row) => row.draft.rowId)).size !== receipt.length ||
+          !receipt.every((row) => {
+            const expected = intent.input.drafts.find((draft) => draft.rowId === row.draft.rowId)
+            return expected && expected.revision === row.draft.revision && expected.cells.length === row.draft.cells.length &&
+              row.draft.cells.every((cell, index) => {
+                const source = expected.cells[index]
+                return source && source.measure === cell.measure && source.month === cell.month && source.text === cell.text
+              }) && Boolean(row.errors.length || row.result)
+          })) {
+        unknown()
+        return
+      }
+      const updated = reconcileBudgetPaste(intent.paste, receipt, true)
+      if (retry && remaining.rows.length) {
+        holdConflict(updated)
+        return
+      }
+      monthlyIntent = undefined
+      setState({ uncertainty: false, paste: updated, error: remaining.rows.length ? t("sf.u07.failedRows") : t("sf.u07.saved") })
+      for (const result of receipt) if (result.result?.ok === true) {
+        monthlyDrafts.get(JSON.stringify([currentYear(), intent.input.versionId, result.draft.rowId]))?.discard()
+      }
+      reload()
+    } catch (error) {
+      if (!live()) return
+      console.error("N19 monthly apply failed", error instanceof Error ? error.name : "unknown")
+      unknown()
+    } finally {
+      clearTimeout(timer)
+      if (monthlyController === controller) {
+        monthlyController = undefined
+        setState("busy", false)
+      }
+    }
+  }
+  const applyPaste = async (rows: readonly SfPasteRow[]) => {
     const input = state.pasteInput
     const paste = state.paste
-    if (!ready || !input || !allowed("save") ||
+    if (!input || !allowed("save") || monthlyIntent ||
         (paste.phase !== "review" && paste.phase !== "partial")) return
     const admitted = new Set(rows.filter((row) => row.result === "ready").map((row) => row.rowRef))
     const drafts = input.drafts.filter((row) => admitted.has(row.rowId as SfRef))
@@ -509,42 +631,17 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       setState({ paste: { ...paste, phase: "failed" }, error: t("sf.common.unavailable") })
       return
     }
-    setState({ busy:true, paste: { ...paste, phase: "applying" } })
-    try {
-      const response = await createSfPlannerClient(ready.transport)["planner.monthly.apply"](
-        { action: "apply", input: request }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() },
-      )
-      if (response.kind === "response" && (response.status === 409 ||
-          response.body.status === "conflict" || response.body.status === "provider-conflict")) {
-        setState({ paste: { ...paste, phase: "conflict" }, phase: "conflict", error: t("sf.common.conflict") })
-        return
-      }
-      const remaining = unresolvedSfPlannerMonthlyRows(request,response)
-      if (remaining.status === "outcome-unknown") {
-        setState({ uncertainty: true, phase: "outcome-unknown", error: t("sf.common.operationUnknown"),
-          paste: { ...paste, phase: "failed" } }); return
-      }
-      if (remaining.status === "unavailable") {
-        setState({paste: { ...paste, phase: "failed" }, error: t("sf.common.unavailable") }); return
-      }
-      if (response.kind !== "response" || response.body.status !== "ok") {
-        setState({ paste: { ...paste, phase: "failed" }, error: t("sf.common.failed") }); return
-      }
-      const updated = reconcileBudgetPaste(paste,response.body.value.rows,true)
-      setState({paste:updated, error: remaining.rows.length ? t("sf.u07.failedRows") : t("sf.u07.saved")})
-      for (const result of response.body.value.rows) if (result.result?.ok === true) {
-        const controller = monthlyDrafts.get(JSON.stringify([currentYear(),versionId(),result.draft.rowId]))
-        controller?.discard()
-      }
-      reload() // Always read authoritative current values; never replace with simulated preview.
-    } catch (error) {
-      console.error("N19 monthly apply failed", error instanceof Error ? error.name : "unknown")
-      setState({ uncertainty: true, phase: "outcome-unknown", error: t("sf.common.operationUnknown"),
-        paste: { ...paste, phase: "failed" } })
-    } finally { setState("busy", false) }
+    // Keep the admitted payload separate from future edits and projections.
+    monthlyIntent = { input: request, key: crypto.randomUUID(), paste: structuredClone(unwrap(paste)) }
+    await sendMonthly(monthlyIntent, false)
+  }
+  const retryMonthly = () => {
+    if (monthlyIntent && state.monthlyRetry && state.uncertainty && !state.busy) void sendMonthly(monthlyIntent, true)
   }
   const retryFailedPaste = () => {
-    // Producer CAS must first be re-read; retain text and failed rows, never replay.
+    // Definite failures require a fresh read before review. Only an uncertain
+    // admitted intent can use the separate exact-retry action.
+    if (state.uncertainty) return
     setState("error",t("sf.u07.failedRows"))
     reload()
   }
@@ -794,7 +891,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         } : undefined}
       density={state.restored?.density ?? "comfortable"} layout="work" onLayoutMode={()=>undefined}
     >
-      <SfStatePanel state={status()} messageKey={key(note())} onRetryRead={reload}>
+      <SfStatePanel state={status()} messageKey={key(note())} onRetryRead={state.uncertainty ? undefined : reload}>
         <Show when={state.page}>
           {(page) => <div class="sf-u07" data-sf-wave="three" hidden={Boolean(review())}>
             <Show when={state.restored}>{(saved) => <p role="status">{t("sf.ui32.restored", { title: saved().title })}</p>}</Show>
@@ -835,6 +932,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             <Show when={grid()} fallback={<p role="status" hidden={Boolean(record() || presentation.creating) || presentation.tab !== "monthly"}>{t("sf.u07.noData")}</p>}>
               {(monthly)=><section class="sf-u07-monthly-panel" id={stageId + "-monthly"} role="tabpanel" aria-labelledby={stageId + "-monthly-tab"} hidden={presentation.tab !== "monthly" || Boolean(record() || presentation.creating)}>
                 <header class="sf-u07-panel-head"><h2 id="sf-u07-months">{t("sf.u07.months")}</h2><p>{t("sf.u07.gridHint")}</p></header>
+                <Show when={state.monthlyRetry}>
+                  <button type="button" class="mx-btn" disabled={state.busy} onClick={retryMonthly}>
+                    {t("sf.u07.retryMonthly")}
+                  </button>
+                </Show>
                 <SfMonthlyGrid
                   rows={monthly().rows}
                   months={sourceMonths()} columns={columns}
@@ -846,7 +948,9 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                   onPasteTsv={pasteTsv}
                   onApplyPastedRows={(rows)=>void applyPaste(rows)}
                   onRetryFailedPasteRows={retryFailedPaste}
-                  onCancelPaste={()=>setState({paste:{phase:"idle"},pasteInput:null})}
+                  onCancelPaste={() => {
+                    if (!state.uncertainty && !state.busy) setState({ paste: { phase: "idle" }, pasteInput: null })
+                  }}
                   onNavigate={navigateCell}
                   onEdit={editCell} onCommitCell={editCell} onCancelCell={()=>undefined}
                   onOpenRow={(rowRef)=>setState("selected",String(rowRef))}
