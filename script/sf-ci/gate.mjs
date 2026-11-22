@@ -248,12 +248,28 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
 function additionalCoverageFiles(suite) {
   const files = suite.coverageBaseline?.additionalFiles
   if (files === undefined) return undefined
-  if (suite.id !== "CI-APP-BROWSER" || suite.kind !== "bun" ||
+  const prefix = suite.id === "CI-APP-BROWSER" ? "test-browser/sucafina-native/" : suite.id === "CI-APP-SRC" ? "src/" : ""
+  if (!prefix || suite.kind !== "bun" ||
       !Array.isArray(files) || !files.length || new Set(files).size !== files.length ||
-      files.some((file) => typeof file !== "string" || !/^test-browser\/sucafina-native\/[\w/-]+\.test\.ts$/.test(file))) {
-    fail("invalid additional browser coverage files: " + suite.id)
+      files.some((file) => typeof file !== "string" || !file.startsWith(prefix) || !isTestFile(validateRelative(file)))) {
+    fail("invalid additional coverage files: " + suite.id)
   }
   return files
+}
+
+function additionalCoverageCaseKeys(suite) {
+  const cases = suite.coverageBaseline?.additionalCases
+  if (cases === undefined) return undefined
+  const admitted = suite.id === "CI-CLI" ? ["test/sucafina-installation.test.ts"] : additionalCoverageFiles(suite)
+  if (!admitted || suite.kind !== "bun" || !Array.isArray(cases) || !cases.length ||
+      cases.some((entry) => !admitted.includes(entry?.file) ||
+        typeof entry.classname !== "string" || typeof entry.name !== "string" ||
+        !entry.name.trim() || /\0/.test(entry.name + entry.classname))) {
+    fail("invalid additional coverage cases: " + suite.id)
+  }
+  const keys = cases.map(({ file, classname, name }) => file + "\0" + classname + "\0" + name)
+  if (new Set(keys).size !== keys.length) fail("duplicate additional coverage case: " + suite.id)
+  return keys
 }
 /** Converts summary to a stable multiset of case identities; duplicate parametrized titles stay counted. */
 function bunCaseKeys(raw) {
@@ -331,7 +347,8 @@ export function checkCoverageBaseline(suite, coverage) {
   if (additional?.some((file) => !coverage.files.includes(file)) || (additional && !coverage.historical)) {
     fail("additional browser coverage was not executed: " + suite.id)
   }
-  const historical = additional ? coverage.historical : coverage
+  const historical = additional || additionalCoverageCaseKeys(suite) ? coverage.historical : coverage
+  if (!historical) fail("additional coverage was not executed: " + suite.id)
   if (historical.cases < baseline.minimumCases || historical.fileCount < baseline.minimumFiles ||
       historical.filesSha256 !== baseline.filesSha256 || historical.casesSha256 !== baseline.casesSha256) {
     fail("missing/changed baseline case or file inventory: " + suite.id)
@@ -404,6 +421,7 @@ export function validateManifest(manifest) {
       fail("unversioned coverage baseline state: " + suite.id)
     }
     additionalCoverageFiles(suite)
+    additionalCoverageCaseKeys(suite)
   }
   if (JSON.stringify(manifest.separateReleaseProofs) !== JSON.stringify(PROOFS)) fail("AM proof inventory drift")
   return suites
@@ -485,8 +503,14 @@ function coverageForReport(bytes, suite) {
   const cases = bunCaseKeys(raw)
   const coverage = bunCoverageFromKeys(cases)
   const additional = additionalCoverageFiles(suite)
-  if (!additional) return coverage
-  const historical = bunCoverageFromKeys(cases.filter((key) => !additional.includes(key.split("\0", 1)[0])))
+  const additionalCases = additionalCoverageCaseKeys(suite)
+  if (!additional && !additionalCases) return coverage
+  if (additionalCases && (additionalCases.some((expected) => cases.filter((key) => key === expected).length !== 1) ||
+      cases.some((key) => additional?.includes(key.split("\0", 1)[0]) && !additionalCases.includes(key)))) {
+    fail("additional case inventory mismatch: " + suite.id)
+  }
+  const historical = bunCoverageFromKeys(cases.filter((key) =>
+    !additional?.includes(key.split("\0", 1)[0]) && !additionalCases?.includes(key)))
   return { ...coverage, historical }
 }
 

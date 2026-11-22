@@ -274,10 +274,9 @@ test("CI workflow is opt-in and preserves exhaustive green coverage", () => {
   assert.match(ciSf, /SF_SHARD_COUNT: "8"/)
   assert.doesNotMatch(ciSf, /--bail(?:=|\s|$)|--only-failures|--pass-with-no-tests/)
   // The unrelated app-browser fail-fast policy remains unchanged.
-  assert.match(workflow, /CI-APP-BROWSER\)[\s\S]*?--bail=5/)
   const realManifest = JSON.parse(readFileSync(new URL("../../sf/ci/suites.json", import.meta.url), "utf8"))
   assertWorkflowManifestSelection(workflow, realManifest)
-  assert.match(workflow, /--max-failures=2/)
+  assert.doesNotMatch(workflow, /--bail|--max-failures/)
   assert.doesNotMatch(workflow, /--pass-with-no-tests|continue-on-error: true|--retry\s+[1-9]/)
 })
 // A6 consumes this test-defined wiring contract in .github/workflows/sf-ci.yml.
@@ -291,7 +290,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
   const arms = single.map((suite) => [
     `              ${suite.id})`,
     `                cd "$root/${suite.directory}"`,
-    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${suite.id === "CI-APP-BROWSER" ? '${files[@]/#/./}' : '${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} "${suite.id === "CI-APP-BROWSER" ? '${files[@]/#/./}' : '${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
     "                ;;",
   ].join("\n")).join("\n")
   const selected = [
@@ -333,7 +332,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
     "    steps:", "      - name: test", "        run: |", prefix,
     '          test "${#files[@]}" -eq 1 || exit 2',
     '          cd "$root/packages/app-shell"',
-    '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --max-failures=2',
+    '          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1',
     "",
   ].join("\n")
 }
@@ -364,6 +363,8 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
     ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],
     ["missing browser dispatch arm", good.replace(/\n {14}CI-APP-BROWSER\)[\s\S]*?\n {16};;/, "")],
     ["browser filters omit files outside Bun's test root", hardcodeInBrowser('"${files[@]}"')],
+    ["browser bail hides later cases", hardcodeInBrowser('"${files[@]/#/./}" --bail=5')],
+    ["Playwright failure cap hides later cases", good.replace("--workers 1", "--workers 1 --max-failures=2")],
     ["browser hardcoded directory", hardcodeInBrowser('"./test-browser/sucafina-native"')],
     ["browser hardcoded file", hardcodeInBrowser('"test-browser/sucafina-native/transport-contract.test.ts"')],
     ["hardcoded file appended to selected array", hardcodeInBrowser('"${files[@]/#/./}" "test-browser/sucafina-native/one.test.ts"')],

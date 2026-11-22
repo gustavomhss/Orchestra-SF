@@ -149,9 +149,7 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     const selectedArg = suite.id === "CI-APP-BROWSER" ? '"${files[@]/#/./}"' : '"${files[@]}"'
     requireContract(commands.length === 1 && commands[0].includes(selectedArg),
       `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
-    if (suite.id === "CI-APP-BROWSER") {
-      requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: --bail=5 lost")
-    }
+    requireContract(!/(?:^|\s)--bail(?:=|\s|$)/.test(commands[0]), `${suite.id}: --bail would hide late cases`)
     if (suite.id === "CI-APP-BROWSER") {
       requireContract(/(?:^|\s)--conditions=browser(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: browser execution condition lost")
     }
@@ -192,6 +190,8 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
   const uiCommands = uiFlat.split("\n").filter((line) => /\bbun run test:e2e:local\b/.test(line))
   requireContract(uiCommands.length === 1 && /"\$\{files\[0\]\}"/.test(uiCommands[0]),
     "ui: Playwright must consume the single manifest-selected spec")
+  requireContract(!/(?:^|\s)(?:--max-failures|-x)(?:=|\s|$)/.test(uiCommands[0]),
+    "ui: early failure cap would hide late cases")
   assertNoHardcodes(selectedUi.source, "ui")
   return { bun: unitSuites.map((suite) => suite.id), playwright: uiSuites.map((suite) => suite.id) }
 }

@@ -294,7 +294,7 @@ jobs:
                 # Bun requires explicit paths for files outside the configured test root.
                 ORCHESTRA_OMNI_CONTROL=declared bun test --conditions=browser \
                   --preload ../../script/test-omni-control.ts --preload ./happydom.ts \
-                  --bail=5 --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]/#/./}"
+                  --reporter=junit "--reporter-outfile=$evidence/report.xml" "${files[@]/#/./}"
                 ;;
               CI-ATLAS-BUSINESS)
                 # Generated files are checked independently by static.
@@ -306,10 +306,24 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
+          printf 'sourceSha=%s\ntreeSha=%s\nrunId=%s\nattempt=%s\nexitCode=%s\n' "$GITHUB_SHA" "$SF_CHECKOUT_TREE_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$status" > "$evidence/execution.txt"
+          sha256sum "$root/sf/ci/suites.json" >> "$evidence/execution.txt"
           test "$status" -eq 0
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve inventory when the suite receipt is rejected
+        if: failure() && !cancelled()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-candidate-${{ matrix.id }}
+          path: |
+            sf-ci-evidence/${{ matrix.id }}/execution.txt
+            sf-ci-evidence/${{ matrix.id }}/selection.txt
+            sf-ci-evidence/${{ matrix.id }}/report.xml
+            sf-ci-evidence/${{ matrix.id }}/summary.json
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Publish only valid summary and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -336,6 +350,7 @@ jobs:
       SF_SHARD_INDEX: ${{ matrix.shard }}
       SF_SHARD_COUNT: "8"
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
+      ORCHESTRA_OMNI_CONTROL: declared
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
@@ -380,6 +395,8 @@ jobs:
           } 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
+          printf 'sourceSha=%s\ntreeSha=%s\nrunId=%s\nattempt=%s\nshard=%s\nexitCode=%s\n' "$GITHUB_SHA" "$SF_CHECKOUT_TREE_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$SF_SHARD_INDEX" "$status" > "$evidence/execution.txt"
+          sha256sum "$root/sf/ci/suites.json" >> "$evidence/execution.txt"
           test "$status" -eq 0
           cd "$root"
           python3 script/sf2h/final-bundle/verify-bun-report.py "$evidence/report.xml" > "$evidence/summary.json"
@@ -405,14 +422,17 @@ jobs:
           compression-level: 0
           retention-days: 7
 
-      - name: Publish the shard run log on failure
-        if: failure()
+      - name: Preserve each shard inventory independently of qualification
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sf-shard-failure-CI-SF-${{ matrix.shard }}
+          name: sf-candidate-CI-SF-shard-${{ matrix.shard }}
           path: |
-            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/run.log
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/execution.txt
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/selection.txt
             sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/report.xml
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/summary.json
+            sf-ci-evidence/CI-SF-shard-${{ matrix.shard }}/run.log
           if-no-files-found: ignore
           retention-days: 7
 
@@ -480,9 +500,14 @@ jobs:
           export PLAYWRIGHT_JSON_OUTPUT_NAME="$evidence/report.json"
           cd "$root/$suite_dir"
           set +e
-          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --max-failures=2 --reporter json,line 2>&1 | tee "$evidence/run.log"
+          bun run test:e2e:local "${files[0]}" --config e2e/playwright.production.config.ts --workers 1 --retries 0 --reporter json,line 2>&1 | tee "$evidence/run.log"
           status=${PIPESTATUS[0]}
           set -e
+          printf 'sourceSha=%s\ntreeSha=%s\nrunId=%s\nattempt=%s\nexitCode=%s\n' "$GITHUB_SHA" "$SF_CHECKOUT_TREE_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$status" > "$evidence/execution.txt"
+          sha256sum "$root/sf/ci/suites.json" >> "$evidence/execution.txt"
+          if [ "$SF_SUITE_ID" = CI-UI-DECISIONS ] && [ -s "$evidence/report.json" ]; then
+            cp "$evidence/report.json" "$evidence/report.raw.json"
+          fi
           test "$status" -eq 0
           cd "$root"
           node script/sf-ci/gate.mjs sanitize-playwright
@@ -490,6 +515,17 @@ jobs:
           # run and independently reviewed. Until that baseline exists in the
           # manifest, calling it here would only fail closed on every PR.
           SF_TEST_EXIT_CODE="$status" SF_CHECKOUT_SHA="$(git rev-parse HEAD)" node script/sf-ci/gate.mjs receipt
+      - name: Preserve Decisions inventory for independent baseline review
+        if: ${{ !cancelled() && matrix.id == 'CI-UI-DECISIONS' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sf-candidate-CI-UI-DECISIONS
+          path: |
+            sf-ci-evidence/CI-UI-DECISIONS/execution.txt
+            sf-ci-evidence/CI-UI-DECISIONS/selection.txt
+            sf-ci-evidence/CI-UI-DECISIONS/report.raw.json
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Publish only minimized JSON and receipt for a clean run
         if: success()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
