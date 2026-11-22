@@ -25,13 +25,15 @@ type LoadingReceipt = {
   bootstrapGetterCalls: number
 }
 
-export async function runSfCaptureLoadingControl(file: string, mode: LoadingMode): Promise<LoadingReceipt> {
+export async function runSfCaptureLoadingControl(file: string, mode: LoadingMode): Promise<LoadingReceipt & { omniSpawns: number; omniDelegations: number }> {
   // These imports belong only to the parent. They cannot preload SF in the child.
-  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }] = await Promise.all([
+  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([
     import("@orchestra/core/process"), import("@orchestra/core/effect/layer-node"),
     import("@orchestra/core/test/fixture/omni-expect"), import("effect"), import("effect/unstable/process"),
+    import("@orchestra/core/omni"),
   ])
   expectSpawn(file)
+  const before = Omni.snapshot()
   const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {
     const processes = yield* AppProcess.Service
     return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {
@@ -39,6 +41,7 @@ export async function runSfCaptureLoadingControl(file: string, mode: LoadingMode
       killSignal: "SIGTERM", forceKillAfter: "1 second",
     }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })
   }), LayerNode.compile(AppProcess.node))))
+  const after = Omni.snapshot()
   const stdout = result.stdout.toString("utf8"), stderr = result.stderr.toString("utf8")
   if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)
     throw new Error("Captured context child did not complete: " + JSON.stringify({
@@ -48,7 +51,8 @@ export async function runSfCaptureLoadingControl(file: string, mode: LoadingMode
   const receipt: unknown = JSON.parse(stdout)
   if (!receipt || typeof receipt !== "object" || !("mode" in receipt) || receipt.mode !== mode)
     throw new Error("Captured context child returned an invalid receipt")
-  return receipt as LoadingReceipt
+  return { ...(receipt as LoadingReceipt),
+    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }
 }
 
 async function child(mode: LoadingMode): Promise<LoadingReceipt> {

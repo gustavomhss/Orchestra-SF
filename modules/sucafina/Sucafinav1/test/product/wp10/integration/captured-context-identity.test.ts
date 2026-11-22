@@ -265,6 +265,8 @@ for (const mode of capturedContextLoadingModes)
     expect(receipt.mode).toBe(mode)
     expect(Number.isSafeInteger(receipt.pid) && receipt.pid > 0).toBe(true)
     expect(receipt.pid).not.toBe(process.pid)
+    expect(receipt.omniSpawns).toBe(1)
+    expect(receipt.omniDelegations).toBe(0)
     expect(receipt.order).toEqual([
       ...(limited ? ["bootstrap-limited"] : []),
       "canonical-loaded", "hook-arranged", "helper-loaded", "prepared", "changed", "compared", "restored",
