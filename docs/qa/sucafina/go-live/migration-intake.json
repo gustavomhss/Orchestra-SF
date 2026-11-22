@@ -2880,7 +2880,13 @@
       ],
       "hypothesis": "A finalized Bun subprocess with extra Playwright stdio may close a recycled descriptor. This is consistent with the preceding direct launch and the upstream reports; effects on SQLite remain unproved until Actions.",
       "behavior": "Two browser fixtures use the existing Node/AppProcess bridge with installed Chrome and the original 30000 ms acquisition ceiling; all case deadlines and assertions are retained. Caller-specific expectSpawn is declared in each active test. Strict Node/Chromium/Unix transport closure remains mandatory. Local browser retains its independent Linux PID/UID/PGID/generation census and refuses pending or failed driver cleanup.",
-      "qualification": "No product change. No new pass claimed; existing pool206 remains scoped to C532a."
+      "qualification": "No product change. No new pass claimed; existing pool206 remains scoped to C532a.",
+      "independentReview": {
+        "reviewer": "Astra root coordinator",
+        "sourceSha": "7bcc5ca27307181b81f53ff7347fcc49f54ff4fb",
+        "status": "STATIC_ONE_REPORT_ORDER_CORRECTION",
+        "correction": "Visual-layout report now occurs only after server, driver, installation disposal and root removal all succeed; case failures or any cleanup failure suppress the success proof."
+      }
     },
     "operationsReadback": {
       "status": "PENDING_FOCAL",

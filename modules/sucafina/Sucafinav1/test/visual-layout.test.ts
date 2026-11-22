@@ -24,7 +24,6 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
   const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
   let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   const failures: string[] = []
-  let completed = false
   try {
     // Node owns Playwright extra stdio; the original Chrome launch budget remains 30 s.
     driver = await launchBrowserDriver("visual-layout", { signal: new AbortController().signal, timeoutMs: 30000 })
@@ -95,17 +94,17 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       }
     }
     expect(failures).toEqual([])
-    completed = true
   } finally {
     await server.stop(true)
     try {
       if (driver) {
         await driver.close()
-        if (completed) driver.report()
       }
     } finally {
       try { await installation.dispose() }
       finally { await rm(root, { recursive: true, force: true }) }
     }
   }
+  if (!driver) throw new Error("Browser driver was not acquired")
+  driver.report()
 }, 60000)
