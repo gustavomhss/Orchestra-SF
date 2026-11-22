@@ -6,7 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const {
   PHASES, ROSTER, LEGACY_MAP, ADDITIONS, strictJson, privateRead, writePrivate, validateConfig,
-  target, stampOk, noBusiness, runPhase,
+  target, stampOk, noBusiness, refusal, runPhase,
 } = require("./az02-proof.cjs");
 
 const uuid = (n) => n.repeat(8) + "-" + n.repeat(4) + "-4" + n.repeat(3) + "-8" + n.repeat(3) + "-" + n.repeat(12);
@@ -352,5 +352,89 @@ test("each phase captures the original session bytes once and retains private co
     const identity = result.privateDetails.details.find((entry) => entry.role === "requester");
     assert.equal(identity.cookieSha256, require("node:crypto").createHash("sha256").update(f.cookies.requester).digest("hex"));
     assert(!JSON.stringify(result.receipt).includes(identity.cookieSha256));
+  }
+});
+
+
+const invalidRefusalBodies = [
+  ["empty", "", "application/json"],
+  ["HTML", "<h1>Unauthorized</h1>", "text/html"],
+  ["malformed JSON", '{"status":', "application/json"],
+  ["JSON without status", "{}", "application/json"],
+  ["wrong media type", '{"status":"denied"}', "text/plain"],
+  ["duplicate status", '{"status":"denied","status":"denied"}', "application/json"],
+];
+
+test("refusal requires the original JSON denial instead of an arbitrary 401 or 403", () => {
+  const config = configuration();
+  for (const status of [401, 403]) {
+    for (const result of ["unauthenticated", "denied"])
+      assert.equal(refusal(response(status, { status: result }), config), true);
+    for (const [name, body, media] of invalidRefusalBodies) {
+      const observed = { status, headers: { "cache-control": "no-store", "content-type": media }, body };
+      assert.equal(refusal(observed, config), false, status + " " + name);
+    }
+  }
+});
+
+for (const [name, body, media] of invalidRefusalBodies)
+  test("every operational refusal phase rejects " + name + " instead of claiming denial", async () => {
+    const affected = {
+      preflight: ["GUEST", "NO_TEAM_BUSINESS", "ADMIN_NO_TEAM_MAINTENANCE"],
+      actors: ["ACTOR_DENIED", "AUTH_FOREIGN_TEAM"],
+      "after-revoke": ["REVOKE_CONTEXT", "REVOKE_SOURCE"],
+      logout: ["REPLAY_AFTER_LOGOUT"],
+      "after-restart": ["REPLAY_AFTER_RESTART"],
+    };
+    for (const phase of Object.keys(affected)) {
+      const f = fixture(configuration(), ({ route, headers, result }) => {
+        const context = route.includes("/api/ui/context");
+        const forcedRefusal = context && (phase === "actors" && headers.Cookie === f.cookies.denied ||
+          phase === "after-revoke" && headers.Cookie === f.cookies.requester);
+        if (![401, 403].includes(result.status) && !forcedRefusal) return result;
+        return { ...result, status: forcedRefusal ? 403 : result.status,
+          headers: { ...result.headers, "content-type": media }, body };
+      });
+      f.state.revoked = phase === "after-revoke";
+      f.state.loggedOut = phase === "after-restart";
+      const result = await runPhase(f.config, phase,
+        { confirmLogout: true, observeRestart: true }, f.io);
+      assert.equal(result.receipt.status, "FAIL", phase + " " + name);
+      for (const id of affected[phase])
+        assert.equal(result.receipt.cases.find((entry) => entry.id === id)?.status, "FAIL", phase + " " + id);
+      for (const field of ["liveQualified", "installedTeamsProof", "g08Closed", "finalCandidate"])
+        assert.equal(result.receipt[field], false);
+    }
+  });
+
+test("restart rejects an unproven final denial after observing a real process change", async () => {
+  for (const [name, body, media] of invalidRefusalBodies) {
+    const f = fixture(configuration(), ({ route, result }) =>
+      f.state.restarted && route.includes("/api/ui/context")
+        ? { ...result, headers: { ...result.headers, "content-type": media }, body } : result);
+    f.state.loggedOut = true;
+    const result = await runPhase(f.config, "after-restart", { observeRestart: true }, f.io);
+    assert.equal(result.receipt.status, "FAIL", name);
+    assert.equal(result.receipt.cases[0].status, "FAIL");
+    assert.equal(f.state.restarted, true);
+    assert.equal(f.state.requests.length, 3);
+    assert.equal(f.state.requests[0].headers.Cookie, f.cookies.requester);
+    assert.equal(f.state.requests[2].headers.Cookie, f.cookies.requester);
+  }
+});
+
+test("missing selectors requires the original JSON media type on its 400 response", async () => {
+  for (const media of [undefined, "text/html", "text/plain"]) {
+    const f = fixture(configuration(), ({ route, result }) => {
+      if (route !== f.config.mount + "/api/ui/context") return result;
+      const headers = { ...result.headers };
+      if (media === undefined) delete headers["content-type"];
+      else headers["content-type"] = media;
+      return { ...result, headers, body: "<h1>Bad request</h1>" };
+    });
+    const result = await runPhase(f.config, "preflight", {}, f.io);
+    assert.equal(result.receipt.status, "FAIL");
+    assert.equal(result.receipt.cases.find((entry) => entry.id === "MISSING_SELECTORS")?.status, "FAIL");
+    assert.equal(result.receipt.cases.find((entry) => entry.id === "GUEST")?.status, "PASS");
   }
 });

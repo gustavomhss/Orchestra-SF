@@ -231,7 +231,7 @@ function noBusiness(response, config, role, state) {
     Array.isArray(value.availability) && value.availability.length === 0;
 }
 function refusal(response, config) {
-  return accepted(response, [401, 403], config) && [undefined, "unauthenticated", "denied"].includes(json(response)?.status);
+  return accepted(response, [401, 403], config) && ["unauthenticated", "denied"].includes(json(response)?.status);
 }
 
 async function nativeProcess(config) {
@@ -297,7 +297,9 @@ async function runPhase(configInput, phase, options = {}, overrides) {
   if (phase === "preflight") {
     await check("GUEST", "401|403", async () => { const r = await send("GET", contextRoute(config)); return { status: r.status, ok: refusal(r, config) }; });
     await check("MISSING_SELECTORS", "400 without legacy fallback", async () => {
-      const r = await send("GET", config.mount + "/api/ui/context"); return { status: r.status, ok: accepted(r, [400], config) }; });
+      const r = await send("GET", config.mount + "/api/ui/context");
+      return { status: r.status, ok: accepted(r, [400], config) &&
+        /^application\/json(?:\s*;|$)/i.test(String(r.headers["content-type"] ?? "")) }; });
     await check("DUPLICATE_SELECTOR", "400", async () => {
       const r = await send("GET", contextRoute(config) + "&tenantId=" + config.tenantId); return { status: r.status, ok: accepted(r, [400], config) }; });
     for (const key of ["installationId", "tenantId", "hostId"])
