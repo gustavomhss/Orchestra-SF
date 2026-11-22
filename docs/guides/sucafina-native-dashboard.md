@@ -82,6 +82,12 @@ A lista reúne fornecedor, identificação e informações principais de cada co
 
 Um campo opcional em branco permanece sem valor. A moeda e o valor exibidos dependem da informação que a fonte fornece.
 
+## Importações e exportações
+
+Os rótulos de origem e de seleção do pedido acompanham o idioma da interface. A seleção continua usando a referência original da solicitação; mudar o idioma não escolhe outro pedido nem autoriza uma exportação.
+
+Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. Para baixar um arquivo novamente, solicite nova autorização.
+
 ## Planner
 
 ### Visão geral
