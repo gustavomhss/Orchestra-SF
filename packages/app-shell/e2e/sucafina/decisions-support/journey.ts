@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
-import { startPlannerInstallation } from "../wp03/installation-fixture"
+import { decisionsInstallationOrigin, startPlannerInstallation } from "../wp03/installation-fixture"
 import { Schema } from "effect"
 import { SfProjectionCase } from "@orchestra/schema/sucafina/decisions"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
@@ -80,7 +80,7 @@ function receiptDiagnostic(value: string) {
 }
 
 export async function enterWorkbench(page: Page, origin: string) {
-  expect(new URL(origin).port, "Native Decisions must use the production shell").toBe("3000")
+  expect(origin, "Native Decisions must use the shell served by its installation CLI").toBe(decisionsInstallationOrigin)
   const response = await page.goto(new URL("/orchestra/sf-decisions", origin).href)
   expect(response?.status()).toBe(200)
   await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === "/orchestra/sf-decisions")

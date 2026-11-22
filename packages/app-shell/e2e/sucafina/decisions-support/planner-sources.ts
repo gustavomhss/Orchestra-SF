@@ -6,13 +6,13 @@ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "De
 /** Build the financial source records through the installed Planner controls. */
 export async function createPlannerSources(page: Page, origin: string, actorId: string, observations: Record<string, unknown>[]) {
   const planner = (name: string, version?: string) => {
-    const path = name === "OPEX" ? "/orchestra/sf-planner/opex" : "/orchestra/sf-planner/versions"
-    if (!version) return path
-    return `${path}?${new URLSearchParams({ version })}`
+    const url = new URL(name === "OPEX" ? "/orchestra/sf-planner/opex" : "/orchestra/sf-planner/versions", origin)
+    if (version) url.searchParams.set("version", version)
+    return url.href
   }
   const versionRow = (id: string) => page.locator(`tr[data-sf-row="${id}"]`)
   const detail = page.locator("[data-sf-record-detail]")
-  const installed = await page.goto("/orchestra/sf-planner/versions/new")
+  const installed = await page.goto(new URL("/orchestra/sf-planner/versions/new", origin).href)
   expect(installed?.status(), "Original Planner Versions route must be installed").toBe(200)
   await expect(page.getByRole("heading", { name: "Versions", exact: true })).toBeVisible()
   await confirmVersion(page, page.locator('[data-sf-surface="CAP23"]').getByRole("button", { name: "Create first version", exact: true }), "save", observations)
@@ -62,7 +62,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(created.getByRole("cell", { name: "USD", exact: true })).toHaveCount(1)
   await expect(created.locator('[data-sf-field="annual"]')).toHaveText("1200")
 
-  expect((await page.goto("/orchestra/sf-planner/versions?year=2027"))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
+  expect((await page.goto(new URL("/orchestra/sf-planner/versions?year=2027", origin).href))?.status(), "Original Planner Versions route must remain admitted").toBe(200)
   await versionRow(baseline).getByRole("button", { name: "Open record", exact: true }).click()
   await expect(detail).toHaveCount(1)
   await confirmVersion(page, detail.getByRole("button", { name: "copy", exact: true }), "copy", observations)
@@ -114,7 +114,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
 
 /** A real source revision, independent of the saved ChoiceRecord. */
 export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
-  await page.goto(`/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`)
+  await page.goto(new URL(`/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`, origin).href)
   const row = lineRow(page)
   await expect(row).toHaveCount(1)
   await expect(row.locator('[data-sf-field="annual"]')).toHaveText("2400")

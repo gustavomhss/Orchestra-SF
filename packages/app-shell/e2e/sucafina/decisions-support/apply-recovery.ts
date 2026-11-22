@@ -183,7 +183,7 @@ async function openCase(page: Page, origin: string, reference: string, objective
 async function openRequest(page: Page, origin: string, id: string) {
   expect(id).toMatch(/^PR-\d{4}-\d+$/)
   const encoded = encodeSfRouteRef(id)
-  await page.goto(`/orchestra/sf-procurement/requests/${encoded}`)
+  await page.goto(new URL(`/orchestra/sf-procurement/requests/${encoded}`, origin).href)
   await expect(page).toHaveURL((url) => url.origin === origin && url.pathname === `/orchestra/sf-procurement/requests/${encoded}`)
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   await expect(detail).toHaveCount(1)
