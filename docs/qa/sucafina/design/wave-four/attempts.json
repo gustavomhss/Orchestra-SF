@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedThrough": "2026-11-22T00:10:00Z",
+  "updatedThrough": "2026-11-22 00:11:42 UTC",
   "note": "Historical attempts include failures and incomplete journeys. Only a final passing run qualifies its stated coverage.",
   "attempts": [
     {
@@ -711,9 +711,14 @@
           "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
         }
       },
-      "status": "running",
-      "cause": "Four independent original-source journeys after Settings reactive-loop correction; localized assertions require actual rows/form and no browser errors.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964182202"
+      "status": "failed",
+      "cause": "Suppliers, Settings and Portuguese source rows/form passed with empty browser error arrays. Requests/sourcing stopped at the exact nested-label Selected quotation test selector; fixed with its unique original native combobox without changing selected ID/review/readback assertions.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964182202",
+      "passedTests": 3,
+      "failedTests": 1,
+      "confirmedWrites": 6,
+      "sourceReadbacks": 6,
+      "completeCaptures": 31
     },
     {
       "group": "technical",
@@ -815,7 +820,90 @@
         }
       },
       "status": "running",
-      "cause": "Second original destination authorization now awaited explicitly; safe temporary boolean diagnostics isolate pre-dispatch saved-view rejection."
+      "cause": "Second original destination authorization now awaited explicitly; safe temporary boolean diagnostics isolate pre-dispatch saved-view rejection.",
+      "run": 44964988862,
+      "job": 137031865834,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964988862"
+    },
+    {
+      "group": "procurement",
+      "attempt": 10,
+      "run": 44965165654,
+      "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+      "snapshot": "7f3de0206fc25b2925d7c55947d9b5785bdfe7ba",
+      "branch": "ci-run-sf20procurement10",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-procurement.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "status": "running",
+      "cause": "Four original journeys against composed dev3ce1acd0 after selected-quotation selector fix.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965165654"
+    },
+    {
+      "group": "technical",
+      "attempt": 12,
+      "run": 44965223657,
+      "job": 137032605736,
+      "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+      "snapshot": "dacaec3b11b0dce7244268f7de1ade2a6df0aece",
+      "branch": "ci-run-sf20gates12",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-design-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "checks": 13,
+      "status": "running",
+      "cause": "Thirteen checks include fullCLI typecheck, app/E2E declarations/semantics, exact updated-dev guard base and84 regression tests.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965223657"
+    },
+    {
+      "group": "composition-planner-and-six",
+      "attempt": 1,
+      "run": 44965221018,
+      "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+      "snapshot": "fcd8c3099ecc04ae7fd47c3d323e889b4b1af0a8",
+      "branch": "ci-run-sf20composition1",
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-four-planner.spec.ts",
+          "e2e/sucafina/design-wave-one.spec.ts",
+          "e2e/sucafina/design-wave-two.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+      "status": "running",
+      "cause": "Four original browser journeys qualify Planner and six prior areas against actual updated-dev host/business sources.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44965221018"
     }
   ]
 }

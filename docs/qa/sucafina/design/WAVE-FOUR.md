@@ -10,7 +10,8 @@ The next twenty previously unredesigned inventory areas are CAP20–CAP28, UI30�
 
 | Owner | Branch | Areas |
 | --- | --- | --- |
-| Planner and work | `sf-twenty-planner` | CAP20–CAP23, UI30–UI32 (7 areas) |
+| Planner | `sf-twenty-planner` | CAP20–CAP23 (4 areas) |
+| Work, Search and Saved Views | `sf-twenty-work-finish` | UI30–UI32 (3 areas) |
 | Procurement | `sf-twenty-procurement` | CAP24–CAP28 (5 areas) |
 | Decisions | `sf-twenty-decisions` | UI34–UI41 (8 areas) |
 
@@ -50,3 +51,11 @@ All repository operations use GitHub MCP. No shell, local builds/tests or owner-
 Exercise all twenty areas and meaningful lists, details, editors, reviews and special states. Capture actual dark/light, Portuguese and narrow application output, inspect screenshots and fix observed faults. Distinguish CSS reflow from actual browser zoom and state explicitly what was not exercised. Verify application/E2E types, guards, palette parity and preserved English copy. Runtime/source defects must be repaired at their actual boundary without hiding failures.
 
 Current implementation, runtime, visual review and acceptance are **not yet complete**. The final report will cite exact source commits, Actions runs, state/capture maps and unresolved limits.
+
+## Composition with the later dev updates
+
+While the native journeys were running, dev advanced from `d9ab14b6d9cab74843b0689d5d67d1c70d45cc02` to `3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1`: ten commits across46 paths. The candidate incorporates all ten commits at `331cafc50bee2112f6366ff428658de938c6f58e`. Only `apps/cli/src/sucafina-product/host-context.ts` overlapped this wave: its exact upstream FSUtil dependency and outer service acquisition were retained together with the native reading-health observers. The other45 upstream files were carried unchanged.
+
+The upstream changes include recorded permission denials, CLI type corrections, Apply receipt resume, the Finance pair observation and Gateway pack work. Those source changes belong to dev; the redesign does not rewrite or claim authorship of them. The original API schemas, source fences and grants remain authoritative. [Composition record](wave-four/DEV-COMPOSITION.md).
+
+Validation of this composed candidate is in progress through the original test-ci workflow: full application/E2E/CLI types and native source regressions, Planner plus the prior six native areas, and the remaining group journeys. Earlier passing captures retain their original source SHA; they are not silently relabeled as captures of the new composition.

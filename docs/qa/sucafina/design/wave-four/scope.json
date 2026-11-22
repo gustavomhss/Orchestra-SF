@@ -5,7 +5,7 @@
   "branch": "sf-design-twenty",
   "base": {
     "ref": "dev",
-    "sha": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02"
+    "sha": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1"
   },
   "previousWave": {
     "branch": "sf-design-fifteen",
@@ -838,5 +838,24 @@
     "completeCaptures": 67,
     "persistedRepresentativeCaptures": 6,
     "gallery": "evidence/regression/README.md"
+  },
+  "initialBase": {
+    "ref": "dev",
+    "sha": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02"
+  },
+  "integration": {
+    "base": "d9ab14b6d9cab74843b0689d5d67d1c70d45cc02",
+    "dev": "3ce1acd0a60d9b3685f55ae58f4d99c7d13cd5d1",
+    "head": "331cafc50bee2112f6366ff428658de938c6f58e",
+    "upstreamCommits": 10,
+    "upstreamFiles": 46,
+    "overlapPaths": [
+      "apps/cli/src/sucafina-product/host-context.ts"
+    ],
+    "resolution": "Exact upstream FSUtil dependency and outer service acquisition retained together with all native reading-health integration.",
+    "status": "IN_PROGRESS",
+    "technicalRun": 44965223657,
+    "plannerAndPreviousSixRun": 44965221018,
+    "procurementRun": 44965165654
   }
 }
