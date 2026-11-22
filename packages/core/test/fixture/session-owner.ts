@@ -1,5 +1,5 @@
 import path from "node:path"
-import { mkdir } from "node:fs/promises"
+import { chmod, mkdir } from "node:fs/promises"
 import { Effect, Layer, Schema, Scope } from "effect"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { SessionAccess } from "@orchestra/schema/session-access"
@@ -54,6 +54,7 @@ type Services = Database.Service | EventV2.Service | SessionV2.Service | Session
  */
 export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, unknown, LayerNode.Tag | undefined> = never>(input: {
   actions?: readonly SessionAccess.Action[]
+  storageLayout?: "component" | "installation"
   legacyID?: SessionV2.ID
   extraNodes?: readonly Extra[]
   inspection?: boolean
@@ -64,8 +65,10 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
   const temporary = await tmpdir()
   const directory = temporary.path
   const workspaceDirectory = path.join(directory, "workspace")
-  await mkdir(workspaceDirectory)
-  const filename = path.join(directory, "core-owned.sqlite")
+  await mkdir(workspaceDirectory, input.storageLayout === "installation" ? { mode: 0o700 } : undefined)
+  const filename = input.storageLayout === "installation"
+    ? path.join(directory, "host-data", "orchestra.db") : path.join(directory, "core-owned.sqlite")
+  if (input.storageLayout === "installation") await mkdir(path.dirname(filename), { mode: 0o700 })
   const hooks: { beforeProject?: () => Promise<void>; beforeConfiguration?: () => Promise<void> } = {}
   const calls = { projects: 0, resumes: 0, wakes: 0 }
   const projects = Layer.succeed(ProjectV2.Service, ProjectV2.Service.of({
@@ -107,6 +110,7 @@ export async function sessionOwnerFixture<Extra extends LayerNode.Node<unknown, 
     const sessions = yield* SessionV2.Service
     yield* sessions.create({ id: input.legacyID, location })
   }))
+  if (input.storageLayout === "installation") await chmod(filename, 0o600)
   const business = openAuthorityControl(filename)
   const controlDriver = AuthorityControlFile.open(filename + ".authority.sqlite", openAuthorityControl)
   const control = AuthorityControl.open(controlDriver)
