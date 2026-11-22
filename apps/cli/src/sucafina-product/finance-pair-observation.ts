@@ -82,7 +82,7 @@ export function createSfFinancePairObservation(input: {
             decision.version !== selection.ref.version || !decision.participants.includes(actor.principalRef) ||
             actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
             actor.policyVersion !== call.binding.policyVersion) return undefined
-          const refs = closedPair(decision, state, parsed.value.scenarioRefs, initialRules)
+          const refs = closedPlannerScenarios(decision, state, parsed.value.scenarioRefs, initialRules)
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
@@ -157,7 +157,7 @@ function sameReaders(current: readonly unknown[], pinned: readonly unknown[]) {
 }
 
 /** Admit only the historical Planner-only closure. Other domain routes keep their own readers. */
-function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, references: readonly string[], rules?: readonly CriterionRule[]) {
+export function closedPlannerScenarios(decision: DecisionCase, state: Readonly<SfProductState>, references: readonly string[], rules?: readonly CriterionRule[]) {
   const alternatives = [...decision.alternatives, ...decision.choices]
   if (decision.preparedChanges.length || decision.receipts.length || alternatives.some((item) => item.scenario.operations.some((operation) =>
     operation.replacementRef !== undefined || operation.targetRef.startsWith("sf-procurement:") ||
@@ -187,7 +187,8 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
         digestSfValue(item.result) === stored.resultDigest)
       : []
   })
-  return pair[0]?.length === 1 && pair[1]?.length === 1 && pair[0][0]!.id !== pair[1][0]!.id ? [...found.values()] : undefined
+  return pair.length > 0 && pair.every((alternatives) => alternatives.length === 1) &&
+    new Set(pair.map((alternatives) => alternatives[0]!.id)).size === pair.length ? [...found.values()] : undefined
 }
 
 function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {

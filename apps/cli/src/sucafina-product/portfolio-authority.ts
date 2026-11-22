@@ -43,6 +43,7 @@ export function createSfPortfolioAuthority(input: {
       return { status: "unavailable", reason: "criterion-metric-producer-unavailable" }
     const captured = structuredClone(request)
     const resolve = scenarios.resolve, resolveMany = scenarios.resolveMany
+    const reader = comparisons.criteriaScenarios(call) ?? scenarios
     const readersCurrent = () => business.plannerProduct === plannerProduct && plannerProduct.scenarios === scenarios &&
       scenarios.resolve === resolve && scenarios.resolveMany === resolveMany
     const changed = () => ({ status: "stale" as const, reason: "criterion-metric-changed" })
@@ -65,7 +66,7 @@ export function createSfPortfolioAuthority(input: {
       compareScenarios({ host, sources: business.plannerSources, scenarios: {
         resolve: async (reference, context) => {
           if (context !== call || !readersCurrent()) return changed()
-          const observation = structuredClone(await resolve.call(scenarios, reference, context))
+          const observation = structuredClone(await reader.resolve(reference, context))
           if (!readersCurrent()) return changed()
           observed.set(reference, observation)
           return observation
@@ -75,7 +76,7 @@ export function createSfPortfolioAuthority(input: {
           if (context !== call || !readersCurrent()) return selected.map(() => changed())
           // Forward the producer's fresh sibling observation, including its
           // cardinality fence. The comparator opens a new batch for each phase.
-          const values = await resolvePlannerScenarioBatch(scenarios, selected, context)
+          const values = await resolvePlannerScenarioBatch(reader, selected, context)
           if (!readersCurrent()) return selected.map(() => changed())
           for (const [index, value] of values.entries()) observed.set(selected[index]!, structuredClone(value))
           return values
@@ -109,17 +110,17 @@ export function createSfPortfolioAuthority(input: {
   const observation = createSfPortfolioComparisonObservation({ authority, business, rules })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
     observation.scenarios(request, call, () => compareScenarios({ host, sources: business.plannerSources,
-      // A selected criterion is outside the planner-only comparison cache. Its
-      // scope probe always declines and performs redundant full C08 reads;
-      // preserve the canonical scenario producer and all comparison checks.
-      scenarios: request.criteria.length ? scenarios : (comparisons.scenarios ?? scenarios),
+      // Criteria may share completed scenario data only inside the explicit
+      // outer Portfolio invocation. Its fences re-open the real rules, sources
+      // and coverage; direct comparisons retain their original readers.
+      scenarios: request.criteria.length ? (comparisons.criteriaScenarios(call) ?? scenarios) : (comparisons.scenarios ?? scenarios),
       criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
     } } }, request, call)) : business.planner.compareScenarios }
   const originalCompare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
   const compareCanonical: typeof originalCompare = (request, call) => observation.alternatives(request, call, () => originalCompare(request, call))
-  const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios })
+  const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios, rules })
   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
     authorizeSelection: (request, call) => intent.authorize(call, "decisions.select-portfolio", request),
@@ -144,5 +145,6 @@ export function createSfPortfolioAuthority(input: {
     verifyBinding: async (binding, result, call) => await fresh(result.sourceRefs, call) && await (input.proof()?.verifyPortfolio(binding, result, call) ?? Promise.resolve(false)),
     verifySnapshot: (snapshot, binding, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
-  return { rules, planner, compare, selection, sensitivityBindings, comparisonBindings, portfolioBindings, intent, authorizeCase, readMetric }
+  return { rules, planner, compare, selection, sensitivityBindings, comparisonBindings, portfolioBindings, intent, authorizeCase, readMetric,
+    observedScenarios: comparisons.scenarios, withComparisonObservation: comparisons.observeCriteria }
 }
