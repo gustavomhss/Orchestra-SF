@@ -3,7 +3,7 @@
   "status": "TECHNICAL_GATES_RECORDED_BROWSER_QUALIFICATION_IN_PROGRESS",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "sf-design-next",
-  "product": "def862d6a2ea65bf94720b4b6b0761873df63986",
+  "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "environment": {
     "runtime": "existing test-ci",
@@ -154,6 +154,23 @@
         "App types:6 errors in new structural-test typing; production leaf and fixture had no reported type error."
       ],
       "note": "The whole workflow failed. Test-only typing correction and final app types are required."
+    },
+    {
+      "name": "Composed app/CLI types, original guards and A04 contracts after test typing and metadata phases",
+      "status": "PASSED_WITH_RECORDED_WARNINGS",
+      "attempt": 17,
+      "run": 44998893684,
+      "job": 137135823012,
+      "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "snapshot": "1ce177cc37c2534502f67ca8d342f31f479a1543",
+      "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+      "rules": 78,
+      "files": 590,
+      "warnings": 36,
+      "errors": 0,
+      "approved": 0,
+      "touchesGuards": false,
+      "report": "technical-attempts/17-guard-report.json"
     }
   ],
   "focusedRegressions": [
@@ -314,17 +331,18 @@
         "UI55",
         "UI56"
       ],
-      "status": "DIAGNOSTIC_JOURNEY_PASSED_LATEST_CLEAN_REPEAT_FAILED",
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
       "runs": [
-        44992278999,
-        44992688529,
-        44993675945,
-        44994897281,
-        44996583965,
-        44997174038
+        44998959512
       ],
-      "limitation": "Diagnostic journeys passed; the latest clean run on506a failed the unchanged10s post-refresh heading. Original independent reference200/ok6605ms; readiness passed. Latest16-entry metadata equivalence passed separately inside a workflow whose import journey failed. No clean completion is claimed.",
-      "evidence": "collab/attempts/import-fixed-05.json"
+      "limitation": "One original admission and preview, fresh manifest/digest readbacks and unchanged10s refresh expectation passed. No import Apply. A Chromium ERR_ABORTED after original admission200/ok remains recorded; original preview/readbacks/rendered UI independently establish completion.390px reflow, no320px/zoom claim.",
+      "evidence": "collab/attempts/import-fixed-06.json",
+      "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+      "gallery": "collab/REVIEW-GALLERY.md",
+      "captures": 21,
+      "agentViewedCaptures": 21,
+      "rootViewedCaptures": 5
     },
     {
       "areas": [
@@ -350,9 +368,10 @@
         44991578651,
         44992841677,
         44992968102,
-        44996623210
+        44996623210,
+        44998750010
       ],
-      "limitation": "Latest clean run44996623210 emitted one original preview request and failed the unchanged60s expectation. Original preflight comparison/selection/readbacks completed, but UI43/UI44 were not reached. Bounded earlier diagnostics preserve the original failure and later authority refusal, not successful persistence.",
+      "limitation": "Latest clean preview60s failure remains. Diagnostic16 used43 original read roots with35 completed metrics/140 scalar resolves before the same original request returned403 decision-authority-changed at300s. UI43/UI44 remain unreached. A separate batch-forwarding candidate awaits focused CI and installed timing.",
       "evidence": "analytics/attempt-12/README.md"
     }
   ],
@@ -367,7 +386,7 @@
   "merged": false,
   "inventoryAcceptedAndMergedAreas": 41,
   "pendingDelta": {
-    "status": "PENDING_FINAL_APP_CLI_TYPES_GUARDS_AND_INSTALLED_QUALIFICATION",
+    "status": "TECHNICAL_GATES_PASSED_INSTALLED_QUALIFICATION_PENDING",
     "files": [
       {
         "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",

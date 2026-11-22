@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "FOCUSED_CONTRACTS_AND_CLI_E2E_TYPES_PASSED_APP_TEST_TYPING_CORRECTED_PENDING_RECHECK",
+  "status": "FOCUSED_CONTRACTS_AND_COMPOSED_TYPES_PASSED_INSTALLED_SENSITIVITY_PENDING",
   "integrationBase": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
   "candidates": [
     "4e32415ebf7b684ef26ca0012d48eb90acd095ee",
@@ -57,7 +57,7 @@
   ],
   "limitations": [
     "UI42/UI43/UI44 installed journey remains unqualified.",
-    "This delta still needs app/CLI/E2E types and focused source-contract gates."
+    "Focused structural and type checks do not substitute for original installed source issuance or persistence."
   ],
   "typeCorrection": {
     "candidate": "9b075c52070f6833f2e42607d54fa514787a056e",
@@ -79,6 +79,18 @@
     "failed": [
       "App typecheck on prior test typing"
     ],
-    "next": "Recheck app/CLI types and source contracts after this correction."
+    "next": "Installed original sensitivity issuance, evaluation, persisted readback and visual qualification remain pending.",
+    "followup": {
+      "run": 44998893684,
+      "job": 137135823012,
+      "snapshot": "1ce177cc37c2534502f67ca8d342f31f479a1543",
+      "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "passed": [
+        "App types",
+        "CLI types",
+        "Original guards",
+        "15 A04/readiness tests64assertions"
+      ]
+    }
   }
 }

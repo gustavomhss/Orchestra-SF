@@ -264,7 +264,17 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
       ],
-      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "qualification": {
+        "run": 44998959512,
+        "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+        "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+        "rootViewedCaptures": 2,
+        "rootReviewedCaptureNames": [
+          "UI55-dark-desktop-field-change",
+          "UI55-dark-390-selected-file-options"
+        ]
+      }
     },
     {
       "id": "UI56",
@@ -278,7 +288,18 @@
       "components": [
         "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
       ],
-      "status": "CLEAN_JOURNEY_REPEAT_PENDING"
+      "status": "QUALIFIED_PENDING_USER_VISUAL_REVIEW",
+      "qualification": {
+        "run": 44998959512,
+        "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+        "product": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+        "rootViewedCaptures": 3,
+        "rootReviewedCaptureNames": [
+          "UI56-dark-desktop-field-provenance",
+          "UI56-preview-light-390",
+          "UI56-pt-BR-dark-desktop"
+        ]
+      }
     }
   ],
   "constraints": {
@@ -293,18 +314,17 @@
   "verification": {
     "status": "PARTIALLY_VERIFIED",
     "technicalEvidence": "technical-verification.json",
-    "qualifiedAreas": 10,
+    "qualifiedAreas": 12,
     "blockFullyQualified": false,
     "userApproval": "PENDING",
     "merged": false,
     "inventoryAcceptedAndMergedAreas": 41,
-    "pendingFinalTestTypes": [
-      "App and CLI types after A04 test typing correction and draft/intent metadata phases"
-    ],
-    "latestTechnicalAttempt": 16,
+    "pendingFinalTestTypes": [],
+    "latestTechnicalAttempt": 17,
     "latestInstalledFailures": {
       "portfolio": 44996623210,
       "import": 44997174038
-    }
+    },
+    "latestInstalledImportRun": 44998959512
   }
 }

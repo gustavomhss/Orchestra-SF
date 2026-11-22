@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "STATIC_REVIEW_AND_FOCUSED_REGRESSIONS_PASSED_INSTALLED_EQUIVALENCE_PENDING",
+  "status": "FOCUSED_REGRESSIONS_INSTALLED_EQUIVALENCE_AND_CLEAN_IMPORT_PASSED",
   "integrationBase": "def862d6a2ea65bf94720b4b6b0761873df63986",
   "runtimeCandidate": "991eb369b9defce9684bf53464d47d56f8b2c1a9",
   "testCandidate": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
@@ -64,6 +64,49 @@
     "Counts describe the fully admitted path; rejected operations cannot borrow another candidate's grant.",
     "Unit hooks control external identity/namespace boundaries; no producer or receipt is simulated.",
     "No installed latency or completed import journey is claimed.",
-    "Installed equivalence is running ondef862 plus the exact three blobs."
-  ]
+    "The independent reference4374ms is not the complete Refresh latency or a performance percentile."
+  ],
+  "installedEquivalence": {
+    "run": 44998524198,
+    "job": 137134723291,
+    "cleanupJob": 137135765974,
+    "source": "b799889413c648f89ff78147499f7b9748affb43",
+    "snapshot": "6cf35ff7d2f4e850cb8c62c47941ef607872554d",
+    "matches": [
+      {
+        "group": "draft",
+        "original": 7,
+        "candidate": 7,
+        "match": true
+      },
+      {
+        "group": "intent",
+        "original": 7,
+        "candidate": 7,
+        "match": true
+      }
+    ],
+    "fields": [
+      "operationId",
+      "state",
+      "reason",
+      "operational"
+    ],
+    "journey": "DIAGNOSTIC_PASS_3_3_MINUTES",
+    "independentOriginalReferenceMs": 4854,
+    "rootReadLogs": true
+  },
+  "cleanJourney": {
+    "run": 44998959512,
+    "job": 137136016996,
+    "cleanupJob": 137137094301,
+    "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+    "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+    "scope": [
+      "UI55",
+      "UI56"
+    ],
+    "result": "PASSED_WITH_ORIGINAL_ASSERTION_BUDGETS",
+    "receipt": "collab/attempts/import-fixed-06.json"
+  }
 }

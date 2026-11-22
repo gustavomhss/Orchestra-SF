@@ -13,7 +13,7 @@ São **15 áreas e 22 padrões de rota existentes**. O inventário continua em *
 | Revisões e relatórios | UI47–UI50 | Jornadas, preservações e recusas originais verificadas. |
 | Relações, conversas e confirmações | UI51–UI53 | Jornada limpa passou com confirmação original, comprovante e releitura autenticada; tipos do ajuste de teste também verificados. |
 | Propostas de hot topics | UI54 | Rascunho original criado e relido; nenhuma preparação ou mudança de domínio produzida. |
-| Importação e prévia | UI55–UI56 | Jornada diagnóstica passou; a última repetição limpa ainda falhou no prazo de atualização da prévia. |
+| Importação e prévia | UI55–UI56 | Jornada limpa passou com scanner, prévia e releituras originais, cancelamento preservando o arquivo, atualização e português;21 capturas revisadas. |
 
 [Escopo por área e rota](wave-five/scope.json) · [Matriz técnica por snapshot](wave-five/technical-verification.json) · [Histórico de tentativas](wave-five/technical-attempts.json).
 
@@ -25,7 +25,7 @@ As correções de integração preservam os produtores, as admissões, as recusa
 
 ## Evidências já revisadas
 
-As jornadas de **10 das 15 áreas** têm evidência qualificada neste checkpoint. A [galeria de revisões](wave-five/reviews/REVIEW-GALLERY.md) contém a seleção das capturas reais de UI47–UI50 e UI54. A [galeria de BI](wave-five/reviews/BI-NATIVE-HANDOFF.md) separa os valores originais, as unidades e as versões em português. O [galeria de colaboração](wave-five/collab/REVIEW-GALLERY.md) reúne a jornada de UI51–UI53 e os caminhos das capturas originais. Capturas de tentativas incompletas permanecem identificadas como diagnóstico; não contam como conclusão das jornadas pendentes.
+As jornadas de **12 das 15 áreas** têm evidência qualificada neste checkpoint. A [galeria de revisões](wave-five/reviews/REVIEW-GALLERY.md) contém a seleção das capturas reais de UI47–UI50 e UI54. A [galeria de BI](wave-five/reviews/BI-NATIVE-HANDOFF.md) separa os valores originais, as unidades e as versões em português. A [galeria de colaboração e importação](wave-five/collab/REVIEW-GALLERY.md) reúne45 capturas limpas de UI51–UI53 e UI55–UI56, com10 revistas também pelo root. Capturas de tentativas incompletas permanecem identificadas como diagnóstico; não contam como conclusão das jornadas pendentes.
 
 Todas as execuções ocorreram no `test-ci` existente, em Linux, `prod` e `strict`, usando a aplicação nativa instalada e dados isolados emitidos pelos produtores originais. O [registro das fontes protegidas](wave-five/protected-source-audit.json) confirma que workflows, guards, schemas e configurações de proteção permanecem intactos.
 
