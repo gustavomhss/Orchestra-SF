@@ -1,7 +1,7 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-22T13:16:41Z",
+  "observedAtUtc": "2026-11-22T14:22:35Z",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "go-live-readiness",
   "base": {
@@ -61,13 +61,19 @@
     },
     "filesOperationsOwnerClaim": {
       "owner": "Astra go-live",
-      "scope": "G06 scanner proof and benign invalid-payload controls",
-      "pullRequest": 638
+      "scope": "G06 real scanner controls, malformed-payload controls and Microsoft Team upload proof; native importer integration remains a dependency",
+      "pullRequests": [
+        638,
+        660
+      ]
     },
     "installedRunnerOwnerClaim": {
       "owner": "Astra go-live",
-      "scope": "G08 private executor tooling; no QA reservation claimed",
-      "pullRequest": 644
+      "scope": "G08 current-contract subset executor and complete obligation ledger; no QA reservation claimed",
+      "pullRequests": [
+        644,
+        659
+      ]
     },
     "requests": [
       {
@@ -107,8 +113,48 @@
         "url": "https://github.com/gustavomhss/Orchestra-SF/pull/247#issuecomment-7079656702",
         "status": "PUBLISHED_AWAITING_ACK",
         "historicalThread": true
+      },
+      {
+        "target": "Navegação Teams atual: preservar writer #654 e confirmar contratos de login/admin",
+        "pr": 654,
+        "commentId": 7080073629,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/654#issuecomment-7080073629",
+        "status": "PUBLISHED_AWAITING_CONTRACT_HANDOFF"
+      },
+      {
+        "target": "Migração: contratos atuais de administração/grants/revogação e demais grupos instalados G08",
+        "pr": 628,
+        "commentId": 7080104444,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7080104444",
+        "status": "PUBLISHED_AWAITING_CONTRACT_HANDOFF"
+      },
+      {
+        "target": "G10: rota instalada para checkpoint lógico e observação de versão/fronteira",
+        "pr": 628,
+        "commentId": 7080174757,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7080174757",
+        "status": "PUBLISHED_AWAITING_OPERATION_CONTRACT"
+      },
+      {
+        "target": "Integração Teams #657: contratos G08, importador G06 e checkpoint lógico G10",
+        "pr": 657,
+        "commentId": 7080225251,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080225251",
+        "status": "PUBLISHED_AWAITING_INTEGRATED_CONTRACTS"
       }
-    ]
+    ],
+    "latestRead": {
+      "observedAtUtc": "2026-11-22T14:20:00Z",
+      "channels": [
+        628,
+        247,
+        657
+      ],
+      "apiAvailable": true,
+      "newOwnerAcknowledgementsFound": false,
+      "operationalReservationsFound": false,
+      "meaning": "No reply located in these channels; this is not evidence that owners or environments are unavailable."
+    }
   },
   "gates": [
     {
@@ -126,14 +172,15 @@
       "evidenceRefs": [
         "handoff",
         "teams-plan",
-        "g05-work-proof-2026-11-22"
+        "g05-work-proof-2026-11-22",
+        "g06-microsoft-followup-2026-11-22"
       ],
       "firstBlocker": "C/T final sem ACK conjunto da Migração e Release; executar replay completo nesse candidato integrado.",
       "remaining": [
         "Confirmar e executar coverage/auth/effect e isolamento Team sobre C/T final; reconciliar inventário se C mudar endpoints.",
         "Conservar recibos completos, hashes, veredito Omni real, cleanup e aprovação para o candidato efetivo."
       ],
-      "closure": "Três recibos aprovados ligados ao mesmo candidato final e inventário completo; HTTP real observado.",
+      "closure": "Recibos de coverage, auth, effect e isolamento Microsoft/Team aprovados no mesmo C/T final, com inventário completo, HTTP real e limpeza observados.",
       "workProof": {
         "sourceSha": "db896193346305fb1fee2d0d389cfc0b73077a01",
         "sourceTree": "027c26022afe0ef74ae61f40c21e8e5b0b3995c6",
@@ -261,7 +308,37 @@
             "requestsAndLoopbackPeers": 16
           }
         ]
-      }
+      },
+      "followUpProofs": [
+        {
+          "sourceSha": "c7d90669f3b2b7fd3c6a35c9ec2fc5322d9f8898",
+          "sourceTree": "ef239daab90453d69d678ddabc5e2de921d8be74",
+          "pullRequest": 660,
+          "mergeCommit": "ca490e9802248ad2f7bf71f9b4daef5790415bbf",
+          "runId": 45031531759,
+          "runAttempt": 1,
+          "jobId": 137235976665,
+          "status": "TEAM_COMPONENT_PASS_INTEGRATED",
+          "scope": "Shared fixture extraction and original G05 Team case only; coverage/auth/effect were not replayed in this run.",
+          "artifact": {
+            "id": 14757916479,
+            "zipBytes": 35388,
+            "zipSha256": "8fe6d13a8cbe00af4e5a22ff9cac35840576be3787559f2f5d53405607b8e56f",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 17
+          },
+          "receipt": {
+            "schema": "orchestra.g05.team-http/1",
+            "sha256": "49b8955bcba842e8fd353df6828357a8d786f91fb5ca75b4ba15a35b700cf1b3",
+            "expected": 11,
+            "pass": 11,
+            "pending": 0
+          },
+          "installedTeamsProof": false,
+          "finalCandidateApproval": false
+        }
+      ]
     },
     {
       "gate": "G06",
@@ -277,13 +354,15 @@
       "document": "g05-g06-controls.md",
       "evidenceRefs": [
         "clamav-component-reference",
-        "g06-work-proof-2026-11-22"
+        "g06-work-proof-2026-11-22",
+        "g06-microsoft-followup-2026-11-22"
       ],
-      "firstBlocker": "C/T final e composição pertinente ainda sem confirmação; reexecutar nesse candidato.",
-      "coverageGap": "RESOLVED_ON_WORK_CANDIDATE_NOT_FINAL_APPROVAL",
+      "firstBlocker": "Integrar o importador privado na composição Microsoft e fixar C/T final; a prova Microsoft atual cobre uploads privados de fornecedor.",
+      "coverageGap": "A prova legada monta Operations/local-operator. Na composição Microsoft/Team observada em 37931c77, upload privado usa ClamAV, mas import-targets/import-admit/import-preview não estão montados por Application.product. O suplemento Teams integrado, qualificado como componente, não substitui o controle de arquivo malformado após a admissão privada do importador.",
       "remaining": [
-        "Executar os 8 casos e verificador sobre C/T final, preservando seleção, daemon real, integridade e cleanup.",
-        "Manter o alcance de componente local explícito; qualificar a composição pertinente sem promover local-operator a Microsoft instalado."
+        "Confirmar o contrato e integrar import-admit/import-preview na composição Microsoft; preservar controles de arquivo malformado na composição original enquanto isso.",
+        "Executar a seleção expandida completa e as obrigações pertinentes sobre C/T final, com scanner real, origem de identidade explícita, integridade, negativas e cleanup.",
+        "Manter o limite entre fixture local, factory Microsoft com provedor controlado e instalação real; nenhuma prova atual aprova o gate final."
       ],
       "closure": "Scanner real, arquivo malformado e admissão privada qualificados no candidato final; negativos sem efeitos duráveis.",
       "workProof": {
@@ -334,7 +413,104 @@
           "fixtureCleanup": "verified"
         },
         "requestSha256": "5d8d0ef32b33cc90cb86cd02484927e53585cda803cacddaf57d6bc96204d610"
-      }
+      },
+      "followUpProofs": [
+        {
+          "sourceSha": "c7d90669f3b2b7fd3c6a35c9ec2fc5322d9f8898",
+          "sourceTree": "ef239daab90453d69d678ddabc5e2de921d8be74",
+          "pullRequest": 660,
+          "mergeCommit": "ca490e9802248ad2f7bf71f9b4daef5790415bbf",
+          "mergeTree": "6c0d2606c879a98789e95f01ba5e8b301cc06beb",
+          "snapshotSha": "683a1c3a50d869bf7a4d10dcb0fe1f6665f4cf69",
+          "snapshotTree": "b5ae74f889138f297acefbcf6625abb27c0d8a1c",
+          "snapshotChanges": [
+            ".ci-run.json"
+          ],
+          "requestSha256": "34c69603a855eb6b85952c53621140803262a70e86a71809257e35da754796de",
+          "runId": 45031531759,
+          "runAttempt": 1,
+          "jobId": 137235976665,
+          "status": "COMPONENT_PASS_INTEGRATED",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45031531759",
+          "selection": "controls-with-teams",
+          "counts": {
+            "nodeControls": 107,
+            "bunCases": 12,
+            "legacyCases": 8,
+            "microsoftTeamCases": 3,
+            "g05BunCases": 1,
+            "g05InternalControls": 11,
+            "files": 5,
+            "assertions": 1085,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "declaredOmniTests": 4,
+            "omniSpawns": 5,
+            "omniDelegations": 0,
+            "guardRules": 78,
+            "guardGateFindings": 0,
+            "guardErrors": 0,
+            "guardWarnings": 1,
+            "guardChangedPathsObserved": 8
+          },
+          "guardWarning": {
+            "rule": "test-assertions-removed",
+            "reason": "G05 fixture extraction; 27 expect sites remain in the consumer and 8 move to the shared helper, preserving all 35 and the 11 control IDs.",
+            "waiver": false
+          },
+          "artifact": {
+            "id": 14757916479,
+            "zipBytes": 35388,
+            "zipSha256": "8fe6d13a8cbe00af4e5a22ff9cac35840576be3787559f2f5d53405607b8e56f",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 17
+          },
+          "receipt": {
+            "schema": "teams-profile-scanner-receipt-v1",
+            "sha256": "f00b036903238e6c258a224b630097eb429b8997a77cfadc6bf0959d8cdc9526",
+            "proofClass": "COMPONENT_REAL_CLAMD",
+            "installedTeamsProof": false,
+            "finalCandidate": false,
+            "g06Closed": false
+          },
+          "microsoftReceipt": {
+            "schema": "teams-profile-scanner-microsoft-receipt-v1",
+            "sha256": "a45ffcf354616bb6d365ccf680ccad9efdc14708b340d16184544922d26988fe",
+            "composition": "MICROSOFT_TEAM_FACTORY",
+            "identityProvider": "CONTROLLED_ENTRA_GRAPH",
+            "controls": [
+              "private-upload",
+              "denied-owner",
+              "scanner-outage"
+            ],
+            "requests": [
+              26,
+              21,
+              10
+            ],
+            "loopbackAndOriginalIngressObserved": true,
+            "physicalFixtureCleanupVerified": true,
+            "teamsPrivateImportProof": false
+          },
+          "g05Receipt": {
+            "schema": "orchestra.g05.team-http/1",
+            "sha256": "49b8955bcba842e8fd353df6828357a8d786f91fb5ca75b4ba15a35b700cf1b3",
+            "expected": 11,
+            "pass": 11,
+            "pending": 0
+          },
+          "junitSha256": "96016cedc5f78bcb9ca4d7a860d9d946b1e1fa16da87dde65d369926e75a50fe",
+          "sourcePaths": 6,
+          "postMergeSourceUnchanged": true,
+          "rootReview": {
+            "id": 6012701690,
+            "action": "COMMENT"
+          },
+          "finalCandidateApproval": false
+        }
+      ]
     },
     {
       "gate": "G07",
@@ -354,6 +530,7 @@
       ],
       "firstBlocker": "Faltam ACKs de C/T pela Migração e Release anteriores ao produtor, executor Release e toolchain fixados.",
       "remaining": [
+        "Reconciliar com a Release o disparo do produtor existente em C: g09-final.yml permanece restrito à branch histórica g09-final-review.",
         "Obter confirmação real do mesmo C/T e executar o produtor Microsoft da Release depois dos ACKs.",
         "Admitir a requisição versionada com fontes reais de ACKs/run/artefato; verificar ZIP original e tar pelo instalador de C.",
         "Vincular manifesto/roster/factory e instalação real dos mesmos bytes a G08/G10."
@@ -404,14 +581,16 @@
         "purchases-qa-222",
         "purchases-technical",
         "qa-historical-support",
-        "g08-work-proof-2026-11-22"
+        "g08-work-proof-2026-11-22",
+        "g08-current-followup-2026-11-22"
       ],
-      "firstBlocker": "Reconciliar contratos originais UI/admin no candidato integrado e obter reserva/atores reais; pin e tar finais ausentes.",
+      "firstBlocker": "Integrar os contratos atuais de produto, completar as obrigações pendentes e obter C/T, tar e reserva/atores reais.",
       "remaining": [
-        "Reconciliar seletores chat/draft/picker/admin e contrato /api/ui/team-profiles com a integração Teams.",
+        "Integrar navegação/admin e autoridade propostas em #654/#655/#657; confirmar montagem real no candidato instalado.",
+        "Compor grants distintos, UI administrativa, chat/rascunho e descarte; o executor atual conserva essas obrigações como parciais ou ausentes.",
         "Confirmar reserva QA, operador e quatro contextos Microsoft originais com Teams/grants/mutações autorizados.",
-        "Instalar exatamente o tar G07 e executar nove casos centrais com prova antes/depois de host/processo/HTTPS e limpeza.",
-        "Reconciliar/executar U15/U39/U40/F04/AZ02 e demais obrigações da matriz, com seleções e recibos próprios.",
+        "Instalar exatamente o tar G07 e executar os sete controles atuais, completando as nove obrigações originais; preservar host/processo/HTTPS antes/depois e limpeza.",
+        "Reconciliar/executar U15/U39/U40/F04/AZ02 e demais obrigações da matriz com seleções e recibos próprios.",
         "Vincular o aceite 222 (2) somente ao QA original; obter backlink sem estendê-lo ao tar novo."
       ],
       "closure": "Homologação real comprovada no tar G07 instalado; evidência sanitizada e cleanup concluído.",
@@ -459,7 +638,187 @@
           "F04",
           "AZ02"
         ]
-      }
+      },
+      "followUpProofs": [
+        {
+          "sourceSha": "0c40f0c26c4a9a56c3825d9bb4538fffb104ade4",
+          "sourceTree": "449b0d99afaf8d84aa4066fb255a88f040260e49",
+          "pullRequest": 659,
+          "mergeCommit": "a71033f21b2c0f7da508c96f302506a9e73fd145",
+          "mergeTree": "d86fa6c35359fd1437504435a48b0a4363ac8122",
+          "runId": 45031917038,
+          "runAttempt": 1,
+          "jobId": 137237154678,
+          "status": "EXECUTOR_PASS_INTEGRATED_INSTALLED_NOT_RUN",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45031917038",
+          "counts": {
+            "nodeControls": 111,
+            "pythonControls": 28,
+            "domCases": 4,
+            "domAssertions": 127,
+            "listedCases": 7,
+            "installedCasesRun": 0,
+            "guardRules": 78,
+            "guardChangedPaths": 10,
+            "guardGateFindings": 0,
+            "guardErrors": 0,
+            "guardWarnings": 3
+          },
+          "omni": "not applicable; no spawn/delegation",
+          "guardWarnings": {
+            "rules": [
+              "test-assertions-removed",
+              "test-declaration-removed",
+              "test-globalthis"
+            ],
+            "reconciliation": "Original obligations preserved in the mandatory ledger; controlled network only in actual-component DOM test. No waiver or ignored generated file.",
+            "waiver": false
+          },
+          "installedJob": {
+            "id": 137237155856,
+            "status": "skipped"
+          },
+          "artifact": {
+            "id": 14758301449,
+            "zipBytes": 6819,
+            "zipSha256": "bbe77eaa6dabaab5df3460815116d8a6e577298543764794f1a38793bd9827da",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true
+          },
+          "receipt": {
+            "schema": "sf-g08-executor-inventory-v2",
+            "sha256": "a6a11a5e79358a283eaae08f0ad1f1cadf7e03f817cadf475d0eb7452db4f657",
+            "status": "CURRENT_CONTRACT_INVENTORY_VERIFIED",
+            "proofScope": "current-teams-subset",
+            "caseStatus": "LISTED_NOT_RUN",
+            "sourceDigestCount": 10,
+            "installed": false,
+            "g08Closed": false,
+            "productionCutover": false
+          },
+          "domJunitSha256": "2632dedd46bc5ff296925e684537a806fd281453a29001e3b20ccd43f5e825f8",
+          "coverage": {
+            "schema": "sf-g08-coverage-v1",
+            "originalTeams": [
+              {
+                "id": "same-team-distinct-grants",
+                "status": "NOT_RUN",
+                "blocker": "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED",
+                "implementedCases": [
+                  "same-team-principal-binding"
+                ]
+              },
+              {
+                "id": "aba-two-windows",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "aba-two-windows"
+                ]
+              },
+              {
+                "id": "account-without-team",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "account-without-team"
+                ]
+              },
+              {
+                "id": "foreign-deep-link-reload",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "foreign-deep-link-reload"
+                ]
+              },
+              {
+                "id": "admin-without-team",
+                "status": "NOT_RUN",
+                "blocker": "BLOCKED_BY_PRODUCT_ADMINISTRATION_UI_NOT_COMPOSED",
+                "implementedCases": [
+                  "admin-api-without-team"
+                ]
+              },
+              {
+                "id": "narrow-keyboard-draft",
+                "status": "NOT_RUN",
+                "blocker": "BLOCKED_BY_PRODUCT_TEAM_CHAT_NOT_COMPOSED",
+                "implementedCases": []
+              },
+              {
+                "id": "draft-cancel-discard",
+                "status": "NOT_RUN",
+                "blocker": "BLOCKED_BY_PRODUCT_DRAFT_DISCARD_NOT_COMPOSED",
+                "implementedCases": []
+              },
+              {
+                "id": "real-revoke-restore",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "real-revoke-restore"
+                ]
+              },
+              {
+                "id": "logout-original-context",
+                "status": "NOT_RUN",
+                "blocker": null,
+                "implementedCases": [
+                  "logout-original-context"
+                ]
+              }
+            ],
+            "groups": [
+              {
+                "id": "U15",
+                "status": "NOT_RUN",
+                "expectedCount": 6,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "U39",
+                "status": "NOT_RUN",
+                "expectedCount": 22,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "U40",
+                "status": "NOT_RUN",
+                "expectedCount": 22,
+                "blocker": "BLOCKED_BY_PRODUCT_INSTALLED_CHAPTER_AND_CASE_PRODUCER"
+              },
+              {
+                "id": "F04",
+                "status": "NOT_RUN",
+                "expectedCount": 3,
+                "blocker": "BLOCKED_BY_PRODUCT_MODERN_INSTALLED_TRANSPORT_COMPOSITION"
+              },
+              {
+                "id": "AZ02",
+                "status": "NOT_RUN",
+                "expectedCount": 32,
+                "blocker": "BLOCKED_BY_PRODUCT_MODERN_PHASE_PRODUCER_AND_RESERVED_HOST"
+              }
+            ],
+            "complete": false
+          },
+          "originalObligationImplementation": {
+            "complete": 5,
+            "partial": 2,
+            "missing": 2,
+            "allInstalledStatuses": "NOT_RUN"
+          },
+          "postMergeSourceUnchanged": true,
+          "sourcePaths": 10,
+          "rootReview": {
+            "id": 6012703892,
+            "action": "COMMENT"
+          },
+          "resolvedReviewFinding": "P2 empty coverage inventory; ten negative controls now require exact nonempty identities and counts.",
+          "finalCandidateApproval": false
+        }
+      ]
     },
     {
       "gate": "G10",
@@ -476,15 +835,17 @@
       "evidenceRefs": [
         "recovery-component-reference",
         "current-installer",
-        "g10-work-proof-2026-11-22"
+        "g10-work-proof-2026-11-22",
+        "g10-clone-followup-2026-11-22"
       ],
-      "firstBlocker": "Reserva isolada, operadores/observador/chave e C/T/tar finais ainda não recebidos para o ensaio operacional.",
+      "firstBlocker": "Confirmar operação instalada de checkpoint lógico, além de C/T/tar finais e reservas de origem/clone com operadores, chave e observador.",
       "remaining": [
         "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
         "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
         "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
         "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
-        "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team."
+        "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team.",
+        "Confirmar a operação de captura do checkpoint lógico e leitura da versão/fronteira no tar Microsoft; API TS interna e tar físico não substituem essa rota."
       ],
       "closure": "Ensaio isolado comprovado no tar final: backup, corte, retomada e rollback, incluindo efeitos e recibos posteriores ao checkpoint.",
       "workProof": {
@@ -524,7 +885,52 @@
         "actualServiceRestart": "NOT_RUN",
         "compatibleCodeRollback": "NOT_RUN",
         "sourceTargetBinding": "observed installed R verified separately from G07 target C"
-      }
+      },
+      "followUpProofs": [
+        {
+          "sourceSha": "9714cd1819e2f0f5158210076268ac2bb0e5f9fb",
+          "sourceTree": "25139019a6152f771dfdcb977267f1c5d6b9146a",
+          "pullRequest": 658,
+          "mergeCommit": "1773fe7fcff1e291e7f15786f42262af3bb40d3c",
+          "runId": 45030815611,
+          "runAttempt": 1,
+          "jobId": 137233784079,
+          "workflowSha": "100be506a886bef64d210fedb0342e38fc5fc044",
+          "status": "COMPONENT_PASS_INTEGRATED",
+          "scope": "Clone receipt destination observation; operational v3 is prepared, not executed on Azure.",
+          "counts": {
+            "python": 17,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "guardRules": 78,
+            "guardFindings": 0
+          },
+          "artifact": {
+            "id": 14758030307,
+            "bytes": 2874,
+            "sha256": "f9a4b0078640013dcc7669766356cc0518bfeab07a6ab55db48960b904ea9513",
+            "independentlyDownloadedAndHashed": true
+          },
+          "receipt": {
+            "schema": "orchestra-sf.g10-component-tests.v1",
+            "sha256": "4b15cc7049220905f95969718dc31aa14ab0dc95c74de815c68a344ec9988062",
+            "proofClass": "FILESYSTEM_COMPONENT_CONTROLS",
+            "installedTeamsProof": false,
+            "releaseQualified": false
+          },
+          "operationalCloneSchema": "orchestra-sf.teams-clone-integrity.v3",
+          "rootReview": {
+            "id": 6012633266,
+            "action": "COMMENT"
+          },
+          "priorDriverFailures": [
+            45030521031,
+            45030692679
+          ],
+          "finalCandidateApproval": false
+        }
+      ]
     }
   ],
   "evidence": [
@@ -691,6 +1097,42 @@
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45024293423",
       "detailsGate": "G10",
       "finalCandidateApproval": false
+    },
+    {
+      "id": "g06-microsoft-followup-2026-11-22",
+      "kind": "COMPONENT_EXECUTION",
+      "pullRequest": 660,
+      "runId": 45031531759,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45031531759",
+      "sourceSha": "c7d90669f3b2b7fd3c6a35c9ec2fc5322d9f8898",
+      "sourceTree": "ef239daab90453d69d678ddabc5e2de921d8be74",
+      "detailsGate": "G06",
+      "scope": "Actual Microsoft Team private supplier uploads with real ClamAV, controlled identity provider and original G05 Team controls; no private-import or installed proof.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g08-current-followup-2026-11-22",
+      "kind": "EXECUTOR_TOOLING_EXECUTION",
+      "pullRequest": 659,
+      "runId": 45031917038,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45031917038",
+      "sourceSha": "0c40f0c26c4a9a56c3825d9bb4538fffb104ade4",
+      "sourceTree": "449b0d99afaf8d84aa4066fb255a88f040260e49",
+      "detailsGate": "G08",
+      "scope": "Native landing DOM controls and current seven-case inventory; all installed obligations NOT_RUN.",
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "g10-clone-followup-2026-11-22",
+      "kind": "FILESYSTEM_COMPONENT_EXECUTION",
+      "pullRequest": 658,
+      "runId": 45030815611,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45030815611",
+      "sourceSha": "9714cd1819e2f0f5158210076268ac2bb0e5f9fb",
+      "sourceTree": "25139019a6152f771dfdcb977267f1c5d6b9146a",
+      "detailsGate": "G10",
+      "scope": "Operational clone receipt destination binding prepared; no actual reserved Azure clone run.",
+      "finalCandidateApproval": false
     }
   ],
   "migrationObservations": [
@@ -732,9 +1174,15 @@
       "G06: payload benigno de formato inválido e XLSX truncado agora passam pelo scanner real antes da recusa da aplicação.",
       "G08: vínculo factory/PID/host/Caddy/HTTPS e respostas F02 das próprias ações observado pelo executor.",
       "G10: backup pré-corte verifica origem instalada R separadamente do destino G07 C.",
-      "G10 documentation: network fence and disabled clone credentials are reservation attestations requiring independent operational proof."
+      "G10 documentation: network fence and disabled clone credentials are reservation attestations requiring independent operational proof.",
+      "G10 #658: operational clone receipt v3 records the observed destination VM, exact admitted reservation digest and verification time; v2 remains component-only.",
+      "G08 #659: actual native selector and original administrative API with opaque CAS replace unsupported executable DOM assumptions; every original obligation remains mandatory.",
+      "G08 #659: closing coverage refuses empty, partial, duplicate, unknown and wrong-count inventories; ten negative controls preserve this boundary.",
+      "G08 #659: tooling outputs moved outside the checkout; canonical guards run without waivers.",
+      "G06 #660: shared Microsoft HTTP fixture preserves all 11 G05 controls and all 35 expect sites; three new actual Team upload/scanner cases supplement unchanged legacy import proof."
     ],
-    "documentReview": "Seven files reviewed independently; no material finding after the G05 status and G10 attestation corrections."
+    "documentReview": "Current follow-up independently reviewed; evidence catalog, publication metadata, complete G05 receipt obligations and cleanup scope corrected before publication.",
+    "previousDocumentReview": "Seven files reviewed independently; no material finding after the G05 status and G10 attestation corrections."
   },
   "executionThisFront": {
     "testsStarted": [
@@ -745,9 +1193,17 @@
       44999252013,
       44999256028,
       45003896381,
-      45024293423
+      45024293423,
+      45030521031,
+      45030692679,
+      45030815611,
+      45031123932,
+      45031742724,
+      45031917038,
+      45031531759,
+      45031272242
     ],
-    "testInventoryScope": "Selected current and superseded reference runs; exact current source/result is in each gate workProof.",
+    "testInventoryScope": "Selected current and superseded reference runs; exact source/result is in each gate workProof and followUpProofs. Intermediate CI-driver failures remain linked in the PRs.",
     "buildsStarted": [],
     "tarsGenerated": [],
     "environmentsMutated": [],
@@ -759,7 +1215,10 @@
       638,
       639,
       640,
-      644
+      644,
+      658,
+      659,
+      660
     ],
     "executionEnvironmentScope": "GitHub-hosted ephemeral component jobs; no reserved installed QA/recovery host was mutated.",
     "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs."
@@ -772,16 +1231,33 @@
     "formalProductionDecision": null
   },
   "publication": {
-    "pullRequest": 628,
-    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
-    "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8",
-    "scope": "Seven repository documents; exact source and guard run recorded on PR #628.",
-    "stateSource": "Live GitHub PR metadata; not duplicated in this immutable source snapshot."
+    "status": "DRAFT_NOT_PUBLISHED",
+    "pullRequest": null,
+    "url": null,
+    "scope": "Seven repository documents consolidating merged preparation and exact follow-up evidence.",
+    "sourceSha": null,
+    "validation": null,
+    "previousConsolidation": {
+      "pullRequest": 628,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628",
+      "initialCommit": "377707a32a6146e5e51ea2922a87f8e1bd5c41e8",
+      "sourceSha": "db18aa7882f7e3a87ac04c51ce450338fe69f7ee",
+      "mergeCommit": "6b03ea2b55ffa1959d9fcfca0031db51fda48f96"
+    }
   },
   "latestDevObserved": {
-    "sha": "48768330ce2bdd6dc6673cd0b4926b61778e3bd4",
-    "tree": "10787ab1c2d02d514b97184af2db7f53345fe66b",
-    "observedAtUtc": "2026-11-22T13:16:41Z",
+    "sha": "a71033f21b2c0f7da508c96f302506a9e73fd145",
+    "tree": "d86fa6c35359fd1437504435a48b0a4363ac8122",
+    "observedAtUtc": "2026-11-22T14:22:35Z",
     "notFinalCandidate": true
+  },
+  "integrationObservation": {
+    "pullRequest": 657,
+    "sourceSha": "95aa3a01915ebc9543957c267b57ab2ace9ee19f",
+    "sourceTree": "36be087efa65d1ba2c55022126eec02eb46c61c2",
+    "observedAtUtc": "2026-11-22T14:20:00Z",
+    "state": "OPEN_DRAFT_NOT_INTEGRATED",
+    "overlapWith659And660": [],
+    "finalCandidate": false
   }
 }
