@@ -7,8 +7,8 @@
     "gate": "G08-NATIVE-TEAMS"
   },
   "inspectedCandidate": {
-    "sha": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
-    "note": "Explicit reconciliation of original F02 business destinations and private Session action controls. Product-contract preparation, not final C/T, installed acceptance or LIVE proof."
+    "sha": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+    "note": "Merged Team HTTP, private policy, native UI hooks, domain factory and Procurement proof route. Component receipts remain source-specific; no final C/T, installed acceptance or LIVE claim."
   },
   "originalTeams": {
     "source": {
@@ -372,15 +372,158 @@
         }
       ],
       "state": "NOT_RUN",
-      "blocker": "BLOCKED_BY_PRODUCT_MODERN_PHASE_PRODUCER_AND_RESERVED_HOST",
+      "blocker": "BLOCKED_BY_FINAL_CANDIDATE_TAR_AND_RESERVED_HOST",
       "requiredProducer": [
-        "all six phases on modern tenant/Team/host/revision contract",
+        "all six operational phases with 37 exact cases; the 32 original obligations and two explicit ID remappings are retained",
         "real original actors/current authority",
         "source CAS409 and validation422 with unchanged state",
         "real revoke and observed source denial",
         "logout cookie invalidation/replay",
         "observed restart of same C/tree/tar and replay denial; does not replace G10"
-      ]
+      ],
+      "originalCaseIdsByPhase": {
+        "preflight": [
+          "GUEST",
+          "MISSING_SELECTORS",
+          "DUPLICATE_SELECTOR",
+          "BIND_installationId",
+          "BIND_projectId",
+          "BIND_hostId",
+          "CROSS_ORIGIN_GET",
+          "CROSS_SITE_GET",
+          "CSRF_NO_ORIGIN",
+          "CSRF_OTHER_ORIGIN",
+          "CSRF_CROSS_SITE",
+          "OIDC_REDIRECT",
+          "CALLBACK_WITHOUT_CHALLENGE",
+          "CALLBACK_DUPLICATE_STATE"
+        ],
+        "actors": [
+          "ACTOR_REQUESTER",
+          "ACTOR_HOLDER",
+          "ACTOR_DENIED",
+          "DISTINCT_ACTORS",
+          "AUTH_BIND_installationId",
+          "AUTH_BIND_projectId",
+          "AUTH_BIND_hostId",
+          "AUTH_CSRF_NO_ORIGIN",
+          "AUTH_CSRF_OTHER_ORIGIN",
+          "AUTH_CSRF_CROSS_SITE",
+          "AUTH_CSRF_SESSION_SURVIVES"
+        ],
+        "producer": [
+          "CAS_409",
+          "VALIDATION_422"
+        ],
+        "after-revoke": [
+          "REVOKE_CONTEXT",
+          "REVOKE_SOURCE"
+        ],
+        "logout": [
+          "LOGOUT_204",
+          "REPLAY_AFTER_LOGOUT"
+        ],
+        "after-restart": [
+          "REPLAY_AFTER_RESTART"
+        ]
+      },
+      "operationalContract": {
+        "action": "CHANGE_CONTRACT",
+        "source": {
+          "commit": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+          "path": "sf/azure/identity/az02-proof.cjs",
+          "blob": "6b8104170fe546e74e46c0fd374c1fe1254caf24"
+        },
+        "expectedCount": 37,
+        "phases": [
+          {
+            "id": "preflight",
+            "count": 16
+          },
+          {
+            "id": "actors",
+            "count": 14
+          },
+          {
+            "id": "producer",
+            "count": 2
+          },
+          {
+            "id": "after-revoke",
+            "count": 2
+          },
+          {
+            "id": "logout",
+            "count": 2
+          },
+          {
+            "id": "after-restart",
+            "count": 1
+          }
+        ],
+        "remappedIds": {
+          "BIND_projectId": "BIND_tenantId",
+          "AUTH_BIND_projectId": "AUTH_BIND_tenantId"
+        },
+        "addedCaseIds": [
+          "NO_TEAM_BUSINESS",
+          "ADMIN_NO_TEAM_MAINTENANCE",
+          "AUTH_FOREIGN_TEAM",
+          "AUTH_FORGED_PRINCIPAL",
+          "AUTH_FORGED_REVISIONS"
+        ],
+        "caseIdsByPhase": {
+          "preflight": [
+            "GUEST",
+            "MISSING_SELECTORS",
+            "DUPLICATE_SELECTOR",
+            "BIND_installationId",
+            "BIND_tenantId",
+            "BIND_hostId",
+            "CROSS_ORIGIN_GET",
+            "CROSS_SITE_GET",
+            "CSRF_NO_ORIGIN",
+            "CSRF_OTHER_ORIGIN",
+            "CSRF_CROSS_SITE",
+            "OIDC_REDIRECT",
+            "CALLBACK_WITHOUT_CHALLENGE",
+            "CALLBACK_DUPLICATE_STATE",
+            "NO_TEAM_BUSINESS",
+            "ADMIN_NO_TEAM_MAINTENANCE"
+          ],
+          "actors": [
+            "ACTOR_REQUESTER",
+            "ACTOR_HOLDER",
+            "ACTOR_DENIED",
+            "DISTINCT_ACTORS",
+            "AUTH_BIND_installationId",
+            "AUTH_BIND_tenantId",
+            "AUTH_BIND_hostId",
+            "AUTH_CSRF_NO_ORIGIN",
+            "AUTH_CSRF_OTHER_ORIGIN",
+            "AUTH_CSRF_CROSS_SITE",
+            "AUTH_CSRF_SESSION_SURVIVES",
+            "AUTH_FOREIGN_TEAM",
+            "AUTH_FORGED_PRINCIPAL",
+            "AUTH_FORGED_REVISIONS"
+          ],
+          "producer": [
+            "CAS_409",
+            "VALIDATION_422"
+          ],
+          "after-revoke": [
+            "REVOKE_CONTEXT",
+            "REVOKE_SOURCE"
+          ],
+          "logout": [
+            "LOGOUT_204",
+            "REPLAY_AFTER_LOGOUT"
+          ],
+          "after-restart": [
+            "REPLAY_AFTER_RESTART"
+          ]
+        }
+      }
     }
   ],
   "gateClosed": false,
@@ -415,15 +558,45 @@
     },
     {
       "source": "https://github.com/gustavomhss/Orchestra-SF/pull/665",
-      "observedHead": "7a28c5eefece4cae5de0e376ad3bafbe5290a928",
-      "contract": "integration of actual administration/session/config/chat sources, pending its own validation"
+      "observedHead": "f8981f8051edfc3647a368af44cbc41563680c2e",
+      "contract": "Original administration/session/config/chat and Web body boundaries integrated into dev; final-candidate validation remains separate.",
+      "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6",
+      "state": "MERGED"
     },
     {
       "source": "https://github.com/gustavomhss/Orchestra-SF/pull/686",
       "observedHead": "66b1ec0e132124ea77d268f9fc520eadd16dd3a7",
       "integrationSource": "287b08b2afb4f9aeb4442b800d620fbd5ddf9204",
       "contract": "Original F02 business pages/ACL, distinct destination grants and both actor reloads; complements real private Session operations."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/677",
+      "observedHead": "edadc608f10fd52c79197028f2b47de65fdfa7eb",
+      "mergeCommit": "5d0d3973a21b02df954e0e5cf31afe103960c23d",
+      "state": "MERGED",
+      "contract": "Current private policy at F02, import, checkpoint and recovery boundaries; original EOF cleanup."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/685",
+      "observedHead": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+      "mergeCommit": "0fa4778b559963e0f3e7c60051060844d362e796",
+      "state": "MERGED",
+      "contract": "Original CAP25 reader with current Team authority; AZ02 six operational phases with 32 original plus five additive cases."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/689",
+      "observedHead": "0f0373159f04528ed74bf500b55dd311ae0c23d9",
+      "mergeCommit": "428cb9f93c59288d299f57dc70ed93566eda6ec1",
+      "state": "MERGED",
+      "contract": "Original native CAP14/CAP04/CAP05 leaves connected to the Team shell and guarded navigation."
+    },
+    {
+      "source": "https://github.com/gustavomhss/Orchestra-SF/pull/690",
+      "observedHead": "482367ec13c073f73bec859a676e05d14e8f319b",
+      "mergeCommit": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+      "state": "MERGED",
+      "contract": "Original Microsoft factory mounts native domain readers and canonical writers, with one current F02 authority."
     }
   ],
-  "integrationStatus": "PRODUCT_CONTRACTS_OBSERVED_IN_OPEN_INTEGRATION_NOT_FINAL_CANDIDATE"
+  "integrationStatus": "PREPARATION_MERGED_NOT_FINAL_CANDIDATE"
 }

@@ -4,6 +4,7 @@ import assert from "node:assert/strict"
 import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
+import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import { destinationGrants, requireDistinctDestinationGrants, cases, coverageLedger, digest, obligationPath, pendingGroups, preservedTeams, productContractPaths, requireCompleteGate, requireProductContracts, privateRoot, privateText, requireInvocation, target, validateGrantProof, validateHost, validatePackage, validatePlan, verifyReport, writePrivate } from "./g08-private-evidence.mjs"
 
 const uuid = (last) => "00000000-0000-4000-8000-" + String(last).padStart(12, "0")
@@ -269,9 +270,23 @@ test("nine current-contract controls retain the original Teams obligations and s
   assert.equal(executed.originalTeams.find((entry) => entry.id === "same-team-distinct-grants").status, "PASS")
   assert.equal(executed.originalTeams.find((entry) => entry.id === "admin-without-team").status, "PASS")
   assert.deepEqual(executed.groups.map((entry) => entry.id), pendingGroups)
-  assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32])
+  assert.deepEqual(executed.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37])
   assert.throws(() => requireCompleteGate(list), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
   assert.throws(() => requireCompleteGate(executed), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
+})
+test("AZ02 coverage preserves 32 original obligations and requires all 37 cases from the integrated producer", () => {
+  const group = obligations.groups.find((entry) => entry.id === "AZ02")
+  assert.equal(group.expectedCount, 32)
+  assert.deepEqual(group.phases.map((entry) => entry.count), [14, 11, 2, 2, 2, 1])
+  assert.deepEqual(group.operationalContract.caseIdsByPhase, az02.ROSTER)
+  assert.deepEqual(group.operationalContract.phases.map((entry) => entry.count), [16, 14, 2, 2, 2, 1])
+  assert.deepEqual(group.operationalContract.remappedIds, az02.LEGACY_MAP)
+  assert.deepEqual(group.operationalContract.addedCaseIds, az02.ADDITIONS)
+  const coverage = coverageLedger(obligations, true)
+  assert.deepEqual(coverage.groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37])
+  assert(coverage.groups.every((entry) => entry.status === "NOT_RUN"))
+  assert.equal(coverage.complete, false)
+  assert.throws(() => requireCompleteGate(coverage), /G08_REQUIRED_OBLIGATIONS_NOT_PROVEN/)
 })
 for (const [name, change] of [
   ["deleted original Teams case", (value) => { value.originalTeams.obligations.pop() }],
@@ -288,6 +303,17 @@ for (const [name, change] of [
   ["U40 collapsed title list", (value) => { value.groups[2].originalTitles = value.groups[2].originalTitles.slice(0, 1) }],
   ["U15 receipt assumed from old source", (value) => { value.groups[0].state = "PASS" }],
   ["AZ02 restart omitted", (value) => { value.groups[4].phases.pop() }],
+  ["AZ02 operational contract omitted", (value) => { delete value.groups[4].operationalContract }],
+  ["AZ02 original history rewritten to37", (value) => { value.groups[4].expectedCount = 37 }],
+  ["AZ02 original case replaced", (value) => { value.groups[4].originalCaseIdsByPhase.actors[0] = "FORGED_ACTOR" }],
+  ["AZ02 original ID preemptively renamed", (value) => { value.groups[4].originalCaseIdsByPhase.preflight[4] = "BIND_tenantId" }],
+  ["AZ02 operational count left at32", (value) => { value.groups[4].operationalContract.expectedCount = 32 }],
+  ["AZ02 added negative removed", (value) => { value.groups[4].operationalContract.addedCaseIds.pop() }],
+  ["AZ02 phase flattened", (value) => { value.groups[4].operationalContract.phases[0].count = 14 }],
+  ["AZ02 operational case duplicated", (value) => { value.groups[4].operationalContract.caseIdsByPhase.actors[0] = value.groups[4].operationalContract.caseIdsByPhase.actors[1] }],
+  ["AZ02 unsupported ID mapping", (value) => { value.groups[4].operationalContract.remappedIds.BIND_projectId = "BIND_hostId" }],
+  ["AZ02 foreign contract source", (value) => { value.groups[4].operationalContract.source.commit = "a".repeat(40) }],
+  ["AZ02 manual LIVE claim", (value) => { value.groups[4].operationalContract.liveQualified = true }],
   ["gate closed by metadata", (value) => { value.gateClosed = true }],
 ]) test("preserved coverage refuses " + name, () => {
   const value = structuredClone(obligations)
@@ -318,6 +344,7 @@ for (const [name, change] of [
   ["duplicate groups", (value) => { value.groups[0] = value.groups[1] }],
   ["unknown groups", (value) => { value.groups[0].id = "unregistered" }],
   ["incorrect group count", (value) => { value.groups[0].expectedCount = 1 }],
+  ["historical AZ02 count used for closing", (value) => { value.groups[4].expectedCount = 32 }],
 ]) test("closing coverage rejects vacuous or forged PASS inventory: " + name, () => {
   // Synthetic metadata only. Even a fully passing shape could never replace verified original receipts.
   const value = coverageLedger(obligations, true)

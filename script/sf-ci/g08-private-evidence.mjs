@@ -6,6 +6,7 @@ import { isIP } from "node:net"
 import { lstat, open, readFile, realpath, mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import az02 from "../../sf/azure/identity/az02-proof.cjs"
 
 export const cases = Object.freeze([
   { id: "same-team-distinct-grants", title: "Two distinct Microsoft accounts enter the same installed Team with their own authority" },
@@ -47,6 +48,7 @@ export const productContractPaths = Object.freeze([
 export const sourcePaths = Object.freeze([
   ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs", obligationPath,
   "script/sf-ci/g08-installed-preflight.py", "script/sf-ci/g08-private-run.sh",
+  "sf/azure/identity/az02-proof.cjs",
   "packages/app-shell/e2e/sucafina/g08/playwright.config.ts",
   "packages/app-shell/e2e/sucafina/g08/installed-fixture.ts",
   "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
@@ -435,6 +437,39 @@ export function verifyReport(value, executed) {
   }
   return cases.map(({ id }) => ({ id, status: executed ? "PASS" : "LISTED_NOT_RUN" }))
 }
+/** Preserve the original 32 obligations while requiring the explicit 37-case Team contract.
+ * This validates inventory only; neither registration nor a component PASS is an installed proof.
+ * @param {Record<string, unknown>} group
+ */
+function operationalAz02Count(group) {
+  const contract = record(group.operationalContract), original = record(group.originalCaseIdsByPhase)
+  exact(contract, ["action", "source", "expectedCount", "phases", "remappedIds", "addedCaseIds", "caseIdsByPhase"])
+  assert.equal(contract.action, "CHANGE_CONTRACT", "G08_AZ02_EXPLICIT_CONTRACT_CHANGE_REQUIRED")
+  assert.deepEqual(contract.source, {
+    commit: "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a", path: "sf/azure/identity/az02-proof.cjs",
+    blob: "6b8104170fe546e74e46c0fd374c1fe1254caf24",
+  }, "G08_AZ02_CONTRACT_SOURCE_REQUIRED")
+  assert.equal(contract.expectedCount, 37, "G08_AZ02_OPERATIONAL_COUNT_REQUIRED")
+  assert.deepEqual(contract.remappedIds, az02.LEGACY_MAP, "G08_AZ02_EXPLICIT_ID_MAPPING_REQUIRED")
+  assert.deepEqual(contract.addedCaseIds, az02.ADDITIONS, "G08_AZ02_ADDITIVE_NEGATIVES_REQUIRED")
+  assert.deepEqual(contract.caseIdsByPhase, az02.ROSTER, "G08_AZ02_OPERATIONAL_CASES_REQUIRED")
+  assert.deepEqual(contract.phases, az02.PHASES.map((id) => ({ id, count: az02.ROSTER[id].length })),
+    "G08_AZ02_OPERATIONAL_PHASES_REQUIRED")
+  assert.deepEqual(Object.keys(original), az02.PHASES, "G08_AZ02_ORIGINAL_PHASE_IDS_REQUIRED")
+  const historical = Object.values(original).flat()
+  assert(historical.length === 32 && new Set(historical).size === 32, "G08_AZ02_ORIGINAL_CASES_REQUIRED")
+  const inverse = Object.fromEntries(Object.entries(az02.LEGACY_MAP).map(([before, after]) => [after, before]))
+  for (const phase of az02.PHASES) {
+    const names = original[phase]
+    assert(Array.isArray(names) && names.every((name) => typeof name === "string"), "G08_AZ02_ORIGINAL_CASE_IDS_REQUIRED")
+    const retained = az02.ROSTER[phase].filter((name) => !az02.ADDITIONS.includes(name))
+    assert.deepEqual(names, retained.map((name) => inverse[name] ?? name), "G08_AZ02_ORIGINAL_CASE_REMOVED_OR_REPLACED")
+  }
+  const all = Object.values(az02.ROSTER).flat()
+  assert(all.length === 37 && new Set(all).size === 37, "G08_AZ02_PRODUCER_INVENTORY_CHANGED")
+  return 37
+}
+
 /** Keep the original obligations separate from the narrower executable selection.
  * @param {unknown} value @param {boolean} executed
  */
@@ -460,6 +495,7 @@ export function coverageLedger(value, executed = false) {
         { id: "preflight", count: 14 }, { id: "actors", count: 11 }, { id: "producer", count: 2 },
         { id: "after-revoke", count: 2 }, { id: "logout", count: 2 }, { id: "after-restart", count: 1 },
       ], "G08_AZ02_PHASES_REQUIRED")
+      operationalAz02Count(group)
     }
   }
   const teamCoverage = obligations.map((entry) => {
@@ -476,7 +512,8 @@ export function coverageLedger(value, executed = false) {
       implementedCases: entry.implementedCases }
   })
   return { schema: "sf-g08-coverage-v1", originalTeams: teamCoverage,
-    groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN", expectedCount: entry.expectedCount, blocker: entry.blocker })),
+    groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN",
+      expectedCount: entry.id === "AZ02" ? operationalAz02Count(entry) : entry.expectedCount, blocker: entry.blocker })),
     complete: false }
 }
 /** Shape/completeness guard only; callers must already have verified original proof provenance.
@@ -491,7 +528,7 @@ export function requireCompleteGate(value) {
   const original = coverage.originalTeams.map(record), groups = coverage.groups.map(record)
   assert.deepEqual(original.map((entry) => entry.id), preservedTeams, "G08_EXACT_CLOSING_TEAMS_INVENTORY_REQUIRED")
   assert.deepEqual(groups.map((entry) => entry.id), pendingGroups, "G08_EXACT_CLOSING_GROUP_INVENTORY_REQUIRED")
-  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
   assert(original.every((entry) => entry.status === "PASS") && groups.every((entry) => entry.status === "PASS"),
     "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
 }
