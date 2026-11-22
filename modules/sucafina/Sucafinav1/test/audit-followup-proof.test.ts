@@ -10,16 +10,18 @@ import { DashboardPortfolio } from "../runtime/dashboard-portfolio.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { resolve } from "../src/identity.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../product/contracts/business-context.ts"
 import type { DomainPortHost, PortResult } from "../product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../product/contracts/sf-execution.ts"
+import type { DomainProjection } from "../product/contracts/context.ts"
+import type { CollaborationThread } from "../product/collaboration/threads.ts"
 import { createCollaborationHost } from "../product/collaboration/host.ts"
 import { collaborationHumanActions, createCollaborationHumanAuthority } from "../product/collaboration/human.ts"
 import type { CollaborationHumanAction } from "../product/collaboration/human.ts"
 import { createDashboardConfirmationObserver } from "../product/dashboard/confirmation.ts"
 import { createDashboardRecordEvidenceHost } from "../product/dashboard/sources.ts"
 import { createSfDashboardRecordSourceAccess } from "../product/decision-memory/source-access.ts"
-import { createSfBusinessContext } from "../product/host-binding/business-context.ts"
+import { createSfBusinessContext, createSfRecordHistory } from "../product/host-binding/business-context.ts"
 import { createSfExecutionBindingRegistry } from "../product/host-binding/execution-context.ts"
 import { createSfProductState } from "../product/host-binding/state-provider.ts"
 import { createDashboardRecordSourceIssuer } from "../product/integration/dashboard-sources.ts"
@@ -86,12 +88,29 @@ async function fixture() {
     revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false),
   }
   const records = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
-  const availability = { sources: true }
+  const availability = { sources: true, history: false }
+  // Only the protected capture boundary is a fixture. Every captured reference
+  // and projection below was emitted by the real Dashboard producer.
+  const archive = new Map<string, { ref: BusinessEvidenceRef; projection: DomainProjection }>()
   const resolveSource = createSfDashboardRecordSourceAccess({ host, records })
+  const history = createSfRecordHistory({
+    host, now: () => at,
+    readOriginalCapture: async (digest, context) => availability.history && await host.revalidate(context) ? structuredClone(archive.get(digest)) : undefined,
+    current: async (original, page, context): Promise<BusinessEvidenceResolution> => {
+      const unavailable: BusinessEvidenceResolution = { state: "unavailable", ref: original, accessRevision: context.binding.accessRevision, checkedAt: at }
+      if (!page || !original.target.period) return unavailable
+      const issued = await records.issue({ page, recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period: original.target.period }, context)
+      return issued.status === "ok" ? resolveSource(issued.value, context) : unavailable
+    },
+  })
   const evidence = createSfBusinessContext({
     revalidate: host.revalidate,
-    resolveSource: (ref, context) => availability.sources ? resolveSource(ref, context) : Promise.resolve({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }),
-    proveContinuity: async () => false,
+    resolveSource: async (ref, context) => {
+      if (!availability.sources) return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
+      const current = await resolveSource(ref, context)
+      return current.state === "fresh" || !availability.history ? current : history.resolve(ref, context)
+    },
+    proveContinuity: history.proveContinuity,
     recall: async () => { throw new Error("Recall is outside this proof") },
     emitFromLedger: async () => { throw new Error("Emission is outside this proof") },
   })
@@ -146,6 +165,7 @@ async function fixture() {
   const create = async () => {
     const context = await read("questioner")
     const reference = ok(await records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["name", "status"], period }, context))
+    archive.set(reference.refDigest, { ref: structuredClone(reference), projection: ok(await records.read(reference.refId, context)) })
     const draft = { kind: "clarification" as const, sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period, recipientRef: "recipient", body: "Please check the selected project.", evidenceRefs: [reference] }
     const mutation = { expectedStorageVersion: 0, idempotencyKey: "create-question" }
     const thread = await withHuman("questioner", "collaboration.thread.create", { draft, mutation }, async (call) => {
@@ -157,6 +177,8 @@ async function fixture() {
     const version = ok(await collaboration.storageVersion("threads", await read("recipient")))
     const replyMutation = { expectedStorageVersion: version, idempotencyKey: "recipient-reply" }
     const replied = await withHuman("recipient", "collaboration.thread.reply", { id: thread.id, body: answer, mutation: replyMutation }, (call) => collaboration.recipientActions!.reply(thread.id, answer, replyMutation, call))
+    const recipient = await read("recipient")
+    archive.set(replied.current.sourceRef.refDigest, { ref: structuredClone(replied.current.sourceRef), projection: ok(await records.read(replied.current.sourceRef.refId, recipient)) })
     return { thread, reference, replied }
   }
   const answerRead = async (id: string, actor = "recipient") => {
@@ -166,7 +188,28 @@ async function fixture() {
     if (!capability) throw new Error("Real sf_answer_read capability missing")
     return { context, result: await capability.handler(payload, context) }
   }
-  return { store, persistence, records, state, collaboration, read, create, answerRead, availability, mutate,
+  const changeSource = () => persistence.transaction("dashboard", async (snapshot) => {
+    const result = DashboardPortfolio.domain.execute(snapshot, { id: "questioner", roles: ["admin"], canWrite: true },
+      { page: "All Projects", action: "save", id: "project", version: snapshot.versions["projects:project"]!.version, values: { status: "On Hold" } },
+      { at, id: randomUUID, directory: people })
+    if (!result.ok) throw new Error("Source change rejected: " + JSON.stringify(result))
+    return { commit: true, value: result }
+  })
+  const changeThread = async (id: string, change: "recipient" | "period") => {
+    const context = await read("questioner")
+    const expectedStorageVersion = ok(await collaboration.storageVersion("threads", context))
+    const result = await state.transaction(host.requestFor(context)!, {
+      namespace: "threads", expectedStorageVersion, idempotencyKey: randomUUID(), commandDigest: digestSfValue({ id, change }),
+      targetRef: creationTarget.ref, targetIncarnation: creationTarget.incarnation,
+    }, async (value) => {
+      const thread = value.threads[id] as CollaborationThread
+      if (change === "recipient") thread.recipientRef = "questioner"
+      else thread.period = { ...thread.period, start: "2026-02-01" }
+      return { commit: true, value: true }
+    })
+    if (result.status !== "ok" || !result.value) throw new Error("Concurrent state write rejected: " + JSON.stringify(result))
+  }
+  return { store, persistence, records, state, collaboration, read, create, answerRead, availability, mutate, changeSource, changeThread,
     revoke: () => persistence.transaction("dashboard", async (snapshot) => {
       const access = object(snapshot.data.access)
       delete access.recipient
@@ -219,3 +262,58 @@ test("diagnostic 9: persisted recipient-access revocation invalidates an admitte
     expect(JSON.stringify(result)).not.toContain(answer)
   } finally { await f.dispose() }
 }, 120_000)
+
+test("diagnostic 9: historical reads require an explicit protected capture and retain the original source version", async () => {
+  const f = await fixture()
+  try {
+    const selected = await f.create()
+    const context = await f.read("recipient")
+    const current = await f.collaboration.threadReads.read(selected.thread.id, context)
+    expect(current.status).toBe("ok")
+    const unavailable = await f.collaboration.threadReads.readHistorical(selected.thread.id, context)
+    expect(unavailable.status).not.toBe("ok")
+    expect(JSON.stringify(unavailable)).not.toContain(answer)
+    f.availability.history = true
+    const granted = ok(await f.collaboration.threadReads.readHistorical(selected.thread.id, context))
+    expect(granted.sourceRef).toBe(selected.reference.refId)
+    expect(granted.observedVersion).toBe(selected.reference.target.version)
+    await f.changeSource()
+    const historical = ok(await f.collaboration.threadReads.readHistorical(selected.thread.id, context))
+    expect(historical.sourceRef).toBe(selected.reference.refId)
+    expect(historical.observedVersion).toBe(selected.reference.target.version)
+    const projected = ok(await f.collaboration.recipientThread!(selected.thread.id, context))
+    expect(projected.continuity).toBe("historical")
+    expect(projected.current.sourceRef.target.version).toBeGreaterThan(selected.replied.current.sourceRef.target.version)
+    expect(projected.historical?.evidenceRefs).toEqual([selected.reference])
+    f.availability.history = false
+    const lost = await f.collaboration.threadReads.readHistorical(selected.thread.id, context)
+    expect(lost.status).not.toBe("ok")
+    expect(JSON.stringify(lost)).not.toContain(answer)
+  } finally { await f.dispose() }
+}, 120_000)
+
+for (const change of ["recipient", "period", "source"] as const) {
+  test("diagnostic 9: " + change + " drift after the first real thread read cannot publish an answer", async () => {
+    const f = await fixture()
+    try {
+      const selected = await f.create()
+      const read = f.collaboration.threadReads.read
+      let changed = false
+      // Schedule a real SQLite write between producer observations. Every read
+      // still delegates to the shipped reader; no result is fabricated.
+      f.collaboration.threadReads.read = async (...args) => {
+        const result = await read(...args)
+        if (!changed && result.status === "ok") {
+          changed = true
+          if (change === "source") await f.changeSource()
+          else await f.changeThread(selected.thread.id, change)
+        }
+        return result
+      }
+      const result = (await f.answerRead(selected.thread.id)).result
+      expect(changed).toBe(true)
+      expect(result.status).not.toBe("ok")
+      expect(JSON.stringify(result)).not.toContain(answer)
+    } finally { await f.dispose() }
+  }, 120_000)
+}
