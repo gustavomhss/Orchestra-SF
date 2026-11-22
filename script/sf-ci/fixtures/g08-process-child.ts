@@ -1,7 +1,7 @@
 // Isolated subprocess controls for the original G08 process path. No installed host or authority.
 import path from "node:path"
 import { readdir, readlink, writeFile } from "node:fs/promises"
-import { Omni } from "@orchestra/core/omni"
+import { Omni } from "../../../packages/core/src/omni.ts"
 import { captureOriginalCommand, observeAggregateCheckout } from "../g08-installed-evidence.mjs"
 
 const [mode, input] = process.argv.slice(2)

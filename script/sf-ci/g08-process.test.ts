@@ -2,12 +2,16 @@
 import { test, expect } from "bun:test"
 import os from "node:os"
 import path from "node:path"
+import { createRequire } from "node:module"
+import { pathToFileURL } from "node:url"
 import { mkdtemp, readFile, rm, stat, symlink, writeFile } from "node:fs/promises"
-import { AppProcess } from "@orchestra/core/process"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
-import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
-import { Effect } from "effect"
-import { ChildProcess } from "effect/unstable/process"
+import { AppProcess } from "../../packages/core/src/process.ts"
+import { LayerNode } from "../../packages/core/src/effect/layer-node.ts"
+import { expectSpawn } from "../../packages/core/test/fixture/omni-expect.ts"
+
+const require = createRequire(new URL("../../packages/core/package.json", import.meta.url))
+const { Effect } = await import(pathToFileURL(require.resolve("effect")).href)
+const { ChildProcess } = await import(pathToFileURL(require.resolve("effect/unstable/process")).href)
 
 const fixture = path.join(import.meta.dir, "fixtures/g08-process-child.ts")
 const layer = LayerNode.compile(AppProcess.node)

@@ -5,7 +5,8 @@ import { randomBytes } from "node:crypto"
 import { constants, writeSync } from "node:fs"
 import { open, readFile, mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { fileURLToPath } from "node:url"
+import { createRequire } from "node:module"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import {
   cases, preservedTeams, pendingGroups, record, digest, privateText, privateRoot, writePrivate,
@@ -409,12 +410,14 @@ export async function finalizeExecution(status, operations) {
  * The existing Omni loader owns addon/supervisor resolution; absence fails closed.
  */
 async function strictProcessRuntime() {
-  const { AppProcess } = await import("@orchestra/core/process")
+  // Resolve dependencies from their declared Core owner; script/ is outside that workspace.
+  const require = createRequire(new URL("../../packages/core/package.json", import.meta.url))
+  const { AppProcess } = await import("../../packages/core/src/process.ts")
   const { CrossSpawnSpawner } = await import("../../packages/core/src/cross-spawn-spawner.ts")
-  const { Effect, Exit, Layer, Stream } = await import("effect")
-  const { ChildProcess } = await import("effect/unstable/process")
-  const { ChildProcessSpawner } = await import("effect/unstable/process/ChildProcessSpawner")
-  const { NodeFileSystem, NodePath } = await import("@effect/platform-node")
+  const { Effect, Exit, Layer, Stream } = await import(pathToFileURL(require.resolve("effect")).href)
+  const { ChildProcess } = await import(pathToFileURL(require.resolve("effect/unstable/process")).href)
+  const { ChildProcessSpawner } = await import(pathToFileURL(require.resolve("effect/unstable/process/ChildProcessSpawner")).href)
+  const { NodeFileSystem, NodePath } = await import(pathToFileURL(require.resolve("@effect/platform-node")).href)
   const layer = AppProcess.layerWith("strict").pipe(
     Layer.provide(Layer.effect(ChildProcessSpawner, CrossSpawnSpawner.makeWith("strict"))),
     Layer.provide([NodeFileSystem.layer, NodePath.layer]),
