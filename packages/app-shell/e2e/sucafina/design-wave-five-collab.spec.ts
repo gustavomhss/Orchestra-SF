@@ -7,13 +7,14 @@ import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { collabTest, capture, enter, observePage, ready, reflow, scheme, scrollPageTop } from "./design-support/wave-five-collab"
 import { seedWaveFiveCollab, waveFiveCollabData } from "./design-support/wave-five-collab-seed"
+import { waveFourTest } from "./design-support/wave-four"
 import { waveThreeData } from "./design-support/wave-three-data"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 const { Workbook } = createRequire(new URL("../../../../modules/sucafina/package.json", import.meta.url))("exceljs") as typeof import("../../../../modules/sucafina/node_modules/exceljs")
 type Destination = { label: string; selectionRef: string; surface: "planner" | "dashboard"; formats: string[] }
 
-collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussion, material confirmation and scanned import preview", async ({ page, browser, installation, owner }, info) => {
+collabTest("UI55 UI56 · original scanned import preview, cancellation and provenance", async ({ page, browser, installation, owner }, info) => {
   collabTest.setTimeout(900_000)
   page.setDefaultTimeout(20_000)
   expect(info.project.metadata.bundle).toBe("production")
@@ -113,15 +114,25 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     await capture(page, info, "UI55-dark-desktop-selected-file-options")
     const admission = page.waitForResponse(mode("import-admit"))
     const preview = page.waitForResponse(mode("import-preview"))
+    const reference = page.waitForRequest((request) => {
+      const selected = new URL(request.url())
+      return selected.origin === installation.origin && selected.pathname.startsWith(installation.mount + "/") &&
+        selected.searchParams.get("sf") === "import-reference" && request.method() === "GET"
+    })
     await surface.getByRole("button", { name: "Generate preview", exact: true }).click()
-    const admitted = await admission
-    expect(admitted.status()).toBe(200)
-    expect(await admitted.json()).toMatchObject({ status: "ok", value: { digest: sourceDigest } })
-    const generated = await preview
-    expect(generated.status()).toBe(200)
-    const result = await generated.json() as { status: string; value: { id: string; domainApplied: boolean; state: string; sourceDigest: string } }
-    expect(result).toMatchObject({ status: "ok", value: { domainApplied: false, state: "preview", sourceDigest } })
-    manifestId = result.value.id
+    expect((await admission).status()).toBe(200)
+    expect((await preview).status()).toBe(200)
+    // Read the producer-issued reference used by the original controller. Chromium
+    // may release an upload response body; no acknowledgement payload is inferred.
+    const referenceUrl = new URL((await reference).url())
+    manifestId = referenceUrl.searchParams.get("importPreviewRef") ?? ""
+    expect(manifestId).not.toBe("")
+    const originalPreview = await sourceRequest("/planner?" + new URLSearchParams({
+      sf: "import-reference", importPreviewRef: manifestId,
+    }))
+    expect(originalPreview.status).toBe(200)
+    expect(await originalPreview.json()).toMatchObject({ status: "ok",
+      value: { manifest: { id: manifestId, domainApplied: false, state: "preview", sourceDigest } } })
     await expect(surface).toHaveAttribute("data-sf-phase", "reviewing")
     await expect(surface.locator(".sf-files-setup")).toBeHidden()
     await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
@@ -156,11 +167,94 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
   })
 
+  await collabTest.step("UI55 and UI56 have real pt-BR native captures", async () => {
+    const cookies = await page.context().cookies()
+    const portuguese = await browser.newContext({
+      locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+      reducedMotion: "reduce", colorScheme: "dark",
+      httpCredentials: { username: "orchestra", password: installation.serverPassword },
+      storageState: { cookies, origins: [{ origin: installation.origin,
+        localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+    })
+    try {
+      const localized = await portuguese.newPage()
+      const localDiagnostics = observePage(localized)
+      for (const screen of [
+        { id: "UI55", path: "/orchestra/sf-imports/new", title: "Importar arquivo" },
+        { id: "UI56", path: previewPath, title: "Prévia da importação" },
+      ]) {
+        await enter(localized, owner, url(screen.path), screen.title)
+        if (screen.id === "UI56") {
+          await localized.locator('[data-sf-surface="UI56"]').getByRole("button", { name: /Refresh receipt|Atualizar recibo/, exact: true }).click()
+          await expect(localized.locator('[data-sf-surface="UI56"] .sf-files-preview')).toBeVisible()
+        }
+        await scheme(localized, "dark")
+        await capture(localized, info, screen.id + "-pt-BR-dark-desktop")
+      }
+      expect(localDiagnostics.pageErrors).toEqual([])
+      expect(localDiagnostics.consoleErrors).toEqual([])
+    } finally { await portuguese.close() }
+  })
+
+  expect(mutations.filter((value) => value === "import-admit")).toHaveLength(1)
+  expect(mutations.filter((value) => value === "import-preview")).toHaveLength(1)
+  expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
+  expect(diagnostics.pageErrors).toEqual([])
+  expect(diagnostics.consoleErrors).toEqual([])
+  await info.attach("wave-five-import-evidence", { body: JSON.stringify({
+    areas: ["UI55", "UI56"], widths: [1440, 390], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"], mutations,
+    originalSource: "Original Planner row, live ClamD INSTREAM, original preview reference and byte digest",
+    manifestId, sourceDigest, limitations: ["No import Apply invoked", "Upload acknowledgement body not inferred",
+      "Actual browser zoom not measured", "No golden-image approval is inferred"], ...diagnostics,
+  }, null, 2), contentType: "application/json" })
+})
+
+waveFourTest("UI51 UI52 UI53 · original relationships, unsent discussion and material confirmation", async ({ page, browser, installation, owner }, info) => {
+  waveFourTest.setTimeout(600_000)
+  page.setDefaultTimeout(20_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  const diagnostics = observePage(page)
+  const mutations: string[] = []
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (url.origin !== installation.origin || !url.pathname.startsWith(installation.mount + "/") || request.method() !== "POST") return
+    const mode = url.searchParams.get("sf")
+    if (mode && ["collaboration-thread-reply", "collaboration-relation-create", "collaboration-relation-remove",
+      "collaboration-confirmation-confirm", "import-admit", "import-preview", "import-apply"].includes(mode))
+      mutations.push(mode)
+  })
+  page.on("response", async (response) => {
+    if (!new URL(response.url()).pathname.endsWith("/api/ui/context") || response.status() !== 200) return
+    try {
+      const context = await response.json()
+      if (context.status !== "ok") return
+      const reads = ["collaboration.relation-read", "collaboration.thread-read", "collaboration.confirmation-project"]
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "collaboration-route-source-health",
+        operations: context.value.availability.flatMap((resource: { operations: Array<{ operationId: string }> }) =>
+          resource.operations.filter((operation) => reads.includes(operation.operationId))) }))
+    } catch { /* A navigation can close an already superseded response. */ }
+  })
+  const sourceRequest = async (pathname: string, init?: RequestInit) => {
+    const headers = new Headers(init?.headers)
+    if (init?.method === "POST") headers.set("Origin", installation.origin)
+    const response = await page.context().request.fetch(installation.origin + installation.mount + pathname, {
+      method: init?.method ?? "GET", headers: Object.fromEntries(headers),
+      ...(typeof init?.body === "string" ? { data: init.body } : {}), timeout: 40_000,
+    })
+    return new Response(new Uint8Array(await response.body()), { status: response.status(), headers: response.headers() })
+  }
+  const url = (pathname: string) => new URL(pathname, installation.origin).href
+  const mode = (operation: string) => (response: { url(): string; request(): { method(): string } }) => {
+    const selected = new URL(response.url())
+    return selected.origin === installation.origin && selected.pathname.startsWith(installation.mount + "/") &&
+      selected.searchParams.get("sf") === operation && response.request().method() === "POST"
+  }
+
   const seeded = await seedWaveFiveCollab({ actorId: installation.actorId, request: sourceRequest }, installation.year)
   const relationshipPath = "/orchestra/sf-work/relations/" + encodeSfRouteRef(seeded.relation.id)
   const threadPath = "/orchestra/sf-work/threads/" + encodeSfRouteRef(seeded.thread.id)
 
-  await collabTest.step("UI51 reads a producer relationship and preserves explicit evidence through review cancellation", async () => {
+  await waveFourTest.step("UI51 reads a producer relationship and preserves explicit evidence through review cancellation", async () => {
     await enter(page, owner, url(relationshipPath), "Record relationships")
     const surface = page.locator('[data-sf-surface="UI51"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "five")
@@ -216,7 +310,7 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     await capture(page, info, "UI51-dark-desktop-case-alias-empty")
   })
 
-  await collabTest.step("UI52 reads an original internal thread, exposes provenance and retains an unsent draft", async () => {
+  await waveFourTest.step("UI52 reads an original internal thread, exposes provenance and retains an unsent draft", async () => {
     await enter(page, owner, url(threadPath), "Discussion")
     const surface = page.locator('[data-sf-surface="UI52"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "five")
@@ -241,7 +335,7 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
   if (freshlyPrepared.status !== "ok" || !freshlyPrepared.value.selectionRef)
     throw new Error("The original current material could not be refreshed")
   let confirmationId = ""
-  await collabTest.step("UI53 reviews exact current material, cancels review and records one no-change confirmation", async () => {
+  await waveFourTest.step("UI53 reviews exact current material, cancels review and records one no-change confirmation", async () => {
     await enter(page, owner, url("/orchestra/sf-work/confirmations/" + encodeSfRouteRef(freshlyPrepared.value.selectionRef!)), "Confirm no change")
     const surface = page.locator('[data-sf-surface="UI53"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "five")
@@ -273,7 +367,7 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
     await capture(page, info, "UI53-dark-desktop-recorded-validity")
   })
 
-  await collabTest.step("Every selected area has a real pt-BR native capture", async () => {
+  await waveFourTest.step("UI51, UI52 and UI53 have real pt-BR native captures", async () => {
     const cookies = await page.context().cookies()
     const portuguese = await browser.newContext({
       locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
@@ -289,14 +383,8 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
         { id: "UI51", path: relationshipPath, title: "Relações entre registros" },
         { id: "UI52", path: threadPath, title: "Discussão" },
         { id: "UI53", path: "/orchestra/sf-work/confirmations/" + encodeSfRouteRef(confirmationId), title: "Confirmar sem alteração" },
-        { id: "UI55", path: "/orchestra/sf-imports/new", title: "Importar arquivo" },
-        { id: "UI56", path: previewPath, title: "Prévia da importação" },
       ]) {
         await enter(localized, owner, url(screen.path), screen.title)
-        if (screen.id === "UI56") {
-          await localized.locator('[data-sf-surface="UI56"]').getByRole("button", { name: /Refresh receipt|Atualizar recibo/, exact: true }).click()
-          await expect(localized.locator('[data-sf-surface="UI56"] .sf-files-preview')).toBeVisible()
-        }
         await scheme(localized, "dark")
         await capture(localized, info, screen.id + "-pt-BR-dark-desktop")
       }
@@ -306,19 +394,15 @@ collabTest("UI51 UI52 UI53 UI55 UI56 · original relationships, unsent discussio
   })
 
   expect(mutations.filter((value) => value === "collaboration-thread-reply")).toHaveLength(0)
-  expect(mutations.filter((value) => value === "import-admit")).toHaveLength(1)
-  expect(mutations.filter((value) => value === "import-preview")).toHaveLength(1)
-  expect(mutations.filter((value) => value === "import-apply")).toHaveLength(0)
+  expect(mutations.filter((value) => value === "collaboration-confirmation-confirm")).toHaveLength(1)
   expect(diagnostics.pageErrors).toEqual([])
   expect(diagnostics.consoleErrors).toEqual([])
-  await info.attach("wave-five-collab-evidence", { body: JSON.stringify({
-    areas: ["UI51", "UI52", "UI53", "UI55", "UI56"], widths: [1440, 390],
-    schemes: ["dark", "light"], locales: ["en-US", "pt-BR"], mutations,
-    originalSources: ["Handoff relation and authorized record evidence", "Internal unaddressed comment thread",
-      "Dashboard material confirmation", "Planner line and live ClamD INSTREAM import preview"],
-    limitations: ["Reply remains an unsent draft", "Import Apply belongs to UI57 and was not invoked",
-      "Actual browser zoom not measured", "No golden-image approval is inferred"],
-    ...diagnostics,
+  await info.attach("wave-five-collaboration-evidence", { body: JSON.stringify({
+    areas: ["UI51", "UI52", "UI53"], widths: [1440, 390], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"], mutations,
+    originalSources: ["Handoff relationship and authorized record evidence", "Internal unaddressed comment thread",
+      "Dashboard material and original no-change confirmation receipt"],
+    limitations: ["Reply remains an unsent draft", "No relationship create/remove submitted",
+      "Actual browser zoom not measured", "No golden-image approval is inferred"], ...diagnostics,
   }, null, 2), contentType: "application/json" })
 })
 
