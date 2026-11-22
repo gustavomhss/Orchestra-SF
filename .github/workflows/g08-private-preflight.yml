@@ -82,7 +82,7 @@ jobs:
       - name: Load the real Playwright fixture and list every case without attaching a browser
         working-directory: packages/app-shell
         run: bunx --no-install playwright test --config e2e/sucafina/g08/playwright.config.ts --list
-      - name: Require the exact seven-case subset and preserve every original obligation
+      - name: Require the exact nine-scenario subset and preserve every original obligation
         run: node script/sf-ci/g08-private-evidence.mjs verify-list "$SF_G08_TOOLING_EVIDENCE/list.json"
       - name: Check all guards against origin dev
         run: bun run check:guards --base origin/dev

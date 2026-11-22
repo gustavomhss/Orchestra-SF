@@ -1,11 +1,13 @@
 import { expect } from "@playwright/test"
 import type { Page, Request } from "@playwright/test"
 import {
-  adminCatalog, businessReply, configureTeam, contextReply, contextURL, expectUnauthenticated,
-  focusRefresh, installedTest, observe, ownerQuery, selected, switchTeam, uiContext, uiReply,
+  adminCatalog, businessReply, configureTeam, contextReply, contextURL, draftURL, expectUnauthenticated,
+  focusRefresh, installedTest, observe, ownerQuery, readTeamConfiguration, selected, switchTeam, teamConfiguration, uiAdminCatalog,
+  uiContext, uiDraft, uiReply,
 } from "./installed-fixture.ts"
 import type { Target } from "./installed-fixture.ts"
 import { landing } from "./landing-contract.ts"
+import { destinationGrants, requireDistinctDestinationGrants } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
 
 const test = installedTest
 const href = (target: Target) => {
@@ -15,6 +17,20 @@ const href = (target: Target) => {
   return url.href
 }
 test.describe.configure({ mode: "serial" })
+
+// Retain the original stability oracle. Equal empty projections never prove different grants.
+const grants = (live: Awaited<ReturnType<typeof observe>>) => live.destinations
+  .map((entry) => JSON.stringify([entry.capabilityId, entry.canRead, [...entry.allowedActionIds].sort()])).sort()
+
+async function withoutPosts(page: Page, action: () => Promise<void>) {
+  const requests: Request[] = []
+  const capture = (request: Request) => { if (request.method() === "POST") requests.push(request) }
+  page.on("request", capture)
+  try {
+    await action()
+    expect(requests).toHaveLength(0)
+  } finally { page.off("request", capture) }
+}
 
 async function expectNoBusiness(page: Page, target: Target, principal: string) {
   const live = await observe(page, target)
@@ -27,6 +43,8 @@ async function expectNoBusiness(page: Page, target: Target, principal: string) {
   await expect(page.locator(landing.shell)).not.toHaveAttribute("data-sf-team-selected", /.+/)
   await expect(page.locator(landing.dashboard)).toHaveCount(0)
   await expect(page.locator(landing.picker)).toHaveCount(0)
+  await expect(page.locator(landing.newChat)).toHaveCount(0)
+  await expect(page.locator(landing.workspace)).toHaveCount(0)
   // The current HTTP reader renders explicit revoked as unavailable; a future denied/authenticated
   // projection is also safe only with the same original revoked F02 and no business owner/control.
   await expect(page.locator(landing.shell)).toHaveAttribute("data-sf-teams-state", /^(authenticated|unavailable|denied)$/)
@@ -36,7 +54,7 @@ async function expectNoBusiness(page: Page, target: Target, principal: string) {
   return live
 }
 
-test("Two original Microsoft principals select the same Team without claiming different grants", async ({ harness }) => {
+test("Two distinct Microsoft accounts enter the same installed Team with their own authority", async ({ harness }) => {
   const { target, actors } = harness.plan
   const page = await harness.page(), holder = await harness.page("holder")
   expect(page.context()).not.toBe(holder.context())
@@ -49,11 +67,29 @@ test("Two original Microsoft principals select the same Team without claiming di
   const requester = await selected(page, target, actors.requester), other = await selected(holder, target, actors.holder)
   expect(requester.stamp.team?.owner.profile).toEqual(other.stamp.team?.owner.profile)
   expect(requester.stamp.team?.owner.principal).not.toEqual(other.stamp.team?.owner.principal)
-  // Do not claim different business grants from distinct identities or empty destinations.
-  await uiContext(holder, target, () => holder.reload())
-  await selected(holder, target, actors.holder)
-  await uiContext(page, target, () => page.reload())
-  await selected(page, target, actors.requester)
+  expect(first.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(second.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(destinationGrants(first)).toEqual(destinationGrants(requester))
+  expect(destinationGrants(second)).toEqual(destinationGrants(other))
+  requireDistinctDestinationGrants(first, second)
+  // Only original destination pages/permissions prove the difference, never identity, revision or availability.
+  const holderReload = await uiContext(holder, target, () => holder.reload())
+  const holderCurrent = await selected(holder, target, actors.holder)
+  expect(holderReload.stamp.principalRef).toBe(actors.holder)
+  expect(holderReload.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(holderCurrent.stamp.team?.owner).toEqual(other.stamp.team?.owner)
+  expect(destinationGrants(holderReload)).toEqual(destinationGrants(other))
+  expect(destinationGrants(holderCurrent)).toEqual(destinationGrants(other))
+  const requesterReload = await uiContext(page, target, () => page.reload())
+  const requesterCurrent = await selected(page, target, actors.requester)
+  expect(requesterReload.stamp.principalRef).toBe(actors.requester)
+  expect(requesterReload.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(requesterCurrent.stamp.team?.owner).toEqual(requester.stamp.team?.owner)
+  expect(destinationGrants(requesterReload)).toEqual(destinationGrants(requester))
+  expect(destinationGrants(requesterCurrent)).toEqual(destinationGrants(requester))
+  requireDistinctDestinationGrants(requesterReload, holderReload)
+  await expect(page).toHaveURL(href(target))
+  await expect(holder).toHaveURL(href(target))
 })
 
 test("An explicit A B A Team switch leaves the sibling window on its own Team", async ({ harness }) => {
@@ -70,8 +106,9 @@ test("An explicit A B A Team switch leaves the sibling window on its own Team", 
   await expect(page).toHaveURL(href(teamB))
   await expect(sibling).toHaveURL(href(target))
   expect((await selected(sibling, target, actors.requester)).stamp.team?.owner).toEqual(siblingBefore.stamp.team?.owner)
-  expect((await switchTeam(page, target, actors.requester, () => picker.selectOption(target.teamObjectId))).stamp.team?.owner)
-    .toEqual(before.stamp.team?.owner)
+  const returned = await switchTeam(page, target, actors.requester, () => picker.selectOption(target.teamObjectId))
+  expect(returned.stamp.team?.owner).toEqual(before.stamp.team?.owner)
+  expect(grants(returned)).toEqual(grants(before))
   await expect(page).toHaveURL(href(target))
   await uiContext(sibling, target, () => sibling.reload())
   await expect(sibling).toHaveURL(href(target))
@@ -120,7 +157,7 @@ test("A foreign installation deep link and reload cannot inherit the current Tea
   await selected(page, target, actors.requester)
 })
 
-test("Original Microsoft administration works without granting Team business access", async ({ harness }) => {
+test("A Microsoft configuration administrator without Teams cannot acquire business access", async ({ harness }) => {
   const { target, actors } = harness.plan
   const admin = await harness.page("dashboardAdmin")
   const selection = await uiContext(admin, target, () => admin.goto(target.shellOrigin + "/"), true)
@@ -133,11 +170,104 @@ test("Original Microsoft administration works without granting Team business acc
   expect(live.stamp.team).toBeUndefined()
   expect(live.destinations).toEqual([])
   expect(live.availability).toEqual([])
-  const catalog = await adminCatalog(admin, target)
+  await expect(admin.locator(landing.adminToggle)).toBeEnabled()
+  const catalog = await uiAdminCatalog(admin, target, () => admin.locator(landing.adminToggle).click())
+  await expect(admin.locator(landing.adminToggle)).toHaveAttribute("aria-expanded", "true")
+  await expect(admin.locator(landing.administration)).toHaveAttribute("data-sf-team-administration", "ready")
+  await expect(admin.locator(landing.adminRead)).toBeEnabled()
+  await expect(admin.locator(landing.refresh)).toHaveCount(1)
   expect(catalog.profiles.some((entry) => entry.enabled && entry.profile.teamObjectId === target.teamObjectId)).toBe(true)
+  expect(await adminCatalog(admin, target)).toEqual(catalog)
+  await withoutPosts(admin, async () => {
+    const open = admin.locator('[data-sf-admin-team="' + target.teamObjectId + '"] [data-sf-admin-configuration]')
+    await expect(open).toBeEnabled()
+    const displayed = await readTeamConfiguration(admin, target, () => open.click())
+    const editor = admin.locator("[data-sf-team-configuration]")
+    await expect(editor).toHaveAttribute("data-sf-team-configuration", "ready")
+    expect(await readTeamConfiguration(admin, target)).toEqual(displayed)
+    if (displayed.status === "not-found") expect(await adminCatalog(admin, target)).toEqual(catalog)
+    const document = displayed.status === "ok" ? displayed.configuration.document : undefined
+    await expect(editor.locator("[data-sf-configuration-model]")).toHaveValue(document?.settings.model ?? "")
+    await expect(editor.locator("[data-sf-configuration-agent]")).toHaveValue(document?.settings.default_agent ?? "")
+    await expect(editor.locator("[data-sf-configuration-read]")).toBeEnabled()
+    await editor.locator("[data-sf-configuration-close]").click()
+    await expect(editor).toHaveCount(0)
+    await expect(admin.locator(landing.adminRead)).toBeEnabled()
+  })
+  await expect(admin.locator(landing.newChat)).toHaveCount(0)
+  await expect(admin.locator(landing.workspace)).toHaveCount(0)
+  await expect(admin.locator(landing.dashboard)).toHaveCount(0)
   await uiContext(admin, target, () => admin.goto(href(target)))
   await expectNoBusiness(admin, target, actors.dashboardAdmin)
-  // Positive original HTTP administration is useful, but does not replace the original native administration UI.
+})
+
+test("Keyboard navigation opens a new Team chat draft on narrow Web without changing owner", async ({ harness }) => {
+  const { target, actors } = harness.plan
+  const page = await harness.page()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await withoutPosts(page, async () => {
+    await uiContext(page, target, () => page.goto(href(target)))
+    const before = await selected(page, target, actors.requester)
+    const open = page.locator(landing.newChat)
+    await expect(open).toBeEnabled()
+    await expect(open).toBeInViewport()
+    await open.focus()
+    await expect(open).toBeFocused()
+    const draft = await uiDraft(page, target, actors.requester, () => open.press("Enter"))
+    expect(draft.live.stamp).toEqual(before.stamp)
+    await expect(page).toHaveURL(draftURL(target))
+    const workspace = page.locator(landing.workspace)
+    const newChat = workspace.locator(landing.newChat)
+    await expect(newChat).toBeEnabled()
+    await newChat.focus()
+    await expect(newChat).toBeFocused()
+    // An already admitted new draft is local; this button does not issue another F02.
+    await newChat.press("Enter")
+    await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
+    await expect(workspace.locator(landing.transcript).locator(".sf-team-session-empty")).toBeVisible()
+    const editor = workspace.locator(landing.composer).getByRole("textbox")
+    await expect(editor).toBeEditable()
+    await expect(editor).toHaveText("")
+    expect((await selected(page, target, actors.requester)).stamp).toEqual(before.stamp)
+    expect(await page.evaluate(() => "api" in window)).toBe(false)
+    await expect(page.locator('[data-component="session-new-design"], .directory-picker-v2')).toHaveCount(0)
+  })
+})
+
+test("A Team switch keeps a canceled chat draft and discards it only on confirmation", async ({ harness }) => {
+  const { target, teamB, actors } = harness.plan
+  const page = await harness.page()
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await withoutPosts(page, async () => {
+    const initial = await uiDraft(page, target, actors.requester, () => page.goto(draftURL(target)))
+    const workspace = page.locator(landing.workspace)
+    const editor = workspace.locator(landing.composer).getByRole("textbox")
+    const draft = "Unsaved qualification draft; never submit"
+    await editor.fill(draft)
+    await expect(editor).toHaveText(draft)
+    const picker = page.locator(landing.picker), dialog = page.locator(landing.draftGuard)
+    await picker.selectOption(teamB.teamObjectId)
+    await expect(dialog).toBeVisible()
+    await dialog.locator(landing.keepEditing).click()
+    await expect(dialog).toHaveCount(0)
+    await expect(page).toHaveURL(draftURL(target))
+    expect((await selected(page, target, actors.requester)).stamp).toEqual(initial.live.stamp)
+    await expect(editor).toHaveText(draft)
+    await expect(picker).toHaveValue(target.teamObjectId)
+    await picker.selectOption(teamB.teamObjectId)
+    await expect(dialog).toBeVisible()
+    await uiDraft(page, teamB, actors.requester, () => dialog.locator(landing.discard).click())
+    await expect(dialog).toHaveCount(0)
+    await expect(page).toHaveURL(draftURL(teamB))
+    await expect(editor).toBeEditable()
+    await expect(editor).toHaveText("")
+    const returned = await uiDraft(page, target, actors.requester, () => picker.selectOption(target.teamObjectId))
+    expect(returned.namespace).toEqual(initial.namespace)
+    await expect(page).toHaveURL(draftURL(target))
+    await workspace.locator(landing.newChat).click()
+    await expect(editor).toBeEditable()
+    await expect(editor).toHaveText("")
+  })
 })
 
 test("Real administration revokes a disposable Team and restores its original configuration", async ({ harness }) => {
@@ -158,6 +288,8 @@ test("Real administration revokes a disposable Team and restores its original co
   expect(catalog.profiles.filter((entry) => entry.enabled).map((entry) => entry.profile.teamObjectId).sort())
     .toEqual([target.teamObjectId, teamB.teamObjectId].sort())
   expect(catalog.configRevision).toBe(before.stamp.team?.revisions.configRevision)
+  const documents = await Promise.all([teamConfiguration(admin, target), teamConfiguration(admin, teamB)])
+  for (const document of documents) expect(document.configRevision).toBe(catalog.configRevision)
   const profiles = (value: typeof catalog) => value.profiles.map((entry) => JSON.stringify(entry)).sort()
   const disabled = { ...catalog, profiles: catalog.profiles.map((entry) => ({
     ...entry, enabled: entry.profile.teamObjectId === target.teamObjectId ? false : entry.enabled,
@@ -179,9 +311,10 @@ test("Real administration revokes a disposable Team and restores its original co
   } finally {
     // Reconcile a lost response by one original catalog read. Never retry disable or guess/coerce a CAS token.
     const current = await adminCatalog(admin, target)
-    if (JSON.stringify(profiles(current)) === JSON.stringify(profiles(catalog)) && current.configRevision === catalog.configRevision) {
-      harness.revocation.restored = true
-    } else {
+    const unchanged = JSON.stringify(profiles(current)) === JSON.stringify(profiles(catalog)) &&
+      current.configRevision === catalog.configRevision
+    // Enable only after the original reread proves the expected disabled state.
+    if (!unchanged) {
       expect(current.configRevision).not.toBe(catalog.configRevision)
       expect(profiles(current)).toEqual(profiles(disabled))
       const enabled = await configureTeam(admin, target, "enable", current.configRevision)
@@ -194,8 +327,16 @@ test("Real administration revokes a disposable Team and restores its original co
       await selected(page, target, actors.requester)
       await uiContext(holder, target, () => holder.goto(href(target)))
       await selected(holder, target, actors.holder)
-      harness.revocation.restored = true
     }
+    const restored = await adminCatalog(admin, target)
+    expect(profiles(restored)).toEqual(profiles(catalog))
+    const preserved = await Promise.all([teamConfiguration(admin, target), teamConfiguration(admin, teamB)])
+    for (const [index, document] of documents.entries()) {
+      expect(preserved[index]?.configRevision).toBe(restored.configRevision)
+      expect(preserved[index]?.document).toEqual(document.document)
+    }
+    // Shared documents survive; restoring access must not rewind the global CAS revision.
+    harness.revocation.restored = true
   }
   expect(harness.revocation.restored).toBe(true)
 })
@@ -222,5 +363,7 @@ test("Logout invalidates the original Microsoft browser context and preserves th
   await expect(stale.locator(landing.shell)).toHaveAttribute("data-sf-teams-state", "unauthenticated")
   await expectUnauthenticated(await contextReply(stale, target, true))
   await uiContext(holder, target, () => holder.reload())
-  expect((await selected(holder, target, actors.holder)).stamp.team?.owner).toEqual(holderBefore.stamp.team?.owner)
+  const preserved = await selected(holder, target, actors.holder)
+  expect(preserved.stamp.team?.owner).toEqual(holderBefore.stamp.team?.owner)
+  expect(grants(preserved)).toEqual(grants(holderBefore))
 })

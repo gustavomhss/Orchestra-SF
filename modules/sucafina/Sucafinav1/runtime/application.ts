@@ -1,5 +1,6 @@
 import { configure, controls, roleMap } from "./admin.ts"
 import { createHash } from "node:crypto"
+import { digestSfValue } from "../product/contracts/canonical.ts"
 import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
 import { dashboardPages, plannerKeys, procurementKeys } from "../src/nav.ts"
 import { documentHtml, links, pageMain } from "../src/screen-shell.ts"
@@ -50,6 +51,70 @@ export function readSfApplicationSource(handler: object) {
   return applicationSources.get(handler)
 }
 
+/** Read-only projection of this exact original application; a route or catalog is never an authority. */
+export async function readSfApplicationContext(handler: object, request: Request, principalRef: string,
+  verifyCurrent?: () => Promise<boolean>) {
+  const source = applicationSources.get(handler)
+  // An internal read during a POST retains the original Request and requires its current authority fence.
+  // This private projection consumes no body and cannot commit; HTTP F02 still rejects POST at its handler.
+  const readMethod = ["GET", "HEAD"].includes(request.method) || request.method === "POST" && typeof verifyCurrent === "function"
+  if (!source || !readMethod || request.signal.aborted) return undefined
+  const application = source.application
+  const read = async () => {
+    const observed = await Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) =>
+      application.persistence.transaction(surface, async (snapshot) => {
+        const authority = await readApplicationAuthority(application, request, surface, snapshot)
+        if (!authority || authority.actor.id !== principalRef || request.signal.aborted)
+          return { commit: false, value: undefined }
+        return { commit: false, value: {
+          surface,
+          actor: { ...authority.actor, roles: authority.actor.roles.toSorted(),
+            assigned: authority.actor.assigned?.toSorted(), domains: authority.actor.domains?.toSorted() },
+          pages: authority.pages.filter((page) => application.domains[surface].some((entry) => entry.pages.includes(page))),
+        } }
+      }, { signal: request.signal }),
+    ))
+    if (request.signal.aborted || observed.some((item) => !item) || verifyCurrent && !await verifyCurrent() || request.signal.aborted)
+      return undefined
+    const current = observed.filter((item) => item !== undefined)
+    return {
+      principalRef,
+      accessRevision: digestSfValue(current),
+      pages: current.flatMap((item) => item.pages.map((page) => ({ surface: item.surface, page }))),
+    }
+  }
+  // The installed driver keeps all three reads on one root. Each surface still
+  // goes through its original transaction wrapper, always with commit=false.
+  // The optional owner fence finishes before that read root releases its ACL.
+  return application.persistence.readSnapshotRoot
+    ? application.persistence.readSnapshotRoot(read, { signal: request.signal })
+    : read()
+}
+
+async function readApplicationAuthority(application: Application, request: Request, surface: Surface, snapshot: Snapshot) {
+  const principal = await application.authenticate(request, { surface, roleMap: application.rolePolicy?.(surface) ?? roleMap(snapshot, surface) })
+  if (!principal || !principal.id || principal.id.startsWith("local:")) return undefined
+  const access = object(object(snapshot.data.access)[principal.id])
+  const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
+  const actor: Actor = {
+    id: principal.id,
+    canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
+    roles,
+    assigned: Array.isArray(access.assigned)
+      ? access.assigned.filter((entry): entry is string => typeof entry === "string")
+      : [],
+    domains: Array.isArray(access.domains)
+      ? access.domains.filter((entry): entry is string => typeof entry === "string")
+      : [],
+  }
+  const summaries = Array.isArray(snapshot.data.summaries)
+    ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string")
+    : []
+  const pages = surface === "dashboard" ? dashboardPages(actor, summaries)
+    : surface === "planner" ? plannerKeys(actor) : procurementKeys(actor)
+  return { actor, pages }
+}
+
 /** Mount this in the installation's existing fetch composition. It starts no listener and selects no database. */
 export function createApplication(mount: string, application: Application) {
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(mount)) throw new Error("Invalid module mount")
@@ -87,31 +152,10 @@ export function createApplication(mount: string, application: Application) {
     if (preparedUpload instanceof Response) return preparedUpload
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
-      const principal = await application.authenticate(request, { surface, roleMap: application.rolePolicy?.(surface) ?? roleMap(snapshot, surface) })
-      if (!principal || !principal.id || principal.id.startsWith("local:"))
-        return { commit: false, value: reply("Authentication required", 401) }
-      const access = object(object(snapshot.data.access)[principal.id])
-      const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
-      const actor: Actor = {
-        id: principal.id,
-        canWrite: principal.canWrite && roles.some((role) => role !== "viewer"),
-        roles,
-        assigned: Array.isArray(access.assigned)
-          ? access.assigned.filter((entry): entry is string => typeof entry === "string")
-          : [],
-        domains: Array.isArray(access.domains)
-          ? access.domains.filter((entry): entry is string => typeof entry === "string")
-          : [],
-      }
-      const summaries = Array.isArray(snapshot.data.summaries)
-        ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string")
-        : []
-      const allowed =
-        surface === "dashboard"
-          ? dashboardPages(actor, summaries)
-          : surface === "planner"
-            ? plannerKeys(actor)
-            : procurementKeys(actor)
+      const authority = await readApplicationAuthority(application, request, surface, snapshot)
+      if (!authority) return { commit: false, value: reply("Authentication required", 401) }
+      const actor = authority.actor
+      const allowed = authority.pages
       if (!allowed.length) return { commit: false, value: reply("Access denied", 403) }
       const page = parsed?.page ?? url.searchParams.get("page") ?? allowed[0]
       if (!allowed.includes(page)) return { commit: false, value: reply("Access denied", 403) }
