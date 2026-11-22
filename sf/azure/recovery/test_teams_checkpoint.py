@@ -209,6 +209,50 @@ class CheckpointTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             checkpoint.restore_clone_files(archive, receipt, link)
 
+    def release_inputs(self):
+        source = {"sha": "d" * 40, "archiveSha256": "e" * 64, "manifestSha256": "f" * 64}
+        reservation = {**self.binding, "sourceRelease": source}
+        g07 = {"schema": "sf-g07-package-v1", "candidate": self.binding["candidate"],
+               "archive": {"sha256": self.binding["archiveSha256"]},
+               "manifest": {"sha256": "1" * 64}, "verification": {"status": "PACKAGE_VERIFIED"}}
+        installed = {"schema": "orchestra-sf.a7-entra-release-v1", "sourceSHA": source["sha"],
+                     "archiveSha256": source["archiveSha256"], "manifestSha256": source["manifestSha256"]}
+        return reservation, g07, installed
+
+    def test_precutover_checkpoint_binds_observed_R_separately_from_target_C(self):
+        reservation, g07, installed = self.release_inputs()
+        source = checkpoint.bind_releases(reservation, g07, installed["sourceSHA"], installed)
+        self.assertNotEqual(source["sha"], reservation["candidate"]["sha"])
+        archive, receipt = checkpoint.checkpoint_files(self.roots, self.destination, {
+            **self.binding, "sourceRelease": source,
+        })
+        clone = checkpoint.restore_clone_files(archive, receipt, self.clone)
+        self.assertEqual(clone["binding"]["sourceRelease"], source)
+        self.assertEqual(clone["binding"]["candidate"], g07["candidate"])
+        self.assertFalse(clone["releaseQualified"])
+
+    def test_wrong_source_or_target_cannot_be_credited_as_precutover_backup(self):
+        reservation, g07, installed = self.release_inputs()
+        for key, wrong in (("sourceSHA", "2" * 40), ("archiveSha256", "3" * 64), ("manifestSha256", "4" * 64)):
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, "source release differs"):
+                checkpoint.bind_releases(reservation, g07, installed["sourceSHA"], {**installed, key: wrong})
+        with self.assertRaisesRegex(ValueError, "source release differs"):
+            checkpoint.bind_releases(reservation, g07, "5" * 40, installed)
+        with self.assertRaisesRegex(ValueError, "G07 target"):
+            checkpoint.bind_releases(reservation, {**g07, "archive": {"sha256": "6" * 64}}, installed["sourceSHA"], installed)
+
+    def test_postcutover_checkpoint_requires_exact_G07_C_bytes(self):
+        reservation, g07, installed = self.release_inputs()
+        source = {"sha": g07["candidate"]["sha"], "archiveSha256": g07["archive"]["sha256"],
+                  "manifestSha256": g07["manifest"]["sha256"]}
+        reservation["sourceRelease"] = source
+        installed.update(sourceSHA=source["sha"], archiveSha256=source["archiveSha256"], manifestSha256=source["manifestSha256"])
+        self.assertEqual(checkpoint.bind_releases(reservation, g07, source["sha"], installed), source)
+        wrong_source = {**source, "archiveSha256": "7" * 64}
+        with self.assertRaisesRegex(ValueError, "post-cutover source C"):
+            checkpoint.bind_releases({**reservation, "sourceRelease": wrong_source}, g07, source["sha"],
+                                     {**installed, "archiveSha256": wrong_source["archiveSha256"]})
+
 
 if __name__ == "__main__":
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(CheckpointTests)

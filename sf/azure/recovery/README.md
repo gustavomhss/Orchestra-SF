@@ -9,8 +9,10 @@ The clone retains private permissions and is never activated by this command.
 
 The host CLI imports `sf/azure/vm/install-factory-distribution.py`. It uses the
 actual installer lock, stopped-service/maintenance preflight and immutable release
-verification. It compares the observed `.a7-source.json` and manifest with the
-G07 receipt's candidate and inner tar hash. It also checks the current Azure IMDS
+verification. It verifies the observed `.a7-source.json` and manifest against the
+reserved **source release R**, separately from the G07 **target C** and inner tar
+hash. This permits the pre-cutover backup before C is installed. A later checkpoint
+with source C must match the exact G07 tar and manifest. It also checks the current Azure IMDS
 resource ID against the isolated environment reservation. It does not replace
 these checks with the filesystem fixtures used by the component tests.
 
@@ -19,7 +21,7 @@ these checks with the filesystem fixtures used by the component tests.
 The checkpoint receipt has schema `orchestra-sf.teams-checkpoint.v2`; the clone
 receipt has schema `orchestra-sf.teams-clone-integrity.v2`. Both explicitly retain
 `releaseQualified: false`, `businessRecovery: NOT_RUN` and `keyDecryption: NOT_RUN`.
-The checkpoint binds the candidate SHA/tree, installed inner tar and manifest,
+The checkpoint binds the target candidate SHA/tree/tar, current source release SHA/tar/manifest,
 VM identity, reservation digest and writer-fence evidence. Writer drain is an
 operator attestation; service inactivity and installation bytes are observations.
 
@@ -43,6 +45,11 @@ creating the file does not grant authority. Its schema is
 - `vmResourceId`: exact Azure resource ID of the host executing this action.
 - `fqdn`: the reserved ingress checked by the installed maintenance preflight.
 - `candidate`: `{ "sha": "<C>", "tree": "<T>" }` and `archiveSha256`: inner G07 tar hash.
+- `sourceRelease`: `{ "sha": "<R>", "archiveSha256": "<installed R tar hash>",
+  "manifestSha256": "<installed R manifest hash>" }`. The checkpoint observes and
+  verifies this current source. A clone reservation must preserve the same source
+  binding from the checkpoint receipt. After cutover, source R may equal C only
+  with the exact G07 tar and manifest. No prior code selection is needed to back up R.
 
 For `checkpoint`, also provide `externalRegisterPath`, `keyFile`, `writesBlocked`,
 `taskRelayDrained` and `writerFenceEvidenceSha256`. The independent monotonic
@@ -84,7 +91,7 @@ synthetic filesystem test output and its explicit component-class receipt.
 
 ## Failure behavior and component controls
 
-The adapter refuses unsettled SQLite journals, unknown/missing databases, unsafe
+The adapter refuses unsettled SQLite journals, absence of any SQLite store or corrupt stores, unsafe
 paths, links/special files, nested mounts, changed source files, archive hash or
 roster mismatches, missing/extra/duplicate members, invalid payload hashes and
 nonempty clone destinations. Limits bound member count, manifest size and expanded

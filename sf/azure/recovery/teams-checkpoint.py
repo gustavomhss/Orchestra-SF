@@ -363,7 +363,32 @@ def admission(file, command):
     if not SHA40.fullmatch(str(candidate.get("sha", ""))) or not SHA40.fullmatch(str(candidate.get("tree", ""))) or \
        not SHA64.fullmatch(str(reservation.get("archiveSha256", ""))):
         refuse("exact final C/T/inner tar hash required")
+    source = reservation.get("sourceRelease", {})
+    if not SHA40.fullmatch(str(source.get("sha", ""))) or \
+       not SHA64.fullmatch(str(source.get("archiveSha256", ""))) or \
+       not SHA64.fullmatch(str(source.get("manifestSha256", ""))):
+        refuse("exact current source release and its archive/manifest hashes required")
     return reservation
+
+
+def bind_releases(reservation, g07, current, installed):
+    # The pre-cutover backup protects R before C is installed. C's verified tar
+    # identifies the intended destination, not the code currently owning the data.
+    if g07.get("schema") != "sf-g07-package-v1" or g07.get("candidate") != reservation["candidate"] or \
+       g07.get("archive", {}).get("sha256") != reservation["archiveSha256"] or \
+       g07.get("verification", {}).get("status") != "PACKAGE_VERIFIED" or \
+       not SHA64.fullmatch(str(g07.get("manifest", {}).get("sha256", ""))):
+        refuse("G07 target candidate or archive differs from the reservation")
+    source = {"sha": installed.get("sourceSHA"), "archiveSha256": installed.get("archiveSha256"),
+              "manifestSha256": installed.get("manifestSha256")}
+    if installed.get("schema") != "orchestra-sf.a7-entra-release-v1" or \
+       current != reservation["sourceRelease"]["sha"] or source != reservation["sourceRelease"]:
+        refuse("observed current source release differs from the reserved backup source")
+    if source["sha"] == reservation["candidate"]["sha"] and \
+       (source["archiveSha256"] != reservation["archiveSha256"] or \
+        source["manifestSha256"] != g07["manifest"]["sha256"]):
+        refuse("post-cutover source C must have the exact G07 archive and manifest")
+    return source
 
 
 def main():
@@ -388,6 +413,7 @@ def main():
             binding = receipt.get("binding", {})
             if binding.get("candidate") != reservation["candidate"] or \
                binding.get("archiveSha256") != reservation["archiveSha256"] or \
+               binding.get("sourceRelease") != reservation["sourceRelease"] or \
                binding.get("vmResourceId", "").lower() == reservation["vmResourceId"].lower() or \
                binding.get("vmResourceId", "").lower() != str(reservation.get("sourceVmResourceId", "")).lower() or \
                reservation.get("networkEgressFenced") is not True or reservation.get("credentialsDisabled") is not True:
@@ -399,18 +425,14 @@ def main():
             write_private(target / "clone-receipt.json", result)
             print(json.dumps({"result": result["proofClass"], "releaseQualified": False}))
             return
-        if installer.current_source() != reservation["candidate"]["sha"]:
-            refuse("current release is not the reserved candidate")
-        installer.check_rollback_release(reservation["candidate"]["sha"])
+        current = installer.current_source()
+        if current != reservation["sourceRelease"]["sha"]:
+            refuse("current release is not the reserved backup source")
+        installer.check_rollback_release(current)
         with installer.protected_input(installer.CURRENT / ".a7-source.json", 131072) as stream:
             installed = json.load(stream)
         g07 = private_json(Path(args.g07_receipt))
-        if g07.get("schema") != "sf-g07-package-v1" or g07.get("candidate") != reservation["candidate"] or \
-           g07.get("archive", {}).get("sha256") != reservation["archiveSha256"] or \
-           g07.get("verification", {}).get("status") != "PACKAGE_VERIFIED" or \
-           installed["archiveSha256"] != reservation["archiveSha256"] or \
-           installed["manifestSha256"] != g07.get("manifest", {}).get("sha256"):
-            refuse("installed bytes differ from the G07 receipt or reservation")
+        source_release = bind_releases(reservation, g07, current, installed)
         roots = {"state": STATE, "configuration": CONFIGURATION}
         registry = Path(reservation["externalRegisterPath"])
         if not registry.is_absolute() or registry.resolve() != registry or not registry.is_file() or \
@@ -429,6 +451,7 @@ def main():
         if destination.stat().st_dev == STATE.stat().st_dev:
             refuse("backup destination must be on a different volume from durable state")
         binding = {"candidate": reservation["candidate"], "archiveSha256": reservation["archiveSha256"],
+                   "sourceRelease": source_release,
                    "vmResourceId": reservation["vmResourceId"], "installedManifestSha256": installed["manifestSha256"],
                    "reservationSha256": file_digest(Path(args.reservation)),
                    "writerFence": {"evidenceSha256": reservation["writerFenceEvidenceSha256"], "source": "OPERATOR_ATTESTATION"},
