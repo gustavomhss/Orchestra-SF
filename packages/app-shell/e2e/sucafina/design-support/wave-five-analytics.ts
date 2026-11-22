@@ -1,4 +1,4 @@
-import { expect, type Browser, type Page, type Request, type TestInfo } from "@playwright/test"
+import { expect, type Browser, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
 import { waveFourTest, capture, enter, reflow, scheme, scrollPageTop } from "./wave-four"
 
@@ -84,24 +84,26 @@ export async function captureAnalytics(page: Page, info: TestInfo, name: string)
   console.info("SF_ANALYTICS_CAPTURE " + JSON.stringify({ name, width: page.viewportSize()?.width,
     surface: await root.getAttribute("data-sf-surface"), stage: await root.getAttribute("data-sf-stage") }))
 }
-export async function captureModes(page: Page, info: TestInfo, prefix: string) {
+export async function captureModes(page: Page, info: TestInfo, prefix: string, focus?: Locator) {
+  const captureMode = async (suffix: string) => {
+    await scrollPageTop(page)
+    if (focus) await focus.scrollIntoViewIfNeeded()
+    await captureAnalytics(page, info, prefix + suffix + "-test-data")
+  }
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-dark-desktop-test-data")
+  await captureMode("-dark-desktop")
   await scheme(page, "light")
-  await captureAnalytics(page, info, prefix + "-light-desktop-test-data")
+  await captureMode("-light-desktop")
   // The native shell places its theme toggle outside the compact navigation.
   // Choose each actual theme while that control is visible, then measure narrow CSS reflow.
   await scheme(page, "dark")
   await page.setViewportSize({ width: 390, height: 844 })
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-dark-390-test-data")
+  await captureMode("-dark-390")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "light")
   await page.setViewportSize({ width: 320, height: 800 })
-  await scrollPageTop(page)
-  await captureAnalytics(page, info, prefix + "-light-320-test-data")
+  await captureMode("-light-320")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")
 }
