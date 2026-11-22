@@ -1,4 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 import type { DecisionCase, CostCoverageAssessment, CostCoverageBasis } from "../contracts/decisions.ts"
 import type { DomainPortHost, PlannerSourceHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -25,7 +26,7 @@ export function createDecisionCoverageAccess(input: {
       if (!id.trim() || !incarnation.trim() || !alternativeId.trim() || !Number.isSafeInteger(version) || decisionCoverageRef({ id, incarnation }, alternativeId, version) !== reference) return { status: "needs-input", reason: "invalid-coverage-reference" }
       const source = input.host.requestFor(context)
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "coverage-access-unavailable" }
-      const read = async () => input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined)
+      const read = async () => input.state.read(source, "cases", selectSfCase(id, context))
       const current = await read()
       if (current.status !== "ok") return { status: "unavailable", reason: "coverage-unavailable" }
       const decision = current.value
