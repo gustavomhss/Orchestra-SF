@@ -351,6 +351,7 @@ jobs:
       SF_SHARD_COUNT: "8"
       ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "1"
       ORCHESTRA_OMNI_CONTROL: declared
+      SF_CI_FOREIGN_OWNER_FIXTURE: "1"
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
@@ -369,6 +370,7 @@ jobs:
           root="$GITHUB_WORKSPACE"
           evidence="$root/sf-ci-evidence/$SF_SUITE_ID-shard-$SF_SHARD_INDEX"
           mkdir -p "$evidence"
+          test "$(id -u)" -ne 0
           test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
           test "$RUNNER_OS" = Linux && test "$RUNNER_ARCH" = X64
           SF_CHECKOUT_TREE_SHA="$(git rev-parse 'HEAD^{tree}')"
