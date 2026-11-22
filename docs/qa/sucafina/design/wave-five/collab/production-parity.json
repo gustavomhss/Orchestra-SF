@@ -57,7 +57,7 @@
     },
     {
       "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
-      "sha": "e34ed981336ea58bc0daf6a47c429f679b531ed4"
+      "sha": "950b5b65de02ce3002a00279262185c7afbce9ff"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
@@ -94,7 +94,7 @@
       "import": "failed: original valid preview persisted, then all native context health observers slow down; reference handler is never entered before test timeout. Diagnostic trace6 confirms stage timing; trace7 measures original snapshot materialization."
     },
     "observerBatch": {
-      "status": "24 original-source unit cases passed; clean runtime import qualification pending",
+      "status": "24 original-source unit cases passed; import fixed3 remains blocked at UI56 readiness",
       "cases": 24,
       "physicalNamespaceReadsPerObserver": {
         "before": 22,
@@ -107,7 +107,12 @@
       "importRun": 44988782004,
       "job": 137105026147,
       "assertions": 304,
-      "record": "qualification/collaboration-batch-01.json"
+      "record": "qualification/collaboration-batch-01.json",
+      "typeOnlyFollowup": {
+        "source": "5caf3316be860f7a9d1df99e68fd0630d023509b",
+        "testBlob": "950b5b65de02ce3002a00279262185c7afbce9ff",
+        "change": "Two readonly tuple expectations copied to mutable arrays, preserving expected values/order."
+      }
     },
     "importFixed2": {
       "source": "74be68770c958a720c3a34fa5b8e71b779c77e44",
@@ -116,6 +121,14 @@
       "job": 137102272074,
       "status": "partial UI55 original simulation and cancellation; UI56 readiness fails unchanged 10 s assertion",
       "record": "attempts/import-fixed-02.json"
+    },
+    "importFixed3": {
+      "source": "c6f50789ce4f9d3265172c47274f5754b06975b2",
+      "snapshot": "12389e15961f7fb04b7f8b0d956e693a19d27d61",
+      "run": 44988782004,
+      "job": 137105069614,
+      "status": "partial UI55; same unchanged UI56 readiness assertion fails",
+      "record": "attempts/import-fixed-03.json"
     }
   },
   "excluded": [
