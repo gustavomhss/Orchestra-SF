@@ -562,3 +562,66 @@ Os 11 casos Reports do run 44987301540 mantêm especificação, manifesto e 16 s
 A primeira fonte do #704, `21d43e8aa943151a98caabc0f829432d0571e309` / T `c83c93f435e8b601184a202e929c41d19828a1f3`, recebeu revisão 6013916319 e run 45059194082/job 137321074779 SUCCESS. Driver `69eb98a8fc4912e9489b2b10825971ac3b4fce8d`, dev efetivamente observado `f2b129b1610a218b7104dbc2c4bf6b07befae5af`, merge-base b777. Guards: 78 regras, três paths, zero gate/warn/error. ZIP 14768239633, 1.478 bytes, SHA-256 `89c94bc9487171e5b67978c21faf10924cdab0ab3f7dbf322803fc0395686a0c`; sete CRC e três hashes de documento/Git blobs conferidos. Essa fonte não foi integrada por se sobrepor ao #702. Seu CI não qualifica a nova composição.
 
 Não há alteração de candidato final, ACKs, operador, tar, reservas, aceites ou decisão de produção. As 99 obrigações em 11 produtores continuam NOT_RUN na instalação. **0/5 gates finais; NOT_READY.** A virada continua condicionada ao aval explícito de Gustavo após go/no-go e janela propostos com recibos completos.
+
+## Novo corte após #705 e Azure — 2026-11-22T21:04:08Z
+
+Este corte atualiza as observações de 19:18:45 UTC sem apagar seus recibos. Dev observado: **`08e05d917a56505eb371889c92db8eb2d862a986` / T `991f7bbc1649c840e34438b0815b7ca244fb6261`**. Não é o candidato final confirmado. A [reserva documental](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7085707588) limita o follow-up a README/status/este registro; o produto e os workflows permanentes ficam com seus escritores.
+
+### #704 recebido e integrado
+
+O [#704](https://github.com/gustavomhss/Orchestra-SF/pull/704) entrou em dev pelo merge `bd12a386ae0ea3d0a949df791861b1482075f556`, árvore `bf3aa87d40aa9590ccc66faca90fd0ba8a3d3096`, idêntica à fonte `c644c6ea20dbb6c323078acbfe1ff41fac825cdf`. Revisão técnica COMMENT6014026143; [intake7084497776](https://github.com/gustavomhss/Orchestra-SF/pull/704#issuecomment-7084497776).
+
+Run45060904270/job137326379220: SUCCESS; driver separado146d2b871082f120a6571ffed61ace5b76d0383d, checkout literal C/T e base f2b. Guards78/três paths/zero findings; ZIP14769690088,1478bytes, SHA-256 `447e92394c202977732f32418ca56254badfdf9945f96f4220c5aad62e9f38df`, sete CRC e três hashes/Git blobs conferidos. O resultado documental do primeiro head21d continua histórico e não foi transferido.
+
+### Azure: bloqueio de login resolvido, reservas pendentes
+
+[Run45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414), tentativa1, job137326730391, fonte f2b129b1610a218b7104dbc2c4bf6b07befae5af: SUCCESS às19:30:08UTC/16:30:08SãoPaulo. Quatro configurações validadas, login OIDC PASS e12 observações ARM OBSERVED/COMPLETE. ZIP14768723838,2984bytes, SHA-256 `0eb524f32ff259e6309d9b218e8ab8cdd556009095c6bb89c47e6ae54ac79853`; três CRC e receipt `024f23eda7c6455faf1837fe45e4a944b9bc1ee48bd06696b63639fd6f8dafe8` conferidos independentemente no [intake7085197117](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7085197117).
+
+Foram observadas duas VMs running/Succeeded, snapshot, vault e backup protegido concluído. Restore histórico CompletedWithWarnings não é ensaio G10. A identidade Reader permite descoberta; não prova a rota guest/runner. ReservationConfirmed, guestObserved, installedQualification e productionCutover continuam false. As referências privadas de reserva, janela, acesso e responsáveis de G08/G10 não foram confirmadas no corte; não é necessário reenviar as variáveis já válidas.
+
+### #705: processo estrito G08 integrado
+
+Fonte `af4c65927a236a4228245a8c4d1929ad6247dfb1`; árvore idêntica ao merge/dev08e05d. [Run45066918996](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45066918996), tentativa1, job137345029597, driver `0cd6571bd7a4f87f21bfe72ca41b7714faf175fc` / T `9aab076fef5fde0e155956fc97e1a28aa88c7866`: **280 Node +5 adapters +205 proveniência +8 processos =498 PASS**, zero failures/errors/skips. O checkout real antes/depois é a fonte, tracked limpo. Guards78/três paths/zero findings; spawn-imports5171/66; oito controles de processo com18 spawns Omni/zero delegated.
+
+ZIP14771089705,22689bytes, SHA-256 `db257b536421ed1a97b6abf683a83518f3ac844d2b56edc3cd0fa29e1e7d507a`;20 CRC,19 hashes de relatórios e22 fontes conferidos no [intake independente7085548831](https://github.com/gustavomhss/Orchestra-SF/pull/705#issuecomment-7085548831). Receipt `cf22fe42408fc7b1e91ec83dcfac76bb54ae888d919fd11345dfaa89a4d69b70`. Roundtrip14771513420,218bytes, ZIP `c4c299441a9fbd0a8b17f3bda710e3b109a62bdb8b2acb55db3706779c5af832`, um CRC e receipt `79a1e93c816e4de66f767d5d3850e63e511b46584d3ad187a8e40dbd9d448f2c`.
+
+Os negativos45065237570 (alias Core e descoberta de teste) e45065987718 (490 originais positivos, processo7/8 e oracle de causa de sinal) permanecem vinculados às fontes próprias. O ajuste final afirma a causa tipada original, sem mudar o helper de produção. #706 foi fechado sem merge por sobreposição. Não foi adicionado nem declarado PASS para um cenário dedicado writeSync ENOSPC combinado com fsync/close; isso não é uma execução instalada. O runtime/loader Omni do host final ainda deverá ser observado.
+
+### #613: recebimento das fontes separadas
+
+O [9b6 seletivo](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084729365) passou8/8 em45062470131, C17 original99081,21ms/19assertions. É prova da sua fonte. O [intake32155](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085592713) recebeu13/14 técnico, C17 expirado, e5/6 instalado; a prévia UI42 expirou e UI43/UI44 não foram alcançadas. Os quatro paths Core retiraram a barreira de import observada na instalação, sem ganho de performance atribuído.
+
+Fonte seguinte **C44e3efafb6e6f291dabfa7de6690191208a7b978 / T3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11**, [intake independente7085714579](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085714579):
+
+| Run | Checkout efetivamente executado | Resultado |
+| --- | --- | --- |
+|45067348416 técnico |440a7c2051ae71babb9ea541b2d8225c11979175 / T8c32b7d99a09ff8bab95fef8af6aaf5df0680e57 |14/14 PASS; artefatos[] |
+|45067349269 Analytics |50e7643bf19dca724ef1e952ea7ca072b7bfad2a / T5765bbc59fc5b111d445f39e60d3de9e6afb9fae |0/2 PASS |
+|45067350677 Collab |1474987f22006f0f6f6cc1996fe57fd1f4f1ceb5 / Tc4bb9f28724b04a43a0ab76c3c9c24be7849634f |2/2 PASS |
+|45067351696 Reviews |0c081f0586af7d87b405d0b670586bfa690b2e89 / T2b78de10f6a0ad7f59ec3781fe16b632df59074d |2/2 PASS |
+
+São filhos diretos C; instalados acrescentam somente request e técnico request/driver. Não se rotula S como execução literal do pai. Os quatro cleanups passaram; seleção/listagem corresponde aos seis casos, com1worker/0retries/repeat1, um resultado por caso,0skip/flaky/erro superior. Guards78/795paths/38warnings/zeroerros/waivers; original C17 completo104187,50ms de105000,19assertions,812,5ms de margem. Não é ganho estável nem a variante C17 da Migração.
+
+| Artefato original | Bytes / membros CRC | SHA-256 |
+| --- | ---: | --- |
+|14772212377 Analytics |29892739 /91 | `8ca05b7a9083d565e239997c6ae8ab2e617524262f59d823ee489c1d8792b73f` |
+|14772485406 Collab |54046455 /140 | `456183e87d9d0b97cbcbc524a15532c7358b2a2f503890f34b37a2436eff82ea` |
+|14772241594 Reviews |62763145 /145 | `17677c857ad9fe392ed78f9a94c92ac3213955410ce95fd88b6dc55dfd423846` |
+
+A coordenação conferiu os ZIPs originais e os relatórios e viu dois PNGs de falha; não declara ter visto todos os PNGs desta rodada. UI42 permaneceu Running/skeleton/sem resultado: request sequence3 observado às20:44:00.070Z e nenhum response no waiter original60s. UI43/UI44 não foram alcançadas. O mapa de código publicado não localiza um await backend por si só; é necessária observação causal passiva, sem mudar os prazos.
+
+O segundo caso falhou no escalar BI06: erro relativo0.0026798674546290556 contra1e-5. O [finding independente7085742679](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085742679) identifica novo GET de fallback contra DOM de outra observação de ageDays. Runtime e ZIP embutido no HTML não contêm os dois corpos/observedAt. A correção de aquisição deve preservar bytes do mesmo evento; não há atribuição de regressão ao clone/arredondamento. Head público0a/draft/12aceites históricos permanece; a fonte44e não está qualificada para merge.
+
+### Migração: intakes negativos completos e pai b2f congelado
+
+Os diagnósticos [45059200284](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084369574) e [45062218008](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084778824), na fonte produto44334fe/Ta19a, foram recebidos antes dos reparos. Ambos tiveram Decisions3/5. No segundo, sete tipos passaram; SF-E2E falhou e BuildWeb foi skipped; spawn guard também falhou. UI executou o diagnóstico P, enquanto o estático executou C. Seis ZIPs,35 CRC/hashes de membros e os manifestos do segundo run foram conferidos; o ledger original `migration-intake.json` em b2f conserva os vínculos C/P/D e todos os negativos.
+
+O [handoff7085598301](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7085598301) congela **b2f97817a82dc55a66298428107c30d5e3d97354 / T289fd8ac1792a103bfea3e57ce9c8c4283cc6b92**, revisão técnica COMMENT6014465542. O pai8f04 contém reparos revisados de tipos/observador/inventário; b2f modifica somente suites.json. Baselines SF, Decisions e APP-SRC continuam PENDING_REAL_COMPLETE_RUN. Os anchors históricos de APP-SRC/BROWSER/CLI/Atlas foram conferidos nos quatro ZIPs originais e seus conjuntos de identidades.
+
+O catálogo admite as adições reais de Design, sem alterar seletores, política ou oráculos. Os sete arquivos fora da seleção A2 têm quatro invocações originais documentadas. A variante C17 `0f275d83469c22a2154d728edbc3bbec4ae4f6ee`, originada em40a188a6, preserva19assertions e adiciona runId, mas reutiliza o resultado de persistAndIssue: muda o workload. Seu ACK estático não é PASS da variante, não recebe os tempos do blob0d e precisa executar no candidato efetivo.
+
+### Rota de fechamento e limites
+
+A [reconciliação7085665366](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366) substitui a proposta de incorporar a Migração inteira no #613. Design integra dev efetivo/#705 e fecha o PR existente com revisão/CI/instalação. Depois #673 compõe esse dev, revalida as seis uniões preparadas e executa20jobs A2 mais um job suplementar de quatro invocações. Baselines só serão atualizadas após execução completa autêntica e revisão; o novo candidato resultante exige sua própria qualificação, incluindo a instalação impactada.
+
+C/T final, dois ACKs, tar, reservas e aceites continuam nulos. G05/G06 devem executar nesse C/T; G07 deve produzir/verificar o tar original; G08/G10 usam os mesmos bytes em ambientes isolados confirmados. Azure está desbloqueado para descoberta, mas o acesso de execução e os responsáveis/recursos não foram confirmados. **0/5 gates finais; NOT_READY; decisão de produção nula.** #349/#588 e o escopo técnico G09/#647 permanecem encerrados em seus registros. Qualquer virada requer o aval explícito de Gustavo após evidência completa e janela proposta.

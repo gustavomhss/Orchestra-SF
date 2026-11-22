@@ -1,10 +1,27 @@
 # Preparação do go-live — G05, G06, G07, G08 e G10
 
-**CAP03, jornadas nativas/F04, observador de restart, registro Microsoft, proveniência e agregador completo já estão integrados em dev. Os cinco gates finais continuam abertos.** Faltam a composição de produto qualificada, o candidato C/T confirmado, os ACKs originais, o tar verificado e as execuções nas reservas isoladas.
+**Os componentes de preparação, incluindo o processo estrito de G08/#705, estão integrados em dev. O inventário Azure passou login e as 12 observações ARM. Os cinco gates finais continuam abertos.** Faltam a composição de produto qualificada, o candidato C/T confirmado, os ACKs originais, o tar verificado e as execuções nas reservas isoladas.
 
-Observação desta edição: **22/11/2026 às 16:18:45 em America/Sao_Paulo (22/11/2026 às 19:18:45 UTC)**. Último dev observado: `f2b129b1610a218b7104dbc2c4bf6b07befae5af`, árvore `ca3c05964718b20e96561102dc6b07b0207bf856`. A documentação integrada pelo [#702](https://github.com/gustavomhss/Orchestra-SF/pull/702) é a base preservada deste follow-up no [#704](https://github.com/gustavomhss/Orchestra-SF/pull/704). Essa identidade ainda **não é o candidato final confirmado**.
+Observação desta edição: **22/11/2026 às 18:04:08 em America/Sao_Paulo (2026-11-22T21:04:08Z)**. Último dev observado: `08e05d917a56505eb371889c92db8eb2d862a986`, árvore `991f7bbc1649c840e34438b0815b7ca244fb6261`. O corte anterior do [#704](https://github.com/gustavomhss/Orchestra-SF/pull/704) e todos os seus recibos permanecem no histórico. Essa identidade ainda **não é o candidato final confirmado**.
 
 O [registro estruturado](status.json) contém dono, SHA/árvore, artefato, recibo e bloqueio por gate. O [registro de execução](execution-2026-11-22.md) conserva os resultados anteriores, inclusive tentativas negativas, e separa cada prova por fonte. O [runbook instalado de G08](g08-installed-execution.md) descreve a rota concreta entregue pela #698.
+
+## Estado recebido neste corte
+
+| Frente | Resultado recebido | Consequência |
+| --- | --- | --- |
+| Azure | [45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414): login e 12 consultas ARM PASS; ZIP original/CRC/recibo conferidos | O bloqueio anterior de configuração/login foi resolvido. Reserva, acesso guest/runner e qualificação instalada continuam pendentes. |
+| Processo G08 | [#705](https://github.com/gustavomhss/Orchestra-SF/pull/705), merge `08e05d9`; [45066918996](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45066918996): 498/498, guards e spawn-imports PASS | Componente integrado, árvore idêntica à fonte revisada; não executou G08 instalado. #706 foi encerrado por sobreposição. |
+| Design/#613 | Fonte `44e3efaf`: técnico 14/14; instalação 4/6, com Collab/Reviews positivos e dois negativos de Analytics | UI42 ainda expira na primeira prévia; UI43/UI44 não foram alcançadas. BI06 falhou após novo GET usado como esperado de um valor temporal. Head público 0a/draft e 12 aceites históricos preservados. |
+| Migração/#673 | Pai `b2f97817` / T `289fd8ac` congelado e revisado; sem CI isolado | SF, Decisions e APP-SRC exigem baselines reais. Os intakes negativos 45059200284 e 45062218008 foram recebidos integralmente, sem transferência de PASS. |
+
+O [intake independente de 44e](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085714579) identifica cada snapshot realmente executado, os oito jobs/cleanups e os três ZIPs originais. C17 original concluiu em **104.187,50 ms / 105.000 ms**, com 812,5 ms de margem; isso não demonstra ganho estável nem qualifica a variante diferente da Migração. O [finding BI06](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085742679) exige capturar os bytes do mesmo evento, mantendo a tolerância `1e-5`; os dois corpos e os instantes originais não foram preservados. A causa da diferença não foi atribuída ao clone ou ao arredondamento.
+
+A [sequência reconciliada](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366) é **Design no #613, depois composição final no #673**. O writer de `sf613-finish` mantém Design/Core e suas correções; a subfrente `close_pr613` revisa. Após o merge do #613, Migração incorpora o dev resultante no próprio PR e revalida as seis uniões preparadas. O candidato completo terá os 20 jobs canônicos A2 e um job suplementar com quatro invocações originais cobrindo sete arquivos fora dos seletores A2. Atualizar uma baseline muda o candidato e exige sua qualificação própria. Os 11 Reports originais e o pool original continuam obrigatórios.
+
+**Reservas operacionais ainda não confirmadas.** O [inventário recebido](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7085197117) comprova duas VMs running, snapshot, vault e backup concluído, sob identidade Reader. Ele não atribui hosts aos gates nem prova acesso de execução. G08 precisa de host exclusivo, janela, operador, rota guest/runner autorizada e quatro contextos Microsoft/grants/limpeza; G10 precisa de origem e clone separados de G08, rota de execução/recuperação, responsáveis de backup/chave, observador externo e versão de rollback. Não é necessário reenviar as quatro variáveis Azure.
+
+Nenhum tar novo, ACK final, reserva confirmada, aceite instalado ou decisão de produção foi criado neste corte. Os registros encerrados de #349/#588 e do escopo técnico G09/#647 permanecem preservados.
 
 ## Donos e mandato
 
@@ -40,7 +57,7 @@ As contagens acima não devem ser somadas como prova de um candidato final. #691
 
 As entregas anteriores #665/#677/#685/#688/#689/#690/#692/#695 e seus recibos permanecem no ledger. As fronteiras HTTP já corrigidas, a política persistente corrente, Imports privados, decoder/checkpoint e a rota de release não são pendências de implementação.
 
-## Atualização após o #702
+## Corte histórico após o #702 — 19:18:45 UTC
 
 O [#703](https://github.com/gustavomhss/Orchestra-SF/pull/703) resolveu a admissão do próprio agregador G08. O merge `f5132fabfa265ba6bef17b0e0aa2ebe2c2beafdc` conserva exatamente a árvore `4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4` da fonte revisada. O [focal 45058460020](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45058460020) passou **490/490 controles** e os guards; ZIP, CRC, relatórios e fontes foram conferidos. A agregação continua retrospectiva: observa seu checkout e job atuais e relê as onze provas originais, sem exigir nova reserva ativa para essa leitura. Isso não executa nem fecha G08 instalado.
 
@@ -72,7 +89,9 @@ A [#673](https://github.com/gustavomhss/Orchestra-SF/pull/673) compôs dev19fbe 
 
 A [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613) continua 12/15. O focal 255c35c6 recebeu 8/10; a correção exclusiva do driver de tipos passou 3/3 em [45054387720](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45054387720), enquanto C17 / 105 s permanece aberto. O diagnóstico CPU [45054997790](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45054997790) falhou, com cleanup SUCCESS, e publicou o artefato 14766639145. Sua metadata não qualifica o perfil ou o produto. A ausência de artefato registrada anteriormente pertence ao coletor cancelado 45045175421, preservado no histórico.
 
-## Acesso operacional
+## Acesso operacional no corte anterior — histórico
+
+O bloqueio descrito nesta seção pertence ao corte anterior. O inventário 45061014414 o resolveu; as pendências atuais de reserva e acesso estão no início deste documento.
 
 A repetição somente leitura do [inventário 45036787201, tentativa 2](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201/attempts/2), concluída às 15:49:43 em São Paulo, confirmou o bloqueio antes do login: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` e `AZURE_RESOURCE_GROUP` chegaram vazias no contexto `azure-mvp`. Login e comandos ARM ficaram SKIPPED. O artefato 14766939588 (876 bytes) foi adquirido e conferido; receipt `ee9d5d941754ae9da9804e2fa569ef89712a8aafa7ee7f64a4189b276dc02de5`. A tentativa 1 das 15:10UTC permanece histórica. A nova leitura de dispositivos também encontrou o Mac offline, visto pela última vez há110 h; não há acesso operacional estabelecido por esse canal.
 
@@ -88,11 +107,12 @@ O environment existir, uma label constar no workflow ou uma API de metadata reto
 
 ## Sequência de fechamento
 
-1. Receber a composição qualificada da Migração e as jornadas restantes de #613, com os respectivos recibos.
-2. Confirmar o mesmo C/T com Migração e Release e registrar os ACKs originais; o operador efetivo fica vinculado em B.
-3. Executar G05 e G06 completos nesse candidato.
-4. Produzir o tar pela rota original e verificar G07, sem reconstrução entre gates.
-5. Instalar os mesmos bytes nas reservas isoladas. **G08 e G10 podem avançar em paralelo** com processos, dados, sessões e callbacks separados.
-6. Reunir os recibos finais e apresentar a decisão go/no-go e a janela proposta a Gustavo.
+1. Concluir Design no #613 com dev efetivo, jornadas restantes, revisão independente e CI verde no head aprovado.
+2. Compor esse dev no #673, receber A2 completo/pool/Reports/suplementos, obter baselines autênticas e qualificar o candidato resultante, incluindo a instalação impactada.
+3. Confirmar o mesmo C/T com Migração e Release e registrar os ACKs originais; o operador efetivo fica vinculado em B.
+4. Executar G05 e G06 completos nesse candidato.
+5. Produzir o tar pela rota original e verificar G07, sem reconstrução entre gates.
+6. Instalar os mesmos bytes nas reservas isoladas. **G08 e G10 podem avançar em paralelo** com processos, dados, sessões e callbacks separados.
+7. Reunir os recibos finais e apresentar a decisão go/no-go e a janela proposta a Gustavo.
 
 O estado permanece **0/5 gates finais; NOT_READY**. As implementações integradas e os recibos de preparação estão entregues. C/T final, tar, reservas confirmadas, provas instaladas e decisão de produção permanecem ausentes. O backlink de Compras 222 (2) continua pendente para qualquer vínculo além de seu QA original.
