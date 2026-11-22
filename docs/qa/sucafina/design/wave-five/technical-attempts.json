@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "attempts": [
+    {
+      "attempt": 1,
+      "product": "243f954da9dceb505795e7c7457b4de9c7c074d6",
+      "snapshot": "7c22c101ee49fb1b58b573c84942e1f8bb5b54ff",
+      "run": 44978462385,
+      "job": 137073513402,
+      "checks": {
+        "total": 10,
+        "passed": 8,
+        "failed": 2
+      },
+      "regressions": {
+        "passed": 46,
+        "failed": 0
+      },
+      "failures": [
+        "App-shell typing: redundant agenda phases excluded by outer branch.",
+        "E2E typing: original fixture scope annotation omitted."
+      ],
+      "resolution": "Both exact typing fixes composed in c75a561ed9fa634cc4fc7d289c755f708d79a2c3."
+    },
+    {
+      "attempt": 2,
+      "product": "821e07c7b0e4f787245100e117a4df5035c8e42b",
+      "snapshot": "09d3c55ea311db107dd570621d285fb028d83fc8",
+      "run": 44980563097,
+      "job": 137079932445,
+      "checks": {
+        "total": 12,
+        "passed": 8,
+        "failed": 4
+      },
+      "regressions": {
+        "passed": 82,
+        "failed": 12
+      },
+      "failures": [
+        "App-shell typing: keyed Show function needed its keyed parameter.",
+        "Collaboration observer compared the frozen route pattern instead of the final registry override.",
+        "Health write fixtures lacked the actual installed current-choice/source fence.",
+        "CLI types: binding signature omitted existing mounted product IDs; fixture annotations lost concrete types."
+      ],
+      "resolution": "Actual final registry path, type-only callback signature, genuine original SQLite/current-choice fixtures and exact keyed callback. No runtime authorization list changed.",
+      "guard": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 66,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 29,
+        "touchesGuards": false,
+        "warningRules": [
+          "test-timeout-raised"
+        ]
+      },
+      "copy": {
+        "existingEnglishUnchanged": 357,
+        "newKeysWithExplicitPortuguese": 40
+      }
+    },
+    {
+      "attempt": 3,
+      "product": "72884298af5b1f22fa060dfea1d021ed73a308bd",
+      "snapshot": "baf8e247860d5c2c5a483fae4a574f53553f6068",
+      "run": 44981426797,
+      "job": 137082544984,
+      "checks": {
+        "total": 12,
+        "passed": 11,
+        "failed": 1
+      },
+      "regressions": {
+        "passed": 94,
+        "failed": 0
+      },
+      "failures": [
+        "CLI fixture declarations: retain the concrete SQLite driver methods and narrow the exact portfolio operation before indexing."
+      ],
+      "resolution": "Only test typing changed in 722ec9c9703c139160147f344f74ee010d61d6ec and b69429f5632cd15d524ef3df3527714a2ab8c13e.",
+      "guard": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 68,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 31,
+        "touchesGuards": false,
+        "warningRules": [
+          "test-timeout-raised"
+        ]
+      },
+      "copy": {
+        "existingEnglishUnchanged": 357,
+        "newKeysWithExplicitPortuguese": 43
+      }
+    },
+    {
+      "attempt": 4,
+      "product": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
+      "snapshot": "d3cb92d71c89a42531a40a617d8f5863b40c17ac",
+      "run": 44981671317,
+      "job": 137083298996,
+      "checks": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0
+      },
+      "regressions": {
+        "passed": 94,
+        "failed": 0
+      },
+      "guards": {
+        "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+        "rules": 78,
+        "files": 69,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 32,
+        "warningRules": [
+          "test-timeout-raised"
+        ],
+        "touchesGuards": false,
+        "report": "guard-report.json"
+      },
+      "copy": {
+        "catalogs": [
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+            "preserved": 59,
+            "added": 12
+          },
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+            "preserved": 31,
+            "added": 6
+          },
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+            "preserved": 100,
+            "added": 12
+          },
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+            "preserved": 27,
+            "added": 4
+          },
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+            "preserved": 73,
+            "added": 2
+          },
+          {
+            "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+            "preserved": 67,
+            "added": 7
+          }
+        ],
+        "existingEnglishUnchanged": 357,
+        "newEnglishWithExplicitPortuguese": 43,
+        "missingPortuguese": 0
+      },
+      "failures": []
+    }
+  ]
+}

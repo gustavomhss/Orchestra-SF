@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-design-next",
+  "product": "b69429f5632cd15d524ef3df3527714a2ab8c13e",
+  "snapshot": "d3cb92d71c89a42531a40a617d8f5863b40c17ac",
+  "run": 44981671317,
+  "job": 137083298996,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981671317",
+  "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+  "environment": {
+    "runtime": "existing test-ci",
+    "os": "ubuntu-24.04",
+    "channel": "prod",
+    "omni": "strict",
+    "localTests": false
+  },
+  "checks": 12,
+  "checksPassed": 12,
+  "checksFailed": 0,
+  "regressionCases": 94,
+  "regressions": {
+    "workAndSearch": 18,
+    "analysisReading": 19,
+    "collaborationReading": 18,
+    "portfolioReading": 24,
+    "portfolioReadinessAndSensitivityUnits": 11,
+    "reviewAndFilesRouting": 4
+  },
+  "types": {
+    "appShell": "PASSED",
+    "e2e": "PASSED",
+    "cli": "PASSED",
+    "cliDiagnostics": 0
+  },
+  "guards": {
+    "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
+    "rules": 78,
+    "files": 69,
+    "errors": 0,
+    "approved": 0,
+    "warnings": 32,
+    "warningRules": [
+      "test-timeout-raised"
+    ],
+    "touchesGuards": false,
+    "report": "guard-report.json"
+  },
+  "palettes": {
+    "files": 7,
+    "byteChanges": 0
+  },
+  "copy": {
+    "catalogs": [
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "preserved": 59,
+        "added": 12
+      },
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+        "preserved": 31,
+        "added": 6
+      },
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+        "preserved": 100,
+        "added": 12
+      },
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+        "preserved": 27,
+        "added": 4
+      },
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+        "preserved": 73,
+        "added": 2
+      },
+      {
+        "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+        "preserved": 67,
+        "added": 7
+      }
+    ],
+    "existingEnglishUnchanged": 357,
+    "newEnglishWithExplicitPortuguese": 43,
+    "missingPortuguese": 0
+  },
+  "commands": [
+    {
+      "gate": "app-shell typecheck",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "typecheck"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "fetch pinned guard base",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:refs/remotes/origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "resolve pinned guard base",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "guardrails",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "palette generation",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "script/orchestra-palettes.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "app-shell e2e typecheck",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck:e2e"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "native work and search source health",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-work-health.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "native analysis source health",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-analysis-reading-health.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "native collaboration source health",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-collaboration-reading-health.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "native portfolio source health",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-portfolio-reading-health.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "CLI native host typecheck",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "portfolio readiness and sensitivity units regressions",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "--conditions=solid",
+        "--preload",
+        "./happydom.ts",
+        "./src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+        "./src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "review and Files routing regression",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-review-routing.test.ts",
+        "./test/sucafina-files-routing.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u23",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u25",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u32",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u33",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u38",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "read pinned English source sf-u44",
+      "command": [
+        "git",
+        "show",
+        "d3ccea42b5f8409c8d6c68e4909f7b868b50322c:packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "wrapper": {
+    "path": "apps/cli/test/sucafina-design-verification.test.ts",
+    "snapshotOnly": true,
+    "integratedIntoProduct": false
+  },
+  "userAcceptance": "PENDING",
+  "merge": "NOT_REQUESTED_FOR_THIS_WAVE"
+}
