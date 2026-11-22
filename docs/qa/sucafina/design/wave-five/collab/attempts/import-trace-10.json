@@ -1,0 +1,105 @@
+{
+  "source": "15ff166d5c5fa9527e5d9515048fe15f58702264",
+  "sourceTree": "bf286e67e93ec777f6b9f8273b7f09becae16daf",
+  "productSource": "b486fd1e76bdb2dc7c48cb070ba67a744358131a",
+  "snapshot": "3ea359209f10f2d775c5fa13233b6238b5fe0a6c",
+  "tree": "2d0d0f977b11d9b4db815a7e86dd7fbc70d14177",
+  "branch": "ci-run-sf5importtrace10",
+  "paths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+    "apps/cli/test/fixture/sucafina-native-installation.ts",
+    "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    ".ci-run.json"
+  ],
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fae8b86fb615b5036f4985426beea159fd6341e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae5e72d9483f65450b1bfc4b02ce3c9b616a851c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9d46bff43eddee3c53c8778b2bc38491397229f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62c03ffe46bfc57f3ceb46710051099b62b80bff"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f77efd293c998e27ccabf35f23f4758eed2a03dc"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07a7eb1de18c7c486c76f022b63484ea6cadd3d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "552f80446926e542783e577e7a42b33e6f6aa567"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "content": "{\n  \"package\": \"app\",\n  \"packageSelector\": \"@orchestra/app\",\n  \"directory\": \"packages/app-shell\",\n  \"runner\": \"playwright\",\n  \"args\": [\n    \"e2e/sucafina/design-wave-five-collab.spec.ts\"\n  ],\n  \"config\": \"e2e/playwright.production.config.ts\",\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"strict\",\n    \"ORCHESTRA_CHANNEL\": \"prod\"\n  }\n}\n"
+    }
+  ],
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "notes": "Same original import journey and trace9 overlays. Additional plan leaf metrics only; no source bodies, keys or paths emitted. Counts collected during original visit; exact copy/limit/authority behavior unchanged.",
+  "inheritedSnapshot": "9c2187329110937bae09e4a97d4412369955fef0",
+  "entry": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "fae8b86fb615b5036f4985426beea159fd6341e1"
+  },
+  "result": "running",
+  "run": 44994897281,
+  "purpose": "Determine whether the heavy original snapshot plan contains primitive string leaves >=64KiB before considering any materialization optimization. Original annual import journey, source semantics and all assertion budgets remain unchanged.",
+  "measurementFields": [
+    "payload UTF16 units",
+    "copy presence",
+    "fingerprint presence",
+    "copy JSON UTF16 units",
+    "visited node count",
+    "primitive string count and units",
+    "maximum primitive string units",
+    ">=64KiB encoded string count, primitive units and encoded units",
+    "first16 large primitive units"
+  ],
+  "privacy": "Only numeric counts and static labels are emitted. No keys, paths, payload values, credentials or source bodies."
+}
