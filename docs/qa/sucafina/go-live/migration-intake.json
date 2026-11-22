@@ -3913,6 +3913,47 @@
         ],
         "limitation": "Static review only. No installed result, no server-cause conclusion and no gate acceptance."
       }
+    },
+    "decisionsStaticAndInventoryRepair": {
+      "status": "PREPARED_FOR_INDEPENDENT_REVIEW_AND_INTEGRATED_ACTIONS",
+      "sourceRun": 45062218008,
+      "sourceSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+      "sourceTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+      "commit": "1a1128bd0620d36b26503d59367469d97035a555",
+      "tree": "72db93a2bcdecb631e693714c05ea8934e19cd8b",
+      "paths": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "beforeBlob": "f885c4a94ea8e2a97822477608a71f33b2605935",
+          "afterBlob": "6b4ac25f144207c2e8b02c07c6fa4acc2ec80cb4",
+          "change": "Re-read asynchronous failure state through the same synchronous helper at both original post-await checks. No cast, new await, retry, response rewrite or cleanup reordering."
+        },
+        {
+          "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+          "beforeBlob": "308ae602016d3b9afae3c90cb9b20663aba9341e",
+          "afterBlob": "0257829ba7c9c80a3ab13e08368dbd774c4b9705",
+          "change": "Match the exact existing include order, require the original desktop env.d.ts by path and Git blob, include it in declared hashes and require its presence in effective/compiler programs. Preserve all three specs, complete helper globs, strictness and no exclusions."
+        }
+      ],
+      "originalDesktopDeclaration": {
+        "path": "apps/desktop/src/renderer/env.d.ts",
+        "include": "../../apps/desktop/src/renderer/env.d.ts",
+        "blob": "eb472d33abc340e4232465c9806ccb482fd8f1ab",
+        "modified": false
+      },
+      "preserved": {
+        "originalCases": 5,
+        "testDeadlineMilliseconds": 180000,
+        "productDeadlineMilliseconds": 10000,
+        "retries": 0,
+        "workers": 1,
+        "omni": true,
+        "originalAssertions": true,
+        "originalResponseBytes": true
+      },
+      "sourceAndBlobReadbackVerified": true,
+      "actionsResult": "NOT_RUN_ON_REPAIR",
+      "qualification": false
     }
   },
   "focalHistory": [
@@ -6261,6 +6302,693 @@
       "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7083424252",
       "conclusion": "The second comparison had two distinct selected alternatives and emitted its original POST at76781ms; requestfailed net::ERR_ABORTED at86787ms (+10006ms), matching the unmodified product deadline10000. No Fetch pause or response followed that command. This disproves no-POST/same-selection for this incident, but does not yet distinguish server delay from CDP interference. No installation-finally/stop event preceded Page closure; the captured Promise remained pending until the original180s test timeout. Four later cases failed because the fixture listener remained owned by the earlier test.",
       "productCorrection": "None inferred. Compose already-reviewed dev HTTP corrections and the separately reviewed owned-resource teardown, then observe the same original tests. Deadlines10000/180000 and interception remain unchanged."
+    },
+    {
+      "kind": "decisions-compare-response-phase-diagnostic",
+      "runId": 45059200284,
+      "attempt": 1,
+      "jobId": 137321093928,
+      "conclusion": "FAIL",
+      "qualification": false,
+      "candidateSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+      "candidateTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+      "sourceSha": "8f6f3a02a83f466be76bce88bb93ed97a83a88e2",
+      "sourceTree": "400d3d0bb8f2d292439463abbf42286257152225",
+      "driverSha": "96ec9b7601abe993bb091f6fa5632da98635100f",
+      "driverTree": "bce4c3b473068637c8fae724e05d792278ed1063",
+      "admission": {
+        "schema": "sf-source-driver-admission-v1",
+        "qualification": false,
+        "baseCandidateSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+        "baseCandidateTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+        "sourceSha": "8f6f3a02a83f466be76bce88bb93ed97a83a88e2",
+        "sourceTree": "400d3d0bb8f2d292439463abbf42286257152225",
+        "driverEventSha": "96ec9b7601abe993bb091f6fa5632da98635100f",
+        "driverWorkflowSha": "96ec9b7601abe993bb091f6fa5632da98635100f",
+        "originalGithubSha": "96ec9b7601abe993bb091f6fa5632da98635100f",
+        "runId": "45059200284",
+        "attempt": "1",
+        "runnerOs": "Linux",
+        "runnerArch": "X64",
+        "eventName": "push",
+        "overlayPaths": [
+          "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "packages/app-shell/e2e/sucafina/decisions-support/journey.ts"
+        ]
+      },
+      "allJobsAndArtifactsReceived": true,
+      "artifactCount": 2,
+      "memberCount": 11,
+      "artifacts": [
+        {
+          "id": 14769216623,
+          "name": "diagnostic-compare-phases-failure",
+          "zipSha256": "416b6337d5aabb8d1f789a0e519559d4ec3ed0d0d58980985c776e16cecf0045",
+          "zipBytes": 134720,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+              "bytes": 38237,
+              "sha256": "a51fce4d9315ab4caed527fc8b9961dac288d7a8837560fd81b90de10719ace2"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+              "bytes": 51014,
+              "sha256": "32a9f5b12bd8921810095bed9198f51de0f814d298c8ee1dd5c727ef81efceac"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+              "bytes": 32150,
+              "sha256": "4fc2b26c653bc42fb6bbcdf68d1cebfaea0c96c63ccc7274859350b5ed419bc6"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png",
+              "bytes": 77471,
+              "sha256": "95e35b5ac6679d6e32da37f78cc325a428a4d2a714cf21e0e6ef43523069450e"
+            }
+          ]
+        },
+        {
+          "id": 14769096957,
+          "name": "diagnostic-compare-phases-raw",
+          "zipSha256": "257547223a6b23f16e3802a5d42e94f34da2fe3f8dce610491cbd2f28987e703",
+          "zipBytes": 65241,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "diagnostic-source.json",
+              "bytes": 974,
+              "sha256": "943e7a236352a64d19b52c87a4c99ea73547345d3593beea15ae2258185208a0"
+            },
+            {
+              "path": "overlay-paths.txt",
+              "bytes": 175,
+              "sha256": "da1cc879eab3ae5ebb893ef877fef53b38fd700f202417965439a8c1fb6efc47"
+            },
+            {
+              "path": "driver-admission.json",
+              "bytes": 857,
+              "sha256": "78eace935addfa2cc2488d8359d153815ad6bde06086daf966e5eb4e18a4202f"
+            },
+            {
+              "path": "execution.txt",
+              "bytes": 267,
+              "sha256": "097b7f5974033ceb748281e85423f6b9a8541870245934bbd7de342ab833810b"
+            },
+            {
+              "path": "selection.txt",
+              "bytes": 31,
+              "sha256": "b592d895a0344e20771025ce2b1075e10b2e9c0d00093f6fa581ce25a5f31492"
+            },
+            {
+              "path": "report.raw.json",
+              "bytes": 462153,
+              "sha256": "3d125f254e515ff175484411e56231114b483304fb1607be448ae11d2f3c24f1"
+            },
+            {
+              "path": "run.log",
+              "bytes": 162866,
+              "sha256": "a2f4d968fddceb53ca1b4c8995da863f846e2eb57192c981ef24d78a320692ec"
+            }
+          ]
+        }
+      ],
+      "stats": {
+        "startTime": "2026-11-22T19:11:46.643Z",
+        "duration": 389420.944,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "case": 1,
+          "line": 21,
+          "status": "failed",
+          "durationMs": 118599
+        },
+        {
+          "case": 2,
+          "line": 31,
+          "status": "failed",
+          "durationMs": 128827
+        },
+        {
+          "case": 3,
+          "line": 46,
+          "status": "passed",
+          "durationMs": 42644
+        },
+        {
+          "case": 4,
+          "line": 53,
+          "status": "passed",
+          "durationMs": 16747
+        },
+        {
+          "case": 5,
+          "line": 99,
+          "status": "passed",
+          "durationMs": 24900
+        }
+      ],
+      "preserved": {
+        "originalCases": 5,
+        "testDeadlineMilliseconds": 180000,
+        "productDeadlineMilliseconds": 10000,
+        "retries": 0,
+        "workers": 1,
+        "omni": true,
+        "originalAssertions": true,
+        "originalResponseBytes": true
+      },
+      "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084369574",
+      "observations": {
+        "firstJourney": {
+          "originalCommandCall": 12,
+          "requestFailedMilliseconds": 10039,
+          "http200ReplyReadyMilliseconds": 18780,
+          "plannerCompareMilliseconds": 15997,
+          "interpretation": "The browser's original request aborted near the existing 10s product deadline before the server prepared its 200 reply. No Fetch response-body delay was observed for that failed request; the expensive inner function was not yet identified."
+        },
+        "secondJourney": {
+          "stage": "The 120 USD alternative was created. The next candidate-plan option was absent before the original 10s locator deadline.",
+          "lastDiscoveryRequest": "decision-controls",
+          "biOptionsObservedAfterLastControls": false,
+          "interpretation": "Separate symptom; no proven filter, selection or remount cause from this snapshot."
+        },
+        "cleanup": {
+          "browserLastCommandMilliseconds": [
+            11,
+            2134
+          ],
+          "secondLastCommandNetworkDisableMilliseconds": 2050,
+          "cliDisposedMilliseconds": [
+            237,
+            223
+          ],
+          "cleanupFailureEvents": 0,
+          "networkMismatchEvents": 0,
+          "threeFollowingCasesPassed": true,
+          "limitation": "CDP cleanup durations and the CLI's internal SIGTERM-to-disposed durations are different measurements; no external host process census is claimed."
+        }
+      },
+      "limits": [
+        "This three-path overlay is diagnostic and its UI results do not qualify C44334 or any later candidate.",
+        "The direct HTTP runtime.domain.compare return is awaited by the observation overlay to emit its completion phase; product operation order remains intact, but the literal await count is not claimed identical.",
+        "Post-timeout screenshots are symptoms after stopping the case, not evidence of live state at the original failure."
+      ]
+    },
+    {
+      "kind": "decisions-metric-discovery-diagnostic-with-source-static",
+      "runId": 45062218008,
+      "attempt": 1,
+      "conclusion": "FAIL",
+      "qualification": false,
+      "candidateSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+      "candidateTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+      "sourceSha": "57cc9db21c009fc42c1fa6c39a4c0434bada5034",
+      "sourceTree": "776c2921400912e55d092a02c3a13d85a52f6375",
+      "driverSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+      "driverTree": "bfdae96b5b7b280d0cb4bc90deb0735a6db474b5",
+      "allTwoJobsReceived": true,
+      "artifactCount": 4,
+      "memberCount": 24,
+      "internalManifestHashCount": 8,
+      "artifacts": [
+        {
+          "id": 14770560642,
+          "name": "sf-guard-bases-44334fe4d785ea79d9d92179e61ecbdbf40a6a84-1",
+          "zipSha256": "c4e85b948bd5aa7109d352de2eb423ea1397f311c083a4c61cc59252bdfffc2b",
+          "zipBytes": 4272,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "guard-pr-base.log",
+              "bytes": 27675,
+              "sha256": "5bb134a07c4f563ef6b5a95668772e95d76933a25ea8ff20156416ffd9fa28de"
+            },
+            {
+              "path": "sha256sums.txt",
+              "bytes": 475,
+              "sha256": "7e86cabf1ebb22b7902149c5e836c13cd32303def116eb1264085d6659bc9542"
+            },
+            {
+              "path": "receipt.json",
+              "bytes": 645,
+              "sha256": "ecaf2ab27a80ad1d453e70ab3d28a2cc595d1bf1b2e212f3402d726d5be9131d"
+            },
+            {
+              "path": "guard-dev.log",
+              "bytes": 18887,
+              "sha256": "a304bf4be2c5f30cf27c80480cd2baf4027e25fcee0fd2a17a38795a08df0d2c"
+            },
+            {
+              "path": "spawn.log",
+              "bytes": 288,
+              "sha256": "3febe3c1c84b8ca6dee64c414a9a0b5e7bcd97aeaf9cea46e4fe63ab11f03b0c"
+            }
+          ]
+        },
+        {
+          "id": 14770455958,
+          "name": "sf-e2e-inclusion-44334fe4d785ea79d9d92179e61ecbdbf40a6a84-1",
+          "zipSha256": "e0774b2437be124b950c8a34b9a9ca52be6d404905087eda1cbccd9a2a0ebd70",
+          "zipBytes": 538049,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "config.stderr.log",
+              "bytes": 44,
+              "sha256": "13e0b94a8977f08798183eebac7381edffbc3d429ace0d7b7949cfc4ddc0b190"
+            },
+            {
+              "path": "command-statuses.json",
+              "bytes": 65,
+              "sha256": "15b2bfdd643c60582b9dbf9b9bb796589d0d5dccc4ad6a5a4cb56154d23a3a6d"
+            },
+            {
+              "path": "driver-admission.json",
+              "bytes": 504,
+              "sha256": "ebd2016090bfecdff43df3cb84947b714d476ad18afb28fcc5bdfde7ac28a237"
+            },
+            {
+              "path": "bun-version.txt",
+              "bytes": 7,
+              "sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c"
+            },
+            {
+              "path": "inclusion.json",
+              "bytes": 1996540,
+              "sha256": "cbacf94a0f953de3cd6fbbcfc4d10bf6970fcc35a6302ecdfc6f2c010e6ba833"
+            },
+            {
+              "path": "effective-config.json",
+              "bytes": 1064,
+              "sha256": "1011272e602eb8ccc7a3eb1ffcaa7ab10979b3f42aefd04fb531a6b11c6b002f"
+            },
+            {
+              "path": "sha256sums.txt",
+              "bytes": 534,
+              "sha256": "6757d91ce8337809de3c3c16db7daf2b5cda9e076f01ea89328e7e1853e6cf6e"
+            },
+            {
+              "path": "typecheck.log",
+              "bytes": 791562,
+              "sha256": "bc17829361a39cbf4ee24ba8b40e3bb6e41dd986afce92e30f4d91560b115257"
+            }
+          ]
+        },
+        {
+          "id": 14770207072,
+          "name": "diagnostic-compare-phases-raw",
+          "zipSha256": "8730240a286be2cebe85c8401f102253e362aafa40b126eafaef75b360b3499c",
+          "zipBytes": 75022,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "diagnostic-source.json",
+              "bytes": 1271,
+              "sha256": "c3425d5fe1650744996946afac982725578dd3caa92ee704b72d66bfaf427a45"
+            },
+            {
+              "path": "overlay-paths.txt",
+              "bytes": 408,
+              "sha256": "d5c028921d077a9f44a9f19eb6e9feb40c258a438133c581e50169dfacd2b4e1"
+            },
+            {
+              "path": "driver-admission.json",
+              "bytes": 1118,
+              "sha256": "fadbb3cf223b1802fbfce1be3b3685f2b5bac287116d53e7ffcfe857d76e8ccd"
+            },
+            {
+              "path": "execution.txt",
+              "bytes": 267,
+              "sha256": "dd432d12e3655cfe79c859fd0e2980f9365b1cc1a12721b36310540d557bd7fc"
+            },
+            {
+              "path": "selection.txt",
+              "bytes": 31,
+              "sha256": "b592d895a0344e20771025ce2b1075e10b2e9c0d00093f6fa581ce25a5f31492"
+            },
+            {
+              "path": "report.raw.json",
+              "bytes": 558716,
+              "sha256": "03f308d8b65f141bcaf2398ccccf8fbed00cdf1bad119348c11286ca7c8cdd4e"
+            },
+            {
+              "path": "run.log",
+              "bytes": 179114,
+              "sha256": "2752be0fa9c0e6f3698262387412039399363e4242371814ade43bb30a905af8"
+            }
+          ]
+        },
+        {
+          "id": 14769763720,
+          "name": "diagnostic-compare-phases-failure",
+          "zipSha256": "1658167db79cdd81bb3c25237d8a8e4851772c448f54f3fa1f1f2a7f42f30709",
+          "zipBytes": 136818,
+          "crcVerified": true,
+          "files": [
+            {
+              "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+              "bytes": 38609,
+              "sha256": "8ee46bb4d2a55ee3fbf0d3b09358cccd1940f51dd773ef2622ca3c77d34f5d93"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+              "bytes": 32150,
+              "sha256": "708d79cae945d489da0d2136846eb4227fe1c632ae018ed1d43e81c48934c25e"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+              "bytes": 53204,
+              "sha256": "97d5385b84db2ebde964a79023d4965d091a7e7749e918c8b79d6987d5db1ebd"
+            },
+            {
+              "path": "sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png",
+              "bytes": 77471,
+              "sha256": "95e35b5ac6679d6e32da37f78cc325a428a4d2a714cf21e0e6ef43523069450e"
+            }
+          ]
+        }
+      ],
+      "verifiedInternalManifests": [
+        {
+          "artifact": 14770455958,
+          "verified": [
+            {
+              "name": "bun-version.txt",
+              "sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c"
+            },
+            {
+              "name": "effective-config.json",
+              "sha256": "1011272e602eb8ccc7a3eb1ffcaa7ab10979b3f42aefd04fb531a6b11c6b002f"
+            },
+            {
+              "name": "config.stderr.log",
+              "sha256": "13e0b94a8977f08798183eebac7381edffbc3d429ace0d7b7949cfc4ddc0b190"
+            },
+            {
+              "name": "typecheck.log",
+              "sha256": "bc17829361a39cbf4ee24ba8b40e3bb6e41dd986afce92e30f4d91560b115257"
+            }
+          ]
+        },
+        {
+          "artifact": 14770560642,
+          "verified": [
+            {
+              "name": "spawn.log",
+              "sha256": "3febe3c1c84b8ca6dee64c414a9a0b5e7bcd97aeaf9cea46e4fe63ab11f03b0c"
+            },
+            {
+              "name": "guard-dev.log",
+              "sha256": "a304bf4be2c5f30cf27c80480cd2baf4027e25fcee0fd2a17a38795a08df0d2c"
+            },
+            {
+              "name": "guard-pr-base.log",
+              "sha256": "5bb134a07c4f563ef6b5a95668772e95d76933a25ea8ff20156416ffd9fa28de"
+            },
+            {
+              "name": "receipt.json",
+              "sha256": "ecaf2ab27a80ad1d453e70ab3d28a2cc595d1bf1b2e212f3402d726d5be9131d"
+            }
+          ]
+        }
+      ],
+      "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084778824",
+      "independentReception": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084824492",
+      "ui": {
+        "jobId": 137330452341,
+        "name": "diagnostic/CI-UI-DECISIONS",
+        "conclusion": "FAIL",
+        "admission": {
+          "schema": "sf-source-driver-admission-v1",
+          "qualification": false,
+          "baseCandidateSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+          "baseCandidateTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+          "sourceSha": "57cc9db21c009fc42c1fa6c39a4c0434bada5034",
+          "sourceTree": "776c2921400912e55d092a02c3a13d85a52f6375",
+          "driverEventSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "driverWorkflowSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "originalGithubSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "runId": "45062218008",
+          "attempt": "1",
+          "runnerOs": "Linux",
+          "runnerArch": "X64",
+          "eventName": "push",
+          "overlayPaths": [
+            "apps/cli/src/sucafina-product/decision-controls.ts",
+            "apps/cli/src/sucafina-product/decision-domain-http.ts",
+            "apps/cli/src/sucafina-product/portfolio-authority.ts",
+            "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+            "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+            "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+            "packages/app-shell/e2e/sucafina/decisions-support/journey.ts"
+          ]
+        },
+        "stats": {
+          "startTime": "2026-11-22T19:43:41.529Z",
+          "duration": 370485.012,
+          "expected": 3,
+          "skipped": 0,
+          "unexpected": 2,
+          "flaky": 0
+        },
+        "cases": [
+          {
+            "case": 1,
+            "line": 21,
+            "status": "failed",
+            "durationMs": 111119,
+            "retry": 0,
+            "cliSha256": "4e1634831e9e8c52094faac9f0233c9ee0b4cb4c596a9e29940364c3b8dcd277"
+          },
+          {
+            "case": 2,
+            "line": 31,
+            "status": "failed",
+            "durationMs": 121559,
+            "retry": 0,
+            "cliSha256": "e6ea8da490f546b0eb7d410b0880590307e191380fdbed58382982c99d6a2a30"
+          },
+          {
+            "case": 3,
+            "line": 46,
+            "status": "passed",
+            "durationMs": 42086,
+            "retry": 0,
+            "cliSha256": "713d8999e6c262303d7348c764154e7e933eebb5d27cd415a943840e1d4838b9"
+          },
+          {
+            "case": 4,
+            "line": 53,
+            "status": "passed",
+            "durationMs": 17052,
+            "retry": 0,
+            "cliSha256": "10e463fdcbee3510ab5e8f5ca37b6a8f34011b08c4c3bafce2945c4d51b319dd"
+          },
+          {
+            "case": 5,
+            "line": 99,
+            "status": "passed",
+            "durationMs": 24993,
+            "retry": 0,
+            "cliSha256": "ab4fd5048677f5196bc8756ef5c27ec758617d00ca48dcbc66964cc1498800c7"
+          }
+        ],
+        "positiveQualificationReceiptPresent": false,
+        "preserved": {
+          "originalCases": 5,
+          "testDeadlineMilliseconds": 180000,
+          "productDeadlineMilliseconds": 10000,
+          "retries": 0,
+          "workers": 1,
+          "omni": true,
+          "originalAssertions": true,
+          "originalResponseBytes": true
+        },
+        "firstJourney": {
+          "originalCommandCall": 12,
+          "requestObservedMilliseconds": 39,
+          "requestFailedMilliseconds": 10044,
+          "http200ReplyReadyMilliseconds": 15666,
+          "plannerCompareMilliseconds": 13409,
+          "domainMilliseconds": 15530,
+          "fetchResponsePausedForFailedRequest": false,
+          "criterionEvaluations": [
+            {
+              "conditioned": true,
+              "durationMilliseconds": 4026,
+              "readMetricMilliseconds": 3595,
+              "scalarResolveMilliseconds": [
+                736,
+                734,
+                752,
+                743
+              ],
+              "historicalReadMilliseconds": 114
+            },
+            {
+              "conditioned": true,
+              "durationMilliseconds": 4051,
+              "readMetricMilliseconds": 3626,
+              "scalarResolveMilliseconds": [
+                740,
+                746,
+                721,
+                748
+              ],
+              "historicalReadMilliseconds": 134
+            }
+          ],
+          "observedReadMetricCalls": 2,
+          "observedVerifyMetricCalls": 0,
+          "interpretation": "Both observed rule evaluations take the conditioned branch. Two private metric observations and four scalar scenario resolutions in each were measured; the structural eight-comparison bound of a confirmed metric is not the count of this run."
+        },
+        "secondJourney": {
+          "originalLocatorDeadlineMilliseconds": 10000,
+          "totalObservedRequests": 66,
+          "finalControlsRequestTo200Milliseconds": 9927,
+          "finalControlsRequestFinishedMilliseconds": 9928,
+          "nextBiOptionsPendingAtObserverDetachMilliseconds": 76,
+          "serverControlsSpanMilliseconds": 5300,
+          "caseReadSpansMilliseconds": [
+            1158,
+            1109,
+            1107,
+            1103
+          ],
+          "lastUiInstance": {
+            "controlsResolvedAtMillisecondsSinceMount": 10032,
+            "connected": true,
+            "live": true,
+            "busy": true,
+            "pending": false,
+            "prepared": false,
+            "choicesPresent": false,
+            "optionsResolvedBeforeObserverStop": false
+          },
+          "interpretation": "The original option assertion expired while sequential discovery was still completing. The controls response was followed by the bi-options request; no completed options/filter step or explicit refusal was observed before stopping. No selection/filter change is justified by this receipt.",
+          "timingLimit": "Service call ordinals are local, and browser/server spans are not a perfectly correlated distributed trace. The remaining gap between 9927ms and the server's 5300ms span is not located."
+        },
+        "cleanup": {
+          "failedCaseBrowserLastCommandMilliseconds": [
+            10,
+            1910
+          ],
+          "secondLastCommandNetworkDisableMilliseconds": 1839,
+          "cliDisposedMilliseconds": [
+            193,
+            157,
+            194,
+            136,
+            142
+          ],
+          "cleanupFailureEvents": 0,
+          "networkMismatchEvents": 0,
+          "threeFollowingCasesPassed": true,
+          "limitation": "Browser cleanup and CLI-internal shutdown durations measure distinct resources. There is no claim of an external host process census."
+        }
+      },
+      "static": {
+        "jobId": 137330452632,
+        "name": "sf/static-and-contracts",
+        "conclusion": "FAIL",
+        "sourceSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+        "sourceTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+        "admission": {
+          "schema": "sf-source-driver-admission-v1",
+          "sourceSha": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+          "sourceTree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+          "driverEventSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "driverWorkflowSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "originalGithubSha": "463df37b4432e3494d2ced1f0254ec58961a7a4b",
+          "runId": "45062218008",
+          "attempt": "1",
+          "runnerOs": "Linux",
+          "runnerArch": "X64",
+          "eventName": "push",
+          "qualification": false
+        },
+        "generators": "PASS",
+        "sevenTypechecks": "PASS",
+        "sfE2e": {
+          "status": "FAIL",
+          "commandStatuses": {
+            "config_status": 0,
+            "typecheck_status": 2,
+            "verification_status": 1
+          },
+          "compilerDiagnostics": [
+            "e2e/sucafina/decisions-support/journey.ts(267,50): error TS2339: Property 'error' does not exist on type 'never'."
+          ],
+          "failures": [
+            "CONFIG_DRIFT: preserve the complete Sucafina helper tree",
+            "TYPECHECK_FAILED: exit 2",
+            "COMPILER_DIAGNOSTICS: 1 errors; preserve the complete log"
+          ],
+          "effective_root_count": 6338,
+          "compiler_file_count": 6338,
+          "transitive_source_count": 2735
+        },
+        "webBuild": "SKIPPED_AFTER_E2E_FAILURE",
+        "guardReceipt": {
+          "schema": "sf-ci-guard-bases-v1",
+          "candidate": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+          "tree": "a19a0a9ffce71788dd7f813656d129010e4fdb8c",
+          "run": "45062218008",
+          "attempt": "1",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "canonical_base": "bd12a386ae0ea3d0a949df791861b1482075f556",
+          "pr_base": "8bd7645767deb85b286b046a52a4e9f1db100262",
+          "commands": [
+            {
+              "command": "bun run check:spawn-imports",
+              "status": 1
+            },
+            {
+              "command": "bun run check:guards --base origin/dev",
+              "status": 0
+            },
+            {
+              "command": "bun run check:guards --base <PR base SHA>",
+              "status": 0
+            }
+          ]
+        },
+        "guardWarnings": {
+          "guard-dev.log": {
+            "errorAnnotations": 0,
+            "warningAnnotations": 47
+          },
+          "guard-pr-base.log": {
+            "errorAnnotations": 0,
+            "warningAnnotations": 69
+          }
+        },
+        "spawnGuard": {
+          "status": "FAIL",
+          "exitCode": 1,
+          "filesChecked": 5183,
+          "allowListedSites": 67,
+          "path": "script/sf-ci/g08-installed-evidence.mjs",
+          "finding": "child_process outside the spawn allow-list; spawn through ChildProcessSpawner or Process",
+          "owner": "teams_product via a separate G08 PR; no allow-list or guard change in this intake"
+        }
+      },
+      "limits": [
+        "The UI used diagnostic snapshot P57cc, while the original static job used source C44334. Neither negative receipt qualifies a later combined candidate.",
+        "The diagnostic phases contain no bodies, credentials, private identifiers, URLs or headers. Existing callbacks, operations, assertions, source filters and deadlines remain unchanged.",
+        "The absence of framenavigated alone does not prove absence of a SPA remount. Existing UI lifecycle markers are the bounded observation used here.",
+        "Both guard bases exited zero with 0 errors, but 47 canonical-base and 69 historical-base warnings remain. This is not a zero-findings claim.",
+        "The existing batch implementation in #613 is the sole integration path; this intake adds no competing product/batch/filter patch."
+      ]
     }
   ],
   "compositionHistory": [
@@ -7712,5 +8440,60 @@
       "Three original Decisions cases passed; the two Compare-dependent journeys remain unqualified. The web build was skipped after the E2E compiler failure.",
       "Canonical guards exited zero with 0 errors and 47 warnings; historical-base guards exited zero with 0 errors and 69 warnings. This is not a zero-findings claim."
     ]
+  },
+  "latestDiagnosticIntake": {
+    "runId": 45062218008,
+    "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7084778824",
+    "allTwoJobsReceived": true,
+    "qualification": false,
+    "uiResult": "3/5 on diagnostic P57cc",
+    "staticResult": "FAIL on C44334",
+    "negativeEvidencePreserved": true
+  },
+  "integrationHandoff": {
+    "status": "AWAITING_REVIEW_AND_SINGLE_COMPOSITION_VIA_PR_613",
+    "coordinationRecord": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084824492",
+    "requiredParents": [
+      "Qualified #613 source 9b6c4f2d6d8594d47e0e13715080fc28786170f1",
+      "Effective dev including the separate G08 spawn correction",
+      "The reviewed final #673 head as an explicit additional parent, preserving all its ancestry"
+    ],
+    "designSource": {
+      "sha": "9b6c4f2d6d8594d47e0e13715080fc28786170f1",
+      "tree": "178b746f45ebbf9c68a14b0de4522bed44852e55",
+      "qualificationRun": 45062470131,
+      "scope": "8/8 focal only, not a result for the combined candidate"
+    },
+    "migrationCodeSource": {
+      "sha": "1a1128bd0620d36b26503d59367469d97035a555",
+      "tree": "72db93a2bcdecb631e693714c05ea8934e19cd8b",
+      "priorHead": "44334fe4d785ea79d9d92179e61ecbdbf40a6a84",
+      "scope": "Two reviewed-source TS/inventory repairs plus append-only ledger follow-up; final ledger head is identified in the PR handoff."
+    },
+    "existingBatch": {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "6c14ea5adf58a44466fe0a1a5d8802cb53a3f093",
+      "owner": "PR #613",
+      "action": "Preserve the existing resolveMany wrapper and observation phases through composition; no parallel product patch in #673."
+    },
+    "latestObservedDev": {
+      "sha": "bd12a386ae0ea3d0a949df791861b1482075f556",
+      "tree": "bf3aa87d40aa9590ccc66faca90fd0ba8a3d3096",
+      "qualification": "Historical pin only; re-read effective dev when composing."
+    },
+    "requiredIntegratedProof": [
+      "Original Decisions 5 and Operations 5 journeys",
+      "Original G01-G04 focal shard selections",
+      "Original Migration pool selection without diagnostic overlay",
+      "Original Reports 11; historical run44987301540 remains source-bound",
+      "Canonical generators, all required types, SF-E2E inclusion/build, spawn control and guards against actual origin/dev"
+    ],
+    "boundaries": [
+      "No premature independent merge of #673 and no duplicate migration code path.",
+      "Preserve current dev status.json, README and execution records; this writer changes only migration-intake.json.",
+      "No diagnostic overlay enters the production source and no old PASS is promoted to the new SHA/tree.",
+      "Production remains subject to the user's explicit approval."
+    ],
+    "qualification": false
   }
 }
