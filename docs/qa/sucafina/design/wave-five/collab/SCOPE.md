@@ -1,6 +1,17 @@
-# Wave five · collaboration and import candidate
+# Wave five · collaboration and import scope
 
 Base: `d3ccea42b5f8409c8d6c68e4909f7b868b50322c` (pinned dev). Working branch: `sf-next-collab`.
+
+## Current qualification
+
+All five owned areas have passing independent clean production journeys with the original assertion budgets:
+
+- **UI51–UI53 — clean8:** [run 44993470385](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44993470385) passes the original relationship and thread reads, retained drafts and cancelled relationship reviews, one original no-change confirmation, its audit receipt and a fresh authenticated validity readback. The [clean8 receipt](attempts/collaboration-clean-08.json) records the exact product, permanent spec, snapshot and 24 captures.
+- **UI55–UI56 — import clean6:** [run 44998959512](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44998959512) passes the original ClamD admission and Planner preview, manifest/source-digest readbacks, complete-impact structure and provenance, cancellation retaining the native FileList/options, and preview refresh. The [clean6 receipt](attempts/import-fixed-06.json) records the composed product, snapshot and 21 captures.
+
+The [qualified gallery](REVIEW-GALLERY.md) contains 45 actual JPEGs, all individually inspected by the collaboration agent; root independently inspected the ten marked images. English dark/light desktop and 390px reflow, relevant review/source states and pt-BR application copy are covered. Actual browser zoom and 320px are not measured. No import Apply or external reply is performed. UI57/UI68 remain outside this visual scope.
+
+User visual acceptance remains pending. The campaign inventory remains **41 accepted and merged areas**; this group's qualification does not add accepted or merged areas. [HANDOFF.md](HANDOFF.md) separates current qualification from the retained historical attempts.
 
 ## Selected areas
 
@@ -26,7 +37,7 @@ Native raised/soft surfaces, 20px panel padding (16px below 767px), 16–20px ga
 - Import keeps the native FileList/options mounted during preview and restores them on cancel. The current step follows the actual destination/preview state. Only one Cancel preview action remains. Its polite status reports scanning, preparing the original preview, or reading original source details only while that exact stage is awaited; it never announces success from HTTP status alone.
 - Preview retains original domain impact, changed/unchanged/ignored/rejected records and the original UI57 continuation.
 
-## Source availability repair
+## Historical native-admission repair
 
 Hosted attempt 2 exposed a pre-existing native admission gap: the original collaboration HTTP producers succeeded, but UI51 was denied before its leaf mounted. Attempt 3 recorded actual `ctx.context`: `collaboration.relation-read`, `collaboration.thread-read` and `collaboration.confirmation-project` were all `operational-source-unavailable`.
 
@@ -34,7 +45,7 @@ The existing `work-route.tsx` gate and operation registry are unchanged. Root ex
 
 The observer selects the original mounted HTTP producer and exact method dependencies, obtains the original request-bound human admission, reads only metadata from the canonical C08 state reader twice, and revalidates access, source identity, incarnation and revisions. Write observations also require the original installed transaction pair and the original human action's write authority. Selected record/evidence/recipient/CAS checks remain in the original handlers. No readiness is inferred from a callable method or catalog entry, and no mutation, selection, message or receipt is executed by the observer. Every admitted lease is finished; readiness is checked again after finish.
 
-The focused test uses original SQLite storage, C08 and UI lease factories. Its 18 cases cover unchanged storage, original read/write separation, three exact read admissions, namespace denial, changed dependencies/access/revisions, abort/error cleanup, disposal, an unregistered reader and uninitialized source state. Runtime results are recorded separately; adding the test is not proof that it passed.
+The initial focused test used original SQLite storage, C08 and UI lease factories. Its 18 cases covered unchanged storage, original read/write separation, three exact read admissions, namespace denial, changed dependencies/access/revisions, abort/error cleanup, disposal, an unregistered reader and uninitialized source state. Later metadata-phase and queued-reader identity regressions brought the collaboration reader suite to 25 passing cases; the exact Actions receipt is [portfolio-batch-02](qualification/portfolio-batch-02.json). These historical source checks remain distinct from the clean installed journeys above.
 
 ## Original journey boundary
 
@@ -58,13 +69,13 @@ Terminology references:
 
 Planner, XLS, XLSX and JSON remain names. Source IDs and record values remain original data.
 
-The visual review of attempt 5 found a literal `{kind}` in the existing relationship label. Root delegated the minimal shared `collaboration/index.tsx` correction: only the two exact frozen observed-kind keys resolve that one field through a callback replacement, preserving literal source data and every catalog byte. The relation leaf's two direct uses receive the same exact-field handling. Browser assertions require the original relationship kind in English and pt-BR; the renderer correction awaits a subsequent capture.
+The historical visual review of attempt 5 found a literal `{kind}` in the existing relationship label. Root delegated the minimal shared `collaboration/index.tsx` correction: only the two exact frozen observed-kind keys resolve that one field through a callback replacement, preserving literal source data and every catalog byte. The relation leaf's two direct uses receive the same exact-field handling. Clean8's browser assertions and actual English/pt-BR captures now verify the original relationship kind `handoff`; the corrected images are listed under UI51 in [REVIEW-GALLERY.md](REVIEW-GALLERY.md).
 
-## Coordinated source composition
+## Coordinated source composition and historical import diagnosis
 
-The composed root additionally restores the read snapshot scope required by the original confirmation fences. Only `readSelection` receives that read-only wrapper. The original observation/reissue runs outside the lock; manifest and source fences, both observation comparisons, current authority checks, expiry and the confirmation write fence remain unchanged. Browser attempt 6 passed the complete UI51/52/53 journey, including the original confirmation, its receipt and a fresh validity readback. This shared source composition is root-owned and is not copied into this worker branch.
+The composed root additionally restores the read snapshot scope required by the original confirmation fences. Only `readSelection` receives that read-only wrapper. The original observation/reissue runs outside the lock; manifest and source fences, both observation comparisons, current authority checks, expiry and the confirmation write fence remain unchanged. Historical browser attempt 6 first passed the complete UI51/52/53 journey. Clean8 is the current qualified receipt, including the original confirmation, its audit reference and a fresh validity readback. This shared source composition is root-owned and is not copied into this worker branch.
 
-The import journey remains unresolved after attempt 6: the original preview output passes its codec/schema, but an independent authenticated reference read times out. Disposable branch `ci-run-sf5importtrace` adds static stage logs to the original reads and forwards only those bounded stage names through the fixture stdout. Its source overlays are diagnostic-only, never integrated into product or worker branches. No source guard, lock, producer result or authorization is replaced.
+At historical attempt 6, the import journey remained unresolved: the original preview output passed its codec/schema, but an independent authenticated reference read timed out. Disposable branch `ci-run-sf5importtrace` added static stage logs to the original reads and forwarded only those bounded stage names through the fixture stdout. Its source overlays were diagnostic-only and were never integrated into product or worker branches. The subsequent measured source-composition work and original-source checks are preserved in [HANDOFF.md](HANDOFF.md); clean6 now passes both UI55 and UI56 with the unchanged budgets. The earlier failure is retained as history, not the current qualification state.
 
 ## Evidence and approval boundary
 
