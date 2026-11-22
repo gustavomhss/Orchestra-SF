@@ -1,6 +1,7 @@
 // Cross-run installed-route observation. This is not the canonical G09 qualifier or a signer.
 import assert from "node:assert/strict"
 import fs from "node:fs"
+import http from "node:http"
 import path from "node:path"
 import { createHash, randomBytes } from "node:crypto"
 import { createServer } from "node:net"
@@ -192,11 +193,40 @@ if (mode === "metadata") {
   await probe()
 }
 
+// Node v24.15.0's deps/undici/src/lib/web/fetch/index.js deletes Host before dispatch.
+// The installed ingress requires the configured virtual Host, including its port.
 function request(route, { cookie, basic, withProof = true, accept = "text/html", method = "GET", timeout = 20_000 } = {}) {
-  return fetch(transport.local + route, { redirect: "manual", method, signal: AbortSignal.timeout(timeout),
-    headers: { accept, host: transport.host, ...(withProof ? { "x-sf-ingress-proof": transport.proof } : {}),
-      ...(cookie ? { cookie } : {}), ...(basic ? { authorization: basic } : {}),
-      ...(method === "GET" ? {} : { origin }) } })
+  return new Promise((resolve, reject) => {
+    const operation = http.request(transport.local + route, {
+      method, agent: false, signal: AbortSignal.timeout(timeout), maxHeaderSize: 16 * 1024,
+      headers: { accept, host: transport.host, ...(withProof ? { "x-sf-ingress-proof": transport.proof } : {}),
+        ...(cookie ? { cookie } : {}), ...(basic ? { authorization: basic } : {}),
+        ...(method === "GET" ? {} : { origin }) },
+    }, (incoming) => {
+      const chunks = []
+      let bytes = 0
+      incoming.on("data", (chunk) => {
+        bytes += chunk.length
+        if (bytes > 2 * 1024 * 1024) {
+          incoming.destroy(new Error("Boundary HTTP response exceeded 2 MiB"))
+          return
+        }
+        chunks.push(chunk)
+      })
+      incoming.once("error", reject)
+      incoming.once("end", () => {
+        const headers = new Headers()
+        for (let offset = 0; offset < incoming.rawHeaders.length; offset += 2)
+          headers.append(incoming.rawHeaders[offset], incoming.rawHeaders[offset + 1])
+        // Native http never follows redirects; preserve each Set-Cookie separately.
+        resolve(new Response(bytes ? Buffer.concat(chunks) : null, {
+          status: incoming.statusCode, statusText: incoming.statusMessage, headers,
+        }))
+      })
+    })
+    operation.once("error", reject)
+    operation.end()
+  })
 }
 
 async function signIn(identity) {
@@ -262,7 +292,11 @@ async function probe() {
     sourceFiles, signInFunctionSha256: sha256(signIn.toString()), checks: [], databaseCheckpoints: [],
     databaseEvents: [], ignoredDatabaseDirectoryEvents: 0, processIdentity: [],
     canonicalQualification: false, signed: false, formalG09Pass: false, azureDeployment: false,
-    browserInteraction: false, liveMicrosoftTenant: false }
+    browserInteraction: false, liveMicrosoftTenant: false,
+    requestTransport: { implementation: "node:http.request", redirectsFollowed: false,
+      timeoutMs: 20_000, maximumResponseBytes: 2 * 1024 * 1024, maximumHeaderBytes: 16 * 1024,
+      reason: "Node v24.15.0 bundled fetch removes the virtual Host required by trusted ingress",
+      upstreamSource: "https://github.com/nodejs/node/blob/v24.15.0/deps/undici/src/lib/web/fetch/index.js" } }
   let child, watcher, exit, stage = "prepare", failure, ownedStartTime
   const output = { stdout: createHash("sha256"), stderr: createHash("sha256"), stdoutBytes: 0, stderrBytes: 0 }
   function procState() {
