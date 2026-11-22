@@ -2,6 +2,7 @@ import { For, Show, createMemo } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
 import { sfBiChartModel, sfBiKey, sfBiPeriodLabel, sfBiValueSource } from "./model"
 import { SfChartFrame } from "../../shared/frame"
+import { sfBiScalarLabel } from "./scalar"
 import { useSfPresentation } from "../../shared/frame/presentation"
 import "./figure.css"
 
@@ -9,8 +10,10 @@ import "./figure.css"
 export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly<{ copy: "sf.u20" | "sf.u21" }>) {
   const { t, locale } = useSfPresentation()
   const model = createMemo(() => sfBiChartModel(props.viewId, props.projection, props.copy, locale()))
-  const fmt = (n: number | null) => n === null ? t(sfBiKey(props.copy + ".missing")) :
-    new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
+  const fmt = (n: number | null, unit?: string) => n === null ? t(sfBiKey(props.copy + ".missing")) :
+    unit !== undefined && unit !== props.projection.projection.context.currency
+      ? sfBiScalarLabel(n, locale())
+      : new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
   const assigned = () => new Map(props.projection.projection.values.map((value) => [value.id, value]))
   const waterfall = () => props.viewId === "BI02" ? props.projection.presentation.waterfall : undefined
   const timeline = () => props.viewId === "BI08" ? props.projection.presentation.timeline : undefined
@@ -69,7 +72,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                       return (
                         <g data-sf-value-id={row.id} data-sf-evidence={row.evidence}
                           data-sf-value-kind={row.value === null ? "missing" : "known"}>
-                          <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + row.unit}</title>
+                          <title>{row.label + " · " + row.period + " · " + fmt(row.value, row.unit) + " " + row.unit}</title>
                           <text x="6" y={index() * 43 + 31} class="sf-bi-axis-label">{row.period}</text>
                           <Show when={row.value !== null} fallback={
                             <text x="360" y={index() * 43 + 31} class="sf-bi-axis-label">
@@ -82,7 +85,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                             <text x={row.value !== null && row.value < 0 ? 350 - magnitude() - 6 : 358 + magnitude()}
                               y={index() * 43 + 29}
                               text-anchor={row.value !== null && row.value < 0 ? "end" : "start"}
-                              class="sf-bi-axis-value">{fmt(row.value)}</text>
+                              class="sf-bi-axis-value">{fmt(row.value, row.unit)}</text>
                           </Show>
                         </g>
                       )

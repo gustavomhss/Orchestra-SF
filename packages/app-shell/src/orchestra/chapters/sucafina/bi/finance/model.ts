@@ -5,6 +5,7 @@
  */
 import type { SfBiBiDataOutput } from "@orchestra/schema/sucafina/bi"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
+import { sfBiScalarLabel } from "./scalar"
 import type {
   SfChartFrameProps, SfCopyKey, SfCoverage, SfDisplayValue, SfMessage,
   SfPlotSeries, SfUiState, SfUnit,
@@ -85,12 +86,16 @@ function numeric(value: SourceValue): number | null {
     Number.isFinite(value.value) ? value.value : null
 }
 
-function cellValue(value: SourceValue, unit: SfUnit, prefix: string): SfDisplayValue {
+function cellValue(value: SourceValue, unit: SfUnit, prefix: string, locale: string): SfDisplayValue {
   if (value.evidenceState === "absent" || value.value === null)
     return absent(prefix + ".missing")
   if (typeof value.value === "number")
     return Number.isFinite(value.value)
-      ? { kind: "number", value: value.value, unit, fractionDigits: 2 }
+      ? unit.kind === "currency"
+        ? { kind: "number", value: value.value, unit, fractionDigits: 2 }
+        // The adjacent Unit column preserves the exact producer unit. A scalar
+        // must not acquire a currency-style fallback or lose a small nonzero age.
+        : dataCell(sfBiScalarLabel(value.value, locale))
       : absent(prefix + ".missing")
   if (typeof value.value === "boolean")
     return { kind: "boolean", value: value.value,
@@ -224,7 +229,7 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
         ...(reference ? { selectionRef: reference } : {}),
         cells: {
           series: dataCell(series.label),
-          value: cellValue(value, unit, prefix),
+          value: cellValue(value, unit, prefix, locale),
           unit: dataCell(series.unit),
           period: dataCell(period),
           evidence: { kind: "text", text: { kind: "message", message: message(prefix + ".evidence." + value.evidenceState) } },
