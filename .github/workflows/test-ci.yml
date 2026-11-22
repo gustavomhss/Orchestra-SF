@@ -25,7 +25,7 @@ jobs:
         # Extension: ci-run-linux-arm64-* selects only ubuntu-24.04-arm before the generic Linux fallback.
         host: ${{ fromJSON(startsWith(github.ref_name, 'ci-run-macos-intel-') && '["macos-15-intel"]' || startsWith(github.ref_name, 'ci-run-all-') && '["ubuntu-24.04","windows-latest","macos-14"]' || startsWith(github.ref_name, 'ci-run-both-') && '["ubuntu-24.04","windows-latest"]' || startsWith(github.ref_name, 'ci-run-windows-') && '["windows-latest"]' || startsWith(github.ref_name, 'ci-run-macos-') && '["macos-14"]' || startsWith(github.ref_name, 'ci-run-linux-arm64-') && '["ubuntu-24.04-arm"]' || '["ubuntu-24.04"]') }}
     runs-on: ${{ matrix.host }}
-    timeout-minutes: 45
+    timeout-minutes: ${{ github.ref_name == 'ci-run-onboarding-chat-long' && 140 || 45 }}
     defaults:
       run:
         shell: bash
@@ -194,6 +194,14 @@ jobs:
 
       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
+      - name: Check compact Chat media tools
+        if: github.ref_name == 'ci-run-onboarding-chat-long'
+        run: |
+          set -euo pipefail
+          python3 --version
+          ffmpeg -v error -version
+          ffprobe -v error -version
+
       - name: Run tests
         env:
           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
@@ -304,6 +312,22 @@ jobs:
               ;;
           esac
 
+      - name: Prepare compact real Chat evidence
+        if: always() && github.ref_name == 'ci-run-onboarding-chat-long' && steps.request.outputs.runner == 'playwright'
+        run: |
+          set -euo pipefail
+          python3 scripts/onboarding-media/capture_transport.py --test-results "${{ steps.request.outputs.directory }}/e2e/test-results" --output onboarding-transport
+
+      - name: Upload compact real Chat evidence
+        if: always() && github.ref_name == 'ci-run-onboarding-chat-long' && hashFiles('onboarding-transport/transport-manifest.json') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: onboarding-chat-transport-${{ github.sha }}
+          path: onboarding-transport/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
       - name: Upload Lean dashboard previews (extension)
         if: always() && hashFiles(format('{0}/e2e/test-results/lean-visual/*.png', steps.request.outputs.directory)) != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -340,3 +364,4 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
         run: gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+

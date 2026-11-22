@@ -19,7 +19,7 @@ Primary sources checked on 2026-11-22:
 - [Pinned llama.cpp team GGUF revision](https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/tree/316dea3b5462fd5755862bcec45a2f901bc0ba6b). Its `.src_sha` identifies upstream Qwen commit `2fc06364715b967f1860aea9cf38778875588b17`.
 - [Exact Q8_0 LFS pointer](https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/raw/316dea3b5462fd5755862bcec45a2f901bc0ba6b/Qwen3.5-0.8B-Q8_0.gguf). The recording owner verified its object ID and size; download enforces both before loading.
 - [Primary Qwen Apache-2.0 license](https://huggingface.co/Qwen/Qwen3.5-0.8B/blob/2fc06364715b967f1860aea9cf38778875588b17/LICENSE).
-- [Pinned llama.cpp argument source](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/common/arg.cpp): `--timeout` controls server read/write seconds. The isolated demonstration server allows 2,100 seconds for CPU prefill and streaming.
+- [Pinned llama.cpp argument source](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/common/arg.cpp): `--timeout` controls server read/write seconds. The bounded long recording sets it to **7,800 seconds**. This is an I/O allowance, not a throughput improvement or a completed-answer claim.
 
 
 No API key, paid inference service, new account, Azure setting, or production provider is used. The model and binary are downloaded from the model author and llama.cpp team public sources into the owned temporary directory and removed after the managed process exits. They are not committed to the repository or included in the final video artifact. If redistribution is added later, retain the corresponding license and notice files.
@@ -58,7 +58,7 @@ Model readiness and configuration are not proof of an AI answer. Only the comple
 
 Use the video label **“Local demonstration model”**. This is a small model demonstrating real inference through Orchestra. It does not establish production model quality, Microsoft tenant access, business-data retrieval, skill execution, Teams readiness, or a successful HuGR Claw connector action. The prompt explicitly supplies example staffing and quotation inputs, then requests three review questions or checks. It forbids tools, writes and claims to have inspected the business system. The example inputs are entered by the demonstrator, not retrieved by the model.
 
-CPU latency must be measured in recording CI. The server-load deadline remains 120 seconds; the Chat-only test allows 38 minutes, including a 30-minute response wait, within the recording job's 45-minute budget. There is no latency promise. If waiting is shortened during editing, mark it. A context or inference failure is a failed recording attempt; no substitute text is permitted.
+CPU latency must be measured in recording CI. The server-load deadline remains 120 seconds. The bounded long Chat-only recording allows a **120-minute response wait**, within a **130-minute test** and a **140-minute recording job**. There is no latency or completion promise. If waiting is shortened during editing, mark it. A context or inference failure is a failed recording attempt; no substitute text is permitted.
 
 ## Preserved prior observations and focused Chat take
 
@@ -80,4 +80,33 @@ The public custom-provider API accepts model names but does not expose model lim
 
 `packages/server/src/handlers/message.ts` returns `cursor.next` for every nonempty page, including the last one. The proof follows each cursor **without combining it with `order`**, until it reads an empty page, with repeated-ID/cursor checks and a 2,000-message upper bound. It then records the exact persisted assistant response, actual selected model/agent, completion, finish reason, tool count, errors, numeric inference metrics and timings. Only agreement between this response and the real rendered assistant turn qualifies cue06.
 
-The genuine draft model picker and Send button are retained. `OrchestraComposeTools` renders the untouched Ask/auto-accept control only after a session exists. The recording never clicks that permission control, then verifies it remains Ask. Each minute of a long inference wait logs only elapsed time, message count and partial text length; the actual answer is stored in the final proof and remains visible in the continuous video.
+The genuine draft model picker and Send button are retained. `OrchestraComposeTools` renders the untouched Ask/auto-accept control only after a session exists. The recording never clicks that permission control, then verifies it remains Ask. Each minute of a long inference wait can record elapsed time, message count, partial text length and the numeric telemetry below. The actual answer is stored in the final proof and remains visible in the continuous video.
+
+### Bounded CPU progress telemetry
+
+The [30-minute native-context attempt](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45042453784) completed only the automatic title: 642 prompt tokens and 13 generated tokens, with 14.593 seconds of prompt processing and 21.897 seconds of generation. At its deadline, one request remained processing and the context high watermark was 67,584. The requested Chat session contained one user message and no assistant response. These observations qualify neither a completed answer nor an exact current prompt total; the older 148,598-token count came from Qwen3, not Qwen3.5.
+
+The long-attempt helper preserves the exact binary/model pins, 196,608-token context, four-thread cap, one slot, business prompt, complete Maestro instructions, all admitted tool schemas and policies. Apart from the HTTP timeout, it changes only observability. It retains the existing batch/microbatch defaults and Flash Attention `auto`; it does not introduce a speculative performance optimization.
+
+`local.readProgress()` returns a fixed, safe projection:
+
+Its `elapsedMs` and prefill `observedAtMs` share a clock beginning at helper setup. They are diagnostic timestamps, not the source-video clock or a substitute for the recorded UI-send timestamp.
+
+- `/metrics` numerical counters, including `n_decode_total` and the context high watermark.
+- `/slots` numerical slot/task identity, context, current prefix length, processed/cached tokens, decoded/remaining tokens and prediction limit, plus the processing boolean. The complete response may contain prompts, generated text or grammar; those fields are never forwarded, recorded or attached.
+- Parsed numbers from the existing information-level prompt-processing line: slot/task IDs, processed tokens, fractional progress, elapsed seconds and tokens per second. No raw log line is retained.
+- The owned child process's CPU ticks, start-time ticks, RSS/high-water RSS, swap and thread count, plus runner memory headroom and available CPU count. It reads only `/proc/<owned-pid>/stat` and `/proc/<owned-pid>/status`, never the command line or environment.
+- Startup batch sizes, resolved Flash Attention support, a validated CPU-backend basename and a fixed list of numerical CPU capability flags. Backend paths and full diagnostic output are omitted.
+
+Primary implementation references at the pinned llama.cpp commit:
+
+- [Server state, progress and metrics](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/tools/server/server-context.cpp): `server_slot::to_json`, `print_timings_pp`, `metrics_post_decode` and `metrics_flush_prompt`. During prefill, `n_prompt_tokens` is the currently stored prefix, not necessarily the total request. Global prompt counters can remain at completed work until pending computation is synchronized.
+- [Slot logging prefix](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/tools/server/server-common.h): the numeric parser follows the actual `SLT_INF` slot/task prefix and prompt-processing format.
+- [Actual defaults](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/common/common.h): logical batch 2,048, physical microbatch 512, Flash Attention `auto`.
+- [Flash Attention resolution](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/src/llama-context.cpp): `resolve_fused_ops` probes backend support; forcing `on` is not a demonstrated acceleration.
+- [Backend selection](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/ggml/src/ggml-backend-reg.cpp): the loader selects a supported backend variant and emits the basename captured by the strict parser.
+- [Effect process identity at the repository's pinned dependency](https://github.com/Effect-TS/effect-smol/blob/effect%404.0.0-beta.83/packages/effect/src/unstable/process/ChildProcessSpawner.ts): `ChildProcessHandle.pid` is the branded numeric PID of the owned process; `isRunning` is queried from the same managed handle.
+
+Telemetry reads are bounded and best-effort. A missing or delayed read is not a failure of inference. The stall detector requires a real, active, identified task, valid per-slot and decode counters, a valid process-start identity and CPU accounting. It reports `suspected` only after **ten continuous minutes with neither token/decode progress nor CPU-time progress**. A new task/process, a decreasing counter, an unavailable diagnostic read, or an inactive slot resets that baseline. This conservative detector does not replace the finite response/test/job deadlines.
+
+The helper retains at most 150 sampled progress objects and includes them in the final proof or failure receipt. A title's generated-token counter, provider readiness or prefill progress can never satisfy the existing exact-session assistant/model/agent/completion/text/no-tool/no-error checks. Only the actual completed answer and matching visible/persisted result qualify the Chat scene.

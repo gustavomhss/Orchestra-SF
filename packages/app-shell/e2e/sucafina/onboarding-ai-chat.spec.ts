@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { mkdir, writeFile } from "node:fs/promises"
 import { expect, test, type Browser, type TestInfo } from "@playwright/test"
 import { withDesignInstallation } from "./design-support/installation"
 import { authenticateRecordingInstallation } from "./design-support/recording-installation"
@@ -7,14 +8,16 @@ import { withLocalModel, type LocalModelRecording } from "./design-support/local
 
 // Chat-only retake. AI3's eight observed catalog/connection/Atlas beats remain
 // valid. The previous native-40k Qwen rejected the unchanged 148598-token turn;
-// this uses a pinned model whose original native context admits that request.
+// this uses a pinned model whose original native window can hold that class of
+// request. The previous 30-minute take was still prefilling; this single retry
+// has a finite 120-minute response guard and records numeric progress only.
 // Workflow is deliberately not rerun. No instructions, tools or guards change.
 test.use({ trace: "off", video: "off", screenshot: "off" })
 test.describe.configure({ retries: 0 })
 type Json = Record<string, unknown>
 
 test("record the actual Maestro prompt and genuine local-model answer", async ({ browser }, info) => {
-  test.setTimeout(2_280_000)
+  test.setTimeout(7_800_000)
   await withRecording(browser, info, "C-chat-native-context", async (film) => {
     await withLocalModel(film.context.request, film.installed, (local) => chatChapters(film, local), async (name, proof) => {
       film.mark("model-evidence", name)
@@ -39,7 +42,10 @@ async function withRecording(browser: Browser, info: TestInfo, example: string, 
       try {
         await selectOriginalRecordingWorkspace(film)
         await use(film)
-      } finally { await film.finish() }
+      } finally {
+        try { await film.finish() }
+        finally { await preserveTransportProof(info, example) }
+      }
       expect(film.missingCritical(), "only actual completed UI evidence qualifies this focused retake").toEqual([])
     } finally { await context.close() }
   }, "four")
@@ -128,21 +134,42 @@ async function chatChapters(film: Film, local: LocalModelRecording) {
     if (!sessionId) throw new Error("No actual UI session identity was observed after sending")
     film.mark("inference-wait-start", "Waiting for the real model response")
     const startedWaiting = Date.now()
-    const deadline = startedWaiting + 1_800_000
+    const deadline = startedWaiting + 7_200_000
     let nextProgress = startedWaiting
-    while (Date.now() < deadline) {
-      const messages = rows((await apiObject(film, "/api/session/" + encodeURIComponent(sessionId) + "/message?order=asc&limit=200")).data)
-      const assistants = messages.filter((value) => value.type === "assistant")
-      const last = assistants.at(-1)
-      if (last && (last.error !== undefined || typeof object(last.time).completed === "number")) break
-      if (Date.now() >= nextProgress) {
-        console.log("SF_MODEL_PROGRESS", JSON.stringify({ sessionId, elapsedSeconds: Math.round((Date.now() - startedWaiting) / 1000),
-          assistantMessages: assistants.length, completed: false,
-          partialTextCharacters: Array.isArray(last?.content) ? rows(last.content).filter((part) => part.type === "text").reduce((sum, part) => sum + String(part.text ?? "").length, 0) : 0 }))
-        nextProgress = Date.now() + 60_000
+    let stopReason = "response-deadline"
+    try {
+      while (Date.now() < deadline) {
+        const messages = rows((await apiObject(film, "/api/session/" + encodeURIComponent(sessionId) + "/message?order=asc&limit=200")).data)
+        const assistants = messages.filter((value) => value.type === "assistant")
+        const last = assistants.at(-1)
+        if (last && (last.error !== undefined || typeof object(last.time).completed === "number")) {
+          stopReason = last.error !== undefined ? "persisted-assistant-error" : "persisted-assistant-completed"
+          break
+        }
+        if (Date.now() >= nextProgress) {
+          // The helper only returns numeric process/server facts. A title's
+          // generated tokens never stand in for this session's actual answer.
+          const progress = await local.readProgress().catch(() => undefined)
+          const observation = { sessionId, elapsedSeconds: Math.round((Date.now() - startedWaiting) / 1000),
+            assistantMessages: assistants.length, completed: false,
+            partialTextCharacters: Array.isArray(last?.content) ? rows(last.content).filter((part) => part.type === "text").reduce((sum, part) => sum + String(part.text ?? "").length, 0) : 0,
+            ...(progress ? { modelProgress: progress } : { telemetryUnavailable: true }) }
+          console.log("SF_MODEL_PROGRESS", JSON.stringify(observation))
+          film.proof({ kind: "actual-inference-progress", ...observation })
+          nextProgress = Date.now() + 60_000
+          if (progress?.process.running === false) { stopReason = "model-process-exited"; break }
+          if (progress?.stall.suspected === true) { stopReason = "stall-observation-with-no-progress-and-no-cpu-advance"; break }
+        }
+        await film.pause(5000)
       }
-      await film.pause(5000)
+    } catch {
+      // Preserve the real final model/message evidence even if a diagnostic
+      // read fails. captureProof remains the exact-session success authority.
+      stopReason = "message-readback-unavailable"
     }
+    film.proof({ kind: "actual-inference-wait-ended", sessionId, stopReason,
+      elapsedSeconds: Math.round((Date.now() - startedWaiting) / 1000), responseGuardSeconds: 7200,
+      outputSubstituted: false, policyChanged: false })
     // captureProof records bounded failure diagnostics as well as success.
     const proof = await local.captureProof(sessionId)
     const answer = String(proof.answer ?? "")
@@ -164,6 +191,24 @@ async function chatChapters(film: Film, local: LocalModelRecording) {
       visibleFragments: fragments, responseSubstituted: false, productionProviderClaimed: false,
       modelLabel: "Local demonstration model" })
   }, true)
+}
+
+/** Materialize only the original proof attachment bytes for the post-test media
+ * transport. No report rewriting, arbitrary attachment copying or auth files.
+ * The original full Playwright report/video remain in the ordinary artifact. */
+async function preserveTransportProof(info: TestInfo, example: string) {
+  if (example !== "C-chat-native-context") throw new Error("Unexpected focused Chat capture identity")
+  const allowed = new Set([example + "-film-report", example + "-video-source",
+    "local-model-setup-started", "local-model-ready", "local-model-chat-proof", "local-model-failure"])
+  const selected = info.attachments.filter((attachment) => allowed.has(attachment.name) && attachment.contentType === "application/json")
+  if (new Set(selected.map((attachment) => attachment.name)).size !== selected.length)
+    throw new Error("Ambiguous original proof attachments")
+  await mkdir(info.outputPath("transport-proof"), { recursive: true })
+  for (const attachment of selected) {
+    if (!Buffer.isBuffer(attachment.body) || attachment.body.length > 16 * 1024 ** 2)
+      throw new Error("Expected bounded original JSON attachment bytes")
+    await writeFile(info.outputPath("transport-proof", attachment.name + ".json"), attachment.body, { flag: "wx" })
+  }
 }
 
 async function openAgent(film: Film, id: string) {

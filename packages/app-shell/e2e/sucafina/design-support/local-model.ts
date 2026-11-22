@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto"
-import { chmod, mkdir, mkdtemp, open, readdir, realpath, rm, stat } from "node:fs/promises"
+import { chmod, mkdir, mkdtemp, open, readFile, readdir, realpath, rm, stat } from "node:fs/promises"
 import { createServer } from "node:net"
 import { availableParallelism, freemem, totalmem, tmpdir } from "node:os"
 import path from "node:path"
@@ -45,7 +45,63 @@ export type LocalModelRecording = {
   agentId: string
   agentName: string
   prompt: string
+  readProgress: () => Promise<LocalModelProgress>
   captureProof: (sessionId: string) => Promise<Record<string, unknown>>
+}
+
+type ModelSlotProgress = {
+  id?: number
+  taskId?: number
+  contextTokens?: number
+  prefixTokens?: number
+  processedTokens?: number
+  cachedTokens?: number
+  decodedTokens?: number
+  remainingTokens?: number
+  predictLimit?: number
+  processing?: boolean
+}
+
+type PrefillProgress = {
+  observedAtMs: number
+  slotId: number
+  taskId: number
+  processedTokens: number
+  progressFraction: number
+  elapsedSeconds: number
+  tokensPerSecond: number
+}
+
+type ProcessResources = {
+  pid: number
+  startTimeTicks: number
+  cpuTicks: number
+  rssBytes?: number
+  peakRssBytes?: number
+  swapBytes?: number
+  threads?: number
+}
+
+export type LocalModelProgress = {
+  elapsedMs: number
+  metrics: Record<string, number>
+  metricsRead: boolean
+  slots: ModelSlotProgress[]
+  slotsRead: boolean
+  prefill?: PrefillProgress
+  process: Partial<ProcessResources> & {
+    running: boolean | null
+    resourcesRead: boolean
+    availableCpus: number
+    freeMemoryBytes: number
+  }
+  stall: {
+    baselineObserved: boolean
+    noProgressMs: number
+    noCpuProgressMs: number
+    thresholdMs: number
+    suspected: boolean
+  }
 }
 
 type Recorder = (name: string, proof: object) => Promise<void>
@@ -80,6 +136,16 @@ export async function withLocalModel<T>(
   const owned: { child?: ChildProcessHandle } = {}
   const timingLines: string[] = []
   const startupLines: string[] = []
+  const numericStartup: {
+    cpuBackend?: string
+    cpuFeatures: Record<string, number>
+    nBatch?: number
+    nUbatch?: number
+    flashAttentionEnabled?: boolean
+  } = { cpuFeatures: {} }
+  const progressSamples: LocalModelProgress[] = []
+  const telemetryStartedAt = Date.now()
+  let latestPrefill: PrefillProgress | undefined
   // The real prior turn contained 148598 tokens. Preserve the complete Maestro
   // and every permission-filtered tool; use Qwen3.5's native 262144-token window.
   const memoryBeforeLoad = { totalBytes: totalmem(), freeBytes: freemem() }
@@ -139,7 +205,7 @@ export async function withLocalModel<T>(
       "-ngl", "0", "-t", String(modelThreads), "-tb", String(modelThreads), "-c", String(contextTokens), "-np", "1", "-n", "384",
       "--jinja", "--chat-template-kwargs", '{"enable_thinking":false}', "--reasoning", "off",
       "--temp", "0.7", "--top-k", "20", "--top-p", "0.8", "--min-p", "0", "--presence-penalty", "1.5",
-      "--metrics", "--timeout", "2100",
+      "--metrics", "--timeout", "7800",
     ]
     stage = "start-model"
     const child = yield* launcher.spawn(ChildProcess.make(binary, args, {
@@ -148,6 +214,31 @@ export async function withLocalModel<T>(
     }))
     owned.child = child
     const collect = (line: string) => Effect.sync(() => {
+      // Pinned b12632 server_slot::print_timings_pp is numeric and uses task-local
+      // progress. Its prefix is defined by SLT_INF in server-common.h. Keep no text.
+      const pp = line.match(/\bid\s+(\d+)\s*\|\s*task\s+(\d+)\s*\|\s*prompt processing, n_tokens\s*=\s*(\d+), progress\s*=\s*([\d.]+), t\s*=\s*([\d.]+) s\s*\/\s*([\d.]+) tokens per second/)
+      if (pp) {
+        const values = pp.slice(1).map(Number)
+        if (values.every(Number.isFinite) && values[3]! >= 0 && values[3]! <= 1) {
+          latestPrefill = { observedAtMs: Date.now() - telemetryStartedAt, slotId: values[0]!, taskId: values[1]!,
+            processedTokens: values[2]!, progressFraction: values[3]!, elapsedSeconds: values[4]!, tokensPerSecond: values[5]! }
+        }
+      }
+      if (!modelReady) {
+        // Backend basename and fixed capability flags only; never retain its path.
+        const backend = line.match(/loaded CPU backend from .*\b(libggml-cpu(?:-[A-Za-z0-9_-]+)?\.so)\b/)
+        if (backend) numericStartup.cpuBackend = backend[1]!
+        const batch = line.match(/\bn_(batch|ubatch)\s*=\s*(\d+)\b/)
+        if (batch) numericStartup[batch[1] === "batch" ? "nBatch" : "nUbatch"] = Number(batch[2])
+        if (/\bFlash Attention enabled\b/.test(line)) numericStartup.flashAttentionEnabled = true
+        if (/\bFlash Attention not supported, set to disabled\b/.test(line)) numericStartup.flashAttentionEnabled = false
+        if (/\bsystem_info\b/.test(line)) {
+          for (const feature of ["AVX", "AVX2", "AVX512", "AVX512_VBMI", "AVX512_VNNI", "AVX512_BF16", "F16C", "FMA", "AVX_VNNI", "AMX_INT8", "REPACK", "LLAMAFILE"]) {
+            const value = line.match(new RegExp("\\b" + feature + "\\s*=\\s*([01])\\b"))
+            if (value) numericStartup.cpuFeatures[feature] = Number(value[1])
+          }
+        }
+      }
       // Startup precedes any inference; retain a bounded diagnostic tail while
       // omitting tokenizer templates and file paths. Never retain request logs.
       if (!modelReady && line.length < 1600 && !/chat_template|system.prompt|authorization|api.key/i.test(line) &&
@@ -218,6 +309,62 @@ export async function withLocalModel<T>(
       const agentId = agent.id
       const agentName = typeof agent.name === "string" && agent.name ? agent.name : agentId
       const baselineMetrics = await metrics(modelOrigin)
+      // Counters are diagnostic only. The actual UI/persisted assistant proof below
+      // remains the success gate; the automatic title is not the requested answer.
+      const stallThresholdMs = 10 * 60_000
+      let stallBaseline: {
+        taskId: number; startTimeTicks: number; counters: number[]; cpuTicks: number
+        lastProgressMs: number; lastCpuProgressMs: number
+      } | undefined
+      const readProgress = async (): Promise<LocalModelProgress> => {
+        const [metricRead, slotRead, resourceRead, runningRead] = await Promise.allSettled([
+          metrics(modelOrigin), modelSlots(modelOrigin), ownedProcessResources(child.pid), Effect.runPromise(child.isRunning),
+        ])
+        const elapsedMs = Date.now() - telemetryStartedAt
+        const observedMetrics: Record<string, number> = metricRead.status === "fulfilled" ? metricRead.value : {}
+        const observedSlots = slotRead.status === "fulfilled" ? slotRead.value : []
+        const resources = resourceRead.status === "fulfilled" ? resourceRead.value : undefined
+        const running = runningRead.status === "fulfilled" ? runningRead.value : null
+        const active = observedSlots.filter((slot) => slot.processing === true)
+        const slot = active.length === 1 ? active[0] : undefined
+        const counters = slot ? [slot.prefixTokens, slot.processedTokens, slot.decodedTokens, observedMetrics["llamacpp:n_decode_total"]] : []
+        const valid = metricRead.status === "fulfilled" && slotRead.status === "fulfilled" && running === true &&
+          resources !== undefined && slot?.taskId !== undefined && counters.length === 4 &&
+          counters.every((value) => typeof value === "number" && Number.isFinite(value)) &&
+          (slot.processedTokens ?? 0) > 0
+        const stall = { baselineObserved: false, noProgressMs: 0, noCpuProgressMs: 0, thresholdMs: stallThresholdMs, suspected: false }
+        if (valid && resources && slot?.taskId !== undefined) {
+          const values = counters as number[]
+          if (!stallBaseline || stallBaseline.taskId !== slot.taskId || stallBaseline.startTimeTicks !== resources.startTimeTicks ||
+              values.some((value, index) => value < stallBaseline!.counters[index]!) || resources.cpuTicks < stallBaseline.cpuTicks) {
+            stallBaseline = { taskId: slot.taskId, startTimeTicks: resources.startTimeTicks, counters: values,
+              cpuTicks: resources.cpuTicks, lastProgressMs: elapsedMs, lastCpuProgressMs: elapsedMs }
+          } else {
+            if (values.some((value, index) => value > stallBaseline!.counters[index]!)) stallBaseline.lastProgressMs = elapsedMs
+            if (resources.cpuTicks > stallBaseline.cpuTicks) stallBaseline.lastCpuProgressMs = elapsedMs
+            stallBaseline.counters = values
+            stallBaseline.cpuTicks = resources.cpuTicks
+          }
+          stall.baselineObserved = true
+          stall.noProgressMs = elapsedMs - stallBaseline.lastProgressMs
+          stall.noCpuProgressMs = elapsedMs - stallBaseline.lastCpuProgressMs
+          stall.suspected = stall.noProgressMs >= stallThresholdMs && stall.noCpuProgressMs >= stallThresholdMs
+        } else {
+          // Missing or delayed diagnostics are not evidence of stalled inference.
+          stallBaseline = undefined
+        }
+        const value: LocalModelProgress = {
+          elapsedMs, metrics: observedMetrics, metricsRead: metricRead.status === "fulfilled",
+          slots: observedSlots, slotsRead: slotRead.status === "fulfilled", prefill: latestPrefill,
+          process: { ...resources, running, resourcesRead: resources !== undefined,
+            availableCpus: availableParallelism(), freeMemoryBytes: freemem() }, stall,
+        }
+        if (!progressSamples.length || elapsedMs - progressSamples.at(-1)!.elapsedMs >= 55_000 || stall.suspected) {
+          progressSamples.push(value)
+          if (progressSamples.length > 150) progressSamples.shift()
+        }
+        return value
+      }
       await record("local-model-ready", {
         sourceBase, readyAt: new Date().toISOString(), assets,
         binaryVersion: versionText.replaceAll(root, "[temporary-model-directory]").slice(0,2000),
@@ -230,10 +377,11 @@ export async function withLocalModel<T>(
         catalog: { providerPresent: true, modelEnabled: true, defaultMatches: true,
           reportedLimit: object(model.limit), limitsConfiguredViaAPI: false },
         baselineMetrics,
+        numericStartup,
       })
       stage = "actual-chat"
       return use({
-        providerId, modelId, modelName, agentId, agentName, prompt: localModelPrompt,
+        providerId, modelId, modelName, agentId, agentName, prompt: localModelPrompt, readProgress,
         captureProof: async (sessionId) => {
           if (!/^[A-Za-z0-9_-]{8,160}$/.test(sessionId)) throw new Error("Supply the actual parsed Chat session ID")
           const timeline = await completeMessages(request, origin, sessionId)
@@ -249,6 +397,7 @@ export async function withLocalModel<T>(
           const answerModel = object(answer.model)
           const time = object(answer.time)
           const finalMetrics = await metrics(modelOrigin)
+          const finalProgress = await readProgress()
           const checks = {
             actualPrompt: users.length === 1 && users[0]!.text === localModelPrompt,
             actualAgent: answer.agent === agentId,
@@ -272,6 +421,7 @@ export async function withLocalModel<T>(
               messageId: value.id, error: modelError(value.error, installationRoot),
             })),
             checks, baselineMetrics, finalMetrics, timingLines: [...timingLines],
+            numericStartup, finalProgress, progressSamples: [...progressSamples],
           }
           await record("local-model-chat-proof", proof)
           if (Object.values(checks).some((value) => !value))
@@ -284,6 +434,7 @@ export async function withLocalModel<T>(
     await record("local-model-failure", {
       stage, modelReady, error: modelError(error, installationRoot),
       startupDiagnosticTail: startupLines, timingLines,
+      numericStartup, progressSamples,
     })
     throw error
   })
@@ -464,12 +615,60 @@ async function modelCapacity(origin: string) {
   return { context, trainingContext }
 }
 
+function finiteNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined
+}
+
+async function modelSlots(origin: string): Promise<ModelSlotProgress[]> {
+  const response = await fetch(origin + "/slots", { signal: AbortSignal.timeout(5_000) })
+  if (!response.ok) throw new Error("Local model slot metrics unavailable")
+  // b12632 may return prompt/generated/grammar here. Never forward or store that
+  // response: construct only the fixed numeric/boolean projection below.
+  return rows(await response.json()).map((slot) => {
+    const next = object(Array.isArray(slot.next_token) ? slot.next_token[0] : slot.next_token)
+    const params = object(slot.params)
+    return {
+      id: finiteNumber(slot.id), taskId: finiteNumber(slot.id_task), contextTokens: finiteNumber(slot.n_ctx),
+      // This is the current prefix, not the full input size during prefill.
+      prefixTokens: finiteNumber(slot.n_prompt_tokens), processedTokens: finiteNumber(slot.n_prompt_tokens_processed),
+      cachedTokens: finiteNumber(slot.n_prompt_tokens_cache), decodedTokens: finiteNumber(next.n_decoded),
+      remainingTokens: finiteNumber(next.n_remain), predictLimit: finiteNumber(params.n_predict),
+      processing: typeof slot.is_processing === "boolean" ? slot.is_processing : undefined,
+    }
+  })
+}
+
+async function ownedProcessResources(pid: number): Promise<ProcessResources> {
+  // ChildProcessHandle.pid is the branded numeric PID of the process this scope
+  // owns. Read only Linux numeric accounting; never command line or environment.
+  if (!Number.isSafeInteger(pid) || pid <= 1) throw new Error("Owned model process identity unavailable")
+  const [statText, statusText] = await Promise.all([
+    readFile("/proc/" + pid + "/stat", "utf8"), readFile("/proc/" + pid + "/status", "utf8"),
+  ])
+  const endName = statText.lastIndexOf(")")
+  if (endName < 0 || Number(statText.slice(0, statText.indexOf(" "))) !== pid)
+    throw new Error("Owned model process accounting identity mismatch")
+  const fields = statText.slice(endName + 2).trim().split(/\s+/)
+  // The first remaining field is Linux stat field 3; utime/stime/starttime are 14/15/22.
+  const [userTicks, systemTicks, startTimeTicks] = [fields[11], fields[12], fields[19]].map(Number)
+  if (![userTicks, systemTicks, startTimeTicks].every((value) => Number.isSafeInteger(value) && value! >= 0))
+    throw new Error("Owned model CPU accounting unavailable")
+  const bytes = (name: "VmRSS" | "VmHWM" | "VmSwap") => {
+    const match = statusText.match(new RegExp("^" + name + ":\\s*(\\d+)\\s+kB$", "m"))
+    return match ? Number(match[1]) * 1024 : undefined
+  }
+  const threads = statusText.match(/^Threads:\s*(\d+)\s*$/m)
+  return { pid, startTimeTicks: startTimeTicks!, cpuTicks: userTicks! + systemTicks!,
+    rssBytes: bytes("VmRSS"), peakRssBytes: bytes("VmHWM"), swapBytes: bytes("VmSwap"),
+    threads: threads ? Number(threads[1]) : undefined }
+}
+
 async function metrics(origin: string) {
   const response = await fetch(origin + "/metrics", { signal: AbortSignal.timeout(5_000) })
   if (!response.ok) throw new Error("Local model numeric metrics unavailable")
   const result: Record<string, number> = {}
   for (const line of (await response.text()).split("\n")) {
-    const match = line.match(/^(llamacpp:(?:prompt_tokens_total|prompt_seconds_total|tokens_predicted_total|tokens_predicted_seconds_total|requests_processing|requests_deferred|n_tokens_max))\s+([0-9.eE+-]+)\s*$/)
+    const match = line.match(/^(llamacpp:(?:prompt_tokens_total|prompt_seconds_total|tokens_predicted_total|tokens_predicted_seconds_total|requests_processing|requests_deferred|n_tokens_max|n_decode_total))\s+([0-9.eE+-]+)\s*$/)
     if (match && Number.isFinite(Number(match[2]))) result[match[1]!] = Number(match[2])
   }
   return result
