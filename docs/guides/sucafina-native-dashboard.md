@@ -2,6 +2,12 @@
 
 Este guia descreve as telas nativas de orçamento, pessoas, portfólio, operações e planejamento da Sucafina. As ações disponíveis dependem do seu acesso à instalação e aos dados.
 
+## Visão executiva e referências
+
+A navegação da visão executiva permite abrir a pauta de revisão, os Hot Topics e ações, os riscos e as partes interessadas disponíveis para seu acesso. Os rótulos e as referências acompanham o idioma selecionado.
+
+Em **Referências executivas**, selecione um registro e escolha **Abrir referência**. A seleção identifica o registro original; mudar o idioma mantém essa seleção. Uma leitura negada mostra o aviso de acesso, separado da mensagem de lista vazia. Se outra origem fornecer registros autorizados, eles continuam disponíveis. Uma falha de leitura mostra a indisponibilidade, e trocar de contexto remove as referências anteriores.
+
 ## Hot Topics e ações
 
 Use **Filtrar por status** para localizar os tópicos de uma situação. Cada registro mostra a ação, a prioridade, o responsável e o prazo. **Ver detalhes** abre as notas e as informações do tópico.
