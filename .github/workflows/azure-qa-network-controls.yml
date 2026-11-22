@@ -1,0 +1,251 @@
+name: azure-qa-network-controls
+on:
+  push:
+    branches: [qa-network-ci]
+permissions:
+  contents: read
+concurrency:
+  group: qa-network-ci
+  cancel-in-progress: false
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    env:
+      CANDIDATE_SHA: cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb
+      CANDIDATE_TREE: c5ee09b9407ecce59eb5b024e555b90e400542c9
+      BASE_SHA: 346af44f4aac7bf1eb9821d4c5482bacf233a706
+    steps:
+      - name: Checkout the independently reviewed candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact source and disposable driver attribution
+        id: admission
+        run: |
+          set -euo pipefail
+          umask 077
+          export EVIDENCE="$RUNNER_TEMP/azure-qa-network-controls"
+          export AZURE_NETWORK_EVIDENCE_DIR="$EVIDENCE/wrapper"
+          printf 'EVIDENCE=%s\nAZURE_NETWORK_EVIDENCE_DIR=%s\n' "$EVIDENCE" "$AZURE_NETWORK_EVIDENCE_DIR" >> "$GITHUB_ENV"
+          mkdir -m 700 "$EVIDENCE" "$AZURE_NETWORK_EVIDENCE_DIR"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$CANDIDATE_TREE"
+          test "$(git rev-parse 'HEAD^')" = "$BASE_SHA"
+          test "$(git rev-list --parents -n 1 HEAD | wc -w)" = 2
+          test "$(git rev-parse "$GITHUB_SHA^")" = "$CANDIDATE_SHA"
+          test "$(git rev-list --parents -n 1 "$GITHUB_SHA" | wc -w)" = 2
+          test "$(git diff --name-only "$CANDIDATE_SHA" "$GITHUB_SHA")" = ".github/workflows/azure-qa-network-controls.yml"
+          test "$(git diff --name-only "$BASE_SHA" "$CANDIDATE_SHA")" = $'infra/azure/README.md\ninfra/azure/deploy.sh\ninfra/azure/main.bicep\npackages/script/test/azure-deploy.node-smoke.mjs\npackages/script/test/azure-foundation.node-smoke.mjs'
+          git diff --check "$BASE_SHA" "$CANDIDATE_SHA"
+          test -z "$(git status --porcelain)"
+          {
+            printf 'candidateSha=%s\n' "$CANDIDATE_SHA"
+            printf 'candidateTree=%s\n' "$CANDIDATE_TREE"
+            printf 'baseSha=%s\n' "$BASE_SHA"
+            printf 'driverSha=%s\n' "$GITHUB_SHA"
+            printf 'driverTree=%s\n' "$(git rev-parse "$GITHUB_SHA^{tree}")"
+            printf 'guardBaseSha=%s\n' "$(git rev-parse origin/dev)"
+          } > "$EVIDENCE/source.refs"
+          sha256sum infra/azure/main.bicep infra/azure/deploy.sh infra/azure/README.md infra/azure/bootstrap.sh infra/azure/tools.json .github/workflows/azure-mvp.yml packages/script/test/azure-foundation.node-smoke.mjs packages/script/test/azure-workflow.node-smoke.mjs packages/script/test/azure-bootstrap.node-smoke.mjs packages/script/test/azure-deploy.node-smoke.mjs packages/script/test/fixture/azure-tools.mjs .github/actions/setup-bun/action.yml package.json bun.lock > "$EVIDENCE/source.sha256"
+      - name: Prepare Node 24.15
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.15.0
+      - name: Prepare the declared Bun runtime
+        id: runtime
+        uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Run the four original Azure smoke sets
+        id: smokes
+        run: |
+          set -euo pipefail
+          bash -n infra/azure/deploy.sh
+          bash -n infra/azure/bootstrap.sh
+          node --test --test-reporter=tap packages/script/test/azure-foundation.node-smoke.mjs packages/script/test/azure-workflow.node-smoke.mjs packages/script/test/azure-bootstrap.node-smoke.mjs packages/script/test/azure-deploy.node-smoke.mjs 2>&1 | tee "$EVIDENCE/smokes.tap"
+      - name: Verify and retain the original wrapper ARM and parameter bytes
+        id: capture
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re
+          root = pathlib.Path(os.environ["EVIDENCE"])
+          wrapper = root / "wrapper"
+          expected = {f"wrapper-{n}.json" for n in range(1, 52)}
+          paths = list(wrapper.iterdir())
+          assert {p.name for p in paths} == expected
+          assert all(p.is_file() and not p.is_symlink() for p in paths)
+          rows = []
+          for path in sorted(paths, key=lambda p: int(p.stem.split("-")[1])):
+              value = json.loads(path.read_text())
+              assert set(value) == {"variant", "operation", "status", "calls", "captures"}
+              assert value["variant"] in {"canonical", "confirm-mutation"}
+              assert value["operation"] in {"preview", "apply"}
+              assert type(value["status"]) is int
+              assert isinstance(value["calls"], list) and isinstance(value["captures"], list)
+              assert all(isinstance(c, list) and all(isinstance(s, str) for s in c) for c in value["calls"])
+              sent = [c for c in value["calls"] if c[:2] == ["deployment", "group"] and len(c) > 2 and c[2] in {"what-if", "create"}]
+              assert sent == [c["args"] for c in value["captures"]]
+              rows.append((path.name, value))
+          canonical = [v for _, v in rows if v["variant"] == "canonical"]
+          mutation = [v for _, v in rows if v["variant"] == "confirm-mutation"]
+          assert len(canonical) == 50 and len(mutation) == 1
+          assert mutation[0]["status"] == 0 and len(mutation[0]["captures"]) == 2
+          assert [c["args"][2] for c in mutation[0]["captures"]] == ["what-if", "create"]
+          assert sum(v["status"] == 0 for v in canonical) == 8
+          assert sum(v["status"] != 0 and not v["calls"] and not v["captures"] for v in canonical) == 35
+          assert sum(v["status"] != 0 and bool(v["calls"]) and not v["captures"] for v in canonical) == 6
+          refused_confirmation = [v for v in canonical if v["status"] != 0 and v["captures"]]
+          assert len(refused_confirmation) == 1
+          assert refused_confirmation[0]["operation"] == "apply"
+          assert [c["args"][2] for c in refused_confirmation[0]["captures"]] == ["what-if"]
+          assert sum(len(v["captures"]) for v in canonical) == 16
+          assert sum(len(v["captures"]) for v in mutation) == 2
+          arm_dir = root / "compiled-arm"
+          parameter_dir = root / "parameters"
+          arm_dir.mkdir(mode=0o700)
+          parameter_dir.mkdir(mode=0o700)
+          arms, parameters, counts, index = {}, {}, {}, []
+          allowed_groups = {
+              "mvp": {"orchsf-audit", "orchestra-sf-g08-qa", "orchestra-sf-g10-source", "orchestra-sf-g10-clone"},
+              "g08-qa": {"orchestra-sf-g08-qa"},
+              "g10-source": {"orchestra-sf-g10-source"},
+              "g10-clone": {"orchestra-sf-g10-clone"},
+          }
+          common = {"location", "vmSize", "imageVersion", "adminSshPublicKey", "adminUsername", "dataDiskSizeGiB"}
+          canonical_groups = {k: set() for k in allowed_groups}
+          for name, value in rows:
+              for capture in value["captures"]:
+                  assert set(capture) == {"args", "template", "parameters", "templateSha256", "parametersSha256", "templateMode", "parametersMode"}
+                  args = capture["args"]
+                  assert len(args) == 13 and args[:2] == ["deployment", "group"]
+                  assert args[2] in {"what-if", "create"}
+                  assert args[3:8] == ["--mode", "Incremental", "--name", "orchsf-foundation", "--resource-group"]
+                  assert args[9] == "--template-file" and args[11] == "--parameters"
+                  assert pathlib.Path(args[10]).is_absolute() and args[12].startswith("@/")
+                  assert capture["templateMode"] == 0o600 and capture["parametersMode"] == 0o600
+                  arm = capture["template"].encode("utf-8")
+                  params = capture["parameters"].encode("utf-8")
+                  ah, ph = hashlib.sha256(arm).hexdigest(), hashlib.sha256(params).hexdigest()
+                  assert ah == capture["templateSha256"] and ph == capture["parametersSha256"]
+                  parsed = json.loads(arm)
+                  assert parsed["parameters"]["networkProfile"]["defaultValue"] == "mvp"
+                  assert parsed["parameters"]["networkProfile"]["allowedValues"] == ["mvp", "g08-qa", "g10-source", "g10-clone"]
+                  document = json.loads(params)
+                  values = document["parameters"]
+                  profile = values.get("networkProfile", {"value": "mvp"})["value"]
+                  assert profile in allowed_groups and args[8] in allowed_groups[profile]
+                  assert set(values) == (common if profile == "mvp" else common | {"networkProfile", "qaHttpsIngressCidrs", "cloneAdminEgressCidrs"})
+                  if ah in arms:
+                      assert arms[ah] == arm
+                  else:
+                      arms[ah] = arm
+                      (arm_dir / (ah + ".json")).write_bytes(arm)
+                  if profile in parameters:
+                      assert parameters[profile] == params
+                  else:
+                      parameters[profile] = params
+                      (parameter_dir / (profile + ".json")).write_bytes(params)
+                  key = (value["variant"], profile, args[2])
+                  counts[key] = counts.get(key, 0) + 1
+                  if value["variant"] == "canonical":
+                      canonical_groups[profile].add(args[8])
+                  index.append({"wrapper": name, "variant": value["variant"], "operation": args[2], "group": args[8], "profile": profile, "templateSha256": ah, "parametersSha256": ph})
+          assert len(arms) == 1 and set(parameters) == set(allowed_groups)
+          assert canonical_groups == allowed_groups
+          assert counts == {
+              ("canonical", "mvp", "what-if"): 6, ("canonical", "mvp", "create"): 4,
+              ("canonical", "g08-qa", "what-if"): 1, ("canonical", "g08-qa", "create"): 1,
+              ("canonical", "g10-source", "what-if"): 1, ("canonical", "g10-source", "create"): 1,
+              ("canonical", "g10-clone", "what-if"): 1, ("canonical", "g10-clone", "create"): 1,
+              ("confirm-mutation", "mvp", "what-if"): 1, ("confirm-mutation", "mvp", "create"): 1,
+          }
+          tap = (root / "smokes.tap").read_text()
+          summary = {}
+          for field in ("tests", "pass", "fail", "cancelled", "skipped", "todo"):
+              found = re.findall(r"^# " + field + r" (\d+)$", tap, re.M)
+              assert len(found) == 1, (field, found)
+              summary[field] = int(found[0])
+          assert summary == {"tests": 61, "pass": 61, "fail": 0, "cancelled": 0, "skipped": 0, "todo": 0}
+          report = {
+              "tests": summary, "wrapperInvocations": 51, "canonicalInvocations": 50,
+              "confirmationMutationInvocations": 1, "inputRefusalsBeforeAzure": 35,
+              "foundationRefusalsBeforeDeployment": 6, "confirmationRefusals": 1,
+              "originalCapturedDeployments": 18, "canonicalCapturedDeployments": 16,
+              "confirmationMutationCapturedDeployments": 2,
+              "compiledArmSha256": next(iter(arms)),
+              "originalParameterSha256": {k: hashlib.sha256(v).hexdigest() for k, v in parameters.items()},
+              "actualAzureObserved": False, "cloudMutation": False,
+              "originalCaptureIndex": index,
+          }
+          (root / "capture-controls.json").write_text(json.dumps(report, indent=2) + "\n")
+          print(json.dumps({k: v for k, v in report.items() if k != "originalCaptureIndex"}, indent=2))
+          PY
+      - name: Run canonical change guards
+        id: guards
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' && steps.admission.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev --json > "$EVIDENCE/guards.json" 2> "$EVIDENCE/guards.stderr"
+          cat "$EVIDENCE/guards.json"
+      - name: Close the original source attribution
+        id: closure
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' && steps.admission.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$CANDIDATE_TREE"
+          test -z "$(git status --porcelain)"
+          sha256sum --check "$EVIDENCE/source.sha256"
+      - name: Record the executed component result
+        if: ${{ !cancelled() && steps.smokes.outcome == 'success' && steps.capture.outcome == 'success' && steps.guards.outcome == 'success' && steps.closure.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ["EVIDENCE"])
+          controls = json.loads((root / "capture-controls.json").read_text())
+          guards = json.loads((root / "guards.json").read_text())
+          assert guards["errors"] == []
+          assert not any(f["severity"] == "gate" for f in guards["findings"])
+          assert guards["bootstrap"] is False and guards["touchesGuards"] is False
+          refs = dict(line.split("=", 1) for line in (root / "source.refs").read_text().splitlines())
+          assert controls["tests"] == {"tests": 61, "pass": 61, "fail": 0, "cancelled": 0, "skipped": 0, "todo": 0}
+          assert controls["actualAzureObserved"] is False and controls["cloudMutation"] is False
+          files = {}
+          for path in sorted(root.rglob("*")):
+              assert not path.is_symlink()
+              if path.is_file():
+                  files[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+          receipt = {
+              "schema": "orchestra-sf.azure-qa-network-controls.v1", "class": "COMPONENT_READINESS",
+              **refs, "runId": os.environ["GITHUB_RUN_ID"], "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "result": "PASS", "tests": controls["tests"], "wrapperInvocations": controls["wrapperInvocations"],
+              "canonicalCapturedDeployments": controls["canonicalCapturedDeployments"],
+              "confirmationMutationCapturedDeployments": controls["confirmationMutationCapturedDeployments"],
+              "compiledArmSha256": controls["compiledArmSha256"],
+              "originalParameterSha256": controls["originalParameterSha256"],
+              "canonicalGuardsPassed": True, "guardRules": guards["rules"],
+              "guardWarnings": sum(f["severity"] == "warn" for f in guards["findings"]),
+              "fileSha256": files,
+              "actualAzureObserved": False, "cloudMutation": False,
+              "reservationConfirmed": False, "guestObserved": False, "networkIsolationObserved": False,
+              "installedQualification": False, "productionCutover": False,
+          }
+          (root / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps({k: v for k, v in receipt.items() if k != "fileSha256"}, indent=2))
+          PY
+      - name: Preserve original smoke and wrapper evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: azure-qa-network-controls-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/azure-qa-network-controls
+          if-no-files-found: error
+          retention-days: 7
