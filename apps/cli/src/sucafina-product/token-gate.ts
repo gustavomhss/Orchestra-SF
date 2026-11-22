@@ -250,7 +250,8 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
                     request: httpRequest, description: "SF budget gate denied request",
                   }) })),
                 ))
-              const scoped = yield* Layer.build(RequestExecutor.layer.pipe(Layer.provide(Layer.succeed(HttpClient.HttpClient, guarded))))
+              // The stock executor is already memoized with an unguarded client in this scope.
+              const scoped = yield* Layer.build(Layer.fresh(RequestExecutor.layer).pipe(Layer.provide(Layer.succeed(HttpClient.HttpClient, guarded))))
               return originalRoute.streamPrepared(prepared, compiled, { ...runtime, http: Context.get(scoped, RequestExecutor.Service) })
             })) }
           return original.stream(LLMRequest.update(request, { model: Model.update(request.model, { route: transportRoute }) }))

@@ -83,6 +83,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
   }
   const toolInputs: { selected?: string; outside?: string } = {}
   const fixture: { renewPeriod?: () => Promise<void> } = {}
+  const countedRequests = new Set<string>()
   let turns = 0
   let tokenCounts = 0
   let titleTokenCounts = 0
@@ -92,6 +93,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
     const request = new Request(incoming, init)
     if (new URL(request.url).origin !== "https://api.openai.com") return fetch(incoming, init)
     const payload = object(await request.json())
+    const inputDigest = digestSfValue([payload.model, payload.input, payload.tools])
     const messages = (Array.isArray(payload.input) ? payload.input : []).map(object)
     const title = messages.some((message) => message.role === "user" && (typeof message.content === "string"
       ? message.content.startsWith("Generate a title for this conversation:")
@@ -100,12 +102,14 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
         return typeof text === "string" && text.startsWith("Generate a title for this conversation:")
       })))
     if (request.url === "https://api.openai.com/v1/responses/input_tokens") {
+      countedRequests.add(inputDigest)
       if (title) titleTokenCounts++
       else tokenCounts++
       console.info(`SF_REVIEWER_PROOF token oracle ${title ? "title" : `reviewer ${tokenCounts}`}`)
       return Response.json({ object: "response.input_tokens", input_tokens: 120 })
     }
     expect(request.url).toBe("https://api.openai.com/v1/responses")
+    if (!countedRequests.delete(inputDigest)) throw new Error("SF_REVIEWER_PROOF inference reached transport without counting the same input and tools")
     if (!title) {
       turns++
       console.info(`SF_REVIEWER_PROOF reviewer model turn ${turns}, oracle calls ${tokenCounts}`)
@@ -296,7 +300,7 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
               console.info("SF_REVIEWER_PROOF start command admitted")
               return analyses.start(call, start)
             }, "reviewer", signal)), "start reviewer")
-          await step("reviewer runner and tool result", 240_000, async (signal) => {
+          await step("reviewer runner and tool result", 330_000, async (signal) => {
             // Wait on stored lifecycle state without competing with the runner's
             // source verification. The public read below still verifies the result.
             const progress = async () => value(await services.state.read(request("reviewer", signal), "contributions", (state) =>
@@ -348,4 +352,4 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
       await rm(root, { recursive: true, force: true })
     })
   }
-}, 750_000)
+}, 850_000)
