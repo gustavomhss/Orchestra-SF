@@ -12,19 +12,22 @@ export function redactLog(text: string) {
 
 const SENSITIVE_KEY = /^(?:authorization|proxy-authorization|password|(?:x-)?api[-_]?key|auth_token|access_token|refresh_token)$/i
 const JSON_VALUE = /("(?:\\[^\r\n]|[^"\\\r\n])*")(?:(\s*:\s*)("(?:\\[^\r\n]|[^"\\\r\n])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|null|true|false))?/g
+const MALFORMED_JSON = '{"redacted":"malformed log record"}'
 
 // Keep untouched tokens, whitespace and numeric precision in exported JSON and netlogs.
 function redactJSON(text: string) {
-  return text.replace(JSON_VALUE, (match, token: string, separator?: string, value?: string) => {
-    try {
-      if (separator !== undefined && value !== undefined) {
-        if (SENSITIVE_KEY.test(JSON.parse(token))) return token + separator + '"[redacted]"'
-        return token + separator + redactJSONString(value)
-      }
-      return redactJSONString(token)
-    } catch {
-      return redactLog(match)
+  try {
+    // A truncated string may contain credentials outside any complete token.
+    JSON.parse(text)
+  } catch {
+    return MALFORMED_JSON
+  }
+  return text.replace(JSON_VALUE, (_match, token: string, separator?: string, value?: string) => {
+    if (separator !== undefined && value !== undefined) {
+      if (SENSITIVE_KEY.test(JSON.parse(token))) return token + separator + '"[redacted]"'
+      return token + separator + redactJSONString(value)
     }
+    return redactJSONString(token)
   })
 }
 
@@ -36,7 +39,15 @@ function redactJSONString(token: string) {
 }
 
 export function redactLogFile(name: string, text: string) {
-  if (/\.jsonl(\.\d+)?$/i.test(name)) return text.split("\n").map(redactJSON).join("\n")
+  if (/\.jsonl(\.\d+)?$/i.test(name))
+    return text
+      .split("\n")
+      .map((line) => {
+        if (line.trim() === "") return line
+        if (line.endsWith("\r")) return redactJSON(line.slice(0, -1)) + "\r"
+        return redactJSON(line)
+      })
+      .join("\n")
   if (/\.(json|netlog)(\.\d+)?$/i.test(name)) return redactJSON(text)
   return redactLog(text)
 }

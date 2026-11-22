@@ -54,7 +54,7 @@ test("desktop file logs redact scoped, structured and renderer messages before d
       expect(main + window + renderer).not.toContain(secret)
 
     await writeFile(join(run, "legacy.log"), "GET /event?auth_token=fixture-legacy&keep=yes")
-    await writeFile(join(run, "legacy.jsonl"), '{"password":12345,"ok":true}\n')
+    await writeFile(join(run, "legacy.jsonl"), '{"password":12345,"ok":true}\n{"password":"fixture-truncated')
     const zip = new ZipReader(new BlobReader(Bun.file(await exportDebugLogs())))
     try {
       const entries = await zip.getEntries()
@@ -63,7 +63,9 @@ test("desktop file logs redact scoped, structured and renderer messages before d
       expect(await legacy.getData(new TextWriter())).toBe("GET /event?auth_token=[redacted]&keep=yes")
       const jsonl = entries.find((entry) => entry.filename.endsWith("/legacy.jsonl"))
       if (!jsonl || jsonl.directory) throw new Error("Missing legacy JSONL")
-      expect(await jsonl.getData(new TextWriter())).toBe('{"password":"[redacted]","ok":true}\n')
+      expect(await jsonl.getData(new TextWriter())).toBe(
+        '{"password":"[redacted]","ok":true}\n{"redacted":"malformed log record"}',
+      )
     } finally {
       await zip.close()
     }

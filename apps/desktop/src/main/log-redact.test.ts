@@ -54,6 +54,15 @@ describe("redactLog", () => {
     expect(redactLogFile("desktop/events.jsonl.1", clean)).toBe(clean)
   })
 
+  test("replaces malformed records without preserving fragments of truncated strings", () => {
+    const truncated = '{"message":"url /events?auth_token=fixture-secret'
+    const marker = '{"redacted":"malformed log record"}'
+    expect(redactLogFile("events.jsonl.1", '{"ok":1}\r\n' + truncated + '\r\n{"ok":2}\n\n' + truncated))
+      .toBe('{"ok":1}\r\n' + marker + '\r\n{"ok":2}\n\n' + marker)
+    expect(redactLogFile("network.netlog", '{"events":[\n' + truncated)).toBe(marker)
+    expect(redactLogFile("legacy.json", '{"password":"fixture-secret\\')).toBe(marker)
+  })
+
   test("selects log text and not crash dumps", () => {
     expect(isRedactable("server-1/orchestra.log")).toBe(true)
     expect(isRedactable("network.netlog")).toBe(true)
