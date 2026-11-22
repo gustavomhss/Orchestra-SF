@@ -92,7 +92,17 @@ test("operations pages normalize visible technical labels while retaining exact 
 })
 
 test("planner chart has keyed colors, visible months and USD scale, preserves signed amounts and closed-month zero rules", () => {
-  const summary = { budget: [120, -60, ...Array(10).fill(0)], actual: Array(12).fill(0), outlook: [100, -60, ...Array(10).fill(0)], total: 60, actualYTD: 0, fullYear: 40 }
+  const actual = [0, null, 0, ...Array<null>(9).fill(null)]
+  const summary = {
+    budget: [120, -60, ...Array(10).fill(0)],
+    actual: Array(12).fill(0),
+    outlook: [100, -60, ...Array(10).fill(0)],
+    // The aggregate alone cannot distinguish a recorded zero from missing line data.
+    lines: [{ id: "licenses", cur: "USD", a: actual, actual: [...actual] }],
+    total: 60,
+    actualYTD: 0,
+    fullYear: 40,
+  }
   const before = structuredClone(summary)
   const html = planner(summary)!
   const chart = figure(html, monthlyTitle)
@@ -101,6 +111,7 @@ test("planner chart has keyed colors, visible months and USD scale, preserves si
   expect(chart).toMatch(/<text\b[^>]*>[^<]*-\$?60/)
   expect(chart).toContain("Actual 1: $0")
   expect(chart).not.toContain("Actual 2:")
+  expect(chart).toContain("Actual 3: $0")
   expect(chart).toContain("Budget 1: $120")
   expect(chart).toContain("Budget 2: -$60")
   expect(summary).toEqual(before)
