@@ -14,11 +14,7 @@ export const SfDomainAmountInput = Schema.Union([Schema.Finite, Schema.String, S
 export const SfDomainYears = Schema.Int.check(Schema.isBetween({ minimum: 2024, maximum: 2027 }))
 export const SfDomainMonths = Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 12 }))
 export const SfDomainVersionNumbers = Schema.Record(Schema.String, NonNegativeInt )
-// Project imports retain decimal revision strings from legacy forms; arbitrary text is not a version.
-const VersionText = Schema.String.check(Schema.makeFilter((value) =>
-  /^\d+$/.test(value) && Number.isSafeInteger(Number(value)) || "version must be a non-negative safe integer",
-))
-export const SfDomainVersionInput = Schema.Record(Schema.String, Schema.Union([NonNegativeInt, VersionText]))
+export const SfDomainVersionInput = Schema.Record(Schema.String, Schema.Union([NonNegativeInt, Schema.String]))
 export const SfDomainReadSelection = Schema.Struct({
   year: optional(SfDomainYears),
   month: optional(SfDomainMonths),

@@ -47,8 +47,10 @@ test("the public import contract refuses revision strings the producer cannot in
 })
 
 test("editable amount contracts retain producer-supported text, null and explicit zero", () => {
-  const domainInput = { version: 0, values: { name: "Finance", budget: "123.45" } }
-  expect(Schema.decodeUnknownSync(SfDomainCommandCap04Save.input)(domainInput)).toEqual(domainInput)
+  for (const version of ["", "latest", "0"]) {
+    const domainInput = { version: 0, values: { name: "Finance", budget: "123.45", versions: { "opexOwners:finance": version } } }
+    expect(Schema.decodeUnknownSync(SfDomainCommandCap04Save.input)(domainInput)).toEqual(domainInput)
+  }
   const line = { page: "OPEX", action: "save", version: 0,
     values: { versionId: "v", annual: "123.45", a0: null, f0: "0", b0: "12.5" } }
   expect(Schema.decodeUnknownSync(SfDomainCommandCap18Save.input)(line)).toEqual(line)
