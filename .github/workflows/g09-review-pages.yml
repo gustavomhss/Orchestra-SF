@@ -1,5 +1,5 @@
 name: g09-review-pages
-run-name: Read the measured G09 file index pages
+run-name: Read the G09 v2 file index and resolution findings
 
 on:
   push:
@@ -20,11 +20,11 @@ defaults:
 
 jobs:
   read-review-file-index:
-    name: Read file index page ${{ matrix.page }}
+    name: Read diagnostic page ${{ matrix.page }}
     strategy:
       fail-fast: false
       matrix:
-        page: [0, 1]
+        page: [0, 1, 5, 6]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -80,7 +80,7 @@ jobs:
           PY
           gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_REPORT_ARTIFACT_ID/zip" > "$input/report.zip"
 
-      - name: Verify original bindings and emit one measured file page
+      - name: Verify original bindings and emit one measured page
         run: |
           set -euo pipefail
           python3 .github/ci/g09-review-pages.py \
@@ -88,14 +88,14 @@ jobs:
             --output "$RUNNER_TEMP/g09-review-output" \
             --emit-page ${{ matrix.page }}
 
-      - name: Preserve this file page and its navigation inputs
+      - name: Preserve this page and its navigation inputs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: g09-review-page-${{ matrix.page }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/g09-review-output/manifest.json
-            ${{ runner.temp }}/g09-review-output/000${{ matrix.page }}-files.jsonl
+            ${{ runner.temp }}/g09-review-output/000${{ matrix.page }}-*.jsonl
             ${{ runner.temp }}/g09-review-input/expected.json
             ${{ runner.temp }}/g09-review-input/report-artifact.json
             ${{ runner.temp }}/g09-review-input/producer-artifact.json
