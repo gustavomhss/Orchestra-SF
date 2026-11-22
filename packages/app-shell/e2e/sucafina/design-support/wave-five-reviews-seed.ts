@@ -12,7 +12,8 @@ function text(value: unknown) {
 }
 
 /** Original authenticated producers create the test case and draft. No store, grant or receipt is patched. */
-export async function seedWaveFiveReviewProposal(request: APIRequestContext, installation: DesignInstallation) {
+export async function seedWaveFiveReviewProposal(request: APIRequestContext, installation: DesignInstallation,
+  owner: { installationId: string; projectId: string; hostId: string }) {
   const base = installation.origin + installation.mount + "/dashboard"
   const post = async (mode: string, data: unknown, mutation = false) => {
     const response = await request.post(base + "?sf=" + mode, {
@@ -27,7 +28,37 @@ export async function seedWaveFiveReviewProposal(request: APIRequestContext, ins
     expect(body.status).toBe("ok")
     return body
   }
+  const contextResponse = await request.get(installation.origin + installation.mount + "/api/ui/context", {
+    params: { installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId }, timeout: 40_000,
+  })
+  expect(contextResponse.status()).toBe(200)
+  const contextBody = object(await contextResponse.json())
+  expect(contextBody.status).toBe("ok")
+  const availability = object(contextBody.value).availability
+  if (!Array.isArray(availability)) throw new Error("Native source availability is required")
+  const operations = availability.flatMap((entry) => {
+    const resource = object(entry)
+    return Array.isArray(resource.operations) ? resource.operations.map(object) : []
+  }).filter((entry) => ["dashboard.dashboard-workbench", "dashboard.dashboard-hot-topic-draft",
+    "decisions.command.sf_case_draft"].includes(String(entry.operationId)))
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-proposal-native-availability",
+    operations: operations.map(({ operationId, state, operational }) => ({ operationId, state, operational })) }))
   const period = { start: installation.year + "-01-01", end: installation.year + "-12-31" }
+  // The canonical Decisions fixture first registers an original empty-source case.
+  // The proposal's target evidence is subsequently read and supplied to the original draft producer.
+  const created = await post("workbench-command", { operation: "sf_case_draft", input: {
+    objective: "Design test data · Preserve the sourcing follow-up proposal",
+    horizon: period, currency: "USD",
+    criteria: ["Design test data · Confirm source evidence before any application"],
+    sourceRefs: [],
+  } }, true)
+  const reference = text(created.outputRef)
+  const control = await request.get(base, { params: { sf: "decision-controls", case: reference, format: "json" }, timeout: 40_000 })
+  expect(control.status()).toBe(200)
+  const controls = object(await control.json())
+  expect(controls.status).toBe("ok")
+  const selected = object(object(controls.value).selected)
+  const caseRef = object(selected.caseRef)
   const discovered = object((await post("dashboard-workbench", { page: "Hot Topics & Actions", period })).value)
   const records = discovered.records
   if (!Array.isArray(records)) throw new Error("Original workbench omitted its record catalog")
@@ -37,19 +68,6 @@ export async function seedWaveFiveReviewProposal(request: APIRequestContext, ins
   const fields = object(source.fields)
   const evidence = object(source.targetEvidence)
   const action = "Design test data · Review regional sourcing evidence before the next meeting"
-  const created = await post("workbench-command", { operation: "sf_case_draft", input: {
-    objective: "Design test data · Preserve the sourcing follow-up proposal",
-    horizon: period, currency: "USD",
-    criteria: ["Design test data · Confirm source evidence before any application"],
-    sourceRefs: [evidence],
-  } }, true)
-  const reference = text(created.outputRef)
-  const control = await request.get(base, { params: { sf: "decision-controls", case: reference, format: "json" }, timeout: 40_000 })
-  expect(control.status()).toBe(200)
-  const controls = object(await control.json())
-  expect(controls.status).toBe("ok")
-  const selected = object(object(controls.value).selected)
-  const caseRef = object(selected.caseRef)
   const saved = await post("dashboard-hot-topic-draft", {
     caseRef, target: source.target, targetEvidence: evidence,
     fields: { action, owner: text(fields.owner), due: text(fields.due),

@@ -1,6 +1,7 @@
-import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
+import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
+import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import { preservedValueRows, readPreservedProjection } from "../../src/orchestra/chapters/sucafina/reviews/preserved/model"
 import { seedWaveFiveReviewProposal } from "./design-support/wave-five-reviews-seed"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
@@ -30,12 +31,27 @@ function monitor(page: Page) {
   })
   return reads
 }
-function guardExternalWrites(page: Page, writes: Request[] = []) {
+type GuardedWrite = { mode: string; operationId: string | null; effect: string | null }
+function guardExternalWrites(page: Page, mount: string, writes: GuardedWrite[] = []) {
+  const routes: readonly (readonly [string, SfNativeOperationRoute])[] = Object.entries(SfOperationRegistry)
   page.on("request", (request) => {
-    const mode = new URL(request.url()).searchParams.get("sf") ?? ""
-    if (request.method() === "POST" &&
-      /collaboration|notify|send|review-report|report-prepare|hot-topic-prepare|hot-topic-apply/.test(mode))
-      writes.push(request)
+    const url = new URL(request.url())
+    const mode = url.searchParams.get("sf") ?? ""
+    if (request.method() !== "POST" ||
+      !/collaboration|notify|send|review-report|report-prepare|hot-topic-prepare|hot-topic-apply/.test(mode)) return
+    const declared = routes.filter(([, route]) =>
+      route.method === request.method() && route.fixedQuery?.sf === mode &&
+      route.pathTemplate.replaceAll("{mount}", mount).replaceAll("{surface}", "dashboard") === url.pathname &&
+      Object.entries(route.fixedQuery ?? {}).every(([key, value]) => url.searchParams.get(key) === value) &&
+      Object.entries(route.fixedBodyDiscriminator ?? {}).every(([key, value]) => {
+        try { return object(request.postDataJSON())[key] === value } catch { return false }
+      }))
+    const knownRead = declared.length === 1 && declared[0]![1].effect === "read"
+    const observed = { mode, operationId: declared.length === 1 ? declared[0]![0] : null,
+      effect: declared.length === 1 ? declared[0]![1].effect : null }
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({
+      kind: knownRead ? "wave-five-declared-read" : "wave-five-forbidden-write", ...observed }))
+    if (!knownRead) writes.push(observed)
   })
   return writes
 }
@@ -89,8 +105,15 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const reads = monitor(page)
-  const externalWrites = guardExternalWrites(page)
-  const draft = await seedWaveFiveReviewProposal(page.request, installation)
+  const externalWrites = guardExternalWrites(page, installation.mount)
+  await enter(page, owner, installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" +
+    encodeSfRouteRef("design-test-before-proposal-source"), "Follow-up proposal", 40_000)
+  const initialSource = page.locator('[data-sf-surface="UI54"] .sf-state-panel')
+  await expect(initialSource).not.toHaveAttribute("data-sf-state", "loading", { timeout: 40_000 })
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-proposal-initial-source",
+    state: await initialSource.getAttribute("data-sf-state") }))
+  await capture(page, info, "UI54-dark-desktop-initial-source-test-data")
+  const draft = await seedWaveFiveReviewProposal(page.request, installation, owner)
   const proposal: Screen = { id: "UI54",
     href: installation.origin + "/orchestra/sf-dashboard/hot-topics/proposals/" + encodeSfRouteRef(draft.draftRef),
     title: "Follow-up proposal", titleBr: "Proposta de encaminhamento", state: "ready" }
@@ -122,7 +145,7 @@ waveFourTest("wave five proposals: original draft and missing-source boundaries"
   try {
     const localized = await portuguese.newPage()
     const localizedDiagnostics = observePage(localized)
-    guardExternalWrites(localized, externalWrites)
+    guardExternalWrites(localized, installation.mount, externalWrites)
     await screen(localized, owner, proposal, true)
     await capture(localized, info, "UI54-pt-BR-dark-desktop-original-draft-test-data")
     expect(localizedDiagnostics.pageErrors).toEqual([])
@@ -145,7 +168,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const reads = monitor(page)
-  const externalWrites = guardExternalWrites(page)
+  const externalWrites = guardExternalWrites(page, installation.mount)
   const base = installation.origin + "/orchestra/sf-reviews/"
   await enter(page, owner, base + "agenda?year=" + installation.year, "Meeting agenda")
   await expect(page.locator('[data-sf-surface="UI47"] .sf-state-panel')).toHaveAttribute("data-sf-state", "empty")
@@ -279,6 +302,17 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
       await scrollPageTop(page)
       await capture(page, info, names[index] + "-" + color + "-desktop-test-data")
       if (index === 1 || index === 2) await captureValues(page, info, names[index] + "-values-" + color + "-desktop-test-data", index === 2)
+      if (index === 2 && color === "dark") {
+        const sourceDetails = page.locator(".sf-review-meeting-values details").first()
+        await sourceDetails.locator("summary").click()
+        await expect(sourceDetails.locator("p")).toBeVisible()
+        const originalValue = decoded.values[0]!
+        await expect(sourceDetails).toContainText(originalValue.period.start)
+        await expect(sourceDetails).toContainText(originalValue.period.end)
+        for (const source of originalValue.sourceRefs) await expect(sourceDetails).toContainText(source.refId)
+        await capture(page, info, "UI48-dark-desktop-expanded-original-source-test-data")
+        await sourceDetails.locator("summary").click()
+      }
     }
   }
   await scheme(page, "dark")
@@ -329,7 +363,7 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   try {
     const localized = await portuguese.newPage()
     const localizedDiagnostics = observePage(localized)
-    guardExternalWrites(localized, externalWrites)
+    guardExternalWrites(localized, installation.mount, externalWrites)
     await selectAgenda(localized, owner, installation.origin, installation.year, true)
     await capture(localized, info, "UI47-pt-BR-dark-desktop-test-data")
     for (const [index, entry] of entries.entries()) {
