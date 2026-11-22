@@ -136,8 +136,8 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
   await opener.click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
-  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
-  const confirm = review.getByRole("button", { name: "Confirm", exact: true })
+  await expect(review.getByRole("heading", { name: "Save version", exact: true })).toBeVisible()
+  const confirm = review.getByRole("button", { name: "Save version", exact: true })
   await expect(confirm).toBeEnabled()
   const endpoint = account.baseURL + "/planner?page=Versions"
   const match = (url: URL) => url.href === endpoint
