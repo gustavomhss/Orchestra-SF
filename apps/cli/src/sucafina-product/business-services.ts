@@ -1,3 +1,4 @@
+import { countSfReadonlyDiagnostic } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/diagnostic-timing.ts"
 import { createSfProcurementScenarioServices } from "./procurement-scenario-services.ts"
 import { createSfBiObservationScope } from "./bi-observation-scope.ts"
 import { createSfProcurementCompositePlanner } from "./procurement-composite-planner.ts"
@@ -249,13 +250,18 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
   const bindingWitnesses = new BindingWitnessMap<TrustedDomainContext, SfUiContextIntegrity>()
   const callBindingDigest = (call: TrustedDomainContext) => {
-    const observed = observeSfUiContextIntegrity(call)
+    const observed = observeSfUiContextIntegrity(call, undefined, "Business")
     bindingWitnessApply(bindingWitnessSet, bindingWitnesses, [call, observed])
     return observed.digest
   }
   const currentCaseBinding = (call: TrustedDomainContext, expected: string) => {
     const observed: SfUiContextIntegrity | undefined = bindingWitnessApply(bindingWitnessGet, bindingWitnesses, [call])
-    return observed?.digest === expected ? observed.current() : digestSfValue([call.kind, call.binding]) === expected
+    if (observed?.digest === expected) {
+      countSfReadonlyDiagnostic("business.binding.witness-match", "Business")
+      return observed.current()
+    }
+    countSfReadonlyDiagnostic(observed ? "business.binding.witness-mismatch" : "business.binding.witness-absent", "Business")
+    return digestSfValue([call.kind, call.binding]) === expected
   }
   const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
     host.requestFor(call) === request && !request.signal.aborted && currentCaseBinding(call, bindingDigest)
@@ -472,7 +478,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       const ref = structuredClone(scope.selected), selectedDigest = digestSfValue(ref)
       return { ref, current: () => caseBindings.get(call) === scope && !scope.historical &&
         scope.request === request && scope.bindingDigest === binding &&
-        currentCaseAuthority(call, request, binding) && digestSfValue(scope.selected) === selectedDigest }
+        currentCaseAuthority(call, request, binding) && digestSfValue(scope.selected, "finance.current") === selectedDigest }
     },
     readerIdentities: () => [forecastCoverage.current,
       ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,

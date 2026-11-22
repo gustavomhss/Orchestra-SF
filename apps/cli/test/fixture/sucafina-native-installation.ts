@@ -84,7 +84,8 @@ export function withNativeInstallation(input: {
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
     yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
+      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) :
+        line.startsWith("SF_PORTFOLIO_READONLY {") && line.endsWith("}") && line.length <= 4096 ? Effect.sync(() => console.info(line)) : Effect.void,
     )))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),

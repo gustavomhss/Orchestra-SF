@@ -45,14 +45,14 @@ export function createSfFinancePairObservation(input: {
       const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
       if (call.kind !== "ui" || !parsed.ok || (parsed.value.criteria.length > 0 && !input.criteria) || parsed.value.scenarioRefs.length !== 2 ||
         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
-        digestSfValue(parsed.value) !== digestSfValue(incoming) ||
+        digestSfValue(parsed.value, "finance.other") !== digestSfValue(incoming, "finance.other") ||
         !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
       const selection = input.selectedScope(call)
       if (!selection) return await work()
       const request = host.requestFor(call)
       if (!request || request.signal.aborted || !selection.current()) return unavailable()
 
-      const pairDigest = digestSfValue(incoming), caseDigest = digestSfValue(selection.ref)
+      const pairDigest = digestSfValue(incoming, "finance.other"), caseDigest = digestSfValue(selection.ref, "finance.other")
       const readState = input.state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
       const identities = [...readers()]
       const criteria = parsed.value.criteria.length ? input.criteria : undefined
@@ -66,14 +66,14 @@ export function createSfFinancePairObservation(input: {
         const value = await resolveCriteria(selection.ref, parsed.value.criteria, call)
         return rulesCurrent() && value ? structuredClone(value) : undefined
       }
-      const current = () => rulesCurrent() && selection.current() && digestSfValue(selection.ref) === caseDigest &&
+      const current = () => rulesCurrent() && selection.current() && digestSfValue(selection.ref, "finance.current") === caseDigest &&
         input.host === host && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted &&
-        digestSfValue(incoming) === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
+        digestSfValue(incoming, "finance.current") === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
         input.readerIdentities === readers && sameReaders(readers(), identities)
       const environment = async () => {
         const value = await host.environment(request), at = Date.parse(value.at)
         return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
-          directory: value.directory, bankKey: value.bankKey ? Array.from(value.bankKey) : undefined }) : undefined
+          directory: value.directory, bankKey: value.bankKey ? Array.from(value.bankKey) : undefined }, "finance.other") : undefined
       }
       const witness = async (): Promise<Witness | undefined> => {
         const observed = await readState(request, "cases", async (state, actor): Promise<Witness | undefined> => {
@@ -86,7 +86,7 @@ export function createSfFinancePairObservation(input: {
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
-          const snapshotDigest = digestSfValue({ state, snapshots, sources })
+          const snapshotDigest = digestSfValue({ state, snapshots, sources }, "finance.other")
           const before = await environment()
           const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
@@ -96,14 +96,14 @@ export function createSfFinancePairObservation(input: {
           // witness never substitutes for that namespace's permission.
           if (criteria) {
             const rules = await readRules()
-            if (!rules || !current() || rulesDigest === undefined || digestSfValue(rules) !== rulesDigest) return undefined
+            if (!rules || !current() || rulesDigest === undefined || digestSfValue(rules, "finance.other") !== rulesDigest) return undefined
           }
           if (!await host.revalidate(call) || !current()) return undefined
           const after = await environment()
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
-          if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
-          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after }
+          if (!after || before !== after || digestSfValue(principal, "finance.other") !== digestSfValue(again, "finance.other") || !current() ||
+            snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }, "finance.other")) return undefined
+          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }, "finance.other"), environment: after }
         })
         if (!current() || observed.status !== "ok" || !observed.value) return undefined
         if (observed.value.kind === "unsupported") return observed.value
@@ -119,7 +119,7 @@ export function createSfFinancePairObservation(input: {
         if (!current()) return false
         if (!rules) { unsupportedCriteria = true; return "unsupported" }
         initialRules = rules
-        rulesDigest = digestSfValue(rules)
+        rulesDigest = digestSfValue(rules, "finance.other")
         return true
       }, current)
       if (!prepared) return unavailable()
@@ -171,7 +171,7 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
       const ref = item as BusinessEvidenceRef
       if (ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" ||
         !ref.target.period || ref.refDigest !== digestSfEvidenceRef(ref)) return false
-      found.set(digestSfValue(ref), ref)
+      found.set(digestSfValue(ref, "finance.other"), ref)
     }
     return Object.values(item).every(visit)
   }
@@ -182,9 +182,9 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
     const stored = state.decisionResults?.[ref]
     return stored?.kind === "scenario" && stored.resultRef === ref && stored.caseRef.id === decision.id &&
       stored.caseRef.incarnation === decision.incarnation && stored.caseRef.version <= decision.version &&
-      digestSfValue(stored.result) === stored.resultDigest && stored.sourceRefs.every((source) => found.has(digestSfValue(source)))
-      ? decision.alternatives.filter((item) => digestSfValue(item.scenario) === stored.requestDigest &&
-        digestSfValue(item.result) === stored.resultDigest)
+      digestSfValue(stored.result, "finance.other") === stored.resultDigest && stored.sourceRefs.every((source) => found.has(digestSfValue(source, "finance.other")))
+      ? decision.alternatives.filter((item) => digestSfValue(item.scenario, "finance.other") === stored.requestDigest &&
+        digestSfValue(item.result, "finance.other") === stored.resultDigest)
       : []
   })
   return pair[0]?.length === 1 && pair[1]?.length === 1 && pair[0][0]!.id !== pair[1][0]!.id ? [...found.values()] : undefined
@@ -196,13 +196,13 @@ function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContex
     canWrite: principal.canWrite && roles.some((role) => role !== "viewer") })
   const scope = { principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision,
     policyVersion: call.binding.policyVersion, recordType: "planner-version", recordId: ref.target.recordId, selector }
-  const entry = snapshot.sfSources?.scopes?.[digestSfValue(scope)]
+  const entry = snapshot.sfSources?.scopes?.[digestSfValue(scope, "finance.other")]
   const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId), identity = sfScopedSourceIdentity(snapshot, scope)
   const projection = projectSfSourceScope("planner", snapshot, scope)
   if (!entry || !source || !identity || !projection || typeof projection !== "object" || Array.isArray(projection) ||
-    identity.incarnation !== entry.incarnation || identity.version !== entry.version || identity.inputDigest !== digestSfValue(projection)) return false
+    identity.incarnation !== entry.incarnation || identity.version !== entry.version || identity.inputDigest !== digestSfValue(projection, "finance.other")) return false
   const expected = sfPlannerEvidenceRef({ versionId: scope.recordId, projection: projection as Record<string, unknown>, identity }, call)
-  return !!expected && digestSfValue(expected) === digestSfValue(ref) &&
-    digestSfValue(entry) === digestSfValue({ scope, sourceIncarnation: source.incarnation, incarnation: entry.incarnation,
-      alive: true, inputDigest: identity.inputDigest, version: entry.version })
+  return !!expected && digestSfValue(expected, "finance.other") === digestSfValue(ref, "finance.other") &&
+    digestSfValue(entry, "finance.other") === digestSfValue({ scope, sourceIncarnation: source.incarnation, incarnation: entry.incarnation,
+      alive: true, inputDigest: identity.inputDigest, version: entry.version }, "finance.other")
 }

@@ -1,4 +1,5 @@
 import { types } from "node:util"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic, countSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import { sfReviewArtifactBlobKey } from "../../runtime/artifact.ts"
@@ -325,7 +326,9 @@ const caseIdentityReads = new WeakMap<object, {
 
 /** Current case membership only; the consumer retains its own Request and scope fences. */
 export function selectSfCaseIdentity(captured: CaseIdentity, call: TrustedDomainContext) {
+  countSfReadonlyDiagnostic("state.identity.factory")
   const read = (state: Pick<SfProductState, "cases">, actor: SfStateAuthority) => {
+    countSfReadonlyDiagnostic("state.identity.callback")
     const value = state.cases[captured.id]
     return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
       actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
@@ -333,13 +336,19 @@ export function selectSfCaseIdentity(captured: CaseIdentity, call: TrustedDomain
   }
   // Preserve the original observation of captured and call inside the C08
   // callback. Registration recognizes code and immutable data context only.
-  if (types.isProxy(call)) return read
+  if (types.isProxy(call)) {
+    countSfReadonlyDiagnostic("state.identity.opaque-proxy")
+    return read
+  }
   const binding = Object.getOwnPropertyDescriptor(call, "binding")
   if (Object.isFrozen(call) && binding && "value" in binding && binding.value && typeof binding.value === "object" && !types.isProxy(binding.value) && Object.isFrozen(binding.value) &&
     ["principalRef", "policyVersion", "accessRevision"].every((key) => {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
-    })) caseIdentityReads.set(read, { project: (cases, actor) => read({ cases }, actor) })
+    })) {
+    caseIdentityReads.set(read, { project: (cases, actor) => read({ cases }, actor) })
+    countSfReadonlyDiagnostic("state.identity.registered")
+  } else countSfReadonlyDiagnostic("state.identity.opaque-shape")
   return read
 }
 
@@ -385,50 +394,65 @@ export function createSfProductState(input: {
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
       input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
-        const candidate = readinessReads.get(read)
-        const readiness = candidate?.namespace === namespace ? candidate : undefined
-        const mode = readiness?.mode ?? "read"
-        const authority = await input.authorize(request, snapshot, namespace, mode)
-        if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
-        const state = readSfState(snapshot)
-        if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
-        const selection = namespace === "cases" ? caseReads.get(read) : undefined
-        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
-        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
-          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
-        const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
-        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
-        const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
-        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
-        const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
-        const identityCases = identitySelection ? caseIdentityMap(state) : undefined
-        const persistence = input.persistence
-        const authorityOnly = namespace === "reviews" ? reviewAuthorityReads.get(read) : undefined
-        const fence = namespace === "reviews" && (authorityOnly || reviewReceiptReads.has(read)) && hasSfDashboardSourceFence(persistence)
-          ? persistence.dashboardSourceFence : undefined
-        const seal = fence?.observeAuthority?.([])
-        const sealCurrent = () => !!seal && seal.current() && input.persistence === persistence &&
-          persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence)
-        const sealed = sealCurrent()
-        const receipts = sealed && !authorityOnly ? structuredClone({ reviews: state.reviews, transactions: state.transactions }) as SfProductState : undefined
-        // Keep missing/inherited, accessor and malformed lookups on the original
-        // path. Durable SQLite snapshots contain plain cloneable data.
-        const value = readiness
-          ? structuredClone(readiness.select(state, authority)) as T
-          : selection && selected?.enumerable && "value" in selected && selected.value &&
-          typeof selected.value === "object" && !Array.isArray(selected.value)
-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
-          : selectedResults ? await read(selectedResults, authority)
-          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
-          : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
-          : sealed && authorityOnly ? await authorityOnly(authority) as T
-          : await read(receipts ?? structuredClone(state), authority)
-        if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-        if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
-        const current = await input.authorize(request, snapshot, namespace, mode)
-        if (!sameAuthority(authority, current) || sealed && !sealCurrent())
-          return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-        return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
+        const measured = beginSfReadonlyDiagnostic("state.read.total")
+        let narrowMeasure: ReturnType<typeof beginSfReadonlyDiagnostic> = undefined
+        let fullMeasure: ReturnType<typeof beginSfReadonlyDiagnostic> = undefined
+        try {
+          const candidate = readinessReads.get(read)
+          const readiness = candidate?.namespace === namespace ? candidate : undefined
+          const mode = readiness?.mode ?? "read"
+          const authority = await input.authorize(request, snapshot, namespace, mode)
+          if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
+          const state = readSfState(snapshot)
+          if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
+          const selection = namespace === "cases" ? caseReads.get(read) : undefined
+          const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+          const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
+            ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+          const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
+          const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+          const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
+          const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
+          const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
+          const identityCases = identitySelection ? caseIdentityMap(state) : undefined
+          countSfReadonlyDiagnostic(identitySelection ? identityCases ? "state.read.identity-eligible" : "state.read.identity-ineligible" : "state.read.identity-absent")
+          const persistence = input.persistence
+          const authorityOnly = namespace === "reviews" ? reviewAuthorityReads.get(read) : undefined
+          const fence = namespace === "reviews" && (authorityOnly || reviewReceiptReads.has(read)) && hasSfDashboardSourceFence(persistence)
+            ? persistence.dashboardSourceFence : undefined
+          const seal = fence?.observeAuthority?.([])
+          const sealCurrent = () => !!seal && seal.current() && input.persistence === persistence &&
+            persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence)
+          const sealed = sealCurrent()
+          const receipts = sealed && !authorityOnly ? structuredClone({ reviews: state.reviews, transactions: state.transactions }) as SfProductState : undefined
+          // Keep missing/inherited, accessor and malformed lookups on the original
+          // path. Durable SQLite snapshots contain plain cloneable data.
+          const value = readiness
+            ? structuredClone(readiness.select(state, authority)) as T
+            : selection && selected?.enumerable && "value" in selected && selected.value &&
+            typeof selected.value === "object" && !Array.isArray(selected.value)
+            ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+            : selectedResults ? await read(selectedResults, authority)
+            : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
+            : identitySelection && identityCases ? await identitySelection.project((
+              narrowMeasure = beginSfReadonlyDiagnostic("state.read.identity-narrow.clone-project-await"), structuredClone(identityCases)), authority) as T
+            : sealed && authorityOnly ? await authorityOnly(authority) as T
+            : await read(receipts ?? (
+              countSfReadonlyDiagnostic(identitySelection ? "state.read.full-clone.registered" : "state.read.full-clone.other"),
+              fullMeasure = beginSfReadonlyDiagnostic("state.read.full.clone-callback-await"), structuredClone(state)), authority)
+          endSfReadonlyDiagnostic(narrowMeasure)
+          endSfReadonlyDiagnostic(fullMeasure)
+          if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+          if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+          const current = await input.authorize(request, snapshot, namespace, mode)
+          if (!sameAuthority(authority, current) || sealed && !sealCurrent())
+            return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+          return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
+        } finally {
+          endSfReadonlyDiagnostic(narrowMeasure)
+          endSfReadonlyDiagnostic(fullMeasure)
+          endSfReadonlyDiagnostic(measured)
+        }
       }, { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
         ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) }),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {

@@ -255,7 +255,7 @@ export function createSfSourcePersistence(input: {
     if (sourceRoot && (!protectedAcl || protectedAcl.identity !== sourceRoot || !dashboardProjectorCurrent())) throw new Error("SF_DASHBOARD_SOURCE_ROOT_CHANGED")
     if (sourceRoot) requireObservationSources(snapshot, protectedAcl?.bytesIdentity ?? sourceRoot)
     const detachedAcl = protectedAcl ? undefined : detachedDashboardAcl(surface, snapshot, authorize)
-    const before = protectedAcl || detachedAcl || plannerAcl ? undefined : digestSfValue(snapshot)
+    const before = protectedAcl || detachedAcl || plannerAcl ? undefined : digestSfValue(snapshot, "source.other")
     const authenticate = () => {
       if (plannerAcl) {
         if (!plannerAcl.current()) return Promise.resolve(false)
@@ -279,9 +279,9 @@ export function createSfSourcePersistence(input: {
     if (checking) requireSourceChecks(checking)
     if (protectedAcl ? !protectedAcl.current() || !authorityCurrent() || sourceRoot && !dashboardProjectorCurrent()
       : detachedAcl ? !authorityCurrent() || !dashboardProjectorCurrent()
-      : plannerAcl ? !plannerAcl.current() : digestSfValue(snapshot) !== before)
+      : plannerAcl ? !plannerAcl.current() : digestSfValue(snapshot, "source.other") !== before)
       throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
-    return { scope, projection, source, inputDigest: digestSfValue(projection) }
+    return { scope, projection, source, inputDigest: digestSfValue(projection, "source.other") }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, sourceRoot?: object, plannerAcl?: ReadonlyAuthorityData<"planner">) => {
     const checkScope = scopedSourceChecks.getStore()
@@ -297,7 +297,7 @@ export function createSfSourcePersistence(input: {
       return { commit: false, value: current && current.inputDigest === inputDigest
         ? { projection: structuredClone(projection), ...current } : undefined }
     }
-    const key = digestSfValue(scope)
+    const key = digestSfValue(scope, "source.other")
     const prior = snapshot.sfSources!.scopes?.[key]
     const entry = {
       scope, sourceIncarnation: source.incarnation, incarnation: prior?.sourceIncarnation === source.incarnation ? prior.incarnation : createScopedIncarnation(snapshot, input.createId), alive: true, inputDigest,
@@ -306,12 +306,12 @@ export function createSfSourcePersistence(input: {
     snapshot.sfSources!.scopes ??= {}
     snapshot.sfSources!.scopes[key] = entry
     requireSourceIdentities(snapshot)
-    return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
+    return { commit: digestSfValue(prior, "source.other") !== digestSfValue(entry, "source.other"), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
   }
   const guard = (surface: Surface, snapshot: Snapshot, sealedPreimage?: () => Snapshot | undefined) => {
-    const before = sealedPreimage ? undefined : digestSfValue(snapshot.sfSources)
+    const before = sealedPreimage ? undefined : digestSfValue(snapshot.sfSources, "source.other")
     const auditStart = snapshot.audit.length
-    const auditPrefix = sealedPreimage ? undefined : digestSfValue(snapshot.audit)
+    const auditPrefix = sealedPreimage ? undefined : digestSfValue(snapshot.audit, "source.other")
     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
     const reserved = new Map<string, { incarnation: string; inputDigest: string }>()
     const previous = creationBinders.get(snapshot)
@@ -319,7 +319,7 @@ export function createSfSourcePersistence(input: {
       requireSourceIdentities(snapshot)
       const original = sealedPreimage?.()
       if (input.purpose === "business-restore" || (sealedPreimage && !original) ||
-        (sealedPreimage ? digestSfValue(original?.sfSources) : before) !== digestSfValue(snapshot.sfSources))
+        (sealedPreimage ? digestSfValue(original?.sfSources, "source.other") : before) !== digestSfValue(snapshot.sfSources, "source.other"))
         throw new Error("SF_SOURCE_IDENTITY_MUTATION")
       if (!recordType.trim() || !recordId.trim()) throw new Error("SF_SOURCE_INPUT_INVALID")
       const key = JSON.stringify([recordType, recordId])
@@ -344,8 +344,8 @@ export function createSfSourcePersistence(input: {
         // The native store must see commit:true so it can poison the read root.
         if (sealedPreimage) return
         requireSourceIdentities(snapshot)
-        if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
-        if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
+        if (before !== digestSfValue(snapshot.sfSources, "source.other")) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+        if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart), "source.other") !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
         const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
         if (input.purpose === "business-restore") {
           if (!replacement) throw new Error("SF_RESTORE_MARKER_MISSING")
@@ -637,7 +637,7 @@ export function createSfSourcePersistence(input: {
         if (checking) requireSourceChecks(checking)
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const original = surfaces.map((surface) => snapshots[surface])
-        const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
+        const before = surfaces.map((surface) => digestSfValue(snapshots[surface], "source.other"))
         const guarded = surfaces.map((surface) => guard(surface, snapshots[surface]))
         try {
           const result = await work(snapshots)
@@ -645,7 +645,7 @@ export function createSfSourcePersistence(input: {
           if (result.commit) {
             if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
               throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
-            surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) guarded[index]!.finish() })
+            surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface], "source.other") !== before[index]) guarded[index]!.finish() })
           }
           return result
         } finally { guarded.forEach((entry) => entry.dispose()) }
@@ -695,7 +695,7 @@ export function sfScopedSourceIdentity(snapshot: Snapshot, scope: SfSourceScope)
 }
 
 function readScopedIdentity(snapshot: Snapshot, scope: SfSourceScope, read = readSourceIdentity) {
-  const entry = snapshot.sfSources!.scopes?.[digestSfValue(scope)]
+  const entry = snapshot.sfSources!.scopes?.[digestSfValue(scope, "source.other")]
   const source = read(snapshot, scope.recordType, scope.recordId)
   return entry?.alive && source?.incarnation === entry.sourceIncarnation
     ? { incarnation: entry.incarnation, version: entry.version, inputDigest: entry.inputDigest }
@@ -722,7 +722,7 @@ function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdenti
 function requireSourceIdentities(snapshot: Snapshot) {
   const state = snapshot.sfSources
   if (!state || state.schemaVersion !== 1 || !state.records || Array.isArray(state.records) || Object.values(state.records).some((entry) => !entry || typeof entry.incarnation !== "string" || !entry.incarnation.trim() || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_IDENTITIES_UNAVAILABLE")
-  if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope) || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
+  if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope, "source.scope-validation") || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
 }
 
 /** Recomputed at every durable write, including intermediate A→B→A writes without a reader. */
@@ -744,7 +744,7 @@ function synchronizeScopes(surface: Surface, snapshot: Snapshot, project: ((surf
       entry.alive = false
       return
     }
-    const inputDigest = digestSfValue(projection)
+    const inputDigest = digestSfValue(projection, "source.other")
     if (entry.sourceIncarnation !== source.incarnation) {
       entry.version = 1
       entry.incarnation = createScopedIncarnation(snapshot, createId)

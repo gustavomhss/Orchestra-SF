@@ -1,4 +1,5 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
@@ -15,8 +16,13 @@ export function canonicalSfValue(value: unknown): string {
   return JSON.stringify(canonical(value))
 }
 
-export function digestSfValue(value: unknown): string {
-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): string {
+  const label = caller === "principal.direct" || caller === "source.scope-validation" || caller === "source.other" ||
+    caller === "finance.current" || caller === "finance.other" ? caller : "unlabelled"
+  const measured = beginSfReadonlyDiagnostic("canonical.digest", label)
+  try {
+    return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
+  } finally { endSfReadonlyDiagnostic(measured) }
 }
 
 /** Integrity of the whole reference; authentication remains in the source resolver. */
