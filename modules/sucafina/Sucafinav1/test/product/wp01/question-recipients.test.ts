@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, expect } from "bun:test"
 import type { Browser } from "@playwright/test"
-import { caseQuestionForm, caseQuestionScript } from "../../../product/ui/work-collaboration.ts"
 import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { createWorkSelectionDomainFixture } from "./work-selection-domain-fixture.ts"
 
@@ -10,12 +9,12 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
   afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
-  const fixture = () => createWorkSelectionDomainFixture(browser, (projection) => ({ html: caseQuestionForm(projection), script: caseQuestionScript }))
+  const fixture = () => createWorkSelectionDomainFixture(browser)
 
   test("the question consumer finds recipients through the canonical HTTP route and the real authorized directory", async () => {
     const app = await fixture()
     try {
-      expect((await app.page.goto(`${app.origin}${app.mount}`))?.status()).toBe(200)
+      expect((await app.page.goto(app.caseUrl))?.status()).toBe(200)
       const form = app.page.locator("[data-case-question]")
       const recipient = form.getByLabel("Recipient", { exact: true })
       expect(await recipient.count()).toBe(1)
@@ -55,7 +54,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("real logout denies directory reads and the question consumer purges its protected recipient and draft", async () => {
     const app = await fixture()
     try {
-      expect((await app.page.goto(`${app.origin}${app.mount}`))?.status()).toBe(200)
+      expect((await app.page.goto(app.caseUrl))?.status()).toBe(200)
       const form = app.page.locator("[data-case-question]")
       await form.getByLabel("Question", { exact: true }).fill("Private recipient draft")
       const listed = app.page.waitForResponse((value) => new URL(value.url()).searchParams.get("sf") === "collaboration-recipients")
@@ -65,16 +64,21 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       expect(await form.getByLabel("Recipient", { exact: true }).count()).toBe(1)
       expect(await form.getByLabel("Recipient", { exact: true }).isEnabled()).toBe(true)
       await form.getByLabel("Recipient", { exact: true }).selectOption(app.principalRef)
+      const retainedForm = await form.elementHandle()
+      if (!retainedForm) throw new Error("Live question form unavailable before revocation")
       expect(await app.page.evaluate(async () => (await fetch("/sucafina/auth/logout", { method: "POST" })).status)).toBe(204)
       const denied = app.page.waitForResponse((value) => new URL(value.url()).searchParams.get("sf") === "collaboration-recipients")
       await form.getByRole("button", { name: "Find recipients", exact: true }).click()
       expect((await denied).status()).toBe(403)
-      await app.page.waitForFunction(() => document.querySelector('[data-case-question] [role="status"]')?.textContent?.includes("Question access changed."))
-      expect(await form.getAttribute("data-context")).toBeNull()
-      expect(await form.getAttribute("data-dirty")).toBeNull()
-      expect(await form.locator("select,textarea,input,button").count()).toBe(0)
+      await app.page.locator("main[data-access-unavailable]").waitFor()
+      expect(await retainedForm.evaluate((element) => element.querySelector('[role="status"]')?.textContent)).toMatch(/^Question access changed/)
+      expect(await retainedForm.getAttribute("data-context")).toBeNull()
+      expect(await retainedForm.getAttribute("data-dirty")).toBeNull()
+      expect(await retainedForm.evaluate((element) => element.querySelectorAll("select,textarea,input,button").length)).toBe(0)
+      expect(await form.count()).toBe(0)
       expect(await app.page.content()).not.toContain("Private recipient draft")
-      expect(await form.textContent()).not.toContain("Authorized work reviewer")
+      expect(await retainedForm.textContent()).not.toContain("Authorized work reviewer")
+      await retainedForm.dispose()
       expect(app.attempts.map((attempt) => [attempt.route, attempt.status])).toEqual([["collaboration-recipients", 200], ["collaboration-recipients", 403]])
       expect(app.attempts.some((attempt) => attempt.route === "collaboration-thread-create")).toBe(false)
       expect(app.errors).toEqual([])
