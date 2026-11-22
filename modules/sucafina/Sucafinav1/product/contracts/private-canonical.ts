@@ -139,12 +139,64 @@ function privateGraph(root: unknown) {
   }
 }
 
-/** Exact tagged bytes for a private structured clone. A later call proves the
- * graph again; opaque inputs use the original serializer without an extra read. */
+/** Exact tagged bytes for a private, callback-free data graph. Any ambiguity uses
+ * the original serializer. Aliases share only a completed fragment during this
+ * synchronous walk; a later call observes the graph again from the beginning. */
 export function canonicalSfPrivateValue(value: unknown): string {
+  if (!unhooked()) return canonicalSfValue(value)
   try {
-    const graph = privateGraph(value)
-    if (graph) return graph.encode(value)
+    const fragments = new WeakMap<object, string>()
+    const active = new WeakSet<object>()
+    const visit = (item: unknown): string | undefined => {
+      if (item === undefined) return '["absent"]'
+      if (item === null) return '["null"]'
+      if (typeof item === "string") return '["string",' + stringify(item) + "]"
+      if (typeof item === "boolean") return '["boolean",' + (item ? "true" : "false") + "]"
+      if (typeof item === "number") return Number.isFinite(item)
+        ? '["number",' + (sameValue(item, -0) ? '"-0"' : stringify(item)) + "]" : undefined
+      if (typeof item !== "object" || isProxy(item)) return undefined
+      const prior = fragments.get(item)
+      if (prior !== undefined) return prior
+      if (active.has(item)) return undefined
+      const array = Array.isArray(item)
+      const parent = prototype(item)
+      if (array ? parent !== arrayPrototype : parent !== objectPrototype && parent !== null) return undefined
+      const fields = descriptors(item)
+      const names = ownKeys(fields)
+      // Never invoke an accessor or a Proxy while discovering eligibility.
+      // Symbols and nonstandard arrays retain the canonical implementation.
+      for (let index = 0; index < names.length; index++) {
+        const name = names[index]!
+        if (typeof name !== "string" || !own(fields[name]!, "value")) return undefined
+      }
+      active.add(item)
+      const parts: string[] = []
+      if (array) {
+        const length: unknown = fields.length?.value
+        if (typeof length !== "number" || names.length !== length + 1) return undefined
+        for (let index = 0; index < length; index++) {
+          const field = fields[index]
+          if (!field || !own(field, "value")) return undefined
+          const encoded = visit(field.value)
+          if (encoded === undefined) return undefined
+          parts[index] = encoded
+        }
+      } else {
+        const selected = keys(item).sort()
+        for (let index = 0; index < selected.length; index++) {
+          const key = selected[index]!
+          const encoded = visit(fields[key]!.value)
+          if (encoded === undefined) return undefined
+          parts[index] = "[" + stringify(key) + "," + encoded + "]"
+        }
+      }
+      active.delete(item)
+      const encoded = (array ? '["array",[' : '["object",[') + parts.join(",") + "]]"
+      fragments.set(item, encoded)
+      return encoded
+    }
+    const result = visit(value)
+    if (result !== undefined) return result
   } catch {
     // A fast-walk allocation/stack failure does not change canonical admission.
   }
