@@ -1,0 +1,26 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+    "./Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+    "./Sucafinav1/test/product/teams-scanner/private-admission.check.ts",
+    "./Sucafinav1/test/g05-http-team-isolation.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "teamsProfileScanner": {
+    "schema": "teams-profile-scanner-v2",
+    "candidateSha": "c7d90669f3b2b7fd3c6a35c9ec2fc5322d9f8898",
+    "candidateTree": "ef239daab90453d69d678ddabc5e2de921d8be74",
+    "requestSha256": "34c69603a855eb6b85952c53621140803262a70e86a71809257e35da754796de",
+    "selection": "controls-with-teams"
+  }
+}
