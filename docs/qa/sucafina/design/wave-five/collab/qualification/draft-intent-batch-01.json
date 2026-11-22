@@ -68,7 +68,7 @@
       "revalidations": 14
     }
   },
-  "limits": "All106 unit cases and installed7+7 availability equality pass. Diagnostic browser passed; clean UI55/56 is still running and is not inferred from source HTTP200 or diagnostics.",
+  "limits": "All106 original unit cases, installed7+7 availability equality and clean native UI55/56 pass with unchanged budgets. User visual acceptance, browser zoom and import Apply are not claimed.",
   "cases": 106,
   "failed": 0,
   "assertions": 1155,
@@ -102,7 +102,12 @@
     "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
     "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
     "run": 44998959512,
-    "result": "running",
-    "record": "attempts/import-fixed-06.json"
+    "result": "passed",
+    "record": "attempts/import-fixed-06.json",
+    "testJob": 137136016996,
+    "cleanupJob": 137137094301,
+    "captures": 21,
+    "pageErrors": 0,
+    "consoleErrors": 0
   }
 }

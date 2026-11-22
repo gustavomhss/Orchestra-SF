@@ -1,5 +1,5 @@
 {
-  "workerSource": "56738681e9fce838518fedde2bfe11eac20492e8",
+  "workerSource": "4ae4be95e9e2af000518465fba170f92879212de",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -253,15 +253,21 @@
         "draft": 7,
         "intent": 7
       },
-      "status": "Unit and installed equality passed; diagnostic import also passed; clean import6 running.",
+      "status": "106 unit cases/1155 assertions, exact installed7+7 availability equality and clean import6 passed.",
       "record": "qualification/draft-intent-batch-01.json"
     },
     "cleanImport6": {
       "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
       "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
       "run": 44998959512,
-      "result": "running",
-      "record": "attempts/import-fixed-06.json"
+      "result": "passed",
+      "record": "attempts/import-fixed-06.json",
+      "job": 137136016996,
+      "cleanupJob": 137137094301,
+      "captures": 21,
+      "rootReviewedCaptures": 5,
+      "independentReferenceMs": 4374,
+      "transportObservation": "Original admitCDP200/ok followed by ERR_ABORTED is retained separately; original preview/readback/native UI passed."
     }
   },
   "excluded": [
@@ -437,5 +443,22 @@
         "match": true
       }
     ]
+  },
+  "currentScope": {
+    "areas": [
+      "UI51",
+      "UI52",
+      "UI53",
+      "UI55",
+      "UI56"
+    ],
+    "qualification": "Independent clean production journeys passed.",
+    "collaborationRecord": "attempts/collaboration-clean-08.json",
+    "importRecord": "attempts/import-fixed-06.json",
+    "captures": 45,
+    "agentInspected": 45,
+    "rootIndependentlyInspected": 10,
+    "humanAcceptance": false,
+    "notes": "Historical failures below remain attached to their exact older sources. Current import PASS does not replace their recorded outcome."
   }
 }
