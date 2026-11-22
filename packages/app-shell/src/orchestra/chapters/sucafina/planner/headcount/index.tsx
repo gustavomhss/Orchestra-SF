@@ -49,10 +49,10 @@ const toRateForm = (rate: Rate): RateForm => ({
   name: rate.name, locs: typeof rate.locs === "string" ? rate.locs : Array.isArray(rate.locs) ? rate.locs.join(", ") : "",
   cur: rate.cur, annual: rate.annual === null ? "" : String(rate.annual),
 })
-const money = (value: number | null | undefined, currency: string | null | undefined, locale: string) => {
+const money = (value: number | null | undefined, currency: string | null | undefined, locale: string, missingCurrency: string) => {
   if (value === null || value === undefined) return null
   const code = currency?.trim() ?? ""
-  if (!code) return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " unspecified"
+  if (!code) return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " · " + missingCurrency
   const iso = /^[A-Za-z]{3}$/.test(code) ? code.toUpperCase() : ""
   if (!iso) return new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value) + " " + code
   try {
@@ -73,6 +73,14 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   const language = useLanguage()
   const t = (s: string, params?: Record<string, string | number>) =>
     language.t(s as Parameters<typeof language.t>[0], params)
+  const missingCurrency = () => t("sf.u02.noCurrency")
+  const hrTotalLabel = (rates: ReadonlyArray<{ cur: string }> | undefined) => {
+    const code = soleRateCurrency(rates)?.trim() ?? ""
+    const iso = /^[A-Za-z]{3}$/.test(code) ? code.toUpperCase() : ""
+    if (iso === "USD") return t("sf.u08.total")
+    if (iso) return t("sf.u08.moneyInCurrency", { currency: iso })
+    return t("sf.u08.moneyUnscoped")
+  }
   const owner = useSfContext()
   const [state, setState] = createStore({
     phase: "loading" as SfUiState,
@@ -439,7 +447,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                   <div><dt>{t("sf.u08.fte")}</dt><dd>{page().data.metrics?.fte === undefined || page().data.metrics?.fte === null
                     ? t("sf.u08.none") : page().data.metrics?.fte}</dd></div>
                   <Show when={page().data.rates !== undefined && page().data.metrics?.hrTotal !== undefined}>
-                    <div><dt>{soleRateCurrency(page().data.rates)?.toUpperCase() === "USD" ? t("sf.u08.total") : t("sf.u06.hrStaff")}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl()) ?? t("sf.u08.none")}</dd></div>
+                    <div><dt>{hrTotalLabel(page().data.rates)}</dt><dd>{money(page().data.metrics?.hrTotal, soleRateCurrency(page().data.rates), language.intl(), missingCurrency()) ?? t("sf.u08.none")}</dd></div>
                   </Show>
                 </dl>
               </section>
@@ -542,7 +550,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                           <h3>{t("sf.u08.monthly")}</h3>
                           <table><thead><tr><For each={months()}>{(_, index) => <th>{index() + 1}</th>}</For></tr></thead>
                             <tbody><tr><For each={months()}>{(amount) =>
-                              <td>{money(amount, page().data.rates?.find((rate) => rate.id === selected().rateId)?.cur, language.intl()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
+                              <td>{money(amount, page().data.rates?.find((rate) => rate.id === selected().rateId)?.cur, language.intl(), missingCurrency()) ?? t("sf.u08.none")}</td>}</For></tr></tbody>
                           </table>
                         </div>
                       )}
@@ -556,7 +564,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     <h2>{t("sf.u08.rates")}</h2>
                     <div class="sf-u08-rate-list"><For each={rates()}>{(r) =>
                       <button type="button" class="mx-btn" onClick={() => selectRate(r)}>
-                        <span>{r.name}</span><span>{r.cur} · {money(r.annual,r.cur,language.intl()) ?? t("sf.u08.none")}</span>
+                        <span>{r.name}</span><span>{r.cur} · {money(r.annual,r.cur,language.intl(),missingCurrency()) ?? t("sf.u08.none")}</span>
                       </button>}
                     </For></div>
                     <Show when={state.formKind === "rate" && state.rateForm}>

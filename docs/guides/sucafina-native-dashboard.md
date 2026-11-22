@@ -88,6 +88,12 @@ O OPEX organiza as linhas de despesas e o CAPEX organiza projetos e linhas de in
 
 A edição, a colagem de valores, a distribuição e a revisão usam as regras da versão selecionada. Meses fechados e restrições de acesso continuam visíveis. Os ajustes só são concluídos depois da confirmação apresentada pela operação.
 
+### Headcount
+
+Os custos mensais e anuais mostram a moeda da tabela de custos recebida da fonte. O resumo identifica a moeda quando todas as tabelas informadas usam o mesmo código. Se a fonte não informar uma moeda única, a tela indica essa ausência; os valores continuam na unidade fornecida, sem conversão para USD. Um valor zero permanece zero e um valor ausente aparece como **Não informado**.
+
+A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
+
 ## Leitura em telas menores
 
 As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.
