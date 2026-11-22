@@ -27,6 +27,7 @@ import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
 import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import { prepareSfCapturedContextIdentity } from "./captured-context-identity.ts"
+import { matchesSfPlannerProjectionSourceRefs } from "./planner-projection-source-refs.ts"
 
 type CaptureSelection = Parameters<BusinessContextService["recall"]>[0]
 type CaptureObservation = {
@@ -726,8 +727,8 @@ function plannerProjectionMatches(projection: DomainProjection, ref: Extract<Bus
   return projection.context.installationId === call.binding.installationId && projection.context.projectId === call.binding.projectId &&
     projection.context.principalRef === call.binding.principalRef && projection.context.accessRevision === call.binding.accessRevision &&
     projection.context.policyVersion === call.binding.policyVersion && projection.context.surface === "planner" &&
-    digestSfValue(projection.context.period) === digestSfValue(ref.target.period) && projection.values.every((value) =>
-      value.sourceRefs.length === 1 && digestSfValue(value.sourceRefs[0]) === digestSfValue(ref))
+    digestSfValue(projection.context.period) === digestSfValue(ref.target.period) &&
+    matchesSfPlannerProjectionSourceRefs(projection.values, ref)
 }
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>

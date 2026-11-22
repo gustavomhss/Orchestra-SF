@@ -11,6 +11,12 @@ type SfCanonicalCaptureRuntime = Readonly<{
   current(): boolean
 }>
 
+type SfCanonicalProjectionRuntime = Readonly<{
+  reject(value: unknown): boolean
+  current(): boolean
+}>
+let originalProjectionRuntime: SfCanonicalProjectionRuntime | undefined
+
 const captureDescriptor = Object.getOwnPropertyDescriptor
 const captureOwnKeys = Reflect.ownKeys
 const capturePrototype = Object.getPrototypeOf
@@ -104,7 +110,46 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
       } catch { return false }
     }
     if (!current()) return undefined
-    return captureFreeze({ isProxy: proxy.value as (value: unknown) => boolean, current })
+    const captured = captureFreeze({ isProxy: proxy.value as (value: unknown) => boolean, current })
+    try {
+      const engine = Bun
+      const version = captureDescriptor(engine, "version"), revision = captureDescriptor(engine, "revision")
+      const names = ["isNativeError", "isAnyArrayBuffer", "isArrayBufferView"]
+      const predicates: { key: string; expected: PropertyDescriptor; test: (value: unknown) => boolean }[] = []
+      for (let index = 0; index < names.length; index++) {
+        const key = names[index]
+        if (key === undefined) break
+        const expected = captureDescriptor(proxyTypes, key)
+        if (!expected || !captureOwn(expected, "value")) break
+        const test: unknown = expected.value
+        if (typeof test !== "function") break
+        predicates[index] = { key, expected, test: (value: unknown) => test(value) === true }
+      }
+      if (version && revision && captureOwn(version, "value") && captureOwn(revision, "value") &&
+        version.value === "1.3.14" && revision.value === "0d9b296af33f2b851fcbf4df3e9ec89751734ba4" &&
+        predicates.length === names.length) {
+        originalProjectionRuntime = captureFreeze({
+          reject: (value: unknown) => {
+            if (captured.isProxy(value)) return true
+            for (let index = 0; index < predicates.length; index++) {
+              const predicate = predicates[index]
+              if (!predicate || predicate.test(value)) return true
+            }
+            return false
+          },
+          current: () => {
+            if (!current() || !sameCaptureDescriptor(captureDescriptor(engine, "version"), version) ||
+              !sameCaptureDescriptor(captureDescriptor(engine, "revision"), revision)) return false
+            for (let index = 0; index < predicates.length; index++) {
+              const pin = predicates[index]
+              if (!pin || !sameCaptureDescriptor(captureDescriptor(proxyTypes, pin.key), pin.expected)) return false
+            }
+            return true
+          },
+        })
+      }
+    } catch { /* Missing optional predicates do not disable the existing capture proof. */ }
+    return captured
   } catch { return undefined }
 }
 
@@ -113,6 +158,11 @@ const originalCaptureRuntime = initializeCaptureRuntime()
 /** A private frozen backend capability; it carries no domain state or authority. */
 export function sfCanonicalCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
   return originalCaptureRuntime?.current() ? originalCaptureRuntime : undefined
+}
+
+export function sfCanonicalProjectionRuntime(): SfCanonicalProjectionRuntime | undefined {
+  try { return originalProjectionRuntime?.current() ? originalProjectionRuntime : undefined }
+  catch { return undefined }
 }
 
 /** Memoized canonical bytes require the original serializer and plain tagged arrays. */
