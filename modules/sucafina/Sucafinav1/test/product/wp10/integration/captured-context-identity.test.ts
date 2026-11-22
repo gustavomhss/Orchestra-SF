@@ -277,6 +277,10 @@ for (const mode of capturedContextLoadingModes)
     expect(receipt.duringHookAdmitted).toBe(mode === "clean")
     expect(receipt.restoredAdmitted).toBe(!limited)
     expect(receipt.loadHookCalls).toBe(0)
+    const silentHook = mode === "clean" || mode === "copy-descriptors" ||
+      mode === "reflection-descriptor" || mode === "proxy-checker"
+    if (silentHook) expect(receipt.originalHookCalls).toBe(0)
+    else expect(receipt.originalHookCalls).toBeGreaterThan(0)
     expect(receipt.preparationHookCalls).toBe(receipt.originalHookCalls)
     expect(receipt.preparationTraps).toEqual(receipt.originalTraps)
     expect(receipt.positivePreparationHookCalls).toBe(receipt.originalHookCalls)
