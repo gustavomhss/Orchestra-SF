@@ -40,7 +40,7 @@ export async function configureRestrictedMaestro(
   const root = await realpath(installed.root)
   const directory = await realpath(path.join(root, "workspace"))
   if (origin.protocol !== "http:" || origin.hostname !== "127.0.0.1" || !origin.port || installed.mount !== "/sucafina" ||
-      root !== path.resolve(installed.root) || !path.basename(root).startsWith("sf-design-capture-") ||
+      root !== path.resolve(installed.root) || !path.basename(root).startsWith("sf-native-host-") ||
       directory !== path.join(root, "workspace") || ((await stat(root)).mode & 0o077) !== 0)
     throw new Error("Restricted configuration requires the original private ephemeral recording workspace")
 
