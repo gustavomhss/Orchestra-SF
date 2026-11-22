@@ -156,13 +156,21 @@ const layer = Layer.effectDiscard(
           yield* requireParent(store, location, context, decodeCalled, called)
           yield* policy.assertChild(context.sessionID, model)
           yield* revalidateTarget(existing)
-          const child = yield* sessions.create({
-            id: childID,
-            parentID: context.sessionID,
-            agent: target.id,
-            model,
-            location: Location.Ref.make({ directory: placement.directory, workspaceID: placement.workspaceID }),
-          })
+          const child = yield* sessions
+            .create({
+              id: childID,
+              parentID: context.sessionID,
+              agent: target.id,
+              model,
+              location: Location.Ref.make({ directory: placement.directory, workspaceID: placement.workspaceID }),
+            })
+            .pipe(
+              Effect.catchDefect((defect) =>
+                defect instanceof SessionV2.ConflictError
+                  ? Effect.fail(new ToolFailure({ message: `Task child parent, agent, or placement mismatch: ${childID}` }))
+                  : Effect.die(defect),
+              ),
+            )
           adopted.current = true
           const failure = requireChild(child, placement, context, target.id, model)
           if (failure) return yield* failure

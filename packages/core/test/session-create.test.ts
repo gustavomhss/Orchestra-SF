@@ -1,6 +1,6 @@
 import { describe, expect } from "bun:test"
 import path from "path"
-import { DateTime, Effect, Layer, Stream } from "effect"
+import { Cause, DateTime, Effect, Exit, Layer, Stream } from "effect"
 import { AgentV2 } from "@orchestra/core/agent"
 import { asc, eq } from "drizzle-orm"
 import { Database } from "@orchestra/core/database/database"
@@ -93,24 +93,27 @@ describe("SessionV2.create", () => {
     }),
   )
 
-  it.effect("returns the existing Session when one ID is reused with different create arguments", () =>
+  it.effect("refuses conflicting reuse and preserves the recorded Session", () =>
     Effect.gen(function* () {
       const session = yield* SessionV2.Service
-      const created = yield* session.create({ id, location })
-      const changed = [
+      const created = yield* session.create({ id, location, agent: AgentV2.defaultID })
+      const conflicting = [
         { id, location: Location.Ref.make({ directory: AbsolutePath.make("/other") }) },
-        { id, location, agent: AgentV2.ID.make("maestro") },
-        {
-          id,
-          location,
-          model: ModelV2.Ref.make({ id: ModelV2.ID.make("sonnet"), providerID: ProviderV2.ID.anthropic }),
-        },
+        { id, location: Location.Ref.make({ directory: location.directory, workspaceID: WorkspaceV2.ID.make("wrk_other") }) },
+        { id, location, agent: AgentV2.ID.make("reviewer") },
+        { id, location, parentID: SessionV2.ID.create() },
+        { id, location, adopt: false },
       ]
 
-      for (const input of changed) {
-        expect(yield* session.create(input)).toEqual(created)
+      for (const input of conflicting) {
+        const exit = yield* Effect.exit(session.create(input))
+        expect(Exit.isFailure(exit) && Cause.squash(exit.cause)).toBeInstanceOf(SessionV2.ConflictError)
       }
-      expect(yield* session.list()).toHaveLength(1)
+
+      // A model hint is not part of the recorded Session's identity.
+      const model = ModelV2.Ref.make({ id: ModelV2.ID.make("sonnet"), providerID: ProviderV2.ID.anthropic })
+      expect(yield* session.create({ id, location, model })).toEqual(created)
+      expect(yield* session.list()).toEqual([created])
     }),
   )
 
@@ -123,6 +126,23 @@ describe("SessionV2.create", () => {
 
       expect(created[1]).toEqual(created[0])
       expect(yield* session.list()).toEqual([created[0]])
+    }),
+  )
+
+  it.effect("returns only the winner when concurrent requests disagree on Session identity", () =>
+    Effect.gen(function* () {
+      const session = yield* SessionV2.Service
+      const other = Location.Ref.make({ directory: AbsolutePath.make("/other") })
+      const exits = yield* Effect.all(
+        [Effect.exit(session.create({ id, location })), Effect.exit(session.create({ id, location: other }))],
+        { concurrency: "unbounded" },
+      )
+
+      const succeeded = exits.filter(Exit.isSuccess)
+      const refused = exits.filter(Exit.isFailure)
+      expect(succeeded).toHaveLength(1)
+      expect(refused.map((exit) => Cause.squash(exit.cause))).toEqual([expect.any(SessionV2.ConflictError)])
+      expect(yield* session.list()).toEqual(succeeded.map((exit) => exit.value))
     }),
   )
 

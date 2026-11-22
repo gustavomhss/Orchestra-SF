@@ -181,26 +181,27 @@ describe("ScheduledTask scheduler", () => {
     }),
   )
 
-  it.effect("a failed run is recorded with its reason and its slot is not retried", () =>
+  it.effect("a fresh claim refuses a preexisting matching Session and does not retry its slot", () =>
     Effect.gen(function* () {
       yield* TestClock.setTime(slot - MINUTE)
       const tasks = yield* ScheduledTask.Service
       const sessions = yield* SessionV2.Service
       const created = yield* tasks.create(directory, hourly)
-      // The slot's message ID already holds another prompt, so admission conflicts.
+      // Matching placement and agent do not establish ownership of a preexisting Session.
       const ids = slotIDs(created.id, slot)
-      yield* sessions.create({ id: ids.session, location: { directory } })
-      yield* sessions.prompt({ id: ids.message, sessionID: ids.session, prompt: { text: "Something else." } })
+      yield* sessions.create({ id: ids.session, agent: AgentV2.defaultID, location: { directory } })
+      wakes.length = 0
       yield* TestClock.setTime(slot + MINUTE)
       yield* tasks.tick
       yield* tasks.tick
       expect(yield* first(tasks)).toMatchObject({
         runs: 0,
         next: slot + HOUR,
-        last: { outcome: "failed", slot, error: expect.stringContaining("conflicts") },
+        last: { outcome: "failed", slot, error: expect.stringContaining("was not created for this request") },
       })
       expect((yield* runRows).map((row) => row.state)).toEqual(["failed"])
-      expect(yield* inputs).toHaveLength(1)
+      expect(yield* inputs).toEqual([])
+      expect(wakes).toEqual([])
     }),
   )
 })
@@ -229,6 +230,27 @@ describe("ScheduledTask restart recovery", () => {
         last: { outcome: "started", sessionID: ids.session },
       })
       expect((yield* runRows).map((row) => [row.slot, row.state, row.owner])).toEqual([[slot, "started", null]])
+    }),
+  )
+
+  it.effect("does not reconcile or wake a stopped claim whose durable prompt belongs to another Session", () =>
+    Effect.gen(function* () {
+      yield* TestClock.setTime(slot - MINUTE)
+      const tasks = yield* ScheduledTask.Service
+      const sessions = yield* SessionV2.Service
+      const created = yield* tasks.create(directory, hourly)
+      const ids = yield* stopped({ task: created, slot, claimed: slot - MINUTE, admitted: false })
+      const other = yield* sessions.create({ location: { directory } })
+      yield* sessions.prompt({ id: ids.message, sessionID: other.id, prompt: { text: created.prompt }, resume: false })
+      wakes.length = 0
+
+      yield* TestClock.setTime(slot + ScheduledTask.LEASE)
+      yield* tasks.tick
+
+      expect(wakes).toEqual([])
+      expect((yield* inputs).map((row) => [row.id, row.session_id])).toEqual([[ids.message, other.id]])
+      expect((yield* runRows).map((row) => [row.state, row.session_id])).toEqual([["failed", ids.session]])
+      expect(yield* first(tasks)).toMatchObject({ runs: 0, last: { outcome: "failed" } })
     }),
   )
 
@@ -399,12 +421,12 @@ describe("ScheduledTask Run now", () => {
       const sessions = yield* SessionV2.Service
       const created = yield* tasks.create(directory, hourly)
       const ids = slotIDs(created.id, slot)
-      yield* sessions.create({ id: ids.session, location: { directory } })
+      yield* sessions.create({ id: ids.session, agent: AgentV2.defaultID, location: { directory } })
       yield* sessions.prompt({ id: ids.message, sessionID: ids.session, prompt: { text: "Something else." } })
       yield* TestClock.setTime(slot + MINUTE)
       const error = yield* tasks.run(directory, created.id).pipe(Effect.flip)
       expect(error).toBeInstanceOf(ScheduledTask.RunError)
-      expect(error._tag === "ScheduledTask.RunError" && error.reason).toContain("conflicts")
+      expect(error._tag === "ScheduledTask.RunError" && error.reason).toContain("was not created for this request")
       const task = yield* first(tasks)
       expect(task).toMatchObject({ runs: 0, next: slot })
       expect(task?.last).toBeUndefined()
