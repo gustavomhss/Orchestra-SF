@@ -1,5 +1,5 @@
 {
-  "workerSource": "d4e3cf151ca7cd682d74a76691058e3ea1e349f4",
+  "workerSource": "56738681e9fce838518fedde2bfe11eac20492e8",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -90,6 +90,18 @@
     {
       "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
       "sha": "4ed364f8e83f6b61a9f498f607fd938dc65cc233"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+      "sha": "08f45a9910139614e977cb69d1fe053b6e78af7b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+      "sha": "479808933d294192fe3e0ce6f8f67583375e39e8"
+    },
+    {
+      "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+      "sha": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
     }
   ],
   "qualification": {
@@ -228,6 +240,28 @@
       "record": "attempts/import-fixed-05.json",
       "job": 137130609517,
       "independentReferenceMs": 6605
+    },
+    "draftIntentBatch": {
+      "candidate": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+      "integrated": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "unitRun": 44998337630,
+      "cases": 106,
+      "assertions": 1155,
+      "newCases": 35,
+      "installedEqualityRun": 44998524198,
+      "installedCounts": {
+        "draft": 7,
+        "intent": 7
+      },
+      "status": "Unit and installed equality passed; diagnostic import also passed; clean import6 running.",
+      "record": "qualification/draft-intent-batch-01.json"
+    },
+    "cleanImport6": {
+      "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+      "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+      "run": 44998959512,
+      "result": "running",
+      "record": "attempts/import-fixed-06.json"
     }
   },
   "excluded": [
@@ -249,27 +283,159 @@
     ],
     "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files. Root later delegated portfolio metadata batching and canonical-reader capture in both observers; exact four blobs are listed and integrated by root."
   },
-  "pendingCandidates": {
-    "draftIntent": {
-      "source": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
-      "files": [
-        {
-          "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
-          "sha": "08f45a9910139614e977cb69d1fe053b6e78af7b"
-        },
-        {
-          "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
-          "sha": "479808933d294192fe3e0ce6f8f67583375e39e8"
-        },
-        {
-          "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
-          "sha": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
-        }
-      ],
-      "record": "qualification/draft-intent-batch-01.json",
-      "status": "Static reviews and106cases/1155assertions passed; installed equality running; clean import still required.",
-      "unitRun": 44998337630,
-      "unitJob": 137134156854
-    }
+  "verifiedComposition": {
+    "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+    "checks": [
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "expected": "bacfb8d9c3c82265365a8daa9c96a52d07716516",
+        "actual": "bacfb8d9c3c82265365a8daa9c96a52d07716516",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+        "expected": "66191bad409758318261ed57e74dc35afd1f3dd7",
+        "actual": "66191bad409758318261ed57e74dc35afd1f3dd7",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "expected": "5bfacfdfa016b0af26fc68d7b2593f07ae2eb132",
+        "actual": "5bfacfdfa016b0af26fc68d7b2593f07ae2eb132",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/confirmations.css",
+        "expected": "b9257b6fb2db8a73dad69bcf027f40967868ead7",
+        "actual": "b9257b6fb2db8a73dad69bcf027f40967868ead7",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
+        "expected": "15e428e7763e0f98e1bdb1069b5938ac32b31515",
+        "actual": "15e428e7763e0f98e1bdb1069b5938ac32b31515",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/presentation.css",
+        "expected": "d28fb36e90cb7dbd9986937e13769c393fda4e50",
+        "actual": "d28fb36e90cb7dbd9986937e13769c393fda4e50",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
+        "expected": "32f0ab855a88cbc9a6634979b1b5c0558da5021f",
+        "actual": "32f0ab855a88cbc9a6634979b1b5c0558da5021f",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/relations.css",
+        "expected": "3b7dccb9c3c8ab42b277e4fc607b4b80d62b88d3",
+        "actual": "3b7dccb9c3c8ab42b277e4fc607b4b80d62b88d3",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
+        "expected": "d6a0c119fd11deb52540f803190a4f5149ac6f9c",
+        "actual": "d6a0c119fd11deb52540f803190a4f5149ac6f9c",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/threads.css",
+        "expected": "3b26f34fbe1067c4cd4cd28343680c553e83b0ab",
+        "actual": "3b26f34fbe1067c4cd4cd28343680c553e83b0ab",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+        "expected": "ae91eed80e273ad42b3955e72188da3dfebaf563",
+        "actual": "ae91eed80e273ad42b3955e72188da3dfebaf563",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "expected": "c32a662bf029aabef3d6509c5b0ca578cb5300f2",
+        "actual": "c32a662bf029aabef3d6509c5b0ca578cb5300f2",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+        "expected": "e0b83d004fb9682254c9c81fe154fb2658354720",
+        "actual": "e0b83d004fb9682254c9c81fe154fb2658354720",
+        "match": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-collaboration-reading-health.test.ts",
+        "expected": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "actual": "d9d8b833f07378891dbf5b320f6969ac433b3496",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+        "expected": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+        "actual": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
+        "expected": "a65fcc203fa02d0129a44ad3a84c32ff615c4b77",
+        "actual": "a65fcc203fa02d0129a44ad3a84c32ff615c4b77",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-seed.ts",
+        "expected": "2192b5260a9837dc614a58ada15cb1843b36a533",
+        "actual": "2192b5260a9837dc614a58ada15cb1843b36a533",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
+        "expected": "c407b9b67c7f3142935d10ba524d36399f618250",
+        "actual": "c407b9b67c7f3142935d10ba524d36399f618250",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+        "expected": "adcdfe07b97b75a6cddf20de763e271d5015161c",
+        "actual": "adcdfe07b97b75a6cddf20de763e271d5015161c",
+        "match": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+        "expected": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2",
+        "actual": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+        "expected": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+        "actual": "f107a50dfa694d3680c351e3b6833e12c94af1e5",
+        "match": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-portfolio-reading-health.test.ts",
+        "expected": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "actual": "4ed364f8e83f6b61a9f498f607fd938dc65cc233",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+        "expected": "08f45a9910139614e977cb69d1fe053b6e78af7b",
+        "actual": "08f45a9910139614e977cb69d1fe053b6e78af7b",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+        "expected": "479808933d294192fe3e0ce6f8f67583375e39e8",
+        "actual": "479808933d294192fe3e0ce6f8f67583375e39e8",
+        "match": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+        "expected": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24",
+        "actual": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24",
+        "match": true
+      }
+    ]
   }
 }

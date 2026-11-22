@@ -68,7 +68,7 @@
       "revalidations": 14
     }
   },
-  "limits": "Installed availability equality and clean browser qualification remain pending. Unit success alone does not qualify UI56.",
+  "limits": "All106 unit cases and installed7+7 availability equality pass. Diagnostic browser passed; clean UI55/56 is still running and is not inferred from source HTTP200 or diagnostics.",
   "cases": 106,
   "failed": 0,
   "assertions": 1155,
@@ -78,7 +78,31 @@
     "source": "b799889413c648f89ff78147499f7b9748affb43",
     "snapshot": "6cf35ff7d2f4e850cb8c62c47941ef607872554d",
     "record": "attempts/draft-intent-equivalence-01.json",
-    "status": "running"
+    "status": "passed",
+    "run": 44998524198,
+    "testJob": 137134723291,
+    "cleanupJob": 137135765974,
+    "originalCounts": {
+      "draft": 7,
+      "intent": 7
+    },
+    "candidateCounts": {
+      "draft": 7,
+      "intent": 7
+    },
+    "equality": true,
+    "browser": "passed diagnostic import journey; clean run still required"
   },
-  "testBoundary": "Tests use genuine SQLite, original current-choice/source persistence composition, canonical C08 reader and original UI lease implementation. External identity/grant callbacks and replacement hooks are controlled to exercise refusal paths. Source handlers throw if called; no produced result or authority receipt is installed."
+  "testBoundary": "Tests use genuine SQLite, original current-choice/source persistence composition, canonical C08 reader and original UI lease implementation. External identity/grant callbacks and replacement hooks are controlled to exercise refusal paths. Source handlers throw if called; no produced result or authority receipt is installed.",
+  "integrated": {
+    "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+    "tree": "06077b327562dce86a71f3a6ab82976df21382e3"
+  },
+  "clean": {
+    "source": "84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf",
+    "snapshot": "0833a6ea23b8db551f36a5d0406085112028708d",
+    "run": 44998959512,
+    "result": "running",
+    "record": "attempts/import-fixed-06.json"
+  }
 }
