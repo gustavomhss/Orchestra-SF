@@ -1,0 +1,141 @@
+{
+  "kind": "static-audit-of-original-installed-read-phases",
+  "source": "2213d2f216745976bb89d345277726e3a833f1d4",
+  "candidate": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+  "reviewedBy": [
+    "design_collaboration: ten observers and original persistence/choice contracts",
+    "design_reviews: report, review read/thread, agenda and draft observers plus original state provider",
+    "design_analytics: portfolio reading observer",
+    "root: eight concrete local observers and raw-driver/forwarder composition"
+  ],
+  "hostObservers": [
+    {
+      "observer": "observeSfPersonalViewsHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/personal-views-health.ts",
+      "sha": "acd3d2e1c28e5b05ca72743b902a152b5e5c2404",
+      "stateReadsWhenAllCandidatesEligible": 8,
+      "notes": "Two observations of views and preferences metadata; original UI admission/revalidation and human capability remain."
+    },
+    {
+      "observer": "observeSfImportHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/import-health.ts",
+      "sha": "817f50ae7dab6c092d13f342cb0f33edc82c0c53",
+      "stateReadsWhenAllCandidatesEligible": 6,
+      "notes": "Original documents/receipts metadata and four original dashboard/planner transactions commit:false; assets metadata only, no scanner/blob mutation."
+    },
+    {
+      "observer": "observeSfDocumentHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/document-health.ts",
+      "sha": "71696e7ba85e3a9caf937b1a80af4c080506fc04",
+      "stateReadsWhenAllCandidatesEligible": 2,
+      "notes": "Original documents read/write namespace authority health and document grants; no producer invocation."
+    },
+    {
+      "observer": "observeSfSearchHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/work-health.ts",
+      "sha": "24768c2a56e01841df7e59f9c3dbcce2b35ce459",
+      "stateReadsWhenAllCandidatesEligible": 2,
+      "notes": "Original search infrastructure and documents metadata; no search command or producer invocation."
+    },
+    {
+      "observer": "observeSfCollaborationReadingHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/collaboration-reading-health.ts",
+      "sha": "eb405fac33b6a34a9d4a3fb68fff2877a4659cb7",
+      "stateReadsWhenAllCandidatesEligible": 6,
+      "notes": "Nine exact original admissions; two separate namespace phases over relations/threads/confirmations, per-operation identities/revalidation/finish."
+    },
+    {
+      "observer": "observeSfReportHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/report-health.ts",
+      "sha": "3233fff964e62b2ed92a63620ba181506be86130",
+      "stateReadsWhenAllCandidatesEligible": 4,
+      "notes": "Original reviews/documents authority metadata; docx/pptx infrastructure presence; no report prepare/dispatch."
+    },
+    {
+      "observer": "observeSfReviewThreadContextHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/report-health.ts",
+      "sha": "3233fff964e62b2ed92a63620ba181506be86130",
+      "stateReadsWhenAllCandidatesEligible": 2,
+      "notes": "Original reviews namespace health, identity and revision comparison; no thread prepare/authorize call."
+    },
+    {
+      "observer": "observeSfDashboardDraftHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+      "sha": "842989d8163acbba6c0c0f7b6c9b87ad370dcb50",
+      "stateReadsWhenAllCandidatesEligible": 26,
+      "notes": "Seven exact candidates; original decisions.edit/reviews.preserve checks before/after, cases/preferences metadata; no draft/capture call."
+    },
+    {
+      "observer": "observeSfReviewAgendaHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/review-agenda-health.ts",
+      "sha": "9a2b1a69ec2e213318d4961696f8e0ed17c57ac2",
+      "stateReadsWhenAllCandidatesEligible": 4,
+      "notes": "Two candidates read reviews twice, original preserve-action and UI revalidation kept; no agenda mutation."
+    },
+    {
+      "observer": "observeSfReviewReadHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/report-health.ts",
+      "sha": "3233fff964e62b2ed92a63620ba181506be86130",
+      "stateReadsWhenAllCandidatesEligible": 4,
+      "notes": "Two candidates read reviews twice; exact revision/incarnation/storage comparison and source/binding identities."
+    },
+    {
+      "observer": "observeSfPortfolioReadingHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/portfolio-reading-health.ts",
+      "sha": "45ccca2ff1076aa0b71f7961603bae7ca724b482",
+      "stateReadsWhenAllCandidatesEligible": 28,
+      "notes": "Seven exact IDs, cases/preferences metadata twice; prepare IDs require installed transaction and namespace write authority, but execute no evaluation/write."
+    },
+    {
+      "observer": "observeSfDecisionIntentHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+      "sha": "a9488e57a14713d47536d2096d7fe73fc1f57406",
+      "stateReadsWhenAllCandidatesEligible": 14,
+      "notes": "Original intent/source metadata and human action checks; no case draft/edit/evaluation invocation."
+    },
+    {
+      "observer": "observeSfDecisionReadingHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-reading-health.ts",
+      "sha": "52369a71341f1b136e1aaca1893350321b275b74",
+      "stateReadsWhenAllCandidatesEligible": 8,
+      "notes": "Original metadata; choice.fence.run reuses an existing original local readonly scope through its installed check. No choice command."
+    },
+    {
+      "observer": "observeSfAnalysisReadingHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/analysis-reading-health.ts",
+      "sha": "628f1d3487e7b46a6bbc7ddc7dff57db74043e7b",
+      "stateReadsWhenAllCandidatesEligible": 6,
+      "notes": "Original analysis/case metadata and installed dependency identity; no analysis start."
+    },
+    {
+      "observer": "observeSfDecisionApplicationHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-application-health.ts",
+      "sha": "77ffa51a34c461e7b2f744fd52f83a6cbbbba95b",
+      "stateReadsWhenAllCandidatesEligible": 12,
+      "notes": "Original cases/changes/receipts metadata and original human actions; no review/apply/recover command."
+    },
+    {
+      "observer": "observeSfRecallHealth",
+      "path": "apps/cli/src/sucafina-product/native-ui/recall-health.ts",
+      "sha": "bf8578f2326f59c1a35918f5c4afe4ad94ee954b",
+      "stateReadsWhenAllCandidatesEligible": 3,
+      "notes": "Original reviews/notes/preferences metadata; no recall or memory mutation."
+    }
+  ],
+  "hostStateReadTotal": 135,
+  "extraOriginalImportTransactions": 4,
+  "localAudit": "../local-operational-read-audit.json",
+  "commonChecks": [
+    "Every original state.read still enters the original persistence.transaction('dashboard'), executes its original authorize before and after, preserves abort/sameAuthority, and returns commit:false.",
+    "Write-mode namespace health is an authority condition, not a mutation. No producer command/prepare/evaluate/apply/send/dispatch handler is executed by these observations.",
+    "No observer opens its own transactionAll/readSnapshotRoot. The existing choice fence recognizes and reuses an original local snapshot scope while preserving its checks.",
+    "All admitted UI leases finish in their original finally blocks.",
+    "The original local-store readonly root owns fresh SQL rows, detached copies, poison-on-write, joined reader lifetime and final closure. No readiness or authority results are cached.",
+    "All three original context admissions remain outside observation roots, and the two operational invocations open separate fresh roots.",
+    "The arbitrary host input.operational extension starts and is awaited outside the host root. Only its concrete local implementation independently opens its own audited raw-store root."
+  ],
+  "limitations": [
+    "Static audit is not runtime equivalence proof; the installed comparison is separately recorded in attempts/phase-equivalence-01.json.",
+    "Read counts are source-structure counts with all candidates eligible, not observed SQL benchmark counts. Physical effects require clean Actions evidence."
+  ]
+}

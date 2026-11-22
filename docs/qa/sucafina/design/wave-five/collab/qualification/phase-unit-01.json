@@ -1,0 +1,53 @@
+{
+  "source": "7bfdac1fd3cd6658ea6c64d26a4944e5c9bdfef4",
+  "sourceTree": "7f27ea5fce6c74ef3d079cca538b9f29bf457113",
+  "snapshot": "822b98b7d3d5bb56b09e6679a6c0c16f610e7f72",
+  "tree": "5b4daa6346d931c166e378f769bf882ef8cee129",
+  "branch": "ci-run-sf5phaseunit1",
+  "request": {
+    "package": "cli",
+    "packageSelector": "@orchestra/cli",
+    "directory": "apps/cli",
+    "runner": "bun",
+    "args": [
+      "./test/sucafina-operational-read-phase.test.ts",
+      "./test/sucafina-collaboration-reading-health.test.ts",
+      "./test/sucafina-portfolio-reading-health.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "kind": "existing-test-ci-original-sqlite-qualification",
+  "result": "passed",
+  "run": 44991547893,
+  "job": 137113486998,
+  "cleanupJob": 137113686422,
+  "tests": {
+    "passed": 59,
+    "failed": 0,
+    "assertions": 518
+  },
+  "code": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "089f3b18298ab79f1f6d614f89331c2a1b665a1e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "605468463922e7f5bdbeddb72b9b7a34114e8719"
+    }
+  ],
+  "limitations": "Initial 11-case helper; superseded by phase-unit-02 after peer review found two lifetime/pinning gaps."
+}

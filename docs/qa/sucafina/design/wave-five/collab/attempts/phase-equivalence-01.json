@@ -1,0 +1,89 @@
+{
+  "source": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+  "sourceTree": "308630ee33cdebdaacba5a58cab13c742587740f",
+  "snapshot": "e7b71d60b23df49e48aeeb2bbd4dc170388c5e7b",
+  "tree": "7ea8c09356063fd432d3ba832fe2f0b08699ea83",
+  "branch": "ci-run-sf5phaseequal1",
+  "paths": [
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/local/entry.ts",
+    "apps/cli/test/fixture/sucafina-native-installation.ts",
+    "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+    "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    ".ci-run.json"
+  ],
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4c3a912fc6bc4b723a2aa544e2924a9fc35ad37"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f409c692a9131725feffb44bb251fa3993f7bc02"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f77efd293c998e27ccabf35f23f4758eed2a03dc"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07a7eb1de18c7c486c76f022b63484ea6cadd3d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6beadb9e3bc1d7814ca7a12835ccc12e49950dd"
+    },
+    {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "content": "{\n  \"package\": \"app\",\n  \"packageSelector\": \"@orchestra/app\",\n  \"directory\": \"packages/app-shell\",\n  \"runner\": \"playwright\",\n  \"args\": [\n    \"e2e/sucafina/design-wave-five-collab.spec.ts\"\n  ],\n  \"config\": \"e2e/playwright.production.config.ts\",\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"strict\",\n    \"ORCHESTRA_CHANNEL\": \"prod\"\n  }\n}\n"
+    }
+  ],
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "notes": "Diagnostic-only first-call comparison. All fields of original installed availability compared per observer, 16 host and 8 local. Actual read-only source work runs twice only for first comparison. No command handler invoked, no result substitutes, no timeout changes.",
+  "status": "running",
+  "run": 44992278999,
+  "productionCode": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "adcdfe07b97b75a6cddf20de763e271d5015161c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
+    }
+  ],
+  "limitations": "Diagnostic overlays are never integrated. Fresh clean import and full collaboration qualification still required."
+}

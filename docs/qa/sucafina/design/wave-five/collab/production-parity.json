@@ -1,5 +1,5 @@
 {
-  "workerSource": "1b096bfed1c00109cb9084d9d72409f51da10336",
+  "workerSource": "e2a8bc53217d89ad40fe4975122074215fe35474",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -74,6 +74,14 @@
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
       "sha": "c407b9b67c7f3142935d10ba524d36399f618250"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+      "sha": "adcdfe07b97b75a6cddf20de763e271d5015161c"
+    },
+    {
+      "path": "apps/cli/test/sucafina-operational-read-phase.test.ts",
+      "sha": "18ec8fdf32c5d0fa3aefdf4a78daf65592ad84f2"
     }
   ],
   "qualification": {
@@ -129,10 +137,38 @@
       "job": 137105069614,
       "status": "partial UI55; same unchanged UI56 readiness assertion fails",
       "record": "attempts/import-fixed-03.json"
+    },
+    "operationalReadPhase": {
+      "source": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+      "unitRun": 44992111577,
+      "unitJob": 137115211181,
+      "cases": 61,
+      "assertions": 524,
+      "helperCases": 13,
+      "unitRecord": "qualification/phase-unit-02.json",
+      "audit": "qualification/operational-read-audit.json",
+      "review": "qualification/operational-read-review.json",
+      "runtimeStatus": "Installed equivalence and clean import pending",
+      "equivalenceRun": 44992278999
     }
   },
   "excluded": [
-    "All temporary SF_IMPORT_TRACE source overlays on ci-run-sf5importtrace through ci-run-sf5importtrace7.",
+    "All temporary SF_IMPORT_TRACE profiling/equivalence source overlays on disposable ci-run snapshots.",
     "Root-owned header, installation variants, host-context binding/composition, type-only IDs and confirmation read-scope fix."
-  ]
+  ],
+  "sharedCompositionCandidates": {
+    "source": "2213d2f216745976bb89d345277726e3a833f1d4",
+    "candidate": "1de7171efe8bf6fc908fff102955012c6da2d2da",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "sha": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "sha": "abfbaac4a88a9b6dc7501cad8fb475e447295bdc"
+      }
+    ],
+    "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files."
+  }
 }
