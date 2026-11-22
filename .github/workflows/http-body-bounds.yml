@@ -1,0 +1,91 @@
+name: http-body-bounds
+
+on:
+  push:
+    branches: [body-bounds-check]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_OMNI_CONTROL: declared
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "124bbbd1d12f43b9f3bb7363345d9f462cda09ff"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bind exact source
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "124bbbd1d12f43b9f3bb7363345d9f462cda09ff"
+          test "$(git rev-parse 'HEAD^{tree}')" = "da2a63e40dd8fe94a679a2d5683d6ecdfede2eaa"
+          mkdir -m700 "$RUNNER_TEMP/body-bounds"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/body-bounds/source.refs"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/body-bounds/workflow.sha"
+          git diff --name-only 9d57d077d5c06a21f7bced97eba5806cee8a8f95 HEAD > "$RUNNER_TEMP/body-bounds/changed-paths.txt"
+          sha256sum packages/server/src/body-limit.ts packages/server/test/body-limit.test.ts packages/server/src/session-http.ts packages/server/test/session-owner-http.test.ts packages/server/test/fixture/session-http.ts > "$RUNNER_TEMP/body-bounds/source.sha256"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD
+      - uses: ./.github/actions/setup-bun
+      - uses: ./.github/actions/ripgrep
+      - uses: ./.github/actions/omni-binaries
+      - name: Own the invocation nonce
+        run: |
+          set -euo pipefail
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          printf '%s\n' "$nonce" > "$RUNNER_TEMP/body-bounds/omni-nonce.txt"
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$nonce" >> "$GITHUB_ENV"
+      - name: Exercise actual Node and prefixed Web body boundaries
+        working-directory: packages/server
+        run: |
+          set -euo pipefail
+          bun test ./test/body-limit.test.ts ./test/session-owner-http.test.ts --timeout 30000 --reporter=junit "--reporter-outfile=$RUNNER_TEMP/body-bounds/report.xml" 2>&1 | tee "$RUNNER_TEMP/body-bounds/controls.log"
+      - name: Typecheck Server
+        working-directory: packages/server
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/body-bounds/types.log"
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/body-bounds/guards.log"
+      - name: Verify complete original and regression controls
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,xml.etree.ElementTree as ET
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"body-bounds"
+          cases=list(ET.parse(root/"report.xml").getroot().iter("testcase"))
+          assert len(cases)==24,len(cases)
+          assert not any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"])
+          assert set((root/"changed-paths.txt").read_text().splitlines())=={"packages/server/src/body-limit.ts","packages/server/test/body-limit.test.ts"}
+          nonce=(root/"omni-nonce.txt").read_text().strip()
+          verdict=[line for line in (root/"controls.log").read_text().splitlines() if "omni positive control ["+nonce+"]:" in line]
+          assert len(verdict)==1 and (": pass " in verdict[0] or ": not applicable " in verdict[0])
+          receipt={"schema":"sf-web-body-boundary-controls-v1","sourceSha":"124bbbd1d12f43b9f3bb7363345d9f462cda09ff","sourceTree":"da2a63e40dd8fe94a679a2d5683d6ecdfede2eaa",
+            "workflowSha":os.environ["GITHUB_SHA"],"runId":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"],
+            "tests":len(cases),"failures":0,"skips":0,"originalRequest":True,"adapter":"ORIGINAL_PREFIXED_SESSION_WEB_AND_NODE",
+            "identity":"CONTROLLED_COMPONENT","installedTar":False,"finalCandidate":False,"g05Closed":False,
+            "hashes":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps({"tests":len(cases),"sourceSha":receipt["sourceSha"],"installedTar":False}))
+          PY
+      - name: Preserve evidence including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: http-body-bounds-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/body-bounds/
