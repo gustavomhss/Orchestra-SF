@@ -1,0 +1,184 @@
+{
+  "schema": "sucafina-visual-evidence-review-v1",
+  "attempt": "sensitivity-isolated-03",
+  "run": 45029259117,
+  "reviewer": "root_cost",
+  "source": "Original SF_DESIGN_PREVIEW log chunks; 37/37 complete, 1-based indexing, zero JSON parse errors.",
+  "reviewed": [
+    "UI44-no-source-scenarios-test-data",
+    "UI44-original-source-selection-test-data",
+    "UI44-issued-units-editor-dark-desktop-test-data",
+    "UI44-issued-units-editor-light-desktop-test-data",
+    "UI44-issued-units-editor-dark-390-test-data",
+    "UI44-issued-units-editor-light-320-test-data",
+    "UI44-dark-desktop-review-test-data",
+    "UI44-dark-320-review-actions-test-data",
+    "FAILED-native-wave-three-test-data"
+  ],
+  "findings": [
+    {
+      "name": "UI44-no-source-scenarios-test-data",
+      "findings": [
+        "Native dark desktop empty-case state visibly reports that the producer has not issued authorized sensitivity units.",
+        "Scenario, baseline and parameter controls remain at Choose a case; Unit appears disabled.",
+        "The selected case heading and absence notice are legible without overlap."
+      ],
+      "limits": [
+        "This is a configure state, not a result or qualification."
+      ]
+    },
+    {
+      "name": "UI44-original-source-selection-test-data",
+      "findings": [
+        "Native dark desktop shows the selected scenario, baseline and February parameter before requesting units.",
+        "The Unit action is visible and enabled; no issued-unit editor or result is shown yet.",
+        "Long values are clipped inside native select controls; the full case heading is visible."
+      ],
+      "limits": [
+        "Exact source identity is established by the original assertions/readbacks, not by the clipped select text alone."
+      ]
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "findings": [
+        "Native dark desktop issued editor displays USD / USD and two evidence references.",
+        "Criterion uses ≤ 2000; bounds are 200 to 2200 with two steps.",
+        "Evaluate sensitivity is visible; the Steps control has a clear focus outline and the lower editor remains within the image."
+      ],
+      "limits": [
+        "The image establishes editor configuration only."
+      ]
+    },
+    {
+      "name": "UI44-issued-units-editor-light-desktop-test-data",
+      "findings": [
+        "Native light desktop retains the same source selections, USD / USD, two evidence references, ≤ 2000 criterion and 200–2200 / 2 bounds.",
+        "The complete editor and Evaluate sensitivity action are legible within the captured viewport."
+      ],
+      "limits": [
+        "This confirms the displayed light-theme editor state, not a completed evaluation."
+      ]
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-390-test-data",
+      "findings": [
+        "The 390px dark viewport stacks the case and source controls without visible horizontal page overflow.",
+        "The case heading wraps and the Evaluate sensitivity action remains visible.",
+        "The capture reaches the parameter control near the lower edge."
+      ],
+      "limits": [
+        "Issued-unit details, criterion and numeric bounds are below the captured fold; this image does not establish the complete lower mobile editor."
+      ]
+    },
+    {
+      "name": "UI44-issued-units-editor-light-320-test-data",
+      "findings": [
+        "The 320px light viewport keeps the heading, case selection, scenario and baseline controls within the narrow panel.",
+        "The case heading wraps and the Evaluate sensitivity action remains visible."
+      ],
+      "limits": [
+        "Only the Parameter label is visible near the lower edge; the parameter control and lower editor are outside this capture."
+      ]
+    },
+    {
+      "name": "UI44-dark-desktop-review-test-data",
+      "findings": [
+        "Native dark desktop review displays wrapped scenario and parameter references, criterion text lte 2000 USD and basis 200–2200 (2) USD.",
+        "Confirm sensitivity evaluation and Cancel review are both visible and legible within the review panel.",
+        "No result or sample table is displayed."
+      ],
+      "limits": [
+        "This is the review before evaluation, not a persisted result."
+      ]
+    },
+    {
+      "name": "UI44-dark-320-review-actions-test-data",
+      "findings": [
+        "The 320px review wraps the full scenario and parameter references within the panel.",
+        "Criterion, basis and both stacked confirmation/cancel actions are visible.",
+        "No visible horizontal overflow or overlap affects these captured review contents."
+      ],
+      "limits": [
+        "The page is scrolled to review actions; its upper heading is outside this capture."
+      ]
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "findings": [
+        "The failure image visibly reports Lost connection to the server. Retrying... with a Retry now action.",
+        "The review remains displayed with the same references, lte 2000 USD and 200–2200 (2) USD basis.",
+        "Confirm sensitivity evaluation appears disabled; the Cancel review action extends below the lower viewport edge.",
+        "No result or sample table is displayed."
+      ],
+      "limits": [
+        "The connection warning does not identify the backend cause or establish whether a mutation persisted.",
+        "No response or authenticated sensitivity-result readback was observed."
+      ]
+    }
+  ],
+  "conclusion": "Partial source/editor/review evidence only. UI44 is not qualified because the unchanged declaration failed before evaluation response and result readbacks.",
+  "limits": [
+    "No completed UI44 end-to-end qualification or global count change.",
+    "No persisted sensitivity result, sampled threshold, sample table, result keyboard-focus checks or pt-BR result view was reached.",
+    "The narrow editor images show the upper form only; lower controls are outside the captured fold.",
+    "The connection warning does not establish the backend cause or whether the mutation persisted.",
+    "Viewport changes are not browser-zoom evidence.",
+    "Only root_cost is recorded as the viewer of these nine archived images; no independent reviewer is claimed."
+  ],
+  "archivedBytes": [
+    {
+      "name": "UI44-no-source-scenarios-test-data",
+      "sha": "3f44fd76bad0fe5bb68d04932a241799f94d6407",
+      "bytes": 86338,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-original-source-selection-test-data",
+      "sha": "cd6f074886ec9aa11037757ccfeb266d7077e9e1",
+      "bytes": 89397,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-desktop-test-data",
+      "sha": "2f7b61c2ac25b3228b831a26ce9f2da80f2f23e8",
+      "bytes": 106198,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-issued-units-editor-light-desktop-test-data",
+      "sha": "8a391c93942c31ec293718d986f092018984691b",
+      "bytes": 108456,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-issued-units-editor-dark-390-test-data",
+      "sha": "4edfff68cc58de935df9f4cc7084f6b0f47b2951",
+      "bytes": 36769,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-issued-units-editor-light-320-test-data",
+      "sha": "0c0b89098126a879fab2ed092e1112e55f928264",
+      "bytes": 31092,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-dark-desktop-review-test-data",
+      "sha": "eb3d7468cd29a77231e3ded254be3a12918e19ef",
+      "bytes": 89261,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "UI44-dark-320-review-actions-test-data",
+      "sha": "374737afd60223e63a3f1113d884d30f76eea7a6",
+      "bytes": 29676,
+      "originalBytesEqual": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "sha": "5c3fcf719bdc2264190e3cd16e6b323119e06f24",
+      "bytes": 31029,
+      "originalBytesEqual": true
+    }
+  ]
+}
