@@ -23,7 +23,7 @@ O transporte/UI consome os adapters originais de #681/#683; não define CRUD, at
 
 Leituras usam os readers originais `/<mount>/api/ui/pages/CAP14|CAP04|CAP05` e o selector `x-sf-team-profile`; comandos usam `/<mount>/teams/<id>/dashboard`, incluindo fixedQuery e body originais. A fonte é validada pelo schema original, e owner/principal/revisões são comparados com F02 atual antes e depois do I/O.
 
-**Dependência concreta do cenário source:** as duas suítes Budget exigem o destino autorizado CAP03 e o clique original “View source” para `/orchestra/sf-dashboard/budget`, mantendo Team e year=2026. O bridge inicial de três CAPs não entregava CAP03. O cenário foi preservado e falha fechado enquanto a composição do candidato não entregar esse destino. Um link fabricado, um fallback projectId ou a exclusão do caso não resolvem a obrigação.
+**Percurso source preservado:** as duas suítes Budget exigem o destino autorizado CAP03 e o clique original “View source” para `/orchestra/sf-dashboard/budget`, mantendo Team e year=2026. O reader original somente de leitura, o transporte, o retorno OIDC e a rota/porta de período foram integrados por #693/#691. CAP03 conserva year/month opcionais no contrato original, sem ações de mutação nativas; os cenários source continuam usando year=2026. A inclusão desses componentes no candidato e seu funcionamento no tar instalado ainda devem ser comprovados. O registro só aceita o link produzido pela folha e admitido por F01/F02 atuais.
 
 ### Compatibilidade da apresentação original
 
@@ -39,10 +39,11 @@ O plano original `sf-g08-private-plan-v1`, o recibo de pacote e o observador ori
 
 As variáveis SF_G08 de pin/invocação exigidas pelo plano e as SF_NATIVE abaixo devem derivar da mesma invocação observada:
 
+- `SF_G08_PRIVATE_ROOT`: raiz absoluta privada da invocação, igual a `scratchRoot` do plano.
 - `SF_NATIVE_CANDIDATE_SHA`: C do plano, igual ao checkout efetivo.
 - `SF_NATIVE_INVOCATION_ID`: nonce32hex da invocação.
-- `SF_NATIVE_INSTALLED_MANIFEST`: arquivo privado produzido pelo registro.
-- `SF_NATIVE_BROWSER_ENDPOINT_FILE`: descriptor CDP loopback privado, do host autorizado.
+- `SF_NATIVE_INSTALLED_MANIFEST`: exatamente `<raiz>/native-installed-manifest.json`, produzido pelo registro.
+- `SF_NATIVE_BROWSER_ENDPOINT_FILE`: arquivo de texto privado diretamente sob essa raiz, contendo o endpoint CDP loopback do browser existente no host autorizado; a integração #698 usa `<raiz>/browser-endpoint.txt`.
 - `SF_NATIVE_PRIVATE_REPORT`: exatamente `<raiz>/native-playwright.json`.
 - U15: as cinco URLs retornadas por `u15RegisteredEnvironment`, passadas no ambiente privado antes da importação da suíte.
 
@@ -50,19 +51,39 @@ As variáveis SF_G08 de pin/invocação exigidas pelo plano e as SF_NATIVE abaix
 
 ## Registro e seleção por caso
 
-`registerInstalledProofFromHost` é uma função de host, não uma CLI que aceite “PASS”. Seu adapter `ApprovedInstalledHost` deve oferecer o registro original de conexão aprovada, páginas dos quatro contextos existentes, resultado original F01 e um ID atualmente observado no produtor/UI. O consumidor confere esses resultados com a UI real, o resolver original, F02, principal, disponibilidade e leitura independente. Sem esse adapter original e os contextos existentes, o registro é bloqueado. A interface não autoriza login ou dados sintéticos.
+A CLI concreta de #700 está em `execute-registration.ts`; o adapter original está em `packages/app-shell/e2e/sucafina/native/fixture/original-host-adapter.ts`, reexportado por `host-adapter.ts`. Executada na raiz do checkout admitido, ela aceita exatamente um grupo:
 
-O registro produz:
+```sh
+bun script/sf2h/proofs/installed/execute-registration.ts U15
+bun script/sf2h/proofs/installed/execute-registration.ts U39
+bun script/sf2h/proofs/installed/execute-registration.ts U40
+bun script/sf2h/proofs/installed/execute-registration.ts F04
+```
 
-1. `sf2h.native-installed-manifest.v2`, preservando o writer/reader v2 da Migração.
-2. `sf2h.native-context-observations.v2`, contextos F02 realmente observados, privados; o requester é usado somente como entrada histórica do negativo zero-network F04.
-3. `sf2h.native-selected-installation.v2`, com C, invocation completo, hash do manifest e todas as seleções.
+Essas linhas são invocações alternativas: cada grupo exige seu próprio plano, nonce e raiz privada. A CLI não carrega callbacks, módulos, shell ou credenciais de um arquivo. `createOriginalInstalledHost` relê plano/G07/processo, anexa o cliente CDP ao browser existente e observa os quatro principais Microsoft em contextos distintos. A conexão vem de `SfTrustedInstallationSource.current`, pela descoberta original `/api/sucafina/installations?select=current&contractRevision=sf-team-profile/1`, com descriptor fechado, peer HTTPS da reserva e F02 antes/depois. Isso observa a instalação atual aprovada; não simula o registro geral de `ServerProvider`.
+
+Para U15/U39/U40, `registerInstalledProofFromHost` usa esse adapter. O destino deve existir como âncora real da navegação Team; o clique, a URL atual, o resolver F01, o principal e as permissões são relidos. Quando há referência de registro, o ID/CAS deve aparecer na projeção original e na linha da UI. Em CAP14, o Edit original navega pelo `buildHref` da folha e o registro exige o editor real dessa referência. O adapter não fabrica uma URL de registro a partir de um ID fornecido pelo plano.
+
+A CLI publica arquivos privados exclusivos:
+
+| Arquivo | Contrato e finalidade |
+| --- | --- |
+| `native-installed-manifest.json` | `sf-g08-native-installed-v1`, com C/invocation e as fronteiras efetivamente usadas por G08. |
+| `native-context-observations.json` | `sf-g08-native-context-observations-v1`, F02 dos contextos realmente observados. |
+| `native-installed-u15.json`, `native-installed-u39.json` ou `native-installed-u40.json` | `sf2h.native-selected-installation.v2`, somente para a suíte solicitada, com todas as seleções e o hash do manifesto. |
+| `native-runner-environment.json` | Somente U15: as cinco URLs retornadas pelo produtor original `u15RegisteredEnvironment`. |
+| `native-registration-observations.json` | Descoberta, F01 e stamps observados; permanece privado. |
+| `native-registration.json` | `sf-g08-native-registration-v1`, estado `REGISTERED_ONLY_NOT_EXECUTED`, hashes e cleanup do registro. |
+
+O contrato G08 é aditivo e não contém `wrongServer`, negativa que essas 50 jornadas e F04 não exercitam. O `manifest-contract.ts` histórico da Migração permanece byte-idêntico e seu v2 continua exigindo todas as fronteiras originais, inclusive servidor estrangeiro. `validateInstalledNativeManifest` escolhe explicitamente entre os schemas; um v2 incompleto nunca é reinterpretado como G08. `readG08NativeManifest` conserva leitura privada canônica, nonce/C/run e rejeição de aliases/duplicatas.
 
 A invocation inclui treeSha, runId, runAttempt, role, invocationId e archiveSha256. Cada seleção inclui caso, ator, target completo, URL/route F01 original, principal observador, intenção, stamp F02 e ref/CAS original. Valores serializados não substituem as leituras atuais. `consumeInstalledSuiteFromHost` e a fixture repetem F01/F02/source para cada escolha.
 
+F04 usa role `teams` e prepara somente manifesto/observações de contexto, sem seleções nativas. O cliente CDP é desconectado antes do processo Bun/HappyDOM separado. Nos demais grupos, as páginas próprias também são fechadas; os contextos e páginas anteriores são preservados. A CLI relê processo/plano/pacote após o cleanup e só então publica o recibo. Esse recibo mantém `installed`, `liveQualified`, `g08Closed`, `finalCandidate` e `productionCutover` em false: não comprova o corpo de qualquer jornada nem substitui o exit real, o host-after ou a proveniência independente.
+
 ### Planos por invocação e principais distintos
 
-O plano das nove obrigações Teams conserva seus quatro atores e o administrador sem Team. Ele não é reutilizado implicitamente para todas as jornadas. Cada U15/U39/U40 tem um plano e uma invocation próprios, vinculados à mesma reserva autorizada, C/T, tar e VM, com `approvals.actorsReference` explícito para os principais daquela invocação. O manifesto v2 continua com as quatro chaves originais e seus valores devem ser idênticos ao plano, além de observados em quatro contextos Microsoft originais distintos.
+O plano das nove obrigações Teams conserva seus quatro atores e o administrador sem Team. Ele não é reutilizado implicitamente para todas as jornadas. Cada U15/U39/U40 tem um plano e uma invocation próprios, vinculados à mesma reserva autorizada, C/T, tar e VM, com `approvals.actorsReference` explícito para os principais daquela invocação. O manifesto G08 conserva as quatro chaves de atores originais; seus valores devem ser idênticos ao plano e observados em quatro contextos Microsoft originais distintos. O reader histórico v2 permanece separado e estrito.
 
 U39/U40 exigem dois editores reais, um principal readonly e um principal negado. A revogação exige também autorização administrativa original. Uma composição possível, que o registro só aceita após observá-la, é requester e holder como editores, denied sem leitura e dashboardAdmin como administrador com leitura empresarial sem ações de mutação. O nome de qualquer chave não concede esses papéis. A autorização administrativa e a empresarial são verificadas separadamente. Se os quatro contextos autorizados não satisfizerem essa combinação, o registro falha; não cria um quinto ator, não troca um principal por metadata e não reutiliza o admin sem Team do grupo nove como readonly.
 
@@ -86,7 +107,18 @@ O cleanup registra somente páginas próprias e mudanças dos callbacks. Os caso
 
 ## Comandos originais após admissão
 
-Executar cada suíte separadamente, dentro de `packages/app-shell`, com o ambiente privado já registrado. A raiz do relatório deve ser 0700 e o shell deve usar umask 077.
+A integração operacional #698 foi incorporada em dev, merge `b7776698e61934ed2cb820658408ff8a8207ec62`. No checkout do candidato admitido, o ponto de entrada do grupo é, na raiz do repositório:
+
+```sh
+bash script/sf-ci/g08-installed-run.sh U15
+bash script/sf-ci/g08-installed-run.sh U39
+bash script/sf-ci/g08-installed-run.sh U40
+bash script/sf-ci/g08-installed-run.sh F04
+```
+
+Cada linha usa a raiz e o plano próprios daquela invocação; não executar todos os grupos sobre os mesmos arquivos. O wrapper executa host-before antes do registro, observa o exit real da CLI, mantém stdout/stderr privados e executa host-after no finalizador, inclusive quando o registro ou a suíte falham. Para U15, rederiva as cinco URLs da seleção original para o ambiente do subprocesso; na inspeção posterior, analisa `native-runner-environment.json` e o confere por `validateU15RegisteredEnvironment`, baseado em `u15RegisteredEnvironment`. Não usa `source` ou `eval`. O manifesto usa a entry da suíte derivada por `nativeJourneyEntryHref`, enquanto o plano conserva sua entrada sf-home/context; os demais bindings de owner/instalação/host permanecem iguais.
+
+Os comandos abaixo documentam os subprocessos originais da execução. Eles não substituem o wrapper nem a coleta de proveniência. Cada suíte roda separadamente, dentro de `packages/app-shell`, com o ambiente privado já registrado. A raiz do relatório deve ser 0700 e o shell deve usar umask 077.
 
 ```sh
 bunx --no-install playwright test --config e2e/playwright.production.config.ts e2e/sucafina/native/journeys/u15.spec.ts --workers=1 --retries=0 --repeat-each=1 --reporter=json
@@ -119,7 +151,7 @@ bun script/sf-ci/g08-native-journeys.mjs record-f04 "$SF_G08_PRIVATE_ROOT"
 
 `sf2h.native-report-observation.v2` vincula o relatório original, todos os casos, owner/caso, arquivo de detach, hash do pacote/host/reserva e a mesma invocation. `sf2h.f04-report-observation.v2` exige os três títulos/arquivo originais, propriedades Bun de C/run, exit code 0 e um único Omni fresco. Ambos mantêm **installed=false, liveQualified=false, g08Closed=false, finalCandidate=false**: um parser e arquivos de entrada não estabelecem a proveniência do job/artefato nem a cadeia LIVE.
 
-O agregador final deve conferir a execução original do workflow/job, SHA/árvore, artefato bruto privado e hashes, serviço antes/depois, tar, reserva e cleanup do dataset. Deve rejeitar missing/extra/skip/retry e composições de C/T/tar diferentes. Esta entrega não altera `gate.mjs`, não inventa o modo normativo nele ainda ausente e não emite aprovação final. O coordenador integra esse contrato à cadeia original antes de aceitar LIVE.
+A integração #698 confere a execução original do workflow/job, SHA/árvore, artefatos e hashes, serviço antes/depois, tar, reserva e cleanup do dataset, usando a proveniência independente da #701. O recibo do grupo também vincula `native-registration.json`, as observações e o exit real da CLI. Missing/extra/skip/retry e composições de C/T/tar/reserva/VM diferentes são recusados. A agregação ocorre em invocação posterior, após os produtores originais concluídos; o registro ou seu hash isolado não são prova LIVE. Esta rota não altera `gate.mjs` nem inventa um modo normativo nele.
 
 As nove obrigações Teams, as três jornadas, F04 e AZ02 continuam separadas. AZ02 preserva seus 32 casos históricos e os cinco aditivos da composição moderna, 37 no total; não é uma quinta suíte Playwright. A reunião desses grupos não fecha por si G01–G10 nem decide go/no-go.
 
@@ -127,4 +159,7 @@ As nove obrigações Teams, as três jornadas, F04 e AZ02 continuam separadas. A
 
 `.github/workflows/g08-native-journeys.yml` executa somente controles de metadata, arquivos privados, recusa de recibos, typecheck e listagem inerte. Seu recibo `sf-g08-native-controls-v1` fixa source C/T, run/tentativa/workflow, hashes de fontes/logs/inventário, controles Node/Bun, Omni e baseline origin/dev. Os 50 casos ficam LISTED_NOT_RUN e F04 fica NOT_RUN. Não há tenant, sessão ou host instalado nesse job.
 
-Antes de execução instalada ainda faltam candidato final confirmado por Migração+Release, tar verificado desse SHA, reserva/host/contextos originais, adapter original de registro, CAP03 na composição, pré-requisitos reais por caso e a integração do agregador. Nenhuma dessas dependências é preenchida com prova de candidato anterior ou aprovação presumida.
+A preparação de #700 acrescentou a CLI/adapter concretos, o schema G08 aditivo e a navegação original Edit CAP14. Seu focal Actions `45055263348`, fonte `9991d8bb4df736f6d4abcab195a4f4138d7c339c`, verificou 40 Node, 42 Bun, 21 DOM, tipos nativos/AppShell/Client e guards; os 50 casos continuaram LISTED_NOT_RUN e F04 NOT_RUN. O recibo `sf-g08-native-adapter-controls-v1` qualifica somente esses controles. A extração literal do contrato de tipo mantém a resolução de rota original; não é prova do ambiente instalado.
+
+Antes da execução instalada ainda são necessários o candidato final confirmado por Migração+Release, tar verificado desse SHA, reserva/host/contextos originais, pré-requisitos reais por caso e a execução completa pelo wrapper/agregador/proveniência já integrados. A CLI, CAP03, wrapper, agregador e proveniência já estão implementados e integrados; sua presença e funcionamento no candidato final/tar permanecem parte da admissão e da prova instalada. Nenhuma dessas dependências operacionais é preenchida com prova de candidato anterior ou aprovação presumida.
+
