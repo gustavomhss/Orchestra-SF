@@ -156,9 +156,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
 
         if (outcome === "ready") {
           await phase("analysis.ready", () => form.getByText("Analysis: ready.", { exact: true }).waitFor())
-          const result = page.locator("[data-analysis-history] article").filter({ hasText: "Analysis: ready" })
+          const result = page.locator(`[data-analysis-history] article[data-run-ref="${runRef}"]`)
           await phase("analysis.open-result", () => result.getByRole("button", { name: "Open result", exact: true }).click())
-          await phase("analysis.rendered", () => result.getByText("Forecast result supplied by the explicit UI fixture.", { exact: true }).waitFor())
+          await phase("analysis.rendered", () => result.locator("[data-analysis-body]").getByText("Forecast result supplied by the explicit UI fixture.", { exact: true }).waitFor())
           expect(requests.filter((entry) => entry.mode === "workbench-forecast" || ["start", "read", "output"].includes(String(entry.action))).map((entry) => entry.mode === "workbench-forecast" ? "prepare" : entry.action)).toEqual(["prepare", "start", "read", "output"])
           expect(requests.find((entry) => entry.action === "start")?.payload).toEqual({ action: "start", input: { request: fixture.request, skillInput, model: fixture.model } })
           expect(requests.find((entry) => entry.action === "read")?.payload).toEqual({ action: "read", runRef })
@@ -166,9 +166,9 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
           expect(await phase("analysis.cancel-hidden", () => form.locator("[data-analysis-cancel]").isVisible())).toBe(false)
         }
         if (outcome === "rejected") {
-          await phase("analysis.rejected", () => form.getByText("Analysis could not be prepared. Check the sources and period, then try again.", { exact: true }).waitFor())
+          await phase("analysis.rejected", () => form.getByText("The analysis request was rejected. Review the sources and current decision before retrying.", { exact: true }).waitFor())
           expect(requests.filter((entry) => ["start", "read", "output"].includes(String(entry.action)))).toHaveLength(0)
-          expect(await phase("analysis.no-output", () => page.getByText("Forecast result supplied by the explicit UI fixture.", { exact: true }).count())).toBe(0)
+          expect(await phase("analysis.no-output", () => page.locator("[data-analysis-body]").count())).toBe(0)
         }
         expect(requests.filter((entry) => entry.mode === "workbench-forecast").map((entry) => entry.payload)).toEqual([{
           caseRef: fixture.caseRef, baseRef: fixture.sources[0]!.refId, candidateRef: fixture.sources[1]!.refId,
