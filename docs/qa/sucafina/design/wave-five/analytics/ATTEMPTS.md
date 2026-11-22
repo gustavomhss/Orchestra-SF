@@ -80,3 +80,48 @@ The BI result capture shows the source's partial-coverage header, but its plot a
 | [UI46 rejected unencoded route](attempt-02/UI46-invalid-unencoded-route.jpg) | Original invalid-link state | Test route corrected with original codec |
 
 The next attempt must retain exact native context stamp checks, source-issued identities, original readback comparisons and the unchanged operation assertions. Runtime qualification of UI43/UI44/UI46 remains outstanding after this attempt.
+
+## Attempt 3 — admitted operations, diagnostic lifetime and BI source identity
+
+- Source composition: `72884298af5b1f22fa060dfea1d021ed73a308bd`.
+- Test snapshot: `676a3d9eaf169fba8e6303525d239a08965dba06`; branch `ci-run-sf5analytics4`.
+- [Run 44981425097](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981425097), test job `137082540064`, attempt 1, no retries.
+- Existing production Playwright configuration and workflow; both strict omni control and production channel.
+- [Canonical artifact 14737943395](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44981425097/artifacts/14737943395): `playwright-ubuntu-24.04-1`, 25,207,682 bytes, SHA-256 `f5aed91c94608fd9d81ada17cc8f329175ad82643a1cfe74974e78786d23a74d`.
+- Result: both grouped journeys failed. The browser emitted no page/console errors. Twenty-two captures were produced; eleven selected captures were emitted as images, inspected and persisted here. The manifest distinguishes inspected images from other canonical artifact captures.
+
+### Proven original admission
+
+Three actual native `ctx.context` responses returned HTTP 200 / `ok` with the exact installation/project/host binding. Every one of the seven targeted portfolio operations was `ready` and `operational:true`. Campaign/results resources remained `partial` because unrelated reconciliation/preparation/promotion operations were genuinely unavailable; sensitivity was `ready`. These original states are preserved in the manifest. No resource or grant was fabricated.
+
+The original parameter-source read and real parameter promotion again returned 200 / `ok`. UI42 listed both authorized cases and reached the empty case with a present disabled Preview combinations action. Its existing history warning remained, so successful admission is not misreported as successful history read. Bounded native response-code diagnostics were added for the next attempt.
+
+The first grouped test then aborted because its diagnostic listener continued acquiring context response bodies after the required reports. A later navigation evicted a CDP body and an unhandled acquisition promise failed the test. The interrupted screenshot shows the original loading state; it does not establish a denied main case. The correction settles all acquisitions to data or an explicit failure, keeps strict owner/body assertions at the two required reports, and detaches that listener after the empty-case report.
+
+### Proven financial BI and observed source failure
+
+The canonical encoded UI46 route succeeded. An independent original BI01 read matched all thirty-six rendered row identities and chart evidence/known-missing states. Fourteen observations were numeric; twenty-two were missing. The source's unspecified currency remained unspecified. Every numeric value was checked against the original response.
+
+Dark/light desktop and 390px/320px plot/table captures completed. The named table region passed keyboard focus and outline assertions. The source action then produced no `bi-source` HTTP response and the test timed out. The original renderer passed only a reference ID; the catalog matched that ID across all observations and refused ambiguous matches. A repeated monthly source ID must retain its selected value ID and digest. The parent is correcting that exact native tuple boundary, preserving rejection of missing, duplicate or mismatched identity. The next test uses two genuinely published rows sharing a reference, when present, and checks each original request's value ID and reference digest separately.
+
+### Visual critique and corrections
+
+The financial plot has readable labels, bars and original values in both desktop themes. At narrow widths it retains the original 700px geometry inside a local horizontal scroller. A capture at the left edge contains dates but not the off-screen numeric labels. The next helper retains that view and adds a real rightward-scrolled capture; it does not resize or redraw the source chart.
+
+The table captures exposed two concrete problems. Centering an oversized table captured middle rows without headings; the next capture anchors at the original caption/thead. Generic anywhere-wrapping split short words such as “Confirmed” and “unspecified” within cells. The owned CSS now preserves whole words in financial/operational value, unit and evidence columns while retaining local table overflow and wrapped opaque references.
+
+| Inspected capture | Observed content | Qualification limit |
+| --- | --- | --- |
+| [UI42 empty case with admitted preview](attempt-03/UI42-empty-admitted-preview.jpg) | Disabled action, real empty candidates, retained history warning | History not yet proven |
+| [UI42 interrupted loading](attempt-03/UI42-interrupted-loading.jpg) | Loading after diagnostic acquisition failure | No result qualification |
+| [UI46 dark desktop plot](attempt-03/UI46-plot-dark-desktop.jpg) | Original monthly budget values and bars | Source navigation failed later |
+| [UI46 light desktop plot](attempt-03/UI46-plot-light-desktop.jpg) | Same original values | Source navigation failed later |
+| [UI46 dark 390px plot left edge](attempt-03/UI46-plot-left-dark-390.jpg) | Original date labels, local horizontal scroller | Numeric labels off-screen |
+| [UI46 light 320px plot left edge](attempt-03/UI46-plot-left-light-320.jpg) | Original date labels | Numeric labels off-screen |
+| [UI46 dark desktop middle table](attempt-03/UI46-table-middle-dark-desktop.jpg) | Known and missing actuals; source references | Heading outside viewport, short-word wrapping |
+| [UI46 light desktop middle table](attempt-03/UI46-table-middle-light-desktop.jpg) | Same source values | Same capture/wrapping issues |
+| [UI46 dark 390px middle table](attempt-03/UI46-table-middle-dark-390.jpg) | Genuine missing observations | Heading outside viewport |
+| [UI46 light 320px middle table](attempt-03/UI46-table-middle-light-320.jpg) | Genuine missing observations | Heading outside viewport |
+| [UI46 source action without request](attempt-03/UI46-source-action-no-request.jpg) | First original monthly source action invoked | Missing exact value binding |
+
+UI43, UI44, operational BI, Portuguese final states and completed source navigation remain unqualified after this attempt. The next production run must resolve the concrete failures and retain these receipts.
