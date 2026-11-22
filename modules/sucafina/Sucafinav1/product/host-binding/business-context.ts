@@ -25,6 +25,7 @@ import { isSfCapturedSourceBoundToCurrentAccess } from "./denied-read.ts"
 import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
 import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
+import { prepareSfCapturedContextIdentity } from "./captured-context-identity.ts"
 
 type CaptureSelection = Parameters<BusinessContextService["recall"]>[0]
 type CaptureObservation = {
@@ -572,7 +573,7 @@ export function createSfAtlasBusiness(input: {
       binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
       selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
       return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
-    const sourceIdentity = digestSfValue(sources)
+    const sameSources = prepareSfCapturedContextIdentity(sources)
     if (request) captureObservations.set(sources, { call, read: async (requested) => {
       const selected = structuredClone(requested)
       const selectionIdentity = digestSfValue(selected)
@@ -585,7 +586,7 @@ export function createSfAtlasBusiness(input: {
         binding === digestSfValue([call.kind, call.binding]) &&
         headers === digestSfValue([...request.headers.entries()]) &&
         selectionIdentity === digestSfValue(requested) && selectionIdentity === digestSfValue(selected) &&
-        sourceIdentity === digestSfValue(sources) &&
+        sameSources(sources) &&
         snapshotIdentity === digestSfValue(input.host.persistence.currentSnapshots?.()) &&
         extras.every((extra) => extra.identity === digestSfValue(extra.values)) &&
         captures.every((capture) => capture.identity === digestSfValue(capture.value))
