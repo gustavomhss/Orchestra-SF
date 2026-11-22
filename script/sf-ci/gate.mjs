@@ -237,7 +237,23 @@ export function selectSuiteFiles(manifest, suiteId, repoRoot = process.cwd()) {
   }
   const accepted = files.filter((name) => !excluded.includes(name)).sort()
   if (accepted.length === 0 || new Set(accepted).size !== accepted.length) fail("empty/duplicate suite selection: " + suiteId)
+  const additional = additionalCoverageFiles(suite)
+  if (additional && (additional.some((file) => !accepted.includes(file)) ||
+      sha256Lines(accepted.filter((file) => !additional.includes(file))) !== suite.coverageBaseline.filesSha256)) {
+    fail("selection omitted or changed a historical or additional browser file: " + suiteId)
+  }
   return accepted
+}
+
+function additionalCoverageFiles(suite) {
+  const files = suite.coverageBaseline?.additionalFiles
+  if (files === undefined) return undefined
+  if (suite.id !== "CI-APP-BROWSER" || suite.kind !== "bun" ||
+      !Array.isArray(files) || !files.length || new Set(files).size !== files.length ||
+      files.some((file) => typeof file !== "string" || !/^test-browser\/sucafina-native\/[\w/-]+\.test\.ts$/.test(file))) {
+    fail("invalid additional browser coverage files: " + suite.id)
+  }
+  return files
 }
 /** Converts summary to a stable multiset of case identities; duplicate parametrized titles stay counted. */
 function bunCaseKeys(raw) {
@@ -256,7 +272,9 @@ function bunCaseKeys(raw) {
   return cases
 }
 export function bunCoverageIdentity(raw) {
-  const cases = bunCaseKeys(raw)
+  return bunCoverageFromKeys(bunCaseKeys(raw))
+}
+function bunCoverageFromKeys(cases) {
   const files = [...new Set(cases.map((name) => name.split("\0", 1)[0]))].sort()
   return { cases: cases.length, files, fileCount: files.length,
     casesSha256: sha256Lines(cases), filesSha256: sha256Lines(files) }
@@ -309,8 +327,13 @@ export function checkCoverageBaseline(suite, coverage) {
       !Number.isSafeInteger(baseline.minimumFiles) || baseline.minimumFiles < 1) {
     fail("malformed coverage baseline: " + suite.id)
   }
-  if (coverage.cases < baseline.minimumCases || coverage.fileCount < baseline.minimumFiles ||
-      coverage.filesSha256 !== baseline.filesSha256 || coverage.casesSha256 !== baseline.casesSha256) {
+  const additional = additionalCoverageFiles(suite)
+  if (additional?.some((file) => !coverage.files.includes(file)) || (additional && !coverage.historical)) {
+    fail("additional browser coverage was not executed: " + suite.id)
+  }
+  const historical = additional ? coverage.historical : coverage
+  if (historical.cases < baseline.minimumCases || historical.fileCount < baseline.minimumFiles ||
+      historical.filesSha256 !== baseline.filesSha256 || historical.casesSha256 !== baseline.casesSha256) {
     fail("missing/changed baseline case or file inventory: " + suite.id)
   }
   return coverage
@@ -380,6 +403,7 @@ export function validateManifest(manifest) {
         !["HISTORIC_SUCCESSFUL_ARTIFACT", "PENDING_REAL_COMPLETE_RUN"].includes(suite.coverageBaseline?.status)) {
       fail("unversioned coverage baseline state: " + suite.id)
     }
+    additionalCoverageFiles(suite)
   }
   if (JSON.stringify(manifest.separateReleaseProofs) !== JSON.stringify(PROOFS)) fail("AM proof inventory drift")
   return suites
@@ -457,9 +481,13 @@ export function minimalPlaywrightEvidence(raw, exactSpec) {
 
 function coverageForReport(bytes, suite) {
   const raw = bytes.toString("utf8")
-  return suite.kind === "bun"
-    ? bunCoverageIdentity(raw)
-    : playwrightCoverageIdentity(raw, suite.specFile)
+  if (suite.kind === "playwright") return playwrightCoverageIdentity(raw, suite.specFile)
+  const cases = bunCaseKeys(raw)
+  const coverage = bunCoverageFromKeys(cases)
+  const additional = additionalCoverageFiles(suite)
+  if (!additional) return coverage
+  const historical = bunCoverageFromKeys(cases.filter((key) => !additional.includes(key.split("\0", 1)[0])))
+  return { ...coverage, historical }
 }
 
 export function checkReceipt(receipt, suite, meta, reportBytes, selectedFiles, options = {}) {

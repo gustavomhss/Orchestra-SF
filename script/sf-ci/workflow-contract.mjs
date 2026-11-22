@@ -13,8 +13,8 @@ import { SHARDED, validateManifest } from "./gate.mjs"
 //   and the real GITHUB_SHA/RUN_ID/RUN_ATTEMPT. stdout is newline-delimited,
 //   sorted, checkout-validated paths relative to each suite.directory;
 //   releaseOnlyFiles are excluded by the selector (not by YAML).
-// * Every Bun case must execute bun test ... "${files[@]}" without file globs,
-//   hardcoded file paths, path-ignore filters, extra selectors or bypasses.
+// * Every Bun case must consume the entire selector array. App Browser adds
+//   "./" to each path because it sits outside Bun's configured test root.
 // * UI must run: bun run test:e2e:local "${files[0]}" ... (no matrix.spec).
 // This checks *binding* to the authoritative selector, not a literal example
 // test command or shell execution; GitHub Actions must prove actual execution.
@@ -146,7 +146,8 @@ export function assertWorkflowManifestSelection(workflow, manifest) {
     const body = arms.get(suite.id)
     const flat = body.replace(/\\\n\s*/g, " ")
     const commands = flat.split("\n").filter((line) => /\bbun test\b/.test(line))
-    requireContract(commands.length === 1 && /"\$\{files\[@\]\}"/.test(commands[0]),
+    const selectedArg = suite.id === "CI-APP-BROWSER" ? '"${files[@]/#/./}"' : '"${files[@]}"'
+    requireContract(commands.length === 1 && commands[0].includes(selectedArg),
       `${suite.id}: Bun must consume all files from selector as argv, exactly once`)
     if (suite.id === "CI-APP-BROWSER") {
       requireContract(/(?:^|\s)--bail=5(?:\s|$)/.test(commands[0]), "CI-APP-BROWSER: --bail=5 lost")

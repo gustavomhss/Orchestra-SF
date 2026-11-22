@@ -5,7 +5,7 @@ import { createHash } from "node:crypto"
 import { readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, sha256Lines, selectSuiteFiles } from "./gate.mjs"
+import { SHARDED, shardFiles, browserPoolConsumers, countBunReport, countPlaywrightReport, minimalPlaywrightEvidence, verifyAll, REQUIRED, validateManifest, requiredSelection, requirePrerequisites, releaseOnlySelection, bunCoverageIdentity, playwrightCoverageIdentity, checkCoverageBaseline, checkReceipt, sha256Lines, selectSuiteFiles } from "./gate.mjs"
 
 const report = Buffer.from(JSON.stringify({ status: "PASS",
   counts: { tests: 2, product_executed: 2, failures: 0, errors: 0, skipped: 0 },
@@ -291,7 +291,7 @@ function manifestWiredWorkflowFixture(actualManifest) {
   const arms = single.map((suite) => [
     `              ${suite.id})`,
     `                cd "$root/${suite.directory}"`,
-    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${'${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
+    `                bun test ${suite.id === "CI-APP-BROWSER" ? "--conditions=browser" : "--timeout 30000"} --bail=5 "${suite.id === "CI-APP-BROWSER" ? '${files[@]/#/./}' : '${files[@]}'}" --reporter=junit "--reporter-outfile=$evidence/report.xml"`,
     "                ;;",
   ].join("\n")).join("\n")
   const selected = [
@@ -353,7 +353,7 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
   const hardcodeInBrowser = (value) => {
     const at = good.indexOf("              CI-APP-BROWSER)")
     assert.ok(at > 0, "fixture browser arm exists")
-    return good.slice(0, at) + good.slice(at).replace('"${files[@]}"', value)
+    return good.slice(0, at) + good.slice(at).replace('"${files[@]/#/./}"', value)
   }
   const failCases = [
     ["missing Bun selector", good.replace(selector, "echo omitted-bun-selector")],
@@ -363,9 +363,10 @@ test("manifest-to-YAML negative mutations refuse missing selector, missing suite
     ["missing CI-APP-BROWSER matrix ID", good.replace(", CI-APP-BROWSER", "")],
     ["missing CI-UI-DECISIONS manifest suite", good.replace("          - id: CI-UI-DECISIONS\n", "")],
     ["missing browser dispatch arm", good.replace(/\n {14}CI-APP-BROWSER\)[\s\S]*?\n {16};;/, "")],
+    ["browser filters omit files outside Bun's test root", hardcodeInBrowser('"${files[@]}"')],
     ["browser hardcoded directory", hardcodeInBrowser('"./test-browser/sucafina-native"')],
     ["browser hardcoded file", hardcodeInBrowser('"test-browser/sucafina-native/transport-contract.test.ts"')],
-    ["hardcoded file appended to selected array", hardcodeInBrowser('"${files[@]}" "test-browser/sucafina-native/one.test.ts"')],
+    ["hardcoded file appended to selected array", hardcodeInBrowser('"${files[@]/#/./}" "test-browser/sucafina-native/one.test.ts"')],
     ["hardcoded selection overrides mapfile", good.replace('mapfile -t files < "$evidence/selection.txt"', 'mapfile -t files < "$evidence/selection.txt"\n          files=("test/fake.test.ts")')],
     ["hardcoded Playwright spec", good.replace('"${files[0]}"', '"e2e/sucafina/operations.spec.ts"')],
     ["UI matrix.spec drift", good.replace("          - id: CI-UI-REPORTS", "          - id: CI-UI-REPORTS\n            spec: e2e/sucafina/reports.spec.ts")],
@@ -482,6 +483,25 @@ test("M4 authentic baseline cannot silently shrink into one test", () => {
   const digest = createHash("sha256").update(JSON.stringify(data.manifest)).digest("hex")
   for (const receipt of Object.values(data.receipts)) receipt.manifestSha256 = digest
   assert.throws(() => verifyAll(data), /missing\/changed baseline case or file/)
+})
+test("an additional browser file executes alongside the unchanged historical case inventory", () => {
+  const original = "test-browser/sucafina-native/transport-contract.test.ts"
+  const added = "test-browser/sucafina-native/confirm-quote.test.ts"
+  const suite = structuredClone(manifest.suites.find((entry) => entry.id === "CI-APP-BROWSER"))
+  const historical = bunCoverageIdentity(bunReport([original]).toString("utf8"))
+  Object.assign(suite.coverageBaseline, {
+    minimumCases: historical.cases, minimumFiles: historical.fileCount,
+    casesSha256: historical.casesSha256, filesSha256: historical.filesSha256, additionalFiles: [added],
+  })
+  const selected = [original, added]
+  const meta = { sha, runId, attempt, treeSha, manifestSha256: receiptFor(suite, report, []).manifestSha256 }
+  const verify = (bytes) => checkReceipt(receiptFor(suite, bytes, selected), suite, meta, bytes, selected)
+  assert.equal(verify(bunReport(selected)), 2)
+  assert.throws(() => verify(bunReport([original])), /additional browser coverage was not executed/)
+  assert.throws(() => verify(bunReport([added])), /missing\/changed baseline case or file/)
+  const changed = JSON.parse(bunReport(selected).toString("utf8"))
+  changed.cases[0].name = "a different historical case"
+  assert.throws(() => verify(Buffer.from(JSON.stringify(changed))), /missing\/changed baseline case or file/)
 })
 test("M4 missing baseline remains BLOCKED rather than passing with one test", () => {
   const data = fixture()
