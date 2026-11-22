@@ -2611,62 +2611,70 @@
     }
   },
   "latestFocal": {
-    "runId": "45045269481",
+    "runId": "45048445274",
     "attempt": 1,
-    "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
-    "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
-    "driverSha": "79cab55a4ab127036a2d1fe1b955bb77e461735e",
-    "driverTreeSha": "c2594e1734bd4d3502b9a1aef5f13646a429cd14",
+    "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+    "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+    "driverSha": "4697cee1502907bbcc5408e3a96c68b166fa103f",
+    "driverTreeSha": "2289d06b03c374bd3de46bcd2e54253eb60a407c",
     "allSixJobsReceived": true,
     "jobs": [
       {
-        "jobId": 137278400517,
+        "jobId": 137288068223,
         "name": "CI-SF-shard-4",
         "status": "PASS",
-        "passed": 80,
+        "passed": 97,
         "failed": 0,
-        "files": 12,
-        "omniSpawns": 1,
+        "files": 13,
+        "expectCalls": 1029,
+        "omniDeclared": 2,
+        "omniSpawns": 4,
         "delegated": 0
       },
       {
-        "jobId": 137278400691,
+        "jobId": 137288068208,
         "name": "CI-SF-shard-5",
         "status": "PASS",
-        "passed": 64,
+        "passed": 156,
         "failed": 0,
         "files": 13,
+        "expectCalls": 1567,
+        "omniDeclared": 2,
         "omniSpawns": 2,
         "delegated": 0
       },
       {
-        "jobId": 137278400696,
+        "jobId": 137288068324,
         "name": "CI-SF-shard-8",
         "status": "PASS",
-        "passed": 98,
+        "passed": 140,
         "failed": 0,
         "files": 13,
-        "omniSpawns": 9,
+        "expectCalls": 934,
+        "omniDeclared": 2,
+        "omniSpawns": 2,
         "delegated": 0
       },
       {
-        "jobId": 137278400770,
+        "jobId": 137288068187,
         "name": "CI-UI-DECISIONS",
         "status": "FAIL",
         "passed": 3,
         "failed": 2,
         "skipped": 0,
         "flaky": 0,
-        "failure": "Planner first save received200 but Network.getResponseBody was unavailable after click. Requisition creation received200 without new identity and remained in the explicit refresh-to-list state."
+        "durationMs": 164946.65,
+        "failure": "Planner first save/year2027 progressed, then the helper addressed the Name editor while the real UI displayed Monthly plan. Procurement creation/refresh progressed, then openRequisition addressed a cell in the hidden list while the real detail was visible."
       },
       {
-        "jobId": 137278400773,
+        "jobId": 137288068062,
         "name": "CI-UI-OPERATIONS",
         "status": "FAIL",
         "passed": 3,
         "failed": 2,
         "skipped": 0,
         "flaky": 0,
+        "durationMs": 328394.292,
         "passedCases": [
           "OP-PROC-01",
           "OP-IMPORT-01",
@@ -2676,160 +2684,188 @@
           "OP-PROC-02",
           "OP-PROC-03"
         ],
-        "failure": "OP02 progressed beyond readback, then submit_sourcing403 request_invalid after read projection omitted qty/unitPrice. OP03 progressed beyond exactCAS and fx-missing to an obsolete secondary ranking message expectation."
+        "failure": "Both failed in queueIdentity decoding the original CAP25 GET200: Chromium Network.getResponseBody reported No data found. OP02 reached submit_sourcing200 and frozen/current FX checks; OP03 reached select_quote200/CAS/history but not the later submit_sourcing422 refusal."
       },
       {
-        "jobId": 137278400731,
+        "jobId": 137288068302,
         "name": "G04-ORDERED-BROWSER-POOL",
-        "status": "PASS",
-        "passed": 209,
-        "failed": 0,
+        "status": "FAIL",
+        "passedBodies": 208,
+        "failedBodies": 1,
+        "failedClosingHooks": 1,
+        "bunTests": 210,
+        "bunFailed": 2,
+        "expectCalls": 3202,
         "originalSourceCount": 40,
+        "declaredCases": 209,
         "proofClass": "COMPONENT_BROWSER_REGRESSION",
         "installedTeamsProof": false,
+        "omniDeclared": 1,
         "omniSpawns": 1,
         "delegated": 0,
-        "acquisitions": 48,
-        "releases": 48,
-        "caseIdentitySha256": "92c1a25c5213640d873ac5d95ede31a4c3208dd6c2b3cf1ce05ad62596d8b99d"
+        "positiveReceiptPresent": false,
+        "failure": "The 401 question revocation body cleared controls/context but its held recipient-response event did not arrive in the original5000ms. The403 variant passed. Final lifecycle closed successfully; the registry rejected an incomplete209-body run."
       }
     ],
     "artifacts": [
       {
-        "id": 14763032937,
-        "name": "sf-evidence-CI-SF-shard-4",
-        "zipSha256": "3bce73aa8b7ee2eda33a06ead3f4a1f4b3eb465eddd226505d40614a8ed7dcbb"
-      },
-      {
-        "id": 14762963250,
-        "name": "sf-candidate-CI-SF-shard-5",
-        "zipSha256": "4f577edf94f8c1d3ec5b3d52f4bfe4fc247dc6cf751e33999fcc19bc5577f3ec"
-      },
-      {
-        "id": 14762803356,
-        "name": "sf-evidence-CI-SF-shard-5",
-        "zipSha256": "be1e5c8d43cbcbebdd7fd93b39af02ab8fa2229318eb0043a2eb400d5e6cd7c5"
-      },
-      {
-        "id": 14762414316,
-        "name": "sf-candidate-CI-SF-shard-4",
-        "zipSha256": "7623ec3ffdfc53514823b84fd2e746608f1edd83b5e493ede794dc2e5e9bcd34"
-      },
-      {
-        "id": 14763770480,
-        "name": "sf-candidate-CI-UI-DECISIONS",
-        "zipSha256": "9d23bafcf95cafba50aa1642a6433ff8ba05f69763f195b04d310497e2d555a9"
-      },
-      {
-        "id": 14763154641,
-        "name": "sf-ui-failure-CI-UI-DECISIONS",
-        "zipSha256": "bdcf96486d3f4198fc7fd17fa512831deae4e7212e0f926a23e69d1fffc4b08a"
-      },
-      {
-        "id": 14762649081,
-        "name": "sf-evidence-CI-SF-shard-8",
-        "zipSha256": "5099d87ac42c24b1ad96a5eb745a5e98e48605519b2f4dbbe7508d3ce023ffc6"
-      },
-      {
-        "id": 14762544282,
+        "id": 14764841128,
         "name": "sf-candidate-CI-SF-shard-8",
-        "zipSha256": "52dedf20ea6d4f260a6cb6bf23e1f519cf12088d170618fae9fd5c77f87af5c3"
+        "zipSha256": "d9efaa847ed1f5c12c3b8b388b14e344b740df7f0c636dd05016486858cb4dd7"
       },
       {
-        "id": 14763437364,
+        "id": 14764831214,
+        "name": "sf-evidence-CI-SF-shard-4",
+        "zipSha256": "6b54ea413bdc9932bf0da9bbdfabfc64116e92fa08d1a697189e9393aac85618"
+      },
+      {
+        "id": 14764647149,
+        "name": "sf-candidate-CI-SF-shard-4",
+        "zipSha256": "bd49098947a2556efc6fc7df697b120e6193e9f970ec9c119c02175adead95bc"
+      },
+      {
+        "id": 14764622095,
+        "name": "sf-evidence-CI-SF-shard-8",
+        "zipSha256": "bdbdb1b29b8f0d7c46d3bde9c08c3a5554b01de49f88582027d1311eb94d4b2d"
+      },
+      {
+        "id": 14764613301,
         "name": "teams-profile-evidence-G04",
-        "zipSha256": "8bc885eefc6f2e59f273c3e75914bba47389206cad32666336658e6fdd40d1df"
+        "zipSha256": "4f65ca8da900f0a25e59c93e1eaf7246e384591e33a9db94af36c34f2eb34be1"
       },
       {
-        "id": 14763706273,
+        "id": 14764532436,
         "name": "sf-candidate-CI-UI-OPERATIONS",
-        "zipSha256": "12724fb2145a29b4d5cfa14bcdfac3091b7cc0794a26a62ca4240203957df926"
+        "zipSha256": "bcfdd81c49febc1b5a33ebf4c11903ac713e3c694bdddb9b58797a404d6983e3"
       },
       {
-        "id": 14764065283,
+        "id": 14764153050,
+        "name": "sf-candidate-CI-SF-shard-5",
+        "zipSha256": "356b4d772d655596cdd0975743645eef4ef61d2a389e69e7fb1ab2633d67e2db"
+      },
+      {
+        "id": 14764063719,
+        "name": "sf-candidate-CI-UI-DECISIONS",
+        "zipSha256": "a3e75680e251ff97b0031ec87328ba83489f740afde38c010eab9b888bfc7cea"
+      },
+      {
+        "id": 14763789317,
+        "name": "sf-ui-failure-CI-UI-DECISIONS",
+        "zipSha256": "d88ec672855f77ca70267c6e4ab55d916e3597993e1dbcbaf9113039b6d84419"
+      },
+      {
+        "id": 14763763858,
+        "name": "sf-evidence-CI-SF-shard-5",
+        "zipSha256": "2c88ecde86cfdd0c7a63ab5c4aec962a6df878b457b35c464c56ed0707d448fa"
+      },
+      {
+        "id": 14763604972,
         "name": "sf-ui-failure-CI-UI-OPERATIONS",
-        "zipSha256": "e92ce1728d0a4316fd8ad6efc9efaa8187948288b45b5c8e771394c51e847177"
+        "zipSha256": "9d98b228bf6e1004bc4e8a19768b9d23adeecb5321d60252329adb6fc3b88c28"
       }
     ],
-    "receiptVerification": [
-      {
-        "artifactId": 14763032937,
-        "shard": 4,
-        "status": "PASS",
-        "count": 80,
-        "receiptSha256": "fdfe9c5824661ee77c3972fd1bcc1baccc3ffa0bbfe0b8948ff13ab18d5108f0",
-        "summarySha256": "091ec1f60ffd957e20af0e43f12c884768f1fd15e6a63c178ece1fd26ac11cb3"
-      },
-      {
-        "artifactId": 14762803356,
-        "shard": 5,
-        "status": "PASS",
-        "count": 64,
-        "receiptSha256": "6926afe052bbcd33dc93fa05a148e2dda25a1fad0ebedb0c0dbb6da81fabe960",
-        "summarySha256": "7939fbf6cf821b5e1fa18b98f525a410c673677eff0ea3cb9d642f9088f89a13"
-      },
-      {
-        "artifactId": 14762649081,
-        "shard": 8,
-        "status": "PASS",
-        "count": 98,
-        "receiptSha256": "86cbeb57a6b71f7f3455cece67a6a0a74946484a5ab6ff5f0206d19a6a819ebd",
-        "summarySha256": "1d42f5906a6b78a199dd3d4b1270c62895ca8cd3cdf19a7989c9fd99364bee62"
-      },
-      {
-        "artifactId": 14763770480,
-        "status": "FAIL",
-        "execution": {
-          "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
-          "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
-          "runId": "45045269481",
+    "receiptVerification": {
+      "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+      "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+      "runId": "45048445274",
+      "attempt": 1,
+      "allSixJobsReceived": true,
+      "artifactCount": 11,
+      "executions": [
+        {
+          "artifactId": 14764647149,
+          "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+          "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+          "runId": "45048445274",
+          "attempt": "1",
+          "shard": "4",
+          "exitCode": "0"
+        },
+        {
+          "artifactId": 14764153050,
+          "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+          "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+          "runId": "45048445274",
+          "attempt": "1",
+          "shard": "5",
+          "exitCode": "0"
+        },
+        {
+          "artifactId": 14764841128,
+          "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+          "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+          "runId": "45048445274",
+          "attempt": "1",
+          "shard": "8",
+          "exitCode": "0"
+        },
+        {
+          "artifactId": 14764063719,
+          "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+          "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+          "runId": "45048445274",
           "attempt": "1",
           "exitCode": "1"
         },
-        "stats": {
-          "startTime": "2026-11-22T16:43:06.214Z",
-          "duration": 154919.697,
-          "expected": 3,
-          "skipped": 0,
-          "unexpected": 2,
-          "flaky": 0
-        },
-        "reportSha256": "133adb18ee13d66375bbff59e35f0918190c2245b7da0f01f98f9e791a2cb77b"
-      },
-      {
-        "artifactId": 14763706273,
-        "status": "FAIL",
-        "execution": {
-          "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
-          "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
-          "runId": "45045269481",
+        {
+          "artifactId": 14764532436,
+          "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+          "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+          "runId": "45048445274",
           "attempt": "1",
           "exitCode": "1"
+        }
+      ],
+      "positiveReceipts": [
+        {
+          "artifactId": 14764831214,
+          "shard": 4,
+          "count": 97,
+          "files": 13,
+          "receiptSha256": "327b02c27a0df3d3e2868ea2fe940c3f7ed344cc1e9ef4d872504b373cb8c10f",
+          "summarySha256": "575c8d07121019ce244d627818017a67476a3ae6be7e8c163d5341a0fbf9191f"
         },
-        "stats": {
-          "startTime": "2026-11-22T16:43:55.793Z",
-          "duration": 304678.788,
-          "expected": 3,
-          "skipped": 0,
-          "unexpected": 2,
-          "flaky": 0
+        {
+          "artifactId": 14763763858,
+          "shard": 5,
+          "count": 156,
+          "files": 13,
+          "receiptSha256": "be257dadac9854f016174d0f7c8b087276b0ec756347666c9a1e0d7d802ce768",
+          "summarySha256": "76a0b1deeded16e79026d6f5a89133f89cf029e2ad3c7c103657f37ceb66d18a"
         },
-        "reportSha256": "f44633e95a5d43191549e6813294eeabd70d5d619678acb2408c8ecbf44a03f6"
-      },
-      {
-        "artifactId": 14763437364,
-        "status": "PASS",
-        "count": 209,
-        "originalSources": 40,
-        "receiptSha256": "78b06e70eb340a3909281743c450e77c1e3cbacd64a8c95802b43731ceb87542",
-        "caseIdentitySha256": "92c1a25c5213640d873ac5d95ede31a4c3208dd6c2b3cf1ce05ad62596d8b99d",
-        "proofClass": "COMPONENT_BROWSER_REGRESSION",
-        "installedTeamsProof": false,
+        {
+          "artifactId": 14764622095,
+          "shard": 8,
+          "count": 140,
+          "files": 13,
+          "receiptSha256": "81626b9ec229afa2ae358d42751c7027ca92feb26d8acd392b075eabdbcd259c",
+          "summarySha256": "eb46a4dbe624d28583bee02ce93e53bad8c1c7163fe955c3dd6f0a39912ec1cc"
+        }
+      ],
+      "pool": {
+        "status": "FAIL",
+        "admissionSha256": "f4b7c94f7f4d8176a2db252f29860b092642a5cb0b075ee6923a7dd2b9e352bd",
+        "reportSha256": "fec0e8cd9473e1df4d2d4633763d4fd09bbf8e0b00bf2405af0f4858ec4ee873",
+        "summarySha256": "9201fa8befc33ffabc59e9253e70524fb50a9bb1c2c4b0cf4cb90a1baaee8527",
+        "journalSha256": "22b57a48f8a0c5c9070e852a7674edaa20adbe3af55b7a22c1cae357935fd47a",
+        "caseRun": {
+          "seq": 671,
+          "type": "run-incomplete",
+          "observationsComplete": false,
+          "sourceCount": 40,
+          "declaredCases": 209,
+          "bodiesStarted": 209,
+          "bodiesFinished": 209,
+          "bodiesReturned": 208,
+          "bodiesThrew": 1,
+          "activeCase": null,
+          "forcedFinalization": false
+        },
         "lifecycle": {
           "launches": 1,
           "acquisitions": 48,
           "releases": 48,
-          "pid": 2890,
+          "pid": 2883,
           "activeLease": false,
           "contexts": 0,
           "disconnected": true,
@@ -2839,18 +2875,99 @@
           "verified": true,
           "failed": false
         },
-        "evidenceSha256": {
-          "report": "33e392fbc91863c62e8e7dc78165b37253598b53d041a6ded0520fce9d5a2af6",
-          "summary": "2ab22deb015c03d6583b1fc585903352c8a376f35cad0da622465d51a959a00f",
-          "journal": "475efc55541496a23fa1a993b56d6f6b3ffa793615d14c140e1eeff6c09ed03c",
-          "log": "67e2a202e715a6ba2ecf4ece3e4dd471b44a7f25ca6e445d5bb6ca09b971a547",
-          "chromeVersion": "04ce1829b69f68a11eb8ef036a6ab18a63411689e39b9b3331c0d884b707983a"
-        }
+        "positiveReceiptPresent": false
+      },
+      "monthlyP1": {
+        "file": "Sucafinav1/test/planner-runtime.test.ts",
+        "passed": 52,
+        "failed": 0,
+        "shard": 5
+      },
+      "qualification": "FAIL; exact source evidence only; no final or installed Teams qualification"
+    },
+    "uiRawEvidence": [
+      {
+        "artifactId": 14764063719,
+        "reportSha256": "1f501ce7996293eebecf51d470c60b57ab0f75d63aa4e6fc250f91b1002fe35d"
+      },
+      {
+        "artifactId": 14764532436,
+        "reportSha256": "ea0b2207b557c28613a26a9c3ee82fca3e2b931ad0a97d453dfd1e2da5691379"
+      },
+      {
+        "artifactId": 14763604972,
+        "op02TraceSha256": "c7e8df20a48dc4905493f4215cb93310e357ac25474f97f9952b7bd092465505",
+        "op03TraceSha256": "f833ab0fe206b1b33b46f85bf706c807f90ae35f169214a8a1eab499797e7e59"
       }
     ],
-    "integrity": "All eleven ZIPs match GitHub SHA256 and CRC. Five execution inventories and the pool receipt pin the same C/T/run. All three positive summaries match receipt reportSha256; all pool raw and canonical evidence digests match.",
-    "qualification": "Exact-candidate evidence only. Overall focal failed; no integrated gate qualification. Pool209 is component evidence, not installed Microsoft proof. Monthly P1 remains a separate52-case run on Cc6ee; planner-runtime is outside these six jobs.",
-    "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7082411093"
+    "selection": {
+      "contract": "Same six job selectors; actual manifest-selected files changed with composition. Counts and proofs are candidate-specific.",
+      "manifestPath": "sf/ci/suites.json",
+      "manifestBlob": "e9b4d19d2b2b027416e337ad0d8a787d18165475",
+      "rawManifestSha256": "5885665be67e166d37eeb2fd94385d021eca55ce5e13754cffceb9e86793bc52",
+      "shards": [
+        {
+          "artifactId": 14764647149,
+          "shard": 4,
+          "files": [
+            "Sucafinav1/test/corporate-recovery-register.test.ts",
+            "Sucafinav1/test/dashboard-portfolio-runtime.test.ts",
+            "Sucafinav1/test/http-assets.test.ts",
+            "Sucafinav1/test/local-jobs.test.ts",
+            "Sucafinav1/test/local-store.test.ts",
+            "Sucafinav1/test/native-ui-contract/talent-files.test.ts",
+            "Sucafinav1/test/operator-browser.test.ts",
+            "Sucafinav1/test/parity-planner.test.ts",
+            "Sucafinav1/test/plug.test.ts",
+            "Sucafinav1/test/product/host-binding/claw-mcp.test.ts",
+            "Sucafinav1/test/product/wp10/integration/coverage-proof-order.test.ts",
+            "Sucafinav1/test/s1.test.ts",
+            "Sucafinav1/test/teams-profile/admin-policy-http.test.ts"
+          ]
+        },
+        {
+          "artifactId": 14764153050,
+          "shard": 5,
+          "files": [
+            "Sucafinav1/test/corporate-checkpoint-http.test.ts",
+            "Sucafinav1/test/dashboard-people-runtime.test.ts",
+            "Sucafinav1/test/g05-http-team-isolation.test.ts",
+            "Sucafinav1/test/io-browser.test.ts",
+            "Sucafinav1/test/local-identity.test.ts",
+            "Sucafinav1/test/native-ui-contract/request-context.test.ts",
+            "Sucafinav1/test/parity-maintenance.test.ts",
+            "Sucafinav1/test/planner-runtime.test.ts",
+            "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+            "Sucafinav1/test/product/wp10/integration/confirmation-selection-sqlite.test.ts",
+            "Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+            "Sucafinav1/test/teams-profile/access-policy.test.ts",
+            "porta/linha.test.ts"
+          ]
+        },
+        {
+          "artifactId": 14764841128,
+          "shard": 8,
+          "files": [
+            "Sucafinav1/test/admin-runtime.test.ts",
+            "Sucafinav1/test/business-browser.test.ts",
+            "Sucafinav1/test/dashboard-budget-runtime.test.ts",
+            "Sucafinav1/test/export-egress.test.ts",
+            "Sucafinav1/test/lido.test.ts",
+            "Sucafinav1/test/local-services.test.ts",
+            "Sucafinav1/test/operator-enroll.test.ts",
+            "Sucafinav1/test/parity-procurement.test.ts",
+            "Sucafinav1/test/presentation.test.ts",
+            "Sucafinav1/test/product/wp06/documents/docx.test.ts",
+            "Sucafinav1/test/product/wp10/integration/procurement-legacy-choice.test.ts",
+            "Sucafinav1/test/s4.test.ts",
+            "Sucafinav1/test/teams-profile/selector.test.ts"
+          ]
+        }
+      ]
+    },
+    "integrity": "All eleven ZIP SHA256 values match GitHub digests; CRC and safe member paths verified. Five execution inventories and pool admission pin the same C/T/run/attempt. All three positive summaries match receipt hashes. Pool raw hashes and physical lifecycle were inspected; no positive pool receipt was issued.",
+    "qualification": "FAIL. Evidence applies only to c9a9b0/T8e6d5f. No integrated G01-G04 or installed Microsoft qualification. SF5 now selects planner-runtime and passes all52 cases, including P1 restore/edit/legacy/restart; earlier manifests did not select that file.",
+    "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7082886558"
   },
   "reviewCorrections": {
     "parentSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
@@ -2919,6 +3036,17 @@
           "todo": 0,
           "expectCalls": 405
         }
+      },
+      "currentExactCandidateEvidence": {
+        "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+        "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+        "runId": "45048445274",
+        "jobId": 137288068208,
+        "artifactId": 14763763858,
+        "file": "Sucafinav1/test/planner-runtime.test.ts",
+        "passed": 52,
+        "failed": 0,
+        "qualification": "Regression only on this exact candidate; no final G10 qualification."
       }
     },
     "monthlyRemount": {
@@ -3306,7 +3434,102 @@
       },
       "validation": "Static source inspection only for this delta. The previous complete six-job receipts remain attached to385b13/T787d, not this composition. All original job selectors, deadlines, retries and Omni controls remain unchanged. Execute a new focal only after independent review.",
       "compositionBoundary": "dev5ba96127750f15fe221daebfc0635466997b69d6/T38034fa8c000a93072846cfb91617161ccdbb47f now includes665. This prepared correction intentionally stays on the reviewed000179 composition; final integration requires explicit reconciliation and qualification of the effective candidate.",
-      "finalGateQualification": false
+      "finalGateQualification": false,
+      "execution": {
+        "reviewId": 6013455683,
+        "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+        "treeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+        "runId": "45048445274",
+        "allSixJobsReceived": true,
+        "status": "FOCAL_FAILED_NOT_QUALIFIED"
+      }
+    },
+    "fifthFocalFollowup": {
+      "status": "PREPARED_FOR_INDEPENDENT_REVIEW_NOT_QUALIFIED",
+      "parentSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+      "parentTreeSha": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+      "evidenceRunId": "45048445274",
+      "allSixJobsReceived": true,
+      "pathCountIncludingLedger": 4,
+      "beforeBlobs": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+          "blobSha": "3b8be893c3dd0a126b528dd379b62cb841205a05"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+          "blobSha": "4ba4ef8cb9bd39eb1246f643bd357399197996e0"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+          "blobSha": "b46b003f7b98d1c9094c8679a89e507248370c3c"
+        }
+      ],
+      "changes": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+          "cause": "The installed CAP18 presentation defaults to Monthly plan; creation and list/detail panels are mutually hidden. The helper still assumed the old simultaneous editor/list presentation.",
+          "correction": "Use Add line, Review changes, Confirm, Back to plan and Lines. Follow the current Manage accessible label for both button and region, then prove updated details and reopen the same visible row. Keep baseline/candidate identities, year2027, owner, element, USD, annual values, original DTOs and strictly advancing revisions.",
+          "sources": [
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+              "blob": "0c8a191b2a205d047bda2c0738ce6c00a29525b3"
+            },
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+              "blob": "cd290320986d5a9795c14badd47f9aa499577f9b"
+            },
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+              "blob": "9195c2c91f8c69af2b6f7c0761800f720c24bdd8"
+            }
+          ]
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+          "cause": "openRequisition navigated to a visible detail then queried accessible cells in the hidden Requests list.",
+          "correction": "Assert the same visible detail identity, use Back to requests, prove the unique visible selected row/cell/no row links, then use Open record and retain all identity/version/stage-link checks.",
+          "source": {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+            "blob": "c13b809fe73f7d5f83a24e90aae6fa490ad93faf"
+          }
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+          "cause": "The captured original CAP25 GET returned200 with JSON headers, but its browser-body cache was unavailable when decoded. The traces do not establish an HTTP producer failure or request cancellation.",
+          "correction": "A Page-lifetime route retains the original exact GET APIResponse with retries0/redirects0 and fulfills it unchanged. Preserve the original browser response wait and navigation, require exact Request identity and status agreement, and decode that retained response. Other methods, origins, paths, selections and inactive reads fall through.",
+          "constraints": "One endpoint and one active observation per Page. No extra UI GET, repeat POST, synthetic body, direct-state injection, timeout increase, live unroute or relaxed projection/identity/CAS assertion."
+        }
+      ],
+      "poolDiagnosis": {
+        "status": "RUNNING_DIAGNOSTIC_ONLY_NO_CORRECTION",
+        "sourceSha": "c9a9b0b3a85ea7f663b50d16527f45e977ccd3b5",
+        "sourceTree": "8e6d5f3113dd0fc3149877f0f2846302866a0956",
+        "runId": "45050657010",
+        "snapshotSha": "020d263618d953027936292368410707a3616bdb",
+        "snapshotTree": "5b3e8bbe0a2d4e2d3a3b8b02c7cf634d2912fb4f",
+        "driverSha": "20a0c9d677309ba349c46e55b6fd9d6748edbe69",
+        "driverTree": "c53b431e7ab8c774c4622cb00409ff079726f1a5",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "unchangedAgainstPriorPass": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+            "blob": "68d6b3690c96dee556a180c8a00dae283fb8ba1a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+            "blob": "1d0979805d5fd6b05f88a5f4e9d6133d582da2ab"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+            "blob": "2fc2dc11756961034e2d6091d2d8728635728ffb"
+          }
+        ],
+        "overlay": "Relative server and browser request/response/finished/failed/close logs only in original401/403 cases. No cookies, bodies, private identities, changed assertions, callbacks, order,5s/30s deadlines, fetch timeout, Omni or registration. Full209/40 pool retains possible shared-state causes. Workflow does not emit a gate receipt.",
+        "qualification": false
+      },
+      "validation": "Static source reconciliation only; independent review and new exact-candidate Actions execution remain required. No production or gate closure.",
+      "compositionBoundary": "This change is on c9. Subsequent dev integrations, including665/677/685/688/695 and613, require explicit reconciliation and qualification of the effective candidate; no inherited PASS."
     }
   },
   "focalHistory": [
@@ -3633,6 +3856,248 @@
       "integrity": "All nine ZIP SHA256 values verified against GitHub digests and CRC checked; all six execution inventories or receipts pin the same C/T/run. Pool report/log/Chrome raw hashes and summary/parsed-journal canonical JSON hashes match receipt. SF4 positive receipt report digest matches summary bytes.",
       "qualification": "Exact-candidate evidence only. Overall focal failed; no integrated gate qualification. Pool209 is component evidence, not installed Microsoft proof. Monthly P1 remains a separate52-case run on Cc6ee; planner-runtime is outside these six jobs.",
       "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7082147501"
+    },
+    {
+      "runId": "45045269481",
+      "attempt": 1,
+      "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
+      "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
+      "driverSha": "79cab55a4ab127036a2d1fe1b955bb77e461735e",
+      "driverTreeSha": "c2594e1734bd4d3502b9a1aef5f13646a429cd14",
+      "allSixJobsReceived": true,
+      "jobs": [
+        {
+          "jobId": 137278400517,
+          "name": "CI-SF-shard-4",
+          "status": "PASS",
+          "passed": 80,
+          "failed": 0,
+          "files": 12,
+          "omniSpawns": 1,
+          "delegated": 0
+        },
+        {
+          "jobId": 137278400691,
+          "name": "CI-SF-shard-5",
+          "status": "PASS",
+          "passed": 64,
+          "failed": 0,
+          "files": 13,
+          "omniSpawns": 2,
+          "delegated": 0
+        },
+        {
+          "jobId": 137278400696,
+          "name": "CI-SF-shard-8",
+          "status": "PASS",
+          "passed": 98,
+          "failed": 0,
+          "files": 13,
+          "omniSpawns": 9,
+          "delegated": 0
+        },
+        {
+          "jobId": 137278400770,
+          "name": "CI-UI-DECISIONS",
+          "status": "FAIL",
+          "passed": 3,
+          "failed": 2,
+          "skipped": 0,
+          "flaky": 0,
+          "failure": "Planner first save received200 but Network.getResponseBody was unavailable after click. Requisition creation received200 without new identity and remained in the explicit refresh-to-list state."
+        },
+        {
+          "jobId": 137278400773,
+          "name": "CI-UI-OPERATIONS",
+          "status": "FAIL",
+          "passed": 3,
+          "failed": 2,
+          "skipped": 0,
+          "flaky": 0,
+          "passedCases": [
+            "OP-PROC-01",
+            "OP-IMPORT-01",
+            "OP-DOC-01"
+          ],
+          "failedCases": [
+            "OP-PROC-02",
+            "OP-PROC-03"
+          ],
+          "failure": "OP02 progressed beyond readback, then submit_sourcing403 request_invalid after read projection omitted qty/unitPrice. OP03 progressed beyond exactCAS and fx-missing to an obsolete secondary ranking message expectation."
+        },
+        {
+          "jobId": 137278400731,
+          "name": "G04-ORDERED-BROWSER-POOL",
+          "status": "PASS",
+          "passed": 209,
+          "failed": 0,
+          "originalSourceCount": 40,
+          "proofClass": "COMPONENT_BROWSER_REGRESSION",
+          "installedTeamsProof": false,
+          "omniSpawns": 1,
+          "delegated": 0,
+          "acquisitions": 48,
+          "releases": 48,
+          "caseIdentitySha256": "92c1a25c5213640d873ac5d95ede31a4c3208dd6c2b3cf1ce05ad62596d8b99d"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14763032937,
+          "name": "sf-evidence-CI-SF-shard-4",
+          "zipSha256": "3bce73aa8b7ee2eda33a06ead3f4a1f4b3eb465eddd226505d40614a8ed7dcbb"
+        },
+        {
+          "id": 14762963250,
+          "name": "sf-candidate-CI-SF-shard-5",
+          "zipSha256": "4f577edf94f8c1d3ec5b3d52f4bfe4fc247dc6cf751e33999fcc19bc5577f3ec"
+        },
+        {
+          "id": 14762803356,
+          "name": "sf-evidence-CI-SF-shard-5",
+          "zipSha256": "be1e5c8d43cbcbebdd7fd93b39af02ab8fa2229318eb0043a2eb400d5e6cd7c5"
+        },
+        {
+          "id": 14762414316,
+          "name": "sf-candidate-CI-SF-shard-4",
+          "zipSha256": "7623ec3ffdfc53514823b84fd2e746608f1edd83b5e493ede794dc2e5e9bcd34"
+        },
+        {
+          "id": 14763770480,
+          "name": "sf-candidate-CI-UI-DECISIONS",
+          "zipSha256": "9d23bafcf95cafba50aa1642a6433ff8ba05f69763f195b04d310497e2d555a9"
+        },
+        {
+          "id": 14763154641,
+          "name": "sf-ui-failure-CI-UI-DECISIONS",
+          "zipSha256": "bdcf96486d3f4198fc7fd17fa512831deae4e7212e0f926a23e69d1fffc4b08a"
+        },
+        {
+          "id": 14762649081,
+          "name": "sf-evidence-CI-SF-shard-8",
+          "zipSha256": "5099d87ac42c24b1ad96a5eb745a5e98e48605519b2f4dbbe7508d3ce023ffc6"
+        },
+        {
+          "id": 14762544282,
+          "name": "sf-candidate-CI-SF-shard-8",
+          "zipSha256": "52dedf20ea6d4f260a6cb6bf23e1f519cf12088d170618fae9fd5c77f87af5c3"
+        },
+        {
+          "id": 14763437364,
+          "name": "teams-profile-evidence-G04",
+          "zipSha256": "8bc885eefc6f2e59f273c3e75914bba47389206cad32666336658e6fdd40d1df"
+        },
+        {
+          "id": 14763706273,
+          "name": "sf-candidate-CI-UI-OPERATIONS",
+          "zipSha256": "12724fb2145a29b4d5cfa14bcdfac3091b7cc0794a26a62ca4240203957df926"
+        },
+        {
+          "id": 14764065283,
+          "name": "sf-ui-failure-CI-UI-OPERATIONS",
+          "zipSha256": "e92ce1728d0a4316fd8ad6efc9efaa8187948288b45b5c8e771394c51e847177"
+        }
+      ],
+      "receiptVerification": [
+        {
+          "artifactId": 14763032937,
+          "shard": 4,
+          "status": "PASS",
+          "count": 80,
+          "receiptSha256": "fdfe9c5824661ee77c3972fd1bcc1baccc3ffa0bbfe0b8948ff13ab18d5108f0",
+          "summarySha256": "091ec1f60ffd957e20af0e43f12c884768f1fd15e6a63c178ece1fd26ac11cb3"
+        },
+        {
+          "artifactId": 14762803356,
+          "shard": 5,
+          "status": "PASS",
+          "count": 64,
+          "receiptSha256": "6926afe052bbcd33dc93fa05a148e2dda25a1fad0ebedb0c0dbb6da81fabe960",
+          "summarySha256": "7939fbf6cf821b5e1fa18b98f525a410c673677eff0ea3cb9d642f9088f89a13"
+        },
+        {
+          "artifactId": 14762649081,
+          "shard": 8,
+          "status": "PASS",
+          "count": 98,
+          "receiptSha256": "86cbeb57a6b71f7f3455cece67a6a0a74946484a5ab6ff5f0206d19a6a819ebd",
+          "summarySha256": "1d42f5906a6b78a199dd3d4b1270c62895ca8cd3cdf19a7989c9fd99364bee62"
+        },
+        {
+          "artifactId": 14763770480,
+          "status": "FAIL",
+          "execution": {
+            "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
+            "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
+            "runId": "45045269481",
+            "attempt": "1",
+            "exitCode": "1"
+          },
+          "stats": {
+            "startTime": "2026-11-22T16:43:06.214Z",
+            "duration": 154919.697,
+            "expected": 3,
+            "skipped": 0,
+            "unexpected": 2,
+            "flaky": 0
+          },
+          "reportSha256": "133adb18ee13d66375bbff59e35f0918190c2245b7da0f01f98f9e791a2cb77b"
+        },
+        {
+          "artifactId": 14763706273,
+          "status": "FAIL",
+          "execution": {
+            "sourceSha": "385b13ecb1e635d070517e76b6f02f1ab8019db7",
+            "treeSha": "787d1edbcd94bf61fcf22325409df3ff8a461295",
+            "runId": "45045269481",
+            "attempt": "1",
+            "exitCode": "1"
+          },
+          "stats": {
+            "startTime": "2026-11-22T16:43:55.793Z",
+            "duration": 304678.788,
+            "expected": 3,
+            "skipped": 0,
+            "unexpected": 2,
+            "flaky": 0
+          },
+          "reportSha256": "f44633e95a5d43191549e6813294eeabd70d5d619678acb2408c8ecbf44a03f6"
+        },
+        {
+          "artifactId": 14763437364,
+          "status": "PASS",
+          "count": 209,
+          "originalSources": 40,
+          "receiptSha256": "78b06e70eb340a3909281743c450e77c1e3cbacd64a8c95802b43731ceb87542",
+          "caseIdentitySha256": "92c1a25c5213640d873ac5d95ede31a4c3208dd6c2b3cf1ce05ad62596d8b99d",
+          "proofClass": "COMPONENT_BROWSER_REGRESSION",
+          "installedTeamsProof": false,
+          "lifecycle": {
+            "launches": 1,
+            "acquisitions": 48,
+            "releases": 48,
+            "pid": 2890,
+            "activeLease": false,
+            "contexts": 0,
+            "disconnected": true,
+            "driverClosed": true,
+            "processExited": true,
+            "sealed": true,
+            "verified": true,
+            "failed": false
+          },
+          "evidenceSha256": {
+            "report": "33e392fbc91863c62e8e7dc78165b37253598b53d041a6ded0520fce9d5a2af6",
+            "summary": "2ab22deb015c03d6583b1fc585903352c8a376f35cad0da622465d51a959a00f",
+            "journal": "475efc55541496a23fa1a993b56d6f6b3ffa793615d14c140e1eeff6c09ed03c",
+            "log": "67e2a202e715a6ba2ecf4ece3e4dd471b44a7f25ca6e445d5bb6ca09b971a547",
+            "chromeVersion": "04ce1829b69f68a11eb8ef036a6ab18a63411689e39b9b3331c0d884b707983a"
+          }
+        }
+      ],
+      "integrity": "All eleven ZIPs match GitHub SHA256 and CRC. Five execution inventories and the pool receipt pin the same C/T/run. All three positive summaries match receipt reportSha256; all pool raw and canonical evidence digests match.",
+      "qualification": "Exact-candidate evidence only. Overall focal failed; no integrated gate qualification. Pool209 is component evidence, not installed Microsoft proof. Monthly P1 remains a separate52-case run on Cc6ee; planner-runtime is outside these six jobs.",
+      "record": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7082411093"
     }
   ],
   "composition": {

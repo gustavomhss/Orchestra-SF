@@ -37,6 +37,8 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   expect((await page.goto(planner("OPEX", baseline)))?.status(), "Original OPEX route must be installed").toBe(200)
   const budget = page.locator('[data-sf-surface="CAP18"]')
   await expect(budget).toHaveCount(1)
+  await expect(budget).toBeVisible()
+  await budget.getByRole("button", { name: "Add line", exact: true }).click()
   const name = budget.getByRole("textbox", { name: "Name", exact: true })
   await expect(name).toHaveCount(1)
   await name.fill(sourceNames.line)
@@ -51,10 +53,12 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(currency).toHaveCount(1)
   await expect(currency).toHaveValue("USD")
   await budget.getByRole("textbox", { name: "Annual budget", exact: true }).fill("1200")
-  await confirmLine(page, budget.getByRole("button", { name: "Save", exact: true }), {
+  await confirmLine(page, budget.getByRole("button", { name: "Review changes", exact: true }), {
     version: 0,
     values: { versionId: baseline, collection: "lines", name: sourceNames.line, owner: actorId, el: "licenses", cur: "USD", annual: "1200" },
   }, observations)
+  await budget.getByRole("button", { name: "Back to plan", exact: true }).click()
+  await openLines(page)
   const created = lineRow(page)
   await expect(created).toHaveCount(1)
   await expect(created.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
@@ -82,6 +86,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(versionRow(candidate).locator(".sf-s01-cell-value")).toHaveText(sourceNames.candidate)
   await expect(versionRow(candidate).getByRole("cell").nth(1)).toHaveText("2027")
   expect((await page.goto(planner("OPEX", candidate)))?.status(), "Original candidate OPEX route must be installed").toBe(200)
+  await openLines(page)
   const copiedLine = lineRow(page)
   await expect(copiedLine).toHaveCount(1)
   await expect(copiedLine.getByRole("cell", { name: actorId, exact: true })).toHaveCount(1)
@@ -99,10 +104,13 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("1200")
   const copiedRevision = await sourceRevision(manager)
   await manager.getByLabel("Annual budget", { exact: true }).fill("2400")
-  await confirmLine(page, manager.getByRole("button", { name: "Save", exact: true }), {
+  await confirmLine(page, manager.getByRole("button", { name: "Review changes", exact: true }), {
     version: copiedRevision,
     values: { versionId: candidate, collection: "lines", annual: "2400" },
   }, observations)
+  await expect(manager.locator('[data-sf-field="annual"] dd')).toHaveText("2,400")
+  await manager.getByRole("button", { name: "Back to plan", exact: true }).click()
+  await openLines(page)
   await expect(copiedLine).toHaveCount(1)
   await expect(copiedLine.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
   await expect(copiedLine.locator('[data-sf-field="annual"] .sf-u07-number')).toHaveText("2,400")
@@ -116,6 +124,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
 /** A real source revision, independent of the saved ChoiceRecord. */
 export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
   await page.goto(decisionsChapterURL(page, origin, `/orchestra/sf-planner/opex?${new URLSearchParams({ version: versionId })}`).href)
+  await openLines(page)
   const row = lineRow(page)
   await expect(row).toHaveCount(1)
   await expect(row.locator('[data-sf-field="annual"] .sf-u07-number')).toHaveText("2,400")
@@ -127,10 +136,13 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
   await expect(manager.locator('[data-sf-field="currency"] dd')).toHaveText("USD")
   const previousRevision = await sourceRevision(manager)
   await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
-  await confirmLine(page, manager.getByRole("button", { name: "Save", exact: true }), {
+  await confirmLine(page, manager.getByRole("button", { name: "Review changes", exact: true }), {
     version: previousRevision,
     values: { versionId, collection: "lines", annual: String(annualBudget) },
   }, observations)
+  await expect(manager.locator('[data-sf-field="annual"] dd')).toHaveText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(annualBudget))
+  await manager.getByRole("button", { name: "Back to plan", exact: true }).click()
+  await openLines(page)
   await expect(row).toHaveCount(1)
   await expect(row.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
   await expect(row.locator('[data-sf-field="annual"] .sf-u07-number')).toHaveText(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(annualBudget))
@@ -190,12 +202,22 @@ async function versionIdentity(detail: Locator) {
   return (await id.innerText()).trim()
 }
 
+async function openLines(page: Page) {
+  const budget = page.locator('[data-sf-surface="CAP18"]')
+  const tab = budget.getByRole("tab", { name: "Lines", exact: true })
+  await expect(tab).toBeVisible()
+  await tab.click()
+  await expect(tab).toHaveAttribute("aria-selected", "true")
+  await expect(budget.getByRole("tabpanel", { name: "Lines", exact: true })).toBeVisible()
+}
+
 function lineRow(page: Page) {
-  return page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
+  return page.locator('[data-sf-surface="CAP18"]').getByRole("tabpanel", { name: "Lines", exact: true })
+    .getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
 }
 
 function lineManager(page: Page) {
-  return page.getByRole("region", { name: "Manage record", exact: true })
+  return page.getByRole("region", { name: "Manage", exact: true })
 }
 
 async function sourceRevision(manager: Locator) {

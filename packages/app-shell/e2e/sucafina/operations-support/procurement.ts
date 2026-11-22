@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import type { APIResponse, Locator, Page } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Route } from "@playwright/test"
 import { captureInstalledCommand } from "../installed-command-response"
 import { Schema } from "effect"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
@@ -17,6 +17,38 @@ export async function sourcingSourceVersion(page: Page, expected?: number) {
   const line = source.locator("p")
   await expect(line).toHaveText(expected === undefined ? /^Source version: [1-9]\d*$/ : `Source version: ${expected}`)
   return (await line.innerText()).replace("Source version: ", "")
+}
+
+type QueueReadCapture = { forward(route: Route): Promise<void>; reject(reason: Error): void }
+type QueueReadInterceptor = { endpoint: string; ready: Promise<void>; active?: QueueReadCapture }
+const queueReadInterceptors = new WeakMap<Page, QueueReadInterceptor>()
+
+/** Retain only the original authorized CAP25 GET response. Keep the exact endpoint
+ * route until Page closure so live readback never loses Chromium interception.
+ * Unrelated requests and reads outside the active observation use normal handlers. */
+async function queueReadInterceptor(page: Page, endpoint: URL) {
+  let state = queueReadInterceptors.get(page)
+  if (state) {
+    if (state.endpoint !== endpoint.href) throw new Error("A queue Page cannot switch read endpoints")
+    await state.ready
+    return state
+  }
+  state = { endpoint: endpoint.href, ready: Promise.resolve() }
+  queueReadInterceptors.set(page, state)
+  const owned = state
+  const pattern = new RegExp("^" + endpoint.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:\\?|$)")
+  owned.ready = page.route(pattern, (route) => owned.active ? owned.active.forward(route) : route.fallback())
+  page.once("close", () => {
+    queueReadInterceptors.delete(page)
+    const active = owned.active
+    owned.active = undefined
+    active?.reject(new Error("Queue Page closed before its original read completed"))
+  })
+  try { await owned.ready } catch (error) {
+    if (queueReadInterceptors.get(page) === owned) queueReadInterceptors.delete(page)
+    throw error
+  }
+  return owned
 }
 
 export async function queueIdentity(page: Page, account: Account, id: string, moneySentence: string, monetaryState: string | null, options?: { reload: true }) {
@@ -41,15 +73,48 @@ export async function queueIdentity(page: Page, account: Account, id: string, mo
       selectedQuoteId: record.sourcing?.selectedId, selectionJustification: record.sourcing?.selectionJustification }
   }
   const navigate = async (selected: boolean, reload = false) => {
-    const pending = page.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return response.request().method() === "GET" && url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
+    const interceptor = await queueReadInterceptor(page, endpoint)
+    if (interceptor.active) throw new Error("Concurrent queue read observations on one Page are not allowed")
+    const matches = (request: Request) => {
+      const url = new URL(request.url())
+      return request.method() === "GET" && url.origin === endpoint.origin && url.pathname === endpoint.pathname &&
         url.searchParams.size === (selected ? 1 : 0) && url.searchParams.get("request") === (selected ? id : null)
-    })
+    }
+    // Keep the original browser-response wait and its original timeout. A retained
+    // APIResponse is accepted only for that exact Request, after untouched delivery.
+    const pending = page.waitForResponse((response) => matches(response.request()))
     void pending.catch(() => undefined)
-    const navigation = reload ? await page.reload() : await page.goto(selected ? detailPath : listPath)
-    expect(navigation?.status()).toBe(200)
-    return decode(await pending, selected)
+    const retained = Promise.withResolvers<{ response: APIResponse; request: Request }>()
+    void retained.promise.catch(() => undefined)
+    let captured = false
+    const capture: QueueReadCapture = {
+      reject: retained.reject,
+      forward: async (route) => {
+        const request = route.request()
+        if (captured || !matches(request)) return route.fallback()
+        captured = true
+        try {
+          const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
+          await route.fulfill({ response })
+          retained.resolve({ response, request })
+        } catch (error) {
+          retained.reject(error)
+          await route.abort("failed").catch(() => undefined)
+        }
+      },
+    }
+    interceptor.active = capture
+    try {
+      const [delivered, original] = await Promise.all([pending, retained.promise, (async () => {
+        const navigation = reload ? await page.reload() : await page.goto(selected ? detailPath : listPath)
+        expect(navigation?.status()).toBe(200)
+      })()])
+      expect(delivered.request(), "Decode the response to the UI's original authorized GET").toBe(original.request)
+      expect(delivered.status()).toBe(original.response.status())
+      return await decode(original.response, selected)
+    } finally {
+      if (interceptor.active === capture) interceptor.active = undefined
+    }
   }
   const detail = page.locator(`article[data-sf-request-ref="${id}"]`)
   let listed: Awaited<ReturnType<typeof decode>>
