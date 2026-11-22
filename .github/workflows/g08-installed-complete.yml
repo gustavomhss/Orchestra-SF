@@ -1,0 +1,119 @@
+name: g08-installed-complete
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "One original installed group, or verify completed original producers"
+        type: choice
+        options: ["group", "aggregate"]
+        required: true
+        default: "group"
+      kind:
+        description: "Exactly one original group; ignored only for aggregate"
+        type: choice
+        options: ["TEAMS", "U15", "U39", "U40", "F04", "AZ02-preflight", "AZ02-actors", "AZ02-producer", "AZ02-after-revoke", "AZ02-logout", "AZ02-after-restart"]
+        required: true
+        default: "TEAMS"
+      private_root:
+        description: "Existing runner-owned private0700 root outside checkout, with the original approved plan"
+        type: string
+        required: true
+      invocation_id:
+        description: "Original32hex invocation nonce; group mode only"
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: g08-installed-isolated-qualification
+  cancel-in-progress: false
+
+jobs:
+  installed-group:
+    name: installed-group
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && inputs.mode == 'group'
+    runs-on: [self-hosted, Linux, X64, orchestra-sf-g08-qa]
+    environment: g08-isolated-qa
+    timeout-minutes: 60
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ${{ github.token }}
+      SF_G08_PRIVATE_ROOT: ${{ inputs.private_root }}
+      SF_G08_INVOCATION_ID: ${{ inputs.invocation_id }}
+      SF_G08_KIND: ${{ inputs.kind }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Verify guards before using the reserved private host
+        run: bun run check:guards --base origin/dev
+      - name: Execute the one original authorized group with before and after observations
+        id: execute
+        run: bash script/sf-ci/g08-installed-run.sh "$SF_G08_KIND"
+      - name: Publish the allowlisted receipt; raw evidence stays on the isolated host
+        if: success() && steps.execute.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-group-${{ inputs.kind }}-${{ inputs.invocation_id }}-${{ github.run_attempt }}
+          path: g08-group-public/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  installed-aggregate:
+    name: installed-aggregate
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && inputs.mode == 'aggregate'
+    runs-on: [self-hosted, Linux, X64, orchestra-sf-g08-qa]
+    environment: g08-isolated-qa
+    timeout-minutes: 40
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      GH_TOKEN: ${{ github.token }}
+      SF_G08_PRIVATE_ROOT: ${{ inputs.private_root }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Verify all guards and the original source
+        run: bun run check:guards --base origin/dev
+      - name: Re-read every raw private report and verify its completed GitHub producer
+        id: aggregate
+        run: |
+          set -euo pipefail
+          umask 077
+          bun script/sf-ci/g08-installed-evidence.mjs aggregate "$SF_G08_PRIVATE_ROOT"
+      - name: Publish the isolated qualification receipt only
+        if: success() && steps.aggregate.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-complete-installed-${{ github.sha }}-${{ github.run_attempt }}
+          path: g08-aggregate-public/receipt.json
+          if-no-files-found: error
+          retention-days: 30

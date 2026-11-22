@@ -550,34 +550,9 @@ export async function requireProductContracts(root = process.cwd()) {
 export async function sourceInventory(root = process.cwd()) {
   return Promise.all(sourcePaths.map(async (file) => ({ path: file, sha256: digest(await readFile(path.join(root, file))) })))
 }
-async function main() {
-  const command = process.argv[2]
-  if (command === "verify-list") {
-    const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
-      candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
-      cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
-    const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
-    assert(path.isAbsolute(output) && path.resolve(output) === output &&
-      (!workspace || !(output === workspace || output.startsWith(path.resolve(workspace) + path.sep))),
-      "G08_TOOLING_OUTPUT_OUTSIDE_CHECKOUT_REQUIRED")
-    await mkdir(output, { recursive: true })
-    await writeFile(path.join(output, "inventory.json"), JSON.stringify(receipt, null, 2) + "\n")
-    console.log(JSON.stringify(receipt))
-    return
-  }
-  if (command === "require-closed-gate") { requireCompleteGate(await readCoverage(true)); return }
-  const root = text(process.env.SF_G08_PRIVATE_ROOT), plan = await readPlan(root)
-  const packageText = await privateText(root, "package-receipt.json")
-  assert.equal(digest(packageText), plan.packageReceiptSha256, "G08_G07_RECEIPT_BYTES_MISMATCH")
-  const receipt = validatePackage(JSON.parse(packageText), plan)
-  if (command === "admit") {
-    await requireProductContracts()
-    await readCoverage(false)
-    await writePrivate(root, "source-before.json", await sourceInventory())
-    return
-  }
-  assert.equal(command, "verify", "G08_COMMAND_INVALID")
+
+/** Re-read the original private nine-case evidence; this pure inspection does not establish workflow provenance. */
+export async function inspectCurrentEvidence(root, plan, receipt) {
   assert.equal(await privateText(root, "exit-code.txt", 64), "0\n", "G08_PLAYWRIGHT_EXIT_NOT_ZERO")
   const reportText = await privateText(root, "playwright.json", 25_000_000), report = JSON.parse(reportText)
   const inventory = verifyReport(report, true)
@@ -623,6 +598,38 @@ async function main() {
       "Logout proves original context invalidation, not raw token replay or Entra global sign-out.",
       "Reservation and actor references are operator-supplied authorization metadata, never inferred role grants."],
   }
+  return publicReceipt
+}
+
+async function main() {
+  const command = process.argv[2]
+  if (command === "verify-list") {
+    const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
+    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
+      candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
+      cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
+    const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
+    assert(path.isAbsolute(output) && path.resolve(output) === output &&
+      (!workspace || !(output === workspace || output.startsWith(path.resolve(workspace) + path.sep))),
+      "G08_TOOLING_OUTPUT_OUTSIDE_CHECKOUT_REQUIRED")
+    await mkdir(output, { recursive: true })
+    await writeFile(path.join(output, "inventory.json"), JSON.stringify(receipt, null, 2) + "\n")
+    console.log(JSON.stringify(receipt))
+    return
+  }
+  if (command === "require-closed-gate") { requireCompleteGate(await readCoverage(true)); return }
+  const root = text(process.env.SF_G08_PRIVATE_ROOT), plan = await readPlan(root)
+  const packageText = await privateText(root, "package-receipt.json")
+  assert.equal(digest(packageText), plan.packageReceiptSha256, "G08_G07_RECEIPT_BYTES_MISMATCH")
+  const receipt = validatePackage(JSON.parse(packageText), plan)
+  if (command === "admit") {
+    await requireProductContracts()
+    await readCoverage(false)
+    await writePrivate(root, "source-before.json", await sourceInventory())
+    return
+  }
+  assert.equal(command, "verify", "G08_COMMAND_INVALID")
+  const publicReceipt = await inspectCurrentEvidence(root, plan, receipt)
   await writePrivate(root, "current-receipt.json", publicReceipt)
   await mkdir("g08-public", { recursive: true, mode: 0o700 })
   await writeFile("g08-public/receipt.json", JSON.stringify(publicReceipt, null, 2) + "\n", { flag: "wx", mode: 0o600 })
