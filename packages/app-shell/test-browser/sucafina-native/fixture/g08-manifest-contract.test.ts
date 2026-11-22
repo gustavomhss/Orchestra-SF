@@ -37,7 +37,8 @@ test("dedicated G08 carries only used boundaries while historical v2 round-trips
   expect(serializeInstalledNativeManifest(legacy())).toBe(serializeNativeManifest(legacy()))
   expect(validateInstalledNativeManifest(g08())).toEqual(g08())
   expect(Object.hasOwn(g08(), "wrongServer")).toBe(false)
-  expect(g08().actors).toEqual(legacy().actors)
+  expect(g08().actors).toEqual(actors)
+  expect(legacy().actors).toEqual(actors)
   expect(g08().invocation).toEqual(legacy().invocation)
 })
 test("missing foreign server cannot silently turn a historical v2 into G08", () => {

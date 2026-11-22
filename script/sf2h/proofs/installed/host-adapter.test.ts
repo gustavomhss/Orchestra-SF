@@ -14,7 +14,7 @@ const target = validateNativeTarget({ serverKey: "https://native.example.test", 
     server: "https://native.example.test", installationId: "metadata-only",
     tenantId: "11111111-1111-4111-8111-111111111111", teamObjectId: "22222222-2222-4222-8222-222222222222" }) })
 const descriptor = { contractRevision: "sf-team-profile/1", authMode: "microsoft", installationId: target.installationId,
-  tenantId: target.tenantId, projectId: target.projectId, hostId: target.hostId, publicOrigin: target.publicOrigin, mount: target.mount }
+  tenantId: target.tenantId, projectId: target.projectId, hostId: target.hostId, publicOrigin: target.publicOrigin, mount: target.mount } as const
 test("adapter accepts only the original single current Microsoft descriptor with complete reserved placement", () => {
   expect(decodeOriginalCurrentInstallation({ installations: [descriptor] }, target)).toEqual(descriptor)
   for (const field of ["installationId", "tenantId", "projectId", "hostId", "publicOrigin", "mount", "authMode"] as const)
@@ -52,7 +52,7 @@ test("ambiguous vendor and invalid version cannot select a U15 edit target or a 
     { "opexOwners:line": 4 }, ["line"], "CAP05")).toThrow()
 })
 test("registration CLI has only four explicit kinds and cannot load an adapter, command or environment file", () => {
-  for (const kind of ["U15", "U39", "U40", "F04"]) expect(parseRegistrationArguments([kind])).toBe(kind)
+  for (const kind of ["U15", "U39", "U40", "F04"] as const) expect(parseRegistrationArguments([kind])).toBe(kind)
   for (const args of [[], ["u15"], ["ALL"], ["U15", "extra"], ["--adapter", "/tmp/code.ts"], ["F04; echo bad"]])
     expect(() => parseRegistrationArguments(args)).toThrow()
 })

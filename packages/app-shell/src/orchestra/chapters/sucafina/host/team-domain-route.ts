@@ -7,7 +7,7 @@ import { SfDomainReadSelection } from "@orchestra/schema/sucafina/domain"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
 import { matchSfNativeRoutePath, type SfNativeRouteCandidate } from "../route-registry"
 import { parseDashboardRouteQuery } from "./dashboard-route"
-import type { SfBudgetPeriod } from "../navigation-state/budget-period"
+type SfBudgetPeriod = Readonly<Pick<typeof SfDomainReadSelection.Type, "year" | "month">>
 
 export type SfTeamDomainCapability = "CAP14" | "CAP04" | "CAP05" | "CAP03"
 export type SfTeamDomainRoute = SfResolvedRoute<SfTeamDomainCapability>
