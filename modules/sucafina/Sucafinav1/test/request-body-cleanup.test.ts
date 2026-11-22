@@ -3,15 +3,15 @@ import { limitRequestBody, readRequestBody } from "../runtime/request-body.ts"
 
 const bytes = (value: string) => new TextEncoder().encode(value)
 
-function fixture(input: { chunks?: readonly Uint8Array[]; brokenRelease?: boolean; pending?: boolean }) {
+function fixture(input: { chunks?: readonly Uint8Array<ArrayBuffer>[]; brokenRelease?: boolean; pending?: boolean }) {
   const state = {
     pulls: 0, readers: 0, releases: 0, cancellationAttempts: 0, sourceCancellations: 0,
     closed: undefined as Promise<"closed" | "errored"> | undefined,
-    controller: undefined as ReadableStreamDefaultController<Uint8Array> | undefined,
+    controller: undefined as ReadableStreamDefaultController<Uint8Array<ArrayBuffer>> | undefined,
   }
   const started = Promise.withResolvers<void>()
   const chunks = [...(input.chunks ?? [])]
-  const source = new ReadableStream<Uint8Array>({
+  const source = new ReadableStream<Uint8Array<ArrayBuffer>>({
     start(controller) { state.controller = controller },
     pull(controller) {
       state.pulls++
@@ -45,7 +45,7 @@ function fixture(input: { chunks?: readonly Uint8Array[]; brokenRelease?: boolea
   return { source, state, started: started.promise }
 }
 
-function request(source: ReadableStream<Uint8Array>, input: { length?: string; signal?: AbortSignal } = {}) {
+function request(source: ReadableStream<Uint8Array<ArrayBuffer>>, input: { length?: string; signal?: AbortSignal } = {}) {
   const headers = input.length === undefined ? undefined : { "content-length": input.length }
   const value = new Request("https://fixture.example.test/body", {
     method: "POST", body: source, headers, signal: input.signal,

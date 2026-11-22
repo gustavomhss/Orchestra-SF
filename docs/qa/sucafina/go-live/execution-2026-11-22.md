@@ -2,7 +2,7 @@
 
 **Este é um índice de provas observadas e integrações. Não é aprovação dos gates finais.** Os recibos originais permanecem nos artefatos de Actions. [status.json](status.json) distingue campos finais ainda nulos dos candidatos de trabalho abaixo.
 
-Observação do consolidado: `2026-11-22T14:22:35Z`. Dev observado após os três complementos: `a71033f21b2c0f7da508c96f302506a9e73fd145`, árvore `d86fa6c35359fd1437504435a48b0a4363ac8122`; referência de integração, não candidato final confirmado.
+Observação histórica anterior: `2026-11-22T14:22:35Z`. Dev então observado após os três complementos: `a71033f21b2c0f7da508c96f302506a9e73fd145`, árvore `d86fa6c35359fd1437504435a48b0a4363ac8122`; referência de integração, não candidato final confirmado. A retomada descrita ao fim inclui os merges #666/#671/#668/#670/#669/#674 e a composição testada da #672; o dev observado após G10 é `6beab17e71c246b871b5a7f92c5de5ff2b0477d8`, árvore `3179c5c01ce287353fbef02b698c983a8f845f84`, também sem pin final.
 
 ## Identidade das entregas iniciais
 
@@ -80,7 +80,7 @@ Em ambos os Teams: arquivo limpo aceito, EICAR real de 68 bytes recusado com 422
 
 Os marcadores dos três novos casos Microsoft são emitidos após a limpeza dos respectivos fixtures. O recibo agregado positivo exige também a limpeza dos quatro fixtures legados e dos daemons próprios. O aviso `test-assertions-removed` foi reconciliado: 27 pontos `expect(...)` permanecem no consumidor G05 e oito foram extraídos para o helper compartilhado; os 35 e os 11 IDs originais foram preservados. Não houve waiver.
 
-A prova declara `COMPONENT_REAL_CLAMD`, `MICROSOFT_TEAM_FACTORY` e `CONTROLLED_ENTRA_GRAPH`, com `installedTeamsProof:false`, `finalCandidate:false`, `g06Closed:false` e `teamsPrivateImportProof:false`. O importador nativo `import-admit/import-preview` ainda não está montado em `runTeamBusiness` no código inspecionado. O suplemento de upload não substitui essa obrigação; a prova de importação legada conserva seu alcance local. Coverage/auth/effect de G05 não foram repetidos nessa execução.
+A prova declara `COMPONENT_REAL_CLAMD`, `MICROSOFT_TEAM_FACTORY` e `CONTROLLED_ENTRA_GRAPH`, com `installedTeamsProof:false`, `finalCandidate:false`, `g06Closed:false` e `teamsPrivateImportProof:false`. Na fonte da #660, o importador nativo `import-admit/import-preview` ainda não estava montado em `runTeamBusiness`; a #670 abaixo resolve essa lacuna com recibo separado. O suplemento de upload não substitui essa obrigação; a prova de importação legada conserva seu alcance local. Coverage/auth/effect de G05 não foram repetidos nessa execução.
 
 ## G07 — verificador do tar original
 
@@ -125,7 +125,7 @@ Dos nove requisitos originais, cinco têm controles completos implementados, doi
 
 A revisão independente identificou que arrays vazios poderiam satisfazer o helper de fechamento por `every()`. O código final exige schema, inventários completos/únicos e contagens exatas, com dez controles negativos. Os avisos dos guards conservam a retirada de casos/assertions da seleção executável e a rede global controlada no teste DOM; o ledger mantém todas as obrigações. Os outputs ficam em `RUNNER_TEMP`, sem waiver ou exclusão do guard. Omni declarou `not applicable`, sem spawn/delegação; não foi apresentado como positivo.
 
-As falhas intermediárias de tipo, outputs e contexto do workflow estão registradas na PR. O run verde usa o head final exato. A composição proposta em #654/#655/#657 precisa integrar o candidato e ser observada no host antes de executar o subconjunto; nenhuma aprovação foi herdada dessas branches.
+As falhas intermediárias de tipo, outputs e contexto do workflow estão registradas na PR. O run verde usa o head final exato. À época dessa prova, a composição proposta em #654/#655/#657 precisava integrar o candidato. A #657 foi posteriormente mergeada; a adaptação #672 abaixo consome os contratos posteriores da #665. Nenhuma aprovação foi herdada dessas branches.
 
 ## G10 — backup e clone de arquivos (#639)
 
@@ -160,9 +160,11 @@ O caminho operacional `restore_reserved_clone` emite `orchestra-sf.teams-clone-i
 
 Os dois controles adicionais exercitam um clone real de arquivos e dez variantes negativas de vínculo. **Nenhuma VM Azure reservada foi usada no CI.** O recibo continua `FILESYSTEM_COMPONENT_CONTROLS`, `installedTeamsProof:false`, `releaseQualified:false`.
 
-A inspeção também identificou uma dependência operacional separada: a factory Microsoft monta o consumidor `recover`, mas não expõe a captura do checkpoint lógico que ele consome. A API TS interna e o backup físico não fornecem essa operação ao tar instalado. As etapas 7–9 do [runbook](g10-cutover-rollback.md) permanecem `BLOCKED_BY_CHECKPOINT_OPERATION`, além das reservas/tar ainda pendentes.
+A inspeção anterior identificou a falta de captura lógica na factory Microsoft. Essa lacuna foi implementada na #669, complementada pela política corrente da #674 e registrada abaixo. A API TS interna e o backup físico não foram usados como substitutos da rota. As etapas 7–9 do [runbook](g10-cutover-rollback.md) ainda não foram executadas no tar final.
 
-## Dependências e decisão
+## Dependências observadas às 14:22 UTC — referência histórica
+
+As linhas desta seção preservam a leitura anterior. A situação atual é a da retomada abaixo; os heads e bloqueios históricos não são apresentados como estado vivo.
 
 - **Migração:** último agregado G03/G04 inspecionado [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, concluído em falha. Pool, SF4/SF5/SF8, UI operations/decisions e verify têm falhas. A investigação e integração seguem com a sessão proprietária.
 - **Integração atual:** #657 observada aberta/draft em `95aa3a01915ebc9543957c267b57ab2ace9ee19f`, árvore `36be087efa65d1ba2c55022126eec02eb46c61c2`, às 14:20 UTC. Não está integrada nem é pin final. Os 64 paths não se sobrepõem aos dez de #659 ou aos seis de #660. A autoridade de Team proposta requer nova prova no candidato combinado.
@@ -173,3 +175,141 @@ A inspeção também identificou uma dependência operacional separada: a factor
 - **Outras frentes:** G01–G04/pool, #349, G09/#588 continuam com seus donos. A [#647](https://github.com/gustavomhss/Orchestra-SF/pull/647) registra a atualização técnica de G09; sua avaliação e decisão não são assumidas por esta frente.
 
 Após o pin conjunto, repetir G05/G06 em C e produzir/verificar G07. Com o mesmo tar instalado, G08 e G10 avançam em paralelo nas reservas isoladas. Só então os recibos permitem avaliar o fechamento pedido. **Gates finais qualificados nesta frente: 0/5. Prontidão para go/no-go: NOT_READY.** A virada de produção depende de janela e decisão específicas; nenhuma foi executada.
+
+## Retomada — mandato de integração, Release e operações
+
+Gustavo atribuiu a esta sessão os itens 1–3: concluir a coordenação da integração, confirmar/produzir a Release admitida e obter as reservas QA/G10. A [coordenação #657/7080753498](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080753498) preserva os escritores ativos. O mandato não equivale a ACK C/T, reserva, identidade de operador ou decisão de produção.
+
+| Entrega | Fonte e integração | Estado observado |
+| --- | --- | --- |
+| Base Teams #657 | Fonte `dd8a7ce7cda006ab3a6a23b6cdeb4e633bbc8826`; merge `ad6d245119ef2d69fb96471edd62dd6413ae185f` | Integrada; controles componentes e conclusão focada no [run 45034291003](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45034291003). Não inclui automaticamente Session/Chat posteriores |
+| Inventário #666 | Fonte `95330d413fda61f0379171c3df688702c5ab9fa2`; merge `4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc` | Workflow somente leitura integrada |
+| Correção de inventário #671 | Fonte `86923bff80869af3a84d0e255af6be754a1de3ac`; merge `c3d7f8eb6716db2e05ec33f4269b734793bd3d9e` | Variáveis resolvidas no contexto de step; metadata coletada mesmo com preflight falho |
+| Release #668 | Fonte `37f67919c4e6345760cd2dafdea1a07977e1eb4d`; merge `0df66a7929168ccc98e3a5b2e6c45f574801902e` | Rota B/C/T/Q e admissão antes do build integradas; tar final não produzido |
+| Imports #670 | Fonte `39cbd8f4505d45c4b5014f280cb4413c47603bbb`; merge `84ec2655cfbe9d138d8b61d7a025c62df05946cc` | Composição Microsoft/Team original e controles reais integrados |
+| Checkpoint #669 e política #674 | Produto testado `32f06e47407e31c98d84babb31a1565d8aedbd4c`; merge dependente `f84f9c0fbdf8d93ede8c0d14eeed270771bbd519`; merge final em dev `6beab17e71c246b871b5a7f92c5de5ff2b0477d8` | Sete caminhos preservados byte a byte; ensaio instalado não executado |
+| Executor G08 #672 | D `0b68b5d5cae2dc17267558702caa6536b45bc6d7`; composição testada C `90a8fced96f6cf0dfd408b0e3c393308fd5d50ce` | Revisada; merge aguarda #665. Nove controles apenas listados |
+
+### G05/G06 — Imports nativo Microsoft/Team (#670)
+
+[Run 45037391139](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139), tentativa 1, job `137254063616`, **SUCCESS**. C `39cbd8f4505d45c4b5014f280cb4413c47603bbb`, T `3b07c51dbdfa88821881eb139badcef8062453ce`. S `d247cd3acb6e4cfbe67a906b914096fa31afa5b3`, árvore `7258270b8e9cd201602ba31f4856e4f3d95c6b30`, é filho único de C com apenas `.ci-run.json` alterado.
+
+**162 controles Node, 16 casos Bun/126.359 asserções, zero falha/skip/TODO**, tipos CLI/Sucafina e 78 guards/dez paths/zero findings. Seleção v3 `controls-with-imports`: oito legados, três Microsoft/Team, um G05 com 11 controles e quatro Imports, em seis arquivos. Nonce Omni novo, quatro declarações, cinco spawns e zero delegações. Coverage/auth/effect de G05 não foram repetidos.
+
+| Artefato/recibo | Identidade |
+| --- | --- |
+| ZIP [14760321903](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45037391139/artifacts/14760321903), 46.721 bytes | `ccec82ebf0f6ac466ad79d8bf1027dedcd1f0a01ec93d281eeae709ae1f72b74` |
+| Agregado `receipt.json` | `f4ae4d7920e49ef6300d4e06be02f9a96105006c0a34f70aeca1d5b3808eec34` |
+| Microsoft/Imports | `214a468892fb61b54a9580079504f4efb9e47df4427df3512b2b503e5ea9c1a4` |
+| Microsoft/Team upload | `066961ee071ff64c644e9da14d140ffac57fcb50e658afcd808ce7b73eb4c7a6` |
+| G05 Team | `19d0fce0d41444cf74782de655bd1c48ec3f3e0c55afeb228671bab114e04fe3` |
+| JUnit | `37660759194be83784d8a20869b06901aa9370feda1fd85b0325fe36c93d13fc` |
+| Request normalizado | `7a677934d05907fda7d1e718360be7b2ec1ed31966ec90fa767778cdd9368023` |
+
+A coordenação baixou e conferiu tamanho/digest/CRC, **18 hashes internos**, JUnit, C/T/S e cleanup. A composição usa a factory Microsoft, HTTP, ClamD, parser, authority e stores originais. Os quatro casos provam clean/EICAR/clean, teto de dois intakes com TCP real, payloads benignos inválidos após staging, negativas de owner/grants e daemon indisponível, com igualdade durável A/B e limpeza. A classe é `COMPONENT_REAL_CLAMD / MICROSOFT_TEAM_NATIVE_IMPORT / CONTROLLED_ENTRA_GRAPH`; `componentPrivateImportProof:true`, `installedTeamsProof:false`, `finalCandidate:false`, `g06Closed:false`.
+
+Os runs 45036662670 e 45036971290 permanecem falhos por fixture PID e entrada antecipada no fence de preview. Seus ZIPs são, respectivamente, `6273eaa2648d5cf916095bb7018cda231f0ccfaf21c712c119154d8d199b019b` (artefato 14759933470/29.426 bytes) e `ea0d02ad9d401a758d4fcbfd0e86302157537a7d7fb1189913352742551f888b` (artefato 14760525441/30.654 bytes). As correções não relaxaram schema, decoders ou autoridade. [Detalhes e reexecução final](g05-g06-controls.md).
+
+### G07 — admissão e disparo Release (#668)
+
+D `37f67919c4e6345760cd2dafdea1a07977e1eb4d`, T `e54fdd06a76a3042c01594331e6ca69af1bde2cf`. [Run 45035835391](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035835391), job `137249288305` **SUCCESS**, qualificação `137249472312` **SKIPPED**: 68 Node, 18 Python, 78 guards/quatro paths/zero findings.
+
+Artefato [14759253519](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035835391/artifacts/14759253519), 3.997 bytes; ZIP `5cd87310a51b13c00de99ee4092ff5a208602bfc690e7cd37ab501e6647e3e9e`; recibo `97dd0f59461e223c5de8978aaab022a356be411541c45f3eee097baef6519d23`. ZIP/CRC, três logs e sete fontes conferidos independentemente. O merge de evento `00b2435b0e7153779b81b90ffddab1cc0df26a7a` não é D.
+
+B contém o pedido de build e os dois ACKs reais e é distinto de C. `release-build-<B>` aponta exatamente C; antes de build/tar são conferidos fonte, árvore, papéis, textos originais, operador real e checkout limpo. Após o artefato, Q contém o pedido de qualificação e `g07-qualify-<Q>` em C consome os bytes originais. O builder/toolchain e três jobs posteriores G09 permanecem originais. **Nenhum B/Q final, ACK, tar ou instalação foi produzido por esse run.** [Contrato](g07-linux-package.md).
+
+### G08 — nove oráculos, composição de teste explícita (#672)
+
+D `0b68b5d5cae2dc17267558702caa6536b45bc6d7`, árvore `ca3b800f3ba6ab97e280e87d2768d29f0090e339`. Produto S da #665 `fde191dfc1970d37021d82370cccac657efac246`. Checkout testado C `90a8fced96f6cf0dfd408b0e3c393308fd5d50ce`, T `53f0d767b4b90bd64004ec2789c9803d43bc361f`: S mais exatamente nove blobs G08 de D, conferidos por compare API. Não é uma prova do head puro da PR nem do dev.
+
+[Run 45038080944](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038080944), job `137256156567` **SUCCESS**; instalado `137256157449` **SKIPPED**. 134 Node, 28 Python, oito DOM/243 asserções, tipos e nove Playwright **LISTED_NOT_RUN**. Guards: 78 / 105 paths da composição/zero gates e erros/**um WARN** `js-empty-catch` em `tooling/httpapi-codegen/src/index.ts:517`; não foi convertido em zero findings.
+
+Artefato [14760243491](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038080944/artifacts/14760243491), 7.689 bytes; ZIP `b415fd156b11b75b8bf4afe55aa11264ff5a71666e8a49c26cdcabeac4b033ce`; inventário `c148adbff0fa05a204cd3aa021c4a2147a38a54ace8dd125cbcf99c3b874df65`; DOM JUnit `0d1dab53d24556ca167b584a8f1e6f63f0056bfd210805bf5e6d07d619442f84`. Aquisição/CRC/digests e relatórios conferidos pela coordenação; revisão técnica `6013022868`.
+
+Os nove oráculos estão implementados, incluindo grants efetivos por create/read/401/igualdade/cleanup, UI administrativa real sem Team e PromptInputV2 com cancelamento/descarte. O recibo v3 conserva `installed:false`, `g08Closed:false` e nove obrigações **NOT_RUN**. U15=6, U39=22, U40=22 e F04=3 são obrigações diretas G08; AZ02=32/seis fases é prova LIVE transversal obrigatória. O quinto papel nativo é recovery/G10. Os cinco grupos continuam **NOT_RUN**; a adaptação não fecha o agregado G01–G10. #672 está revisada e aguarda #665. [Matriz completa](g08-teams-qa.md).
+
+### G10 — captura lógica e recuperação por política corrente (#669/#674)
+
+D/T de produto testado `32f06e47407e31c98d84babb31a1565d8aedbd4c` / `4d01afacc5287eea5f6fd8a81c523ec83c484c7f`; snapshot S `237f9bec632e1aeb6b7e6559f2451ca81f989ee7`, pai único D e runner efêmero. [Run 45038388189](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038388189), job `137257131236` **SUCCESS**: **41 PASS, um skip preexistente de ownership/root**, zero falha, 403 asserções e oito novos casos aprovados; tipos e 78 guards/sete paths/zero findings.
+
+Artefato [14760886449](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038388189/artifacts/14760886449), 6.863 bytes; ZIP `6d51d4e9e7d2303395dc3081aeb111f9071961cb197252248cff9257cbf9cb24`; recibo `748b66fbd215b243f62ebcef992f34eec19f89287bada04a237a934da3aa2875`. Root conferiu CRC/nove hashes internos/relatórios/fontes.
+
+A fonte final #669 `f84f9c0fbdf8d93ede8c0d14eeed270771bbd519`, árvore `d9d329d4d55a08ca3c969c2565d11665b85f5b05`, difere de D apenas no guia. [Guard final 45038822594](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038822594), job `137258474958`, S `60ca68083b83660c46a6286a5494a23b21b85f7e`: 78 regras/sete paths/zero findings. Artefato [14760034604](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038822594/artifacts/14760034604), 1.892 bytes; ZIP `919b291c31c4a609a990eab49b1415bd18b75c29a437a806ce5b13a757502e49`; recibo `9e84040c5fe47e458d77b7ecff5a3dfc9f9e2ce9b0f421d0a295e0cfe1b8d4ea`; quatro hashes e CRC conferidos.
+
+#674 foi mergeada na dependência em f84f9c0f; #669 entrou em dev em `6beab17e71c246b871b5a7f92c5de5ff2b0477d8`/árvore `3179c5c01ce287353fbef02b698c983a8f845f84`, preservando os sete blobs. Revisões #674/`6013028788` e #669/`6013043654`. Run inicial 45038117675 falhou no typecheck do fixture; produto e 41 testes já passavam, sem apagar o skip.
+
+HTTP, SQLite, backups/blobs e mutação de política são reais; Microsoft, seed e observador externo do pin são fixtures. As rotas de captura não criam aprovação independente. O restore exige política corrente e a mesma revisão antes de commit, sem usar o seed como autoridade. O decoder #675 já foi integrado na branch #665; o candidato final ainda precisa incorporar essa composição e preservar os hooks/política. Não houve ensaio instalado, clone Azure, prova da chave, corte, restart real ou rollback. [Runbook e entradas exatas](g10-cutover-rollback.md).
+
+### Inventário operacional #666/#671 — execução bloqueada antes do login
+
+#666 foi validada no [run 45035892320](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45035892320), job `137249451432`, snapshot `982898ce60e6d9fcc7a8e2700da15b315a0743f6`: parse da workflow/três programas Python e 78 guards/um path/zero findings. Artefato 14759074375/1.186 bytes, ZIP `8ee9f86daac048a984291f69c0115a3d1f998395ebc8473eb9d3847506f977b2`. A primeira versão falhou no driver 45035540926; foi corrigida antes do merge.
+
+#671 corrigiu a observação de variáveis no contexto de step. Fonte `86923bff80869af3a84d0e255af6be754a1de3ac`, árvore `1cfc6886e1b06b616576752155b511f2a80d9fea`; [run 45036567797](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036567797), job `137251525645`, S `a5f66ed6d2341393fcec09997fd045719801d447`: parse/três programas e 78 guards/um path/zero findings. Artefato 14759996647, ZIP `1f8e345b5a396e14bb8b32dede5a97d45b3fc38ebdca7c7921570c1b9dcc1fa1`. São controles de ferramenta; não fazem login Azure.
+
+O inventário após merge [45036787201](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201), job `137252212765`, observou:
+
+- Environment `azure-mvp` existente; resposta sem políticas de proteção.
+- `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` e `AZURE_RESOURCE_GROUP` vazias no preflight. Nenhum valor privado foi publicado.
+- Autenticação Azure **SKIPPED**; nenhum login ou comando ARM executado.
+- Consulta de runners e nomes de variáveis: **403 / NOT_OBSERVABLE**; branch-policy: **404 / NOT_OBSERVABLE**.
+- Consulta UI de GitHub Settings deslogada; inventário Desktop Commander com somente um Mac offline, sem ação no host.
+
+Artefato [14760385059](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201/artifacts/14760385059), **877 bytes**; ZIP `672b98c1718bd66d97375571724981108db9fdbabcba08d634b13764dce01a64`; recibo `4ec3f609af032496424ad7bd76c37828e157b4d848ff1a02a4a4f5dd20b72864`; metadata `d4f3caee711ec59696ab32a27fb7c206f8118bc45637bacd6c5ac51dc96f028f`. Root adquiriu bytes, conferiu tamanho, digest e CRC. A tentativa anterior 45036258206 também ficou antes do login e permanece histórica.
+
+**O bloqueio é de observabilidade/autenticação pelo caminho tentado. Não demonstra ausência de infraestrutura, reserva ou dono.** Nenhuma reserva foi inventada, parâmetro privado antigo reaproveitado ou host alterado. `reservationConfirmed:false`, `guestObserved:false`, `installedQualification:false`.
+
+## Complementos finais desta consolidação
+
+### #665 — reparos focados e composição verificados, novos achados abertos
+
+Os logs originais foram lidos pela coordenação e por revisão independente. A fonte testada difere do snapshot efêmero de execução; nenhuma aquisição nova de ZIP é afirmada para estes dois recibos de log.
+
+| Prova | Fonte D/T e snapshot S | Resultado observado |
+| --- | --- | --- |
+| [45039523637](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039523637), job `137260633773` | D `d4daba81866166c1363563faa2b6156db0765b63`; T `a41c9c7b859b30ab1d4d8cf0284a871cf8a2b7fe`; S `5117581495d7ece34d96b5d5a79be9f79d5b0f80` | HTTP 25/204 asserções, factory 1/3, Chat 29/272, zero falha; typechecks Server/CLI/App-shell, geração canônica e guards 78/97 paths/zero findings |
+| [45039881113](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039881113), job `137261724555` | D `51278d55623f69f950785a9de8b8f1d0082bf62a`; T `a64eb0f6d173036ea9b380ce81e80efbaec730f0`; S `7c8e4cbffcbb4c192f6167e657d115e91d769c38` | Composição Microsoft Chat/checkpoint/recovery: 21 PASS/4.601 asserções; typechecks SF/CLI e guards 78/97 paths/zero findings; Omni uma declaração/três spawns/zero delegações |
+
+Os recibos de log são `sf-teams-focused-closure-proof-v1` e `sf-teams-concurrent-composition-proof-v1`. O segundo vincula a composição ao dev `6beab17e…`; mantém `liveMicrosoftProof:false`, `installedQualification:false`, `migrationExecuted:false` e `productionChanged:false`.
+
+O replay histórico fde191/45037362513 de 19/22 gates continua registrado. Seus reparos HTTP/SSE/gerador têm os positivos focados acima. Permanecem dois achados estáticos com regressões dirigidas solicitadas ao writer: [bytes reais do body Web sem Content-Length confiável, corte no teto e 413](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081547510), e [corpo JSON vazio com SyntaxError próprio do handler deve conservar 500](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081586708). Os logs verdes não demonstram que esses novos casos tenham passado. Não houve replay G05 completo nessa sequência.
+
+### #673 — segundo intake completo, pool e SF5 verdes
+
+Fonte `532a7e7958a9a8932076532cab93cf3ce61fb85e`, árvore `bd93e2a0431b8ec465c81c0715237dcd79891b75`; driver `9c53dce33afad3ea4896b0441ec4b5bd84577640`, árvore `e8b89d938102fba0b9247153bf979976216c8aab`. [Run 45038699571](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038699571), tentativa 1, **failure**. Fonte do registro: [recibo oficial do dono](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7081513410).
+
+| Job | Resultado e alcance | Artefato / hash informado pelo dono |
+| --- | --- | --- |
+| SF4 `137258101534` | 79 PASS, uma falha, 671 asserções/12 arquivos; SQLITE_PROTOCOL no SELECT de secrets.get em parity-polling-browser | `14761066352`; execution SHA-256 `c298fcbaae9129a4aeb5c011d9b9757296697a549ae2d556d11937eee00eea7a` |
+| SF5 `137258101511` | 64 PASS, zero falha/skip/TODO, 411 asserções/13 arquivos | `14760975837`; recibo `17c25d38864e21bc450dbf99687cd087e6bf0621579cc7a14823d5e621ed7ea6` |
+| SF8 `137258101699` | 97 PASS, uma falha, 4.855 asserções/13 arquivos; Omni EBADF no stdout do filho antes do PID Chromium; finalizador recusa prova incompleta | `14761330134`; execution `0f829169d9da1c2219df06c8c57ac0a7fa23a098e13a68513852f32875a761c0` |
+| Decisions `137258101315` | 0/5, todas param na discovery: private root selecionado em lugar do workspace privado; nenhuma jornada alcançada | candidate `14760249977`, failure `14760633257`; execution `41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6` |
+| Operations `137258101503` | 2/5, zero skip/flaky; sourcing, justificativa somente leitura e sourceVersion4vs3 em análise | candidate `14761510074`, failure `14760504500`; execution `41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6` |
+| Pool `137258101465` | **206/206**, 40 fontes, 3.122 asserções, 48 aquisições/liberações, um Chromium, um Omni/zero delegações, finalização verificada | `14760668799`; recibo `ca5d54a11be3717b1caf1942051af4a5e46c786cc83843a040b69ea236170cdd` |
+
+O dono registrou aquisição/conferência de nove ZIPs e CRC, relatórios e hashes canônicos. Esta consolidação leu essa fonte; não afirma download próprio desses nove artefatos. O pool é `COMPONENT_BROWSER_REGRESSION`, `installedTeamsProof:false`. SF4/SF8/Decisions/Operations e os próximos slices — retry mensal após restore, montagem mensal e fixtures de workspace — mantêm #673 **IN_PROGRESS_NOT_QUALIFIED**. O verde do pool não fecha os demais gates.
+
+### #675 — decoder integrado na branch #665, ainda não em dev
+
+D `a675a5792b9260054d043624dc45d60a5adb8dbf`, T `b3614391f2d6a7a4f89bd298aa861be3a469a972`, S `9709e78f39f0ec0449e2319242f1b37aec335911`. [Run 45040408446](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040408446), job `137263353207`, **SUCCESS**: 46 PASS, um skip preexistente de ownership/root, zero falha, 481 asserções; typecheck SF e 78 guards/97 paths/zero gate/warn/erro.
+
+Artefato [14761970496](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040408446/artifacts/14761970496), **12.387 bytes**; ZIP SHA-256 `58965ccb1590817ecce89d438c7b645b151091f5da951cd9efe30d9ad5fe403c`; recibo SHA-256 `f8eaf43472da823e05ebb654017a0c71efac9d2f16513dfab5c2d7159be53cca`. Root adquiriu bytes e conferiu CRC, nove hashes internos, JUnit e dois digests de fontes. Revisão `6013130249`; [handoff #665/7081657071](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081657071).
+
+O merge `4bee9c656034bb6771929a3d1eb893bc65af6a7a` preserva a mesma árvore T e tem como destino **session-http-integrated/#665**. Não entrou em dev nesta observação. O decoder admite checkpoint independentemente de recover e normaliza somente namespaces/operations omitidos para arrays vazios; não concede operações ou Session implicitamente. O primeiro run 45040173632 passou 46 testes e falhou apenas no tipo TS2769 do fixture; `as const` corrigiu o teste, sem mudança no produto. Esse histórico não foi apagado.
+
+## Dependências atuais e decisão ainda pendente
+
+- **#665:** integração posterior ativa. Os focais 45039523637 e 45039881113 comprovaram os reparos anteriores e a composição; o replay fde191/19 de 22 continua histórico. Limite Web de bytes reais e corpo vazio permanecem achados abertos. #675 foi mergeada somente nessa branch. Os focais não fecham G05 completo ou a qualificação instalada.
+- **#673:** o intake f382029/205 paths e o run anterior 45035419728 permanecem no [manifesto histórico](https://github.com/gustavomhss/Orchestra-SF/blob/f382029d7be3f4e31440814f7b3e16038ad65329/docs/qa/sucafina/go-live/migration-intake.json), que esta consolidação não altera. O último focal completo 45038699571 passou pool 206/206 e SF5 64; SF4/SF8/Decisions/Operations falharam. O dono focal_migration mantém os slices corretivos e o estado IN_PROGRESS_NOT_QUALIFIED.
+- **G05/G06:** rota de replay pronta; nenhum replay longo foi disparado somente para repetir uma prova antiga. Reconciliar catálogo atual e executar completo no C integrado confirmado.
+- **Release:** rota #668 disponível; C/T, dois ACKs, operador e artefato final ainda nulos. Não reexecutar uma branch histórica para aparentar produção do candidato novo.
+- **Operações:** reservas QA/G10, atores/grants/callbacks, observador, R retido, dados e chave ainda não confirmados. A descoberta bloqueada não é prova de inexistência.
+- **222 (2):** aceite QA 4/4 original preservado; backlink SHA/tar/reserva não recuperado, sem promoção para outro candidato.
+- **Outras frentes:** #349, G09 e #588 preservam seus donos. Recovery do plano é G10; a prova LIVE AZ02 é transversal e não substitui esses gates.
+
+Após C/T e os pré-requisitos, G05/G06 devem qualificar o candidato; Release produz e G07 verifica o tar original; G08/G10 consomem os mesmos bytes em reservas separadas. **Gates finais qualificados: 0/5. Go/no-go: NOT_READY.** Nem os componentes verdes nem a cobertura G08 isolada fecham o agregado G01–G10. A decisão e a janela de produção continuam sem aprovação específica.
+
+### Integração fixada nesta edição
+
+A #665 incorporou dev em `51278d55623f69f950785a9de8b8f1d0082bf62a`, árvore `a64eb0f6d173036ea9b380ce81e80efbaec730f0`, incluindo #670 e #669/#674. O [run 45039881113](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039881113) aprovou a composição de componente nesse source, sem aprovação instalada.
+
+A [#675](https://github.com/gustavomhss/Orchestra-SF/pull/675) entrou **na branch #665, ainda não em dev**, no merge `4bee9c656034bb6771929a3d1eb893bc65af6a7a`; sua árvore `b3614391f2d6a7a4f89bd298aa861be3a469a972` é idêntica à fonte testada `a675a5792b9260054d043624dc45d60a5adb8dbf`. Admite `checkpoint` separado de `recover` e normaliza apenas namespaces/operations omitidos para listas vazias, sem ampliar autoridade Session/negócio. O [run 45040408446](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040408446), job `137263353207`, passou 46 casos/481 asserções e preservou um skip anterior de ownership/root; tipos SF e guards 78/97 paths/zero findings. Snapshot `9709e78f39f0ec0449e2319242f1b37aec335911`. Nenhum ACK final ou qualificação instalada é inferido.
