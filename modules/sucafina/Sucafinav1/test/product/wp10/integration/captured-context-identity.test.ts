@@ -6,6 +6,7 @@ import path from "node:path"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { capturedContextLoadingModes, runSfCaptureLoadingControl } from "../../../../../../../apps/cli/test/fixture/sucafina-captured-context-loading.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { prepareSfCapturedContextIdentity } from "../../../../product/host-binding/captured-context-identity.ts"
 import { readSfMemoryCaptureIntegrity } from "../../../../product/host-binding/business-context.ts"
@@ -257,38 +258,28 @@ test("prototype toJSON and species hooks retain eager canonical observation", ()
 })
 
 
-test("a toJSON hook present before module loading keeps canonical admission eager", async () => {
-  for (const [name, owner] of [["object", Object.prototype], ["array", Array.prototype]] as const) {
-    const saved = property(owner, "toJSON")
-    const source = { values: [1, 2], absent: undefined }
-    let calls = 0
-    let observed: { distinct: boolean; canonical: number; preparation: number; comparison: number; matches: boolean } | undefined
-    define(owner, "toJSON", { configurable: true, value: function(this: unknown) { calls++; return this } })
-    try {
-      const url = new URL("../../../../product/host-binding/captured-context-identity.ts", import.meta.url)
-      url.searchParams.set("preexisting-tojson", name)
-      const fresh: typeof import("../../../../product/host-binding/captured-context-identity.ts") = await import(url.href)
-      calls = 0
-      digestSfValue(source)
-      const canonical = calls
-      calls = 0
-      const same = fresh.prepareSfCapturedContextIdentity(source)
-      const preparation = calls
-      calls = 0
-      const matches = same(source)
-      observed = { distinct: fresh.prepareSfCapturedContextIdentity !== prepareSfCapturedContextIdentity,
-        canonical, preparation, comparison: calls, matches }
-    } finally {
-      if (saved) define(owner, "toJSON", saved)
-      else remove(owner, "toJSON")
-    }
-    expect(observed?.distinct).toBe(true)
-    expect(observed?.canonical).toBeGreaterThan(0)
-    expect(observed?.preparation).toBe(observed?.canonical)
-    expect(observed?.comparison).toBe(observed?.canonical)
-    expect(observed?.matches).toBe(true)
-  }
-})
+for (const mode of capturedContextLoadingModes)
+  test("original canonical bootstrap precedes the isolated helper: " + mode, async () => {
+    const receipt = await runSfCaptureLoadingControl(import.meta.path, mode)
+    const limited = mode === "bootstrap-api-absent" || mode === "bootstrap-api-accessor"
+    expect(receipt.mode).toBe(mode)
+    expect(Number.isSafeInteger(receipt.pid) && receipt.pid > 0).toBe(true)
+    expect(receipt.pid).not.toBe(process.pid)
+    expect(receipt.order).toEqual([
+      ...(limited ? ["bootstrap-limited"] : []),
+      "canonical-loaded", "hook-arranged", "helper-loaded", "prepared", "changed", "compared", "restored",
+    ])
+    expect(receipt.beforeHookAdmitted).toBe(!limited)
+    expect(receipt.bundleFrozen).toBe(!limited)
+    expect(receipt.duringHookAdmitted).toBe(mode === "clean")
+    expect(receipt.restoredAdmitted).toBe(!limited)
+    expect(receipt.loadHookCalls).toBe(0)
+    expect(receipt.preparationHookCalls).toBe(receipt.originalHookCalls)
+    expect(receipt.preparationTraps).toEqual(receipt.originalTraps)
+    expect(receipt.originalMatches).toBe(false)
+    expect(receipt.actualMatches).toBe(false)
+    expect(receipt.bootstrapGetterCalls).toBe(0)
+  })
 
 test("a hasher hook present at preparation is invoked immediately by the original path", () => {
   let constructors = 0

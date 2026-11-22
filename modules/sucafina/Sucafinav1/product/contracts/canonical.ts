@@ -4,6 +4,116 @@ import type { ContributionEnvelope } from "./resident-ai.ts"
 
 const canonicalStringify = JSON.stringify
 
+
+type SfCanonicalCaptureRuntime = Readonly<{
+  isProxy(value: unknown): boolean
+  current(): boolean
+}>
+
+const captureDescriptor = Object.getOwnPropertyDescriptor
+const captureOwnKeys = Reflect.ownKeys
+const capturePrototype = Object.getPrototypeOf
+const captureOwn = Object.hasOwn
+const captureSameValue = Object.is
+const captureFreeze = Object.freeze
+const captureDescriptorFields = ["configurable", "enumerable", "value", "writable", "get", "set"] as const
+
+function sameCaptureDescriptor(left: PropertyDescriptor | undefined, right: PropertyDescriptor | undefined) {
+  if (!left || !right) return left === right
+  for (let index = 0; index < captureDescriptorFields.length; index++) {
+    const field = captureDescriptorFields[index]!
+    if (captureOwn(left, field) !== captureOwn(right, field) ||
+      captureOwn(left, field) && !captureSameValue(left[field], right[field])) return false
+  }
+  return true
+}
+
+/** This anchor belongs to the original canonical module bootstrap. It detects
+ * changes after that bootstrap, including changes before a consumer is loaded.
+ * It does not attest a runtime already modified before this module initialized.
+ * Missing backend primitives permanently retain the original eager digest. */
+function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
+  try {
+    if (typeof Bun === "undefined" || typeof process === "undefined") return undefined
+    const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
+    if (capturePrototype(objectPrototype) !== null || capturePrototype(arrayPrototype) !== objectPrototype ||
+      captureDescriptor(objectPrototype, "toJSON") || captureDescriptor(arrayPrototype, "toJSON")) return undefined
+    const loader = captureDescriptor(process, "getBuiltinModule")
+    if (!loader || !captureOwn(loader, "value") || typeof loader.value !== "function") return undefined
+    // Optional backend lookup, without a static Node dependency in this contract.
+    const proxyTypes: unknown = process.getBuiltinModule("node:util/types")
+    if (!proxyTypes || typeof proxyTypes !== "object") return undefined
+    const proxy = captureDescriptor(proxyTypes, "isProxy")
+    if (!proxy || !captureOwn(proxy, "value") || typeof proxy.value !== "function") return undefined
+    const hashConstructor = Bun.CryptoHasher, hashPrototype = hashConstructor?.prototype
+    if (!hashPrototype) return undefined
+    const hashParent = capturePrototype(hashPrototype)
+    const update = captureDescriptor(hashPrototype, "update"), digest = captureDescriptor(hashPrototype, "digest")
+    if (typeof update?.value !== "function" || typeof digest?.value !== "function") return undefined
+
+    const keys: readonly (readonly [object, PropertyKey])[] = [
+      [globalThis, "globalThis"], [globalThis, "Object"], [globalThis, "Array"], [globalThis, "JSON"],
+      [globalThis, "Number"], [globalThis, "Reflect"], [globalThis, "WeakMap"], [globalThis, "WeakSet"],
+      [globalThis, "Symbol"], [globalThis, "Bun"], [globalThis, "process"],
+      [Object, "prototype"], [Object, "getOwnPropertyDescriptor"], [Object, "getOwnPropertyDescriptors"],
+      [Object, "getPrototypeOf"], [Object, "hasOwn"], [Object, "keys"], [Object, "is"],
+      [Object, "defineProperty"], [Object, "create"], [Object, "freeze"],
+      [Array, "prototype"], [Array, "isArray"], [Array, Symbol.species],
+      [Symbol, "species"], [Number, "isFinite"], [JSON, "stringify"], [Reflect, "ownKeys"],
+      [WeakMap, "prototype"], [WeakMap.prototype, "get"], [WeakMap.prototype, "set"],
+      [WeakSet, "prototype"], [WeakSet.prototype, "has"], [WeakSet.prototype, "add"], [WeakSet.prototype, "delete"],
+      [process, "getBuiltinModule"], [proxyTypes, "isProxy"],
+      [Bun, "CryptoHasher"], [hashConstructor, "prototype"], [hashPrototype, "update"], [hashPrototype, "digest"],
+    ]
+    const pins: { owner: object; key: PropertyKey; expected: PropertyDescriptor }[] = []
+    for (let index = 0; index < keys.length; index++) {
+      const [owner, key] = keys[index]!, expected = captureDescriptor(owner, key)
+      if (!expected) return undefined
+      pins[index] = { owner, key, expected }
+    }
+    const prototypes: { owner: object; fields: { key: PropertyKey; expected: PropertyDescriptor }[] }[] = []
+    for (const owner of [objectPrototype, arrayPrototype]) {
+      const names = captureOwnKeys(owner), fields: { key: PropertyKey; expected: PropertyDescriptor }[] = []
+      for (let index = 0; index < names.length; index++) {
+        const key = names[index]!, expected = captureDescriptor(owner, key)
+        if (!expected) return undefined
+        fields[index] = { key, expected }
+      }
+      prototypes[prototypes.length] = { owner, fields }
+    }
+    const current = () => {
+      try {
+        for (let index = 0; index < pins.length; index++) {
+          const pin = pins[index]!
+          if (!sameCaptureDescriptor(captureDescriptor(pin.owner, pin.key), pin.expected)) return false
+        }
+        if (capturePrototype(objectPrototype) !== null || capturePrototype(arrayPrototype) !== objectPrototype ||
+          capturePrototype(hashPrototype) !== hashParent || captureDescriptor(objectPrototype, "toJSON") ||
+          captureDescriptor(arrayPrototype, "toJSON")) return false
+        for (let index = 0; index < prototypes.length; index++) {
+          const pin = prototypes[index]!, names = captureOwnKeys(pin.owner)
+          if (names.length !== pin.fields.length) return false
+          for (let position = 0; position < names.length; position++) {
+            const field = pin.fields[position]!
+            if (names[position] !== field.key ||
+              !sameCaptureDescriptor(captureDescriptor(pin.owner, field.key), field.expected)) return false
+          }
+        }
+        return true
+      } catch { return false }
+    }
+    if (!current()) return undefined
+    return captureFreeze({ isProxy: proxy.value as (value: unknown) => boolean, current })
+  } catch { return undefined }
+}
+
+const originalCaptureRuntime = initializeCaptureRuntime()
+
+/** A private frozen backend capability; it carries no domain state or authority. */
+export function sfCanonicalCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
+  return originalCaptureRuntime?.current() ? originalCaptureRuntime : undefined
+}
+
 /** Memoized canonical bytes require the original serializer and plain tagged arrays. */
 export function sfCanonicalSerializerUnhooked() {
   return JSON.stringify === canonicalStringify && Object.getPrototypeOf(Array.prototype) === Object.prototype &&

@@ -1,77 +1,20 @@
-import { types } from "node:util"
-import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+import { digestSfValue, sfCanonicalCaptureRuntime } from "../contracts/canonical.ts"
 
-// This preparation only removes unused serialization of one context result.
-// It retains no authorization and never replaces the live comparison's digest.
-const descriptor = Object.getOwnPropertyDescriptor
-const descriptors = Object.getOwnPropertyDescriptors
-const ownKeys = Reflect.ownKeys
-const prototype = Object.getPrototypeOf
-const own = Object.hasOwn
-const define = Object.defineProperty
-const create = Object.create
-const sameValue = Object.is
-const isArray = Array.isArray
-const finite = Number.isFinite
-const isProxy = types.isProxy
-const objectPrototype = Object.prototype
-const arrayPrototype = Array.prototype
-const hashRuntime = typeof Bun === "undefined" ? undefined : Bun
-const hashConstructor = hashRuntime?.CryptoHasher
-const hashPrototype = hashConstructor?.prototype
-const hashParent = hashPrototype && prototype(hashPrototype)
-const hashUpdate = hashPrototype && descriptor(hashPrototype, "update")
-const hashDigest = hashPrototype && descriptor(hashPrototype, "digest")
-const intrinsicKeys: readonly (readonly [object, PropertyKey])[] = [
-  ...["Object", "Array", "JSON", "Number", "Reflect", "WeakMap", "WeakSet", "Bun"].map((key) => [globalThis, key] as const),
-  ...["getOwnPropertyDescriptor", "getOwnPropertyDescriptors", "getPrototypeOf", "hasOwn", "keys", "is", "defineProperty", "create"].map((key) => [Object, key] as const),
-  [Array, "isArray"], [Array, Symbol.species], [Number, "isFinite"], [JSON, "stringify"], [Reflect, "ownKeys"], [types, "isProxy"],
-  [WeakMap.prototype, "get"], [WeakMap.prototype, "set"],
-  [WeakSet.prototype, "has"], [WeakSet.prototype, "add"], [WeakSet.prototype, "delete"],
-  ...(hashRuntime && hashConstructor && hashPrototype ? [
-    [hashRuntime, "CryptoHasher"], [hashConstructor, "prototype"], [hashPrototype, "update"], [hashPrototype, "digest"],
-  ] as const : []),
-]
-const intrinsicPins = intrinsicKeys.map(([owner, key]) => ({ owner, key, expected: descriptor(owner, key) }))
-const prototypePins = [objectPrototype, arrayPrototype].map((owner) => ({
-  owner, fields: ownKeys(owner).map((key) => ({ key, expected: descriptor(owner, key) })),
-}))
-const descriptorFields = ["configurable", "enumerable", "value", "writable", "get", "set"] as const
-
-function sameDescriptor(left: PropertyDescriptor | undefined, right: PropertyDescriptor | undefined) {
-  if (!left || !right) return left === right
-  for (let index = 0; index < descriptorFields.length; index++) {
-    const field = descriptorFields[index]!
-    if (own(left, field) !== own(right, field) || own(left, field) && !sameValue(left[field], right[field])) return false
-  }
-  return true
-}
-
-function unchangedRuntime() {
-  if (typeof isProxy !== "function" || !hashPrototype || typeof hashUpdate?.value !== "function" ||
-    typeof hashDigest?.value !== "function" || prototype(hashPrototype) !== hashParent ||
-    prototype(arrayPrototype) !== objectPrototype || prototype(objectPrototype) !== null) return false
-  for (let index = 0; index < intrinsicPins.length; index++) {
-    const pin = intrinsicPins[index]!
-    if (!sameDescriptor(descriptor(pin.owner, pin.key), pin.expected)) return false
-  }
-  for (let index = 0; index < prototypePins.length; index++) {
-    const pin = prototypePins[index]!, current = ownKeys(pin.owner)
-    if (current.length !== pin.fields.length) return false
-    for (let position = 0; position < current.length; position++) {
-      const field = pin.fields[position]!
-      if (current[position] !== field.key || !sameDescriptor(descriptor(pin.owner, field.key), field.expected)) return false
-    }
-  }
-  return sfCanonicalSerializerUnhooked()
-}
-
-const opaque = Symbol("opaque-context-identity")
+// The helper performs no reflective work while loading. Its earlier canonical
+// anchor decides whether any private-copy operation can run.
+const opaque = {}
 
 /** No getters, Proxy traps, custom iterators or serializer hooks run in this walk.
  * Aliases are copied once; an active ancestor is not mistaken for an alias. */
-function capture(value: unknown): { value: unknown } | undefined {
-  if (!unchangedRuntime()) return undefined
+function capture(value: unknown) {
+  const runtime = sfCanonicalCaptureRuntime()
+  if (!runtime) return undefined
+  // No callback or await separates the earlier admission from these native aliases.
+  const descriptors = Object.getOwnPropertyDescriptors, ownKeys = Reflect.ownKeys
+  const prototype = Object.getPrototypeOf, own = Object.hasOwn
+  const define = Object.defineProperty, create = Object.create
+  const isArray = Array.isArray, finite = Number.isFinite, isProxy = runtime.isProxy
+  const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
   const copies = new WeakMap<object, object>()
   const active = new WeakSet<object>()
   const visit = (item: unknown): unknown => {
@@ -110,7 +53,7 @@ function capture(value: unknown): { value: unknown } | undefined {
   }
   try {
     const copied = visit(value)
-    return copied !== opaque && unchangedRuntime() ? { value: copied } : undefined
+    return copied !== opaque && runtime.current() ? { value: copied, runtime } : undefined
   } catch {
     // Native allocation/depth failures do not replace canonical admission.
     return undefined
@@ -128,9 +71,9 @@ export function prepareSfCapturedContextIdentity(value: unknown): (current: unkn
   }
   let expected: string | undefined
   return (current) => {
-    if (!unchangedRuntime()) return false
+    if (!captured.runtime.current()) return false
     expected ??= digestSfValue(captured.value)
     const actual = digestSfValue(current)
-    return unchangedRuntime() && expected === actual
+    return captured.runtime.current() && expected === actual
   }
 }
