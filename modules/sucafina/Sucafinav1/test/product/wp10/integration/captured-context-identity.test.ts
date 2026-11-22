@@ -269,7 +269,8 @@ for (const mode of capturedContextLoadingModes)
     expect(receipt.omniDelegations).toBe(0)
     expect(receipt.order).toEqual([
       ...(limited ? ["bootstrap-limited"] : []),
-      "canonical-loaded", "hook-arranged", "helper-loaded", "prepared", "changed", "compared", "restored",
+      "canonical-loaded", "hook-arranged", "helper-loaded", "cold-prepared", "positive-prepared",
+      "positive-compared", "changed", "cold-compared", "restored",
     ])
     expect(receipt.beforeHookAdmitted).toBe(!limited)
     expect(receipt.bundleFrozen).toBe(!limited)
@@ -278,6 +279,11 @@ for (const mode of capturedContextLoadingModes)
     expect(receipt.loadHookCalls).toBe(0)
     expect(receipt.preparationHookCalls).toBe(receipt.originalHookCalls)
     expect(receipt.preparationTraps).toEqual(receipt.originalTraps)
+    expect(receipt.positivePreparationHookCalls).toBe(receipt.originalHookCalls)
+    expect(receipt.positivePreparationTraps).toEqual(receipt.originalTraps)
+    expect(receipt.unchangedMatches).toBe(true)
+    expect(receipt.unchangedHookCalls).toBe(receipt.originalHookCalls)
+    expect(receipt.unchangedTraps).toEqual(receipt.originalTraps)
     expect(receipt.originalMatches).toBe(false)
     expect(receipt.actualMatches).toBe(false)
     expect(receipt.bootstrapGetterCalls).toBe(0)

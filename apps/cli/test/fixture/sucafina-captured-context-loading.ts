@@ -18,8 +18,13 @@ type LoadingReceipt = {
   loadHookCalls: number
   originalHookCalls: number
   preparationHookCalls: number
+  positivePreparationHookCalls: number
+  unchangedHookCalls: number
+  unchangedMatches: boolean
   originalTraps: string[]
   preparationTraps: string[]
+  positivePreparationTraps: string[]
+  unchangedTraps: string[]
   originalMatches: boolean
   actualMatches: boolean
   bootstrapGetterCalls: number
@@ -150,13 +155,25 @@ async function child(mode: LoadingMode): Promise<LoadingReceipt> {
     calls = 0
     const same = helper.prepareSfCapturedContextIdentity(source)
     const preparationHookCalls = calls, preparationTraps = [...traps]
-    order.push("prepared")
+    order.push("cold-prepared")
+    // The first matcher stays unconsumed until the change. A positive must not
+    // warm its deferred baseline and hide the original stateful-hook finding.
+    calls = 0
+    traps.length = 0
+    const sameUnchanged = helper.prepareSfCapturedContextIdentity(source)
+    const positivePreparationHookCalls = calls, positivePreparationTraps = [...traps]
+    order.push("positive-prepared")
+    calls = 0
+    traps.length = 0
+    const unchangedMatches = sameUnchanged(source)
+    const unchangedHookCalls = calls, unchangedTraps = [...traps]
+    order.push("positive-compared")
     target.x = 2
     collapse = mode === "stateful-map" || mode === "stateful-keys" || mode === "stateful-hasher"
     order.push("changed")
     const originalMatches = original === canonical.digestSfValue(source)
     const actualMatches = same(source)
-    order.push("compared")
+    order.push("cold-compared")
     restoreHook()
     restoreHook = () => {}
     order.push("restored")
@@ -164,6 +181,7 @@ async function child(mode: LoadingMode): Promise<LoadingReceipt> {
     return {
       mode, pid: process.pid, order, beforeHookAdmitted, duringHookAdmitted, restoredAdmitted, bundleFrozen,
       loadHookCalls, originalHookCalls, preparationHookCalls, originalTraps, preparationTraps,
+      positivePreparationHookCalls, positivePreparationTraps, unchangedHookCalls, unchangedTraps, unchangedMatches,
       originalMatches, actualMatches, bootstrapGetterCalls,
     }
   } finally {
