@@ -21,6 +21,8 @@ The composition investigation below is static. The candidate-source regression o
 
 The log records two selected tests, zero passing, two failing and three assertions. The second case first passed its agent-level denial assertion and then failed the recorded-Session denial assertion. This is not a preload/import failure or a run with no matching tests. The focused Omni control reported `not applicable`; this run supplies no Omni-spawn evidence.
 
+Each selected test stopped at its first failing assertion. The later calls to `ask`, `authorize`, `askExplicit`, `list`, and the remaining assertions in those cases were not reached. The full test names do not grant coverage to those unexecuted statements.
+
 The workflow verified the old PermissionV2 SHA-256 before and after, verified the PR test SHA-256 before copying it to a new temporary test path, checked all tracked source files remained unchanged, preserved the actual Bun exit code, and removed only its owned test copy. The artifact is [14731740025](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44964767854/artifacts/14731740025), ZIP SHA-256 `afcd6d539588f9ffb60f5f5199cb590a5e205e2a21e1825067cd105ff57d365b`.
 
 These are candidate-source tests. The installed ELF was not executed by this case, and no Team bypass is asserted.

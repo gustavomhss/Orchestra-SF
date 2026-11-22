@@ -28,6 +28,22 @@ const metadata = new Set(["start", "end", "loc", "range", "leadingComments", "in
 const extraMetadata = new Set(["parenthesized", "parenStart", "raw", "rawValue", "trailingComma"])
 const absent = ["absent"]
 
+function parserCompatibility(node, fields) {
+  const values = {}
+  if (node.type === "ObjectProperty" || node.type === "ObjectMethod") {
+    const kind = node.kind === undefined ? fields.kind?.default : node.kind
+    if (node.type === "ObjectMethod") check(["method", "get", "set"].includes(kind), "G09_ORIGIN_METHOD_KIND_INVALID")
+    const expected = node.type === "ObjectMethod" && kind === "method"
+    check(node.method === undefined || node.method === expected, "G09_ORIGIN_LEGACY_METHOD_DIFFER", node.type + ".method")
+    values.method = expected
+  }
+  if (["ArrowFunctionExpression", "ObjectMethod"].includes(node.type)) {
+    check(node.id === undefined || node.id === null, "G09_ORIGIN_UNSUPPORTED_FUNCTION_ID", node.type)
+    values.id = null
+  }
+  return values
+}
+
 export function semanticTree(root, nodeFields) {
   const nodes = new Map()
   function visit(value, at, parentNode = null, parentField = null) {
@@ -44,14 +60,25 @@ export function semanticTree(root, nodeFields) {
       return ["record", Object.keys(value).sort().map((key) => [key, visit(value[key], [...at, key])])]
     const fields = nodeFields[value.type]
     check(fields, "G09_ORIGIN_UNKNOWN_NODE", value.type)
+    const compatibility = parserCompatibility(value, fields)
     for (const key of Object.keys(value)) {
-      check(key === "type" || metadata.has(key) || Object.hasOwn(fields, key), "G09_ORIGIN_UNKNOWN_FIELD", value.type + "." + key)
+      check(key === "type" || metadata.has(key) || Object.hasOwn(fields, key) || Object.hasOwn(compatibility, key),
+        "G09_ORIGIN_UNKNOWN_FIELD", value.type + "." + key + " at " + JSON.stringify(at))
     }
     if (value.extra != null) {
       check(typeof value.extra === "object" && !Array.isArray(value.extra), "G09_ORIGIN_EXTRA_INVALID")
-      for (const key of Object.keys(value.extra))
-        check(extraMetadata.has(key), "G09_ORIGIN_UNREVIEWED_EXTRA", key)
+      for (const key of Object.keys(value.extra)) {
+        if (key === "topLevelAwait") {
+          check(value.type === "Program" && value.sourceType === "module", "G09_ORIGIN_TOP_LEVEL_AWAIT_CONTEXT")
+          check(typeof value.extra[key] === "boolean", "G09_ORIGIN_TOP_LEVEL_AWAIT_TYPE")
+        } else if (key === "shorthand") {
+          check(value.type === "ObjectProperty" && value.shorthand === true && value.extra[key] === true,
+            "G09_ORIGIN_LEGACY_SHORTHAND_DIFFER")
+        } else check(extraMetadata.has(key), "G09_ORIGIN_UNREVIEWED_EXTRA", key + " at " + JSON.stringify(at))
+      }
     }
+    if (value.type === "Program" && value.sourceType === "module")
+      check(typeof value.extra?.topLevelAwait === "boolean", "G09_ORIGIN_TOP_LEVEL_AWAIT_FLAG_REQUIRED")
     check(value.extra?.parenthesized === undefined || typeof value.extra.parenthesized === "boolean",
       "G09_ORIGIN_PARENTHESIS_FLAG_INVALID")
     check(!(value.type === "Identifier" && value.extra?.parenthesized && parentField === "left" &&
@@ -65,17 +92,60 @@ export function semanticTree(root, nodeFields) {
       const field = value[key] === undefined ? fields[key].default : value[key]
       return [key, visit(field, [...at, key], value, key)]
     })
+    for (const key of Object.keys(compatibility).sort())
+      semanticFields.push(["@parser:" + key, visit(compatibility[key], [...at, key], value, key)])
+    if (value.type === "Program" && value.sourceType === "module")
+      semanticFields.push(["@parser:topLevelAwait", ["boolean", value.extra.topLevelAwait]])
     return ["node", value.type, semanticFields]
   }
-  const canonical = JSON.stringify(visit(root, []))
-  return { canonical, nodes, sha256: sha256(canonical) }
+  const projection = visit(root, [])
+  const canonical = JSON.stringify(projection)
+  return { projection, canonical, nodes, sha256: sha256(canonical) }
+}
+
+export function firstSemanticDifference(left, right, at = []) {
+  const summary = (value) => value[0] === "node" ? { kind: "node", type: value[1] }
+    : value[0] === "array" ? { kind: "array", length: value[1].length }
+      : value[0] === "record" ? { kind: "record", keys: value[1].map(([key]) => key) }
+        : typeof value[1] === "string" && value[1].length > 512
+          ? { kind: value[0], valuePrefix: value[1].slice(0, 512), valueLength: value[1].length, valueSha256: sha256(value[1]) }
+          : { kind: value[0], value: value[1] ?? null }
+  const mismatch = (reason) => ({ structuralPath: at, reason, transformed: summary(left), reparsed: summary(right) })
+  if (left[0] !== right[0]) return mismatch("value-kind")
+  if (left[0] === "node" && left[1] !== right[1]) return mismatch("node-type")
+  if (left[0] === "node" || left[0] === "record") {
+    const a = left[left[0] === "node" ? 2 : 1]
+    const b = right[right[0] === "node" ? 2 : 1]
+    if (JSON.stringify(a.map(([key]) => key)) !== JSON.stringify(b.map(([key]) => key)))
+      return { structuralPath: at, reason: "field-set", transformed: a.map(([key]) => key), reparsed: b.map(([key]) => key) }
+    for (let index = 0; index < a.length; index++) {
+      const difference = firstSemanticDifference(a[index][1], b[index][1], [...at, a[index][0]])
+      if (difference) return difference
+    }
+    return null
+  }
+  if (left[0] === "array") {
+    if (left[1].length !== right[1].length) return mismatch("array-length")
+    for (let index = 0; index < left[1].length; index++) {
+      const difference = firstSemanticDifference(left[1][index], right[1][index], [...at, index])
+      if (difference) return difference
+    }
+    return null
+  }
+  return left[1] === right[1] ? null : mismatch("value")
 }
 
 export function linkSemanticTrees(transformedAst, reparsedAst, nodeFields) {
   const transformed = semanticTree(transformedAst, nodeFields)
   const reparsed = semanticTree(reparsedAst, nodeFields)
-  check(transformed.canonical === reparsed.canonical, "G09_ORIGIN_SEMANTIC_TREE_DIFFER",
-    "transformed=" + transformed.sha256 + "; reparsed=" + reparsed.sha256)
+  if (transformed.canonical !== reparsed.canonical) {
+    const diagnostic = { transformedSha256: transformed.sha256, reparsedSha256: reparsed.sha256,
+      firstDifference: firstSemanticDifference(transformed.projection, reparsed.projection) }
+    const error = new Error("G09_ORIGIN_SEMANTIC_TREE_DIFFER: " + JSON.stringify(diagnostic))
+    error.semanticDiagnostic = diagnostic
+    error.semanticProjections = { transformed: transformed.projection, reparsed: reparsed.projection }
+    throw error
+  }
   return { transformed, reparsed }
 }
 
@@ -131,7 +201,7 @@ async function main() {
     harnessSha256: sha256(await readFile(fileURLToPath(import.meta.url))),
     method: "whole-semantic-tree-equality-and-exact-structural-path-to-transform-origin",
     formalG09Pass: false, reviewDisposition: "not-assigned", existingExactEndCriterionChanged: false,
-    inputs: {}, files: [], occurrences: [],
+    inputs: {}, files: [], semanticDifferences: [], occurrences: [],
     limits: [
       "Supplementary origin metadata from the same pinned transform, not an independent compiler validation.",
       "No original or supplementary source-map point is created, interpolated, or changed.",
@@ -167,14 +237,23 @@ async function main() {
       "G09_ORIGIN_PRECEDING_RECEIPT_DIFFER")
     const toolchain = await solidToolchain(candidate)
     const require = createRequire(toolchain.transform)
-    const types = require("@babel/types")
-    const typesVersion = require("@babel/types/package.json").version
-    const generatorVersion = require("@babel/generator/package.json").version
-    check(typesVersion === "7.29.7" && generatorVersion === "7.29.7", "G09_ORIGIN_DEPENDENCY_VERSION_DIFFER")
+    const coreRequire = createRequire(require.resolve("@babel/core"))
+    const types = coreRequire("@babel/types")
+    const typesVersion = coreRequire("@babel/types/package.json").version
+    const generatorVersion = coreRequire("@babel/generator/package.json").version
+    const parserVersion = coreRequire("@babel/parser/package.json").version
+    check(typesVersion === "7.29.7" && generatorVersion === "7.29.7" && parserVersion === "7.29.7", "G09_ORIGIN_DEPENDENCY_VERSION_DIFFER")
     receipt.toolchain = { bun: Bun.version, bunRevision: Bun.revision, core: toolchain.babel.version,
-      types: typesVersion, generator: generatorVersion, lockfileSha256: pins.lock }
+      types: typesVersion, generator: generatorVersion, parser: parserVersion,
+      dependenciesResolvedFrom: "effective @babel/core module", lockfileSha256: pins.lock }
     receipt.semanticProjection = { fields: "All @babel/types.NODE_FIELDS with their declared defaults; sorted field names; array order preserved",
       omittedNodeMetadata: [...metadata].sort(), allowedExtraMetadata: [...extraMetadata].sort(),
+      parserCompatibility: {
+        topLevelAwait: "Required boolean on module Program.extra only; preserved in the semantic projection without a guessed default",
+        method: "ObjectProperty: false; ObjectMethod: kind=method means true, get/set means false; absent builder field is derived from compared type/kind; contradictory or nonboolean values reject",
+        shorthand: "extra.shorthand is accepted only as true on ObjectProperty whose semantic shorthand field is true",
+        id: "ArrowFunctionExpression and ObjectMethod permit absent or null only; canonical null is preserved; any named id rejects",
+      },
       identifierParentheses: "Reject parenthesized Identifier in AssignmentExpression.left or AssignmentPattern.left before projection.",
       unknownNodeOrFieldOrExtra: "reject", numbers: "finite; negative zero distinct" }
     const cases = targetIds.map((id) => {
@@ -232,11 +311,22 @@ async function main() {
               existingBabelEndAnchor: "not-proven", endOfBunSpan: "not-proven", tuiExecution: "not-observed", reviewDisposition: "not-assigned" })
           } catch (error) {
             receipt.occurrences.push({ id: row.id, repositoryPath, status: "blocked", reason: String(error),
+              semanticDiagnostic: error?.semanticDiagnostic ?? null,
               existingBabelEndAnchor: "not-proven", endOfBunSpan: "not-proven", tuiExecution: "not-observed" })
           }
         }
       } catch (error) {
+        if (error?.semanticProjections) {
+          const diagnosticPath = "semantic-differences/" + repositoryPath + ".json"
+          const diagnosticBytes = Buffer.from(JSON.stringify({ schema: "sf-g09-semantic-tree-difference-v1", repositoryPath,
+            ...error.semanticDiagnostic, projections: error.semanticProjections }, null, 2) + "\n")
+          await mkdir(path.dirname(path.join(output, diagnosticPath)), { recursive: true, mode: 0o700 })
+          await writeFile(path.join(output, diagnosticPath), diagnosticBytes, { flag: "wx", mode: 0o600 })
+          receipt.semanticDifferences.push({ repositoryPath, path: diagnosticPath, sha256: sha256(diagnosticBytes),
+            bytes: diagnosticBytes.length, ...error.semanticDiagnostic })
+        }
         for (const row of group) receipt.occurrences.push({ id: row.id, repositoryPath, status: "blocked", reason: String(error),
+          semanticDiagnostic: error?.semanticDiagnostic ?? null,
           existingBabelEndAnchor: "not-proven", endOfBunSpan: "not-proven", tuiExecution: "not-observed" })
       }
     }

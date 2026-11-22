@@ -1,18 +1,81 @@
 import { expect, test } from "bun:test"
 import { solidToolchain, identifierSpan, parseIdentifiers } from "./g09-recover-solid.mjs"
-import { semanticTree, linkSemanticTrees, originForToken } from "./g09-solid-origin.mjs"
+import { semanticTree, linkSemanticTrees, originForToken, firstSemanticDifference } from "./g09-solid-origin.mjs"
 import { createRequire } from "node:module"
 
 if (!process.env.G09_CANDIDATE) throw new Error("G09_CANDIDATE is required")
 const toolchain = await solidToolchain(process.env.G09_CANDIDATE)
 const require = createRequire(toolchain.transform)
-const fields = require("@babel/types").NODE_FIELDS
+const coreRequire = createRequire(require.resolve("@babel/core"))
+const fields = coreRequire("@babel/types").NODE_FIELDS
 const parse = (text) => toolchain.babel.parseSync(text, { configFile: false, babelrc: false, sourceType: "module" })
 
 test("semantic equality ignores locations and declared formatting metadata only", () => {
   const left = parse("const object = (alpha)")
   const right = parse("const object = alpha")
   expect(() => linkSemanticTrees(left, right, fields)).not.toThrow()
+})
+
+test("module topLevelAwait is a required boolean and remains part of semantic equality", () => {
+  const left = parse("const x = alpha")
+  const right = parse("const x = alpha")
+  right.program.extra.topLevelAwait = !left.program.extra.topLevelAwait
+  expect(() => linkSemanticTrees(left, right, fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+  for (const value of [0, "false", null]) {
+    const item = parse("const x = alpha")
+    item.program.extra.topLevelAwait = value
+    expect(() => semanticTree(item, fields)).toThrow("G09_ORIGIN_TOP_LEVEL_AWAIT_TYPE")
+  }
+  const missing = parse("const x = alpha")
+  delete missing.program.extra.topLevelAwait
+  expect(() => semanticTree(missing, fields)).toThrow("G09_ORIGIN_TOP_LEVEL_AWAIT_FLAG_REQUIRED")
+})
+
+test("topLevelAwait metadata is accepted only on a module Program", () => {
+  const wrongNode = parse("const x = alpha")
+  wrongNode.program.body[0].declarations[0].init.extra = { topLevelAwait: false }
+  expect(() => semanticTree(wrongNode, fields)).toThrow("G09_ORIGIN_TOP_LEVEL_AWAIT_CONTEXT")
+  const wrongMode = parse("const x = alpha")
+  wrongMode.program.sourceType = "script"
+  expect(() => semanticTree(wrongMode, fields)).toThrow("G09_ORIGIN_TOP_LEVEL_AWAIT_CONTEXT")
+})
+
+test("legacy method and null id fields have only their type-specific parser meaning", () => {
+  const left = parse("const object = { key: 1, method() {}, get value() { return 1 }, set value(x) {} }; const arrow = () => 1")
+  const right = parse("const object = { key: 1, method() {}, get value() { return 1 }, set value(x) {} }; const arrow = () => 1")
+  for (const property of right.program.body[0].declarations[0].init.properties) {
+    delete property.method
+    delete property.id
+  }
+  delete right.program.body[1].declarations[0].init.id
+  expect(() => linkSemanticTrees(left, right, fields)).not.toThrow()
+  for (const replacement of [true, "false", null]) {
+    const item = parse("const object = { key: 1 }")
+    item.program.body[0].declarations[0].init.properties[0].method = replacement
+    expect(() => semanticTree(item, fields)).toThrow("G09_ORIGIN_LEGACY_METHOD_DIFFER")
+  }
+  for (const source of ["const object = { method() {} }", "const object = { get value() {} }"]) {
+    const item = parse(source)
+    const method = item.program.body[0].declarations[0].init.properties[0]
+    method.method = method.kind !== "method"
+    expect(() => semanticTree(item, fields)).toThrow("G09_ORIGIN_LEGACY_METHOD_DIFFER")
+  }
+  const named = parse("const arrow = () => 1")
+  named.program.body[0].declarations[0].init.id = parse("name").program.body[0].expression
+  expect(() => semanticTree(named, fields)).toThrow("G09_ORIGIN_UNSUPPORTED_FUNCTION_ID")
+})
+
+test("legacy shorthand metadata must agree with the compared property flag", () => {
+  const left = parse("const object = { projectID }")
+  const right = parse("const object = { projectID }")
+  delete right.program.body[0].declarations[0].init.properties[0].extra.shorthand
+  expect(() => linkSemanticTrees(left, right, fields)).not.toThrow()
+  const contradictory = parse("const object = { projectID: projectID }")
+  contradictory.program.body[0].declarations[0].init.properties[0].extra = { shorthand: true }
+  expect(() => semanticTree(contradictory, fields)).toThrow("G09_ORIGIN_LEGACY_SHORTHAND_DIFFER")
+  const wrongType = parse("const object = { projectID }")
+  wrongType.program.body[0].declarations[0].init.properties[0].extra.shorthand = "true"
+  expect(() => semanticTree(wrongType, fields)).toThrow("G09_ORIGIN_LEGACY_SHORTHAND_DIFFER")
 })
 
 test("parenthesized assignment identifiers are outside the supported semantic projection", () => {
@@ -36,6 +99,23 @@ test("operator, sibling order, names, and node types are semantic", () => {
     ["const x = alpha", "const x = beta"],
     ["const x = alpha", "const x = 'alpha'"],
   ]) expect(() => linkSemanticTrees(parse(left), parse(right), fields)).toThrow("G09_ORIGIN_SEMANTIC_TREE_DIFFER")
+})
+
+test("a semantic mismatch reports its exact field path and both values", () => {
+  const left = semanticTree(parse("a + b"), fields)
+  const right = semanticTree(parse("a - b"), fields)
+  const difference = firstSemanticDifference(left.projection, right.projection)
+  expect(difference.structuralPath).toEqual(["program", "body", 0, "expression", "operator"])
+  expect(difference.transformed).toEqual({ kind: "string", value: "+" })
+  expect(difference.reparsed).toEqual({ kind: "string", value: "-" })
+  try {
+    linkSemanticTrees(parse("a + b"), parse("a - b"), fields)
+    throw new Error("expected the differing tree to reject")
+  } catch (error) {
+    expect(error.semanticDiagnostic.firstDifference).toEqual(difference)
+    expect(error.semanticProjections.transformed).toEqual(left.projection)
+    expect(error.semanticProjections.reparsed).toEqual(right.projection)
+  }
 })
 
 test("computed member access cannot match a noncomputed property", () => {
