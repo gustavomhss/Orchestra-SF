@@ -53,7 +53,7 @@ const orderKeys = [
 ] as const
 const quoteKeys = [
   "id", "supplierId", "supplier", "currency", "total", "description", "notes",
-  "attachments", "scores", "cscores", "techPass",
+  "attachments", "scores", "cscores", "techPass", "qty", "unitPrice",
 ] as const
 const supplierKeys = [
   "id", "number", "status", "createdBy", "legalName", "tradingName", "type", "country",
@@ -237,7 +237,7 @@ function publishedRequestBasis(row: Record<string, unknown>, snapshot: Snapshot,
     requestSummary: procurementRequestSummary(row, baseCurrency, version, formSettings),
   }
 }
-function pageData(
+export function projectSfProcurementPage(
   capability: Capability, view: View, actor: Actor, prepared: Record<string, unknown>, snapshot: Snapshot,
   assetSupplier?: string,
 ) {
@@ -301,7 +301,7 @@ type ProcurementPageOutcome<Stamp> =
   | {
       status: "ok"
       context: Stamp
-      value: NonNullable<ReturnType<typeof pageData>> & Readonly<{
+      value: NonNullable<ReturnType<typeof projectSfProcurementPage>> & Readonly<{
         capabilityId: Capability; selection: Selection; allowedActionIds: readonly string[]
       }>
     }
@@ -410,7 +410,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
           { ...snapshot, data: publicSfData(snapshot.data) }, actor,
           environment,
         )
-        const projection = pageData(capability, view, actor, prepared?.data ?? {}, snapshot, assetSupplier)
+        const projection = projectSfProcurementPage(capability, view, actor, prepared?.data ?? {}, snapshot, assetSupplier)
         if (!projection)
           return { commit: false, value: { status: "unavailable" as const, reason: "procurement-projection-unavailable" } }
         return {
