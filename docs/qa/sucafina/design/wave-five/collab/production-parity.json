@@ -1,5 +1,5 @@
 {
-  "workerSource": "e2a8bc53217d89ad40fe4975122074215fe35474",
+  "workerSource": "db7efc17411d31d14a201f81dac168ccb7ff7f08",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -61,7 +61,7 @@
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
-      "sha": "56680de04159b0539b6afc405cb3a557fda2ed40"
+      "sha": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
@@ -148,8 +148,19 @@
       "unitRecord": "qualification/phase-unit-02.json",
       "audit": "qualification/operational-read-audit.json",
       "review": "qualification/operational-read-review.json",
-      "runtimeStatus": "Installed equivalence and clean import pending",
-      "equivalenceRun": 44992278999
+      "runtimeStatus": "Installed16+8 equivalence passed; UI55/56 diagnostic journey passed; clean UI56 refresh missed10s and clean UI53 acknowledgement observer failed, both preserved.",
+      "equivalenceRun": 44992278999,
+      "equivalenceRecord": "attempts/phase-equivalence-01.json"
+    },
+    "cleanImport4": {
+      "run": 44992688529,
+      "result": "failed after UI56 readiness at preview-refresh rendering deadline",
+      "record": "attempts/import-fixed-04.json"
+    },
+    "cleanCollaboration7": {
+      "run": 44992785649,
+      "result": "failed on Chromium acknowledgement read after actual confirmation receipt; test observation corrected",
+      "record": "attempts/collaboration-clean-07.json"
     }
   },
   "excluded": [

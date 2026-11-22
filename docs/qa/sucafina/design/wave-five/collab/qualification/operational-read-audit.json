@@ -124,7 +124,7 @@
   ],
   "hostStateReadTotal": 135,
   "extraOriginalImportTransactions": 4,
-  "localAudit": "../local-operational-read-audit.json",
+  "localAudit": "../../local-operational-read-audit.json",
   "commonChecks": [
     "Every original state.read still enters the original persistence.transaction('dashboard'), executes its original authorize before and after, preserves abort/sameAuthority, and returns commit:false.",
     "Write-mode namespace health is an authority condition, not a mutation. No producer command/prepare/evaluate/apply/send/dispatch handler is executed by these observations.",

@@ -23,6 +23,594 @@
     "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
   ],
   "notes": "Clean original product; only import-only spec selection plus existing test-ci request. No diagnostic code, timeout change, source substitution or workflow changes.",
+  "result": "failed",
   "run": 44992688529,
-  "status": "running clean import-only"
+  "job": 137116989957,
+  "cleanupJob": 137117967613,
+  "tests": {
+    "passed": 0,
+    "failed": 1
+  },
+  "failure": {
+    "assertion": "UI56 simulation heading after Refresh receipt must be visible within unchanged 10 seconds.",
+    "line": 190,
+    "error": "expect(locator).toBeVisible(): element not found at deadline",
+    "observedAtTeardown": "Native provider and view were ready and the real original preview was rendered. Timing relative to response/renderer requires trace9; no clean pass inferred.",
+    "pageErrors": 0,
+    "consoleErrors": 0
+  },
+  "completed": [
+    "Original live ClamD admission and preview exactly once; no Apply",
+    "UI55 source readback, full-impact count/last field, four review modes, cancellation file/destination retention",
+    "UI56 unchanged provider readiness10s"
+  ],
+  "independentReferenceElapsedMs": 9661,
+  "performanceLimitation": "Single observation; earlier diagnostic5.300s is not a stable benchmark.",
+  "captures": [
+    {
+      "index": 0,
+      "name": "UI55-setup-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:15:51.4886229Z S",
+      "base64Length": 131756
+    },
+    {
+      "index": 1,
+      "name": "UI55-setup-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:15:52.1204696Z S",
+      "base64Length": 137420
+    },
+    {
+      "index": 2,
+      "name": "UI55-setup-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:15:52.2566413Z S",
+      "base64Length": 56184
+    },
+    {
+      "index": 3,
+      "name": "UI55-setup-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:15:52.5701017Z S",
+      "base64Length": 55352
+    },
+    {
+      "index": 4,
+      "name": "UI55-dark-desktop-selected-file-options",
+      "parts": 6,
+      "at": "2026-11-22T06:15:59.3749861Z S",
+      "base64Length": 135912
+    },
+    {
+      "index": 5,
+      "name": "UI55-dark-390-selected-file-options",
+      "parts": 3,
+      "at": "2026-11-22T06:15:59.5190319Z S",
+      "base64Length": 48304
+    },
+    {
+      "index": 6,
+      "name": "UI55-scanned-simulation-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:16:19.3074926Z S",
+      "base64Length": 136328
+    },
+    {
+      "index": 7,
+      "name": "UI55-scanned-simulation-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:16:19.8774852Z S",
+      "base64Length": 140588
+    },
+    {
+      "index": 8,
+      "name": "UI55-scanned-simulation-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:16:20.0571518Z S",
+      "base64Length": 63256
+    },
+    {
+      "index": 9,
+      "name": "UI55-scanned-simulation-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:16:20.4509187Z S",
+      "base64Length": 62584
+    },
+    {
+      "index": 10,
+      "name": "UI55-dark-desktop-field-change",
+      "parts": 8,
+      "at": "2026-11-22T06:16:21.1476020Z S",
+      "base64Length": 168724
+    },
+    {
+      "index": 11,
+      "name": "UI55-dark-desktop-complete-source-impact",
+      "parts": 9,
+      "at": "2026-11-22T06:16:21.7356902Z S",
+      "base64Length": 201940
+    },
+    {
+      "index": 12,
+      "name": "UI55-dark-desktop-cancel-retains-file",
+      "parts": 6,
+      "at": "2026-11-22T06:16:22.3961188Z S",
+      "base64Length": 135904
+    },
+    {
+      "index": 13,
+      "name": "FAILED-native-wave-three-test-data",
+      "parts": 6,
+      "at": "2026-11-22T06:16:43.2862823Z S",
+      "base64Length": 141052
+    }
+  ],
+  "gallery": [
+    {
+      "index": 13,
+      "name": "FAILED-native-wave-three-test-data",
+      "parts": 6,
+      "at": "2026-11-22T06:16:43.2862823Z S",
+      "base64Length": 141052,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/import-fixed-04-FAILED-native-wave-three-test-data.jpg",
+      "sha": "0b1319bcca0819225688eca7bc2970a06bec1c10",
+      "attempt": "fixed4"
+    }
+  ],
+  "artifact": [
+    {
+      "id": 14741644827,
+      "name": "playwright-ubuntu-24.04-1",
+      "sizeBytes": 16651356,
+      "digest": "sha256:fcd311bb6632e2cdd13348e193631bef07e40effe440bcf4709d11fca99d7c70",
+      "expiresAt": "2026-11-29T06:16:44Z"
+    }
+  ],
+  "diagnostics": [
+    {
+      "at": "2026-11-22T06:15:49.9271789Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:15:50.5929235Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:15:53.9499192Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:15:54.6682709Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:15:56.2703130Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:15:56.6851194Z S",
+      "kind": "original-import-request",
+      "event": "requestfailed",
+      "mode": "import-targets",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-11-22T06:15:57.3539255Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:00.4494626Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:00.7321190Z S",
+      "kind": "original-import-admission",
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "instrumentation": "CDP response-stage observation; no replay"
+    },
+    {
+      "at": "2026-11-22T06:16:00.7382124Z S",
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-admit",
+      "method": "POST",
+      "failure": null
+    },
+    {
+      "at": "2026-11-22T06:16:01.4479673Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:02.1093918Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:03.6252044Z S",
+      "kind": "original-import-progress",
+      "stage": "preview-producer-response",
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "codecStatus": "ok",
+      "typed": "Some",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "at": "2026-11-22T06:16:03.6326461Z S",
+      "kind": "original-import-preview",
+      "manifestId": "927853b418aefed14f53b433d250325ca0577ec5aef72072e07f11799c5089a4",
+      "state": "preview",
+      "sourceDigest": "0f63dfa5d4519134b015c9d4b7e88bb84ca0a4184bd4dc4294ac8c9da5280554",
+      "domainApplied": false
+    },
+    {
+      "at": "2026-11-22T06:16:03.7491809Z S",
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-preview",
+      "method": "POST",
+      "failure": null
+    },
+    {
+      "at": "2026-11-22T06:16:03.7682941Z S",
+      "kind": "original-import-progress",
+      "stage": "preview-delivered",
+      "activity": "previewing",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "at": "2026-11-22T06:16:13.3401791Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:13.3439939Z S",
+      "kind": "original-import-progress",
+      "stage": "independent-reference-read",
+      "elapsedMs": 9661,
+      "httpStatus": 200,
+      "producerStatus": "ok",
+      "activity": "reading-source",
+      "phase": "selecting",
+      "state": "ready"
+    },
+    {
+      "at": "2026-11-22T06:16:13.9264619Z S",
+      "kind": "original-import-request",
+      "event": "requestfinished",
+      "mode": "import-reference",
+      "method": "GET",
+      "failure": null
+    },
+    {
+      "at": "2026-11-22T06:16:18.1583794Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:28.0135926Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:37.1389497Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:37.6961098Z S",
+      "kind": "original-import-request",
+      "event": "requestfailed",
+      "mode": "import-reference",
+      "method": "GET",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-11-22T06:16:42.2470399Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:42.9107444Z S",
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "at": "2026-11-22T06:16:42.9190866Z S",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready"
+      }
+    },
+    {
+      "at": "2026-11-22T06:16:43.4329561Z S",
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "followup": "import-trace-09.json"
 }

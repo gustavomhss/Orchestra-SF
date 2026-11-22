@@ -24,5 +24,438 @@
     "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts"
   ],
   "notes": "Clean root integration; select only UI51–53 declaration, preserve all permanent helpers and looks. The permanent spec retains both independent declarations. No trace/timeout/source changes.",
-  "status": "running clean UI51–53"
+  "result": "failed",
+  "run": 44992785649,
+  "job": 137117294547,
+  "cleanupJob": 137118066435,
+  "tests": {
+    "passed": 0,
+    "failed": 1
+  },
+  "failure": {
+    "assertion": "Decode the original confirmation acknowledgement via Chromium Response.json.",
+    "line": 176,
+    "error": "Network.getResponseBody: No data found for resource with given identifier",
+    "observedAtTeardown": "Real native confirmation receipt with audit reference and current validity was visible. The response-body read and subsequent fresh recorded projection/capture did not complete, so no clean pass is inferred.",
+    "pageErrors": 0,
+    "consoleErrors": 0
+  },
+  "completed": [
+    "UI51 four modes, actual handoff kind rendered without literal placeholder, removal review/cancel/focus, editor/review/cancel and case alias",
+    "UI52 four modes, original isolated source comment and unsent retained draft",
+    "UI53 material four modes and confirmation review/cancel, original confirm executed; actual receipt visible"
+  ],
+  "captures": [
+    {
+      "index": 0,
+      "name": "UI51-relationship-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:16:53.2566055Z S",
+      "base64Length": 127256
+    },
+    {
+      "index": 1,
+      "name": "UI51-relationship-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:16:53.9577134Z S",
+      "base64Length": 132508
+    },
+    {
+      "index": 2,
+      "name": "UI51-relationship-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:16:54.1082094Z S",
+      "base64Length": 60292
+    },
+    {
+      "index": 3,
+      "name": "UI51-relationship-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:16:54.4595427Z S",
+      "base64Length": 59852
+    },
+    {
+      "index": 4,
+      "name": "UI51-dark-desktop-removal-review",
+      "parts": 5,
+      "at": "2026-11-22T06:16:54.9248263Z S",
+      "base64Length": 105864
+    },
+    {
+      "index": 5,
+      "name": "UI51-dark-desktop-explicit-editor",
+      "parts": 6,
+      "at": "2026-11-22T06:16:58.3333211Z S",
+      "base64Length": 134244
+    },
+    {
+      "index": 6,
+      "name": "UI51-dark-desktop-create-review",
+      "parts": 5,
+      "at": "2026-11-22T06:16:58.7322692Z S",
+      "base64Length": 116804
+    },
+    {
+      "index": 7,
+      "name": "UI51-dark-desktop-case-alias-empty",
+      "parts": 6,
+      "at": "2026-11-22T06:17:01.9728945Z S",
+      "base64Length": 122520
+    },
+    {
+      "index": 8,
+      "name": "UI52-discussion-dark-desktop",
+      "parts": 5,
+      "at": "2026-11-22T06:17:04.8538376Z S",
+      "base64Length": 118296
+    },
+    {
+      "index": 9,
+      "name": "UI52-discussion-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:17:05.2888237Z S",
+      "base64Length": 124716
+    },
+    {
+      "index": 10,
+      "name": "UI52-discussion-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:17:05.4256923Z S",
+      "base64Length": 52236
+    },
+    {
+      "index": 11,
+      "name": "UI52-discussion-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:17:05.7237712Z S",
+      "base64Length": 51724
+    },
+    {
+      "index": 12,
+      "name": "UI52-dark-desktop-origin-unsent-draft",
+      "parts": 7,
+      "at": "2026-11-22T06:17:06.3177415Z S",
+      "base64Length": 144524
+    },
+    {
+      "index": 13,
+      "name": "UI52-dark-390-unsent-draft",
+      "parts": 3,
+      "at": "2026-11-22T06:17:06.4993204Z S",
+      "base64Length": 57980
+    },
+    {
+      "index": 14,
+      "name": "UI53-material-dark-desktop",
+      "parts": 5,
+      "at": "2026-11-22T06:17:09.4934770Z S",
+      "base64Length": 119540
+    },
+    {
+      "index": 15,
+      "name": "UI53-material-light-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:17:09.9780296Z S",
+      "base64Length": 124260
+    },
+    {
+      "index": 16,
+      "name": "UI53-material-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:17:10.1164318Z S",
+      "base64Length": 55208
+    },
+    {
+      "index": 17,
+      "name": "UI53-material-dark-390",
+      "parts": 3,
+      "at": "2026-11-22T06:17:10.4179239Z S",
+      "base64Length": 54732
+    },
+    {
+      "index": 18,
+      "name": "UI53-dark-desktop-confirmation-review",
+      "parts": 5,
+      "at": "2026-11-22T06:17:10.9192578Z S",
+      "base64Length": 111000
+    },
+    {
+      "index": 19,
+      "name": "FAILED-native-wave-three-test-data",
+      "parts": 5,
+      "at": "2026-11-22T06:17:11.8750648Z S",
+      "base64Length": 107544
+    }
+  ],
+  "gallery": [
+    {
+      "index": 0,
+      "name": "UI51-relationship-dark-desktop",
+      "parts": 6,
+      "at": "2026-11-22T06:16:53.2566055Z S",
+      "base64Length": 127256,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/collaboration-clean-07-UI51-relationship-dark-desktop.jpg",
+      "sha": "45fb312e5daa6fd853569982d2be61197b77bf14",
+      "attempt": "collabClean"
+    },
+    {
+      "index": 2,
+      "name": "UI51-relationship-light-390",
+      "parts": 3,
+      "at": "2026-11-22T06:16:54.1082094Z S",
+      "base64Length": 60292,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/collaboration-clean-07-UI51-relationship-light-390.jpg",
+      "sha": "0a1fe549fa54eb0338ad3b8d085ea29b810e3edd",
+      "attempt": "collabClean"
+    },
+    {
+      "index": 19,
+      "name": "FAILED-native-wave-three-test-data",
+      "parts": 5,
+      "at": "2026-11-22T06:17:11.8750648Z S",
+      "base64Length": 107544,
+      "path": "docs/qa/sucafina/design/wave-five/collab/gallery/collaboration-clean-07-FAILED-native-wave-three-test-data.jpg",
+      "sha": "41782cc6f8df27427c59d87e8675972f7efb07e8",
+      "attempt": "collabClean"
+    }
+  ],
+  "artifact": [
+    {
+      "id": 14742234430,
+      "name": "playwright-ubuntu-24.04-1",
+      "sizeBytes": 23058427,
+      "digest": "sha256:6cac4d75f8ff9bc345c1298df89fb942d1478c375b57961a93ea0348c8cd88ef",
+      "expiresAt": "2026-11-29T06:17:12Z"
+    }
+  ],
+  "diagnostics": [
+    {
+      "at": "2026-11-22T06:16:50.9504249Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:51.6715917Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:56.6181448Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:16:57.3022918Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:17:00.3221238Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:17:03.3853906Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:17:06.7840434Z S",
+      "kind": "confirmation-prepare-project",
+      "httpStatus": 200,
+      "status": "ok",
+      "preparedSourceVersion": 1
+    },
+    {
+      "at": "2026-11-22T06:17:08.2428038Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:17:08.9023531Z S",
+      "kind": "collaboration-route-source-health",
+      "operations": [
+        {
+          "operationId": "collaboration.thread-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.relation-read",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        },
+        {
+          "operationId": "collaboration.confirmation-project",
+          "state": "ready",
+          "reason": null,
+          "operational": true
+        }
+      ]
+    },
+    {
+      "at": "2026-11-22T06:17:11.5287123Z S",
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "at": "2026-11-22T06:17:11.5474946Z S",
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready"
+      }
+    },
+    {
+      "at": "2026-11-22T06:17:11.9809882Z S",
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "followup": {
+    "record": "collaboration-clean-08.json",
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "sha": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
+    },
+    "reason": "Original-response capture plus independent authenticated recorded projection, no extra confirmation."
+  }
 }

@@ -1,0 +1,28 @@
+{
+  "source": "15ff166d5c5fa9527e5d9515048fe15f58702264",
+  "sourceTree": "bf286e67e93ec777f6b9f8273b7f09becae16daf",
+  "snapshot": "ff18667522878c4b46a0cbcae0452f0472010b2d",
+  "tree": "5b6a4d0056424333fe3a25865f51a69d76c58789",
+  "branch": "ci-run-sf5collabclean8",
+  "request": {
+    "package": "app",
+    "packageSelector": "@orchestra/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-collab.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "permanentSpec": {
+    "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    "sha": "a7481a0f5e6346d4794b2309c54f06bae3e4162b"
+  },
+  "notes": "UI51–53 declaration only, all permanent helpers retained; exact original acknowledgement captured once and fresh read-only projection.",
+  "result": "running",
+  "run": 44993470385
+}
