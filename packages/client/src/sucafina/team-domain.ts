@@ -59,17 +59,18 @@ export function createSfTeamDomainTransport(options: Readonly<{
       const json = Schema.decodeUnknownOption(Schema.Json)(decoded.value)
       if (Option.isNone(json) || !json.value || typeof json.value !== "object" || Array.isArray(json.value))
         return failure("contract-mismatch")
+      const values = json.value
       const url = new URL(binding.mount + (mutating ? "/teams/" + profile.teamObjectId + "/dashboard" : "/api/ui/pages/" + selected), binding.publicOrigin)
       if (mutating && "fixedQuery" in metadata)
         Object.entries(metadata.fixedQuery).forEach(([key, value]) => url.searchParams.set(key, value))
-      if (!mutating) Object.entries(json.value).forEach(([key, value]) => {
+      if (!mutating) Object.entries(values).forEach(([key, value]) => {
         if (value !== undefined && value !== null) url.searchParams.set(key, String(value))
       })
       if (url.search.length > 4096) return failure("contract-mismatch")
       const fixed = mutating && "fixedBodyDiscriminator" in metadata ? metadata.fixedBodyDiscriminator : undefined
-      if (mutating && (!fixed || Object.entries(fixed).some(([key, value]) => key in json.value && json.value[key] !== value)))
+      if (mutating && (!fixed || Object.entries(fixed).some(([key, value]) => key in values && values[key] !== value)))
         return failure("contract-mismatch")
-      const body = mutating ? JSON.stringify({ ...json.value, ...fixed }) : undefined
+      const body = mutating ? JSON.stringify({ ...values, ...fixed }) : undefined
       if (body && new TextEncoder().encode(body).byteLength > 2 * 1024 * 1024) return failure("contract-mismatch")
       const fresh = async () => {
         const contextUrl = new URL(binding.mount + "/api/ui/context", binding.publicOrigin)
