@@ -88,6 +88,12 @@ O OPEX organiza as linhas de despesas e o CAPEX organiza projetos e linhas de in
 
 A edição, a colagem de valores, a distribuição e a revisão usam as regras da versão selecionada. Meses fechados e restrições de acesso continuam visíveis. Os ajustes só são concluídos depois da confirmação apresentada pela operação.
 
+### Headcount
+
+O custo mensal de cada posição e o orçamento total de pessoal são calculados pelo Planner em USD, usando as taxas de câmbio da versão selecionada. A tela mantém esses valores em USD. O valor anual de uma tabela de custos permanece na moeda original dessa tabela. Se essa moeda não estiver informada, o valor anual mostra **Moeda não especificada na fonte**. Zero e **Não informado** continuam distintos.
+
+A seleção de ano e versão define o planejamento exibido. **Ainda não há registros** indica uma leitura autorizada vazia; **Você não tem acesso a este conteúdo** indica acesso recusado e oculta os dados.
+
 ## Leitura em telas menores
 
 As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.
