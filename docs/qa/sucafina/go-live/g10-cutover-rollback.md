@@ -58,7 +58,7 @@ A fonte final da #669 é `f84f9c0fbdf8d93ede8c0d14eeed270771bbd519`, árvore `d9
 
 O run anterior [45038117675](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038117675) tinha 41 PASS e falhou no typecheck de IDs sem brands do fixture; a correção usou os tipos originais, sem cast e sem mudança no produto. Os 17 controles de arquivos/clone da #658 permanecem vinculados ao seu próprio run; não foram apresentados como repetidos por essa seleção.
 
-A integração posterior #665 deve admitir explicitamente `checkpoint` no decoder privado e conservar os hooks e o consumo da política corrente no candidato conjunto. Essa reconciliação ainda está em andamento; o merge da rota em dev não é um ACK final, tar produzido ou confirmação de que outro head de integração já a contém.
+A #675 entregou a admissão explícita de `checkpoint` no decoder privado da branch #665, com a árvore testada preservada no merge. A composição #665 também já incorporou os hooks e a política corrente de dev; sua integração final ainda está em andamento. O merge da rota em dev e o merge dependente do decoder não são ACK final, tar produzido ou ensaio instalado.
 
 ## O que já existe e o limite das provas
 
@@ -166,7 +166,7 @@ As duas operações usam a sessão Microsoft original e a origem HTTPS exata, gr
 
 O checkpoint permanece privado em `backups-teams/<partitionDigest>/dashboard/<checkpointId>`. A observação de metadados não aprova o restore, escreve o registro, escolhe a geração ou substitui a fonte independente do efeito. Tar físico, chave utilizável e restart/rollback continuam provas separadas.
 
-Respostas 403, 404, 409 e 503 são recusas/indisponibilidade, nunca sucesso. Uma resposta perdida ou uma recusa tardia depois da publicação pode deixar um checkpoint existente: conferir o inventário privado antes de repetir. Não inferir ausência de arquivo a partir de timeout. Antes do ensaio final, confirmar o contrato completo na composição C instalada e reconciliar o decoder pendente da #665.
+Respostas 403, 404, 409 e 503 são recusas/indisponibilidade, nunca sucesso. Uma resposta perdida ou uma recusa tardia depois da publicação pode deixar um checkpoint existente: conferir o inventário privado antes de repetir. Não inferir ausência de arquivo a partir de timeout. Antes do ensaio final, confirmar o contrato completo na composição C instalada, incluindo o decoder #675, cujo merge ainda está na branch #665.
 
 ### Recuperação corporativa
 
@@ -227,6 +227,10 @@ Usar hashes e aliases sanitizados no repositório. Estado bruto, chaves, cookies
 
 **Fechamento:** ensaio realizado no tar final instalado, com backup, corte, retomada e rollback comprovados, preservando recibos e efeitos posteriores ao checkpoint. A preparação documental e as provas antigas não atendem sozinhas a esse fechamento.
 
-### Observação de integração posterior ao replay
+### Integração fixada nesta edição
 
-A #665 incorporou dev em `51278d55623f69f950785a9de8b8f1d0082bf62a`, incluindo #670 e #669/#674. Isso não promove os recibos antigos a esse head. A [#675](https://github.com/gustavomhss/Orchestra-SF/pull/675), fonte `2c27173bb983e8a609312795cbfa3068104e7cc6` / árvore `ae97fdcefa5b0148fa8faad4086f196a0bb23e34`, prepara a admissão explícita de `checkpoint` separada de `recover` e normaliza namespaces/operations omitidos para listas vazias, sem ampliar autoridade de negócio/Session. Seu snapshot CI é `2127c9112ee09a78a897c7b2dc7fb68ef5de2d36`; o resultado ainda está pendente nesta edição. Nenhum ACK final ou gate aprovado é inferido.
+A #665 incorporou dev em `51278d55623f69f950785a9de8b8f1d0082bf62a`, árvore `a64eb0f6d173036ea9b380ce81e80efbaec730f0`, incluindo #670 e #669/#674. O [run 45039881113](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039881113) aprovou a composição de componente nesse source, sem aprovação instalada.
+
+A [#675](https://github.com/gustavomhss/Orchestra-SF/pull/675) entrou **na branch #665, ainda não em dev**, no merge `4bee9c656034bb6771929a3d1eb893bc65af6a7a`; sua árvore `b3614391f2d6a7a4f89bd298aa861be3a469a972` é idêntica à fonte testada `a675a5792b9260054d043624dc45d60a5adb8dbf`. Admite `checkpoint` separado de `recover` e normaliza apenas namespaces/operations omitidos para listas vazias, sem ampliar autoridade Session/negócio. O [run 45040408446](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040408446), job `137263353207`, passou 46 casos/481 asserções e preservou um skip anterior de ownership/root; tipos SF e guards 78/97 paths/zero findings. Snapshot `9709e78f39f0ec0449e2319242f1b37aec335911`. Nenhum ACK final ou qualificação instalada é inferido.
+
+O complemento #675 tem artefato [14761970496](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040408446/artifacts/14761970496), 12.387 bytes, ZIP `58965ccb1590817ecce89d438c7b645b151091f5da951cd9efe30d9ad5fe403c` e recibo `f8eaf43472da823e05ebb654017a0c71efac9d2f16513dfab5c2d7159be53cca`. Root conferiu download/CRC/nove hashes internos/JUnit/dois digests de fontes; revisão 6013130249 e handoff 7081657071. A primeira execução 45040173632 falhou apenas no typecheck do teste; a correção não mudou o produto. O positivo atual não elimina o skip de ownership nem comprova ensaio G10.

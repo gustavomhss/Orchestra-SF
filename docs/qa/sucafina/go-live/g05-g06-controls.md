@@ -32,6 +32,12 @@ A PR #660 extraiu a fixture Microsoft HTTP de G05 para `modules/sucafina/Sucafin
 
 A identidade controlada de CI permite provar os mecanismos de HTTP, autorização e isolamento. O recibo mantém `installedTeamsProof:false` e `finalCandidate:false`; não representa login corporativo nem homologação G08.
 
+### Composição posterior de HTTP — focais da #665
+
+Os focais [45039523637](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039523637) e [45039881113](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039881113) foram conferidos nos logs originais. O primeiro executou D `d4daba81866166c1363563faa2b6156db0765b63` / T `a41c9c7b859b30ab1d4d8cf0284a871cf8a2b7fe`: HTTP 25, factory 1 e Chat 29 aprovados, três typechecks, geração e guards 78/97 paths/zero findings. O segundo executou D `51278d55623f69f950785a9de8b8f1d0082bf62a` / T `a64eb0f6d173036ea9b380ce81e80efbaec730f0`: composição Microsoft 21/4.601 asserções, tipos SF/CLI e guards limpos. São provas de reparos/composição de componente, sem repetição dos três modos completos G05.
+
+Antes da qualificação final, o writer da #665 ainda precisa resolver e provar os achados de [limite de bytes reais do body Web sem Content-Length confiável](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081547510) e [corpo JSON vazio com defeito próprio do handler](https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081586708). A exigência é 413 no teto real, sem writer/resume, mantendo o Request original; o envelope vazio válido deve conservar 500 para o defeito do handler. Os focais verdes não abrangem automaticamente essas novas regressões. O [índice de execução](execution-2026-11-22.md) preserva snapshots, jobs e o histórico anterior 19/22.
+
 ### Reexecução sobre C
 
 A rota integrada pela PR #637 é `.github/workflows/g05-http-proof.yml`. Após confirmar C, criar uma referência própria `g05-http-*` apontando **exatamente a C**, sem acrescentar um commit de CI ao produto. O workflow faz checkout do SHA do evento e executa os três modos, os controles Teams, os typechecks e guards.
@@ -204,6 +210,6 @@ O caso G05 incluído nessa invocação serve à regressão da fixture compartilh
 
 O run histórico [44684352036](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44684352036), fonte `6f9b66a2aaa8b057653244c94183254bb6f008b2`, preserva os sete controles de origem, 59 controles do verificador e 162 asserções; seu artefato e alcance permanecem no registro estruturado. A nova prova não altera o recibo histórico.
 
-O agregado da Migração registrado na preparação inicial, [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, terminou com falhas, inclusive pool/SF4/SF5/SF8/UI. O intake posterior #673, mantido por `focal_migration` sob coordenação desta sessão, reconcilia essas fontes; o run de origem 45035419728 conserva falhas em SF8, UI Decisions/Operations e pool. A integração Teams #665 segue com seus escritores ativos. Nenhuma dessas fontes fornece ACK final.
+O agregado da Migração registrado na preparação inicial, [44987301540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/44987301540), fonte `b4ba7f595e6b3b5ff10a3379cd91b6771bb1b793`, terminou com falhas, inclusive pool/SF4/SF5/SF8/UI. O intake posterior #673, mantido por `focal_migration` sob coordenação desta sessão, reconcilia essas fontes; o run de origem 45035419728 conserva falhas em SF8, UI Decisions/Operations e pool. O focal posterior 45038699571 passou pool 206/206 e SF5 com 64 casos, mantendo falhas em SF4/SF8/Decisions/Operations; o recibo oficial está no registro de execução. A integração Teams #665 segue com seus escritores ativos. Nenhuma dessas fontes fornece ACK final.
 
 Compras 222 (2) mantém seu aceite original de QA. G07 usa o mesmo C/T final confirmado, e G08/G10 qualificam o tar instalado em ambientes isolados cuja reserva e autorização tenham sido confirmadas. Nenhum resultado de componente ou roteiro libera produção.

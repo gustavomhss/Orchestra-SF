@@ -148,7 +148,7 @@ Essas fontes são contratos observados, não um ACK do candidato final. Sua comp
 
 Os quatro oráculos de grants efetivos distintos, UI administrativa, Chat estreito e cancelamento/descarte estão implementados na #672 e reconciliados com os produtores da #665. O que permanece é integrar e qualificar essa composição no candidato final, reconciliar e executar integralmente **U15/U39/U40/F04/AZ02**, e observar o host e as autoridades reais. Nove controles listados e testes DOM controlados não encerram essas obrigações.
 
-Ainda faltam pin final, tar G07, reserva e atores/grants originais. A reserva operacional ainda não foi confirmada. A consulta Azure registrada no [índice de execução](execution-2026-11-22.md) foi bloqueada antes do login; não demonstrou inexistência de hosts ou reservas. O levantamento abaixo descreve consultas históricas de caminhos; não afirma a inexistência de qualquer outra rota e não nega a implementação atual em `g08/`.
+Os novos domínios Teams/CAPs e seus produtores de jornada pertencem a uma entrega posterior isolada; não estão declarados como entregues nem executados nesta publicação. Ainda faltam pin final, tar G07, reserva e atores/grants originais. A reserva operacional ainda não foi confirmada. A consulta Azure registrada no [índice de execução](execution-2026-11-22.md) foi bloqueada antes do login; não demonstrou inexistência de hosts ou reservas. O levantamento abaixo descreve consultas históricas de caminhos; não afirma a inexistência de qualquer outra rota e não nega a implementação atual em `g08/`.
 
 ### Levantamento histórico
 

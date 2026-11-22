@@ -1,7 +1,7 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-22T15:43:21Z",
+  "observedAtUtc": "2026-11-22T15:56:12Z",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "readiness-reconciliation",
   "base": {
@@ -228,11 +228,18 @@
         "pr": 665,
         "commentId": 7081417452,
         "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081417452",
-        "status": "CHECKPOINT_MERGED_DECODER_RECONCILIATION_PENDING"
+        "status": "CHECKPOINT_IN_DEV_DECODER_MERGED_IN_665_NOT_DEV"
+      },
+      {
+        "target": "Decoder checkpoint/recover integrado na branch #665",
+        "pr": 665,
+        "commentId": 7081657071,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081657071",
+        "status": "COMPONENT_PASS_BRANCH_MERGE_FINAL_INTEGRATION_PENDING"
       }
     ],
     "latestRead": {
-      "observedAtUtc": "2026-11-22T15:43:21Z",
+      "observedAtUtc": "2026-11-22T15:56:12Z",
       "channels": [
         628,
         665,
@@ -244,7 +251,7 @@
       "apiAvailable": true,
       "newFinalCandidateAcknowledgementsFound": false,
       "operationalReservationsConfirmed": false,
-      "meaning": "Entregas de componente e coordenação observadas; não há C/T final ou reserva confirmada. Inventário Azure bloqueado antes do login não demonstra inexistência de ambiente."
+      "meaning": "Resultados focados #665, intake #673 e merge dependente #675 conferidos. A integração em dev e findings Web/corpo vazio seguem pendentes; sem C/T final ou reserva."
     },
     "integrationCoordinator": "Astra go-live",
     "migrationWriter": {
@@ -289,6 +296,7 @@
       ],
       "firstBlocker": "Concluir integração e obter C/T confirmado por Migração e Release; repetir coverage/auth/effect e Team sobre o catálogo corrente desse candidato.",
       "remaining": [
+        "Resolver e provar os achados Web body cap/Content-Length e corpo JSON vazio da #665 antes do replay final; os focais atuais não os cobrem.",
         "Confirmar e executar coverage/auth/effect e isolamento Team sobre C/T final; reconciliar inventário se C mudar endpoints.",
         "Conservar recibos completos, hashes, veredito Omni real, cleanup e aprovação para o candidato efetivo."
       ],
@@ -1346,7 +1354,11 @@
           },
           "finalCandidateApproval": false
         }
-      ]
+      ],
+      "futureDomainDelivery": {
+        "status": "NOT_DELIVERED_IN_THIS_PUBLICATION",
+        "scope": "Novos domínios Teams/CAPs e produtores de jornadas serão entrega isolada posterior; estados dos grupos continuam NOT_RUN."
+      }
     },
     {
       "gate": "G10",
@@ -1365,16 +1377,17 @@
         "current-installer",
         "g10-work-proof-2026-11-22",
         "g10-clone-followup-2026-11-22",
-        "g10-logical-checkpoint-policy-2026-11-22"
+        "g10-logical-checkpoint-policy-2026-11-22",
+        "checkpoint-decoder-integration-2026-11-22"
       ],
-      "firstBlocker": "Admitir checkpoint explicitamente no decoder da integração #665 e preservar hooks/política; obter C/T/tar e reservas/atores/chave/observador para o ensaio.",
+      "firstBlocker": "Integrar #665 em dev preservando checkpoint/recovery e decoder #675; obter C/T/tar e reservas/atores/chave/observador para o ensaio.",
       "remaining": [
         "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
         "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
         "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
         "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
         "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team.",
-        "Confirmar no C instalado checkpoint-observe/checkpoint com grant explícito, versão/snapshot/frontier reais, recover com política corrente e a reconciliação do decoder privado da #665; nenhuma fixture aprova o registro externo."
+        "Confirmar no C instalado as rotas checkpoint-observe/checkpoint com grant explícito, versão/snapshot/fronteira reais, recover com política corrente e decoder #675 integrado; nenhuma fixture aprova o registro externo."
       ],
       "closure": "Ensaio isolado comprovado no tar final: backup, corte, retomada e rollback, incluindo efeitos e recibos posteriores ao checkpoint.",
       "workProof": {
@@ -1563,6 +1576,62 @@
           "cutover": "NOT_RUN",
           "actualServiceRestart": "NOT_RUN",
           "compatibleCodeRollback": "NOT_RUN"
+        },
+        {
+          "pullRequest": 675,
+          "sourceSha": "a675a5792b9260054d043624dc45d60a5adb8dbf",
+          "sourceTree": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+          "snapshotSha": "9709e78f39f0ec0449e2319242f1b37aec335911",
+          "mergeCommit": "4bee9c656034bb6771929a3d1eb893bc65af6a7a",
+          "mergeTree": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+          "mergeTarget": "session-http-integrated / #665",
+          "integratedInDev": false,
+          "runId": 45040408446,
+          "runAttempt": 1,
+          "jobId": 137263353207,
+          "status": "COMPONENT_PASS_MERGED_IN_INTEGRATION_NOT_DEV",
+          "counts": {
+            "pass": 46,
+            "skip": 1,
+            "fail": 0,
+            "assertions": 481,
+            "typechecks": 1,
+            "guards": 78,
+            "changedPaths": 97,
+            "gateFindings": 0,
+            "warnings": 0,
+            "errors": 0
+          },
+          "skipReason": "Controle de ownership/root preexistente, não promovido a PASS",
+          "typecheckPackages": [
+            "modules/sucafina/Sucafinav1"
+          ],
+          "artifact": {
+            "id": 14761970496,
+            "zipBytes": 12387,
+            "zipSha256": "58965ccb1590817ecce89d438c7b645b151091f5da951cd9efe30d9ad5fe403c",
+            "independentlyDownloadedAndHashVerified": true,
+            "crcVerified": true,
+            "internalEvidenceHashesVerified": 9,
+            "sourceDigestsVerified": 2
+          },
+          "receiptSha256": "f8eaf43472da823e05ebb654017a0c71efac9d2f16513dfab5c2d7159be53cca",
+          "review": {
+            "id": 6013130249,
+            "action": "COMMENT",
+            "formalGateApproval": false
+          },
+          "handoff": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081657071",
+          "contract": "Admite checkpoint explícito separado de recover; somente namespaces/operations omitidos viram arrays vazios, sem autoridade Session/negócio implícita.",
+          "priorRun": {
+            "runId": 45040173632,
+            "testsPassed": 46,
+            "conclusion": "failure",
+            "reason": "Typecheck TS2769 apenas no teste; as const corrigiu o fixture sem alteração de produto."
+          },
+          "installedQualification": false,
+          "finalCandidateApproval": false,
+          "scope": "Complemento de decoder da composição, integrado em #665 e ainda não em dev; não é ensaio G10."
         }
       ]
     }
@@ -1833,6 +1902,44 @@
       "scope": "Pre-login configuration empty, Azure login skipped; not evidence of absent reservations.",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45036787201",
       "finalCandidateApproval": false
+    },
+    {
+      "id": "teams-integration-focused-followups-2026-11-22",
+      "kind": "ACTIONS_LOG_COMPONENT_REFERENCE",
+      "pullRequest": 665,
+      "runs": [
+        45039523637,
+        45039881113
+      ],
+      "detailsField": "integrationObservation",
+      "scope": "Dois reparos anteriores e composição passam; limites Web e corpo vazio permanecem findings explícitos.",
+      "finalCandidateApproval": false,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081547510"
+    },
+    {
+      "id": "migration-focal-intake-2026-11-22",
+      "kind": "OWNER_RECEIPT_REFERENCE",
+      "pullRequest": 673,
+      "sourceSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
+      "sourceTree": "bd93e2a0431b8ec465c81c0715237dcd79891b75",
+      "runId": 45038699571,
+      "detailsField": "migrationObservations",
+      "scope": "Pool206/206 e SF564pass; SF4/SF8/Decisions/Operations falharam; não qualificado.",
+      "finalCandidateApproval": false,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7081513410"
+    },
+    {
+      "id": "checkpoint-decoder-integration-2026-11-22",
+      "kind": "COMPONENT_EXECUTION_BRANCH_INTEGRATION_REFERENCE",
+      "pullRequest": 675,
+      "sourceSha": "a675a5792b9260054d043624dc45d60a5adb8dbf",
+      "sourceTree": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+      "runId": 45040408446,
+      "detailsField": "integrationObservation.checkpointDecoderFollowup",
+      "detailsGate": "G10",
+      "scope": "Decoder explícito checkpoint/recover sem grants implícitos, merge na #665; não dev/instalado.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081657071",
+      "finalCandidateApproval": false
     }
   ],
   "migrationObservations": [
@@ -1930,6 +2037,108 @@
         }
       ],
       "finalCandidateAcknowledgement": null
+    },
+    {
+      "pullRequest": 673,
+      "writer": "focal_migration",
+      "status": "IN_PROGRESS_NOT_QUALIFIED",
+      "sourceSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
+      "sourceTree": "bd93e2a0431b8ec465c81c0715237dcd79891b75",
+      "driverSha": "9c53dce33afad3ea4896b0441ec4b5bd84577640",
+      "driverTree": "e8b89d938102fba0b9247153bf979976216c8aab",
+      "runId": 45038699571,
+      "runAttempt": 1,
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45038699571",
+      "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7081513410",
+      "evidenceAcquisition": "Nove ZIPs/CRC e recibos conferidos pela frente proprietária, conforme comentário oficial; esta consolidação leu essa fonte, sem afirmar nova aquisição dos bytes.",
+      "sourceJobs": [
+        {
+          "name": "SF4",
+          "jobId": 137258101534,
+          "status": "failure",
+          "pass": 79,
+          "fail": 1,
+          "assertions": 671,
+          "files": 12,
+          "artifactId": 14761066352,
+          "executionSha256": "c298fcbaae9129a4aeb5c011d9b9757296697a549ae2d556d11937eee00eea7a",
+          "reason": "parity-polling-browser: SQLITE_PROTOCOL no SELECT de secrets.get"
+        },
+        {
+          "name": "SF5",
+          "jobId": 137258101511,
+          "status": "success",
+          "pass": 64,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0,
+          "assertions": 411,
+          "files": 13,
+          "artifactId": 14760975837,
+          "receiptSha256": "17c25d38864e21bc450dbf99687cd087e6bf0621579cc7a14823d5e621ed7ea6"
+        },
+        {
+          "name": "SF8",
+          "jobId": 137258101699,
+          "status": "failure",
+          "pass": 97,
+          "fail": 1,
+          "assertions": 4855,
+          "files": 13,
+          "artifactId": 14761330134,
+          "executionSha256": "0f829169d9da1c2219df06c8c57ac0a7fa23a098e13a68513852f32875a761c0",
+          "reason": "form-layout: Omni lê stdout do filho com EBADF antes do PID Chromium; finalizador recusa prova incompleta"
+        },
+        {
+          "name": "Decisions",
+          "jobId": 137258101315,
+          "status": "failure",
+          "pass": 0,
+          "total": 5,
+          "artifactId": 14760249977,
+          "failureArtifactId": 14760633257,
+          "executionSha256": "41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6",
+          "reason": "Todos param na discovery; fixture seleciona private root e instalação exige workspace privado, sem alcançar a jornada"
+        },
+        {
+          "name": "Operations",
+          "jobId": 137258101503,
+          "status": "failure",
+          "pass": 2,
+          "total": 5,
+          "skip": 0,
+          "flaky": 0,
+          "artifactId": 14761510074,
+          "failureArtifactId": 14760504500,
+          "executionSha256": "41ceca3dc73ef652d492eab49322ce2e9315654cfe4e4436a47a52c42bd40dd6",
+          "reason": "Atributo sourcing, justificativa somente leitura e sourceVersion4vs3; causalidade em análise pela frente"
+        },
+        {
+          "name": "pool",
+          "jobId": 137258101465,
+          "status": "success",
+          "pass": 206,
+          "total": 206,
+          "assertions": 3122,
+          "sourceFiles": 40,
+          "acquisitions": 48,
+          "releases": 48,
+          "chromiumProcesses": 1,
+          "omni": 1,
+          "delegated": 0,
+          "artifactId": 14760668799,
+          "receiptSha256": "ca5d54a11be3717b1caf1942051af4a5e46c786cc83843a040b69ea236170cdd",
+          "proofClass": "COMPONENT_BROWSER_REGRESSION",
+          "installedTeamsProof": false
+        }
+      ],
+      "reservedNextDeltas": [
+        "Monthly retry after restore must not report saved for reverted effect; preserve receipt and result fence/digest.",
+        "Monthly mount survives shell main replacement, idempotent and draft preserving.",
+        "Installed fixtures use canonical workspace while private root retains secrets/data."
+      ],
+      "finalCandidateAcknowledgement": null
     }
   ],
   "review": {
@@ -1953,9 +2162,9 @@
       "G07 #668: textual ACK requires original technical attestation binding URL/body/author/statement hashes; no fabricated or repeated approval.",
       "G08 #672: effective grants, original administration UI and native Chat/draft controls restore all nine implemented obligations without claiming installed execution.",
       "G08 documentation: AZ02 is transversal LIVE application-cookie logout/replay evidence; native recovery role is G10, not G09.",
-      "G10 #669/#674: logical capture is separate from independent approval; restore uses current persistent policy and stable revision. Decoder checkpoint in #665 remains explicit integration work."
+      "G10 #669/#674: logical capture is separate from independent approval; restore uses current persistent policy and stable revision. Decoder checkpoint delivered by #675 into #665, not yet dev; full integration remains pending."
     ],
-    "documentReview": "Rascunho atual: revisão independente G07/G10 e G08 concluída com correções de attestation, decoder e escopo AZ02; ledger/README/execution aguardam revisão da coordenação e guards em Actions.",
+    "documentReview": "Revisão independente G07/G10 e G08 concluída sem pendências materiais após correções; revisão inicial da coordenação em README/status/execution sem erro material. Guards finais vinculados ao head exato pela metadata da PR #676.",
     "previousDocumentReview": "Independent review of the current follow-up completed. Evidence catalog, publication metadata, complete G05 receipt obligations, cleanup scope, G10 count and Playwright-only invocation wording corrected; no material finding remaining."
   },
   "executionThisFront": {
@@ -1986,7 +2195,9 @@
       45038080944,
       45038117675,
       45038388189,
-      45038822594
+      45038822594,
+      45040173632,
+      45040408446
     ],
     "testInventoryScope": "Selected current/superseded runs. Exact sources and scopes are recorded per proof; G08 was tested on explicit composition. No result is promoted to final C/T.",
     "buildsStarted": [],
@@ -2023,6 +2234,19 @@
         "reviewed": true,
         "dependencyPullRequest": 665
       }
+    ],
+    "coordinatedExternalRuns": [
+      45039523637,
+      45039881113,
+      45038699571
+    ],
+    "branchIntegratedComponents": [
+      {
+        "pullRequest": 675,
+        "mergeCommit": "4bee9c656034bb6771929a3d1eb893bc65af6a7a",
+        "targetPullRequest": 665,
+        "integratedInDev": false
+      }
     ]
   },
   "overall": {
@@ -2033,74 +2257,187 @@
     "formalProductionDecision": null
   },
   "publication": {
-    "pullRequest": null,
+    "pullRequest": 676,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/676",
     "branch": "readiness-reconciliation",
-    "recordKind": "DRAFT_DOCUMENT_CONSOLIDATION",
+    "recordKind": "PR_PUBLICATION_REFERENCE",
     "scope": "Exatamente sete documentos go-live; migration-intake.json e guia Microsoft fora do lease.",
-    "sourceIdentitySource": "Commit/tree/run/review da publicação virão da metadata original da PR; sem SHA autorreferente inventado.",
-    "stateSource": "PR nova e validação final ainda não criadas neste rascunho.",
+    "sourceIdentitySource": "Fonte/árvore, snapshot CI e recibo de validação exata constam na metadata original da PR #676; sem SHA autorreferente.",
+    "stateSource": "Estado de revisão, Actions e merge consultado na metadata viva da PR; resultado futuro não é inferido neste arquivo.",
     "baseSha": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
     "baseTree": "3179c5c01ce287353fbef02b698c983a8f845f84"
   },
   "latestDevObserved": {
     "sha": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
     "tree": "3179c5c01ce287353fbef02b698c983a8f845f84",
-    "observedAtUtc": "2026-11-22T15:43:21Z",
+    "observedAtUtc": "2026-11-22T15:56:12Z",
     "notFinalCandidate": true
   },
   "integrationObservation": {
     "pullRequest": 665,
-    "state": "OPEN_DRAFT_REPAIRS_ACTIVE",
-    "snapshotKind": "LAST_COMPLETED_INTEGRATED_REPLAY_NOT_LATEST_REPAIR_HEAD",
-    "sourceSha": "fde191dfc1970d37021d82370cccac657efac246",
-    "sourceTree": "526530b5fdf335b07ff00dbcf008b39b905e001d",
-    "snapshotSha": "d28d75bf4e5c71436cd952a5c5550c9f9115800a",
-    "runId": 45037362513,
-    "jobId": 137253976844,
-    "conclusion": "failure",
-    "gates": {
-      "pass": 19,
-      "total": 22,
-      "pending": 3,
-      "failedTestCases": 2
-    },
-    "typechecksPassed": 10,
-    "classificationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081262811",
-    "remainingAtReplay": [
-      {
-        "path": "packages/server/test/session-owner-http.test.ts",
-        "line": 226,
-        "observed": "Invalid JSON returns500 expected400"
-      },
-      {
-        "path": "apps/cli/test/fixture/team-session-factory.ts",
-        "line": 55,
-        "observed": "Reader received chunk after dispose; SSE completion oracle needs bounded proof"
-      },
-      {
-        "path": "tooling/httpapi-codegen/src/index.ts",
-        "line": 517,
-        "observed": "js-empty-catch warning; driver refused clean proof"
-      }
-    ],
-    "focalG08DoesNotReplaceReplay": true,
-    "finalCandidateAcknowledgement": null,
-    "repairHeads": "Consultar metadata viva; não atribuir o resultado fde191 aos reparos posteriores.",
-    "latestRepairHeadObserved": "51278d55623f69f950785a9de8b8f1d0082bf62a",
-    "latestRepairIncludes": [
+    "state": "OPEN_DRAFT_COMPONENT_FIXES_PASS_NEW_FINDINGS_PENDING",
+    "sourceSha": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+    "sourceTree": "a64eb0f6d173036ea9b380ce81e80efbaec730f0",
+    "includesIntegratedDevSha": "6beab17e71c246b871b5a7f92c5de5ff2b0477d8",
+    "includesPullRequests": [
       670,
       669,
       674
     ],
-    "latestRepairIsFinalCandidate": false,
+    "proofKind": "ACTIONS_JOB_LOGS_REVIEWED_BY_COORDINATION_AND_INDEPENDENT_REVIEWER",
+    "componentProofs": [
+      {
+        "sourceSha": "d4daba81866166c1363563faa2b6156db0765b63",
+        "sourceTree": "a41c9c7b859b30ab1d4d8cf0284a871cf8a2b7fe",
+        "snapshotSha": "5117581495d7ece34d96b5d5a79be9f79d5b0f80",
+        "runId": 45039523637,
+        "runAttempt": 1,
+        "jobId": 137260633773,
+        "status": "success",
+        "receiptSchema": "sf-teams-focused-closure-proof-v1",
+        "counts": {
+          "httpCases": 25,
+          "httpAssertions": 204,
+          "factoryCases": 1,
+          "factoryAssertions": 3,
+          "chatCases": 29,
+          "chatAssertions": 272,
+          "fail": 0,
+          "typechecks": 3,
+          "guards": 78,
+          "changedPaths": 97,
+          "gateFindings": 0,
+          "warnings": 0,
+          "errors": 0
+        },
+        "generatedContract": "PASS",
+        "typecheckPackages": [
+          "packages/server",
+          "apps/cli",
+          "packages/app-shell"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039523637",
+        "installedQualification": false,
+        "finalCandidateApproval": false
+      },
+      {
+        "sourceSha": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+        "sourceTree": "a64eb0f6d173036ea9b380ce81e80efbaec730f0",
+        "snapshotSha": "7c8e4cbffcbb4c192f6167e657d115e91d769c38",
+        "runId": 45039881113,
+        "runAttempt": 1,
+        "jobId": 137261724555,
+        "status": "success",
+        "receiptSchema": "sf-teams-concurrent-composition-proof-v1",
+        "counts": {
+          "cases": 21,
+          "assertions": 4601,
+          "fail": 0,
+          "typechecks": 2,
+          "guards": 78,
+          "changedPaths": 97,
+          "gateFindings": 0,
+          "warnings": 0,
+          "errors": 0
+        },
+        "typecheckPackages": [
+          "modules/sucafina/Sucafinav1",
+          "apps/cli"
+        ],
+        "scope": "Composição original Microsoft Chat/checkpoint/recovery; identidade controlada.",
+        "omni": {
+          "declared": 1,
+          "spawns": 3,
+          "delegations": 0
+        },
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039881113",
+        "installedQualification": false,
+        "migrationExecuted": false,
+        "productionChanged": false,
+        "finalCandidateApproval": false
+      }
+    ],
+    "resolvedPriorReplayFindings": [
+      "Malformed nonempty JSON maps to400 while valid JSON handler defect remains500",
+      "Factory stream terminates normally after bounded drain/dispose",
+      "Generator warning repaired; focused guards78/97 clean"
+    ],
+    "remainingFindings": [
+      {
+        "id": "web-real-byte-cap",
+        "kind": "STATIC_REVIEW_FINDING_PENDING_WRITER_REGRESSION",
+        "sourceSha": "d4daba81866166c1363563faa2b6156db0765b63",
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081547510",
+        "scope": "Limitar bytes efetivamente lidos no adapter Web quando Content-Length ausente/inexato;413 e nenhuma chamada de writer/resume, cancelamento no teto, source Request original preservado."
+      },
+      {
+        "id": "empty-json-handler-defect",
+        "kind": "STATIC_REVIEW_FINDING_PENDING_WRITER_REGRESSION",
+        "sourceSha": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081586708",
+        "scope": "Corpo JSON vazio é envelope válido no produtor; SyntaxError próprio do handler sem parse deve permanecer500, sem reclassificar como400."
+      }
+    ],
     "checkpointDecoderFollowup": {
       "pullRequest": 675,
-      "sourceSha": "2c27173bb983e8a609312795cbfa3068104e7cc6",
-      "sourceTree": "ae97fdcefa5b0148fa8faad4086f196a0bb23e34",
-      "snapshotSha": "2127c9112ee09a78a897c7b2dc7fb68ef5de2d36",
-      "status": "CI_PENDING",
-      "scope": "Explicit checkpoint separate from recover; omitted namespaces/operations normalize to empty without Session/business authority."
-    }
+      "sourceSha": "a675a5792b9260054d043624dc45d60a5adb8dbf",
+      "sourceTree": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+      "snapshotSha": "9709e78f39f0ec0449e2319242f1b37aec335911",
+      "mergeCommit": "4bee9c656034bb6771929a3d1eb893bc65af6a7a",
+      "mergeTree": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+      "mergeTarget": "session-http-integrated / #665",
+      "integratedInDev": false,
+      "runId": 45040408446,
+      "runAttempt": 1,
+      "jobId": 137263353207,
+      "status": "COMPONENT_PASS_MERGED_IN_INTEGRATION_NOT_DEV",
+      "counts": {
+        "pass": 46,
+        "skip": 1,
+        "fail": 0,
+        "assertions": 481,
+        "typechecks": 1,
+        "guards": 78,
+        "changedPaths": 97,
+        "gateFindings": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      "skipReason": "Controle de ownership/root preexistente, não promovido a PASS",
+      "typecheckPackages": [
+        "modules/sucafina/Sucafinav1"
+      ],
+      "artifact": {
+        "id": 14761970496,
+        "zipBytes": 12387,
+        "zipSha256": "58965ccb1590817ecce89d438c7b645b151091f5da951cd9efe30d9ad5fe403c",
+        "independentlyDownloadedAndHashVerified": true,
+        "crcVerified": true,
+        "internalEvidenceHashesVerified": 9,
+        "sourceDigestsVerified": 2
+      },
+      "receiptSha256": "f8eaf43472da823e05ebb654017a0c71efac9d2f16513dfab5c2d7159be53cca",
+      "review": {
+        "id": 6013130249,
+        "action": "COMMENT",
+        "formalGateApproval": false
+      },
+      "handoff": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081657071",
+      "contract": "Admite checkpoint explícito separado de recover; somente namespaces/operations omitidos viram arrays vazios, sem autoridade Session/negócio implícita.",
+      "priorRun": {
+        "runId": 45040173632,
+        "testsPassed": 46,
+        "conclusion": "failure",
+        "reason": "Typecheck TS2769 apenas no teste; as const corrigiu o fixture sem alteração de produto."
+      },
+      "installedQualification": false,
+      "finalCandidateApproval": false
+    },
+    "finalCandidateAcknowledgement": null,
+    "scopeLimit": "Componentes focados não equivalem a replay agregado final, G05 completo, instalação Teams ou go/no-go.",
+    "latestIntegrationHeadObserved": "4bee9c656034bb6771929a3d1eb893bc65af6a7a",
+    "latestIntegrationTreeObserved": "b3614391f2d6a7a4f89bd298aa861be3a469a972",
+    "latestIntegrationHeadIsFinalCandidate": false
   },
   "ownershipHistory": [
     {
@@ -2129,6 +2466,60 @@
       "mergeCommit": "ad6d245119ef2d69fb96471edd62dd6413ae185f",
       "completionRunId": 45034291003,
       "scope": "First Teams integration slice; no final ACK or subsequent Session/Chat proof"
+    },
+    {
+      "pullRequest": 665,
+      "state": "OPEN_DRAFT_REPAIRS_ACTIVE",
+      "snapshotKind": "LAST_COMPLETED_INTEGRATED_REPLAY_NOT_LATEST_REPAIR_HEAD",
+      "sourceSha": "fde191dfc1970d37021d82370cccac657efac246",
+      "sourceTree": "526530b5fdf335b07ff00dbcf008b39b905e001d",
+      "snapshotSha": "d28d75bf4e5c71436cd952a5c5550c9f9115800a",
+      "runId": 45037362513,
+      "jobId": 137253976844,
+      "conclusion": "failure",
+      "gates": {
+        "pass": 19,
+        "total": 22,
+        "pending": 3,
+        "failedTestCases": 2
+      },
+      "typechecksPassed": 10,
+      "classificationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/665#issuecomment-7081262811",
+      "remainingAtReplay": [
+        {
+          "path": "packages/server/test/session-owner-http.test.ts",
+          "line": 226,
+          "observed": "Invalid JSON returns500 expected400"
+        },
+        {
+          "path": "apps/cli/test/fixture/team-session-factory.ts",
+          "line": 55,
+          "observed": "Reader received chunk after dispose; SSE completion oracle needs bounded proof"
+        },
+        {
+          "path": "tooling/httpapi-codegen/src/index.ts",
+          "line": 517,
+          "observed": "js-empty-catch warning; driver refused clean proof"
+        }
+      ],
+      "focalG08DoesNotReplaceReplay": true,
+      "finalCandidateAcknowledgement": null,
+      "repairHeads": "Consultar metadata viva; não atribuir o resultado fde191 aos reparos posteriores.",
+      "latestRepairHeadObserved": "51278d55623f69f950785a9de8b8f1d0082bf62a",
+      "latestRepairIncludes": [
+        670,
+        669,
+        674
+      ],
+      "latestRepairIsFinalCandidate": false,
+      "checkpointDecoderFollowup": {
+        "pullRequest": 675,
+        "sourceSha": "2c27173bb983e8a609312795cbfa3068104e7cc6",
+        "sourceTree": "ae97fdcefa5b0148fa8faad4086f196a0bb23e34",
+        "snapshotSha": "2127c9112ee09a78a897c7b2dc7fb68ef5de2d36",
+        "status": "CI_PENDING",
+        "scope": "Explicit checkpoint separate from recover; omitted namespaces/operations normalize to empty without Session/business authority."
+      }
     }
   ],
   "publicationHistory": [
