@@ -285,7 +285,7 @@ async function expectRevokedTeamContext(response: Response | undefined) {
   expect(result.status).toBe("ok")
   if (result.status !== "ok") throw new Error("Expected an authenticated context without Team admission")
   expect(result.value.profile.status).toBe("authenticated")
-  expect(result.value.profile.principal).toEqual({ tenantId, principalObjectId: oid })
+  expect<unknown>(result.value.profile.principal).toEqual({ tenantId, principalObjectId: oid })
   expect(result.value.profile.teams).toEqual({ status: "revoked" })
   expect(result.value.stamp.team).toBeUndefined()
   expect(result.value.destinations).toEqual([])
@@ -365,7 +365,7 @@ test("A valid native login return never grants an ineligible Team and the instal
       const result = Schema.decodeUnknownSync(SfTeamContextResult)(await admitted!.json())
       if (result.status !== "ok") throw new Error("Expected the current eligible Team")
       expect(result.value.profile.teams).toMatchObject({ status: "ready", selected: { teamObjectId } })
-      expect(result.value.stamp.team?.owner).toEqual({
+      expect<unknown>(result.value.stamp.team?.owner).toEqual({
         profile: { installationId: f.selection.installationId, tenantId, teamObjectId },
         principal: { tenantId, principalObjectId: oid },
       })
@@ -450,7 +450,7 @@ test("Corporate profile administration uses the signed Microsoft identity withou
     expect(f.membership.reads).toBe(membershipReadsBeforeEnable)
     const committed = await list()
     expect(committed.configRevision).toBe(changed.configRevision)
-    expect(committed.profiles).toEqual([{ profile: profile(teamObjectId), enabled: true }])
+    expect<unknown>(committed.profiles).toEqual([{ profile: profile(teamObjectId), enabled: true }])
     await expectRevokedTeamContext(await f.context(teamObjectId, cookie))
     expect((await f.installation.handler(ingress("/teams/" + teamObjectId + "/dashboard", { cookie })))?.status).toBe(403)
 

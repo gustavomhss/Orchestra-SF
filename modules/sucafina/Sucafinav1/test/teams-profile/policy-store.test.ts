@@ -17,13 +17,13 @@ test("policy-store: private descriptor seeds once; restart preserves revocation 
   const f = await fixture([teamA, teamB])
   const before = await f.profiles().read()
   expect(typeof before.configRevision).toBe("string")
-  expect(before.profiles.map((entry) => [entry.profile.teamObjectId, entry.enabled])).toEqual([[teamA, true], [teamB, true]])
+  expect<unknown>(before.profiles.map((entry) => [entry.profile.teamObjectId, entry.enabled])).toEqual([[teamA, true], [teamB, true]])
   expect(f.readRows("SELECT * FROM sf_team_profile_audit")).toEqual([])
   const disabled = await f.profiles().mutate({ ...authority, command: adminCommand(f.profile(), "disable", before.configRevision) })
   expect(disabled.status).toBe("ok")
   const after = await (await f.reopen()).read()
   expect(after.configRevision).not.toBe(before.configRevision)
-  expect(after.profiles.map((entry) => [entry.profile.teamObjectId, entry.enabled])).toEqual([[teamA, false], [teamB, true]])
+  expect<unknown>(after.profiles.map((entry) => [entry.profile.teamObjectId, entry.enabled])).toEqual([[teamA, false], [teamB, true]])
   expect(f.readRows("SELECT action, principal_object_id FROM sf_team_profile_audit")).toEqual([
     { action: "disable", principal_object_id: principalId },
   ])
