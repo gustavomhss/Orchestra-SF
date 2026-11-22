@@ -19,7 +19,7 @@ export async function runSfGatewayProof(spec, installed) {
   const plugin = manifest.id
   const [tool] = manifest.contracts.tools
   const [upstreamTool] = configExample.toolFilter.include
-  const endpoint = new URL(configExample.url).pathname
+  const endpoint = spec.endpoint ?? new URL(configExample.url).pathname
   const tokenEnv = /^Bearer \$\{([A-Z][A-Z0-9_]*)\}$/.exec(configExample.headers.Authorization)?.[1]
   assert.ok(tokenEnv, "Expected an environment reference for the profile bearer")
   assert.equal(tool, serverId + "__" + upstreamTool)
@@ -277,5 +277,7 @@ const procurement = {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const installed = process.argv.includes("--installed-fixture") ? JSON.parse(readFileSync(0, "utf8")) : undefined
-  await runSfGatewayProof(procurement, installed)
+  // Exercise the non-default QA mount in the standalone proof and the native mount in the installed proof.
+  const spec = installed ? procurement : { ...procurement, endpoint: "/sucafina-teams-qa/api/claw/mcp" }
+  await runSfGatewayProof(spec, installed)
 }

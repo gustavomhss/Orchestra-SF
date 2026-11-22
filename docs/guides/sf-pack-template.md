@@ -2,6 +2,8 @@
 
 O pack de Compras é a referência para skills de leitura, ferramentas MCP, plugins OpenClaw e provas com escopos separados.
 
+Use o [guia de aceite dos três primeiros packs](sf-packs-acceptance.md) para reproduzir a prova integrada e preparar o QA corporativo.
+
 ## Gerar
 
 ```sh
