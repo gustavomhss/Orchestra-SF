@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
+import { createSfAnalysisHostServices } from "../src/sucafina-product/analysis-host-services.ts"
 import { createSfBusinessServices } from "../src/sucafina-product/business-services.ts"
 import { createSfProcurementCaseReadScope } from "../src/sucafina-product/procurement-case-read-scope.ts"
 import { createSfProductAuthority } from "../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
@@ -97,7 +98,7 @@ async function withFixture<T>(work: (fixture: Fixture) => Promise<T>): Promise<T
       identity: () => identity, installationId: identity.installationId, origin, policyVersion: "case-scope-policy",
       persistence, proposalCoverageWrites: new WeakSet<object>(),
       grants: [{ principalRef: actorId, namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-        operations: ["sf_case_draft", "sf_case_read", "sf_work_list"], humanActions: [] }],
+        operations: ["sf_case_draft", "sf_case_read", "sf_work_list"], humanActions: ["analysis.prepare"] }],
       // A bounded fixture identity provider; the original authority owns every
       // admission, consumed lease, request binding, revalidation and C08 grant.
       authenticate: async (incoming, scope) => requests.has(incoming) && control.authorized && scope
@@ -179,6 +180,43 @@ test("canonical Planner case remains readable after the original global Procurem
       expect(value(await revision(), "C08 revision after replacement")).toBe(before)
     })
   } finally { clock.mockRestore() }
+}, 45_000)
+
+test("analysis preparation distinguishes unavailable case evidence from a refused selection", async () => {
+  await withFixture(async (fixture) => {
+    const analysis = createSfAnalysisHostServices({
+      business: fixture.business, authority: fixture.authority, selected: [], analysisSelectionWrites: new WeakSet<object>(),
+    })
+    const caseRef = { id: fixture.plannerCase.id, incarnation: fixture.plannerCase.incarnation, version: fixture.plannerCase.version }
+    const request = {
+      caseRef, objective: "Inspect an unavailable case source", profileId: "sf_finance", profileVersion: "1",
+      skillId: "sf-explicar-forecast", skillVersion: "1", manifestDigest: "a".repeat(64),
+      outputSchemaVersion: "sf-contribution-v1" as const, requestedOperationScope: [],
+    }
+    const prepare = (ref = caseRef) => {
+      const input = { request: { ...request, caseRef: ref }, selection: {} }
+      return fixture.ui("sf-human:analysis.prepare", input, (call) => analysis.registry.prepare(input.selection, input.request, call))
+    }
+    const revisions = async () => ({
+      cases: value(await fixture.authority.state.read(fixture.request(), "cases", (state) => state.versions.cases), "cases revision"),
+      preferences: value(await fixture.authority.state.read(fixture.request(), "preferences", (state) => state.versions.preferences), "preferences revision"),
+    })
+    const before = await revisions()
+    const source = spyOn(fixture.business.context, "context").mockRejectedValue(new Error("fixture source unavailable"))
+    try {
+      expect(await prepare()).toEqual({ status: "unavailable", reason: "analysis-source-unavailable" })
+      expect(source).toHaveBeenCalledTimes(1)
+      expect(await prepare({ ...caseRef, version: caseRef.version + 1 })).toMatchObject({ status: "denied" })
+      expect(await prepare({ ...caseRef, incarnation: "foreign-incarnation" })).toMatchObject({ status: "denied" })
+      source.mockImplementation(async () => {
+        fixture.control.authorized = false
+        throw new Error("fixture source unavailable during revocation")
+      })
+      expect(await prepare()).toMatchObject({ status: "denied" })
+      fixture.control.authorized = true
+      expect(await revisions()).toEqual(before)
+    } finally { source.mockRestore() }
+  })
 }, 45_000)
 
 /** Structural negative fixture only. This is NOT an emitted C12 preparation,
