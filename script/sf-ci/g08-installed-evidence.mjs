@@ -2,11 +2,11 @@
 // No input status document is accepted as a substitute for an original report or GitHub producer.
 import assert from "node:assert/strict"
 import { randomBytes } from "node:crypto"
-import { constants } from "node:fs"
+import { constants, writeSync } from "node:fs"
 import { open, readFile, mkdir, writeFile } from "node:fs/promises"
-import { spawnSync } from "node:child_process"
 import path from "node:path"
-import { fileURLToPath } from "node:url"
+import { createRequire } from "node:module"
+import { fileURLToPath, pathToFileURL } from "node:url"
 import az02 from "../../sf/azure/identity/az02-proof.cjs"
 import {
   cases, preservedTeams, pendingGroups, record, digest, privateText, privateRoot, writePrivate,
@@ -405,26 +405,91 @@ export async function finalizeExecution(status, operations) {
   try { await operations.persist(status) } catch (error) { failures.push(error) }
   if (failures.length) throw new AggregateError(failures, "G08_ORIGINAL_FINALIZATION_FAILED")
 }
-async function command(root, name, executable, args, env, cwd = process.cwd()) {
+/** Only executing Bun paths load Core; the pure Node controls remain inert.
+ * Both layers select strict Omni locally, independent of the ambient rollback flag.
+ * The existing Omni loader owns addon/supervisor resolution; absence fails closed.
+ */
+async function strictProcessRuntime() {
+  // Resolve dependencies from their declared Core owner; script/ is outside that workspace.
+  const require = createRequire(new URL("../../packages/core/package.json", import.meta.url))
+  const { AppProcess } = await import("../../packages/core/src/process.ts")
+  const { CrossSpawnSpawner } = await import("../../packages/core/src/cross-spawn-spawner.ts")
+  const { Effect, Exit, Layer, Stream } = await import(pathToFileURL(require.resolve("effect")).href)
+  const { ChildProcess } = await import(pathToFileURL(require.resolve("effect/unstable/process")).href)
+  const { ChildProcessSpawner } = await import(pathToFileURL(require.resolve("effect/unstable/process/ChildProcessSpawner")).href)
+  const { NodeFileSystem, NodePath } = await import(pathToFileURL(require.resolve("@effect/platform-node")).href)
+  const layer = AppProcess.layerWith("strict").pipe(
+    Layer.provide(Layer.effect(ChildProcessSpawner, CrossSpawnSpawner.makeWith("strict"))),
+    Layer.provide([NodeFileSystem.layer, NodePath.layer]),
+  )
+  return { AppProcess, Effect, Exit, Stream, ChildProcess, layer }
+}
+/** Stream the original stdout/stderr bytes to the owned private handle, without a capture cap.
+ * Signal, spawn, stream and disk failures reject; no signal name is reconstructed from an exit code.
+ */
+export async function captureOriginalCommand(root, name, executable, args, env, cwd = process.cwd()) {
   const handle = await open(path.join(root, name), constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600)
+  const primaryFailures = []
   try {
-    const result = spawnSync(executable, args, { env, cwd, stdio: ["ignore", handle.fd, handle.fd] })
-    return { exit: result.status ?? 125, signal: result.signal ?? (result.error ? "SPAWN_ERROR" : null) }
-  } finally { await finishCommandOutput(handle) }
+    const { AppProcess, Effect, Exit, Stream, ChildProcess, layer } = await strictProcessRuntime()
+    return await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+      const processes = yield* AppProcess.Service
+      const child = yield* processes.spawn(ChildProcess.make(executable, args, {
+        env, cwd, extendEnv: env === undefined, stdin: "ignore", stdout: "pipe", stderr: "pipe",
+        killSignal: "SIGTERM", forceKillAfter: "5 seconds",
+      }))
+      const [, exit] = yield* Effect.all([
+        Stream.runForEach(child.all, (chunk) => Effect.sync(() => {
+          for (let offset = 0; offset < chunk.length;) {
+            const written = writeSync(handle.fd, chunk, offset, chunk.length - offset)
+            assert(written > 0, "G08_PRIVATE_COMMAND_WRITE_STALLED")
+            offset += written
+          }
+        })),
+        // Preserve signal failure while allowing already-produced output to finish draining.
+        Effect.exit(child.exitCode),
+      ], { concurrency: "unbounded" })
+      if (Exit.isFailure(exit)) return yield* Effect.failCause(exit.cause)
+      return { exit: exit.value, signal: null }
+    })).pipe(Effect.provide(layer)))
+  } catch (error) {
+    primaryFailures.push(error)
+    throw error
+  } finally {
+    try { await finishCommandOutput(handle) }
+    catch (cleanup) {
+      if (primaryFailures.length) throw new AggregateError([primaryFailures[0], cleanup], "G08_COMMAND_AND_PRIVATE_OUTPUT_CLEANUP_FAILED")
+      throw cleanup
+    }
+  }
+}
+/** Each call observes the real Git process; no cache or injected command backend is accepted. */
+async function observeOriginalGit(args) {
+  const { AppProcess, Effect, ChildProcess, layer } = await strictProcessRuntime()
+  const result = await Effect.runPromise(Effect.gen(function* () {
+    const processes = yield* AppProcess.Service
+    return yield* processes.run(ChildProcess.make("git", args, {
+      cwd: process.cwd(), env: process.env, extendEnv: false,
+      stdin: "ignore", stdout: "pipe", stderr: "pipe",
+      killSignal: "SIGTERM", forceKillAfter: "5 seconds",
+    }), { maxOutputBytes: 1_048_576, maxErrorBytes: 1_048_576 })
+  }).pipe(Effect.provide(layer)))
+  assert(!result.stdoutTruncated && !result.stderrTruncated, "G08_CHECKOUT_OUTPUT_TRUNCATED")
+  return { status: result.exitCode, signal: null, stdout: result.stdout.toString("utf8") }
 }
 async function runInstalled(kind) {
   assert(installedKinds.includes(kind), "G08_EXACT_GROUP_REQUIRED")
   const root = process.env.SF_G08_PRIVATE_ROOT
   await privateRoot(root)
-  const git = (args) => {
-    const result = spawnSync("git", args, { encoding: "utf8" })
+  const git = async (args) => {
+    const result = await observeOriginalGit(args)
     assert(result.status === 0 && !result.signal, "G08_CHECKOUT_OBSERVATION_FAILED")
     return result.stdout.trim()
   }
-  process.env.SF_G08_CANDIDATE_SHA = git(["rev-parse", "HEAD"])
-  process.env.SF_G08_CANDIDATE_TREE = git(["rev-parse", "HEAD^{tree}"])
+  process.env.SF_G08_CANDIDATE_SHA = await git(["rev-parse", "HEAD"])
+  process.env.SF_G08_CANDIDATE_TREE = await git(["rev-parse", "HEAD^{tree}"])
   assert(process.env.SF_G08_CANDIDATE_SHA === process.env.GITHUB_SHA &&
-    git(["status", "--porcelain", "--untracked-files=no"]) === "", "G08_EXACT_CLEAN_CHECKOUT_REQUIRED")
+    await git(["status", "--porcelain", "--untracked-files=no"]) === "", "G08_EXACT_CLEAN_CHECKOUT_REQUIRED")
   const plan = await readPlan(root), env = candidateEnvironment(plan)
   const planRaw = await privateText(root, "plan.json", 65536)
   const packageRaw = await privateText(root, "package-receipt.json")
@@ -440,7 +505,7 @@ async function runInstalled(kind) {
     startedAt: new Date().toISOString(), finishedAt: "", commandExit: 125, registrationExit: 0,
     hostBeforeExit: 125, hostAfterExit: 125, trackedDiffExit: 125, stagedDiffExit: 125, signal: null }
   const capture = async (name, executable, args, cwd) => {
-    const result = await command(root, name, executable, args, env, cwd)
+    const result = await captureOriginalCommand(root, name, executable, args, env, cwd)
     if (result.signal) status.signal = result.signal
     return result.exit
   }
@@ -525,11 +590,11 @@ export function verifyAggregateCheckout(candidate, observations) {
   return { candidate: { sha: candidate.sha, tree: candidate.tree }, trackedClean: true }
 }
 /** Read-only Git observations. The real aggregation never accepts an injected command adapter. */
-export function observeAggregateCheckout(candidate) {
+export async function observeAggregateCheckout(candidate) {
   const observations = {
-    sha: spawnSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }),
-    tree: spawnSync("git", ["rev-parse", "HEAD^{tree}"], { encoding: "utf8" }),
-    tracked: spawnSync("git", ["status", "--porcelain", "--untracked-files=no"], { encoding: "utf8" }),
+    sha: await observeOriginalGit(["rev-parse", "HEAD"]),
+    tree: await observeOriginalGit(["rev-parse", "HEAD^{tree}"]),
+    tracked: await observeOriginalGit(["status", "--porcelain", "--untracked-files=no"]),
   }
   return { ...verifyAggregateCheckout(candidate, observations), observedAt: new Date().toISOString() }
 }
@@ -542,7 +607,7 @@ async function aggregateInstalled(root) {
   assert(input.schema === "sf-g08-aggregate-input-v1" && Array.isArray(input.proofs), "G08_AGGREGATE_INPUT_REQUIRED")
   same(input.proofs.map((item) => item.kind), installedKinds, "G08_EXACT_ALL_GROUPS_REQUIRED")
   assert(input.candidate?.sha === process.env.GITHUB_SHA, "G08_AGGREGATE_ORIGINAL_CHECKOUT_REQUIRED")
-  const checkoutBefore = observeAggregateCheckout(input.candidate)
+  const checkoutBefore = await observeAggregateCheckout(input.candidate)
   const items = []
   const { verifyOriginalProducer, verifyDatasetCleanupAuthority, verifyAggregateExecution } = await import("./g08-proof-provenance.mjs")
   for (const proof of input.proofs) {
@@ -565,7 +630,7 @@ async function aggregateInstalled(root) {
     completedAt, reference: input.cleanup.reference })
   const admission = await verifyAggregateExecution({ plan: items[0].plan, planRaw: items[0].planRaw,
     archiveSha256: items[0].packageReceipt.archive.sha256 })
-  const checkoutAfter = observeAggregateCheckout(input.candidate)
+  const checkoutAfter = await observeAggregateCheckout(input.candidate)
   const receipt = { schema: "sf-g08-installed-complete-v1", status: "INSTALLED_OBLIGATIONS_AND_PROVENANCE_VERIFIED",
     candidate: input.candidate, archive: items[0].receipt.archive, packageReceiptSha256: items[0].plan.packageReceiptSha256,
     reservationSha256: items[0].receipt.bindings.reservationSha256, vmIdSha256: items[0].receipt.bindings.vmIdSha256,
