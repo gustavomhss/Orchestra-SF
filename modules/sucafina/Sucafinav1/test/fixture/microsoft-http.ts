@@ -13,7 +13,8 @@ import { teamProfileInstallationId } from "../../runtime/team-profile-access.ts"
 // controlled; HTTP, callback/session issuance, Team admission, storage and scanner
 // remain the original implementation. This is never installed-tenant evidence.
 export async function microsoftHttpFixture(options: {
-  label?: "g05" | "g06" | "g10"
+  label?: "g05" | "g06" | "g08" | "g10"
+  nativeWeb?: boolean
   grants?: readonly Readonly<Record<string, unknown>>[]
   plannerAdministrator?: boolean
   scanner?: { host: "127.0.0.1"; port: number } | null
@@ -40,6 +41,8 @@ export async function microsoftHttpFixture(options: {
     administrator: boolean
     teams: string[]
     graphCalls: string[]
+    beforeGraphRequest?: (url: URL) => Promise<void>
+    observeRequest?: (request: Request) => void
     requests: number
     loopbackPeers: number
     ingressRequests: number
@@ -50,6 +53,7 @@ export async function microsoftHttpFixture(options: {
     hostname: "127.0.0.1", port: 0, idleTimeout: 0,
     async fetch(request, server) {
       state.requests += 1
+      state.observeRequest?.(request)
       if (server.requestIP(request)?.address !== "127.0.0.1")
         return new Response("Non-loopback proof peer", { status: 500 })
       state.loopbackPeers += 1
@@ -106,6 +110,7 @@ export async function microsoftHttpFixture(options: {
       TMPDIR: join(directory, "host-tmp"), XDG_DATA_HOME: join(directory, "host-data"),
       XDG_CONFIG_HOME: join(directory, "host-config"), XDG_CACHE_HOME: join(directory, "host-cache"),
       XDG_STATE_HOME: join(directory, "host-state"),
+      ...(options.nativeWeb ? { SUCAFINA_NATIVE_TEAM_WEB: "1" } : {}),
     }, {
       now: () => new Date(epoch * 1000),
       async fetch(request) {
@@ -134,6 +139,7 @@ export async function microsoftHttpFixture(options: {
         if (url.origin === "https://graph.microsoft.com") {
           expect(request.headers.get("authorization")).toBe("Bearer synthetic-" + label + "-access")
           state.graphCalls.push(url.pathname)
+          await state.beforeGraphRequest?.(url)
           if (url.pathname === "/v1.0/me") return Response.json({ id: principalId, displayName: "Controlled " + label.toUpperCase() + " actor" })
           if (url.href === graph + "/me/checkMemberGroups") return Response.json({ value: state.administrator ? [groupId] : [] })
           if (url.href === graph + "/me/joinedTeams")

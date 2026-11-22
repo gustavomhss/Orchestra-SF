@@ -7,6 +7,20 @@ import type { TeamProfileCatalog } from "./team-profile-policy.ts"
 import type { TeamProfilePolicyStore } from "./team-profile-store.ts"
 import { readTeamProfileIntent } from "./team-profile-selector.ts"
 
+/** Server-private Team admission; neither a URL nor session actions can produce it. */
+export type TeamBusinessContextAdmission = Readonly<{
+  profile: TeamProfile.Ref
+  principalObjectId: string
+  verifyCurrent: () => Promise<boolean>
+}>
+export type TeamBusinessContext = Readonly<{
+  owner: TeamProfile.Owner
+  accessRevision: string
+  destinations: SfTeamContext["destinations"]
+  availability: SfTeamContext["availability"]
+  verifyCurrent: () => Promise<boolean>
+}>
+
 type Observed = Readonly<{
   status: "observed"
   observation: EntraTeamsObservation
@@ -34,6 +48,7 @@ export function createTeamProfileAccess(input: {
   observeTeams: (request: Request) => Promise<EntraTeamsObservation>
   profilePolicy?: Pick<TeamProfilePolicyStore, "read">
   observeAdministrator?: (request: Request) => Promise<TeamProfileAdministratorObservation>
+  readBusinessContext?: (request: Request, admission: TeamBusinessContextAdmission) => Promise<TeamBusinessContext | undefined>
 }) {
   const installationId = teamProfileInstallationId(input)
   const tenantId = input.tenantId
@@ -184,10 +199,23 @@ export function createTeamProfileAccess(input: {
       administrator.status === "unavailable" ? { status: "unavailable", reason: projectionReason(administrator.reason) } : { status: "denied" }
     // Administration may display Teams, but this route never admits a business owner.
     const admitted = target.kind !== "administration" && teams.status === "ready" ? teams.selected : undefined
+    const businessCurrent = async () => current.status === "observed" &&
+      await verifyObservation(request, current, admitted?.teamObjectId) &&
+      (administrator.status !== "available" || await administrator.verifyCurrent().catch(() => false)) &&
+      await policyCurrent(catalog, admitted?.teamObjectId) && !request.signal.aborted
+    const business = admitted && input.readBusinessContext
+      ? await input.readBusinessContext(request, {
+          profile: admitted, principalObjectId: principal.principalObjectId, verifyCurrent: businessCurrent,
+        }).catch(() => undefined)
+      : undefined
+    if (admitted && input.readBusinessContext && (!business || !business.accessRevision ||
+        digestSfValue(business.owner) !== digestSfValue({ profile: admitted, principal })))
+      return { status: "unavailable", reason: "provider-unavailable" }
     const accessRevision = digestSfValue({
       installationId, principal, configRevision: catalog.configRevision, selected: admitted,
       teams: teams.status, administration: administration.status,
       eligible: choices.map((choice) => choice.profile.teamObjectId).toSorted(),
+      ...(business ? { business: business.accessRevision } : {}),
     })
     const decoded = Schema.decodeUnknownOption(SfTeamContext, { onExcessProperty: "error" })({
       contractRevision: "sf-team-profile/1", authMode: "microsoft",
@@ -201,7 +229,7 @@ export function createTeamProfileAccess(input: {
         contractRevision: "sf-team-profile/1", status: "authenticated", installationId, principal, accessRevision,
         administration, teams,
       },
-      destinations: [], availability: [],
+      destinations: business?.destinations ?? [], availability: business?.availability ?? [],
     })
     if (Option.isNone(decoded)) return { status: "unavailable", reason: "invalid-response" }
     if (current.status === "observed" && !await verifyObservation(request, current, admitted?.teamObjectId))
@@ -209,6 +237,10 @@ export function createTeamProfileAccess(input: {
     // Group proof follows the awaited Teams reread so enumeration cannot outlive revocation.
     if (administrator.status === "available" && !await administrator.verifyCurrent().catch(() => false)) return { status: "denied" }
     if (!await policyCurrent(catalog) || request.signal.aborted) return { status: "unavailable", reason: "identity-unavailable" }
+    // This observation reopens the original Team partition and checks current
+    // business roles/ACL plus the held Microsoft/Team/admin proof after the awaits.
+    if (business && !await business.verifyCurrent().catch(() => false))
+      return { status: "unavailable", reason: "identity-unavailable" }
     return { status: "ok", value: decoded.value }
   }
 

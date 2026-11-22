@@ -1,6 +1,7 @@
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import type { SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
+import { Effect, Schema } from "effect"
+import { SfTeamInstallationDescriptor, type SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
 import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import type { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
@@ -10,7 +11,8 @@ import type { EntraOptions, EntraTeamsSessionResult } from "../runtime/local-con
 import { createTeamProfileAccess, teamProfileInstallationId } from "../runtime/team-profile-access.ts"
 import { createTeamProfileResolver } from "../runtime/team-profile-resolver.ts"
 import { createTeamProfileHttp } from "../runtime/team-profile-http.ts"
-import { runTeamBusiness } from "../runtime/team-business.ts"
+import { createTeamSessionAdmission } from "../runtime/team-session-admission.ts"
+import { readTeamBusinessContext, runTeamBusiness } from "../runtime/team-business.ts"
 import { teamBusinessRoute } from "../runtime/team-profile-selector.ts"
 import { esc } from "../src/screen-shell.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
@@ -19,6 +21,7 @@ export const nativeSfTeamInstallation = true
 type InstallationContext = {
   origin: string
   teamCurrentChoice?: SfTeamCurrentChoice
+  loadTeamSessionHttp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-session-http.ts").createSfTeamSessionHttp>
   loadTeamPurchaseMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamPurchaseMcp>
   loadTeamSupplierMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamSupplierMcp>
   loadTeamContractMcp?: () => Promise<typeof import("../../../../apps/cli/src/sucafina-product/team-purchase-mcp.ts").createSfTeamContractMcp>
@@ -46,6 +49,10 @@ export async function createMicrosoftInstallation(
   if (nativeWeb && config.teams !== "direct") throw new Error("Native Team Web requires Microsoft Teams admission")
   const authorize = await loadMicrosoftIngressAuthorizer(directory)
   const installationId = teamProfileInstallationId({ origin: config.origin, mount: config.mount, directory })
+  const nativeBinding = nativeWeb ? Object.freeze(Schema.decodeUnknownSync(SfTeamInstallationDescriptor)({
+    contractRevision: "sf-team-profile/1", authMode: "microsoft", publicOrigin: config.origin,
+    mount: config.mount, tenantId: config.tenantId, installationId, projectId: installationId, hostId: randomUUID(),
+  })) : undefined
   const store = await openLocalStore(path.join(directory, "business-microsoft"), config.teams === "direct" ? {
     teamProfilePolicy: {
       binding: { installationId, tenantId: config.tenantId },
@@ -64,13 +71,13 @@ export async function createMicrosoftInstallation(
       const { createCorporateRecoveryHttp } = await import("../runtime/corporate-recovery-http.ts")
       const { openCorporateRecoveryRegister } = await import("../runtime/corporate-recovery-register.ts")
       const register = await (overrides.openRecoveryRegister ?? openCorporateRecoveryRegister)(registerPath, directory)
-      return createCorporateRecoveryHttp({ config, directory, identity, now, register, profilePolicy })
+      return createCorporateRecoveryHttp({ config, directory, identity, now, register, profilePolicy, readPolicy: prepared.readCurrentConfiguration })
     })()
     const readTeams = identity.teamDirectory
     if (config.teams === "direct" && !store.teamProfiles) throw new Error("Microsoft Team policy is unavailable")
     const teamProfiles = store.teamProfiles && identity.observeTeamProfileAdministrator && createTeamProfileResolver({
       installationId, tenantId: config.tenantId, store: store.teamProfiles,
-      policy: async () => ({ teams: config.teams, supremeAdminGroupId: config.supremeAdminGroupId }),
+      policy: prepared.readTeamProfilePolicy,
       observeAdministrator: identity.observeTeamProfileAdministrator, prepare: identity.prepare,
       now: () => now().getTime(),
     })
@@ -79,15 +86,80 @@ export async function createMicrosoftInstallation(
     })
     const checkpoint = config.teams === "direct" && store.teamProfiles ? await (async () => {
       const { createCorporateCheckpointHttp } = await import("../runtime/corporate-checkpoint-http.ts")
-      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, now })
+      return createCorporateCheckpointHttp({ config, directory, identity, profilePolicy: store.teamProfiles!, readPolicy: prepared.readCurrentConfiguration, now })
     })() : undefined
     const teamAccess = identity.observeTeams && createTeamProfileAccess({
       origin: config.origin, mount: config.mount, directory, tenantId: config.tenantId,
       enabledTeamIds: config.enabledTeamIds ?? [], prepare: identity.prepare, observeTeams: identity.observeTeams,
       profilePolicy: store.teamProfiles,
+      ...(nativeWeb ? { readBusinessContext: (request: Request, admission: Parameters<typeof readTeamBusinessContext>[0]["admission"]) =>
+        readTeamBusinessContext({ request, admission, identity, readCurrentConfiguration: prepared.readCurrentConfiguration,
+          directory, now, teamCurrentChoice: context.teamCurrentChoice, nativeDomain: nativeBinding }) } : {}),
       ...(teamProfiles ? { observeAdministrator: (request: Request) => teamProfiles.administrator(request, { refreshSession: false }) } : {}),
     })
     if (nativeWeb && !teamAccess) throw new Error("Native Team Web admission is unavailable")
+    const readSessionAdmission = nativeWeb && teamAccess && store.teamProfiles ? createTeamSessionAdmission({
+      origin: config.origin, mount: config.mount, installationId, tenantId: config.tenantId, directory,
+      authorizeTeam: teamAccess, identity, profilePolicy: store.teamProfiles,
+      readCurrentConfiguration: prepared.readCurrentConfiguration, readGrants: prepared.readGrants,
+      connections: store.teamConnections, readKey: prepared.readConnectionKey, policyVersion: "sf-team-profile/1",
+    }) : undefined
+    type SessionRuntime = Awaited<ReturnType<typeof import("../../../../apps/cli/src/sucafina-product/team-session-http.ts").createSfTeamSessionHttp>>
+    let sessionRuntime: Promise<SessionRuntime> | undefined
+    let disposed = false
+    const sessionHttp = async (request: Request): Promise<Response | undefined> => {
+      const pathname = new URL(request.url).pathname
+      if (!nativeWeb || !(pathname === config.mount + "/api/session" || pathname.startsWith(config.mount + "/api/session/") ||
+        pathname === config.mount + "/api/event" || pathname === config.mount + "/api/reference")) return undefined
+      const headers = { "cache-control": "no-store", "x-content-type-options": "nosniff" }
+      const unavailable = () => Response.json({ status: "unavailable" }, { status: 503, headers })
+      if (disposed || !readSessionAdmission || !context.loadTeamSessionHttp) return unavailable()
+      const admission = await readSessionAdmission(request)
+      if (!admission || request.signal.aborted)
+        return Response.json({ _tag: "UnauthorizedError", message: "Current session authority required" }, { status: 401, headers })
+      try {
+        const action = request.method === "POST" && pathname === config.mount + "/api/session" ? "create" : "read"
+        if (!await Effect.runPromise(admission.authorize(action)) ||
+          !await Effect.runPromise(admission.verifyCurrent()) || request.signal.aborted)
+          return Response.json({ _tag: "UnauthorizedError", message: "Current session authority required" }, { status: 401, headers })
+        const configuration = await Effect.runPromise(admission.configuration?.() ?? Effect.succeed(undefined))
+        const profile = admission.binding.owner.profile
+        if (!configuration || configuration.origin !== "installation-team-store" ||
+          configuration.configRevision !== admission.binding.revisions.configRevision ||
+          configuration.profile.installationId !== profile.installationId ||
+          configuration.profile.tenantId !== profile.tenantId ||
+          configuration.profile.teamObjectId !== profile.teamObjectId ||
+          !await Effect.runPromise(admission.verifyCurrent()) || request.signal.aborted) return unavailable()
+        // Only a current private Microsoft/Team grant can load and start the Core graph.
+        // Each actual HTTP operation still captures and verifies its own opaque owner lease.
+        if (!sessionRuntime) {
+          const load = context.loadTeamSessionHttp
+          sessionRuntime = (async () => {
+            const create = await load()
+            const runtime = await create({
+              origin: config.origin, mount: config.mount, directory,
+              workspaceDirectory: config.workspaceDirectory, readAdmission: readSessionAdmission,
+            })
+            if (disposed) {
+              await runtime.dispose()
+              throw new Error("Microsoft session runtime disposed")
+            }
+            return runtime
+          })()
+        }
+        const pending = sessionRuntime
+        const runtime = await pending.catch((error) => {
+          if (sessionRuntime === pending) sessionRuntime = undefined
+          throw error
+        })
+        if (disposed || request.signal.aborted) return unavailable()
+        return await runtime.handler(request)
+      } catch (error) {
+        console.error("SF_TEAM_SESSION_RUNTIME_UNAVAILABLE", error)
+        return unavailable()
+      }
+    }
+
     const purchasePeriod = config.clawPurchasePeriod
     const purchaseMcp = purchasePeriod ? await (async () => {
       if (!teamAccess || !context.loadTeamPurchaseMcp) throw new Error("Purchase MCP requires the Microsoft Team host")
@@ -107,8 +179,10 @@ export async function createMicrosoftInstallation(
     const headers = { "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" }
     const htmlHeaders = { ...headers, "Content-Type": "text/html; charset=utf-8",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'; base-uri 'none'" }
-    const web = nativeWeb && teamAccess ? (() => {
-      const binding = Object.freeze({ installationId, projectId: installationId, hostId: randomUUID() })
+    const web = nativeBinding && teamAccess ? (() => {
+      const binding = Object.freeze({
+        installationId: nativeBinding.installationId, projectId: nativeBinding.projectId, hostId: nativeBinding.hostId,
+      })
       const runtime = Object.freeze({ nativeUiProducts: {
         currentBinding: () => binding,
         teamTenantId: config.tenantId,
@@ -120,7 +194,7 @@ export async function createMicrosoftInstallation(
         publicOrigin: config.origin, mount: config.mount, authMode: "microsoft" as const, tenantId: config.tenantId,
         identity: () => ({ ...binding, location: { directory } }),
       })
-      return { context, discovery: {
+      return { context, nativeDomain: { binding: nativeBinding, readContext: runtime.nativeUiProducts.readTeamContext }, discovery: {
         current: async (signal: AbortSignal) => signal.aborted ? undefined : discovered,
         forAdmittedLocation: async () => [],
       } }
@@ -130,6 +204,7 @@ export async function createMicrosoftInstallation(
       trustedIngress: Object.freeze({ origin: prepared.transport.ingressOrigin, authorize }),
       ...(web ? { nativeWeb: true, discovery: web.discovery } : {}),
       async handler(incoming: Request) {
+        if (disposed) return new Response(null, { status: 503, headers })
         const request = microsoftRequest(incoming, prepared.transport)
         if (!request) return new Response(null, { status: 403, headers })
         const url = new URL(request.url)
@@ -145,12 +220,35 @@ export async function createMicrosoftInstallation(
         if (web && url.pathname === config.mount + "/api/ui/context") return web.context.handle(request)
         const profiles = await profileHttp?.(request)
         if (profiles) return profiles
+        const session = await sessionHttp(request)
+        if (session) return session
         const mcp = await purchaseMcp?.(request) ?? await supplierMcp?.(request) ?? await contractMcp?.(request)
         if (mcp) return mcp
         const captured = await checkpoint?.(request)
         if (captured) return captured
         const recovered = await recovery?.(request)
         if (recovered) return recovered
+        const nativePage = web && ["CAP14", "CAP04", "CAP05", "CAP03", "CAP25"].find((id) =>
+          url.pathname === config.mount + "/api/ui/pages/" + id)
+        if (nativePage && teamAccess && web) {
+          if (request.method !== "GET")
+            return new Response(null, { status: 405, headers: { ...headers, Allow: "GET" } })
+          // The header is intent, never authority. Preserve the normalized
+          // original Request through admission, F02, Domain.view and its fences.
+          const access = await teamAccess(request)
+          if (access.status !== "allowed") return Response.json(access, {
+            status: access.status === "unauthenticated" ? 401 : access.status === "denied" ? 403 :
+              access.status === "selection-required" ? 409 : 503, headers,
+          })
+          return runTeamBusiness({
+            request, admission: access, authorizeTeam: teamAccess, identity,
+            route: { mount: config.mount + "/teams/" + access.profile.teamObjectId,
+              teamObjectId: access.profile.teamObjectId, surface: nativePage === "CAP25" ? "procurement" : "dashboard" },
+            readCurrentConfiguration: prepared.readCurrentConfiguration, directory, keys: prepared.loaded.keys, now,
+            teamCurrentChoice: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? context.teamCurrentChoice : undefined,
+            nativeDomain: web.nativeDomain,
+          })
+        }
         const route = teamAccess ? teamBusinessRoute(url.pathname, config.mount) : undefined
         const landing = url.pathname === config.mount || url.pathname === config.mount + "/dashboard" ||
           (!!teamAccess && (url.pathname === config.mount + "/planner" || url.pathname === config.mount + "/procurement"))
@@ -178,10 +276,11 @@ export async function createMicrosoftInstallation(
         const access = await teamAccess(request, route?.teamObjectId)
         if (access.status === "allowed") {
           if (route) return runTeamBusiness({
-            request, route, admission: access, authorizeTeam: teamAccess, identity, config, directory,
+            request, route, admission: access, authorizeTeam: teamAccess, identity, readCurrentConfiguration: prepared.readCurrentConfiguration, directory,
             keys: prepared.loaded.keys, now,
             teamCurrentChoice: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? context.teamCurrentChoice : undefined,
             decisionIntentions: environment.SUCAFINA_NATIVE_TEAM_DECISIONS === "1" ? store : undefined,
+            nativeDomain: web?.nativeDomain,
           })
           return new Response(null, { status: 303, headers: {
             ...headers, Location: webLanding ? "/" : config.mount + "/teams/" + access.profile.teamObjectId + "/" + surface,
@@ -209,7 +308,15 @@ export async function createMicrosoftInstallation(
         const request = microsoftRequest(incoming, prepared.transport)
         return request ? readTeams(request) : { state: "unauthenticated" }
       } } : {}),
-      dispose: () => store.dispose(),
+      async dispose() {
+        if (disposed) return
+        disposed = true
+        try {
+          // A failed startup owns no live graph; its request already returned an explicit unavailable response.
+          const runtime = await sessionRuntime?.catch(() => undefined)
+          await runtime?.dispose()
+        } finally { await store.dispose() }
+      },
     }
   } catch (error) {
     await store.dispose()

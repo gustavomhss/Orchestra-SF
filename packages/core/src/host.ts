@@ -4,6 +4,13 @@ import { Layer } from "effect"
 import type { ClaudeCodeAccount } from "./claude-code-account"
 import type { Database } from "./database/database"
 import type { EventV2 } from "./event"
+import type { AppProcess } from "./process"
+import type { FSUtil } from "./fs-util"
+import type { MoveSession } from "./control-plane/move-session"
+import type { SessionOwner } from "./session/owner"
+import type { SessionProcess } from "./session-process"
+import type { SessionSubagentModels } from "./session/subagent-models"
+import type { TaskBackground } from "./tool/task-background"
 import type { LayerNode } from "./effect/layer-node"
 import type { Node } from "./effect/app-node"
 import { LocationServiceMap } from "./location-service-map"
@@ -18,6 +25,11 @@ export type ReferenceServices =
   | EventV2.Service
   | LocationServiceMap.Service
   | ClaudeCodeAccount.Service
+
+/** Existing global graph consumed by an installed HTTP adapter, with one coordinator. */
+export type RuntimeServices = ReferenceServices | SessionV2.Service | SessionOwner.Service |
+  SessionSubagentModels.Service | SessionProcess.Service | AppProcess.Service | FSUtil.Service |
+  MoveSession.Service | TaskBackground.Service
 
 /**
  * What a product module hands a composition root. A root applies all contributions once, to its single

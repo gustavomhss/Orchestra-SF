@@ -53,6 +53,10 @@ export async function loadSfInstallation(
     origin: origin.origin,
     ...(teamCurrentChoice ? { teamCurrentChoice } : {}),
     ...(module.nativeSfTeamInstallation === true ? {
+      loadTeamSessionHttp: async () => {
+        const { createSfTeamSessionHttp } = await import("./team-session-http")
+        return createSfTeamSessionHttp
+      },
       loadTeamPurchaseMcp: async () => {
         const { createSfTeamPurchaseMcp } = await import("./team-purchase-mcp")
         return createSfTeamPurchaseMcp

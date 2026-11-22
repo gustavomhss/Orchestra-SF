@@ -123,6 +123,8 @@ function criticalFor(selection) {
     ...(selection === "controls-with-imports" ? [
       "apps/cli/src/sucafina-product/team-imports.ts",
       "modules/sucafina/Sucafinav1/runtime/team-business.ts",
+      "modules/sucafina/Sucafinav1/local/microsoft-entry.ts",
+      "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
       "apps/cli/src/sucafina-product/import-services.ts",
       "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
       "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
@@ -381,7 +383,7 @@ export function verifyMicrosoftImportEvidence({ admission, env, service, log }) 
   for (const [index, value] of controls.entries()) {
     const daemon = index === 3 ? service.error : service.main
     const teams = value.binding?.teamObjectIds
-    if (value.schema !== "orchestra.g06.microsoft-team-import-control/1" || value.control !== importControlIds[index] ||
+    if (value.schema !== "orchestra.g06.microsoft-team-import-control/2" || value.control !== importControlIds[index] ||
         value.status !== "PASS" || value.sourceSha !== env.GITHUB_SHA || value.runId !== env.GITHUB_RUN_ID ||
         value.runAttempt !== env.GITHUB_RUN_ATTEMPT || value.proofClass !== "COMPONENT_REAL_CLAMD" ||
         value.composition !== "MICROSOFT_TEAM_NATIVE_IMPORT" || value.identityProvider !== "CONTROLLED_ENTRA_GRAPH" ||
@@ -437,6 +439,18 @@ export function verifyMicrosoftImportEvidence({ admission, env, service, log }) 
       !digestValue(denied.result.missingGrant.binding) || controls.some((value) => value.binding.installationId === denied.result.missingGrant.binding) ||
       denied.result.missingGrant.cleanupComplete !== true || !sameDurable(denied.result.missingGrant.durable, denied.binding.teamObjectIds))
     fail("private importer must preserve owner, grant and membership refusal with independent complete-store equality")
+
+  const configuration = denied.result.configurationRevocation
+  const configurationCases = ["grants:before-request", "roles:before-request",
+    "grants:after-request-body", "roles:after-request-body", "unavailable:before-request"]
+  if (configuration?.source !== "private-installation-file" || !Array.isArray(configuration.observations) ||
+      !isDeepStrictEqual(configuration.observations.map((value) => value.kind + ":" + value.boundary).sort(), configurationCases.sort()) ||
+      configuration.observations.some((value) =>
+        value.httpStatus !== (value.kind === "unavailable" ? 503 : 403) ||
+        value.originalBodyObserved !== (value.boundary === "after-request-body") ||
+        value.restoredReadStatus !== 200 || !sameDurable(value.durable, denied.binding.teamObjectIds)) ||
+      !clean(configuration.cleanAfterRestore, denied.binding.teamObjectIds[0], denied.binding.teamObjectIds))
+    fail("private configuration revocation before admission and after original body consumption must preserve both stores and recover explicitly")
   const outage = controls[3]
   if (outage.result.connectionRefused !== true || !Array.isArray(outage.result.attempts) || outage.result.attempts.length !== 2 ||
       !isDeepStrictEqual(outage.result.attempts.map((value) => value.teamObjectId).sort(), [...outage.binding.teamObjectIds].sort()) ||
@@ -444,7 +458,7 @@ export function verifyMicrosoftImportEvidence({ admission, env, service, log }) 
         !Number.isSafeInteger(value.bytes) || value.bytes < 1 || !sameDurable(value.durable, outage.binding.teamObjectIds)))
     fail("owned real daemon outage must refuse private imports in both Teams without durable effects")
   return {
-    schema: "teams-profile-scanner-microsoft-import-receipt-v1", status: "PASS",
+    schema: "teams-profile-scanner-microsoft-import-receipt-v2", status: "PASS",
     candidateSha: admission.envelope.candidateSha, candidateTree: admission.envelope.candidateTree,
     snapshotSha: env.GITHUB_SHA, snapshotTree: env.G05_SOURCE_TREE, requestSha256: admission.envelope.requestSha256,
     run: env.GITHUB_RUN_ID, attempt: env.GITHUB_RUN_ATTEMPT, proofClass: "COMPONENT_REAL_CLAMD",

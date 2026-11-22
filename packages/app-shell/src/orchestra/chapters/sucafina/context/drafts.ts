@@ -1,6 +1,6 @@
 import { batch } from "solid-js"
 import type {
-  SfContext, SfContextDependencies, SfDraftReadBinding, SfDraftRegistry,
+  SfContext, SfReadableContext, SfDraftDependencies, SfDraftReadBinding, SfDraftRegistry,
   SfDraftRevalidation, SfOwnerIdentity, SfPublicDraftController,
 } from "./contracts"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
@@ -24,8 +24,8 @@ type DraftEntry = {
 type RegistryState = "active" | "quarantined" | "revoked"
 
 /** One ephemeral owner registry outside every keyed chapter boundary. */
-export function createSfOwnerDrafts(
-  deps: SfContextDependencies,
+export function createSfOwnerDrafts<Context extends SfReadableContext = SfContext>(
+  deps: SfDraftDependencies<Context>,
   initial: Readonly<{ key: SfOwnerKey; identity: SfOwnerIdentity }>,
 ) {
   const entries = new Map<string, DraftEntry>()
@@ -109,15 +109,15 @@ export function createSfOwnerDrafts(
     },
   }
 
-  const discardAll = () => {
-    if (state === "revoked" || unresolved.size > 0) return false
-    // A submitted command's status cannot be cleared by a UI discard prompt.
-    if ([...entries.values()].some((entry) => {
+  // A submitted command's status cannot be cleared by a UI discard prompt or a new transport generation.
+  const hasUnresolvedOperations = () => unresolved.size > 0 || [...entries.values()].some((entry) => {
       if (state === "quarantined") return entry.quarantinedPending
       const snapshot = entry.controller.snapshot()
       return snapshot.availability !== "active" || snapshot.pendingOperation !== null ||
         snapshot.phase === "submitting" || snapshot.phase === "outcome-unknown"
-    })) return false
+    })
+  const discardAll = () => {
+    if (state === "revoked" || hasUnresolvedOperations()) return false
     if (state === "quarantined") {
       revoke("owner-changed")
       return true
@@ -161,7 +161,7 @@ export function createSfOwnerDrafts(
     left.principalRef === right.principalRef
   const revalidate = async (
     incoming: Readonly<{ key: SfOwnerKey; identity: SfOwnerIdentity }>,
-    context: SfContext,
+    context: Context,
     transport: SfTransport,
     signal: AbortSignal,
   ): Promise<boolean> => {
@@ -218,7 +218,7 @@ export function createSfOwnerDrafts(
     if (state === "quarantined") return entry.quarantinedDirty || entry.quarantinedPending
     return snapshot.availability === "active" && (snapshot.dirty || snapshot.pendingOperation !== null)
   })
-  return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority,
+  return Object.freeze({ registry, discardAll, quarantine, revoke, revalidate, dirty, sameAuthority, hasUnresolvedOperations,
     owner: () => owner, state: () => state, revocationReason: () => revocationReason })
 }
 

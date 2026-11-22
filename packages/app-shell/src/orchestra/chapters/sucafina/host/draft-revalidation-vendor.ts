@@ -1,6 +1,6 @@
 import { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 import type { SfTransport } from "@orchestra/client/sucafina/transport"
-import type { SfContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
+import type { SfReadableContext, SfDraftRevalidation, SfDraftRevalidationInput } from "../context/contracts"
 import { decodeVendorContractsPage, vendorRef, vendorVersion } from "../procurement/contracts/model"
 import { draftAvailability } from "./draft-revalidation-availability"
 
@@ -9,7 +9,7 @@ const fields = ["vendor", "num", "name", "desc", "category", "owner", "start", "
   "amtType", "renewal", "renewType", "notice", "eval", "notes"]
 
 export async function revalidateVendorContractDraft(
-  input: SfDraftRevalidationInput, fresh: SfContext, transport: SfTransport, signal: AbortSignal,
+  input: SfDraftRevalidationInput, fresh: SfReadableContext, transport: SfTransport, signal: AbortSignal,
 ): Promise<SfDraftRevalidation> {
   if (input.surfaceId !== "CAP14" || input.read.operationId !== "domain.page.CAP14" ||
       input.editScopeKey !== "vendor-contract-fields" || input.read.actionIds.length !== 1 ||
@@ -18,10 +18,10 @@ export async function revalidateVendorContractDraft(
   const source = input.read.input
   if (!source || typeof source !== "object" || Array.isArray(source) || Object.keys(source).length)
     return { status: "unavailable" }
-  const availability = draftAvailability(fresh, "domain-read", "CAP14", ["domain.page.CAP14", "domain.command.CAP14.save"])
-  if (availability) return availability
   if (!fresh.destinations.some((item) => item.capabilityId === "CAP14" && item.surface === "dashboard" &&
       item.page === "Vendor Contracts" && item.canRead && item.allowedActionIds.includes("save"))) return { status: "denied" }
+  const availability = draftAvailability(fresh, "domain-read", "CAP14", ["domain.page.CAP14", "domain.command.CAP14.save"])
+  if (availability) return availability
   const result = await createSfDomainClient(transport)["domain.page.CAP14"]({}, { signal }).catch(() => undefined)
   if (signal.aborted || !result || result.kind !== "response") return { status: "unavailable" }
   if (result.status === 401 || result.status === 403 || result.body.status === "unauthenticated" ||

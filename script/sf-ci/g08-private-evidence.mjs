@@ -6,13 +6,16 @@ import { isIP } from "node:net"
 import { lstat, open, readFile, realpath, mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import az02 from "../../sf/azure/identity/az02-proof.cjs"
 
 export const cases = Object.freeze([
-  { id: "same-team-principal-binding", title: "Two original Microsoft principals select the same Team without claiming different grants" },
+  { id: "same-team-distinct-grants", title: "Two distinct Microsoft accounts enter the same installed Team with their own authority" },
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
-  { id: "admin-api-without-team", title: "Original Microsoft administration works without granting Team business access" },
+  { id: "admin-without-team", title: "Native Microsoft administration remains usable without Team business access" },
+  { id: "narrow-keyboard-draft", title: "Keyboard navigation opens a new Team chat draft on narrow Web without changing owner" },
+  { id: "draft-cancel-discard", title: "A Team switch keeps a canceled chat draft and discards it only on confirmation" },
   { id: "real-revoke-restore", title: "Real administration revokes a disposable Team and restores its original configuration" },
   { id: "logout-original-context", title: "Logout invalidates the original Microsoft browser context and preserves the other account" },
 ])
@@ -21,6 +24,8 @@ export const preservedTeams = Object.freeze([
   "admin-without-team", "narrow-keyboard-draft", "draft-cancel-discard", "real-revoke-restore", "logout-original-context",
 ])
 export const completeMappings = Object.freeze({
+  "same-team-distinct-grants": "same-team-distinct-grants", "admin-without-team": "admin-without-team",
+  "narrow-keyboard-draft": "narrow-keyboard-draft", "draft-cancel-discard": "draft-cancel-discard",
   "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
   "foreign-deep-link-reload": "foreign-deep-link-reload", "real-revoke-restore": "real-revoke-restore",
   "logout-original-context": "logout-original-context",
@@ -29,12 +34,21 @@ export const obligationPath = "packages/app-shell/e2e/sucafina/g08/obligations.j
 export const pendingGroups = Object.freeze(["U15", "U39", "U40", "F04", "AZ02"])
 export const productContractPaths = Object.freeze([
   "packages/app-shell/src/context/team-profile-navigation.ts",
+  "packages/app-shell/src/components/team-profile-administration.tsx",
+  "packages/app-shell/src/pages/team-session.tsx",
+  "packages/app-shell/src/context/team-sessions.ts",
+  "packages/client/src/sucafina/sessions.ts",
+  "packages/client/src/sucafina/team-profile.ts",
+  "modules/sucafina/Sucafinav1/runtime/team-session-admission.ts",
+  "apps/cli/src/sucafina-product/team-session-http.ts",
+  "packages/server/src/session-http.ts",
   "modules/sucafina/Sucafinav1/runtime/team-profile-http.ts",
   "modules/sucafina/Sucafinav1/runtime/team-profile-store.ts",
 ])
 export const sourcePaths = Object.freeze([
   ".github/workflows/g08-private-preflight.yml", "script/sf-ci/g08-private-evidence.mjs", obligationPath,
   "script/sf-ci/g08-installed-preflight.py", "script/sf-ci/g08-private-run.sh",
+  "sf/azure/identity/az02-proof.cjs",
   "packages/app-shell/e2e/sucafina/g08/playwright.config.ts",
   "packages/app-shell/e2e/sucafina/g08/installed-fixture.ts",
   "packages/app-shell/e2e/sucafina/g08/teams-installed.spec.ts",
@@ -55,6 +69,32 @@ function text(value) {
   assert(typeof value === "string" && value.trim() === value && value.length > 0 && value.length <= 2048 &&
     !/[\u0000-\u001f\u007f]/.test(value), "G08_TEXT_REQUIRED")
   return value
+}
+/** Canonical business projection only. The caller must first decode the original F02 response.
+ * Principal, revisions and resource availability are deliberately outside this comparison.
+ * @param {unknown} value
+ */
+export function destinationGrants(value) {
+  const destinations = record(value).destinations
+  assert(Array.isArray(destinations), "G08_ORIGINAL_DESTINATIONS_REQUIRED")
+  const projection = destinations.map((value) => {
+    const entry = record(value)
+    exact(entry, ["capabilityId", "surface", "page", "canRead", "allowedActionIds"])
+    const surface = text(entry.surface)
+    assert(["dashboard", "planner", "procurement"].includes(surface) &&
+      typeof entry.canRead === "boolean" && Array.isArray(entry.allowedActionIds), "G08_DESTINATION_GRANT_INVALID")
+    const actions = entry.allowedActionIds.map(text).sort()
+    assert.equal(new Set(actions).size, actions.length, "G08_DUPLICATE_ACTION_GRANT")
+    return { capabilityId: text(entry.capabilityId), surface, page: text(entry.page),
+      canRead: entry.canRead, allowedActionIds: actions }
+  })
+  assert.equal(new Set(projection.map((entry) => entry.capabilityId)).size, projection.length,
+    "G08_DUPLICATE_DESTINATION_GRANT")
+  return projection.map((entry) => JSON.stringify(entry)).sort()
+}
+/** @param {unknown} requester @param {unknown} holder */
+export function requireDistinctDestinationGrants(requester, holder) {
+  assert.notDeepEqual(destinationGrants(requester), destinationGrants(holder), "G08_DISTINCT_DESTINATION_GRANTS_REQUIRED")
 }
 /** @param {unknown} value @param {number} length @returns {string} */
 function hex(value, length) {
@@ -287,6 +327,71 @@ export function validateHost(value, plan, receipt) {
     observed < Date.parse(plan.reservation.endsAt), "G08_HOST_OUTSIDE_WINDOW")
   return host
 }
+
+/** Original browser transcript reduced only after strict corporate response decoding.
+ * The CLI reads this file solely after the exact installed Playwright run and cleanup pass.
+ * It is not an operator-supplied grant declaration and cannot substitute for that provenance.
+ * @param {unknown} value @param {ReturnType<typeof validatePlan>} plan
+ */
+export function validateGrantProof(value, plan) {
+  const proof = record(value)
+  exact(proof, ["schema", "invocationId", "profile", "fixtureIds", "requester", "holder", "cleanup"])
+  assert(proof.schema === "sf-g08-session-grants-v1" && proof.invocationId === plan.invocation.id,
+    "G08_GRANT_PROOF_INVOCATION_REQUIRED")
+  const profile = { installationId: plan.target.installationId, tenantId: plan.target.tenantId,
+    teamObjectId: plan.target.teamObjectId }
+  assert.deepEqual(proof.profile, profile, "G08_GRANT_PROFILE_REQUIRED")
+  const fixtures = record(proof.fixtureIds), requester = record(proof.requester), holder = record(proof.holder)
+  const cleanup = record(proof.cleanup)
+  exact(fixtures, ["requester", "holder"]); exact(cleanup, ["requester", "holder"])
+  assert(fixtures.requester !== fixtures.holder, "G08_DISTINCT_FIXTURE_IDS_REQUIRED")
+  for (const entry of Object.values(fixtures))
+    assert(new RegExp("^ses_g08_" + plan.invocation.id + "_[a-f0-9]{32}$").test(text(entry)), "G08_DISPOSABLE_SESSION_ID_REQUIRED")
+  exact(requester, ["namespace", "before", "created", "observed", "afterCreate", "createStatus", "readStatus"])
+  exact(holder, ["namespace", "before", "afterDenial", "deniedStatus", "readStatus"])
+  assert(requester.createStatus === 200 && requester.readStatus === 200 &&
+    holder.readStatus === 200 && holder.deniedStatus === 401, "G08_DIFFERENT_EFFECTIVE_GRANTS_NOT_OBSERVED")
+  /** @param {unknown} value @param {"requester" | "holder"} actor */
+  function namespace(value, actor) {
+    const item = record(value)
+    exact(item, ["version", "owner", "authorityGeneration"])
+    assert(item.version === 1 && Number.isSafeInteger(item.authorityGeneration) && Number(item.authorityGeneration) > 0,
+      "G08_ORIGINAL_SESSION_NAMESPACE_REQUIRED")
+    assert.deepEqual(item.owner, { profile, principal: {
+      tenantId: plan.target.tenantId, principalObjectId: plan.actors[actor],
+    } }, "G08_ORIGINAL_SESSION_OWNER_REQUIRED")
+    return item
+  }
+  /** @param {unknown} value @param {Record<string, unknown>} owner */
+  function entries(value, owner) {
+    assert(Array.isArray(value) && value.length <= 10_000, "G08_COMPLETE_SESSION_INVENTORY_REQUIRED")
+    const rows = value.map(record), ids = rows.map((entry) => text(entry.id))
+    assert.equal(new Set(ids).size, rows.length, "G08_SESSION_INVENTORY_DUPLICATE")
+    assert.deepEqual(ids, [...ids].sort((a, b) => a.localeCompare(b)), "G08_SESSION_INVENTORY_ORDER_REQUIRED")
+    for (const row of rows) assert.deepEqual(row.namespace, owner, "G08_SESSION_ROW_OWNER_REQUIRED")
+    return rows
+  }
+  const requesterOwner = namespace(requester.namespace, "requester"), holderOwner = namespace(holder.namespace, "holder")
+  const before = entries(requester.before, requesterOwner), holderBefore = entries(holder.before, holderOwner)
+  assert(!before.some((entry) => entry.id === fixtures.requester) &&
+    !holderBefore.some((entry) => entry.id === fixtures.holder), "G08_FIXTURE_MUST_BE_NEW")
+  const created = record(requester.created)
+  assert(created.id === fixtures.requester, "G08_CREATED_SESSION_ID_CHANGED")
+  assert.deepEqual(created.namespace, requesterOwner, "G08_CREATED_SESSION_OWNER_CHANGED")
+  assert.deepEqual(requester.observed, created, "G08_SESSION_EFFECT_NOT_REREAD")
+  assert.deepEqual(entries(requester.afterCreate, requesterOwner),
+    [...before, created].sort((a, b) => String(a.id).localeCompare(String(b.id))), "G08_SESSION_CREATE_EFFECT_NOT_EXACT")
+  assert.deepEqual(entries(holder.afterDenial, holderOwner), holderBefore, "G08_DENIED_SESSION_CHANGED_STATE")
+  for (const actor of ["requester", "holder"]) {
+    const item = record(cleanup[actor]), original = actor === "requester" ? before : holderBefore
+    const expectedOwner = actor === "requester" ? requesterOwner : holderOwner
+    exact(item, ["namespace", "entries"])
+    assert.deepEqual(item.namespace, expectedOwner, "G08_SESSION_CLEANUP_OWNER_CHANGED")
+    assert.deepEqual(entries(item.entries, expectedOwner), original, "G08_SESSION_FIXTURE_CLEANUP_REQUIRED")
+  }
+  return proof
+}
+
 /** @param {unknown} value */
 export function reportSpecs(value) {
   const report = record(value)
@@ -332,6 +437,39 @@ export function verifyReport(value, executed) {
   }
   return cases.map(({ id }) => ({ id, status: executed ? "PASS" : "LISTED_NOT_RUN" }))
 }
+/** Preserve the original 32 obligations while requiring the explicit 37-case Team contract.
+ * This validates inventory only; neither registration nor a component PASS is an installed proof.
+ * @param {Record<string, unknown>} group
+ */
+function operationalAz02Count(group) {
+  const contract = record(group.operationalContract), original = record(group.originalCaseIdsByPhase)
+  exact(contract, ["action", "source", "expectedCount", "phases", "remappedIds", "addedCaseIds", "caseIdsByPhase"])
+  assert.equal(contract.action, "CHANGE_CONTRACT", "G08_AZ02_EXPLICIT_CONTRACT_CHANGE_REQUIRED")
+  assert.deepEqual(contract.source, {
+    commit: "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a", path: "sf/azure/identity/az02-proof.cjs",
+    blob: "6b8104170fe546e74e46c0fd374c1fe1254caf24",
+  }, "G08_AZ02_CONTRACT_SOURCE_REQUIRED")
+  assert.equal(contract.expectedCount, 37, "G08_AZ02_OPERATIONAL_COUNT_REQUIRED")
+  assert.deepEqual(contract.remappedIds, az02.LEGACY_MAP, "G08_AZ02_EXPLICIT_ID_MAPPING_REQUIRED")
+  assert.deepEqual(contract.addedCaseIds, az02.ADDITIONS, "G08_AZ02_ADDITIVE_NEGATIVES_REQUIRED")
+  assert.deepEqual(contract.caseIdsByPhase, az02.ROSTER, "G08_AZ02_OPERATIONAL_CASES_REQUIRED")
+  assert.deepEqual(contract.phases, az02.PHASES.map((id) => ({ id, count: az02.ROSTER[id].length })),
+    "G08_AZ02_OPERATIONAL_PHASES_REQUIRED")
+  assert.deepEqual(Object.keys(original), az02.PHASES, "G08_AZ02_ORIGINAL_PHASE_IDS_REQUIRED")
+  const historical = Object.values(original).flat()
+  assert(historical.length === 32 && new Set(historical).size === 32, "G08_AZ02_ORIGINAL_CASES_REQUIRED")
+  const inverse = Object.fromEntries(Object.entries(az02.LEGACY_MAP).map(([before, after]) => [after, before]))
+  for (const phase of az02.PHASES) {
+    const names = original[phase]
+    assert(Array.isArray(names) && names.every((name) => typeof name === "string"), "G08_AZ02_ORIGINAL_CASE_IDS_REQUIRED")
+    const retained = az02.ROSTER[phase].filter((name) => !az02.ADDITIONS.includes(name))
+    assert.deepEqual(names, retained.map((name) => inverse[name] ?? name), "G08_AZ02_ORIGINAL_CASE_REMOVED_OR_REPLACED")
+  }
+  const all = Object.values(az02.ROSTER).flat()
+  assert(all.length === 37 && new Set(all).size === 37, "G08_AZ02_PRODUCER_INVENTORY_CHANGED")
+  return 37
+}
+
 /** Keep the original obligations separate from the narrower executable selection.
  * @param {unknown} value @param {boolean} executed
  */
@@ -357,6 +495,7 @@ export function coverageLedger(value, executed = false) {
         { id: "preflight", count: 14 }, { id: "actors", count: 11 }, { id: "producer", count: 2 },
         { id: "after-revoke", count: 2 }, { id: "logout", count: 2 }, { id: "after-restart", count: 1 },
       ], "G08_AZ02_PHASES_REQUIRED")
+      operationalAz02Count(group)
     }
   }
   const teamCoverage = obligations.map((entry) => {
@@ -366,7 +505,6 @@ export function coverageLedger(value, executed = false) {
     // Full mappings are versioned here. The list of passing cases cannot promote unmapped obligations.
     const complete = Object.entries(completeMappings).find(([id]) => id === entry.id)
     assert(!!complete === (entry.coverage === "complete"), "G08_UNSUPPORTED_OBLIGATION_CLAIM")
-    assert(entry.id !== "narrow-keyboard-draft" || entry.coverage === "none", "G08_LANDING_IS_NOT_A_CHAT_DRAFT")
     if (entry.coverage !== "complete") assert(text(entry.blocker).startsWith("BLOCKED_BY_PRODUCT_"), "G08_PRODUCT_BLOCKER_REQUIRED")
     else assert(entry.blocker === null && complete && JSON.stringify(entry.implementedCases) === JSON.stringify([complete[1]]), "G08_COMPLETE_MAPPING_INVALID")
     return { id: entry.id, status: executed && entry.coverage === "complete" ? "PASS" :
@@ -374,7 +512,8 @@ export function coverageLedger(value, executed = false) {
       implementedCases: entry.implementedCases }
   })
   return { schema: "sf-g08-coverage-v1", originalTeams: teamCoverage,
-    groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN", expectedCount: entry.expectedCount, blocker: entry.blocker })),
+    groups: groups.map((entry) => ({ id: entry.id, status: "NOT_RUN",
+      expectedCount: entry.id === "AZ02" ? operationalAz02Count(entry) : entry.expectedCount, blocker: entry.blocker })),
     complete: false }
 }
 /** Shape/completeness guard only; callers must already have verified original proof provenance.
@@ -389,7 +528,7 @@ export function requireCompleteGate(value) {
   const original = coverage.originalTeams.map(record), groups = coverage.groups.map(record)
   assert.deepEqual(original.map((entry) => entry.id), preservedTeams, "G08_EXACT_CLOSING_TEAMS_INVENTORY_REQUIRED")
   assert.deepEqual(groups.map((entry) => entry.id), pendingGroups, "G08_EXACT_CLOSING_GROUP_INVENTORY_REQUIRED")
-  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 32], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
+  assert.deepEqual(groups.map((entry) => entry.expectedCount), [6, 22, 22, 3, 37], "G08_EXACT_CLOSING_GROUP_COUNTS_REQUIRED")
   assert(original.every((entry) => entry.status === "PASS") && groups.every((entry) => entry.status === "PASS"),
     "G08_REQUIRED_OBLIGATIONS_NOT_PROVEN")
 }
@@ -415,7 +554,7 @@ async function main() {
   const command = process.argv[2]
   if (command === "verify-list") {
     const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v2", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
+    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
       cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
     const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
@@ -463,18 +602,24 @@ async function main() {
       value.boundDocuments === value.openedPages && value.cacheBypassPages === value.openedPages &&
       value.ingressErrors === 0 && Number(value.ingressResources) >= Number(value.openedPages),
       "G08_CLEANUP_OR_BROWSER_INGRESS_NOT_OBSERVED")
+    if (item.id === "same-team-distinct-grants")
+      assert(value.grantMutationAttempted === true && value.grantFixturesCleaned === true, "G08_SESSION_FIXTURE_CLEANUP_REQUIRED")
+    if (item.id === "admin-without-team" || item.id === "real-revoke-restore")
+      assert(value.nativeAdministrationObserved === true, "G08_NATIVE_ADMINISTRATION_REQUIRED")
     if (item.id === "real-revoke-restore")
       assert(value.revocationAttempted === true && value.revocationRestored === true, "G08_REVOCATION_RESTORATION_REQUIRED")
     cleanup.push({ caseId: item.id, sha256: digest(raw) })
   }
+  const grantsText = await privateText(root, "session-grants.json", 25_000_000)
+  validateGrantProof(JSON.parse(grantsText), plan)
   const archive = record(receipt.archive)
   const publicReceipt = {
-    schema: "sf-g08-current-installed-v2", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
+    schema: "sf-g08-current-installed-v3", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
     candidate: plan.candidate, archive: { file: archive.file, sha256: archive.sha256, bytes: archive.bytes },
     packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, coverage: await readCoverage(true), sources,
-    evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), cleanup },
+    evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), grantProofSha256: digest(grantsText), cleanup },
     installed: true, g08Closed: false, pendingGroups, productionCutover: false,
-    limits: ["Seven current-contract controls only; distinct business grants, native administration UI, chat/draft and U15/U39/U40/F04/AZ02 remain mandatory.",
+    limits: ["Nine current-contract Teams controls, including native administration, effective Session grants and native drafts; U15/U39/U40/F04/AZ02 remain mandatory.",
       "Logout proves original context invalidation, not raw token replay or Entra global sign-out.",
       "Reservation and actor references are operator-supplied authorization metadata, never inferred role grants."],
   }

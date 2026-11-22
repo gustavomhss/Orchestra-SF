@@ -6,6 +6,7 @@ import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import type { SfTeamContext } from "@orchestra/schema/sucafina/context"
 import { expect } from "@playwright/test"
+import { nativeOriginalRequest } from "./browser-transport.ts"
 import type { Locator, Page } from "@playwright/test"
 import { nativeTeamRef, serializeNativeManifest, validateNativeManifest, validateNativeTarget } from "./manifest-contract.ts"
 import type { NativeManifest, NativeTarget } from "./manifest-contract.ts"
@@ -97,7 +98,7 @@ export async function observeNativeBinding(page: Page, target: NativeTarget): Pr
   discoveryURL.search = new URLSearchParams({
     select: "current", contractRevision: "sf-team-profile/1",
   }).toString()
-  const discovery = await page.request.get(discoveryURL.href, { maxRedirects: 0, maxRetries: 0 })
+  const discovery = await nativeOriginalRequest(page, discoveryURL.href)
   if (discovery.status() !== 200) throw new Error("F04_INSTALLED_DISCOVERY_UNAVAILABLE_" + discovery.status())
   const discovered = Schema.decodeUnknownSync(Schema.toCodecJson(SfInstallationList), strict)(await discovery.json())
   if (discovered.installations.length !== 1) throw new Error("F04_DISCOVERY_OWNER_MISMATCH")
@@ -107,7 +108,7 @@ export async function observeNativeBinding(page: Page, target: NativeTarget): Pr
       descriptor.projectId !== selected.projectId || descriptor.hostId !== selected.hostId ||
       descriptor.publicOrigin !== selected.publicOrigin || descriptor.mount !== selected.mount)
     throw new Error("F04_DISCOVERY_OWNER_MISMATCH")
-  const response = await page.request.get(nativeContextURL(selected), { maxRedirects: 0, maxRetries: 0 })
+  const response = await nativeOriginalRequest(page, nativeContextURL(selected))
   if (response.status() !== 200) throw new Error("F04_AUTHENTICATED_CONTEXT_NOT_READY_" + response.status())
   const result = Schema.decodeUnknownSync(Schema.toCodecJson(SfTeamContextResult), strict)(await response.json())
   if (result.status !== "ok") throw new Error("F04_CONTEXT_AUTHORITY_MISMATCH")

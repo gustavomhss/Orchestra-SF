@@ -3,7 +3,8 @@
  * Navigation and a matching name never create a permission or identity.
  */
 import type { Page } from "@playwright/test"
-import { observeNativeBinding } from "./readiness.ts"
+import { nativeOwnerQuery, validateNativeTarget } from "./manifest-contract.ts"
+import { observeNativeBinding, nativeTeamHeaders } from "./readiness.ts"
 import type { NativeActor, NativeManifest, NativeTarget } from "./readiness.ts"
 import type { NativeFaultTarget } from "./response-faults.ts"
 
@@ -21,9 +22,12 @@ const routes: Readonly<Record<NativeJourney, Readonly<{
 }
 
 export function nativeJourneyEntryHref(target: NativeTarget, capabilityId: NativeJourney, year?: number) {
-  if (year !== undefined && (!Number.isSafeInteger(year) || year < 2024 || year > 2100))
+  target = validateNativeTarget(target)
+  if (capabilityId === "CAP14" ? year !== undefined :
+    !Number.isSafeInteger(year) || year! < 2024 || year! > 2027)
     throw new Error("F04_INVALID_PRODUCER_YEAR")
   const url = new URL(routes[capabilityId].entry, target.shellOrigin)
+  url.search = nativeOwnerQuery(target).toString()
   if (year !== undefined) url.searchParams.set("year", String(year))
   return url.toString()
 }
@@ -33,7 +37,17 @@ export function nativeJourneyEntryHref(target: NativeTarget, capabilityId: Nativ
 export function nativeJourneyResolvedHref(
   target: NativeTarget, capabilityId: NativeJourney, resolvedHref: string,
 ) {
+  target = validateNativeTarget(target)
   const url = new URL(resolvedHref)
+  const query = nativeOwnerQuery(target)
+  if (capabilityId !== "CAP14") {
+    const year = url.searchParams.get("year")
+    if (!year || !/^202[4-7]$/.test(year)) throw new Error("F04_INVALID_PRODUCER_YEAR")
+    query.set("year", year)
+  }
+  if (url.searchParams.size !== query.size || [...query].some(([key, value]) =>
+    url.searchParams.getAll(key).length !== 1 || url.searchParams.get(key) !== value))
+    throw new Error("F04_RESOLVED_SOURCE_TEAM_SELECTION_MISMATCH")
   if (url.origin !== target.shellOrigin || url.username || url.password ||
       url.hash || !url.pathname.startsWith(routes[capabilityId].entry + "/") ||
       url.pathname.includes("//"))
@@ -46,7 +60,8 @@ export function nativeDashboardCommandTarget(
 ): NativeFaultTarget {
   return {
     origin: manifest.target.publicOrigin,
-    pathname: manifest.target.mount + "/dashboard",
+    pathname: manifest.target.mount + "/teams/" + manifest.target.teamObjectId + "/dashboard",
+    headers: nativeTeamHeaders(manifest.target),
     method: "POST",
     query: { page: routes[capabilityId].sourcePage },
   }

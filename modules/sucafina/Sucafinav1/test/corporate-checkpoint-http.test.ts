@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { mkdtemp, readFile, readdir, realpath, rm } from "node:fs/promises"
+import { mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { basename, join } from "node:path"
 import { digestSfValue } from "../product/contracts/canonical.ts"
@@ -208,4 +208,79 @@ test("corporate capture retains older observer checkpoints and verifies a detach
     await store.dispose()
     await rm(root, { recursive: true, force: true })
   }
+})
+
+async function changePrivateConfiguration(f: Fixture, changes: Readonly<Record<string, unknown>>) {
+  const file = join(f.directory, "installation.json")
+  const value: unknown = JSON.parse(await readFile(file, "utf8"))
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected private installation object")
+  await writeFile(file, JSON.stringify({ ...value, ...changes }), { mode: 0o600 })
+}
+
+test.each(["removed", "recover-only", "duplicate", "group"] as const)(
+  "Microsoft checkpoint reads the private authority after startup: %s",
+  async (change) => {
+    const f = await fixture()
+    try {
+      await seed(f)
+      const cookie = await f.login()
+      const observation = await observe(f, cookie)
+      const before = f.durable([f.teamA])
+      const grant = { principalRef: f.principalId, migrationActions: ["checkpoint"] }
+      await changePrivateConfiguration(f, change === "group"
+        ? { supremeAdminGroupId: f.teamB }
+        : { grants: change === "removed" ? [] : change === "duplicate" ? [grant, grant]
+          : [{ principalRef: f.principalId, migrationActions: ["recover"] }] })
+      expect((await post(f, cookie, route + "-observe", { teamObjectId: f.teamA })).status).toBe(403)
+      expect((await post(f, cookie, route, command(observation))).status).toBe(403)
+      expect(f.durable([f.teamA])).toEqual(before)
+      expect(await readdir(f.directory)).not.toContain("backups-teams")
+    } finally { await f.close() }
+  },
+)
+
+test.each(["grant", "group"] as const)(
+  "Microsoft checkpoint cancels a staged archive when the private %s changes before publication",
+  async (change) => {
+    const f = await fixture()
+    try {
+      await seed(f)
+      const cookie = await f.login()
+      const observation = await observe(f, cookie)
+      const before = f.durable([f.teamA])
+      const parent = join(archiveDirectory(f, f.teamA), "dashboard")
+      let revokedAtStaging = false
+      f.state.beforeGraphRequest = async (url) => {
+        if (revokedAtStaging || url.pathname !== "/v1.0/me/checkMemberGroups") return
+        const entries = await readdir(parent).catch((error: unknown) => {
+          if (error instanceof Error && "code" in error && error.code === "ENOENT") return []
+          throw error
+        })
+        const stage = entries.find((entry) => entry.startsWith(".stage-"))
+        if (!stage || !await Bun.file(join(parent, stage, "manifest.json")).exists()) return
+        await changePrivateConfiguration(f, change === "grant" ? { grants: [] } : { supremeAdminGroupId: f.teamB })
+        revokedAtStaging = true
+      }
+      expect((await post(f, cookie, route, command(observation))).status).toBe(403)
+      expect(revokedAtStaging).toBe(true)
+      expect(await readdir(parent)).toEqual([])
+      expect(f.durable([f.teamA])).toEqual(before)
+      const backups = await createLocalBackups(archiveDirectory(f, f.teamA))
+      expect(await backups.list("dashboard")).toEqual([])
+    } finally { await f.close() }
+  },
+)
+
+test("Microsoft checkpoint never falls back to startup grants when the private file becomes invalid", async () => {
+  const f = await fixture()
+  try {
+    await seed(f)
+    const cookie = await f.login()
+    const observation = await observe(f, cookie)
+    const before = f.durable([f.teamA])
+    await writeFile(join(f.directory, "installation.json"), "{}", { mode: 0o600 })
+    expect((await post(f, cookie, route, command(observation))).status).toBe(503)
+    expect(f.durable([f.teamA])).toEqual(before)
+    expect(await readdir(f.directory)).not.toContain("backups-teams")
+  } finally { await f.close() }
 })

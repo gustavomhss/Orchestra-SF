@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
-import { createApplication } from "../runtime/application.ts"
+import { createApplication, readSfApplicationContext } from "../runtime/application.ts"
 import { domain, pages, render } from "../runtime/dashboard-portfolio.ts"
-import type { ResolvedActor } from "../src/identity.ts"
+import type { ResolvedActor, RoleRow } from "../src/identity.ts"
 import { empty, testPersistence } from "./fixture/persistence.ts"
 import { join } from "node:path"
 import { mkdir } from "node:fs/promises"
@@ -233,3 +233,48 @@ test("Chrome submits a real form and preserves unsaved edits after blur until re
     await browser.close()
   }
 }, 45000)
+
+test("The original HTTP context reader shares page and ACL resolution without dispatching or mutating a business request", async () => {
+  const app = fixture()
+  app.identity.principal = { id: "viewer", canWrite: false, roles: [{ surface: "dashboard", role: "viewer" }] }
+  app.state.dashboard.data.summaries = ["IT Risks"]
+  app.state.dashboard.data.access = { viewer: { assigned: ["risk-one"], domains: ["risks"] } }
+  const before = structuredClone(app.state)
+  const request = new Request("https://installation.example/sucafina/api/ui/context?closed-original-query=retained")
+  const observed = await readSfApplicationContext(app.handler, request, "viewer")
+  expect(observed?.pages).toEqual([{ surface: "dashboard", page: "IT Risks" }])
+  expect(app.state).toEqual(before)
+  expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?page=IT%20Risks")))?.status).toBe(200)
+  expect((await app.handler(new Request("https://installation.example/sucafina/dashboard?page=All%20Projects")))?.status).toBe(403)
+  app.state.dashboard.data.access = { viewer: { assigned: ["risk-two"], domains: ["risks"] } }
+  const changed = await readSfApplicationContext(app.handler, request, "viewer")
+  expect(changed?.pages).toEqual(observed?.pages)
+  expect(changed?.accessRevision).not.toBe(observed?.accessRevision)
+  expect(await readSfApplicationContext(app.handler, request, "another-principal")).toBeUndefined()
+  expect(await readSfApplicationContext({}, request, "viewer")).toBeUndefined()
+  expect(await readSfApplicationContext(app.handler, new Request(request.url, { method: "POST" }), "viewer")).toBeUndefined()
+})
+
+test("The original context reader passes the same Request and configured role policy through every original surface transaction", async () => {
+  const storage = testPersistence()
+  const request = new Request("https://installation.example/sucafina/api/ui/context?closed=original")
+  const observed: Request[] = []
+  const policy: RoleRow[] = [{ surface: "dashboard", role: "viewer", entra: "Original configured group", version: 0, by: "" }]
+  const handler = createApplication("/sucafina", {
+    persistence: storage.persistence,
+    rolePolicy: (surface) => policy.filter((row) => row.surface === surface),
+    authenticate: async (original, context) => {
+      observed.push(original)
+      expect(original).toBe(request)
+      expect(context?.roleMap).toEqual(policy.filter((row) => row.surface === context?.surface))
+      return { id: "viewer", canWrite: false, roles: [{ surface: "dashboard", role: "viewer" }] }
+    },
+    environment: async () => { throw new Error("Context reads must not dispatch the page environment") },
+    domains: { dashboard: [{ pages, domain, render }], planner: [], procurement: [] },
+    maxJsonBytes: 100000,
+  })
+  storage.state.dashboard.data.summaries = ["IT Risks"]
+  expect((await readSfApplicationContext(handler, request, "viewer"))?.pages).toEqual([{ surface: "dashboard", page: "IT Risks" }])
+  expect(observed).toHaveLength(3)
+  expect(request.url).toBe("https://installation.example/sucafina/api/ui/context?closed=original")
+})

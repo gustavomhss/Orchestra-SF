@@ -357,10 +357,17 @@ function importFixture() {
               .map((kind) => ({ kind, httpStatus: 403, durable })),
             foreignReference: { httpStatus: 503, durable },
             missingGrant: { httpStatus: 403, explicitGrants: 0, binding: "e".repeat(64), cleanupComplete: true, durable },
+            configurationRevocation: { source: "private-installation-file",
+              observations: ["grants:before-request", "roles:before-request", "grants:after-request-body",
+                "roles:after-request-body", "unavailable:before-request"].map((value) => {
+                  const [kind, boundary] = value.split(":")
+                  return { kind, boundary, httpStatus: kind === "unavailable" ? 503 : 403,
+                    originalBodyObserved: boundary === "after-request-body", restoredReadStatus: 200, durable }
+                }), cleanAfterRestore: accepted(teams[0]) },
             mainCleanAfter: true }
           : { connectionRefused: true, attempts: teams.map((teamObjectId) => ({ teamObjectId, httpStatus: 403,
               bytes: 100, digest: "8".repeat(64), durable })), mainCleanAfter: true }
-    const value = { schema: "orchestra.g06.microsoft-team-import-control/1", control: id, status: "PASS",
+    const value = { schema: "orchestra.g06.microsoft-team-import-control/2", control: id, status: "PASS",
       sourceSha: f.env.GITHUB_SHA, runId: f.env.GITHUB_RUN_ID, runAttempt: f.env.GITHUB_RUN_ATTEMPT,
       proofClass: "COMPONENT_REAL_CLAMD", composition: "MICROSOFT_TEAM_NATIVE_IMPORT", identityProvider: "CONTROLLED_ENTRA_GRAPH",
       runtimeFactory: "createMicrosoftInstallation", installedTeamsProof: false, finalCandidate: false,
@@ -461,6 +468,16 @@ for (const [name, id, mutate] of [
   ["accepted absent grant", "denied-owner", (r) => { r.result.missingGrant.httpStatus = 200 }],
   ["uncleaned no-grant fixture", "denied-owner", (r) => { r.result.missingGrant.cleanupComplete = false }],
   ["reused no-grant installation", "denied-owner", (r) => { r.result.missingGrant.binding = "5".repeat(64) }],
+  ["missing current private configuration", "denied-owner", (r) => { delete r.result.configurationRevocation }],
+  ["inferred configuration source", "denied-owner", (r) => { r.result.configurationRevocation.source = "startup-object" }],
+  ["missing private revocation boundary", "denied-owner", (r) => { r.result.configurationRevocation.observations.pop() }],
+  ["duplicate private revocation boundary", "denied-owner", (r) => { r.result.configurationRevocation.observations[1] = r.result.configurationRevocation.observations[0] }],
+  ["accepted changed private grants", "denied-owner", (r) => { r.result.configurationRevocation.observations[0].httpStatus = 200 }],
+  ["body boundary unobserved", "denied-owner", (r) => { r.result.configurationRevocation.observations[2].originalBodyObserved = false }],
+  ["effect after private revocation", "denied-owner", (r) => { r.result.configurationRevocation.observations[2].durable[0].after = "9".repeat(64) }],
+  ["private policy not restored", "denied-owner", (r) => { r.result.configurationRevocation.observations[3].restoredReadStatus = 403 }],
+  ["fallback after unreadable private policy", "denied-owner", (r) => { r.result.configurationRevocation.observations[4].httpStatus = 200 }],
+  ["missing clean import after restoration", "denied-owner", (r) => { delete r.result.configurationRevocation.cleanAfterRestore }],
   ["wrong stopped daemon", "scanner-outage", (r) => { r.scanner.pid = 200 }],
   ["unobserved refused connection", "scanner-outage", (r) => { r.result.connectionRefused = false }],
   ["missing second Team outage", "scanner-outage", (r) => { r.result.attempts.pop() }],

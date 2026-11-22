@@ -2,7 +2,8 @@
  * No route.fulfill mock, forged status/receipt, role override, or replay.
  */
 import type { Page, Request, Route } from "@playwright/test"
-import { observeNativeBinding } from "./readiness.ts"
+import { nativeOriginalRequest } from "./browser-transport.ts"
+import { observeNativeBinding, nativeContextURL } from "./readiness.ts"
 import type { NativeManifest } from "./readiness.ts"
 
 export type NativeFaultTarget = Readonly<{
@@ -10,6 +11,7 @@ export type NativeFaultTarget = Readonly<{
   pathname: string
   method: "POST" | "GET"
   query?: Readonly<Record<string, string>>
+  headers?: Readonly<Record<string, string>>
 }>
 
 function sameTarget(url: URL, target: NativeFaultTarget) {
@@ -20,13 +22,17 @@ function sameTarget(url: URL, target: NativeFaultTarget) {
     })
 }
 function exactURL(request: Request, target: NativeFaultTarget) {
-  return request.method() === target.method && sameTarget(new URL(request.url()), target)
+  return request.method() === target.method && sameTarget(new URL(request.url()), target) &&
+    request.headers()["x-sf-native-observation"] === undefined &&
+    Object.entries(target.headers ?? {}).every(([key, value]) => request.headers()[key] === value)
 }
 function requireFaultTarget(target: NativeFaultTarget) {
   const origin = new URL(target.origin)
   if (target.origin !== origin.origin || origin.username || origin.password ||
       !target.pathname.startsWith("/") || target.pathname.startsWith("//") ||
-      Object.values(target.query ?? {}).some((value) => typeof value !== "string" || !value))
+      Object.values(target.query ?? {}).some((value) => typeof value !== "string" || !value) ||
+      Object.entries(target.headers ?? {}).some(([key, value]) =>
+        key !== "x-sf-team-profile" || typeof value !== "string" || !value))
     throw new Error("F04_FAULT_TARGET_MUST_BE_EXACT_ORIGINAL_PRODUCER")
 }
 
@@ -38,7 +44,9 @@ export async function armLostResponse(page: Page, target: NativeFaultTarget) {
   if (target.method !== "POST") throw new Error("F04_LOST_RESPONSE_REQUIRES_EXPLICIT_POST")
   let attempts = 0
   let producerStatus: number | null = null
-  const matchesURL = (url: URL) => sameTarget(url, target)
+  // A path regexp avoids intercepting unrelated requests; query/Team remain checked on the original Request.
+  const escaped = (target.origin + target.pathname).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const matchesURL = new RegExp("^" + escaped + "(?:\\?.*)?$")
   const handler = async (route: Route) => {
     if (!exactURL(route.request(), target)) return route.continue()
     attempts++
@@ -72,7 +80,9 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
   let producerStatus: number | null = null
   let releaseResponse: () => void = () => {}
   const gate = new Promise<void>((resolve) => { releaseResponse = resolve })
-  const matchesURL = (url: URL) => sameTarget(url, target)
+  // A path regexp avoids intercepting unrelated requests; query/Team remain checked on the original Request.
+  const escaped = (target.origin + target.pathname).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const matchesURL = new RegExp("^" + escaped + "(?:\\?.*)?$")
   const handler = async (route: Route) => {
     if (!exactURL(route.request(), target)) return route.continue()
     attempts++
@@ -113,15 +123,7 @@ export async function requestRealRevocation(input: Readonly<{
     throw new Error("F04_REVOCATION_PRECONDITION_UNAUTHORIZED")
   const actual = await input.revokeViaProducer()
   if (!actual.committed) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
-  const contextURL = new URL(input.manifest.target.mount + "/api/ui/context",
-    input.manifest.target.publicOrigin)
-  contextURL.search = new URLSearchParams({
-    installationId: input.manifest.target.installationId,
-    projectId: input.manifest.target.projectId,
-    hostId: input.manifest.target.hostId,
-  }).toString()
-  const response = await input.page.request.get(contextURL.toString(),
-    { maxRedirects: 0, maxRetries: 0 })
+  const response = await nativeOriginalRequest(input.page, nativeContextURL(input.manifest.target))
   if (response.status() === 401 || response.status() === 403) {
     return { phase: "PRODUCER_AUTHENTICATION_REVOKED" as const,
       status: response.status(), clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" as const }

@@ -1,0 +1,34 @@
+.sf-team-main-chat{display:flex;flex-direction:column;overflow:hidden}
+.sf-team-main-chat>.sf-team-notice{flex:none}
+.sf-team-session{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:1rem;flex:1;min-height:0;min-width:0;height:100%;overflow:hidden}
+.sf-team-session-error{grid-column:1/-1;align-self:start;display:grid;gap:1rem;padding:1rem}
+.sf-team-session-list{min-width:0;overflow:auto;padding-right:1rem;border-right:1px solid var(--border-base);font-size:.85rem}
+.sf-team-session-list h2{font-weight:600;margin:1.25rem 0 .5rem}.sf-team-session-list form{display:grid;gap:.4rem;margin-top:1rem}
+.sf-team-session-search{display:grid;gap:.4rem}.sf-team-session-search input{min-width:0;border:1px solid var(--border-base);border-radius:.4rem;padding:.5rem;background:var(--background-strong);color:inherit}
+.sf-team-session-list ul{list-style:none;padding:0;margin:0;display:grid;gap:.15rem}
+.sf-team-session-item{width:100%;text-align:left;padding:.5rem;border-radius:.4rem;overflow-wrap:anywhere;cursor:pointer}
+.sf-team-session-item:hover,.sf-team-session-item[aria-current=page]{background:var(--background-strong)}
+.sf-team-session-item small,.sf-team-session-pending small{display:block;color:var(--text-weak);font-size:.7rem;overflow-wrap:anywhere}
+.sf-team-session-main{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:hidden}
+.sf-team-session-tabs{display:flex;gap:.25rem;flex:none;overflow:auto;border-bottom:1px solid var(--border-base);padding-bottom:.5rem}
+.sf-team-session-tabs>button,.sf-team-session-tab{flex:none;max-width:16rem;display:flex;border-radius:.4rem;background:var(--background-strong);font-size:.8rem}
+.sf-team-session-tab[data-active],.sf-team-session-tabs>button[aria-current=page]{outline:1px solid var(--border-base)}
+.sf-team-session-tabs button{padding:.45rem .65rem;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sf-team-session-tab>button:first-child{min-width:0}.sf-team-session-tab>button:last-child{flex:none}
+.sf-team-session-heading{flex:none;padding:.75rem .5rem}.sf-team-session-heading h1{font-size:1.1rem;font-weight:600;overflow-wrap:anywhere}
+.sf-team-session-transcript{min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;padding:.5rem;scrollbar-gutter:stable}
+.sf-team-session-transcript [data-sf-message-id]{margin-bottom:1.25rem;overflow-wrap:anywhere}
+.sf-team-session-note{margin:.5rem 0;color:var(--text-weak)}.sf-team-session-note pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.8rem}
+.sf-team-session-queued{padding:1rem;border:1px solid var(--border-base);border-radius:.5rem;margin-top:1rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.sf-team-session-queued p:first-child{font-size:.75rem;color:var(--text-weak);margin-bottom:.5rem}
+.sf-team-session-pending{flex:none;border:1px solid var(--border-base);padding:.75rem;max-height:10rem;overflow:auto;font-size:.85rem}
+.sf-team-session-pending button{margin:.5rem .5rem 0 0}.sf-team-session-empty{color:var(--text-weak);padding:2rem .5rem}
+.sf-team-session-compose{flex:none;padding:.75rem .25rem .25rem;min-width:0}
+.sf-team-session button:disabled{opacity:.5;cursor:default}
+@media(max-width:1100px){.sf-team-session{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:.5rem}.sf-team-session-list{display:grid;grid-template-columns:minmax(0,1fr);max-height:10rem;border-right:0;border-bottom:1px solid var(--border-base);padding:0 0 .5rem}.sf-team-session-list form{margin:.5rem 0}.sf-team-session-search{grid-template-columns:minmax(0,1fr) auto}.sf-team-session-list h2{margin:.5rem 0}.sf-team-session-list ul{display:flex;gap:.4rem}.sf-team-session-list li{flex:none;max-width:14rem}.sf-team-session-list>button{justify-self:start}.sf-team-session-compose{padding:.5rem 0 0}}
+
+.sf-team-main-chat>.sf-team-session{align-self:stretch;width:100%}
+
+.sf-team-dialog::backdrop{background:rgb(0 0 0/.4)}
+.sf-team-dialog{margin:auto;width:calc(100% - 2rem);background:var(--background-base);color:var(--text-base);border:1px solid var(--border-base);border-radius:.75rem;padding:1.5rem;max-width:32rem;box-shadow:0 1rem 3rem rgb(0 0 0/.2)}
+.sf-team-dialog h2{font-size:1.1rem;margin-bottom:1rem}.sf-team-dialog button{margin-right:.6rem}
