@@ -1,0 +1,72 @@
+{
+  "source": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+  "sourceTree": "a679145cc3850325e4b073249c8273c86f3e832e",
+  "snapshot": "10dd4db5d194efa8878106218512a90d8e87b3d2",
+  "tree": "0993f42b0ddaeb27a0d6736f62384147ec0b2820",
+  "branch": "ci-run-sf5draftintent1",
+  "request": {
+    "package": "cli",
+    "packageSelector": "@orchestra/cli",
+    "directory": "apps/cli",
+    "runner": "bun",
+    "args": [
+      "./test/sucafina-operational-read-phase.test.ts",
+      "./test/sucafina-collaboration-reading-health.test.ts",
+      "./test/sucafina-portfolio-reading-health.test.ts",
+      "./test/sucafina-draft-intent-health.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08f45a9910139614e977cb69d1fe053b6e78af7b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "479808933d294192fe3e0ce6f8f67583375e39e8"
+    },
+    {
+      "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
+    }
+  ],
+  "run": 44998337630,
+  "testJob": 137134156854,
+  "result": "running",
+  "declaredNewCases": 35,
+  "previousRegressionCases": 71,
+  "staticReview": {
+    "root": "Original namespace/mode/phase batching and lease/human revalidation ordering approved by reading.",
+    "peer": "Independent review approved candidate991eb; no blocking issue, captured original arrow reader ignores receiver.",
+    "receiver": "Original state-provider.ts386 defines read as an arrow function closing over input.persistence."
+  },
+  "changes": {
+    "draft": {
+      "originalReads": 26,
+      "batchedReads": 8,
+      "individualAdmissions": 7,
+      "humanActionObservations": 6,
+      "revalidations": 7
+    },
+    "intent": {
+      "originalReads": 14,
+      "batchedReads": 4,
+      "individualAdmissions": 7,
+      "humanActionObservations": 2,
+      "revalidations": 14
+    }
+  },
+  "limits": "No installed equality or clean browser PASS is claimed before those executions finish. Unchanged producer/grant/schema/registry/provider/selector/workflow/budget boundaries."
+}

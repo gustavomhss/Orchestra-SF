@@ -1,5 +1,5 @@
 {
-  "workerSource": "1040067c132156f5e2ee445f2e8fd3373ad0ef28",
+  "workerSource": "d4e3cf151ca7cd682d74a76691058e3ea1e349f4",
   "base": "d3ccea42b5f8409c8d6c68e4909f7b868b50322c",
   "purpose": "Exact current blobs for root composition; compose only owned paths, not the complete pinned worker tree.",
   "files": [
@@ -217,15 +217,17 @@
       "record": "qualification/portfolio-batch-02.json",
       "installedComparisonRun": 44996583965,
       "installedComparisonSource": "536a06dc32704ba87eb9b02964db1a70ee6248ea",
-      "runtime": "Installed original9/candidate9 collaboration and original7/candidate7 portfolio match; diagnostic import still misses10s. Clean composed import5 running.",
+      "runtime": "Installed original9/candidate9 collaboration and original7/candidate7 portfolio match. Diagnostic and clean composed import5 both miss the unchanged10s refresh heading deadline.",
       "installedComparisonRecord": "attempts/batch-equivalence-01.json"
     },
     "cleanImport5": {
       "source": "506a0a6141c5afaff37ec8c282ea3cb2cc7daf31",
       "snapshot": "12c27f7830a31229296acf5b2c9c226851cb2721",
       "run": 44997174038,
-      "result": "running",
-      "record": "attempts/import-fixed-05.json"
+      "result": "failed: native readiness passed; unchanged 10s post-Refresh heading deadline missed; actual screenshot still Loading",
+      "record": "attempts/import-fixed-05.json",
+      "job": 137130609517,
+      "independentReferenceMs": 6605
     }
   },
   "excluded": [
@@ -246,5 +248,26 @@
       }
     ],
     "authorization": "Root delegated these two precise readonly-phase compositions; root integrates onto current shared files. Root later delegated portfolio metadata batching and canonical-reader capture in both observers; exact four blobs are listed and integrated by root."
+  },
+  "pendingCandidates": {
+    "draftIntent": {
+      "source": "528a348cfa9cff146872fd4a9d7272ee16f4d235",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/dashboard-draft-health.ts",
+          "sha": "08f45a9910139614e977cb69d1fe053b6e78af7b"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/decision-intent-health.ts",
+          "sha": "479808933d294192fe3e0ce6f8f67583375e39e8"
+        },
+        {
+          "path": "apps/cli/test/sucafina-draft-intent-health.test.ts",
+          "sha": "9afcfa9bd0bb065021189891e0fa9a5c968a9b24"
+        }
+      ],
+      "record": "qualification/draft-intent-batch-01.json",
+      "status": "Static reviews passed; Actions unit pending; installed equality and clean import remain required."
+    }
   }
 }
