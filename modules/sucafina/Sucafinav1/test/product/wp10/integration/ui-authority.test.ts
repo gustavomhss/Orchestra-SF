@@ -134,6 +134,27 @@ test("finite expiry preserves a consumed command identity for current reauthoriz
   })
 })
 
+test("a clock rollback cannot release an expired receipt before live reauthorization", async () => {
+  const f = await fixture()
+  const digest = "a".repeat(64)
+  expect(await f.ui.validate(f.context, "sf_forecast_compare", digest)).toBe(true)
+  const deadline = Date.parse(f.context.binding.expiresAt)
+  f.state.at = deadline
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", digest)).toBeUndefined()
+  f.state.at = deadline - 1
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", digest)).toBeUndefined()
+  expect(f.ui.requestFor(f.context)).toBe(f.request)
+  const reauthorization = f.ui.revalidate(f.context)
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", digest)).toBeUndefined()
+  expect(await reauthorization).toBe(true)
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", digest)).toMatchObject({
+    requestId: f.context.binding.requestId, at: new Date(f.state.at).toISOString(),
+  })
+  expect(await f.ui.validate(f.context, "sf_forecast_compare", digest)).toBe(false)
+  f.state.at += 5 * 60 * 1000
+  expect(f.ui.receiptFor(f.context, "sf_forecast_compare", digest)).toBeUndefined()
+})
+
 test("an unused lease that expires during authorization cannot be consumed", async () => {
   const f = await fixture()
   f.state.afterAuthorize = () => { f.state.at += 5 * 60 * 1000 }

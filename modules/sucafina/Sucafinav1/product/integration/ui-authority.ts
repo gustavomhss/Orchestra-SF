@@ -5,7 +5,7 @@ import freeze from "../contracts/freeze-v1.json" with { type: "json" }
 import { sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 
 type UiIdentity = Pick<TrustedUiContext["binding"], "installationId" | "projectId" | "principalRef" | "policyVersion" | "accessRevision">
-type UiAdmission = { request: Request; operation: string; inputDigest: string; commandId: string; expiresAt: number; consumed: boolean; renewable: boolean }
+type UiAdmission = { request: Request; operation: string; inputDigest: string; commandId: string; expiresAt: number; expired: boolean; consumed: boolean; renewable: boolean }
 const identityFields = ["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const
 const ttl = 5 * 60 * 1000
 const validTime = (at: number) => Number.isFinite(new Date(at).getTime())
@@ -24,7 +24,9 @@ export function createSfUiAuthority(input: {
     const admission = admissions.get(context)
     if (!admission) return undefined
     if (!admission.request.signal.aborted && validTime(at)) {
-      if (at < admission.expiresAt) return admission
+      // Once observed, expiry survives a clock rollback until live reauthorization.
+      if (at >= admission.expiresAt) admission.expired = true
+      if (!admission.expired) return admission
       // A consumed command can retain its private identity while awaiting live reauthorization.
       if (admission.consumed && admission.renewable) return retainExpiredCommand ? admission : undefined
     }
@@ -40,13 +42,14 @@ export function createSfUiAuthority(input: {
       identityFields.every((key) => context.binding[key] === identity[key])
     if (!valid) admissions.delete(context)
     if (!valid) return false
-    if (at >= admission.expiresAt) {
+    if (admission.expired) {
       const expiresAt = at + ttl
       if (!validTime(expiresAt)) {
         admissions.delete(context)
         return false
       }
       admission.expiresAt = expiresAt
+      admission.expired = false
     }
     return true
   }
@@ -72,7 +75,7 @@ export function createSfUiAuthority(input: {
         kind: "ui", binding: Object.freeze({ ...identity, requestId, expiresAt: new Date(expiresAt).toISOString() }),
         lease: Object.freeze({}) as TrustedUiLease,
       })
-      admissions.set(context, { request, operation, inputDigest, commandId, expiresAt, consumed: false, renewable })
+      admissions.set(context, { request, operation, inputDigest, commandId, expiresAt, expired: false, consumed: false, renewable })
       if (!await revalidate(context)) {
         admissions.delete(context)
         return { status: "denied", reason: "ui-authority-changed" }
