@@ -1623,3 +1623,24 @@ test("Corporate native domain return rejects incomplete, duplicate, legacy and o
     }
   } finally { await f.close() }
 })
+
+test("Corporate native login preserves canonical original detail and edit references without authority", async () => {
+  const f = await nativeNavigationFixture()
+  try {
+    for (const base of ["/orchestra/sf-procurement/contracts", "/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"]) {
+      const query = new URLSearchParams({ ...f.selection, teamObjectId,
+        ...(base.endsWith("/contracts") ? {} : { year: "2026" }) })
+      // r_Y2Fmw6k is the original UTF-8 opaque reference "café"; it grants no record access.
+      for (const suffix of ["/new", "/r_YQ", "/r_Y2Fmw6k", "/r_Y2Fmw6k/edit"]) {
+        const returnTo = base + suffix + "?" + query
+        await f.signIn(returnTo, returnTo, "/orchestra/sf-home?principalRef=" + oid)
+        await f.signIn(base + suffix, mount + "/dashboard")
+        await f.signIn(returnTo + "&principalRef=" + oid, mount + "/dashboard")
+      }
+      for (const suffix of ["/new/edit", "/r_", "/r_A", "/r_YR", "/r__w", "/r_YQ==",
+        "/r_%59Q", "/r_YQ/extra", "/r_YQ/edit/extra", "/r_YQ/", "//r_YQ"]) {
+        await f.signIn(base + suffix + "?" + query, mount + "/dashboard")
+      }
+    }
+  } finally { await f.close() }
+})

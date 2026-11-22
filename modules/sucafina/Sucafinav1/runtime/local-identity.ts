@@ -431,8 +431,9 @@ function nativeTeamReturn(value: string | null, origin: string) {
   const sessionSegment = /^\/orchestra\/sf-sessions\/([A-Za-z0-9_-]{1,256})$/.exec(url.pathname)?.[1]
   const sessionRoute = sessionSegment === "new" ||
     sessionSegment !== undefined && Schema.is(NativeSession.ID)(sessionSegment)
-  const budgetRoute = ["/orchestra/sf-dashboard/opex", "/orchestra/sf-dashboard/capex"].includes(url.pathname)
-  const domainRoute = budgetRoute || url.pathname === "/orchestra/sf-procurement/contracts"
+  const domain = nativeTeamDomainPath(url.pathname)
+  const budgetRoute = domain === "budget"
+  const domainRoute = domain !== undefined
   if (url.origin !== origin || url.username || url.password || url.hash ||
       !sessionRoute && !domainRoute && !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
   if (!url.search) return sessionRoute || domainRoute ? undefined : url.pathname
@@ -456,4 +457,24 @@ function nativeTeamReturn(value: string | null, origin: string) {
     : { contractRevision, kind: "selection", installationId, tenantId }
   if (!Schema.is(TeamProfile.Selector)(intent)) return
   return url.pathname + url.search
+}
+
+/** The original native route registry's closed entry/new/detail/edit syntax. */
+function nativeTeamDomainPath(pathname: string) {
+  const match = /^\/orchestra\/(sf-procurement\/contracts|sf-dashboard\/(?:opex|capex))(?:\/(new|r_[A-Za-z0-9_-]+)(\/edit)?)?$/.exec(pathname)
+  if (!match) return
+  const [, base, reference, edit] = match
+  if (reference === "new" && edit) return
+  if (reference && reference !== "new") {
+    // Same canonical UTF-8/base64url codec as decodeSfRouteRef; decoded refs are only route intent.
+    try {
+      const body = reference.slice(2).replace(/-/g, "+").replace(/_/g, "/")
+      const bytes = Uint8Array.from(atob(body.padEnd(Math.ceil(body.length / 4) * 4, "=")), (byte) => byte.charCodeAt(0))
+      const value = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+      const binary = Array.from(new TextEncoder().encode(value), (byte) => String.fromCharCode(byte)).join("")
+      const canonical = "r_" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "")
+      if (!value || canonical !== reference) return
+    } catch { return }
+  }
+  return base === "sf-procurement/contracts" ? "contracts" : "budget"
 }
