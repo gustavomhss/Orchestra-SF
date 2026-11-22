@@ -14,18 +14,27 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   }, 35_000)
   afterAll(async () => { if (runtime.browser) await closeWp01Browser(runtime.browser) }, 25_000)
 
+  async function openPage(options?: Parameters<Browser["newPage"]>[0]) {
+    if (!runtime.browser) throw new Error("Shared shell browser is unavailable")
+    const page = await runtime.browser.newPage(options)
+    // Leave time for the case's cleanup when a browser observation fails.
+    page.setDefaultTimeout(5_000)
+    page.setDefaultNavigationTimeout(8_000)
+    return page
+  }
+
   function editor(value = "Original", version = 1) {
     return form("Vendor Contracts", "save", "contract-1", version, fields([{ name: "description", label: "Description", value }]))
   }
   function html(body: string, revision = "access-1") {
-    return documentHtml("Dashboard", "dashboard", links([{ key: "Vendor Contracts", index: 13 }]), pageMain({ drawn: true, key: "Vendor Contracts", index: 13 }, body), "", "", revision)
+    return documentHtml("Dashboard", "dashboard", links([{ key: "Vendor Contracts", index: 13 }]), pageMain({ drawn: true, key: "Vendor Contracts", index: 13 }, body), "", "", undefined, revision)
   }
 
   test.each([401, 403])("refresh %i removes the old authorized view even with unsaved edits", async (status) => {
     const state = { denied: false }
     const initial = html(`<p>PRIVATE-RECORD</p>${editor()}`)
     const server = Bun.serve({ port: 0, fetch: () => state.denied ? new Response("PRIVATE-DENIAL-BODY", { status }) : new Response(initial, { headers: { "Content-Type": "text/html" } }) })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("PRIVATE-DRAFT")
@@ -44,7 +53,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("access revision change fails closed even when refresh returns HTTP 200", async () => {
     const state = { revision: "access-1" }
     const server = Bun.serve({ port: 0, fetch: () => new Response(html(editor("PRIVATE"), state.revision), { headers: { "Content-Type": "text/html", "X-SF-Access-Revision": state.revision } }) })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("PRIVATE-DRAFT")
@@ -58,7 +67,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("an expired session rendered as a sign-in document cannot retain the dirty authorized view", async () => {
     const state = { expired: false }
     const server = Bun.serve({ port: 0, fetch: () => new Response(state.expired ? documentHtml("Sign in", "signed-out", "", "<main>Sign in again</main>", "") : html(editor("PRIVATE-OLD-VIEW")), { headers: { "Content-Type": "text/html" } }) })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("PRIVATE-DRAFT")
@@ -72,7 +81,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test("transient refresh failure and fresh data preserve a dirty form and its expected version", async () => {
     const state = { status: 200, version: 1 }
     const server = Bun.serve({ port: 0, fetch: () => new Response(html(editor("Server version " + state.version, state.version)), { status: state.status, headers: { "Content-Type": "text/html" } }) })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("Local draft")
@@ -101,12 +110,17 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       state.saved++
       return Response.json({ ok: true })
     } })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("Submitted draft")
       await page.getByRole("button", { name: "Save", exact: true }).click()
-      await started
+      let timeout: ReturnType<typeof setTimeout> | undefined
+      try {
+        await Promise.race([started, new Promise<never>((_resolve, reject) => {
+          timeout = setTimeout(() => reject(new Error("The save request did not reach the server")), 5_000)
+        })])
+      } finally { clearTimeout(timeout) }
       await page.getByLabel("Description").fill("Later draft")
       state.release?.()
       await page.getByText("The submitted changes were saved. Later edits remain unsaved; review them before continuing.").waitFor()
@@ -120,7 +134,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     const server = Bun.serve({ port: 0, fetch: (request) => request.method === "GET"
       ? new Response(html(editor()), { headers: { "Content-Type": "text/html" } })
       : Response.json({ ok: false, stored: { description: "Other person's change" } }, { status: 409 }) })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(server.url.href)
       await page.getByLabel("Description").fill("My attempt")
@@ -142,7 +156,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
         : dashboardScreen({ actor: { id: "operator", roles: ["admin"], canWrite: true }, key: "IT Operations", year: 2027, ownYear: 2025 }).html
       return new Response(content, { headers: { "Content-Type": "text/html" } })
     } })
-    const page = await runtime.browser!.newPage()
+    const page = await openPage()
     try {
       await page.goto(new URL("?page=IT+Operations&year=2027&own=2025&month=5&execYear=2024&secYear=2026&securityMonth=9", server.url).href)
       expect(await page.locator('main select[data-year="own"][data-query="opsYear"]').inputValue()).toBe("2025")
@@ -167,7 +181,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       const body = detail ? "<p>Current authorized record detail</p>" : '<div style="height:900px"></div><a data-detail href="?page=Vendor+Contracts&year=2027&filter=open&record=contract-1">Open record</a><div style="height:1600px"></div>'
       return new Response(html(body), { headers: { "Content-Type": "text/html" } })
     } })
-    const page = await runtime.browser!.newPage({ viewport: { width: 1440, height: 700 } })
+    const page = await openPage({ viewport: { width: 1440, height: 700 } })
     try {
       const original = new URL("?page=Vendor+Contracts&year=2027&filter=open", server.url).href
       await page.goto(original)
@@ -185,7 +199,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
   test.each([320, 768, 1440])("real shell detail supports keyboard, focus return and confined overflow at %i px", async (width) => {
     const rows = ["first", "second"].map((id) => ["Long authorized record " + "reference-".repeat(24), form("Vendor Contracts", "save", id, 1, fields([{ name: "description", label: "Description", value: "A long business explanation ".repeat(24), type: "textarea" }, { name: "readonly", label: "Protected value", value: "Visible but not editable", readonly: true }]))])
     const server = Bun.serve({ port: 0, fetch: () => new Response(html(table(["Record", "Edit"], rows)), { headers: { "Content-Type": "text/html" } }) })
-    const page = await runtime.browser!.newPage({ viewport: { width, height: 900 } })
+    const page = await openPage({ viewport: { width, height: 900 } })
     try {
       await page.goto(server.url.href)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
