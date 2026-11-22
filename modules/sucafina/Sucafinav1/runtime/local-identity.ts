@@ -1,5 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { isIP } from "node:net"
+import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Schema } from "effect"
 import type { CorporateLocalSecrets, DirectoryPerson, EntraClient, EntraTeamsInput, EntraTeamsObservation, EntraTeamsResult, EntraTokens, LocalIdentity, LocalSecrets } from "./local-contract.ts"
 import { isTeamLandingNavigation, teamBusinessRoute } from "./team-profile-selector.ts"
 
@@ -189,6 +191,81 @@ function createIdentity(
       return await verifyCurrent() ? Object.freeze({ principalId, verifyCurrent }) : undefined
     }
     : undefined
+  const readAdministratorGroup = options.client.checkGroupMembership?.bind(options.client)
+  const readAdministrativeTeam = options.client.team?.bind(options.client)
+  const observeTeamProfileAdministrator: LocalIdentity["observeTeamProfileAdministrator"] =
+    corporate && teamTenant && readActiveSession && readAdministratorGroup
+      ? async (request, groupId) => {
+        const allowedRequest = () => !request.signal.aborted &&
+          (request.method === "GET" || request.method === "POST") &&
+          request.headers.get("sec-fetch-site") !== "cross-site" &&
+          (request.method !== "POST" || request.headers.get("origin") === origin.origin)
+        if (!allowedRequest() || typeof groupId !== "string" || !entraObjectId.test(groupId))
+          return { status: "denied" }
+        const current = await teamReadCurrent(request).catch(() => undefined)
+        const principal = current?.value.teamPrincipal
+        if (!current || !principal) return { status: "unauthenticated" }
+        const sameSession = async () => {
+          const latest = await teamReadCurrent(request).catch(() => undefined)
+          return !!latest && latest.handle === current.handle &&
+            latest.encrypted.byteLength === current.encrypted.byteLength &&
+            timingSafeEqual(latest.encrypted, current.encrypted)
+        }
+        const tokens = {
+          accessToken: current.value.tokens.accessToken,
+          expiresAt: current.value.tokens.expiresAt,
+          grantedScopes: current.value.tokens.grantedScopes,
+        }
+        const membership = async () => {
+          if (!allowedRequest() || !await sameSession())
+            return { state: "unavailable", reason: "unauthenticated" } as const
+          const result = await readAdministratorGroup({
+            principal: { ...principal }, tokens, groupObjectId: groupId.toLowerCase(),
+          }).catch(() => ({ state: "unavailable", reason: "provider_unavailable" }) as const)
+          if (!allowedRequest() || !await sameSession())
+            return { state: "unavailable", reason: "unauthenticated" } as const
+          if (result.state === "complete" &&
+              (result.tenantId !== principal.tenantId || result.principalObjectId !== principal.principalObjectId ||
+               result.groupObjectId !== groupId.toLowerCase() || result.source !== "checkMemberGroups" ||
+               result.membership !== "transitive"))
+            return { state: "unavailable", reason: "identity_mismatch" } as const
+          return result
+        }
+        const observed = await membership()
+        if (observed.state === "unavailable") {
+          if (observed.reason === "unauthenticated") return { status: "unauthenticated" }
+          return { status: "unavailable", reason: observed.reason }
+        }
+        if (!observed.member) return { status: "denied" }
+        const verifyCurrent = async () => {
+          const current = await membership()
+          return current.state === "complete" && current.member
+        }
+        return Object.freeze({
+          status: "available",
+          principal: Object.freeze({ ...principal }),
+          verifyCurrent,
+          ...(readAdministrativeTeam ? {
+            async readTeam(teamObjectId: string) {
+              const before = await membership()
+              if (before.state === "unavailable") return before
+              if (!before.member) return { state: "unavailable", reason: "forbidden" } as const
+              const result = await readAdministrativeTeam({
+                principal: { ...principal }, tokens, teamObjectId,
+              }).catch(() => ({ state: "unavailable", reason: "provider_unavailable" }) as const)
+              const after = await membership()
+              if (after.state === "unavailable") return after
+              if (!after.member) return { state: "unavailable", reason: "forbidden" } as const
+              if (result.state === "complete" &&
+                  (result.tenantId !== principal.tenantId || result.principalObjectId !== principal.principalObjectId ||
+                   result.source !== "team" || result.team.teamObjectId !== teamObjectId))
+                return { state: "unavailable", reason: "identity_mismatch" } as const
+              return result
+            },
+          } : {}),
+        })
+      }
+      : undefined
   const retireSession = async (id: string) => {
     const storageKey = slot("session", id)
     const revokedKey = slot("revoked", id)
@@ -200,6 +277,7 @@ function createIdentity(
   const error = (status: number) => new Response("Authentication unavailable", { status, headers: headers() })
   return {
     ...(observeCorporateRecoveryActor ? { observeCorporateRecoveryActor } : {}),
+    ...(observeTeamProfileAdministrator ? { observeTeamProfileAdministrator } : {}),
     async handle(request) {
       const url = new URL(request.url)
       const path = url.pathname.slice(options.mount.length)
@@ -222,7 +300,7 @@ function createIdentity(
         const returnTo = url.searchParams.get("returnTo")
         const login: Login = {
           nonce: randomBytes(32).toString("hex"), verifier,
-          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true),
+          returnTo: safeReturn(corporate && returnTo && returnTo.length > 2048 ? null : returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true, origin.origin),
         }
         const storageKey = slot("login", state)
         const issuedAt = now()
@@ -264,7 +342,7 @@ function createIdentity(
       }
       await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
       responseHeaders.append("set-cookie", cookie("session", id, sessionSeconds))
-      responseHeaders.set("location", safeReturn(login.returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true))
+      responseHeaders.set("location", safeReturn(login.returnTo, options.mount, !!corporate && !!observeTeams, !!corporate && options.nativeWeb === true, origin.origin))
       return new Response(null, { status: 303, headers: responseHeaders })
     },
     async prepare(request) {
@@ -332,12 +410,38 @@ function validSession(value: unknown): value is Session {
 function validLogin(value: unknown): value is Login {
   return value !== null && typeof value === "object" && "nonce" in value && typeof value.nonce === "string" && /^[a-f0-9]{64}$/.test(value.nonce) && "verifier" in value && typeof value.verifier === "string" && /^[A-Za-z0-9_-]{43}$/.test(value.verifier) && "returnTo" in value && typeof value.returnTo === "string"
 }
-function safeReturn(value: string | null, mount: string, teams: boolean, nativeWeb: boolean) {
-  if (nativeWeb && value === "/") return "/"
+function safeReturn(value: string | null, mount: string, teams: boolean, nativeWeb: boolean, origin: string) {
+  const native = nativeWeb && nativeTeamReturn(value, origin)
+  if (native) return native
   const fallback = `${mount}/dashboard`
   if (!value || !value.startsWith(`${mount}/`) || /[\\\r\n]/.test(value)) return fallback
   const parsed = new URL(value, "http://localhost")
   if (parsed.origin !== "http://localhost") return fallback
   if (teams && teamBusinessRoute(parsed.pathname, mount)) return parsed.pathname
   return ["dashboard", "planner", "procurement"].some((surface) => parsed.pathname === `${mount}/${surface}`) ? `${parsed.pathname}${parsed.search}` : fallback
+}
+
+function nativeTeamReturn(value: string | null, origin: string) {
+  if (!value || !value.startsWith("/") || value.startsWith("//") ||
+      /[\\\u0000-\u0020\u007f]/.test(value)) return
+  try { decodeURIComponent(value) } catch { return }
+  const url = new URL(value, origin)
+  if (url.origin !== origin || url.username || url.password || url.hash ||
+      !["/", "/orchestra/sf-home", "/orchestra/sf-home/context"].includes(url.pathname)) return
+  if (!url.search) return url.pathname
+  const parameters = url.searchParams
+  const keys = [...parameters.keys()]
+  const required = ["contractRevision", "server", "installationId", "tenantId"]
+  if ((keys.length !== 4 && keys.length !== 5) || new Set(keys).size !== keys.length ||
+      required.some((key) => !parameters.has(key)) ||
+      keys.some((key) => !required.includes(key) && key !== "teamObjectId") ||
+      parameters.get("server") !== origin) return
+  const installationId = parameters.get("installationId")
+  const tenantId = parameters.get("tenantId")
+  const contractRevision = parameters.get("contractRevision")
+  const intent = parameters.has("teamObjectId")
+    ? { contractRevision, kind: "team", profile: { installationId, tenantId, teamObjectId: parameters.get("teamObjectId") } }
+    : { contractRevision, kind: "selection", installationId, tenantId }
+  if (!Schema.is(TeamProfile.Selector)(intent)) return
+  return url.pathname + url.search
 }
