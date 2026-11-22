@@ -21,6 +21,107 @@ export function sourceText(value: unknown): string {
 export function isOperation(request: Request, operation: string) {
   return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === operation
 }
+/**
+ * Observe the native BI response before delivery. A new GET would advance BI06's
+ * observation clock, so it cannot supply the oracle for the rendered response.
+ */
+export async function captureOriginalBiData(
+  page: Page, owner: AnalyticsOwner, viewId: string,
+  acquire: (observe: (response: Response) => Promise<void>) => Promise<Response>,
+) {
+  const endpoint = owner.publicOrigin + owner.mount + "/dashboard"
+  const matches = (method: string, href: string) => {
+    const url = new URL(href)
+    return method === "GET" && url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
+      url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === viewId
+  }
+  const session = await page.context().newCDPSession(page)
+  const producer = Promise.withResolvers<{ url: string; status: number; body: unknown }>()
+  void producer.promise.catch(() => undefined) // The original response wait receives the failure below.
+  const requests: Request[] = []
+  const observed: { response: Response; body: unknown }[] = []
+  const failures: string[] = []
+  let responses = 0
+  const fail = (phase: string, error: unknown) => {
+    failures.push(phase)
+    console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
+      view: viewId, acquisition: "native-response-cdp", phase, acquisitionFailure: true,
+      errorClass: error instanceof SyntaxError ? "SyntaxError" : error instanceof Error ? "Error" : "NonError" }))
+    producer.reject(error)
+  }
+  const onRequest = (request: Request) => {
+    if (matches(request.method(), request.url())) requests.push(request)
+  }
+  const onRequestFailed = (request: Request) => {
+    if (matches(request.method(), request.url()))
+      fail("native-request-failed", new Error("Original BI request failed"))
+  }
+  const onPageClose = () => fail("page-closed", new Error("Page closed during original BI acquisition"))
+  const onSessionClose = () => fail("session-closed", new Error("CDP session closed during original BI acquisition"))
+  page.on("request", onRequest)
+  page.on("requestfailed", onRequestFailed)
+  page.on("close", onPageClose)
+  session.on("close", onSessionClose)
+  session.on("Fetch.requestPaused", async (event) => {
+    let phase = "continue-unrelated-response"
+    try {
+      if (!matches(event.request.method, event.request.url)) {
+        await session.send("Fetch.continueRequest", { requestId: event.requestId })
+        return
+      }
+      phase = "original-response-identity"
+      expect(++responses, "one original BI response").toBe(1)
+      if (event.responseStatusCode === undefined) throw new Error("Original BI request failed before HTTP response")
+      phase = "original-response-body"
+      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      phase = "original-response-json"
+      const text = raw.base64Encoded
+        ? new TextDecoder("utf-8", { fatal: true }).decode(Buffer.from(raw.body, "base64"))
+        : raw.body
+      const body: unknown = JSON.parse(text)
+      phase = "original-response-delivery"
+      // No URL, method, body, status, header or authentication overrides.
+      await session.send("Fetch.continueResponse", { requestId: event.requestId })
+      producer.resolve({ url: event.request.url, status: event.responseStatusCode, body })
+    } catch (error) {
+      fail(phase, error)
+      // Acquisition has failed; this only attempts to release a paused native request.
+      await session.send("Fetch.continueRequest", { requestId: event.requestId }).catch(() => undefined)
+    }
+  })
+  const acquired = await (async () => {
+    try {
+      await session.send("Fetch.enable", { patterns: [{
+        urlPattern: endpoint.replace(/[\\*?]/g, "\\$&") + "\\?*sf=bi-data*", requestStage: "Response",
+      }] })
+      const response = await acquire(async (response) => {
+        expect(matches(response.request().method(), response.url()), "exact original BI owner and operation").toBe(true)
+        const original = await producer.promise
+        expect(response.url()).toBe(original.url)
+        expect(response.status()).toBe(original.status)
+        observed.push({ response, body: original.body })
+      })
+      expect(observed.length, "capture completed within the original response wait").toBe(1)
+      expect(response === observed[0]!.response, "same observed native Response identity").toBe(true)
+      return { response, body: observed[0]!.body }
+    } finally {
+      producer.reject(new Error("Original BI observation ended before acquisition"))
+      session.off("close", onSessionClose)
+      try { await session.detach() } finally {
+        page.off("request", onRequest)
+        page.off("requestfailed", onRequestFailed)
+        page.off("close", onPageClose)
+      }
+    }
+  })()
+  expect(failures, "original BI response acquisition must succeed").toEqual([])
+  expect(responses, "one original BI response").toBe(1)
+  expect(requests.length, "one native BI request; no readback or retry").toBe(1)
+  expect(acquired.response.request() === requests[0], "same native Request identity").toBe(true)
+  expect(acquired.response.request().redirectedFrom() === null, "no redirected BI request").toBe(true)
+  return acquired
+}
+
 export async function controls(page: Page, owner: AnalyticsOwner, reference?: string) {
   const response = await page.request.get(owner.publicOrigin + owner.mount + "/dashboard", {
     params: { sf: "decision-controls", format: "json", ...(reference ? { case: reference } : {}) },

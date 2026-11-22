@@ -6,7 +6,7 @@ import { scheme } from "./design-support/wave-four"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
   enter, ready, observePage, observeAnalyticsContext, observeAnalyticsOperations,
-  captureAnalytics, captureModes, withPortuguese,
+  captureAnalytics, captureModes, withPortuguese, captureOriginalBiData,
 } from "./design-support/wave-five-analytics"
 
 analyticsTest("wave five analytics: native scenarios, recorded results and sensitivity", async ({ page, browser, installation, owner }, info) => {
@@ -607,28 +607,26 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await chooseBi(page, installation.year)
   const operationsSelection = catalog.locator('[data-sf-field="selection"]')
   if (await operationsSelection.isVisible()) await operationsSelection.selectOption({ index: 1 })
-  const operationalResponse = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06"
-  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(
-    (value: unknown) => ({ status: "ok" as const, value }), () => ({ status: "unavailable" as const }),
-  ) }))
-  await catalog.getByRole("button", { name: "View data", exact: true }).click()
-  const operationsAcquired = await operationalResponse
+  const operationsAcquired = await captureOriginalBiData(page, owner, "BI06", async (observe) => {
+    const operationalResponse = page.waitForResponse(async (response) => {
+      const url = new URL(response.url())
+      if (!(response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06")) return false
+      await observe(response)
+      return true
+    }, { timeout: 60_000 })
+    // The original promise is returned below; consume rejection if the click fails first.
+    void operationalResponse.catch(() => undefined)
+    await catalog.getByRole("button", { name: "View data", exact: true }).click()
+    return operationalResponse
+  })
   const originalOperationsResponse = operationsAcquired.response
   const operationsUrl = new URL(originalOperationsResponse.url())
   expect(operationsUrl.origin).toBe(owner.publicOrigin)
   expect(operationsUrl.pathname).toBe(owner.mount + "/dashboard")
   expect(operationsUrl.searchParams.get("selectionRef")).toBe(await operationsSelection.inputValue())
-  const operationsBody = operationsAcquired.body.status === "ok" ? operationsAcquired.body.value : await (async () => {
-    const reread = await page.request.get(operationsUrl.href)
-    expect(reread.url()).toBe(operationsUrl.href)
-    expect(reread.status()).toBe(originalOperationsResponse.status())
-    return reread.json() as Promise<unknown>
-  })()
+  const operationsBody = operationsAcquired.body
   console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition", view: "BI06",
-    http: originalOperationsResponse.status(), acquisition: operationsAcquired.body.status === "ok"
-      ? "native-response" : "authenticated-original-readback",
+    http: originalOperationsResponse.status(), acquisition: "native-response-cdp",
     ...(originalOperationsResponse.status() !== 200 ? { refusal: operationsBody } : {}) }))
   expect(originalOperationsResponse.status()).toBe(200)
   await expect(catalog.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
@@ -757,28 +755,26 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await localized.getByRole("button", { name: "Escolher contexto", exact: true }).click()
     expect((await operationalOptions).status()).toBe(200)
     await localized.locator('[data-sf-field="selection"]').selectOption({ index: 1 })
-    const operationalData = localized.waitForResponse((response) => {
-      const url = new URL(response.url())
-      return response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06"
-    }).then(async (response) => ({ response, body: await response.json().then(
-      (value: unknown) => ({ status: "ok" as const, value }), () => ({ status: "unavailable" as const }),
-    ) }))
-    await localized.getByRole("button", { name: "Ver dados", exact: true }).click()
-    const localizedOperations = await operationalData
+    const localizedOperations = await captureOriginalBiData(localized, owner, "BI06", async (observe) => {
+      const operationalData = localized.waitForResponse(async (response) => {
+        const url = new URL(response.url())
+        if (!(response.request().method() === "GET" && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI06")) return false
+        await observe(response)
+        return true
+      })
+      // The original promise is returned below; consume rejection if the click fails first.
+      void operationalData.catch(() => undefined)
+      await localized.getByRole("button", { name: "Ver dados", exact: true }).click()
+      return operationalData
+    })
     expect(localizedOperations.response.status()).toBe(200)
     const localizedOperationsUrl = new URL(localizedOperations.response.url())
     expect(localizedOperationsUrl.origin).toBe(owner.publicOrigin)
     expect(localizedOperationsUrl.pathname).toBe(owner.mount + "/dashboard")
     expect(localizedOperationsUrl.searchParams.get("selectionRef")).toBe(await localized.locator('[data-sf-field="selection"]').inputValue())
-    const localizedOperationsBody = localizedOperations.body.status === "ok" ? localizedOperations.body.value : await (async () => {
-      const reread = await localized.request.get(localizedOperationsUrl.href)
-      expect(reread.url()).toBe(localizedOperationsUrl.href)
-      expect(reread.status()).toBe(localizedOperations.response.status())
-      return reread.json() as Promise<unknown>
-    })()
+    const localizedOperationsBody = localizedOperations.body
     console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition", view: "BI06", locale: "pt-BR",
-      http: localizedOperations.response.status(), acquisition: localizedOperations.body.status === "ok"
-        ? "native-response" : "authenticated-original-readback" }))
+      http: localizedOperations.response.status(), acquisition: "native-response-cdp" }))
     await expect(localized.locator('[data-sf-bi-view="BI06"]')).toBeVisible()
     await assertBiSource(localized, localizedOperationsUrl.href, "BI06",
       { http: localizedOperations.response.status(), body: localizedOperationsBody }, "pt-BR")
