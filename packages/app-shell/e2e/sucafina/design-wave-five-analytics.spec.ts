@@ -4,7 +4,7 @@ import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data
 import { prepareParameterizedScenario } from "./design-support/wave-five-analytics-source"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
-  enter, ready, observePage, observeAnalyticsContext,
+  enter, ready, observePage, observeAnalyticsContext, observeAnalyticsOperations,
   captureAnalytics, captureModes, withPortuguese,
 } from "./design-support/wave-five-analytics"
 
@@ -15,6 +15,7 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
   expect(info.config.workers).toBe(1)
   const diagnostics = observePage(page)
   const contextReads = observeAnalyticsContext(page, owner)
+  observeAnalyticsOperations(page)
   const writes: Request[] = []
   page.on("request", (request) => {
     if (isOperation(request, "decision-portfolio-evaluate") || isOperation(request, "decision-sensitivity-evaluate")) writes.push(request)
@@ -386,7 +387,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
   await catalog.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
   await page.setViewportSize({ width: 320, height: 800 })
-  await catalog.locator(".sf-chart-table-region").scrollIntoViewIfNeeded()
+  await catalog.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-dark-320-test-data")
   await page.setViewportSize({ width: 1440, height: 1100 })
 
@@ -424,7 +425,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await localized.locator(".sf-bi-series").first().scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-desktop-values-test-data")
     await localized.setViewportSize({ width: 320, height: 800 })
-    await localized.locator(".sf-chart-table-region").scrollIntoViewIfNeeded()
+    await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-values-test-data")
     expect(localizedDiagnostics.pageErrors).toEqual([])
     expect(localizedDiagnostics.consoleErrors).toEqual([])
