@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { AbsolutePath } from "@orchestra/schema/schema"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+import { dispatchSfCapability } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import { createCurrentChoiceFence } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
 import { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
@@ -106,6 +108,12 @@ export async function runSfTeamImports(input: {
   })
   const service = createSfImportServices({ runtime, authority })
   if (!service) throw new Error("SF_TEAM_IMPORT_COMPOSITION_UNAVAILABLE")
+  // Dispatch consumes the UI lease before entering its handler. The original
+  // descriptor must run under the fence after that consumption, never before it.
+  const descriptors = service.descriptors.map((descriptor) => ({
+    ...descriptor, handler: (value: unknown, context: Parameters<typeof descriptor.handler>[1]) =>
+      fence.run(context, () => descriptor.handler(value, context)),
+  }))
   const transportRuntime: ImportRuntime = { ui: authority.ui, human: authority.human, service: {
       ...service,
       imports: {
@@ -116,7 +124,12 @@ export async function runSfTeamImports(input: {
         apply: (value, context) => fence.run(context, () => service.imports.apply(value, context)),
       },
       prepareTarget: (value, context) => fence.run(context, () => service.prepareTarget(value, context)),
-      dispatch: (value, context) => fence.run(context, () => service.dispatch(value, context)),
+      dispatch: (payload, context) => dispatchSfCapability({
+        operation: "sf_import_preview", payload, context, descriptors, authority: authority.authority,
+        validateInput: (descriptor, value) => descriptor.id === "sf_import_preview" && decodeSfOperationInput("sf_import_preview", value).ok,
+        validateOutput: (descriptor, value) => descriptor.id === "sf_import_preview" &&
+          (value.status !== "ok" || decodeSfOperationOutput("sf_import_preview", value.result).ok),
+      }),
       discover: (surface, context, period) => fence.run(context, async () => {
         // Only a valid original discovery request and current private writer
         // may enroll source metadata for an older Team. Refused intake never
