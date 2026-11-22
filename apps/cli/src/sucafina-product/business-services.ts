@@ -51,6 +51,7 @@ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfFinancePairObservation } from "./finance-pair-observation.ts"
+import { observeSfUiContextIntegrity, type SfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
@@ -72,6 +73,10 @@ import { createProcurementQueuePageView, procurementQueueIntent } from "../../..
 import { prepareSourcingDossier, type ProcurementPreparation } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
+
+const bindingWitnessApply = Reflect.apply
+const bindingWitnessGet = WeakMap.prototype.get
+const bindingWitnessSet = WeakMap.prototype.set
 
 export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; procurementRequest?: Readonly<{ request: Request; period: Period }>; reviewerRecall?: ReturnType<typeof createSfReviewerRecall> }) {
   const host = input.authority.host
@@ -241,9 +246,18 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type CaseRef = { id: string; incarnation: string; version: number }
   type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; historical?: boolean }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
-  const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
+  const bindingWitnesses = new WeakMap<TrustedDomainContext, SfUiContextIntegrity>()
+  const callBindingDigest = (call: TrustedDomainContext) => {
+    const observed = observeSfUiContextIntegrity(call)
+    bindingWitnessApply(bindingWitnessSet, bindingWitnesses, [call, observed])
+    return observed.digest
+  }
+  const currentCaseBinding = (call: TrustedDomainContext, expected: string) => {
+    const observed: SfUiContextIntegrity | undefined = bindingWitnessApply(bindingWitnessGet, bindingWitnesses, [call])
+    return observed?.digest === expected ? observed.current() : digestSfValue([call.kind, call.binding]) === expected
+  }
   const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
-    host.requestFor(call) === request && !request.signal.aborted && callBindingDigest(call) === bindingDigest
+    host.requestFor(call) === request && !request.signal.aborted && currentCaseBinding(call, bindingDigest)
   const releaseCaseScope = (call: TrustedDomainContext, scope: CaseScope) => {
     scope.retainers--
     if (scope.retainers === 0 && caseBindings.get(call) === scope) caseBindings.delete(call)

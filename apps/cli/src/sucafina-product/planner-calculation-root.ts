@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { observeSfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -46,13 +46,13 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const authenticate = host.authenticate, environment = host.environment
       const request = requestFor.call(host, call), binding = call.binding, lease = call.lease
       if (!request || request.signal.aborted) return undefined
-      const identity = digestSfValue([call.kind, binding]), headers = plannerRequestIdentity(request)
+      const identity = observeSfUiContextIntegrity(call, { binding }), headers = plannerRequestIdentity(request)
       const pinned = () => input.host === host && host.persistence === persistence &&
         persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots &&
         persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
         persistence.currentSnapshotScope === snapshotScope && host.requestFor === requestFor &&
         host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
-        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === identity &&
+        call.binding === binding && call.lease === lease && identity.current() &&
         !request.signal.aborted && requestFor.call(host, call) === request && plannerRequestIdentity(request) === headers && ownerCurrent()
       const current = () => pinned() && unchanged()
       const live = () => {
