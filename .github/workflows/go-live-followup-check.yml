@@ -1,0 +1,67 @@
+name: go-live-readiness-document-guards
+
+on:
+  push:
+    branches: [readiness-integrated-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  document-guards:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GO_LIVE_DOC_SOURCE_SHA: "21d43e8aa943151a98caabc0f829432d0571e309"
+      GO_LIVE_DOC_SOURCE_TREE: "c83c93f435e8b601184a202e929c41d19828a1f3"
+      GO_LIVE_DOC_BASE_SHA: "b7776698e61934ed2cb820658408ff8a8207ec62"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact reviewed documentation source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "21d43e8aa943151a98caabc0f829432d0571e309"
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Observe the exact three-file source and validation base
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "$GO_LIVE_DOC_SOURCE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$GO_LIVE_DOC_SOURCE_TREE"
+          test -z "$(git status --porcelain)"
+          git show-ref --verify refs/remotes/origin/dev
+          mkdir -m 700 "$RUNNER_TEMP/go-live-docs"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/go-live-docs/refs.txt"
+          git merge-base HEAD origin/dev > "$RUNNER_TEMP/go-live-docs/merge-base.txt"
+          test "$(cat "$RUNNER_TEMP/go-live-docs/merge-base.txt")" = "$GO_LIVE_DOC_BASE_SHA"
+          git diff --name-only "$GO_LIVE_DOC_BASE_SHA" HEAD > "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/go-live-docs/workflow-sha.txt"
+          printf '%s\n' \
+            docs/qa/sucafina/go-live/README.md \
+            docs/qa/sucafina/go-live/execution-2026-11-22.md \
+            docs/qa/sucafina/go-live/status.json > "$RUNNER_TEMP/go-live-docs/expected-paths.txt"
+          diff -u "$RUNNER_TEMP/go-live-docs/expected-paths.txt" "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+          while IFS= read -r file; do
+            sha256sum "$file"
+          done < "$RUNNER_TEMP/go-live-docs/changed-paths.txt" > "$RUNNER_TEMP/go-live-docs/documents.sha256"
+          git diff --check "$GO_LIVE_DOC_BASE_SHA" HEAD
+          cat "$RUNNER_TEMP/go-live-docs/refs.txt"
+          cat "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+      - name: Repository setup for canonical guards
+        uses: ./.github/actions/setup-bun
+      - name: Canonical documentation guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/go-live-docs/guards.log"
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Preserve source and guard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: go-live-docs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/go-live-docs
+          if-no-files-found: error
+          retention-days: 14
