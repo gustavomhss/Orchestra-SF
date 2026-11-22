@@ -59,7 +59,7 @@ export function createProcurementDecisionHttp(input: {
   }
 }
 
-function parse(mode: string, value: unknown): Prepare | Apply | Recover | (Review & { purpose: "review" }) | undefined {
+function parse(mode: string, value: unknown): Prepare | Apply | Recover | (Review & { purpose?: "review" }) | undefined {
   if (!object(value) || !caseRef(value.caseRef) || typeof value.choiceId !== "string" || !value.choiceId.trim()) return undefined
   if (mode === "decision-prepare-changes") {
     if (!closed(value, ["caseRef", "choiceId", "operations"])) return undefined
@@ -67,7 +67,12 @@ function parse(mode: string, value: unknown): Prepare | Apply | Recover | (Revie
     return operations.ok ? { caseRef: value.caseRef, choiceId: value.choiceId, operations: operations.value.operations } : undefined
   }
   if (typeof value.changeId !== "string" || !value.changeId.trim()) return undefined
-  if (mode === "decision-review") return closed(value, ["purpose", "caseRef", "choiceId", "changeId"]) && value.purpose === "review" ? { purpose: "review", caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
+  if (mode === "decision-review") {
+    const selection = { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId }
+    if (closed(value, ["caseRef", "choiceId", "changeId"])) return selection
+    if (value.purpose === "review" && closed(value, ["purpose", "caseRef", "choiceId", "changeId"])) return { ...selection, purpose: "review" }
+    return undefined
+  }
   if (mode === "decision-recover" && value.purpose === "recover") return closed(value, ["purpose", "caseRef", "choiceId", "changeId"]) ? { purpose: "recover", caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
   return closed(value, ["caseRef", "choiceId", "changeId", "reviewDigest"]) && typeof value.reviewDigest === "string" && isReviewDigest(value.reviewDigest) ? { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId, reviewDigest: value.reviewDigest } : undefined
 }

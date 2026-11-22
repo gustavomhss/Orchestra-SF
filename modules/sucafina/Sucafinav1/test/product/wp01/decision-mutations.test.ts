@@ -186,11 +186,15 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
     await fixture(apply, async (request) => {
       if (request.method === "GET") return applied ? new Response('<p data-receipt>Current receipt reopened</p>', { headers: { "Content-Type": "text/html" } }) : undefined
       const body = await request.text()
-      if (new URL(request.url).searchParams.get("sf") === "decision-review") { reviewReads++; return ok(review) }
+      if (new URL(request.url).searchParams.get("sf") === "decision-review") {
+        reviewReads++
+        expect(JSON.parse(body)).toEqual({ caseRef: applyContext.caseRef, choiceId: applyContext.choiceId, changeId: applyContext.changeId })
+        return ok(review)
+      }
       seen.push({ body, key: request.headers.get("idempotency-key") })
       if (seen.length === 1) { entered(); await wait; return new Response("delivery interrupted") }
       if (outcome === "conflict") return Response.json({ status: "conflict" }, { status: 409 })
-      applied = true; return ok({ receiptId: "consumer-receipt", surface: applyContext.surface, version: applyContext.expectedVersion + 1 })
+      applied = true; return ok({ receiptId: "consumer-receipt", surface: applyContext.surface, version: applyContext.expectedVersion + 1, outcome: "applied" })
     }, async (page) => {
       await page.getByRole("button", { name: "Review current changes", exact: true }).click()
       await page.getByText("action: Original action → Reviewed action", { exact: true }).waitFor()
