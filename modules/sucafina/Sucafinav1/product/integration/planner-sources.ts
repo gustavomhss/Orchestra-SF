@@ -21,7 +21,7 @@ export function sfPlannerEvidenceRef(input: { versionId: string; projection: Rec
     installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "observed",
     target: { surface: "planner", recordType: "planner-version", recordId: input.versionId, incarnation: input.identity.incarnation,
       version: input.identity.version, fields: Object.keys(input.projection), period: { start: `${year}-01-01`, end: `${year}-12-31` },
-      projectionDigest: digestSfValue({ versionId: input.versionId, projection: input.projection }) },
+      projectionDigest: digestSfValue({ versionId: input.versionId, projection: input.projection }, "planner.source.projection") },
   }
   return { ...value, refDigest: digestSfEvidenceRef(value) }
 }
@@ -63,7 +63,7 @@ export function createSfPlannerSourceHost(input: {
               if (!principal || principal.id !== scope.principalRef) return false
               const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
               const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
-              return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
+              return digestSfValue(sfPlannerProjectionSelector(snapshot, actor), "planner.source.selector") === digestSfValue(selector, "planner.source.selector")
             }),
           }
         }
@@ -90,7 +90,7 @@ export function createSfPlannerSourceHost(input: {
       const evidence = sfPlannerEvidenceRef({ versionId: decoded[0], ...current }, context)
       if (!evidence) return { status: "unavailable", reason: "invalid-source-period" }
       const again = await read().catch(() => undefined)
-      if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
+      if (!again || digestSfValue(again, "planner.source.envelope") !== digestSfValue(current, "planner.source.envelope") || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
       return { status: "ok", value: { versionId: decoded[0], evidence } }
     },
   }

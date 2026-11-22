@@ -34,11 +34,11 @@ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: 
     }, { signal: request.signal })
     const projection = await read()
     if (!projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...ref.target.fields].sort()) ||
-      digestSfValue({ versionId: ref.target.recordId, projection }) !== ref.target.projectionDigest || projection.year !== Number(period.start.slice(0, 4)))
+      digestSfValue({ versionId: ref.target.recordId, projection }, "planner.evidence.projection") !== ref.target.projectionDigest || projection.year !== Number(period.start.slice(0, 4)))
       return { status: "stale", reason: "planner-source-changed" }
     const result = buildPlannerFinancialProjection({ projection, ref, period, binding: call, at: environment.at })
     const latest = await read(), second = await input.sources.resolveForecastSource(ref.refId, call)
-    if (!latest || digestSfValue(latest) !== digestSfValue(projection) || second.status !== "ok" || digestSfValue(second.value.evidence) !== digestSfValue(ref) ||
+    if (!latest || digestSfValue(latest, "planner.evidence.projection") !== digestSfValue(projection, "planner.evidence.projection") || second.status !== "ok" || digestSfValue(second.value.evidence) !== digestSfValue(ref) ||
       request.signal.aborted || !await input.host.revalidate(call)) return { status: "stale", reason: "planner-source-changed" }
     return { status: "ok", value: result }
   }

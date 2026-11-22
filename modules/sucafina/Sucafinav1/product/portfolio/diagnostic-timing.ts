@@ -138,8 +138,9 @@ export function withSfReadonlyDiagnostic<Value>(request: Request, operation: str
     nextPeriodic: 10000, periodicSnapshots: 0, skippedPeriodicThresholds: 0, checkpointing: false }
   return frames.run(frame, async () => {
     emit(frame, { phase: "started", operation, schema: "sf-portfolio-readonly-v2", scopeOrigin: "before-human-admit",
-      canonicalDigestSurface: { meaning: "direct-caller-label", labels: ["principal.direct", "source.scope-validation", "source.other", "finance.current", "finance.other", "bcs.planner.projection-period", "bcs.planner.expected-period", "bcs.planner.source-ref", "bcs.planner.expected-ref", "canonical.evidence-ref", "unlabelled"] },
+      canonicalDigestSurface: { meaning: "direct-caller-label", labels: ["principal.direct", "source.scope-validation", "source.other", "finance.current", "finance.other", "bcs.planner.projection-period", "bcs.planner.expected-period", "bcs.planner.source-ref", "bcs.planner.expected-ref", "canonical.evidence-ref", "planner.source.projection", "planner.source.selector", "planner.source.envelope", "planner.evidence.projection", "planner.source.role-map", "source.run-fence", "bcs.capture.sources", "bcs.capture.snapshots", "bcs.capture.extras", "bcs.capture.captures", "unlabelled"] },
       canonicalDirect: "direct canonicalSfValue calls; internal digest canonicalization excluded",
+      bcsCaptureStable: "sync captureObservations.read stable body; conditional on readSfMemoryCaptureIntegrity use; includes currentSnapshots and argument work when reached; nested digest durations overlap; initial snapshot capture excluded",
       originalObservationWindowMs: 60000, maximumBuckets, maximumRoots, maximumLines, maximumLineLength,
       periodicThresholdsMs: [10000, 20000, 30000, 40000, 50000], checkpointModes: ["timer", "settled-span"] })
     const timer = setInterval(() => {

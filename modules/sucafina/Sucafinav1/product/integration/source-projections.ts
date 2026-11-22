@@ -18,7 +18,7 @@ import { publicSfData } from "./public-state.ts"
 
 /** Saved roles define the projection, never authenticate a later caller. Reads authenticate again. */
 export function sfPlannerProjectionSelector(snapshot: Pick<Snapshot, "data">, actor: Actor) {
-  return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner")) }
+  return { kind: "planner-source-v1", roles: [...actor.roles].sort(), canWrite: actor.canWrite, roleMapDigest: digestSfValue(roleMap(snapshot, "planner"), "planner.source.role-map") }
 }
 
 export function sfPlannerRosterProjectionSelector(snapshot: Snapshot, actor: Actor, fields: readonly string[], period: Period) {
@@ -116,7 +116,7 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     return Object.fromEntries([...selector.fields].sort().map((field) => [field, record[field]]))
   }
   if (surface !== "planner" || !["planner-source-v1", "planner-roster-v1"].includes(String(selector.kind)) ||
-    selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "planner")) || typeof selector.canWrite !== "boolean" ||
+    selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "planner"), "planner.source.role-map") || typeof selector.canWrite !== "boolean" ||
     !Array.isArray(selector.roles) || !selector.roles.every((role): role is string => typeof role === "string")) return undefined
   const access = object(object(snapshot.data.access)[scope.principalRef])
   const actor: Actor = { id: scope.principalRef, roles: selector.roles, canWrite: selector.canWrite,

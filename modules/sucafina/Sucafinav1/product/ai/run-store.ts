@@ -37,7 +37,7 @@ function matchesStaleObservation(run: SfNativeRunRecord, observation: SfStaleRun
 
 /** Fence the host snapshot used for source validation, excluding the product state checked separately by CAS. */
 export function sfRunSourceFence(snapshot: Snapshot) {
-  return digestSfValue({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")), versions: snapshot.versions, sequences: snapshot.sequences, sfSources: snapshot.sfSources, sfBlobGenerations: snapshot.sfBlobGenerations })
+  return digestSfValue({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")), versions: snapshot.versions, sequences: snapshot.sequences, sfSources: snapshot.sfSources, sfBlobGenerations: snapshot.sfBlobGenerations }, "source.run-fence")
 }
 
 /** Host preflight must resolve current ACL, case, evidence and C10 semantics against this exact snapshot;

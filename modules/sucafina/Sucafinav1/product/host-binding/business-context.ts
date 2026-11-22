@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
+import { beginSfReadonlyDiagnostic, endSfReadonlyDiagnostic } from "../portfolio/diagnostic-timing.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
@@ -572,23 +573,28 @@ export function createSfAtlasBusiness(input: {
       binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
       selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
       return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
-    const sourceIdentity = digestSfValue(sources)
+    const sourceIdentity = digestSfValue(sources, "bcs.capture.sources")
     if (request) captureObservations.set(sources, { call, read: async (requested) => {
       const selected = structuredClone(requested)
       const selectionIdentity = digestSfValue(selected)
       const snapshots = input.host.persistence.currentSnapshots?.()
-      const snapshotIdentity = digestSfValue(snapshots)
+      const snapshotIdentity = digestSfValue(snapshots, "bcs.capture.snapshots")
       const extras: { values: readonly BusinessEvidenceResolution[]; identity: string }[] = []
       const captures: { value: ProtectedEvidenceCapture; identity: string }[] = []
-      const stable = () => !!snapshots && !request.signal.aborted && call.lease === lease &&
-        input.host.requestFor(call) === request &&
-        binding === digestSfValue([call.kind, call.binding]) &&
-        headers === digestSfValue([...request.headers.entries()]) &&
-        selectionIdentity === digestSfValue(requested) && selectionIdentity === digestSfValue(selected) &&
-        sourceIdentity === digestSfValue(sources) &&
-        snapshotIdentity === digestSfValue(input.host.persistence.currentSnapshots?.()) &&
-        extras.every((extra) => extra.identity === digestSfValue(extra.values)) &&
-        captures.every((capture) => capture.identity === digestSfValue(capture.value))
+      const stable = () => {
+        const measured = beginSfReadonlyDiagnostic("bcs.capture.stable")
+        try {
+          return !!snapshots && !request.signal.aborted && call.lease === lease &&
+            input.host.requestFor(call) === request &&
+            binding === digestSfValue([call.kind, call.binding]) &&
+            headers === digestSfValue([...request.headers.entries()]) &&
+            selectionIdentity === digestSfValue(requested) && selectionIdentity === digestSfValue(selected) &&
+            sourceIdentity === digestSfValue(sources, "bcs.capture.sources") &&
+            snapshotIdentity === digestSfValue(input.host.persistence.currentSnapshots?.(), "bcs.capture.snapshots") &&
+            extras.every((extra) => extra.identity === digestSfValue(extra.values, "bcs.capture.extras")) &&
+            captures.every((capture) => capture.identity === digestSfValue(capture.value, "bcs.capture.captures"))
+        } finally { endSfReadonlyDiagnostic(measured) }
+      }
       if (!stable() || !await input.host.revalidate(call) || !stable()) return false
 
       const captured: BusinessEvidenceRef[] = []
@@ -687,13 +693,13 @@ export function createSfAtlasBusiness(input: {
         if (missing.length) {
           const values = await readContext({ refs: structuredClone(missing) }, call)
           if (values.length !== missing.length) return false
-          extras.push({ values, identity: digestSfValue(values) })
+          extras.push({ values, identity: digestSfValue(values, "bcs.capture.extras") })
           values.forEach((value, index) => { if (digestSfValue(value.ref) === digestSfValue(missing[index])) known.set(digestSfValue(value.ref), value) })
         }
         for (const ref of candidate.refs) {
           const source = known.get(digestSfValue(ref))
           const capture = await memory.readOriginalCapture(caseRef, ref.refDigest, call)
-          if (capture) captures.push({ value: capture, identity: digestSfValue(capture) })
+          if (capture) captures.push({ value: capture, identity: digestSfValue(capture, "bcs.capture.captures") })
           if (!stable()) return false
           if (!source || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) ||
             (source.state !== "fresh" && source.state !== "historical") ||

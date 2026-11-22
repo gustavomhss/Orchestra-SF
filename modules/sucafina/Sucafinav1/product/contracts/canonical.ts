@@ -25,7 +25,12 @@ export function digestSfValue(value: unknown, caller: unknown = "unlabelled"): s
     caller === "finance.current" || caller === "finance.other" ||
     caller === "bcs.planner.projection-period" || caller === "bcs.planner.expected-period" ||
     caller === "bcs.planner.source-ref" || caller === "bcs.planner.expected-ref" ||
-    caller === "canonical.evidence-ref" ? caller : "unlabelled"
+    caller === "canonical.evidence-ref" ||
+    caller === "planner.source.projection" || caller === "planner.source.selector" ||
+    caller === "planner.source.envelope" || caller === "planner.evidence.projection" ||
+    caller === "planner.source.role-map" || caller === "source.run-fence" ||
+    caller === "bcs.capture.sources" || caller === "bcs.capture.snapshots" ||
+    caller === "bcs.capture.extras" || caller === "bcs.capture.captures" ? caller : "unlabelled"
   const measured = beginSfReadonlyDiagnostic("canonical.digest", label)
   try {
     return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value, diagnosticDigestCanonicalCall)).digest("hex")
