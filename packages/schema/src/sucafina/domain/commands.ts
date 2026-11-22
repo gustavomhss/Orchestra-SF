@@ -16,6 +16,11 @@ export const SfDomainCommandBase = {
 } as const
 
 const versions = optional(SfDomainVersionInput)
+// Project imports accept decimal revision strings; other commands retain their own fallback semantics.
+const projectVersionText = Schema.String.check(Schema.makeFilter((value) =>
+  /^\d+$/.test(value) && Number.isSafeInteger(Number(value)) || "version must be a non-negative safe integer",
+))
+const projectVersions = Schema.Record(Schema.String, Schema.Union([NonNegativeInt, projectVersionText]))
 const amount = SfDomainAmountInput
 const scalar = Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.Null])
 const text = optional(Schema.String)
@@ -109,7 +114,7 @@ export const SfDomainCommandValues = {
     rows: Schema.Array(Schema.Struct({
       ...projectEdit, name: Schema.String, _status: optional(Schema.Literals(["valid", "error"])),
     })),
-    versions: SfDomainVersionInput,
+    versions: projectVersions,
   }),
   milestoneSave: Schema.Struct({
     milestoneId: optional(Schema.String), name: Schema.String,
