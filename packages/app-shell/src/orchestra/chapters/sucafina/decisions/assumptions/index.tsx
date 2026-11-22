@@ -72,8 +72,8 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
               <header class="sf-decision-section-heading"><h2 id="sf-n24-assumptions">{t("sf.ui36.record")}</h2>
               <div class="sf-n24-toolbar">
                 <label class="sf-n24-field">
-                  <span>{t("sf.ui36.state")}</span>
-                  <select value={ui.filter} onChange={(event) => setUi("filter", event.currentTarget.value as typeof ui.filter)}>
+                  <span id="sf-n24-assumption-state-label">{t("sf.ui36.state")}</span>
+                  <select aria-labelledby="sf-n24-assumption-state-label" value={ui.filter} onChange={(event) => setUi("filter", event.currentTarget.value as typeof ui.filter)}>
                     <option value="all">{t("sf.ui36.record")}</option>
                     <option value="open">{t("sf.ui36.open")}</option>
                     <option value="confirmed">{t("sf.ui36.confirmed")}</option>

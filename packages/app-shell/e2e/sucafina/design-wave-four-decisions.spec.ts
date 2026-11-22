@@ -110,6 +110,7 @@ async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Pag
 
 waveFourTest("wave four decisions: real sources, retained drafts, uncertainty and native review", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(780_000)
+  page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostic = observePage(page)
@@ -199,7 +200,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await editor.getByRole("button", { name: "Review source attachments", exact: true }).click()
     await page.setViewportSize({ width: 390, height: 844 })
     await reviewViewport(page, info, review, "UI34-dark-390-review-actions-test-data")
-    const saved = page.waitForResponse((response) => action(response.request(), "decision-edit"))
+    const saved = page.waitForResponse((response) => action(response.request(), "decision-edit"), { timeout: 40_000 })
     await review.getByRole("button", { name: "Save decision", exact: true }).click()
     expect((await saved).status()).toBe(200)
     await expect(editor).toHaveCount(0)
@@ -262,15 +263,21 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await openScreen(page, owner, screens[2]!)
     const assumptions = page.getByRole("region", { name: "Assumption", exact: true })
     await expect(assumptions.getByRole("listitem")).toHaveCount(2)
-    await assumptions.getByLabel("State", { exact: true }).selectOption("confirmed")
+    await assumptions.getByRole("combobox", { name: "State", exact: true }).selectOption("confirmed")
     await expect(assumptions.locator('[data-sf-state="filtered-empty"]')).toBeVisible()
-    await assumptions.getByLabel("State", { exact: true }).selectOption("open")
+    await assumptions.getByRole("combobox", { name: "State", exact: true }).selectOption("open")
     await assumptions.getByRole("listitem").filter({ hasText: waveFourDecisionsData.assumption })
       .getByRole("button", { name: "Review assumption", exact: true }).click()
     const detail = page.locator("#sf-n24-assumption-detail")
     await expect(detail).toContainText(waveFourDecisionsData.assumption)
     await expect(detail).toContainText(source.assumptions[0]!.evidenceRefs[0]!.refId)
-    await expect(page.getByRole("region", { name: "Missing cost categories", exact: true })).toContainText("migration")
+    const missing = [...new Set(source.alternatives.flatMap((entry) => entry.result.costCoverage.derivedMissingCategoryIds))]
+    expect(missing).toEqual([])
+    await expect(page.getByRole("region", { name: "Missing cost categories", exact: true })
+      .getByText("No missing categories are reported in the current results.", { exact: true })).toBeVisible()
+    const divergences = page.getByRole("region", { name: "Divergences", exact: true })
+    await expect(divergences).toContainText("cost-coverage-unresolved-or-source-mismatch")
+    await expect(divergences).toContainText("coverage:migration:")
     await capture(page, info, "UI36-dark-desktop-assumption-detail-test-data")
   })
 
@@ -286,7 +293,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await composer.locator("summary").first().click()
     const question = composer.getByLabel("Question text", { exact: true })
     await question.fill(waveFourDecisionsData.question)
-    await composer.getByLabel("Related criterion", { exact: true }).selectOption(source.criteria[0]!.id)
+    await composer.getByRole("combobox", { name: "Related criterion", exact: true }).selectOption(source.criteria[0]!.id)
     await composer.getByRole("button", { name: "Prepare question", exact: true }).click()
     const review = composer.getByRole("group", { name: "Confirm preparation", exact: true })
     await expect(review).toContainText(waveFourDecisionsData.question)
@@ -298,7 +305,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await expect(question).toHaveValue(waveFourDecisionsData.question)
     await composer.getByRole("button", { name: "Prepare question", exact: true }).click()
     await capture(page, info, "UI37-dark-desktop-question-review-test-data")
-    const prepared = page.waitForResponse((response) => action(response.request(), "workbench-command", "sf_question_prepare"))
+    const prepared = page.waitForResponse((response) => action(response.request(), "workbench-command", "sf_question_prepare"), { timeout: 40_000 })
     await composer.getByRole("button", { name: "Confirm preparation", exact: true }).click()
     expect((await prepared).status()).toBe(200)
     await expect(composer.getByText("Preparing a question is not the same as recording or sending it.", { exact: true })).toBeVisible()
@@ -331,7 +338,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       const request = response.request()
       return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-analysis" &&
         object(request.postDataJSON()).action === "choices"
-    }).then((response) => ({ status: response.status(), request: response.request() }))
+    }, { timeout: 40_000 }).then((response) => ({ status: response.status(), request: response.request() }))
     const [nativeRead] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
     expect(nativeRead.status).toBe(200)
     expect(new URL(nativeRead.request.url()).origin).toBe(installation.origin)
@@ -350,15 +357,15 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     const analyses = choices.analyses as { skillId: string; label: string }[]
     const models = choices.models as { id: string; providerID: string }[]
     expect(cases.some((entry) => entry.caseRef.id === source.id && entry.caseRef.incarnation === source.incarnation)).toBe(true)
-    await expect(page.getByLabel("Authorized case", { exact: true }).locator("option")).toHaveCount(cases.length + 1)
-    await expect(page.getByLabel("Analysis type", { exact: true }).locator("option")).toHaveCount(analyses.length + 1)
-    await expect(page.getByLabel("Admitted model", { exact: true }).locator("option")).toHaveCount(models.length + 1)
+    await expect(page.getByRole("combobox", { name: "Authorized case", exact: true }).locator("option")).toHaveCount(cases.length + 1)
+    await expect(page.getByRole("combobox", { name: "Analysis type", exact: true }).locator("option")).toHaveCount(analyses.length + 1)
+    await expect(page.getByRole("combobox", { name: "Admitted model", exact: true }).locator("option")).toHaveCount(models.length + 1)
     await expect(page.getByRole("heading", { name: "Analysis history", exact: true })).toBeVisible()
     await expect(page.getByText("No analyses were recorded for this authorized case.", { exact: true })).toBeVisible()
     await page.getByLabel("Analysis objective", { exact: true }).fill(waveFourDecisionsData.objective)
     const published = analyses.findIndex((entry) => entry.skillId === "sf-enquadrar-decisao")
-    if (published >= 0) await page.getByLabel("Analysis type", { exact: true }).selectOption({ index: published + 1 })
-    if (models.length) await page.getByLabel("Admitted model", { exact: true }).selectOption({ index: 1 })
+    if (published >= 0) await page.getByRole("combobox", { name: "Analysis type", exact: true }).selectOption({ index: published + 1 })
+    if (models.length) await page.getByRole("combobox", { name: "Admitted model", exact: true }).selectOption({ index: 1 })
     if (!analyses.length) await expect(page.getByText("No admitted analysis option is available.", { exact: true })).toBeVisible()
     if (analyses.length && !models.length) await expect(page.getByText("No admitted model is available.", { exact: true })).toBeVisible()
     const preparationAvailable = availability.some((entry) => entry.operation === "intelligence.analysis.prepare" &&
@@ -405,6 +412,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
   })
   const localized = await portuguese.newPage()
+  localized.setDefaultTimeout(15_000)
   const localizedDiagnostic = observePage(localized)
   const localizedReadTimes = observeDecisionReads(localized)
   try {

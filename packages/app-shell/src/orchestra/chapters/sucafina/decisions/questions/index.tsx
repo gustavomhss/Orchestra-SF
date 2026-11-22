@@ -224,8 +224,8 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                       onInput={(event) => setUi({ text: event.currentTarget.value, phase: "editing", message: "" })} />
                   </label>
                   <label class="sf-n24-field">
-                    <span>{t("sf.ui37.criterion")}</span>
-                    <select value={ui.criterion} onChange={(event) => setUi({ criterion: event.currentTarget.value, phase: "editing" })}
+                    <span id="sf-n24-question-criterion-label">{t("sf.ui37.criterion")}</span>
+                    <select aria-labelledby="sf-n24-question-criterion-label" value={ui.criterion} onChange={(event) => setUi({ criterion: event.currentTarget.value, phase: "editing" })}
                       disabled={ui.phase === "preparing" || ui.phase === "unknown" || ui.phase === "prepared"}>
                       <option value="">{t("sf.ui37.noCriterion")}</option>
                       <For each={current().criteria}>{(criterion) =>
@@ -234,8 +234,8 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                     </select>
                   </label>
                   <label class="sf-n24-field">
-                    <span>{t("sf.ui37.recipient")}</span>
-                    <select value={ui.recipient} onChange={(event) => setUi({ recipient: event.currentTarget.value, phase: "editing" })}
+                    <span id="sf-n24-question-recipient-label">{t("sf.ui37.recipient")}</span>
+                    <select aria-labelledby="sf-n24-question-recipient-label" value={ui.recipient} onChange={(event) => setUi({ recipient: event.currentTarget.value, phase: "editing" })}
                       disabled={ui.recipientState !== "ready" || ui.phase === "preparing" || ui.phase === "unknown" || ui.phase === "prepared"}>
                       <option value="">{t("sf.ui37.noRecipient")}</option>
                       <For each={ui.recipients}>{(recipient) =>

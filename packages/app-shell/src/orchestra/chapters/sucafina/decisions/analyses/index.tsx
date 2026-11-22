@@ -387,8 +387,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
           <div class="mx-card sf-decision-analysis-editor" hidden={view.phase === "reviewing" || view.phase === "starting"}>
           <div class="sf-decision-section-heading"><h2>{t("sf.u37.prepare")}</h2></div>
           <div class="sf-analyses-controls">
-            <label>{t("sf.u37.chooseCase")}
-              <select value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-case-label">{t("sf.u37.chooseCase")}</span>
+              <select aria-labelledby="sf-analysis-case-label" value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => {
                   const value = event.currentTarget.value
                   invalidatePrepared()
@@ -407,8 +407,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
-            <label>{t("sf.u37.chooseAnalysis")}
-              <select value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-type-label">{t("sf.u37.chooseAnalysis")}</span>
+              <select aria-labelledby="sf-analysis-type-label" value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("analysisKey", event.currentTarget.value) }}>
                 <option value="">{t("sf.u37.selectSkill")}</option>
                 <For each={view.analyses}>{(item) => (
@@ -416,8 +416,8 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
-            <label>{t("sf.u37.chooseModel")}
-              <select value={view.modelKey} disabled={isBusy() || view.phase === "outcome-unknown"}
+            <label><span id="sf-analysis-model-label">{t("sf.u37.chooseModel")}</span>
+              <select aria-labelledby="sf-analysis-model-label" value={view.modelKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("modelKey", event.currentTarget.value) }}>
                 <option value="">{t("sf.u37.selectModel")}</option>
                 <For each={view.models}>{(item) => (
