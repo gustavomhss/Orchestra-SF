@@ -1,5 +1,6 @@
 import { BrowserWindow, clipboard, globalShortcut, ipcMain, screen, type IpcMainEvent, type IpcMainInvokeEvent } from "electron"
 import { getStore } from "./store"
+import { isLiveRendererFrame, isLiveRendererOrigin } from "./live-ipc"
 import {
   LIVE_OVERLAY_CONTENT_PROTECTION_KEY,
   LIVE_OVERLAY_HOTKEYS_KEY,
@@ -64,11 +65,13 @@ export function registerLiveOverlay() {
   const alive = () => (win && !win.isDestroyed() ? win : undefined)
   const update = (next: LiveOverlayState) => {
     state = next
-    alive()?.webContents.send("live-overlay-state", state)
+    const target = alive()
+    if (target && isLiveRendererOrigin(target.webContents.getURL()))
+      target.webContents.send("live-overlay-state", state)
   }
   const emit = (action: LiveOverlayAction) => listeners.forEach((listener) => listener(action))
   const fromOverlay = (event: IpcMainEvent | IpcMainInvokeEvent) =>
-    !!alive() && event.sender === win?.webContents && event.senderFrame === event.sender.mainFrame
+    alive()?.webContents === event.sender && isLiveRendererFrame(event)
   // macOS drops the protection and the level on some show and space transitions, so they are set again on each.
   const reassert = (target: BrowserWindow) => {
     target.setContentProtection(state.contentProtection)
@@ -219,10 +222,6 @@ export function registerLiveOverlay() {
   })
   ipcMain.on("live-overlay-move-end", (event: IpcMainEvent) => {
     if (fromOverlay(event)) endDrag()
-  })
-  ipcMain.handle("get-live-overlay-content-protection", () => state.contentProtection)
-  ipcMain.handle("set-live-overlay-content-protection", (_event: IpcMainInvokeEvent, enabled: unknown) => {
-    if (typeof enabled === "boolean") setContentProtection(enabled)
   })
 
   function setContentProtection(enabled: boolean) {
