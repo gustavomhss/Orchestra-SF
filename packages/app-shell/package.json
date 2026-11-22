@@ -20,6 +20,7 @@
     "./index.css": "./src/index.css"
   },
   "scripts": {
+    "typecheck:sf-e2e": "tsgo -p tsconfig.sf-e2e.json",
     "typecheck": "tsgo -b",
     "typecheck:e2e": "tsgo -p e2e/tsconfig.json",
     "test": "bun run test:unit && bun run test:browser",

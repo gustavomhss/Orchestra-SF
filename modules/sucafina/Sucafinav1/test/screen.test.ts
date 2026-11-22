@@ -75,6 +75,7 @@ test("the screen draws the server list, the footer is not a page, and a refused 
     year: 2025,
     ownYear: 2026,
   })
+  expect(executive.html.match(/<main\b[^>]*>[\s\S]*?<\/main>/)?.[0]).toMatch(/<select\b[^>]*\bdata-year="own"/)
   const server = executiveScreen(budget, 2026)
   expect(executive.html).toContain(dashboardMoney(server.totals.totalBudget))
   expect(executive.html).toContain(server.label)
@@ -95,7 +96,9 @@ test("the screen draws the server list, the footer is not a page, and a refused 
     index: 2,
   })
   expect(overview.html).toContain(dashboardMoney(executiveScreen(budget, 2025).totals.totalBudget))
-  expect(overview.html).not.toContain('data-year="own"')
+  const overviewMarkup = overview.html.match(/<main\b[^>]*>[\s\S]*?<\/main>/)?.[0]
+  expect(overviewMarkup).toBeDefined()
+  expect(overviewMarkup).not.toMatch(/<select\b[^>]*\bdata-year="own"/)
 
   const closed = dashboardScreen({
     actor: actor("vie", ["viewer"]),

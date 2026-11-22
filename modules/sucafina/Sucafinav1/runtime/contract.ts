@@ -31,6 +31,14 @@ export type Snapshot = {
   audit: Audit[]
   notices: Notice[]
   sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
+  // Host-private monthly outcomes commit with the Planner rows they acknowledge.
+  sfPlannerMonthlyReceipts?: Record<string, {
+    requestDigest: string
+    authorityDigest: string
+    // Pre-fence receipts remain consumed, but cannot acknowledge a current result.
+    resultDigest?: string
+    rows: import("../product/planner/monthly-host.ts").MonthlyResult["rows"]
+  }>
   // Host-private blob generations survive deletion and are updated atomically with blob bytes.
   sfBlobGenerations?: Record<string, number>
   // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.

@@ -1,3 +1,4 @@
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { test } from "bun:test"
 import { expect, type BrowserContext } from "@playwright/test"
 import path from "node:path"
@@ -5,6 +6,7 @@ import { localBrowser } from "./fixture/local-browser.ts"
 
 test("private operator completes supplier, PR, sourcing and issued PO through browser forms", async () => {
   console.info("browser business: fixture opening")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   try {
     console.info("browser business: fixture ready")
@@ -85,16 +87,17 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     const id = await page.locator('details[id^="PR-"]').getAttribute("id")
     expect(id).toMatch(/^PR-/)
     const record = page.locator(`details[id="${id}"]`)
+    const recordSummary = record.locator(":scope > summary")
     const transition = async (action: string, status: string) => {
       console.info("browser business: transition starting", action, status)
-      await record.locator("summary").click()
+      await recordSummary.click()
       await submit(record.locator(`form[data-command="${action}"]`))
       await expect(page.getByRole("row").filter({ hasText: id! }).first()).toContainText(status)
       console.info("browser business: transition verified", action, status)
     }
     await transition("submit_pr", "pr_pending")
     await transition("approve", "sourcing")
-    await record.locator("summary").click()
+    await recordSummary.click()
     const sourcing = record.locator('form[data-command="save"]').filter({ has: page.locator('[name="sourcing.evaluator"]') })
     for (const [name, value] of Object.entries({ evaluator: "Local operator", fewQuotesJustification: "Temporary sole source acceptance", selectionJustification: "Meets acceptance", "quotes.0.supplier": "Browser acceptance vendor", "quotes.0.currency": "USD", "quotes.0.total": "500", "quotes.0.qty": "1", "quotes.0.unitPrice": "500" })) await sourcing.locator(`[name="sourcing.${name}"]`).fill(value)
     await sourcing.locator('[name="sourcing.contractStrategy"]').selectOption("new")
@@ -112,7 +115,7 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
       scores: [5, 4, 3, 4, 5],
       cscores: [0, 4, 5],
     })
-    await record.locator("summary").click()
+    await recordSummary.click()
     const assertSourcingRows = async () => {
       await expect(sourcing.locator('[name="sourcing.quotes.0._new"]')).toHaveCount(0)
       await expect(sourcing.locator('[name="sourcing.quotes.0._remove"]')).toHaveCount(1)
@@ -128,14 +131,14 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await assertSourcingRows()
     await sourcing.locator('[name="sourcing.evaluator"]').fill("Local operator revised")
     await submit(sourcing)
-    await record.locator("summary").click()
+    await recordSummary.click()
     await expect(sourcing.locator('[name="sourcing.evaluator"]')).toHaveValue("Local operator revised")
     await assertSourcingRows()
     await record.getByLabel("Winning quote").selectOption({ label: "Browser acceptance vendor · USD 500" })
     await submit(record.locator('form[data-command="select_quote"]'))
     await transition("submit_sourcing", "src_pending")
     await transition("approve", "po_draft")
-    await record.locator("summary").click()
+    await recordSummary.click()
     const po = record.locator('form[data-command="save"]').filter({ has: page.locator('[name="po.description"]') })
     for (const [name, value] of Object.entries({ description: "Consulting deliverable", paymentTerms: "Net 30", deliveryDate: "2026-12-20", deliveryConditions: "Remote", contractRef: "BROWSER-C1", "lines.0.desc": "Milestone", "lines.0.qty": "1", "lines.0.unitPrice": "500" })) await po.locator(`[name="po.${name}"]`).fill(value)
     await po.locator('[name="po.expenseType"]').selectOption("OPEX")
@@ -143,7 +146,7 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await transition("submit_po", "po_pending")
     await transition("approve", "po_approved")
     await transition("issue", "po_issued")
-    await record.locator("summary").click()
+    await recordSummary.click()
     await expect(record.locator('[name="po.description"]')).toHaveValue("Consulting deliverable")
     await expect(record.locator('[name="sourcing.quotes.0.total"]')).toHaveValue("500")
     await expect(record.locator('[name="pr.title"]')).toHaveValue("Browser procurement acceptance")
@@ -154,7 +157,9 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     console.info("browser business: PO download event received")
     expect(await artifact.failure()).toBeNull()
     console.info("browser business: PO download complete; parse starting")
-    const html = await Bun.file((await artifact.path())!).text()
+    const downloadedFile = path.join(fixture.root, "purchase-order-" + crypto.randomUUID() + ".html")
+    await artifact.saveAs(downloadedFile)
+    const html = await Bun.file(downloadedFile).text()
     console.info("browser business: PO parse complete")
     expect(html).toContain("po_issued")
     expect(html).toContain("500.00")
@@ -171,10 +176,12 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await fixture.dispose()
     console.info("browser business: cleanup complete")
   }
+  fixture.report()
 }, 120000)
 
 test("two browser tabs reject a stale supplier save without overwriting persisted data", async () => {
   console.info("browser business: fixture opening")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   const secondary: { context?: BrowserContext } = {}
   try {
@@ -280,4 +287,5 @@ test("two browser tabs reject a stale supplier save without overwriting persiste
     }
     console.info("browser business: cleanup complete")
   }
+  fixture.report()
 }, 45000)

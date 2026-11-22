@@ -1,3 +1,4 @@
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { test } from "bun:test"
 import { expect } from "@playwright/test"
 import path from "node:path"
@@ -7,6 +8,7 @@ import { openLocalStore } from "../runtime/local-store.ts"
 test("actual local inbox delivery, read receipt, backups and logout operate through Chrome", async () => {
   const started = Date.now()
   const phase = (name: string) => console.info(`local controls: ${name} (${Date.now() - started}ms)`)
+  expectSpawn(import.meta.path)
   const f = await localBrowser()
   phase("store open start")
   const store = await openLocalStore(path.join(f.root, "business-local"))
@@ -112,4 +114,5 @@ test("actual local inbox delivery, read receipt, backups and logout operate thro
     expect(f.errors).toEqual([])
     phase("logout complete")
   } finally { phase("cleanup start"); await store.dispose(); await f.dispose(); phase("cleanup complete") }
+  f.report()
 }, 60000)

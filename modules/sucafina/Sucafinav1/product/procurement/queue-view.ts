@@ -62,6 +62,25 @@ export function readProcurementQueueView(value: unknown): ProcurementQueueView |
   return value !== null && typeof value === "object" && presentations.has(value) ? value as ProcurementQueueView : undefined
 }
 
+/** Stable identity of the exact C02 member, after the caller revalidates its prepared view.
+ * recordId identifies the member; incarnation/version belong to its current collection,
+ * and projectionDigest is the member material already produced and checked by C02.
+ * Never synthesize an individual source, reuse another member or accept a copied view. */
+export function procurementQueueMemberIdentity(value: unknown, recordId: string) {
+  const view = readProcurementQueueView(value)
+  const members = view?.rows.filter((row) => row.id === recordId)
+  if (!recordId || members?.length !== 1) return undefined
+  const row = members[0]!
+  const evidence = row.evidence
+  const target = evidence.target
+  if (target.surface !== "procurement" || target.recordType !== "procurement-request" ||
+      target.recordId !== recordId || !target.incarnation ||
+      !Number.isSafeInteger(target.version) || target.version < 1 || target.version !== row.version ||
+      !/^[a-f0-9]{64}$/.test(target.projectionDigest) ||
+      evidence.refDigest !== digestSfEvidenceRef(evidence)) return undefined
+  return { sourceRef: target.incarnation, sourceDigest: target.projectionDigest, sourceVersion: target.version }
+}
+
 /** Dates and holders are read from C02; no history, SLA, score or approval policy is recomputed. */
 export function procurementApprovalGroups(view: ProcurementQueueView, actorId: string) {
   const waitingForYou: ProcurementQueueRow[] = []

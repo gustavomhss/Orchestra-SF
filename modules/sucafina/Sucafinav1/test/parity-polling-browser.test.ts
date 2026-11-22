@@ -1,8 +1,10 @@
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { test } from "bun:test"
 import { expect } from "@playwright/test"
 import { localBrowser } from "./fixture/local-browser.ts"
 
 test("business polling reflects another session without replacing unsaved edits or overlapping requests", async () => {
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   try {
     const page = fixture.page
@@ -57,4 +59,5 @@ test("business polling reflects another session without replacing unsaved edits 
     await page.unrouteAll({ behavior: "wait" })
     expect(fixture.errors).toEqual([])
   } finally { await fixture.dispose() }
+  fixture.report()
 })

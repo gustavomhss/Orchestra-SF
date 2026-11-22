@@ -32,6 +32,15 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
   const caseRef = { id: "ancestry-case", incarnation: "ancestry-inc", version: 1 }
   const otherCaseRef = { id: "other-case", incarnation: "other-inc", version: 1 }
   const control = { active: true, canonicalResultReads: 0, canonicalResultReadsCompleted: 0 }
+  const observe = async <T>(phase: string, work: () => Promise<T>) => {
+    const started = performance.now(), before = control.canonicalResultReads, completed = control.canonicalResultReadsCompleted
+    try { return await work() }
+    finally {
+      console.info("SF_CALCULATION_ANCESTRY", JSON.stringify({ phase, elapsedMs: Math.round(performance.now() - started),
+        canonicalResultReads: control.canonicalResultReads - before,
+        canonicalResultReadsCompleted: control.canonicalResultReadsCompleted - completed, aborted: deadline.signal.aborted }))
+    }
+  }
   const open = async (initialize: boolean) => {
     const store = await openLocalStore(storeDirectory)
     deadline.own(() => store.dispose())
@@ -90,22 +99,27 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
       })
       if (seeded.status !== "ok") throw new Error("Case fixtures unavailable")
     }
-    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => {
-      const started = performance.now(), before = control.canonicalResultReads, completed = control.canonicalResultReadsCompleted
-      return ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
-        const issued = await business.plannerProduct.issueSource("v0", call)
-        if (issued.status !== "ok") return issued
-        const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
-        const simulated = await business.planner.simulateScenario(input, call)
+    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) =>
+      observe(`produce-${idempotencyKey}`, () => ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
+        let input = scenario
+        if (!input) {
+          const issued = await observe("issue-planner-source", () => business.plannerProduct.issueSource("v0", call))
+          if (issued.status !== "ok") return issued
+          input = { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
+        }
+        const scenarioRequest = input
+        const simulated = await observe(`simulate-${idempotencyKey}`, () => business.planner.simulateScenario(scenarioRequest, call))
         if (simulated.status !== "ok") return simulated
-        const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
-        if (saved.status !== "ok") return saved
-        const calculation = await business.calculations.issue(saved.value.resultRef, call)
-        return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
-      })).finally(() => console.info("SF_CALCULATION_ANCESTRY", JSON.stringify({ phase: `produce-${idempotencyKey}`,
-        elapsedMs: Math.round(performance.now() - started), canonicalResultReads: control.canonicalResultReads - before,
-        canonicalResultReadsCompleted: control.canonicalResultReadsCompleted - completed, aborted: deadline.signal.aborted })))
-    }
+        // Both persistence facades already verify registration and issue a
+        // canonical Calculation. Reuse the combined producer's verified
+        // reference here; reopen below still verifies it independently.
+        const published = await observe(`publish-${idempotencyKey}`, () => business.calculations.persistAndIssue({
+          kind: "scenario", request: scenarioRequest, result: simulated.value,
+        }, idempotencyKey, call))
+        if (published.status !== "ok") return published
+        expect(published.value.calculation.target.runId).toBe(published.value.resultRef)
+        return { status: "ok" as const, value: { input: scenarioRequest, result: simulated.value, calculation: published.value.calculation } }
+      })))
     return { store, authority, business, ui, produce, request }
   }
   try {
@@ -140,12 +154,13 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
     await first.store.dispose()
     const reopened = await deadline.phase("reopen", () => open(false))
     await deadline.phase("resolve-reopened-ancestry", () => reopened.ui("sf_evidence_get", async (call) => {
-      const resolved = await reopened.business.context.resolve(outer.value.calculation, call)
+      const resolved = await observe("resolve-reopened-calculation", () => reopened.business.context.resolve(outer.value.calculation, call))
       expect(resolved.state).toBe("fresh")
       expect(resolved.currentRef).toEqual(outer.value.calculation)
       expect(resolved.authorizedProjection && "values" in resolved.authorizedProjection ? resolved.authorizedProjection.values.find((value) => value.id === "scenario:total")?.value : undefined).toBeNull()
       expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
-      const foreignScope = await reopened.business.withCase(call, otherCaseRef, {}, () => reopened.business.calculations.issue(outer.value.calculation.target.runId, call))
+      const foreignScope = await observe("issue-with-foreign-case", () => reopened.business.withCase(call, otherCaseRef, {},
+        () => reopened.business.calculations.issue(outer.value.calculation.target.runId, call)))
       expect(foreignScope.status).not.toBe("ok")
       expect(Object.hasOwn(foreignScope, "value")).toBe(false)
     }))

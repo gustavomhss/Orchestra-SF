@@ -208,6 +208,9 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       authenticate: identity.authenticate,
       environment: environmentFor,
       ...(runtime ? { product,
+        plannerMonthlyAvailable: () => Boolean(runtime?.services?.()?.plannerMonthly),
+        personalViewsAvailable: () => Boolean(runtime?.services?.()?.personalViews),
+        dashboardWorkbenchAvailable: () => Boolean(runtime?.services?.()?.productHttp),
         productView: async (request: Request, surface: Surface, page: string | undefined) =>
           runtime?.services?.()?.productView?.(request, surface, page),
       } : {}),

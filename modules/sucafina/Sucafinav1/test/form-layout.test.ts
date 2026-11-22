@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -6,69 +7,122 @@ import { pathToFileURL } from "node:url"
 import { prepareLocalConfiguration } from "../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
+import type { Page } from "@playwright/test"
+import { captureBrowserPng, withinBrowserDeadline } from "./fixture/browser-evidence.ts"
+import { launchBrowserDriver } from "./product/wp02/browser-driver-fixture.ts"
 
+const peopleLabels = ["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"]
+
+function measureMetrics(page: Page) {
+  return page.evaluate((labels) => {
+    const box = (element: Element | undefined | null) => {
+      if (!element) return null
+      const bounds = element.getBoundingClientRect()
+      if (!element.getClientRects().length || bounds.width <= 0 || bounds.height <= 0) return null
+      return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height }
+    }
+    const cards = [...document.querySelectorAll(".metric")]
+    return {
+      first: box(cards[0]), third: box(cards[2]), content: box(document.querySelector("#content")),
+      people: labels.map((label) => {
+        const matches = cards.filter((card) => [...card.querySelectorAll("span")].some((span) => span.textContent?.trim() === label))
+        return matches.length === 1 ? box(matches[0]) : null
+      }),
+    }
+  }, peopleLabels)
+}
+
+
+// Internal local-renderer coverage; native public route qualification is separate.
 test("All editor screens keep readable field widths and ordered configuration sections", async () => {
+  expectSpawn(import.meta.path)
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
-  const file = await prepareLocalConfiguration(root)
-  const access = await prepareOperatorAccess(file, true)
   const environment = {
     ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"), ORCHESTRA_INHERIT_CREDENTIALS: "0",
     ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"), ORCHESTRA_CREDENTIAL_KEY_FILE: path.join(root, "host-credential.key"),
     TMPDIR: path.join(root, "host-tmp"), XDG_DATA_HOME: path.join(root, "host-data"), XDG_CONFIG_HOME: path.join(root, "host-config"),
     XDG_CACHE_HOME: path.join(root, "host-cache"), XDG_STATE_HOME: path.join(root, "host-state"),
   }
-  const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
-  const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const resources: {
+    installation?: Awaited<ReturnType<typeof createLocalInstallation>>
+    browserDriver?: Awaited<ReturnType<typeof launchBrowserDriver>>
+  } = {}
+  const server = Bun.serve({
+    hostname: "127.0.0.1", port: 0,
+    fetch: async (request) => await resources.installation?.handler(request) ?? new Response(null, { status: 404 }),
+  })
+  const origin = `http://127.0.0.1:${server.port}`
   const failures: string[] = []
+  let completed = false
+  const phase = async <T>(label: string, operation: () => Promise<T>) => {
+    console.info("browser form layout: phase start", label)
+    const result = await withinBrowserDeadline(label, operation, 8_000)
+    console.info("browser form layout: phase complete", label)
+    return result
+  }
   try {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    const file = await prepareLocalConfiguration(root, origin)
+    const access = await prepareOperatorAccess(file, true)
+    resources.installation = await createLocalInstallation({ origin }, file, environment)
+    resources.browserDriver = await launchBrowserDriver("form-layout", { signal: new AbortController().signal, timeoutMs: 8000 })
+    const page = await resources.browserDriver.browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    page.setDefaultTimeout(8000)
+    page.setDefaultNavigationTimeout(8000)
     page.on("pageerror", (error) => { failures.push(error.message) })
-    await page.goto(pathToFileURL(access.artifact).href)
-    await page.waitForURL("http://localhost:4110/sucafina/dashboard")
-    await mkdir(path.join(import.meta.dir, "artifacts"), { recursive: true })
+    const [enrollment] = await phase("enrollment", () => Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.origin === origin && url.pathname === "/sucafina/auth/local"
+      }),
+      page.goto(pathToFileURL(access.artifact).href),
+    ]))
+    expect(enrollment.status()).toBe(303)
+    await page.waitForURL(`${origin}/sucafina/dashboard`)
+    const artifacts = path.join(import.meta.dir, "artifacts")
+    await mkdir(artifacts, { recursive: true })
+    const navigate = async (destination: URL) => {
+      const response = await phase("navigate " + destination.pathname + destination.search, () => page.goto(destination.href, { waitUntil: "domcontentloaded" }))
+      expect({ status: response?.status(), url: page.url() }).toEqual({ status: 200, url: destination.href })
+    }
+    const capture = (name: string) => captureBrowserPng(page, path.join(artifacts, name), { milliseconds: 8_000 })
     // Exercise populated planner layouts through the same durable command path as the UI.
     // This is isolated test data, never a write to the owner's installation.
-    const plan = await page.request.post("http://localhost:4110/sucafina/planner", {
-      headers: { Origin: "http://localhost:4110" },
+    const plan = await page.request.post(`${origin}/sucafina/planner`, {
+      headers: { Origin: origin },
       data: { page: "Versions", action: "save", version: 0, values: {} },
+      timeout: 8000,
     })
     expect(plan.ok()).toBe(true)
-    expect(await plan.json()).toMatchObject({ ok: true })
-    const topic = await page.request.post("http://localhost:4110/sucafina/dashboard", {
-      headers: { Origin: "http://localhost:4110" },
+    expect(await phase("read plan receipt", () => plan.json())).toMatchObject({ ok: true })
+    const topic = await page.request.post(`${origin}/sucafina/dashboard`, {
+      headers: { Origin: origin },
       data: { page: "Hot Topics & Actions", action: "save", version: 0, values: { action: "Browser layout acceptance", owner: "", due: "2026-12-01", status: "open", priority: "normal", notes: "Temporary browser fixture" } },
+      timeout: 8000,
     })
     expect(topic.ok()).toBe(true)
-    expect(await topic.json()).toMatchObject({ ok: true })
-    await page.goto("http://localhost:4110/sucafina/dashboard?page=Executive+Dashboard")
-    await page.screenshot({ path: path.join(import.meta.dir, "artifacts", "forms-dashboard-desktop.png"), fullPage: true })
-    const metrics = page.locator(".metric")
-    const first = await metrics.nth(0).boundingBox()
-    const third = await metrics.nth(2).boundingBox()
-    const content = await page.locator("#content").boundingBox()
-    expect(first).not.toBeNull()
-    expect(third).not.toBeNull()
-    expect(content).not.toBeNull()
-    expect(third!.x + third!.width - first!.x).toBeGreaterThan(content!.width * 0.85)
-    const people = await Promise.all(["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"].map(async (label) => {
-      const card = metrics.filter({ has: page.locator("span", { hasText: label }).filter({ hasText: new RegExp("^" + label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$") }) })
-      return await card.boundingBox()
-    }))
+    expect(await phase("read topic receipt", () => topic.json())).toMatchObject({ ok: true })
+    await navigate(new URL("/sucafina/dashboard?page=Executive+Dashboard", origin))
+    console.info("browser form layout: executive dashboard loaded")
+    const geometry = await phase("executive dashboard metric geometry", () => measureMetrics(page))
+    expect(geometry.first).not.toBeNull()
+    expect(geometry.third).not.toBeNull()
+    expect(geometry.content).not.toBeNull()
+    expect(geometry.third!.x + geometry.third!.width - geometry.first!.x).toBeGreaterThan(geometry.content!.width * 0.85)
+    const people = geometry.people
     expect(people.every(Boolean)).toBe(true)
     expect(Math.max(...people.map((box) => box!.y)) - Math.min(...people.map((box) => box!.y))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.width)) - Math.min(...people.map((box) => box!.width))).toBeLessThanOrEqual(2)
     expect(Math.max(...people.map((box) => box!.height)) - Math.min(...people.map((box) => box!.height))).toBeLessThanOrEqual(2)
+    await capture("forms-dashboard-desktop.png")
     for (const width of [1440, 1024, 390]) {
-      await page.setViewportSize({ width, height: 1000 })
+      await phase("viewport " + width, () => page.setViewportSize({ width, height: 1000 }))
       for (const surface of ["dashboard", "planner", "procurement"]) {
-        await page.goto(`http://localhost:4110/sucafina/${surface}`)
+        await navigate(new URL(`/sucafina/${surface}`, origin))
         const hrefs = await page.locator("nav a").evaluateAll((links) => links.map((link) => link.getAttribute("href")!))
         expect(hrefs).toHaveLength(surface === "dashboard" ? 16 : surface === "planner" ? 7 : 5)
         expect(new Set(hrefs).size).toBe(hrefs.length)
         if (surface === "dashboard") {
-          const cards = await Promise.all(["Total IT Users", "Cost per User (OPEX)", "Cost per User (OPEX + CAPEX)", "Attrition YTD"].map(async (label) => await page.locator(".metric").filter({ has: page.getByText(label, { exact: true }) }).boundingBox()))
+          const cards = (await phase("responsive metric geometry " + width, () => measureMetrics(page))).people
           expect(cards.every(Boolean)).toBe(true)
           expect(new Set(cards.map((box) => Math.round(box!.x))).size).toBe(width === 1440 ? 4 : 2)
           expect(new Set(cards.map((box) => Math.round(box!.y))).size).toBe(width === 1440 ? 1 : 2)
@@ -76,14 +130,14 @@ test("All editor screens keep readable field widths and ordered configuration se
           expect(Math.max(...cards.map((box) => box!.height)) - Math.min(...cards.map((box) => box!.height))).toBeLessThanOrEqual(2)
           expect(Math.min(...cards.map((box) => box!.height))).toBeGreaterThanOrEqual(100)
         }
-        await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${width}.png`), fullPage: true })
+        await capture(`forms-${surface}-${width}.png`)
         for (const href of hrefs) {
-          const response = await page.goto(new URL(href, `http://localhost:4110/sucafina/${surface}`).href)
-          expect(response?.status()).toBe(200)
+          const destination = new URL(href, `${origin}/sucafina/${surface}`)
+          await navigate(destination)
           for (const summary of await page.locator('details.editor-panel > summary').all()) {
             if (await summary.locator('..').getAttribute('open') === null) await summary.click()
           }
-          const expectedPage = new URL(href, page.url()).searchParams.get("page")!
+          const expectedPage = destination.searchParams.get("page")!
           expect(await page.locator("main").getAttribute("data-page")).toBe(expectedPage)
           expect(await page.locator("h1").innerText()).toBe(expectedPage)
           expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
@@ -105,8 +159,8 @@ test("All editor screens keep readable field widths and ordered configuration se
             await page.getByRole("button", { name: "Edit", exact: true }).click()
             const editor = page.getByRole("dialog", { name: "Edit record", exact: true })
             expect(await editor.isVisible()).toBe(true)
-            await editor.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-row-editor-${width}.png`) })
-            const dialog = await editor.boundingBox()
+            await captureBrowserPng(page, path.join(artifacts, `forms-row-editor-${width}.png`), { element: editor, milliseconds: 8_000 })
+            const dialog = await phase("dialog geometry " + width, () => editor.boundingBox())
             expect(dialog!.width).toBeLessThanOrEqual(width - 20)
             expect(await editor.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true)
             for (let index = 0; index < 12; index++) {
@@ -137,17 +191,32 @@ test("All editor screens keep readable field widths and ordered configuration se
           expect(await active.count()).toBe(1)
           if (width === 1440) {
             const name = new URL(page.url()).searchParams.get("page")!.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
-            await page.evaluate(() => scrollTo(0, 0))
-            await page.screenshot({ path: path.join(import.meta.dir, "artifacts", `forms-${surface}-${name}.png`), fullPage: true })
+            await phase("return to page origin " + name, () => page.evaluate(() => scrollTo(0, 0)))
+            await capture(`forms-${surface}-${name}.png`)
           }
         }
       }
     }
     expect(failures).toEqual([])
+    completed = true
+  } catch (error) {
+    console.error("browser form layout: failed before cleanup", error)
+    throw error
   } finally {
+    console.info("browser form layout: cleanup start")
     await server.stop(true)
-    await browser.close()
-    await installation.dispose()
-    await rm(root, { recursive: true, force: true })
+    try {
+      if (resources.browserDriver) {
+        // The shared driver owns and awaits its bounded process finalizer.
+        await resources.browserDriver.close()
+        if (completed) resources.browserDriver.report()
+      }
+    } finally {
+      try {
+        await resources.installation?.dispose()
+      } finally {
+        await rm(root, { recursive: true, force: true })
+      }
+    }
   }
 }, 60000)
