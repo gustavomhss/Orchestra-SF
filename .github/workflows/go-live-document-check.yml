@@ -1,0 +1,104 @@
+name: go-live-document-receipts
+
+on:
+  push:
+    branches: [receipts-docs-ci]
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "4379c2a4b63d336f38905c5faf9fb531b2b0b7da"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Bind the documentation source and scope
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/go-live-docs"
+          test "$(git rev-parse HEAD)" = "4379c2a4b63d336f38905c5faf9fb531b2b0b7da"
+          test "$(git rev-parse 'HEAD^{tree}')" = "f9d0058a161253cf3d9d2cc60bd8e703d1ed190e"
+          git merge-base --is-ancestor "4379c2a4b63d336f38905c5faf9fb531b2b0b7da" "$GITHUB_SHA"
+          test "$(git diff --name-only "4379c2a4b63d336f38905c5faf9fb531b2b0b7da" "$GITHUB_SHA")" = ".github/workflows/go-live-document-check.yml"
+          git diff --name-only "b7776698e61934ed2cb820658408ff8a8207ec62" HEAD > "$RUNNER_TEMP/go-live-docs/changed-paths.txt"
+          git diff --check "b7776698e61934ed2cb820658408ff8a8207ec62" HEAD 2>&1 | tee "$RUNNER_TEMP/go-live-docs/whitespace.log"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/go-live-docs/source.refs"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Check the preserved final-gate boundaries and all original guards
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"go-live-docs"
+          expected=["docs/qa/sucafina/go-live/README.md","docs/qa/sucafina/go-live/execution-2026-11-22.md","docs/qa/sucafina/go-live/g05-g06-controls.md","docs/qa/sucafina/go-live/g07-linux-package.md","docs/qa/sucafina/go-live/g08-teams-qa.md","docs/qa/sucafina/go-live/g10-cutover-rollback.md","docs/qa/sucafina/go-live/status.json","script/sf2h/proofs/installed/README.md"]
+          assert sorted((root/"changed-paths.txt").read_text().splitlines())==sorted(expected)
+          state=json.loads(pathlib.Path("docs/qa/sucafina/go-live/status.json").read_text())
+          assert state["overall"]["qualifiedFinalGates"]==0
+          assert state["overall"]["requiredFinalGates"]==5
+          assert state["overall"]["goNoGoReadiness"]=="NOT_READY"
+          assert state["overall"]["formalProductionDecision"] is None
+          assert all(value is None for value in state["finalCandidate"].values())
+          assert [g["gate"] for g in state["gates"]]==["G05","G06","G07","G08","G10"]
+          for gate in state["gates"]:
+              for name in ["candidateSha","candidateTree","artifact","receipt","approval"]:
+                  assert gate[name] is None,(gate["gate"],name)
+          assert state["environments"]["qa"]["reservation"] is None
+          assert state["environments"]["recovery"]["reservation"] is None
+          ids=[e["id"] for e in state["evidence"]]
+          assert len(ids)==len(set(ids))
+          for gate in state["gates"]:
+              assert set(gate["evidenceRefs"]).issubset(set(ids))
+          observed=state["gates"][3]["currentOperationalInventory"]
+          assert [observed["teamsCases"],observed["U15"],observed["U39"],observed["U40"],observed["F04"],observed["AZ02"]["current"]]==[9,6,22,22,3,37]
+          assert observed["originalInvocations"]==11 and observed["totalObligations"]==99
+          assert observed["allInstalledStates"]=="NOT_RUN" and observed["complete"] is False
+          assert not state["executionThisFront"]["preparedCodePendingIntegration"]
+          for path in expected:
+              text=pathlib.Path(path).read_text()
+              assert "@LOCAL_TIME@" not in text and "@UTC_TIME@" not in text
+          print("Eight documentation paths; original source receipts remain separate and all final gates open.")
+          PY
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/go-live-docs/guards.log"
+      - name: Preserve the documentation validation receipt
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"go-live-docs"
+          files=["docs/qa/sucafina/go-live/README.md","docs/qa/sucafina/go-live/execution-2026-11-22.md","docs/qa/sucafina/go-live/g05-g06-controls.md","docs/qa/sucafina/go-live/g07-linux-package.md","docs/qa/sucafina/go-live/g08-teams-qa.md","docs/qa/sucafina/go-live/g10-cutover-rollback.md","docs/qa/sucafina/go-live/status.json","script/sf2h/proofs/installed/README.md"]
+          refs=(root/"source.refs").read_text().splitlines()
+          receipt={"schema":"sf-go-live-document-validation-v1","status":"DOCUMENTATION_VALIDATED",
+              "source":{"sha":refs[0],"tree":refs[1]},"snapshot":os.environ["GITHUB_SHA"],
+              "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"]},
+              "guardBase":refs[2],"scope":files,"casesExecuted":0,"productTestsExecuted":False,
+              "sources":[{"path":p,"gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip(),
+                  "sha256":hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()} for p in files],
+              "reports":[{"path":p.name,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()],
+              "installed":False,"liveQualified":False,"finalCandidate":False,"productionCutover":False,
+              "qualifiedFinalGates":0,"limits":["Documentation/guard validation only; no product, installed or release qualification."]}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print("Documentation receipt preserved; no final candidate, tar, reservation or production decision.")
+          PY
+      - name: Preserve the original documentation checks
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: go-live-docs-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/go-live-docs/
+          if-no-files-found: error
+          retention-days: 30
