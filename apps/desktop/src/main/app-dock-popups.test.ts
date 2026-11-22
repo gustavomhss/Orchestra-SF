@@ -144,6 +144,48 @@ test("a background tab's popup never reaches the Linux workspace's popup policy"
   f.dock.closeAll(f.sender, f.win)
 })
 
+test("blocks non-HTTPS subframe navigation while retaining HTTPS and main-frame delegation", async () => {
+  const f = fixture()
+  const tab = await f.open("https://example.com/page")
+  const before = f.events.length
+  for (const url of [
+    "http://127.0.0.1/frame",
+    "file:///etc/passwd",
+    "data:text/html,untrusted",
+    "javascript:document.title='untrusted'",
+    "about:blank",
+    "custom://callback",
+  ]) expect(f.frame(tab.url, url)).toBe(true)
+  expect(f.frame(tab.url, "https://example.com/frame")).toBe(false)
+  // The main frame still goes through will-navigate, which owns its blocked navigation event.
+  expect(f.frame(tab.url, "http://127.0.0.1/main", true)).toBe(false)
+  expect(f.events.slice(before)).toEqual([])
+  expect(f.dock.list(f.sender)[0]?.url).toBe(tab.url)
+  f.dock.closeAll(f.sender, f.win)
+})
+
+test("frame sign-in callbacks keep the existing external URL admission and refusal", async () => {
+  const callbacks: string[] = []
+  const f = fixture({
+    onExternalURL: (_sender, _identity, url) => {
+      callbacks.push(url)
+      if (url === "slack://accepted") return true
+      if (url === "slack://refused") return false
+    },
+  })
+  const tab = await f.open("https://example.com/sign-in")
+  const before = f.events.length
+  expect(f.frame(tab.url, "slack://accepted")).toBe(true)
+  expect(f.frame(tab.url, "slack://refused")).toBe(true)
+  expect(f.frame(tab.url, "slack://accepted", true)).toBe(true)
+  expect(callbacks).toEqual(["slack://accepted", "slack://refused", "slack://accepted"])
+  expect(f.events.slice(before)).toEqual([{
+    type: "navigation-error",
+    payload: { identity: identity(tab), code: "blocked", url: "slack://callback" },
+  }])
+  f.dock.closeAll(f.sender, f.win)
+})
+
 function fixture(options: Parameters<typeof createAppDock>[0] = {}) {
   const sender = ++senderIDs
   const children: FakeView[] = []
@@ -177,6 +219,15 @@ function fixture(options: Parameters<typeof createAppDock>[0] = {}) {
     open: (url: string) => dock.open(sender, win, url, bounds, (event) => events.push(event), profile),
     // The page in the tab showing `from` calls window.open(url).
     request: (from: string, url: string) => contents(from).open!({ url }),
+    frame: (from: string, url: string, isMainFrame = false) => {
+      let prevented = false
+      contents(from).emit("will-frame-navigate", {
+        url,
+        isMainFrame,
+        preventDefault: () => { prevented = true },
+      })
+      return prevented
+    },
     attached: () => children.filter((view) => view.visible).map((view) => view.webContents.url),
   }
 }
