@@ -1,0 +1,130 @@
+name: az02-teams-proof
+
+on:
+  push:
+    branches: ["teams-az02-ci"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: az02-controls-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  controls:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      ORCHESTRA_OMNI_CONTROL: declared
+      ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+      ORCHESTRA_CHANNEL: prod
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Bind the component source and fresh declared control
+        run: |
+          set -euo pipefail
+          az02_output="$RUNNER_TEMP/az02-controls-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir "$az02_output"
+          printf 'SF_AZ02_EVIDENCE=%s\n' "$az02_output" >> "$GITHUB_ENV"
+          git rev-parse HEAD > "$az02_output/source-sha.txt"
+          git rev-parse 'HEAD^{tree}' > "$az02_output/source-tree.txt"
+          git rev-parse origin/dev > "$az02_output/guard-base.txt"
+          az02_nonce=$(node -e 'process.stdout.write(require("node:crypto").randomBytes(16).toString("hex"))')
+          printf 'ORCHESTRA_OMNI_CONTROL_NONCE=%s\n' "$az02_nonce" >> "$GITHUB_ENV"
+      - name: Exercise every executor obligation and false-evidence refusal with controlled transport
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap sf/azure/identity/az02-proof.test.cjs 2>&1 | tee "$SF_AZ02_EVIDENCE/node-controls.tap"
+      - name: Exercise the original HTTP Procurement reader, writer, CAS and SQLite
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          bun test --reporter=junit --reporter-outfile "$SF_AZ02_EVIDENCE/reader.junit.xml" ./test/sucafina-product/team-native-procurement.test.ts 2>&1 | tee "$SF_AZ02_EVIDENCE/reader.log"
+      - name: Typecheck the actual CLI source and focal reader
+        working-directory: apps/cli
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$SF_AZ02_EVIDENCE/cli-types.log"
+      - name: Check all guards against origin dev
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_AZ02_EVIDENCE/guards.log"
+          git diff --check origin/dev...HEAD
+      - name: Require the complete inventory and preserve a component-only receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict"
+          import { createHash } from "node:crypto"
+          import { readFileSync, writeFileSync, readdirSync } from "node:fs"
+          import { createRequire } from "node:module"
+          const require = createRequire(import.meta.url)
+          const { ROSTER, LEGACY_MAP, ADDITIONS } = require("./sf/azure/identity/az02-proof.cjs")
+          const root = process.env.SF_AZ02_EVIDENCE
+          const read = (name) => readFileSync(root + "/" + name, "utf8")
+          const hash = (bytes) => createHash("sha256").update(bytes).digest("hex")
+          const tap = read("node-controls.tap"), log = read("reader.log"), junit = read("reader.junit.xml")
+          for (const [name, expected] of [["tests", 32], ["pass", 32], ["fail", 0], ["cancelled", 0], ["skipped", 0], ["todo", 0]])
+            assert(new RegExp("^# " + name + " " + expected + "$", "m").test(tap), "AZ02_NODE_INVENTORY_" + name)
+          assert.equal((junit.match(/<testcase\b/g) ?? []).length, 5, "AZ02_ORIGINAL_READER_INVENTORY")
+          assert(!/<(?:failure|error|skipped)\b/.test(junit), "AZ02_READER_FAILURE_OR_SKIP")
+          const controls = [...log.matchAll(/omni positive control \[([0-9a-f]{32})\]: (pass|not applicable|FAIL|off)/g)]
+          assert(controls.length === 1 && controls[0][1] === process.env.ORCHESTRA_OMNI_CONTROL_NONCE &&
+            ["pass", "not applicable"].includes(controls[0][2]), "AZ02_FRESH_OMNI_REQUIRED")
+          const source = { sha: read("source-sha.txt").trim(), tree: read("source-tree.txt").trim() }
+          assert.equal(source.sha, process.env.GITHUB_SHA)
+          const paths = [
+            "sf/azure/identity/az02-proof.cjs", "sf/azure/identity/az02-proof.test.cjs",
+            "apps/cli/src/sucafina-product/team-native-procurement.ts",
+            "apps/cli/test/sucafina-product/team-native-procurement.test.ts",
+            ".github/workflows/az02-teams-proof.yml",
+            "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+            "modules/sucafina/Sucafinav1/runtime/application.ts",
+            "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+            "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "modules/sucafina/Sucafinav1/runtime/team-profile-selector.ts",
+            "packages/schema/src/sucafina/context.ts",
+            "script/sf-ci/g08-private-evidence.mjs",
+            "script/sf-ci/g08-installed-preflight.py",
+          ]
+          const sources = paths.map((path) => ({ path, sha256: hash(readFileSync(path)) }))
+          const inventory = { legacyCount: 32, addedCaseIds: ADDITIONS, currentCount: 37,
+            legacyMap: LEGACY_MAP, phases: ROSTER, installedExecuted: 0 }
+          writeFileSync(root + "/case-inventory.json", JSON.stringify(inventory, null, 2) + "\n")
+          const artifacts = readdirSync(root).sort().map((path) => ({ path, sha256: hash(readFileSync(root + "/" + path)) }))
+          const receipt = { schema: "sf-az02-component-controls-v1", status: "PASS", source, sources, artifacts,
+            run: { id: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, workflowSha: process.env.GITHUB_WORKFLOW_SHA },
+            guardBase: read("guard-base.txt").trim(), node: { passed: 32, failed: 0, skipped: 0 },
+            originalReader: { passed: 5, failed: 0, skipped: 0, transport: "REAL_LOOPBACK_HTTP",
+              persistence: "ORIGINAL_SQLITE", identity: "CONTROLLED_COMPONENT" },
+            omni: { nonce: process.env.ORCHESTRA_OMNI_CONTROL_NONCE, verdict: controls[0][2] },
+            liveQualified: false, installedTeamsProof: false, finalCandidate: false, g08Closed: false,
+            operationalPhases: "NOT_RUN", inventory }
+          writeFileSync(root + "/receipt.json", JSON.stringify(receipt, null, 2) + "\n")
+          console.log("AZ02 tooling and Procurement component controls verified; LIVE NOT_RUN")
+          NODE
+      - name: Preserve source-bound controls and failure logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: az02-controls-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ env.SF_AZ02_EVIDENCE }}
+          if-no-files-found: error
+          retention-days: 30
