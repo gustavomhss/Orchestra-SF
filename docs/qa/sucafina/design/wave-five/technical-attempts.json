@@ -2302,6 +2302,151 @@
         "omni": "strict",
         "localTests": false
       }
+    },
+    {
+      "attempt": 24,
+      "name": "Installed Portfolio23 context and case-selector diagnostic",
+      "kind": "INSTALLED_DIAGNOSTIC_NOT_QUALIFICATION",
+      "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+      "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+      "run": 45033525825,
+      "job": 137242109427,
+      "cleanupJob": 137244040727,
+      "cleanupStatus": "success",
+      "conclusion": "failure",
+      "tests": {
+        "selected": 1,
+        "passed": 0,
+        "failed": 1,
+        "title": "wave five analytics: native scenarios, recorded results and sensitivity"
+      },
+      "scope": "Full original first analytics declaration with bounded diagnostic instrumentation and unchanged fixtures, callbacks and 60000 ms preview waiter. It failed before recorded-result and sensitivity assertions. No typecheck, regression-suite or original guard gate was rerun by this diagnostic.",
+      "request": {
+        "blob": "a11922821a47594d76397582be38f9b7940177ca",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-analytics.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "originalPreviewTimeoutMs": 60000,
+      "previewResponseObserved": false,
+      "finalProfilerSnapshotObserved": false,
+      "additionalQualifiedAreas": 0,
+      "profiler": {
+        "records": 181,
+        "started": 1,
+        "periodicSnapshots": 5,
+        "finalSnapshots": 0,
+        "bucketsPerSnapshot": 35,
+        "emittedBucketRecords": 175,
+        "elapsedMs": [
+          10000,
+          20003,
+          30000,
+          40006,
+          50000
+        ],
+        "scopeOrigin": "before-human-admit",
+        "pendingAtLastSample": 1,
+        "drops": 0,
+        "errors": 0,
+        "skippedThresholds": 0,
+        "interpretation": "Cumulative settled-span prefix through 50000 ms; HTTP remains pending and no final snapshot exists. Inclusive times overlap, and the earlier scope origin differs from Portfolio21."
+      },
+      "contextIntegrity": {
+        "mintRegistrations": 1,
+        "Business": {
+          "captures": 132,
+          "attested": 132,
+          "currentCalls": 589,
+          "fastCalls": 589,
+          "provenanceHits": 853,
+          "environmentCurrent": 853
+        },
+        "Root": {
+          "captures": 9,
+          "attested": 9,
+          "currentCalls": 125,
+          "fastCalls": 125,
+          "provenanceHits": 143,
+          "environmentCurrent": 143
+        },
+        "fallbackOrEnvironmentRejectionBucketsObserved": 0
+      },
+      "selector": {
+        "factory": 131,
+        "registered": 131,
+        "eligible": 131,
+        "narrowBranch": 131,
+        "callback": 131,
+        "narrowCloneProjectAwaitInclusiveMs": 51,
+        "identityAbsentAcrossNamespaces": 1792
+      },
+      "selectedMeasurements": [
+        {
+          "name": "canonical.digest",
+          "surface": "none",
+          "calls": 1414970,
+          "settledInclusiveMs": 17879
+        },
+        {
+          "name": "authority.principal",
+          "surface": "none",
+          "calls": 63608,
+          "settledInclusiveMs": 13371
+        },
+        {
+          "name": "state.read.full.clone-callback-await",
+          "surface": "none",
+          "calls": 1032,
+          "settledInclusiveMs": 3226
+        },
+        {
+          "name": "state.read.identity-narrow.clone-project-await",
+          "surface": "none",
+          "calls": 131,
+          "settledInclusiveMs": 51
+        }
+      ],
+      "interpretationLimits": [
+        "canonical.digest measures digestSfValue only, excluding direct canonicalSfValue calls such as plannerRequestIdentity and any uninstrumented CPU work.",
+        "root.caller.* covers PlannerCalculationServices only, not the direct Finance caller; absence does not mean Root was unused.",
+        "identity-absent aggregates namespaces and arbitrary callbacks, not missed case-selector opportunities.",
+        "baseline-accessor rejects before comparing getter/setter identities, so that reason would not prove equality; no such rejection bucket was observed.",
+        "Physical callback entries do not prove accepted roots or completed transactions. Clone spans include original callbacks/awaits and different populations.",
+        "Zero drops applies to the emitted checkpoints, with no final snapshot; no causal speedup or qualification claim."
+      ],
+      "preservedEvidence": {
+        "profilerRecords": 181,
+        "sourceEvents": 24,
+        "contextReadbacks": 2,
+        "captureEvents": 6,
+        "stages": 46,
+        "diagnostics": 3,
+        "jpegs": 7,
+        "chunks": 33,
+        "jpegBytes": 536861,
+        "agentViewed": 7,
+        "rawLogArchived": false
+      },
+      "receipt": "analytics/attempt-20/receipt.json",
+      "evidence": "analytics/attempt-20/README.md",
+      "immutableArchiveCommit": "29f86ded00253462b5c1bbef5f51c87ae2362ccb",
+      "retainedCheckpointGuard": {
+        "attempt": 23,
+        "run": 45032261331,
+        "conclusion": "success",
+        "reexecuted": false,
+        "scope": "Previously reviewed checkpoint only; no extension to the new diagnostic archive/rollups is claimed."
+      },
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      }
     }
   ],
   "causalControls": [

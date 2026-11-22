@@ -77,6 +77,18 @@ Os dois cleanups passaram. As capturas, eventos filtrados e recibos foram preser
 
 O [guard final do checkpoint](wave-five/analytics/context-integrity/checkpoint-guard/receipt.json), run [45032261331](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45032261331), passou sobre a composição revisada: **78 regras, 782 arquivos, 36 warnings**, nenhum bloqueio, erro ou aprovação excepcional. Essa execução verificou somente os guards originais; a produção e as evidências anteriores permaneceram iguais.
 
+## Diagnóstico instalado posterior: Portfolio23
+
+O [diagnóstico Portfolio23](wave-five/analytics/attempt-20/README.md), run [45033525825](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45033525825), executou a primeira declaração original completa no snapshot `7f9a1233a200c4da2e80baa2e546d70afbd87ff4`, sobre o produto `e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d`. A preparação e as duas leituras de histórico 200/ok terminaram. A primeira prévia novamente não teve resposta observada dentro dos **60.000 ms originais**; o teste falhou e o cleanup passou. Resultado, releituras posteriores e sensibilidade não foram alcançados.
+
+O arquivo preserva **181 registros do profiler**, com cinco snapshots em 10.000 / 20.003 / 30.000 / 40.006 / 50.000 ms e 35 chaves em cada um, sem descartes, erros ou limiares perdidos. O último snapshot mantém a requisição HTTP pendente; não houve snapshot final. O escopo começa explicitamente **antes de human.admit**, portanto seu marco temporal difere do diagnóstico Portfolio21 e não estabelece comparação causal de latência.
+
+Os dois caminhos novos foram usados no preview instalado. Business registrou 132 capturas atestadas e 589 chamadas pelo caminho rápido; Root, nove capturas atestadas e 125 chamadas rápidas. O seletor registrou 131 chamadas em cada ponto: fábrica, registro, leitura elegível, ramo estreito e callback. Nenhum bucket de fallback ou recusa de ambiente aparece no prefixo emitido. Houve nove entradas de callback físico de Root; esse contador não comprova nove raízes aceitas ou requisições concluídas.
+
+Aos 50 segundos, `digestSfValue` teve 1.414.970 chamadas e 17.879 ms inclusivos; principal de autoridade teve 63.608 chamadas e 13.371 ms inclusivos. Esses tempos se sobrepõem. O contador de digest não inclui chamadas diretas de `canonicalSfValue`, como `plannerRequestIdentity`, nem decompõe toda a CPU. `root.caller.*` cobre apenas PlannerCalculationServices, `identity-absent` agrega namespaces e callbacks, e o motivo `baseline-accessor` rejeita antes de comparar getter/setter; os limites completos estão no manifest e no README.
+
+As sete imagens originais foram reconstruídas de 33 chunks 1-based completos, conferidas byte por byte e vistas individualmente pelo agente. A captura de falha mostra Running, controles desabilitados, prévia indisponível e histórico vazio. Esse diagnóstico acrescenta **zero áreas qualificadas**: permanecem **41 aceitas/mescladas, 12/15 qualificadas e UI42–UI44 pendentes**. Portfolio22 continua sendo a última tentativa limpa; o guard aprovado do checkpoint, run 45032261331, permanece registrado com seu escopo original, sem novo gate técnico atribuído a Portfolio23.
+
 ## Aceite
 
 **Aprovação visual do usuário pendente. Nenhum merge realizado.** As galerias apresentam as evidências reais das doze áreas qualificadas. As três jornadas pendentes impedem considerar o bloco concluído.

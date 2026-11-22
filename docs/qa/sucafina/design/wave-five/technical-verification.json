@@ -586,9 +586,10 @@
         45019357466,
         45025502692,
         45029253108,
-        45029259117
+        45029259117,
+        45033525825
       ],
-      "limitation": "The current product e4cc03b has composed passing technical evidence, including one complete original C17 run, but installed UI42–UI44 remain unqualified. Clean Portfolio22 completes original preparation and both native histories, then fails the unchanged first-preview60000ms wait with no response observed. UI44 isolated03 completes original source/units/editor/review/cancel stages, then its one evaluation POST has no response observed within the unchanged120000ms wait. Neither journey reaches its result assertions/readbacks or final scope footer. Internal completion or persistence is unknown. Prior attempts and instrumented diagnostics remain separately recorded; their counts and inclusive times do not establish a causal speedup.",
+      "limitation": "The current product e4cc03b has composed passing technical evidence, including one complete original C17 run, but installed UI42–UI44 remain unqualified. Clean Portfolio22 completes original preparation and both native histories, then fails the unchanged first-preview60000ms wait with no response observed. UI44 isolated03 completes original source/units/editor/review/cancel stages, then its one evaluation POST has no response observed within the unchanged120000ms wait. Neither journey reaches its result assertions/readbacks or final scope footer. Internal completion or persistence is unknown. Prior attempts and instrumented diagnostics remain separately recorded; their counts and inclusive times do not establish a causal speedup. Portfolio23 is an instrumented failure of the same original preview deadline; it confirms actual context/selector use in a partial prefix, without qualification, completed egress or causal performance attribution.",
       "evidence": "analytics/attempt-19/README.md",
       "isolatedSensitivityEvidence": "collab/sensitivity-isolated-03/README.md",
       "latestClean": {
@@ -627,6 +628,146 @@
         "rootReview": "analytics/attempt-19/root-review.json"
       },
       "latestDiagnostic": {
+        "label": "Portfolio23",
+        "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+        "run": 45033525825,
+        "job": 137242109427,
+        "cleanupJob": 137244040727,
+        "cleanupStatus": "SUCCESS",
+        "source": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "runtime": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+        "snapshot": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+        "evidence": "analytics/attempt-20/README.md",
+        "receipt": "analytics/attempt-20/receipt.json",
+        "profile": "analytics/attempt-20/profile.json",
+        "manifest": "analytics/attempt-20/manifest.json",
+        "immutableArchiveCommit": "29f86ded00253462b5c1bbef5f51c87ae2362ccb",
+        "originalPreviewTimeoutMs": 60000,
+        "failureLine": 72,
+        "previewResponseObserved": false,
+        "internalPersistence": "UNKNOWN",
+        "preparation": {
+          "complete": true
+        },
+        "nativeHistory": [
+          {
+            "sequence": 1,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 351
+          },
+          {
+            "sequence": 2,
+            "http": 200,
+            "status": "ok",
+            "elapsedMs": 592
+          }
+        ],
+        "profiler": {
+          "records": 181,
+          "started": 1,
+          "periodicSnapshots": 5,
+          "finalSnapshots": 0,
+          "bucketsPerSnapshot": 35,
+          "emittedBucketRecords": 175,
+          "elapsedMs": [
+            10000,
+            20003,
+            30000,
+            40006,
+            50000
+          ],
+          "scopeOrigin": "before-human-admit",
+          "pendingAtLastSample": 1,
+          "drops": 0,
+          "errors": 0,
+          "skippedThresholds": 0,
+          "interpretation": "Cumulative settled-span prefix through 50000 ms; HTTP remains pending and no final snapshot exists. Inclusive times overlap, and the earlier scope origin differs from Portfolio21."
+        },
+        "contextIntegrity": {
+          "mintRegistrations": 1,
+          "Business": {
+            "captures": 132,
+            "attested": 132,
+            "currentCalls": 589,
+            "fastCalls": 589,
+            "provenanceHits": 853,
+            "environmentCurrent": 853
+          },
+          "Root": {
+            "captures": 9,
+            "attested": 9,
+            "currentCalls": 125,
+            "fastCalls": 125,
+            "provenanceHits": 143,
+            "environmentCurrent": 143
+          },
+          "fallbackOrEnvironmentRejectionBucketsObserved": 0
+        },
+        "selector": {
+          "factory": 131,
+          "registered": 131,
+          "eligible": 131,
+          "narrowBranch": 131,
+          "callback": 131,
+          "narrowCloneProjectAwaitInclusiveMs": 51,
+          "identityAbsentAcrossNamespaces": 1792
+        },
+        "root": {
+          "prepareEntries": 9,
+          "ownedReady": 9,
+          "physicalCallbackEntries": 9,
+          "callerBucketsObserved": 0
+        },
+        "selectedMeasurements": [
+          {
+            "name": "canonical.digest",
+            "surface": "none",
+            "calls": 1414970,
+            "settledInclusiveMs": 17879
+          },
+          {
+            "name": "authority.principal",
+            "surface": "none",
+            "calls": 63608,
+            "settledInclusiveMs": 13371
+          },
+          {
+            "name": "state.read.full.clone-callback-await",
+            "surface": "none",
+            "calls": 1032,
+            "settledInclusiveMs": 3226
+          },
+          {
+            "name": "state.read.identity-narrow.clone-project-await",
+            "surface": "none",
+            "calls": 131,
+            "settledInclusiveMs": 51
+          }
+        ],
+        "interpretationLimits": [
+          "canonical.digest measures digestSfValue only, excluding direct canonicalSfValue calls such as plannerRequestIdentity and any uninstrumented CPU work.",
+          "root.caller.* covers PlannerCalculationServices only, not the direct Finance caller; absence does not mean Root was unused.",
+          "identity-absent aggregates namespaces and arbitrary callbacks, not missed case-selector opportunities.",
+          "baseline-accessor rejects before comparing getter/setter identities, so that reason would not prove equality; no such rejection bucket was observed.",
+          "Physical callback entries do not prove accepted roots or completed transactions. Clone spans include original callbacks/awaits and different populations.",
+          "Zero drops applies to the emitted checkpoints, with no final snapshot; no causal speedup or qualification claim."
+        ],
+        "captures": 7,
+        "agentViewed": 7,
+        "originalChunks": 33,
+        "totalJpegBytes": 536861,
+        "sourceEvents": 24,
+        "contextReadbacks": 2,
+        "captureEvents": 6,
+        "stages": 46,
+        "diagnostics": 3,
+        "resultAssertionsReached": false,
+        "ptBrCompletion": false,
+        "additionalQualifiedAreas": 0
+      },
+      "previousDiagnostic": {
         "label": "Portfolio21",
         "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
         "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
@@ -739,78 +880,78 @@
         "rootViewed": 2,
         "additionalQualifiedAreas": 0
       },
-      "previousDiagnostic": {
-        "label": "Portfolio20",
-        "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
-        "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
-        "run": 45015314625,
-        "job": 137186259049,
-        "cleanupJob": 137188589158,
-        "cleanupStatus": "SUCCESS",
-        "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
-        "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
-        "snapshot": "cad315298856419c6da18f561e593688d38ec982",
-        "evidence": "analytics/attempt-17/README.md",
-        "immutableArchiveCommit": "b4443c57ac6aac1ea9be7e74aa5169f0868a8317",
-        "rootReview": "analytics/attempt-17/root-review.json",
-        "originalPreviewTimeoutMs": 60000,
-        "failureLine": 72,
-        "previewResponseObserved": false,
-        "internalPersistence": "UNKNOWN",
-        "preparation": {
-          "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
-          "complete": true
-        },
-        "nativeHistory": [
-          {
-            "sequence": 1,
-            "http": 200,
-            "status": "ok"
-          },
-          {
-            "sequence": 2,
-            "http": 200,
-            "status": "ok"
-          }
-        ],
-        "profiler": {
-          "records": 533,
-          "started": 1,
-          "sealedRootMarkers": 9,
-          "rootCallbackExits": 8,
-          "periodicSnapshots": 5,
-          "finalSnapshots": 0,
-          "bucketsPerSnapshot": 102,
-          "emittedBucketRecords": 510,
-          "elapsedMs": [
-            10002,
-            20001,
-            30001,
-            40001,
-            50000
-          ],
-          "pendingAtLastSample": 4,
-          "drops": 0,
-          "errors": 0,
-          "skippedThresholds": 0,
-          "interpretation": "Counters stop at 50000 ms. Later callback markers do not extend coverage or prove provider acceptance. Inclusive times are settled spans and must not be summed across nested buckets."
-        },
-        "findings": {
-          "preparedChoiceHits": 9065,
-          "preparedRootNotReadonly": 1276,
-          "authorityChoiceHits": 595,
-          "sourceFenceMemoHits": 550,
-          "sourceFenceMemoMisses": 1,
-          "readScopeBucketsObserved": 0,
-          "guardDigestSubtotalMs": 951,
-          "guardCandidateSavings": "UNKNOWN_NOT_ESTIMATED_FROM_SUBTOTAL"
-        },
-        "captures": 7,
-        "agentViewed": 7,
-        "rootViewed": 2,
-        "additionalQualifiedAreas": 0
-      },
       "olderDiagnostics": [
+        {
+          "label": "Portfolio20",
+          "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",
+          "status": "FAILED_FIRST_PREVIEW_ORIGINAL60S_NO_RESPONSE_OBSERVED",
+          "run": 45015314625,
+          "job": 137186259049,
+          "cleanupJob": 137188589158,
+          "cleanupStatus": "SUCCESS",
+          "source": "82076e542b03825ca9cbfb21dae4a86fabd0ca88",
+          "runtime": "2d3abae061c9d4be188540433b9d34c4bfaf2b24",
+          "snapshot": "cad315298856419c6da18f561e593688d38ec982",
+          "evidence": "analytics/attempt-17/README.md",
+          "immutableArchiveCommit": "b4443c57ac6aac1ea9be7e74aa5169f0868a8317",
+          "rootReview": "analytics/attempt-17/root-review.json",
+          "originalPreviewTimeoutMs": 60000,
+          "failureLine": 72,
+          "previewResponseObserved": false,
+          "internalPersistence": "UNKNOWN",
+          "preparation": {
+            "helper": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+            "complete": true
+          },
+          "nativeHistory": [
+            {
+              "sequence": 1,
+              "http": 200,
+              "status": "ok"
+            },
+            {
+              "sequence": 2,
+              "http": 200,
+              "status": "ok"
+            }
+          ],
+          "profiler": {
+            "records": 533,
+            "started": 1,
+            "sealedRootMarkers": 9,
+            "rootCallbackExits": 8,
+            "periodicSnapshots": 5,
+            "finalSnapshots": 0,
+            "bucketsPerSnapshot": 102,
+            "emittedBucketRecords": 510,
+            "elapsedMs": [
+              10002,
+              20001,
+              30001,
+              40001,
+              50000
+            ],
+            "pendingAtLastSample": 4,
+            "drops": 0,
+            "errors": 0,
+            "skippedThresholds": 0,
+            "interpretation": "Counters stop at 50000 ms. Later callback markers do not extend coverage or prove provider acceptance. Inclusive times are settled spans and must not be summed across nested buckets."
+          },
+          "findings": {
+            "preparedChoiceHits": 9065,
+            "preparedRootNotReadonly": 1276,
+            "authorityChoiceHits": 595,
+            "sourceFenceMemoHits": 550,
+            "sourceFenceMemoMisses": 1,
+            "readScopeBucketsObserved": 0,
+            "guardDigestSubtotalMs": 951,
+            "guardCandidateSavings": "UNKNOWN_NOT_ESTIMATED_FROM_SUBTOTAL"
+          },
+          "captures": 7,
+          "agentViewed": 7,
+          "rootViewed": 2,
+          "additionalQualifiedAreas": 0
+        },
         {
           "label": "Portfolio19",
           "kind": "PARTIAL_INSTRUMENTED_DIAGNOSTIC_NOT_CLEAN_QUALIFICATION",

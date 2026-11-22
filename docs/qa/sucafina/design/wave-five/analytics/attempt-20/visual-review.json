@@ -1,0 +1,75 @@
+{
+  "schema": "sf-design-visual-review-v1",
+  "label": "Portfolio23",
+  "reviewer": "/root/root_cost",
+  "recordedAt": "2026-11-22T14:51:31.764Z",
+  "method": "Each of the seven original emitted JPEGs was displayed separately and inspected; no montage, crop, repaint or generated substitute was used.",
+  "classification": "visual observations of an incomplete diagnostic journey; no qualification credit",
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "84945790970ad3991e154924f0dc2ec0859a78ece355c2b443ee17614db41dda",
+      "individuallyViewed": true,
+      "observations": "Desktop dark list shows two authorized case cards (versions 2 and 6), readable titles and Open case actions. Portfolio scenarios is active in the sidebar. No preview or recorded result is shown; no visible overlap in this captured viewport."
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "293b62515ad18a960a0d1f667c37099104f34956bcea57c0024a3bb49841be4d",
+      "individuallyViewed": true,
+      "observations": "Desktop light list shows the same two authorized case cards and versions, with titles and Open case actions readable. The light theme and sidebar remain coherent in the captured viewport. This is list evidence only."
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "width": 390,
+      "height": 844,
+      "sha256": "7d09f4a9fda641a03ab31bc007a31bc4da9a7859d1e579a05ef19f3b3cf6d7a5",
+      "individuallyViewed": true,
+      "observations": "At 390 px, the two authorized cases stack vertically. Both case versions and Open case actions are visible, titles wrap within their cards, and no horizontal clipping is visible in the captured list."
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "width": 320,
+      "height": 800,
+      "sha256": "72ff13da645feb7c10b18416dcc229a082067e433d7d664f2936d98a87ab8f03",
+      "individuallyViewed": true,
+      "observations": "At 320 px, the light list retains both cards, versions and Open case actions. Supporting copy and case titles wrap within the available width. No horizontal clipping is visible in this captured list."
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "1744a674f641c68d2a5da67a9645b2cc7f33b1ae57d8f0514758be47e73c6b17",
+      "individuallyViewed": true,
+      "observations": "Authorized case version 2 shows No eligible scenarios in the authorized case, an inactive Preview combinations action, the explicit priority criterion and exploration limit, and No recorded results for this case. The empty state is visible without a result or success claim."
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "5ba358e8c770a221074f969e9b2dc2ffed51acf13a5add1fa0c84540d9a94c7b",
+      "individuallyViewed": true,
+      "observations": "Case version 6 shows the Decision candidate plan selected; baseline and monthly amount hypothesis are unselected. The version-2 constraint is checked, priority criterion is unchecked, exploration limit 4 has visible focus, and Preview combinations is enabled. History remains empty; this image precedes the preview request."
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "width": 1440,
+      "height": 1100,
+      "sha256": "ffbf1a5d04fd65cb79ae16140af29cb99cdbe0dca78311da7de6bda3087772e0",
+      "individuallyViewed": true,
+      "observations": "Failure capture retains case version 6 and the focused-candidate configuration, with controls disabled and Preview combinations marked Running. The preview panel says Preview is not yet available and shows placeholder bars; history still has no recorded results. There is no visible completed preview, error banner or sensitivity/result screen. This image supports a pending UI state only, not backend termination or persistence success."
+    }
+  ],
+  "failureState": "Running; controls disabled; Preview is not yet available; history empty; no completed preview/result/sensitivity screen.",
+  "limits": "Screenshots establish visible state at capture time only. They do not establish backend completion, full responsive coverage, persistence success, or successful original readbacks after the timeout."
+}

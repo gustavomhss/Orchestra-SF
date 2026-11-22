@@ -1,0 +1,387 @@
+{
+  "schema": "sf-design-diagnostic-receipt-v1",
+  "label": "Portfolio23",
+  "archiveAttempt": "attempt-20",
+  "classification": "diagnostic-only; native journey incomplete; no qualification increment",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": {
+    "id": 45033525825,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45033525825",
+    "headBranch": "ci-run-sf5portfolio23",
+    "headSha": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-22T14:34:10Z",
+    "updatedAt": "2026-11-22T14:41:16Z"
+  },
+  "jobs": [
+    {
+      "id": 137242109427,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "startedAt": "2026-11-22T14:34:12Z",
+      "completedAt": "2026-11-22T14:41:08Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:12Z",
+          "completedAt": "2026-11-22T14:34:13Z"
+        },
+        {
+          "name": "Checkout repository",
+          "number": 2,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:13Z",
+          "completedAt": "2026-11-22T14:34:22Z"
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "number": 3,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:22Z",
+          "completedAt": "2026-11-22T14:34:22Z"
+        },
+        {
+          "name": "Assert macOS arm64",
+          "number": 4,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:22Z",
+          "completedAt": "2026-11-22T14:34:22Z"
+        },
+        {
+          "name": "Setup request validator Node",
+          "number": 5,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:22Z",
+          "completedAt": "2026-11-22T14:34:26Z"
+        },
+        {
+          "name": "Read request",
+          "number": 6,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:26Z",
+          "completedAt": "2026-11-22T14:34:26Z"
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "number": 7,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:26Z",
+          "completedAt": "2026-11-22T14:34:26Z"
+        },
+        {
+          "name": "Setup Bun",
+          "number": 8,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:26Z",
+          "completedAt": "2026-11-22T14:34:38Z"
+        },
+        {
+          "name": "ripgrep",
+          "number": 9,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:38Z",
+          "completedAt": "2026-11-22T14:34:38Z"
+        },
+        {
+          "name": "Setup Playwright Node",
+          "number": 10,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:38Z",
+          "completedAt": "2026-11-22T14:34:38Z"
+        },
+        {
+          "name": "Install Chromium",
+          "number": 11,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:38Z",
+          "completedAt": "2026-11-22T14:34:55Z"
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "number": 12,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:55Z",
+          "completedAt": "2026-11-22T14:34:58Z"
+        },
+        {
+          "name": "Setup Python",
+          "number": 13,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:58Z",
+          "completedAt": "2026-11-22T14:34:58Z"
+        },
+        {
+          "name": "Install Python test dependencies",
+          "number": 14,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:58Z",
+          "completedAt": "2026-11-22T14:34:58Z"
+        },
+        {
+          "name": "Configure git identity",
+          "number": 15,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:58Z",
+          "completedAt": "2026-11-22T14:34:58Z"
+        },
+        {
+          "name": "Export requested environment",
+          "number": 16,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:58Z",
+          "completedAt": "2026-11-22T14:34:58Z"
+        },
+        {
+          "name": "omni binaries",
+          "number": 17,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:58Z",
+          "completedAt": "2026-11-22T14:34:59Z"
+        },
+        {
+          "name": "Qualify real loopback ClamD for Files uploads",
+          "number": 18,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:59Z",
+          "completedAt": "2026-11-22T14:34:59Z"
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "number": 19,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:34:59Z",
+          "completedAt": "2026-11-22T14:34:59Z"
+        },
+        {
+          "name": "Omni control nonce",
+          "number": 20,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:34:59Z",
+          "completedAt": "2026-11-22T14:34:59Z"
+        },
+        {
+          "name": "Run tests",
+          "number": 21,
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-22T14:34:59Z",
+          "completedAt": "2026-11-22T14:41:05Z"
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "number": 22,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:41:05Z",
+          "completedAt": "2026-11-22T14:41:05Z"
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "number": 23,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:05Z",
+          "completedAt": "2026-11-22T14:41:06Z"
+        },
+        {
+          "name": "Post Setup Playwright Node",
+          "number": 43,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:41:06Z",
+          "completedAt": "2026-11-22T14:41:06Z"
+        },
+        {
+          "name": "Post Setup Bun",
+          "number": 44,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:06Z",
+          "completedAt": "2026-11-22T14:41:06Z"
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "number": 45,
+          "status": "completed",
+          "conclusion": "skipped",
+          "startedAt": "2026-11-22T14:41:06Z",
+          "completedAt": "2026-11-22T14:41:06Z"
+        },
+        {
+          "name": "Post Checkout repository",
+          "number": 46,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:06Z",
+          "completedAt": "2026-11-22T14:41:07Z"
+        },
+        {
+          "name": "Complete job",
+          "number": 47,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:07Z",
+          "completedAt": "2026-11-22T14:41:07Z"
+        }
+      ]
+    },
+    {
+      "id": 137244040727,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-22T14:41:10Z",
+      "completedAt": "2026-11-22T14:41:15Z",
+      "steps": [
+        {
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:11Z",
+          "completedAt": "2026-11-22T14:41:11Z"
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "number": 2,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:11Z",
+          "completedAt": "2026-11-22T14:41:14Z"
+        },
+        {
+          "name": "Complete job",
+          "number": 3,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-22T14:41:14Z",
+          "completedAt": "2026-11-22T14:41:14Z"
+        }
+      ]
+    }
+  ],
+  "source": {
+    "productCommit": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+    "snapshotCommit": "7f9a1233a200c4da2e80baa2e546d70afbd87ff4",
+    "snapshotTree": "3c154294157599d4f17e6e6b0d6a86b2ec2249cf",
+    "snapshotOverlayPaths": 13,
+    "selectedSpecPath": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "selectedSpecBlob": "db1d7f4f0d770e5eed811070b0814c0363083c62",
+    "permanentSpecBlob": "f4eb9a534b7a22fcf79e7ccb20bbfd9f8251ae74",
+    "selection": "Full literal first declaration and its prefix helpers; remaining declarations excluded without truncating this journey.",
+    "requestBlob": "a11922821a47594d76397582be38f9b7940177ca",
+    "collectorOriginalBlob": "81792fc1fba96de5b4cc0b93a2213862a2d2bc2a",
+    "collectorDiagnosticBlob": "301dce3901504566ca746826bf95b918891d439a",
+    "collectorDifference": "Only scopeOrigin: before-human-admit in started metadata.",
+    "qaBaseCommit": "e08b28986b6eeebe17d2ab7e5f6a540201256893",
+    "qaBaseTree": "806869213fef754fd5a8edabd3f3b7fb5945930c",
+    "qaContainsCodeOverlays": false
+  },
+  "acquisition": {
+    "method": "GitHub workflow job logs after completed metadata",
+    "jobObservedCompletedAt": "2026-11-22T14:41:16.111Z",
+    "onlyMetadataReadBeforeCompleted": true,
+    "logCharacters": 900678,
+    "splitLineCountIncludingTrailingEmpty": 1704,
+    "rawLogArchived": false,
+    "structuredParseErrors": 0,
+    "additionalExecutionsByAcquirer": 0
+  },
+  "failure": {
+    "testTitle": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "browser": "chromium",
+    "selectedTests": 1,
+    "failedTests": 1,
+    "error": "TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+    "sourceLocation": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+    "operation": "decision-portfolio-preview",
+    "originalTimeoutMs": 60000,
+    "nativeRequest": {
+      "timestamp": "2026-11-22T14:40:03.0054480Z",
+      "sourceLine": 1209,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    "nativeResponseObserved": false,
+    "finalProfilerSnapshotObserved": false,
+    "completedPreviewReadbackObserved": false,
+    "resultOrSensitivityJourneyReached": false
+  },
+  "profilerStarted": {
+    "timestamp": "2026-11-22T14:40:03.0056114Z",
+    "sourceLine": 1211,
+    "marker": "SF_PORTFOLIO_READONLY",
+    "value": {
+      "request": 1,
+      "phase": "started",
+      "operation": "decision-portfolio-preview",
+      "schema": "sf-portfolio-readonly-v2",
+      "scopeOrigin": "before-human-admit",
+      "originalObservationWindowMs": 60000,
+      "maximumBuckets": 256,
+      "maximumRoots": 64,
+      "maximumLines": 2048,
+      "maximumLineLength": 4096,
+      "periodicThresholdsMs": [
+        10000,
+        20000,
+        30000,
+        40000,
+        50000
+      ],
+      "checkpointModes": [
+        "timer",
+        "settled-span"
+      ]
+    }
+  },
+  "artifact": {
+    "id": 14759345102,
+    "name": "playwright-ubuntu-24.04-1",
+    "sizeInBytes": 8827785,
+    "digest": "sha256:04321fe192484b030d364c872e8d25556f26f946272189d011a68d964ded3a43",
+    "createdAt": "2026-11-22T14:41:06Z",
+    "expiresAt": "2026-11-29T14:41:05Z",
+    "expiredAtAcquisition": false,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45033525825/artifacts/14759345102",
+    "archiveDownloaded": false,
+    "jpegPreviewsDurablyArchived": true
+  },
+  "qualification": {
+    "completeDeclarationPassed": false,
+    "qualifyingSurfaceIncrement": 0,
+    "globalCountsModified": false,
+    "reason": "Preview did not return within the original deadline; the original result/readback/sensitivity assertions were not reached."
+  }
+}
