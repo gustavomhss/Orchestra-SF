@@ -384,7 +384,7 @@ const main = Effect.gen(function* () {
       if (setNativeTranslations(bundle)) createMenu(menuDeps)
     },
   }).stopLinuxRuntime
-  registerWslIpcHandlers(wslServers)
+  registerWslIpcHandlers(wslServers, isMainWindow)
   // Not awaited: the net log took about a second to start, and the server start below does not need it.
   void startNetLog().catch((error) => logger.warn("failed to start net log", error))
 
