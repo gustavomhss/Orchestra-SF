@@ -1110,7 +1110,8 @@
           "stdoutTruncated": false,
           "stderrTruncated": false
         }
-      ]
+      ],
+      "resolvedByAttempt": 10
     },
     {
       "attempt": 10,
@@ -1251,7 +1252,75 @@
         "channel": "prod",
         "omni": "strict",
         "localTests": false
-      }
+      },
+      "resolvedByAttempt": 12
+    },
+    {
+      "attempt": 12,
+      "product": "796c7f27634dca55e25087cb44d1a0fe45a06cf9",
+      "snapshot": "b4896d460a32549f0eb37be3c21564968fd2cda9",
+      "run": 44989840123,
+      "job": 137108269511,
+      "checks": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "notRerun": 13
+      },
+      "failures": [],
+      "scope": "App-shell, permanent E2E and CLI package types after the small-original-scalar presentation fix and readonly tuple test assertion correction. Existing original producer and currency formatting unchanged.",
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "typecheck"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "CLI native host typecheck",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "environment": {
+        "workflow": "test-ci",
+        "os": "Linux",
+        "channel": "prod",
+        "omni": "strict",
+        "localTests": false
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/44989840123",
+      "omni": {
+        "declaredTests": 3,
+        "spawns": 3,
+        "delegated": 0,
+        "status": "PASSED"
+      },
+      "cleanupJob": 137108699479
     }
   ]
 }

@@ -1,7 +1,8 @@
-import { expect, type Page, type Request } from "@playwright/test"
+import { expect, type Locator, type Page, type Request, type TestInfo } from "@playwright/test"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import { prepareParameterizedScenario } from "./design-support/wave-five-analytics-source"
+import { scheme } from "./design-support/wave-four"
 import {
   analyticsTest, array, object, sourceText, controls, readPortfolio, isOperation,
   enter, ready, observePage, observeAnalyticsContext, observeAnalyticsOperations,
@@ -261,6 +262,47 @@ analyticsTest("wave five analytics: native scenarios, recorded results and sensi
     preserved: ["conditioned comparison", "pending cost coverage", "original rule and source-issued units", "no inferred complete total"],
   }))
 })
+
+async function revealBiAgingValue(plot: Locator) {
+  await plot.evaluate((element) => {
+    const label = element.querySelector(".sf-bi-axis-value")
+    if (!label) throw new Error("The original numeric plot label is missing")
+    element.scrollLeft += label.getBoundingClientRect().left - element.getBoundingClientRect().left - 12
+  })
+  const [label, viewport] = await Promise.all([
+    plot.locator(".sf-bi-axis-value").first().boundingBox(), plot.boundingBox(),
+  ])
+  if (!label || !viewport) throw new Error("The numeric plot label is not rendered")
+  expect(label.x).toBeGreaterThanOrEqual(viewport.x + 8)
+  expect(label.x + label.width).toBeLessThanOrEqual(viewport.x + viewport.width - 8)
+}
+
+async function captureBiAgingPlots(page: Page, info: TestInfo, figure: Locator) {
+  // Tiny original ages place their labels near the axis. The global far-end
+  // capture remains appropriate for other comparisons, so align this view only.
+  for (const mode of [
+    { theme: "dark" as const, width: 1440, height: 1100, suffix: "-dark-desktop" },
+    { theme: "light" as const, width: 1440, height: 1100, suffix: "-light-desktop" },
+    { theme: "dark" as const, width: 390, height: 844, suffix: "-dark-390" },
+    { theme: "light" as const, width: 320, height: 800, suffix: "-light-320" },
+  ]) {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await scheme(page, mode.theme)
+    await page.setViewportSize({ width: mode.width, height: mode.height })
+    await figure.scrollIntoViewIfNeeded()
+    const plot = figure.locator(".sf-bi-plot-region")
+    await plot.evaluate((element) => { element.scrollLeft = 0 })
+    const name = "UI46-operations-original-values" + mode.suffix
+    await captureAnalytics(page, info, name + "-test-data")
+    if (mode.width <= 390) {
+      expect(await plot.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true)
+      await revealBiAgingValue(plot)
+      await captureAnalytics(page, info, name + "-scrolled-values-test-data")
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await scheme(page, "dark")
+}
 
 function readLocalizedScalar(text: string, locale: string): number {
   const parts = new Intl.NumberFormat(locale).formatToParts(-12345.6)
@@ -571,7 +613,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     ages: ages.map((value) => ({ id: value.id, value: value.value, unit: value.unit, period: value.period, evidenceState: value.evidenceState })) }))
   await catalog.locator(".sf-chart-visual").scrollIntoViewIfNeeded()
   await captureAnalytics(page, info, "UI46-operations-original-coverage-test-data")
-  await captureModes(page, info, "UI46-operations-original-values", catalog.locator(".sf-bi-series").first())
+  await captureBiAgingPlots(page, info, catalog.locator(".sf-bi-series").first())
   await captureModes(page, info, "UI46-operations-original-table", catalog.locator(".sf-chart-table-region"))
   await page.setViewportSize({ width: 320, height: 800 })
   await catalog.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()
@@ -720,8 +762,7 @@ analyticsTest("wave five analytics: question catalog and original contextual BI"
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-test-data")
     const localizedPlot = localized.locator(".sf-bi-plot-region").first()
     await localizedPlot.scrollIntoViewIfNeeded()
-    await localizedPlot.evaluate((element) => { element.scrollLeft = element.scrollWidth })
-    expect(await localizedPlot.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
+    await revealBiAgingValue(localizedPlot)
     await captureAnalytics(localized, info, "UI46-pt-BR-dark-320-operations-scrolled-values-test-data")
     const localizedTable = localized.locator(".sf-chart-table-region")
     await localized.locator(".sf-chart-table caption").scrollIntoViewIfNeeded()

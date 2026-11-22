@@ -18,7 +18,7 @@ The collaboration observer follows the final registry's dashboard route. Portfol
 
 The nativeReadBinding callback's TypeScript union is extended by the exact sixteen observed IDs. This is only a type declaration: local/entry.ts already selects the same installed productBinding for the original productHttp object. Its runtime implementation, grants, human-action lists, route registry, workflows, guard rules and allowlists remain unchanged. No ID is aliased and no type cast stands in for a binding.
 
-The 18 collaboration and 24 portfolio regression cases instantiate original UI leases, SQLite, current-choice wrappers and the source lifecycle. The source fence derives current() from the original ownership predicate and uses the real driver's capabilities. No browser producer response, selection or receipt is fabricated.
+The original 18 collaboration and 24 portfolio regression cases instantiate original UI leases, SQLite, current-choice wrappers and the source lifecycle. The source fence derives current() from the original ownership predicate and uses the real driver's capabilities. No browser producer response, selection or receipt is fabricated.
 
 ## Preserved review content
 
@@ -54,7 +54,7 @@ The import owner exposes its actual scan, preview and source-read activity separ
 
 ## Incremental verification record
 
-`technical-attempts.json` retains attempts 1–8 with each exact product, snapshot, run, job, check scope and failure. Later focused checks do not relabel an earlier failed whole workflow. The 94 original source/readiness/routing regressions, 14 client routing cases and 8 native BI destination cases passed in their stated scopes. Seven generated palettes stayed byte-identical; all 357 existing English key/value literals stayed unchanged and all 46 new keys had explicit pt-BR in the recorded copy check. Browser qualification and final integration types remain distinct from those regression receipts.
+`technical-attempts.json` retains all scoped attempts, including failures with each exact product, snapshot, run, job, check scope and failure. Later focused checks do not relabel an earlier failed whole workflow. The 94 original source/readiness/routing regressions, 14 client routing cases and 8 native BI destination cases passed in their stated scopes. Seven generated palettes stayed byte-identical; all 357 existing English key/value literals stayed unchanged and all 48 new keys had explicit pt-BR in the recorded copy check. Browser qualification and final integration types remain distinct from those regression receipts.
 
 ## Reactive portfolio inputs
 
@@ -66,10 +66,28 @@ Procurement age values derive from the original environment's observation time. 
 
 The scope pins the original host, environment, Request, request digest, revalidator, input, binding and consumed UI intent. Provider replacement, abort, mutation, concurrency and escaped asynchronous work cannot publish a successful result. The original C16 admission and exact source-bootstrap intent remain required. This change wraps BI dispatch and original bi-source reads; it does not widen review parsing or cache a projection, grant or receipt.
 
-Seven original-host regression groups passed with 119 assertions in Actions run 44987754031. The original moving-clock control returns 403; the held observation reproduces the entire original projection at the captured instant. Original options, BI06 data and source-link HTTP reads return 200; invalid origin choices and changed source data remain refused. Browser captures remain a separate qualification.
+Seven original-host regression groups passed with 119 assertions in Actions run 44987754031. The original moving-clock control returns 403; the held observation reproduces the entire original projection at the captured instant. Original options, BI06 data and source-link HTTP reads return 200; invalid origin choices and changed source data remain refused. The first installed BI-only journey passed original options, financial and operational reads, exact source links and the negative reference check. Its visual review found small nonzero ages rounding to zero; that presentation defect and its corrected recapture remain separately recorded in the reviews evidence.
 
 ## Full import impact and bounded materialization
 
 UI55/UI56 show the original simulation, exact change list and a disclosure containing every original impact component, value and missing-source item before actions. The disclosure reduces the initial rendered content without truncating the source. Shared UI57/UI68 keep their existing presentation order. Two additional messages have explicit EN and pt-BR text; final catalog parity is rerun against the composed candidate.
 
 The large preview also exposed bounded snapshot memo eviction in the original store. [The correction and its limits](STORE-MATERIALIZATION.md) and [42-case SQLite receipt](store-materialization.json) record the measured cause, unchanged budget, exact-byte identity, independent copies and same-length replacement checks. The installed import journey must separately verify the original preview-reference reread and native result.
+
+## Original scalar presentation
+
+BI scalar marks and table values now share a locale-aware significant-digit formatter. Small nonzero original quantities remain distinguishable from zero, and the producer unit is shown separately in the original Unit column and figure caption. Integer counts retain their original value. Currency keeps its existing formatter. Source values, projection points, labels, units and links are unchanged. The installed journey compares the original response with both DOM values, including sign/nonzero, numerical tolerance and exact source unit in English and pt-BR.
+
+## Collaboration read work within a phase
+
+The collaboration observer retains all nine original action admissions and leases. Within each observation phase, equal namespace reads share their original in-flight promise; the post-finish phase uses new promises. Each action still revalidates its own original Request, binding, source and authority before and after closure. All leases close on error. Six additional cases cover changing sources, denial, failures and shared work; the 24-case suite passed with 304 assertions. This reduced the measured namespace read count, but the installed import reference still took roughly 19 seconds, so it is not recorded as the solution for UI56.
+
+## Criterion comparison observation
+
+The criterion metric consumer now invokes its existing closed Planner pair observation around the original comparison. Both historical scenarios and every canonical resolver still execute, and the final original Request, binding, result digest, input digest and authority checks remain. The observation does not cache a metric or comparison result and is not shared by a later invocation.
+
+The original SQLite/C08 integration fixture compared the full scalar and grouped metric results. Physical source reads fell from 2,501 to 118 while all four canonical resolver calls remained. A repeat performed the same work again; an unsupported adapter followed the original complete read path. Revocation after root closure and a source change between roots remained refused, without replay. The focused regression passed 62 assertions, together with current CLI and permanent E2E types in Actions run 44990184354. Installed portfolio persistence and sensitivity qualification remain separate.
+
+## Import profile after bounded materialization
+
+The next original-host diagnostic rejected the hypothesis that recursive snapshot cloning dominated the remaining delay. A representative post-preview observation group took 11.3 seconds; the measured inclusive costs included about 3.9 seconds in 1,602 observeSnapshot calls, 1.9 seconds in materialization and 0.74 seconds in cloning. No materialization plan was rebuilt in that group. These nested categories must not be added together. The runtime and measured SQL/source observation behavior, rather than a longer browser wait, determine the next correction.

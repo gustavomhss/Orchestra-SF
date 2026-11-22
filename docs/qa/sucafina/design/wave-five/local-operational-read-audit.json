@@ -1,0 +1,67 @@
+{
+  "product": "d8faa155002f0a9f3df029d946a026462af65e69",
+  "composition": {
+    "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+    "sha": "5969791636a00bfbbb25e1f479b6ab64909691ae"
+  },
+  "status": "STATIC_READ_ONLY_AUDIT_ONLY",
+  "observers": [
+    {
+      "name": "Planner",
+      "sha": "30b83cf0b7d69d6a18312d57b9caeba753d165f9",
+      "scope": "Original environment/authenticator, one commit:false Planner transaction and original projection."
+    },
+    {
+      "name": "Dashboard",
+      "sha": "7ca00ccb8665a88859d72f1113c31144aa35bb13",
+      "scope": "Two commit:false Dashboard transactions, original allowed pages, fixed known read-only portfolio projection, version fence."
+    },
+    {
+      "name": "Domain",
+      "sha": "79ea77d1d754965c6485cc555a194fc636c3b9b9",
+      "scope": "Dashboard/Procurement commit:false reads and original queue admission; SummarySettings observer calls only read snapshot function."
+    },
+    {
+      "name": "Assets",
+      "sha": "a38c6bb03de1a52b0746728b42939f40ebb3d0e8",
+      "scope": "Four commit:false transactions and original readContextAdmission; no scan, upload or blob mutation invoked."
+    },
+    {
+      "name": "Home",
+      "sha": "2d24a6d95051856139b84da02b6109a322aed859",
+      "scope": "Original case-health admission, selected state read, revalidation and finish."
+    },
+    {
+      "name": "Work",
+      "sha": "24768c2a56e01841df7e59f9c3dbcce2b35ce459",
+      "scope": "Original admissions, three namespace reads and Procurement commit:false source observation."
+    },
+    {
+      "name": "Cases",
+      "sha": "4077651a9813df69de0a37e1e0a106ddb122f5ce",
+      "scope": "Handler existence and same original case-health source; no handler invocation."
+    },
+    {
+      "name": "Actions",
+      "sha": "019b08d9c0f5941f056d41f2cf5747d9d2345de1",
+      "scope": "Three commit:false source reads and original action predicates; no command dispatcher."
+    }
+  ],
+  "dependentReaders": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/case-health.ts",
+      "sha": "eb4bb00a4d2178e6100ac0e83066ebd4a7b438fe"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/summary-settings.ts",
+      "sha": "9b767f3eb8f917010669f18f2eb8a4a722a30ed3",
+      "scope": "Only observeSfSummarySettingsHealth and its snapshot/current/source read dependencies were included; public write handler remains outside."
+    }
+  ],
+  "constraints": [
+    "The generic external operational callback is not assumed read-only.",
+    "Separate local and host roots must be awaited outside each other to avoid queue deadlock.",
+    "Original three context admissions and two independent operational phases remain outside the grouped callbacks.",
+    "Runtime equivalence and negative regression evidence still required."
+  ]
+}
