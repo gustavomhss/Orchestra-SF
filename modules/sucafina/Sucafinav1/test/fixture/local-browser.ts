@@ -5,6 +5,7 @@ import type { BrowserContext, CDPSession } from "@playwright/test"
 import { prepareLocalConfiguration } from "../../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../../local/enroll.ts"
 import { createLocalInstallation } from "../../local/entry.ts"
+import { launchBrowserDriver } from "../product/wp02/browser-driver-fixture.ts"
 
 /** Throwaway browser installation. The protocol scanner is a test fixture, never antivirus qualification. */
 export async function localBrowser() {
@@ -65,9 +66,10 @@ export async function localBrowser() {
     const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
     const stopServer = () => server.stop(true)
     cleanup.push(stopServer)
-    const { chromium } = await import("@playwright/test")
-    console.info("browser fixture: direct pipe Chrome launch")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    console.info("browser fixture: Node-owned Chrome launch")
+    // Keep Chrome and its original 30 s launch budget; Bun never owns extra stdio 3/4.
+    const driver = await launchBrowserDriver("local-browser", { signal: new AbortController().signal, timeoutMs: 30000 })
+    const browser = driver.browser
     const connection: { context?: BrowserContext; cdp?: CDPSession; owner?: NonNullable<Awaited<ReturnType<typeof linuxProcess>>> & { cmdline: string } } = {}
     cleanup.push(async () => {
       const outcomes: { operation: string; settled: boolean; error?: unknown }[] = []
@@ -87,10 +89,9 @@ export async function localBrowser() {
           if (deadline.timer) clearTimeout(deadline.timer)
         }
       }
-      // Include extra contexts created by a business test, before closing the browser pipe.
-      await Promise.all(browser.contexts().map((context, index) => bounded(`context.close:${index}`, context.close(), 750)))
-      if (connection.cdp) await bounded("CDP Browser.close", connection.cdp.send("Browser.close"), 1000)
-      await bounded("browser.close", browser.close(), 1500)
+      // The canonical driver closes every context, bridge and Node scope. Keep the
+      // independent Linux process-group census below as an additional proof.
+      await bounded("Node browser driver.close", driver.close(), 5000)
       const owner = connection.owner
       if (!owner) throw new Error("No authoritative Linux Chrome ownership capture; cleanup cannot be certified")
       const census = async () => {
@@ -133,8 +134,9 @@ export async function localBrowser() {
             if (!await waitForEnd(7000)) throw new Error("Owned Chrome group remains live or transport remains connected")
           }
         }
-        // Pending close promises are accepted only after both independent end-state proofs.
         if ((await census()).length || browser.isConnected()) throw new Error("Chrome OS/transport closure proof failed")
+        if (outcomes.some((outcome) => !outcome.settled || outcome.error !== undefined))
+          throw new Error("Node browser driver did not close successfully")
       } catch (error) {
         console.error("browser fixture: Chrome cleanup proof failed", {
           pid: owner.pid, pgid: owner.group, uid: owner.uid, starttime: owner.start.toString(),
@@ -198,7 +200,7 @@ export async function localBrowser() {
     await page.waitForURL("http://localhost:4110/sucafina/dashboard", { timeout: 10000 })
     console.info("browser fixture: authenticated")
     await mkdir(path.join(import.meta.dir, "../artifacts"), { recursive: true })
-    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose }
+    return { page, browser, root, configFile, actorId: `macos:${config.localOperator.installationId}:${config.localOperator.uid}`, installation, errors, stopServer, dispose, report: driver.report }
   } catch (error) {
     await dispose()
     throw error

@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "./product/wp02/browser-driver-fixture.ts"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -8,6 +10,7 @@ import { prepareOperatorAccess } from "../local/enroll.ts"
 import { createLocalInstallation } from "../local/entry.ts"
 
 test("Executive metrics align, fill the content area and fit desktop and mobile viewports", async () => {
+  expectSpawn(import.meta.path)
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "operator-browser-"))
   const file = await prepareLocalConfiguration(root)
   const access = await prepareOperatorAccess(file, true)
@@ -19,11 +22,13 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
   }
   const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
   const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  let driver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   const failures: string[] = []
+  let completed = false
   try {
-    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
+    // Node owns Playwright extra stdio; the original Chrome launch budget remains 30 s.
+    driver = await launchBrowserDriver("visual-layout", { signal: new AbortController().signal, timeoutMs: 30000 })
+    const page = await driver.browser.newPage({ viewport: { width: 1440, height: 1000 } })
     page.on("pageerror", (error) => { failures.push(error.message) })
     await page.goto(pathToFileURL(access.artifact).href)
     await page.waitForURL("http://localhost:4110/sucafina/dashboard")
@@ -90,10 +95,17 @@ test("Executive metrics align, fill the content area and fit desktop and mobile 
       }
     }
     expect(failures).toEqual([])
+    completed = true
   } finally {
     await server.stop(true)
-    await browser.close()
-    await installation.dispose()
-    await rm(root, { recursive: true, force: true })
+    try {
+      if (driver) {
+        await driver.close()
+        if (completed) driver.report()
+      }
+    } finally {
+      try { await installation.dispose() }
+      finally { await rm(root, { recursive: true, force: true }) }
+    }
   }
 }, 60000)

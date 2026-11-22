@@ -1,3 +1,4 @@
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { test } from "bun:test"
 import { expect, type BrowserContext } from "@playwright/test"
 import path from "node:path"
@@ -5,6 +6,7 @@ import { localBrowser } from "./fixture/local-browser.ts"
 
 test("private operator completes supplier, PR, sourcing and issued PO through browser forms", async () => {
   console.info("browser business: fixture opening")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   try {
     console.info("browser business: fixture ready")
@@ -172,10 +174,12 @@ test("private operator completes supplier, PR, sourcing and issued PO through br
     await fixture.dispose()
     console.info("browser business: cleanup complete")
   }
+  fixture.report()
 }, 120000)
 
 test("two browser tabs reject a stale supplier save without overwriting persisted data", async () => {
   console.info("browser business: fixture opening")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   const secondary: { context?: BrowserContext } = {}
   try {
@@ -281,4 +285,5 @@ test("two browser tabs reject a stale supplier save without overwriting persiste
     }
     console.info("browser business: cleanup complete")
   }
+  fixture.report()
 }, 45000)

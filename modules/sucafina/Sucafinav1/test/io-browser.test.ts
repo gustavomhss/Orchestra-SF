@@ -1,3 +1,4 @@
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { test } from "bun:test"
 import { Workbook } from "exceljs"
 import { expect } from "@playwright/test"
@@ -8,6 +9,7 @@ import { captureBrowserPng, withinBrowserDeadline } from "./fixture/browser-evid
 
 test("browser previews/applies Planner XLSX and exports persisted monthly values and totals", async () => {
   console.info("browser IO: opening private installation")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   try {
     console.info("browser IO: private installation authenticated")
@@ -95,10 +97,12 @@ test("browser previews/applies Planner XLSX and exports persisted monthly values
     await fixture.dispose()
     console.info("browser IO: cleanup complete")
   }
+  fixture.report()
 }, 90000)
 
 test("browser roundtrips private document bytes, supplier CSV and Members XLSX", async () => {
   console.info("browser IO: opening private installation")
+  expectSpawn(import.meta.path)
   const fixture = await localBrowser()
   try {
     console.info("browser IO: private installation authenticated")
@@ -182,6 +186,7 @@ test("browser roundtrips private document bytes, supplier CSV and Members XLSX",
     await fixture.dispose()
     console.info("browser IO: cleanup complete")
   }
+  fixture.report()
 }, 90000)
 
 async function submit(page: Page, form: Locator) {

@@ -2764,7 +2764,7 @@
   },
   "reviewCorrections": {
     "parentSha": "532a7e7958a9a8932076532cab93cf3ce61fb85e",
-    "status": "PENDING_FOCAL_AND_INDEPENDENT_REVIEW",
+    "status": "MONTHLY_REPLAY_FOCAL_PASS_OTHER_CORRECTIONS_PENDING",
     "monthlyReplay": {
       "finding": "A durable receipt previously acknowledged a result reverted by restoreBackup.",
       "changes": [
@@ -2773,7 +2773,63 @@
         "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts"
       ],
       "behavior": "Preserve consumed intent; bind acknowledgement to applied row value/revision, version state and dataset revision; conflict on superseded or pre-fence receipt without mutation.",
-      "regression": "Existing real SQLite replay test has restart, private backup/restore, same-row edit and legacy-receipt variants. Restore and subsequent retries retain the consumed receipt and do not append audit or reapply."
+      "regression": "Existing real SQLite replay test has restart, private backup/restore, same-row edit and legacy-receipt variants. Restore and subsequent retries retain the consumed receipt and do not append audit or reapply.",
+      "independentReview": {
+        "reviewer": "Astra Teams coordinator",
+        "sourceSha": "be69ce682aa8313ba1e98f67e5b47fbaefbb7282",
+        "treeSha": "014eb0b28c5a5f42bf17aba8875d53700647c508",
+        "status": "STATIC_NO_FINDINGS"
+      },
+      "focal": {
+        "artifactId": 14761592135,
+        "zipSha256": "eb46c18487fac65b0ca2649898f9311f93ab553e8d9f1194470c30f2d92c6850",
+        "receiptSha256": "eed686a93340de4db1a989c0c3b5a8cab4f16f4dcf5682baaf6bde6e9fdf3335",
+        "receipt": {
+          "schemaVersion": 1,
+          "status": "PASS",
+          "proofClass": "FOCUSED_MONTHLY_RECOVERY_REGRESSION",
+          "sourceSha": "c6ee32d7071c2e06ba050d4d64470fc9af69e5cb",
+          "treeSha": "5abe3f5b10eb0462e4efa3596376a46523f6c51b",
+          "driverSha": "8a3d009d1d58a5219f57f6fa0a62d93987b42272",
+          "runId": "45040612283",
+          "attempt": "1",
+          "runnerOS": "Linux",
+          "runnerArch": "X64",
+          "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+          "testBlobSha": "39286e77520bfae11bc18a6b51217fd409f3f72f",
+          "executedTests": 52,
+          "recoveryVariants": [
+            "restart",
+            "restore",
+            "edit",
+            "legacy"
+          ],
+          "hashes": {
+            "report.xml": "fc4a9ae7360b0779df80a496d54ae51392ad37e46651b73fa2fdd945426e2a08",
+            "summary.json": "5e3600d726ff60f0f94d7dfc047659d2920b931119bf9a3b9500f64a73a19aac",
+            "run.log": "c1e49b78d2f2fb8023e5437b52f29585131e0c64e30c91ff900760e1585b2838",
+            "execution.txt": "051a72426e90838669beee8244c6d390eeab32b06f126d5a2f32fd768828bfc3",
+            "selection.txt": "b7ba1072452bd40bee0a6852175f248ef32c670361a6ea4cf66c04a8cc4bbae4"
+          },
+          "limitation": "Exact-file SQLite regression only. Not integrated gate, installed Teams, tar or production qualification."
+        },
+        "hashChecks": {
+          "report.xml": true,
+          "summary.json": true,
+          "run.log": true,
+          "execution.txt": true,
+          "selection.txt": true
+        },
+        "jobId": 137263991552,
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45040612283",
+        "caseCounts": {
+          "passed": 52,
+          "failed": 0,
+          "skipped": 0,
+          "todo": 0,
+          "expectCalls": 405
+        }
+      }
     },
     "monthlyRemount": {
       "finding": "Normal shell refresh replaced main and removed the monthly grid without mounting its successor.",
@@ -2792,6 +2848,39 @@
         "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts"
       ],
       "behavior": "The Bun setup consumes prepareSfLocalWorkspace and issues a private receipt. The Node fixture verifies its owner-only physical child path. Discovery and project picker use workspace; credentials/configuration remain under private root. No production admission fallback."
+    },
+    "browserOwnership": {
+      "status": "EXPERIMENT_PENDING_ACTIONS",
+      "parentSha": "c6ee32d7071c2e06ba050d4d64470fc9af69e5cb",
+      "failureRunId": 45038699571,
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+        "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+        "modules/sucafina/Sucafinav1/test/business-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/io-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/local-controls-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/parity-polling-browser.test.ts"
+      ],
+      "observations": [
+        {
+          "jobId": 137258101699,
+          "failure": "Omni stdout EBADF before form-layout obtains a Chromium PID",
+          "sequence": "visual-layout direct Bun Chromium completed at 15:34:57.682Z; five pure parity-recovery-plan tests completed at .687Z; form-layout driver started at .688Z and stdout EBADF followed."
+        },
+        {
+          "jobId": 137258101534,
+          "failure": "One SQLITE_PROTOCOL exception in local-store authReader SELECT after direct Bun Chromium launch",
+          "sequence": "Only one LocalStore instance, first Settings POST, before the second browser tab. No PID/WAL locking telemetry proves external writer contention. No retry or SQLite change."
+        }
+      ],
+      "primaryReports": [
+        "https://github.com/oven-sh/bun/issues/47956",
+        "https://github.com/oven-sh/bun/issues/47561"
+      ],
+      "hypothesis": "A finalized Bun subprocess with extra Playwright stdio may close a recycled descriptor. This is consistent with the preceding direct launch and the upstream reports; effects on SQLite remain unproved until Actions.",
+      "behavior": "Two browser fixtures use the existing Node/AppProcess bridge with installed Chrome and the original 30000 ms acquisition ceiling; all case deadlines and assertions are retained. Caller-specific expectSpawn is declared in each active test. Strict Node/Chromium/Unix transport closure remains mandatory. Local browser retains its independent Linux PID/UID/PGID/generation census and refuses pending or failed driver cleanup.",
+      "qualification": "No product change. No new pass claimed; existing pool206 remains scoped to C532a."
     }
   }
 }
