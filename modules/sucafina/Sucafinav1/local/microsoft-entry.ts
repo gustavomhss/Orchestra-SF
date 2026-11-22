@@ -1,7 +1,7 @@
 import path from "node:path"
 import { randomUUID } from "node:crypto"
-import { Effect } from "effect"
-import type { SfTeamContextQuery, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
+import { Effect, Schema } from "effect"
+import { SfTeamInstallationDescriptor, type SfTeamContextQuery } from "@orchestra/schema/sucafina/context"
 import type { SfTeamCurrentChoice } from "../../../../apps/cli/src/sucafina-product/team-current-choice.ts"
 import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
 import type { openCorporateRecoveryRegister } from "../runtime/corporate-recovery-register.ts"
@@ -49,10 +49,10 @@ export async function createMicrosoftInstallation(
   if (nativeWeb && config.teams !== "direct") throw new Error("Native Team Web requires Microsoft Teams admission")
   const authorize = await loadMicrosoftIngressAuthorizer(directory)
   const installationId = teamProfileInstallationId({ origin: config.origin, mount: config.mount, directory })
-  const nativeBinding: SfTeamInstallationDescriptor | undefined = nativeWeb ? Object.freeze({
+  const nativeBinding = nativeWeb ? Object.freeze(Schema.decodeUnknownSync(SfTeamInstallationDescriptor)({
     contractRevision: "sf-team-profile/1", authMode: "microsoft", publicOrigin: config.origin,
     mount: config.mount, tenantId: config.tenantId, installationId, projectId: installationId, hostId: randomUUID(),
-  }) : undefined
+  })) : undefined
   const store = await openLocalStore(path.join(directory, "business-microsoft"), config.teams === "direct" ? {
     teamProfilePolicy: {
       binding: { installationId, tenantId: config.tenantId },

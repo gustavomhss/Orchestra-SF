@@ -156,7 +156,8 @@ export async function runTeamBusiness(input: {
       maxJsonBytes: 2 * 1024 * 1024,
       assets: { persistence, services },
     })
-    const native = input.nativeDomain && await (async () => {
+    const nativeDomain = input.nativeDomain
+    const native = nativeDomain && await (async () => {
       // The original module and every native fence hold the same first role
       // observation. Repeated authentication cannot replace that authority.
       const actor = await currentActor()
@@ -164,13 +165,13 @@ export async function runTeamBusiness(input: {
       authorized.actor = actor
       const { createSfTeamNativeDomain } = await import("../../../../apps/cli/src/sucafina-product/team-native-domain.ts")
       const domain = await createSfTeamNativeDomain({
-        request, handler: business, ...input.nativeDomain, profile: admission.profile,
+        request, handler: business, ...nativeDomain, profile: admission.profile,
         current: () => reauthorize({ refreshSession: false }),
       }).handle()
       if (domain) return domain
       const { createSfTeamNativeProcurement } = await import("../../../../apps/cli/src/sucafina-product/team-native-procurement.ts")
       return createSfTeamNativeProcurement({
-        request, handler: business, ...input.nativeDomain, profile: admission.profile,
+        request, handler: business, ...nativeDomain, profile: admission.profile,
         current: () => reauthorize({ refreshSession: false }),
       }).handle()
     })()

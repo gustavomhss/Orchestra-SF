@@ -55,6 +55,9 @@ jobs:
         id: install
         with:
           reuse-node: "true"
+      - name: Prepare the original Omni addon and supervisor
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: ./.github/actions/omni-binaries
       - name: Exercise native factory and signed Microsoft HTTP paths
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         working-directory: modules/sucafina/Sucafinav1

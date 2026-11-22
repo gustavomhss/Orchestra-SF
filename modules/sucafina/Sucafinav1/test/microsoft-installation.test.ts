@@ -1611,7 +1611,7 @@ function expectNativeReadBindings(context: SfTeamContext, contractsReadable = fa
     ...destination, canRead: destination.capabilityId === "CAP14" && contractsReadable,
   }))
   expect(context.destinations.filter((item) => ["CAP14", "CAP04", "CAP05"].includes(item.capabilityId))).toEqual(expected)
-  expect(context.availability).toEqual(expected.map((destination) => ({
+  expect<unknown>(context.availability).toEqual(expected.map((destination) => ({
     family: "domain-read", resource: destination.capabilityId, state: destination.canRead ? "partial" : "denied",
     operations: Object.keys(SfOperationRegistry)
       .filter((id) => id === "domain.page." + destination.capabilityId || id.startsWith("domain.command." + destination.capabilityId + "."))

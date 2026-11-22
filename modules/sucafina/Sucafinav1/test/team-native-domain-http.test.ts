@@ -63,7 +63,7 @@ async function openFixture(nativeWeb: boolean) {
       expect(response.status).toBe(200)
       const result = Schema.decodeUnknownSync(SfTeamContextResult)(await response.json())
       if (result.status !== "ok") throw new Error("Current original F02 unavailable: " + result.status)
-      expect(result.value.stamp.team?.owner.profile).toEqual(f.profile(team))
+      expect<unknown>(result.value.stamp.team?.owner.profile).toEqual(f.profile(team))
       expect(result.value.stamp.principalRef).toBe(f.principalId)
       return result.value
     }
@@ -106,7 +106,7 @@ test("Microsoft factory F02 binds all three native capabilities and preserves or
   const current = await f.context()
   const capabilities = ["CAP14", "CAP04", "CAP05"]
   const native = current.destinations.filter((item) => capabilities.includes(item.capabilityId))
-  expect(native.map((item) => item.capabilityId)).toEqual(capabilities)
+  expect<unknown>(native.map((item) => item.capabilityId)).toEqual(capabilities)
   expect(native.map((item) => [item.canRead, item.allowedActionIds])).toEqual([
     [true, ["save", "delete"]],
     [true, ["save", "delete", "save-entry", "save-deviation", "annual-entry", "year-amount", "import"]],
@@ -114,13 +114,13 @@ test("Microsoft factory F02 binds all three native capabilities and preserves or
   ])
   expect(current.destinations.some((item) => item.capabilityId === "CAP25" && item.canRead)).toBe(true)
   expect(new Set(current.destinations.map((item) => item.capabilityId)).size).toBe(current.destinations.length)
-  expect(current.availability.map((item) => item.resource)).toEqual(capabilities)
+  expect<unknown>(current.availability.map((item) => item.resource)).toEqual(capabilities)
   for (const available of current.availability) {
     expect(available.family).toBe("domain-read")
     expect(available.state).toBe("ready")
     const operations = Object.keys(SfOperationRegistry).filter((id) =>
       id === "domain.page." + available.resource || id.startsWith("domain.command." + available.resource + "."))
-    expect(available.operations.map((item) => item.operationId)).toEqual(operations)
+    expect<unknown>(available.operations.map((item) => item.operationId)).toEqual(operations)
     expect(available.operations.every((item) => item.state === "ready" && item.operational && item.reason === null)).toBe(true)
   }
   for (const cap of ["CAP14", "CAP04", "CAP05"] as const) {
