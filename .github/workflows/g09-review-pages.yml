@@ -1,0 +1,100 @@
+name: g09-review-pages
+run-name: Read original G09 diagnostic without rerunning qualification
+
+on:
+  push:
+    branches:
+      - g09-review-pages
+
+concurrency:
+  group: g09-review-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  measure-review-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout the navigation code and explicit input identities
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Prepare the read-only navigation request
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          source = Path(".github/ci/g09-review-input.json")
+          value = json.loads(source.read_bytes())
+          fields = {
+              "NAV_RUN_ID": ("runId", r"[1-9][0-9]*"),
+              "NAV_RUN_ATTEMPT": ("runAttempt", r"[1-9][0-9]*"),
+              "NAV_REPORT_ARTIFACT_ID": ("reportArtifactId", r"[1-9][0-9]*"),
+              "NAV_PRODUCER_ARTIFACT_ID": ("producerArtifactId", r"[1-9][0-9]*"),
+              "NAV_SOURCE_SHA": ("sourceSHA", r"[a-f0-9]{40}"),
+          }
+          directory = Path(os.environ["RUNNER_TEMP"]) / "g09-review-input"
+          directory.mkdir(mode=0o700)
+          (directory / "expected.json").write_bytes(source.read_bytes())
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              for env, (key, pattern) in fields.items():
+                  assert isinstance(value[key], str) and re.fullmatch(pattern, value[key]), "invalid " + key
+                  output.write(env + "=" + value[key] + "\n")
+          PY
+
+      - name: Download the original report and raw GitHub identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          input="$RUNNER_TEMP/g09-review-input"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_REPORT_ARTIFACT_ID" > "$input/report-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_PRODUCER_ARTIFACT_ID" > "$input/producer-artifact.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NAV_RUN_ID/attempts/$NAV_RUN_ATTEMPT" > "$input/run.json"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NAV_RUN_ID/attempts/$NAV_RUN_ATTEMPT/jobs?per_page=100" > "$input/jobs.json"
+          gh api "repos/$GITHUB_REPOSITORY/contents/script/sf-ci/g09-581-catalog.json?ref=$NAV_SOURCE_SHA" > "$input/catalog-metadata.json"
+          python3 - "$input" <<'PY'
+          import base64, json, sys
+          from pathlib import Path
+          root = Path(sys.argv[1])
+          metadata = json.loads((root / "catalog-metadata.json").read_bytes())
+          assert metadata["type"] == "file" and metadata["encoding"] == "base64"
+          assert metadata["path"] == "script/sf-ci/g09-581-catalog.json"
+          (root / "catalog.json").write_bytes(base64.b64decode("".join(metadata["content"].split()), validate=True))
+          PY
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$NAV_REPORT_ARTIFACT_ID/zip" > "$input/report.zip"
+
+      - name: Verify original bindings and measure complete review pages
+        run: |
+          set -euo pipefail
+          python3 .github/ci/g09-review-pages.py \
+            --input "$RUNNER_TEMP/g09-review-input" \
+            --output "$RUNNER_TEMP/g09-review-output"
+
+      - name: Preserve measured pages and navigation inputs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-review-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/g09-review-output
+            ${{ runner.temp }}/g09-review-input/expected.json
+            ${{ runner.temp }}/g09-review-input/report-artifact.json
+            ${{ runner.temp }}/g09-review-input/producer-artifact.json
+            ${{ runner.temp }}/g09-review-input/run.json
+            ${{ runner.temp }}/g09-review-input/jobs.json
+            ${{ runner.temp }}/g09-review-input/catalog.json
+            ${{ runner.temp }}/g09-review-input/catalog-metadata.json
+          if-no-files-found: error
+          retention-days: 30
