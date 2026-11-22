@@ -1,0 +1,864 @@
+{
+  "schema": "sf-design-diagnostic-manifest-v1",
+  "label": "Portfolio25",
+  "archiveAttempt": "attempt-22",
+  "runId": 45037958471,
+  "jobId": 137255778039,
+  "qaBase": "5abb86723f00b287325e3ac274388bdda8adec8b",
+  "classification": "diagnostic-only; not qualification",
+  "recordCounts": {
+    "profiler": 211,
+    "source": 24,
+    "context": 2,
+    "capture": 6,
+    "stage": 46,
+    "diagnostics": 3,
+    "previewChunks": 33,
+    "jpegs": 7,
+    "totalStructuredEmissionLines": 325
+  },
+  "allStructuredRecordsPreserved": true,
+  "rawLogArchived": false,
+  "preservation": {
+    "profile": "All 211 profiler payloads retained without value changes, with originalPayload, timestamp and sourceLine.",
+    "sourceEvents": "All 81 source/context/capture/stage/diagnostic payloads retained in original emission order, with originalPayload, timestamp and sourceLine.",
+    "previewChunks": "All 33 chunk data payloads are recoverable by canonical base64 encoding the original JPEG bytes and splitting at the recorded base64Characters lengths in part order. Names, 1-based parts, declared totals, sourceLine, timestamps and chunk hashes are retained."
+  },
+  "profilerAudit": {
+    "records": 211,
+    "started": 1,
+    "bucketRecords": 205,
+    "periodicSummaries": 5,
+    "finalSummaries": 0,
+    "totalStructuredRecords": 325,
+    "scopeOrigin": "before-human-admit",
+    "canonicalDigestSurface": {
+      "meaning": "direct-caller-label",
+      "labels": [
+        "principal.direct",
+        "source.scope-validation",
+        "source.other",
+        "finance.current",
+        "finance.other",
+        "unlabelled"
+      ]
+    },
+    "canonicalDirect": "direct canonicalSfValue calls; internal digest canonicalization excluded",
+    "maximumObservedProfilerLineLength": 653,
+    "identicalKeyInventory": true,
+    "snapshotAudits": [
+      {
+        "snapshot": 1,
+        "elapsedMs": 10006,
+        "dueMs": 10000,
+        "trigger": "settled-span",
+        "observedKeys": 41,
+        "declaredBuckets": 41,
+        "uniqueKeys": 41,
+        "measuredPending": 1,
+        "declaredPending": 1,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "source.scope-validation",
+          "principal.direct",
+          "source.other",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 85669,
+          "settled": 85669,
+          "pending": 0,
+          "inclusiveMs": 2702
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 1,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 10006,
+            "trigger": "settled-span",
+            "dueMs": 10000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          }
+        ]
+      },
+      {
+        "snapshot": 2,
+        "elapsedMs": 20000,
+        "dueMs": 20000,
+        "trigger": "settled-span",
+        "observedKeys": 41,
+        "declaredBuckets": 41,
+        "uniqueKeys": 41,
+        "measuredPending": 1,
+        "declaredPending": 1,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "source.scope-validation",
+          "principal.direct",
+          "source.other",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 265093,
+          "settled": 265093,
+          "pending": 0,
+          "inclusiveMs": 6218
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 2,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 20000,
+            "trigger": "settled-span",
+            "dueMs": 20000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          }
+        ]
+      },
+      {
+        "snapshot": 3,
+        "elapsedMs": 30001,
+        "dueMs": 30000,
+        "trigger": "settled-span",
+        "observedKeys": 41,
+        "declaredBuckets": 41,
+        "uniqueKeys": 41,
+        "measuredPending": 3,
+        "declaredPending": 3,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "source.scope-validation",
+          "principal.direct",
+          "source.other",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 401445,
+          "settled": 401445,
+          "pending": 0,
+          "inclusiveMs": 9395
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 3,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 30001,
+            "trigger": "settled-span",
+            "dueMs": 30000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 3,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 30001,
+            "trigger": "settled-span",
+            "dueMs": 30000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 18083,
+            "settled": 18082,
+            "pending": 1,
+            "inclusiveMs": 7453
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 3,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 30001,
+            "trigger": "settled-span",
+            "dueMs": 30000,
+            "name": "state.read.total",
+            "origin": "none",
+            "surface": "none",
+            "calls": 552,
+            "settled": 551,
+            "pending": 1,
+            "inclusiveMs": 2410
+          }
+        ]
+      },
+      {
+        "snapshot": 4,
+        "elapsedMs": 40000,
+        "dueMs": 40000,
+        "trigger": "settled-span",
+        "observedKeys": 41,
+        "declaredBuckets": 41,
+        "uniqueKeys": 41,
+        "measuredPending": 2,
+        "declaredPending": 2,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "source.scope-validation",
+          "principal.direct",
+          "source.other",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 575307,
+          "settled": 575307,
+          "pending": 0,
+          "inclusiveMs": 12960
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 4,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 40000,
+            "trigger": "settled-span",
+            "dueMs": 40000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 4,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 40000,
+            "trigger": "settled-span",
+            "dueMs": 40000,
+            "name": "authority.principal",
+            "origin": "none",
+            "surface": "none",
+            "calls": 25865,
+            "settled": 25864,
+            "pending": 1,
+            "inclusiveMs": 10402
+          }
+        ]
+      },
+      {
+        "snapshot": 5,
+        "elapsedMs": 50041,
+        "dueMs": 50000,
+        "trigger": "settled-span",
+        "observedKeys": 41,
+        "declaredBuckets": 41,
+        "uniqueKeys": 41,
+        "measuredPending": 3,
+        "declaredPending": 3,
+        "callsBalanced": true,
+        "cumulativeMonotonic": true,
+        "emittedMatchesRecordIndex": true,
+        "bucketDrops": 0,
+        "rootDrops": 0,
+        "lineDrops": 0,
+        "diagnosticErrors": 0,
+        "skippedPeriodicThresholds": 0,
+        "digestSurfaces": [
+          "unlabelled",
+          "source.scope-validation",
+          "principal.direct",
+          "source.other",
+          "finance.other",
+          "finance.current"
+        ],
+        "digestTotals": {
+          "calls": 697487,
+          "settled": 697487,
+          "pending": 0,
+          "inclusiveMs": 16167
+        },
+        "pendingBuckets": [
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 5,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 50041,
+            "trigger": "settled-span",
+            "dueMs": 50000,
+            "name": "http.preview",
+            "origin": "none",
+            "surface": "none",
+            "calls": 1,
+            "settled": 0,
+            "pending": 1,
+            "inclusiveMs": 0
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 5,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 50041,
+            "trigger": "settled-span",
+            "dueMs": 50000,
+            "name": "state.read.total",
+            "origin": "none",
+            "surface": "none",
+            "calls": 954,
+            "settled": 953,
+            "pending": 1,
+            "inclusiveMs": 4084
+          },
+          {
+            "request": 1,
+            "phase": "bucket",
+            "snapshot": 5,
+            "snapshotPhase": "periodic",
+            "elapsedMs": 50041,
+            "trigger": "settled-span",
+            "dueMs": 50000,
+            "name": "state.read.full.clone-callback-await",
+            "origin": "none",
+            "surface": "none",
+            "calls": 507,
+            "settled": 506,
+            "pending": 1,
+            "inclusiveMs": 2713
+          }
+        ]
+      }
+    ],
+    "structuredParseErrors": [],
+    "issues": []
+  },
+  "chunkAudit": {
+    "partNumbering": "1-based",
+    "missingParts": 0,
+    "duplicateParts": 0,
+    "inconsistentPartTotals": 0,
+    "base64SyntaxErrors": 0,
+    "base64RoundTripExact": true,
+    "jpegBoundariesValidated": true,
+    "totalOriginalJpegBytes": 536633,
+    "allImagesIndividuallyViewed": true,
+    "allImageReadbacksMatchOriginalBase64": true,
+    "readbackCommit": "e7d680e391534d5d933bd0af479b5f51101e2c93",
+    "readbackCommitHasNoRef": true
+  },
+  "images": [
+    {
+      "name": "UI42-list-dark-desktop-test-data",
+      "path": "gallery/UI42-list-dark-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 80564,
+      "sha256": "22e37016adf6ba76f1708da4d06fdddaf72e6e8ef5e729abe9fe0822116129ee",
+      "gitBlobSha": "7abf26d34cb2e785a4021e18d7f16fd6e945851c",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 107420,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T15:32:13.0457926Z",
+      "lastChunkAt": "2026-11-22T15:32:13.2907195Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "5a14ce55b500fc69ae237a3457f270143942a16d4dbd38b433760158b23e68c4",
+          "sourceLine": 1178,
+          "timestamp": "2026-11-22T15:32:13.0457926Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "c82e51edad486a889f4bd334b839e98d56a760363e0e2cb4376eb1edca7f181e",
+          "sourceLine": 1180,
+          "timestamp": "2026-11-22T15:32:13.0978453Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "52015f171d63dd71acc840f16555640765bca0c70f1bdf7218d141830c197d31",
+          "sourceLine": 1182,
+          "timestamp": "2026-11-22T15:32:13.1715732Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "ef0aad46050ef6cc48c01d56e55b00e9a39249e8f6e0753732a690ecd6dde233",
+          "sourceLine": 1184,
+          "timestamp": "2026-11-22T15:32:13.2599193Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 11420,
+          "base64Sha256": "49d9a9d9f6c298655e5e10675a6975b1a97583b4a7631f8a3cfbbaf92b79931d",
+          "sourceLine": 1186,
+          "timestamp": "2026-11-22T15:32:13.2907195Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-light-desktop-test-data",
+      "path": "gallery/UI42-list-light-desktop-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 85857,
+      "sha256": "6cfed255e3451be8109eb4a7bd7fc3deeedc7778e521e327e0dfd702cd555c6f",
+      "gitBlobSha": "5aae23c21166fdf38ccd70055b95725e9d0272bb",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 114476,
+      "declaredParts": 5,
+      "receivedParts": 5,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "firstChunkAt": "2026-11-22T15:32:13.9504459Z",
+      "lastChunkAt": "2026-11-22T15:32:14.2356589Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "69fc33948421627aab7aeab4e1c34f52b7278e4ec04efb1e5897fc2e109d16d8",
+          "sourceLine": 1190,
+          "timestamp": "2026-11-22T15:32:13.9504459Z"
+        },
+        {
+          "part": 2,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "fe5ad10d9ab276d8fbeee96b54820a1bfd1ef1c7c71de663f394e995e05f0214",
+          "sourceLine": 1192,
+          "timestamp": "2026-11-22T15:32:14.0299178Z"
+        },
+        {
+          "part": 3,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "33e669fcdcc34f34a1b7f223b5b14ca553663fd108f2ca419b3d21e1e011e477",
+          "sourceLine": 1194,
+          "timestamp": "2026-11-22T15:32:14.1147683Z"
+        },
+        {
+          "part": 4,
+          "parts": 5,
+          "base64Characters": 24000,
+          "base64Sha256": "0e487535fdbb988e6cc5a4727168da2bf95dc67e70a31ed628df60f488fc3bc6",
+          "sourceLine": 1196,
+          "timestamp": "2026-11-22T15:32:14.1763721Z"
+        },
+        {
+          "part": 5,
+          "parts": 5,
+          "base64Characters": 18476,
+          "base64Sha256": "e97ead5daccefc59868000fb3862b36eb0f310e9acf9d765373ed087c0590931",
+          "sourceLine": 1198,
+          "timestamp": "2026-11-22T15:32:14.2356589Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-dark-390-test-data",
+      "path": "gallery/UI42-list-dark-390-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 28670,
+      "sha256": "ad829c4e3abf8ccdd9e44e65cb359c695e72706f76628625610d9f7f4e64f61d",
+      "gitBlobSha": "8b5062b4d3701fcc190d9d5e1c965abe6412e154",
+      "width": 390,
+      "height": 844,
+      "base64Characters": 38228,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T15:32:14.3541355Z",
+      "lastChunkAt": "2026-11-22T15:32:14.3994293Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "f0a5c9ba267e346258f23fc93726be4c09148502cd07acdf0d07094718abe891",
+          "sourceLine": 1202,
+          "timestamp": "2026-11-22T15:32:14.3541355Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 14228,
+          "base64Sha256": "5dbd449066c822f527921ba5178575088d1506b11e41aa79d534c3500659dd81",
+          "sourceLine": 1204,
+          "timestamp": "2026-11-22T15:32:14.3994293Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-list-light-320-test-data",
+      "path": "gallery/UI42-list-light-320-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 27442,
+      "sha256": "d6d9fe8fce946758cbb1912c42371fe1c7dec720e91e3912f9b1c1e7fe8eeaa0",
+      "gitBlobSha": "51fcab6f2ce4a035a94041718b8b0a47d0ca5ff7",
+      "width": 320,
+      "height": 800,
+      "base64Characters": 36592,
+      "declaredParts": 2,
+      "receivedParts": 2,
+      "originalEmissionOrder": [
+        1,
+        2
+      ],
+      "firstChunkAt": "2026-11-22T15:32:14.8803578Z",
+      "lastChunkAt": "2026-11-22T15:32:14.9115604Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 2,
+          "base64Characters": 24000,
+          "base64Sha256": "e9939df16a15c034a48b6f7ee76e0695cc6c8876c048aaef07e98b516cdd06a5",
+          "sourceLine": 1208,
+          "timestamp": "2026-11-22T15:32:14.8803578Z"
+        },
+        {
+          "part": 2,
+          "parts": 2,
+          "base64Characters": 12592,
+          "base64Sha256": "9c06b9a0dc3311c83c1dd2cababd40e2ff48d677bc7f0ef8a54e41f7b795bd90",
+          "sourceLine": 1210,
+          "timestamp": "2026-11-22T15:32:14.9115604Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-empty-authorized-case-test-data",
+      "path": "gallery/UI42-empty-authorized-case-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 97838,
+      "sha256": "4ebed2f862fc651d40ce5cc737965ea8f147636ff1c0fd5d73521e8e0929c581",
+      "gitBlobSha": "7a63c8434986a030da41dd1c3f380d5710938d6c",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 130452,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T15:32:27.4129953Z",
+      "lastChunkAt": "2026-11-22T15:32:27.6797339Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "e70929db7619b0f292355ebbc0a3a6e3fc7697bd988fc5b90d16df9ad3282a1d",
+          "sourceLine": 1220,
+          "timestamp": "2026-11-22T15:32:27.4129953Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "5abf2d79cfde5278d29f460ae715dcdf4c578052f3745087828a5655cbd57a64",
+          "sourceLine": 1222,
+          "timestamp": "2026-11-22T15:32:27.4507698Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "8823ed31faf5566e9be9c0e88804694e9c1b8ab51a5a8b8b0f7e0079d5b3f37c",
+          "sourceLine": 1224,
+          "timestamp": "2026-11-22T15:32:27.4995206Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "76576411f6a559622d596eff35bd6d7f67845d1864bb5fff06fb93d49d0f07d4",
+          "sourceLine": 1226,
+          "timestamp": "2026-11-22T15:32:27.5563307Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "c52865c3ec1e4e8992f3df59b4f4cc852eacaf89877b1ecfba52178427d880cc",
+          "sourceLine": 1228,
+          "timestamp": "2026-11-22T15:32:27.6449634Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 10452,
+          "base64Sha256": "a751be79cc405883b1f0badfd0a2836f923132d2b8dfcfd5d4092fb16da18e73",
+          "sourceLine": 1230,
+          "timestamp": "2026-11-22T15:32:27.6797339Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "UI42-configure-focused-candidate-test-data",
+      "path": "gallery/UI42-configure-focused-candidate-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 106232,
+      "sha256": "a0023ed47836819711890af053d78e43fbe533e611e493203e319ef58422e8ab",
+      "gitBlobSha": "e7cea4cd0d8d479b6ce8aa0be8c3a88375c7e2fa",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 141644,
+      "declaredParts": 6,
+      "receivedParts": 6,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "firstChunkAt": "2026-11-22T15:32:43.8720070Z",
+      "lastChunkAt": "2026-11-22T15:32:44.2128689Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "5d8b5268daa30f2226d123f60fe82bb9c3b57da3fc088343d28a47b1ef6c3098",
+          "sourceLine": 1238,
+          "timestamp": "2026-11-22T15:32:43.8720070Z"
+        },
+        {
+          "part": 2,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "e86c6a2ae7e04b851f06b0d738e1979cd6c8f284b6f3ecde4d7fb0b4069edebd",
+          "sourceLine": 1240,
+          "timestamp": "2026-11-22T15:32:43.9522375Z"
+        },
+        {
+          "part": 3,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "4d962a4b34a09d4c9998c853bb6ccb1b36776909ed6272b22dd9e8f3c740abf2",
+          "sourceLine": 1242,
+          "timestamp": "2026-11-22T15:32:44.0317629Z"
+        },
+        {
+          "part": 4,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "a76813eb6b16551964fbd4c76f55beae37c809b1d211f4b32dbe8bb7d2e2db98",
+          "sourceLine": 1244,
+          "timestamp": "2026-11-22T15:32:44.0980059Z"
+        },
+        {
+          "part": 5,
+          "parts": 6,
+          "base64Characters": 24000,
+          "base64Sha256": "dd8f4f2aa7219cc2ef52c6bfd2bf405687d4a20e0acfef67313eb28736a063f2",
+          "sourceLine": 1246,
+          "timestamp": "2026-11-22T15:32:44.1759523Z"
+        },
+        {
+          "part": 6,
+          "parts": 6,
+          "base64Characters": 21644,
+          "base64Sha256": "acfffdafcb8af240bc7167aa349791e46cb6ae2d4db0aff8542eb9d887239535",
+          "sourceLine": 1248,
+          "timestamp": "2026-11-22T15:32:44.2128689Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    },
+    {
+      "name": "FAILED-native-wave-three-test-data",
+      "path": "gallery/FAILED-native-wave-three-test-data.jpg",
+      "mimeType": "image/jpeg",
+      "bytes": 110030,
+      "sha256": "edff10fe6183d9ae78a88c8f4b9a3df5349027d0e7e0d21d1eafbe78fcae9999",
+      "gitBlobSha": "7c36e1990b814f8179be9fd1acbaa069988da82f",
+      "width": 1440,
+      "height": 1100,
+      "base64Characters": 146708,
+      "declaredParts": 7,
+      "receivedParts": 7,
+      "originalEmissionOrder": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "firstChunkAt": "2026-11-22T15:33:44.7387070Z",
+      "lastChunkAt": "2026-11-22T15:33:45.0054947Z",
+      "chunks": [
+        {
+          "part": 1,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "50c9b885a909db2fe46264461dfb9dfac334a6737b1171845fe12f723c14daa1",
+          "sourceLine": 1680,
+          "timestamp": "2026-11-22T15:33:44.7387070Z"
+        },
+        {
+          "part": 2,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "81afc61db39786c69d517d4e5f12c99e30a3b20c9c73e2affdf5d8e18c01c0a4",
+          "sourceLine": 1682,
+          "timestamp": "2026-11-22T15:33:44.8203141Z"
+        },
+        {
+          "part": 3,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "508d9e47053df78ac41a085d5da7f21cb711ef5fd6e62d532c0db6a43f06e220",
+          "sourceLine": 1684,
+          "timestamp": "2026-11-22T15:33:44.8687711Z"
+        },
+        {
+          "part": 4,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "3cd1d0082e53bff6c76bf9e2c81a71b226adeab273be8b6f46b4503ae2a7421e",
+          "sourceLine": 1686,
+          "timestamp": "2026-11-22T15:33:44.9058219Z"
+        },
+        {
+          "part": 5,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "d1e5661c35b8104426acfc43cf43252639f2a50ba95069457a17af19e654549c",
+          "sourceLine": 1688,
+          "timestamp": "2026-11-22T15:33:44.9409791Z"
+        },
+        {
+          "part": 6,
+          "parts": 7,
+          "base64Characters": 24000,
+          "base64Sha256": "ca5fdfd35b59f6fdd22b62e2d4ef5ded0c53865525d737af0194bb6eb3ef6f6a",
+          "sourceLine": 1690,
+          "timestamp": "2026-11-22T15:33:44.9806053Z"
+        },
+        {
+          "part": 7,
+          "parts": 7,
+          "base64Characters": 2708,
+          "base64Sha256": "b37f6b056fb83704496655c39f62944a4213a95b7c1e3409af5995f11115114c",
+          "sourceLine": 1692,
+          "timestamp": "2026-11-22T15:33:45.0054947Z"
+        }
+      ],
+      "individuallyViewed": true,
+      "remoteReadbackExact": true
+    }
+  ],
+  "limitations": [
+    "Diagnostic evidence only. The full original first declaration did not complete; no qualification or global counter increment is supported.",
+    "The collector starts before human.admit. Portfolio25 also adds direct-canonical bookkeeping to the labelled diagnostic. These observations do not establish a causal performance comparison with Portfolio23 or earlier attempts.",
+    "All bucket values are cumulative at an observed checkpoint. Inclusive durations overlap, are rounded to integer milliseconds, and must not be summed across bucket families into total CPU or wall time. Pending spans can be nested.",
+    "The six canonical.digest surfaces partition the recorded digestSfValue invocation population; their counts and inclusive durations may be summed for that bucket name. Each invocation has one digest span. Labels identify direct labelled call sites, not complete ancestry, and unlabelled calls remain unattributed.",
+    "canonical.direct measures direct canonicalSfValue calls outside active digest canonicalization; internal digest canonicalization is excluded. Neither canonical bucket measures all serialization, all canonical work outside the frame, or all CPU work.",
+    "root.caller.* instruments PlannerCalculationServices only. It does not cover the direct Finance caller. Missing caller buckets do not imply that Root was unused or attribute every Root invocation to Finance.",
+    "state.read.identity-absent aggregates read namespaces and arbitrary callbacks. It is not a count of missed selectSfCaseIdentity opportunities.",
+    "The baseline-accessor rejection branch rejects an unsupported accessor before comparing getter/setter identities. That reason would not prove getter/setter equality. No such rejection bucket was observed in this prefix.",
+    "root.physical.callback counts callback entries, not independently identified physical roots, committed transactions, accepted roots, or completed requests.",
+    "The narrow and full clone spans include their original callback and await, not only cloning. Their populations differ, so their average durations are not a controlled clone benchmark.",
+    "Zero drops, diagnostic errors and skipped thresholds apply to the five emitted checkpoints. There is no final snapshot. At the last checkpoint HTTP, state.read.total and the full clone/callback/await span each have one pending entry; the archive does not prove complete backend unwind.",
+    "Absent buckets describe this one diagnostic frame and emitted prefix only. Aggregate counters do not establish per-object joins or behavior outside the frame.",
+    "The diagnostic adds bookkeeping and output overhead without installing global intrinsic hooks, wrapping providers, or making extra authority/provider queries. No product candidate is selected by this archive."
+  ]
+}
