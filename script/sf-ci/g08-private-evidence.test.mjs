@@ -32,23 +32,39 @@ function plan() {
 function packageReceipt() {
   return { schema: "sf-g07-package-v1", status: "PACKAGE_VERIFIED", candidate: plan().candidate,
     archive: { file: "orchestra-sf-entra-linux-x64-baseline.tar.gz", sha256: "f".repeat(64), bytes: 100 },
-    manifest: { sha256: "1".repeat(64), files: [{ path: "bin/orchestra", sha256: "2".repeat(64), bytes: 80, executable: true }] },
+    manifest: { sha256: "1".repeat(64), files: [
+      { path: "bin/orchestra", sha256: "2".repeat(64), bytes: 80, executable: true },
+      { path: "bin/local/entry.mjs", sha256: "8".repeat(64), bytes: 20, executable: false }] },
+    factory: { path: "bin/local/entry.mjs", sha256: "8".repeat(64) },
     artifact: { id: "1234", name: "synthetic", zipSha256: "3".repeat(64) },
     producer: { runId: "100", runAttempt: "1", jobId: "200", checkRunId: "200", workflowSha: "4".repeat(40),
       workflowPath: ".github/workflows/release.yml" },
     acknowledgements: Object.fromEntries(["migration", "release"].map((role, index) => [role,
       { status: "VERIFIED_SOURCE", source: { url: "https://github.com/gustavomhss/Orchestra-SF/issues/628#issuecomment-" + (130 + index),
         bodySha256: "5".repeat(64) } }])),
-    installation: null, g07Closed: false, productionCutover: false }
+    verification: { installerSha256: "6".repeat(64) }, installation: null, g07Closed: false, productionCutover: false }
 }
 function host() {
+  const value = plan()
+  const descriptor = { contractRevision: "sf-team-profile/1", authMode: "microsoft",
+    installationId: value.target.installationId, tenantId: value.target.tenantId, projectId: value.target.projectId,
+    hostId: value.target.hostId, publicOrigin: value.target.publicOrigin, mount: value.target.mount }
+  const descriptorSha = digest(JSON.stringify(Object.fromEntries(Object.entries(descriptor).sort(([a], [b]) => a.localeCompare(b)))))
   return { schema: "sf-g08-installed-host-v1", status: "INSTALLATION_BYTES_AND_PROCESS_VERIFIED",
     candidate: plan().candidate, invocationId: plan().invocation.id, vmId: plan().reservation.vmId,
     archiveSha256: packageReceipt().archive.sha256, manifestSha256: packageReceipt().manifest.sha256,
     currentSource: plan().candidate.sha, observedAt: "2026-01-01T01:00:00Z",
     installerSha256: "6".repeat(64), releaseReceiptSha256: "7".repeat(64),
     process: { unit: "orchestra-sf.service", pid: 123, activeState: "active", subState: "running",
-      exe: "/opt/orchestra-sf/releases/" + plan().candidate.sha + "/bin/orchestra", startTicks: "100" } }
+      exe: "/opt/orchestra-sf/releases/" + plan().candidate.sha + "/bin/orchestra", startTicks: "100", bootId: uuid(20) },
+    binding: { status: "LOOPBACK_PID_AND_HTTPS_BOUND",
+      factoryPath: "/opt/orchestra-sf/releases/" + value.candidate.sha + "/bin/local/entry.mjs",
+      factorySha256: packageReceipt().factory.sha256, argvSha256: "a".repeat(64),
+      configurationPath: "/synthetic/private/installation.json", configurationSha256: "b".repeat(64),
+      listenerOrigin: "http://127.0.0.1:4096", listenerInode: "987", descriptor,
+      loopbackDiscoverySha256: descriptorSha, httpsDiscoverySha256: descriptorSha, ingressAddresses: ["10.0.0.4"],
+      caddyConfigSha256: "c".repeat(64), caddyProcess: { unit: "caddy.service", pid: 555, uid: 999,
+        exe: "/usr/bin/caddy", startTicks: "100", listeners: { tcp: ["444"], udp: [] } } } }
 }
 function report() {
   return { config: { workers: 1, grep: {}, grepInvert: null, shard: null,
@@ -116,6 +132,8 @@ for (const [name, change] of [
   ["ZIP instead of inner tar", (value) => { value.archive.file = "artifact.zip" }],
   ["missing manifest inventory", (value) => { value.manifest.files = [] }],
   ["missing pin ACK", (value) => { value.acknowledgements.migration.status = "DECLARED" }],
+  ["factory missing from manifest", (value) => { value.manifest.files.pop() }],
+  ["factory differs from manifest", (value) => { value.factory.sha256 = "9".repeat(64) }],
 ]) test("refuses " + name, () => { const value = packageReceipt(); change(value); assert.throws(() => validatePackage(value, validatePlan(plan()))) })
 
 test("package receipt with installation null is never a host witness", () => {
@@ -130,6 +148,19 @@ for (const [name, change] of [
   ["developer executable", (value) => { value.process.exe = "/usr/bin/bun" }],
   ["stopped service", (value) => { value.process.activeState = "inactive" }],
   ["old host receipt", (value) => { value.observedAt = "2025-01-01T00:00:00Z" }],
+  ["missing runtime binding", (value) => { delete value.binding }],
+  ["different running factory", (value) => { value.binding.factoryPath = "/opt/other/bin/local/entry.mjs" }],
+  ["factory bytes changed", (value) => { value.binding.factorySha256 = "9".repeat(64) }],
+  ["another HTTPS origin", (value) => { value.binding.descriptor.publicOrigin = "https://other.invalid" }],
+  ["another factory hostId", (value) => { value.binding.descriptor.hostId = "different-process" }],
+  ["uncorrelated HTTPS response", (value) => { value.binding.httpsDiscoverySha256 = "9".repeat(64) }],
+  ["different listener", (value) => { value.binding.listenerOrigin = "http://127.0.0.1:8090" }],
+  ["missing boot identity", (value) => { delete value.process.bootId }],
+  ["different installer bytes", (value) => { value.installerSha256 = "9".repeat(64) }],
+  ["missing original proxy process", (value) => { delete value.binding.caddyProcess }],
+  ["no assigned VM ingress address", (value) => { value.binding.ingressAddresses = [] }],
+  ["unobserved HTTPS socket", (value) => { value.binding.caddyProcess.listeners.tcp = [] }],
+  ["invalid ingress address", (value) => { value.binding.ingressAddresses = ["qa.example.invalid"] }],
 ]) test("refuses host " + name, () => { const value = host(); change(value); assert.throws(() => validateHost(value, validatePlan(plan()), packageReceipt())) })
 
 test("synthetic exact report lists separately from actual execution", () => {

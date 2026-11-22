@@ -4,7 +4,7 @@ import type { BrowserContext, Page } from "@playwright/test"
 import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
-import { cases, digest, privateText, readPlan, validateHost, validatePackage, writePrivate } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
+import { canonicalAddress, cases, digest, privateText, readPlan, record, validateHost, validatePackage, writePrivate } from "../../../../../script/sf-ci/g08-private-evidence.mjs"
 
 export type Plan = Awaited<ReturnType<typeof readPlan>>
 export type Target = Plan["target"]
@@ -160,11 +160,16 @@ export const installedTest = test.extend<{ harness: Harness }>({
     const packageRaw = await privateText(root, "package-receipt.json")
     if (digest(packageRaw) !== plan.packageReceiptSha256) throw new Error("G08_PACKAGE_BYTES_CHANGED")
     const receipt = validatePackage(JSON.parse(packageRaw), plan)
-    validateHost(JSON.parse(await privateText(root, "host-before.json")), plan, receipt)
+    const host = validateHost(JSON.parse(await privateText(root, "host-before.json")), plan, receipt)
+    const ingressAddresses = Schema.decodeUnknownSync(Schema.Array(Schema.String))(record(host.binding).ingressAddresses).map(canonicalAddress)
     const entry = cases.find((item) => item.title === info.title)
     if (!entry) throw new Error("G08_UNREGISTERED_CASE")
     const session = await attach(plan)
     const pages: Page[] = []
+    const boundDocuments = new Set<Page>()
+    const ingressErrors: string[] = []
+    const responseChecks: Promise<void>[] = []
+    const delivery = { resources: 0, cacheBypassPages: 0 }
     const revocation = { attempted: false, restored: false }
     try {
       await use({
@@ -180,20 +185,43 @@ export const installedTest = test.extend<{ harness: Harness }>({
           if (live.stamp.principalRef !== plan.actors[actor]) throw new Error("G08_PRINCIPAL_CHANGED")
           const page = await context.newPage()
           pages.push(page)
+          const protocol = await context.newCDPSession(page)
+          await protocol.send("Network.enable")
+          await protocol.send("Network.setCacheDisabled", { cacheDisabled: true })
+          await protocol.send("Network.setBypassServiceWorker", { bypass: true })
+          delivery.cacheBypassPages++
+          page.on("response", (response) => {
+            const resource = response.request().resourceType()
+            if (!["document", "script", "stylesheet"].includes(resource)) return
+            const check = (async () => {
+              if (new URL(response.url()).origin !== plan.target.publicOrigin || response.fromServiceWorker())
+                throw new Error("G08_BROWSER_CONTENT_OUTSIDE_ORIGINAL_INGRESS")
+              const peer = await response.serverAddr()
+              if (!peer || peer.port !== 443 || !ingressAddresses.includes(canonicalAddress(peer.ipAddress)))
+                throw new Error("G08_BROWSER_INGRESS_NOT_RESERVED_VM")
+              delivery.resources++
+              if (resource === "document" && response.frame() === page.mainFrame()) boundDocuments.add(page)
+            })().catch(() => { ingressErrors.push("G08_BROWSER_INGRESS_NOT_PROVEN") })
+            responseChecks.push(check)
+          })
           return page
         },
       })
     } finally {
+      await Promise.all(responseChecks)
       const closed = await Promise.allSettled(pages.map((page) => page.close()))
+      await Promise.all(responseChecks)
       const contextCount = session.browser.contexts().length
       await session.browser.close()
       await writePrivate(root, "cleanup-" + entry.id + ".json", {
         schema: "sf-g08-cleanup-v1", caseId: entry.id, invocationId: plan.invocation.id,
         originalContexts: 4, createdContexts: contextCount - 4, openedPages: pages.length,
         closedPages: pages.filter((page) => page.isClosed()).length, disconnected: true,
+        boundDocuments: boundDocuments.size, ingressResources: delivery.resources, ingressErrors: ingressErrors.length,
+        cacheBypassPages: delivery.cacheBypassPages,
         revocationAttempted: revocation.attempted, revocationRestored: revocation.restored,
       })
-      if (closed.some((result) => result.status === "rejected") || contextCount !== 4)
+      if (closed.some((result) => result.status === "rejected") || contextCount !== 4 || ingressErrors.length || boundDocuments.size !== pages.length)
         throw new Error("G08_PRIVATE_BROWSER_CLEANUP_INCOMPLETE")
     }
   },

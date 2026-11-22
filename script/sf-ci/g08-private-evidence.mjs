@@ -2,6 +2,7 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { constants } from "node:fs"
+import { isIP } from "node:net"
 import { lstat, open, readFile, realpath, mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -69,6 +70,12 @@ function origin(value) {
   const result = text(value), url = new URL(result)
   assert(url.protocol === "https:" && url.origin === result && !url.username && !url.password, "G08_HTTPS_ORIGIN_REQUIRED")
   return result
+}
+/** @param {unknown} value @returns {string} */
+export function canonicalAddress(value) {
+  const address = text(value).replace(/^::ffff:/i, "")
+  assert(isIP(address) !== 0, "G08_IP_ADDRESS_REQUIRED")
+  return isIP(address) === 4 ? address : new URL("http://[" + address + "]").hostname.slice(1, -1)
 }
 /** @param {unknown} value */
 export function target(value) {
@@ -196,14 +203,17 @@ export async function readPlan(root) {
 /** @param {unknown} value @param {ReturnType<typeof validatePlan>} plan */
 export function validatePackage(value, plan) {
   const receipt = record(value), candidate = record(receipt.candidate), archive = record(receipt.archive)
-  const manifest = record(receipt.manifest), artifact = record(receipt.artifact), producer = record(receipt.producer)
+  const manifest = record(receipt.manifest), artifact = record(receipt.artifact), producer = record(receipt.producer), factory = record(receipt.factory)
   assert(receipt.schema === "sf-g07-package-v1" && receipt.status === "PACKAGE_VERIFIED" &&
     receipt.productionCutover === false, "G08_G07_VERIFIED_RECEIPT_REQUIRED")
   assert(candidate.sha === plan.candidate.sha && candidate.tree === plan.candidate.tree, "G08_G07_CANDIDATE_MISMATCH")
   assert.equal(archive.file, "orchestra-sf-entra-linux-x64-baseline.tar.gz", "G08_ORIGINAL_INNER_TAR_REQUIRED")
-  hex(archive.sha256, 64); hex(manifest.sha256, 64); hex(artifact.zipSha256, 64)
+  hex(archive.sha256, 64); hex(manifest.sha256, 64); hex(artifact.zipSha256, 64); hex(factory.sha256, 64)
+  assert.equal(factory.path, "bin/local/entry.mjs", "G08_ORIGINAL_FACTORY_REQUIRED")
   assert(Number.isSafeInteger(archive.bytes) && Number(archive.bytes) > 0 && Array.isArray(manifest.files) && manifest.files.length > 0,
     "G08_G07_INVENTORY_REQUIRED")
+  const factoryEntries = manifest.files.map(record).filter((entry) => entry.path === factory.path)
+  assert(factoryEntries.length === 1 && factoryEntries[0].sha256 === factory.sha256, "G08_G07_FACTORY_INVENTORY_MISMATCH")
   for (const key of ["id", "name"]) assert(artifact[key] !== undefined, "G08_G07_ARTIFACT_REQUIRED")
   for (const key of ["runId", "runAttempt", "jobId", "checkRunId", "workflowSha", "workflowPath"])
     assert(producer[key] !== undefined, "G08_G07_PRODUCER_REQUIRED")
@@ -228,7 +238,36 @@ export function validateHost(value, plan, receipt) {
     running.activeState === "active" && running.subState === "running" &&
     running.exe === "/opt/orchestra-sf/releases/" + plan.candidate.sha + "/bin/orchestra" &&
     /^[1-9][0-9]*$/.test(String(running.startTicks)), "G08_RUNNING_INSTALLED_PROCESS_REQUIRED")
+  uuid(running.bootId)
+  const binding = record(host.binding), factory = record(receipt.factory)
+  const descriptor = { contractRevision: "sf-team-profile/1", authMode: "microsoft",
+    installationId: plan.target.installationId, tenantId: plan.target.tenantId, projectId: plan.target.projectId,
+    hostId: plan.target.hostId, publicOrigin: plan.target.publicOrigin, mount: plan.target.mount }
+  assert(binding.status === "LOOPBACK_PID_AND_HTTPS_BOUND" &&
+    binding.factoryPath === "/opt/orchestra-sf/releases/" + plan.candidate.sha + "/bin/local/entry.mjs" &&
+    binding.factorySha256 === factory.sha256 && binding.listenerOrigin === "http://127.0.0.1:4096",
+    "G08_RUNTIME_FACTORY_OR_LISTENER_MISMATCH")
+  id(binding.listenerInode)
+  assert(Array.isArray(binding.ingressAddresses) && binding.ingressAddresses.length > 0, "G08_ASSIGNED_INGRESS_ADDRESSES_REQUIRED")
+  const addresses = binding.ingressAddresses.map(canonicalAddress)
+  assert.equal(new Set(addresses).size, addresses.length, "G08_DUPLICATE_INGRESS_ADDRESS")
+  const proxy = record(binding.caddyProcess), listeners = record(proxy.listeners)
+  assert(proxy.unit === "caddy.service" && proxy.exe === "/usr/bin/caddy" && Number(proxy.pid) > 0 &&
+    Number.isSafeInteger(proxy.pid) && Number(proxy.uid) > 0 && Number.isSafeInteger(proxy.uid),
+    "G08_ORIGINAL_CADDY_PROCESS_REQUIRED")
+  id(proxy.startTicks)
+  assert(Array.isArray(listeners.tcp) && listeners.tcp.length > 0 && Array.isArray(listeners.udp), "G08_CADDY_HTTPS_SOCKET_REQUIRED")
+  for (const inode of [...listeners.tcp, ...listeners.udp]) id(inode)
+  hex(binding.caddyConfigSha256, 64)
+  hex(binding.argvSha256, 64); hex(binding.configurationSha256, 64)
+  const configurationPath = text(binding.configurationPath)
+  assert(path.isAbsolute(configurationPath) && path.resolve(configurationPath) === configurationPath, "G08_CONFIG_PATH_REQUIRED")
+  assert.deepEqual(binding.descriptor, descriptor, "G08_ORIGINAL_HTTPS_DESCRIPTOR_MISMATCH")
+  const descriptorSha256 = digest(JSON.stringify(Object.fromEntries(Object.entries(descriptor).sort(([a], [b]) => a.localeCompare(b)))))
+  assert(binding.loopbackDiscoverySha256 === descriptorSha256 && binding.httpsDiscoverySha256 === descriptorSha256,
+    "G08_LOOPBACK_HTTPS_CORRELATION_REQUIRED")
   hex(host.installerSha256, 64); hex(host.releaseReceiptSha256, 64)
+  assert.equal(host.installerSha256, record(receipt.verification).installerSha256, "G08_G07_INSTALLER_SOURCE_MISMATCH")
   const observed = Date.parse(text(host.observedAt))
   assert(Number.isFinite(observed) && observed >= Date.parse(plan.reservation.startsAt) &&
     observed < Date.parse(plan.reservation.endsAt), "G08_HOST_OUTSIDE_WINDOW")
@@ -310,6 +349,7 @@ async function main() {
   const beforeText = await privateText(root, "host-before.json"), afterText = await privateText(root, "host-after.json")
   const before = validateHost(JSON.parse(beforeText), plan, receipt), after = validateHost(JSON.parse(afterText), plan, receipt)
   assert.deepEqual(before.process, after.process, "G08_INSTALLED_PROCESS_CHANGED_DURING_QA")
+  assert.deepEqual(before.binding, after.binding, "G08_RUNTIME_BINDING_CHANGED_DURING_QA")
   assert.equal(before.installerSha256, after.installerSha256, "G08_INSTALLER_CHANGED")
   assert.equal(before.releaseReceiptSha256, after.releaseReceiptSha256, "G08_RELEASE_RECEIPT_CHANGED")
   assert(Date.parse(text(before.observedAt)) <= Date.parse(text(after.observedAt)), "G08_HOST_OBSERVATION_ORDER")
@@ -320,7 +360,10 @@ async function main() {
     const raw = await privateText(root, "cleanup-" + item.id + ".json"), value = record(JSON.parse(raw))
     assert(value.schema === "sf-g08-cleanup-v1" && value.caseId === item.id && value.invocationId === plan.invocation.id &&
       value.originalContexts === 4 && value.createdContexts === 0 && Number(value.openedPages) > 0 &&
-      value.openedPages === value.closedPages && value.disconnected === true, "G08_CLEANUP_NOT_OBSERVED")
+      value.openedPages === value.closedPages && value.disconnected === true &&
+      value.boundDocuments === value.openedPages && value.cacheBypassPages === value.openedPages &&
+      value.ingressErrors === 0 && Number(value.ingressResources) >= Number(value.openedPages),
+      "G08_CLEANUP_OR_BROWSER_INGRESS_NOT_OBSERVED")
     if (item.id === "real-revoke-restore")
       assert(value.revocationAttempted === true && value.revocationRestored === true, "G08_REVOCATION_RESTORATION_REQUIRED")
     cleanup.push({ caseId: item.id, sha256: digest(raw) })
