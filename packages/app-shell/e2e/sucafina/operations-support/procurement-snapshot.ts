@@ -81,8 +81,9 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("Sourcing approval")
     await expect(page.locator(`p[data-request-summary="${id}"]`)).toContainText("30240 USD")
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText(submitted)
-    await expect(page.getByRole("status").filter({ hasText: /^Estimate value: 28000 EUR; base value: 56000 USD; FX: 2 \(current\)\.$/ })).toBeVisible()
-    await expect(page.getByRole("status").filter({ hasText: /^Order value 56000 USD; approved sourcing value 30240 USD\. Review the difference\.$/ })).toBeVisible()
+    await expect(order.getByRole("status").filter({ hasText: /^Estimate value: 28000 EUR; base value: 56000 USD; FX: 2 \(current\)\.$/ })).toBeVisible()
+    await expect(order.getByRole("status").filter({ hasText: /^Order value 56000 USD; approved sourcing value 30240 USD\. Review the difference\.$/ })).toBeVisible()
+    await expect(order.getByRole("button", { name: "Submit purchase order", exact: true })).toBeDisabled()
     await expect(page.getByRole("status").filter({ hasText: /^Sourcing is not editable in the current request stage\.$/ })).toBeVisible()
     await expect(page.getByRole("button", { name: "Submit sourcing", exact: true })).toHaveCount(0)
     await page.goto(`/orchestra/sf-procurement/requests/${encoded}/sourcing/compare`)
@@ -94,7 +95,10 @@ export async function sourcingSnapshot(page: Page, info: TestInfo) {
     await expect(page.locator(`p[data-request-money="${id}"]`)).toHaveText(submitted)
     const after = await queueIdentity(page, account, id, submitted, "pending-approval")
     expect(after.domainVersion).toBe(before.domainVersion)
-    await observation(info, "operations-sourcing-frozen-fx", { recordId: id, before, after, domainVersion: pendingVersion, pendingSourcing: { original: 28000, currency: "EUR", rate: 1.08, baseAmount: 30240, state: "src_pending" }, futurePo: { baseAmount: 56000, rate: 2, submitted: false }, c06MaterialConfirmation: "BLOCKED_DEPENDENCY" })
+    const reloaded = await queueIdentity(page, account, id, submitted, "pending-approval", { reload: true })
+    expect(reloaded.sourceVersion).toBe(after.sourceVersion)
+    expect(reloaded.domainVersion).toBe(after.domainVersion)
+    await observation(info, "operations-sourcing-frozen-fx", { recordId: id, before, after, reloaded, domainVersion: pendingVersion, pendingSourcing: { original: 28000, currency: "EUR", rate: 1.08, baseAmount: 30240, state: "src_pending" }, futurePo: { baseAmount: 56000, rate: 2, submitted: false }, c06MaterialConfirmation: "BLOCKED_DEPENDENCY" })
   } finally {
     if (restore) await setEurRate(page, account, "2", "1.08")
   }

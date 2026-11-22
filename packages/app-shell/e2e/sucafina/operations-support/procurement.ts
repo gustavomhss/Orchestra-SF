@@ -9,9 +9,10 @@ export function sourcingStage(page: Page) {
   return page.locator(".sf-u12-heading p").filter({ hasText: /^Stage: .* · Source version:/ })
 }
 
-export async function queueIdentity(page: Page, account: Account, id: string, moneySentence: string, monetaryState: string | null) {
+export async function queueIdentity(page: Page, account: Account, id: string, moneySentence: string, monetaryState: string | null, options?: { reload: true }) {
   const listPath = "/orchestra/sf-procurement/requests"
-  expect((await page.goto(listPath))?.status()).toBe(200)
+  const navigation = options?.reload ? await page.reload() : await page.goto(listPath)
+  expect(navigation?.status()).toBe(200)
   const table = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Value basis", exact: true }) })
   await expect(table).toHaveCount(1)
   const link = table.getByRole("link", { name: id, exact: true })
@@ -33,7 +34,7 @@ export async function queueIdentity(page: Page, account: Account, id: string, mo
   const matching = projection.value.data.requests.filter((record) => record.number === id)
   expect(matching).toHaveLength(1)
   expect(matching[0]).toMatchObject({ ...identity, moneySentence, monetaryState })
-  await link.click()
+  if (!options?.reload) await link.click()
   await expect(page).toHaveURL((url) => url.origin === account.origin && url.pathname === listPath &&
     url.searchParams.get("request") === id && decodeURIComponent(url.hash.slice(1)) === id)
   await expect(page.getByText(moneySentence, { exact: true })).toBeVisible()
