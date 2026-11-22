@@ -7,19 +7,22 @@ This helper belongs only to the isolated `onboarding-recording` branch. It prepa
 | Asset | Pin | SHA-256 | Bytes | License |
 | --- | --- | --- | ---: | --- |
 | Official llama.cpp Ubuntu x64 CPU binary | `b12632`, source commit `8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052` | `3fe2107f1f58d7fb77c514d65b5873dc68ffe999f8e7fd3789a4448d477eb6e2` | 23,226,195 | MIT |
-| Official Qwen3-0.6B Q8_0 GGUF | `Qwen/Qwen3-0.6B-GGUF`, revision `1eaf4d9657fe65ad10a51eab76a8db5b363bddaa` | `9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031` | 639,446,688 | Apache-2.0 |
+| llama.cpp team conversion of Qwen3.5-0.8B Q8_0 GGUF | `ggml-org/Qwen3.5-0.8B-GGUF`, revision `316dea3b5462fd5755862bcec45a2f901bc0ba6b` | `37ae482d336108d23516fa35e8e0c4126688d81018b87178a18d752a1357814f` | 833,592,096 | Apache-2.0 |
 
 Primary sources checked on 2026-11-22:
 
 - [Official llama.cpp release b12632](https://github.com/ggml-org/llama.cpp/releases/tag/b12632). This is a pinned **prerelease** used for ephemeral recording, not a production release qualification. The selected asset is `llama-b12632-bin-ubuntu-x64.tar.gz` (asset ID 779362116); GitHub release metadata supplies its SHA-256 digest.
 - [Exact llama.cpp server documentation](https://github.com/ggml-org/llama.cpp/blob/b12632/tools/server/README.md), covering `/health`, OpenAI-compatible `/v1/chat/completions`, `/v1/models`, `--metrics`, CPU/context/output settings and Qwen thinking switches.
 - [llama.cpp MIT license](https://github.com/ggml-org/llama.cpp/blob/b12632/LICENSE).
-- [Official Qwen GGUF model card](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF), including Apache-2.0 licensing and non-thinking sampling guidance.
-- [Pinned Qwen model revision](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/commit/1eaf4d9657fe65ad10a51eab76a8db5b363bddaa).
-- [Official Q8_0 LFS pointer](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/raw/1eaf4d9657fe65ad10a51eab76a8db5b363bddaa/Qwen3-0.6B-Q8_0.gguf), whose SHA-256 object ID and exact size are enforced before starting inference.
-- [Qwen Apache-2.0 license](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/blob/1eaf4d9657fe65ad10a51eab76a8db5b363bddaa/LICENSE).
+- [Official Qwen3.5-0.8B model card at its pinned upstream revision](https://huggingface.co/Qwen/Qwen3.5-0.8B/blob/2fc06364715b967f1860aea9cf38778875588b17/README.md): Apache-2.0, native 262,144-token context, default non-thinking mode. This small model is intended for prototyping and development.
+- [Exact primary Qwen configuration](https://huggingface.co/Qwen/Qwen3.5-0.8B/blob/2fc06364715b967f1860aea9cf38778875588b17/config.json): 24 hybrid layers, six full-attention layers, two KV heads of dimension 256, `max_position_embeddings: 262144`.
+- [Pinned llama.cpp team GGUF revision](https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/tree/316dea3b5462fd5755862bcec45a2f901bc0ba6b). Its `.src_sha` identifies upstream Qwen commit `2fc06364715b967f1860aea9cf38778875588b17`.
+- [Exact Q8_0 LFS pointer](https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/raw/316dea3b5462fd5755862bcec45a2f901bc0ba6b/Qwen3.5-0.8B-Q8_0.gguf). The recording owner verified its object ID and size; download enforces both before loading.
+- [Primary Qwen Apache-2.0 license](https://huggingface.co/Qwen/Qwen3.5-0.8B/blob/2fc06364715b967f1860aea9cf38778875588b17/LICENSE).
+- [Pinned llama.cpp argument source](https://github.com/ggml-org/llama.cpp/blob/8cb0d98ccd0a310879ae8eaa1ce2c41e4b40a052/common/arg.cpp): `--timeout` controls server read/write seconds. The isolated demonstration server allows 2,100 seconds for CPU prefill and streaming.
 
-No API key, paid inference service, new account, Azure setting, or production provider is used. The model and binary are downloaded from official public sources into the owned temporary directory and removed after the managed process exits. They are not committed to the repository or included in the final video artifact. If redistribution is added later, retain the corresponding license and notice files.
+
+No API key, paid inference service, new account, Azure setting, or production provider is used. The model and binary are downloaded from the model author and llama.cpp team public sources into the owned temporary directory and removed after the managed process exits. They are not committed to the repository or included in the final video artifact. If redistribution is added later, retain the corresponding license and notice files.
 
 ## Product contract verified at exact base
 
@@ -55,26 +58,26 @@ Model readiness and configuration are not proof of an AI answer. Only the comple
 
 Use the video label **“Local demonstration model”**. This is a small model demonstrating real inference through Orchestra. It does not establish production model quality, Microsoft tenant access, business-data retrieval, skill execution, Teams readiness, or a successful HuGR Claw connector action. The prompt explicitly supplies example staffing and quotation inputs, then requests three review questions or checks. It forbids tools, writes and claims to have inspected the business system. The example inputs are entered by the demonstrator, not retrieved by the model.
 
-CPU latency and the full agent system-context size still need measurement in recording CI. The fixture allows a 120-second server-load deadline; the recording test should allow several minutes for setup and an initial response. If a wait is shortened during editing, mark it. A context or inference failure is a failed recording attempt; no substitute text is permitted.
+CPU latency must be measured in recording CI. The server-load deadline remains 120 seconds; the Chat-only test allows 38 minutes, including a 30-minute response wait, within the recording job's 45-minute budget. There is no latency promise. If waiting is shortened during editing, mark it. A context or inference failure is a failed recording attempt; no substitute text is permitted.
 
-## Focused AI3 follow-up
+## Preserved prior observations and focused Chat take
 
-The [actual AI3 recording](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039502239) observed all five SF profiles, all eighteen SF skills, the shared Maestro catalog (103 advertised tools and 67 skills), Connections, and the real empty Atlas store. Those original cuts are retained. The local model loaded and the provider was admitted with unchanged policy. No Chat prompt was submitted: the first take incorrectly looked for the session-only permission footer on the new-session draft.
+The [AI3 recording](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45039502239) observed all five SF profiles, eighteen SF skills, the shared Maestro catalog (103 advertised tools and 67 skills), Connections, and the real empty Atlas store. Those original cuts remain valid. The first follow-up [run45041154033](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45041154033) genuinely sent the visible prompt, but Qwen3-0.6B rejected the unmodified request: **148,598 tokens against its configured 32,768 context**. Its actual GGUF training limit was 40,960. No completed Chat answer from that take qualifies. The generated session title does not qualify as the requested answer.
 
-The focused follow-up uses two separate original installations: real Chat in its private workspace, and the useful draft Workflow in the job's existing Git checkout. It does not repeat the catalog footage. The draft contains the actual model selector and Send button. `OrchestraComposeTools` renders the untouched Ask/auto-accept control only after a session exists; the follow-up records that real control after the answer. The actual assistant turn supplies its focus box.
+The same take proved that the physical Actions checkout still resolved to the `global` project. Its Workflow admission stayed intact. The next recording is **Chat only**, with no Workflow attempt or catalog replay.
 
-### Context and memory
+Desktop Chat uses platform Maestro. `context/local.tsx` fixes its current agent to `maestro`, and Agents→Open Chat carries no alternate profile. An `@sf_reviewer` mention asks Maestro to use the task tool; it is not a direct Sucafina-agent session. The visible permission UI controls fourteen standard groups and configured MCP servers, not every native tool. The recording therefore preserves the complete original Maestro, all tool schemas, all prompts, and all permission rules, and changes only the owned demonstration model and its supported capacity.
 
-The official Qwen model card documents a 32,768-token context. The follow-up preserves all Maestro instructions and all permission-filtered tools and uses that full supported server context. The verified GGUF's `/v1/models` metadata must report `meta.n_ctx_train >= 32768`; the read-only `/props` response must report `default_generation_settings.n_ctx === 32768` and one slot. No metadata, tokenizer, prompt, or tool schema is rewritten.
+### Capacity and memory proof
 
-The CPU's default F16 key/value cache estimate is 28 layers × 8 KV heads × 128 dimensions × key/value × two bytes × 32,768 tokens = 3.5 GiB. Before starting, the helper records actual runner total/free RAM and requires free RAM for that cache, the verified 639,446,688-byte model and an additional 1 GiB. It records free RAM again after load. These are capacity checks, not claims about inference speed or model quality.
+Qwen3.5-0.8B has a native 262,144-token context. The helper requests **196,608**, with one slot, and verifies actual `/v1/models` `meta.n_ctx_train >= 196608` plus `/props` `default_generation_settings.n_ctx === 196608`. No RoPE scaling, tokenizer, prompt, or tool schema override is used. The model alias is `qwen35-demo`; the UI name is **Qwen3.5-0.8B · local demo**. Non-thinking mode is supplied through the model's actual chat template; no special `/no_think` suffix is added to the business prompt.
 
-The public custom-provider API accepts model names but does not expose model limits. The follow-up therefore retains supported API keys only and reports the catalog's actual `limit` fields alongside the verified server capacity. It does not write private configuration files or modify product schemas.
+The F16 full-attention KV estimate is six layers × two KV heads × 256 dimensions × key/value × two bytes × 196,608 tokens = **2.25 GiB**. The helper requires actual free RAM for that cache, the verified 833,592,096-byte model and an additional 2 GiB for hybrid state, batching and overhead; it records total/free RAM before load and free RAM afterward. Up to four actual available CPU threads are used. These capacity checks are separate from measured inference performance.
 
-Additional exact-base source contracts:
+The public custom-provider API accepts model names but does not expose model limits. Only supported API keys are written; the catalog's actual reported limits are recorded alongside the server capacity. No private configuration workaround or product schema change is used.
 
-- `packages/app-shell/src/pages/session/composer/orchestra-compose-tools.tsx`: actual session-only permission control; no toggle is clicked.
-- `packages/app-shell/src/pages/session/timeline/orchestra-turn.tsx`: actual assistant turn and body selectors.
-- `packages/app-shell/src/utils/server-compat.ts`: project.current resolves through GET `/api/location`.
-- `packages/server/src/handlers/location.ts`: resolving that directory records its project before a Session exists. Workflow joins the catalog using this actual returned ID, rather than inferring Git status from a missing catalog row.
-- `packages/app-shell/src/orchestra/relay/chapter.tsx`: the original global-project refusal remains intact; no workflow is created if the actual resolver still returns global.
+### Persisted response and pagination
+
+`packages/server/src/handlers/message.ts` returns `cursor.next` for every nonempty page, including the last one. The proof follows each cursor **without combining it with `order`**, until it reads an empty page, with repeated-ID/cursor checks and a 2,000-message upper bound. It then records the exact persisted assistant response, actual selected model/agent, completion, finish reason, tool count, errors, numeric inference metrics and timings. Only agreement between this response and the real rendered assistant turn qualifies cue06.
+
+The genuine draft model picker and Send button are retained. `OrchestraComposeTools` renders the untouched Ask/auto-accept control only after a session exists. The recording never clicks that permission control, then verifies it remains Ask. Each minute of a long inference wait logs only elapsed time, message count and partial text length; the actual answer is stored in the final proof and remains visible in the continuous video.

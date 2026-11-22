@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { chmod, mkdir, mkdtemp, open, readdir, realpath, rm, stat } from "node:fs/promises"
 import { createServer } from "node:net"
-import { freemem, totalmem, tmpdir } from "node:os"
+import { availableParallelism, freemem, totalmem, tmpdir } from "node:os"
 import path from "node:path"
 import type { APIRequestContext } from "@playwright/test"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
@@ -11,9 +11,10 @@ import type { DesignInstallation } from "./installation"
 // Pins and licenses: scripts/onboarding/ai/SOURCES.md on the isolated recording branch.
 const sourceBase = "55d332a2451d2146e825d494b87878875d63b1c7"
 const providerId = "onboarding-local"
-const modelId = "qwen3-demo"
-const modelName = "Qwen3-0.6B · local demo"
-const contextTokens = 32_768
+const modelId = "qwen35-demo"
+const modelName = "Qwen3.5-0.8B · local demo"
+const contextTokens = 196_608
+const modelThreads = Math.max(1, Math.min(4, availableParallelism()))
 const assets = {
   server: {
     file: "llama-b12632-bin-ubuntu-x64.tar.gz",
@@ -25,16 +26,17 @@ const assets = {
     license: "MIT",
   },
   model: {
-    file: "Qwen3-0.6B-Q8_0.gguf",
-    url: "https://huggingface.co/Qwen/Qwen3-0.6B-GGUF/resolve/1eaf4d9657fe65ad10a51eab76a8db5b363bddaa/Qwen3-0.6B-Q8_0.gguf",
-    sha256: "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031",
-    bytes: 639446688,
-    sourceCommit: "1eaf4d9657fe65ad10a51eab76a8db5b363bddaa",
+    file: "Qwen3.5-0.8B-Q8_0.gguf",
+    url: "https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF/resolve/316dea3b5462fd5755862bcec45a2f901bc0ba6b/Qwen3.5-0.8B-Q8_0.gguf",
+    sha256: "37ae482d336108d23516fa35e8e0c4126688d81018b87178a18d752a1357814f",
+    bytes: 833592096,
+    sourceCommit: "316dea3b5462fd5755862bcec45a2f901bc0ba6b",
+    upstreamModelCommit: "2fc06364715b967f1860aea9cf38778875588b17",
     license: "Apache-2.0",
   },
 } as const
 
-export const localModelPrompt = "Prepare a regional IT review from these example inputs: one infrastructure position is planned at 1.0 FTE, with 0.9 FTE proposed. A support purchase has three quotations; one is selected, with final approval pending. In exactly three short bullets, give the staffing review question, the evidence needed for the selected quote, and the next human review step. Do not use tools, change records, or claim you read the business system. /no_think"
+export const localModelPrompt = "Prepare a regional IT review from these example inputs: one infrastructure position is planned at 1.0 FTE, with 0.9 FTE proposed. A support purchase has three quotations; one is selected, with final approval pending. In exactly three short bullets, give the staffing review question, the evidence needed for the selected quote, and the next human review step. Do not use tools, change records, or claim you read the business system."
 
 export type LocalModelRecording = {
   providerId: string
@@ -78,13 +80,15 @@ export async function withLocalModel<T>(
   const owned: { child?: ChildProcessHandle } = {}
   const timingLines: string[] = []
   const startupLines: string[] = []
-  // The observed AI3 Maestro exposes 103 tools and 67 skills. Preserve all
-  // instructions/schemas and use a supported context, with explicit RAM room.
+  // The real prior turn contained 148598 tokens. Preserve the complete Maestro
+  // and every permission-filtered tool; use Qwen3.5's native 262144-token window.
   const memoryBeforeLoad = { totalBytes: totalmem(), freeBytes: freemem() }
-  const estimatedF16KVBytes = 28 * 8 * 128 * 2 * 2 * contextTokens
-  const requiredFreeBytes = estimatedF16KVBytes + assets.model.bytes + 1024 ** 3
+  // Pinned Qwen config: six full-attention layers, two KV heads, dim 256.
+  // Two GiB of additional room cover hybrid state, batches and process overhead.
+  const estimatedF16KVBytes = 6 * 2 * 256 * 2 * 2 * contextTokens
+  const requiredFreeBytes = estimatedF16KVBytes + assets.model.bytes + 2 * 1024 ** 3
   if (memoryBeforeLoad.freeBytes < requiredFreeBytes)
-    throw new Error("Runner lacks measured RAM for the full 32768-token local context: free=" + memoryBeforeLoad.freeBytes + ", required=" + requiredFreeBytes)
+    throw new Error("Runner lacks measured RAM for the 196608-token local context: free=" + memoryBeforeLoad.freeBytes + ", required=" + requiredFreeBytes)
   let stage = "download"
   let modelReady = false
   return Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -132,10 +136,10 @@ export async function withLocalModel<T>(
     const modelOrigin = "http://127.0.0.1:" + port
     const args = [
       "-m", modelFile, "--alias", modelId, "--host", "127.0.0.1", "--port", String(port),
-      "-ngl", "0", "-t", "2", "-tb", "2", "-c", String(contextTokens), "-np", "1", "-n", "256",
+      "-ngl", "0", "-t", String(modelThreads), "-tb", String(modelThreads), "-c", String(contextTokens), "-np", "1", "-n", "384",
       "--jinja", "--chat-template-kwargs", '{"enable_thinking":false}', "--reasoning", "off",
       "--temp", "0.7", "--top-k", "20", "--top-p", "0.8", "--min-p", "0", "--presence-penalty", "1.5",
-      "--metrics",
+      "--metrics", "--timeout", "2100",
     ]
     stage = "start-model"
     const child = yield* launcher.spawn(ChildProcess.make(binary, args, {
@@ -220,7 +224,7 @@ export async function withLocalModel<T>(
         provider: { id: providerId, modelId, modelName, endpoint: "owned loopback /v1", credentialsRequired: false },
         agent: { id: agentId, name: agentName, engine: agent.engine ?? "orchestra (default)", mode: agent.mode },
         policyUnchanged: true, policySha256: originalPolicy,
-        server: { cpuOnly: true, threads: 2, context: contextTokens, parallel: 1, maximumDefaultOutputTokens: 256, thinking: false,
+        server: { cpuOnly: true, threads: modelThreads, context: contextTokens, parallel: 1, maximumDefaultOutputTokens: 384, thinking: false,
           observedContext: capacity.context, modelTrainingContext: capacity.trainingContext },
         memory: { ...memoryBeforeLoad, estimatedF16KVBytes, requiredFreeBytes, freeAfterLoadBytes: freemem() },
         catalog: { providerPresent: true, modelEnabled: true, defaultMatches: true,
@@ -232,11 +236,8 @@ export async function withLocalModel<T>(
         providerId, modelId, modelName, agentId, agentName, prompt: localModelPrompt,
         captureProof: async (sessionId) => {
           if (!/^[A-Za-z0-9_-]{8,160}$/.test(sessionId)) throw new Error("Supply the actual parsed Chat session ID")
-          const url = new URL("/api/session/" + encodeURIComponent(sessionId) + "/message", origin)
-          url.search = new URLSearchParams({ order: "asc", limit: "200" }).toString()
-          const response = await apiObject(request, url.href)
-          if (object(response.cursor).next) throw new Error("Chat message proof exceeded one complete page")
-          const messages = rows(response.data)
+          const timeline = await completeMessages(request, origin, sessionId)
+          const messages = timeline.messages
           const users = messages.filter((value) => value.type === "user")
           const assistants = messages.filter((value) => value.type === "assistant")
           const candidate = assistants.at(-1)
@@ -262,6 +263,7 @@ export async function withLocalModel<T>(
           }
           const proof = {
             capturedAt: new Date().toISOString(), sourceBase, sessionId,
+            pagination: { pagesRead: timeline.pagesRead, terminatedOnEmptyPage: true, messageCount: messages.length },
             userMessageIds: users.map((value) => value.id), assistantMessageId: answer.id,
             agent: { id: agentId, name: agentName }, model: { providerId, modelId, name: modelName },
             prompt: users[0]?.text, answer: answerText.slice(0,16000), finish: answer.finish,
@@ -315,6 +317,32 @@ function object(value: unknown): JsonObject {
 function rows(value: unknown): JsonObject[] {
   if (!Array.isArray(value)) throw new Error("Expected an actual API result array")
   return value.map((item) => object(item))
+}
+
+async function completeMessages(request: APIRequestContext, origin: URL, sessionId: string) {
+  const messages: JsonObject[] = []
+  const cursors = new Set<string>()
+  const ids = new Set<string>()
+  let cursor: string | undefined
+  for (let page = 1; page <= 10; page++) {
+    const url = new URL("/api/session/" + encodeURIComponent(sessionId) + "/message", origin)
+    // MessageHandler issues a next cursor for every nonempty page, including
+    // the last one. Only an empty read proves exhaustion; cursor excludes order.
+    url.search = new URLSearchParams(cursor ? { cursor, limit: "200" } : { order: "asc", limit: "200" }).toString()
+    const response = await apiObject(request, url.href)
+    const batch = rows(response.data)
+    if (batch.length === 0) return { messages, pagesRead: page }
+    for (const message of batch) {
+      if (typeof message.id !== "string" || ids.has(message.id)) throw new Error("Actual message pagination returned a missing or repeated identity")
+      ids.add(message.id)
+      messages.push(message)
+    }
+    const next = object(response.cursor).next
+    if (typeof next !== "string" || !next || cursors.has(next)) throw new Error("Actual nonempty message page omitted a new continuation cursor")
+    cursors.add(next)
+    cursor = next
+  }
+  throw new Error("Actual Chat timeline exceeded the bounded 2000-message recording proof")
 }
 
 async function apiObject(request: APIRequestContext, url: string): Promise<JsonObject> {
@@ -430,7 +458,7 @@ async function modelCapacity(origin: string) {
   const props = object(await propsResponse.json())
   const context = object(props.default_generation_settings).n_ctx
   if (typeof trainingContext !== "number" || trainingContext < contextTokens)
-    throw new Error("Pinned GGUF metadata does not support the requested 32768-token context")
+    throw new Error("Pinned GGUF metadata does not support the requested " + contextTokens + "-token context")
   if (context !== contextTokens || props.total_slots !== 1)
     throw new Error("Owned model server did not report the requested single-slot context")
   return { context, trainingContext }
