@@ -25,6 +25,11 @@ export type ReviewChart =
   | { status: "ok"; viewId: string; series: readonly { id: string; label: string; unit: string; role: string; valueIds: readonly string[]; alignmentKeys?: readonly string[]; values: DomainProjection["values"] }[]; limitations: readonly string[]; unassigned: DomainProjection["values"]; sensitivity?: { result: SensitivityResult; parameterUnit: string; resultUnit: string }; waterfall?: ReviewWaterfall; timeline?: { status: "ok"; items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown"; date: string | null; source: DomainProjection["values"][number] }[] } | { status: "unavailable"; reason: string } }
   | { status: "unavailable"; reason: string }
 export type ReviewSection = { id: string; title: string; period: Period; recordCount: number; projection: DomainProjection; agendaNote?: string; outcome?: ObservedResultProjection; outcomeComparison?: ReviewOutcomeComparison; chart?: ReviewChart; comments?: readonly { id: string; version: number; content: string; authorRef: string; createdAt: string; sourceRefs: readonly SourceRef[] }[] }
+export type HistoricalSelectionProof = Readonly<{
+  selectionRef: string
+  resultDigest: string
+  sections: readonly Readonly<{ id: string; digest: string }>[]
+}>
 export type ReviewHost = {
   state: SfProductStatePort
   creationTarget: { ref: string; incarnation: string }
@@ -42,8 +47,8 @@ export type ReviewHost = {
   revalidateReadEvidence?: (binding: TrustedDomainContext, refs: readonly BusinessEvidenceRef[]) => Promise<boolean>
   revalidateReadAccess?: (binding: TrustedDomainContext) => Promise<boolean>
   select: (selectionRef: string, sectionRefs: readonly string[], binding: TrustedDomainContext, period?: Period) => Promise<PortResult<readonly ReviewSection[]>>
-  /** Only a server-issued immutable result selection may retain historical authority stamps. */
-  isHistoricalSelection?: (selectionRef: string, binding: TrustedDomainContext) => boolean
+  /** A server-issued result must be re-read before retaining its historical authority stamps. */
+  historicalSelectionProof?: (selectionRef: string, binding: TrustedDomainContext) => Promise<HistoricalSelectionProof | false> | false
 }
 
 type ReviewReadValidation = Readonly<{
@@ -127,7 +132,7 @@ export function createReviewPort(host: ReviewHost, readDependenciesCurrent?: () 
         return previous !== undefined && previous !== digest
       })) return { status: "unavailable", reason: "conflicting-comment-snapshot" } as const
       if (selected.value.some((section) => !validChart(section.projection, section.chart))) return { status: "unavailable", reason: "chart-projection-mismatch" } as const
-      if (selected.value.some((section) => [section.projection.context, ...(section.projection.comparison ? [section.projection.comparison.context] : [])].some((context) => context.principalRef !== binding.binding.principalRef || context.installationId !== binding.binding.installationId || context.projectId !== binding.binding.projectId || ((context.accessRevision !== binding.binding.accessRevision || context.policyVersion !== binding.binding.policyVersion) && !host.isHistoricalSelection?.(selectionRef, binding)))))
+      if (!await authorizesSelectionContexts(host, selectionRef, selected.value, binding))
         return { status: "denied", reason: "context-mismatch" } as const
       if (selected.value.some((section) => section.projection.values.some((value) => (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
       if (!(await host.revalidateEvidence(binding, selected.value.flatMap((section) => reviewProjectionEvidence(section.projection, section))))) return { status: "denied", reason: "access-unavailable" } as const
@@ -244,6 +249,37 @@ async function reopenReviewReceipt(value: unknown, expectedId: string, read: (id
   if (result.status !== "ok") return result
   if (digestSfValue(result.value) !== receipt.reviewDigest) return { status: "conflict", reason: "preserved-review-changed" }
   return result
+}
+
+async function authorizesSelectionContexts(
+  host: ReviewHost,
+  selectionRef: string,
+  sections: readonly ReviewSection[],
+  context: TrustedDomainContext,
+): Promise<boolean> {
+  const binding = context.binding
+  const historical: ReviewSection[] = []
+  for (const section of sections) {
+    const contexts = [section.projection.context]
+    if (section.projection.comparison) contexts.push(section.projection.comparison.context)
+    if (contexts.some((stamp) => stamp.principalRef !== binding.principalRef ||
+      stamp.installationId !== binding.installationId || stamp.projectId !== binding.projectId)) return false
+    if (contexts.some((stamp) => stamp.accessRevision !== binding.accessRevision ||
+      stamp.policyVersion !== binding.policyVersion)) historical.push(section)
+  }
+  if (!historical.length) return true
+  try {
+    const proof = await host.historicalSelectionProof?.(selectionRef, context)
+    if (!proof || proof.selectionRef !== selectionRef || !/^[a-f0-9]{64}$/.test(proof.resultDigest) ||
+      !Array.isArray(proof.sections)) return false
+    // A complete section digest binds both projection and comparison stamps to the actual selected content.
+    return historical.every((section) => {
+      const digest = digestSfValue(section)
+      return proof.sections.some((sealed) => sealed?.id === section.id && sealed.digest === digest)
+    })
+  } catch {
+    return false
+  }
 }
 
 type ReviewProjection = DomainProjection & { reviewChart?: ReviewChart; reviewAgendaNote?: string; reviewOutcome?: ObservedResultProjection; reviewOutcomeComparison?: ReviewOutcomeComparison; reviewCommentRefs?: readonly ReviewCommentRef[] }

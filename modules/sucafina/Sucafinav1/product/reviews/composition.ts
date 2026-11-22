@@ -9,7 +9,7 @@ type Comments = Parameters<typeof createReviewThreadComments>[0]
 
 export type ReviewCompositionInput = Omit<Services, "selection"> & {
   ports: Omit<ReviewAgendaPorts, "threadComments">
-  access: Omit<Services["selection"], "select" | "authorizeComments" | "isHistoricalSelection">
+  access: Omit<Services["selection"], "select" | "authorizeComments" | "historicalSelectionProof">
   collaboration: Omit<Comments, "host" | "history"> & { history: NonNullable<Comments["history"]> }
   routineResults?: Parameters<typeof createReviewRoutineSelection>[0]["results"]
   maxSelections?: number
@@ -38,7 +38,7 @@ export function createReviewComposition(input: ReviewCompositionInput) {
     host: input.host,
     authority: input.authority,
     evidence: input.evidence,
-    selection: { ...input.access, select: agenda.select, isHistoricalSelection: (ref, context) => routineAgenda?.isHistoricalSelection(ref, context) ?? false, authorizeComments: comments.authorizeComments },
+    selection: { ...input.access, select: agenda.select, historicalSelectionProof: (ref, context) => routineAgenda?.historicalSelectionProof(ref, context) ?? false, authorizeComments: comments.authorizeComments },
     creationTarget: input.creationTarget,
     operationIdentity: input.operationIdentity,
     requiredAuthority: input.requiredAuthority,
