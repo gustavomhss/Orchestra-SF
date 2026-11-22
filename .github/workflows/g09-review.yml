@@ -1,0 +1,85 @@
+name: G09 unsigned review inventory
+
+on:
+  push:
+    branches: [g09-closeout-bc4418]
+    paths:
+      - .github/workflows/g09-review.yml
+      - .github/ci/g09-review-index.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: g09-new-review-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout review tooling
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare private evidence directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir "$RUNNER_TEMP/g09-review-evidence"
+
+      - name: Install pinned guard runtime
+        id: bun
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_bun_zip="$RUNNER_TEMP/g09-bun.zip"
+          curl --fail --location --retry 3 \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.1/bun-linux-x64-baseline.zip \
+            --output "$g09_bun_zip"
+          printf '%s  %s\n' a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646 "$g09_bun_zip" | sha256sum --check
+          unzip -q "$g09_bun_zip" -d "$RUNNER_TEMP/g09-bun"
+          g09_bun_dir="$RUNNER_TEMP/g09-bun/bun-linux-x64-baseline"
+          test "$("$g09_bun_dir/bun" --revision)" = 1.4.1+4661e494f
+          printf '%s\n' "$g09_bun_dir" >> "$GITHUB_PATH"
+
+      - name: Check unchanged guard rules
+        id: guards
+        working-directory: .
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev | tee "$RUNNER_TEMP/g09-review-evidence/guards.log"
+
+      - name: Read frozen diagnostic without rerunning product or scanner
+        id: inventory
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14732642812 \
+            > "$RUNNER_TEMP/g09-review-artifact.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14732642812/zip \
+            > "$RUNNER_TEMP/g09-review.zip"
+          python3 -B .github/ci/g09-review-index.py \
+            --zip "$RUNNER_TEMP/g09-review.zip" --metadata "$RUNNER_TEMP/g09-review-artifact.json" \
+            --output "$RUNNER_TEMP/g09-review-evidence/index"
+          cp "$RUNNER_TEMP/g09-review-artifact.json" "$RUNNER_TEMP/g09-review-evidence/"
+          printf '%s\n' 'Unsigned review inventory only; no inherited classification or formal G09 PASS.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload exact review index
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-review-index-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g09-review-evidence
+          if-no-files-found: error
+          retention-days: 30

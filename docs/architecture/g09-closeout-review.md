@@ -118,6 +118,16 @@ This probe concerns generic bootstrap. It does not cover worktree creation, move
 
 No repeated old-source permission run or repeated full inventory/AST run is needed to answer this bootstrap question.
 
+## New review route without historical credit
+
+The historical checkpoint is required to authenticate and reuse its old dispositions. It is **not** a universal prerequisite for starting another review of the same preserved bytes.
+
+The published scanner accepts a newly authenticated review bound to the newly computed exact inventory; it has no mandatory reference to an older review. The new producer attestation must bind the corresponding new review payload. Therefore the technical route is to review all 22,864 exact IDs again, reuse independently verified execution evidence where its scope genuinely applies, and execute any additional obligations. None of the 2,314 historically reported dispositions is silently credited.
+
+The adapter for that route must be versioned explicitly for artifact 14722264806 and the registered evidence. It is a new proposal, not a claimed reconstruction of missing commit 1b35f764. Its adoption and the independent reviewer/producer authority remain prerequisites to a formal PASS. This branch does not establish new signer authority or provision signing keys.
+
+The unsigned review index in this branch reads the already preserved diagnostic artifact, checks its ZIP/manifest/report identities and recomputes exact occurrence/finding IDs. It does not rerun the product or scanner, classify by path, accept an old signature, or count the groups as review decisions.
+
 ## Authenticated input dependency and closure conditions
 
 The bounded recovery search checked connected files by the exact hashes and queried the original adapter commit directly. The commit lookup returned “No commit found for SHA”. The accessible briefing and later diagnostic reports name the following objects but do not contain their authenticated bytes:
@@ -135,7 +145,7 @@ The exact original full diagnostic, independently established reviewer/producer 
 
 | Work item | Completion evidence |
 | --- | --- |
-| Recover historical checkpoint | Exact original bytes and valid independent trust bindings; verify all hashes and complete ID sets |
+| Reuse historical checkpoint (optional route) | Exact original bytes and valid independent trust bindings; verify all hashes and complete ID sets. Otherwise review the entire exact inventory without historical credit |
 | Complete residual review | Zero unclassified IDs, active legacy and orphans under the applicable signed review |
 | Accept attribution method | Explicit authorized disposition of the 28-endpoint/5-origin evidence and exact test obligations |
 | Finish applicable behavior obligations | Exact reviewed cases executed on the appropriate retained surface with matching hashes and run/job evidence |
