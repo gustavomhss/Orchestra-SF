@@ -9,6 +9,8 @@ import type {
   SfTransportFailure, SfTransportResult,
 } from "@orchestra/schema/sucafina/common"
 import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
+import { SfPortfolio } from "@orchestra/schema/sucafina/portfolio"
+import { sfPortfolioSourceSurface } from "./transport/portfolio"
 import { SfContextStamp, SfContextResult, SfExpectedContextBinding,
   type SfContext, type SfInstallationDescriptor, type SfResolvedRoute,
 } from "@orchestra/schema/sucafina/context"
@@ -242,7 +244,7 @@ export function createSfTransport(options: Readonly<{
       if (operation.operationId === "files.document-confirm" &&
           Option.isNone(Schema.decodeUnknownOption(Schema.toType(operation.input), { onExcessProperty: "error" })(wireInput)))
         return failure("contract-mismatch")
-      const route = operationUrl(options.binding, metadata, wireInput, operation.operationId)
+      const route = sfOperationUrl(options.binding, metadata, wireInput, operation.operationId)
       if (!route) return failure("contract-mismatch")
       const postRead = metadata.method === "POST" && (metadata.effect === "read" || metadata.effect === "preview")
       // This original C08 lookup is read-only, but addresses the first save by
@@ -552,7 +554,7 @@ export function createSfTransport(options: Readonly<{
           meta.fixedQuery.download !== "suppliers" ||
           Object.keys(meta.fixedQuery).length !== 1)
         return { status: "unavailable" }
-      const route = operationUrl(options.binding, meta, parsed.value, "files.export.suppliers")
+      const route = sfOperationUrl(options.binding, meta, parsed.value, "files.export.suppliers")
       if (!route) return { status: "invalid" }
       const isOwned = () => isCurrent() && !call.signal.aborted &&
         stamp !== undefined && equalContextStamp(stamp, original)
@@ -742,15 +744,20 @@ function validSupplierCsvHeaders(contentType: string | null | undefined, disposi
     /^attachment;\s*filename\*=UTF-8''suppliers\.csv$/i.test(disposition)
 }
 
-function operationUrl(
+/** Internal source route constructor shared by browser transport and pure contract tests. */
+export function sfOperationUrl(
   binding: SfInstallationDescriptor,
   meta: Readonly<{ method: "GET" | "POST"; pathTemplate: string; fixedQuery?: Readonly<Record<string, string>> }>,
   input: SfJson | undefined,
   operationId: SfOperationId,
 ): string | undefined {
+  if (!validInstallation(binding)) return undefined
   if (!meta.pathTemplate.startsWith("/") && !meta.pathTemplate.startsWith("{mount}/")) return undefined
   const source = asJsonObject(input)
-  const surface = source?.surface
+  // A05 publishes a closed body without a surface selector. The original
+  // installed dashboard route is selected separately, never added to that body.
+  const surface = Object.hasOwn(SfPortfolio, operationId)
+    ? sfPortfolioSourceSurface(operationId, input) : source?.surface
   const path = meta.pathTemplate
     .replaceAll("{mount}", binding.mount)
     .replaceAll("{surface}", typeof surface === "string" && SURFACES.has(surface) ? surface : "__unbound__")
@@ -982,7 +989,7 @@ async function refreshSfFileAuthority(options: Readonly<{
   if (!meta || !codec || meta.method !== "GET" || meta.responseMode !== "json") return false
   const tuple = { installationId: options.binding.installationId,
     projectId: options.binding.projectId, hostId: options.binding.hostId }
-  const route = operationUrl(options.binding, meta, tuple, "ctx.context")
+  const route = sfOperationUrl(options.binding, meta, tuple, "ctx.context")
   if (!route) return false
   try {
     const reply = await options.fetch(route, {
