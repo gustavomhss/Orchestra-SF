@@ -141,7 +141,7 @@
       },
       "coverageBaseline": {
         "schemaVersion": 1,
-        "status": "HISTORIC_SUCCESSFUL_ARTIFACT",
+        "status": "PENDING_REAL_COMPLETE_RUN",
         "source": {
           "runId": "43956369500",
           "attempt": "1",
@@ -151,7 +151,12 @@
         "minimumCases": 2408,
         "minimumFiles": 273,
         "additionalFiles": [
-          "src/orchestra/chapters/sucafina/portfolio/projects/model.test.ts"
+          "src/orchestra/chapters/sucafina/portfolio/projects/model.test.ts",
+          "src/context/team-session-live.test.ts",
+          "src/utils/team-profile-storage.test.ts",
+          "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+          "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+          "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts"
         ],
         "additionalCases": [
           {
@@ -168,10 +173,166 @@
             "file": "src/orchestra/chapters/sucafina/portfolio/projects/model.test.ts",
             "classname": "portfolio A01 version projection",
             "name": "does not unwrap, coerce or default malformed CAS values"
+          },
+          {
+            "file": "src/context/team-session-live.test.ts",
+            "classname": "",
+            "name": "late hydration never appends a live delta to an unknown HTTP watermark"
+          },
+          {
+            "file": "src/context/team-session-live.test.ts",
+            "classname": "",
+            "name": "a stream start admits incremental text, rejects repeated events and preserves stable IDs"
+          },
+          {
+            "file": "src/context/team-session-live.test.ts",
+            "classname": "",
+            "name": "HTTP text ahead of an observed start stays visible until the stream catches up or ends"
+          },
+          {
+            "file": "src/context/team-session-live.test.ts",
+            "classname": "",
+            "name": "completed HTTP settlement keeps tool parts, billing and full final reasoning"
+          },
+          {
+            "file": "src/context/team-session-live.test.ts",
+            "classname": "",
+            "name": "native transcript projection keeps message identities and exposes attachment names without file requests"
+          },
+          {
+            "file": "src/utils/team-profile-storage.test.ts",
+            "classname": "",
+            "name": "full installation, resource tenant, Team and principal all separate private categories"
+          },
+          {
+            "file": "src/utils/team-profile-storage.test.ts",
+            "classname": "",
+            "name": "unsupported Web Locks creates distinct ephemeral windows without using copied storage identity"
+          },
+          {
+            "file": "src/utils/team-profile-storage.test.ts",
+            "classname": "",
+            "name": "copied sessionStorage cannot acquire a window identity already held by another document"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "preserves the original source path and filters with the current owner"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "retains a producer's Planner version without inferring another source"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "uses the admitted installation when the shell selection was implicit"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "keeps original canonical opaque references"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "rejects another origin, credentials, non-native paths and malformed paths"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "rejects producer-selected owners and duplicate or malformed query fields"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "rejects a selection that no longer matches the admitted binding"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/bi/source-destination.test.ts",
+            "classname": "original BI native source destinations",
+            "name": "leaves the original mounted-source validator unchanged"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "accepts the exact ready operation in a fully ready resource"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "retains an admitted read when an unrelated sibling makes the resource partial"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "does not turn a sibling readiness into permission for the unavailable operation"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "refuses explicit denial, unavailable sources, and missing operations"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "requires the requested family and an admitted aggregate state"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/readiness.test.ts",
+            "classname": "independently admitted portfolio operations",
+            "name": "also retains a ready portfolio read within a partial portfolio resource"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "retains the exact selected case, tuple, units and complete source metadata"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "requires the selected controls envelope, units and unit selection"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses another public case, identity, incarnation or revision"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses a different or unlisted scenario, baseline or parameter tuple"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses missing units metadata, malformed evidence and excess authority fields"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses a changed access revision or source outside the current installation and project"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "dispatches only the original GET controls descriptor and exact selection through the client"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses absent, sibling, nonoperational or wrong-family availability before transport"
+          },
+          {
+            "file": "src/orchestra/chapters/sucafina/portfolio/scenarios/sensitivity-units.test.ts",
+            "classname": "source-issued sensitivity units through original A04 controls",
+            "name": "refuses incomplete or same-scenario selections before transport"
           }
         ],
         "filesSha256": "38dd26efc44420d6d5ed0f3c96af6efaadd98b1a5ab71c7144a87536ea024f79",
-        "casesSha256": "40328173decad6fae7051c29dbc6dfb4b528cb51f610a48dba9c206cf7c0d058"
+        "casesSha256": "40328173decad6fae7051c29dbc6dfb4b528cb51f610a48dba9c206cf7c0d058",
+        "reason": "The historical source, minima and hashes below remain intact as admission anchors. Five new cases in the historical src/utils/server.test.ts file cannot be admitted by the existing APP-SRC additional-case mechanism. The declared new files include the Design source composed through #613. Execute the complete integrated candidate, preserve and independently review every historical and additional case, then version an authentic positive replacement baseline. No positive result is claimed for these declarations."
       }
     },
     {
@@ -201,13 +362,215 @@
         "minimumCases": 114,
         "minimumFiles": 32,
         "additionalFiles": [
-          "test-browser/sucafina-native/confirm-quote.test.ts"
+          "test-browser/sucafina-native/confirm-quote.test.ts",
+          "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+          "test-browser/sucafina-native/fixture/response-faults.test.ts"
         ],
         "additionalCases": [
           {
             "file": "test-browser/sucafina-native/confirm-quote.test.ts",
             "classname": "",
             "name": "confirming a quote shows progress, sends one CAS command, and reads the recorded selection"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "dedicated G08 carries only used boundaries while historical v2 round-trips unchanged"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "missing foreign server cannot silently turn a historical v2 into G08"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses same-team"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses same-installation"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses other-endpoint"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses other-tenant"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses missing-admin"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses duplicate-principal"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses missing-run"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 additive manifest refuses unknown-schema"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/g08-manifest-contract.test.ts",
+            "classname": "",
+            "name": "G08 private reader accepts canonical explicit schemas and rejects duplicate keys and stale invocation"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation consumes the original closed 401/unauthenticated refusal once"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation consumes the original closed 403/denied refusal once"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses gateway HTML as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses empty JSON as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses malformed JSON as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses duplicate status as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses escaped duplicate status as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses 401 with denied body as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses 403 with unauthenticated body as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses unavailable body as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses extra private body member as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses valid body with wrong media as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses cacheable refusal as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses missing no-store as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses redirect metadata as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses foreign CORS origin as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "native revocation refuses successful HTTP status as authentication proof"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held dispose before capture is idempotent and leaves the Page route passive"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held dispose settles its one original operation before later cleanup traffic"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held fetch failure remains visible to both dispose calls without replay"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held delivery failure remains visible to both dispose calls without replay"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held detects a second original attempt without repeating the producer fetch"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "lost dispose before capture is idempotent and leaves the Page route passive"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "lost dispose settles its one original operation before later cleanup traffic"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "lost fetch failure remains visible to both dispose calls without replay"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "lost delivery failure remains visible to both dispose calls without replay"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "lost detects a second original attempt without repeating the producer fetch"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held response keeps the original response gated until explicit release"
+          },
+          {
+            "file": "test-browser/sucafina-native/fixture/response-faults.test.ts",
+            "classname": "",
+            "name": "held GET excludes a different method, Team, duplicate selector and observer Request"
           }
         ],
         "filesSha256": "cc8f60ff9b60b0c69978aff799c1b28cdd2486533d6aa406cac2908938771544",
