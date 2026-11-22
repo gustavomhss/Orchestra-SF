@@ -1,4 +1,6 @@
 import { expect, type Page, type Request } from "@playwright/test"
+import { Schema } from "effect"
+import { SfReviewDomainProjection } from "@orchestra/schema/sucafina/reviews"
 import { seedWaveFiveReviewProposal } from "./design-support/wave-five-reviews-seed"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 import { waveFourTest, enter, observePage, scheme, reflow, capture, scrollPageTop } from "./design-support/wave-four"
@@ -101,6 +103,28 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
   await page.setViewportSize({ width: 1440, height: 1100 })
   const first = await preserve(page)
   await capture(page, info, "UI47-dark-desktop-producer-confirmed-test-data")
+  const sourceRead = await page.request.get(installation.origin + installation.mount + "/dashboard",
+    { params: { sf: "dashboard-review", id: first } })
+  expect(sourceRead.status()).toBe(200)
+  const sourceBody = object(await sourceRead.json())
+  expect(sourceBody.status).toBe("ok")
+  const originalReview = object(sourceBody.value)
+  const originalSections = originalReview.sections
+  if (!Array.isArray(originalSections)) throw new Error("Original preserved sections required")
+  const originalContent = object(object(originalSections[0]).content)
+  const sourceShape = { contentKeys: Object.keys(originalContent),
+    contextKeys: Object.keys(object(originalContent.context)),
+    valueKeys: Array.isArray(originalContent.values) ? Object.keys(object(originalContent.values[0])) : [],
+    componentKeys: Array.isArray(originalContent.components) && originalContent.components.length
+      ? Object.keys(object(originalContent.components[0])) : [] }
+  console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-original-projection-shape", ...sourceShape }))
+  await info.attach("original-preserved-source-test-data", { contentType: "application/json",
+    body: JSON.stringify(sourceBody, null, 2) })
+  try { Schema.decodeUnknownSync(SfReviewDomainProjection)(originalContent) } catch (error) {
+    console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-five-original-projection-decode",
+      error: String(error).replace(/[a-f0-9]{64}/g, "[redacted]").slice(0, 7000) }))
+    throw error
+  }
   await selectAgenda(page, owner, installation.origin, installation.year)
   const second = await preserve(page)
   expect(first).not.toBe(second)
@@ -134,14 +158,21 @@ waveFourTest("wave five reviews: original agenda, preserved sources, comparison 
         await expect(page.getByRole("button", { name: "Next topic", exact: true })).toBeDisabled()
         await expect(page.getByRole("button", { name: "Previous topic", exact: true })).toBeDisabled()
         if (color === "dark") {
+          const updateResponse = page.waitForResponse((response) =>
+            new URL(response.url()).searchParams.get("sf") === "review-update")
           await page.getByRole("button", { name: "Check for updates", exact: true }).click()
-          await expect(page.locator("[data-sf-successor-availability]")).toBeVisible({ timeout: 40_000 })
+          const updateRead = await updateResponse
+          expect(updateRead.status()).toBe(409)
+          expect(await updateRead.json()).toMatchObject({ status: "stale", reason: "review-read-changed" })
+          await expect(page.getByRole("alert").filter({ hasText:
+            "The original sources changed or could not be revalidated. Read them again." })).toBeVisible()
         }
       }
       await scrollPageTop(page)
       await capture(page, info, names[index] + "-" + color + "-desktop-test-data")
     }
   }
+  await scheme(page, "dark")
   await screen(page, owner, entries[1]!)
   const unsent = "Design test data · Keep this unsent question while presenting."
   await page.getByLabel("Question", { exact: true }).fill(unsent)
