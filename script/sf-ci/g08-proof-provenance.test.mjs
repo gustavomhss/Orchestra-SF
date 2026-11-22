@@ -54,6 +54,21 @@ function authority(value, raw, archive) {
       actorsReferenceSha256: digest(value.approvals.actorsReference), mutationReferenceSha256: digest(value.approvals.mutationReference) }],
     productionCutover: false, datasetCleanup: null }
 }
+// Original job API names and chronology: source commands are separately checked against the literal YAML.
+function observedSteps() {
+  const names = ["Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5",
+    "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020", "Run ./.github/actions/setup-bun",
+    "Verify guards before using the reserved private host",
+    "Execute the one original authorized group with before and after observations",
+    "Publish the allowlisted receipt; raw evidence stays on the isolated host"]
+  const times = ["01:00:01", "01:00:10", "01:00:20", "01:00:40", "01:01:00", "01:08:55", "01:09:05"]
+  const step = (name, number, start, end) => ({ name, number, status: "completed", conclusion: "success",
+    started_at: "2026-01-01T" + start + "Z", completed_at: "2026-01-01T" + end + "Z" })
+  return [step("Set up job", 1, "01:00:00", times[0]),
+    ...names.map((name, index) => step(name, index + 2, times[index], times[index + 1])),
+    ...names.slice(0, 3).reverse().map((name, index) => step("Post " + name, index + 16, "01:09:10", "01:09:20")),
+    step("Complete job", 19, "01:09:20", "01:10:00")]
+}
 const fixturesRoot = process.env.SF_G08_PROVENANCE_ZIPS
 if (!fixturesRoot) throw new Error("ACTIONS_STANDARD_LIBRARY_ZIP_FIXTURES_REQUIRED")
 const readFixture = (name) => readFile(path.join(fixturesRoot, name))
@@ -71,7 +86,7 @@ async function fixture(zipName = "deflated.zip") {
   const job = { id: 200, run_id: 100, run_attempt: 1, name: producerJob, head_sha: candidate.sha,
     status: "completed", conclusion: "success", check_run_url: "https://api.github.com" + base + "/check-runs/201",
     labels: [...producerLabels], runner_id: 12, runner_name: "controlled-runner-name-not-a-reservation",
-    started_at: "2026-01-01T01:00:00Z", completed_at: "2026-01-01T01:10:00Z" }
+    started_at: "2026-01-01T01:00:00Z", completed_at: "2026-01-01T01:10:00Z", steps: observedSteps() }
   const artifact = { id: 300, name: "g08-group-U39-" + original.invocation.id + "-1",
     expired: false, workflow_run: { id: 100, repository_id: Number(repositoryId), head_repository_id: Number(repositoryId), head_sha: candidate.sha },
     digest: "sha256:" + digest(zip), size_in_bytes: zip.length, created_at: "2026-01-01T01:09:00Z" }
@@ -100,10 +115,19 @@ async function fixture(zipName = "deflated.zip") {
     GITHUB_WORKFLOW_SHA: candidate.sha, SF_G08_INVOCATION_ID: original.invocation.id, GITHUB_SHA: candidate.sha, GITHUB_JOB: producerJob }
   const authInput = { plan: original, planRaw: raw, archiveSha256: archive, authorization: input.authorization }
   return { input, data, calls, downloads, api, env, authInput, zip, receipt, comment, run, job, artifact,
+    activate() {
+      run.status = "in_progress"; run.conclusion = null; run.updated_at = "2026-01-01T01:05:00Z"
+      job.status = "in_progress"; job.conclusion = null; job.completed_at = null
+      job.steps = job.steps.slice(0, 7)
+      Object.assign(job.steps[5], { status: "in_progress", conclusion: null, completed_at: null })
+      Object.assign(job.steps[6], { status: "queued", conclusion: null, started_at: null, completed_at: null })
+      data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[0] = structuredClone(job)
+    },
     changeAuthorization(change) {
       const value = JSON.parse(comment.body); change(value); comment.body = JSON.stringify(value)
       input.authorization.bodySha256 = digest(comment.body)
     },
+    changeAuthorizationRaw(change) { comment.body = change(comment.body); input.authorization.bodySha256 = digest(comment.body) },
     changeWorkflow(change) { const value = workflow(); change(value); data.set(base + "/contents/" + workflowPath + "?ref=" + candidate.sha, content(value)) },
   }
 }
@@ -143,10 +167,14 @@ test("literal canonical workflow parser observes the two exclusive jobs and actu
   assert.equal(content(canonicalWorkflow).sha, "6035b60476c4fce49b83ce7503ef03367ffc2d28")
 })
 test("execution authorization observes original permission and current runner window before archive or CDP", async () => {
-  const f = await fixture()
+  const f = await fixture(); f.activate()
   const result = await exerciseAuthorizationControl(f.authInput, f.api, f.env, now)
   isControl(result)
   assert.equal(result.authorization.scope, "qualification-only")
+  assert.equal(result.producer.startedAt, "2026-01-01T01:00:00Z")
+  assert.equal(result.producer.jobStatus, "in_progress")
+  assert.equal(result.producer.steps.at(-1).status, "in_progress")
+  assert(f.calls.includes(base + "/actions/jobs/200"))
   assert.equal(f.downloads.length, 0)
   assert(!f.calls.some((name) => name.includes("/actions/artifacts/")))
 })
@@ -182,6 +210,12 @@ test("review authorization observes edit timestamps through the original GraphQL
 })
 
 const producerRefusals = [
+  ["missing canonical execution step", (f) => { f.job.steps.splice(5, 1) }],
+  ["skipped canonical execution step", (f) => { f.job.steps[5].conclusion = "skipped" }],
+  ["failed canonical execution step", (f) => { f.job.steps[5].conclusion = "failure" }],
+  ["reordered original job steps", (f) => { [f.job.steps[4], f.job.steps[5]] = [f.job.steps[5], f.job.steps[4]] }],
+  ["duplicate canonical execution step", (f) => { f.job.steps.push({ ...f.job.steps[5], number: 99 }) }],
+  ["additional receipt writer step", (f) => { f.job.steps.push({ ...f.job.steps[5], number: 99, name: "Create manual receipt" }) }],
   ["repository id", (f) => { f.data.get(base).id = 99 }],
   ["commit tree", (f) => { f.data.get(base + "/git/commits/" + candidate.sha).tree.sha = "9".repeat(40) }],
   ["workflow blob bytes", (f) => { f.data.get(base + "/contents/" + workflowPath + "?ref=" + candidate.sha).sha = "9".repeat(40) }],
@@ -217,6 +251,14 @@ for (const [name, change] of producerRefusals) test("original producer refuses "
   await expect(exerciseProvenanceControl(f.input, f.api)).rejects.toThrow()
 })
 const authorizationRefusals = [
+  ["duplicate decision key", (f) => f.changeAuthorizationRaw((raw) => raw.replace('"decision":', '"decision":"deny","decision":'))],
+  ["duplicate nested candidate key", (f) => f.changeAuthorizationRaw((raw) => raw.replace('"candidate":{', '"candidate":{"sha":"' + "9".repeat(40) + '",'))],
+  ["duplicate nested invocation key", (f) => f.changeAuthorizationRaw((raw) => raw.replace('"planSha256":', '"planSha256":"' + "9".repeat(64) + '","planSha256":'))],
+  ["escaped duplicate decision key", (f) => f.changeAuthorizationRaw((raw) => raw.replace('"decision":', '"decisi\\u006fn":"deny","decision":'))],
+  ["contradictory JSON block before a valid declaration", (f) => f.changeAuthorizationRaw((raw) => {
+    const fence = String.fromCharCode(96).repeat(3), bad = raw.replace('"decision":', '"decision":"deny","decision":')
+    return "Original authorization follows.\n" + fence + "json\n" + bad + "\n" + fence + "\n" + fence + "json\n" + raw + "\n" + fence
+  })],
   ["manual PASS statement", (f) => { f.comment.body = "PASS"; f.input.authorization.bodySha256 = digest(f.comment.body) }],
   ["ambiguous declarations", (f) => { const fence = String.fromCharCode(96).repeat(3); f.comment.body = fence + "json\n" + f.comment.body + "\n" + fence + "\n" + fence + "json\n" + f.comment.body + "\n" + fence; f.input.authorization.bodySha256 = digest(f.comment.body) }],
   ["different author", (f) => { f.comment.user.login = "another-user" }],
@@ -244,6 +286,13 @@ for (const [name, change] of authorizationRefusals) test("original authorization
   assert.equal(f.downloads.length, 0)
 })
 const workflowRefusals = [
+  ["missing canonical execution", (v) => { v.jobs["installed-group"].steps.splice(4, 1) }],
+  ["manual receipt command", (v) => { v.jobs["installed-group"].steps[4].run = "printf manual-pass > g08-group-public/receipt.json" }],
+  ["execution after upload", (v) => { const steps = v.jobs["installed-group"].steps; [steps[4], steps[5]] = [steps[5], steps[4]] }],
+  ["additional output rewrite", (v) => { v.jobs["installed-group"].steps.splice(5, 0, { run: "touch g08-group-public/receipt.json" }) }],
+  ["ignored execution failure", (v) => { v.jobs["installed-group"].steps[4]["continue-on-error"] = true }],
+  ["guards replaced by success text", (v) => { v.jobs["installed-group"].steps[3].run = "echo PASS" }],
+  ["different execution id", (v) => { v.jobs["installed-group"].steps[4].id = "manual" }],
   ["wrong environment", (v) => { v.jobs["installed-group"].environment = "production" }],
   ["hosted workflow runner", (v) => { v.jobs["installed-group"]["runs-on"] = ["ubuntu-latest"] }],
   ["branch checkout", (v) => { v.jobs["installed-group"].steps[0].with.ref = "dev" }],
@@ -301,6 +350,27 @@ for (const [name, modify, time] of [
   await expect(exerciseAuthorizationControl(f.authInput, f.api, f.env, time)).rejects.toThrow()
   assert.equal(f.calls.length, 0); assert.equal(f.downloads.length, 0)
 })
+const activeRefusals = [
+  ["authorization created after job start", (f) => { f.comment.created_at = f.comment.updated_at = "2026-01-01T01:02:00Z" }, "AUTHORIZATION_AFTER_PRODUCER_START"],
+  ["authorization edited between job start and admission", (f) => { f.comment.updated_at = "2026-01-01T01:02:00Z" }, "AUTHORIZATION_AFTER_PRODUCER_START"],
+  ["completed run replayed before execution", (f) => { f.run.status = "completed"; f.run.conclusion = "success" }, "ORIGINAL_ACTIVE_RUN_REQUIRED"],
+  ["different active run attempt", (f) => { f.run.run_attempt = 2 }, "ORIGINAL_ACTIVE_RUN_REQUIRED"],
+  ["different active source SHA", (f) => { f.run.head_sha = "9".repeat(40) }, "ORIGINAL_ACTIVE_RUN_REQUIRED"],
+  ["two active producer names", (f) => { f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[1].name = producerJob }, "EXCLUSIVE_ACTIVE_JOB_INVENTORY"],
+  ["missing active job", (f) => { const jobs = f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100"); jobs.jobs.shift(); jobs.total_count = 1 }, "EXACT_ACTIVE_JOB_INVENTORY_REQUIRED"],
+  ["aggregate executing in the same run", (f) => { const job = f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[1]; job.status = "in_progress"; job.conclusion = null }, "AGGREGATOR_RUN_IS_NOT_A_PRODUCER"],
+  ["hosted active runner", (f) => { f.job.labels = ["ubuntu-latest"]; f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[0].labels = ["ubuntu-latest"] }, "ACTIVE_RUNNER_LABELS"],
+  ["driver not yet executing", (f) => { f.job.steps[5].status = "queued" }, "ORIGINAL_DRIVER_NOT_CURRENTLY_EXECUTING"],
+  ["guards skipped before admission", (f) => { f.job.steps[4].conclusion = "skipped" }, "ORIGINAL_DRIVER_STEP_SUCCESS_REQUIRED"],
+  ["job starts after admission time", (f) => { f.job.started_at = "2026-01-01T01:06:00Z"; f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[0].started_at = f.job.started_at }, "ACTIVE_PRODUCER_OUTSIDE_RESERVED_WINDOW"],
+  ["job starts before reservation", (f) => { f.run.created_at = "2025-12-31T23:58:00Z"; f.job.started_at = "2025-12-31T23:59:00Z"; f.data.get(base + "/actions/runs/100/attempts/1/jobs?per_page=100").jobs[0].started_at = f.job.started_at }, "ACTIVE_PRODUCER_OUTSIDE_RESERVED_WINDOW"],
+  ["job start changed between original API reads", (f) => { f.job.started_at = "2026-01-01T01:00:01Z" }, "ORIGINAL_ACTIVE_JOB_REQUIRED"],
+]
+for (const [name, change, reason] of activeRefusals) test("pre-execution original job refuses " + name, async () => {
+  const f = await fixture(); f.activate(); change(f)
+  await expect(exerciseAuthorizationControl(f.authInput, f.api, f.env, now)).rejects.toThrow(reason)
+  assert.equal(f.downloads.length, 0)
+})
 async function cleanupFixture() {
   const f = await fixture(), declaration = authority(f.input.plan, f.input.planRaw, f.input.archiveSha256)
   const value = { schema: "sf-g08-dataset-cleanup-v1", scope: "qualification-only", decision: "attest-isolated-dataset-cleanup",
@@ -314,7 +384,8 @@ async function cleanupFixture() {
     receiptSha256: value.receiptSha256, completedAt: "2026-01-01T01:10:00Z",
     reference: { url: comment.html_url, bodySha256: digest(comment.body), authorLogin: "gustavomhss" } }
   return { ...f, cleanup: input, cleanupComment: comment,
-    changeCleanup(change) { const v = JSON.parse(comment.body); change(v); comment.body = JSON.stringify(v); input.reference.bodySha256 = digest(comment.body) } }
+    changeCleanup(change) { const v = JSON.parse(comment.body); change(v); comment.body = JSON.stringify(v); input.reference.bodySha256 = digest(comment.body) },
+    changeCleanupRaw(change) { comment.body = change(comment.body); input.reference.bodySha256 = digest(comment.body) } }
 }
 test("cleanup source is a posterior attestation and never an observation of a cleanup process", async () => {
   const f = await cleanupFixture(), result = await exerciseCleanupControl(f.cleanup, f.api, Date.parse("2026-01-01T01:30:00Z"))
@@ -324,7 +395,17 @@ test("cleanup source is a posterior attestation and never an observation of a cl
   assert.equal(f.downloads.length, 0)
   await expect(verifyDatasetCleanupAuthority(f.cleanup, f.api)).rejects.toThrow()
 })
+test("free prose around one strict JSON declaration carries no independent authority", async () => {
+  const f = await cleanupFixture(), fence = String.fromCharCode(96).repeat(3)
+  const wrap = (raw) => "Review context is free prose, not another authorization.\n" + fence + "json\n" + raw + "\n" + fence + "\nEnd of context."
+  f.changeAuthorizationRaw(wrap); f.changeCleanupRaw(wrap)
+  isControl(await exerciseProvenanceControl(f.input, f.api))
+  isControl(await exerciseCleanupControl(f.cleanup, f.api, Date.parse("2026-01-01T01:30:00Z")))
+})
 for (const [name, change] of [
+  ["duplicate cleanup decision", (f) => f.changeCleanupRaw((raw) => raw.replace('"decision":', '"decision":"deny","decision":'))],
+  ["duplicate cleanup candidate", (f) => f.changeCleanupRaw((raw) => raw.replace('"candidate":{', '"candidate":{"sha":"' + "9".repeat(40) + '",'))],
+  ["duplicate cleanup invocation pin", (f) => f.changeCleanupRaw((raw) => raw.replace('"planSha256":', '"planSha256":"' + "9".repeat(64) + '","planSha256":'))],
   ["pre-test statement", (f) => { f.cleanupComment.created_at = "2026-01-01T00:20:00Z" }],
   ["wrong receipt", (f) => f.changeCleanup((v) => { v.receiptSha256 = "8".repeat(64) })],
   ["missing invocation", (f) => f.changeCleanup((v) => { v.invocations = [] })],

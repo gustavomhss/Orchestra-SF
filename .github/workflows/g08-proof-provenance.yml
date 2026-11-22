@@ -163,8 +163,8 @@ jobs:
           root=pathlib.Path.cwd(); output=pathlib.Path(os.environ["SF_G08_PROVENANCE_EVIDENCE"])
           report=(output/"controls.junit.xml").read_bytes(); tree=ET.fromstring(report)
           cases=tree.findall(".//testcase")
-          if len(cases)!=89 or len({case.attrib.get("name") for case in cases})!=89 or any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"]):
-              raise SystemExit("G08_PROVENANCE_EXACT_89_PASS_REQUIRED")
+          if len(cases)!=125 or len({case.attrib.get("name") for case in cases})!=125 or any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"]):
+              raise SystemExit("G08_PROVENANCE_EXACT_125_PASS_REQUIRED")
           nonce=(output/"omni-nonce.txt").read_text().strip(); log=(output/"controls.log").read_text()
           if not re.fullmatch("[0-9a-f]{32}",nonce) or len(re.findall(r"omni positive control \["+nonce+r"\]: not applicable",log))!=1:
               raise SystemExit("G08_PROVENANCE_ORIGINAL_OMNI_CONTROL_REQUIRED")
@@ -177,7 +177,7 @@ jobs:
           receipt={"schema":"sf-g08-provenance-controls-v1","status":"CONTROLS_VERIFIED",
               "source":{"sha":(output/"source.sha").read_text().strip(),"tree":(output/"source.tree").read_text().strip()},
               "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"],"workflowSha":os.environ["GITHUB_WORKFLOW_SHA"]},
-              "controls":{"bun":89,"failures":0,"skips":0},"junitSha256":hashlib.sha256(report).hexdigest(),
+              "controls":{"bun":125,"failures":0,"skips":0},"junitSha256":hashlib.sha256(report).hexdigest(),
               "sources":[{"path":name,"sha256":hashlib.sha256((root/name).read_bytes()).hexdigest()} for name in paths],
               "guardBase":(output/"guard-base.sha").read_text().strip(),"zipRoundtrip":roundtrip,
               "omni":"DECLARED_NOT_APPLICABLE_NO_SPAWNS","installed":False,"liveQualified":False,"g08Closed":False,"productionCutover":False}

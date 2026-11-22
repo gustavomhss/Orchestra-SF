@@ -3,6 +3,9 @@ import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import { inflateRawSync } from "node:zlib"
 import { digest, requireInvocation, validatePlan } from "./g08-private-evidence.mjs"
+import az02 from "../../sf/azure/identity/az02-proof.cjs"
+
+const { strictJson } = az02
 
 export const repository = "gustavomhss/Orchestra-SF"
 export const repositoryId = "1455724710"
@@ -15,6 +18,25 @@ const prefix = "/repos/" + repository
 const maximumReceipt = 1024 * 1024
 const maximumArchive = 2 * 1024 * 1024
 const associations = new Set(["OWNER", "MEMBER", "COLLABORATOR"])
+const checkoutAction = "actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5"
+const setupNodeAction = "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020"
+const setupBunAction = "./.github/actions/setup-bun"
+const guardStep = "Verify guards before using the reserved private host"
+const executionStep = "Execute the one original authorized group with before and after observations"
+const publicationStep = "Publish the allowlisted receipt; raw evidence stays on the isolated host"
+const producerStepNames = ["Run " + checkoutAction, "Run " + setupNodeAction, "Run " + setupBunAction,
+  guardStep, executionStep, publicationStep]
+const originalProducerSteps = [
+  { uses: checkoutAction, with: { ref: "$" + "{{ github.sha }}", "fetch-depth": 0, "persist-credentials": false } },
+  { uses: setupNodeAction, with: { "node-version": "24.15" } },
+  { uses: setupBunAction, with: { "reuse-node": "true" } },
+  { name: guardStep, run: "bun run check:guards --base origin/dev" },
+  { name: executionStep, id: "execute", run: 'bash script/sf-ci/g08-installed-run.sh "$SF_G08_KIND"' },
+  { name: publicationStep, if: "success() && steps.execute.outcome == 'success'",
+    uses: "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+    with: { name: "g08-group-$" + "{{ inputs.kind }}-$" + "{{ inputs.invocation_id }}-$" + "{{ github.run_attempt }}",
+      path: "g08-group-public/receipt.json", "if-no-files-found": "error", "retention-days": 30 } },
+]
 const issueURL = /^https:\/\/github\.com\/gustavomhss\/Orchestra-SF\/(?:issues|pull)\/([1-9][0-9]*)#issuecomment-([1-9][0-9]*)$/
 const reviewURL = /^https:\/\/github\.com\/gustavomhss\/Orchestra-SF\/pull\/([1-9][0-9]*)#pullrequestreview-([1-9][0-9]*)$/
 
@@ -80,9 +102,9 @@ function invocationPin(bound) {
 function sourceRecords(body, schema) {
   const fence = String.fromCharCode(96).repeat(3)
   const blocks = [...body.matchAll(new RegExp(fence + "json\\s*\\r?\\n([\\s\\S]*?)\\r?\\n" + fence, "g"))].map((entry) => entry[1])
-  const values = [body, ...blocks].flatMap((raw) => {
-    try { const value = JSON.parse(raw); return value?.schema === schema ? [value] : [] } catch { return [] }
-  })
+  // Free prose around fenced JSON has no authority. Every declared JSON block must parse without
+  // duplicate keys; an invalid/contradictory block cannot be ignored in favor of a later valid one.
+  const values = (blocks.length ? blocks : [body]).map((raw) => strictJson(raw)).filter((value) => value?.schema === schema)
   need(values.length === 1, "ONE_UNAMBIGUOUS_SOURCE_DECLARATION_REQUIRED")
   return record(values[0])
 }
@@ -204,9 +226,14 @@ export function inspectOriginalWorkflow(raw) {
     [undefined, repository, "$" + "{{ github.repository }}"].includes(checkouts[0].with?.repository) &&
     [undefined, "."].includes(checkouts[0].with?.path) && [undefined, true, "true"].includes(checkouts[0].with?.clean),
     "EXACT_CANDIDATE_CHECKOUT_REQUIRED")
+  // The canonical driver must be the only command that can create the uploaded receipt. Pin the
+  // six source steps, including order and closed fields; no extra writer or continue-on-error.
+  assert.deepEqual(job.steps, originalProducerSteps, "G08_PROVENANCE_ORIGINAL_DRIVER_STEP_CHAIN_REQUIRED")
+  assert.deepEqual(job.defaults, { run: { shell: "bash" } }, "G08_PROVENANCE_ORIGINAL_DRIVER_SHELL_REQUIRED")
+  need(job["continue-on-error"] === undefined, "ORIGINAL_DRIVER_CANNOT_IGNORE_FAILURE")
   return { path: workflowPath, sha256: digest(bytes), bytes: bytes.length, job: producerJob,
     environment: "g08-isolated-qa", environmentEvidence: "ORIGINAL_WORKFLOW_AT_CANDIDATE_NOT_JOB_API",
-    labels: [...producerLabels] }
+    execution: { command: originalProducerSteps[4].run, steps: [...producerStepNames] }, labels: [...producerLabels] }
 }
 async function originalSource(bound, api) {
   const [repo, commit, file] = await Promise.all([
@@ -235,6 +262,82 @@ export function parseProducerRequest(input) {
   return { status: "PARSED_INPUT_NOT_EVIDENCE", bound, producer: { ...producer }, receipt,
     kind: input.kind, authorization,
     artifactName: "g08-group-" + input.kind + "-" + bound.plan.invocation.id + "-" + producer.runAttempt }
+}
+function observedProducerSteps(job, active, observedAt) {
+  need(Array.isArray(job.steps) && job.steps.length > 0, "ORIGINAL_JOB_STEPS_REQUIRED")
+  const platform = new Set(["Set up job", "Complete job", ...producerStepNames.slice(0, 3).map((name) => "Post " + name)])
+  need(job.steps.every((step) => producerStepNames.includes(step?.name) || platform.has(step?.name)),
+    "UNEXPECTED_PRODUCER_JOB_STEP")
+  need(new Set(job.steps.map((step) => step.number)).size === job.steps.length &&
+    job.steps.every((step) => Number.isSafeInteger(step.number) && step.number > 0), "UNIQUE_ORIGINAL_STEP_NUMBERS_REQUIRED")
+  const expected = active ? producerStepNames.slice(0, 5) : producerStepNames
+  let previousNumber = 0, previousPosition = -1, previousEnd = instant(job.started_at)
+  const observed = expected.map((name, index) => {
+    const matches = job.steps.filter((step) => step.name === name)
+    need(matches.length === 1, "ONE_ORIGINAL_DRIVER_STEP_REQUIRED")
+    const step = matches[0], position = job.steps.indexOf(step), started = instant(step.started_at)
+    need(step.number > previousNumber && position > previousPosition && started >= previousEnd && started <= observedAt,
+      "ORIGINAL_DRIVER_STEP_ORDER_REQUIRED")
+    const executing = active && index === 4
+    if (executing) need(step.status === "in_progress" && step.conclusion === null && step.completed_at === null,
+      "ORIGINAL_DRIVER_NOT_CURRENTLY_EXECUTING")
+    else need(step.status === "completed" && step.conclusion === "success" &&
+      instant(step.completed_at) >= started && instant(step.completed_at) <= observedAt,
+      "ORIGINAL_DRIVER_STEP_SUCCESS_REQUIRED")
+    previousNumber = step.number; previousPosition = position
+    previousEnd = executing ? started : instant(step.completed_at)
+    return { name, number: step.number, status: step.status, conclusion: step.conclusion,
+      startedAt: step.started_at, completedAt: step.completed_at }
+  })
+  if (active) {
+    const publications = job.steps.filter((step) => step.name === publicationStep)
+    need(publications.length <= 1 && publications.every((step) => step.number > previousNumber &&
+      job.steps.indexOf(step) > previousPosition && step.status === "queued" && step.conclusion === null),
+      "PUBLICATION_BEFORE_ORIGINAL_DRIVER_COMPLETION")
+  }
+  return observed
+}
+async function activeProducer(bound, api, now) {
+  const runId = bound.plan.invocation.runId, attempt = bound.plan.invocation.runAttempt, candidate = bound.plan.candidate.sha
+  const [source, run, jobs] = await Promise.all([
+    originalSource(bound, api), api.json(prefix + "/actions/runs/" + runId + "/attempts/" + attempt),
+    api.json(prefix + "/actions/runs/" + runId + "/attempts/" + attempt + "/jobs?per_page=100"),
+  ])
+  need(String(run.id) === runId && String(run.run_attempt) === attempt &&
+    run.repository?.full_name === repository && String(run.repository?.id) === repositoryId &&
+    run.head_repository?.full_name === repository && String(run.head_repository?.id) === repositoryId &&
+    run.head_sha === candidate && run.path === workflowPath && run.status === "in_progress" && run.conclusion === null,
+    "ORIGINAL_ACTIVE_RUN_REQUIRED")
+  need(jobs.total_count === 2 && Array.isArray(jobs.jobs) && jobs.jobs.length === 2, "EXACT_ACTIVE_JOB_INVENTORY_REQUIRED")
+  assert.deepEqual(jobs.jobs.map((entry) => entry.name).sort(), ["installed-aggregate", producerJob].sort(),
+    "G08_PROVENANCE_EXCLUSIVE_ACTIVE_JOB_INVENTORY")
+  for (const entry of jobs.jobs) {
+    need(String(entry.run_id) === runId && String(entry.run_attempt) === attempt && entry.head_sha === candidate,
+      "ACTIVE_JOB_SOURCE_MISMATCH")
+    if (entry.name === producerJob) need(entry.status === "in_progress" && entry.conclusion === null,
+      "ORIGINAL_ACTIVE_PRODUCER_REQUIRED")
+    else need(entry.status === "completed" && entry.conclusion === "skipped", "AGGREGATOR_RUN_IS_NOT_A_PRODUCER")
+  }
+  const listed = jobs.jobs.find((entry) => entry.name === producerJob), jobId = id(String(listed.id))
+  const job = await api.json(prefix + "/actions/jobs/" + jobId)
+  need(String(job.id) === jobId && String(job.run_id) === runId && String(job.run_attempt) === attempt &&
+    job.name === producerJob && job.head_sha === candidate && job.status === "in_progress" && job.conclusion === null &&
+    job.started_at === listed.started_at && job.check_run_url === listed.check_run_url &&
+    typeof job.check_run_url === "string" &&
+    job.check_run_url.startsWith("https://api.github.com" + prefix + "/check-runs/"), "ORIGINAL_ACTIVE_JOB_REQUIRED")
+  const checkRunId = id(job.check_run_url.slice(("https://api.github.com" + prefix + "/check-runs/").length))
+  assert.deepEqual(job.labels, listed.labels, "G08_PROVENANCE_ACTIVE_RUNNER_OBSERVATION_CHANGED")
+  assert.deepEqual([...job.labels].sort(), [...producerLabels].sort(), "G08_PROVENANCE_ACTIVE_RUNNER_LABELS")
+  need(Number.isSafeInteger(job.runner_id) && job.runner_id > 0 && typeof job.runner_name === "string" &&
+    job.runner_name.length > 0, "OBSERVED_SELF_HOSTED_RUNNER_REQUIRED")
+  const started = instant(job.started_at)
+  need(started >= instant(run.created_at) && started >= instant(bound.plan.reservation.startsAt) &&
+    started <= now && now < instant(bound.plan.reservation.endsAt), "ACTIVE_PRODUCER_OUTSIDE_RESERVED_WINDOW")
+  const steps = observedProducerSteps(job, true, now)
+  return { source, started, metadata: { runId, runAttempt: attempt, jobId, checkRunId,
+    workflowPath, workflowSha: candidate, jobName: producerJob, startedAt: job.started_at,
+    runStatus: run.status, jobStatus: job.status, aggregateJobConclusion: "skipped", steps,
+    runnerId: String(job.runner_id), runnerNameSha256: digest(job.runner_name), labels: [...producerLabels] } }
 }
 async function completedProducer(parsed, api) {
   const { bound, producer: p } = parsed
@@ -273,6 +376,7 @@ async function completedProducer(parsed, api) {
   need(started <= completed && started >= instant(run.created_at) && completed <= instant(run.updated_at) &&
     started >= instant(bound.plan.reservation.startsAt) && completed < instant(bound.plan.reservation.endsAt),
     "PRODUCER_OUTSIDE_RESERVED_WINDOW")
+  const steps = observedProducerSteps(job, false, completed)
   need(String(artifact.id) === p.artifactId && artifact.name === parsed.artifactName && artifact.expired === false &&
     String(artifact.workflow_run?.id) === p.runId && String(artifact.workflow_run?.repository_id) === repositoryId &&
     String(artifact.workflow_run?.head_repository_id) === repositoryId && artifact.workflow_run?.head_sha === candidate &&
@@ -282,7 +386,7 @@ async function completedProducer(parsed, api) {
     jobId: p.jobId, checkRunId: p.checkRunId, checkRunEvidence: "ORIGINAL_JOB_CHECK_RUN_URL", artifactId: p.artifactId, artifactName: parsed.artifactName,
     workflowPath, workflowSha: candidate, jobName: producerJob, startedAt: job.started_at, completedAt: job.completed_at,
     runCreatedAt: run.created_at, runUpdatedAt: run.updated_at, artifactCreatedAt: artifact.created_at,
-    runConclusion: "success", jobConclusion: "success", aggregateJobConclusion: "skipped",
+    runConclusion: "success", jobConclusion: "success", aggregateJobConclusion: "skipped", steps,
     runnerId: String(job.runner_id), runnerNameSha256: digest(job.runner_name), labels: [...producerLabels],
     zipSha256: p.zipSha256, zipBytes: p.zipBytes } }
 }
@@ -362,10 +466,10 @@ async function executionAuthorization(input, api, env, now) {
   const ref = reference(input.authorization)
   requireInvocation(bound.plan, env, now)
   need(env.GITHUB_SHA === bound.plan.candidate.sha && env.GITHUB_JOB === producerJob, "CURRENT_CANDIDATE_JOB_REQUIRED")
-  const source = await originalSource(bound, api)
-  const authorization = await originalAuthorization(bound, ref, api, now)
+  const observed = await activeProducer(bound, api, now)
+  const authorization = await originalAuthorization(bound, ref, api, observed.started)
   return { schema: "sf-g08-execution-authorization-v1", status: "ORIGINAL_EXECUTION_AUTHORIZATION_OBSERVED",
-    ...sharedPins(bound), invocation: invocationPin(bound), source, authorization,
+    ...sharedPins(bound), invocation: invocationPin(bound), source: observed.source, producer: observed.metadata, authorization,
     observedAt: new Date(now).toISOString(), installed: false, liveQualified: false, g08Closed: false, productionCutover: false }
 }
 async function cleanupAuthority(input, api, now) {
