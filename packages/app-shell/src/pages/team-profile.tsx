@@ -102,6 +102,13 @@ export function SfTeamWebApp() {
     return current && readTeamSessionNavigation(new URL(window.location.href), current.binding)
   }
   const chatRuntime = () => chat.ready && sessionRoute() ? runtime : undefined
+  const chatNotice = () => {
+    const notice = chat.notice, sessions = chatRuntime()?.sessions.state
+    const local = sessions?.status === "unavailable"
+      ? sessions.reason === "stream" ? "sf.teams.chatUpdatesStopped" : "sf.teams.chatUnavailable"
+      : undefined
+    return notice === local ? undefined : notice
+  }
   const administrationScope = (current: Extract<TeamWebState, { status: "authenticated" }>) =>
     JSON.stringify([current.binding, current.context.profile.principal])
   const teams = () => {
@@ -422,7 +429,10 @@ export function SfTeamWebApp() {
       data-sf-teams-shell data-sf-teams-state={state().status}
       data-sf-team-selected={selected()?.profile.teamObjectId}>
       <header class="sf-team-brand">
-        <img src="/brand/sucafina/lockup-primary.svg" alt="Sucafina" width="145" />
+        <span class="sf-team-logo" role="img" aria-label="Sucafina">
+          <img data-sf-logo-scheme="light" src="/brand/sucafina/lockup-primary.svg" alt="" />
+          <img data-sf-logo-scheme="dark" src="/brand/sucafina/lockup-inverse.svg" alt="" />
+        </span>
         <div class="sf-team-brand-actions">
           <Show when={state().status !== "loading" && state().status !== "unauthenticated"}>
             <button type="button" class="mx-btn" data-sf-refresh-access onClick={refresh}>{language.t("sf.ui67.refreshAccess")}</button>
@@ -502,7 +512,7 @@ export function SfTeamWebApp() {
             </Show>
           </div>
         }}</Show>
-        <Show when={chat.notice} keyed>{(key) => <p class="sf-team-notice" data-sf-chat-notice role="alert">{language.t(key)}</p>}</Show>
+        <Show when={chatNotice()} keyed>{(key) => <p class="sf-team-notice" data-sf-chat-notice role="alert">{language.t(key)}</p>}</Show>
         <Show when={chat.consent}><SfTeamDiscardDialog close={closeConsent} /></Show>
         <Show when={chatRuntime()} keyed>{(value) =>
           <Suspense fallback={<p role="status">{language.t("sf.ui67.loading")}</p>}>

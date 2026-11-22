@@ -9,7 +9,6 @@
   --sf-chat-control: 44px;
   --sf-chat-line: 1px;
   --sf-chat-focus: 2px;
-  --sf-chat-mobile-height: 34rem;
   display: grid;
   grid-template-columns: var(--sf-chat-list-width) minmax(0, 1fr);
   gap: var(--sf-chat-gap);
@@ -69,8 +68,5 @@
   .sf-team-session-list > .mx-btn { justify-self: start; inline-size: auto; }
 }
 @media (max-width: 767px) {
-  .sf-team-shell[data-sf-team-layout="chat"] { overflow-y: auto; }
-  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-surface { flex: none; }
-  .sf-team-main-chat > .sf-team-session { block-size: var(--sf-chat-mobile-height); flex: none; }
   .sf-team-session-heading h1 { font-size: var(--orchestra-font-size-xl); }
 }

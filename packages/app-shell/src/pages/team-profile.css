@@ -13,6 +13,8 @@
   --sf-team-access-width: 840px;
   --sf-team-work-width: 1440px;
   --sf-team-dialog-width: 560px;
+  --sf-team-logo-width: 112px;
+  --sf-team-chat-height: 34rem;
   min-inline-size: 0;
   color: var(--mx-strong);
   font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
@@ -36,7 +38,11 @@
   gap: var(--sf-team-sm);
 }
 .sf-team-brand { justify-content: space-between; gap: var(--sf-team-gap); flex: none; }
-.sf-team-brand img { display: block; flex: none; max-inline-size: 100%; }
+.sf-team-logo { display: block; flex: none; inline-size: var(--sf-team-logo-width); max-inline-size: 100%; }
+.sf-team-logo img { display: block; inline-size: 100%; block-size: auto; }
+.sf-team-logo [data-sf-logo-scheme="light"] { display: none; }
+html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="dark"] { display: none; }
+html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { display: block; }
 .sf-team-brand-actions { justify-content: flex-end; }
 .sf-team-surface {
   display: flex;
@@ -123,8 +129,8 @@
 .sf-team-dialog .mx-dialog-head h2 { font-size: var(--orchestra-font-size-2xl); line-height: 1.45; }
 .sf-team-dialog .mx-dialog-foot { flex-wrap: wrap; padding: var(--sf-team-lg) var(--sf-team-gap); }
 @media (max-width: 767px) {
-  .sf-team-shell { --sf-team-gutter: 16px; padding: var(--sf-team-lg); gap: var(--sf-team-lg); }
-  .sf-team-brand { align-items: flex-start; gap: var(--sf-team-md); }
+  .sf-team-shell { --sf-team-gutter: 16px; --sf-team-logo-width: 96px; padding: var(--sf-team-lg); gap: var(--sf-team-lg); }
+  .sf-team-brand { align-items: center; gap: var(--sf-team-md); }
   .sf-team-brand-actions { justify-content: flex-start; }
   .sf-team-heading h1 { font-size: var(--orchestra-font-size-3xl); }
   .sf-team-toolbar { align-items: stretch; }
@@ -145,3 +151,10 @@
 .sf-team-main-chat:has(.sf-team-administration) > .sf-team-session { block-size: max(420px, 65dvh); flex: none; }
 .sf-team-dialog .mx-dialog-head { min-block-size: 0; overflow-y: auto; }
 .sf-team-dialog .mx-dialog-foot { flex: none; }
+
+/* The shell owns responsive overflow, independent of the lazy chat stylesheet order. */
+@media (max-width: 980px), (max-height: 720px) {
+  .sf-team-shell[data-sf-team-layout="chat"] { overflow-y: auto; }
+  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-surface { flex: none; overflow: visible; }
+  .sf-team-shell[data-sf-team-layout="chat"] .sf-team-session { block-size: max(var(--sf-team-chat-height), 70dvh); flex: none; }
+}
