@@ -8,7 +8,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 export const cases = Object.freeze([
-  { id: "same-team-principal-binding", title: "Two original Microsoft principals select the same Team without claiming different grants" },
+  { id: "same-team-distinct-grants", title: "Two distinct Microsoft accounts enter the same installed Team with their own authority" },
   { id: "aba-two-windows", title: "An explicit A B A Team switch leaves the sibling window on its own Team" },
   { id: "account-without-team", title: "An authenticated account without Team access cannot open the original business chapter" },
   { id: "foreign-deep-link-reload", title: "A foreign installation deep link and reload cannot inherit the current Team selection" },
@@ -23,6 +23,7 @@ export const preservedTeams = Object.freeze([
   "admin-without-team", "narrow-keyboard-draft", "draft-cancel-discard", "real-revoke-restore", "logout-original-context",
 ])
 export const completeMappings = Object.freeze({
+  "same-team-distinct-grants": "same-team-distinct-grants",
   "aba-two-windows": "aba-two-windows", "account-without-team": "account-without-team",
   "foreign-deep-link-reload": "foreign-deep-link-reload", "admin-without-team": "admin-without-team",
   "narrow-keyboard-draft": "narrow-keyboard-draft", "draft-cancel-discard": "draft-cancel-discard",
@@ -61,6 +62,32 @@ function text(value) {
   assert(typeof value === "string" && value.trim() === value && value.length > 0 && value.length <= 2048 &&
     !/[\u0000-\u001f\u007f]/.test(value), "G08_TEXT_REQUIRED")
   return value
+}
+/** Canonical business projection only. The caller must first decode the original F02 response.
+ * Principal, revisions and resource availability are deliberately outside this comparison.
+ * @param {unknown} value
+ */
+export function destinationGrants(value) {
+  const destinations = record(value).destinations
+  assert(Array.isArray(destinations), "G08_ORIGINAL_DESTINATIONS_REQUIRED")
+  const projection = destinations.map((value) => {
+    const entry = record(value)
+    exact(entry, ["capabilityId", "surface", "page", "canRead", "allowedActionIds"])
+    const surface = text(entry.surface)
+    assert(["dashboard", "planner", "procurement"].includes(surface) &&
+      typeof entry.canRead === "boolean" && Array.isArray(entry.allowedActionIds), "G08_DESTINATION_GRANT_INVALID")
+    const actions = entry.allowedActionIds.map(text).sort()
+    assert.equal(new Set(actions).size, actions.length, "G08_DUPLICATE_ACTION_GRANT")
+    return { capabilityId: text(entry.capabilityId), surface, page: text(entry.page),
+      canRead: entry.canRead, allowedActionIds: actions }
+  })
+  assert.equal(new Set(projection.map((entry) => entry.capabilityId)).size, projection.length,
+    "G08_DUPLICATE_DESTINATION_GRANT")
+  return projection.map((entry) => JSON.stringify(entry)).sort()
+}
+/** @param {unknown} requester @param {unknown} holder */
+export function requireDistinctDestinationGrants(requester, holder) {
+  assert.notDeepEqual(destinationGrants(requester), destinationGrants(holder), "G08_DISTINCT_DESTINATION_GRANTS_REQUIRED")
 }
 /** @param {unknown} value @param {number} length @returns {string} */
 function hex(value, length) {
@@ -372,10 +399,6 @@ export function coverageLedger(value, executed = false) {
     // Full mappings are versioned here. The list of passing cases cannot promote unmapped obligations.
     const complete = Object.entries(completeMappings).find(([id]) => id === entry.id)
     assert(!!complete === (entry.coverage === "complete"), "G08_UNSUPPORTED_OBLIGATION_CLAIM")
-    if (entry.id === "same-team-distinct-grants") assert(entry.coverage === "partial" &&
-      entry.blocker === "BLOCKED_BY_PRODUCT_GRANTS_NOT_PUBLISHED" &&
-      JSON.stringify(entry.implementedCases) === JSON.stringify(["same-team-principal-binding"]),
-      "G08_DISTINCT_GRANTS_REMAIN_UNPROVEN")
     if (entry.coverage !== "complete") assert(text(entry.blocker).startsWith("BLOCKED_BY_PRODUCT_"), "G08_PRODUCT_BLOCKER_REQUIRED")
     else assert(entry.blocker === null && complete && JSON.stringify(entry.implementedCases) === JSON.stringify([complete[1]]), "G08_COMPLETE_MAPPING_INVALID")
     return { id: entry.id, status: executed && entry.coverage === "complete" ? "PASS" :
@@ -424,7 +447,7 @@ async function main() {
   const command = process.argv[2]
   if (command === "verify-list") {
     const inventory = verifyReport(JSON.parse(await readFile(process.argv[3], "utf8")), false)
-    const receipt = { schema: "sf-g08-executor-inventory-v3", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
+    const receipt = { schema: "sf-g08-executor-inventory-v4", status: "CURRENT_CONTRACT_INVENTORY_VERIFIED", proofScope: "current-teams-subset",
       candidate: { sha: process.env.SF_G08_CANDIDATE_SHA, tree: process.env.SF_G08_CANDIDATE_TREE },
       cases: inventory, coverage: await readCoverage(false), sources: await sourceInventory(), installed: false, g08Closed: false, pendingGroups, productionCutover: false }
     const output = text(process.env.SF_G08_TOOLING_EVIDENCE), workspace = process.env.GITHUB_WORKSPACE
@@ -478,7 +501,7 @@ async function main() {
   }
   const archive = record(receipt.archive)
   const publicReceipt = {
-    schema: "sf-g08-current-installed-v3", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
+    schema: "sf-g08-current-installed-v4", status: "CURRENT_TEAMS_SUBSET_INSTALLED_VERIFIED", proofScope: "current-teams-subset",
     candidate: plan.candidate, archive: { file: archive.file, sha256: archive.sha256, bytes: archive.bytes },
     packageReceiptSha256: plan.packageReceiptSha256, invocation: plan.invocation, cases: inventory, coverage: await readCoverage(true), sources,
     evidence: { reportSha256: digest(reportText), hostBeforeSha256: digest(beforeText), hostAfterSha256: digest(afterText), cleanup },
