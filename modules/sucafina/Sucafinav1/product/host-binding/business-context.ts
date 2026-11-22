@@ -721,11 +721,16 @@ export function createSfAtlasBusiness(input: {
 }
 
 function plannerProjectionMatches(projection: DomainProjection, ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) {
-  return projection.context.installationId === call.binding.installationId && projection.context.projectId === call.binding.projectId &&
-    projection.context.principalRef === call.binding.principalRef && projection.context.accessRevision === call.binding.accessRevision &&
-    projection.context.policyVersion === call.binding.policyVersion && projection.context.surface === "planner" &&
-    digestSfValue(projection.context.period) === digestSfValue(ref.target.period) && projection.values.every((value) =>
-      value.sourceRefs.length === 1 && digestSfValue(value.sourceRefs[0]) === digestSfValue(ref))
+  if (projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId ||
+      projection.context.principalRef !== call.binding.principalRef || projection.context.accessRevision !== call.binding.accessRevision ||
+      projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== "planner" ||
+      digestSfValue(projection.context.period) !== digestSfValue(ref.target.period)) return false
+  // One synchronous projection check shares only the expected reference digest.
+  // Every value still proves its own source, and the reference is checked again at exit.
+  const referenceDigest = digestSfValue(ref)
+  const matches = projection.values.every((value) =>
+    value.sourceRefs.length === 1 && digestSfValue(value.sourceRefs[0]) === referenceDigest)
+  return matches && digestSfValue(ref) === referenceDigest
 }
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
