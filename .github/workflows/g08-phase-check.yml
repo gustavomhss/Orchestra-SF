@@ -1,0 +1,98 @@
+name: g08-phase-ledger-controls
+
+on:
+  push:
+    branches: [g08-phase-check]
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: "aff2fead9c9df28b725282a2d2e0665a67be7590"
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+      - name: Bind exact inventory source
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "aff2fead9c9df28b725282a2d2e0665a67be7590"
+          test "$(git rev-parse 'HEAD^{tree}')" = "5322d9b052745f5fb8ce377cd2a1b03f3ed1e65b"
+          test "$(git show -s --format=%P "$GITHUB_SHA")" = "aff2fead9c9df28b725282a2d2e0665a67be7590"
+          test "$(git rev-parse HEAD:sf/azure/identity/az02-proof.cjs)" = "6b8104170fe546e74e46c0fd374c1fe1254caf24"
+          mkdir -m700 "$RUNNER_TEMP/g08-phase"
+          git rev-parse HEAD 'HEAD^{tree}' origin/dev > "$RUNNER_TEMP/g08-phase/source.refs"
+          git diff --name-only d9194fc04428da9a6c0ebf348e84633968f77b51 HEAD > "$RUNNER_TEMP/g08-phase/changed-paths.txt"
+          git diff --check "$(git merge-base HEAD origin/dev)" HEAD 2>&1 | tee "$RUNNER_TEMP/g08-phase/whitespace.log"
+      - uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+      - name: Run complete private-evidence and original AZ02 component suites
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/g08-phase/controls.xml" script/sf-ci/g08-private-evidence.test.mjs sf/azure/identity/az02-proof.test.cjs 2>&1 | tee "$RUNNER_TEMP/g08-phase/controls.log"
+      - name: Canonical guards
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g08-phase/guards.log"
+      - name: Verify closed coverage and original report
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'JS'
+          import { readFileSync, writeFileSync } from "node:fs"
+          import assert from "node:assert/strict"
+          import { coverageLedger, requireCompleteGate } from "./script/sf-ci/g08-private-evidence.mjs"
+          const ledger=JSON.parse(readFileSync("packages/app-shell/e2e/sucafina/g08/obligations.json","utf8"))
+          const coverage=coverageLedger(ledger,true)
+          assert.deepEqual(coverage.groups.map(entry=>entry.expectedCount),[6,22,22,3,37])
+          assert.equal(coverage.complete,false)
+          assert(coverage.groups.every(entry=>entry.status==="NOT_RUN"))
+          assert.throws(()=>requireCompleteGate(coverage))
+          writeFileSync(process.env.RUNNER_TEMP+"/g08-phase/coverage.json",JSON.stringify(coverage,null,2)+"\n")
+          JS
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess,xml.etree.ElementTree as ET
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"g08-phase"
+          report=ET.parse(root/"controls.xml").getroot()
+          cases=list(report.iter("testcase"))
+          assert len(cases)>33
+          assert not any(case.find(tag) is not None for case in cases for tag in ["failure","error","skipped"])
+          names=[case.attrib["name"] for case in cases]
+          assert len(names)==len(set(names))
+          assert "AZ02 coverage preserves 32 original obligations and requires all 37 cases from the integrated producer" in names
+          assert "closing coverage rejects vacuous or forged PASS inventory: historical AZ02 count used for closing" in names
+          assert len([name for name in names if name.startswith("preserved coverage refuses AZ02")])==12
+          selected=["script/sf-ci/g08-private-evidence.test.mjs","sf/azure/identity/az02-proof.test.cjs"]
+          changed=["packages/app-shell/e2e/sucafina/g08/obligations.json","script/sf-ci/g08-private-evidence.mjs","script/sf-ci/g08-private-evidence.test.mjs"]
+          assert set((root/"changed-paths.txt").read_text().splitlines())==set(changed)
+          sources=[{"path":p,"sha256":hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest(),"gitBlob":subprocess.check_output(["git","rev-parse","HEAD:"+p],text=True).strip()} for p in sorted(set(changed+selected+["sf/azure/identity/az02-proof.cjs"]))]
+          receipt={"schema":"sf-g08-az02-ledger-controls-v1","source":{"sha":"aff2fead9c9df28b725282a2d2e0665a67be7590","tree":"5322d9b052745f5fb8ce377cd2a1b03f3ed1e65b"},"base":"d9194fc04428da9a6c0ebf348e84633968f77b51","workflowSha":os.environ["GITHUB_SHA"],
+            "run":{"id":os.environ["GITHUB_RUN_ID"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"]},"selectedFiles":selected,
+            "tests":len(cases),"failures":0,"skips":0,"names":names,"sources":sources,"originalAZ02Count":32,"operationalAZ02Count":37,
+            "componentOnly":True,"installed":False,"g08Closed":False,"productionCutover":False,
+            "hashes":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in root.iterdir() if p.is_file()}}
+          (root/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps({"source":receipt["source"],"tests":len(cases),"originalAZ02Count":32,"operationalAZ02Count":37,"g08Closed":False}))
+          PY
+      - name: Preserve original reports including failures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g08-phase-ledger-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ${{ runner.temp }}/g08-phase/
