@@ -369,7 +369,7 @@ export function registerPoolTests(test: typeof import("bun:test").test) {
       await page.getByRole("button", { name: "Record choice", exact: true }).click()
       await page.getByText("Could not confirm the choice. Your reason and comparison are locked; retry the same request.", { exact: true }).waitFor()
       await page.getByRole("button", { name: "Retry the same choice", exact: true }).click()
-      await page.getByText("The retry was rejected but the earlier choice is still unconfirmed. Reopen the decision to reconcile its current state.", { exact: true }).waitFor()
+      await page.getByText("The request was rejected but the earlier choice is still unconfirmed. Reopen the decision to reconcile its current state.", { exact: true }).waitFor()
       expect(calls).toHaveLength(2)
       expect(calls[1]).toEqual(calls[0])
       expect(await page.getByRole("button", { name: "Retry the same choice", exact: true }).isDisabled()).toBe(true)
