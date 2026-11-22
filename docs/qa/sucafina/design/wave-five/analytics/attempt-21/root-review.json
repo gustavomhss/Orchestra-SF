@@ -1,0 +1,50 @@
+{
+  "schema": "sf-root-archive-review-v1",
+  "reviewer": "/root",
+  "attempt": "Portfolio24",
+  "recordedAt": "2026-11-22 15:57:56 UTC",
+  "snapshot": "912deed79badd8684298ae9c3799f8ef5f15e016",
+  "product": "e4cc03bb3fa6deaed5c66f0050ffebf878dfef5d",
+  "run": 45037289486,
+  "archive": "5abb86723f00b287325e3ac274388bdda8adec8b",
+  "compareOnlySevenQaAdditions": true,
+  "logLengthExact": true,
+  "logLinesExact": true,
+  "originalFailureLine": {
+    "sourceLine": 252,
+    "text": "2026-11-22T15:15:54.1523321Z ##[error]Error: Unexpected HTTP response: 403"
+  },
+  "structuredNativeRecords": 0,
+  "measuredValuesAvailable": false,
+  "rootViewedImages": 0,
+  "testsActuallyRun": false,
+  "countsUnchanged": true,
+  "setupObservations": [
+    {
+      "sourceLine": 244,
+      "exact": true
+    },
+    {
+      "sourceLine": 250,
+      "exact": true
+    },
+    {
+      "sourceLine": 251,
+      "exact": true
+    },
+    {
+      "sourceLine": 252,
+      "exact": true
+    },
+    {
+      "sourceLine": 253,
+      "exact": true
+    }
+  ],
+  "pass": true,
+  "qualification": "Infrastructure failure before tests; no product outcome, runtime measurement, preview or visual qualification.",
+  "limitations": [
+    "Setup Bun returned HTTP 403; the available evidence does not establish the cause.",
+    "Run tests was skipped. Metrics are unavailable, not zero-duration measurements."
+  ]
+}
