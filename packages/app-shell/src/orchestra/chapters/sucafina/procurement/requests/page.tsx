@@ -168,6 +168,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const canPr = () => !!row() && isPrWritable(row()!) && actionAllowed("save-pr")
   const canPo = () => !!row() && isPoWritable(row()!) && actionAllowed("save-po")
   const stage = () => row() ? stageOf(row()!.status) : "pr"
+  const stageLabel = () => t(stage() === "pr" ? "sf.u11.remaining.pr" :
+    stage() === "sourcing" ? "sf.u11.remaining.sourcing" :
+    stage() === "po" ? "sf.u11.remaining.po" : "sf.u11.remaining.closed")
   const sourceRevision = () => JSON.stringify({
     row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
   })
@@ -687,7 +690,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </Show>
         </Show>
         <Show when={current}>
-          <p>{t("sf.u11.remaining.stage")}: {stage()}</p>
+          <p title={stage()}>{t("sf.u11.remaining.stage")}: {stageLabel()}</p>
         </Show>
         <Show when={current?.poEstimate}><p role="status">{current?.poEstimate}</p></Show>
         <Show when={current?.orderDifference}><p role="status">{current?.orderDifference}</p></Show>

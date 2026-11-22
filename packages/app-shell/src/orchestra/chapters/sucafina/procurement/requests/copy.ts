@@ -182,7 +182,7 @@ export const SF_U11_REMAINING_COPY_BR: Record<keyof typeof SF_U11_REMAINING_COPY
   "sf.u11.remaining.noHistory": "Nenhuma entrada de histórico autorizada.",
   "sf.u11.remaining.all": "Todos",
   "sf.u11.remaining.openFilter": "Abertos",
-  "sf.u11.remaining.closed": "Fechados",
+  "sf.u11.remaining.closed": "Encerrada",
   "sf.u11.remaining.requisition": "Requisição",
   "sf.u11.remaining.purchaseOrder": "Ordem de compra",
   "sf.u11.remaining.awaitingApproval": "Aguardando aprovação",

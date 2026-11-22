@@ -827,7 +827,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           <section class="sf-u12-requests"><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
               <li><button type="button" class="mx-btn" onClick={()=>setUi("selected",row.number??null)}>
-                {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · {row.status}
+                {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · <span title={row.status}>{procurementStatusLabel(row.status, language.t)}</span>
               </button></li>
             }</For></ul>
           </section>
