@@ -46,17 +46,21 @@ export function SfRequisitionForm(props: PrProps) {
       <For each={prFields.filter((field) => props.creating || field !== "title")}>{(field) => {
         const label = () => copy(tKey("sf.u11.remaining.field." + field))
         const value = () => props.value[field]
+        const numeric = field === "estAmount" || field === "estAnnual"
         return <label class="sf-u11-field" data-field={field}>
           <span>{label()}</span>
           <Show when={field === "recurring"} fallback={
             <Show when={field === "type" && props.creating} fallback={
               <Show when={field === "description" || field === "justification"} fallback={
-                <input name={`pr.${field}`} type={field === "needBy" ? "date" :
-                  field === "estAmount" || field === "estAnnual" ? "number" : "text"}
-                  step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
+                <input name={`pr.${field}`} type={field === "needBy" ? "date" : numeric ? "number" : "text"}
+                  step={numeric ? "any" : undefined}
                   required={props.creating && field === "title"}
                   value={textValue(value())}
-                  onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
+                  onInput={(event) => {
+                    const input = event.currentTarget
+                    if (!numeric) return edit(field, input.value)
+                    return edit(field, Number.isFinite(input.valueAsNumber) ? input.valueAsNumber : null)
+                  }} />
               }>
                 <textarea name={`pr.${field}`} rows={3} value={textValue(value())}
                   onInput={(event) => edit(field, event.currentTarget.value)} />

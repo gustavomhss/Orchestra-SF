@@ -268,6 +268,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       }
       if(Array.isArray(scores)){
         const values=[...scores]
+        while(values.length<=criterion)values.push(null)
         values[criterion]=raw
         return {...item,[kind]:values}
       }
@@ -572,16 +573,21 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       <legend>{t("sf.u12.quotes")} {index+1} · {quote.id??t("sf.u12.missing")}</legend>
       <div class="sf-u12-fields">
         <For each={fields}>{([name,key])=>{
+          const numeric=name==="total"||name==="qty"||name==="unitPrice"
           const refusal=name==="currency"?ui.fieldErrors.find((error)=>error.field==="sourcing.quotes."+index+".currency"):undefined
           const described=refusal?"sf-u12-currency-"+index:undefined
           return <>
             <label>{t(key)}
-              <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
-                step={["total","qty","unitPrice"].includes(name)?"any":undefined}
+              <input type={numeric?"number":"text"}
+                step={numeric?"any":undefined}
                 value={asString(quote[name])}
                 aria-invalid={refusal?"true":undefined}
                 aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,event.currentTarget.value)}/>
+                onInput={(event)=>{
+                  const input=event.currentTarget
+                  if(!numeric){updateQuote(index,name,input.value);return}
+                  updateQuote(index,name,Number.isFinite(input.valueAsNumber)?input.valueAsNumber:null)
+                }}/>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
