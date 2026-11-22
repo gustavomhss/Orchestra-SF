@@ -1,6 +1,8 @@
 import { expect } from "@playwright/test"
 import type { APIResponse, Locator, Page } from "@playwright/test"
-import type { SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
+import { SfFiles, type SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
+import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
+import { Schema } from "effect"
 import { forwardOnce } from "../operations-support/runtime"
 
 type Manifest = Extract<SfFilesOperationOutput<"files.import-preview">, { status: "ok" }>["value"]
@@ -58,6 +60,7 @@ async function captureOriginalAdmission(page: Page, endpoint: string) {
  */
 export async function captureOriginalImportPreview(page: Page, input: {
   origin: string; mount: string; sourceDigest: string; generate: Locator
+  observe: (facts: Readonly<Record<string, unknown>>) => Promise<void>
 }) {
   const endpoint = (mode: string, query: Record<string, string> = {}) =>
     input.origin + input.mount + "/planner?" + new URLSearchParams({ sf: mode, ...query })
@@ -69,8 +72,16 @@ export async function captureOriginalImportPreview(page: Page, input: {
     const reference = await forwardOnce(page, () => prepared?.referenceURL, "GET")
     close.push(reference.close)
     const preview = await forwardOnce(page, endpoint("import-preview"), "POST", async (response) => {
+      const wire = await response.json()
+      const decoded = SfNativeOperationBindings["files.import-preview"]!.decodeOutput(wire)
+      const typed = Schema.decodeUnknownOption(Schema.toType(SfFiles.operations["files.import-preview"].output),
+        { onExcessProperty: "error" })(wire)
+      await input.observe({ stage: "preview-producer-response", httpStatus: response.status(),
+        producerStatus: wire.status, codecStatus: decoded.status, typed: typed._tag })
       const manifest = await originalValue<Manifest>(response)
       prepared = { manifest, referenceURL: endpoint("import-reference", { importPreviewRef: manifest.id }) }
+      console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "original-import-preview",
+        manifestId: manifest.id, state: manifest.state, sourceDigest: manifest.sourceDigest, domainApplied: manifest.domainApplied }))
     })
     close.push(preview.close)
     const [admitted, previewTransport, referenceTransport] = await Promise.all([
@@ -84,7 +95,20 @@ export async function captureOriginalImportPreview(page: Page, input: {
         expect(body.value).toMatchObject({ ref: expect.stringMatching(/^[a-f0-9]{64}$/), digest: input.sourceDigest })
         return body.value!
       }),
-      preview.completed, reference.completed, input.generate.click(),
+      preview.completed.then(async (transport) => {
+        if (!prepared) throw new Error("Original preview source reference missing")
+        const started = Date.now()
+        await input.observe({ stage: "preview-delivered" })
+        const fresh = await page.context().request.get(prepared.referenceURL, { maxRetries: 0, timeout: 40_000 })
+        const body = await fresh.json()
+        await input.observe({ stage: "independent-reference-read", elapsedMs: Date.now() - started,
+          httpStatus: fresh.status(), producerStatus: body.status,
+          reason: typeof body.reason === "string" ? body.reason : undefined })
+        expect(fresh.status()).toBe(200)
+        expect(body).toMatchObject({ status: "ok", value: { manifest: { id: prepared.manifest.id,
+          sourceDigest: input.sourceDigest, domainApplied: false, state: "preview" } } })
+        return transport
+      }), reference.completed, input.generate.click(),
     ])
     if (!prepared) throw new Error("Original producer returned no import preview")
     expect(previewTransport.request.postDataJSON()).toEqual({
