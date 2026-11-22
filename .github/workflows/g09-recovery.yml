@@ -123,6 +123,9 @@ jobs:
           printf '%s  %s\n' ab96ca57d1447f882328b54a1ae31b51fe3c3f6274803bae7ea57c268163a29e "$g09_input/supplement.zip" | sha256sum --check
           unzip -p "$g09_input/supplement.zip" proof.json > "$g09_input/supplement-proof.json"
           printf '%s  %s\n' 80ea2faec0de396115ffcd120bbeda2ceba837f336072cf2dc2277a89f7d1380 "$g09_input/supplement-proof.json" | sha256sum --check
+          gh api 'repos/gustavomhss/Orchestra-SF/contents/packages/core/test/permission.test.ts?ref=a90fcb86b2909249a54adbc8a23d5c4d4ee104d8' \
+            --jq .content | base64 --decode > "$g09_input/pr589-permission.test.ts"
+          printf '%s  %s\n' 14057ce742638f142a993e77a1b46dc39ad8a3f3b4ca471ed30be017a65bce36 "$g09_input/pr589-permission.test.ts" | sha256sum --check
           test "$(git -C candidate rev-parse HEAD)" = "$SOURCE_REVISION"
           test "$(git -C candidate rev-parse HEAD^{tree})" = "$SOURCE_TREE"
           test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_REVISION"
@@ -204,6 +207,27 @@ jobs:
             "$SF_G09_SOURCE_DIR" "$GITHUB_WORKSPACE/scanner" "$RUNNER_TEMP/g09-input" \
             "$RUNNER_TEMP/g09-out" 2>&1 | tee "$RUNNER_TEMP/g09-out/inventory.log"
 
+      - name: Run structural evidence negative controls
+        id: structural_controls
+        if: ${{ !cancelled() && steps.node.outcome == 'success' && steps.harness.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/g09-out"
+          node --test "$G09_HARNESS/.github/ci/g09-structural-supplement.test.mjs" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/structural-controls.log"
+
+      - name: Bind the nested workspace and locked export evidence by finding ID
+        id: structural
+        if: ${{ !cancelled() && steps.inventory.outcome == 'success' && steps.parser.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --max-old-space-size=5120 "$G09_HARNESS/.github/ci/g09-structural-supplement.mjs" \
+            "$SF_G09_SOURCE_DIR" "$GITHUB_WORKSPACE/scanner" "$RUNNER_TEMP/g09-input" \
+            "$RUNNER_TEMP/g09-out" "$RUNNER_TEMP/g09-out/structural" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/structural.log"
+
       - name: Exercise the exact installed TUI against the Microsoft host
         id: tui
         if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
@@ -271,6 +295,56 @@ jobs:
             --provider "$g09_provider" --archive "$RUNNER_TEMP/g09-input/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
             --runtime-dir "$CI_RUNTIME" --server-pid "$g09_server" --port "$CI_PORT" \
             --output-dir "$CI_RUNTIME/tui-evidence" 2>&1 | tee "$RUNNER_TEMP/g09-out/tui-proof.log"
+
+      - name: Observe the candidate source against the focused permission regressions
+        id: permissions
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_probe="$SF_G09_SOURCE_DIR/packages/core/test/g09-permission-pr589.test.ts"
+          test ! -e "$g09_probe"
+          printf '%s  %s\n' 19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6 \
+            "$SF_G09_SOURCE_DIR/packages/core/src/permission.ts" | sha256sum --check
+          cp "$RUNNER_TEMP/g09-input/pr589-permission.test.ts" "$g09_probe"
+          trap 'rm -f "$g09_probe"' EXIT
+          cd "$SF_G09_SOURCE_DIR/packages/core"
+          set +e
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            ORCHESTRA_OMNI_CONTROL=declared ORCHESTRA_OMNI_CONTROL_NONCE="$(openssl rand -hex 16)" \
+            NO_COLOR=1 bun test ./test/g09-permission-pr589.test.ts \
+            -t 'denies calls without resources even under configured and saved allows|enforces recorded Session denies while keeping order within each configured ruleset' \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/permission-regression.log"
+          g09_pipeline_status=("${PIPESTATUS[@]}")
+          g09_permission_exit=${g09_pipeline_status[0]}
+          set -e
+          test "${g09_pipeline_status[1]}" = 0
+          export G09_PERMISSION_EXIT="$g09_permission_exit"
+          printf '%s  %s\n' 19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6 \
+            "$SF_G09_SOURCE_DIR/packages/core/src/permission.ts" | sha256sum --check
+          git -C "$SF_G09_SOURCE_DIR" diff --exit-code HEAD --
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          output = Path(os.environ['RUNNER_TEMP']) / 'g09-out'
+          log = (output / 'permission-regression.log').read_bytes()
+          result = {
+              'schema': 'g09-candidate-source-permission-observation-v1',
+              'sourceSHA': os.environ['SOURCE_REVISION'], 'workflowSHA': os.environ['GITHUB_SHA'],
+              'runId': os.environ['GITHUB_RUN_ID'], 'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'jobId': os.environ['CHECK_RUN_ID'], 'testSourceSHA': 'a90fcb86b2909249a54adbc8a23d5c4d4ee104d8',
+              'testSha256': '14057ce742638f142a993e77a1b46dc39ad8a3f3b4ca471ed30be017a65bce36',
+              'permissionImplementationSha256': '19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6',
+              'exitCode': int(os.environ['G09_PERMISSION_EXIT']), 'logSha256': hashlib.sha256(log).hexdigest(),
+              'caseNames': ['denies calls without resources even under configured and saved allows',
+                            'enforces recorded Session denies while keeping order within each configured ruleset'],
+              'scope': 'Original PermissionV2 source with the two later regression cases; inspect logs for actual selected-case results',
+              'trackedProductUnchanged': True, 'installedElfExecutedByThisCase': False,
+              'teamsBypassProven': False, 'formalG09Pass': False,
+          }
+          (output / 'permission-regression-observed.json').write_text(json.dumps(result, indent=2) + '\n')
+          PY
+          exit "$g09_permission_exit"
 
       - name: Preserve bounded TUI evidence and execution manifest
         id: manifest
