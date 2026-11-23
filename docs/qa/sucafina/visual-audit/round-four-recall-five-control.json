@@ -1,0 +1,927 @@
+{
+  "run": 45282009824,
+  "job": 138068601260,
+  "cleanupJob": 138071676539,
+  "runConclusion": "success",
+  "jobConclusion": "success",
+  "cleanupConclusion": "success",
+  "source": "065f697ef01ba0a03468c9aa32e46a4901b8ca6c",
+  "sourceTree": "cd6e593b805965d959afb88f911a535707a1db86",
+  "snapshot": "ed92f30f324b46fcdecb55fa0513aa7710b3a41d",
+  "snapshotTree": "185bee89d45a7f24538c1dbef556ddb3ca7d3eff",
+  "snapshotChanges": [
+    {
+      "path": ".ci-run.json",
+      "sha": "ccc94a9b9d3a192e4dd92add1f311cad8a755f69"
+    },
+    {
+      "path": "apps/cli/test/sucafina-recall-verification.test.ts",
+      "sha": "d096805a45937c69f4dfb43c987bc11c34fef3bf"
+    }
+  ],
+  "testPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recall-observation.test.ts",
+  "testBlob": "cce24526efa015ae6a1100308c5483905d7c9ecb",
+  "priorSource": "ff9006d6209513005da23cc8979b6b22bd114bc2",
+  "priorTestBlob": "6fb8397f3fab425b7a214772ccce512ea26b399f",
+  "runner": "ubuntu-24.04",
+  "omniMode": "strict",
+  "budget": {
+    "cooperativePerCaseMs": 105000,
+    "bunPerCaseMs": 120000,
+    "aggregateChildProcessMs": 630000,
+    "aggregateWrapperMs": 660000,
+    "deadlineHelperBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+    "deadlineHelperUnchanged": true,
+    "notes": "Only the snapshot wrapper has the aggregate envelope for five independent cases. The four original bodies and their 105/120 second limits are literally unchanged; the new case uses the same individual limits."
+  },
+  "summary": {
+    "innerPassed": 5,
+    "innerFailed": 0,
+    "innerExpectCalls": 477,
+    "innerDurationSeconds": 298.22,
+    "outerPassed": 1,
+    "outerFailed": 0,
+    "outerExpectCalls": 1,
+    "outerCaseDurationMs": 298288.85,
+    "outerDurationSeconds": 298.62
+  },
+  "cases": [
+    {
+      "name": "Planner case preflight uses its private version and closes independent native observations",
+      "durationMs": 797.89
+    },
+    {
+      "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+      "durationMs": 71451.6
+    },
+    {
+      "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+      "durationMs": 73597.55
+    },
+    {
+      "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+      "durationMs": 77820.15
+    },
+    {
+      "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+      "durationMs": 73774.47
+    }
+  ],
+  "originalBodyChecks": [
+    {
+      "name": "Planner case preflight uses its private version and closes independent native observations",
+      "literalEqual": true,
+      "characters": 6874,
+      "sha256": "98dc38ab486bc1be3f94979c68a28dc8a29a52a33f373a3354a8a37808be75bf",
+      "cooperativeDeadlineLines": [
+        "const deadline = compositionTestDeadline(\"planner-recall-preflight\")"
+      ],
+      "bunTimeoutMs": 120000
+    },
+    {
+      "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+      "literalEqual": true,
+      "characters": 5180,
+      "sha256": "d6dd0aaf607706e34f1dc2964ec1af8bf337130051c99b28da8db519a845b40f",
+      "cooperativeDeadlineLines": [
+        "const deadline = compositionTestDeadline(\"planner-recall-atlas\")"
+      ],
+      "bunTimeoutMs": 120000
+    },
+    {
+      "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+      "literalEqual": true,
+      "characters": 5789,
+      "sha256": "93cfe2f85db3f0a1c0e5f1ec3986d7bad7616c81fec4f0aa6591b2f293d88847",
+      "cooperativeDeadlineLines": [
+        "const deadline = compositionTestDeadline(\"planner-recall-closure\")"
+      ],
+      "bunTimeoutMs": 120000
+    },
+    {
+      "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+      "literalEqual": true,
+      "characters": 8771,
+      "sha256": "a40ef20d3854e2ad4488b0524984403089ce21c21eb020265a8cbbe01d505023",
+      "cooperativeDeadlineLines": [
+        "const deadline = compositionTestDeadline(\"planner-recall-open-assumptions\")"
+      ],
+      "bunTimeoutMs": 120000
+    }
+  ],
+  "newCase": {
+    "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+    "characters": 6853,
+    "sha256": "36fa4cae4532cc1e59e3c2269f4d3c24dbbd842489a2c1c1b247a6472ea83263",
+    "cooperativeDeadlineLines": [
+      "const deadline = compositionTestDeadline(\"planner-recall-mixed-horizons\")"
+    ],
+    "bunTimeoutMs": 120000
+  },
+  "phases": [
+    {
+      "timestamp": "2026-11-23T22:46:49.8511510Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8513698Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 221,
+      "elapsedMs": 221,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8516009Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "public-reference-keeps-canonical-read",
+      "state": "started",
+      "elapsedMs": 221
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8519344Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "public-reference-keeps-canonical-read",
+      "state": "returned",
+      "phaseMs": 52,
+      "elapsedMs": 274,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8521923Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "with-case-captures-version-before-preflight",
+      "state": "started",
+      "elapsedMs": 274
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8551683Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "with-case-captures-version-before-preflight",
+      "state": "returned",
+      "phaseMs": 73,
+      "elapsedMs": 347,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8554114Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "selected-read-is-complete-and-independent",
+      "state": "started",
+      "elapsedMs": 347
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8555585Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "selected-read-is-complete-and-independent",
+      "state": "returned",
+      "phaseMs": 157,
+      "elapsedMs": 504,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8558104Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "revocation-after-work-does-not-replay",
+      "state": "started",
+      "elapsedMs": 504
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8559550Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "revocation-after-work-does-not-replay",
+      "state": "returned",
+      "phaseMs": 81,
+      "elapsedMs": 586,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8560963Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "source-port-drift-after-admission-does-not-replay",
+      "state": "started",
+      "elapsedMs": 586
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8562454Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "source-port-drift-after-admission-does-not-replay",
+      "state": "returned",
+      "phaseMs": 75,
+      "elapsedMs": 661,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8563871Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "case-change-between-work-and-fresh-egress",
+      "state": "started",
+      "elapsedMs": 661
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8565294Z",
+      "fixture": "planner-recall-preflight",
+      "phase": "case-change-between-work-and-fresh-egress",
+      "state": "returned",
+      "phaseMs": 130,
+      "elapsedMs": 791,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8566793Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "native-scanner-and-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8567998Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "native-scanner-and-fixture",
+      "state": "returned",
+      "phaseMs": 1015,
+      "elapsedMs": 1015,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8569131Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "stage-real-precedent",
+      "state": "started",
+      "elapsedMs": 1015
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8570284Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "stage-real-precedent",
+      "state": "returned",
+      "phaseMs": 6,
+      "elapsedMs": 1021,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8571581Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "started",
+      "elapsedMs": 1021
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8573069Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "returned",
+      "phaseMs": 6,
+      "elapsedMs": 1027,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8574442Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "started",
+      "elapsedMs": 1027
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8575958Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "returned",
+      "phaseMs": 151,
+      "elapsedMs": 1178,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8577736Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "started",
+      "elapsedMs": 1178
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8579012Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "returned",
+      "phaseMs": 616,
+      "elapsedMs": 1794,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8580258Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "stage-current-case-without-publication",
+      "state": "started",
+      "elapsedMs": 1794
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8581545Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "stage-current-case-without-publication",
+      "state": "returned",
+      "phaseMs": 29,
+      "elapsedMs": 1823,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8582853Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "started",
+      "elapsedMs": 1840
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8584234Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "returned",
+      "phaseMs": 29976,
+      "elapsedMs": 31816,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8585641Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "installed-recall-has-independent-work-and-egress-owners",
+      "state": "started",
+      "elapsedMs": 31816
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8587354Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "installed-recall-has-independent-work-and-egress-owners",
+      "state": "returned",
+      "phaseMs": 26025,
+      "elapsedMs": 57841,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8588999Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "child-case-results-are-detached-and-closed-owners-refuse",
+      "state": "started",
+      "elapsedMs": 57841
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8590511Z",
+      "fixture": "planner-recall-atlas",
+      "phase": "child-case-results-are-detached-and-closed-owners-refuse",
+      "state": "returned",
+      "phaseMs": 13603,
+      "elapsedMs": 71444,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8591791Z",
+      "fixture": "planner-recall-closure",
+      "phase": "native-scanner-and-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8592955Z",
+      "fixture": "planner-recall-closure",
+      "phase": "native-scanner-and-fixture",
+      "state": "returned",
+      "phaseMs": 749,
+      "elapsedMs": 749,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8594059Z",
+      "fixture": "planner-recall-closure",
+      "phase": "stage-real-precedent",
+      "state": "started",
+      "elapsedMs": 749
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8595164Z",
+      "fixture": "planner-recall-closure",
+      "phase": "stage-real-precedent",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 754,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8596669Z",
+      "fixture": "planner-recall-closure",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "started",
+      "elapsedMs": 754
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8598194Z",
+      "fixture": "planner-recall-closure",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 758,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8599598Z",
+      "fixture": "planner-recall-closure",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "started",
+      "elapsedMs": 758
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8600957Z",
+      "fixture": "planner-recall-closure",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "returned",
+      "phaseMs": 161,
+      "elapsedMs": 919,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8602232Z",
+      "fixture": "planner-recall-closure",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "started",
+      "elapsedMs": 919
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8603521Z",
+      "fixture": "planner-recall-closure",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "returned",
+      "phaseMs": 566,
+      "elapsedMs": 1485,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8604786Z",
+      "fixture": "planner-recall-closure",
+      "phase": "stage-current-case-without-publication",
+      "state": "started",
+      "elapsedMs": 1485
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8606269Z",
+      "fixture": "planner-recall-closure",
+      "phase": "stage-current-case-without-publication",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 1521,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8607885Z",
+      "fixture": "planner-recall-closure",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "started",
+      "elapsedMs": 1535
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8609333Z",
+      "fixture": "planner-recall-closure",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "returned",
+      "phaseMs": 30240,
+      "elapsedMs": 31775,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8610832Z",
+      "fixture": "planner-recall-closure",
+      "phase": "a-divergent-private-child-selection-refuses-before-its-producer",
+      "state": "started",
+      "elapsedMs": 31775
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8612420Z",
+      "fixture": "planner-recall-closure",
+      "phase": "a-divergent-private-child-selection-refuses-before-its-producer",
+      "state": "returned",
+      "phaseMs": 13845,
+      "elapsedMs": 45620,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8613904Z",
+      "fixture": "planner-recall-closure",
+      "phase": "a-child-cannot-substitute-another-case-version",
+      "state": "started",
+      "elapsedMs": 45620
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8615306Z",
+      "fixture": "planner-recall-closure",
+      "phase": "a-child-cannot-substitute-another-case-version",
+      "state": "returned",
+      "phaseMs": 13796,
+      "elapsedMs": 59416,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8617022Z",
+      "fixture": "planner-recall-closure",
+      "phase": "atlas-publication-change-between-work-and-egress-refuses",
+      "state": "started",
+      "elapsedMs": 59416
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8618750Z",
+      "fixture": "planner-recall-closure",
+      "phase": "atlas-publication-change-between-work-and-egress-refuses",
+      "state": "returned",
+      "phaseMs": 14174,
+      "elapsedMs": 73590,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8620095Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "native-scanner-and-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8621374Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "native-scanner-and-fixture",
+      "state": "returned",
+      "phaseMs": 1166,
+      "elapsedMs": 1166,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8622632Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "stage-real-precedent",
+      "state": "started",
+      "elapsedMs": 1166
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8624758Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "stage-real-precedent",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 1171,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8626223Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "started",
+      "elapsedMs": 1171
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8628288Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 1174,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8630248Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "started",
+      "elapsedMs": 1175
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8632379Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "returned",
+      "phaseMs": 133,
+      "elapsedMs": 1308,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8633775Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "started",
+      "elapsedMs": 1308
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8635176Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "returned",
+      "phaseMs": 555,
+      "elapsedMs": 1862,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8636811Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "stage-current-case-without-publication",
+      "state": "started",
+      "elapsedMs": 1862
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8638229Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "stage-current-case-without-publication",
+      "state": "returned",
+      "phaseMs": 27,
+      "elapsedMs": 1890,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8639830Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "started",
+      "elapsedMs": 1909
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8641317Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "returned",
+      "phaseMs": 30793,
+      "elapsedMs": 32702,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8642841Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "open-uncertainty-preserves-the-complete-installed-recall",
+      "state": "started",
+      "elapsedMs": 32702
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8644455Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "open-uncertainty-preserves-the-complete-installed-recall",
+      "state": "returned",
+      "phaseMs": 27571,
+      "elapsedMs": 60274,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8646040Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "an-admitted-terminal-hit-still-refuses-revocation-at-egress",
+      "state": "started",
+      "elapsedMs": 60274
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8647902Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "an-admitted-terminal-hit-still-refuses-revocation-at-egress",
+      "state": "returned",
+      "phaseMs": 14437,
+      "elapsedMs": 74710,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8649541Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "unknown-states-and-foreign-evidence-remain-human-command-refusals",
+      "state": "started",
+      "elapsedMs": 74711
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8651366Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "unknown-states-and-foreign-evidence-remain-human-command-refusals",
+      "state": "returned",
+      "phaseMs": 534,
+      "elapsedMs": 75245,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8653014Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "confirmed-and-rejected-assumptions-keep-the-canonical-reader",
+      "state": "started",
+      "elapsedMs": 75245
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8654668Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "confirmed-and-rejected-assumptions-keep-the-canonical-reader",
+      "state": "returned",
+      "phaseMs": 1033,
+      "elapsedMs": 76278,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8656594Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "an-open-assumption-with-real-dashboard-evidence-keeps-the-canonical-reader",
+      "state": "started",
+      "elapsedMs": 76278
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8658458Z",
+      "fixture": "planner-recall-open-assumptions",
+      "phase": "an-open-assumption-with-real-dashboard-evidence-keeps-the-canonical-reader",
+      "state": "returned",
+      "phaseMs": 1534,
+      "elapsedMs": 77812,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8659929Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "native-scanner-and-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8661180Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "native-scanner-and-fixture",
+      "state": "returned",
+      "phaseMs": 1124,
+      "elapsedMs": 1124,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8662366Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "stage-real-precedent",
+      "state": "started",
+      "elapsedMs": 1124
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8663574Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "stage-real-precedent",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 1134,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8664953Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "started",
+      "elapsedMs": 1134
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8666774Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 1139,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8668265Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "started",
+      "elapsedMs": 1139
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8669690Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "pending-is-unavailable-and-does-not-publish",
+      "state": "returned",
+      "phaseMs": 137,
+      "elapsedMs": 1276,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8671220Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "started",
+      "elapsedMs": 1276
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8672583Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "publish-through-the-real-atlas-writer",
+      "state": "returned",
+      "phaseMs": 557,
+      "elapsedMs": 1832,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8673911Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "stage-current-case-without-publication",
+      "state": "started",
+      "elapsedMs": 1832
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8675395Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "stage-current-case-without-publication",
+      "state": "returned",
+      "phaseMs": 24,
+      "elapsedMs": 1857,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8676994Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "started",
+      "elapsedMs": 1869
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8678483Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "canonical-recall-without-a-shared-recall-owner",
+      "state": "returned",
+      "phaseMs": 30290,
+      "elapsedMs": 32159,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8679987Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "each-installed-recall-keeps-the-original-candidate-horizon",
+      "state": "started",
+      "elapsedMs": 32159
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8681584Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "each-installed-recall-keeps-the-original-candidate-horizon",
+      "state": "returned",
+      "phaseMs": 26934,
+      "elapsedMs": 59093,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8683328Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "a-query-period-outside-the-current-case-keeps-the-canonical-refusal",
+      "state": "started",
+      "elapsedMs": 59094
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8685041Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "a-query-period-outside-the-current-case-keeps-the-canonical-refusal",
+      "state": "returned",
+      "phaseMs": 192,
+      "elapsedMs": 59286,
+      "aborted": false
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8686904Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "a-human-change-to-the-candidate-horizon-refuses-at-fresh-egress",
+      "state": "started",
+      "elapsedMs": 59286
+    },
+    {
+      "timestamp": "2026-11-23T22:46:49.8688574Z",
+      "fixture": "planner-recall-mixed-horizons",
+      "phase": "a-human-change-to-the-candidate-horizon-refuses-at-fresh-egress",
+      "state": "returned",
+      "phaseMs": 14481,
+      "elapsedMs": 73767,
+      "aborted": false
+    }
+  ],
+  "runCreatedAt": "2026-11-23T22:41:06Z",
+  "runCompletedMetadataAt": "2026-11-23T22:47:05Z",
+  "verification": [
+    {
+      "verification": "sf-planner-recall-composition-round-four",
+      "candidate": "ed92f30f324b46fcdecb55fa0513aa7710b3a41d",
+      "run": "45282009824",
+      "source": "065f697ef01ba0a03468c9aa32e46a4901b8ca6c"
+    },
+    {
+      "gate": "planner-recall-observation",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/planner-recall-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "artifacts": [],
+  "artifactNote": "This Bun workflow did not upload an artifact. Qualification is grounded in the immutable snapshot, API job results and decoded job log.",
+  "logs": {
+    "rawDecodedUtf8Sha256": "2bab39bfc8d88c15d448eda860b9f9440ac51fb005897dcbb89079f57fc17d45",
+    "rawDecodedCharacters": 85756,
+    "sanitizedSha256": "31699ca1db55cbf851f3aaa63d77341682f1c26133d8747033223bc510347104",
+    "policy": "Only test summaries, constant composition-phase metadata and snapshot/gate verification retained. No auth headers, payload identities, SAS URLs or source code retained locally.",
+    "sanitizedPath": "/workspace/scratch/e460075886fd/round-four-business-requalify/recall5-45282009824/native5-job-sanitized.log"
+  },
+  "limitations": [
+    "Phase timestamps in the job log reflect buffered child output; phaseMs/elapsedMs are the original cooperative-deadline timings.",
+    "The focused native test does not replace the original browser UI62 deadline qualification."
+  ],
+  "recordedAt": "2026-11-23T23:00:42.918315+00:00"
+}
