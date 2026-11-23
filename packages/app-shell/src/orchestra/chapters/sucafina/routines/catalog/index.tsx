@@ -386,8 +386,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
             <section class="mx-card sf-routine-case" aria-label={t("sf.u27.case")}>
               <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">01</span>{t("sf.u27.case")}</h2>
               <label class="sf-n29-field">
-                <span>{t("sf.u27.chooseCase")}</span>
-                <select value={view.caseIndex === null ? "" : String(view.caseIndex)}
+                <span id="sf-routine-case-label">{t("sf.u27.chooseCase")}</span>
+                <select aria-labelledby="sf-routine-case-label" value={view.caseIndex === null ? "" : String(view.caseIndex)}
                   disabled={busy() || view.phase === "outcome-unknown"}
                   onChange={(event) => chooseCase(event.currentTarget.value === "" ? null : Number(event.currentTarget.value))}>
                   <option value="">{t("sf.u27.chooseCase")}</option>
@@ -429,8 +429,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 />
               }>
                 <label class="sf-n29-field">
-                  <span>{t("sf.u27.selectRecipe")}</span>
-                  <select value={view.recipeIndex === null ? "" : String(view.recipeIndex)}
+                  <span id="sf-routine-recipe-label">{t("sf.u27.selectRecipe")}</span>
+                  <select aria-labelledby="sf-routine-recipe-label" value={view.recipeIndex === null ? "" : String(view.recipeIndex)}
                     disabled={busy() || view.phase === "outcome-unknown"}
                     onChange={(event) => chooseRecipe(event.currentTarget.value === "" ? null : Number(event.currentTarget.value))}>
                     <option value="">{t("sf.u27.selectRecipe")}</option>

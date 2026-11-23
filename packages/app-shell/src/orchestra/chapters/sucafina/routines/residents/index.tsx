@@ -313,8 +313,8 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
               onInput={(event) => setView("search", event.currentTarget.value)} />
           </label>
           <label class="sf-n29-field">
-            <span>{t("sf.u35.selectCase")}</span>
-            <select value={view.caseKey} disabled={view.caseState !== "ready"}
+            <span id="sf-resident-case-label">{t("sf.u35.selectCase")}</span>
+            <select aria-labelledby="sf-resident-case-label" value={view.caseKey} disabled={view.caseState !== "ready"}
               onChange={(event) => setView("caseKey", event.currentTarget.value)}>
               <option value="">{t("sf.u35.selectCase")}</option>
               <For each={view.cases}>
