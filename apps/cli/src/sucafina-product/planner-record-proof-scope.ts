@@ -5,8 +5,10 @@ import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../.
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { readSfPlannerCalculationRootProof, type SfPlannerCalculationRootProof } from "./planner-calculation-root.ts"
+import { currentSfPlannerProofDiagnostic, sfPlannerProofCount, type SfPlannerProofDiagnostic } from "./planner-proof-diagnostic.ts"
 
 type Frame = {
+  diagnostic: SfPlannerProofDiagnostic | null
   open: boolean
   invalid: boolean
   call: TrustedDomainContext
@@ -47,14 +49,15 @@ export function pinSfPlannerRecordReaders(readers: readonly unknown[]) {
 export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; readersCurrent: () => boolean }) {
   const frames = new AsyncLocalStorage<Frame>()
   const host = input.host, readersCurrent = input.readersCurrent
-  const unavailable = () => ({ status: "unavailable", reason: "planner-record-proof-unavailable" } as const)
+  const unavailable = () => { sfPlannerProofCount("runRefused"); return ({ status: "unavailable", reason: "planner-record-proof-unavailable" } as const) }
   const terminal = (ref: BusinessEvidenceRef) => ref.kind === "record" && ref.target.surface === "planner" &&
     ref.target.recordType === "planner-version" && !!ref.target.period
   const observe = async (ref: BusinessEvidenceRef, call: TrustedDomainContext,
     readCanonical: () => Promise<BusinessEvidenceResolution>): Promise<BusinessEvidenceResolution> => {
     const frame = frames.getStore()
-    if (!frame) return readCanonical()
+    if (!frame) { sfPlannerProofCount("unscoped"); return readCanonical() }
     const refused = (): BusinessEvidenceResolution => {
+      sfPlannerProofCount("leafRefused", frame.diagnostic)
       frame.invalid = true
       return { state: "unavailable", ref: structuredClone(ref), accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
     }
@@ -69,7 +72,8 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
       const current = () => frame.current() && frame.call === call && digestSfValue(ref) === key && digestSfValue(captured) === key
       if (!await frame.authorize() || !current()) return refused()
       const existing = frame.values.get(key)
-      if (existing) return structuredClone(existing)
+      if (existing) { sfPlannerProofCount("hits", frame.diagnostic); return structuredClone(existing) }
+      sfPlannerProofCount("misses", frame.diagnostic)
       const result = await readCanonical()
       if (!current()) return refused()
       const value = structuredClone(result), resultDigest = digestSfValue(value)
@@ -79,6 +83,7 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
       // Keep the producer's timestamps and bytes. Reauthorization is separate
       // from the completed observation and never pretends a new source read ran.
       frame.values.set(key, value)
+      sfPlannerProofCount("stored", frame.diagnostic)
       return structuredClone(value)
     } catch { return refused() }
     finally { if (entered && key !== undefined) frame.busy.delete(key) }
@@ -86,18 +91,19 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
   const run = async <Value>(refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext,
     proof: SfPlannerCalculationRootProof | undefined, authorize: () => Promise<boolean>, unchanged: () => boolean,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    sfPlannerProofCount("runs")
     const parent = frames.getStore()
     if (parent) { parent.invalid = true; return unavailable() }
     try {
       // Opaque/older compositions retain every original producer. Once an owner
       // is admitted, failure never replays that producer outside its scope.
-      if (!proof) return await work()
+      if (!proof) { sfPlannerProofCount("noProof"); return await work() }
       const owner = readSfPlannerCalculationRootProof(proof, host, call)
       if (!owner || !owner.current() || !unchanged()) return unavailable()
-      if (!readersCurrent()) return await work()
+      if (!readersCurrent()) { sfPlannerProofCount("readersFallback"); return await work() }
       if (!refs.length || !refs.every(terminal)) return unavailable()
       const refsDigest = digestSfValue(refs), admitted = new Set(refs.map((ref) => digestSfValue(ref)))
-      const frame: Frame = { open: true, invalid: false, call, refs: admitted, busy: new Set(), values: new Map(), authorize,
+      const frame: Frame = { diagnostic: currentSfPlannerProofDiagnostic(), open: true, invalid: false, call, refs: admitted, busy: new Set(), values: new Map(), authorize,
         current: () => {
           if (frame.invalid) return false
           try {
@@ -108,12 +114,14 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
           } catch { frame.invalid = true; return false }
         } }
       try {
+        sfPlannerProofCount("scopeOpen", frame.diagnostic)
         return await frames.run(frame, async () => {
           if (!frame.current()) return unavailable()
+          sfPlannerProofCount("admitted", frame.diagnostic)
           const result = await work()
           return frame.current() && frame.busy.size === 0 ? result : unavailable()
         })
-      } finally { frame.open = false; frame.values.clear(); frame.busy.clear() }
+      } finally { sfPlannerProofCount("scopeClosed", frame.diagnostic); frame.open = false; frame.values.clear(); frame.busy.clear() }
     } catch { return unavailable() }
   }
   return { observe, run }
