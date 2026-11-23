@@ -22,7 +22,8 @@ const stamp = Object.freeze({
  */
 async function fixture() {
   const selected = structuredClone((await bundle).selected)
-  const controls = { present: true, binding: true, allowed: true, revision: stamp.accessRevision,
+  const controls: { present: boolean; binding: boolean; allowed: boolean; revision: string; principal: string;
+    operations: Set<string>; reads: boolean } = { present: true, binding: true, allowed: true, revision: stamp.accessRevision,
     principal: stamp.principalRef, operations: new Set(selected.flatMap((entry) => entry.operationIds)), reads: true }
   const hooks: { authorize?: (operation: string) => Promise<void>; finish?: () => void } = {}
   const seen: TrustedUiContext[] = [], finished: TrustedUiContext[] = []
