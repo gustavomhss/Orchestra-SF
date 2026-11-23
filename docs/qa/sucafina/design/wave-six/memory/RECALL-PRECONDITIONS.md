@@ -2,14 +2,16 @@
 
 ## Qualification at this checkpoint
 
-This is a read-only source review of product `d62c4b500695d248240a48944461a0d2262a589f`. The fixture establishes an original decision, evidence, a recorded choice, and its ledger event. It does **not** establish completed Atlas publication. A pending event is not an empty recall result. The effective cause of the observed HTTP 503 remains unqualified until the original response is available. **R16 qualification is still pending.**
+This is a read-only source review of product `d62c4b500695d248240a48944461a0d2262a589f`. The fixture establishes an original decision, evidence, a recorded choice, and its ledger event. It does **not** establish completed Atlas publication. A pending event is not an empty recall result. The preserved R16 response now qualifies the original refusal category, **HTTP 503 / unavailable / similarity-source-unavailable**. It does not identify a unique internal cause or qualify a positive recall result.
 
 Primary evidence:
 
 - [R11, job 137502251987](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885/job/137502251987), source `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e): the UI62 step failed with “Expected: 200” / “Received: 503”. The primary log did not preserve a qualified source reason. The separate Portuguese candidate-selection step passed; that does not qualify a recall result.
 - [R14, job 137515748521](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121399352/job/137515748521), snapshot `0729f9e4c3cc0e91956a8c8209c73f80bf06ed3e`: the case GET returned 200, but reading the recall body failed with `Network.getResponseBody: No data found for resource with given identifier`. The intended original-response marker was never emitted. Diagnostics show a 503 browser resource error and “Currently unavailable”, without a primary business reason.
 
-Neither run proves that a particular Atlas, authority, evidence, feature, or continuity check caused the refusal.
+- [R16, job 137521673423](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123256492/job/137521673423), snapshot `de718cd31d6e38a22934274a8d4bba72b108587f`: the single original POST was decoded against the closed output contract. At 06:26:02 UTC, `SF_FINAL_MEMORY_RECALL_ORIGINAL` recorded HTTP 503, status `unavailable`, reason `similarity-source-unavailable`, `reasonTruncated: false`, and `matchingCases: null`. The unchanged positive assertion then failed with “Expected: 200” / “Received: 503”. No match count or empty result was qualified.
+
+None of these runs isolates the Atlas, authority, evidence, feature, or continuity check responsible for the refusal.
 
 ## What the fixture actually prepares
 
@@ -40,10 +42,10 @@ The separate [original Atlas writer](https://github.com/gustavomhss/Orchestra-SF
 
 The public Atlas reader checks for pending outbox items for the selected case before handling a missing partition. Pending means unavailable. A missing partition can produce an authorized empty result only after the original no-pending and current-state checks. Existing records additionally require a matching publication, envelope, ledger event, capture, and readable evidence through final revalidation.
 
-## Supported next step and limits
+## Observed refusal and remaining limits
 
-The immediate supported change is observation: preserve the single original POST response outside Chromium's transient response cache. Helper `9b9831a12d63a9ff9abbb0909841d39c37ba819b` received independent source review: one request, no retry or redirect, original 40-second bound, closed output decoding, and unchanged response delivery even if observer decoding fails. Its caller retains HTTP 200 and the original positive assertions.
+R16 used the durable observer in helper `9b9831a12d63a9ff9abbb0909841d39c37ba819b`: one original POST, no retry or redirect, the original 40-second bound, closed output decoding, and unchanged response delivery even if observer decoding fails. The caller retained HTTP 200 and all original positive assertions; the refusal correctly failed that positive journey.
 
-Even a future `similarity-source-unavailable` reason is a collapsed category, not proof of a particular internal check. If further isolation is needed, inspect the original selected event/publication state under existing authority. Do not replace pending with empty, fabricate publication, change grants, or adjust the candidate solely to obtain green CI.
+The confirmed `similarity-source-unavailable` reason is a collapsed category, not proof of a particular internal check. A separate refusal presentation can describe that observed source limitation while retaining the user's criteria and showing no matches. Its UI qualification must remain separate from the failed positive journey. If further isolation is needed, inspect the original selected event/publication state under existing authority. Do not replace pending with empty, fabricate publication, change grants, or adjust the candidate solely to obtain green CI.
 
-No backend, fixture, schema, authorization, deadline, or memory report was changed during this review. This note records preconditions and uncertainty; it does not claim successful recall or supersede the pending R16 evidence.
+No backend, fixture, schema, authorization, deadline, or memory report was changed during this review. This note records preconditions, the qualified R16 refusal category, and the remaining uncertainty. It does not claim successful recall or an independently verified refusal presentation.
