@@ -177,7 +177,7 @@ async function openScreen(page: Page, owner: Owner, screen: Screen, localized = 
       UI36: ".sf-decision-assumptions-layout",
       UI37: "[data-sf-question-composer]",
       UI38: "[data-choice-id]",
-      UI39: ".sf-decision-change-ledger",
+      UI39: '.sf-decision-change-ledger, [data-sf-state="empty"]',
       UI40: ".sf-decision-receipt-ledger",
       UI41: ".sf-decision-analysis-history",
     }
@@ -397,14 +397,28 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       .getByRole("button", { name: "Review assumption", exact: true }).click()
     const detail = page.locator("#sf-n24-assumption-detail")
     await expect(detail).toContainText(waveFourDecisionsData.assumption)
-    await expect(detail).toContainText(source.assumptions[0]!.evidenceRefs[0]!.refId)
+    const evidence = detail.locator("details.sf-decision-source-scope")
+    await expect(evidence).not.toHaveAttribute("open", "")
+    await expect(evidence.getByText(source.assumptions[0]!.evidenceRefs[0]!.refId, { exact: true })).toBeHidden()
+    await evidence.locator("summary").focus()
+    await page.keyboard.press("Enter")
+    await expect(evidence.getByText(source.assumptions[0]!.evidenceRefs[0]!.refId, { exact: true })).toBeVisible()
+    await evidence.locator("summary").click()
     const missing = [...new Set(source.alternatives.flatMap((entry) => entry.result.costCoverage.derivedMissingCategoryIds))]
     expect(missing).toEqual([])
     await expect(page.getByRole("region", { name: "Missing cost categories", exact: true })
       .getByText("No missing categories are reported in the current results.", { exact: true })).toBeVisible()
     const divergences = page.getByRole("region", { name: "Divergences", exact: true })
-    await expect(divergences).toContainText("cost-coverage-unresolved-or-source-mismatch")
-    await expect(divergences).toContainText("coverage:migration:")
+    await expect(divergences.getByText("Cost coverage is unresolved or does not match the source.", { exact: true })).toBeVisible()
+    await expect(divergences.locator("> ul")).toContainText("Cost coverage · Migration:")
+    const originalGaps = divergences.locator("details.sf-decision-source-scope")
+    await expect(originalGaps).not.toHaveAttribute("open", "")
+    await expect(originalGaps.getByText("cost-coverage-unresolved-or-source-mismatch", { exact: true })).toBeHidden()
+    await originalGaps.locator("summary").focus()
+    await page.keyboard.press("Enter")
+    await expect(originalGaps.getByText("cost-coverage-unresolved-or-source-mismatch", { exact: true })).toBeVisible()
+    await expect(originalGaps).toContainText("coverage:migration:")
+    await originalGaps.locator("summary").click()
     await capture(page, info, "UI36-dark-desktop-assumption-detail-test-data")
   })
 
@@ -439,8 +453,18 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await capture(page, info, "UI37-dark-desktop-question-review-test-data")
     const prepared = page.waitForResponse((response) => action(response.request(), "workbench-command", "sf_question_prepare"), { timeout: 40_000 })
     await composer.getByRole("button", { name: "Confirm preparation", exact: true }).click()
-    expect((await prepared).status()).toBe(200)
+    const preparedResponse = await prepared
+    expect(preparedResponse.status()).toBe(200)
+    const preparedBody = object(await preparedResponse.json())
     await expect(composer.getByText("Preparing a question is not the same as recording or sending it.", { exact: true })).toBeVisible()
+    const unavailable = composer.getByText("The source did not return a confirmation reference. This prepared question cannot be recorded here.", { exact: true })
+    if (typeof preparedBody.outputRef === "string" && preparedBody.outputRef.length) {
+      await expect(composer.getByRole("region", { name: "Question confirmation", exact: true })).toBeVisible()
+      await expect(unavailable).toHaveCount(0)
+    } else {
+      await expect(unavailable).toBeVisible()
+      await expect(composer.getByRole("button", { name: "Record question", exact: true })).toHaveCount(0)
+    }
     expect(writes.filter((request) => action(request, "workbench-command", "sf_question_prepare"))).toHaveLength(1)
     const after = await readCase(page, installation.origin, installation.mount, caseRef)
     expect(after.version).toBe(source.version)
@@ -455,7 +479,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await expect(page.getByRole("button", { name: "Review current sources", exact: true })).toBeDisabled()
     await expect(page.getByText("The producer has not admitted a preparation for this choice.", { exact: true })).toBeVisible()
     await openScreen(page, owner, screens[5]!)
-    await expect(page.locator(".sf-decision-change-ledger")).toBeVisible()
+    await expect(page.getByText("No prepared changes are available for this case.", { exact: true })).toBeVisible()
+    await expect(page.locator(".sf-decision-change-ledger")).toHaveCount(0)
     await expect(page.locator(".sf-decision-change-select")).toHaveCount(0)
     await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
     await openScreen(page, owner, screens[6]!)
@@ -560,6 +585,16 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   try {
     for (const screen of screens) {
       await openScreen(localized, owner, screen, true)
+      if (screen.id === "UI36") {
+        const divergences = localized.getByRole("region", { name: "Divergências", exact: true })
+        await expect(divergences.getByText("A cobertura de custos está pendente ou não corresponde à fonte.", { exact: true })).toBeVisible()
+        await expect(divergences.locator("> ul")).toContainText("Cobertura de custos · Migração:")
+        await expect(divergences.locator("details.sf-decision-source-scope")).not.toHaveAttribute("open", "")
+      }
+      if (screen.id === "UI39") {
+        await expect(localized.getByText("Nenhuma mudança preparada está disponível para este caso.", { exact: true })).toBeVisible()
+        await expect(localized.locator(".sf-decision-change-ledger")).toHaveCount(0)
+      }
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
     await openScreen(localized, owner, screens[3]!, true)
