@@ -123,6 +123,8 @@ export type CreateSfHostRuntime = (input: {
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
     | "decisions.choice.read" | "decisions.command.sf_question_prepare"
     | "intelligence.analysis.choices" | "intelligence.analysis.list"
+    | "intelligence.memory-catalog" | "intelligence.memory-conditions" | "intelligence.memory-signals"
+    | "intelligence.memory-materiality" | "intelligence.memory-outcome"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision", producer: object) => object | undefined
   nativeActions?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp,

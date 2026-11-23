@@ -104,6 +104,7 @@ import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThread
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
 import { observeSfDocumentScenarioHealth } from "./native-ui/document-scenario-health.ts"
+import { observeSfMemoryReadingHealth } from "./native-ui/memory-health.ts"
 import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
@@ -1162,6 +1163,20 @@ export const createSfHostRuntimeWithRoutineNative = async (
               dependencies: [nativeUiProducts.routines, nativeUiProducts.withCase, business.cases, business.cases.read,
                 nativePhases.services.routines, nativePhases.services.readExecution, nativePhases.services.openResult,
                 services.routineEvidence, services.dispatch, authority, routineRuntime, routineOwners] } : undefined
+          },
+        }, request, stamp),
+        observeSfMemoryReadingHealth({ ui: authority.ui, state: authority.state, persistence: input.persistence,
+          binding: input.nativeReadBinding, source: () => {
+            if (!identity() || services.productHttp !== productHttp ||
+                !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
+            return { producer: productHttp, handler: memoryHttp, memory,
+              scenarios: business.plannerProduct.scenarios,
+              dependencies: [authority, authority.host, authority.host.requestFor, authority.host.revalidate,
+                authority.human, authority.human.authorize, business.withCase, business.cases, business.cases.read,
+                business.plannerProduct, business.plannerProduct.scenarios, extended.portfolioServices.planner,
+                business.plannerSources, business.plannerSources.resolveForecastSource,
+                business.results, business.context, business.readSourceFences, input.persistence,
+                input.persistence.readScopedSource, input.persistence.resolveScopedSource] }
           },
         }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
