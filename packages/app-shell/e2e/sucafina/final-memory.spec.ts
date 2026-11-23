@@ -5,6 +5,7 @@ import { captureFinalSurface } from "./design-support/final-capture"
 import { finalMemoryData, seedFinalMemory } from "./design-support/final-memory-seed"
 import { observeFinalMemoryOutcomeFailures, withFinalMemoryPortuguese } from "./design-support/final-memory-browser"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
+import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 waveFourTest.use({ designWave: "four-decisions" })
 waveFourTest.beforeEach(async ({ page }, info) => {
@@ -94,7 +95,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     await expect(outcome).toBeHidden()
     await expect(surface.locator("[data-sf-memory-choice]")).toHaveCount(0)
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
-    await outcomeFailures.expectUnavailable(() => enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed"))
+    await outcomeFailures.expectUnavailable(() => enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + encodeSfRouteRef(seeded.selectionRef), "Expected and observed"))
     await expect(outcome).toHaveAttribute("data-sf-memory-reason", "coverage-incomplete")
     await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
     await captureFinalSurface(page, info, "UI63", "dark-desktop-incomplete-coverage")
@@ -199,7 +200,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
         await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
       })
       await independently("UI63 Portuguese incomplete coverage", async () => {
-        await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Previsto e observado"))
+        await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + encodeSfRouteRef(seeded.selectionRef), "Previsto e observado"))
         await expect(localized.locator("[data-sf-memory-outcome-status]")).toContainText("Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta.")
         await expect(localized.locator("[data-sf-memory-outcome]")).toHaveCount(0)
         await captureFinalSurface(localized, info, "UI63", "pt-br-dark-desktop-incomplete-coverage")
