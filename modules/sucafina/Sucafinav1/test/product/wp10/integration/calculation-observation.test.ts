@@ -115,7 +115,7 @@ test("calculation observations preserve fallback parity, fresh phases and refusa
         expect(observed).toEqual(previous)
         // Two independent request observations, each retaining both result reads.
         expect(control.reads).toBe(4)
-        if (observed.status === "ok") observed.value.target.sourceRefs.length = 0
+        if (observed.status === "ok") expect(Reflect.set(observed.value.target.sourceRefs, "length", 0)).toBe(true)
       }
     })
     await deadline.phase("typed-refusal-has-no-fallback", async () => {
