@@ -25,6 +25,23 @@ param adminSshPublicKey string
 @maxValue(1024)
 param dataDiskSizeGiB int = 64
 
+@description('mvp preserves the original network. QA requires deploy.sh scope/CIDR checks after data-free bootstrap.')
+@allowed([
+  'mvp'
+  'g08-qa'
+  'g10-source'
+  'g10-clone'
+])
+param networkProfile string = 'mvp'
+
+@description('Observed validator IPv4 /32 addresses. Nonempty only for g08-qa or g10-source; validated by deploy.sh.')
+@maxLength(32)
+param qaHttpsIngressCidrs array = []
+
+@description('Observed public administrator endpoint IPv4 /32 addresses for TCP 443. Clone only; validated by deploy.sh.')
+@maxLength(32)
+param cloneAdminEgressCidrs array = []
+
 var vmName = 'orchsf-vm'
 var bootstrapPath = '/usr/local/sbin/orchestra-sf-bootstrap.sh'
 var protectedItemName = 'VM;iaasvmcontainerv2;${resourceGroup().name};${vmName}'
@@ -56,54 +73,143 @@ var cloudConfig = {
   ]
 }
 
+// The default rule objects retain the original MVP values.
+var mvpSecurityRules = [
+  {
+    name: 'allow-http'
+    properties: {
+      priority: 100
+      access: 'Allow'
+      direction: 'Inbound'
+      protocol: 'Tcp'
+      sourceAddressPrefix: 'Internet'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '80'
+    }
+  }
+  {
+    name: 'allow-https'
+    properties: {
+      priority: 110
+      access: 'Allow'
+      direction: 'Inbound'
+      protocol: 'Tcp'
+      sourceAddressPrefix: 'Internet'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '443'
+    }
+  }
+  {
+    name: 'deny-inbound'
+    properties: {
+      priority: 4096
+      access: 'Deny'
+      direction: 'Inbound'
+      protocol: '*'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '*'
+    }
+  }
+]
+
+var qaSecurityRules = [
+  {
+    name: 'allow-qa-https'
+    properties: {
+      priority: 110
+      access: 'Allow'
+      direction: 'Inbound'
+      protocol: 'Tcp'
+      sourceAddressPrefixes: qaHttpsIngressCidrs
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '443'
+    }
+  }
+  {
+    name: 'deny-inbound'
+    properties: {
+      priority: 4096
+      access: 'Deny'
+      direction: 'Inbound'
+      protocol: '*'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '*'
+    }
+  }
+]
+
+var cloneAdminRules = [
+  {
+    name: 'allow-clone-admin-https'
+    properties: {
+      priority: 100
+      access: 'Allow'
+      direction: 'Outbound'
+      protocol: 'Tcp'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefixes: cloneAdminEgressCidrs
+      destinationPortRange: '443'
+    }
+  }
+]
+
+var cloneDenyRules = [
+  {
+    name: 'deny-inbound'
+    properties: {
+      priority: 4096
+      access: 'Deny'
+      direction: 'Inbound'
+      protocol: '*'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '*'
+    }
+  }
+  {
+    name: 'deny-platform-dns'
+    properties: {
+      priority: 200
+      access: 'Deny'
+      direction: 'Outbound'
+      protocol: '*'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefix: 'AzurePlatformDNS'
+      destinationPortRange: '*'
+    }
+  }
+  {
+    name: 'deny-outbound'
+    properties: {
+      priority: 4096
+      access: 'Deny'
+      direction: 'Outbound'
+      protocol: '*'
+      sourceAddressPrefix: '*'
+      sourcePortRange: '*'
+      destinationAddressPrefix: '*'
+      destinationPortRange: '*'
+    }
+  }
+]
+
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: 'orchsf-nsg'
   location: location
   properties: {
-    securityRules: [
-      {
-        name: 'allow-http'
-        properties: {
-          priority: 100
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: 'Tcp'
-          sourceAddressPrefix: 'Internet'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '80'
-        }
-      }
-      {
-        name: 'allow-https'
-        properties: {
-          priority: 110
-          access: 'Allow'
-          direction: 'Inbound'
-          protocol: 'Tcp'
-          sourceAddressPrefix: 'Internet'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '443'
-        }
-      }
-      {
-        name: 'deny-inbound'
-        properties: {
-          priority: 4096
-          access: 'Deny'
-          direction: 'Inbound'
-          protocol: '*'
-          sourceAddressPrefix: '*'
-          sourcePortRange: '*'
-          destinationAddressPrefix: '*'
-          destinationPortRange: '*'
-        }
-      }
-    ]
+    securityRules: networkProfile == 'mvp' ? mvpSecurityRules : (networkProfile == 'g10-clone' ? concat(empty(cloneAdminEgressCidrs) ? [] : cloneAdminRules, cloneDenyRules) : qaSecurityRules)
   }
 }
-
 resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: 'orchsf-vnet'
   location: location
