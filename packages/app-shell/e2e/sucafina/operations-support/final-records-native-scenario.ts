@@ -7,12 +7,42 @@ import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import { SfDocumentEvidence } from "@orchestra/schema/sucafina/files/structures"
 import { authenticateDesignInstallation, withDesignInstallation } from "../design-support/installation"
-import { enter, observePage } from "../design-support/wave-three"
+import { ServerConnection } from "../../../src/context/server-connection"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime"
 import { modeURL, observation } from "./runtime"
 import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
 import { captureRecordVariants, captureRecordDetail, captureRecordFailure } from "./final-records"
+
+/** Local diagnostics have no Playwright fixture or suite-registration side effects. */
+function observeNativeScenario(page: Page) {
+  const diagnostics = { pageErrors: [] as string[], consoleErrors: [] as string[] }
+  const record = (list: string[], message: string) => {
+    const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]")
+      .replace(/https?:\/\/[^\s"'<>]+/g, "[url]")
+      .replace(/\b(?:Bearer|Basic)\s+[A-Za-z0-9._~+/-]+=*/gi, "[credential]")
+      .replace(/\b(code|token|password|secret|authorization)\s*[:=]\s*("[^"]*"|'[^']*'|[^\s&,]+)/gi, "$1=[redacted]")
+      .slice(0, 1024)
+    if (!list.includes(safe)) list.push(safe)
+    if (list.length > 8) list.shift()
+  }
+  page.on("pageerror", (error) => record(diagnostics.pageErrors, error.stack ?? error.message))
+  page.on("console", (entry) => { if (entry.type() === "error") record(diagnostics.consoleErrors, entry.text()) })
+  return diagnostics
+}
+
+async function enterNativeScenario(page: Page, account: Account, documentRef: string) {
+  const target = new URL("/orchestra/sf-documents/" + encodeSfRouteRef(documentRef) + "/scenario", account.origin)
+  target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: account.origin } }))
+  target.searchParams.set("project", account.projectId)
+  target.searchParams.set("installation", account.installationId)
+  expect((await page.goto(target.href))?.status()).toBe(200)
+  const host = page.locator('[data-sf-host="owner-runtime231"]')
+  for (const attribute of ["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"])
+    await expect(host).toHaveAttribute(attribute, "ready")
+  await expect(host.getByRole("heading", { level: 1, name: "Evidence in scenario", exact: true })).toBeVisible()
+  await expect(page).toHaveURL(target.href)
+}
 
 async function readSuppliers(page: Page, account: Account) {
   const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP27", { maxRetries: 0 })
@@ -45,8 +75,22 @@ async function prepareConfirmedSource(page: Page, account: Account, info: TestIn
   })
   expect(reset.status()).toBe(200)
   expect(await reset.json()).toMatchObject({ ok: true })
+  const resetSettings = await readSettings(page, account)
+  expect(resetSettings.versions.settings?.version).toBe(settingsVersion + 1)
+  expect(resetSettings.data.settings.uploadCap).toBeNull()
+  // Reset deliberately leaves uploads unconfigured. The original administrator
+  // saves a bounded limit through the normal command, with the fresh CAS.
+  const uploadCap = 1024 * 1024
+  const saved = await page.request.post(account.baseURL + "/procurement?page=Settings", {
+    maxRetries: 0, headers: { Origin: account.origin },
+    data: { page: "Settings", action: "save", version: settingsVersion + 1,
+      values: { uploadCap }, confirmed: true },
+  })
+  expect(saved.status()).toBe(200)
+  expect(await saved.json()).toMatchObject({ ok: true })
   const configured = await readSettings(page, account)
-  expect(configured.versions.settings?.version).toBe(settingsVersion + 1)
+  expect(configured.versions.settings?.version).toBe(settingsVersion + 2)
+  expect(configured.data.settings).toEqual({ ...resetSettings.data.settings, uploadCap })
   expect(configured.data.settings.uploadCap).toBeGreaterThan(bytes.byteLength)
 
   const before = await readSuppliers(page, account)
@@ -144,7 +188,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       httpCredentials: { username: "orchestra", password: installed.serverPassword },
     })
     const page = await context.newPage()
-    const diagnostics = observePage(page)
+    const diagnostics = observeNativeScenario(page)
     let failed = false
     try {
       const owner = await authenticateDesignInstallation(context, installed)
@@ -166,8 +210,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
         expect(matches).toHaveLength(1)
         expect(matches[0]).toMatchObject({ state: "ready", operational: true })
       }
-      const href = installed.origin + "/orchestra/sf-documents/" + encodeSfRouteRef(confirmed.fileRef) + "/scenario"
-      await enter(page, owner, href, "Evidence in scenario")
+      await enterNativeScenario(page, account, confirmed.fileRef)
       const surface = page.locator('[data-sf-surface="UI60"]')
       await expect(surface.locator("[data-sf-evidence-id]")).toHaveCount(1)
       await previewRecordScenario(page, info, account, confirmed, fixture)
@@ -178,6 +221,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       expect(diagnostics.consoleErrors).toEqual([])
     } catch (error) {
       failed = true
+      console.info("SF_FINAL_RECORDS_NATIVE_DIAGNOSTICS " + JSON.stringify(diagnostics))
       await captureRecordFailure(page, info).catch(() => undefined)
       throw error
     } finally {
