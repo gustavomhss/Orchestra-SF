@@ -106,3 +106,25 @@ The entire journey passed, including one reviewed save, exact CAS and persisted 
 
 ![UI69 pt-br-dark-desktop-administration](./evidence/r11-ui69-pt-br-dark-desktop-administration.jpg)
 
+## R13: UI69 after PR715 composition
+
+The focused original journey passed on candidate `722b703b060e5cc578fa8d23568b3f9c56d72077`: [run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514). It preserved the 30 body expectations, proved the single save/CAS/readback and refreshed Portuguese view, and produced no page or console errors. These three previews include the additional authorized-content gap; the [R13 manifest](./evidence/r13-ui69-manifest.json) records their source and exact bytes.
+
+### R13 dark-desktop-summary-settings
+
+1440 × 1100 pixels; unchanged original JPEG, 81,819 bytes.
+
+![dark-desktop-summary-settings](./evidence/r13-ui69-dark-desktop-summary-settings.jpg)
+
+### R13 light-320-summary-review-actions
+
+320 × 900 pixels; unchanged original JPEG, 23,181 bytes.
+
+![light-320-summary-review-actions](./evidence/r13-ui69-light-320-summary-review-actions.jpg)
+
+### R13 pt-br-dark-desktop-administration
+
+1440 × 1100 pixels; unchanged original JPEG, 85,345 bytes.
+
+![pt-br-dark-desktop-administration](./evidence/r13-ui69-pt-br-dark-desktop-administration.jpg)
+
