@@ -43,7 +43,8 @@
 .sf-u46-compare-scroll tbody th {
   position: sticky;
   inset-inline-start: 0;
-  background: var(--orchestra-surface);
+  /* A fixed label must fully cover source values passing beneath it. */
+  background: var(--surface-base);
   z-index: 1;
 }
 .sf-u46-compare-scroll tbody tr:last-child :is(th, td) { border-block-end: 0; }
