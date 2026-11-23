@@ -195,7 +195,7 @@
     "product": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
     "snapshot": "9e4a5a13f80b25f260eb2f0e61447de016966dd5",
     "tree": "381bbc81bb1707dfe873936d15b25091822d701a",
-    "status": "DISPATCHED",
+    "status": "PASSED",
     "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
     "checks": [
       "guardrails",
@@ -205,6 +205,45 @@
     "snapshotOnlyPaths": [
       ".ci-run.json",
       "apps/cli/test/sucafina-final14-verification.test.ts"
+    ],
+    "run": 45123446736,
+    "conclusion": "success",
+    "job": 137522272062,
+    "cleanupJob": 137522514797,
+    "guard": {
+      "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "rules": 78,
+      "files": 106,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 12,
+      "warningRules": [
+        "test-timeout-raised"
+      ],
+      "touchesGuards": false
+    },
+    "commands": [
+      {
+        "gate": "fetch pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "resolve pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "guardrails",
+        "exitCode": 0
+      },
+      {
+        "gate": "app-shell e2e typecheck",
+        "exitCode": 0
+      }
+    ],
+    "summaries": [
+      " 2 pass",
+      " 0 fail",
+      " 6 expect() calls"
     ]
   }
 }

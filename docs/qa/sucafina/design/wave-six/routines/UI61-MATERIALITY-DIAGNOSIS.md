@@ -32,7 +32,9 @@ Test-facing markers: `data-sf-memory-materiality-state` reports the original rea
 
 ## Evidence boundary
 
-The three product blobs were read back exactly. All existing EN/pt-BR entries remain byte-identical, with three new key pairs. Coordinator source review approved the product. Native browser and technical-gate results for this correction must be recorded by the memory/coordinator owners; they are not claimed here.
+The subsequent original browser qualification passed both isolated journeys: [run 45122439989 / job 137519060570](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989/job/137519060570), source `d62c4b500695d248240a48944461a0d2262a589f`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280`. Each observed one native GET and `net::ERR_ABORTED`, retained conditions, no resend and clearing on selection change. The materiality action kept focus. Twelve PNGs/eight JPEG previews and empty console/page-error arrays were recorded. Root inspected both dark desktop and light 320 cancellation frames for materiality EN and signals pt-BR. Gate17 also passed all nine technical checks on that source. These results qualify the local waiting/cancellation behavior; they do not qualify positive materiality/signal results, a late-response runtime scenario or server-side termination.
+
+The three product blobs were read back exactly. All existing EN/pt-BR entries remain byte-identical, with three new key pairs. Coordinator source review approved the product. The original implementation checkpoint preceded runtime qualification; the subsequent results are stated above.
 
 The memory owner prepared separate native materiality/signal cancellation journeys, observing Request/requestfailed without forwarding the expensive request. Those journeys retain their original budgets and check one request, no resend, focus, preserved conditions, and selection clearing. The original positive materiality oracle remains intact and independently unqualified; cancellation cannot replace it.
 

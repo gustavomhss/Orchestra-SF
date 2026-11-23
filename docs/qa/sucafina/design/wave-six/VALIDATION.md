@@ -15,8 +15,9 @@ O escopo contém 14 áreas e 25 padrões de rota existentes. Uma área de design
 | Registros R15 | 4 jornadas passaram em 7,7 min; 30 PNG e 10 JPEG; scanner ClamD e revogação originais | [45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778) |
 | Memória R11 | 3/5 jornadas passaram: UI63, UI67 e UI69. Materialidade sem corpo em 40s; recall POST503 sem motivo registrado | [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885) |
 | Administração local após #715 | Jornada original passou: único save, CAS/releitura persistida, rascunho conservado, EN/pt-BR e 320px | [45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514) |
-| UI61 cancelamento local | Duas jornadas isoladas em execução; sem aprovação antecipada | [45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989) |
-| Guardrails e tipos E2E após observador POST | Gate18 em execução; somente os dois checks afetados após Gate17 | Snapshot `9e4a5a13f80b25f260eb2f0e61447de016966dd5` |
+| UI61 cancelamento local | 2 jornadas passaram: um GET nativo por consulta, ERR_ABORTED, condição retida, zero reenvio e seleção limpa; 12 PNG e 8 JPEG | [45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989) |
+| Guardrails e tipos E2E após observador POST | Gate18 passou os 2 checks afetados; 78 regras, 106 paths, zero erros/exceções e 12 avisos de declaração de prazo | [45123446736](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123446736) |
+| Recall UI62 R16 | Resposta original 503, schema fechado: `unavailable / similarity-source-unavailable`. O teste positivo permanece falho; correspondência positiva não é qualificada | [45123256492](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123256492) |
 <!-- END_FINAL_MATRIX -->
 
 Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION.md](DEV-COMPOSITION.md) e [DEV-COMPOSITION.json](DEV-COMPOSITION.json). O arquivo [technical.json](technical.json) conserva os contadores primários do gate.
@@ -28,8 +29,8 @@ Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION
 | UI57 | Recibo original, diferenças e recuperação por referência; EN/pt-BR | Histórico não reaplica importação |
 | UI58/UI59 | Origem autorizada, anexo, ClamD, extração/trecho/hash, confirmação e revogação | Extração permanece candidata até confirmação; CAS e autoridade intactos |
 | UI60 | Prévia positiva R15 passou os 28 asserts originais: evidência 42 USD, baseline 420 USD preservado e `domainApplied=false`; fixture restrita mantém negativa | Total continua indisponível por cobertura incompleta; vinculação persistente não é afirmada |
-| UI61 | Condições independentes; consulta explícita e cancelamento local de sinais | R11 não recebeu materialidade em 40s; resultados positivos de materialidade/sinais e interrupção remota não são qualificados |
-| UI62 | Caso atual, pergunta privada e candidatos da fonte original | Candidatos por si só não comprovam execução do recall; verificar resultado final da jornada |
+| UI61 | Condições independentes; consultas explícitas e cancelamento local de materialidade e sinais | R11 não recebeu materialidade em 40s; resultados positivos de materialidade/sinais e interrupção remota não são qualificados |
+| UI62 | Caso atual, pergunta privada e candidatos da fonte original | Recusa original `similarity-source-unavailable` em R16; nenhuma correspondência positiva ou causa interna exclusiva é presumida |
 | UI63 | Escolha registrada, referência opaca e resposta original `coverage-incomplete` | Sem comparação numérica prevista/observada qualificada |
 | UI64 | Entrada contextual indisponível; F01 negado; zero folhas; retornos reais por teclado | Catálogo/preparo não operacionais; rota histórica de admissão preservada sem jornada positiva |
 | UI65 | Estado sem execução selecionada e retorno no mesmo proprietário | Sem C07 executado nem saída C08 positiva |

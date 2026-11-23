@@ -1,8 +1,8 @@
 # Galeria visual — últimas 14 áreas Sucafina
 
-Esta galeria reúne 27 imagens reais das 14 áreas UI57–UI70, capturadas no app-shell de produção pelo workflow Linux original `test-ci` e inspecionadas visualmente. Cada estado identifica sua rodada, o enquadramento e os limites funcionais. Uma imagem de estado não transforma uma jornada incompleta em aprovação.
+Esta galeria reúne 31 imagens reais das 14 áreas UI57–UI70, capturadas no app-shell de produção pelo workflow Linux original `test-ci` e inspecionadas visualmente. Cada estado identifica sua rodada, o enquadramento e os limites funcionais. Uma imagem de estado não transforma uma jornada incompleta em aprovação.
 
-A qualificação final de Memória ainda está em andamento. Consulte o [relatório central](../VALIDATION.md) e o [manifesto com proveniência](./manifest.json).
+A qualificação da recusa original de casos semelhantes ainda está em andamento. Consulte o [relatório central](../VALIDATION.md) e o [manifesto com proveniência](./manifest.json).
 
 | Área | Tela | Imagens selecionadas |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ A qualificação final de Memória ainda está em andamento. Consulte o [relató
 | UI58 | Documentos | 1 |
 | UI59 | Evidências | 4 |
 | UI60 | Documento em cenário | 2 |
-| UI61 | Sinais de memória | 2 |
+| UI61 | Sinais de memória | 6 |
 | UI62 | Casos semelhantes | 1 |
 | UI63 | Resultados / Outcomes | 2 |
 | UI64 | Rotinas | 1 |
@@ -118,6 +118,38 @@ Original conditions captured; materiality exceeded40s. Whole UI61 journey failed
 Original conditions captured; materiality exceeded40s. Whole UI61 journey failed; no positive materiality or signal result qualified.
 
 ![UI61 — light-320-recorded-condition](ui61-light-320-recorded-condition.jpg)
+
+### en-dark-desktop-materiality-local-cancel
+
+1440×1100px. [Run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), job `137519060570`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280`.
+
+Both isolated native cancellation journeys passed. One original GET each, browser ERR_ABORTED, conditions retained, no resend, selection clearing. No positive result or server cancellation is claimed. Viewport scrolled to show retained conditions and the local cancellation state; top case heading may lie outside the frame.
+
+![UI61 — en-dark-desktop-materiality-local-cancel](ui61-en-dark-desktop-materiality-local-cancel.jpg)
+
+### en-light-320-materiality-local-cancel
+
+320×900px. [Run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), job `137519060570`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280`.
+
+Both isolated native cancellation journeys passed. One original GET each, browser ERR_ABORTED, conditions retained, no resend, selection clearing. No positive result or server cancellation is claimed. Viewport scrolled to show retained conditions and the local cancellation state; top case heading may lie outside the frame.
+
+![UI61 — en-light-320-materiality-local-cancel](ui61-en-light-320-materiality-local-cancel.jpg)
+
+### br-dark-desktop-signals-local-cancel
+
+1440×1100px. [Run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), job `137519060570`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280`.
+
+Both isolated native cancellation journeys passed. One original GET each, browser ERR_ABORTED, conditions retained, no resend, selection clearing. No positive result or server cancellation is claimed.
+
+![UI61 — br-dark-desktop-signals-local-cancel](ui61-br-dark-desktop-signals-local-cancel.jpg)
+
+### br-light-320-signals-local-cancel
+
+320×900px. [Run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), job `137519060570`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280`.
+
+Both isolated native cancellation journeys passed. One original GET each, browser ERR_ABORTED, conditions retained, no resend, selection clearing. No positive result or server cancellation is claimed. Viewport scrolled to show retained conditions and the local cancellation state; top case heading may lie outside the frame.
+
+![UI61 — br-light-320-signals-local-cancel](ui61-br-light-320-signals-local-cancel.jpg)
 
 ## UI62 — Casos semelhantes
 
