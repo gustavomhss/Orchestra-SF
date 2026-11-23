@@ -37,9 +37,18 @@ export async function observeFinalMemoryRecall(page: Page, installation: Pick<De
     const read = boundedOriginalRead((async () => {
       const original = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: originalReadDeadline })
       try {
+        const raw: unknown = await original.json()
+        const source = raw && typeof raw === "object" ? raw : undefined
+        const status = source && "status" in source && typeof source.status === "string" ? source.status : null
+        const reason = source && "reason" in source && typeof source.reason === "string" ? source.reason : null
+        console.info("SF_FINAL_MEMORY_RECALL_RESPONSE " + JSON.stringify({
+          httpStatus: original.status(), status: status?.slice(0, 200) ?? null,
+          statusTruncated: status !== null && status.length > 200,
+          reason: reason?.slice(0, 200) ?? null, reasonTruncated: reason !== null && reason.length > 200,
+        }))
         const result: unknown = Schema.decodeUnknownSync(Schema.toType(SfIntelligenceMemorySimilarCases.output), {
           onExcessProperty: "error",
-        })(await original.json())
+        })(raw)
         return { status: original.status(), url: original.url(), body: request.postDataJSON() as unknown, result }
       } finally {
         // The browser receives the unchanged original response even if decoding fails.
