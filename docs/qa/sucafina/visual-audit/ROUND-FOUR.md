@@ -23,7 +23,8 @@ The issue ledger counts distinct observed defects. Files, commits, viewport vari
 | R4-13 | Agents / Tabs | Mobile tabs had 37px targets. | Apply native 44px targets within the existing scroller. |
 | R4-14 | Agents / Prompt editor | The counter wrapped into two or three lines beside Reset. | Allow the footer to wrap while preserving the whole counter and action. |
 | R4-15 | MCP / Tools | A long endpoint expanded scroll width to 1234px and hid controls. | Shrink the text block and wrap the full redacted endpoint inside the dialog. |
-| R4-16 | Native page reads | Unchanged dev returned valid page data after the original 10-second ready bound. | Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons. |
+| R4-16 | Native page reads | Unchanged dev returned valid page data after the original 10-second ready bound. | Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons. CAP23 alone omits operational-health probes unused by its original handler; other pages retain them. |
+| R4-17 | Memory / Planner comparisons | Repeated canonical scenario and criterion reads exceeded the original materiality deadline. | Give each scenario-pair resolution its own existing observation scope, preserving criteria outside the scope and fresh initial, second and final reads. |
 
 ## Teams: surface containment and readable field boundaries
 
@@ -71,7 +72,21 @@ The host's full operational-health observation repeated unrelated native-operati
 
 This changes which operational-health source is used, without removing the original principal, binding, lease, abort, destination, access-revision or data-stability checks. Two equal observations and the final authority/source comparisons remain. CAP27 still consumes the original asset-health information needed for supplier attachment links and downloads. A missing optional page port retains the old behavior; a present but failing page port fails closed.
 
-The request-context suite contains 53 cases, including controls for exact routes and methods, authority revocation, identity changes, failed observations, fallback and asset availability. Planner, Procurement, asset and installed-host regressions accompany it. The original browser readiness bounds, original per-test deadlines and retry:0 remain unchanged.
+The request-context suite contains 62 cases, including controls for exact routes and methods, authority revocation, identity changes, failed observations, fallback and asset availability. Planner, Procurement, asset and installed-host regressions accompany it. The original browser readiness bounds, original per-test deadlines and retry:0 remain unchanged.
+
+The Back diagnostic passed the original two-case Planner spec and measured sequential full-context and CAP23 reads. Its list body arrived 8.567 seconds after the click, inside but close to the unchanged 10-second bound. This did not reproduce the earlier failed return, and does not retrospectively measure it. The original CAP23 handler only consumes the context stamp, destinations and action IDs, then reads its own current Planner source. Its private page callback now omits operational-health probes unused by that handler. It returns explicit unavailable operation availability, retains all three admissions, and keeps the full route-context admission unchanged. Other page callbacks, including CAP27 attachment-health evidence, retain their original observations. Nine new controls cover the exact route, final authority drift, delegation, asset drift and full-context separation.
+
+## Repairing repeated comparison reads
+
+The isolated original UI61 diagnostic retained its 40-second bound and recorded 305 internal stages, 145 after the materiality GET. The first canonical observation took 60.764 seconds: the two comparisons alone took 21.719 and 21.940 seconds, with additional registry and scenario reads. Work continued beyond the deadline and began the second independent observation. This established repeated producer cost, without a held lock or an observed successful late HTTP response.
+
+Each scenario-pair resolution now uses the existing Planner observation owner. The initial, second and final phases remain separate; criteria still run after the pair root closes. The stored scenario batch keeps the canonical scalar fallback, and the metric facade preserves its actual observations and clones. No comparison result is reused between phases or requests. The existing owner still checks source and reader identity, principal, environment, selected case, authority and a fresh egress witness. Its eligibility and refusal rules are unchanged.
+
+The new original-fixture regression compares the complete result with and without the callback, requires all three pair phases to run again on a second call, and keeps criteria outside those roots. It also covers revocation, reader replacement and a real source change after a root closes. Existing Finance-pair, subtotal, ancestry, sensitivity and case-scope regressions accompany it. Their original assertions and time bounds remain.
+
+## Atlas publication precondition
+
+The original UI62 recall returned 503 because its selected precedent still had a pending outbox event. The third isolated diagnostic reached canonical case-read and owner readiness, then recorded `recall-atlas-outbox-pending` before opening the Atlas partition. The reader intentionally refuses that incomplete publication state. The fixture had recorded the original decision choice but had not completed the original Atlas publication. Its preparation is being repaired through the existing writer and scanner, with an explicit pending-state negative control; the reader's refusal remains required. This is scenario maintenance, not an additional visual or product fix.
 
 ## Verification integrity and fixture maintenance
 
@@ -90,12 +105,15 @@ These are test-setup corrections, not additional product fixes. The failed run i
 | Agents | [45209024988](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209024988) | 27 | PASS |
 | MCP | [45209554231](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209554231) | 15 | PASS |
 | Documents | [45210521937](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45210521937) | 4 | PASS |
+| Memory consultation | [45214839965](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214839965) | 2 | PASS · requalification pending after producer change |
 
-These retained runs currently establish 86 distinct browser cases. The original business and Memory qualification remains in progress. The consultation follow-up has completed successfully; its artifact and final original-image review are still being indexed. A failed combined Memory run is retained in the ledger and is not counted as final green coverage.
+These runs establish 88 distinct passed browser cases. Full composed-source business and Memory qualification remains in progress. Consultation's earlier pass qualifies its CSS and local cancellation behavior; it will be repeated after the shared producer change. Failed and diagnostic attempts remain in the ledger and are not counted as final green coverage.
 
-The expanded [gate 45217577648](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45217577648) passed all ten checks on product source `2d8b354742df54e65c28317500feea92b8155d7d`: app-shell/CLI/Sucafina types, E2E types, 78 guardrails against the exact pinned base, generation and byte parity of seven palette outputs, and 256 nested regression cases (13 comparison/layout, 103 browser-command/Teams, 136 page/domain/asset and four installed-context/Procurement cases). Strict Omni declared ten wrapper tests, observed twelve spawns and zero delegated executions, and passed its positive control.
+The composed [gate 45224951271](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45224951271) passed all ten checks on product source `4b03e4f3fbeb19d578e2c8442bd2d744cee14d12`: app-shell/CLI/Sucafina types, E2E types, 78 guardrails against the exact pinned base, generation and byte parity of seven palette outputs, and 265 nested regression cases (13 comparison/layout, 103 browser-command/Teams, 145 page/domain/asset and four installed-context/Procurement cases). Strict Omni declared ten wrapper tests, observed twelve spawns and zero delegated executions, and passed its positive control. The seven-file producer gate is still running; original business and Memory suites and the final documentation candidate remain required before merge.
 
-This is an intermediate evidence checkpoint, not a merge receipt. Remaining producer repairs and the final documentation candidate must pass their original suites before the PR is merged.
+This is an intermediate evidence checkpoint, not a merge receipt.
+
+The carried Teams/shared-visual, Agents, MCP and Documents cohorts retain the exact direct UI, theme and spec paths used in their qualified runs. The manifest records the source-to-composition path comparisons. Shared host and producer changes are separately covered by the composed structural, producer and affected installed-browser suites; unchanged direct paths alone are not represented as a complete dependency proof.
 
 The retained visual evidence uses default native skins, original source values and the production bundle. Component HTTP fixtures remain distinct from genuine isolated installation journeys. These runs do not establish live Microsoft account, OAuth or external model behavior. CSS viewport reflow is not browser zoom, and reviewer inspection is not owner visual acceptance.
 

@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
-  "productSource": "2d8b354742df54e65c28317500feea92b8155d7d",
+  "productSource": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -115,12 +115,19 @@
       "id": "R4-16",
       "area": "Native page reads",
       "problem": "Unchanged dev returned valid page data after the original 10-second ready bound.",
-      "resolution": "Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons.",
+      "resolution": "Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons. CAP23 alone omits operational-health probes unused by its original handler; other pages retain them.",
+      "kind": "loading"
+    },
+    {
+      "id": "R4-17",
+      "area": "Memory / Planner comparisons",
+      "problem": "Repeated canonical scenario and criterion reads exceeded the original materiality deadline.",
+      "resolution": "Give each scenario-pair resolution its own existing observation scope, preserving criteria outside the scope and fresh initial, second and final reads.",
       "kind": "loading"
     }
   ],
   "qualification": {
-    "uniqueBrowserCases": 86,
+    "uniqueBrowserCases": 88,
     "scopes": [
       {
         "scope": "Teams / shared visual",
@@ -185,13 +192,30 @@
         "skipped": 0,
         "flaky": 0,
         "retries": 0
+      },
+      {
+        "scope": "Memory consultation",
+        "run": 45214839965,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "snapshot": "20aeffe77a20f7f65224517af75fa64f5e9f2e8a",
+        "artifact": 14839177705,
+        "sha256": "a129d62fd9dfeea30a808a0a454feb9775a5364f0bab278ff77a220da8c4d72b",
+        "retainedCases": 2,
+        "fullRunCases": 2,
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214839965",
+        "boundary": "Original consultation and cancellation journeys; not positive materiality qualification."
       }
     ],
     "pending": [
-      "Original Planner / Procurement six-case cohort",
-      "Consultation final artifact and original image review",
+      "Original Planner / Procurement six-case cohort on composed source",
       "Original Memory five-case cohort after causal repair",
-      "Final composed documentation gate"
+      "Memory consultation two-case requalification after shared producer change",
+      "Producer regression gates and final composed documentation gate"
     ]
   },
   "visualReview": {
@@ -877,6 +901,50 @@
         "suite": "Documents",
         "reviewer": "round_four_final_areas",
         "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-en-light-320-materiality-conditions-before-consultation.jpg",
+        "sha256": "60a916c7018321ca467122773a9b99babe23bf5269376505cd185403f5e80153",
+        "bytes": 26416,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-en-light-320-signals-conditions-before-consultation.jpg",
+        "sha256": "e7a7b676bf14ac5c55635a4978a83c2c19052b83fd9634cf663e7e2a5dfce30a",
+        "bytes": 26360,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg",
+        "sha256": "1817232b9720cd1b7f4e61c61f1764300983351a8b65e30a298e8661845e1316",
+        "bytes": 77497,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-en-light-320-materiality-local-cancel.jpg",
+        "sha256": "cd86e13bb6cb0344f402306833418d0f1952d53bedca0e1d12a4dcdd8fffd3cd",
+        "bytes": 26137,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
       }
     ],
     "beforeOriginals": [
@@ -1345,6 +1413,316 @@
         "maximumShellOverflow": 0,
         "scope": "Computed solid-color layers; decorative image pixels, glass and blur require original screenshot review."
       }
+    },
+    "intermediateBusiness": {
+      "run": 45215511151,
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "snapshot": "c9e8e65c23fbac49680cd2cddbd0e3a2429e2d82",
+      "artifact": 14838989397,
+      "digest": "sha256:086ea0d74c9cb37b1020a30c58a184365fa56b7efe8e5fd7a5bcebdeff20a546",
+      "runConclusion": "failure",
+      "passedJourneys": 5,
+      "failedJourneys": 1,
+      "beforeProvenance": {
+        "run": 45114138448,
+        "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+        "qualification": "Historical capture; relevant visual leaf blobs were verified identical to e115. Not a fresh e115 capture."
+      },
+      "reviewedCaptures": 14,
+      "unreachedCaptures": 3,
+      "sourceOriginalPngs": 82,
+      "entries": [
+        {
+          "capture": "CAP23-version-ledger-dark-desktop-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+            "bytes": 454544,
+            "sha256": "7bfd70cae8a6e46aa6c6fe72c64e5488dc0af931b277d91f07c159fbb832e69d"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+            "sha256": "e28afd8183b4493fd4061ad989594b18e5751f2312428a9ee4ca70fda5bc2dd2",
+            "bytes": 454596
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP23-version-ledger-light-desktop-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+            "bytes": 495994,
+            "sha256": "b6b8df2ba50ce8bbfba952fa172ff0e91a2a4f5da7887c25064ded328d04fa8b"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+            "sha256": "e6646aa611d50db9f503ce887ab6ef021962d5270422701698baeb7a8c13c78a",
+            "bytes": 496102
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP23-version-ledger-light-320-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+            "bytes": 50481,
+            "sha256": "aeddf3a438a96e2952ee3b623679d37398f05310b088f40a017b0800bf772f91"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+            "sha256": "03d09ae90db7d52d4b6bbd5c4d56e7601c71a2ba3c56bd026e9f0ad79526cbe3",
+            "bytes": 52837
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP23-dark-320-version-actions-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+            "bytes": 59383,
+            "sha256": "a4b0066bdc10ac26ed4ccf1fa4e1dc7c6903a51b9b34a54fb23faa9912ae32f2"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+            "sha256": "5ee0d0e6acb2d78ef1952f4c5f68e8d6dffcaa3765035cf7e3e0ba3ad8cb8975",
+            "bytes": 55795
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP23-pt-BR-dark-desktop-test-data.png",
+          "state": "not-reached-after-CAP23-Back-failure",
+          "after": null,
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-desktop-test-data.png",
+            "sha256": "2ed5917a22d782f5d3b04891495b546503c0a62344c0ae9eead4cc355f5cf01a",
+            "bytes": 463356
+          },
+          "comparison": "not-qualified"
+        },
+        {
+          "capture": "CAP23-pt-BR-dark-320-test-data.png",
+          "state": "not-reached-after-CAP23-Back-failure",
+          "after": null,
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-320-test-data.png",
+            "sha256": "a670a17c091dc123ce33d9034ba1f7ec7f4af0f61297305ea47c868225f998c0",
+            "bytes": 59191
+          },
+          "comparison": "not-qualified"
+        },
+        {
+          "capture": "CAP23-pt-BR-dark-320-version-actions-test-data.png",
+          "state": "not-reached-after-CAP23-Back-failure",
+          "after": null,
+          "before": null,
+          "comparison": "not-qualified"
+        },
+        {
+          "capture": "CAP24-dark-desktop-source-overview-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+            "bytes": 460441,
+            "sha256": "5071963a12447619bcdd1eb5d945e92ddb2369dcda1c8cf0f9acdb3797f724cb"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+            "sha256": "318ec4ea97a70c6382bbc6c3b3291be27255acc0ec601cdf70863877654ce2b0",
+            "bytes": 460416
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP24-light-desktop-source-overview-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+            "bytes": 490533,
+            "sha256": "3b9a812a4aeb70ac399afb4fed8b80a4d509c03f572d86b0da4086e063ba6eeb"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+            "sha256": "9df25696bcd0d6ebd2076162df8bdb0989f8fb5cdc6048836c0e16e3f9e101f7",
+            "bytes": 490548
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP24-light-320-source-overview-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+            "bytes": 46550,
+            "sha256": "99714319109051078b07c95ddacf2eebed3763e04329f0dedb818d5f5bb2f9a0"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+            "sha256": "db729e46315042f5771491d76cac5c2aff6e8be79f6120ad8d34a301f5643c84",
+            "bytes": 46556
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP24-pt-BR-dark-desktop-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+            "bytes": 476759,
+            "sha256": "0d327d7fcdeb241d7d7c66357d984e813337d4e6b37b0565b46e1a326fba1ef4"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+            "sha256": "de14db07021b36d99ef20e616f64b427697cb80d99220f997094f2b24901001a",
+            "bytes": 477584
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP24-pt-BR-dark-320-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+            "bytes": 47772,
+            "sha256": "ab9f190176f805868f06e4a8f8dd44a04185205cf728492b06638dac4ea96c01"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+            "sha256": "23a695cc7993d05e7f7a657cac9d894a2faf46a5bb211743ed41b35862e77685",
+            "bytes": 47785
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP26-dark-desktop-pr-approval-list-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+            "bytes": 423083,
+            "sha256": "71393411480580ce07610048bf43f903ac1490e53d65cdd7ae975177a6321e90"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+            "sha256": "70b5254c0f15563de3d37c0964032919ea1579c1a8560ae5264eb161f34387b2",
+            "bytes": 411219
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP26-light-desktop-pr-approval-list-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+            "bytes": 465262,
+            "sha256": "3b5b4a2aca7e609d7d53b2cdb6a7385ea5ec711162de39be99acfb336d9ca0c3"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+            "sha256": "fedbf1cd2ae30dbbec9628ac6eb33bbca63e7d2e990e56272de9dab1ebbd6435",
+            "bytes": 446126
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP26-light-320-pr-approval-list-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-320-pr-approval-list-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-320-pr-approval-list-test-data.png",
+            "bytes": 50677,
+            "sha256": "8d15f530ff2be36179f839df66b2f4f8952d40056b1c7292295128307bf15a9a"
+          },
+          "before": null,
+          "comparison": "new-coverage"
+        },
+        {
+          "capture": "CAP26-pt-BR-dark-desktop-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+            "bytes": 447115,
+            "sha256": "0129b8ae4ebe9bd467f025cfacba8eebd340c75913e04fe154daa2b71fa8bb26"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+            "sha256": "dc7c56db62419df920bcc34f6768abcc539e7c3a68e45955c9d12804dcb1ead1",
+            "bytes": 442841
+          },
+          "comparison": "historical-pair"
+        },
+        {
+          "capture": "CAP26-pt-BR-dark-320-test-data.png",
+          "state": "opened-and-reviewed",
+          "after": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+            "bytes": 46219,
+            "sha256": "8a7c2c976ef491bbf4dfa465b57196c619c7c2359c28baaadfcfd604dc468848"
+          },
+          "before": {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+            "member": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+            "sha256": "73a7f29a56a10218f4840526dbf5afdfe8787dae0e12dda118b809b268423ef6",
+            "bytes": 49000
+          },
+          "comparison": "historical-pair"
+        }
+      ],
+      "findings": [
+        {
+          "area": "CAP23",
+          "result": "English visuals passed; Portuguese and full journey remain unqualified",
+          "observed": "At the action-side edge in 320px, each version name is visible above its own four actions. Desktop leaves the name in the original first column without a repeated visible caption. The left mobile edge still shows the original source name and Open record.",
+          "assertions": "Before the later Back failure, source-name equality, aria-hidden repetition, action viewport containment, first-name full visibility and original row-height cap passed."
+        },
+        {
+          "area": "CAP24",
+          "result": "Visual and original-journey assertions passed in EN/PT desktop/320",
+          "observed": "All five values share one baseline, including the count beside the Portuguese two-line label. Currency labels retain their own lower row. Narrow label/value alignment and source absence states are preserved.",
+          "assertions": "Original EN and PT metric assertions require top spread <=1px across five values; both reached and passed."
+        },
+        {
+          "area": "CAP26",
+          "result": "Visual and original-journey assertions passed in EN/PT desktop/320",
+          "observed": "PR numbers and Open record/Abrir registro remain on a single line. The 180px identity column is legible at the mobile scroller edge; subjects and status retain the existing horizontal table. Light/dark desktop spacing stays consistent.",
+          "assertions": "The text-range single-line identity/action assertions reached and passed for EN/PT desktop/320. EN light 320 is new coverage without an exact historical counterpart."
+        }
+      ],
+      "limitations": [
+        "Whole run is not green: original CAP23 Back/readback assertion failed after a successful rename.",
+        "CAP23 Portuguese, canonical copy and comparison were not reached.",
+        "No trace, HAR or video exists in this artifact because the original authenticated suite disables them.",
+        "Screenshot review does not measure physical browser zoom or claim live financial data."
+      ]
     }
   },
   "diagnosis": {
@@ -1590,13 +1968,293 @@
         }
       ],
       "qualification": false
+    },
+    "materialityFirst": {
+      "run": 45216437015,
+      "snapshot": "e84bccfdcdb7829af7cc7625b88050ccbbb8070b",
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "artifact": 14837758981,
+      "sha256": "01abfdc0294a0097a17a3f533e9972ff8498d60f9e0898f27ce1233c672082ce",
+      "result": "failure",
+      "qualification": false,
+      "observation": "Original 40-second deadline reproduced, but native stdout collector discarded internal diagnostic markers; inconclusive about the internal failing stage."
+    },
+    "recallFirst": {
+      "run": 45217503921,
+      "snapshot": "add5604cfc9d3d95bd3bb87e775792f1acda14bf",
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "artifact": 14838569290,
+      "sha256": "04f3ba861551b55f1ebfb81c75e3c1720cdf58f2cca6ead0d8c5310980ed69e7",
+      "result": "failure",
+      "qualification": false,
+      "observation": "The original final-memory seed decision-choose POST exceeded its unchanged 40-second bound. The recall request was not reached. Native stdout collector also discarded internal diagnostic markers."
+    },
+    "businessAfterPort": {
+      "run": 45215511151,
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "snapshot": "c9e8e65c23fbac49680cd2cddbd0e3a2429e2d82",
+      "artifact": 14838989397,
+      "sha256": "086ea0d74c9cb37b1020a30c58a184365fa56b7efe8e5fd7a5bcebdeff20a546",
+      "result": "failure",
+      "passed": 5,
+      "failed": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "qualification": false,
+      "observation": "All six initial-page readiness checks passed. Four Procurement cases and one Planner case passed. Original CAP23 rename succeeded, but returning Back left the list loading beyond the unchanged 10-second list assertion."
+    },
+    "businessBackProbe": {
+      "run": 45220969354,
+      "snapshot": "3c646cf4d68202d738232b0bbee1053ee9365b16",
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "branch": "ci-run-r4backprobe",
+      "qualification": false,
+      "status": "completed",
+      "changes": "Sanitized HTTP observers and two Back boundary markers in the complete original two-case Planner spec; all original assertions, bounds and retry:0 unchanged.",
+      "result": "success",
+      "artifact": 14841917260,
+      "artifactBytes": 38988669,
+      "sha256": "07c580f92c4b75ad8ca44d56fdcc12b8cacf97664e0beaf4628536e833f08151",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "backToPageBodyMs": 8567,
+      "context": {
+        "ordinal": 16,
+        "endpoint": "context",
+        "startedMs": 82301,
+        "status": 200,
+        "responseMs": 6815,
+        "finishedMs": 6845,
+        "bodyStatus": "ok",
+        "bodyMs": 6849
+      },
+      "page": {
+        "ordinal": 17,
+        "endpoint": "page:CAP23",
+        "startedMs": 89141,
+        "status": 200,
+        "responseMs": 1709,
+        "finishedMs": 1723,
+        "bodyStatus": "ok",
+        "bodyMs": 1723
+      },
+      "conclusion": "The isolated diagnostic passed both original Planner journeys. The observed Back performs a sequential full context read followed by CAP23; its page body arrived 8.567s after click. This does not reproduce or retrospectively measure the earlier failure.",
+      "ledgerSha256": "4f49bda25e0f3851f2ec579a717bf2854fa7d3de2b12e1048622bbe3f0e46b0d"
+    },
+    "materialityRelay": {
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "head": "6c5c4ae15dc0ec656101a8e661076d3ba0889a89",
+      "tree": "41f2601ff19fb6b3eeacba7b6a0b73a0e7cf28ac",
+      "branch": "ci-run-r4material2",
+      "diagnostic": true,
+      "run": 45219624480,
+      "result": "failure",
+      "qualification": false,
+      "markers": 305,
+      "afterRequestMarkers": 145,
+      "firstReadMs": 60764,
+      "stagesMs": {
+        "registryBefore": 5530,
+        "initialPair": 2549,
+        "firstCompare": 21719,
+        "nextPair": 2474,
+        "secondCompare": 21940,
+        "registryAfter": 5573
+      },
+      "observation": "The original read exceeded 40 seconds while work continued. The first canonical observation completed after about 61 seconds; the second began independently. No late successful HTTP response was observed before journey end.",
+      "cause": "Repeated canonical scenario and nested criterion reads amplify the cost; not a held lock.",
+      "artifact": 14841946025,
+      "artifactBytes": 11402644,
+      "sha256": "f2b2e59f441e97b8263eb1b4bd652226790566db720ac31bd10516ad434d169e",
+      "ledgerSha256": "00b52972bb3e04746f1daffb9cab0fff970f38dde716b2c55b01253037457970"
+    },
+    "recallRelay": {
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "snapshot": "85bcfeac46dc4de5bb5f263cd5a2efbed6b9cf62",
+      "run": 45220541008,
+      "artifact": 14840119768,
+      "sha256": "c5db1d1e53580a3e61c6b2c9cfff7f66aab1e14289c7dbac4444970f93ffe85b",
+      "result": "failure",
+      "qualification": false,
+      "markers": 320,
+      "observation": "The original recall POST returned 503 after seed completion. Source, feature and candidate authorization passed; the first canonical Atlas read returned unavailable in approximately 284ms. A third diagnostic narrows its exact guard."
+    },
+    "recallAtlas": {
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "snapshot": "07b9f448f572117acdc6dfad0f59edb5059dce67",
+      "tree": "8d1be769b5ee0db7922de087371b14ef78b95dd9",
+      "branch": "ci-run-r4recall3",
+      "diagnostic": true,
+      "run": 45224745425,
+      "job": 137868096769,
+      "result": "failure",
+      "qualification": false,
+      "marker": "recall-atlas-outbox-pending",
+      "markerUtc": "2026-11-23T17:18:52.376Z",
+      "cause": "Original Atlas reader correctly refuses a case with an unpublished pending outbox event. The chosen Decisions fixture enqueues the event but does not publish it.",
+      "next": "Prepare the canonical published precedent and retain an explicit real pending negative control; do not relax the production reader or return empty successful data.",
+      "scannerBoundary": "Atlas uses the original pinned gitleaks probe through BackendToolkit/AppProcess. ClamD belongs to Files upload scanning and is not a dependency of this publication path."
+    },
+    "materialityAfterScope": {
+      "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+      "snapshot": "93f9c1199642f31deaad6669c299079400c10015",
+      "tree": "8d6d8726b4eb9f34ec4e569e58d2a776bdefac36",
+      "run": 45227935999,
+      "branch": "ci-run-r4material3",
+      "status": "in_progress",
+      "qualification": false,
+      "changes": "Snapshot-only exact UI61 prefix/helpers/journey from original final-memory.spec.ts; no source, fixture or new marker changes; original40s/300s/retry0."
     }
   },
   "sourceBoundaries": {
     "productReadWrite": "GitHub MCP",
     "execution": "Existing test-ci, Linux, strict Omni, disposable ci-run snapshots",
     "localOperations": "CI evidence parsing, hashing and image inspection only",
-    "diagnosticCopies": "Snapshot-only copies of original UI61/UI62 journeys retain their original actions, assertions, bounds and retry:0; neither copies nor diagnostic console markers enter the product branch."
+    "diagnosticCopies": "Snapshot-only copies of original UI61/UI62 journeys retain their original actions, assertions, bounds and retry:0; neither copies nor diagnostic console markers enter the product branch.",
+    "carriedCohortPaths": [
+      {
+        "scope": "Teams / shared visual",
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "relevant": [
+          "packages/app-shell/src/pages/team-profile",
+          "packages/app-shell/src/components/settings-v2",
+          "packages/app-shell/src/orchestra/theme.css",
+          "packages/app-shell/e2e/orchestra/shared-visual",
+          "packages/app-shell/e2e/orchestra/team-profile-visual"
+        ],
+        "comparedTo": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "changedTotal": 24,
+        "relevantChanged": [],
+        "allChanged": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "apps/cli/src/sucafina-product/memory-services.ts",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "apps/cli/test/sucafina-native-web.test.ts",
+          "docs/qa/sucafina/visual-audit/ROUND-FOUR.md",
+          "docs/qa/sucafina/visual-audit/round-four-runs.json",
+          "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/request-context.test.ts",
+          "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+          "packages/app-shell/e2e/orchestra/chapter-agents.spec.ts",
+          "packages/app-shell/e2e/orchestra/chapter-mcp.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+          "packages/app-shell/src/orchestra/DESIGN.md",
+          "packages/app-shell/src/orchestra/chapters/agents.css",
+          "packages/app-shell/src/orchestra/chapters/agents.tsx",
+          "packages/app-shell/src/orchestra/chapters/mcp.css",
+          "packages/app-shell/src/orchestra/chapters/sucafina/documents/records.css",
+          "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css"
+        ]
+      },
+      {
+        "scope": "Agents",
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "relevant": [
+          "packages/app-shell/src/orchestra/chapters/agents",
+          "packages/app-shell/src/orchestra/theme.css",
+          "packages/app-shell/e2e/orchestra/chapter-agents"
+        ],
+        "comparedTo": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "changedTotal": 21,
+        "relevantChanged": [],
+        "allChanged": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "apps/cli/src/sucafina-product/memory-services.ts",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "apps/cli/test/sucafina-native-web.test.ts",
+          "docs/qa/sucafina/visual-audit/ROUND-FOUR.md",
+          "docs/qa/sucafina/visual-audit/round-four-runs.json",
+          "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/request-context.test.ts",
+          "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+          "packages/app-shell/e2e/orchestra/chapter-mcp.spec.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+          "packages/app-shell/src/orchestra/DESIGN.md",
+          "packages/app-shell/src/orchestra/chapters/mcp.css",
+          "packages/app-shell/src/orchestra/chapters/sucafina/documents/records.css",
+          "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css"
+        ]
+      },
+      {
+        "scope": "MCP",
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "relevant": [
+          "packages/app-shell/src/orchestra/chapters/mcp",
+          "packages/app-shell/src/orchestra/theme.css",
+          "packages/app-shell/e2e/orchestra/chapter-mcp"
+        ],
+        "comparedTo": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "changedTotal": 19,
+        "relevantChanged": [],
+        "allChanged": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "apps/cli/src/sucafina-product/memory-services.ts",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "apps/cli/test/sucafina-native-web.test.ts",
+          "docs/qa/sucafina/visual-audit/ROUND-FOUR.md",
+          "docs/qa/sucafina/visual-audit/round-four-runs.json",
+          "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/request-context.test.ts",
+          "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+          "packages/app-shell/src/orchestra/DESIGN.md",
+          "packages/app-shell/src/orchestra/chapters/sucafina/documents/records.css",
+          "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css"
+        ]
+      },
+      {
+        "scope": "Documents",
+        "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+        "relevant": [
+          "packages/app-shell/src/orchestra/chapters/sucafina/documents",
+          "packages/app-shell/e2e/sucafina/operations",
+          "packages/app-shell/src/orchestra/theme.css"
+        ],
+        "comparedTo": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "changedTotal": 16,
+        "relevantChanged": [],
+        "allChanged": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "apps/cli/src/sucafina-product/memory-services.ts",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "apps/cli/test/sucafina-native-web.test.ts",
+          "docs/qa/sucafina/visual-audit/ROUND-FOUR.md",
+          "docs/qa/sucafina/visual-audit/round-four-runs.json",
+          "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/request-context.test.ts",
+          "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+          "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css"
+        ]
+      }
+    ]
   },
   "fixtureMaintenance": [
     {
@@ -1675,6 +2333,78 @@
         "files": 7,
         "changed": []
       }
+    },
+    {
+      "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+      "snapshot": "ff88320990a13d7b442bb84d346573686a26cb8d",
+      "tree": "3d01deefbaf6e704bf07998f0d04de6df34ece76",
+      "branch": "ci-run-r4gates4",
+      "run": 45224951271,
+      "job": 137868822272,
+      "result": "success",
+      "outer": {
+        "passed": 10,
+        "failed": 0
+      },
+      "nested": {
+        "comparisonLayout": 13,
+        "browserCommandsTeams": 103,
+        "pageDomainAssets": 145,
+        "installedContextProcurement": 4,
+        "total": 265
+      },
+      "omni": {
+        "declared": 10,
+        "spawns": 12,
+        "delegated": 0,
+        "verdict": "pass"
+      },
+      "palettes": {
+        "files": 7,
+        "changed": []
+      },
+      "guardrails": {
+        "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+        "bootstrap": false,
+        "rules": 78,
+        "files": 45,
+        "findings": [],
+        "errors": [],
+        "approved": [],
+        "touchesGuards": false
+      }
     }
-  ]
+  ],
+  "producerGates": [
+    {
+      "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+      "snapshot": "d892058be400dcdfedb67ae9033df1fadd1e3c24",
+      "tree": "1fc4d0337f3e5ceb5daa1c74593aef4ba5e00063",
+      "branch": "ci-run-r4producers",
+      "run": 45225786561,
+      "job": 137871759430,
+      "status": "in_progress",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-subtotal-source.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "apps/cli/test/sucafina-case-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-classification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-publication.test.ts"
+      ],
+      "newWrapperBounds": "The new snapshot-only wrapper permits each original file's existing deadlines plus shutdown. Five files use child240s/outer300s, classification uses750s/780s for its original300+300+120s cases, publication330s/360s for its original300s case. No original test bound or assertion changes."
+    }
+  ],
+  "consultationRequalification": {
+    "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+    "snapshot": "73f9e474e81ad65da2a2d2637495d97070b2c054",
+    "tree": "924de2af9980c2e16c0700b3e3868dfb91d5a74c",
+    "run": 45227929041,
+    "branch": "ci-run-r4consult2",
+    "status": "in_progress",
+    "spec": "e2e/sucafina/final-memory-consultation.spec.ts",
+    "specBlob": "77716502118d6133f2153784d22b018ea6b323c8",
+    "cases": 2
+  }
 }
