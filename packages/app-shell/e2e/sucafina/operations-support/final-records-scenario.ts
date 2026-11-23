@@ -6,7 +6,9 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { Account } from "./runtime"
-import { forwardOnce, observation } from "./runtime"
+import { observation } from "./runtime"
+import type { SfContextStamp } from "@orchestra/schema/sucafina/context"
+import { observeRecordFileOperation } from "./final-records-file-fence"
 
 async function versions(page: Page, account: Account) {
   const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP23", { maxRetries: 0 })
@@ -69,20 +71,28 @@ export async function prepareRecordScenario(page: Page, account: Account) {
 }
 
 export async function previewRecordScenario(page: Page, info: TestInfo, account: Account,
-  confirmed: DocumentEvidence, fixture: Awaited<ReturnType<typeof prepareRecordScenario>>, source: "procurement" | "dashboard" = "procurement") {
+  confirmed: DocumentEvidence, fixture: Awaited<ReturnType<typeof prepareRecordScenario>>, stamp: SfContextStamp, source: "procurement" | "dashboard" = "procurement") {
   const surface = page.locator('[data-sf-surface="UI60"]')
   const mode = (url: string, kind: string) => {
     const parsed = new URL(url)
     return parsed.origin === account.origin && parsed.pathname === new URL(account.baseURL).pathname + "/" + source &&
       parsed.searchParams.get("sf") === kind
   }
-  const discovered = page.waitForResponse((response) => mode(response.url(), "document-scenario-targets") &&
-    response.request().method() === "GET")
-  await surface.locator(`[data-sf-evidence-id=${JSON.stringify(confirmed.id)}]`)
-    .getByRole("button", { name: "Use confirmed amount in a scenario", exact: true }).click()
-  const discovery = await discovered
-  expect(discovery.status()).toBe(200)
-  const catalog = Schema.decodeUnknownSync(SfFiles.operations["files.document-scenario-targets"].output)(await discovery.json())
+  const discovered = await observeRecordFileOperation(page, account, stamp, "files.document-scenario-targets",
+    (url) => mode(url.href, "document-scenario-targets"), "GET")
+  const catalog = await (async () => {
+    try {
+      await surface.locator(`[data-sf-evidence-id=${JSON.stringify(confirmed.id)}]`)
+        .getByRole("button", { name: "Use confirmed amount in a scenario", exact: true }).click()
+      const { response: discovery } = await discovered.completed
+      expect(discovery.status()).toBe(200)
+      const catalog = Schema.decodeUnknownSync(SfFiles.operations["files.document-scenario-targets"].output)(await discovery.json())
+      await discovered.finish()
+      return catalog
+    } finally {
+      await discovered.close()
+    }
+  })()
   if (catalog.status !== "ok") throw new Error("No authorized scenario target was supplied by the original producer")
   const matches = catalog.value.map((target, index) => ({ target, index })).filter(({ target }) =>
     target.targetRef === fixture.line + ":1" && target.currency === "USD")
@@ -93,7 +103,8 @@ export async function previewRecordScenario(page: Page, info: TestInfo, account:
   await expect(submit).toBeEnabled()
   // Observe the sole real UI POST before Chromium can evict its response body.
   // The helper delivers the original bytes unchanged and forbids retries.
-  const previewed = await forwardOnce(page, (url) => mode(url.href, "document-scenario-preview"), "POST")
+  const previewed = await observeRecordFileOperation(page, account, stamp, "files.document-scenario-preview",
+    (url) => mode(url.href, "document-scenario-preview"), "POST")
   try {
     await submit.click()
     const { response, request } = await previewed.completed
@@ -113,6 +124,7 @@ export async function previewRecordScenario(page: Page, info: TestInfo, account:
     expect(body.value.scenario).toMatchObject({
       currency: "USD", sourceRefs: expect.arrayContaining([confirmed.ref]), total: null,
     })
+    await previewed.finish()
     await expect(surface).toHaveAttribute("data-sf-phase", "preview")
     const preview = surface.locator('[data-sf-scenario="preview"]')
     await expect(preview.getByRole("heading", { name: "Simulation · no changes applied", exact: true })).toBeVisible()

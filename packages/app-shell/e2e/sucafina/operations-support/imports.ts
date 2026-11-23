@@ -183,11 +183,12 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
 }
 
 /** One read-only recovery, only after an observed CAP23 read failure, inside the original 10s budget. */
-async function reconcileCreatedVersion(page: Page, account: Account, createdRow: Locator, info: TestInfo) {
+async function reconcileCreatedVersion(page: Page, account: Account, createdRow: Locator, info: TestInfo,
+  observedFailures: readonly { kind: "transport" | "http"; detail: string | number }[] = []) {
   const source = account.baseURL + "/api/ui/pages/CAP23"
   const matches = (request: Request) => request.method() === "GET" &&
     new URL(request.url()).origin === account.origin && new URL(request.url()).pathname === new URL(source).pathname
-  const failures: { kind: "transport" | "http"; detail: string | number }[] = []
+  const failures: { kind: "transport" | "http"; detail: string | number }[] = [...observedFailures]
   const failed = (request: Request) => {
     if (matches(request) && failures.length < 8)
       failures.push({ kind: "transport", detail: (request.failure()?.errorText ?? "failed").slice(0, 160) })
@@ -312,13 +313,39 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   page.on("response", responded)
   page.on("requestfailed", failed)
   const createdRow = surface.locator("tr[data-sf-row]")
+  const originalRead = await forwardOnce(page, (url) => url.origin === account.origin &&
+    url.pathname === new URL(account.baseURL).pathname + "/api/ui/pages/CAP23", "GET")
   try {
     await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
-    // The native row must still appear. Only an observed original read failure can
-    // trigger one read-only recovery within the unchanged 10-second visibility budget.
-    await reconcileCreatedVersion(page, account, createdRow, info)
+    // Observe the one automatic read after the acknowledged save before starting
+    // the DOM budget. An original connection failure still permits the same
+    // bounded read-only recovery; the save is never repeated.
+    const observed = await originalRead.completed.then(
+      (value) => ({ kind: "response" as const, value }),
+      (error: unknown) => ({ kind: "transport" as const,
+        detail: String(error).replace(/https?:\/\/[^\s"'<>]+/g, "[url]").slice(0, 240) }),
+    )
+    const readFailures: { kind: "transport" | "http"; detail: string | number }[] = []
+    let readVersion: string | undefined
+    if (observed.kind === "transport") readFailures.push(observed)
+    else if (observed.value.response.status() >= 400)
+      readFailures.push({ kind: "http", detail: observed.value.response.status() })
+    else {
+      expect(observed.value.request.method()).toBe("GET")
+      expect(observed.value.response.status()).toBe(200)
+      const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await observed.value.response.json())
+      if (body.status !== "ok") throw new Error("The acknowledged version's original readback is unavailable")
+      expect(body.context.principalRef).toBe(account.principal)
+      expect(body.value.data.versions).toHaveLength(1)
+      readVersion = body.value.data.versions[0]!.id
+      expect(body.value.versions["versions:" + readVersion]?.version).toBe(1)
+    }
+    await originalRead.close()
+    await reconcileCreatedVersion(page, account, createdRow, info, readFailures)
     await expect(createdRow).toHaveCount(1)
+    if (readVersion) await expect(createdRow).toHaveAttribute("data-sf-row", readVersion)
   } finally {
+    await originalRead.close()
     page.off("request", requested)
     page.off("response", responded)
     page.off("requestfailed", failed)

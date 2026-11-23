@@ -10,7 +10,8 @@ import { authenticateDesignInstallation, withDesignInstallation } from "../desig
 import { ServerConnection } from "../../../src/context/server-connection"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime"
-import { forwardOnce, modeURL, observation } from "./runtime"
+import { modeURL, observation } from "./runtime"
+import { observeRecordFileOperation } from "./final-records-file-fence"
 import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
 import { captureRecordVariants, captureRecordDetail, captureRecordFailure } from "./final-records"
 
@@ -19,19 +20,21 @@ function observeNativeScenario(page: Page) {
   const started = performance.now()
   const diagnostics = {
     pageErrors: [] as string[], consoleErrors: [] as string[],
-    reads: [] as { kind: string; method: string; event: string; elapsedMs: number; status?: number }[],
+    reads: [] as { kind: string; method: string; event: string; elapsedMs: number; status?: number; failure?: string }[],
   }
-  const observeRead = (request: BrowserRequest, event: string, status?: number) => {
+  const observeRead = (request: BrowserRequest, event: string, status?: number, failure?: string) => {
     const url = new URL(request.url())
     const kind = url.pathname.endsWith("/api/ui/context") ? "context" : url.searchParams.get("sf")
     if (!kind || !["context", "document-candidates", "document-scenario-targets", "document-scenario-preview"].includes(kind)) return
     diagnostics.reads.push({ kind, method: request.method(), event,
-      elapsedMs: Math.round(performance.now() - started), ...(status === undefined ? {} : { status }) })
+      elapsedMs: Math.round(performance.now() - started), ...(status === undefined ? {} : { status }),
+      ...(failure === undefined ? {} : { failure: failure.replace(/https?:\/\/[^\s"'<>]+/g, "[url]").slice(0, 160) }) })
     if (diagnostics.reads.length > 64) diagnostics.reads.shift()
   }
   page.on("request", (request) => observeRead(request, "request"))
   page.on("response", (response) => observeRead(response.request(), "response", response.status()))
-  page.on("requestfailed", (request) => observeRead(request, "failed"))
+  page.on("requestfinished", (request) => observeRead(request, "finished"))
+  page.on("requestfailed", (request) => observeRead(request, "failed", undefined, request.failure()?.errorText))
   const record = (list: string[], message: string) => {
     const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]")
       .replace(/https?:\/\/[^\s"'<>]+/g, "[url]")
@@ -203,14 +206,25 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
           expect(matches[0]).toMatchObject({ state: "ready", operational: true })
         }
       }
-      await enterNativeScenario(page, account, confirmed.fileRef)
+      const initial = await observeRecordFileOperation(page, account, current.value.stamp, "files.document-candidates",
+        modeURL(account, "procurement", "document-candidates", { documentRef: confirmed.fileRef }).href, "GET")
+      try {
+        await enterNativeScenario(page, account, confirmed.fileRef)
+        const { response } = await initial.completed
+        const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await response.json())
+        expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
+        await initial.finish()
+      } finally {
+        await initial.close()
+      }
       const surface = page.locator('[data-sf-surface="UI60"]')
       // Select the original Dashboard source with its native control, including
       // if the default source is unavailable. The server reauthorizes the read.
       const source = surface.getByRole("combobox", { name: "Source", exact: true })
       await expect(source).toBeEnabled()
       const candidatesURL = modeURL(account, "dashboard", "document-candidates", { documentRef: confirmed.fileRef })
-      const candidateRead = await forwardOnce(page, candidatesURL.href, "GET")
+      const candidateRead = await observeRecordFileOperation(page, account, current.value.stamp,
+        "files.document-candidates", candidatesURL.href, "GET")
       try {
         await source.selectOption("dashboard")
         await expect(source).toHaveValue("dashboard")
@@ -221,6 +235,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
         expect(response.status()).toBe(200)
         const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await response.json())
         expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
+        await candidateRead.finish()
         await observation(info, "final-records-native-selected-source", {
           source: "dashboard", httpStatus: response.status(), documentRef: confirmed.fileRef,
           confirmed: confirmed.ref, sourceRead: "one original UI GET", reads: diagnostics.reads,
@@ -230,7 +245,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       }
       await expect(surface).toHaveAttribute("data-sf-read-state", "ready")
       await expect(surface.locator("[data-sf-evidence-id]")).toHaveCount(1)
-      await previewRecordScenario(page, info, account, confirmed, fixture, "dashboard")
+      await previewRecordScenario(page, info, account, confirmed, fixture, current.value.stamp, "dashboard")
       await captureRecordVariants(page, info, "UI60", "native-authorized-preview", false)
       await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence",
         surface.locator('[data-sf-scenario="preview"]'))
