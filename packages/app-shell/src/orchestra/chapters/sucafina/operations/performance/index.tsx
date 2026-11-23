@@ -10,8 +10,9 @@ import { useSfContext } from "../../context"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { SfChangeReview } from "../../shared/change-review"
+import { SfChangeReview, SfReviewFieldList } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
+import type { SfPendingOperation } from "../../shared/draft"
 import "./performance.css"
 
 type Performance = typeof SfDomainPerformance.Type
@@ -225,6 +226,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     error: null as string | null,
     warnings: [] as readonly string[],
     confirmedWeights: false,
+    weightRequirement: null as Readonly<{ scope: string }> | null,
     busy: false,
     uncertain: false,
     reload: 0,
@@ -263,6 +265,20 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
   }
   const refresh = () => setStore("reload", (n) => n + 1)
   const snapshot = () => active()?.controller.snapshot()
+  // Consent belongs to the exact owner, source version, command and proposal.
+  // The producer alone decides whether weights require this exception.
+  const weightScope = () => {
+    const editing = active(), target = removal(), state = snapshot()
+    return JSON.stringify([ready()?.key, owner.generation(), store.cas,
+      target ?? null, editing?.operationRef, editing?.command,
+      state?.availability === "active" ? state.value : null])
+  }
+  const weightsRequired = () => store.weightRequirement?.scope === weightScope()
+  createEffect(() => {
+    if (store.weightRequirement && !weightsRequired())
+      setStore({ weightRequirement: null, confirmedWeights: false })
+  })
+  const reviseWeights = (mode: Mode) => setStore({ mode, weightRequirement: null, confirmedWeights: false })
 
   createEffect(() => {
     const r = ready()
@@ -400,7 +416,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       itemId, command: operation,
       operationRef: crypto.randomUUID() as SfOperationRef })
     setRemoval(null)
-    setStore({ mode: "edit", error: null, confirmedWeights: false, warnings: [] })
+    setStore({ mode: "edit", error: null, confirmedWeights: false, weightRequirement: null, warnings: [] })
   }
 
   const beginRemove = (kind: Removal["kind"], item: Item, sub?: Sub) => {
@@ -410,7 +426,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     setActive(null)
     setRemoval({ kind, itemId, subId: subId || undefined,
       operationRef: crypto.randomUUID() as SfOperationRef })
-    setStore({ mode: "review-delete", error: null, confirmedWeights: false })
+    setStore({ mode: "review-delete", error: null, confirmedWeights: false, weightRequirement: null })
   }
   const draftFields = () => {
     const state = snapshot()
@@ -436,16 +452,19 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     const isDelete = store.mode === "review-delete" && !!deleting
     const action = isDelete ? deleting!.kind : editing?.command
     if (!r || !action || !allowed(action) || store.busy || store.uncertain || store.cas === undefined) return
+    if (weightsRequired() && !store.confirmedWeights) return
+    const reviewedScope = weightScope()
     const currentDraft = editing?.controller.snapshot()
     if (!isDelete && (!editing || currentDraft?.availability !== "active" ||
-        currentDraft.baseVersion !== store.cas)) {
+        currentDraft.baseVersion !== store.cas || currentDraft.pendingOperation || currentDraft.conflict || currentDraft.phase !== "reviewing")) {
       setStore({ error: t("sf.common.stale"), mode: "edit" })
       return
     }
     const commandRef = isDelete ? deleting!.operationRef : editing!.operationRef
     const idempotencyKey = crypto.randomUUID()
     const signal = new AbortController()
-    const confirmedWeights = store.confirmedWeights
+    const confirmedWeights = weightsRequired() && store.confirmedWeights
+    let pendingOperation: SfPendingOperation | undefined
     setStore({ busy: true, error: null })
     try {
       if (!isDelete && currentDraft?.availability === "active") {
@@ -453,9 +472,13 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
           opId[action], currentDraft.value, store.cas, confirmedWeights, idempotencyKey]))
         const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", payload)))
           .map((byte) => byte.toString(16).padStart(2, "0")).join("")
-        editing!.controller.setPending({ operationRef: commandRef,
-          idempotencyKey, payloadDigest: digest, expectedVersion: store.cas })
+        pendingOperation = { operationRef: commandRef,
+          idempotencyKey, payloadDigest: digest, expectedVersion: store.cas }
+        editing!.controller.setPending(pendingOperation)
         editing!.controller.setPhase("submitting")
+        const pending = editing!.controller.snapshot()
+        if (pending.availability !== "active" || pending.phase !== "submitting" ||
+            pending.pendingOperation?.idempotencyKey !== idempotencyKey || reviewedScope !== weightScope()) return
       }
       const client = createSfDomainClient(r.value.transport)
       // Exactly five frozen A01 operations, never a free action/path dispatcher.
@@ -486,7 +509,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       if (response?.kind === "response" && response.status >= 200 &&
           response.status < 300 && response.body.ok) {
         setStore({ warnings: response.body.warnings || [], error: null,
-          mode: "overview", confirmedWeights: false })
+          mode: "overview", confirmedWeights: false, weightRequirement: null })
         if (!isDelete && editing && currentDraft?.availability === "active")
           setConfirmed({ controller: editing.controller, operationRef: commandRef,
             kind: currentDraft.value.kind, itemId: editing.itemId,
@@ -497,9 +520,20 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         editing?.controller.setPhase("outcome-unknown")
         setStore({ uncertain: true, error: t("sf.common.operationUnknown") })
       } else if (response?.kind === "response") {
-        editing?.controller.setPhase(response.status === 409 ? "conflict" : "validation-error")
-        setStore({ mode: isDelete ? "overview" : "edit",
-          error: !response.body.ok ? response.body.errors?.join(" ") || t("sf.common.failed") : t("sf.common.failed") })
+        if (pendingOperation && (response.status === 409 || response.status === 422))
+          editing?.controller.rejectSave({ status: response.status, operation: pendingOperation })
+        // This exact 422 is emitted by dashboard-portfolio.ts before any write.
+        // Do not infer an exception from numbers, warnings or a generic failure.
+        const needsWeights = response.status === 422 && !response.body.ok &&
+          response.body.errors?.includes("Confirm owner and co-owner weights exceeding the total before saving.")
+        if (needsWeights && !confirmedWeights && reviewedScope === weightScope()) {
+          editing?.controller.setPhase("reviewing")
+          setStore({ mode: isDelete ? "review-delete" : "review-edit", error: null,
+            weightRequirement: { scope: reviewedScope }, confirmedWeights: false })
+        } else {
+          setStore({ mode: isDelete ? "overview" : "edit", weightRequirement: null, confirmedWeights: false,
+            error: !response.body.ok ? response.body.errors?.join(" ") || t("sf.common.failed") : t("sf.common.failed") })
+        }
         if (response.status === 401 || response.status === 403)
           setStore({ data: undefined, ownerId: "", cas: undefined, actions: [],
             state: response.status === 401 ? "session-expired" : "denied" })
@@ -533,6 +567,31 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     return { kind: "persisted", ref: editing.identity.kind === "record"
       ? editing.identity.recordRef : "itperf" as SfRef,
       version: state.baseVersion ?? store.cas, fields: state.base ? fields(state.base) : [] }
+  }
+
+  function WeightConfirmation(): JSX.Element {
+    const weightFields = (value: FormData) => fields(value)
+      .filter((field) => ["totalWeight", "ownerWeight", "co1Weight", "co2Weight"].includes(field.path))
+    return <Show when={weightsRequired()}>
+      <section class="sf-u31-weight-context" aria-label={t("sf.u31.confirmWeights")}>
+        <p role="alert">{t("sf.u31.weightConfirmationReason")}</p>
+        <details class="sf-u31-source">
+          <summary>{t("sf.u31.sourceAllocations")}</summary>
+          <p class="sf-u31-caption">{t("sf.u31.design.weightHint")}</p>
+          <For each={items()}>{(item) => <section class="sf-u31-weight-record">
+            <h4><bdi>{text(item.name) || t("sf.common.unavailable")}</bdi></h4>
+            <SfReviewFieldList fields={weightFields(editItem(item))} />
+            <For each={item.subs || []}>{(sub) => <section class="sf-u31-weight-record">
+              <h5><bdi>{text(sub.label) || t("sf.common.unavailable")}</bdi></h5>
+              <SfReviewFieldList fields={weightFields(editSub(reference(item.id) || "", sub))} />
+            </section>}</For>
+          </section>}</For>
+        </details>
+        <label class="sf-u31-confirm"><input type="checkbox" checked={store.confirmedWeights} disabled={store.busy}
+          onChange={(event) => setStore("confirmedWeights", event.currentTarget.checked)} />
+          {t("sf.u31.confirmWeights")}</label>
+      </section>
+    </Show>
   }
 
   return <div class="sf-u31-host" data-sf-authorized={current()}>
@@ -797,9 +856,6 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                 const currentDraft = () => editing.controller.snapshot()
                 const proposed = () => { const state = currentDraft(); return state.availability === "active" ? state.value : undefined }
                 return <section class="sf-u31-panel sf-u31-review" aria-label={t("sf.common.review")}>
-                  <label class="sf-u31-confirm"><input type="checkbox" checked={store.confirmedWeights}
-                    onChange={(event) => setStore("confirmedWeights", event.currentTarget.checked)} />
-                    {t("sf.u31.confirmWeights")}</label>
                   <SfChangeReview
                     operation={{ ref: editing.operationRef,
                       label: labelMessage(editing.command === "save" ? "sf.u31.saveContract"
@@ -822,17 +878,18 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                     coverage={{ state: "complete", summary: labelMessage("sf.common.currentSource"),
                       reasons: [], knownCount: null, expectedCount: null }}
                     blockingReasons={store.uncertain ? [labelMessage("sf.common.operationUnknown")] : []}
-                    confirmation={!store.uncertain && allowed(editing.command)
+                    confirmation={!store.uncertain && allowed(editing.command) && (!weightsRequired() || store.confirmedWeights)
                       ? { kind: "admitted", labelKey: key("sf.common.save"), purpose: "save",
                         binding: { kind: "catalog-command", operationId: opId[editing.command],
                           version: { kind: "record", expectedVersion: store.cas! },
-                          confirmation: store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
+                          confirmation: weightsRequired() && store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
                       : { kind: "blocked", labelKey: key("sf.common.unavailable"),
-                        reasons: [labelMessage("sf.common.unavailable")] }}
+                        reasons: [labelMessage(weightsRequired() ? "sf.u31.confirmWeights" : "sf.common.unavailable")] }}
                     state={store.uncertain ? "outcome-unknown" : "ready"}
+                    busy={store.busy} confirmationContext={<WeightConfirmation />}
                     onConfirm={() => { void perform() }}
-                    onRevise={() => setStore("mode", "edit")}
-                    onCancel={() => setStore("mode", "edit")}
+                    onRevise={() => reviseWeights("edit")}
+                    onCancel={() => reviseWeights("edit")}
                     onReconcile={refresh}
                   />
                 </section>
@@ -853,19 +910,20 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                   coverage={{ state: "complete", summary: labelMessage("sf.common.currentSource"),
                     reasons: [], knownCount: null, expectedCount: null }}
                   blockingReasons={store.uncertain ? [labelMessage("sf.common.operationUnknown")] : []}
-                  confirmation={!store.uncertain && allowed(target().kind)
+                  confirmation={!store.uncertain && allowed(target().kind) && (!weightsRequired() || store.confirmedWeights)
                     ? { kind: "admitted",
                       labelKey: key(target().kind === "delete-item" ? "sf.u31.deleteItem" : "sf.u31.deleteSub"),
                       purpose: "delete",
                       binding: { kind: "catalog-command", operationId: opId[target().kind],
                         version: { kind: "record", expectedVersion: store.cas! },
-                        confirmation: "presentation-only" } }
+                        confirmation: weightsRequired() && store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
                     : { kind: "blocked", labelKey: key("sf.common.unavailable"),
-                      reasons: [labelMessage("sf.common.unavailable")] }}
+                      reasons: [labelMessage(weightsRequired() ? "sf.u31.confirmWeights" : "sf.common.unavailable")] }}
                   state={store.uncertain ? "outcome-unknown" : "ready"}
+                  busy={store.busy} confirmationContext={<WeightConfirmation />}
                   onConfirm={() => { void perform() }}
-                  onRevise={() => setStore("mode", "overview")}
-                  onCancel={() => setStore("mode", "overview")}
+                  onRevise={() => reviseWeights("overview")}
+                  onCancel={() => reviseWeights("overview")}
                   onReconcile={refresh}
                 />
               </section>}

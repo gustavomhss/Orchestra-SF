@@ -82,11 +82,13 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
           : { kind: "missing" as const, reason: { key: newDraft ? designKey("sf.u03.design.notRecorded") : sfCommonKey("sf.common.unknown") } },
       }
     })
+  const focusedTalent = () => props.entity === "talent" && !!props.recordRef
   const groups = () => [
     { label: designKey("sf.u03.design.identity"), fields: props.fields.filter((field) => ["name", "title", "domain", "location"].includes(field.name)) },
     { label: designKey("sf.u03.design.employment"), fields: props.fields.filter((field) => ["type", "leaderId", "start", "end", "status"].includes(field.name)) },
     { label: designKey("sf.u03.design.assessment"), fields: props.fields.filter((field) => ["cls", "outlook", "notes"].includes(field.name)) },
-  ].filter((group) => group.fields.length > 0)
+  ].filter((group) => group.fields.length > 0).sort((a, b) => focusedTalent()
+    ? Number(b.label === designKey("sf.u03.design.assessment")) - Number(a.label === designKey("sf.u03.design.assessment")) : 0)
   const [local, setLocal] = createStore({
     message: "" as string,
     busy: false,
@@ -210,22 +212,9 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
     : { kind: "blocked" as const, labelKey: props.action.labelKey,
       reasons: [{ key: sfCommonKey("sf.common.readOnly") }] as SfMessage[] }
 
-  return (
-    <section class="sf-people-editor" aria-labelledby={id} data-sf-editor={props.entity}
-      data-sf-stage={phase() === "reviewing" ? "review" : "form"}>
-      <header class="sf-people-editor-heading">
-        <h2 id={id}>{t(phase() === "reviewing" ? sfCommonKey("sf.common.review") : props.action.labelKey)}</h2>
-        <p>{t(designKey(phase() === "reviewing" ? "sf.u03.design.reviewHint" : "sf.u03.design.editorHint"))}</p>
-      </header>
-      <Show when={state().availability === "active"} fallback={
-        <SfStatePanel
-          state={state().availability === "quarantined" ? "session-expired" : "denied"}
-          messageKey={sfCommonKey("sf.common.noAccess")}
-        />
-      }>
-        <Show when={phase() === "reviewing"} fallback={
-          <form onSubmit={(event) => { event.preventDefault(); review() }}>
-            <For each={groups()}>{(group) => <fieldset class="sf-people-fieldset">
+  function FieldGroup(groupProps: Readonly<{ group: ReturnType<typeof groups>[number] }>): JSX.Element {
+    const group = groupProps.group
+    return (<fieldset class="sf-people-fieldset">
               <legend>{t(group.label)}</legend>
               <div class="sf-people-form-grid">
               <For each={group.fields}>
@@ -272,7 +261,34 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
                 )}
               </For>
               </div>
-            </fieldset>}</For>
+            </fieldset>)
+  }
+
+  return (
+    <section class="sf-people-editor" aria-labelledby={id} data-sf-editor={props.entity}
+      data-sf-stage={phase() === "reviewing" ? "review" : "form"}>
+      <header class="sf-people-editor-heading">
+        <h2 id={id}>{t(phase() === "reviewing" ? sfCommonKey("sf.common.review") : focusedTalent() ? ("sf.cap08.primary" as SfCopyKey) : props.action.labelKey)}</h2>
+        <Show when={focusedTalent()}><p class="sf-people-editor-person"><strong><bdi>{props.original?.name}</bdi></strong><Show when={props.original?.title}><span><bdi>{props.original?.title}</bdi></span></Show></p></Show>
+        <p>{t(designKey(phase() === "reviewing" ? "sf.u03.design.reviewHint" : "sf.u03.design.editorHint"))}</p>
+      </header>
+      <Show when={state().availability === "active"} fallback={
+        <SfStatePanel
+          state={state().availability === "quarantined" ? "session-expired" : "denied"}
+          messageKey={sfCommonKey("sf.common.noAccess")}
+        />
+      }>
+        <Show when={phase() === "reviewing"} fallback={
+          <form onSubmit={(event) => { event.preventDefault(); review() }}>
+            <For each={groups()}>{(group) => (
+              <Show when={focusedTalent() && group.label !== designKey("sf.u03.design.assessment")}
+                fallback={<FieldGroup group={group} />}>
+                <details class="sf-people-profile-fields">
+                  <summary>{t(group.label)}</summary>
+                  <FieldGroup group={group} />
+                </details>
+              </Show>
+            )}</For>
             <Show when={local.message}>
               <p role="alert" class="sf-people-error">{local.message}</p>
             </Show>
