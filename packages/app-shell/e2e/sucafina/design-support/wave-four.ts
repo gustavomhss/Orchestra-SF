@@ -9,5 +9,5 @@ export const waveFourTest = waveThreeTest.extend<{ designWave: "four" | "four-de
 })
 
 export {
-  capture, enter, observePage, ready, reflow, reviewActions, scheme, scrollPageTop,
+  capture, enter, observePage, originalRead, originalReads, type OriginalRead, ready, reflow, reviewActions, scheme, scrollPageTop,
 } from "./wave-three"
