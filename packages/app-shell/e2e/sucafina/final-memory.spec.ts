@@ -9,6 +9,7 @@ import { finalMemoryData, seedFinalMemory } from "./design-support/final-memory-
 import { enterFinalMemorySurface, enterFinalMemoryOutcome, observeFinalMemoryOutcomeFailures, withFinalMemoryPortuguese } from "./design-support/final-memory-browser"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import { observeFinalGet } from "./design-support/final-navigation"
+import { observeFinalMemoryRecall } from "./design-support/final-memory-recall"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 waveFourTest.use({ designWave: "four-decisions" })
@@ -283,12 +284,12 @@ waveFourTest("UI62 · private authorized case recall in an isolated installation
     await surface.getByLabel("Recall question", { exact: true }).fill(query)
     const precedent = surface.getByRole("checkbox", { name: new RegExp(waveFourDecisionsData.objective) })
     await precedent.check()
-    const response = page.waitForResponse((reply) => reply.request().method() === "POST" &&
-      new URL(reply.url()).searchParams.get("sf") === "memory-similar-cases", { timeout: 40_000 })
-      .then(async (reply) => ({ status: reply.status(), url: reply.url(), body: reply.request().postDataJSON() as unknown,
-        result: await reply.json() as unknown }))
-    await surface.getByRole("button", { name: "Find similar cases", exact: true }).click()
-    const original = await response
+    const response = await observeFinalMemoryRecall(page, installation)
+    let original: Awaited<ReturnType<typeof response.next>>
+    try {
+      await surface.getByRole("button", { name: "Find similar cases", exact: true }).click()
+      original = await response.next()
+    } finally { await response.close() }
     const source = original.result && typeof original.result === "object" ? original.result : undefined
     const reason = source && "reason" in source && typeof source.reason === "string" ? source.reason : null
     console.info("SF_FINAL_MEMORY_RECALL_ORIGINAL " + JSON.stringify({
