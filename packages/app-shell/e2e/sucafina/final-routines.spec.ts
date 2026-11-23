@@ -199,6 +199,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     localized.setDefaultTimeout(15_000)
     const localizedDiagnostics = observePage(localized)
     for (const screen of screens) {
+      await localized.setViewportSize({ width: 1440, height: 1100 })
       if (screen.id === "UI66") {
         const destination = new URL(screen.path, installation.origin)
         const selection = new URL(localized.url()).searchParams
@@ -209,6 +210,8 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
         }
         await localized.goto(destination.href)
         await scheme(localized, "dark")
+        await localized.setViewportSize({ width: 360, height: 900 })
+        await reflow(localized)
         await captureFinalRoutineGate(localized, info, "pt-br-dark-360")
         await localized.setViewportSize({ width: 1440, height: 1100 })
         await scheme(localized, "light")
@@ -218,6 +221,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
       }
       await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
       await scheme(localized, "dark")
+      await localized.setViewportSize({ width: 360, height: 900 })
       await reflow(localized)
       await captureFinalSurface(localized, info, screen.id, "pt-br-dark-360-installed-state", { preview: true })
       await localized.setViewportSize({ width: 1440, height: 1100 })
