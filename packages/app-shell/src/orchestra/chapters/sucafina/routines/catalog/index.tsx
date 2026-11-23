@@ -30,6 +30,7 @@ type View = {
   caseIndex: number | null
   purpose: string
   recipes: readonly Recipe[]
+  catalogRequested: boolean
   recipesState: SfUiState
   recipeIndex: number | null
   inputRefs: string
@@ -41,7 +42,7 @@ type View = {
 }
 const clean = (): View => ({
   choices: [], casesState: "loading", caseIndex: null, purpose: "",
-  recipes: [], recipesState: "empty", recipeIndex: null, inputRefs: "", parameters: "{}",
+  recipes: [], catalogRequested: false, recipesState: "empty", recipeIndex: null, inputRefs: "", parameters: "{}",
   preparation: null, admissionState: "empty", phase: "clean", requestError: null,
 })
 
@@ -131,6 +132,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
   const chooseCase = (index: number | null) => {
     if (busy() || view.phase === "outcome-unknown") return
     setView("caseIndex", index)
+    setView("catalogRequested", false)
     setView("recipes", [])
     setView("recipesState", "empty")
     setView("recipeIndex", null)
@@ -155,6 +157,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
     const abort = new AbortController()
     const generation = owner.generation()
     const stamp = current.context.stamp
+    setView("catalogRequested", true)
     setView("recipesState", "loading")
     setView("recipes", [])
     setView("recipeIndex", null)
@@ -406,6 +409,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 <input type="text" value={view.purpose} disabled={!caseChoice() || busy() || view.phase === "outcome-unknown"}
                   onInput={(event) => {
                     setView("purpose", event.currentTarget.value)
+                    setView("catalogRequested", false)
                     setView("recipes", [])
                     setView("recipeIndex", null)
                     setView("recipesState", "empty")
@@ -415,6 +419,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 || busy() || view.phase === "outcome-unknown"}
                 onClick={() => { void catalog() }}>{t("sf.u27.loadRecipes")}</button>
             </section>
+            <Show when={view.catalogRequested}>
             <section class="mx-card sf-routine-recipe" aria-label={t("sf.u27.recipe")}>
               <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">03</span>{t("sf.u27.recipe")}</h2>
               <Show when={view.recipesState === "ready"} fallback={
@@ -442,6 +447,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 </Show>
               </Show>
             </section>
+            </Show>
+            <Show when={recipe()}>
             <section class="mx-card sf-routine-inputs" aria-label={t("sf.u27.inputs")}>
               <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">04</span>{t("sf.u27.inputs")}</h2>
               <label class="sf-n29-field">
@@ -456,6 +463,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                   onInput={(event) => setView("parameters", event.currentTarget.value)} />
               </label>
             </section>
+            </Show>
+            <Show when={recipe() || currentAdmissionRef() || view.preparation}>
             <section class="mx-card sf-routine-admission" aria-label={t("sf.u27.readiness")}>
               <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">05</span>{t("sf.u27.readiness")}</h2>
               <p>{t("sf.u27.reviewSummary")}</p>
@@ -522,8 +531,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               <Show when={view.preparation?.runRef}>
                 <p role="status">{t("sf.u27.runningUnverified")}</p>
               </Show>
-              <p>{t("sf.u27.cancelUnavailable")}</p>
+              <Show when={view.preparation?.runRef}><p>{t("sf.u27.cancelUnavailable")}</p></Show>
             </section>
+            </Show>
           </div>
         </SfStatePanel>
       </section>

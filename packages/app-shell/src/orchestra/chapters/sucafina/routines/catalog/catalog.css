@@ -25,7 +25,9 @@
 }
 .sf-n29-routines .sf-n29-facts > div:last-child { padding-block-end: 0; border: 0; }
 @media (min-width: 1100px) {
-  .sf-n29-catalog-sections { grid-template-columns: minmax(0, 1fr) minmax(300px, .8fr); }
-  .sf-n29-catalog-sections > :not(.sf-routine-admission) { grid-column: 1; }
+  .sf-n29-catalog-sections { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sf-n29-catalog-sections > .sf-routine-recipe { grid-column: 1 / -1; }
+  .sf-n29-catalog-sections:has(.sf-routine-admission) { grid-template-columns: minmax(0, 1fr) minmax(300px, .8fr); }
+  .sf-n29-catalog-sections:has(.sf-routine-admission) > :not(.sf-routine-admission) { grid-column: 1; }
   .sf-n29-catalog-sections > .sf-routine-admission { grid-column: 2; grid-row: 1 / span 4; }
 }
