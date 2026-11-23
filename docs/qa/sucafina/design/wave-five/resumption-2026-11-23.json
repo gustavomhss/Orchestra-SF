@@ -1585,7 +1585,7 @@
     "mergeCommit": null,
     "nextAction": "Integrate and review the separate producer performance correction and minimal Portuguese copy correction, then qualify the exact final composition through the original Linux test-ci campaigns. Preserve original deadlines, owner/cancellation guards and runtime admission. Retain all five original negative campaigns."
   },
-  "updatedAt": "2026-11-23T16:49:07Z",
+  "updatedAt": "2026-11-23T16:52:07Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -1791,6 +1791,19 @@
       "jpegsReviewed": 49,
       "uniqueJpegBytes": 42,
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T16:52:07Z",
+      "status": "P18_NORMAL_FAILED_RELEASE_FOCAL_PASSED_MEASUREMENTS_PENDING",
+      "normalRun": 45219311276,
+      "releaseRun": 45219321830,
+      "measurementRuns": [
+        45220892706,
+        45220898500
+      ],
+      "currentCandidate": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+      "controlPromoted": false,
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -1849,8 +1862,8 @@
     },
     "focalCampaigns": {
       "qualification": false,
-      "observedAt": "2026-11-23T16:44:39Z",
-      "observationSource": "Parent root reports pending; no success inferred.",
+      "observedAt": "2026-11-23T16:52:07Z",
+      "observationSource": "GitHub run metadata, raw jobs and decoded original job logs independently read.",
       "originalWrapperTestsEach": 3,
       "campaigns": [
         {
@@ -1858,20 +1871,223 @@
           "run": 45219311276,
           "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219311276",
           "snapshot": "5e743bd482a889a06468d453a9498ed6dd44d156",
-          "status": "PENDING",
-          "qualification": false
+          "status": "FAILED",
+          "qualification": false,
+          "scope": "Focal original wrapper selection only; not full campaign or artifact Release qualification.",
+          "workflowObservation": {
+            "observedAt": "2026-11-23T16:52:07Z",
+            "status": "completed",
+            "conclusion": "failure",
+            "createdAt": "2026-11-23T16:41:21Z",
+            "updatedAt": "2026-11-23T16:45:01Z"
+          },
+          "result": {
+            "source": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+            "sourceTree": "f5ac369ca2a3c23e939ac0fa259eb6e861aab83c",
+            "testJob": {
+              "id": 137848921408,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T16:44:50Z"
+            },
+            "cleanupJob": {
+              "id": 137851210509,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T16:45:00Z"
+            },
+            "wrapper": {
+              "passed": 2,
+              "failed": 1,
+              "filtered": 12
+            },
+            "controlGroup": {
+              "passed": 47,
+              "failed": 0
+            },
+            "storageGroup": {
+              "passed": 59,
+              "skipped": 2,
+              "failed": 1,
+              "skips": "Original inherited foreign UID fixtures; unchanged."
+            },
+            "C17": {
+              "passed": false,
+              "originalCooperativeDeadlineMs": 105000,
+              "observedTestDurationMs": 105009,
+              "outer": {
+                "phaseMs": 79394,
+                "elapsedMs": 80471,
+                "aborted": false,
+                "businessResultsReadForCalculationCalls": 1952,
+                "businessResultsReadForCalculationCompleted": 1952,
+                "counterInterpretation": "Log names canonicalResultReads/canonicalResultReadsCompleted count business.results.readForCalculation calls; they do not count SQL queries or Planner prepares."
+              },
+              "reopen": {
+                "phaseMs": 6,
+                "elapsedMs": 80479,
+                "aborted": false
+              },
+              "ancestry": {
+                "phaseMs": 24523,
+                "elapsedMs": 105002,
+                "aborted": true
+              },
+              "cycleAndRevocationReached": false
+            },
+            "omni": {
+              "passed": true,
+              "declaredTests": 3,
+              "spawns": 5,
+              "delegated": 0
+            },
+            "qualification": false,
+            "countInterpretation": "Wrapper, control-group and storage counts remain separate; filtered wrapper tests are not passes.",
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219311276/job/137848921408"
+          }
         },
         {
           "runtime": "Release",
           "run": 45219321830,
           "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219321830",
           "snapshot": "b80ce01b4be816728933df0a6717183eb0728abd",
-          "status": "PENDING",
-          "qualification": false
+          "status": "PASSED",
+          "qualification": true,
+          "scope": "Focal original wrapper selection only; not full campaign or artifact Release qualification.",
+          "workflowObservation": {
+            "observedAt": "2026-11-23T16:52:07Z",
+            "status": "completed",
+            "conclusion": "success",
+            "createdAt": "2026-11-23T16:41:24Z",
+            "updatedAt": "2026-11-23T16:45:40Z"
+          },
+          "result": {
+            "source": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+            "sourceTree": "f5ac369ca2a3c23e939ac0fa259eb6e861aab83c",
+            "testJob": {
+              "id": 137848955875,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T16:45:33Z"
+            },
+            "cleanupJob": {
+              "id": 137851692200,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T16:45:40Z"
+            },
+            "wrapper": {
+              "passed": 3,
+              "failed": 0,
+              "filtered": 2
+            },
+            "controlGroup": {
+              "passed": 11,
+              "failed": 0
+            },
+            "storageGroup": {
+              "passed": 60,
+              "skipped": 2,
+              "failed": 0,
+              "skips": "Original inherited foreign UID fixtures; unchanged."
+            },
+            "C17": {
+              "passed": true,
+              "originalCooperativeDeadlineMs": 105000,
+              "observedTestDurationMs": 82733.53,
+              "outer": {
+                "phaseMs": 59134,
+                "elapsedMs": 59955,
+                "aborted": false,
+                "businessResultsReadForCalculationCalls": 1952,
+                "businessResultsReadForCalculationCompleted": 1952,
+                "counterInterpretation": "Log names canonicalResultReads/canonicalResultReadsCompleted count business.results.readForCalculation calls; they do not count SQL queries or Planner prepares."
+              },
+              "reopen": {
+                "phaseMs": 5,
+                "elapsedMs": 59961,
+                "aborted": false
+              },
+              "ancestry": {
+                "phaseMs": 22448,
+                "elapsedMs": 82409,
+                "aborted": false
+              },
+              "cycle": {
+                "phaseMs": 11,
+                "elapsedMs": 82423,
+                "aborted": false
+              },
+              "revocation": {
+                "phaseMs": 305,
+                "elapsedMs": 82730,
+                "aborted": false
+              }
+            },
+            "omni": {
+              "passed": true,
+              "declaredTests": 3,
+              "spawns": 7,
+              "delegated": 0
+            },
+            "qualification": false,
+            "countInterpretation": "Wrapper, control-group and storage counts remain separate; filtered wrapper tests are not passes.",
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219321830/job/137848955875",
+            "runtime": {
+              "version": "1.4.1",
+              "revision": "4661e494f052c83c80dade1318e5710238340be6",
+              "cloneTreeAdmitted": false,
+              "nativeFallbackBytesMatched": true,
+              "artifactReleaseQualification": false
+            }
+          }
         }
-      ]
+      ],
+      "status": "NORMAL_C17_FAILED_RELEASE_FOCAL_PASSED"
     },
     "fullCampaignQualification": false,
     "visualReviewsDelta": "Root reports no Reviews visual changes in P18/copy. The observed R7 JPEGs still belong to ac470824."
+  },
+  "additionalMeasurements": {
+    "observedAt": "2026-11-23T16:52:07Z",
+    "qualification": false,
+    "experiments": [
+      {
+        "name": "NORMAL_CALLER_CLONE_TREE_JSON_AB_CONTROL",
+        "branch": "sf613-control",
+        "source": "d2b34cafdf26b15bfef4f5273af11cc207b4aa90",
+        "sourceTree": "e763475b7b3aaa28451595ec0f93ed81265ee687",
+        "parent": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+        "changedPaths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+            "blob": "461c1728b9c6081d0ade0183bc194382523764f3"
+          }
+        ],
+        "delta": "Only canonical.ts restored to the exact original caller cloneTree + JSON serialization blob; all 47 controls retained.",
+        "run": 45220892706,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45220892706",
+        "snapshot": "b039ce7376e8e2f7511a785e35155171ce9cab41",
+        "status": "PENDING",
+        "workflowObservation": {
+          "status": "in_progress",
+          "conclusion": null,
+          "updatedAt": "2026-11-23T16:49:53Z"
+        },
+        "promotedToCandidate": false,
+        "qualification": false
+      },
+      {
+        "name": "ANALYTICS_RELEASE_RA4_ORIGINAL_FULL_CAMPAIGN",
+        "source": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+        "sourceTree": "f5ac369ca2a3c23e939ac0fa259eb6e861aab83c",
+        "run": 45220898500,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45220898500",
+        "snapshot": "2699b9d8617b3f449c240e81acbcfcde9753c01f",
+        "status": "PENDING",
+        "workflowObservation": {
+          "status": "in_progress",
+          "conclusion": null,
+          "updatedAt": "2026-11-23T16:49:55Z"
+        },
+        "qualification": false
+      }
+    ]
   }
 }
