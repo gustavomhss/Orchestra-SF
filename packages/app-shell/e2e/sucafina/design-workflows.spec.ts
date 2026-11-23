@@ -134,7 +134,7 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   expect(sourceArray(sourceObject(data.projection).values).length).toBeGreaterThan(0)
   await expect(detail.locator('[data-sf-bi-view="BI01"]')).toBeVisible()
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
-  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-svg')
+  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-chart-scroll')
 
   const chartViewport = page.viewportSize()
   const chartScheme = await page.locator("html").getAttribute("data-color-scheme")
@@ -146,6 +146,7 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   await expect(chartScroll).toHaveCount(1)
   await expect(chartScroll).toHaveAttribute("tabindex", "0")
   await chartScroll.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
+  await expect(chartScroll).toHaveJSProperty("scrollLeft", 0)
   const chartText = await chartScroll.locator(".sf-bi-svg").evaluate((element) => {
     const labels = [...element.querySelectorAll("text")].filter((text) => text.textContent?.trim())
     const sizes = labels.map((text) => {
