@@ -2,6 +2,7 @@ import path from "node:path"
 import { createHash } from "node:crypto"
 import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
 import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+import { mountSfFilesOriginalRoutes } from "../../../../../modules/sucafina/Sucafinav1/runtime/native-files/routing.ts"
 import type { LocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-contract.ts"
 import { contributions } from "../../../../../modules/sucafina/Sucafinav1/index.ts"
 import { createSfWorkbenchHttp } from "../../../../../modules/sucafina/Sucafinav1/product/interface/http.ts"
@@ -15,6 +16,7 @@ import { createSfDomainProjectionHandlers } from "../../../../../apps/cli/src/su
 import { observeSfDashboardPages } from "../../../../../apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts"
 import { observeSfDomainHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { observeSfAssetHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
+import { observeSfExportHealth } from "../../../../../apps/cli/src/sucafina-product/native-ui/export-health.ts"
 import { createSfActionSource } from "../../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -153,6 +155,10 @@ export async function createOperationsInstallation(input: {
         const authority = runtime.services?.()
         return authority && runtime.identity() ? { application, producer: business, authority } : undefined
       } }, request, stamp),
+      observeSfExportHealth({ source: () => {
+        const authority = runtime.services?.()
+        return authority && runtime.identity() ? { routes: files, authority } : undefined
+      } }, request, stamp),
       observeSfHome(runtime.services?.(), request, stamp),
       observeSfCases(dependencies, handlers, request, stamp),
       actions.operational(request, stamp),
@@ -160,6 +166,13 @@ export async function createOperationsInstallation(input: {
     return observed.flatMap((item) => item.status === "fulfilled" ? item.value : [])
   }
   const business = createApplication(input.mount, application)
+  // Match the production composition with the exact original application and product delegates.
+  // The wrapper adds no authority, scanner or source state; discovery observes this mounted reader.
+  const files = mountSfFilesOriginalRoutes({
+    origin: input.origin, mount: input.mount,
+    sources: { application: business, imports: application.product, documents: application.product,
+      documentScenarios: application.product, reviews: application.product },
+  })
   const discovery: SfTrustedInstallationSource = {
     current: async (signal) => signal.aborted ? undefined : {
       publicOrigin: input.origin, mount: input.mount, authMode: "local-operator", identity: runtime.identity,
@@ -176,6 +189,6 @@ export async function createOperationsInstallation(input: {
     discovery,
     identity: runtime.identity,
     services: runtime.services,
-    application: async (request: Request) => await native(request) ?? await business(request),
+    application: async (request: Request) => await native(request) ?? await files(request) ?? await business(request),
   }
 }
