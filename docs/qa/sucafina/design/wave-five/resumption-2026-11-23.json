@@ -7,7 +7,8 @@
     "branch": "sf613-resume",
     "commit": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
     "tree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-    "url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac4708241b7af3d742c13a5fb5d712ed7ae2557f"
+    "url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+    "role": "Historical initial six-campaign composition; superseded as current candidate."
   },
   "recordBranch": "sf613-records",
   "recovery": {
@@ -269,7 +270,20 @@
               "canonicalResultReads": 1653,
               "canonicalResultReadsCompleted": 1653,
               "aborted": true,
-              "reopenReached": false
+              "reopenReached": false,
+              "counterInterpretation": {
+                "operation": "business.results.readForCalculation",
+                "calls": 1653,
+                "completedCalls": 1653,
+                "logFieldNames": [
+                  "canonicalResultReads",
+                  "canonicalResultReadsCompleted"
+                ],
+                "notMeasuresOf": [
+                  "SQL queries",
+                  "Planner prepares"
+                ]
+              }
             },
             {
               "kind": "PRODUCT_TRANSLATION_REGRESSION",
@@ -457,7 +471,20 @@
                 "elapsedMs": 94271,
                 "canonicalResultReads": 1952,
                 "canonicalResultReadsCompleted": 1952,
-                "aborted": false
+                "aborted": false,
+                "counterInterpretation": {
+                  "operation": "business.results.readForCalculation",
+                  "calls": 1952,
+                  "completedCalls": 1952,
+                  "logFieldNames": [
+                    "canonicalResultReads",
+                    "canonicalResultReadsCompleted"
+                  ],
+                  "notMeasuresOf": [
+                    "SQL queries",
+                    "Planner prepares"
+                  ]
+                }
               },
               "reopen": {
                 "startedElapsedMs": 94274,
@@ -738,7 +765,8 @@
           "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215769910/job/137836359021"
         }
       }
-    ]
+    ],
+    "role": "Historical initial qualification: five negative campaigns and one successful Reviews campaign."
   },
   "completion": {
     "allCampaignsQualified": false,
@@ -747,7 +775,7 @@
     "mergeCommit": null,
     "nextAction": "Integrate and review the separate producer performance correction and minimal Portuguese copy correction, then qualify the exact final composition through the original Linux test-ci campaigns. Preserve original deadlines, owner/cancellation guards and runtime admission. Retain all five original negative campaigns."
   },
-  "updatedAt": "2026-11-23T16:43:25Z",
+  "updatedAt": "2026-11-23T16:44:39Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -939,6 +967,12 @@
       "otherCampaignsPendingAtLastObservation": 0,
       "qualification": false,
       "passedRun": 45215769910
+    },
+    {
+      "recordedAt": "2026-11-23T16:44:39Z",
+      "status": "CURRENT_CANDIDATE_UPDATED_FOCALS_PENDING",
+      "candidate": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -977,5 +1011,49 @@
       "includedInRecordedRootSource": false,
       "status": "IMPLEMENTED_PENDING_ROOT_INTEGRATION_AND_LINUX_TEST_CI"
     }
-  ]
+  ],
+  "currentCandidate": {
+    "branch": "sf613-resume",
+    "commit": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+    "tree": "f5ac369ca2a3c23e939ac0fa259eb6e861aab83c",
+    "parents": [
+      "13285841a6c410e9be6fe2716ef50d94a85904ae",
+      "f8c92867c64ce63160389e5ff2ed828e9a359a41"
+    ],
+    "composition": "P18 producer correction plus the minimal Portuguese planner label restoration, preserving reviewed recovery/dev/P17/ledger ancestry.",
+    "staticReview": {
+      "reviewers": [
+        "root",
+        "sf613_candidate"
+      ],
+      "status": "ACK_REPORTED_BY_ROOT",
+      "qualification": false
+    },
+    "focalCampaigns": {
+      "qualification": false,
+      "observedAt": "2026-11-23T16:44:39Z",
+      "observationSource": "Parent root reports pending; no success inferred.",
+      "originalWrapperTestsEach": 3,
+      "campaigns": [
+        {
+          "runtime": "normal",
+          "run": 45219311276,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219311276",
+          "snapshot": "5e743bd482a889a06468d453a9498ed6dd44d156",
+          "status": "PENDING",
+          "qualification": false
+        },
+        {
+          "runtime": "Release",
+          "run": 45219321830,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45219321830",
+          "snapshot": "b80ce01b4be816728933df0a6717183eb0728abd",
+          "status": "PENDING",
+          "qualification": false
+        }
+      ]
+    },
+    "fullCampaignQualification": false,
+    "visualReviewsDelta": "Root reports no Reviews visual changes in P18/copy. The observed R7 JPEGs still belong to ac470824."
+  }
 }
