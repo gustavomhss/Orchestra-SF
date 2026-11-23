@@ -33,6 +33,10 @@ async function selectMemory(page: Page, reference: string, area: "UI61" | "UI63"
 waveFourTest("UI61–UI63 · original condition, incomplete outcome and authorized case recall", async ({ page, browser, installation, owner }, info) => {
   const diagnostics = observePage(page)
   const outcomeFailures = observeFinalMemoryOutcomeFailures(page)
+  const failures: unknown[] = []
+  const independently = async (name: string, work: () => Promise<void>) => {
+    try { await waveFourTest.step(name, work) } catch (error) { failures.push(error) }
+  }
   const seeded = await seedFinalMemory({
     actorId: installation.actorId,
     request: async (pathname, init) => {
@@ -53,7 +57,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
       memoryWrites.push(url.searchParams.get("sf")!)
   })
 
-  await waveFourTest.step("UI63 opens a recorded choice without a condition and preserves the original coverage refusal", async () => {
+  await independently("UI63 opens a recorded choice without a condition and preserves the original coverage refusal", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes", "Expected and observed")
     await scheme(page, "dark")
@@ -88,9 +92,8 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     await captureFinalSurface(page, info, "UI63", "light-320-incomplete-coverage", { preview: true })
   })
 
-  const registered = await seeded.registerCondition()
-
-  await waveFourTest.step("UI61 selects the original case, reopens its registered condition and clears detail on a new selection", async () => {
+  await independently("UI61 selects the original case, reopens its registered condition and clears detail on a new selection", async () => {
+    const registered = await seeded.registerCondition()
     await page.setViewportSize({ width: 1440, height: 1100 })
     await scheme(page, "dark")
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/signals", "Signals")
@@ -120,7 +123,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
   })
 
-  await waveFourTest.step("UI62 sends a private recall question and explicit authorized candidates to the original producer", async () => {
+  await independently("UI62 sends a private recall question and explicit authorized candidates to the original producer", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/cases", "Similar cases")
     await scheme(page, "dark")
@@ -173,23 +176,32 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     await expect(surface.locator("[data-sf-similar-detail]")).toHaveCount(0)
   })
 
-  await withFinalMemoryPortuguese(browser, page, installation, async (localized, localizedOutcomes) => {
-    await enter(localized, owner, installation.origin + "/orchestra/sf-memory/signals", "Sinais")
-    await selectMemory(localized, seeded.reference, "UI61", true)
-    await localized.getByRole("button", { name: "Revisar condição", exact: true }).click()
-    await expect(localized.locator("[data-sf-memory-materiality]")).toBeVisible()
-    await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
-    await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Previsto e observado"))
-    await expect(localized.locator("[data-sf-memory-outcome-status]")).toContainText("Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta.")
-    await expect(localized.locator("[data-sf-memory-outcome]")).toHaveCount(0)
-    await captureFinalSurface(localized, info, "UI63", "pt-br-dark-desktop-incomplete-coverage")
-    await enter(localized, owner, installation.origin + "/orchestra/sf-memory/cases", "Casos semelhantes")
-    await localized.getByLabel("Caso de decisão original", { exact: true }).selectOption(seeded.reference)
-    await captureFinalSurface(localized, info, "UI62", "pt-br-dark-desktop-authorized-candidates")
+  await independently("Portuguese memory journeys preserve source results", async () => {
+    await withFinalMemoryPortuguese(browser, page, installation, async (localized, localizedOutcomes) => {
+      await independently("UI61 Portuguese condition", async () => {
+        await enter(localized, owner, installation.origin + "/orchestra/sf-memory/signals", "Sinais")
+        await selectMemory(localized, seeded.reference, "UI61", true)
+        await localized.getByRole("button", { name: "Revisar condição", exact: true }).click()
+        await expect(localized.locator("[data-sf-memory-materiality]")).toBeVisible()
+        await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
+      })
+      await independently("UI63 Portuguese incomplete coverage", async () => {
+        await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Previsto e observado"))
+        await expect(localized.locator("[data-sf-memory-outcome-status]")).toContainText("Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta.")
+        await expect(localized.locator("[data-sf-memory-outcome]")).toHaveCount(0)
+        await captureFinalSurface(localized, info, "UI63", "pt-br-dark-desktop-incomplete-coverage")
+      })
+      await independently("UI62 Portuguese authorized candidates", async () => {
+        await enter(localized, owner, installation.origin + "/orchestra/sf-memory/cases", "Casos semelhantes")
+        await localized.getByLabel("Caso de decisão original", { exact: true }).selectOption(seeded.reference)
+        await captureFinalSurface(localized, info, "UI62", "pt-br-dark-desktop-authorized-candidates")
+      })
+    })
   })
   expect(memoryWrites).toEqual([])
   expect(diagnostics.pageErrors).toEqual([])
   outcomeFailures.assertOnlyExpectedErrors(diagnostics.consoleErrors)
+  if (failures.length) throw new AggregateError(failures, "Independent original-memory journeys failed")
   await info.attach("UI61-UI63-original-memory-evidence", { contentType: "application/json", body: JSON.stringify({
     areas: ["UI61", "UI62", "UI63"], source: "original human decision, memory and Planner HTTP producers",
     caseVersion: seeded.caseRef.version, period: seeded.period, outcome: { status: "unavailable", reason: seeded.outcomeReason },

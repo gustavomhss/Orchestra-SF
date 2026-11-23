@@ -1173,7 +1173,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
               scenarios: business.plannerProduct.scenarios,
               dependencies: [authority, authority.host, authority.host.requestFor, authority.host.revalidate,
                 authority.human, authority.human.authorize, business.withCase, business.cases, business.cases.read,
-                business.plannerProduct, business.plannerProduct.scenarios, extended.portfolioServices.planner,
+                business.plannerProduct, ...(business.plannerProduct.scenarios ? [business.plannerProduct.scenarios] : []),
+                extended.portfolioServices.planner,
                 business.plannerSources, business.plannerSources.resolveForecastSource,
                 business.results, business.context, business.readSourceFences, input.persistence,
                 input.persistence.readScopedSource, input.persistence.resolveScopedSource] }
