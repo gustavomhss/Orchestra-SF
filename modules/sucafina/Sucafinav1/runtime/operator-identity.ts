@@ -48,14 +48,17 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
   const session = async (request: Request) => {
     if (new URL(request.url).origin !== fixedOrigin) return false
     const id = handle(request)
-    if (!id || await secrets.get(slot("revoked", id), now())) return false
-    const storageKey = slot("session", id)
+    if (!id) return false
+    const digest = createHash("sha256").update(id).digest("hex")
+    const revokedKey = `operator-revoked:${digest}`
+    if (await secrets.get(revokedKey, now())) return false
+    const storageKey = `operator-session:${digest}`
     const bytes = await secrets.get(storageKey, now())
     if (!bytes) return false
     const value = await Promise.resolve().then(() => open(storageKey, bytes)).catch(() => undefined)
     if (!valid(value)) return false
     // Recheck after the session read: logout may have revoked a handle while that read was pending.
-    return !await secrets.get(slot("revoked", id), now())
+    return !await secrets.get(revokedKey, now())
   }
   const headers = () => new Headers({ "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" })
   const error = (status: number) => new Response("Local authentication unavailable", { status, headers: headers() })
