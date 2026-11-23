@@ -181,4 +181,32 @@ describe("captured review field and record identity", () => {
       recordRef: "projects[id:project]", fieldKey: "sf.u32.field.budget", recordKey: "sf.u32.record.projects",
     })
   })
+  test("interleaved captured records keep the original value order and repeat their headings", () => {
+    const source = projection().values[0]!
+    const values = [
+      { ...source, id: "opexOwners[id:finance].name", value: "Finance" },
+      { ...source, id: "opexOwners[id:finance].budget", value: -0 },
+      { ...source, id: "opexOwners[id:operations].budget", value: null },
+      { ...source, id: "opexOwners[id:finance].year", value: 2026 },
+      { ...source, id: "opexOwners[id:finance].actual", value: 0 },
+      { ...source, id: "opexOwners[id:operations].name", value: "Operations" },
+      { ...source, id: "opaque-source-field", value: false },
+    ]
+    const original = structuredClone(values)
+    const groups = preservedValueGroups(values)
+    expect(groups.map((group) => group.presentation.recordRef)).toEqual([
+      "opexOwners[id:finance]", "opexOwners[id:operations]",
+      "opexOwners[id:finance]", "opexOwners[id:operations]", "opaque-source-field",
+    ])
+    expect(groups.map((group) => group.presentation.recordName)).toEqual([
+      "Finance", "Operations", "Finance", "Operations", undefined,
+    ])
+    expect(groups.map((group) => group.values.length)).toEqual([2, 1, 2, 1, 1])
+    const flattened = groups.flatMap((group) => group.values)
+    expect(flattened).toEqual(original)
+    flattened.forEach((value, index) => expect(value).toBe(values[index]))
+    expect(Object.is(flattened[1]?.value, -0)).toBe(true)
+    expect(values).toEqual(original)
+  })
+
 })

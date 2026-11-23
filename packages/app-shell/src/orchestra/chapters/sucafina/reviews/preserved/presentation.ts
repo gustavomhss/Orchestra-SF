@@ -125,12 +125,14 @@ export function preservedValuePresentation(value: PreservedValue, values: readon
 }
 
 export function preservedValueGroups(values: readonly PreservedValue[]) {
-  const groups = new Map<string, { presentation: PreservedValuePresentation; values: PreservedValue[] }>()
+  // Preserve the producer's sequence. A returning record starts another group
+  // instead of pulling its later values ahead of intervening source records.
+  const groups: { presentation: PreservedValuePresentation; values: PreservedValue[] }[] = []
   for (const value of values) {
     const presentation = preservedValuePresentation(value, values)
-    const group = groups.get(presentation.recordRef)
-    if (group) group.values.push(value)
-    else groups.set(presentation.recordRef, { presentation, values: [value] })
+    const group = groups[groups.length - 1]
+    if (group?.presentation.recordRef === presentation.recordRef) group.values.push(value)
+    else groups.push({ presentation, values: [value] })
   }
-  return [...groups.values()]
+  return groups
 }
