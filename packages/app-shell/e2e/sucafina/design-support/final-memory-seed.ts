@@ -125,14 +125,19 @@ export async function seedFinalMemory(installed: Installed, year: number) {
   if (!observedSource) throw new Error("Final memory seed received no original observed SourceRef")
   const fields = observedSource.fields.filter((field) => source.target.fields.includes(field))
   if (!fields.length) throw new Error("Final memory seed received no shared observed fields")
-  await post("memory-condition", { caseRef, choiceId: choice.id,
-    scenarioRefs: [choice.comparison.baselineResultRef, choice.comparison.alternativeResultRef],
-    source: observedSource, evidence: source, fields, period, criterionId: criterion.id,
-    recipientRef: installed.actorId, destination: reference, label: finalMemoryData.condition })
   const query = { caseId: caseRef.id, incarnation: caseRef.incarnation, version: String(caseRef.version) }
-  const conditions = list((await request("memory-conditions", query)).value).map(object)
-  const condition = conditions.find((entry) => entry.label === finalMemoryData.condition && entry.choiceId === choice.id)
-  if (conditions.length !== 1 || !condition) throw new Error("Final memory source did not reopen the recorded condition")
+  const beforeConditions = list((await request("memory-conditions", query)).value)
+  if (beforeConditions.length !== 0) throw new Error("The original choice must initially have no signal condition")
+  const registerCondition = async () => {
+    await post("memory-condition", { caseRef, choiceId: choice.id,
+      scenarioRefs: [choice.comparison.baselineResultRef, choice.comparison.alternativeResultRef],
+      source: observedSource, evidence: source, fields, period, criterionId: criterion.id,
+      recipientRef: installed.actorId, destination: reference, label: finalMemoryData.condition })
+    const conditions = list((await request("memory-conditions", query)).value).map(object)
+    const condition = conditions.find((entry) => entry.label === finalMemoryData.condition && entry.choiceId === choice.id)
+    if (conditions.length !== 1 || !condition) throw new Error("Final memory source did not reopen the recorded condition")
+    return { conditionId: text(condition.conditionId) }
+  }
   const observed = projection.values.filter((value) => value.evidenceState === "confirmed" &&
     typeof value.value === "number" && value.period.start === period.start && value.period.end === period.end &&
     value.id === plannerMonthlyPrefix(projection.components) + ":1:actual" && value.sourceRefs.some((ref) => ref.refDigest === source.refDigest))
@@ -144,6 +149,6 @@ export async function seedFinalMemory(installed: Installed, year: number) {
   if (outcome.status !== "comparable" || typeof outcome.expected !== "number" ||
     outcome.observed !== observed[0].value || typeof outcome.delta !== "number")
     throw new Error("Final memory source did not produce a comparable original outcome")
-  return { reference, caseRef, choiceId: choice.id, conditionId: text(condition.conditionId), period, selectionRef,
+  return { reference, caseRef, choiceId: choice.id, registerCondition, initialConditionCount: beforeConditions.length, period, selectionRef,
     expected: outcome.expected, observed: outcome.observed, delta: outcome.delta }
 }

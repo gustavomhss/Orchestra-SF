@@ -22,12 +22,12 @@ function summaryMutation(request: Request) {
   } catch { return false }
 }
 
-async function selectMemory(page: Page, reference: string, localized = false) {
+async function selectMemory(page: Page, reference: string, area: "UI61" | "UI63", localized = false) {
   const picker = page.locator("[data-sf-memory-case]")
   await expect(picker.locator("option", { hasText: finalMemoryData.objective })).toHaveCount(1)
   await picker.selectOption(reference)
   await page.getByRole("button", { name: localized ? "Consultar caso autorizado" : "Read authorized case", exact: true }).click()
-  await expect(page.locator("[data-sf-condition-id]")).toHaveCount(1)
+  await expect(page.locator(area === "UI61" ? "[data-sf-condition-id]" : "[data-sf-memory-choice]")).toHaveCount(1)
 }
 
 waveFourTest("UI61–UI63 · original condition, month outcome and authorized case recall", async ({ page, browser, installation, owner }, info) => {
@@ -52,14 +52,54 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
       memoryWrites.push(url.searchParams.get("sf")!)
   })
 
+  await waveFourTest.step("UI63 opens a real recorded choice without a condition and reopens its opaque outcome locator", async () => {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes", "Expected and observed")
+    await scheme(page, "dark")
+    const surface = page.locator('[data-sf-surface="UI63"]')
+    await selectMemory(page, seeded.reference, "UI63")
+    expect(seeded.initialConditionCount).toBe(0)
+    await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
+    const choice = surface.locator('[data-sf-memory-choice="' + seeded.choiceId + '"]')
+    await expect(choice).toContainText(waveFourDecisionsData.plannerCandidate)
+    await expect(choice).toContainText(finalMemoryData.reason)
+    await choice.getByRole("button", { name: "Review choice outcome", exact: true }).click()
+    const outcome = surface.locator("[data-sf-memory-outcome]")
+    await expect(outcome).toBeVisible()
+    await expect(outcome.locator("[data-sf-memory-expected]")).toHaveText(String(seeded.expected) + " USD")
+    await expect(outcome.locator("[data-sf-memory-observed]")).toHaveText(String(seeded.observed) + " USD")
+    await expect(outcome.locator("[data-sf-memory-delta]")).toHaveText(String(seeded.delta))
+    await expect(outcome).toContainText("No causal attribution is made from an observed difference.")
+    await expect(choice.getByRole("button", { name: "Review choice outcome", exact: true })).toHaveAttribute("aria-expanded", "true")
+    await scrollPageTop(page)
+    await captureFinalSurface(page, info, "UI63", "dark-desktop-recorded-choice-no-condition", { preview: true })
+    await surface.locator("[data-sf-memory-case]").selectOption("")
+    await expect(outcome).toBeHidden()
+    await expect(surface.locator("[data-sf-memory-choice]")).toHaveCount(0)
+    await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
+    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed")
+    await expect(outcome).toBeVisible()
+    await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
+    await captureFinalSurface(page, info, "UI63", "dark-desktop-source-comparison")
+    await scheme(page, "light")
+    await captureFinalSurface(page, info, "UI63", "light-desktop-source-comparison")
+    await page.setViewportSize({ width: 320, height: 900 })
+    await reflow(page)
+    await captureFinalSurface(page, info, "UI63", "light-320-source-comparison")
+  })
+
+  const registered = await seeded.registerCondition()
+
   await waveFourTest.step("UI61 selects the original case, reopens its registered condition and clears detail on a new selection", async () => {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await scheme(page, "dark")
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/signals", "Signals")
     const surface = page.locator('[data-sf-surface="UI61"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "six")
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
     await captureFinalSurface(page, info, "UI61", "dark-desktop-case-selection")
-    await selectMemory(page, seeded.reference)
-    const condition = surface.locator('[data-sf-condition-id="' + seeded.conditionId + '"]')
+    await selectMemory(page, seeded.reference, "UI61")
+    const condition = surface.locator('[data-sf-condition-id="' + registered.conditionId + '"]')
     await expect(condition).toContainText(finalMemoryData.condition)
     await condition.getByRole("button", { name: "Review condition", exact: true }).click()
     const materiality = surface.locator("[data-sf-memory-materiality]")
@@ -78,30 +118,6 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     await expect(materiality).toBeHidden()
     await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
-  })
-
-  await waveFourTest.step("UI63 compares only the original closed-month observation and reopens its opaque locator", async () => {
-    await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes", "Expected and observed")
-    await scheme(page, "dark")
-    const surface = page.locator('[data-sf-surface="UI63"]')
-    await selectMemory(page, seeded.reference)
-    await surface.getByRole("button", { name: "Review choice outcome", exact: true }).click()
-    const outcome = surface.locator("[data-sf-memory-outcome]")
-    await expect(outcome).toBeVisible()
-    await expect(outcome.locator("[data-sf-memory-expected]")).toHaveText(String(seeded.expected) + " USD")
-    await expect(outcome.locator("[data-sf-memory-observed]")).toHaveText(String(seeded.observed) + " USD")
-    await expect(outcome.locator("[data-sf-memory-delta]")).toHaveText(String(seeded.delta))
-    await expect(outcome).toContainText("No causal attribution is made from an observed difference.")
-    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed")
-    await expect(outcome).toBeVisible()
-    await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
-    await captureFinalSurface(page, info, "UI63", "dark-desktop-source-comparison", { preview: true })
-    await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI63", "light-desktop-source-comparison")
-    await page.setViewportSize({ width: 320, height: 900 })
-    await reflow(page)
-    await captureFinalSurface(page, info, "UI63", "light-320-source-comparison")
   })
 
   await waveFourTest.step("UI62 sends a private recall question and explicit authorized candidates to the original producer", async () => {
@@ -159,7 +175,7 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
 
   await withFinalMemoryPortuguese(browser, page, installation, async (localized) => {
     await enter(localized, owner, installation.origin + "/orchestra/sf-memory/signals", "Sinais")
-    await selectMemory(localized, seeded.reference, true)
+    await selectMemory(localized, seeded.reference, "UI61", true)
     await localized.getByRole("button", { name: "Revisar condição", exact: true }).click()
     await expect(localized.locator("[data-sf-memory-materiality]")).toBeVisible()
     await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
@@ -176,7 +192,8 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
   await info.attach("UI61-UI63-original-memory-evidence", { contentType: "application/json", body: JSON.stringify({
     areas: ["UI61", "UI62", "UI63"], source: "original human decision, memory and Planner HTTP producers",
     caseVersion: seeded.caseRef.version, period: seeded.period, expected: seeded.expected, observed: seeded.observed,
-    delta: seeded.delta, browserMemoryMutations: memoryWrites.length,
+    delta: seeded.delta, browserMemorySelectionCommands: memoryWrites.length,
+    choicesWithoutConditions: 1, initialConditionCount: seeded.initialConditionCount,
     limitations: ["Other decision cost categories remain pending.", "No causal effect inferred.", "Actual browser zoom not measured."],
   }, null, 2) })
 })
