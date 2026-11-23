@@ -11,6 +11,7 @@ export const sharedVisualVariants = [
   { name: "dark-wide", scheme: "dark", width: 1440, height: 1000 },
   { name: "light-wide", scheme: "light", width: 1440, height: 1000 },
   { name: "dark-narrow", scheme: "dark", width: 390, height: 844 },
+  { name: "light-small", scheme: "light", width: 320, height: 900 },
 ] as const
 export type SharedVisualVariant = (typeof sharedVisualVariants)[number]
 

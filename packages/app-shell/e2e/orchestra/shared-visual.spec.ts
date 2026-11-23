@@ -49,6 +49,8 @@ for (const variant of sharedVisualVariants) {
     await expect(inbox.locator(".inbox-workspace")).toHaveAttribute("aria-busy", "false")
     await expect(inbox.getByRole("heading", { name: "A little breathing room.", exact: true })).toBeVisible()
     await expect(inbox.locator("button.inbox-row")).toHaveCount(0)
+    await expect(inbox.locator(".inbox-idle")).toHaveCount(0)
+    await expect(inbox.locator(".inbox-workspace")).toHaveAttribute("data-has-items", "false")
     await captureSharedState(page, info, variant, state, "inbox", "empty",
       "Explicit empty read response, not an unavailable account represented as empty.")
 
@@ -57,6 +59,8 @@ for (const variant of sharedVisualVariants) {
     await expect(inbox.getByRole("alert")).toContainText("Your inbox couldn't be loaded.")
     await expect(inbox.getByRole("button", { name: "Try again", exact: true })).toBeEnabled()
     await expect(inbox.getByRole("heading", { name: "A little breathing room.", exact: true })).toHaveCount(0)
+    await expect(inbox.locator(".inbox-idle")).toHaveCount(0)
+    await expect(inbox.locator(".inbox-workspace")).toHaveAttribute("data-has-items", "false")
     await captureSharedState(page, info, variant, state, "inbox", "read-unavailable",
       "HTTP 503 negative control. Acquisition and provider authentication remain outside this visual fixture.")
   })
@@ -68,6 +72,7 @@ for (const variant of sharedVisualVariants) {
     await expect(flight.getByRole("heading", { name: "Flight Engineer", exact: true })).toBeVisible()
     await expect(flight.getByText("Flight Engineer runs in the desktop app.", { exact: true })).toBeVisible()
     await expect(flight.getByRole("navigation", { name: "Flight Engineer", exact: true })).toHaveCount(0)
+    await expect(flight.getByRole("link", { name: "Back to Home", exact: true })).toHaveAttribute("href", "/")
     await captureSharedState(page, info, variant, state, "flight-engineer", "web-unavailable",
       "No liveSeat or development bridge is injected. Meeting, consent, recordings and settings require an actual desktop seat and are not captured here.")
   })
@@ -199,11 +204,36 @@ for (const variant of sharedVisualVariants) {
 
     state.rag = "error"
     await page.reload()
-    await expect(studio.getByRole("alert").filter({ hasText: "Could not load Rag Studio." })).toHaveCount(2)
+    await expect(studio.getByRole("alert")).toHaveCount(1)
+    await expect(studio.getByRole("alert")).toContainText("Could not load Rag Studio.")
+    await expect(studio.getByRole("button", { name: "Try again", exact: true })).toBeEnabled()
     await expect(studio.getByText("Embedding is off.", { exact: true })).toHaveCount(0)
     await expect(studio.getByRole("heading", { name: "Pipeline", exact: true })).toHaveCount(0)
     await captureSharedState(page, info, variant, state, "rag-studio", "source-and-pipeline-unavailable",
-      "Both reads return HTTP 503. The UI must not turn unknown pipeline state into a known embedding-off claim.")
+      "Both reads return HTTP 503. One persistent recovery panel names the failed reads; unknown pipeline state never becomes an embedding-off claim.")
+
+    const path = studio.getByRole("textbox", { name: "Path outside the project", exact: true })
+    const question = studio.getByRole("textbox", { name: "Sentence", exact: true })
+    await path.fill("/work/unsent-document.txt")
+    await question.fill("Keep this question while retrying")
+    const readsBefore = state.reads.length
+    state.rag = "ready"
+    const sourceRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/api/rag-studio/sources")
+    const pipelineRead = page.waitForResponse((response) => new URL(response.url()).pathname === "/api/rag-studio/pipeline")
+    await studio.getByRole("button", { name: "Try again", exact: true }).click()
+    await Promise.all([sourceRead, pipelineRead])
+    await expect(studio.getByRole("alert")).toHaveCount(0)
+    await expect(files.getByRole("heading", { name: "Files", exact: true })).toBeFocused()
+    await expect(studio.getByRole("heading", { name: "Pipeline", exact: true })).toBeVisible()
+    await expect(studio.getByText("Embedding is off.", { exact: true })).toBeVisible()
+    await expect(path).toHaveValue("/work/unsent-document.txt")
+    await expect(question).toHaveValue("Keep this question while retrying")
+    expect(state.reads.slice(readsBefore).filter((read) => read.startsWith("/api/rag-studio/")).sort()).toEqual([
+      "/api/rag-studio/pipeline", "/api/rag-studio/sources",
+    ])
+    expect(state.writes).toEqual([])
+    await captureSharedState(page, info, variant, state, "rag-studio", "local-read-recovery",
+      "One click repeats exactly the two failed GETs, preserves both unsent inputs, and restores focus without admission, question execution or pipeline mutation.")
   })
 
   test(variant.name + ": Project Board overview, board, issue panel, empty and read failure", async ({ page }, info) => {
@@ -290,6 +320,29 @@ for (const variant of sharedVisualVariants) {
     await expect(address).toBeEditable()
     await expect(dialog.getByLabel("Username (optional)", { exact: true })).toBeEditable()
     await expect(dialog.getByLabel("Password (optional)", { exact: true })).toBeEditable()
+    await expect(address).toBeFocused()
+    const geometry = await dialog.evaluate((element) => {
+      const frame = element.closest<HTMLElement>('[data-slot="dialog-container"]')!
+      const box = frame.getBoundingClientRect()
+      const heading = element.querySelector<HTMLElement>('[data-slot="dialog-header-title"]')!
+      return {
+        left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width,
+        radius: getComputedStyle(frame).borderRadius,
+        titleSize: Number.parseFloat(getComputedStyle(heading).fontSize),
+        buttons: [...element.querySelectorAll<HTMLButtonElement>('[data-slot="dialog-footer"] button')].map((button) => ({
+          name: button.textContent, height: button.getBoundingClientRect().height,
+        })),
+      }
+    })
+    expect(geometry.width).toBeLessThanOrEqual(480)
+    expect(geometry.left).toBeGreaterThanOrEqual(15.5)
+    expect(geometry.right).toBeLessThanOrEqual(variant.width - 15.5)
+    expect(geometry.top).toBeGreaterThanOrEqual(15.5)
+    expect(geometry.bottom).toBeLessThanOrEqual(variant.height - 15.5)
+    expect(geometry.titleSize).toBeGreaterThanOrEqual(18)
+    expect(geometry.buttons).toHaveLength(2)
+    for (const button of geometry.buttons) expect(button.height, button.name ?? "dialog button").toBeGreaterThanOrEqual(44)
+    await info.attach("server-dialog-native-geometry", { body: JSON.stringify(geometry, null, 2), contentType: "application/json" })
     await captureSharedState(page, info, variant, state, "error-recovery", "server-connection-form",
       "Original Settings server dialog from desktop-connection-recovery.spec.ts. The global fatal ErrorPage and desktop restart/export-logs remain uncaptured.")
 

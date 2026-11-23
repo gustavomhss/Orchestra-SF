@@ -444,8 +444,8 @@ export function SfTeamWebApp() {
       </header>
       <main class="sf-team-surface" classList={{ "sf-team-main-chat": !!sessionRoute() }}>
         <header class="sf-team-heading">
-          <div class="mx-eyebrow">{language.t("sf.teams.title")}</div>
-          <h1>{selected()?.displayName || language.t("sf.teams.select")}</h1>
+          <Show when={selected()}><div class="mx-eyebrow">{language.t("sf.teams.title")}</div></Show>
+          <h1>{selected()?.displayName || language.t("sf.teams.title")}</h1>
         </header>
         <Show when={!selected()}>
           <p role={state().status === "invalid" ? "alert" : "status"}>{language.t(statusCopy())}</p>
@@ -487,7 +487,6 @@ export function SfTeamWebApp() {
             if (url) void goSession(url.href)
           }}>{language.t("sf.teams.newChat")}</button></div>
         </Show>
-        </div>
         <Show when={authenticated()} keyed>{(current) => {
           const scope = administrationScope(current)
           const notice = () => administration.notice?.scope === scope ? administration.notice.key : undefined
@@ -512,6 +511,7 @@ export function SfTeamWebApp() {
             </Show>
           </div>
         }}</Show>
+        </div>
         <Show when={chatNotice()} keyed>{(key) => <p class="sf-team-notice" data-sf-chat-notice role="alert">{language.t(key)}</p>}</Show>
         <Show when={chat.consent}><SfTeamDiscardDialog close={closeConsent} /></Show>
         <Show when={chatRuntime()} keyed>{(value) =>

@@ -2,7 +2,6 @@ import { createEffect, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
-import { showToast } from "@/utils/toast"
 import type { ChapterPageProps } from "@/orchestra/chapter-route"
 import { MxBadge } from "../kit"
 import { settlePipelineRead } from "./pipeline"
@@ -70,7 +69,6 @@ export function Maintain(props: ChapterPageProps) {
   let pipelineRead = 0
   const reportPipeline = (error: unknown) => {
     console.error(error)
-    if (!roster.pipelineFailed) showToast({ variant: "error", title: language.t("common.requestFailed") })
     setRoster("pipelineFailed", true)
   }
   const selected = () => roster.sources.find((source) => source.id === state.sourceId)
@@ -141,6 +139,7 @@ export function Maintain(props: ChapterPageProps) {
 
   createEffect(() => {
     const directory = props.directory
+    roster.pipelineRetry
     const started = ++pipelineRead
     setRoster({ pipelineKnown: false, pipelineFailed: false })
     void settlePipelineRead({
@@ -174,27 +173,8 @@ export function Maintain(props: ChapterPageProps) {
   return (
     <section>
       <h3 class="mx-section">{language.t("orchestra.ragStudio.maintain")}</h3>
-      <Show when={roster.status === "loading"}>
-        <div class="mx-empty" role="status">
-          {language.t("orchestra.ragStudio.loading")}
-        </div>
-      </Show>
-      <Show when={roster.status === "error"}>
-        <div class="mx-empty" role="alert">
-          {language.t("orchestra.ragStudio.error")}
-        </div>
-      </Show>
       <Show when={roster.status === "ready"}>
-        <Show
-          when={roster.pipelineKnown}
-          fallback={
-            <Show when={roster.pipelineFailed}>
-              <p class="mx-error rag-follow" role="alert">
-                {language.t("common.requestFailed")}
-              </p>
-            </Show>
-          }
-        >
+        <Show when={roster.pipelineKnown}>
         <h3 class="mx-section">{language.t("orchestra.ragStudio.pipeline")}</h3>
         <div class="mx-table">
           <div class="mx-row rag-stage">
