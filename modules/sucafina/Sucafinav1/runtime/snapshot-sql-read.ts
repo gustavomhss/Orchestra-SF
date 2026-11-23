@@ -208,7 +208,6 @@ export function createSnapshotSqlReader() {
         const surface = surfaces[index]
         if (surface !== undefined) drop(surface)
       }
-      retainedUnits = 0
     },
   }
 }
