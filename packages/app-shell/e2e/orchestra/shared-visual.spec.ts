@@ -105,6 +105,14 @@ for (const variant of sharedVisualVariants) {
 
     await connect.click()
     const dialog = page.getByRole("dialog", { name: "Connect account", exact: true })
+    if (variant.name === "dark-narrow") {
+      const close = dialog.getByRole("button", { name: "Close", exact: true })
+      await expect(close).toBeVisible()
+      const bounds = await close.boundingBox()
+      expect(bounds).not.toBeNull()
+      expect(bounds!.width).toBeGreaterThanOrEqual(44)
+      expect(bounds!.height).toBeGreaterThanOrEqual(44)
+    }
     await expect(dialog.getByRole("combobox", { name: "Provider", exact: true })).toBeEnabled()
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveValue("")
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveAttribute("type", "password")
