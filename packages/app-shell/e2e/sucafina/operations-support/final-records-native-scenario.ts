@@ -144,7 +144,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       httpCredentials: { username: "orchestra", password: installed.serverPassword },
     })
     const page = await context.newPage()
-    observePage(page)
+    const diagnostics = observePage(page)
     let failed = false
     try {
       const owner = await authenticateDesignInstallation(context, installed)
@@ -174,6 +174,8 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       await captureRecordVariants(page, info, "UI60", "native-authorized-preview", false)
       await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence",
         surface.locator('[data-sf-scenario="preview"]'))
+      expect(diagnostics.pageErrors).toEqual([])
+      expect(diagnostics.consoleErrors).toEqual([])
     } catch (error) {
       failed = true
       await captureRecordFailure(page, info).catch(() => undefined)
