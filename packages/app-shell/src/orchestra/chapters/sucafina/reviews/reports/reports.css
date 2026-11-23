@@ -29,3 +29,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Keep the report source disclosure reachable at the native touch target size. */
+.sf-page-frame .sf-n28-summary > .sf-technical-details > summary {
+  min-block-size: var(--sf-workflow-control);
+}
