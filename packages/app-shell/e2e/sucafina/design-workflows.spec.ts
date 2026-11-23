@@ -2,7 +2,7 @@ import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
-import { waveFourTest, enter, observePage } from "./design-support/wave-four"
+import { waveFourTest, enter, observePage, capture, reflow, scheme, scrollPageTop } from "./design-support/wave-four"
 import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import { workflowPolishCoverage } from "./design-support/workflow-polish-coverage"
 import { workflowCase, settledSurface, sourceObject, sourceText, sourceArray, type WorkflowOwner } from "./design-support/workflow-polish-source"
@@ -134,7 +134,46 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   expect(sourceArray(sourceObject(data.projection).values).length).toBeGreaterThan(0)
   await expect(detail.locator('[data-sf-bi-view="BI01"]')).toBeVisible()
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
-  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type > figcaption')
+  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-svg')
+
+  const chartViewport = page.viewportSize()
+  const chartScheme = await page.locator("html").getAttribute("data-color-scheme")
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await scheme(page, "dark")
+  await page.setViewportSize({ width: 320, height: 800 })
+  await reflow(page)
+  const chartScroll = detail.locator('[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-chart-scroll')
+  await expect(chartScroll).toHaveCount(1)
+  await expect(chartScroll).toHaveAttribute("tabindex", "0")
+  await chartScroll.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
+  const chartText = await chartScroll.locator(".sf-bi-svg").evaluate((element) => {
+    const labels = [...element.querySelectorAll("text")].filter((text) => text.textContent?.trim())
+    const sizes = labels.map((text) => {
+      const matrix = text.getScreenCTM()
+      if (!matrix) throw new Error("An original chart label is not rendered")
+      return Number.parseFloat(getComputedStyle(text).fontSize) * Math.hypot(matrix.a, matrix.b)
+    })
+    return { labelCount: labels.length, minimumFontPx: Math.min(...sizes) }
+  })
+  expect(chartText.labelCount).toBeGreaterThan(0)
+  expect(chartText.minimumFontPx).toBeGreaterThanOrEqual(11)
+  await chartScroll.hover()
+  await page.mouse.wheel(10_000, 0)
+  await expect.poll(() => chartScroll.evaluate((element) =>
+    Math.abs(element.scrollWidth - element.clientWidth - element.scrollLeft))).toBeLessThanOrEqual(1)
+  const chartPosition = await chartScroll.evaluate((element) => ({
+    viewportWidth: element.clientWidth, contentWidth: element.scrollWidth, scrollLeft: element.scrollLeft,
+  }))
+  expect(chartPosition.scrollLeft).toBeGreaterThan(0)
+  await info.attach("UI46-mobile-chart-original-value-proof", { contentType: "application/json",
+    body: JSON.stringify({ source: "original contextual BI01 response", selectionRef: choice.selectionRef,
+      period: sourceObject(data.request).period, viewport: { width: 320, height: 800 },
+      text: chartText, horizontalScroll: chartPosition, input: "native horizontal wheel", recomputedValues: false }) })
+  await capture(page, info, "UI46-original-financial-chart-values-dark-320")
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  if (chartScheme === "dark" || chartScheme === "light") await scheme(page, chartScheme)
+  if (chartViewport) await page.setViewportSize(chartViewport)
+  await scrollPageTop(page)
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("portfolio-qualification-limit", { contentType: "text/plain",
     body: "UI42/UI44 input capture is conditional on the original resource prerequisite. A partial resource records the actual leaf refusal instead. UI43 may be refused by original F01 or show a missing-result negative control. None of these states qualifies portfolio/sensitivity evaluation." })
@@ -223,6 +262,9 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   await expect(compare.locator("[data-sf-comparison-compatibility]")).toHaveAttribute("data-sf-comparison-compatibility", "compatible", { timeout: 40_000 })
   await expect(compare.locator('[data-change-numeric="true"]')).toHaveCount(0)
   await record(page, info, "UI49", "compatible-original-revisions", "Two separately preserved original reviews of the same material; compatibility is verified and no numeric change is invented.")
+  await record(page, info, "UI49", "original-comparison-detail",
+    "The first comparison rows of the original budget section are visible; source-only differences remain nonnumeric and the wide table keeps its own horizontal scroll.",
+    '[data-sf-comparison-diff="authorized"] > [data-section-id] > .sf-n28-scroll > table > tbody > tr:first-child')
 
   const report = await open(page, owner, "/orchestra/sf-reviews/reports/" + encodeSfRouteRef(previous), "Report", "UI50")
   const selectedSections = report.locator("[data-section-id] input[type=checkbox]")
@@ -230,6 +272,9 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   await expect(selectedSections).toBeChecked()
   await expect(report.getByRole("combobox", { name: "Office format", exact: true })).toBeVisible()
   await record(page, info, "UI50", "authorized-report-selection", "Original preserved content and one selected section; no DOCX/PPTX artifact or download is claimed.")
+  await record(page, info, "UI50", "authorized-report-content-and-notes",
+    "The original authorized section and preserved notes remain available below the original report controls. No Office generation or download is claimed.",
+    'section[aria-label="Preserved notes and comments"] > h2')
   await selectedSections.uncheck()
   await expect(page.getByRole("button", { name: "Generate report", exact: true })).toBeDisabled()
   await record(page, info, "UI50", "empty-report-selection", "The explicit empty section selection keeps report generation disabled.")

@@ -64,7 +64,9 @@ export const captureWorkflowState: WorkflowCapture = async (page, info, checkpoi
       const focus = surface.locator(checkpoint.focus)
       await expect(focus).toHaveCount(1)
       await expect(focus).toBeVisible()
-      await focus.scrollIntoViewIfNeeded()
+      // Center the requested content even when its heading already sits at the viewport edge.
+      await focus.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
+      await expect(focus).toBeInViewport()
     }
     await capture(page, info, name + "-" + variant.name)
   }
