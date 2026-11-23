@@ -170,7 +170,7 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
   return pair[0]?.length === 1 && pair[1]?.length === 1 && pair[0][0]!.id !== pair[1][0]!.id ? [...found.values()] : undefined
 }
 
-function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {
+export function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {
   const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
   const selector = sfPlannerProjectionSelector(snapshot, { id: principal.id, roles,
     canWrite: principal.canWrite && roles.some((role) => role !== "viewer") })
