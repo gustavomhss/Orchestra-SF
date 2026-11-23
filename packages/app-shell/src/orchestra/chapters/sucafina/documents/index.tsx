@@ -275,7 +275,13 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     setState({ busy: true, status: "ready", uploadNotice: "sf.u24.uploadWorking", uploadConflictRecord: "" })
     let bytes: Uint8Array
     try { bytes = new Uint8Array(await file.arrayBuffer()) }
-    catch { if (current(token)) fail("unavailable"); return }
+    catch (error: unknown) {
+      if (current(token)) {
+        console.error("Document upload file read failed", error instanceof Error ? error.name : "unknown")
+        fail("unavailable")
+      }
+      return
+    }
     if (!current(token)) return
     if (bytes.byteLength !== file.size || bytes.byteLength === 0) { fail("invalid"); return }
     const reply = await api["files.asset.upload"]({
@@ -687,7 +693,25 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </div>
               <label>{t("sf.u24.uploadFile")}
                 <input type="file" accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  required disabled={state.busy} onChange={(event) => {
+                  required disabled={state.busy} ref={(input) => {
+                    if (!uploadFile) return
+                    // Restore the same human-selected File after a read remounts the form.
+                    // Never retain an invisible upload if the browser rejects restoration.
+                    try {
+                      const selection = new DataTransfer()
+                      selection.items.add(uploadFile)
+                      input.files = selection.files
+                      const restored = input.files?.[0]
+                      if (input.files?.length !== 1 || !restored || restored.name !== uploadFile.name ||
+                          restored.size !== uploadFile.size || restored.type !== uploadFile.type || restored.lastModified !== uploadFile.lastModified)
+                        throw new Error("DocumentUploadSelectionNotRestored")
+                    } catch (error: unknown) {
+                      console.error("Document upload selection could not be restored", error instanceof Error ? error.name : "unknown")
+                      uploadFile = undefined
+                      input.value = ""
+                      setState({ uploadName: "", uploadNotice: "sf.u24.uploadChooseAgain" })
+                    }
+                  }} onChange={(event) => {
                     uploadFile = event.currentTarget.files?.[0]
                     setState({ uploadName: uploadFile?.name ?? "", uploadNotice: "" })
                   }} />

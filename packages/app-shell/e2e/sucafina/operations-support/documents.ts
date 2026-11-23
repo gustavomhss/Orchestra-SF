@@ -470,6 +470,16 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
   await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
   await expect(attachDocument).toBeEnabled()
+  const sourcesWithDraft = await observeFile(page, "files.document-sources", endpoint("document-sources"))
+  await root.getByRole("button", { name: "Refresh sources", exact: true }).click()
+  expect((await valueOf<Source[]>((await sourcesWithDraft.completed).response))
+    .filter((source) => source.label === filename)).toHaveLength(1)
+  await sourcesWithDraft.finish()
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(documentInput).toBeVisible()
+  expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+  await expect(targetRecord).toHaveValue(supplier)
+  await expect(attachDocument).toBeEnabled()
   // Observe exactly one original scanned upload. Record identity and CAS come
   // from the authorized catalog, not a manually entered ID or asset revision.
   const catalogUpload = await observe(page, (url) =>
@@ -519,7 +529,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
     targetLabel, record: supplier, catalogVersion: beforeVersion + 1,
     uploadedVersion: beforeVersion + 2, httpStatus: catalogUploadResponse.status(),
     scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
-    manualRecordId: false, manualVersion: false, responseSubstituted: false, automaticRetries: 0,
+    manualRecordId: false, manualVersion: false, fileSelectionPreservedAcrossRead: true,
+    responseSubstituted: false, automaticRetries: 0,
   })
   if (await register.getAttribute("open") !== null) await register.locator("summary").click()
   await document.selectOption({ value: selectedSourceRef })
