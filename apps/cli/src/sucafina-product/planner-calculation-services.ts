@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { observeSfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -127,7 +128,7 @@ export function createSfPlannerCalculationServices(input: {
     replayRecordOnly: recordOnly.simulateScenario,
   })
   const freshRecordSources = async (refs: readonly PlannerRecord[], call: TrustedDomainContext): Promise<boolean> => {
-    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), selected = digestSfValue(refs)
+    const request = input.host.requestFor(call), bindingIntegrity = observeSfUiContextIntegrity(call), selected = digestSfValue(refs)
     if (!request || request.signal.aborted || call.binding.principalRef.startsWith("local:") || !await input.host.revalidate(call)) return false
     const before = await input.readSourceFences(call)
     if (!before) return false
@@ -137,11 +138,11 @@ export function createSfPlannerCalculationServices(input: {
     for (const ref of refs) {
       const current = await input.sources.resolveForecastSource(ref.refId, call)
       if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref) || input.host.requestFor(call) !== request ||
-        request.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || selected !== digestSfValue(refs)) return false
+        request.signal.aborted || !bindingIntegrity.current() || selected !== digestSfValue(refs)) return false
     }
     const after = await input.readSourceFences(call)
     return !!after && digestSfValue(after) === digestSfValue(before) && await input.host.revalidate(call) && input.host.requestFor(call) === request && !request.signal.aborted &&
-      binding === digestSfValue([call.kind, call.binding]) && selected === digestSfValue(refs)
+      bindingIntegrity.current() && selected === digestSfValue(refs)
   }
   const calculation = createPlannerCalculationEvidence({ host: input.host,
     loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult,
@@ -202,14 +203,15 @@ export function createSfPlannerCalculationServices(input: {
     if (!readRoot.allows(call)) return { status: "unavailable", reason: "calculation-read-root-unavailable" }
     // Bound the selector admission too: canonical readers may resolve ancestors
     // before the producer's own replay guard starts.
-    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), parent = replaying.getStore()
+    const request = input.host.requestFor(call), bindingIntegrity = observeSfUiContextIntegrity(call), parent = replaying.getStore()
+    const binding = bindingIntegrity.digest
     if (!request || request.signal.aborted) return { status: "denied", reason: "calculation-authority-unavailable" }
     const requestDigest = plannerRequestIdentity(request)
     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
     if (ancestors.has(runId) || ancestors.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
     const scope: ReplayScope = { call, request, requestDigest, binding, runId, runs: new Set([...ancestors, runId]), open: true }
     const current = () => scope.open && replaying.getStore() === scope && input.host.requestFor(call) === request && !request.signal.aborted &&
-      plannerRequestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
+      plannerRequestIdentity(request) === requestDigest && bindingIntegrity.current()
     return replaying.run(scope, async (): Promise<PortResult<Value>> => {
       try {
         const selected = await readScope.select(runId, call)
@@ -243,7 +245,7 @@ export function createSfPlannerCalculationServices(input: {
               const stateReader = rootState.read, resultReader = rootResults.readForCalculation
               const evidenceResolve = rootEvidence.resolve, evidenceContext = rootEvidence.context
               const sameOwner = () => scope.open && !request.signal.aborted && input.host.requestFor(call) === request &&
-                plannerRequestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding &&
+                plannerRequestIdentity(request) === requestDigest && bindingIntegrity.current() &&
                 (!parent || parent.open && parent.call === call && parent.request === request &&
                   parent.requestDigest === requestDigest && parent.binding === binding) && input.host === rootHost &&
                 input.state === rootState && input.results === rootResults && input.sources === rootSources &&

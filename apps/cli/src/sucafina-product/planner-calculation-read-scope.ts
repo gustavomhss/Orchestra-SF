@@ -1,4 +1,5 @@
 import { canonicalSfValue, digestSfValue, sfCanonicalSerializerUnhooked } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { observeSfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
@@ -22,10 +23,10 @@ export function createSfPlannerCalculationReadScope(input: {
 }) {
   const sealedStateDigests = new WeakMap<object, string>()
   const select = async (runId: string, call: TrustedDomainContext): Promise<PortResult<Selection>> => {
-    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
+    const request = input.host.requestFor(call), bindingIntegrity = observeSfUiContextIntegrity(call)
     const headers = request && plannerRequestIdentity(request)
     const current = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
-      plannerRequestIdentity(request) === headers && digestSfValue([call.kind, call.binding]) === binding
+      plannerRequestIdentity(request) === headers && bindingIntegrity.current()
     if (!request || !current() || !await input.host.revalidate(call) || !current())
       return { status: "denied", reason: "calculation-authority-unavailable" }
     // This is only the authenticated store selector. The producer still reads
@@ -55,14 +56,15 @@ export function createSfPlannerCalculationReadScope(input: {
       : { status: "unavailable", reason: "scenario-request-unavailable" }
   }
   const open = async (selected: Selection, call: TrustedDomainContext, owns: () => boolean) => {
-    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
+    const request = input.host.requestFor(call), bindingIntegrity = observeSfUiContextIntegrity(call)
+    const binding = bindingIntegrity.digest
     const headers = request && plannerRequestIdentity(request), selectedDigest = digestSfValue(selected)
     const captured = structuredClone(selected), runId = captured.stored.resultRef
     let closed = false, invalid = false
     const requests: StoredRequest[] = [], results: StoredScenario[] = []
     const current = () => !closed && !invalid && owns() && call.kind === "ui" && !!request && !request.signal.aborted &&
       input.host.requestFor(call) === request && plannerRequestIdentity(request) === headers &&
-      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(selected) === selectedDigest
+      bindingIntegrity.current() && digestSfValue(selected) === selectedDigest
     const environment = async () => {
       if (!request) return undefined
       const value = await input.host.environment(request), at = Date.parse(value.at)
