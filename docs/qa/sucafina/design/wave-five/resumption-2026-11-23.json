@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Inspect original value-types and transport-phases diagnostic receipts. Continue read-only proof review of any concrete minimal correction, preserving fresh authority/source boundaries and all original gates. No performance proposal is approved for product promotion."
+    "nextAction": "Use the completed transport-phase evidence to investigate the cost of the original pre/post context revalidations without removing fresh boundaries. Preview still fails its original60s assertion; primitive-string memo has zero eligibility in the measured window. Any proposed native canonical-sort micro-optimization requires independent semantic review before a product patch. Preserve all six original gate recipes, callbacks, SQL, eager semantics and baseline; no product proposal is approved."
   },
-  "updatedAt": "2026-11-23T19:35:10Z",
+  "updatedAt": "2026-11-23T19:52:03Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3525,6 +3525,53 @@
       "priorRecordsCommit": "1f342facc14c8f9d8cd4ed1dc4f5bdf5f2af55d0",
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "devUnchanged": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T19:52:03Z",
+      "status": "VALUE_TYPES_AND_FILEPHASES_COMPLETED_FRESH_BOUNDARY_PROPOSALS_REJECTED",
+      "by": "/root/audit_checkpoint",
+      "valueTypes": {
+        "run": 45249464790,
+        "testJob": 137954938906,
+        "cleanupJob": 137962141089,
+        "conclusion": "failure",
+        "browserTests": "1failed/1passed",
+        "receiptBlob": "e79f05ea11ba8a9e27e6fe53cfdeae07e77c067d",
+        "entries": 524288,
+        "objectEntries": 524288,
+        "stringEntries": 0,
+        "memoPrototypeApproved": false
+      },
+      "filePhases": {
+        "run": 45250257726,
+        "testJob": 137957694970,
+        "cleanupJob": 137962685990,
+        "conclusion": "failure",
+        "browserTests": "1failed/1passed",
+        "receiptBlob": "f3f67caa33c91de40b36dfde8246cbe9f6a7822a",
+        "originalFailure": "UI56 original10000ms expectation",
+        "preContextMs": 8826,
+        "fetchResolved": true,
+        "boundedBodyDecoded": true,
+        "postContextEndObserved": false,
+        "postContextElapsedAtExpectCatchMs": 647,
+        "requestFailedEvents": 0,
+        "errAbortedMentions": 0,
+        "earlier403CauseResolved": false
+      },
+      "requestResultReuse": {
+        "reviewedCommit": "42abce1949cc1a533f62baab6597896d359f3129",
+        "approved": false,
+        "originalIndependentCallsPreserved": true,
+        "wholeServicesBlobMustNotBeCopied": "12f1e5faa892e15e07dd5584889c5212aa075357"
+      },
+      "freshAclTransferApproved": false,
+      "visualAttribution": "Filephases monitor viewed exactly two of38 captures; this checkpoint reviewer viewed none. ValueTypes artifactZIP was not opened and no visual review is claimed.",
+      "priorRecordsCommit": "3a18318e5547f45f80f26e38c1ebd171badd658c",
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "devUnchanged": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "sourceRefsCheckedAt": "2026-11-23T19:52:03Z",
       "qualification": false
     }
   ],
@@ -6432,7 +6479,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T19:35:10Z",
+    "observedAt": "2026-11-23T19:52:03Z",
     "qualification": false,
     "experiments": [
       {
@@ -9457,7 +9504,7 @@
         "run": 45249464790,
         "testJob": 137954938906,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45249464790",
-        "status": "IN_PROGRESS",
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
         "sourceOverlay": {
           "branch": "sf613-valuetypes",
           "commit": "d535e2b588a06bc83dce51f2ef2684a9e83fb80f",
@@ -9541,25 +9588,263 @@
           ]
         },
         "workflowObservation": {
-          "observedAt": "2026-11-23T19:30:18Z",
+          "observedAt": "2026-11-23T19:52:03Z",
           "by": "/root/audit_checkpoint",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "headSha": "1b4d5f5ac5e958c9344f95b612933f399585aa86",
           "createdAt": "2026-11-23T19:29:25Z",
-          "updatedAt": "2026-11-23T19:29:28Z"
+          "updatedAt": "2026-11-23T19:41:30Z"
         },
         "jobObservation": [
           {
             "id": 137954938906,
-            "name": "test (ubuntu-24.04)",
-            "status": "in_progress",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "failure",
             "startedAt": "2026-11-23T19:29:28Z",
-            "completedAt": null
+            "completedAt": "2026-11-23T19:41:22Z"
+          },
+          {
+            "id": 137962141089,
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-23T19:41:26Z",
+            "completedAt": "2026-11-23T19:41:29Z"
           }
         ],
-        "interpretationLimit": "Whole-isolate canonical entries, not completed hashes or per-site attribution. Membership hits simulate a bounded primitive-string memo while every original hash still executes. Cooperative timer/pulse duration and errors must be read from the final receipt. No string values or keys are emitted."
+        "interpretationLimit": "Whole-isolate canonical entries, not completed hashes or per-site attribution. Membership hits simulate a bounded primitive-string memo while every original hash still executes. Cooperative timer/pulse duration and errors must be read from the final receipt. No string values or keys are emitted.",
+        "resultRecordedAt": "2026-11-23T19:52:03Z",
+        "cleanupJob": 137962141089,
+        "result": {
+          "receiptBlob": "e79f05ea11ba8a9e27e6fe53cfdeae07e77c067d",
+          "receiptCharacters": 7840,
+          "reportedBy": "/root/preview_cpu",
+          "reviewedBy": "/root/audit_checkpoint",
+          "evidenceAttribution": "The monitor read the complete decoded logs and supplied this immutable receipt. The reviewer independently verified final GitHub job metadata and the static overlay; the reviewer did not reread the full log, open the artifact ZIP, or inspect screenshots.",
+          "receipt": {
+            "schemaVersion": 1,
+            "kind": "preview-canonical-value-types-counts",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "diagnosticCommit": "d535e2b588a06bc83dce51f2ef2684a9e83fb80f",
+            "diagnosticTree": "6776c123b1eea700ac8ba7fd6fb18d23977e86f3",
+            "diagnosticBranch": "sf613-valuetypes",
+            "snapshot": "1b4d5f5ac5e958c9344f95b612933f399585aa86",
+            "snapshotTree": "7afaf0a01fbaeab00a3ed8ca4c39a4271b9c8201",
+            "ciBranch": "ci-run-linux-sf613-valuetypes",
+            "requestBlob": "a11922821a47594d76397582be38f9b7940177ca",
+            "run": 45249464790,
+            "mainJob": 137954938906,
+            "countBasis": "Whole-isolate canonicalSfValue entries during first original Portfolio evaluate diagnostic window; not completed hashes or exclusive Preview attribution.",
+            "requestedWindowMs": 45000,
+            "pulseEvery": 16384,
+            "maximumStringUnits": 512,
+            "maximumEntries": 1024,
+            "memoPolicy": "clear-on-full-miss",
+            "memoStores": "string-membership-only",
+            "prefix": "SF_PORTFOLIO_VALUE_TYPES",
+            "maximumLines": 4,
+            "maximumLineBytes": 1024,
+            "preservation": {
+              "existingFilesExactC3AfterInstrumentationRemoval": true,
+              "originalAwaits": [
+                0,
+                11,
+                13,
+                16
+              ],
+              "allOriginalHashesRetained": true,
+              "noProductOptimization": true,
+              "testsUnchanged": true,
+              "independentAudit": "PASS"
+            },
+            "limits": [
+              "Diagnostic overhead remains unmeasured.",
+              "A simulated membership hit does not measure saved hash time.",
+              "Counts must not be combined with timing or sample data from separate runs.",
+              "No input contents, keys, graphs, grants or SQL results are logged."
+            ],
+            "status": "completed",
+            "conclusion": "failure",
+            "createdAt": "2026-11-23T19:29:25Z",
+            "completedAt": "2026-11-23T19:41:30Z",
+            "runtime": {
+              "versionObserved": "1.3.14",
+              "revisionAbbreviationObserved": "0d9b296af",
+              "exactRevisionReported": false
+            },
+            "main": {
+              "job": 137954938906,
+              "status": "failure",
+              "startedAt": "2026-11-23T19:29:28Z",
+              "completedAt": "2026-11-23T19:41:22Z",
+              "decodedCharacters": 4763034,
+              "utf8Bytes": 4767864,
+              "sha256": "2902eed50698a36e3d7f658827f9bb1f2c8b9a5dc9e5644028f4ec9c7df290dc",
+              "hashBasis": "UTF-8 encoding of decoded GitHub MCP log content"
+            },
+            "cleanup": {
+              "job": 137962141089,
+              "status": "success",
+              "startedAt": "2026-11-23T19:41:26Z",
+              "completedAt": "2026-11-23T19:41:29Z",
+              "decodedCharacters": 2297,
+              "utf8Bytes": 2299,
+              "sha256": "4ee3ac6aff6e61c4633a94cbb7988ccd2daaa23c77f5abd51f4d089011563faf",
+              "hashBasis": "UTF-8 encoding of decoded GitHub MCP log content"
+            },
+            "ciBranchDeleted404": true,
+            "tests": {
+              "total": 2,
+              "passed": 1,
+              "failed": 1,
+              "reportedDuration": "10.8m",
+              "preview": {
+                "name": "wave five analytics: native scenarios, recorded results and sensitivity",
+                "status": "failed",
+                "location": "e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+                "reason": "page.waitForResponse original 60000ms timeout"
+              },
+              "bi": {
+                "name": "wave five analytics: question catalog and original contextual BI",
+                "status": "passed",
+                "location": "e2e/sucafina/design-wave-five-analytics.spec.ts:443:1"
+              }
+            },
+            "records": [
+              {
+                "at": "2026-11-23T19:36:34.3366842Z",
+                "schema": "sf-portfolio-value-types-v1",
+                "qualification": false,
+                "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+                "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+                "phase": "start",
+                "scope": "whole-isolate-canonical-entry",
+                "counts": "entries-not-completions",
+                "objectsIncludeNull": true,
+                "windowMs": 45000,
+                "pulseEvery": 16384,
+                "maximumStringUnits": 512,
+                "maximumEntries": 1024,
+                "memoPolicy": "clear-on-full-miss",
+                "memoStores": "string-membership-only",
+                "originalWork": "unchanged",
+                "maximumLines": 4,
+                "maximumLineBytes": 1024
+              },
+              {
+                "at": "2026-11-23T19:37:19.7247522Z",
+                "schema": "sf-portfolio-value-types-v1",
+                "qualification": false,
+                "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+                "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+                "phase": "counts",
+                "reason": "window-pulse",
+                "elapsedMs": 45388,
+                "total": 524288,
+                "typeof": {
+                  "undefined": 0,
+                  "object": 524288,
+                  "boolean": 0,
+                  "number": 0,
+                  "bigint": 0,
+                  "string": 0,
+                  "symbol": 0,
+                  "function": 0
+                },
+                "nulls": 0
+              },
+              {
+                "at": "2026-11-23T19:37:19.7251015Z",
+                "schema": "sf-portfolio-value-types-v1",
+                "qualification": false,
+                "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+                "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+                "phase": "memo",
+                "eligibleStrings": 0,
+                "hits": 0,
+                "misses": 0,
+                "clears": 0,
+                "entriesAtStop": 0,
+                "peakEntries": 0,
+                "stringUnitsAtStop": 0,
+                "peakStringUnits": 0,
+                "hashesSkipped": 0
+              },
+              {
+                "at": "2026-11-23T19:37:19.7254326Z",
+                "schema": "sf-portfolio-value-types-v1",
+                "qualification": false,
+                "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+                "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+                "phase": "complete",
+                "elapsedMs": 45388,
+                "pulseClockReads": 32,
+                "observerErrors": 0,
+                "dropped": 0,
+                "outputErrorsBeforeComplete": 0,
+                "lineAttemptsBeforeComplete": 3,
+                "complete": true
+              }
+            ],
+            "output": {
+              "count": 4,
+              "parseErrors": [],
+              "maxBytes": 536,
+              "totalBytes": 1645,
+              "byteBasis": "Diagnostic prefix plus ASCII JSON plus newline; excludes CI timestamps and terminal-control prefix.",
+              "ascii": true
+            },
+            "invariants": {
+              "recordsFour": true,
+              "allSameC3": true,
+              "typeSum": true,
+              "nullsWithinObjects": true,
+              "eligibleWithinStrings": true,
+              "eligibleEqualsHitsPlusMisses": true,
+              "entriesWithin1024": true,
+              "stringUnitsBound": true,
+              "clearPolicy": true,
+              "pulseClockReads": true,
+              "sameElapsed": true,
+              "zeroErrors": true,
+              "complete": true
+            },
+            "artifacts": [
+              {
+                "id": 14855942797,
+                "name": "playwright-ubuntu-24.04-1",
+                "size_in_bytes": 45317558,
+                "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14855942797",
+                "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14855942797/zip",
+                "expired": false,
+                "created_at": "2026-11-23T19:41:20Z",
+                "expires_at": "2026-11-30T19:41:18Z",
+                "updated_at": "2026-11-23T19:41:20Z",
+                "digest": "sha256:b6a96297f481bdef78b2359d9c0641167ee03930a8e1aa481aa9fb3d19da7926",
+                "workflow_run": {
+                  "id": 45249464790,
+                  "repository_id": 1455724710,
+                  "head_repository_id": 1455724710,
+                  "head_branch": "ci-run-linux-sf613-valuetypes",
+                  "head_sha": "1b4d5f5ac5e958c9344f95b612933f399585aa86"
+                }
+              }
+            ],
+            "visualReview": false,
+            "artifactZipOpened": false,
+            "decision": "Do not prototype or adopt primitive-string memo for this observed Preview window: all 524288 canonical entries were non-null typeof object; there were zero string inputs and zero eligible simulated hits.",
+            "interpretation": [
+              "The window ended by its 32nd pulse clock read at 45388ms.",
+              "All eight typeof counters sum to total; null count is zero.",
+              "A typeof object count does not distinguish arrays from other objects; no graph inspection was performed.",
+              "All memo counters and retained string units are zero.",
+              "No comparison with other runs establishes a timing change or predicted saving.",
+              "The same original Preview response timeout remains; the BI case passed."
+            ]
+          }
+        }
       },
       {
         "name": "ISOLATED_IMPORT_REFERENCE_TRANSPORT_PHASES",
@@ -9569,12 +9854,12 @@
         "promoteDiagnosticCode": false,
         "diagnosticOnly": true,
         "reportedAt": "2026-11-23T19:35:10Z",
-        "status": "STATIC_REVIEWED_OVERLAY_PUBLISHED_CI_RECEIPT_PENDING",
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
         "branch": "ci-run-linux-sf613-filephases",
-        "snapshot": null,
-        "snapshotTree": null,
-        "run": null,
-        "testJob": null,
+        "snapshot": "8ebe9236d9cc042b2d68c35a7be1a3b99c7582ab",
+        "snapshotTree": "eeb7975f6904874af6d844cb114da3923d73006d",
+        "run": 45250257726,
+        "testJob": 137957694970,
         "sourceOverlay": {
           "branch": "sf613-filephases",
           "commit": "7b6ab920f4873508133618e15f0e91c4def48821",
@@ -9662,7 +9947,899 @@
           "reason": "Removed additional result.status observations; fetch-resolved is a fixed phase marker."
         },
         "purpose": "Locate the pending original files.import-reference await using pre-context, fetch, bounded body, post-context, catch and existing finally boundaries; no new listener, request, retry, timeout, predicate, await or assertion.",
-        "interpretationLimit": "Missing phase markers do not alone establish cause. Existing bounded lifecycle logging and all original scopes/authorization callbacks remain. The original403 variation remains unresolved."
+        "interpretationLimit": "The unchanged UI56 10000ms expectation failed while original post-reference context revalidation was pending. Pre-context took8826ms; fetch resolved in436ms and bounded JSON decoded in16ms. Post-context had run647ms at the observed expect catch, without an end marker. No requestfailed/ERR_ABORTED was necessary in this reproduction. The post-context duration is censored by failure/teardown; no claim of its eventual duration or the earlier403 cause is made. This is diagnostic evidence, not a product fix or qualification.",
+        "resultRecordedAt": "2026-11-23T19:52:03Z",
+        "cleanupJob": 137962685990,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45250257726",
+        "workflowObservation": {
+          "observedAt": "2026-11-23T19:44:28Z",
+          "by": "/root/audit_checkpoint",
+          "status": "completed",
+          "conclusion": "failure",
+          "headSha": "8ebe9236d9cc042b2d68c35a7be1a3b99c7582ab"
+        },
+        "jobObservation": [
+          {
+            "id": 137957694970,
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-23T19:34:02Z",
+            "completedAt": "2026-11-23T19:42:18Z"
+          },
+          {
+            "id": 137962685990,
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-23T19:42:20Z",
+            "completedAt": "2026-11-23T19:42:27Z"
+          }
+        ],
+        "snapshotVerification": {
+          "by": "/root/audit_checkpoint",
+          "at": "2026-11-23T19:44:28Z",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "changedPaths": 10,
+          "diagnosticPaths": 9,
+          "requestPath": ".ci-run.json",
+          "requestBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+          "originalTests": 2
+        },
+        "result": {
+          "receiptBlob": "f3f67caa33c91de40b36dfde8246cbe9f6a7822a",
+          "receiptCharacters": 24801,
+          "reportedBy": "/root/import_lifecycle",
+          "reviewedBy": "/root/audit_checkpoint",
+          "evidenceAttribution": "The monitor read the complete decoded log and viewed exactly the two captures named in receipt.captures.actuallyViewed. The reviewer independently verified final GitHub run/job metadata, the ten-path snapshot, and the static overlay. The reviewer did not reread the complete log or inspect any capture pixels.",
+          "receipt": {
+            "schema": "sf613-filephases-receipt-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "overlay": {
+              "branch": "sf613-filephases",
+              "commit": "7b6ab920f4873508133618e15f0e91c4def48821",
+              "tree": "f63a04f54bad71344ab851224637f2957907f082",
+              "transportBlob": "41cb2313d37394a08c1c2062158fab7f9f43c2b2",
+              "diagnosticPaths": 9
+            },
+            "snapshot": {
+              "branch": "ci-run-linux-sf613-filephases",
+              "commit": "8ebe9236d9cc042b2d68c35a7be1a3b99c7582ab",
+              "tree": "eeb7975f6904874af6d844cb114da3923d73006d",
+              "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "paths": 10,
+              "originalCollabTests": 2
+            },
+            "run": {
+              "id": 45250257726,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45250257726",
+              "testJob": 137957694970,
+              "testConclusion": "failure",
+              "cleanupJob": 137962685990,
+              "cleanupConclusion": "success",
+              "temporaryRefReadback": "404",
+              "result": "1 failed / 1 passed (7.2m)"
+            },
+            "log": {
+              "bytes": 4134840,
+              "sha256": "8a1bec61244219273f3f5149edd71d0f0801a6a3654b64456cb7a843e4459368",
+              "characters": 4128144,
+              "lines": 1761,
+              "firstCodePoint": 65279
+            },
+            "artifact": {
+              "id": 14855322387,
+              "name": "playwright-ubuntu-24.04-1",
+              "bytes": 43541829,
+              "digest": "sha256:9387e4ac353c8ee944d245da45561aa02ecaa7b7a811b5bebc1fc89ff4dcb85d",
+              "createdAt": "2026-11-23T19:42:15Z",
+              "expiresAt": "2026-11-30T19:42:13Z",
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45250257726/artifacts/14855322387"
+            },
+            "observation": {
+              "lifecyclePackets": 46,
+              "transportPhasePackets": 16,
+              "faultPackets": 0,
+              "originalImportRequestFailedEvents": 0,
+              "errAbortedMentions": 0,
+              "readerErrorsOrCancels": 0,
+              "referenceRequestCaught": 0,
+              "UI55": {
+                "preContextMs": 8937,
+                "fetchMs": 456,
+                "bodyMs": 47,
+                "postContextMs": 8567,
+                "beginToSettledMs": 18072,
+                "preLive": true,
+                "postLive": true
+              },
+              "UI56": {
+                "preContextMs": 8826,
+                "fetchMs": 436,
+                "bodyMs": 16,
+                "preLive": true,
+                "bodyPresent": true,
+                "postBeginUTC": "2026-11-23T19:39:03.033Z",
+                "postEndObserved": false,
+                "expectBeforeUTC": "2026-11-23T19:38:53.678Z",
+                "expectCaughtUTC": "2026-11-23T19:39:03.680Z",
+                "expectElapsedMs": 10002,
+                "postElapsedAtExpectCaughtMs": 647,
+                "loadReferenceResultObserved": false,
+                "loadReferenceCatchObserved": false
+              },
+              "conclusion": "UI56 failed the unchanged 10000ms heading assertion while the original post-reference context revalidation was pending. The same GET fetch resolved and bounded JSON decoded; native requestfinished occurred. No requestfailed or ERR_ABORTED event was needed to reproduce this failure.",
+              "limits": [
+                "Zero failure packets does not prove the earlier 403 variation fixed.",
+                "The UI56 post-context duration is censored by assertion failure and teardown; no end marker was observed.",
+                "The actual marker records the same expect rejection observed by the spec, not Playwright internal deadline scheduling.",
+                "Diagnostic overlay is not a product fix or performance qualification."
+              ]
+            },
+            "lifecycle": [
+              {
+                "runnerTime": "2026-11-23T19:37:07.1904886Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "scope-change",
+                "timeMs": 1795462627186,
+                "chapter": "UI55",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "initialScope": true,
+                "routeKindChanged": true,
+                "chapterChanged": true,
+                "hrefChanged": true,
+                "ownerStampChanged": true,
+                "authStatusChanged": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:07.1908084Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462627187,
+                "chapter": "UI55",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:07.1910714Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462627187,
+                "chapter": "UI55",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:20.9803093Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "scope-change",
+                "timeMs": 1795462640977,
+                "chapter": "UI55",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "initialScope": true,
+                "routeKindChanged": true,
+                "chapterChanged": true,
+                "hrefChanged": true,
+                "ownerStampChanged": true,
+                "authStatusChanged": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:20.9805726Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462640977,
+                "chapter": "UI55",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:20.9807937Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462640977,
+                "chapter": "UI55",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.7374013Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462641735,
+                "chapter": "UI55",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change-period"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.7377462Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462641736,
+                "chapter": "UI55",
+                "generation": 2,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change-period"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.7459189Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462641744,
+                "chapter": "UI55",
+                "generation": 2,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change-period"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.7462327Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462641744,
+                "chapter": "UI55",
+                "generation": 3,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change-period"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.8456791Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462641844,
+                "chapter": "UI55",
+                "generation": 3,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "discover"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:21.8458480Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462641844,
+                "chapter": "UI55",
+                "generation": 4,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "discover"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:32.6715959Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462652670,
+                "chapter": "UI55",
+                "generation": 4,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:32.6717701Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462652670,
+                "chapter": "UI55",
+                "generation": 5,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:43.3138549Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462663303,
+                "chapter": "UI55",
+                "generation": 5,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:43.3172416Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462663304,
+                "chapter": "UI55",
+                "generation": 6,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:43.9772523Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462663971,
+                "chapter": "UI55",
+                "generation": 6,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "preview"
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:43.9815312Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462663972,
+                "chapter": "UI55",
+                "generation": 7,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "preview"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:12.7531042Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-pre-context-begin",
+                "timeMs": 1795462692751,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:21.6905228Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-pre-context-end",
+                "timeMs": 1795462701688,
+                "ticket": 1,
+                "aborted": false,
+                "live": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:21.6907326Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-fetch-begin",
+                "timeMs": 1795462701689,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:22.1692340Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-fetch-resolved",
+                "timeMs": 1795462702145,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:22.1791663Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-body-begin",
+                "timeMs": 1795462702145,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:22.2045512Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-body-decoded",
+                "timeMs": 1795462702192,
+                "ticket": 1,
+                "aborted": false,
+                "resultPresent": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:22.2576938Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-post-context-begin",
+                "timeMs": 1795462702255,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:30.8244598Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-post-context-end",
+                "timeMs": 1795462710822,
+                "ticket": 1,
+                "aborted": false,
+                "live": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:30.8246087Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-execute-settled",
+                "timeMs": 1795462710823,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:34.0097510Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462714008,
+                "chapter": "UI55",
+                "generation": 7,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "reviewing",
+                "busy": false,
+                "caller": "cancel-preview"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:34.0099365Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462714008,
+                "chapter": "UI55",
+                "generation": 8,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "reviewing",
+                "busy": false,
+                "caller": "cancel-preview"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.1350265Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "scope-change",
+                "timeMs": 1795462733133,
+                "chapter": "UI56",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "initialScope": true,
+                "routeKindChanged": true,
+                "chapterChanged": true,
+                "hrefChanged": true,
+                "ownerStampChanged": true,
+                "authStatusChanged": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.1351948Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462733133,
+                "chapter": "UI56",
+                "generation": 0,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.1353697Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462733133,
+                "chapter": "UI56",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "loading",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "scope-change"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6510492Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "spec",
+                "label": "refresh-click-before",
+                "timeMs": 1795462733650
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6740400Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "load-reference-begin",
+                "timeMs": 1795462733673,
+                "chapter": "UI56",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6745110Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-before",
+                "timeMs": 1795462733673,
+                "chapter": "UI56",
+                "generation": 1,
+                "controllerPresent": true,
+                "aborted": false,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "load-reference"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6747242Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "imports",
+                "label": "fence-aborted",
+                "timeMs": 1795462733673,
+                "chapter": "UI56",
+                "generation": 2,
+                "controllerPresent": true,
+                "aborted": true,
+                "status": "ready",
+                "phase": "selecting",
+                "busy": false,
+                "caller": "load-reference"
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6763305Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-pre-context-begin",
+                "timeMs": 1795462733675,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6787668Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "spec",
+                "label": "refresh-click-after",
+                "timeMs": 1795462733678
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:53.6789999Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "spec",
+                "label": "refresh-expect-before",
+                "timeMs": 1795462733678
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:02.5040955Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-pre-context-end",
+                "timeMs": 1795462742501,
+                "ticket": 1,
+                "aborted": false,
+                "live": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:02.5043196Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-fetch-begin",
+                "timeMs": 1795462742501,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:02.9392427Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-fetch-resolved",
+                "timeMs": 1795462742937,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:02.9393445Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-body-begin",
+                "timeMs": 1795462742937,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:02.9622185Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-body-decoded",
+                "timeMs": 1795462742953,
+                "ticket": 1,
+                "aborted": false,
+                "resultPresent": true
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:03.0354040Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "transport",
+                "label": "reference-post-context-begin",
+                "timeMs": 1795462743033,
+                "ticket": 1,
+                "aborted": false
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:03.6916326Z",
+                "schema": "sf-import-lifecycle-v1",
+                "qualification": false,
+                "source": "spec",
+                "label": "refresh-expect-threw",
+                "timeMs": 1795462743680
+              }
+            ],
+            "network": [
+              {
+                "runnerTime": "2026-11-23T19:37:27.1860852Z",
+                "kind": "original-import-request",
+                "event": "requestfinished",
+                "mode": "import-targets",
+                "method": "GET",
+                "failure": null
+              },
+              {
+                "runnerTime": "2026-11-23T19:37:49.7108976Z",
+                "kind": "original-import-request",
+                "event": "requestfinished",
+                "mode": "import-admit",
+                "method": "POST",
+                "failure": null
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:03.2981238Z",
+                "kind": "original-import-request",
+                "event": "requestfinished",
+                "mode": "import-preview",
+                "method": "POST",
+                "failure": null
+              },
+              {
+                "runnerTime": "2026-11-23T19:38:22.2618637Z",
+                "kind": "original-import-request",
+                "event": "requestfinished",
+                "mode": "import-reference",
+                "method": "GET",
+                "failure": null
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:03.0424598Z",
+                "kind": "original-import-request",
+                "event": "requestfinished",
+                "mode": "import-reference",
+                "method": "GET",
+                "failure": null
+              }
+            ],
+            "checkpoints": [
+              {
+                "runnerTime": "2026-11-23T19:38:13.0778108Z",
+                "kind": "original-import-progress",
+                "stage": "independent-reference-read",
+                "elapsedMs": 9874,
+                "httpStatus": 200,
+                "producerStatus": "ok",
+                "activity": "reading-source",
+                "phase": "selecting",
+                "state": "ready"
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:03.8777946Z",
+                "kind": "wave-three-failure",
+                "consoleErrors": [],
+                "pageErrors": []
+              },
+              {
+                "runnerTime": "2026-11-23T19:39:04.3061830Z",
+                "kind": "wave-three-page-closed",
+                "consoleErrors": [],
+                "pageErrors": []
+              },
+              {
+                "runnerTime": "2026-11-23T19:42:12.0550413Z",
+                "kind": "wave-three-page-closed",
+                "consoleErrors": [],
+                "pageErrors": []
+              },
+              {
+                "runnerTime": "2026-11-23T19:42:12.3722740Z",
+                "kind": "wave-three-page-closed",
+                "consoleErrors": [],
+                "pageErrors": []
+              }
+            ],
+            "captures": {
+              "complete": 38,
+              "names": [
+                "UI55-setup-dark-desktop",
+                "UI55-setup-light-desktop",
+                "UI55-setup-light-390",
+                "UI55-setup-dark-390",
+                "UI55-dark-desktop-selected-file-options",
+                "UI55-dark-390-selected-file-options",
+                "UI55-scanned-simulation-dark-desktop",
+                "UI55-scanned-simulation-light-desktop",
+                "UI55-scanned-simulation-light-390",
+                "UI55-scanned-simulation-dark-390",
+                "UI55-dark-desktop-field-change",
+                "UI55-dark-desktop-complete-source-impact",
+                "UI55-dark-desktop-cancel-retains-file",
+                "FAILED-native-wave-three-test-data",
+                "UI51-relationship-dark-desktop",
+                "UI51-relationship-light-desktop",
+                "UI51-relationship-light-390",
+                "UI51-relationship-dark-390",
+                "UI51-dark-desktop-removal-review",
+                "UI51-dark-desktop-explicit-editor",
+                "UI51-dark-desktop-create-review",
+                "UI51-dark-desktop-case-alias-empty",
+                "UI52-discussion-dark-desktop",
+                "UI52-discussion-light-desktop",
+                "UI52-discussion-light-390",
+                "UI52-discussion-dark-390",
+                "UI52-dark-desktop-origin-unsent-draft",
+                "UI52-dark-390-unsent-draft",
+                "UI53-material-dark-desktop",
+                "UI53-material-light-desktop",
+                "UI53-material-light-390",
+                "UI53-material-dark-390",
+                "UI53-dark-desktop-confirmation-review",
+                "UI53-dark-desktop-original-receipt",
+                "UI53-dark-desktop-recorded-validity",
+                "UI51-pt-BR-dark-desktop",
+                "UI52-pt-BR-dark-desktop",
+                "UI53-pt-BR-dark-desktop"
+              ],
+              "actuallyViewed": [
+                {
+                  "name": "FAILED-native-wave-three-test-data",
+                  "observation": "UI56 Import preview, step3 Review preview, Loading panel; heading assertion target absent."
+                },
+                {
+                  "name": "UI55-dark-desktop-cancel-retains-file",
+                  "observation": "UI55 returned to file/options; original XLSX filename retained, selected destination/period visible, Generate preview button present."
+                }
+              ],
+              "remainingInventoriedOnly": 36,
+              "coverage": "13 UI55 +1 FAILED UI56 +24 UI51-53 including pt-BR. No successful UI56 capture or pt-BR Import path."
+            }
+          }
+        }
       }
     ]
   },
@@ -10984,7 +12161,7 @@
       "Getter/setter identity and descriptor flags must remain exact, without calling target accessor.",
       "Pre-bootstrap replacement reader can produce ambiguous descriptor objects; fallback must not introduce observable traps/getters before the generic comparison."
     ],
-    "observedAt": "2026-11-23T17:41:08Z",
+    "observedAt": "2026-11-23T19:52:03Z",
     "patchCreated": false,
     "descriptorUnrollDecision": {
       "status": "CANCELLED_BEFORE_IMPLEMENTATION",
@@ -11132,7 +12309,7 @@
     },
     "freshAclTransferProposal": {
       "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
-      "status": "READ_ONLY_UNDER_REVIEW_NO_APPROVAL",
+      "status": "READ_ONLY_BLOCKED_BY_PROVENANCE_COUNTEREXAMPLES_NO_APPROVAL",
       "proposedBy": "/root",
       "assignedForIndependentReviewTo": "/root/preview_cpu",
       "patchCreated": false,
@@ -11144,7 +12321,124 @@
         "Any additional copyValue primitive guard must cover getOwnPropertySymbols/Descriptors, Array.from, Set.has/add/delete and their original bindings.",
         "Do not assume surfaces is an ordinary literal: custom map/proxy/species can expose and mutate intermediate entries before materialization.",
         "Prove the entire synchronous processing path or preserve original copyValue; no product approval has been given."
+      ],
+      "updatedAt": "2026-11-23T19:52:03Z",
+      "additionalCounterexample": {
+        "reportedBy": "/root/preview_cpu",
+        "kind": "STATIC_NOT_EXECUTED",
+        "site": "local-store.ts:935 before readonlyAuthorityAclCodec guard at939",
+        "setup": "Object.hasOwn(scope.root,readOnly) passes the private root to a temporary hook. The hook replaces root.aclCopies.planner with a function returning foreignData, restores Object.hasOwn, and returns the native result.",
+        "effect": "Same-store and the later strong codec guard can pass, while typeof read accepts the substituted closure. Original copyValue detaches/validates the foreign data. Skipping that copy can return an alias or suppress an original validation error.",
+        "limit": "A guard immediately before line935 does not rule out root escape during an earlier call."
+      },
+      "additionalAdmissionRequired": [
+        "Privately attest the exact copyAcl closure identity at its sole construction site, tied to its captured immutable ACL string and complete/full-plan boolean.",
+        "Attest input surfaces and the whole map/species/iterator path so no custom callback can expose or mutate intermediate entries.",
+        "Preserve original fallback and all copyValue error/hook behavior whenever provenance or intrinsic guards are not proven."
+      ],
+      "decision": "No implementation or performance qualification; the existing private-looking root and late codec guard are insufficient fresh-copy provenance."
+    },
+    "primitiveStringMemoDecision": {
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "status": "REJECTED_FOR_OBSERVED_PREVIEW_WINDOW_ZERO_ELIGIBILITY",
+      "recordedAt": "2026-11-23T19:52:03Z",
+      "run": 45249464790,
+      "receiptBlob": "e79f05ea11ba8a9e27e6fe53cfdeae07e77c067d",
+      "windowElapsedMs": 45388,
+      "canonicalEntries": 524288,
+      "nonNullObjectEntries": 524288,
+      "primitiveStringEntries": 0,
+      "eligibleEntries": 0,
+      "simulatedHits": 0,
+      "patchCreated": false,
+      "scope": "Whole-isolate canonical entries during the first original Portfolio evaluation diagnostic window, not completed hashes or exclusive Preview attribution.",
+      "limits": [
+        "Do not infer input distribution outside this measured window or across all C17/application calls.",
+        "No object graph inspection distinguishes arrays or other objects.",
+        "Do not combine these counts with times or CPU samples from different runs.",
+        "All original canonical/hash work still executed; no measured saving exists."
       ]
+    },
+    "fencedRequestResultReuseReview": {
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "status": "REJECTED_FOR_CURRENT_CANDIDATE_FRESH_CALLBACK_BOUNDARIES",
+      "recordedAt": "2026-11-23T19:52:03Z",
+      "reviewedBy": "/root/audit_checkpoint",
+      "parentDecision": "/root agreed to preserve the original readForCalculation calls at calculation-evidence.ts:77 and:90; no patch or experiment is authorized for this candidate.",
+      "reviewedCommit": "42abce1949cc1a533f62baab6597896d359f3129",
+      "reviewedTree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+      "reviewedParent": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
+      "patchCreated": false,
+      "ciRun": false,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "sourceBlob": "e33b15401b676d59a7451bb1f37766c5ad6343d5",
+          "reviewedParentBlob": "1e7d35c7bc55fc3a83c96debeceac7c0c0310df9",
+          "reviewedBlob": "12f1e5faa892e15e07dd5584889c5212aa075357",
+          "parentEqualsC3": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "sourceBlob": "5734adfa72d56fe8c687cf2a1d104ce2bb7d5a68",
+          "reviewedParentBlob": "5734adfa72d56fe8c687cf2a1d104ce2bb7d5a68",
+          "reviewedBlob": "2acb8130196a7444b06cb3a5fe1f178459151d96",
+          "parentEqualsC3": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "sourceBlob": "43039f9ffd0a5403f72328710a0fa0b1ab8fc71c",
+          "reviewedParentBlob": "43039f9ffd0a5403f72328710a0fa0b1ab8fc71c",
+          "reviewedBlob": "430d5cfe87ad67f002fa8fd3eff225712801544a",
+          "parentEqualsC3": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-observation.test.ts",
+          "reviewedBlob": "1be54cd96d84f233bc199c91cccc2cb69b361477",
+          "added": true
+        }
+      ],
+      "positiveProperties": [
+        "The request store still performs its two embedded result reads and existing final joint case/result/request fence, and returns detached request/result values.",
+        "The new reader is called independently before and after the first replay; no persistent inter-observation memo is introduced.",
+        "Normal final-value pairing and output detachment are useful but do not prove equivalence of omitted live callbacks."
+      ],
+      "changedBoundary": "C3 first loadRequest performs result reads R1/R2 and joint fence F1, followed by independent result-store.readForCalculation R3 before first replay. The second loadRequest performs R4/R5 and F2, followed by independent R6 before second replay. The proposal substitutes values from F1/F2 for R3/R6.",
+      "perRemovedSuccessfulInvocation": {
+        "caseResultC08Reads": 3,
+        "authorizeCase": 2,
+        "verifySources": 2,
+        "verifyCalculationSourcesWhenConfigured": 2,
+        "hostRevalidate": 4
+      },
+      "twoRemovedTopLevelSuccessfulInvocations": {
+        "caseResultC08Reads": 6,
+        "c08AuthorizationCallbacks": 12,
+        "authorizeCase": 4,
+        "verifySources": 4,
+        "verifyCalculationSourcesWhenConfigured": 4,
+        "hostRevalidate": 8
+      },
+      "countBasis": "Static successful-path analysis of C3 result-store.ts, blob bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc. Recursive work can also differ. Parent-reported C17 counts1952→1078 were not independently rerun or verified here.",
+      "scopeLimits": [
+        "The new readObservation is installed unconditionally, including opaque/non-UI and UI record-only paths without preparedRoot.",
+        "C3 retains concurrent direct record-only issues; the prepared read-only root is not a universal admission for this patch.",
+        "Read-scope digest/metadata witnesses validate two observed values; they do not prove purity, count or ordering of the callbacks removed between them."
+      ],
+      "counterexample": {
+        "kind": "STATIC_NOT_EXECUTED",
+        "setup": "Use the same stable wrapped results.readForCalculation identity supported by the added test. The wrapper calls the real reader, but returns denied on its third invocation; it does not fabricate a successful source.",
+        "original": "C3 receives R1/R2 inside its first request load, then the independent R3 returns denied at the original pre-first-replay boundary. calculation-evidence returns that denied before any replay.",
+        "proposal": "The paired first observation uses R1/R2, then first replay already runs. The third invocation now occurs inside the final request observation, where its refusal makes that observation unavailable; replayAgain still executes before the final compound check and the public result becomes stale.",
+        "difference": "Same stored bytes and stable wrapper identity do not establish equal callback order/count, refusal result, or replay count."
+      },
+      "testReview": [
+        "The new count3 revocation test tests its renumbered final observation rather than differential equivalence at C3's removed pre-first-replay boundary.",
+        "Count2 mutation tests a retained embedded read.",
+        "Initial typed refusal and normal fallback parity tests do not cover the omitted post-fence callback boundary."
+      ],
+      "wholeBlobHazard": "Do not copy reviewed planner-calculation-services blob12f1e5faa892e15e07dd5584889c5212aa075357 onto C3. Its parent differs from C3 and lacks the observeSfUiContextIntegrity import/guard used by C3 freshRecordSources and issueObserved. Whole-blob replacement would revert an unrelated C3 guard correction. Even an isolated delta preserving that guard remains rejected for the fresh-boundary change.",
+      "decision": "Preserve original calls, awaits, callback/SQL freshness and eager replay semantics. No diagnostic or candidate promotion for this proposal."
     }
   },
   "portfolioHistoryAbortInvestigation": {
