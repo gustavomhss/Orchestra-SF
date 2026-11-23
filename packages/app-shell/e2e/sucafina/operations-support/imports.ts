@@ -112,6 +112,7 @@ async function tokens(page: Page, account: Account, year: string, version: strin
   if (decoded.status !== "ok" || !decoded.value.data.grid) throw new Error("The authorized CAP18 grid is unavailable")
   const grid = decoded.value.data.grid
   const surface = page.locator('[data-sf-surface="CAP18"]')
+  if (observeControls) await surface.getByRole("tab", { name: "Lines", exact: true }).click()
   const result: Record<string, number> = {}
   for (const id of ids) {
     const matching = grid.rows.filter((row) => row.id === id)
@@ -123,10 +124,13 @@ async function tokens(page: Page, account: Account, year: string, version: strin
     const row = surface.locator(`tbody tr[data-sf-row="${id}"]`)
     await expect(row).toHaveCount(1)
     await row.getByRole("button", { name: "Manage", exact: true }).click()
-    const detail = page.getByRole("region", { name: "Manage record", exact: true })
+    const detail = page.getByRole("region", { name: "Manage", exact: true })
+    await detail.locator("details.sf-u07-source > summary").click()
     const line = detail.locator("p").filter({ has: page.getByText(id, { exact: true }) })
     await expect(line).toHaveCount(1)
     await expect(line).toContainText(new RegExp(`Source revision:\\s*${revision}(?![0-9])`))
+    await detail.getByRole("button", { name: "Back to plan", exact: true }).click()
+    await expect(surface.getByRole("tab", { name: "Lines", exact: true })).toHaveAttribute("aria-selected", "true")
   }
   return result
 }
