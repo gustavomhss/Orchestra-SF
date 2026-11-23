@@ -1,0 +1,1680 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 718,
+  "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+  "productSource": "2d8b354742df54e65c28317500feea92b8155d7d",
+  "status": "qualification-in-progress",
+  "distinctIssues": [
+    {
+      "id": "R4-01",
+      "area": "Teams",
+      "problem": "Expanded chat administration escaped its raised surface.",
+      "resolution": "Correct intrinsic sizing for the expanded chat layout.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-02",
+      "area": "Teams",
+      "problem": "Empty active fields had weak boundaries in both themes.",
+      "resolution": "Use a scoped native dim edge while preserving hover and keyboard focus.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-03",
+      "area": "Planner / Versions",
+      "problem": "The version identity vanished from narrow action-side table views.",
+      "resolution": "Repeat the real source name beside narrow actions with the original accessible identity retained.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-04",
+      "area": "Procurement / Overview",
+      "problem": "Wrapped labels displaced adjacent metric values.",
+      "resolution": "Share label, value and note tracks with native subgrid.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-05",
+      "area": "Procurement / Approvals",
+      "problem": "Request numbers and their action wrapped unnecessarily.",
+      "resolution": "Reserve the existing 180px identity-column budget.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-06",
+      "area": "Documents / Evidence",
+      "problem": "Candidate selection shrank within its row and its text was centered.",
+      "resolution": "Fill the candidate column, align value and metadata, and separate confirmation.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-07",
+      "area": "Memory / Signals",
+      "problem": "Selected case text approached the native select arrow.",
+      "resolution": "Give the local 32px end reserve enough specificity to survive the shared form rule.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-08",
+      "area": "Local administration",
+      "problem": "The same summary heading appeared twice.",
+      "resolution": "Use one heading and preserve the fieldset's accessible name.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-09",
+      "area": "Settings / Add server",
+      "problem": "Dialog rules targeted the wrong DOM level.",
+      "resolution": "Apply the native frame, gutters, title and mobile controls to DialogV2 Content.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-10",
+      "area": "MCP / Remove",
+      "problem": "Removal used the primary-action tone.",
+      "resolution": "Use the established danger treatment.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-11",
+      "area": "Native warning role",
+      "problem": "Three consumers referenced an undeclared warning alias.",
+      "resolution": "Resolve warning through the existing warm role in each palette.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-12",
+      "area": "Agents / Roster",
+      "problem": "Duplicate gutters compressed cards and a metric label.",
+      "resolution": "Use shared responsive inner geometry and local compact metric insets.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-13",
+      "area": "Agents / Tabs",
+      "problem": "Mobile tabs had 37px targets.",
+      "resolution": "Apply native 44px targets within the existing scroller.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-14",
+      "area": "Agents / Prompt editor",
+      "problem": "The counter wrapped into two or three lines beside Reset.",
+      "resolution": "Allow the footer to wrap while preserving the whole counter and action.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-15",
+      "area": "MCP / Tools",
+      "problem": "A long endpoint expanded scroll width to 1234px and hid controls.",
+      "resolution": "Shrink the text block and wrap the full redacted endpoint inside the dialog.",
+      "kind": "visual"
+    },
+    {
+      "id": "R4-16",
+      "area": "Native page reads",
+      "problem": "Unchanged dev returned valid page data after the original 10-second ready bound.",
+      "resolution": "Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons.",
+      "kind": "loading"
+    }
+  ],
+  "qualification": {
+    "uniqueBrowserCases": 86,
+    "scopes": [
+      {
+        "scope": "Teams / shared visual",
+        "run": 45207326593,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "snapshot": "26719e33ec919854b87af5dd68b0421df3130de6",
+        "artifact": 14833663548,
+        "sha256": "823b1d2ba9cef0c75a885ab18886863e25675ba60bfa6b2b3c10a131bda33fe4",
+        "retainedCases": 40,
+        "fullRunCases": 55,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45207326593",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0
+      },
+      {
+        "scope": "Agents",
+        "run": 45209024988,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "artifact": 14835875491,
+        "sha256": "ecbdea3b3c7e16c427b5315f09f36f4ffe9a92476ff0e288ac5130993ba11106",
+        "retainedCases": 27,
+        "fullRunCases": 27,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209024988",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0
+      },
+      {
+        "scope": "MCP",
+        "run": 45209554231,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "artifact": 14834784008,
+        "sha256": "0431d66eef63c58c96e630d1de1cd45297cac85607587ba4d7352888305e4a02",
+        "retainedCases": 15,
+        "fullRunCases": 15,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209554231",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0
+      },
+      {
+        "scope": "Documents",
+        "run": 45210521937,
+        "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+        "snapshot": "a10dd1c69942e601dbe9e7b19cc40cb2c34cab4e",
+        "artifact": 14834679694,
+        "sha256": "1d0a499d3034900b598ba9fa9771b6536edf987643584d414a1481aa0088d5b9",
+        "retainedCases": 4,
+        "fullRunCases": 4,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45210521937",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0
+      }
+    ],
+    "pending": [
+      "Original Planner / Procurement six-case cohort",
+      "Consultation final artifact and original image review",
+      "Original Memory five-case cohort after causal repair",
+      "Final composed documentation gate"
+    ]
+  },
+  "visualReview": {
+    "counting": "Only opened original checkpoints are marked reviewed. Report/attachment copies, repeated runs and diagnostic-only captures are not additional final coverage.",
+    "qualifiedOriginals": [
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+        "sha256": "213dde6970c8c3bbce5376b4345c350a28daf8ee6bd5c1dff4f8873c432f9965",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 1440,
+          "height": 1000
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-wide.png",
+        "sha256": "919ec5f8733569dae896e9b01969962760fdca4fdf5f53513b0a06c2b55a094d",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 1440,
+          "height": 1000
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+        "sha256": "bbc6a9079753f9b1328e96158826200086869fb81abb123712adb86a69b2b27c",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+        "sha256": "f944c542a79f260097f8fb45eb4746449a9086c6708aa7a8952e485e9633a9ea",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-small.png",
+        "sha256": "418108ff8287e0d49c6af7a2b08831f2ef4c96a8ace52c362087a71ec38bb26d",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-small.png",
+        "sha256": "0b297a4ebccddc76cfc3ef9f52f1fcd5ffd80f43e8d9fd09e7f92afa99606c03",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+        "sha256": "d2a62d15c0c0138d9815031cbb99dc6e31cdc8476d0d5ed2c26684be57b68e2a",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 1440,
+          "height": 1000
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+        "sha256": "2576840617e3efbc54dfa16c4863133b74ea28f5057bb5833624e1959d0e66ab",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 1440,
+          "height": 1000
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-narrow.png",
+        "sha256": "b9f9207219ca8428c34cfd431d39c2703e408fa0caff6fdaabc8281849180b95",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-narrow.png",
+        "sha256": "415f58a189bd5fadec76e864a298a0c188ba49c895a63448197ac73ec13b114a",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-small.png",
+        "sha256": "9f3669ce5f38d87d1802cdacf9127f2eddd76f9bae86de34e074b72d41da21dc",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-small.png",
+        "sha256": "d9a826ad42615431348a2e9697f690c3da8f3bf2782527befeb77a32467b7df1",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "reviewed-after-fix",
+        "suite": "shared visual",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-E-6f893-tip-layer-remains-behind-it-chromium/agents-dialog-escape-focus-returned.png",
+        "sha256": "c4a42cf1a36efb27c4d0410b59caec3cdd5a9c784ed8c7b9866e2ccc7cf2311f",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 1400,
+          "height": 900
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-prompt-footer-br-dark-320.png",
+        "sha256": "b9b3653070abdd8824f914551eb5fb16ee2123dde985e4ddc567a4aba3900d7f",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-roster-br-dark-320.png",
+        "sha256": "5e0f346a6f666d12801a0ed5332cb69a17a81403b73687fc20efc6ebe6e38f89",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-unsaved-overview-br-dark-320.png",
+        "sha256": "d8452c048a9468f5c3fe68cee9d7b00314b2660526232666ad9610e2a3368f1c",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-prompt-footer-br-light-390.png",
+        "sha256": "85a54e1075c9fc64af0a68300afccafc127b29d6c11e37a9e54e86b32a44a4e9",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-roster-br-light-390.png",
+        "sha256": "f14bb175469c71e0eb1800e5a46423d6c59ad1a9a8b232fc9f4d2f4c20b5908a",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-unsaved-overview-br-light-390.png",
+        "sha256": "b4a49e93b064a362ca1b1657e172c13875f70761c4c3511ed56891f2fa8ebd84",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-prompt-footer-br-light-320.png",
+        "sha256": "8f7d82e5c4c10c2ba39d9760be9993c73adbe7d9bd29d5a4a6c97d6edae6be98",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-roster-br-light-320.png",
+        "sha256": "2a6fd7300417d68fcb333fbe23e90123257256d2fc10b13b279da2bf6526ac60",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-unsaved-overview-br-light-320.png",
+        "sha256": "ce1360cc4539c6a22c1dc00a04b6329adb2e161b698e4650059056afbc3fabbf",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-prompt-footer-br-dark-390.png",
+        "sha256": "4c375fd742adb17eac4e0d0c1b81c3ae52df95119523a7f47ec4f6071cf73c03",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-roster-br-dark-390.png",
+        "sha256": "74c8e0c312420ac7b6ec0802dd7c6e0e76f9bfcac2ca8ced56b6a8173b485067",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-unsaved-overview-br-dark-390.png",
+        "sha256": "c773c66d493d1e02df89d6cc7a2283ff9fce6dc8cc9f66b86293d8779d48b849",
+        "group": "agents-final",
+        "run": 45209024988,
+        "artifact": 14835875491,
+        "source": "d7fc4df0969d8b89abc22ae7991af2b77e81f70b",
+        "snapshot": "6d8272aeb3819a90bdd09d9a00eed5b3476b97f9",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-conf-2b7ea--unedited-saves-and-removes-chromium/mcp-remove-confirmation-dark.png",
+        "sha256": "7a43bcfafe7e197c00a072091b6ca2aca0c7fe5fc222f4bbe7bc114a9fd122b3",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 1400,
+          "height": 900
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-7fd6c-mposition-at-320px-in-light-chromium/mcp-remove-light-320.png",
+        "sha256": "aec93a03014cfce335984d80bcebccab99b8002f5f63cff7b8ba7357eb19efaf",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-7fd6c-mposition-at-320px-in-light-chromium/mcp-tools-long-endpoint-light-320.png",
+        "sha256": "6ad4c882de1ab15f1759ecbfb090dfdbf1bd978e4a6b1a896002c09ccdbd7f29",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-c049b-omposition-at-320px-in-dark-chromium/mcp-remove-dark-320.png",
+        "sha256": "13bb6a74bb59e603ca2c3604902336f92d3bf536d408a2c82dcf3a1b959f9c4e",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-c049b-omposition-at-320px-in-dark-chromium/mcp-tools-long-endpoint-dark-320.png",
+        "sha256": "6bbc00ba6460cdcf6fe346aea5beae81e763d7efb3663b5e2d9085a598eeb79b",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-cd09a-omposition-at-390px-in-dark-chromium/mcp-remove-dark-390.png",
+        "sha256": "2151b0e4bfe01e98bc05696695a8df7dc500b97448a8a8ecb853983007be75ab",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-cd09a-omposition-at-390px-in-dark-chromium/mcp-tools-long-endpoint-dark-390.png",
+        "sha256": "89ee5964448e778b3c6eaa3f27816c501327383a2cf93db3c20e8d66523de556",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-d45fd-mposition-at-390px-in-light-chromium/mcp-remove-light-390.png",
+        "sha256": "73be7966a76fcc4ac0725a1fe80d435306c19651e80e893df125b1179b496d9c",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-d45fd-mposition-at-390px-in-light-chromium/mcp-tools-long-endpoint-light-390.png",
+        "sha256": "c19834a9313885394d9687e630c2cc08b4deefc82e6c336116a65ce2a82ddad9",
+        "group": "mcp-final",
+        "run": 45209554231,
+        "artifact": 14834784008,
+        "source": "b658e1aaf9a6a260f6e6cb4be14e4271d28d54a8",
+        "snapshot": "ef2c7795bf2d2381bdc632f91d355e1e7a484523",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "approved-after-fix",
+        "backendQualified": false,
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-38bae-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-input-keyboard-light-320.png",
+        "sha256": "969dd78d624d8f2fbe074f8b80325501fb8eb886761dfd8eb717e6ece34e612d",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-3a3e4-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-input-keyboard-dark-320.png",
+        "sha256": "767fdcb217961f69ec4740fc9505d05b6cb4e0815bf4302fd283588043cdb952",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-8b463-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-expanded-dark-1440.png",
+        "sha256": "4f7047288786855fd4527d872380e7cc0386f5144bfe57ff4384f387ae87c355",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-30015-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-light-1440.png",
+        "sha256": "bd3c7fb61dec288f4543b79ffb41bcb78523cfbebed375512b164152da16858b",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-51ecc-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-dark-1280.png",
+        "sha256": "6721abf89726d7fcce1522af0f26ed6a46f0222e8f11f6e264bfffab1bdf933e",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-team-profile-vis-8c19f-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-expanded-light-1280.png",
+        "sha256": "a100694ff91a8575a4c3ca27bd522757f5a414b381eed5bd3eb77111d6e0171a",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "suite": "Teams",
+        "reviewer": "root",
+        "method": "opened original with view_image"
+      },
+      {
+        "path": "ui59-review-original-source-dark-desktop.jpg",
+        "sha256": "c05bfab24b0e5d14394c5bd4f4d5bf3ce8476ac5da1c2cd2226e9e10b3e79912",
+        "bytes": 74938,
+        "run": 45210521937,
+        "artifact": 14834679694,
+        "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+        "suite": "Documents",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui59-review-original-source-light-desktop.jpg",
+        "sha256": "d9342335120aba51bc7a837cb77bd0358452779d6511be51caf3b7361995c23d",
+        "bytes": 78470,
+        "run": 45210521937,
+        "artifact": 14834679694,
+        "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+        "suite": "Documents",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui59-review-original-source-light-narrow.jpg",
+        "sha256": "8132db4b2519f9dc4f8efe87872498b631cd42a82fce0b7a6c1fa753ea6bb535",
+        "bytes": 22676,
+        "run": 45210521937,
+        "artifact": 14834679694,
+        "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+        "suite": "Documents",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      }
+    ],
+    "beforeOriginals": [
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-prompt-footer-br-dark-320.png",
+        "sha256": "ac625246fcbd44d1d2f134d91236fb653ffc596f8e66170dd6fdc374ca21667b",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-roster-br-dark-320.png",
+        "sha256": "3fb510fabb5f32f2a2b2fbb50c7fe312b7a5df0b18f36c2284037dae2fd8f013",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-137b5-omposition-at-320px-in-dark-chromium/agents-unsaved-overview-br-dark-320.png",
+        "sha256": "e2d1f88c379b87102f6c03a067b60c29d3103b7b365caeda950bae14be8737bb",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-prompt-footer-br-light-390.png",
+        "sha256": "39afe50ef1b4b6dc8930b159a89e7350ffe1624ccd71918ffa48fd1857946496",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-roster-br-light-390.png",
+        "sha256": "bb507de545e9ea2d8decca99eeaf4da51071af6fe4b7e7145fb76d029f322cfd",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-348e7-mposition-at-390px-in-light-chromium/agents-unsaved-overview-br-light-390.png",
+        "sha256": "fa054bd77b371942f798eef07d0547b71432dd5d13008aedc786d961dac643cc",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-prompt-footer-br-light-320.png",
+        "sha256": "3a6ddfd98d180c7d9f297721a5fa299c6fc49dd9f4fb2be01455b8a834170107",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-roster-br-light-320.png",
+        "sha256": "3d119cdc57b872b421b944e30230851304b3de9ed6dd864de4cfbfbfb102ec84",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-4fbc1-mposition-at-320px-in-light-chromium/agents-unsaved-overview-br-light-320.png",
+        "sha256": "23c2a36ca8480871ac4e30708fa32555b3a82a00d93867f95c4895f28a222dc8",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-prompt-footer-br-dark-390.png",
+        "sha256": "0e2306961cc02bac9af09dbdf01ae490df14a314c3012fcdb48bec3f6b0ac874",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-roster-br-dark-390.png",
+        "sha256": "527490afdc9fbd49424f3b916dd1af6feec11f6ee2b825cb9c98e9eceea461a6",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-r-d1278-omposition-at-390px-in-dark-chromium/agents-unsaved-overview-br-dark-390.png",
+        "sha256": "e76717ec1d25b085c7fa260f31203a7c8d0f679deb6f598ef871953de0a76377",
+        "group": "agents-baseline",
+        "run": 45206454946,
+        "artifact": 14835271052,
+        "source": "8a8a1c230c63be0fac1c0d78b60ed737a2fa139e",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "Agents",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-7fd6c-mposition-at-320px-in-light-chromium/mcp-tools-long-endpoint-light-320.png",
+        "sha256": "419d44b1634683cd0860aa163bc68356854525d89f0078839b2ea34faae6d2cf",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-c049b-omposition-at-320px-in-dark-chromium/mcp-tools-long-endpoint-dark-320.png",
+        "sha256": "19f421777fac68ba691743427ad6494bb232f76979c69833cd44cf4261c1f6b0",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 320,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-cd09a-omposition-at-390px-in-dark-chromium/mcp-tools-long-endpoint-dark-390.png",
+        "sha256": "6003797cd90836cd4138be9e1199c8f4e58e03d616e07fd0b057b78fbee3f3cc",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-mcp-roun-d45fd-mposition-at-390px-in-light-chromium/mcp-tools-long-endpoint-light-390.png",
+        "sha256": "ab9479adc724d49cb3dd165254756e052d5d6d9d2bb9624c620aaac8a6e951f0",
+        "group": "shell-first",
+        "run": 45207326593,
+        "artifact": 14833663548,
+        "source": "d56af6b821f329ccf4075ce49fc5498710b18d54",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "verdict": "confirmed-defect-before-fix",
+        "suite": "MCP",
+        "reviewer": "round_four_shell"
+      }
+    ],
+    "historicalOriginals": [
+      {
+        "run": 45088359630,
+        "artifact": 14780730200,
+        "source": "0d9e866fe5b39ebc12096f77f83a8e50e59cef6e",
+        "observation": "Desktop roster has coherent native card rhythm; no new defect claimed.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-d-d8eeb-ds-show-the-returned-fields-chromium/dark.png",
+        "sha256": "f91fddbe89e014f76009786a9f1f8da0226d77433448fa11df2e81b3d16ef6a3",
+        "resolution": {
+          "width": 1400,
+          "height": 900
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Agents"
+      },
+      {
+        "run": 45088359630,
+        "artifact": 14780730200,
+        "source": "0d9e866fe5b39ebc12096f77f83a8e50e59cef6e",
+        "observation": "Return to roster with Create agent focused. Historical Escape path remains intact; not mobile evidence.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-agents-E-6f893-tip-layer-remains-behind-it-chromium/agents-dialog-escape-focus-returned.png",
+        "sha256": "70ecb61007b610719fabcce7b4433eb2e74d8952a43b2ebcc1ff6c4cecc5ad75",
+        "resolution": {
+          "width": 1400,
+          "height": 900
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Agents"
+      },
+      {
+        "run": 45114820142,
+        "artifact": 14790988705,
+        "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+        "observation": "Read-only skill fits 390 with coherent header/body/footer and distinct close action. No new defect claimed.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-r-f60bb-nt-reflows-at-390px-in-dark-chromium/skill-reader-dark-390.png",
+        "sha256": "f0529782dfe1879dd57a306bbf1159f0fac336bff403517338efc6388f533b88",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Skills"
+      },
+      {
+        "run": 45114820142,
+        "artifact": 14790988705,
+        "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+        "observation": "Failed-save editor retains draft and explicit error in native dialog. Pixel alone does not establish active focus; prior DOM assertion does.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-a-d295c-ailure-retains-it-for-retry-chromium/skill-failed-save-focus.png",
+        "sha256": "9de0921f43ce00dd2a9c4f919237893241431371fa456c0699da3f112bdbf305",
+        "resolution": {
+          "width": 1440,
+          "height": 960
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Skills"
+      },
+      {
+        "run": 45088732308,
+        "artifact": 14780570832,
+        "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+        "observation": "Confirmed SUP-01: dialog spans entire 390 viewport, edge x=0 to390. Compact title and controls differ from native framing. Exact own-source parity to e115 confirmed.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+        "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "shared visual"
+      },
+      {
+        "run": 45114820142,
+        "artifact": 14790988705,
+        "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+        "observation": "Skills empty state retains clear native title, action, filter and contained centered status panel; no new defect claimed.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-empty-state-chromium/test-finished-1.png",
+        "sha256": "bced0db85bad97d8177c52ed9caeb1051ab3db6efdb8e8de159b85f1563e49c9",
+        "resolution": {
+          "width": 1440,
+          "height": 960
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Skills"
+      },
+      {
+        "run": 45114820142,
+        "artifact": 14790988705,
+        "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+        "observation": "Light 390 read-only skill reader retains contained header/body/footer with readable document and close control; no new defect claimed.",
+        "path": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-r-d1c12-t-reflows-at-390px-in-light-chromium/skill-reader-light-390.png",
+        "sha256": "4635855ee93ace97fdadef7889b4a52359e4a78b845694530f5d978f64c83652",
+        "resolution": {
+          "width": 390,
+          "height": 844
+        },
+        "method": "opened-original-full-size-with-view_image",
+        "suite": "Skills"
+      }
+    ],
+    "measurements": {
+      "agents": {
+        "viewportWidths": [
+          320,
+          390
+        ],
+        "contentBefore": [
+          230,
+          300
+        ],
+        "contentAfter": [
+          270,
+          340
+        ],
+        "topPaddingBefore": 52,
+        "topPaddingAfter": 28,
+        "tabsBefore": 37,
+        "tabsAfter": 44,
+        "counterLinesBefore": [
+          3,
+          2
+        ],
+        "counterLinesAfter": [
+          1,
+          1
+        ],
+        "counterHeightAfter": 17.59375,
+        "savebarHeightAfter": 66,
+        "savebarClientEqualsScroll": [
+          268,
+          338
+        ],
+        "metricLabelOverflowAfter": 0
+      },
+      "addServer": {
+        "viewportWidths": [
+          320,
+          390,
+          1440
+        ],
+        "dialogWidth": [
+          288,
+          358,
+          480
+        ],
+        "mobileInset": 16,
+        "radius": 16,
+        "titleSize": 20,
+        "mobileControls": 6,
+        "mobileTargetHeight": 44,
+        "warningEqualsWarm": {
+          "dark": "#cfbd95",
+          "light": "#4d390f"
+        }
+      },
+      "mcp": {
+        "viewportWidths": [
+          320,
+          390
+        ],
+        "dialogClientWidth": [
+          286,
+          356
+        ],
+        "dialogScrollWidthBefore": [
+          1234,
+          1234
+        ],
+        "dialogScrollWidthAfter": [
+          286,
+          356
+        ],
+        "headerLeftBefore": [
+          -931,
+          -861
+        ],
+        "headerLeftAfter": [
+          17,
+          17
+        ],
+        "subtitleWidthBefore": [
+          1166.25,
+          1166.25
+        ],
+        "subtitleWidthAfter": [
+          204,
+          274
+        ],
+        "mobileInset": 16,
+        "secretRedacted": true,
+        "escapeAndFocus": true,
+        "zeroWrites": true
+      },
+      "teams": {
+        "run": 45207326593,
+        "checkpoints": 124,
+        "edgeSamples": 196,
+        "minimumInsideContrast": 3.8700818470706344,
+        "minimumOutsideContrast": 4.101574881652669,
+        "keyboardCheckpoints": 8,
+        "focusedSamples": 8,
+        "minimumFocusWidth": 2,
+        "minimumFocusContrast": 9.926062941744844,
+        "minimumContentClearanceBeyondPadding": 12,
+        "maximumPageOverflow": 0,
+        "maximumShellOverflow": 0,
+        "scope": "Computed solid-color layers; decorative image pixels, glass and blur require original screenshot review."
+      }
+    }
+  },
+  "diagnosis": {
+    "pageReadBaseline": {
+      "run": 45210961318,
+      "snapshot": "760bffdea87e692eb6053f1798e0ffb667017882",
+      "productBase": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "artifact": 14836433020,
+      "sha256": "acb593133ffe7ffc90baa08423a4e49760c78fac8cb95a4b923091a64e761923",
+      "stats": {
+        "startTime": "2026-11-23T16:00:33.404Z",
+        "duration": 353015.633,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      },
+      "summaries": [
+        {
+          "testStatus": "failed",
+          "elapsedMs": 22980,
+          "reads": [
+            {
+              "ordinal": 1,
+              "endpoint": "context",
+              "startedMs": 802,
+              "status": 200,
+              "responseMs": 5808,
+              "failedMs": 5830,
+              "failure": "net::ERR_ABORTED",
+              "bodyStatus": "unreadable",
+              "bodyMs": 5848,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 22178
+            },
+            {
+              "ordinal": 2,
+              "endpoint": "context",
+              "startedMs": 6652,
+              "status": 200,
+              "responseMs": 5384,
+              "finishedMs": 5412,
+              "bodyStatus": "ok",
+              "bodyMs": 5416,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 16328
+            },
+            {
+              "ordinal": 3,
+              "endpoint": "page:CAP24",
+              "startedMs": 12063,
+              "status": 200,
+              "responseMs": 10745,
+              "finishedMs": 10755,
+              "bodyStatus": "ok",
+              "bodyMs": 10766,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 10917
+            }
+          ],
+          "title": "installed procurement wave · requests, sourcing and approval decisions",
+          "retry": 0
+        },
+        {
+          "testStatus": "failed",
+          "elapsedMs": 22881,
+          "reads": [
+            {
+              "ordinal": 1,
+              "endpoint": "context",
+              "startedMs": 883,
+              "status": 200,
+              "responseMs": 5893,
+              "finishedMs": 5918,
+              "bodyStatus": "ok",
+              "bodyMs": 5921,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 21998
+            },
+            {
+              "ordinal": 2,
+              "endpoint": "context",
+              "startedMs": 6812,
+              "status": 200,
+              "responseMs": 5382,
+              "failedMs": 5410,
+              "failure": "net::ERR_ABORTED",
+              "bodyStatus": "unreadable",
+              "bodyMs": 5412,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 16069
+            },
+            {
+              "ordinal": 3,
+              "endpoint": "page:CAP27",
+              "startedMs": 12222,
+              "pendingAtSummary": true,
+              "ageAtSummaryMs": 10659
+            }
+          ],
+          "title": "installed procurement wave · supplier drafts and confirmed changes",
+          "retry": 0
+        },
+        {
+          "testStatus": "failed",
+          "elapsedMs": 22886,
+          "reads": [
+            {
+              "ordinal": 1,
+              "endpoint": "context",
+              "startedMs": 882,
+              "status": 200,
+              "responseMs": 5918,
+              "finishedMs": 5943,
+              "bodyStatus": "ok",
+              "bodyMs": 5947,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 22004
+            },
+            {
+              "ordinal": 2,
+              "endpoint": "context",
+              "startedMs": 6833,
+              "status": 200,
+              "responseMs": 5409,
+              "finishedMs": 5434,
+              "bodyStatus": "ok",
+              "bodyMs": 5439,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 16053
+            },
+            {
+              "ordinal": 3,
+              "endpoint": "page:CAP28",
+              "startedMs": 12266,
+              "pendingAtSummary": true,
+              "ageAtSummaryMs": 10620
+            }
+          ],
+          "title": "installed procurement wave · policy draft and confirmed change",
+          "retry": 0
+        },
+        {
+          "testStatus": "failed",
+          "elapsedMs": 23903,
+          "reads": [
+            {
+              "ordinal": 1,
+              "endpoint": "context",
+              "startedMs": 840,
+              "status": 200,
+              "responseMs": 6182,
+              "finishedMs": 6210,
+              "bodyStatus": "ok",
+              "bodyMs": 6212,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 23063
+            },
+            {
+              "ordinal": 2,
+              "endpoint": "context",
+              "startedMs": 7062,
+              "status": 200,
+              "responseMs": 5827,
+              "failedMs": 5855,
+              "failure": "net::ERR_ABORTED",
+              "bodyStatus": "unreadable",
+              "bodyMs": 5857,
+              "pendingAtSummary": false,
+              "ageAtSummaryMs": 16841
+            },
+            {
+              "ordinal": 3,
+              "endpoint": "page:CAP24",
+              "startedMs": 12917,
+              "pendingAtSummary": true,
+              "ageAtSummaryMs": 10986
+            }
+          ],
+          "title": "installed procurement wave · all five areas in Portuguese",
+          "retry": 0
+        }
+      ],
+      "firstFailure": {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "line": 78,
+        "expectedBusyElements": 0,
+        "receivedBusyElements": 1,
+        "timeoutMs": 10000,
+        "page": "CAP24",
+        "requestStartedUtc": "2026-11-23T16:02:26.0410051Z",
+        "failureUiUtc": "2026-11-23T16:02:36.5530919Z",
+        "headersUtc": "2026-11-23T16:02:36.7880045Z",
+        "headersMs": 10745,
+        "finishedMs": 10755,
+        "bodyMs": 10766,
+        "httpStatus": 200,
+        "envelope": "ok",
+        "conclusion": "The original readiness assertion failed before page response headers arrived."
+      },
+      "diagnosticChanges": [
+        "HTTP observers in the original Procurement spec",
+        ".ci-run.json selecting the entire original Procurement spec because the unchanged validator accepts complete spec paths only"
+      ],
+      "unchanged": [
+        "All product source at e115b667d845822a1df5f523bbfd828ab57ca978",
+        "Original ready() and 10000ms busy deadline",
+        "Original per-test deadlines, assertions and retry:0",
+        "Production browser runner and Linux strict Omni"
+      ],
+      "visualCoverage": "No R4 visual result was reached; this is baseline failure diagnosis, not after evidence."
+    },
+    "memoryFirst": {
+      "run": 45206223972,
+      "snapshot": "74f77c26525ae7f2e9d37b9c0d31e99f212b3fa4",
+      "source": "cfeccf6399b72b7bce80a916b9ce84343a7d76bc",
+      "artifact": 14836658413,
+      "artifactSha256": "1a81042c14166fdaed6d21c707b2f80601396eaf5043d841fe953ca69ce3157f",
+      "stats": {
+        "total": 7,
+        "expected": 3,
+        "unexpected": 4,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": false
+      },
+      "failures": [
+        {
+          "test": "UI61 materiality cancellation",
+          "firstFailure": "new padding geometry oracle: end-start expected >=16, observed0; no cancellation started"
+        },
+        {
+          "test": "UI61 signals cancellation",
+          "firstFailure": "new padding geometry oracle: end-start expected >=16, observed0; no cancellation started"
+        },
+        {
+          "test": "UI61 original independent steps",
+          "firstFailure": "original GET memory-materiality exceeded unchanged40s after conditions rendered. No response/body or late200 observed by end of trace. Subsequent PT navigation15s and conditions40s also failed."
+        },
+        {
+          "test": "UI62 original authorized recall",
+          "firstFailure": "POST memory-similar-cases returned503 in1.630s; complete65byte body {status:unavailable,reason:similarity-source-unavailable}. Original positive200 assertion remains."
+        }
+      ],
+      "qualification": false
+    }
+  },
+  "sourceBoundaries": {
+    "productReadWrite": "GitHub MCP",
+    "execution": "Existing test-ci, Linux, strict Omni, disposable ci-run snapshots",
+    "localOperations": "CI evidence parsing, hashing and image inspection only",
+    "diagnosticCopies": "Snapshot-only copies of original UI61/UI62 journeys retain their original actions, assertions, bounds and retry:0; neither copies nor diagnostic console markers enter the product branch."
+  },
+  "fixtureMaintenance": [
+    {
+      "path": "apps/cli/test/sucafina-native-web.test.ts",
+      "failure": "Discovery requested the private installation directory instead of its admitted workspace.",
+      "repair": "Resolve the workspace with the existing prepareSfLocalWorkspace owner and preserve the original 401/200, one installation, schema and context assertions.",
+      "productFixCount": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "failure": "The original 403 expectation used an actor who could not see the foreign request; the original runtime correctly returned 404.",
+      "repair": "Give the original visible-but-not-editable attack actor requester and viewer roles, prove record visibility and retain the original 403 and unchanged-state assertions. Add a separate requester-only invisible-record attack with 404 and unchanged state.",
+      "productFixCount": 0
+    }
+  ],
+  "limits": [
+    "Component HTTP fixtures are distinct from isolated native installation journeys. These runs do not qualify a live Microsoft account or OAuth integration.",
+    "CSS viewport reflow is not browser zoom; image inspection is not owner visual acceptance.",
+    "Real source absence and unavailable states remain visible. No financial values, identities, roles, CAS, draft or recovery semantics were replaced.",
+    "Original time bounds, retry:0 and positive success assertions remain unchanged. Failed diagnostic attempts are retained and excluded from final success counts.",
+    "No workflow, approval bypass, production deployment or external communication is part of this pass."
+  ],
+  "structuralGates": [
+    {
+      "run": 45210524937,
+      "result": "success",
+      "source": "8cf00a1c386ab69b11bfec122f9743eb683478b7",
+      "snapshot": "31149c7ad35d9a5482cb5587a25f18aa2b547019",
+      "outer": {
+        "passed": 6,
+        "failed": 0
+      },
+      "nested": {
+        "passed": 116,
+        "failed": 0
+      }
+    },
+    {
+      "run": 45215614782,
+      "result": "failure",
+      "source": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+      "snapshot": "2a09999207963f86bc6b6ddea05d5afbfee1f37d",
+      "outer": {
+        "passed": 8,
+        "failed": 2
+      },
+      "qualifies": false,
+      "failure": "Two stale test setups; all 53 request-context controls passed"
+    },
+    {
+      "head": "042ad6edafac0427e706031857fe071c23a855d0",
+      "tree": "c34db32aacf1b6504fcfe16ed3f153a59b614e72",
+      "source": "2d8b354742df54e65c28317500feea92b8155d7d",
+      "branch": "ci-run-r4gates3",
+      "run": 45217577648,
+      "job": 137842777451,
+      "result": "success",
+      "outer": {
+        "passed": 10,
+        "failed": 0
+      },
+      "nested": {
+        "comparisonLayout": 13,
+        "browserCommandsTeams": 103,
+        "pageDomainAssets": 136,
+        "installedContextProcurement": 4,
+        "total": 256
+      },
+      "omni": {
+        "declared": 10,
+        "spawns": 12,
+        "delegated": 0,
+        "verdict": "pass"
+      },
+      "palettes": {
+        "files": 7,
+        "changed": []
+      }
+    }
+  ]
+}
