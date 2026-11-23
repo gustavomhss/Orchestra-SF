@@ -1,5 +1,6 @@
 // N28 / U33: UI50 frozen headings and report-selection copy.
 export const SF_U33_COPY = {
+  "sf.u33.openReview": "Open review for export",
   "sf.ui50.title": "Report",
   "sf.ui50.primary": "Generate report",
   "sf.u33.review": "Preserved review",
@@ -29,6 +30,7 @@ export const SF_U33_COPY = {
   "sf.u33.longNotes": "Full authorized notes remain available, without truncation.",
 } as const
 export const SF_U33_COPY_BR: Readonly<Record<keyof typeof SF_U33_COPY, string>> = {
+  "sf.u33.openReview": "Abrir revisão para exportar",
   "sf.ui50.title": "Relatório",
   "sf.ui50.primary": "Gerar relatório",
   "sf.u33.review": "Revisão preservada",

@@ -88,6 +88,20 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                     </For>
                   </svg>
                 </div>
+                <dl class="sf-bi-mobile-values">
+                  <For each={rows()}>{(row) => <div data-sf-mobile-value-id={row.id}
+                    data-sf-evidence={row.evidence} data-sf-value-kind={row.value === null ? "missing" : "known"}>
+                    <dt>{row.period}</dt>
+                    <dd><strong>{fmt(row.value)}</strong><span>{row.unit}</span></dd>
+                    <Show when={row.value !== null}>
+                      <span class="sf-bi-mobile-track" aria-hidden="true">
+                        <span class="sf-bi-mobile-mark" data-negative={row.value !== null && row.value < 0}
+                          style={{ width: (row.value === null ? 0 : Math.abs(row.value) / extent() * 50) + "%",
+                            left: row.value !== null && row.value < 0 ? (50 - Math.abs(row.value) / extent() * 50) + "%" : "50%" }} />
+                      </span>
+                    </Show>
+                  </div>}</For>
+                </dl>
                 <div class="sf-bi-source-actions">
                   <For each={rows().filter((row) => row.evidenceRef)}>
                     {(row) => <button class="mx-btn" type="button"

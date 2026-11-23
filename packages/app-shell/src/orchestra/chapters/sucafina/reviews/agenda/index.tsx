@@ -1,11 +1,13 @@
 import { For, Show, createEffect, createUniqueId, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
+import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
 import { createSfReviewsClient } from "@orchestra/client/sucafina/reviews"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
+import { encodeSfRouteRef } from "../../navigation-state"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfReviewUpdate } from "@orchestra/schema/sucafina/reviews"
 import type { Schema } from "effect"
@@ -35,6 +37,7 @@ function stateOf(result: { kind: "transport-error"; reason: string } | { kind: "
 export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   const uid = createUniqueId()
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [store, setStore] = createStore({
@@ -52,6 +55,16 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   let sourceAbort: AbortController | undefined
   let commandAbort: AbortController | undefined
   const ready = () => owner.ready()
+  const openPreserved = () => {
+    if (!ready() || !store.preserved || store.phase !== "confirmed") return
+    const query = new URLSearchParams({
+      server: props.route.ownerSelection.serverKey,
+      project: props.route.ownerSelection.projectId,
+    })
+    if (props.route.ownerSelection.installationId)
+      query.set("installation", props.route.ownerSelection.installationId)
+    navigate("/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(store.preserved.id) + "?" + query)
+  }
   const authorized = (operationId: string) => operationGranted(ready()?.context, operationId, { family: "reviews", resource: "agenda" })
   const mayPreview = () => authorized("dashboard.dashboard-agenda")
   const mayPreserve = () => authorized("dashboard.dashboard-review-preserve")
@@ -252,7 +265,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       density="comfortable"
       layout="work"
       onLayoutMode={() => undefined}
-      primaryAction={{
+      primaryAction={store.phase === "reviewing" || store.phase === "confirmed" || store.phase === "outcome-unknown" ? undefined : {
         id: "preview", labelKey: key("sf.u25.preview"), tone: "primary",
         disabled: !mayPreview() || !store.selected.length || store.phase === "submitting" ||
           store.phase === "outcome-unknown" || store.phase === "previewing" || store.phase === "confirmed",
@@ -271,7 +284,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           state={displayState()}
           messageKey={key(displayState() === "filtered-empty" ? "sf.u25.noMatching"
             : store.message || (store.status === "empty" ? "sf.u25.noSections" : "sf.common.unavailable"))}
-          onRetryRead={store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
+          onRetryRead={store.sourcePage.trim() && store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
         >
           <label class="sf-n28-field" for={uid + "-filter"}>{t("sf.u25.filter")}
             <input id={uid + "-filter"} type="search" value={store.filter}
@@ -342,6 +355,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               <dt>{t("sf.u25.result")}</dt><dd>{store.preserved?.id}</dd>
               <dt>{t("sf.u25.version")}</dt><dd>{store.preserved?.version}</dd>
             </dl>
+            <button class="mx-btn primary" type="button" onClick={openPreserved}>{t("sf.u32.openReview")}</button>
           </section>
         </Show>
         <Show when={store.phase === "outcome-unknown"}>

@@ -37,6 +37,8 @@ import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeCh
 import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
 import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfSourceNavigation } from "./source-navigation"
+import { SfPageFrame, type SfCopyKey } from "../shared/frame"
+import { SfStatePanel } from "../shared/states"
 import { sfUnavailableScheduleOwner, SfUnavailableScheduleView } from "./schedule-unavailable"
 import { sfUnavailableRoutineCatalogOwner, SfUnavailableRoutineCatalogView } from "./routine-catalog-unavailable"
 
@@ -316,7 +318,13 @@ function MountedSurface(props: Readonly<{
       <SfSourceNavigation route={current} navigation={props.navigation} />
       <Switch fallback={
         <Show when={unavailableRoutineCatalog()} fallback={
-          <Show when={unavailableSchedule()} fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+          <Show when={unavailableSchedule()} fallback={<div data-sf-f01="not-admitted">
+            <SfPageFrame titleKey={"sf.common.unavailable" as SfCopyKey} context={[]} tabs={[]} activeTab={null}
+              secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
+              <SfStatePanel state="unavailable" messageKey={"sf.common.noAuthorizedDestination" as SfCopyKey}
+                onRetryRead={() => { void handle.reload() }} />
+            </SfPageFrame>
+          </div>}>
             {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}
           </Show>
         }>

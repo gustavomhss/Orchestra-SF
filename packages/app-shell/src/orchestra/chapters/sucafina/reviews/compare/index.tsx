@@ -257,22 +257,6 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                 <h3>{t("sf.u32.diff")}</h3>
                 <Show when={changed() || store.changedOrder} fallback={<p>{t("sf.u32.unchanged")}</p>}>
                   <div class="sf-n28-section sf-section" data-sf-comparison-diff="authorized">
-                    <Show when={reviewSourcesChanged()}>
-                      <section class="mx-card sf-n28-section sf-section">
-                        <h4>{t("sf.u32.reviewSources")}</h4>
-                        <div class="sf-n28-scroll" role="region" aria-label={t("sf.u32.reviewSources")} tabIndex={0}>
-                          <table>
-                            <caption>{t("sf.u32.provenanceChange")}</caption>
-                            <thead><tr><th scope="col">{t("sf.u32.sources")}</th>
-                              <th scope="col">{t("sf.u32.before")}</th><th scope="col">{t("sf.u32.after")}</th></tr></thead>
-                            <tbody><tr data-change-source="true"><th scope="row">{t("sf.u32.reviewSources")}</th>
-                              <td><SourceRefList sources={store.previous!.sourceRefs} t={t} /></td>
-                              <td><SourceRefList sources={store.current!.sourceRefs} t={t} /></td>
-                            </tr></tbody>
-                          </table>
-                        </div>
-                      </section>
-                    </Show>
                     <For each={store.previous?.sections}>{(before) => {
                       const after = () => store.current?.sections.find((section) => section.id === before.id)
                       const left = () => readPreservedProjection(before.content)
@@ -290,30 +274,11 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                               <tbody>
                                 <Show when={before.count !== after()!.count}>
                                   <tr><th scope="row">{t("sf.u32.records")}</th>
-                                    <td>{before.count}</td><td>{after()!.count}</td></tr>
+                                    <td data-label={t("sf.u32.before")}>{before.count}</td><td data-label={t("sf.u32.after")}>{after()!.count}</td></tr>
                                 </Show>
                                 <Show when={before.title !== after()!.title}>
                                   <tr><th scope="row">{t("sf.u32.sections")}</th>
-                                    <td>{before.title}</td><td>{after()!.title}</td></tr>
-                                </Show>
-                                <Show when={!sameSourceMaterial(before.sourceRefs, after()!.sourceRefs)}>
-                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.sectionSources")}</th>
-                                    <td><SourceRefList sources={before.sourceRefs} t={t} /></td>
-                                    <td><SourceRefList sources={after()!.sourceRefs} t={t} /></td></tr>
-                                </Show>
-                                <Show when={left()!.version !== right()!.version}>
-                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.projectionVersion")}</th>
-                                    <td>{left()!.version}</td><td>{right()!.version}</td></tr>
-                                </Show>
-                                <Show when={!sameSourceMaterial(left()!.context.sourceRefs, right()!.context.sourceRefs)}>
-                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.projectionSources")}</th>
-                                    <td><SourceRefList sources={left()!.context.sourceRefs} t={t} /></td>
-                                    <td><SourceRefList sources={right()!.context.sourceRefs} t={t} /></td></tr>
-                                </Show>
-                                <Show when={!sameSourceMaterial(left()!.missing, right()!.missing)}>
-                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.sourceGaps")}</th>
-                                    <td><SourceGaps gaps={left()!.missing} t={t} /></td>
-                                    <td><SourceGaps gaps={right()!.missing} t={t} /></td></tr>
+                                    <td data-label={t("sf.u32.before")}>{before.title}</td><td data-label={t("sf.u32.after")}>{after()!.title}</td></tr>
                                 </Show>
                                 <For each={valueRows()}>{(row) => <tr data-sf-value-id={row.id}
                                   data-change-numeric={String(row.numericChanged)}
@@ -323,8 +288,8 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                                   <th scope="row"><span data-sf-diff-id>{row.id}</span><ChangeKinds numeric={row.numericChanged}
                                     value={row.valueChanged} attributes={row.attributesChanged}
                                     source={row.provenanceChanged} t={t} /></th>
-                                  <td><ValueCell entry={row.before} projection={left()!} t={t} /></td>
-                                  <td><ValueCell entry={row.after} projection={right()!} t={t} /></td>
+                                  <td data-label={t("sf.u32.before")}><ValueCell entry={row.before} projection={left()!} t={t} /></td>
+                                  <td data-label={t("sf.u32.after")}><ValueCell entry={row.after} projection={right()!} t={t} /></td>
                                 </tr>}</For>
                                 <For each={componentRows()}>{(row) => <tr data-sf-component-id={row.id}
                                   data-change-numeric={String(row.numericChanged)}
@@ -335,15 +300,50 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                                     <ChangeKinds numeric={row.numericChanged} value={row.valueChanged}
                                       attributes={row.attributesChanged} source={row.provenanceChanged} t={t} />
                                   </th>
-                                  <td><ComponentCell entry={row.before} t={t} /></td>
-                                  <td><ComponentCell entry={row.after} t={t} /></td>
+                                  <td data-label={t("sf.u32.before")}><ComponentCell entry={row.before} t={t} /></td>
+                                  <td data-label={t("sf.u32.after")}><ComponentCell entry={row.after} t={t} /></td>
                                 </tr>}</For>
+                                <Show when={!sameSourceMaterial(before.sourceRefs, after()!.sourceRefs)}>
+                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.sectionSources")}</th>
+                                    <td data-label={t("sf.u32.before")}><SourceRefList sources={before.sourceRefs} t={t} /></td>
+                                    <td data-label={t("sf.u32.after")}><SourceRefList sources={after()!.sourceRefs} t={t} /></td></tr>
+                                </Show>
+                                <Show when={left()!.version !== right()!.version}>
+                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.projectionVersion")}</th>
+                                    <td data-label={t("sf.u32.before")}>{left()!.version}</td><td data-label={t("sf.u32.after")}>{right()!.version}</td></tr>
+                                </Show>
+                                <Show when={!sameSourceMaterial(left()!.context.sourceRefs, right()!.context.sourceRefs)}>
+                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.projectionSources")}</th>
+                                    <td data-label={t("sf.u32.before")}><SourceRefList sources={left()!.context.sourceRefs} t={t} /></td>
+                                    <td data-label={t("sf.u32.after")}><SourceRefList sources={right()!.context.sourceRefs} t={t} /></td></tr>
+                                </Show>
+                                <Show when={!sameSourceMaterial(left()!.missing, right()!.missing)}>
+                                  <tr data-change-source="true"><th scope="row">{t("sf.u32.sourceGaps")}</th>
+                                    <td data-label={t("sf.u32.before")}><SourceGaps gaps={left()!.missing} t={t} /></td>
+                                    <td data-label={t("sf.u32.after")}><SourceGaps gaps={right()!.missing} t={t} /></td></tr>
+                                </Show>
                               </tbody>
                             </table>
                           </div>
                         </section>
                       </Show>
                     }}</For>
+                    <Show when={reviewSourcesChanged()}>
+                      <details class="mx-card sf-n28-section sf-section sf-n28-provenance">
+                        <summary>{t("sf.u32.reviewSources")}</summary>
+                        <div class="sf-n28-scroll" role="region" aria-label={t("sf.u32.reviewSources")} tabIndex={0}>
+                          <table>
+                            <caption>{t("sf.u32.provenanceChange")}</caption>
+                            <thead><tr><th scope="col">{t("sf.u32.sources")}</th>
+                              <th scope="col">{t("sf.u32.before")}</th><th scope="col">{t("sf.u32.after")}</th></tr></thead>
+                            <tbody><tr data-change-source="true"><th scope="row">{t("sf.u32.reviewSources")}</th>
+                              <td data-label={t("sf.u32.before")}><SourceRefList sources={store.previous!.sourceRefs} t={t} /></td>
+                              <td data-label={t("sf.u32.after")}><SourceRefList sources={store.current!.sourceRefs} t={t} /></td>
+                            </tr></tbody>
+                          </table>
+                        </div>
+                      </details>
+                    </Show>
                   </div>
                 </Show>
               </Show>

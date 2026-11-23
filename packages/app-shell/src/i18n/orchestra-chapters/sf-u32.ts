@@ -19,7 +19,7 @@ export const SF_U32_COPY = {
   "sf.u32.evidence": "Evidence status",
   "sf.u32.materialUnavailable": "This preserved section cannot be displayed as an authorized domain projection.",
   "sf.u32.none": "No preserved section or comment was provided.",
-  "sf.u32.listUnavailable": "The producer has not published a native authorized review-list operation.",
+  "sf.u32.listUnavailable": "Enter a preserved review reference to open it.",
   "sf.u32.reviewUnavailable": "The original review is unavailable. No substitute snapshot was loaded.",
   "sf.u32.return": "Exit presentation",
   "sf.u32.previous": "Previous review",
@@ -89,7 +89,7 @@ export const SF_U32_COPY = {
   "sf.u32.previousTopic": "Previous topic",
   "sf.u32.checkUpdates": "Check for updates",
   "sf.u32.sourceNav": "Preserved source navigation",
-  "sf.u32.authorizedSources": "Origens autorizadas da revisão",
+  "sf.u32.authorizedSources": "Authorized review sources",
   "sf.u32.questionSaved": "Question saved against the preserved review.",
   "sf.u32.replySaved": "Reply saved in this preserved review.",
   "sf.u32.answerConfirmed": "Answer confirmed against the inspected preserved source.",
@@ -104,6 +104,9 @@ export const SF_U32_COPY = {
   "sf.u32.authorReference": "Author reference",
   "sf.u32.valueReference": "Value reference",
   "sf.u32.statusReady": "Ready",
+  "sf.u32.openReview": "Open preserved review",
+  "sf.u32.sourceUnavailable": "This source could not be opened. Try reading it again.",
+  "sf.u32.sourceEmpty": "No authorized link is available for this source.",
 } as const
 
 export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> = {
@@ -126,7 +129,7 @@ export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> 
   "sf.u32.evidence": "Estado da evidência",
   "sf.u32.materialUnavailable": "Esta seção preservada não pode ser apresentada como projeção autorizada do domínio.",
   "sf.u32.none": "Nenhuma seção ou comentário preservado foi fornecido.",
-  "sf.u32.listUnavailable": "O produtor não publicou uma operação nativa autorizada de listagem de revisões.",
+  "sf.u32.listUnavailable": "Informe a referência de uma revisão preservada para abri-la.",
   "sf.u32.reviewUnavailable": "A revisão original está indisponível. Nenhum snapshot substituto foi carregado.",
   "sf.u32.return": "Sair da apresentação",
   "sf.u32.previous": "Revisão anterior",
@@ -211,4 +214,7 @@ export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> 
   "sf.u32.authorReference": "Referência do autor",
   "sf.u32.valueReference": "Referência do valor",
   "sf.u32.statusReady": "Pronto",
+  "sf.u32.openReview": "Abrir revisão preservada",
+  "sf.u32.sourceUnavailable": "Não foi possível abrir esta origem. Tente consultá-la novamente.",
+  "sf.u32.sourceEmpty": "Não há link autorizado disponível para esta origem.",
 }

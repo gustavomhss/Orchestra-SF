@@ -28,3 +28,23 @@
 /* Three comparison columns keep readable labels while the existing region scrolls. */
 .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll table { min-width: 48rem; }
 .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll tr > th:first-child { min-width: 16rem; }
+
+.sf-review-reference { align-items: end; }
+.sf-review-reference .sf-n28-field { flex: 1 1 18rem; min-inline-size: 0; }
+.sf-n28-source-result { margin-block: 1rem; }
+.sf-n28-source-result nav { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sf-n28-source-result a { max-inline-size: 100%; overflow-wrap: anywhere; }
+.sf-n28-provenance > summary { cursor: pointer; font-weight: 600; }
+@media (max-width: 48rem) {
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll table { min-inline-size: 0; display: block; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll caption { display: block; text-align: start; margin-block-end: .75rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll tbody { display: grid; gap: 1rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-inline-size: 0; border: 1px solid var(--border); border-radius: .5rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll tr > th:first-child { grid-column: 1 / -1; min-inline-size: 0; padding: .75rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll td { min-inline-size: 0; padding: .75rem; border-block-end: 0; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll td + td { border-inline-start: 1px solid var(--border); }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-scroll td::before { content: attr(data-label); display: block; font-weight: 600; font-size: .75rem; margin-block-end: .5rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-compare-value { min-inline-size: 0; font-size: .875rem; }
+  .sf-n28[data-sf-surface="UI49"] .sf-n28-source-list { padding-inline-start: 1rem; }
+}
