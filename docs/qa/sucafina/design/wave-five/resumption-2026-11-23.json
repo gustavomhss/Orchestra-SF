@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Run the isolated Catalog availability candidate's focused original/new Catalog controls and core typecheck, then inspect the original Collaboration campaign on that exact source. This candidate narrows hidden-provider metadata validation in available(); it does not remove selected-operation authorization or generation boundaries. C3 remains unqualified, all six final campaigns and original deadlines remain required, and no PR promotion or merge has occurred. Selective Import-header drafts remain suspended and unadopted."
+    "nextAction": "Inspect the completed original C9 failure on isolated Catalog source7d5aa66c; await and inspect the five other original campaigns (T10, Release6, A9, RA6, R9) on that exact source. Focused original/new Catalog tests and core typecheck passed, which does not qualify the overall candidate. Preserve all six original gate requirements and deadlines; no PR promotion or merge."
   },
-  "updatedAt": "2026-11-23T20:33:38Z",
+  "updatedAt": "2026-11-23T20:39:27Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3624,6 +3624,74 @@
       "productCandidateUnpromoted": true,
       "qualification": false,
       "merge": false
+    },
+    {
+      "recordedAt": "2026-11-23T20:39:27Z",
+      "status": "CATALOG_FOCUSED_PASSED_SIX_ORIGINAL_CAMPAIGNS_LAUNCHED_C9_FAILED",
+      "by": "/root/audit_catalog",
+      "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+      "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+      "focused": {
+        "run": 45260393059,
+        "conclusion": "success",
+        "originalTests": 17,
+        "newTests": 5,
+        "passed": 22,
+        "failed": 0,
+        "expectCalls": 127,
+        "coreTypecheckExit": 0,
+        "outerPassed": 3,
+        "receiptBlob": "a8f7ea36775b35b0574c9db195dfbaefcef9a37d"
+      },
+      "campaigns": [
+        {
+          "label": "T10",
+          "run": 45261180250,
+          "snapshot": "1066f85e3ef4cb5c6109b44c5381aa7b2f43adff",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "label": "Release6",
+          "run": 45261218178,
+          "snapshot": "ced9c41e9640e50e595e800e1340a7235e1863fd",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "label": "A9",
+          "run": 45260672235,
+          "snapshot": "ceb04e2e7c52657138ecfda22c359c335023016c",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "label": "RA6",
+          "run": 45261263386,
+          "snapshot": "a17c4b2300e5ee03e2e60512181032b382c53255",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "label": "C9",
+          "run": 45260427535,
+          "snapshot": "9a5f6e7e00b3a6c91613cf3263b827e81debc25f",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "label": "R9",
+          "run": 45261298952,
+          "snapshot": "07076ed1296660b6846e97a7a5b4f322788f7cdc",
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ],
+      "campaignReceiptBlob": "b8b99c45713d63e50facf81769856b169fe5098c",
+      "priorRecordsCommit": "a421d3c8e67869f92bc3dfebb42d49cb93e459cf",
+      "qualification": false,
+      "productPromoted": false,
+      "merged": false
     }
   ],
   "sourceCorrections": [
@@ -13099,7 +13167,7 @@
     }
   },
   "catalogAvailabilityCandidate": {
-    "status": "PASS_STATIC_FOR_FOCUSED_CI_ONLY",
+    "status": "FOCUSED_PASSED_SIX_ORIGINAL_CAMPAIGNS_LAUNCHED_C9_FAILED",
     "recordedAt": "2026-11-23T20:32:06Z",
     "source": {
       "branch": "sf613-catalog",
@@ -13126,25 +13194,118 @@
         "snapshotTree": "921aa969941eb801ad12a971aa48cc1aee9b5d38",
         "wrapperPath": "apps/cli/test/sf613-catalog-verification.test.ts",
         "wrapperBlob": "d20d0bd10e0541a96e2671a40397e69d856cd3c2",
-        "status": "IN_PROGRESS_REPORTED_BY_ROOT",
+        "status": "COMPLETED",
         "reportedAt": "2026-11-23T20:32:18Z",
         "scope": "Source/tree identity, original and new Catalog tests, core typecheck; existing test-ci Linux strict Omni/prod.",
-        "testJob": 137993273205
+        "testJob": 137993273205,
+        "conclusion": "success",
+        "focusedGatePassed": true,
+        "fullQualification": false,
+        "completedAt": "2026-11-23T20:34:18Z",
+        "cleanupJob": 137994385325,
+        "temporaryBranchVerified404": true,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-focused-ci-2026-11-23.json",
+          "blob": "a8f7ea36775b35b0574c9db195dfbaefcef9a37d"
+        }
       },
       "collaboration": {
         "branch": "ci-run-linux-sf613-catalogcollab",
         "snapshot": "9a5f6e7e00b3a6c91613cf3263b827e81debc25f",
         "snapshotTree": "2439e6d3afc8a6392af259f23f7b414ba37f2a79",
         "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
-        "status": "IN_PROGRESS",
+        "status": "completed",
         "diagnosticOverlay": false,
         "originalTwoTestsAndDeadlinesUnchanged": true,
         "run": 45260427535,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260427535",
         "createdAt": "2026-11-23T20:32:30Z",
         "headShaVerified": true,
-        "observedAt": "2026-11-23T20:33:38Z"
+        "observedAt": "2026-11-23T20:39:27Z",
+        "label": "C9",
+        "conclusion": "failure",
+        "updatedAt": "2026-11-23T20:39:11Z",
+        "qualification": false
+      },
+      "technical": {
+        "label": "T10",
+        "run": 45261180250,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261180250",
+        "branch": "ci-run-linux-sf613-catalogtechnical",
+        "snapshot": "1066f85e3ef4cb5c6109b44c5381aa7b2f43adff",
+        "snapshotTree": "47e9a7ab447ff8a39db2a4ba9db88da25057815f",
+        "status": "in_progress",
+        "conclusion": null,
+        "createdAt": "2026-11-23T20:36:49Z",
+        "updatedAt": "2026-11-23T20:36:52Z",
+        "observedAt": "2026-11-23T20:39:27Z",
+        "headShaVerified": true,
+        "qualification": false
+      },
+      "release": {
+        "label": "Release6",
+        "run": 45261218178,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261218178",
+        "branch": "ci-run-linux-sf613-catalogrelease",
+        "snapshot": "ced9c41e9640e50e595e800e1340a7235e1863fd",
+        "snapshotTree": "d6b0f4dd8da9fbed6af7d0e43ed884cf56d9acbd",
+        "status": "in_progress",
+        "conclusion": null,
+        "createdAt": "2026-11-23T20:37:03Z",
+        "updatedAt": "2026-11-23T20:37:06Z",
+        "observedAt": "2026-11-23T20:39:27Z",
+        "headShaVerified": true,
+        "qualification": false
+      },
+      "analytics": {
+        "label": "A9",
+        "run": 45260672235,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260672235",
+        "branch": "ci-run-linux-sf613-cataloganalytics",
+        "snapshot": "ceb04e2e7c52657138ecfda22c359c335023016c",
+        "snapshotTree": "9077dd0274358ceadd400bf128e9db45916a9c33",
+        "status": "in_progress",
+        "conclusion": null,
+        "createdAt": "2026-11-23T20:33:54Z",
+        "updatedAt": "2026-11-23T20:33:57Z",
+        "observedAt": "2026-11-23T20:39:27Z",
+        "headShaVerified": true,
+        "qualification": false
+      },
+      "releaseAnalytics": {
+        "label": "RA6",
+        "run": 45261263386,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261263386",
+        "branch": "ci-run-linux-sf613-catalogreleaseanalytics",
+        "snapshot": "a17c4b2300e5ee03e2e60512181032b382c53255",
+        "snapshotTree": "22255b6cedd57b2547c7b7590fe59fd05af564cd",
+        "status": "in_progress",
+        "conclusion": null,
+        "createdAt": "2026-11-23T20:37:17Z",
+        "updatedAt": "2026-11-23T20:37:20Z",
+        "observedAt": "2026-11-23T20:39:27Z",
+        "headShaVerified": true,
+        "qualification": false
+      },
+      "reviews": {
+        "label": "R9",
+        "run": 45261298952,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261298952",
+        "branch": "ci-run-linux-sf613-catalogreviews",
+        "snapshot": "07076ed1296660b6846e97a7a5b4f322788f7cdc",
+        "snapshotTree": "d8f9a9b9c296950ab46e73f72e4687bae12671fc",
+        "status": "in_progress",
+        "conclusion": null,
+        "createdAt": "2026-11-23T20:37:30Z",
+        "updatedAt": "2026-11-23T20:37:33Z",
+        "observedAt": "2026-11-23T20:39:27Z",
+        "headShaVerified": true,
+        "qualification": false
       }
+    },
+    "originalCampaignReceipt": {
+      "path": "docs/qa/sucafina/design/wave-five/catalog-original-campaigns-2026-11-23.json",
+      "blob": "b8b99c45713d63e50facf81769856b169fe5098c"
     }
   },
   "suspendedImportContextDraft": {

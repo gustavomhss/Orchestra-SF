@@ -1,0 +1,161 @@
+{
+  "schema": "sf613-catalog-focused-ci-receipt-v1",
+  "recordedAt": "2026-11-23T20:38:35Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "focusedVerificationPassed": true,
+  "fullQualification": false,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "branch": "sf613-catalog"
+  },
+  "snapshot": {
+    "commit": "d0e7b61a3035c814f892af1451d35f24c520ccf3",
+    "tree": "921aa969941eb801ad12a971aa48cc1aee9b5d38",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "wrapper": {
+      "path": "apps/cli/test/sf613-catalog-verification.test.ts",
+      "blob": "d20d0bd10e0541a96e2671a40397e69d856cd3c2"
+    },
+    "temporaryBranch": "ci-run-linux-sf613-catalog",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45260393059,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260393059",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "d0e7b61a3035c814f892af1451d35f24c520ccf3",
+    "createdAt": "2026-11-23T20:32:18Z",
+    "updatedAt": "2026-11-23T20:34:18Z",
+    "jobs": [
+      {
+        "id": 137993273205,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:32:20Z",
+        "completedAt": "2026-11-23T20:34:07Z"
+      },
+      {
+        "id": 137994385325,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:34:10Z",
+        "completedAt": "2026-11-23T20:34:18Z"
+      }
+    ]
+  },
+  "environment": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "result": {
+    "identity": {
+      "snapshotHead": true,
+      "sourceParent": true,
+      "sourceTree": true
+    },
+    "catalog": {
+      "originalCases": 17,
+      "newCases": 5,
+      "passed": 22,
+      "failed": 0,
+      "expectCalls": 127,
+      "runnerDurationMs": 1474,
+      "outerCommandDurationMs": 1490
+    },
+    "coreTypecheck": {
+      "command": [
+        "bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "packages/core",
+      "exitCode": 0,
+      "durationMs": 20232
+    },
+    "outerWrapper": {
+      "passed": 3,
+      "failed": 0,
+      "expectCalls": 7,
+      "durationSeconds": 22.21
+    },
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 3,
+      "spawns": 5,
+      "delegated": 0
+    },
+    "outputTruncated": false
+  },
+  "log": {
+    "characters": 72000,
+    "utf8Bytes": 72002,
+    "sha256": "a33f317e9b0dff000eba8456d4de6a36c4871ccaed695533dfb7da3a23522e07",
+    "lineCount": 841,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc"
+    ],
+    "fetchedOnlyAfterTestJobCompleted": true,
+    "source": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260393059/job/137993273205",
+    "evidenceLines": [
+      "2026-11-23T20:32:53.7990758Z ##[group]Run set -euo pipefail",
+      "2026-11-23T20:32:53.8886798Z ##[group]Run set -euo pipefail",
+      "2026-11-23T20:33:43.6236324Z {\"verification\":\"sf613-catalog-availability\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\"}",
+      "2026-11-23T20:33:43.8270317Z {\"gate\":\"fetch source parent\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"d0e7b61a3035c814f892af1451d35f24c520ccf3\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":203,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:33:43.8299522Z {\"gate\":\"snapshot identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:33:43.8452354Z {\"gate\":\"source identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":15,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:33:43.8463457Z (pass) snapshot identifies the exact reviewed product source and tree [231.65ms]",
+      "2026-11-23T20:33:43.8472553Z {\"verification\":\"sf613-catalog-availability\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\"}",
+      "2026-11-23T20:33:45.3371064Z {\"gate\":\"original Catalog suite and five availability contracts\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/catalog.test.ts\",\"./test/catalog-available.test.ts\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":1490,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:33:45.3373909Z (pass) CatalogV2 > API settings credentials use runner precedence and public never authenticates paid Zen [95.61ms]",
+      "2026-11-23T20:33:45.3375037Z (pass) CatalogV2 > Zen without a credential exposes no models, not even free ones [44.80ms]",
+      "2026-11-23T20:33:45.3375804Z (pass) CatalogV2 > configured Zen request auth respects disabled providers and policy [25.57ms]",
+      "2026-11-23T20:33:45.3376474Z (pass) CatalogV2 > publishes an updated event after catalog changes [25.80ms]",
+      "2026-11-23T20:33:45.3377199Z (pass) CatalogV2 > derives availability from active credentials without changing provider state [49.11ms]",
+      "2026-11-23T20:33:45.3378069Z (pass) CatalogV2 > shares one catalog credential read per availability request and keeps the projection [47.53ms]",
+      "2026-11-23T20:33:45.3378769Z (pass) CatalogV2 > derives availability from a provider's integration [43.01ms]",
+      "2026-11-23T20:33:45.3379372Z (pass) CatalogV2 > projects environment connections without a catalog plugin [15.72ms]",
+      "2026-11-23T20:33:45.3379947Z (pass) CatalogV2 > normalizes provider baseURL into api url [24.42ms]",
+      "2026-11-23T20:33:45.3380481Z (pass) CatalogV2 > normalizes model baseURL into api url [15.23ms]",
+      "2026-11-23T20:33:45.3381031Z (pass) CatalogV2 > resolves default model api from provider api [40.37ms]",
+      "2026-11-23T20:33:45.3381606Z (pass) CatalogV2 > resolves provider and model request merges [32.93ms]",
+      "2026-11-23T20:33:45.3382254Z (pass) CatalogV2 > falls back to newest available model when no default is configured [15.97ms]",
+      "2026-11-23T20:33:45.3383007Z (pass) CatalogV2 > uses a transform-provided default model until that transform is replaced [28.41ms]",
+      "2026-11-23T20:33:45.3384102Z (pass) CatalogV2 > ignores a configured default on a disabled provider [25.33ms]",
+      "2026-11-23T20:33:45.3385018Z (pass) CatalogV2 > small model prefers small keyword candidates before cost scoring [24.26ms]",
+      "2026-11-23T20:33:45.3385625Z (pass) CatalogV2 > removes providers denied by policy after loading [18.46ms]",
+      "2026-11-23T20:33:45.3386755Z (pass) Catalog available model metadata > validates hidden metadata immediately when a credential makes its provider available [24.15ms]",
+      "2026-11-23T20:33:45.3387682Z (pass) Catalog available model metadata > validates a disabled model before filtering it from an available provider [16.09ms]",
+      "2026-11-23T20:33:45.3388595Z (pass) Catalog available model metadata > preserves projection getter failures even when the provider is unavailable [34.44ms]",
+      "2026-11-23T20:33:45.3389563Z (pass) Catalog available model metadata > omits nested hidden metadata reads only in available and restores them when visible [15.46ms]",
+      "2026-11-23T20:33:45.3390525Z (pass) Catalog available model metadata > keeps fresh virtual providers, merged metadata and release ordering [44.86ms]",
+      "2026-11-23T20:33:45.3391316Z (pass) current Catalog discovery and availability regressions pass together [1490.90ms]",
+      "2026-11-23T20:33:45.3391761Z  22 pass",
+      "2026-11-23T20:33:45.3391991Z  0 fail",
+      "2026-11-23T20:33:45.3392222Z  127 expect() calls",
+      "2026-11-23T20:33:45.3392521Z Ran 22 tests across 2 files. [1474.00ms]",
+      "2026-11-23T20:33:45.3394007Z {\"verification\":\"sf613-catalog-availability\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\"}",
+      "2026-11-23T20:34:05.5710388Z {\"gate\":\"core package typecheck\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"d0e7b61a3035c814f892af1451d35f24c520ccf3\",\"run\":\"45260393059\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":20232,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:34:05.5712501Z (pass) core package preserves its original types [20234.05ms]",
+      "2026-11-23T20:34:05.5722221Z omni positive control [84e0d42021f83b57b2909a3e14019086]: pass (declared: 3 test(s) in test/sf613-catalog-verification.test.ts); 5 omni spawn(s), 0 delegated.",
+      "2026-11-23T20:34:05.5722937Z  3 pass",
+      "2026-11-23T20:34:05.5723148Z  0 fail",
+      "2026-11-23T20:34:05.5723361Z  7 expect() calls",
+      "2026-11-23T20:34:05.5723638Z Ran 3 tests across 1 file. [22.21s]"
+    ]
+  },
+  "limits": [
+    "Focused Catalog verification only; none of the six final campaigns is qualified by this receipt.",
+    "No browser or visual qualification is claimed.",
+    "No product promotion, merge or deployment."
+  ]
+}
