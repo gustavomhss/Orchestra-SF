@@ -67,3 +67,36 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
     await context.close()
   }
 }
+
+export async function describeRecordPage(page: Page, info: TestInfo, state: string) {
+  const observation = await page.evaluate(() => {
+    const host = document.querySelector('[data-sf-host="owner-runtime231"]')
+    return {
+      pathname: location.pathname,
+      host: host ? Object.fromEntries(["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"]
+        .map((attribute) => [attribute, host.getAttribute(attribute)])) : null,
+      leaves: Array.from(document.querySelectorAll("[data-sf-surface]")).map((leaf) => ({
+        surface: leaf.getAttribute("data-sf-surface"), phase: leaf.getAttribute("data-sf-phase"),
+        state: leaf.getAttribute("data-sf-read-state"), text: leaf.textContent?.slice(0, 6000),
+      })),
+      headings: Array.from(document.querySelectorAll("h1")).map((heading) => heading.textContent),
+      alerts: Array.from(document.querySelectorAll('[role="alert"]')).map((alert) => alert.textContent?.slice(0, 1000)),
+      text: host?.textContent?.slice(0, 8000),
+    }
+  })
+  console.info("SF_FINAL_RECORDS_STATE " + JSON.stringify({ state, ...observation }))
+  await info.attach("final-records-state-" + state, { body: JSON.stringify(observation, null, 2), contentType: "application/json" })
+}
+
+export async function captureRecordFailure(page: Page, info: TestInfo) {
+  if (page.isClosed()) return
+  await describeRecordPage(page, info, "failure")
+  const original = await page.screenshot({ type: "png", fullPage: true, animations: "disabled" })
+  await info.attach("final-records-failure", { body: original, contentType: "image/png" })
+  const preview = await page.screenshot({ type: "jpeg", quality: 60, fullPage: false, animations: "disabled" })
+  if (preview.byteLength <= 393_216)
+    console.info("SF_FINAL_RECORDS_FAILURE_VISUAL " + JSON.stringify({
+      test: info.title, pathname: new URL(page.url()).pathname,
+      mimeType: "image/jpeg", bytes: preview.byteLength, base64: preview.toString("base64"),
+    }))
+}

@@ -643,7 +643,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="button" class="mx-btn" disabled={state.busy}
                 onClick={() => { void loadSources() }}>{t("sf.u24.refresh")}</button>
-              <label>{t("sf.u24.document")}
+              <label class="sf-records-document-choice">{t("sf.u24.document")}
                 <select value={state.sourceSelectionRef} disabled={state.busy || !state.sources.length}
                   onChange={(e) => { clearOnSourceChange(); setState("sourceSelectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u24.chooseDocument")}</option>
@@ -750,31 +750,6 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
             </Show>
           </Show>
           <Show when={evidence() || (catalog() && state.documentRef)}>
-            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void extractField() }}>
-              <h2>{t("sf.u24.fields")}</h2>
-              <p>{t("sf.u24.fieldHelp")}</p>
-              <label>{t("sf.u24.field")}
-                <input maxlength="120" required value={state.fieldId} disabled={state.busy}
-                  onInput={(e) => setState("fieldId", e.currentTarget.value)} />
-              </label>
-              <label>{t("sf.u24.type")}
-                <select value={state.fieldType} disabled={state.busy}
-                  onChange={(e) => setState("fieldType", e.currentTarget.value as LeafState["fieldType"])}>
-                  <option value="string">{t("sf.u24.text")}</option>
-                  <option value="number">{t("sf.u24.number")}</option>
-                  <option value="boolean">{t("sf.u24.boolean")}</option>
-                  <option value="date">{t("sf.u24.date")}</option>
-                </select>
-              </label>
-              <label>{t("sf.u24.unit")}
-                <input maxlength="40" value={state.fieldUnit} disabled={state.busy}
-                  onInput={(e) => setState("fieldUnit", e.currentTarget.value)} />
-              </label>
-              <button type="submit" class="mx-btn primary"
-                disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
-                  state.phase === "unknown" || !permitted("files.document-schema") ||
-                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
-            </form>
             <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
               <section class="sf-files-section sf-records-evidence-review" data-sf-confirmation="review">
                 <h2>{t("sf.ui59.title")}</h2>
@@ -808,6 +783,33 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </details>
               </section>
             </Show>
+            <details class="sf-records-extraction" open={!evidence() || !state.candidates.length}>
+              <summary>{t("sf.u24.fields")}</summary>
+            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void extractField() }}>
+              <p>{t("sf.u24.fieldHelp")}</p>
+              <label>{t("sf.u24.field")}
+                <input maxlength="120" required value={state.fieldId} disabled={state.busy}
+                  onInput={(e) => setState("fieldId", e.currentTarget.value)} />
+              </label>
+              <label>{t("sf.u24.type")}
+                <select value={state.fieldType} disabled={state.busy}
+                  onChange={(e) => setState("fieldType", e.currentTarget.value as LeafState["fieldType"])}>
+                  <option value="string">{t("sf.u24.text")}</option>
+                  <option value="number">{t("sf.u24.number")}</option>
+                  <option value="boolean">{t("sf.u24.boolean")}</option>
+                  <option value="date">{t("sf.u24.date")}</option>
+                </select>
+              </label>
+              <label>{t("sf.u24.unit")}
+                <input maxlength="40" value={state.fieldUnit} disabled={state.busy}
+                  onInput={(e) => setState("fieldUnit", e.currentTarget.value)} />
+              </label>
+              <button type="submit" class="mx-btn primary"
+                disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
+                  state.phase === "unknown" || !permitted("files.document-schema") ||
+                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
+            </form>
+            </details>
           </Show>
           <Show when={scenarioView()}>
             <section class="sf-files-section sf-records-scenario">

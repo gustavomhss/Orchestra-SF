@@ -441,7 +441,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
     await captureRecordVariants(resultPage, info, "UI57", "recovered-receipt")
     await capturePortugueseRecord(resultPage, info, "UI57", "recovered-receipt", async (localized) => {
-      await localized.locator(".sf-files-fields").getByRole("button", { name: "Refresh receipt", exact: true }).click()
+      await localized.locator(".sf-files-fields").getByRole("button", { name: "Atualizar recibo", exact: true }).click()
       await expect(localized.locator(resultRoot)).toHaveAttribute("data-sf-phase", "receipt")
       await expect(localized.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
     })

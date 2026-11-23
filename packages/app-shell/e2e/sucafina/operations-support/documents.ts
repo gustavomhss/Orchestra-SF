@@ -9,7 +9,7 @@ import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
-import { captureRecord, captureRecordVariants, capturePortugueseRecord } from "./final-records"
+import { captureRecord, captureRecordVariants, capturePortugueseRecord, describeRecordPage } from "./final-records"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -482,6 +482,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(page).toHaveURL(scenarioURL.href)
   expect(await valueOf<DocumentEvidence[]>((await scenarioCandidates.completed).response)).toEqual([confirmed])
   const scenario = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI60"]')
+  await describeRecordPage(page, info, "scenario-candidates-read")
   const scenarioCard = scenario.locator(confirmedSelector)
   const scenarioAction = scenarioCard.getByRole("button", { name: scenarioLabel, exact: true })
   await expect(scenarioAction).toBeVisible()
