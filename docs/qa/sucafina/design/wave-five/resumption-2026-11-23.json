@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Await all six original full campaigns on 97c921ab, review their actual native visual evidence and exact-source results, then apply the prepared documentation closure plan in two phases: qualified but unmerged at55/70, followed by merge-confirmed70/70."
   },
-  "updatedAt": "2026-11-23T17:05:16Z",
+  "updatedAt": "2026-11-23T17:06:22Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3300,6 +3300,14 @@
       ],
       "currentCandidate": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:06:22Z",
+      "status": "C3_TECHNICAL_FAILED_ONLY_C17",
+      "failedRun": 45222224716,
+      "copyRegressionPassed": true,
+      "currentCandidate": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -3365,7 +3373,7 @@
     "fullCampaignQualification": false,
     "fullCampaigns": {
       "round": "C3",
-      "status": "FAILED_RELEASE_WITH_FIVE_PENDING",
+      "status": "FAILED_TECHNICAL_AND_RELEASE_WITH_FOUR_PENDING",
       "qualification": false,
       "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
@@ -3386,16 +3394,172 @@
           "branch": "ci-run-linux-sf613-t9",
           "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
           "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
-          "status": "PENDING",
+          "status": "FAILED",
           "qualification": false,
           "workflowObservation": {
-            "observedAt": "2026-11-23T17:01:43Z",
-            "status": "in_progress",
-            "conclusion": null,
+            "observedAt": "2026-11-23T17:06:22Z",
+            "status": "completed",
+            "conclusion": "failure",
             "createdAt": "2026-11-23T16:57:06Z",
-            "updatedAt": "2026-11-23T16:57:10Z"
+            "updatedAt": "2026-11-23T17:05:39Z"
           },
-          "result": null
+          "result": {
+            "outcome": "FAILED_ONLY_ORIGINAL_C17_DEADLINE",
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "testJob": {
+              "id": 137859230233,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:05:29Z"
+            },
+            "cleanupJob": {
+              "id": 137864725164,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:05:39Z"
+            },
+            "wrapper": {
+              "passed": 14,
+              "failed": 1
+            },
+            "successfulUnderlyingGroups": [
+              {
+                "name": "Canonical and P18 controls",
+                "passed": 47,
+                "failed": 0
+              },
+              {
+                "name": "Planner projection references",
+                "passed": 12,
+                "failed": 0
+              },
+              {
+                "name": "C08",
+                "passed": 15,
+                "failed": 0
+              },
+              {
+                "name": "UI authority/context integrity",
+                "passed": 27,
+                "failed": 0
+              },
+              {
+                "name": "Source/authority/storage contracts",
+                "passed": 63,
+                "failed": 0
+              },
+              {
+                "name": "Original DOM regressions including corrected Portuguese imports copy",
+                "passed": 7,
+                "failed": 0
+              },
+              {
+                "name": "Core process/filesystem/layer-node",
+                "passed": 41,
+                "failed": 0
+              }
+            ],
+            "storageGroup": {
+              "passed": 59,
+              "skipped": 2,
+              "failed": 1,
+              "skips": "Original inherited skips; unchanged."
+            },
+            "C17": {
+              "originalCooperativeDeadlineMs": 105000,
+              "observedTestDurationMs": 105012.72,
+              "inner": {
+                "phaseMs": 1459,
+                "businessResultsReadForCalculationCalls": 14,
+                "businessResultsReadForCalculationCompleted": 14,
+                "aborted": false
+              },
+              "outer": {
+                "phaseMs": 103520,
+                "businessResultsReadForCalculationCalls": 1918,
+                "businessResultsReadForCalculationCompleted": 1918,
+                "aborted": true
+              },
+              "reopenReached": false,
+              "counterInterpretation": "business.results.readForCalculation calls; not SQL queries or Planner prepares."
+            },
+            "typechecks": [
+              {
+                "name": "CLI package typecheck",
+                "exitCode": 0,
+                "durationMs": 42378
+              },
+              {
+                "name": "Sucafina package typecheck",
+                "exitCode": 0,
+                "durationMs": 42425
+              },
+              {
+                "name": "app-shell typecheck",
+                "exitCode": 0,
+                "durationMs": 23888
+              },
+              {
+                "name": "app-shell e2e typecheck",
+                "exitCode": 0,
+                "durationMs": 7450
+              }
+            ],
+            "guards": {
+              "rules": 78,
+              "files": 823,
+              "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+              "errors": [],
+              "approved": [],
+              "status": "PASSED_WITH_RECORDED_WARNINGS",
+              "warnings": 40,
+              "touchesGuards": false,
+              "warningsNotWaived": true
+            },
+            "bilingualParity": {
+              "status": "PASSED",
+              "catalogs": [
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+                  "preserved": 78,
+                  "added": 41
+                },
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+                  "preserved": 31,
+                  "added": 6
+                },
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+                  "preserved": 100,
+                  "added": 15
+                },
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+                  "preserved": 27,
+                  "added": 4
+                },
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+                  "preserved": 73,
+                  "added": 3
+                },
+                {
+                  "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+                  "preserved": 70,
+                  "added": 7
+                }
+              ]
+            },
+            "omni": {
+              "passed": true,
+              "declaredTests": 15,
+              "spawns": 26,
+              "delegated": 0
+            },
+            "qualification": false,
+            "countInterpretation": "Wrapper and underlying groups remain separate.",
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222224716/job/137859230233"
+          }
         },
         {
           "name": "release",
