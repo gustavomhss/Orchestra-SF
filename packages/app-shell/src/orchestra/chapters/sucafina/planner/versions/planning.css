@@ -2,6 +2,7 @@
 [data-sf-polish="planner"] {
   --sf-plan-gap: 20px;
   --sf-plan-control: 44px;
+  --sf-plan-select-end: 32px;
   --sf-plan-editor: 760px;
   color: var(--orchestra-body);
   font-family: var(--mx-sans);
@@ -40,6 +41,7 @@
   font: inherit;
   padding: 10px 12px;
 }
+[data-sf-polish="planner"] select { padding-inline-end: var(--sf-plan-select-end); }
 [data-sf-polish="planner"] input[type="checkbox"] {
   inline-size: 18px;
   min-block-size: 18px;

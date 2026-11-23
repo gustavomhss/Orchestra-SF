@@ -181,7 +181,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
     >
       <div class="sf-n24 sf-decision-page sf-decision-questions sf-workflow" data-sf-wave="four" data-sf-decision="UI37" data-sf-surface="UI37">
         <Show when={route()}>
-          {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
+          {(current) => <A class="mx-btn sf-decision-back" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>
         <Show when={caseData.read.state === "ready" && record()} fallback={
           <SfStatePanel state={caseData.read.state}

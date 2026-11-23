@@ -14,8 +14,9 @@ import {
   n29StateKey, useN29Copy,
 } from "./ui"
 import { StatusText } from "../../reviews/labels"
-import "./catalog.css"
 import "../../reviews/workflows.css"
+import "../presentation.css"
+import "./catalog.css"
 
 type ChoicesBody = (typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"])["Type"]
 type CaseChoice = Extract<ChoicesBody, { status: "ok" }>["value"]["cases"][number]
@@ -30,6 +31,7 @@ type View = {
   caseIndex: number | null
   purpose: string
   recipes: readonly Recipe[]
+  catalogRequested: boolean
   recipesState: SfUiState
   recipeIndex: number | null
   inputRefs: string
@@ -41,7 +43,7 @@ type View = {
 }
 const clean = (): View => ({
   choices: [], casesState: "loading", caseIndex: null, purpose: "",
-  recipes: [], recipesState: "empty", recipeIndex: null, inputRefs: "", parameters: "{}",
+  recipes: [], catalogRequested: false, recipesState: "empty", recipeIndex: null, inputRefs: "", parameters: "{}",
   preparation: null, admissionState: "empty", phase: "clean", requestError: null,
 })
 
@@ -84,7 +86,11 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
     && !!caseChoice() && !!recipe() && !!parsedParams() && permitted("routines.prepare-admission")
   const admitted = () => view.preparation?.admission === "admitted"
     && !!view.preparation.admissionRef && Number.isInteger(view.preparation.admissionVersion)
-  const currentCase = () => caseChoice()?.caseRef
+  // A strict wire object cannot contain the Solid store's private symbol keys.
+  const currentCase = () => {
+    const reference = caseChoice()?.caseRef
+    return reference ? { id: reference.id, incarnation: reference.incarnation, version: reference.version } : undefined
+  }
 
   // Case authority is supplied by A15's current authorized case choices, not
   // by an arbitrary route ref or a user-entered case identity/version.
@@ -131,6 +137,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
   const chooseCase = (index: number | null) => {
     if (busy() || view.phase === "outcome-unknown") return
     setView("caseIndex", index)
+    setView("catalogRequested", false)
     setView("recipes", [])
     setView("recipesState", "empty")
     setView("recipeIndex", null)
@@ -155,6 +162,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
     const abort = new AbortController()
     const generation = owner.generation()
     const stamp = current.context.stamp
+    setView("catalogRequested", true)
     setView("recipesState", "loading")
     setView("recipes", [])
     setView("recipeIndex", null)
@@ -373,18 +381,18 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
         busy: view.casesState === "loading", onInvoke: () => { void owner.reload() },
       }]}
     >
-      <section data-sf-wave="polish" class="sf-n29-routines sf-workflow" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
+      <section class="sf-n29-routines sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
         <Show when={view.phase === "outcome-unknown"}>
           <p role="alert" class="mx-error">{t("sf.u27.unknown")}</p>
         </Show>
         <SfStatePanel state={state()} messageKey={n29StateKey(state())}
           onRetryRead={() => { void owner.reload() }}>
           <div class="sf-n29-catalog-sections">
-            <section class="mx-card" aria-label={t("sf.u27.case")}>
-              <h2>{t("sf.u27.case")}</h2>
+            <section class="mx-card sf-routine-case" aria-label={t("sf.u27.case")}>
+              <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">01</span>{t("sf.u27.case")}</h2>
               <label class="sf-n29-field">
-                <span>{t("sf.u27.chooseCase")}</span>
-                <select value={view.caseIndex === null ? "" : String(view.caseIndex)}
+                <span id="sf-routine-case-label">{t("sf.u27.chooseCase")}</span>
+                <select aria-labelledby="sf-routine-case-label" value={view.caseIndex === null ? "" : String(view.caseIndex)}
                   disabled={busy() || view.phase === "outcome-unknown"}
                   onChange={(event) => chooseCase(event.currentTarget.value === "" ? null : Number(event.currentTarget.value))}>
                   <option value="">{t("sf.u27.chooseCase")}</option>
@@ -399,13 +407,14 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 <p role="status">{t("sf.u27.noCase")}</p>
               </Show>
             </section>
-            <section class="mx-card" aria-label={t("sf.u27.purpose")}>
-              <h2>{t("sf.u27.purpose")}</h2>
+            <section class="mx-card sf-routine-purpose" aria-label={t("sf.u27.purpose")}>
+              <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">02</span>{t("sf.u27.purpose")}</h2>
               <label class="sf-n29-field">
                 <span>{t("sf.u27.purpose")}</span>
                 <input type="text" value={view.purpose} disabled={!caseChoice() || busy() || view.phase === "outcome-unknown"}
                   onInput={(event) => {
                     setView("purpose", event.currentTarget.value)
+                    setView("catalogRequested", false)
                     setView("recipes", [])
                     setView("recipeIndex", null)
                     setView("recipesState", "empty")
@@ -415,8 +424,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 || busy() || view.phase === "outcome-unknown"}
                 onClick={() => { void catalog() }}>{t("sf.u27.loadRecipes")}</button>
             </section>
-            <section class="mx-card" aria-label={t("sf.u27.recipe")}>
-              <h2>{t("sf.u27.recipe")}</h2>
+            <Show when={view.catalogRequested}>
+            <section class="mx-card sf-routine-recipe" aria-label={t("sf.u27.recipe")}>
+              <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">03</span>{t("sf.u27.recipe")}</h2>
               <Show when={view.recipesState === "ready"} fallback={
                 <SfStatePanel
                   state={view.recipesState}
@@ -424,8 +434,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 />
               }>
                 <label class="sf-n29-field">
-                  <span>{t("sf.u27.selectRecipe")}</span>
-                  <select value={view.recipeIndex === null ? "" : String(view.recipeIndex)}
+                  <span id="sf-routine-recipe-label">{t("sf.u27.selectRecipe")}</span>
+                  <select aria-labelledby="sf-routine-recipe-label" value={view.recipeIndex === null ? "" : String(view.recipeIndex)}
                     disabled={busy() || view.phase === "outcome-unknown"}
                     onChange={(event) => chooseRecipe(event.currentTarget.value === "" ? null : Number(event.currentTarget.value))}>
                     <option value="">{t("sf.u27.selectRecipe")}</option>
@@ -442,8 +452,10 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 </Show>
               </Show>
             </section>
-            <section class="mx-card" aria-label={t("sf.u27.inputs")}>
-              <h2>{t("sf.u27.inputs")}</h2>
+            </Show>
+            <Show when={recipe()}>
+            <section class="mx-card sf-routine-inputs" aria-label={t("sf.u27.inputs")}>
+              <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">04</span>{t("sf.u27.inputs")}</h2>
               <label class="sf-n29-field">
                 <span>{t("sf.u27.inputs")}</span>
                 <textarea rows={3} value={view.inputRefs} disabled={!recipe() || busy() || view.phase === "outcome-unknown"}
@@ -456,25 +468,38 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                   onInput={(event) => setView("parameters", event.currentTarget.value)} />
               </label>
             </section>
-            <section class="mx-card" aria-label={t("sf.u27.readiness")}>
-              <h2>{t("sf.u27.readiness")}</h2>
+            </Show>
+            <Show when={recipe() || currentAdmissionRef() || view.preparation}>
+            <section class="mx-card sf-routine-admission" aria-label={t("sf.u27.readiness")}>
+              <h2 class="sf-routine-card-title"><span class="sf-routine-step" aria-hidden="true">05</span>{t("sf.u27.readiness")}</h2>
               <p>{t("sf.u27.reviewSummary")}</p>
               <Show when={view.requestError}><p role="status">{t(n29StateKey(view.admissionState))}</p></Show>
               <Show when={view.phase === "reviewing"}>
                 <div class="sf-n29-review sf-section" role="group" aria-label={t("sf.u27.review")}>
                   <h3>{t("sf.u27.review")}</h3>
-                  <p>{t("sf.u27.case")}: <bdi>{currentCase()?.id}</bdi></p>
-                  <p>{t("sf.u27.recipe")}: <bdi>{recipe()?.documentId}</bdi></p>
-                  <p>{t("sf.u27.version")}: <bdi>{recipe()?.publishedVersion}</bdi></p>
-                  <p>{t("sf.u27.scope")}: <bdi>{recipe()?.writeScope.join(", ")}</bdi></p>
-                  <p>{t("sf.u27.inputs")}: <bdi>{refs().join(", ")}</bdi></p>
-                  <p>{t("sf.u44.incarnation")}: <bdi>{currentCase()?.incarnation}</bdi></p>
-                  <p>{t("sf.u32.sourceVersion")}: <bdi>{recipe()?.planRevisionId}</bdi></p>
-                  <p>{t("sf.u27.parameters")}: <bdi>{view.parameters}</bdi></p>
+                  <dl class="sf-routine-review-values">
+                    <div><dt>{t("sf.u27.case")}</dt><dd><bdi>{caseChoice()?.label}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.recipe")}</dt><dd><bdi>{recipe()?.title}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.version")}</dt><dd><bdi>{recipe()?.publishedVersion}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.scope")}</dt><dd><bdi>{recipe()?.writeScope.join(", ")}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.inputs")}</dt><dd><bdi>{refs().join(", ")}</bdi></dd></div>
+                    <div><dt>{t("sf.u27.parameters")}</dt><dd><pre class="sf-routine-parameters">{view.parameters}</pre></dd></div>
+                  </dl>
+                  <details class="sf-routine-source">
+                    <summary>{t("sf.u27.evidence")}</summary>
+                    <dl class="sf-routine-review-values">
+                      <div><dt>{t("sf.u27.case")}</dt><dd><bdi>{currentCase()?.id}</bdi></dd></div>
+                      <div><dt>{t("sf.u27.recipe")}</dt><dd><bdi>{recipe()?.documentId}</bdi></dd></div>
+                      <div><dt>{t("sf.u44.incarnation")}</dt><dd><bdi>{currentCase()?.incarnation}</bdi></dd></div>
+                      <div><dt>{t("sf.u32.sourceVersion")}</dt><dd><bdi>{recipe()?.planRevisionId}</bdi></dd></div>
+                    </dl>
+                  </details>
+                  <div class="sf-routine-actions">
                   <button type="button" class="mx-btn primary" disabled={!canPrepare()}
                     onClick={() => { void prepare() }}>{t("sf.u27.prepare")}</button>
                   <button type="button" class="mx-btn" onClick={() => setView("phase", "clean")}>
                     {t("sf.common.back")}</button>
+                  </div>
                 </div>
               </Show>
               <Show when={currentAdmissionRef()}>
@@ -511,8 +536,9 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               <Show when={view.preparation?.runRef}>
                 <p role="status">{t("sf.u27.runningUnverified")}</p>
               </Show>
-              <p>{t("sf.u27.cancelUnavailable")}</p>
+              <Show when={view.preparation?.runRef}><p>{t("sf.u27.cancelUnavailable")}</p></Show>
             </section>
+            </Show>
           </div>
         </SfStatePanel>
       </section>

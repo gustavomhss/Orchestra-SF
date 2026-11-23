@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { createStore } from "solid-js/store"
-import { QueryClient } from "@tanstack/solid-query"
+import { CancelledError, QueryClient } from "@tanstack/solid-query"
 import type { Config } from "@/v2-wire"
 import type { Project } from "@/v2-types"
 import type { Session } from "@/v2-wire"
@@ -21,6 +21,7 @@ import {
 } from "./bootstrap"
 import type { State, VcsCache } from "./types"
 import { createServerSession } from "../server-session"
+import { createProviderRefresher } from "../server-queries"
 import { sessionPermissionRequest, sessionQuestionRequest } from "@/pages/session/composer/session-request-tree"
 import { ServerScope } from "@/utils/server-scope"
 
@@ -115,6 +116,121 @@ async function until(done: () => boolean) {
 }
 
 describe("bootstrapDirectory", () => {
+  test("a provider refresh cancels the old bootstrap query without a failure notice and loads the fresh catalog", async () => {
+    const [store, setStore] = directoryState()
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    const held = Promise.withResolvers<void>()
+    const started = Promise.withResolvers<void>()
+    const translated: string[] = []
+    let reads = 0
+    const source = {
+      ...api,
+      provider: {
+        list: async () => {
+          const first = ++reads === 1
+          if (first) {
+            started.resolve()
+            await held.promise
+          }
+          return { location: {}, data: [{ id: first ? "stale" : "fresh", name: first ? "Stale" : "Fresh" }] }
+        },
+      },
+    } as unknown as typeof api
+    const query = loadProvidersQuery(ServerScope.local, "/project", source)
+    const refresh = createProviderRefresher(client, ServerScope.local, {
+      providers: (directory) => loadProvidersQuery(ServerScope.local, directory, source),
+    })
+
+    try {
+      await bootstrapDirectory({
+        directory: "/project",
+        scope: ServerScope.local,
+        mcp: false,
+        global: {
+          config: {} satisfies Config,
+          path: { state: "", config: "", worktree: "/project", directory: "/project", home: "/home" },
+          project: [{ id: "project", worktree: "/project" } as Project],
+          provider,
+        },
+        api: source,
+        store,
+        setStore,
+        vcsCache: { setStore() {} } as unknown as VcsCache,
+        loadSessions() {},
+        loadActiveSessions: async () => ({}),
+        translate: (key) => {
+          translated.push(key)
+          return key
+        },
+        queryClient: client,
+      })
+      await started.promise
+      expect(client.getQueryState(query.queryKey)?.fetchStatus).toBe("fetching")
+      // Join the real pending query before the production refresher cancels it.
+      const cancelled = client.fetchQuery(query).then(() => undefined, (error: unknown) => error)
+      await refresh("/project")
+      expect(await cancelled).toBeInstanceOf(CancelledError)
+      await until(() => store.status === "complete")
+
+      expect(reads).toBe(2)
+      expect(client.getQueryData<NormalizedProviderListResponse>(query.queryKey)?.connected).toEqual(["fresh"])
+      expect(translated).not.toContain("toast.project.reloadFailed.title")
+    } finally {
+      held.resolve()
+      client.clear()
+    }
+  })
+
+  test("a provider failure with the message CancelledError still reports the reload failure", async () => {
+    const [store, setStore] = directoryState()
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    const translated: string[] = []
+    const failure = new Error("CancelledError")
+    const source = {
+      ...api,
+      provider: {
+        list: async () => {
+          throw failure
+        },
+      },
+    } as unknown as typeof api
+    const query = loadProvidersQuery(ServerScope.local, "/project", source)
+
+    try {
+      await bootstrapDirectory({
+        directory: "/project",
+        scope: ServerScope.local,
+        mcp: false,
+        global: {
+          config: {} satisfies Config,
+          path: { state: "", config: "", worktree: "/project", directory: "/project", home: "/home" },
+          project: [{ id: "project", worktree: "/project" } as Project],
+          provider,
+        },
+        api: source,
+        store,
+        setStore,
+        vcsCache: { setStore() {} } as unknown as VcsCache,
+        loadSessions() {},
+        loadActiveSessions: async () => ({}),
+        translate: (key) => {
+          translated.push(key)
+          return key
+        },
+        queryClient: client,
+      })
+      await until(() => store.status === "complete")
+
+      expect(client.getQueryState(query.queryKey)?.error).toBe(failure)
+      expect(failure).not.toBeInstanceOf(CancelledError)
+      expect(translated.filter((key) => key === "toast.project.reloadFailed.title")).toEqual([
+        "toast.project.reloadFailed.title",
+      ])
+    } finally {
+      client.clear()
+    }
+  })
+
   test("hands a removed project directory to onMissingDirectory once instead of a reload failure", async () => {
     const [store, setStore] = directoryState()
     const gone = { _tag: "InvalidRequestError", kind: "location_not_found", message: "Directory not found: /project" }

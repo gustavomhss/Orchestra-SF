@@ -60,7 +60,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
     >
       <div class="sf-n24 sf-decision-page sf-decision-assumptions sf-workflow" data-sf-wave="four" data-sf-decision="UI36" data-sf-surface="UI36">
         <Show when={route()}>
-          {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
+          {(current) => <A class="mx-btn sf-decision-back" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>
         <Show when={caseData.read.state === "ready" && record()} fallback={
           <SfStatePanel state={caseData.read.state}
@@ -75,7 +75,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                 <label class="sf-n24-field">
                   <span id="sf-n24-assumption-state-label">{t("sf.ui36.state")}</span>
                   <select aria-labelledby="sf-n24-assumption-state-label" value={ui.filter} onChange={(event) => setUi("filter", event.currentTarget.value as typeof ui.filter)}>
-                    <option value="all">{t("sf.ui36.record")}</option>
+                    <option value="all">{t("sf.u14.all")}</option>
                     <option value="open">{t("sf.ui36.open")}</option>
                     <option value="confirmed">{t("sf.ui36.confirmed")}</option>
                     <option value="rejected">{t("sf.ui36.rejected")}</option>
@@ -83,7 +83,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                 </label>
               </div></header>
               <Show when={filtered().length} fallback={
-                <SfStatePanel state={status()} messageKey={k("sf.ui36.noItems")} />
+                <SfStatePanel state={status()} messageKey={k(status() === "filtered-empty" ? "sf.common.filterEmpty" : "sf.ui36.noItems")} />
               }>
                 <ul class="sf-n24-record-list">
                   <For each={filtered()}>

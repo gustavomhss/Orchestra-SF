@@ -34,6 +34,7 @@ import { authorizationURL, connectableIntegration } from "@/orchestra/chapters/p
 import { useClaudeMode } from "@/orchestra/use-claude-mode"
 import { CustomProviderForm } from "./dialog-custom-provider"
 import { createProviderConnectionState, formatError, releaseAttempt, type ConnectMethod } from "./provider-connection"
+import "./dialog-connect-provider.css"
 
 const CUSTOM_ID = "_custom"
 // Not a provider: the first picker row enables Claude mode (Maestro on the user's Claude subscription).
@@ -101,9 +102,9 @@ export const DialogConnectProvider: Component<{
         (controller.selected()
           ? "!max-h-[min(calc(100dvh_-_16px),640px)]"
           : "!h-[min(calc(100dvh_-_16px),512px)]") +
-        " !w-[min(calc(100vw_-_16px),640px)]"
+        " orchestra-provider-dialog !w-[min(calc(100vw_-_16px),640px)]"
       }
-      class="[font-family:var(--v2-font-family-sans)] [&_[data-slot=dialog-header]]:!px-5 [&_[data-slot=dialog-header-title]]:!text-[15px] [&_[data-slot=dialog-header-title]]:!tracking-[-0.13px]"
+      class="[font-family:var(--v2-font-family-sans)] [&_[data-slot=dialog-header]]:!px-5"
     >
       <DialogHeader closeLabel={language.t("common.close")}>
         <Show
@@ -112,7 +113,7 @@ export const DialogConnectProvider: Component<{
         >
           <button
             type="button"
-            class="flex size-5 items-center justify-center rounded-sm text-v2-icon-icon-muted hover:bg-v2-overlay-simple-overlay-hover focus-visible:bg-v2-overlay-simple-overlay-hover focus-visible:outline-none"
+            class="provider-dialog-back flex items-center justify-center rounded-sm text-v2-icon-icon-muted hover:bg-v2-overlay-simple-overlay-hover focus-visible:bg-v2-overlay-simple-overlay-hover focus-visible:outline-none"
             onClick={() => back.current()}
             aria-label={language.t("common.goBack")}
           >
@@ -897,9 +898,9 @@ function ProviderConnection(props: {
 
   return (
     <div class="flex min-h-0 flex-1 flex-col">
-      <div class="flex h-10 shrink-0 items-start gap-2 px-3">
+      <div class="provider-dialog-heading flex min-h-10 shrink-0 items-start gap-2 px-3">
         <ProviderIcon id={props.provider} class="mt-0.5 size-4 shrink-0 text-v2-icon-icon-base" />
-        <div class="text-[15px] font-[530] leading-5 tracking-[-0.13px] text-v2-text-text-base">
+        <div class="provider-dialog-title text-v2-text-text-base">
           <Switch>
             <Match when={props.provider === "anthropic" && method()?.label?.toLowerCase().includes("max")}>
               {language.t("provider.connect.title.anthropicProMax")}

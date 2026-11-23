@@ -1,10 +1,33 @@
-.sf-n29-routines { min-width: 0; }
-.sf-n29-catalog-sections { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,22rem),1fr)); gap: 1rem; }
-.sf-n29-catalog-sections .mx-card { min-width: 0; overflow-wrap: anywhere; align-self: start; }
-.sf-n29-field { display: flex; flex-direction: column; min-width: 0; gap: .35rem; padding-block: .4rem; }
-.sf-n29-field input, .sf-n29-field select, .sf-n29-field textarea { display: block; width: 100%; min-width: 0; min-height: 44px; }
-.sf-n29-field textarea { resize: vertical; }
-.sf-n29-result, .sf-n29-review { display: grid; gap: .75rem; }
-.sf-n29-facts { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,13rem),1fr)); gap: .75rem; }
-.sf-n29-facts div, .sf-n29-result { overflow-wrap: anywhere; min-width: 0; }
-.sf-n29-review button, .sf-n29-result button { min-height: 44px; }
+.sf-n29-routines { min-inline-size: 0; }
+.sf-n29-catalog-sections {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.sf-n29-catalog-sections > .mx-card { min-inline-size: 0; }
+.sf-n29-routines .sf-n29-result,
+.sf-n29-routines .sf-n29-review { display: grid; gap: 16px; min-inline-size: 0; }
+.sf-n29-routines .sf-n29-review {
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--mx-line);
+}
+.sf-n29-routines .sf-n29-facts {
+  display: grid;
+  gap: 12px;
+  min-inline-size: 0;
+}
+.sf-n29-routines .sf-n29-facts > div {
+  display: grid;
+  gap: 4px;
+  padding-block-end: 12px;
+  border-block-end: 1px solid var(--mx-line);
+}
+.sf-n29-routines .sf-n29-facts > div:last-child { padding-block-end: 0; border: 0; }
+@media (min-width: 1100px) {
+  .sf-n29-catalog-sections { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sf-n29-catalog-sections > .sf-routine-recipe { grid-column: 1 / -1; }
+  .sf-n29-catalog-sections:has(.sf-routine-admission) { grid-template-columns: minmax(0, 1fr) minmax(300px, .8fr); }
+  .sf-n29-catalog-sections:has(.sf-routine-admission) > :not(.sf-routine-admission) { grid-column: 1; }
+  .sf-n29-catalog-sections > .sf-routine-admission { grid-column: 2; grid-row: 1 / span 4; }
+}

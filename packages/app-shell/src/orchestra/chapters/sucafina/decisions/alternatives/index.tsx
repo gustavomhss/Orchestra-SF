@@ -214,7 +214,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
     >
       <div class="sf-n24 sf-decision-page sf-decision-alternatives sf-workflow" data-sf-wave="four" data-sf-decision="UI35" data-sf-surface="UI35">
         <Show when={route()}>
-          {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", sourceRef())}>{t("sf.ui35.return")}</A>}
+          {(current) => <A class="mx-btn sf-decision-back" href={sfDecisionHref(current(), "case", sourceRef())}>{t("sf.ui35.return")}</A>}
         </Show>
         <Show when={caseData.read.state === "ready" && caseRecord()} fallback={
           <SfStatePanel state={caseData.read.state}
