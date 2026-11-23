@@ -86,9 +86,9 @@ export function createSfPortfolioAuthority(input: {
   })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
     compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios,
-      // A selected criterion is outside the planner-only comparison cache. Its
-      // scope probe always declines and performs redundant full C08 reads;
-      // preserve the canonical scenario producer and all comparison checks.
+      // The outer Portfolio cache excludes selected criteria. Each canonical
+      // scenario pair may own a separate read root; the criterion producer
+      // and every later comparison phase still perform their original reads.
       scenarios: request.criteria.length ? scenarios : (comparisons.scenarios ?? scenarios),
       criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)
