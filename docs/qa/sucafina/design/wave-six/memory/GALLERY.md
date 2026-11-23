@@ -128,3 +128,55 @@ The focused original journey passed on candidate `722b703b060e5cc578fa8d23568b3f
 
 ![pt-br-dark-desktop-administration](./evidence/r13-ui69-pt-br-dark-desktop-administration.jpg)
 
+## R15: UI61 native local cancellation
+
+Both isolated journeys passed: [run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), candidate `d62c4b500695d248240a48944461a0d2262a589f`. Materiality EN and signals BR each observed one native GET and `net::ERR_ABORTED`, retained the condition and cleared selection without a resend. These images qualify local presentation and cancellation only. No completed materiality/signal result or source rollback is claimed. The [R15 manifest](./evidence/r15-ui61-manifest.json) records all twelve PNG capture dimensions and these eight unchanged JPEGs.
+
+### R15 en-dark-desktop-materiality-conditions-before-consultation
+
+1440 × 1100 pixels; unchanged original JPEG, 75,912 bytes.
+
+![en-dark-desktop-materiality-conditions-before-consultation](./evidence/r15-ui61-en-dark-desktop-materiality-conditions-before-consultation.jpg)
+
+### R15 pt-br-dark-desktop-materiality-conditions-before-consultation
+
+1440 × 1100 pixels; unchanged original JPEG, 77,601 bytes.
+
+![pt-br-dark-desktop-materiality-conditions-before-consultation](./evidence/r15-ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg)
+
+### R15 en-dark-desktop-materiality-local-cancel
+
+1440 × 1100 pixels; unchanged original JPEG, 77,925 bytes.
+
+![en-dark-desktop-materiality-local-cancel](./evidence/r15-ui61-en-dark-desktop-materiality-local-cancel.jpg)
+
+### R15 en-light-320-materiality-local-cancel
+
+320 × 900 pixels; unchanged original JPEG, 26,191 bytes.
+
+![en-light-320-materiality-local-cancel](./evidence/r15-ui61-en-light-320-materiality-local-cancel.jpg)
+
+### R15 en-dark-desktop-signals-conditions-before-consultation
+
+1440 × 1100 pixels; unchanged original JPEG, 75,826 bytes.
+
+![en-dark-desktop-signals-conditions-before-consultation](./evidence/r15-ui61-en-dark-desktop-signals-conditions-before-consultation.jpg)
+
+### R15 pt-br-dark-desktop-signals-conditions-before-consultation
+
+1440 × 1100 pixels; unchanged original JPEG, 77,506 bytes.
+
+![pt-br-dark-desktop-signals-conditions-before-consultation](./evidence/r15-ui61-pt-br-dark-desktop-signals-conditions-before-consultation.jpg)
+
+### R15 br-dark-desktop-signals-local-cancel
+
+1440 × 1100 pixels; unchanged original JPEG, 77,829 bytes.
+
+![br-dark-desktop-signals-local-cancel](./evidence/r15-ui61-br-dark-desktop-signals-local-cancel.jpg)
+
+### R15 br-light-320-signals-local-cancel
+
+320 × 900 pixels; unchanged original JPEG, 26,457 bytes.
+
+![br-light-320-signals-local-cancel](./evidence/r15-ui61-br-light-320-signals-local-cancel.jpg)
+

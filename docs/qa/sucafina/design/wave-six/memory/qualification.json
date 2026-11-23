@@ -460,14 +460,100 @@
       "run": 45122439989,
       "snapshot": "b0931669e80589776a6ce8a1e63b8957a5e2d280",
       "source": "d62c4b500695d248240a48944461a0d2262a589f",
-      "status": "in_progress",
+      "status": "completed",
       "selection": "permanent final-memory-consultation.spec.ts",
       "installations": 2,
-      "nativeCancellation": true,
+      "nativeCancellation": [
+        {
+          "kind": "materiality",
+          "locale": "en",
+          "requestCount": 1,
+          "browserAbort": "net::ERR_ABORTED",
+          "localState": "cancelled",
+          "originalResultQualified": false,
+          "sourceReconciliationStopped": "not-claimed"
+        },
+        {
+          "kind": "signals",
+          "locale": "br",
+          "requestCount": 1,
+          "browserAbort": "net::ERR_ABORTED",
+          "localState": "cancelled",
+          "originalResultQualified": false,
+          "sourceReconciliationStopped": "not-claimed"
+        }
+      ],
       "positiveMaterialitySpecPreserved": true,
       "testDeadlineMs": 300000,
       "httpDeadlineMs": 40000,
-      "domDeadlineMs": 10000
+      "domDeadlineMs": 10000,
+      "conclusion": "success",
+      "job": 137519060570,
+      "passed": 2,
+      "failed": 0,
+      "durationMinutes": 11.7,
+      "artifact": 14795160692,
+      "artifactDigest": "sha256:3383ed2d70acba50d8758409be2c7a2980dd308d8b735f2bd0be4273aee2c461",
+      "captures": 12,
+      "previews": 8,
+      "positiveMaterialityResultQualified": false,
+      "positiveSignalResultQualified": false,
+      "lateResponseExercised": false
+    },
+    "UI62R16": {
+      "run": 45123256492,
+      "job": 137521673423,
+      "snapshot": "de718cd31d6e38a22934274a8d4bba72b108587f",
+      "source": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+      "status": "completed",
+      "conclusion": "failure",
+      "passed": 0,
+      "failed": 1,
+      "artifact": 14795175598,
+      "artifactDigest": "sha256:f2b666f787614ea5465e2de58426eb1320041e459e2a1bb2a3e4203b4ca4d708",
+      "originalResponse": {
+        "httpStatus": 503,
+        "status": "unavailable",
+        "reason": "similarity-source-unavailable",
+        "truncated": false,
+        "closedSchemaAccepted": true
+      },
+      "positiveAssertion": {
+        "expected": 200,
+        "received": 503,
+        "preserved": true
+      },
+      "brazilianPortugueseCandidates": "passed",
+      "exclusiveInternalCause": "not established"
     }
-  }
+  },
+  "areaQualification": {
+    "UI61": {
+      "conditions": "passed",
+      "nativeMaterialityCancellation": "passed",
+      "nativeSignalCancellation": "passed",
+      "materialityResult": "unqualified",
+      "signalResult": "unqualified"
+    },
+    "UI62": {
+      "authorizedCasesAndCandidates": "passed",
+      "privateRecallResponse": "original 503 similarity-source-unavailable",
+      "positiveMatches": "unqualified",
+      "unavailablePresentationFocal": "not yet executed"
+    },
+    "UI63": {
+      "recordedChoicesWithoutCondition": "passed",
+      "originalCoverageRefusal": "passed",
+      "numericComparison": "unqualified"
+    },
+    "UI67": {
+      "contextAndRefresh": "passed"
+    },
+    "UI69": {
+      "reviewSaveCasPersistedReadback": "passed",
+      "pr715Spacing": "passed",
+      "notificationsAndBackups": "original source unavailable"
+    }
+  },
+  "copyAuditCandidate": "d62c4b500695d248240a48944461a0d2262a589f"
 }

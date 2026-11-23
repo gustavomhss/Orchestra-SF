@@ -1,6 +1,6 @@
 # Final wave: memory, context and local administration
 
-> R11 completed with three passing journeys: UI63, UI67 and UI69. UI61 condition presentation passed, but its original materiality read exceeded 40 seconds. UI62's original recall POST returned 503; R11 did not emit its reason. Technical Gate16 and native69 are green. Focused follow-ups retain the original deadlines and assertions; this report does not qualify materiality, recall or numerical results that the original source has not returned.
+> UI63 and UI67 passed their complete R11 journeys; UI69 also passed the focused R13 repetition after PR715. UI61's recorded conditions and two isolated native cancellation journeys passed in R15. Original materiality, signal and numerical results remain unqualified. R16 established UI62's exact source refusal: HTTP 503, `unavailable`, `similarity-source-unavailable`; the positive 200 assertion remains a failure. No exclusive internal cause is inferred from that category.
 
 ## Scope and behavior
 
@@ -8,7 +8,7 @@ This change covers UI61 Signals, UI62 Similar cases, UI63 Expected and observed,
 
 | Area | User-facing change | Source and behavior retained |
 | --- | --- | --- |
-| UI61 | Authorized case chooser, independent conditions, explicit current-signal consultation with local cancel, selected-condition state and clearer evidence hierarchy | Original case catalogue and condition, signal and materiality reads; source reconciliation, uncertainty and owner fences |
+| UI61 | Authorized case chooser, independent conditions, explicit current-signal consultation, local cancellation of materiality and signal waits, selected-condition state and clearer evidence hierarchy | Original case catalogue and condition, signal and materiality reads; source reconciliation, uncertainty and owner fences |
 | UI62 | Authorized case names, orderly candidate selection and evidence disclosure | Explicit candidate set, private POST recall question, Atlas event references, source reauthorization and original-case read |
 | UI63 | Recorded choices with original names, reasons and dates, independent of signal conditions; an explicit message for original incomplete coverage | Original case projection and closed-month Planner observation, exact case version, opaque selection locator, baseline references, coverage and limitations. Numeric comparison remains conditional on the original producer. |
 | UI67 | Current-context card, responsive identifiers and explicit refresh | Original F01 provider and exact active server, project, installation and principal |
@@ -32,11 +32,11 @@ Typed memory requests materialize only the scalar fields declared by their wire 
 
 Existing English catalogue values are unchanged. New English and Brazilian Portuguese copy follows the repository's case, condition, source, observation and access vocabulary. Local-administration labels are complete in Brazilian Portuguese. Source-owned business text remains as returned.
 
-A full literal comparison of candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e` against the fixed base covered every English quoted-string property and both current locale key sets. [copy-audit.json](./copy-audit.json) records the method and exact revisions.
+A full literal comparison of candidate `d62c4b500695d248240a48944461a0d2262a589f`, including the three new materiality-cancel keys, against the fixed base covered every English quoted-string property and both current locale key sets. [copy-audit.json](./copy-audit.json) records the method and exact revisions.
 
 | Catalog | Existing English literals preserved | Current English / Brazilian Portuguese keys | Missing or extra Portuguese keys |
 | --- | ---: | ---: | ---: |
-| sf-u26.ts | 76 / 76 | 94 / 94 | 0 |
+| sf-u26.ts | 76 / 76 | 97 / 97 | 0 |
 | sf-u28.ts | 21 / 21 | 26 / 26 | 0 |
 | sf-context.ts | 84 / 84 | 97 / 97 | 0 |
 
@@ -192,7 +192,15 @@ R13's five PNGs and three original JPEG previews had document width equal to vie
 
 The R14 evidence-collection defect is isolated to the observer. Commit `9b9831a12d63a9ff9abbb0909841d39c37ba819b` adds an observation of the one original POST through a durable APIResponse, with zero retries, zero redirects and the same 40-second deadline. It uses the original closed response schema and delivers the unchanged response to the browser even when decoding fails. All 114 existing expectations remain byte-identical. No source expectation changes before the original reason is obtained.
 
-UI61's local materiality-cancel controls are being qualified separately in [run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280` on `d62c4b500695d248240a48944461a0d2262a589f`. The two permanent test journeys use independent installations and native Request/requestfailed observations, complete healthy condition/language reads before the expensive consultation, then assert local cancellation and selection cleanup only. The positive materiality assertions stay in the original spec, unqualified. Late-response and owner fences are source-reviewed; a response never received is not claimed as exercised.
+UI61's local materiality-cancel controls passed in [run 45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989), job `137519060570`, snapshot `b0931669e80589776a6ce8a1e63b8957a5e2d280` on `d62c4b500695d248240a48944461a0d2262a589f`: **two journeys passed in 11.7 minutes**. They use independent installations and native Request/requestfailed observations, completing all healthy condition/language reads before the expensive consultation. Both recorded exactly one original GET and `net::ERR_ABORTED`: materiality in English and signals in Brazilian Portuguese. Single-flight controls, retained condition, exact local-cancellation copy, absence of invented results/empty state, zero resend and selection cleanup all passed. The materiality action retained keyboard focus when its label changed to Read materiality. Page and console error lists were empty.
+
+R15 produced twelve full-page PNGs and eight original JPEG previews. Every capture used an actual 1440px or 320px viewport with matching document width. All eight previews were visually reviewed: condition cards and source actions remain distinct, narrow controls stack, references wrap and the cancellation wording does not claim source rollback. [evidence/r15-ui61-manifest.json](./evidence/r15-ui61-manifest.json) records exact states/blobs and artifact `14795160692` (8,799,295 bytes).
+
+The positive materiality and signal-result assertions stay in the original spec and remain unqualified. Source reconciliation may continue after the browser abort. Late-response and owner fences were reviewed in source; these tests did not receive or inject a late source body, and no such exercise is claimed.
+
+R16 [run 45123256492](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123256492), job `137521673423`, snapshot `de718cd31d6e38a22934274a8d4bba72b108587f` on `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7`, obtained the original recall body with the durable observer. At 06:26:02 UTC, both the bounded raw marker and the post-decode marker recorded **HTTP 503, status `unavailable`, reason `similarity-source-unavailable`**, without truncation. The original closed output schema accepted the body. The preserved positive assertion then failed with expected 200 / received 503; the run remains a failure. The case read returned 200, Brazilian Portuguese candidates passed, no browser memory command was issued and page errors were empty. Artifact `14795175598` retains the result.
+
+This reason is a collapsed source category. Source review establishes that the fixture records original choices and features but does not attest completed Atlas publication; it does not establish that an outbox, model or any particular internal branch caused this response. No publisher, grant, alternate result or retry was introduced. Positive recall matches remain unqualified. A separate presentation qualification can assert this exact refusal without changing the preserved positive test.
 
 See [qualification.json](./qualification.json) for durable revisions and status. No pending follow-up is recorded as a pass.
 
