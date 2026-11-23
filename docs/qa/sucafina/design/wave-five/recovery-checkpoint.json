@@ -468,5 +468,118 @@
     "bytes": 30272,
     "sha256": "0718c262a4bb5be3a6c6cbf5239c1a82b25105a964e3d5de0400142c97400b4d",
     "nativeTree": "f7f056fd7349bedf23964b4c2c5d8b0cdaf36365"
+  },
+  "pendingCanonicalCloneCapture": {
+    "qualification": false,
+    "normal": {
+      "sha": "33bb046ee5b7dd558089967380a0900e262d4e72",
+      "tree": "7036934a2c1f6e51f699854de49cb39955eccabd",
+      "branch": "ci-run-sf613cost16",
+      "source": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7faf58dd5ca5566d3e0197689564cee2413096ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "46d2b48fc0404755df8b1bb194781c367bf0da19"
+        },
+        {
+          "path": "apps/cli/test/sucafina-captured-tree-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c4fd8086f07b5c28d91918f20ae1d08bee0c1ea8"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-clone-bytes-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b7fa8b60950286d4c82dd56630a1404f424c583f"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-experiments-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4f5f6b31b142612d3c796bb87b71428c56566bcc"
+        },
+        {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d0c3257445f6a8adbc0344976d5f8ab75364bf97"
+        }
+      ],
+      "run": 45121910093
+    },
+    "release": {
+      "sha": "dc5b1795724372ac1d358dfb2c158ce697228114",
+      "tree": "74479c1a81f6c18f34d29a5803ec9b7013a2ac73",
+      "branch": "ci-run-sf613costr16",
+      "source": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7faf58dd5ca5566d3e0197689564cee2413096ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "46d2b48fc0404755df8b1bb194781c367bf0da19"
+        },
+        {
+          "path": "apps/cli/test/sucafina-captured-tree-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c4fd8086f07b5c28d91918f20ae1d08bee0c1ea8"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-clone-bytes-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b7fa8b60950286d4c82dd56630a1404f424c583f"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-experiments-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4f5f6b31b142612d3c796bb87b71428c56566bcc"
+        },
+        {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d0c3257445f6a8adbc0344976d5f8ab75364bf97"
+        },
+        {
+          "path": "package.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "16e720dee8dbc5d90f011970f821fa996307e3d0"
+        }
+      ],
+      "run": 45121911981
+    },
+    "purpose": "Compare existing clone-tree, direct bytes and original unregistered fallback; compare private captured tree against original copy without redirecting product callers.",
+    "expected": {
+      "driverGates": 5,
+      "driverCommands": 7,
+      "microDeclarations": 5,
+      "cloneMarkers": 7,
+      "captureMarkers": 6
+    },
+    "limits": [
+      "No installed performance claim.",
+      "Release retains original clone refusal, no new fast-path admission.",
+      "Four recorded lane orders are not a fully position-balanced three-lane design.",
+      "Whole-fixture clone aliasing is not claimed to match all BCS contexts."
+    ]
   }
 }
