@@ -1199,3 +1199,156 @@ for (const mode of ["abort", "timeout"] as const) {
     })
   }, 10000)
 }
+
+test("warm snapshot reads observe external replacements without sharing copies or holding a cursor", async () => {
+  await fixture(async (directory, open) => {
+    const store = await open()
+    const original: Snapshot = { ...empty, data: {
+      text: "\u03b1\u{1f600}\u0000", optional: undefined, negativeZero: -0,
+      nested: { values: [undefined, -0] },
+    } }
+    const replacement: Snapshot = { ...original, data: { ...original.data, text: "\u03b2\u{1f600}\u0000" } }
+    const payload = encodeSnapshot(original)
+    const changedPayload = encodeSnapshot(replacement)
+    expect(changedPayload.length).toBe(payload.length)
+    const inspect = (active: LocalStore) => {
+      if (!active.readSnapshotRoot) throw new Error("LocalStore read root required")
+      return active.readSnapshotRoot(async () => {
+        const first = active.currentSnapshots?.()
+        const second = active.currentSnapshots?.()
+        const identity = active.currentSnapshotScope?.()?.bytesIdentity
+        if (!first || !second || !identity) throw new Error("Detached snapshots and byte identity required")
+        expect(first).toEqual(second)
+        expect(first.dashboard.data).not.toBe(second.dashboard.data)
+        const nested = first.dashboard.data.nested
+        if (nested && typeof nested === "object" && "values" in nested && Array.isArray(nested.values)) {
+          expect(nested).not.toBe(second.dashboard.data.nested)
+          nested.values[0] = "detached mutation"
+        }
+        first.dashboard.data.changed = true
+        expect(second.dashboard.data.changed).toBeUndefined()
+        return { identity, snapshots: second }
+      })
+    }
+    const writer = new Database(join(directory, "installation.sqlite"), { strict: true })
+    try {
+      for (const surface of ["dashboard", "planner", "procurement"])
+        writer.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run(surface, payload)
+      const first = await inspect(store)
+      expect(first.snapshots).toEqual({ dashboard: original, planner: original, procurement: original })
+      expect(Object.hasOwn(first.snapshots.dashboard.data, "optional")).toBe(true)
+      expect(Object.is(first.snapshots.dashboard.data.negativeZero, -0)).toBe(true)
+      expect((await inspect(store)).identity).toBe(first.identity)
+
+      writer.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(changedPayload, "dashboard")
+      const changed = await inspect(store)
+      expect(changed.identity).not.toBe(first.identity)
+      expect(changed.snapshots).toEqual({ dashboard: replacement, planner: original, procurement: original })
+      expect((await inspect(store)).identity).toBe(changed.identity)
+
+      writer.query("DELETE FROM snapshots WHERE surface = ?").run("dashboard")
+      const missing = await inspect(store)
+      expect(missing.identity).not.toBe(changed.identity)
+      expect(missing.snapshots).toEqual({ dashboard: empty, planner: original, procurement: original })
+      writer.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run("dashboard", changedPayload)
+      const restored = await inspect(store)
+      expect(restored.identity).not.toBe(missing.identity)
+      expect(restored.snapshots).toEqual(changed.snapshots)
+      // A second connection must be able to finish a checkpoint after the read roots have closed.
+      expect(writer.query("PRAGMA wal_checkpoint(TRUNCATE)").values()[0]?.[0]).toBe(0)
+
+      await store.dispose()
+      expect((await inspect(await open())).snapshots).toEqual(restored.snapshots)
+    } finally {
+      writer.close()
+    }
+  })
+})
+
+test("warm unrelated snapshots stay lazy while non-text and corrupt selected rows reject before work", async () => {
+  await fixture(async (directory, open) => {
+    await mkdir(directory, { mode: 0o700 })
+    const file = join(directory, "installation.sqlite")
+    await writeFile(file, "", { mode: 0o600, flag: "wx" })
+    const writer = new Database(file, { strict: true })
+    try {
+      // A nullable fixture schema permits a real SQL NULL without changing schema after warming plans.
+      writer.exec("CREATE TABLE snapshots (surface TEXT PRIMARY KEY, payload TEXT)")
+      const store = await open()
+      if (!store.readSnapshotRoot) throw new Error("LocalStore read root required")
+      const original: Snapshot = { ...empty, data: { text: "unchanged" } }
+      const payload = encodeSnapshot(original)
+      for (const surface of ["dashboard", "planner", "procurement"])
+        writer.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run(surface, payload)
+      const inspect = async () => {
+        expect(store.currentSnapshots?.()).toEqual({ dashboard: original, planner: original, procurement: original })
+      }
+      for (const invalid of [new TextEncoder().encode(payload), null, "{"]) {
+        await store.readSnapshotRoot(inspect)
+        await store.readSnapshotRoot(inspect)
+        writer.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(invalid, "planner")
+        const calls: string[] = []
+        await store.transaction("dashboard", async (snapshot) => {
+          calls.push("dashboard")
+          expect(snapshot).toEqual(original)
+          return { commit: false, value: undefined }
+        })
+        await expect(store.transaction("planner", async () => {
+          calls.push("planner")
+          return { commit: false, value: undefined }
+        })).rejects.toThrow()
+        await expect(store.readSnapshotRoot(async () => {
+          calls.push("root")
+        })).rejects.toThrow()
+        expect(calls).toEqual(["dashboard"])
+
+        writer.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(payload, "planner")
+        await store.transaction("planner", async (snapshot) => {
+          expect(snapshot).toEqual(original)
+          return { commit: false, value: undefined }
+        })
+        await store.readSnapshotRoot(inspect)
+      }
+      expect(writer.query("PRAGMA wal_checkpoint(TRUNCATE)").values()[0]?.[0]).toBe(0)
+    } finally {
+      writer.close()
+    }
+  })
+})
+
+test("warm snapshot text remains exact across Unicode variants and SQLite database encodings", async () => {
+  for (const encoding of ["UTF-8", "UTF-16le"]) {
+    await fixture(async (directory, open) => {
+      await mkdir(directory, { mode: 0o700 })
+      const file = join(directory, "installation.sqlite")
+      await writeFile(file, "", { mode: 0o600, flag: "wx" })
+      const writer = new Database(file, { strict: true })
+      try {
+        writer.exec("PRAGMA encoding = '" + encoding + "'")
+        writer.exec("CREATE TABLE snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL)")
+        expect(writer.query("PRAGMA encoding").get()).toEqual({ encoding })
+        const store = await open()
+        if (!store.readSnapshotRoot) throw new Error("LocalStore read root required")
+        const previous: { identity?: object } = {}
+        for (const text of ["A", "a", "\u00e9", "e\u0301", "\u{1f600}", "\u{1f601}", "\ud800", "\udc00", "x\u0000y", "x\ufeffy"]) {
+          const snapshot: Snapshot = { ...empty, data: { text } }
+          writer.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload")
+            .run("dashboard", encodeSnapshot(snapshot))
+          expect((await read(store)).snapshot.data.text).toBe(text)
+          const inspect = async () => {
+            expect(store.currentSnapshot?.("dashboard")?.data.text).toBe(text)
+            const identity = store.currentSnapshotScope?.()?.bytesIdentity
+            if (!identity) throw new Error("Current snapshot byte identity required")
+            return identity
+          }
+          const identity = await store.readSnapshotRoot(inspect)
+          expect(identity).not.toBe(previous.identity)
+          expect(await store.readSnapshotRoot(inspect)).toBe(identity)
+          previous.identity = identity
+        }
+      } finally {
+        writer.close()
+      }
+    })
+  }
+})

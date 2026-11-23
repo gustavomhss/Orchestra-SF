@@ -1,4 +1,5 @@
 import { Database } from "bun:sqlite"
+import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
 import { types } from "node:util"
@@ -176,8 +177,9 @@ export async function openLocalStore(directory: string, options: {
   // Every caller still observes SQL under the existing lock. Only immutable
   // strings survive requests; each demanded surface gets a fresh object graph.
   const materializations = new Map<Surface, SnapshotMaterialization>()
+  const snapshotSql = createSnapshotSqlReader()
   const emptySnapshotIdentity = {}
-  const observeSnapshot = (surface: Surface, payload?: string): {
+  const observeSnapshot = (surface: Surface, payload?: unknown): {
     materialize: () => Snapshot
     copy?: () => Snapshot
     freshPlan?: { units: number; copy: () => Snapshot }
@@ -185,6 +187,11 @@ export async function openLocalStore(directory: string, options: {
     bytesIdentity?: object
   } => {
     const prior = materializations.get(surface)
+    if (payload !== undefined && typeof payload !== "string") {
+      materializations.delete(surface)
+      snapshotSql.reconcile(materializations)
+      throw new Error("Unsupported local snapshot encoding")
+    }
     const codecCurrent = snapshotDecoderCurrent()
     const fingerprint = codecCurrent && payload !== undefined && payload.length > SNAPSHOT_MATERIALIZATION_UNITS / 2 &&
       payload.length <= SNAPSHOT_MATERIALIZATION_UNITS * 4
@@ -199,6 +206,7 @@ export async function openLocalStore(directory: string, options: {
         ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
     }
     materializations.delete(surface)
+    snapshotSql.reconcile(materializations)
     if (payload === undefined) {
       const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
       return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity }
@@ -210,16 +218,18 @@ export async function openLocalStore(directory: string, options: {
       for (const [name, entry] of materializations) {
         if (retained.units + plan.units <= SNAPSHOT_MATERIALIZATION_UNITS && materializations.size < 3) break
         materializations.delete(name)
+        snapshotSql.drop(name)
         retained.units -= entry.units
       }
       materializations.set(surface, plan)
+      snapshotSql.reconcile(materializations)
     }
     return { materialize: () => snapshot, bytesIdentity: plan?.identity,
       ...(plan && (!plan.fingerprint || plan.copy) ? { freshPlan: { units: plan.units,
         copy: plan.fingerprint ? fingerprintSnapshotCopy(plan) : () => materializeSnapshot(plan, payload) } } : {}),
     }
   }
-  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
+  const loadSnapshot = (surface: Surface, payload?: unknown) => observeSnapshot(surface, payload).materialize()
 
   type SnapshotCopies = Partial<Record<Surface, () => Snapshot>>
   type AclCopies = Partial<Record<Surface, () => Snapshot["data"] | undefined>>
@@ -286,7 +296,7 @@ export async function openLocalStore(directory: string, options: {
   const closeWriter = () => {
     const db = writer.db
     delete writer.db
-    db?.close()
+    try { snapshotSql.close() } finally { db?.close() }
   }
   const acquireWriter = () => {
     try {
@@ -494,10 +504,10 @@ export async function openLocalStore(directory: string, options: {
         // budget before taking fresh plans for repeated reads of cold surfaces.
         const budget = { remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0) }
         const read = (surface: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          const payload = snapshotSql.read(db, surface, materializations.get(surface))
           // Keep the same SQL order and changed-payload admission as mutable
           // roots. No callback receives this root's authoritative graphs.
-          const source = observeSnapshot(surface, row?.payload)
+          const source = observeSnapshot(surface, payload)
           byteKeys[surface] = source.bytesIdentity
           if (source.copy) copies[surface] = source.copy
           if (source.copyAcl) aclCopies[surface] = source.copyAcl
@@ -621,15 +631,15 @@ export async function openLocalStore(directory: string, options: {
           remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0),
         }
         const read = (name: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          const payload = snapshotSql.read(db, name, materializations.get(name))
           // Ordinary single-surface transactions keep dev's lazy observation
           // of unrelated surfaces. A preimage additionally needs a full seal.
           const prior = materializations.get(name)
-          if (!currentPreimage && name !== surface && (!prior || prior.payload !== row?.payload)) {
+          if (!currentPreimage && name !== surface && (!prior || prior.payload !== payload)) {
             const observed: { value?: Snapshot } = {}
-            return () => observed.value ??= loadSnapshot(name, row?.payload)
+            return () => observed.value ??= loadSnapshot(name, payload)
           }
-          const source = observeSnapshot(name, row?.payload)
+          const source = observeSnapshot(name, payload)
           byteKeys[name] = source.bytesIdentity
           if (name !== surface || currentPreimage) {
             if (source.copy) copies[name] = source.copy
