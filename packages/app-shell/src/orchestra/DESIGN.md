@@ -391,3 +391,16 @@ The second pass after PR #710 refines the existing visual system. It preserves t
 - Failure and destructive states: after a failed Skills save, the prior control is restored only while it remains inside the open dialog and the document body is active; other active controls remain untouched. Provider Disconnect uses the existing danger role while retaining its confirmation and credential-removal flow.
 
 These are presentation and focus refinements. No producer, admission rule, public schema, financial value, currency, CAS, recovery policy or Microsoft integration is introduced by this pass. Evidence for CSS reflow remains distinct from actual browser zoom and from owner visual acceptance.
+
+
+## 15. Third interface refinement pass
+
+PR #716 refines Settings, provider dialogs, Planner native selects and Decisions presentation. The issue ledger, original-capture provenance and change-scoped validation are in `docs/qa/sucafina/visual-audit/ROUND-THREE.md` and `round-three-runs.json`.
+
+- Settings measures its available view/panel width with local size containers. Below 760px of view space, section navigation becomes a wrapping row above the body. Below 620px it uses 16px horizontal gutters, 28px top and 40px bottom padding, and 44px navigation targets. Below 520px of panel space, permission copy sits above three equal 44px choices; model logo/identity and model actions occupy separate rows. Wide layout and the native toggle proportions remain.
+- Permission radios draw their 2px native focus outline inward so the clipped segment preserves all four sides. Keyboard order, locked rules and the ordered save payload remain unchanged.
+- The provider connection dialog uses native radius xl (16px), title 2xl (20px), 28px Back/Close targets and a 2px visible focus ring. Title height is natural. Local spacing variables add no material, blur, shadow or palette. Expected cancellation of a superseded provider-bootstrap query produces no failure toast; ordinary errors retain the existing notification and missing-directory paths.
+- Planner selects reserve 32px logical end padding for the native arrow. Full source options and values remain; a long option can still truncate in a narrow closed select.
+- Decisions keeps Back to case at the start of its grid on Alternatives, Assumptions and Questions. Assumptions distinguishes the all-state choice and filtered-empty result through existing keys. Prepared changes and Receipts label the already-selected case with the existing Current case key.
+
+These changes preserve native role colors, quiet glass, typography, source identities and command owners. The final composed structural gate and merge receipt are indexed in PR #716.
