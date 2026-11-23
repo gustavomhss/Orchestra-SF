@@ -468,9 +468,14 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     // The shared observer forwards it unchanged with redirects and retries disabled.
     const saved = await forwardOnce(page, (url) =>
       url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST")
+    // This is the original response failure deadline, not a readiness delay.
+    const deadline = Promise.withResolvers<never>()
+    const deadlineTimer = setTimeout(() => {
+      deadline.reject(new Error("CAP19 original project-save response was not observed within 15_000 ms"))
+    }, 15_000)
     try {
       const [{ response, request }] = await Promise.all([
-        saved.completed,
+        Promise.race([saved.completed, deadline.promise]),
         review.getByRole("button", { name: "Save project", exact: true }).click(),
       ])
       expect(request.method()).toBe("POST")
@@ -478,6 +483,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
       expect(response.ok()).toBe(true)
       expect(await response.json()).toMatchObject({ ok: true })
     } finally {
+      clearTimeout(deadlineTimer)
       await saved.close()
     }
     await expect(review).toHaveCount(0)
