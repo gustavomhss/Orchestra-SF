@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
-  "productSource": "42abce1949cc1a533f62baab6597896d359f3129",
+  "productSource": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -6093,7 +6093,7 @@
       "artifactBytes": 24410146,
       "artifactSha256": "f84b6242d72707c76fa0a550ef7383f3fbf4c3e90fc91cc603252ae44732fb3d",
       "latencyQualification": "Per-call stdout overhead inflated the first observation and the second was cut by teardown. Counts and call topology are useful; absolute fine-grained latency is not a clean production measurement.",
-      "rejectedHypothesis": "Canonical projection digest is not the dominant cost and was not changed.",
+      "rejectedHypothesis": "The measured BCS capture-digest bucket alone cannot explain the observation. Global canonicalization and all source copying were not measured in this diagnostic; the serializer remains unchanged.",
       "firstObservationCounts": {
         "contextCalls": 591,
         "evidenceResolutions": 1176,
@@ -6443,14 +6443,1051 @@
       "source": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
       "snapshot": "72040df448c814a4825bb53f7269625318284218",
       "tree": "212f1c591ca9c429d3a70e1084b64147c1928f2d",
-      "status": "in_progress",
+      "status": "completed",
       "qualifies": false,
       "method": "Private AsyncLocalStorage per complete observation; numeric count/duration aggregates only at closure, no per-call stdout or retained identity/payload/value. Original Promise identities, awaits, controls and deadlines remain.",
       "review": "Root reviewed helper, both numeric-only relays and authority/store/operator expression wrappers.",
       "caveat": "LIFO marker maxima are not per-call maxima when markers overlap; aggregate totals require balanced starts/ends. Closure spans track each invocation exactly.",
       "run": 45243608894,
       "job": 137934469300,
-      "branch": "ci-run-r4material7"
+      "branch": "ci-run-r4material7",
+      "artifactId": 14852742510,
+      "artifactSha256": "041cf8d47b314a1d2a4b5cfb84dfb737a2729528009aad8d125f1bc93e3ebdb8",
+      "metricsSha256": "5cad39d2fe633a2d3192e2e933150321609e02878416b8a28beaf0479747a5f5",
+      "jobLogSha256": "939d42acb062e6dcd3f92f5058e31758f3f906a8f0a6546785468d244fe65f3d",
+      "stats": {
+        "total": 1,
+        "expected": 0,
+        "unexpected": 1,
+        "flaky": 0,
+        "skipped": 0
+      },
+      "observations": [
+        {
+          "phase": "first",
+          "name": "observation-total",
+          "count": 1,
+          "totalUs": 35906117,
+          "maxUs": 35906117,
+          "active": 0
+        },
+        {
+          "phase": "second",
+          "name": "observation-total",
+          "count": 1,
+          "totalUs": 35732342,
+          "maxUs": 35732342,
+          "active": 0
+        }
+      ],
+      "profiles": 440,
+      "unclosed": [],
+      "markerBalance": [
+        {
+          "phase": "first",
+          "bucket": "materiality-authority-principal",
+          "starts": 26775,
+          "completed": 26775,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-authority-snapshot",
+          "starts": 24823,
+          "completed": 24823,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-authority-ui-authorize",
+          "starts": 24823,
+          "completed": 24823,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-admission",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-bound-access",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-capture-digest",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-context-values",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-current-read",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-egress",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-maps-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-maps-second",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-planner-evidence",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-read-context",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-bcs-source",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-after",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-authorization-first",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-before",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-evidence-operations",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-final-checks",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-state-first",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-case-state-second",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-criteria-first",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-criteria-second",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-scenarios-final",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-scenarios-first",
+          "starts": 6,
+          "completed": 6,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-scenarios-second",
+          "starts": 6,
+          "completed": 6,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-compare-sources",
+          "starts": 14,
+          "completed": 14,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-domain-binding",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-domain-compare-first",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-domain-compare-second",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-domain-scenarios-first",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-domain-scenarios-second",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-admission",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-build-projection",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-canonical-read",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-environment",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-final-validation",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-projection-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-projection-source-second",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-evidence-source-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-coverage-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-coverage-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-projection-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-projection-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-source-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-forecast-source-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-produce",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-registry-after",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-registry-before",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-result-batch-callbacks-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-result-batch-callbacks-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-result-batch-final",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-result-batch-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-result-batch-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-scope-egress",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-scope-work",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-case",
+          "starts": 80,
+          "completed": 80,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-final",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-forecast",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-history",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-initial",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-prepare",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "first",
+          "bucket": "materiality-stored-reread",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-authority-principal",
+          "starts": 26775,
+          "completed": 26775,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-authority-snapshot",
+          "starts": 24823,
+          "completed": 24823,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-authority-ui-authorize",
+          "starts": 24823,
+          "completed": 24823,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-admission",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-bound-access",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-capture-digest",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-context-values",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-current-read",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-egress",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-maps-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-maps-second",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-planner-evidence",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-read-context",
+          "starts": 591,
+          "completed": 591,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-bcs-source",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-after",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-authorization-first",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-before",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-evidence-operations",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-final-checks",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-state-first",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-case-state-second",
+          "starts": 92,
+          "completed": 92,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-criteria-first",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-criteria-second",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-scenarios-final",
+          "starts": 2,
+          "completed": 2,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-scenarios-first",
+          "starts": 6,
+          "completed": 6,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-scenarios-second",
+          "starts": 6,
+          "completed": 6,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-compare-sources",
+          "starts": 14,
+          "completed": 14,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-domain-binding",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-domain-compare-first",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-domain-compare-second",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-domain-scenarios-first",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-domain-scenarios-second",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-admission",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-build-projection",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-canonical-read",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-environment",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-final-validation",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-projection-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-projection-source-second",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-evidence-source-first",
+          "starts": 1176,
+          "completed": 1176,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-coverage-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-coverage-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-projection-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-projection-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-source-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-forecast-source-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-produce",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-registry-after",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-registry-before",
+          "starts": 1,
+          "completed": 1,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-result-batch-callbacks-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-result-batch-callbacks-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-result-batch-final",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-result-batch-first",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-result-batch-second",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-scope-egress",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-scope-work",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-case",
+          "starts": 80,
+          "completed": 80,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-final",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-forecast",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-history",
+          "starts": 40,
+          "completed": 40,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-initial",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-prepare",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        },
+        {
+          "phase": "second",
+          "bucket": "materiality-stored-reread",
+          "starts": 20,
+          "completed": 20,
+          "balanced": true
+        }
+      ],
+      "network": [
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:01:36.915Z",
+          "durationMs": 707.0109999999986,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": 26
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:01:59.407Z",
+          "durationMs": 3181.582999999984,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": 318
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:02:36.528Z",
+          "durationMs": 3272.136999999988,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": 318
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:02:36.525Z",
+          "durationMs": 3281.137,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": -1
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-materiality",
+          "method": "GET",
+          "started": "2026-11-23T19:02:41.378Z",
+          "durationMs": -1,
+          "status": -1,
+          "hasResponseHeaders": false,
+          "responseBodyBytes": -1
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:03:41.864Z",
+          "durationMs": 14727.256000000052,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": 318
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-conditions",
+          "method": "GET",
+          "started": "2026-11-23T19:03:41.860Z",
+          "durationMs": 14735.553,
+          "status": 200,
+          "hasResponseHeaders": true,
+          "responseBodyBytes": -1
+        },
+        {
+          "trace": "1-trace.network",
+          "mode": "memory-materiality",
+          "method": "GET",
+          "started": "2026-11-23T19:02:41.381Z",
+          "durationMs": -1,
+          "status": -1,
+          "hasResponseHeaders": false,
+          "responseBodyBytes": -1
+        }
+      ],
+      "interpretation": [
+        "Original materiality read exceeded40s with no observed successful body; completed producer observation timers are not evidence of an HTTP200.",
+        "Both independent observation groups completed; all timing buckets active=0. Concurrent and nested inclusive times must not be summed.",
+        "LIFO marker maxima are not used; only closure-based span maxima describe individual calls.",
+        "Physical DB identity and SQL work alone are too small to explain the35.9s observation.",
+        "Only BCS capture digest has been measured so far, not total canonicalization or all source snapshot copying."
+      ],
+      "result": "failure",
+      "artifactBytes": 12034825,
+      "ledgerSha256": "196f7865cc369952059e404c6e0683c0d620c2229257ba9c26a3ec7aec0331d6",
+      "summary": {
+        "databaseFileCallsPerObservation": 1507503,
+        "databaseFileMs": [
+          2137,
+          2122
+        ],
+        "sqlCallsPerObservation": 297159,
+        "sqlMs": [
+          444,
+          439
+        ],
+        "sessionCallsPerObservation": 99053,
+        "captureDigestsPerObservation": 591,
+        "captureDigestMs": [
+          3112,
+          3018
+        ],
+        "uiAuthorizationsPerObservation": 24823,
+        "projectionResolutionsPerObservation": 1176
+      }
+    },
+    "materialityCloneDigestAggregates": {
+      "run": 45246722659,
+      "snapshot": "8472793d20731e3e9cf2c99d5fdc1980f882bc13",
+      "tree": "2371a05f3e994d8c480c29843b11aa25edd2ae89",
+      "parent": "72040df448c814a4825bb53f7269625318284218",
+      "status": "in_progress",
+      "qualifies": false,
+      "method": "Four-file numeric aggregate supplement for public canonicalization, source identity validation and concrete snapshot clones; original recursion, values, awaits, controls and case deadlines unchanged.",
+      "stripRestoresOriginalBytes": true
     }
   },
   "sourceBoundaries": {
@@ -7175,8 +8212,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "81a072807ab48f345862200d4548b4415c055d32",
-    "tree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
+    "source": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
+    "tree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -7188,6 +8225,12 @@
         "tree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
         "parent": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
         "candidate": "20b449f4b9a063c15e27ebb7ac592294ace2f7db"
+      },
+      {
+        "sha": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
+        "tree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
+        "parent": "80e8b7f869e1f8c97967fdaa289ed9b904521cd4",
+        "candidate": "1f2f44e0862387e998e7cb186bc77c20bc124bb9"
       }
     ],
     "structural": {
@@ -7206,13 +8249,16 @@
       "tree": "7d1821e6d4e89a0c9d3eff7449fb3e9b11f057f3",
       "source": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
       "branch": "ci-run-r4recall6",
-      "status": "in_progress",
-      "qualifies": false
+      "status": "completed",
+      "qualifies": false,
+      "result": "failure",
+      "fixturePublication": "passed",
+      "reason": "Original recall fetch exceeded unchanged 40s bound; prepared-case fetch was HTTP200."
     }
   },
   "checkpoint": {
-    "productSource": "81a072807ab48f345862200d4548b4415c055d32",
-    "productTree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
+    "productSource": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
+    "productTree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
     "status": "qualification-in-progress",
     "browserCases": 94,
     "reviewedOriginals": 64
@@ -7531,5 +8577,186 @@
       },
       "ledgerSha256": "dd2336b88f254366d4b0daaf3334e9ffe8e6712d6a1eacfc6c56cd5b150afef5"
     }
-  }
+  },
+  "performanceCandidates": [
+    {
+      "qualification": "round-four-operator-session-slot-derivation",
+      "result": "success",
+      "scope": "Completion of R4-17; not a separate defect. Identical SHA256 derived once per invocation; no cross-call caching and all three secret reads and clocks preserved.",
+      "repository": "gustavomhss/Orchestra-SF",
+      "base": {
+        "commit": "81a072807ab48f345862200d4548b4415c055d32",
+        "tree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104"
+      },
+      "candidate": {
+        "commit": "1f2f44e0862387e998e7cb186bc77c20bc124bb9",
+        "tree": "d4c4f66528fab486c577269ad16fecf9c5792736",
+        "branch": "reduce-session-hashing",
+        "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+        "originalBlob": "4845de24285df2459991da7d9895aad95eb93b19",
+        "blob": "e89a8e57394ecc7d91b0e1e31d7c32a6f5c14ce4",
+        "additions": 6,
+        "deletions": 3
+      },
+      "snapshot": {
+        "commit": "273f67f075d18ed9340e1deee5a6528c1d08ba1a",
+        "tree": "36a09fb5cbd53240e5b9ae58946332d7c38888a3",
+        "branch": "ci-run-operatorhash",
+        "branchCleaned": true,
+        "onlyAddedFiles": [
+          {
+            "path": ".ci-run.json",
+            "blob": "b9666519b9ef8b1d6bfcfa8547efc8a27c6c9e93"
+          },
+          {
+            "path": "apps/cli/test/sucafina-operator-hash-verification.test.ts",
+            "blob": "db95100ffb2f82918601144b461d754b651e4652"
+          }
+        ]
+      },
+      "run": {
+        "id": 45244188685,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45244188685",
+        "workflow": "test-ci",
+        "job": 137936535021,
+        "cleanupJob": 137937020632,
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-23T18:59:37Z",
+        "updatedAt": "2026-11-23T19:00:38Z",
+        "runner": "ubuntu-24.04",
+        "omni": "strict",
+        "positiveControl": {
+          "spawns": 1,
+          "delegated": 0,
+          "passed": true
+        },
+        "artifacts": []
+      },
+      "originalSuite": {
+        "path": "modules/sucafina/Sucafinav1/test/operator-identity.test.ts",
+        "blob": "23e3db0071c676e8aa4bc93daeb8fe3e68129466",
+        "unchanged": true,
+        "passed": 14,
+        "failed": 0,
+        "expects": 132,
+        "durationMs": 328,
+        "tests": [
+          {
+            "name": "local helper issues encrypted single-use credentials and scoped opaque eight-hour sessions",
+            "durationMs": 25.46
+          },
+          {
+            "name": "authentication grants only the selected local surface and performs only secret reads",
+            "durationMs": 11.45
+          },
+          {
+            "name": "expired credentials fail even when their storage expiry is extended",
+            "durationMs": 10.62
+          },
+          {
+            "name": "tampering, AAD record relocation, wrong keys and changed operator identities fail closed",
+            "durationMs": 22.76
+          },
+          {
+            "name": "auth routing has no HTTP enrollment grant and requires the configured origin",
+            "durationMs": 9.59
+          },
+          {
+            "name": "logout requires exact Origin and POST, persists revocation before removing and rejects replay",
+            "durationMs": 12.4
+          },
+          {
+            "name": "cookie namespace isolates mounts and operators, malformed or duplicate handles fail closed",
+            "durationMs": 11.75
+          },
+          {
+            "name": "configuration rejects non-loopback or noncanonical origins, malformed mounts, keys and OS identities",
+            "durationMs": 6.48
+          },
+          {
+            "name": "logout wins when an authentication read was already in flight",
+            "durationMs": 9.09
+          },
+          {
+            "name": "empty or unsupported runtime contexts fail closed without consulting group maps",
+            "durationMs": 8.15
+          },
+          {
+            "name": "private file enrollment allows cross-site GET but redirects without credentials and suppresses referrers",
+            "durationMs": 10.18
+          },
+          {
+            "name": "valid local cookies cannot authenticate a foreign request URL or inherit corporate roles",
+            "durationMs": 9.21
+          },
+          {
+            "name": "enrollment and session remain valid until one millisecond before their exact TTL boundary",
+            "durationMs": 9.28
+          },
+          {
+            "name": "explicit local buyer policy grants buyer only on Procurement and never changes the identity",
+            "durationMs": 8.63
+          }
+        ]
+      },
+      "wrapper": {
+        "passed": 1,
+        "failed": 0,
+        "expects": 1,
+        "durationMs": 361.52,
+        "childTimeoutMs": 120000,
+        "outerTimeoutMs": 150000,
+        "originalTestBudgetsModified": false,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "invariants": {
+        "hashDerivationsPerSuccessfulSession": {
+          "before": 3,
+          "after": 1
+        },
+        "noCrossCallCache": true,
+        "secretReads": 3,
+        "readOrder": [
+          "revocation-before",
+          "session",
+          "revocation-after"
+        ],
+        "eachClockReadPreserved": true,
+        "decryptAndValidationPreserved": true,
+        "rolesAndConditionsPreserved": true,
+        "noOriginalTestsEdited": true
+      },
+      "aggregateObserverReview": {
+        "commit": "72040df448c814a4825bb53f7269625318284218",
+        "paths": [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+        ],
+        "restoresOriginalBytes": true,
+        "additionalAwaits": false,
+        "originalPromiseReturned": true
+      },
+      "evidence": {
+        "job.log": {
+          "sha256": "a086a207573232f8652f2f3ef6acb514094b1b3e5583c71c7ffb746fd7f5bcb2",
+          "bytes": 68007
+        },
+        "sanitized-job.log": {
+          "sha256": "b45c8f356deac389752c15f4d597829b87c4eb3ed29c6236ef8d3aea1c115370",
+          "bytes": 3202
+        },
+        "request.json": {
+          "sha256": "a881e93bde6baff563de6ac388bc8ef20464f9a37ae39f4930738ecc9aaf89fc",
+          "bytes": 281
+        }
+      },
+      "status": "integrated",
+      "integratedCommit": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
+      "integratedTree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
+      "qualificationLedgerSha256": "08c343ac92f683e73b298730fb26b74b6310a64b658af4489bee1632829567aa",
+      "performanceClaim": "No end-to-end latency improvement claimed; final composed producer and browser qualification remains pending."
+    }
+  ]
 }
