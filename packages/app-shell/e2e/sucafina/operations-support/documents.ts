@@ -467,18 +467,27 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await expect(attachDocument).toBeDisabled()
   await captureRecord(page, info, "UI58", "register-authorized-target")
   const catalogFilename = "catalog-" + filename
-  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: bytes })
+  const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
+  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
   await expect(attachDocument).toBeEnabled()
   // Observe exactly one original scanned upload. Record identity and CAS come
   // from the authorized catalog, not a manually entered ID or asset revision.
   const catalogUpload = await observe(page, (url) =>
     url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
-      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST", async () => {
+    await expect(register.locator("form")).toHaveAttribute("aria-busy", "true")
+    await expect(documentInput).toBeVisible()
+    await expect(documentInput).toBeDisabled()
+    expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+    await expect(register.getByRole("status")).toHaveText("Uploading document…")
+    await expect(attachDocument).toBeDisabled()
+  })
   const refreshedTargets = await observe(page, targetCatalogURL)
   const refreshedSources = await observeFile(page, "files.document-sources", endpoint("document-sources"))
   await attachDocument.click()
   const { response: catalogUploadResponse, request: catalogUploadRequest } = await catalogUpload.completed
   expect(catalogUploadRequest.method()).toBe("POST")
+  expect(catalogUploadRequest.postDataBuffer()).toEqual(catalogBytes)
   expect(catalogUploadResponse.status()).toBe(200)
   const catalogUploadQuery = new URL(catalogUploadRequest.url()).searchParams
   expect(catalogUploadQuery.get("record")).toBe(supplier)
@@ -500,6 +509,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   expect(originalSource).toHaveLength(1)
   const selectedSourceRef = originalSource[0]!.selectionRef
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(root.locator("[data-sf-upload-outcome]")).toBeVisible()
   await expect(root.locator("[data-sf-upload-outcome]")).toHaveText(
     "File accepted by the server scanner and attached to the authorized record. Refresh and choose the newly admitted source for extraction.",
   )
