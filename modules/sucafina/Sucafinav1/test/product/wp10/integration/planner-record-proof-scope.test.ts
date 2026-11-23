@@ -19,9 +19,11 @@ async function fixture(deadline: Deadline) {
   const sourceReader = native.business.plannerSources.resolveForecastSource
   const projector = native.business.projectPlannerEvidence
   const evidenceReader = projector.readEvidence
+  const scopedReader = native.persistence.readScopedSourcePrepared
+  if (!scopedReader) throw new Error("The native prepared source reader is required")
   const atlas = native.business.evidence.current
   if (!atlas || !native.business.plannerProduct.scenarios) throw new Error("The native Planner and Atlas readers are required")
-  const pinned = pinSfPlannerRecordReaders([host, native.authority.state, native.business.cases,
+  const pinned = pinSfPlannerRecordReaders([host, host.persistence, native.persistence, native.authority.state, native.business.cases,
     native.business.plannerProduct.scenarios, native.business.plannerProduct.planner, native.business.planner,
     native.business.plannerSources, native.business.results, native.business.context, projector, atlas])
   const readersCurrent = () => pinned() && native.business.projectPlannerEvidence === projector &&
@@ -29,7 +31,7 @@ async function fixture(deadline: Deadline) {
   expect(readersCurrent()).toBe(true)
   const scope = createSfPlannerRecordProofScope({ host, readersCurrent })
   const root = createSfPlannerCalculationRoot({ host })
-  return { ...native, host, sourceReader, projector, evidenceReader, readersCurrent, scope, root }
+  return { ...native, host, sourceReader, projector, evidenceReader, scopedReader, readersCurrent, scope, root }
 }
 
 type Fixture = Awaited<ReturnType<typeof fixture>>
@@ -183,6 +185,10 @@ test("Planner record proofs preserve complete canonical values within only one l
           f.projector.readEvidence = (...args) => f.evidenceReader(...args)
           return () => { f.projector.readEvidence = f.evidenceReader }
         },
+        () => {
+          f.persistence.readScopedSourcePrepared = (...args) => f.scopedReader(...args)
+          return () => { f.persistence.readScopedSourcePrepared = f.scopedReader }
+        },
       ]) {
         const restore = replace()
         const before = reads, firstCapture = captures.length
@@ -278,6 +284,26 @@ test("Planner record proofs refuse changed authority, pending work and expired o
       }
     }))
 
+    await deadline.phase("prepared-source-port-change-invalidates-a-completed-proof", () => withCall(f, deadline, async (call) => {
+      let reads = 0, first: BusinessEvidenceResolution | undefined, changed: BusinessEvidenceResolution | undefined
+      try {
+        const result = await withRoot(f, call, (proof) => f.scope.run([reference], call, proof,
+          () => f.host.revalidate(call), () => true, async () => {
+            const canonical = async () => { reads++; return f.business.context.resolve(structuredClone(reference), call) }
+            first = await f.scope.observe(reference, call, canonical)
+            f.persistence.readScopedSourcePrepared = (...args) => f.scopedReader(...args)
+            changed = await f.scope.observe(reference, call, canonical)
+            return { status: "ok", value: changed }
+          }))
+        expect(result).toEqual(unavailable)
+        if (!first || !changed) throw new Error("The completed proof did not reach the prepared-reader replacement")
+        expectFresh(first)
+        expect(changed.state).toBe("unavailable")
+        expect(reads).toBe(1)
+      } finally { f.persistence.readScopedSourcePrepared = f.scopedReader }
+      expect(f.readersCurrent()).toBe(true)
+    }))
+
     await deadline.phase("guards-close-the-authorization-await", () => withCall(f, deadline, async (call) => {
       let reads = 0, authorizeCalls = 0, stillCurrent = true
       const result = await withRoot(f, call, (proof) => f.scope.run([reference], call, proof, async () => {
@@ -329,7 +355,7 @@ test("Planner record proofs refuse changed authority, pending work and expired o
               finally { ready.release() }
               await release.promise
               return value
-            })
+            }).finally(ready.release)
             await ready.promise
             try {
               concurrent = await f.scope.observe(reference, call, async () => {
@@ -362,7 +388,7 @@ test("Planner record proofs refuse changed authority, pending work and expired o
               finally { ready.release() }
               await release.promise
               return value
-            })
+            }).finally(ready.release)
             await ready.promise
             // The owner deliberately returns with real work still outstanding.
             return { status: "ok", value: reference }
