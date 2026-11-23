@@ -339,6 +339,13 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     expect(await list.locator("tr[data-sf-row]").count()).toBeGreaterThanOrEqual(2)
     await views(page, info, "CAP23-version-ledger")
     const primary = list.locator("tr[data-sf-row]").filter({ has: page.getByText(waveThreeData.planner.version, { exact: true }) })
+    await expect(primary.getByRole("cell", { name: "Draft", exact: true })).toBeVisible()
+    for (const name of ["Copy version", "Lock version", "Make official", "Delete version"])
+      await expect(primary.getByRole("button", { name, exact: true })).toBeVisible()
+    await expect.poll(async () => (await primary.boundingBox())?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(200)
+    // Scroll the real table to its existing actions without invoking a command.
+    await primary.getByRole("button", { name: "Delete version", exact: true }).scrollIntoViewIfNeeded()
+    await capture(page, info, "CAP23-dark-320-version-actions-test-data")
     await primary.getByRole("button", { name: "Open record", exact: true }).click()
     await ready(page, "Versions")
     const detail = surface.locator("[data-sf-record-detail]")
