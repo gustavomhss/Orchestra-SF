@@ -90,12 +90,14 @@ export function createSfMemoryHttp(input: {
       const caseRef = memoryCaseRef({ id: url.searchParams.get("caseId"), incarnation: url.searchParams.get("incarnation"), version: Number(url.searchParams.get("version")) })
       if (route !== "memory-catalog" && !byReference && !caseRef) return respond({ status: "needs-input", reason: "invalid-memory-case" })
       const payload = Object.fromEntries(url.searchParams)
+      if (route === "memory-materiality") console.info("SF_DESIGN_STAGE materiality-http-admission-start")
       const operation = "sf-human:analysis.read"
       const digest = digestSfValue(payload)
       const admitted = await input.authority.ui.admit(request, operation, digest)
       if (admitted.status !== "ok") return respond(admitted)
       try {
         if (!await input.authority.ui.validate(admitted.value, operation, digest)) return respond({ status: "denied", reason: "memory-authority-unavailable" })
+        if (route === "memory-materiality") console.info("SF_DESIGN_STAGE materiality-http-admission-ok")
         const selection = selectionRef ? await input.memory.outcomeSelections.readReference(selectionRef, admitted.value) : undefined
         if (byReference && !selection) return respond({ status: "unavailable", reason: "memory-selection-source-unavailable" })
         const selectedCase = selection?.caseRef ?? caseRef
@@ -103,8 +105,11 @@ export function createSfMemoryHttp(input: {
           : route === "memory-signals" ? await input.memory.signals(selectedCase!, admitted.value)
           : route === "memory-materiality" ? await input.memory.materiality(selectedCase!, url.searchParams.get("conditionId")!, admitted.value)
           : await input.memory.outcomes({ caseRef: selectedCase!, choiceId: selection?.choiceId ?? url.searchParams.get("choiceId")! }, admitted.value) })
+        if (route === "memory-materiality") console.info("SF_DESIGN_STAGE materiality-http-case-scope-start")
         const scoped = route === "memory-catalog" ? { status: "ok" as const, value: { status: "ok", value: input.memory.catalog } }
           : await input.withCase(admitted.value, selectedCase!, {}, read)
+        if (route === "memory-materiality") console.info("SF_DESIGN_STAGE materiality-http-case-scope-" + (scoped.status === "ok" ? "ok" : "non-ok"))
+        if (route === "memory-materiality") console.info("SF_DESIGN_STAGE materiality-http-producer-returned")
         const result = scoped.status === "ok" ? scoped.value : scoped
         if (selectionRef) {
           const current = await input.memory.outcomeSelections.readReference(selectionRef, admitted.value)

@@ -111,13 +111,18 @@ export function createSfMaterialityAccess(input: {
         if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(structuredClone(refs), call) || digestSfValue(value) !== valueDigest) return undefined
         return value
       }
+      console.info("SF_DESIGN_STAGE materiality-access-first-start")
       const first = await read()
+      console.info("SF_DESIGN_STAGE materiality-access-first-" + (first ? "ok" : "unavailable"))
       const firstDigest = digestSfValue(first)
       if (!first || !await input.revalidate(call) || digestSfValue(first) !== firstDigest) return { status: "unavailable" as const }
       const result = classifySfMaterialChange(first.condition, first.change)
+      console.info("SF_DESIGN_STAGE materiality-access-second-start")
       const second = await read()
+      console.info("SF_DESIGN_STAGE materiality-access-second-" + (second ? "ok" : "unavailable"))
       const secondDigest = digestSfValue(second)
       if (!second || !await input.revalidate(call) || digestSfValue(first) !== firstDigest || digestSfValue(second) !== secondDigest || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || changeSources(first.change).some((source, index) => !sfObservationTimeAdvances(source.observedAt, changeSources(second.change)[index]!.observedAt)) || digestSfValue([call.kind, call.binding]) !== binding) return { status: "unavailable" as const }
+      console.info("SF_DESIGN_STAGE materiality-access-return-ok")
       return { status: "ok" as const, ...result, snapshot: { condition: first.condition, change: first.change }, scope: { source: first.condition.source, fields: first.condition.fields, period: first.condition.period, criterionId: first.condition.criterionId, choiceId: first.condition.choice.id } }
     } catch {
       return { status: "unavailable" as const }

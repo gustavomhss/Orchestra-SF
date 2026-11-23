@@ -19,20 +19,30 @@ export function createSfPlannerMaterialityAccess(input: {
   return createSfMaterialityAccess({ revalidate: input.host.revalidate, authorizeEvidence: input.authorizeEvidence, load: async (conditionId, call) => {
     const request = input.host.requestFor(call)
     if (!request || request.signal.aborted || !await input.host.revalidate(call)) return undefined
+    console.info("SF_DESIGN_STAGE materiality-registry-before-start")
     const bindings = await input.registry.list(input.caseRef, call)
+    console.info("SF_DESIGN_STAGE materiality-registry-before-" + (bindings.status === "ok" ? "ok" : "non-ok"))
     if (bindings.status !== "ok") return undefined
     const selected = bindings.records.filter((record) => record.id === conditionId)
     if (selected.length !== 1) return undefined
     const binding = selected[0]!
+    console.info("SF_DESIGN_STAGE materiality-case-before-start")
     const current = await input.cases.read({ caseRef: encodeCaseRef(input.caseRef) }, call)
+    console.info("SF_DESIGN_STAGE materiality-case-before-" + (current.status === "ok" ? "ok" : "non-ok"))
     if (current.status !== "ok" || current.value.case.id !== input.caseRef.id || current.value.case.incarnation !== input.caseRef.incarnation || current.value.case.version !== input.caseRef.version || current.value.context.kind !== call.kind || current.value.context.installationId !== call.binding.installationId || current.value.context.projectId !== call.binding.projectId || current.value.context.principalRef !== call.binding.principalRef || current.value.context.accessRevision !== call.binding.accessRevision || current.value.context.policyVersion !== call.binding.policyVersion || (call.kind === "native" && (current.value.context.kind !== "native" || current.value.context.profileId !== call.binding.profileId || call.binding.caseId !== input.caseRef.id || call.binding.caseIncarnation !== input.caseRef.incarnation || call.binding.caseVersion !== input.caseRef.version))) return undefined
     const choices = current.value.case.choices.filter((choice) => choice.id === binding.selection.choiceId)
     if (choices.length !== 1 || digestSfValue(choices[0]) !== binding.choiceDigest || !choices[0]!.criteria.includes(binding.selection.criterionId)) return undefined
     const choice = choices[0]!
+    console.info("SF_DESIGN_STAGE materiality-produce-start")
     const produced = await input.produce({ selection: binding.selection, choice }, call)
+    console.info("SF_DESIGN_STAGE materiality-produce-" + (produced.status === "ok" ? "ok" : "non-ok"))
     if (produced.status !== "ok" || produced.value.source.surface !== binding.selection.source.surface || produced.value.source.type !== binding.selection.source.type || produced.value.source.id !== binding.selection.source.id || digestSfValue([...produced.value.fields].sort()) !== digestSfValue([...binding.selection.fields].sort()) || digestSfValue(produced.value.period) !== digestSfValue(binding.selection.period) || digestSfValue(produced.value.comparison?.before) !== digestSfValue(choice.comparison) || digestSfValue(produced.value.comparison?.resultBefore) !== digestSfValue(choice.result)) return undefined
+    console.info("SF_DESIGN_STAGE materiality-registry-after-start")
     const again = await input.registry.list(input.caseRef, call)
+    console.info("SF_DESIGN_STAGE materiality-registry-after-" + (again.status === "ok" ? "ok" : "non-ok"))
+    console.info("SF_DESIGN_STAGE materiality-case-after-start")
     const refreshed = await input.cases.read({ caseRef: encodeCaseRef(input.caseRef) }, call)
+    console.info("SF_DESIGN_STAGE materiality-case-after-" + (refreshed.status === "ok" ? "ok" : "non-ok"))
     if (again.status !== "ok" || again.records.filter((record) => digestSfValue(record) === digestSfValue(binding)).length !== 1 || refreshed.status !== "ok" || digestSfValue(refreshed.value.case) !== digestSfValue(current.value.case) || request.signal.aborted || !await input.host.revalidate(call)) return undefined
     return { condition: { id: binding.id, source: binding.selection.source, fields: binding.selection.fields, period: binding.selection.period, criterionId: binding.selection.criterionId, choice }, change: produced.value }
   } })

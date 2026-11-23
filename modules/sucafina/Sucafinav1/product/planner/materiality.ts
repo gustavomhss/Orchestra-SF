@@ -15,12 +15,18 @@ export function createPlannerMateriality(input: { scenarios: PlannerScenarioHost
     const selection = structuredClone(request.selection)
     const choice = structuredClone(request.choice)
     if (!selection || selection.source.surface !== "planner" || selection.evidence.target.surface !== "planner" || selection.choiceId !== choice.id || !selection.criterionId.trim() || !selection.fields.length || new Set(selection.fields).size !== selection.fields.length || selection.fields.some((field) => !selection.source.fields.includes(field) || !selection.evidence.target.fields.includes(field)) || selection.scenarioRefs.length !== 2 || selection.scenarioRefs[0] === selection.scenarioRefs[1] || selection.scenarioRefs.some((ref) => !ref.trim()) || selection.evidence.refDigest !== digestSfEvidenceRef(selection.evidence) || selection.evidence.installationId !== context.binding.installationId || selection.evidence.projectId !== context.binding.projectId || selection.evidence.target.recordType !== selection.source.type || selection.evidence.target.recordId !== selection.source.id || selection.evidence.target.incarnation !== selection.source.incarnation || selection.evidence.target.version !== selection.source.version || !selection.evidence.target.period || selection.evidence.target.period.start > selection.period.start || selection.evidence.target.period.end < selection.period.end || selection.source.period.start > selection.period.start || selection.source.period.end < selection.period.end) return { status: "needs-input", reason: "invalid-materiality-selection" } as const
+    console.info("SF_DESIGN_STAGE materiality-domain-binding-start")
     if (!await input.verifyBinding(selection, choice, context)) return { status: "denied", reason: "materiality-binding-unavailable" } as const
+    console.info("SF_DESIGN_STAGE materiality-domain-binding-ok")
     const load = () => Promise.all(selection.scenarioRefs.map((ref) => input.scenarios.resolve(ref, context)))
+    console.info("SF_DESIGN_STAGE materiality-domain-scenarios-first-start")
     const scenarios = await load()
+    console.info("SF_DESIGN_STAGE materiality-domain-scenarios-first-end")
     if (scenarios[0].status !== "ok") return scenarios[0]
     if (scenarios[1].status !== "ok") return scenarios[1]
+    console.info("SF_DESIGN_STAGE materiality-domain-compare-first-start")
     const comparison = await input.planner.compareScenarios({ scenarioRefs: selection.scenarioRefs, criteria: [selection.criterionId] }, context)
+    console.info("SF_DESIGN_STAGE materiality-domain-compare-first-" + (comparison.status === "ok" ? "ok" : "non-ok"))
     if (comparison.status !== "ok") return comparison
     if (comparison.value.baselineResultRef !== selection.scenarioRefs[0] || comparison.value.alternativeResultRef !== selection.scenarioRefs[1] || comparison.value.criterionResults.length !== 1 || comparison.value.criterionResults[0]?.criterionId !== selection.criterionId) return { status: "unavailable", reason: "materiality-comparison-unavailable" } as const
     const resultAfter = scenarios[1].value.result
@@ -28,8 +34,12 @@ export function createPlannerMateriality(input: { scenarios: PlannerScenarioHost
     if (afterRefs.length !== 1) return { status: "unavailable", reason: "materiality-source-unavailable" } as const
     const source = resultAfter.components.flatMap((component) => component.sourceRefs).find((ref) => ref.surface === afterRefs[0]!.target.surface && ref.type === afterRefs[0]!.target.recordType && ref.id === afterRefs[0]!.target.recordId && ref.incarnation === afterRefs[0]!.target.incarnation && ref.version === afterRefs[0]!.target.version)
     if (!source) return { status: "unavailable", reason: "materiality-source-unavailable" } as const
+    console.info("SF_DESIGN_STAGE materiality-domain-scenarios-second-start")
     const again = await load()
+    console.info("SF_DESIGN_STAGE materiality-domain-scenarios-second-end")
+    console.info("SF_DESIGN_STAGE materiality-domain-compare-second-start")
     const checked = await input.planner.compareScenarios({ scenarioRefs: selection.scenarioRefs, criteria: [selection.criterionId] }, context)
+    console.info("SF_DESIGN_STAGE materiality-domain-compare-second-" + (checked.status === "ok" ? "ok" : "non-ok"))
     if (again[0].status !== "ok" || again[1].status !== "ok" || plannerScenarioDigest(again[0].value.result) !== plannerScenarioDigest(scenarios[0].value.result) || plannerScenarioDigest(again[1].value.result) !== plannerScenarioDigest(resultAfter) || checked.status !== "ok" || digestSfValue(checked.value) !== digestSfValue(comparison.value) || !await input.verifyBinding(selection, choice, context)) return { status: "stale", reason: "materiality-binding-or-source-changed" } as const
     return { status: "ok", value: { source, fields: selection.fields, period: selection.period, before: [selection.evidence], after: afterRefs, availability: "available" as const, comparison: { before: choice.comparison, after: comparison.value, resultBefore: choice.result, resultAfter } } } as const
   }
