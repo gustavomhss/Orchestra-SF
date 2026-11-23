@@ -198,7 +198,7 @@
   "fullCampaigns": {
     "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
     "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-    "status": "FAILED_WITH_OTHER_CAMPAIGNS_PENDING",
+    "status": "FAILED_FIVE_CAMPAIGNS_ONE_PASSED",
     "qualification": false,
     "environment": {
       "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
@@ -500,16 +500,51 @@
         "branch": "ci-run-linux-sf613-a7",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:43:25Z",
+          "status": "completed",
+          "conclusion": "failure",
           "createdAt": "2026-11-23T16:22:23Z",
-          "updatedAt": "2026-11-23T16:22:27Z"
+          "updatedAt": "2026-11-23T16:35:24Z"
         },
-        "result": null
+        "result": {
+          "outcome": "FAILED_ORIGINAL_PORTFOLIO_PREVIEW_RESPONSE_DEADLINE",
+          "testJob": {
+            "id": 137836289185,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T16:35:12Z"
+          },
+          "cleanupJob": {
+            "id": 137844846888,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:35:24Z"
+          },
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": false,
+          "originalDeadlinesPreserved": true,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215749054/job/137836289185",
+          "failure": {
+            "operation": "decision-portfolio-preview",
+            "method": "POST",
+            "originalDeadlineMs": 60000,
+            "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+            "observedLeaf": "Running",
+            "hostDiscovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "requestEventUtc": "2026-11-23T16:30:36.0805728Z",
+            "nativeViewUtc": "2026-11-23T16:31:36.1712667Z"
+          },
+          "successfulBrowserTest": "UI45/UI46 BI original data, source links, responsive captures and pt-BR continuation",
+          "causality": "Original Preview response deadline exceeded. No expanded causal claim is inferred from the screenshot or request cancellation."
+        }
       },
       {
         "name": "analytics_release",
@@ -519,16 +554,51 @@
         "branch": "ci-run-linux-sf613-ra3",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:43:25Z",
+          "status": "completed",
+          "conclusion": "failure",
           "createdAt": "2026-11-23T16:22:26Z",
-          "updatedAt": "2026-11-23T16:22:29Z"
+          "updatedAt": "2026-11-23T16:34:42Z"
         },
-        "result": null
+        "result": {
+          "outcome": "FAILED_ORIGINAL_PORTFOLIO_PREVIEW_RESPONSE_DEADLINE",
+          "testJob": {
+            "id": 137836315961,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T16:34:35Z"
+          },
+          "cleanupJob": {
+            "id": 137844442443,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:34:42Z"
+          },
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": false,
+          "originalDeadlinesPreserved": true,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215757218/job/137836315961",
+          "failure": {
+            "operation": "decision-portfolio-preview",
+            "method": "POST",
+            "originalDeadlineMs": 60000,
+            "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+            "observedLeaf": "Running",
+            "hostDiscovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "requestEventUtc": "2026-11-23T16:29:57.9807696Z",
+            "nativeViewUtc": "2026-11-23T16:30:58.0300622Z"
+          },
+          "successfulBrowserTest": "UI45/UI46 BI original data, source links, responsive captures and pt-BR continuation",
+          "causality": "Original Preview response deadline exceeded. No expanded causal claim is inferred from the screenshot or request cancellation."
+        }
       },
       {
         "name": "collaboration",
@@ -538,16 +608,90 @@
         "branch": "ci-run-linux-sf613-c7",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:43:25Z",
+          "status": "completed",
+          "conclusion": "failure",
           "createdAt": "2026-11-23T16:22:28Z",
-          "updatedAt": "2026-11-23T16:22:31Z"
+          "updatedAt": "2026-11-23T16:34:19Z"
         },
-        "result": null
+        "result": {
+          "outcome": "FAILED_ORIGINAL_UI56_PREVIEW_HEADING_DEADLINE",
+          "testJob": {
+            "id": 137836339960,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T16:34:14Z"
+          },
+          "cleanupJob": {
+            "id": 137844209340,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:34:18Z"
+          },
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": false,
+          "originalDeadlinesPreserved": true,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215764349/job/137836339960",
+          "failure": {
+            "testPath": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "assertionLine": 195,
+            "originalDeadlineMs": 10000,
+            "expectedHeading": "Simulation · no domain changes applied",
+            "observedLeaf": "Loading…",
+            "hostDiscovery": "ready",
+            "provider": "ready",
+            "view": "ready"
+          },
+          "successfulBrowserTest": "UI51 UI52 UI53 · original relationships, unsent discussion and material confirmation",
+          "readOnlyDiagnosis": {
+            "comparedSuccessfulRun": 45108398059,
+            "comparedSuccessfulJob": 137474882617,
+            "comparedSnapshot": "13c77aaca9edf29b3e7347e690c88b048acab03e",
+            "comparedSource": "e68c2f720b5aa0fdbf0d865377ca886ef6f998ec",
+            "unchanged": [
+              "Imports pre-render effect and business logic",
+              "Owner-context lifecycle logic",
+              "packages/client/src/sucafina/transport.ts",
+              "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+              "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
+              "packages/app-shell/e2e/sucafina/design-support/wave-three.ts"
+            ],
+            "hostDifference": "Only the optional qualified loopback scanner argument; the four-files default remains the real 127.0.0.1:3310 ClamD.",
+            "mandatoryReadPath": [
+              "ctx.context authority revalidation before request",
+              "files.import-reference original GET",
+              "ctx.context authority revalidation before releasing success"
+            ],
+            "contextResponseEventsUtc": [
+              "2026-11-23T16:30:44.9076801Z",
+              "2026-11-23T16:30:53.5284660Z",
+              "2026-11-23T16:31:02.0743667Z"
+            ],
+            "contextResponseGapsMs": [
+              8620.7859,
+              8545.9007
+            ],
+            "gapInterpretation": "Differences between observed response timestamps, not measured individual request durations.",
+            "independentOriginalReferenceReadMs": {
+              "C6": 5003,
+              "C7": 9346
+            },
+            "observedAbortUtc": "2026-11-23T16:31:02.6271292Z",
+            "observedAbort": "net::ERR_ABORTED",
+            "afterEachDiagnosticsUtc": "2026-11-23T16:31:03.8616070Z",
+            "nativeViewUtc": "2026-11-23T16:31:03.8687098Z",
+            "pageClosedUtc": "2026-11-23T16:31:04.2980514Z",
+            "finding": "The observed failure is the unchanged 10-second readiness oracle. The serialized original reads and increased response gaps make producer cost a supported candidate, not a demonstrated cancellation defect.",
+            "limit": "No request-start or exact assertion-start timestamps were logged. Trace and video are deliberately off because real single-use enrollment/session data must not enter a trace. ERR_ABORTED precedes afterEach and page close; these receipts do not establish why it aborted or whether that caused the missing heading.",
+            "proposedProductChange": "None. Preserve owner/cancellation/freshness guards and qualify the original test after the independently reviewed producer correction."
+          }
+        }
       },
       {
         "name": "reviews",
@@ -557,16 +701,42 @@
         "branch": "ci-run-linux-sf613-r7",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
-        "qualification": false,
+        "status": "PASSED",
+        "qualification": true,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:43:25Z",
+          "status": "completed",
+          "conclusion": "success",
           "createdAt": "2026-11-23T16:22:29Z",
-          "updatedAt": "2026-11-23T16:22:34Z"
+          "updatedAt": "2026-11-23T16:35:41Z"
         },
-        "result": null
+        "result": {
+          "outcome": "PASSED_ORIGINAL_REVIEWS_BROWSER_CAMPAIGN",
+          "testJob": {
+            "id": 137836359021,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:35:31Z"
+          },
+          "cleanupJob": {
+            "id": 137845064206,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:35:40Z"
+          },
+          "browserTests": {
+            "passed": 2,
+            "failed": 0
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": true,
+          "scope": "This Reviews campaign on ac470824 only; full composition qualification and acceptance remain false.",
+          "visualReview": {
+            "status": "PENDING",
+            "reportedJpegCount": 49,
+            "canonicalPngAndJsonArchiveInspected": false
+          },
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215769910/job/137836359021"
+        }
       }
     ]
   },
@@ -575,9 +745,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Integrate the minimal Portuguese copy correction and review the separate C17 performance correction without changing original tests, deadlines or runtime admission. Qualify the corrected final composition through the authorized Linux test-ci controls and retain both original negative runs."
+    "nextAction": "Integrate and review the separate producer performance correction and minimal Portuguese copy correction, then qualify the exact final composition through the original Linux test-ci campaigns. Preserve original deadlines, owner/cancellation guards and runtime admission. Retain all five original negative campaigns."
   },
-  "updatedAt": "2026-11-23T16:35:17Z",
+  "updatedAt": "2026-11-23T16:43:25Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -756,6 +926,19 @@
       "otherCampaignsPending": 4,
       "copyCorrection": "f8c92867c64ce63160389e5ff2ed828e9a359a41",
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T16:43:25Z",
+      "status": "RESUMED_PRODUCT_FIX_REQUIRED",
+      "failedRuns": [
+        45215749054,
+        45215757218,
+        45215764349
+      ],
+      "failedFinalCampaigns": 5,
+      "otherCampaignsPendingAtLastObservation": 0,
+      "qualification": false,
+      "passedRun": 45215769910
     }
   ],
   "sourceCorrections": [
