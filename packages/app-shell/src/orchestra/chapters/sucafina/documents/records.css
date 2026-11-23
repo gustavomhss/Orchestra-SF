@@ -91,3 +91,6 @@
   .sf-files[data-sf-records="six"] .sf-records-document-choice { grid-column: auto; }
   .sf-files[data-sf-records="six"] :is(.sf-records-source-picker, .sf-records-search) { grid-template-columns: minmax(0, 1fr); }
 }
+
+.sf-files[data-sf-records="six"] .sf-records-engine-details[open] { display: grid; gap: 16px; }
+.sf-files[data-sf-records="six"] .sf-records-engine-details .mx-card { padding: 16px; }

@@ -10,7 +10,7 @@ import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
 import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
-import { captureRecord, captureRecordVariants, capturePortugueseRecord, describeRecordPage } from "./final-records"
+import { captureRecord, captureRecordVariants, captureRecordDetail, capturePortugueseRecord, describeRecordPage } from "./final-records"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -357,11 +357,12 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(register.getByRole("button", { name: "Scan and attach to record", exact: true })).toBeDisabled()
   await captureRecord(page, info, "UI58", "register-awaits-source")
   await register.locator("summary").click()
+  await document.selectOption({ value: selected[0]!.selectionRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
   await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
     await expect(localized.getByRole("option", { name: filename, exact: true })).toHaveCount(1)
+    await localized.getByRole("combobox", { name: "Documento", exact: true }).selectOption({ value: selected[0]!.selectionRef })
   })
-  await document.selectOption({ value: selected[0]!.selectionRef })
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([
     observe(page, endpoint("document-admit"), "POST", async (response) => {
@@ -498,7 +499,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
   await previewRecordScenario(page, info, account, confirmed, scenarioFixture)
-  await captureRecordVariants(page, info, "UI60", "authorized-scenario-preview")
+  await captureRecordVariants(page, info, "UI60", "authorized-scenario-preview", false)
+  await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence", scenario.locator('[data-sf-scenario="preview"]'))
   await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
     await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
     await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")

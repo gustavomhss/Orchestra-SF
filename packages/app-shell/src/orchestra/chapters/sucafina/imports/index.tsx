@@ -711,6 +711,22 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </div>
           </Show>
           <Show when={(isImport() || isReference() || isHistory()) && state.manifest && matchedSurface()}>
+            <Show when={props.surfaceId === "UI57" && state.reference?.receipt}>
+              {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
+                <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
+                <dl class="sf-records-receipt">
+                  <div><dt>{t("sf.u23.outcome")}</dt><dd>{receipt().outcome}</dd></div>
+                  <div><dt>{t("sf.u23.changedFields")}</dt><dd>{receipt().changedFields}</dd></div>
+                </dl>
+                <details class="sf-records-technical">
+                  <summary>{t("sf.u23.receiptDetails")}</summary>
+                  <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
+                  <For each={state.manifest!.receipts}>{(item) =>
+                    <p>{item.id} · {item.at} · {item.status} · {item.version}</p>
+                  }</For>
+                </details>
+              </section>}
+            </Show>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{state.manifest!.domainApplied ? t("sf.u23.confirmed") : t("sf.u23.simulation")}</h2>
               <p>{state.manifest!.context.period.start} – {state.manifest!.context.period.end} · {state.manifest!.context.currency}</p>
@@ -722,6 +738,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </section>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{t("sf.u23.context")}</h2>
+              <Show when={props.surfaceId === "UI57"} fallback={<>
               <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
                 <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
                 <dl>
@@ -739,6 +756,28 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               <For each={state.manifest!.issues}>{(issue) =>
                 <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
               }</For>
+              </>}>
+                <details class="sf-records-technical sf-records-engine-details" open={!state.reference?.receipt}>
+                  <summary>{t("sf.u23.sourceDetails")}</summary>
+              <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
+                <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
+                <dl>
+                  <For each={command.preview.components}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.amount === null ? t("sf.common.unknown") : item.amount} · {item.currency} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.values}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.missing}>{(item) => <>
+                    <dt>{item.field}</dt><dd>{item.reason}</dd>
+                  </>}</For>
+                </dl>
+              </article>}</For>
+              <For each={state.manifest!.issues}>{(issue) =>
+                <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
+              }</For>
+                </details>
+              </Show>
             </section>
             <section class="sf-files-section" aria-label={t("sf.u23.changes")}>
               <h2>{t("sf.u23.changes")}</h2>
@@ -784,26 +823,12 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </details>}
               </For>
             </section>
-            <Show when={state.reference?.receipt}>
+            <Show when={props.surfaceId !== "UI57" && state.reference?.receipt}>
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
-                <Show when={props.surfaceId === "UI57"} fallback={<>
                 <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
                 <For each={state.manifest!.receipts}>{(item) =>
                   <p>{item.id} · {item.at} · {item.status} · {item.version}</p>}</For>
-                </>}>
-                  <dl class="sf-records-receipt">
-                    <div><dt>{t("sf.u23.outcome")}</dt><dd>{receipt().outcome}</dd></div>
-                    <div><dt>{t("sf.u23.changedFields")}</dt><dd>{receipt().changedFields}</dd></div>
-                  </dl>
-                  <details class="sf-records-technical">
-                    <summary>{t("sf.u23.receiptDetails")}</summary>
-                    <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
-                    <For each={state.manifest!.receipts}>{(item) =>
-                      <p>{item.id} · {item.at} · {item.status} · {item.version}</p>
-                    }</For>
-                  </details>
-                </Show>
               </section>}
             </Show>
             <div class="sf-files-actions">

@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import type { Page, TestInfo } from "@playwright/test"
+import type { Locator, Page, TestInfo } from "@playwright/test"
 import { captureFinalSurface } from "../design-support/final-capture"
 
 type RecordArea = "UI57" | "UI58" | "UI59" | "UI60" | "UI68"
@@ -22,18 +22,29 @@ export async function captureRecord(page: Page, info: TestInfo, area: RecordArea
 }
 
 /** Read the same actual state through the native theme toggle and two viewport widths. */
-export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string) {
+export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string, preview = true) {
   const original = page.viewportSize()
   const previous = await page.locator("html").getAttribute("data-color-scheme")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await theme(page, "dark")
-  await captureRecord(page, info, area, state + "-dark-desktop", true)
+  await captureRecord(page, info, area, state + "-dark-desktop", preview)
   await theme(page, "light")
   await captureRecord(page, info, area, state + "-light-desktop")
   await page.setViewportSize({ width: 320, height: 900 })
   await captureRecord(page, info, area, state + "-light-narrow")
   if (original) await page.setViewportSize(original)
   await theme(page, previous === "light" ? "light" : "dark")
+}
+
+/** Keep a detailed review in the actual scroll position as an additional, clearly named capture. */
+export async function captureRecordDetail(page: Page, info: TestInfo, area: RecordArea,
+  state: string, region: Locator) {
+  const original = page.viewportSize()
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await region.scrollIntoViewIfNeeded()
+  await expect(region).toBeInViewport()
+  await captureFinalSurface(page, info, area, state, { preview: true })
+  if (original) await page.setViewportSize(original)
 }
 
 /** Reuse the same authorized session with the native persisted language preference. */
