@@ -32,16 +32,17 @@ async function originalMemoryReads(
   page: Page, installation: Pick<DesignInstallation, "origin" | "mount">,
   selection: MemoryCaseSelection, modes: readonly MemoryRead[], action: () => Promise<unknown>,
 ) {
-  const reads = modes.map((mode) => ({
-    mode, started: Date.now(),
-    observed: observeFinalGet(page, installation.origin, installation.mount +
-      (mode === "case" ? "/api/ui/projections/case" : "/dashboard"), 1, (url) =>
-      mode === "case" ? url.searchParams.get("caseRef") === selection.reference :
-        url.searchParams.get("sf") === mode && url.searchParams.get("caseId") === selection.caseRef.id &&
-        url.searchParams.get("incarnation") === selection.caseRef.incarnation &&
-        url.searchParams.get("version") === String(selection.caseRef.version)),
-  }))
+  const reads: { mode: MemoryRead; started: number; observed: Awaited<ReturnType<typeof observeFinalGet>> }[] = []
   try {
+    for (const mode of modes) reads.push({
+      mode, started: Date.now(),
+      observed: await observeFinalGet(page, installation.origin, installation.mount +
+        (mode === "case" ? "/api/ui/projections/case" : "/dashboard"), 1, (url) =>
+        mode === "case" ? url.searchParams.get("caseRef") === selection.reference :
+          url.searchParams.get("sf") === mode && url.searchParams.get("caseId") === selection.caseRef.id &&
+          url.searchParams.get("incarnation") === selection.caseRef.incarnation &&
+          url.searchParams.get("version") === String(selection.caseRef.version)),
+    })
     // Observe first, perform one original action, then await its original body.
     // Each response still has the shared 40s bound from its actual Request.
     await action()
@@ -55,7 +56,9 @@ async function originalMemoryReads(
       if (mode === "case") expect(original.body).toMatchObject({ value: { projection: { case: selection.caseRef } } })
     }))
   } finally {
-    for (const { observed } of reads) observed.close()
+    const closed = await Promise.allSettled(reads.map(({ observed }) => observed.close()))
+    const failures = closed.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
+    if (failures.length) throw new AggregateError(failures, "Original memory reading observers did not close")
   }
 }
 
