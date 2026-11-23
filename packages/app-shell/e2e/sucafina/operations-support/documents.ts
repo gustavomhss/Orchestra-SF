@@ -468,6 +468,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const uploadViewport = page.viewportSize()
   const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
   for (const scheme of ["dark", "light"] as const) {
+    // The native theme control is available in the desktop chrome.
+    await page.setViewportSize({ width: 1440, height: 1100 })
     if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
       await page.locator('[data-slot="orchestra-theme-toggle"]').click()
     await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
