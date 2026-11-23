@@ -655,8 +655,8 @@ for (const variant of [
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR")
     await expect(page.locator("html")).toHaveAttribute("data-color-scheme", variant.scheme)
 
-    // Record the untouched layout first. These measurements become concrete
-    // regression oracles after the baseline screenshots have been reviewed.
+    // The same checkpoints that exposed the narrow layout now guard its
+    // native gutters, full metric labels, touch targets and prompt footer.
     const capture = async (checkpoint: string) => {
       await page.evaluate(() => document.fonts.ready.then(() => undefined))
       const geometry = await page.evaluate(() => {
@@ -664,7 +664,9 @@ for (const variant of [
           ".orchestra-agents", ".agents-inner", ".agents-grid", ".agent-stats",
           ".agent-screen", ".agent-tabs", ".agent-tabs button", ".agent-savebar",
           ".agent-savebar > *", ".agent-prompt-foot", ".agent-prompt-foot > *",
-          ".agent-group-actions", ".agent-group-actions > *",
+          ".agent-group-actions", ".agent-group-actions > *", ".agent-stats dt",
+          ".agent-savebar .mx-btn", ".agent-prompt-foot .mx-note",
+          ".agent-tabs button[aria-selected=true]",
         ]
         return {
           viewport: { width: innerWidth, height: innerHeight },
@@ -688,9 +690,53 @@ for (const variant of [
       await info.attach(name, { path, contentType: "image/png" })
       await info.attach(name + "-geometry", {
         contentType: "application/json",
-        body: JSON.stringify({ classification: "production-component-observation", checkpoint, variant,
+        body: JSON.stringify({ classification: "production-component-regression", checkpoint, variant,
           locale: "br", backendQualified: false, geometry }, null, 2),
       })
+      const measured = (selector: string) => {
+        const element = geometry.elements.find((item) => item.selector === selector)
+        expect(element, selector + " must be measured").toBeDefined()
+        return element!
+      }
+      const chapter = measured(".orchestra-agents")
+      const inner = measured(".agents-inner")
+      expect(Math.abs(inner.width - (chapter.clientWidth - 32))).toBeLessThanOrEqual(1)
+      expect(Math.abs(inner.x - chapter.x - 16)).toBeLessThanOrEqual(1)
+      expect(inner.paddingBlockStart).toBe("28px")
+      expect(inner.paddingBlockEnd).toBe("40px")
+      expect(geometry.document.scrollWidth).toBeLessThanOrEqual(geometry.document.width)
+      for (const item of geometry.elements.filter((element) =>
+        [".agent-stats dt", ".agent-savebar", ".agent-prompt-foot"].includes(element.selector))) {
+        expect(item.scrollWidth, item.selector + " must contain its text").toBeLessThanOrEqual(item.clientWidth + 1)
+      }
+      for (const item of geometry.elements.filter((element) =>
+        [".agent-tabs button", ".agent-savebar .mx-btn"].includes(element.selector))) {
+        expect(item.height, item.selector + " must retain a mobile touch target").toBeGreaterThanOrEqual(44)
+      }
+      if (checkpoint !== "roster") {
+        const tabs = measured(".agent-tabs")
+        const selected = measured(".agent-tabs button[aria-selected=true]")
+        expect(selected.x).toBeGreaterThanOrEqual(tabs.x - 1)
+        expect(selected.right).toBeLessThanOrEqual(tabs.right + 1)
+        const bar = measured(".agent-savebar")
+        for (const item of geometry.elements.filter((element) => element.selector === ".agent-savebar > *")) {
+          expect(item.x).toBeGreaterThanOrEqual(bar.x)
+          expect(item.right).toBeLessThanOrEqual(bar.right)
+        }
+      }
+      if (checkpoint === "prompt-footer") {
+        const footer = measured(".agent-prompt-foot")
+        const counter = measured(".agent-prompt-foot .mx-note")
+        expect(counter.height, "The complete counter must fit one readable line").toBeLessThanOrEqual(parseFloat(counter.lineHeight) + 1)
+        const children = geometry.elements.filter((element) => element.selector === ".agent-prompt-foot > *")
+        expect(children).toHaveLength(2)
+        for (const item of children) {
+          expect(item.x).toBeGreaterThanOrEqual(footer.x)
+          expect(item.right).toBeLessThanOrEqual(footer.right)
+        }
+        expect(children[0].right <= children[1].x + 1 || children[0].bottom <= children[1].y + 1,
+          "The counter and reset action must not overlap").toBe(true)
+      }
     }
 
     await capture("roster")
