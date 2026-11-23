@@ -146,6 +146,7 @@ async function exerciseOriginalRefusal(input: {
   expect(requests).toHaveLength(1)
 
   await scrollPageTop(page)
+  await surface.getByText(refusalCopy[locale], { exact: true }).scrollIntoViewIfNeeded()
   await captureFinalSurface(page, info, "UI62", locale + "-dark-desktop-original-source-unavailable", { preview: true })
   await scheme(page, "light")
   await captureFinalSurface(page, info, "UI62", locale + "-light-desktop-original-source-unavailable", { preview: !br })
