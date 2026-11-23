@@ -79,7 +79,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
                 <dl class="sf-decision-context">
                   <div><dt>{t("sf.ui34.period")}</dt><dd><time>{record().horizon.start}</time> – <time>{record().horizon.end}</time></dd></div>
                   <div><dt>{t("sf.ui33.currency")}</dt><dd><bdi>{record().currency}</bdi></dd></div>
-                  <div><dt>{t("sf.ui34.state")}</dt><dd><bdi>{record().state}</bdi></dd></div>
+                  <div><dt>{t("sf.ui34.state")}</dt><dd><bdi>{record().state === "draft" ? t("sf.common.draft") : record().state}</bdi></dd></div>
                   <div><dt>{t("sf.ui34.current")}</dt><dd>{record().version}</dd></div>
                 </dl>
                 <p class="sf-decision-note">{t("sf.ui34.readonly")}</p>
