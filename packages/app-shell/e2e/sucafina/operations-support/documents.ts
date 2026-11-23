@@ -367,6 +367,7 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.getByText("No extracted candidates yet.", { exact: true })).toBeVisible()
   await capture?.(page, info, { surface: "UI58", state: "admitted-empty-evidence", evidence: "Original private attachment admitted; original candidates read returned an empty array.", attributes: { "data-sf-read-state": "ready" } })
+  await capture?.(page, info, { surface: "UI58", state: "authorized-extraction-fields", evidence: "The original admitted document remains selected; extraction fields are inspected before any schema or extraction command.", attributes: { "data-sf-read-state": "ready" }, focus: 'form.sf-files-fields:has(input[maxlength="120"])' })
   const documentRoute = `/orchestra/sf-documents/${encodeSfRouteRef(documentRef)}`
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
@@ -404,7 +405,7 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
-  await capture?.(page, info, { surface: "UI58", state: "original-extracted-candidate", evidence: "Original schema and extraction returned Price 42 USD with exact text range and blob digest; confirmation is absent.", attributes: { "data-sf-phase": "candidates" } })
+  await capture?.(page, info, { surface: "UI58", state: "original-extracted-candidate", evidence: "Original schema and extraction returned Price 42 USD with exact text range and blob digest; confirmation is absent.", attributes: { "data-sf-phase": "candidates" }, focus: `[data-sf-evidence-id=${JSON.stringify(candidate.id)}]` })
   const continueToEvidence = root.getByRole("link", { name: /^(Document evidence|Evidência do documento)$/ })
   await expect(continueToEvidence).toHaveAttribute("href", evidenceURL.pathname + evidenceURL.search)
   const routedCandidates = await observeCandidates()
