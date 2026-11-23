@@ -214,16 +214,177 @@
         "branch": "ci-run-linux-sf613-t8",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:35:17Z",
+          "status": "completed",
+          "conclusion": "failure",
           "createdAt": "2026-11-23T16:22:19Z",
-          "updatedAt": "2026-11-23T16:22:22Z"
+          "updatedAt": "2026-11-23T16:31:43Z"
         },
-        "result": null
+        "result": {
+          "outcome": "FAILED_ORIGINAL_C17_DEADLINE_AND_PORTUGUESE_IMPORTS_LABEL",
+          "testJob": {
+            "id": 137836240436,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T16:31:37Z"
+          },
+          "cleanupJob": {
+            "id": 137842500745,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:31:42Z"
+          },
+          "wrapper": {
+            "passed": 13,
+            "failed": 2
+          },
+          "failingUnderlyingGroups": [
+            {
+              "name": "CurrentChoice readonly storage and nested calculation composition",
+              "passed": 59,
+              "skipped": 2,
+              "failed": 1,
+              "skips": "Original inherited skips; not newly introduced",
+              "durationMs": 183053,
+              "exitCode": 1
+            },
+            {
+              "name": "Reconciled confirmation and imports DOM regressions",
+              "passed": 6,
+              "failed": 1,
+              "durationMs": 3813,
+              "exitCode": 1
+            }
+          ],
+          "failures": [
+            {
+              "kind": "ORIGINAL_C17_DEADLINE",
+              "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+              "originalCooperativeDeadlineMs": 105000,
+              "observedTestDurationMs": 105010.28,
+              "phase": "produce-outer",
+              "phaseMs": 103301,
+              "elapsedMs": 105004,
+              "canonicalResultReads": 1653,
+              "canonicalResultReadsCompleted": 1653,
+              "aborted": true,
+              "reopenReached": false
+            },
+            {
+              "kind": "PRODUCT_TRANSLATION_REGRESSION",
+              "test": "Imports localizes source/history labels without changing selection, wire values or authority",
+              "testPath": "packages/app-shell/test-browser/sucafina-imports-copy.test.ts",
+              "originalTestBlob": "d804768f711feb00f70a69f9ce1529ccfd7a5f93",
+              "assertionLine": 221,
+              "expected": [
+                [
+                  "planner",
+                  "Planejador"
+                ],
+                [
+                  "dashboard",
+                  "Painel"
+                ]
+              ],
+              "received": [
+                [
+                  "planner",
+                  "Planner"
+                ],
+                [
+                  "dashboard",
+                  "Painel"
+                ]
+              ],
+              "productKey": "SF_U23_COPY_BR[sf.u23.planner]",
+              "testsOrExpectationsChanged": false
+            }
+          ],
+          "successfulUnderlyingGroups": [
+            {
+              "name": "Captured context and canonical/native-clone/byte controls",
+              "passed": 44,
+              "failed": 0
+            },
+            {
+              "name": "Planner projection references",
+              "passed": 12,
+              "failed": 0
+            },
+            {
+              "name": "C08 selection and coverage proof",
+              "passed": 15,
+              "failed": 0
+            },
+            {
+              "name": "UI authority and context integrity",
+              "passed": 27,
+              "failed": 0
+            },
+            {
+              "name": "Reconciled authority, storage and source contracts",
+              "passed": 63,
+              "failed": 0
+            },
+            {
+              "name": "Core process, filesystem and layer-node regressions",
+              "passed": 41,
+              "failed": 0
+            }
+          ],
+          "typechecks": [
+            {
+              "name": "CLI package typecheck",
+              "exitCode": 0
+            },
+            {
+              "name": "Sucafina package typecheck",
+              "exitCode": 0
+            },
+            {
+              "name": "app-shell typecheck",
+              "exitCode": 0
+            },
+            {
+              "name": "app-shell e2e typecheck",
+              "exitCode": 0
+            }
+          ],
+          "guards": {
+            "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+            "rules": 78,
+            "files": 821,
+            "errors": [],
+            "approved": [],
+            "touchesGuards": false,
+            "warningsNotWaived": true
+          },
+          "bilingualParity": {
+            "status": "PASSED",
+            "source": "346af44f4aac7bf1eb9821d4c5482bacf233a706",
+            "catalogs": [
+              "sf-u23",
+              "sf-u25",
+              "sf-u32",
+              "sf-u33",
+              "sf-u38",
+              "sf-u44"
+            ],
+            "existingEnglishPreserved": true
+          },
+          "omni": {
+            "status": "PASSED",
+            "declaredTests": 15,
+            "spawns": 26,
+            "delegated": 0
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": false,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215734271/job/137836240436",
+          "countInterpretation": "Wrapper tests and underlying group tests are recorded separately; no mixed aggregate."
+        }
       },
       {
         "name": "release",
@@ -414,9 +575,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Fix the concrete C17 Release performance failure while retaining the original105000ms cooperative deadline, canonical/native fallback behavior, freshness checks and authority oracles. Read all other final-source campaign results before any promotion."
+    "nextAction": "Integrate the minimal Portuguese copy correction and review the separate C17 performance correction without changing original tests, deadlines or runtime admission. Qualify the corrected final composition through the authorized Linux test-ci controls and retain both original negative runs."
   },
-  "updatedAt": "2026-11-23T16:29:42Z",
+  "updatedAt": "2026-11-23T16:35:17Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -586,6 +747,52 @@
       "failedRun": 45215740844,
       "otherCampaignsPending": 5,
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T16:35:17Z",
+      "status": "RESUMED_PRODUCT_FIX_REQUIRED",
+      "failedRun": 45215734271,
+      "failedFinalCampaigns": 2,
+      "otherCampaignsPending": 4,
+      "copyCorrection": "f8c92867c64ce63160389e5ff2ed828e9a359a41",
+      "qualification": false
+    }
+  ],
+  "sourceCorrections": [
+    {
+      "kind": "PORTUGUESE_IMPORTS_LABEL",
+      "branch": "sf613-copy",
+      "parent": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+      "commit": "f8c92867c64ce63160389e5ff2ed828e9a359a41",
+      "tree": "2a0f0ad2b9ed0043df1161b0140b2251b550eb06",
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+      "originalBlob": "0b5feea1b54e922521b80ad8c7345cc09db68ffa",
+      "resolvedBlob": "5aa39e0683f2691d626da0c0eb63791ba95a97fd",
+      "change": {
+        "dictionary": "SF_U23_COPY_BR",
+        "key": "sf.u23.planner",
+        "before": "Planner",
+        "after": "Planejador"
+      },
+      "reason": "The upstream dev-only line replaced the original Portuguese source-selection label. Restore the original localized product copy required by the unchanged DOM oracle while preserving the planner wire value.",
+      "staticReview": {
+        "completeOriginalTestRead": true,
+        "originalTestCases": 3,
+        "sharedDivergentPortugueseValuesReviewed": 16,
+        "otherDivergentValuesPreserved": true,
+        "EnglishByteUnchanged": true,
+        "onlyPortugueseKeyChanged": "sf.u23.planner",
+        "allOtherLiteralExpectationsMatched": true,
+        "remoteDiff": {
+          "paths": 1,
+          "additions": 1,
+          "deletions": 1
+        }
+      },
+      "testsExecuted": false,
+      "qualification": false,
+      "includedInRecordedRootSource": false,
+      "status": "IMPLEMENTED_PENDING_ROOT_INTEGRATION_AND_LINUX_TEST_CI"
     }
   ]
 }
