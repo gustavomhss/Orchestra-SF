@@ -44,8 +44,11 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   page.on("response", (response) => {
     const url = new URL(response.url())
     const action = analysisAction(response)
-    if (url.origin === installation.origin && (/\/api\/ui\/(routines|schedules|projections\/(residents|case|routine))/.test(url.pathname) || action))
-      reads.push({ path: url.pathname, status: response.status(), ...(action ? { action } : {}) })
+    if (url.origin === installation.origin && (/\/api\/ui\/(routines|schedules|projections\/(residents|case|routine))/.test(url.pathname) || action)) {
+      const observed = { path: url.pathname, status: response.status(), ...(action ? { action } : {}) }
+      reads.push(observed)
+      console.info("SF_FINAL_ROUTINES_HTTP " + JSON.stringify(observed))
+    }
   })
   const query = new URLSearchParams({ installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId })
   const response = await page.context().request.get(installation.origin + installation.mount + "/api/ui/context?" + query)
@@ -58,9 +61,11 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   console.info("SF_FINAL_ROUTINES_AVAILABILITY " + JSON.stringify(availability))
 
   await waveFourTest.step("UI64 keeps case authority and unpublished admission visibly separate", async () => {
-    const choicesResponse = page.waitForResponse((reply) => analysisAction(reply) === "choices")
+    const choicesResponse = page.waitForResponse(async (reply) =>
+      reply.status() === 200 && analysisAction(reply) === "choices" && await reply.finished() === null)
+      .then((reply) => reply.json())
     await enter(page, owner, new URL(screens[0].path, installation.origin).href, screens[0].en)
-    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await (await choicesResponse).json())
+    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await choicesResponse)
     expect(choiceBody.status).toBe("ok")
     if (choiceBody.status !== "ok") throw new Error("The original authorized case source is unavailable")
     const sourceCases = choiceBody.value.cases.filter((entry) => entry.label === waveFourDecisionsData.objective)
