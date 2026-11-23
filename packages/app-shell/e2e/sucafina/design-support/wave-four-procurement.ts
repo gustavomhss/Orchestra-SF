@@ -348,6 +348,11 @@ export function registerProcurementJourneys(ids: readonly ProcurementJourneyID[]
         await capture(page, info, "CAP26-dark-desktop-pr-approval-list-test-data")
         await scheme(page, "light")
         await capture(page, info, "CAP26-light-desktop-pr-approval-list-test-data")
+        await narrow()
+        await readableRequestIdentity(surface.locator("tr[data-sf-row]"))
+        await scrollPageTop(page)
+        await capture(page, info, "CAP26-light-320-pr-approval-list-test-data")
+        await desktop()
         await scheme(page, "dark")
         await surface.locator("tr[data-sf-row]").filter({ hasText: data.requests.created })
           .locator('[data-sf-action="select"]').click()
@@ -611,6 +616,7 @@ export function registerProcurementJourneys(ids: readonly ProcurementJourneyID[]
             await localized.setViewportSize({ width: 320, height: 900 })
             await reflow(localized)
             await scrollPageTop(localized)
+            if (screen.id === "CAP26") await readableRequestIdentity(localized.locator('[data-sf-cap26="submitted-pr"] tr[data-sf-row]'))
             await capture(localized, info, screen.id + "-pt-BR-dark-320-test-data")
             await localized.setViewportSize({ width: 1440, height: 1100 })
           }
@@ -662,8 +668,18 @@ async function alignedMetricValues(surface: Locator) {
 }
 
 async function readableRequestIdentity(rows: Locator) {
-  expect(await rows.count()).toBeGreaterThan(0)
+  await expect(rows.first()).toBeVisible()
+  const count = await rows.count()
+  expect(count).toBeGreaterThan(0)
   const controls = rows.locator(".sf-s01-cell-value, .sf-s01-row-open")
+  await expect(controls).toHaveCount(count * 2)
+  await expect.poll(() => controls.evaluateAll((elements) => elements.map((element) => {
+    const range = document.createRange()
+    range.selectNodeContents(element)
+    return new Set(Array.from(range.getClientRects()).filter((rect) => rect.width > 0 && rect.height > 0)
+      .map((rect) => Math.round(rect.top))).size
+  })), { message: "request numbers and their open-record labels each remain on one readable line" })
+    .toEqual(Array(count * 2).fill(1))
   const layout = await controls.evaluateAll((elements) => elements.map((element) => {
     const range = document.createRange()
     range.selectNodeContents(element)

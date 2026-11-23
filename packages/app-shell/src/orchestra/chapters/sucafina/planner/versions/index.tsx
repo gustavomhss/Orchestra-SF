@@ -395,7 +395,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         if (selected) go("detail", { versionRef: selected.id, year: selected.year })
       }}
       rowActionContext={(item) => (
-        <div class="sf-u46-action-context">
+        <div class="sf-u46-action-context" aria-hidden="true">
           <bdi>{item.name}</bdi>
           <span>{item.year} · {copy.t(key(item.official ? "sf.u46.officialState" : item.locked ? "sf.u46.locked" : "sf.u46.draft"))}</span>
         </div>
