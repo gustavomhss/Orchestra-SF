@@ -8,6 +8,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase, sfOperationReady } from "../cases/model"
 import { SfCaseSourcesEditor } from "./sources"
 import { sfDecisionHref } from "../cases/route"
+import { sfDecisionGap } from "../assumptions/presentation"
 import "../cases/n24.css"
 import "./decision.css"
 import "../../reviews/workflows.css"
@@ -29,6 +30,17 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
   const route = () => valid() ? props.route as SfSurfaceProps<"UI34">["route"] : undefined
   const gaps = () => [...new Set(caseData.read.projection?.events.flatMap((event) => event.factualGaps) ?? [])]
   const back = () => route() ? sfDecisionHref(route()!, "list") : undefined
+  const gapText = (value: string) => {
+    const gap = sfDecisionGap(value)
+    if (gap.label) return t(gap.label)
+    if (gap.category) return t("sf.ui35.coverage") + " · " + t(gap.category) + ": " +
+      (gap.reasonKey ? t(gap.reasonKey) : gap.reason)
+    return value
+  }
+  const hasGapCodes = () => gaps().some((value) => {
+    const gap = sfDecisionGap(value)
+    return !!gap.label || !!gap.category
+  })
   return (
     <SfPageFrame
       titleKey={k("sf.ui34.title")}
@@ -98,7 +110,13 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
                 <aside class="sf-decision-constraints" aria-labelledby="sf-case-constraints">
                   <h2 id="sf-case-constraints">{t("sf.ui34.constraints")}</h2>
                   <Show when={gaps().length} fallback={<p class="sf-decision-note">{t("sf.ui34.noConstraints")}</p>}>
-                    <ul class="sf-n24-list"><For each={gaps()}>{(gap) => <li><bdi>{gap}</bdi></li>}</For></ul>
+                    <ul class="sf-n24-list"><For each={gaps()}>{(gap) => <li><bdi>{gapText(gap)}</bdi></li>}</For></ul>
+                    <Show when={hasGapCodes()}>
+                      <details class="sf-decision-source-scope">
+                        <summary>{t("sf.ui36.sourceDetails")}</summary>
+                        <ul class="sf-n24-list"><For each={gaps()}>{(gap) => <li><bdi>{gap}</bdi></li>}</For></ul>
+                      </details>
+                    </Show>
                   </Show>
                 </aside>
               </section>
