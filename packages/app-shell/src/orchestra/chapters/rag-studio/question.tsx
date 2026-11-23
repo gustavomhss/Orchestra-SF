@@ -67,7 +67,7 @@ export function Question(props: ChapterPageProps) {
               when={claim() === "off"}
               fallback={
                 <Show when={roster.pipelineFailed}>
-                  <p role="alert">{language.t("common.requestFailed")}</p>
+                  <span class="mx-note">{language.t("orchestra.ragStudio.pipelineUnavailable")}</span>
                 </Show>
               }
             >

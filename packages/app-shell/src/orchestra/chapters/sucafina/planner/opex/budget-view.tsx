@@ -594,6 +594,19 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
       case "split": return "sf.u07.saveSplit"
     }
   }
+  const reviewText = (path: string, value: unknown, values: object): string => {
+    if (path === "period" && typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 12)
+      return t(value === 0 ? "sf.u07.openMonths" : "sf.u07.month." + value)
+    if (path === "annual" && (typeof value === "number" || typeof value === "string") &&
+        Number.isFinite(Number(value))) {
+      const amount = new Intl.NumberFormat(locale(), { maximumSignificantDigits: 21 }).format(Number(value))
+      const currency = "cur" in values && typeof values.cur === "string" ? values.cur : ""
+      return currency ? amount + " " + currency : amount
+    }
+    if (path === "approvalState" && typeof value === "string") return approvalLabel(value)
+    if (path === "proj" && typeof value === "string") return projectReference(value)
+    return String(value)
+  }
   const fields = (values: object) =>
     Object.entries(values).map(([path,value]):SfReviewField => ({
       path, label: msg("sf.u07." + (path === "desc" ? "description" : path === "cur" ? "currency" :
@@ -603,8 +616,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         ? { kind: "missing", reason: msg("sf.u07.missing") }
         : path === "split" && typeof value === "boolean"
           ? { kind: "boolean", value, trueLabel: msg("sf.u07.splitEnabled"), falseLabel: msg("sf.u07.splitDisabled") }
-          : textual(path === "approvalState" && typeof value === "string" ? approvalLabel(value) :
-            path === "proj" && typeof value === "string" ? projectReference(value) : String(value)),
+          : textual(reviewText(path, value, values)),
     }))
   const reviewFields = () => {
     const r=state.review

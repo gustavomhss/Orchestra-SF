@@ -275,8 +275,9 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                 <Show when={ui.phase === "prepared" ? ui.proposal : undefined}>
                   {(proposal) => <div class="sf-n24-review" aria-live="polite">
                     <p>{t("sf.ui37.preparationOnly")}</p>
-                    <p><bdi>{proposal().question}</bdi> · {proposal().expectedCaseVersion}</p>
-                    <Show when={proposal().outputRef} fallback={<p>{t("sf.ui37.proposalScope")}</p>}>
+                    <p><bdi>{proposal().question}</bdi></p>
+                    <p>{t("sf.ui35.version")}: {proposal().expectedCaseVersion}</p>
+                    <Show when={proposal().outputRef} fallback={<p>{t("sf.ui37.confirmationUnavailable")}</p>}>
                       {(outputRef) => <SfQuestionConsume owner={caseData.owner} caseRecord={current()} outputRef={outputRef()} onConsumed={() => caseData.reload()} />}
                     </Show>
                   </div>}

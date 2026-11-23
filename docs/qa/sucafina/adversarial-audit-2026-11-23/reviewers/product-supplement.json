@@ -1,0 +1,2833 @@
+{
+  "audit": "Orchestra-SF adversarial business UI/UX supplement",
+  "targetSha": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "readOnly": true,
+  "viewedBy": "/root/product_audit",
+  "mainReport": "artifact-extract/product-audit-findings.md",
+  "mainManifest": "artifact-extract/product-audit-final.json",
+  "counts": {
+    "selectedOriginalFiles": 103,
+    "actuallyViewed": 103,
+    "distinctImageHashes": 102,
+    "namedCaptures": 101,
+    "testFinished": 2,
+    "newSurfaceFamilies": 8,
+    "firstLotFiles": 103,
+    "firstLotDistinctHashes": 100,
+    "totalFilesViewed": 206,
+    "totalDistinctImageHashes": 202,
+    "totalNamedCaptures": 198,
+    "totalTestFinished": 8,
+    "totalSurfaceFamiliesVisuallyReviewed": 16,
+    "newFindings": 2,
+    "amendmentsToExistingFindings": 1,
+    "totalUniqueBusinessFindings": 13,
+    "totalP2": 10,
+    "totalP3": 3
+  },
+  "surfaceFamilies": {
+    "firstLot": [
+      "CAP02",
+      "CAP03",
+      "CAP04",
+      "CAP06",
+      "CAP07",
+      "CAP08",
+      "CAP09",
+      "CAP10"
+    ],
+    "supplement": [
+      "CAP01",
+      "CAP05",
+      "CAP11",
+      "CAP12",
+      "CAP13",
+      "CAP14",
+      "CAP15",
+      "CAP16"
+    ],
+    "combined": [
+      "CAP01",
+      "CAP02",
+      "CAP03",
+      "CAP04",
+      "CAP05",
+      "CAP06",
+      "CAP07",
+      "CAP08",
+      "CAP09",
+      "CAP10",
+      "CAP11",
+      "CAP12",
+      "CAP13",
+      "CAP14",
+      "CAP15",
+      "CAP16"
+    ]
+  },
+  "sources": [
+    {
+      "group": "native-dashboard",
+      "count": 8,
+      "uniqueImageHashes": 8,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "run": 45086595355,
+      "artifact": 14779259534,
+      "scope": "CAP01 somente"
+    },
+    {
+      "group": "operations-earlier",
+      "count": 23,
+      "uniqueImageHashes": 23,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "run": 45086824985,
+      "artifact": 14780276202,
+      "scope": "CAP11/12 EN somente; demais famílias superseded"
+    },
+    {
+      "group": "business-operations",
+      "count": 49,
+      "uniqueImageHashes": 49,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "run": 45090642771,
+      "artifact": 14781785121,
+      "scope": "CAP13/15/16 + PT11/12"
+    },
+    {
+      "group": "finance-final",
+      "count": 23,
+      "uniqueImageHashes": 22,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "scope": "CAP05/14 + dois test-finished; CAP17–19 em outro auditor"
+    }
+  ],
+  "comparisons": [
+    {
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "status": "ahead",
+      "files": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+          "changes": 7
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+          "changes": 70
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+          "changes": 14
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/documents.css",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+          "changes": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.css",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/headcount.css",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "changes": 52
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/versions.css",
+          "changes": 16
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+          "changes": 7
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "changes": 13
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/copy.ts",
+          "changes": 30
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+          "changes": 25
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+          "changes": 27
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "changes": 25
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "changes": 10
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "changes": 17
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+          "changes": 32
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/workflows.css",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/search.css",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "changes": 0
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/work.css",
+          "changes": 0
+        }
+      ]
+    },
+    {
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "status": "ahead",
+      "files": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+          "changes": 7
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+          "changes": 70
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+          "changes": 14
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+          "changes": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.css",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/headcount.css",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "changes": 52
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/versions.css",
+          "changes": 16
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+          "changes": 7
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "changes": 13
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/copy.ts",
+          "changes": 30
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+          "changes": 25
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+          "changes": 27
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+          "changes": 25
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "changes": 10
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "changes": 17
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+          "changes": 32
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/search.css",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 19
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 50
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 3
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+          "changes": 49
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/work.css",
+          "changes": 9
+        }
+      ]
+    },
+    {
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "status": "ahead",
+      "files": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+          "changes": 7
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+          "changes": 70
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+          "changes": 14
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+          "changes": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+          "changes": 27
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "changes": 10
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "changes": 17
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+          "changes": 32
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 19
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 50
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 3
+        }
+      ]
+    },
+    {
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "status": "ahead",
+      "files": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+          "changes": 8
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+          "changes": 14
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+          "changes": 1
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+          "changes": 6
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+          "changes": 27
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "changes": 2
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "changes": 4
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "changes": 15
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+          "changes": 5
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 19
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 50
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 3
+        }
+      ]
+    }
+  ],
+  "provenanceLimits": [
+    "Capturas antigas nos SHAs indicados, não nova execução visual na dev pinada.",
+    "Módulos específicos dos achados novos e da extensão B6 não constam no diff até dev; shared/detail e shared/table tiveram alterações posteriores. Não se certificam pixels, alvos ou alinhamento atuais com esses frames.",
+    "Fonte dev foi lida via GitHub connector. Nenhum produto, teste, build ou browser foi executado localmente; apenas leitura, visualização e hashing de evidências.",
+    "Arquivos test-finished e duplicados de pixel são listados, mas não contados como novos estados funcionais.",
+    "A fonte do inventário lista 70 superfícies e 165 padrões de rota; 16 famílias de negócio tiveram capturas vistas por este auditor. Outras famílias foram cobertas por root/outros auditores; não reivindicadas aqui."
+  ],
+  "screenshots": [
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-dark-1440x800-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-dark-1440x800-test-data.png",
+      "sha256": "a57c1e451f69502ed7b4c1469c3be322ae8a310764da214c93b90d9a5b2dc123",
+      "dimensions": [
+        1440,
+        800
+      ],
+      "uniqueInGroup": true,
+      "index": 0,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-dark-desktop-inline-review-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-dark-desktop-inline-review-test-data.png",
+      "sha256": "ee85ed04a86b8f5fdddbd24d509cc61f179798b8d68de56fe63a9903868b2f6b",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 1,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-dark-desktop-people-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-dark-desktop-people-test-data.png",
+      "sha256": "dfdbe65d4c43975266645263897e04a9a96bb1c670df661ec9961428b16bb6b5",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 2,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-dark-desktop-signals-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-dark-desktop-signals-test-data.png",
+      "sha256": "9ec591f2b44de0fb9dbec84308a9cbf6dc7d6c500d3002ab3a1493b872911dfd",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 3,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-dark-desktop-test-data.png",
+      "sha256": "7b41df77ca9f2a24e2bc27fd69f7c7e68caefa8931f11dd2b488d9f4db1c51f1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 4,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-light-320-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-light-320-test-data.png",
+      "sha256": "6f8d2d440d05589dfe39e915d6ede3532bcaf99bff494a90732b0bb8f395a591",
+      "dimensions": [
+        320,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 5,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-light-desktop-test-data.png",
+      "sha256": "7f53734e37d3560bc9e664083af784d6f568f61db68b18a49b503cf53384f2bc",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 6,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "CAP01-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/CAP01-pt-BR-dark-desktop-test-data.png",
+      "sha256": "cb93760ced3abc646a671a18620273bc8f32496aad931498b0bde78e568891a2",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 7,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-campaign-departments-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-campaign-departments-dark-desktop-test-data.png",
+      "sha256": "d4f9a011a0149b347e7073194f661f108616a7274f10e8c42c04fa26a66578f0",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 8,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-campaign-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-campaign-editor-dark-desktop-test-data.png",
+      "sha256": "f3e1a08d9b3a314b0a76204c51bb7308ff105f76e1b8707cb446535b041af249",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 9,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-campaign-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-campaign-review-dark-desktop-test-data.png",
+      "sha256": "afb4584171e9d5484a820b9806b338ab9b5464e14720a4bcadec14ac37186ed0",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 10,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-campaign-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-campaign-review-top-dark-desktop-test-data.png",
+      "sha256": "fba15fd03a0d98c461967d18829b4a77706cc8743fe4d2b19e68e9d276a72d8f",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 11,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-department-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-department-editor-dark-desktop-test-data.png",
+      "sha256": "ba417d98e71646eb554b02801f73c157560b3b37423af5194143c9c9ac0c39fe",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 12,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-incident-delete-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-incident-delete-review-dark-desktop-test-data.png",
+      "sha256": "f9fc7dc3621d896818b564c8235ecd11c478cc4def18b23c31f1e12d77503ef4",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 13,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-incident-delete-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-incident-delete-review-top-dark-desktop-test-data.png",
+      "sha256": "8477ac8c094d6a1b11cbbf77d882396c51859ffe8142ddbafbbdd2f9aab3cb4c",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 14,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-operations-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-operations-dark-desktop-test-data.png",
+      "sha256": "4a874ba54f3392bdfb4e04dc7b8b0f178231fcdf1cd1e012879850110ffc32d3",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 15,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-incidents-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-incidents-dark-desktop-test-data.png",
+      "sha256": "5ba1f6694b22a17f291832c4a8c135342299ac69f51ce17b943de8bfa5b2ca69",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 16,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-operations-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-operations-light-desktop-test-data.png",
+      "sha256": "96057032f9f339cb71845155370b3f0e1bdbfd47e36a63e3382144a88f4b4a4a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 17,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP12-unscoped-actions-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-7dbbc-s-and-a-real-reviewed-write-chromium/CAP12-unscoped-actions-dark-desktop-test-data.png",
+      "sha256": "88add6fc56b8ce39e92367871a0e78a08cdb622e214d800c1bd551e9cd08bb4d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 18,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-application-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-application-editor-dark-desktop-test-data.png",
+      "sha256": "e76f5b504e765529fead5b5889951284fad040806d264844576137a0f245be5a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 19,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-application-health-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-application-health-dark-desktop-test-data.png",
+      "sha256": "13f5b943778355cf32e64c8f2c684af773eead06680ee2a12879963030d3ae67",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 20,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-categories-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-categories-editor-dark-desktop-test-data.png",
+      "sha256": "c41d11caa6a02870b906983160b2dd61a1277622ce4a75cd381019662102ba22",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 21,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-import-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-import-editor-dark-desktop-test-data.png",
+      "sha256": "3ed02b7e585ca7459745d9e3e7692004e2a6d7a1d412cf2d037f1841d05a54db",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 22,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-import-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-import-review-dark-desktop-test-data.png",
+      "sha256": "f9a3bc2773ef40f3122f2c33ad28cb08af3f30e9c13c276d3372b0db416f6d97",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 23,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-import-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-import-review-top-dark-desktop-test-data.png",
+      "sha256": "9d79a2a9ecdc0eb40993ddcca75c746444987deeae8f9ba5b16e223874afbe80",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 24,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-operations-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-operations-dark-desktop-test-data.png",
+      "sha256": "2bd3500f503e4f14367a61e674e42a04d6dfa9b8e2612b8f18763da71acca59b",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 25,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-operations-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-operations-light-desktop-test-data.png",
+      "sha256": "c29403434ff995343fd09ea2963ba686a9870583890bafa9a2aaee5bdf4e6f82",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 26,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-settings-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-settings-dark-desktop-test-data.png",
+      "sha256": "49ea299f32722927b323c60da42b6f8a0d68bbb89456d4063dd3286be4846ec8",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 27,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-sla-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-sla-editor-dark-desktop-test-data.png",
+      "sha256": "5b4574ec405eb3bf7e9951e77c3b2866af2261612f45025b6ffde7d215f0d681",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 28,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-sla-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-sla-review-dark-desktop-test-data.png",
+      "sha256": "df9ae83dfca77a8a5b9cce171a48676e19fb5ecc16e53a140ded7fdd69a98e99",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 29,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "operations-earlier",
+      "run": 45086824985,
+      "source": "744d24f26086481aa567a999b919dbe220a13306",
+      "artifact": 14780276202,
+      "name": "CAP11-ticket-ledger-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/operations-earlier/packages/app-shell/e2e/test-results/sucafina-design-wave-three-b8356-s-and-a-real-reviewed-write-chromium/CAP11-ticket-ledger-dark-desktop-test-data.png",
+      "sha256": "94d2fd499b6e7209c60a966c22fce4ec442347c09f993012726de28f383cdbe4",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 30,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-delete-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-delete-review-dark-desktop-test-data.png",
+      "sha256": "148ffe610aec92aaf1d922a40259636bab5de9c37a21b028ec6481701b33dba1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 31,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-detail-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-detail-dark-desktop-test-data.png",
+      "sha256": "8fb06ca987a1c635c3095a96dfbd9610bce133b0ec3f3851d477153e94fdb4b2",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 32,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-editor-dark-desktop-test-data.png",
+      "sha256": "5c3f113b9f631967d031004606fec3f0df76c51ef9619de003546bf3abd6c7b8",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 33,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-filtered-empty-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-filtered-empty-dark-desktop-test-data.png",
+      "sha256": "1ec70d38d7ca1dd41f4656637b298794b504503b1117b4fef3f1b6f7853202c3",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 34,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-operations-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-operations-dark-desktop-test-data.png",
+      "sha256": "e7cc78cd67d00ca3ba19e2b835a91447bb22a04e153a884a7660857f673333d5",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 35,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-operations-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-operations-light-desktop-test-data.png",
+      "sha256": "2377eb641c6b6413702a6668cf9f56c0cbc7935ec2e1a456b9b2aad43d90c327",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 36,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-review-dark-desktop-test-data.png",
+      "sha256": "ceb3008ae377668ee58dde370a6b0881c878d2994680c1d9c3fca891c43b8a1f",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 37,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-025ef-g-and-a-real-reviewed-write-chromium/CAP13-review-top-dark-desktop-test-data.png",
+      "sha256": "e3daf3b452dc60c1df9f127009bd127fc3a419ba8e3e107f91f75fa330ea0037",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 38,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-item-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-item-editor-dark-desktop-test-data.png",
+      "sha256": "783750ff3db11eda2d216374c7ee775c647852433f451c71b1a5a5d1d7110ef5",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 39,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-items-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-items-dark-desktop-test-data.png",
+      "sha256": "a24eaf561eeed793fff3202cd63fb0dea75e2eea4e028230cceb54e0c2b1ae51",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 40,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-operations-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-operations-dark-desktop-test-data.png",
+      "sha256": "63486ffa5374cefb53811fd8dca4fd60a609eebd99c968a746d7aaf95cfa69a3",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 41,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-operations-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-operations-light-desktop-test-data.png",
+      "sha256": "83615719b2680b8205a5fc54b19e146ed5917e509552e8a2fd46843dad2317d7",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 42,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-owner-assignments-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-owner-assignments-dark-desktop-test-data.png",
+      "sha256": "6e0792688d3a7c86907d9b1e411ffee24c86952e39f08552a8deaae8a2ac2202",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 43,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-detail-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-subitem-detail-dark-desktop-test-data.png",
+      "sha256": "85ae534f7bf914cda654d4d4cba0787e719b7ddd25f2173f4f52506915f89e9a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 44,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-subitem-editor-dark-desktop-test-data.png",
+      "sha256": "4264c47498bf54f26b42698ca9f02a9c9e595d46f291d0310e0d876f5b9c5875",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 45,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-quarters-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-subitem-quarters-dark-desktop-test-data.png",
+      "sha256": "6ce8db71ed41d4b72f31d624af037305d892958431396add18189463318b02eb",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 46,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-subitem-review-dark-desktop-test-data.png",
+      "sha256": "167c3261356507056ff80c4709ba5c268d50d6560ebb55d872ce567197d02c51",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 47,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B12",
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-36e21-y-and-a-real-reviewed-write-chromium/CAP16-subitem-review-top-dark-desktop-test-data.png",
+      "sha256": "c6f42ec8ef4647eee73e79b5116dc28911b860e64b74e124af7ed2e2e3e6159f",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 48,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B12",
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-detail-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-detail-dark-desktop-test-data.png",
+      "sha256": "432e5324e61722d8bb354a99a7145da76dad7acbf44fbb492dccb2bb154471f1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 49,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-editor-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-editor-dark-desktop-test-data.png",
+      "sha256": "b7aa5b37bcae3f76d88046393201df5d99118a8a33e2884a2c5fd25621a0106a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 50,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-operations-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-operations-dark-desktop-test-data.png",
+      "sha256": "b03e3166d3ca9cf9e57d1f012529884dd86e35fd66f682837538929edfdd4d68",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 51,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-operations-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-operations-light-desktop-test-data.png",
+      "sha256": "976a200b437f5f5117673a3cef240f07261a71867f1e646328ed0b60c278e461",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 52,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-review-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-review-dark-desktop-test-data.png",
+      "sha256": "0e5afc6501462a9a7ca7c1b762a6add2e0b07f0c165003eb343201aae16b00a0",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 53,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-review-top-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d2a07-s-and-a-real-reviewed-write-chromium/CAP15-review-top-dark-desktop-test-data.png",
+      "sha256": "71367022bf87771e0d27d5d4e59ac3996e6e97e9f112c4693c42df8af19abab1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 54,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP11-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP11-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "a12817500e38439f0991e236c43d0431930c14a146bdbb8ed7b892962669023e",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 55,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP11-operations-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP11-operations-pt-BR-dark-390-test-data.png",
+      "sha256": "8b8e3f2c85f0a912bf7e34fc8d07ba541c3e317d75ac9cc2d1e21ef7ed61220b",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 56,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP11-operations-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP11-operations-pt-BR-dark-desktop-test-data.png",
+      "sha256": "4a0408bdafb123fbe69a5a1e99dd3a7280ab6e0b9987aaefe156bff8bd7b535b",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 57,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP11-review-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP11-review-pt-BR-dark-390-test-data.png",
+      "sha256": "ec7e417d796fe9e0f699762080fcb44da3546e2c31e9aece56ffd557305fd765",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 58,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP12-departments-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP12-departments-pt-BR-dark-390-test-data.png",
+      "sha256": "6eb49bd4eb5e8987938e2cd609206456cfe035314bd0877ba207b2df7ce61ac4",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 59,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP12-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP12-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "644082e4add938a7cbc664d66b644d9a9aab0ca8ad6251145efb41496dcbbc81",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 60,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP12-operations-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP12-operations-pt-BR-dark-390-test-data.png",
+      "sha256": "ef7720879f05d6d170f8a100f83ada6b8989d420be3863968b5b1ad97b45bfff",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 61,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP12-operations-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP12-operations-pt-BR-dark-desktop-test-data.png",
+      "sha256": "0e28a0d52347a3be827f6049ce2116429437352c85bb9de59eb5255f4b9606c1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 62,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP12-review-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP12-review-pt-BR-dark-390-test-data.png",
+      "sha256": "54ea83d6469c0631c211d1258596d347ffd55fb8fbc0681e548b0f5562976bab",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 63,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-detail-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP13-detail-pt-BR-dark-390-test-data.png",
+      "sha256": "c7d117d33d40100d54036f17e17cbadb2d548fcc609f72e0977b191d00711312",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 64,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-operations-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP13-operations-pt-BR-dark-390-test-data.png",
+      "sha256": "029993fc157ca5ccfd8737fb90e4e237a484f7b1f7acdf5ee4095f2964369017",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 65,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP13-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "6955dcaa9244aa279a34e872c9cea58ce3315a11ffa7ebc45ff59cc08c782722",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 66,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-operations-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP13-operations-pt-BR-dark-desktop-test-data.png",
+      "sha256": "4fdf171c264773b9a1634a170d3b41dec81457aed91858db14a7d063a8c16d95",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 67,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP13-review-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP13-review-pt-BR-dark-390-test-data.png",
+      "sha256": "7cc9d090153b5f9ba4fa10a2f6737fd327e766e2fa71f678d609d69bb7030845",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 68,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-detail-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP15-detail-pt-BR-dark-390-test-data.png",
+      "sha256": "b81206a239f466a3759d3e63e680ca81d16f00b6c92f9d81eded7544e64d453e",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 69,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP15-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "735a87446a5a9c8350ed81f0cdcd302128a0b2446a98448ecadd18b37dda2a04",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 70,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-operations-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP15-operations-pt-BR-dark-390-test-data.png",
+      "sha256": "c7c78ed73c7020d98772f05659fd23f088ccea577880ef27c47d8c670c28e896",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 71,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-operations-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP15-operations-pt-BR-dark-desktop-test-data.png",
+      "sha256": "5baca989a663a48260abbf4fb4c3b3c3b6dc760ab4cfbeaf83e9eb93cd3d73fc",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 72,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP15-review-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP15-review-pt-BR-dark-390-test-data.png",
+      "sha256": "b367749e0c4b30101b5daa676120d47ac08f3aedc8ae60108c9eeb8e8b86d93b",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 73,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "bd866d5b6188993f37b8b1927ae518da9ceb71b526a4f775b20cd9301bb87642",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 74,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-operations-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-operations-pt-BR-dark-390-test-data.png",
+      "sha256": "773be1e612c4e4c1a76bef677ff7b024c16d2ff5bb95f39f08faffbd70eb0cfd",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 75,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-operations-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-operations-pt-BR-dark-desktop-test-data.png",
+      "sha256": "19493e332369c4ef366730cf1b7a5ab1f5d6af718f41be6acae6b1bd00c56c14",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 76,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-quarter-editor-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-quarter-editor-pt-BR-dark-390-test-data.png",
+      "sha256": "3dd39ad4cb91375a6d44517210ac3539af0361526c09a5047567b54569885027",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 77,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-review-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-review-pt-BR-dark-390-test-data.png",
+      "sha256": "650f19ab8de401a91b00dd6af381a43bdf0d62df98dd32a4f62d5e636ece4cdb",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 78,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B12",
+        "B13"
+      ]
+    },
+    {
+      "group": "business-operations",
+      "run": 45090642771,
+      "source": "45c47f11b6d2c9fd518af7e24b46dc7ee481913e",
+      "artifact": 14781785121,
+      "name": "CAP16-subitem-detail-pt-BR-dark-390-test-data.png",
+      "path": "artifact-extract/additional/business-operations/packages/app-shell/e2e/test-results/sucafina-design-wave-three-f0ec3-d-390px-editors-and-reviews-chromium/CAP16-subitem-detail-pt-BR-dark-390-test-data.png",
+      "sha256": "b485c7b6586c46b0323ff897e38129cd641996795cf5a4562562de8ac089e831",
+      "dimensions": [
+        390,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 79,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-320-month-review-actions-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-320-month-review-actions-test-data.png",
+      "sha256": "a7198415e58003676f32f5b501c7faa19aa26ff41afd738f3cb8ca789f246f8f",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 80,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-320-monthly-records-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-320-monthly-records-test-data.png",
+      "sha256": "b25ad40ee6d029e975b9d4722a51746e9d28e4a3e867cf9ff139d868f58702bd",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 81,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-annual-review-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-annual-review-test-data.png",
+      "sha256": "24897dec59ee3b2ec360fb7a8d351a8e9a8a512466e5b94a6466ec774a402049",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 82,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-create-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-create-test-data.png",
+      "sha256": "59e4d20b284a28de94fefc29936f3426987b6f1bf13474e9d3d01208c135d11c",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 83,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-deviation-review-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-deviation-review-test-data.png",
+      "sha256": "7ddd9711e7d4ae8e5a004c81fba631a15497f68e0ea9d1864a285282403ba63c",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 84,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-list-test-data.png",
+      "sha256": "86a1f854493cc26fd6a9e6ac47c21ffe668a6a2acb4b0227e60527743fabf25d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 85,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-month-editor-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-month-editor-test-data.png",
+      "sha256": "473bb10aa68f942aa512996497cc929caac36a2cab299ad0c0dcb444a4f40793",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 86,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-dark-desktop-twelve-months-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-dark-desktop-twelve-months-test-data.png",
+      "sha256": "e2ab61f9c4de0dc6b5d87e90d33b84f80d7733c909e7c7428892e3b8e476eee7",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 87,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-light-320-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-light-320-list-test-data.png",
+      "sha256": "12437613a24871bd6dfb73f420b94d8d112dea12f9344416a3c0ffe715ffb255",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 88,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-light-desktop-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-light-desktop-list-test-data.png",
+      "sha256": "d177a74fa14185f9205ff3aa60d26c204202128e7cdab96b25f20a1f1c2049f9",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 89,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP05-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP05-pt-BR-dark-desktop-test-data.png",
+      "sha256": "9eb84e068ab018d15acf5d9573b56257f9dba595b8dcf12bb47b1f00ec7c798d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 90,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-320-review-actions-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-320-review-actions-test-data.png",
+      "sha256": "c6338cc3e93dda64cfb882b757bed723bc44fa7f82e926aa26eaa30b003a446d",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 91,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13",
+        "B6-S1"
+      ]
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-320-editor-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-320-editor-test-data.png",
+      "sha256": "c302569634c9333f6a13c20474d56ec1e24c95101e300c1d39005f4bf0e3ce67",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 92,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-desktop-contract-detail-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-desktop-contract-detail-test-data.png",
+      "sha256": "7b191eb6135fdcba3e0bd96cca79831dc16136fb2e56c09dcf1a7b7c3991ccf5",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 93,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B6-S1"
+      ]
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-desktop-create-review-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-desktop-create-review-test-data.png",
+      "sha256": "d75f117ee0c3485276f12f071caa22c1cff10fd0ada05d3639533f6b3f487177",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 94,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13",
+        "B6-S1"
+      ]
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-desktop-delete-review-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-desktop-delete-review-test-data.png",
+      "sha256": "eb3ee3841ed0cb87e2f667fb0383b5542e983281cc77f4fc9ed8d8282cc77d69",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 95,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": [
+        "B13",
+        "B6-S1"
+      ]
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-desktop-fifteen-field-editor-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-desktop-fifteen-field-editor-test-data.png",
+      "sha256": "0bf07cbd735e80b9f21bcd4a20e32a68b3108ad966327f862f347608b3ee5e15",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 96,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-dark-desktop-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-dark-desktop-list-test-data.png",
+      "sha256": "086aaa8beb3211e324da54334edd3d3ad41d72f1aa44c0f97ac8f7255b83aa64",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 97,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-light-320-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-light-320-list-test-data.png",
+      "sha256": "8169935aa1b28ea3c9dc0a62b4cdda6d2d84af8a0d3d77f3a80e543a0c37cdbd",
+      "dimensions": [
+        320,
+        900
+      ],
+      "uniqueInGroup": true,
+      "index": 98,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-light-desktop-list-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-light-desktop-list-test-data.png",
+      "sha256": "3cf6fb8f63f4e25d6f9f11c8ecfc25c603131b111418823e62430d8d4758e990",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 99,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "CAP14-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/CAP14-pt-BR-dark-desktop-test-data.png",
+      "sha256": "c21dec8005c7344a8c73eacc0ba6357d3dc2c423f7c0e5fa01bb57d0f016262d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 100,
+      "viewed": true,
+      "type": "named-business",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/test-finished-1.png",
+      "sha256": "1da44e28aa1c75ea0f088c7c769edd147ff42eb72d34146f80a1e73d760c642a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "index": 101,
+      "viewed": true,
+      "type": "test-finished",
+      "findingIds": []
+    },
+    {
+      "group": "finance-final",
+      "run": 45101169602,
+      "artifact": 14785164854,
+      "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+      "name": "test-finished-2.png",
+      "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-d5fcf-original-financial-commands-chromium/test-finished-2.png",
+      "sha256": "c21dec8005c7344a8c73eacc0ba6357d3dc2c423f7c0e5fa01bb57d0f016262d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": false,
+      "index": 102,
+      "viewed": true,
+      "type": "test-finished",
+      "findingIds": []
+    }
+  ],
+  "additionalSourceReads": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+      "sha": "65702261d6a85def1c2bf8bc74c926340783be0f",
+      "lineCount": 211
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+      "sha": "9dd64dfec0bca80d87c153b5ad862323d8b88219",
+      "lineCount": 661
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+      "sha": "1cc7f0e61adfd0432fbe4c5386dabd84f51cf6c3",
+      "lineCount": 350
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+      "sha": "bed358ca18a15de5a29d37ea304ad69820dc2dec",
+      "lineCount": 113
+    },
+    {
+      "path": "packages/schema/src/sucafina/domain.ts",
+      "sha": "1fab36149820253c0c34bc9452c9187ee3f59913",
+      "lineCount": 73
+    },
+    {
+      "path": "packages/schema/src/sucafina/domain/fields.ts",
+      "sha": "cdb09915b945861ebba3b7337a5182e962e199a8",
+      "lineCount": 298
+    },
+    {
+      "path": "packages/schema/src/sucafina/domain/operations.ts",
+      "sha": "7605856c97eee8fcc44a5fca3214ddf6e34f68ae",
+      "lineCount": 740
+    }
+  ],
+  "findings": [
+    {
+      "id": "B12",
+      "severity": "P2",
+      "title": "CAP16: confirmação de excesso de pesos aparece sem uma exceção identificada",
+      "kind": "Problema de decisão e confirmação",
+      "confidence": "Alta para a apresentação incondicional: captura original + fonte dev; impacto de uma escolha indevida não executado",
+      "surfaces": [
+        "CAP16"
+      ],
+      "screenshots": [
+        48,
+        47,
+        78
+      ],
+      "observed": "A revisão de subitem mostra no topo a caixa 'Confirm weights exceeding total allocation' antes do título da revisão. A captura informa apenas um campo alterado. A caixa não identifica peso, limite, excesso ou regra que exige a exceção. É apresentada em toda revisão de contrato/item/subitem.",
+      "cause": "O ramo review-edit renderiza a caixa sem condição; o estado confirmedWeights é enviado como confirmed nos comandos nativos. A UI não apresenta uma justificativa específica de excesso junto à decisão. Avisos do produtor entram no estado apenas na resposta de sucesso; a revisão não os usa para decidir quando mostrar a caixa.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 795,
+          "end": 829,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L795-L829"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 448,
+          "end": 489,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L448-L489"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 74,
+          "end": 110,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L74-L110"
+        }
+      ],
+      "repro": "Abrir um subitem autorizado, alterar somente uma nota e ir para Review changes. Examinar o topo da revisão e o contexto da caixa de confirmação. Repetir com edição do nome do contrato, cujo formulário tem apenas nome e ano.",
+      "impact": "A interface pede consentimento para uma exceção sem explicar sua necessidade. Isso pode induzir marcação por hábito e torna uma revisão normal ambígua. Não foi demonstrada alteração matemática errada, bypass de autorização ou dano no produtor.",
+      "fix": "Vincular a confirmação a uma condição real, reconhecida pelo produtor, e explicar a regra e os valores que a justificam. Apresentar ao lado os dados de peso/limite realmente fornecidos. Uma revisão comum não deve parecer conter erro de alocação. Preservar o significado e as validações do campo confirmed; não criar cálculo financeiro ou validação de domínio paralela para inventar um excesso.",
+      "acceptance": [
+        "Editar apenas texto, com alocação válida, oferece revisão clara sem sugerir uma exceção inexistente.",
+        "Quando o produtor exige consentimento, a revisão identifica o escopo e o motivo real; o usuário consegue revisar os pesos antes de autorizar.",
+        "Cancelar/revisar/retomar não reaproveita um consentimento de outro contexto ou alteração.",
+        "O comando conserva versão, idempotência, validação e permissões originais; não basta mudar a etiqueta ou marcar a caixa automaticamente."
+      ],
+      "overlap": "Nenhuma das correções atribuídas a #613/#713/#716 cobre CAP16; não foi aberto ticket nem feita mudança.",
+      "limits": "Capture source 45c47f11; módulo operations/performance/index.tsx não consta nas mudanças até a dev pinada. Shared/detail e shared/table mudaram depois; este achado é sobre a decisão e o conteúdo, não equivalência de pixels."
+    },
+    {
+      "id": "B13",
+      "severity": "P3",
+      "title": "Revisões operacionais repetem o payload inteiro em Effects depois do antes/depois",
+      "kind": "Refinamento de densidade e hierarquia",
+      "confidence": "Alta para a repetição: capturas originais + fonte dev; gravidade é julgamento de UX",
+      "surfaces": [
+        "CAP11",
+        "CAP12",
+        "CAP13",
+        "CAP14",
+        "CAP15",
+        "CAP16"
+      ],
+      "screenshots": [
+        23,
+        29,
+        37,
+        47,
+        48,
+        53,
+        63,
+        68,
+        73,
+        78,
+        91,
+        94,
+        95
+      ],
+      "observed": "Depois da comparação Original / Current source / Proposed values, a seção Effects lista outra vez todos os campos da proposta. CAP16 define22 campos de subitem; a captura tem um campo alterado e ainda assim apresenta o conjunto inteiro. Em390 px, o bloco final repete valores longos e entradas vazias antes das ações. CAP14 também repete os15 campos.",
+      "cause": "Os callers passam os mesmos fields/reviewFields/proposedFields para proposed e effects.details. SfEffectList renderiza todos os detalhes, aberto, como lista; SfChangeReview põe essa seção após todas as linhas da comparação.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+          "start": 911,
+          "end": 920,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx#L911-L920"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+          "start": 1058,
+          "end": 1065,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx#L1058-L1065"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+          "start": 598,
+          "end": 607,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx#L598-L607"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 808,
+          "end": 823,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L808-L823"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "start": 450,
+          "end": 459,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L450-L459"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "start": 121,
+          "end": 140,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx#L121-L140"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "start": 266,
+          "end": 309,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx#L266-L309"
+        }
+      ],
+      "repro": "Editar apenas uma observação de um registro operacional ou contrato; abrir a revisão; percorrer a comparação e depois Effects até os botões. Comparar o conteúdo repetido ao bloco de valores propostos.",
+      "impact": "O espaço de decisão fica dominado por cópias do payload, não pelo que mudou ou pelo efeito. Em telas estreitas, o usuário atravessa uma revisão extensa para uma alteração pequena; isso aumenta esforço e dificulta localizar a diferença relevante. Não é prova de erro funcional ou inacessibilidade.",
+      "fix": "Manter uma comparação completa e verificável, destacando primeiro as mudanças. Reservar Effects para consequências de domínio efetivamente conhecidas e apresentar o payload completo como detalhe acessível quando necessário. Evitar a cópia aberta de todos os campos e representar vazio/ausência com texto honesto, conservando a distinção entre eles.",
+      "acceptance": [
+        "Uma alteração de um campo é identificável no primeiro bloco da revisão, com acesso por teclado ao contexto completo.",
+        "A proposta continua inspecionável com suas fontes, versões, ausências e mudanças remotas; não remover o contrato de revisão para encurtar a página.",
+        "Effects acrescenta significado ou funciona como detalhe recolhível claramente rotulado, sem repetir uma longa lista aberta por padrão.",
+        "Em320/390 px, o usuário encontra confirmação/cancelamento sem ter de percorrer uma segunda cópia do mesmo formulário."
+      ],
+      "overlap": "Componente transversal de revisão; coordenar com owners dos módulos e evitar refazer #613/#713. Não foi feita mudança.",
+      "limits": "As capturas são históricas dos SHAs listados; callers relevantes e renderer de revisão permanecem na dev analisada. Não se afirma altura exata da página atual."
+    }
+  ],
+  "amendments": [
+    {
+      "id": "B6-S1",
+      "amends": "B6",
+      "severity": "P2",
+      "title": "CAP14 amplia B6: moeda opcional recebida só aparece no editor, e sua ausência não é comunicada",
+      "kind": "Extensão do contexto financeiro",
+      "confidence": "Alta: captura original de Amount sem unidade + fonte dev",
+      "surfaces": [
+        "CAP14"
+      ],
+      "screenshots": [
+        93,
+        94,
+        95,
+        91
+      ],
+      "observed": "O detalhe de contrato mostra Amount 144,000 / Amount type Annual; as revisões mostram montantes 36,000 ou 144,000 sem moeda. Não há mensagem de moeda desconhecida. A existência de currency em uma linha real não foi fotografada; sua omissão do detalhe/revisão é comprovada pelo código.",
+      "cause": "A projeção SfDomainContract admite currency opcional. EDIT_SECTIONS não inclui currency; detalhe e editFields usam esse conjunto. A única apresentação de currency é um hint no formulário, condicionado a selectedRow().currency !== undefined. Assim, o detalhe e a revisão não exibem a moeda nem declaram sua ausência.",
+      "refs": [
+        {
+          "path": "packages/schema/src/sucafina/domain/fields.ts",
+          "start": 148,
+          "end": 160,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/schema/src/sucafina/domain/fields.ts#L148-L160"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "start": 37,
+          "end": 63,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L37-L63"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "start": 549,
+          "end": 561,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L549-L561"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "start": 574,
+          "end": 585,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L574-L585"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+          "start": 65,
+          "end": 75,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts#L65-L75"
+        }
+      ],
+      "repro": "Abrir Vendor contracts > contrato com valor > detalhe > edição > revisão. Verificar o mesmo contexto de unidade nesses estados. Em cenário controlado adicional, fornecer currency na projeção autorizada para verificar que detalhe/revisão também a mostram após a correção.",
+      "impact": "O valor comercial fica sem a unidade necessária para interpretá-lo. Um contrato com moeda disponível perde essa informação no detalhe/revisão; um contrato sem moeda parece completo. Não se alega que o montante esteja corrompido.",
+      "fix": "Mostrar a moeda original, em modo de leitura, junto ao valor e em toda a revisão; se ausente, informar explicitamente a limitação. Não transformar currency em campo gravável, pois o comando não o admite, nem deduzir moeda de idioma, localização ou fornecedor.",
+      "acceptance": [
+        "Com currency real, detalhe/edição/revisão comunicam a mesma unidade.",
+        "Sem currency, os mesmos estados explicitam ausência, mantendo vazio/null/zero e precisão do montante.",
+        "Nenhuma moeda padrão é inventada e o payload nativo mantém seus campos autorizados."
+      ],
+      "overlap": "Agrupar com B6, não contar como segundo defeito independente; sem cobertura atribuída a #613/#713/#716.",
+      "limits": "Captura finance-final 10a7aaa7; módulos contracts/index.tsx e model.ts não mudaram até dev. Cenário currency presente é inferência estática, ainda requer captura controlada."
+    }
+  ],
+  "observations": [
+    {
+      "id": "SO1",
+      "status": "not-promoted",
+      "surfaces": [
+        "CAP05"
+      ],
+      "screenshots": [
+        82,
+        85,
+        87
+      ],
+      "title": "A revisão Annual Entry ÷12 carece de explicação do efeito, mas não é prova de base anual perdida",
+      "detail": "A captura mostra annual=252,000, field=Budget, Original/Current 'Not available'. O orçamento 240,000 da lista pertence a owner.budget. formFor inicializa annual:'', e draftFields revisa parâmetros do comando annual-entry, não o campo owner.budget. Sem ler o handler original, não se pode equiparar as duas coisas ou afirmar substituição de 12 meses. O spec abre/revisa/cancela esse comando; não valida seu efeito.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "start": 334,
+          "end": 345,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx#L334-L345"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "start": 515,
+          "end": 542,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx#L515-L542"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+          "start": 196,
+          "end": 200,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts#L196-L200"
+        }
+      ],
+      "next": "Ler a semântica do produtor e capturar uma revisão que torne claro escopo e efeitos reais. Não adicionar cálculo anual paralelo nem preencher o base com owner.budget por suposição."
+    },
+    {
+      "id": "SO2",
+      "status": "historical-only",
+      "surfaces": [
+        "CAP13",
+        "CAP15",
+        "CAP16"
+      ],
+      "title": "Cabeçalhos de detalhe e alvos de tabela antigos não certificam a dev",
+      "detail": "Os compares mostram mudanças posteriores em shared/detail/detail.css e index.tsx: botão Back com 44 px, linha de título/estado/ações reorganizada e quebra flex. shared/table/table.css adiciona min-height 44 px ao sort button e padding ao cabeçalho confortável. Não converter desalinhamentos ou alvos desses screenshots antigos em defeitos atuais sem nova captura."
+    },
+    {
+      "id": "SO3",
+      "status": "not-promoted",
+      "surfaces": [
+        "CAP11",
+        "CAP12",
+        "CAP16"
+      ],
+      "title": "Separadores numéricos e unidades pedem contrato semântico",
+      "detail": "Há valores literais 98.4/0.6 em PT e KPI Training 94, mas não foi provado que o tipo de fonte fornece unidade ou formato numérico uniforme. CAP16 explica expressamente que 1 representa 100%. Não corrigir com percentuais inventados nem reinterpretar valores de origem."
+    },
+    {
+      "id": "SO4",
+      "status": "counterevidence",
+      "surfaces": [
+        "CAP01",
+        "CAP05"
+      ],
+      "screenshots": [
+        1,
+        80,
+        84
+      ],
+      "title": "A falta de antes/depois não é universal",
+      "detail": "CAP01 inline review mostra 128→129. CAP05 revisão mensal mostra 19,100→19,500 e desvio mostra texto original/proposto. Esses exemplos impedem generalizar B1 para toda revisão financeira."
+    },
+    {
+      "id": "SO5",
+      "status": "not-defect",
+      "surfaces": [
+        "CAP13"
+      ],
+      "screenshots": [
+        31,
+        32,
+        35,
+        64,
+        65,
+        67
+      ],
+      "title": "Responsible person e Owner não devem ser fundidos por conveniência",
+      "detail": "O campo da lista Responsible person aparece Unavailable, enquanto detalhe traz Owner conhecido. Os campos da fonte são distintos; não substituir ausência por outro campo nem tratar isso como falha de localização."
+    },
+    {
+      "id": "SO6",
+      "status": "evidence-limit",
+      "title": "Estados capturados não provam ausência de flakiness",
+      "detail": "Não houve execução local nem medição de interação ao vivo. Screenshots não demonstram teclado, leitor de tela, hover, animação, race de rede, cancelamento pendente ou todas as alturas/idiomas. Passing test e screenshot bem composto não são um selo de UX impecável."
+    }
+  ],
+  "duplicateImages": [
+    {
+      "indices": [
+        100,
+        102
+      ],
+      "reason": "CAP14-pt-BR-dark-desktop-test-data.png and test-finished-2.png have identical SHA256"
+    }
+  ],
+  "checks": {
+    "imageHashIntegrity": "All103 supplement PNG hashes and dimensions matched metadata; combined206files/202distincthashes verified.",
+    "coverage": "103 of103 supplement originals visually read; images63–66 re-read after truncated output.",
+    "sourceLineReferences": "All pinned to target dev SHA"
+  }
+}

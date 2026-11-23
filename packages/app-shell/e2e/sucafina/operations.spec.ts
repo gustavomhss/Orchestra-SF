@@ -1,6 +1,6 @@
 import { test } from "@playwright/test"
 import { importJourney } from "./operations-support/imports"
-import { documentJourney } from "./operations-support/documents"
+import { documentJourney, documentUploadJourney } from "./operations-support/documents"
 import { exportRecordJourney } from "./operations-support/final-records-export"
 import { nativeRecordScenarioJourney } from "./operations-support/final-records-native-scenario"
 import { captureRecordFailure } from "./operations-support/final-records"
@@ -32,9 +32,16 @@ test.describe("CI-UI-OPERATIONS", () => {
 
   test("OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19" })
-    // Download follows a fresh signed access check and the installed scanner can use most of the default budget.
+    // Native schema/confirmation and source revocation retain the original bounded deadline.
     test.setTimeout(captureWorkflows ? 420_000 : 180_000)
     await documentJourney(page, info, captureWorkflows)
+  })
+
+  test("OP-DOC-UPLOAD-01 authorized record upload preserves scanned bytes, CAS and signed access", async ({ page }, info) => {
+    info.annotations.push({ type: "audit-scope", description: "SUP-03; original OP-DOC-01 scanned uploads, signed download and asset-revocation oracles" })
+    // Independent native source/data; no deadline or retry increase for either document journey.
+    test.setTimeout(captureWorkflows ? 420_000 : 180_000)
+    await documentUploadJourney(page, info, captureWorkflows)
   })
 
   test("OP-EXPORT-01 UI68 delivers the exact authorized Planner file", async ({ page }, info) => {

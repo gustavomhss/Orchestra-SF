@@ -1,0 +1,3153 @@
+{
+  "scope": "Supplement to system-audit-review; independent read-only native-dashboard UI29/UI33, Files UI55–60 and shared components visual/source audit",
+  "pinnedDevSHA": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "date": "2026-11-23",
+  "uniqueImagesViewed": 136,
+  "groupCounts": {
+    "native-dashboard": 16,
+    "files-native": 42,
+    "shared-components": 78
+  },
+  "instructions": "No product edits, no local tests/builds, no public comments/PRs. Parent persists report on sf-adversarial-audit. AGENTS/design instructions already read for principal report.",
+  "sourceParity": [
+    {
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "changedFileCount": 139,
+      "compareURL": "https://github.com/gustavomhss/Orchestra-SF/compare/e315777d9ae9631321c254455aef3961cb651d94...5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "relevantChangedFiles": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/integrations.css",
+          "changes": 19,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/documents.css",
+          "changes": 8,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+          "changes": 8,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/workflows.css",
+          "changes": 0,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 0,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 0,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 0,
+          "status": "modified"
+        }
+      ]
+    },
+    {
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "changedFileCount": 118,
+      "compareURL": "https://github.com/gustavomhss/Orchestra-SF/compare/faddf7019c186fb93c29ada3297c327765200463...5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "relevantChangedFiles": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 19,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 50,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 3,
+          "status": "modified"
+        }
+      ]
+    },
+    {
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "changedFileCount": 125,
+      "compareURL": "https://github.com/gustavomhss/Orchestra-SF/compare/b8f76cc16fe40240e7d9e5739ecb8280142972e2...5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "relevantChangedFiles": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "changes": 19,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "changes": 50,
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "changes": 3,
+          "status": "modified"
+        }
+      ]
+    }
+  ],
+  "parityNotes": [
+    "Compare lists have fewer than 300 changed files; no whole-build equivalence is claimed.",
+    "UI29/Home and UI33/Cases own source unchanged from e315; shared/detail/table and workflows styles are listed changed, and some patches absent in that response. No visual PASS of current shared styles based on those pixels.",
+    "Files own imports/documents CSS/TSX and copy unchanged from fadd. Their direct visual imports are shared/frame, shared/states and reviews/workflows, not shared/detail/table. The shared detail/table patches do not explain their observed native content.",
+    "Shared b8 own RAG/Inbox/Board/Server/DialogV2/kit source unchanged; SF shared/detail/table and work/search changed. Those patches were inspected where present. Native shared historical images do not approve newer SF detail/table.",
+    "Files host toolbar differs from UI29 screenshots; test host/wrapper divergence is not filed as a current product bug."
+  ],
+  "findings": [
+    {
+      "id": "SUP-01",
+      "severity": "P2",
+      "category": "layout defect",
+      "title": "Add server perde largura, margem e padding próprios porque o seletor procura a classe no nó errado",
+      "type": "rendered historical observation + pinned-current source mechanism",
+      "observed": "No checkpoint de 390 px, o modal Add server ocupa x=0 até x=390, sem a margem lateral de 16 px pretendida. Inputs e botões preservam o formato compacto da implementação v2; o modal de Integrations no mesmo tamanho tem inset de 16 px. Não foi observado clipping de texto nesse checkpoint.",
+      "effect": "A superfície de configuração perde o respiro lateral previsto e aparenta pertencer a outro sistema de diálogo. O mesmo seletor inválido impede os ajustes de raio, alinhamento e padding do servidor.",
+      "mechanism": "DialogServerV2 passa class=\"settings-v2-server-dialog\". DialogV2 coloca props.class em Kobalte.Content/data-slot=\"dialog-content\", mas as regras CSS esperam essa classe junto de data-component=\"dialog-v2\" no ancestral. Essas regras não podem casar com a árvore gerada. A caixa usa a receita v2 padrão e encolhe até a largura do viewport.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx",
+          "lines": "57–62",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx#L57"
+        },
+        {
+          "path": "packages/ui/src/v2/components/dialog-v2.tsx",
+          "lines": "84–111",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/ui/src/v2/components/dialog-v2.tsx#L84"
+        },
+        {
+          "path": "packages/app-shell/src/components/settings-v2/settings-v2.css",
+          "lines": "479–507",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/settings-v2.css#L479"
+        },
+        {
+          "path": "packages/ui/src/v2/components/dialog-v2.css",
+          "lines": "10–29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/ui/src/v2/components/dialog-v2.css#L10"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 58,
+          "name": "error-recovery-server-connection-form-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+          "sha256": "9b5bfca80dc45c0a04bd9008ce940c30878e0f9a48427ef25cc52610048cc9f5"
+        },
+        {
+          "index": 65,
+          "name": "error-recovery-server-connection-form-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+          "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2"
+        },
+        {
+          "index": 66,
+          "name": "error-recovery-server-health-failure-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+          "sha256": "b9b1c2213263f55b94e025423043ca540b41b46bb79132b625287e679dfb405a"
+        },
+        {
+          "index": 67,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+          "sha256": "50ca601899826c4e17b81859bd0c3b709fe90b831d0c3c3d100a089cd5c8296c"
+        },
+        {
+          "index": 111,
+          "name": "error-recovery-server-connection-form-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+          "sha256": "813f08e82a48d6ca1bb68c134b4997003c57cb44bcf98fd923ea5e5aed0c6d67"
+        },
+        {
+          "index": 112,
+          "name": "error-recovery-server-health-failure-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+          "sha256": "daeb948f9839b1e144f71c781f49d9229925d6015bef8fa4305ce9078b581e26"
+        },
+        {
+          "index": 113,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+          "sha256": "7073975a2e77a74d96033810c2356a51dd65c76842a8e40a81263e7a4afec722"
+        },
+        {
+          "index": 74,
+          "name": "integrations-connect-account-dialog-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-narrow.png",
+          "sha256": "a8bed31bab41d12126b0d5017f48b353fd6522914ae9687244c20e4863bb9d87"
+        }
+      ],
+      "reproduce": "Settings > Servers > Add server, viewport 390×844, claro/escuro. Inspecionar o DOM e as regras específicas do servidor. Não é necessário enviar uma conexão.",
+      "recommendation": "Alinhar o escopo CSS com o nó que recebe a classe, ou fornecer um wrapper/prop de escopo explícito; aplicar a largura máxima pretendida e a receita nativa de diálogo. Rever raio, padding e tamanhos de controle como conjunto, sem trocar a identidade de material.",
+      "acceptance": "Em 320 e 390 px, o modal mantém inset lateral de 16 px, nenhum overflow horizontal e foco visível. No desktop, preserva a largura pretendida de 480 px. As regras específicas devem casar no DOM real. Conferir campos normais/erro, teclado e conteúdo longo. Não declarar conformidade WCAG só porque um alvo foi aumentado.",
+      "overlap": "Configuração/Settings; possível encontro com #716, mas não se deve presumir que o polimento de provider dialog/Settings resolva este seletor. Root verifica o head atual.",
+      "parity": "Arquivos próprios de servidor, DialogV2 e settings-v2.css não aparecem na comparação completa b8f76cc→dev."
+    },
+    {
+      "id": "SUP-02",
+      "severity": "P2",
+      "category": "error recovery UX",
+      "title": "RAG Studio repete mensagens de indisponibilidade e não oferece nova tentativa local",
+      "type": "rendered historical observation + pinned-current source",
+      "observed": "Nos checkpoints de erro de fontes e pipeline, a página exibe dois painéis 'Could not load Rag Studio.', um 'Request failed' junto de Question e um toast 'Request failed'. Nenhum botão de Retry/Refresh da leitura aparece. O fixture força duas leituras HTTP 503: não são quatro mensagens para uma única requisição.",
+      "effect": "Um erro transitório deixa uma interface ruidosa, pouco específica e sem caminho local explícito para recuperar as leituras. Adicionar um arquivo ou tentar uma pergunta não substitui uma ação de recuperação da carga inicial.",
+      "mechanism": "Files.load coloca roster.status='error' e limpa sources; o estado de erro só renderiza texto. Maintain replica o erro da lista e reportPipeline emite toast; Question também mostra pipelineFailed. As releituras observadas no código são efeitos de contexto/revision e ações, sem botão de reconsulta das duas cargas.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx",
+          "lines": "38–62",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx#L38"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx",
+          "lines": "125–129",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx#L125"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "71–75",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L71"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "142–155",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L142"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "177–195",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L177"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/question.tsx",
+          "lines": "59–80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/question.tsx#L59"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/shared-visual.spec.ts",
+          "lines": "200–206",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/e2e/orchestra/shared-visual.spec.ts#L200"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 91,
+          "name": "rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+          "sha256": "b581125818fee1a3d09f78af7d78c281827addfdc1aaf36c5ce722959ae08c6a"
+        },
+        {
+          "index": 109,
+          "name": "rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+          "sha256": "a785f7e15984f009d1a1052033964bc59da3df37613e43588ee1881c03464825"
+        },
+        {
+          "index": 129,
+          "name": "rag-studio-source-and-pipeline-unavailable-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-wide.png",
+          "sha256": "239030e20c65acd9b383191f84b1d651c0f062222012304fe344f41816421bbf"
+        }
+      ],
+      "reproduce": "Fazer sources e pipeline responderem 503 na entrada em RAG Studio; depois permitir sucesso e tentar recuperar pela própria página, sem reload de browser.",
+      "recommendation": "Mostrar um estado de indisponibilidade com causas agrupadas e ação 'Tentar novamente' que refaça só as leituras necessárias. Manter os painéis dependentes em estado desconhecido explícito. Evitar toast duplicando uma mensagem persistente já visível.",
+      "acceptance": "Depois de 503→sucesso, o usuário recupera lista e pipeline com uma ação local; nenhum erro é convertido em embedding off; foco volta a um ponto previsível e o anúncio de erro é único por evento/escopo relevante. Medir a sequência real, sem alegar frequência de flakiness com screenshots.",
+      "overlap": "RAG/shared; sem correção informada no escopo original de #716. Revisão de #713/#613 pertence ao root.",
+      "parity": "RAG files/maintain/question/studio/kit não aparecem no diff b8f76cc→dev; o checkpoint histórico é compatível com o mecanismo atual. SDK/network recovery geral não foi executado nesta auditoria."
+    },
+    {
+      "id": "SUP-03",
+      "severity": "P2",
+      "category": "task UX friction",
+      "title": "Registro de documento exige que o usuário descubra e digite ID interno e versão CAS",
+      "type": "rendered historical observation + pinned-current source; usability judgment about business workflow",
+      "observed": "UI58 apresenta 'Existing record ID' e 'Current record version (CAS)' como campos obrigatórios vazios. Em 320 px, esse formulário domina o primeiro viewport antes dos seletores de documentos já existentes. O texto pede conhecimento de versão e scanning do servidor.",
+      "effect": "Para anexar um documento, o usuário precisa obter um identificador e uma versão técnica fora do próprio fluxo. A versão exige precisão e pode ficar obsoleta; a interface transfere o controle de concorrência para uma tarefa manual sem descoberta contextual.",
+      "mechanism": "uploadRecord e uploadVersion são inputs livres; upload() valida o ID e o inteiro e os envia diretamente como record/recordVersion. O botão permanece desabilitado sem os dois. O catálogo de registros/documentos exibido abaixo não preenche esses campos. A proteção CAS é legítima; a fricção é como a UI exige seus valores.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "237–269",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L237"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "579–617",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L579"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "619–648",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L619"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+          "lines": "67–77",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts#L67"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+          "lines": "159–169",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts#L159"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 36,
+          "name": "UI58-admitted-empty-evidence-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-320.png",
+          "sha256": "e3246f15884cc55360a9425f86ef98e4acdb5ff3fa1f90282409898b48b5b924"
+        },
+        {
+          "index": 37,
+          "name": "UI58-admitted-empty-evidence-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-desktop.png",
+          "sha256": "8faae30f55bf4c741fee4ed8ced61d3a9cb7b62e6d4af6f33be5541520c9b643"
+        },
+        {
+          "index": 38,
+          "name": "UI58-authorized-extraction-fields-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-320.png",
+          "sha256": "9fc6ca2a981614e50bdb22bde677233257f2fd00de580259b1f1b34ad4eaf3ac"
+        },
+        {
+          "index": 39,
+          "name": "UI58-admitted-empty-evidence-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-light-desktop.png",
+          "sha256": "e1cfe37bc095db071447f8836a917afc5c65d310b3f8c193acb04b7fcac4aeee"
+        },
+        {
+          "index": 40,
+          "name": "UI58-authorized-extraction-fields-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-desktop.png",
+          "sha256": "93eb9608031ff861f6ee16fe6f8d122392ff163b19a9270dda7dddffb62dedcd"
+        },
+        {
+          "index": 41,
+          "name": "UI58-authorized-extraction-fields-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-light-desktop.png",
+          "sha256": "e88ad2ddad9652681b24bb71ec9d2a92baf6fb02603d0f62071007cd444ca323"
+        },
+        {
+          "index": 42,
+          "name": "UI58-original-extracted-candidate-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-320.png",
+          "sha256": "1622ea46f5ddb36abaab0e1499214dc437e6a369c669b8ac5324b8891ecd3292"
+        },
+        {
+          "index": 43,
+          "name": "UI58-original-extracted-candidate-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-desktop.png",
+          "sha256": "3cc36cee7fd2ec6ba7cdcd30c68896140613b3d9ed77874baeea94a9db50fe02"
+        },
+        {
+          "index": 44,
+          "name": "UI58-original-extracted-candidate-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-light-desktop.png",
+          "sha256": "9640b772513cdd00d529784bfb1659e57cee1be91a0cf414e29c9352b6587950"
+        }
+      ],
+      "reproduce": "Documents/UI58 > Register and upload document. Escolher uma classificação e um arquivo válido sem conhecer o ID/versão do registro. Avaliar a descoberta e o preenchimento em 320 px e desktop.",
+      "recommendation": "Iniciar o upload a partir de um registro autorizado ou oferecer escolha por nome/referência de negócio, transportando ID e versão obtidos por leitura autorizada. Manter o CAS e tratar conflito como atualização/revisão do registro. Se o contrato atual não oferece descoberta, registrar explicitamente a lacuna de produto/API e a dependência, sem inventar um destino nem remover proteção.",
+      "acceptance": "Uma pessoa com acesso ao registro consegue anexar o arquivo sem copiar UUID/versão interna; conflitos reais mostram o registro e a ação para revisar/atualizar. Em 320 px, selecionar documento existente e iniciar upload têm hierarquia explícita, com controles contidos. Nunca validar isso removendo autorização, versão ou scanner.",
+      "overlap": "UI58 está em #713 (UI57–70): coordenar com essa branch. É débito de tarefa, não demonstra bug de backend ou autorização.",
+      "parity": "documents/index.tsx, documents.css, sf-u24.ts e dependências visuais frame/states não mudaram no diff faddf701→dev. Não se afirma equivalência de todo o host de teste."
+    }
+  ],
+  "refinements": [
+    {
+      "id": "SUP-R01",
+      "priority": "P3",
+      "title": "Import preview e receipt precisam traduzir payload técnico em hierarquia de revisão",
+      "type": "rendered + current source + design judgment",
+      "observed": "UI55/56 mostra caminhos /versions/@id=.../lines/@id=.../desc:before e o motivo bruto missing na lista de lacunas do resultado. UI57 repete o hash completo de recibo em duas linhas, timestamp ISO e números sem rótulo. A apresentação desloca o foco de impacto para identificadores. Seis buckets fechados ocupam grande altura, inclusive quatro vazios no fixture.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "lines": "715–732",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L715"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "lines": "735–768",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L735"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+          "lines": "90–95",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css#L90"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 19,
+          "name": "UI55-original-preview-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-320.png",
+          "sha256": "60be760f5a94443a9ab0070c37ae96307acc0fd5986ab5016738c3c56a98fbc5"
+        },
+        {
+          "index": 20,
+          "name": "UI55-original-preview-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-desktop.png",
+          "sha256": "9709ea4d556e101c90a389bb7982d86384f7e2051d97d8c0407e2821ddc453ab"
+        },
+        {
+          "index": 21,
+          "name": "UI55-original-preview-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-light-desktop.png",
+          "sha256": "08d6acab765f8a100507b8875a608dbafeb21f5bd38fcdd3b418e079119712ee"
+        },
+        {
+          "index": 25,
+          "name": "UI56-original-manifest-preview-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-320.png",
+          "sha256": "4667051261394d6ecb223f9b1509a3080da256bb6c799ba6a7e72a7849021765"
+        },
+        {
+          "index": 26,
+          "name": "UI56-original-manifest-preview-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-desktop.png",
+          "sha256": "8813e27ca69ed5d16a1ea35f94eb5651002ae9a30aa7f7c6857f7547563c0ed9"
+        },
+        {
+          "index": 27,
+          "name": "UI56-original-manifest-preview-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-light-desktop.png",
+          "sha256": "4f493020bbffae2c4e498beb7d96b36dd6500941e36c05645006cfb0a96f5b91"
+        },
+        {
+          "index": 28,
+          "name": "UI57-original-confirmed-receipt-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-desktop.png",
+          "sha256": "50da1607e0c346d61e1af3c5be8b844aae0d9b70c1982875212488a56181a7c4"
+        },
+        {
+          "index": 29,
+          "name": "UI57-original-confirmed-receipt-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-320.png",
+          "sha256": "5f56c5e94bf909d438866085546645b97b6550a9163987f38687443da6296304"
+        },
+        {
+          "index": 30,
+          "name": "UI57-original-confirmed-receipt-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-light-desktop.png",
+          "sha256": "ceb4c6c6ccd3d794d7c886d4004072287d27208c381894eab6605490b2b0b434"
+        }
+      ],
+      "recommendation": "Nomear os campos e itens por referências de negócio quando admitidas pelo contrato; manter paths e hashes completos num detalhe técnico copiável. Dar rótulos a quantidade alterada e versão; formatar timestamp para a localidade. Agrupar buckets vazios num resumo compacto preservando acesso. entry.path já está em details: não promover a hipótese errada de que todo diff cru está aberto.",
+      "acceptance": "Um revisor distingue impacto, lacunas e resultado sem decodificar paths/UUIDs; detalhe técnico continua íntegro e acessível; datas/contagens não perdem precisão; buckets vazios não tomam a maior parte do viewport.",
+      "overlap": "UI55/56 em #613; UI57 em #713. Fonte sf-u23.ts:1–2 preserva copy legada intencionalmente: textos demandam revisão do contrato/copy, não tradução improvisada."
+    },
+    {
+      "id": "SUP-R02",
+      "priority": "P3",
+      "title": "Unificar material e escala dos diálogos preservando sua função",
+      "type": "rendered observation + current source + aesthetic judgment",
+      "observed": "Inbox Preferences usa o shared DialogV2 com mx-dialog e fundo desfocado; Integrations usa overlay próprio somente escurecido; Add server usa controles e títulos compactos e primário cinza/contraste, enquanto os outros usam azul. O tamanho e a função podem variar, mas raio, respiro e profundidade hoje não parecem parentes em todos os estados.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/inbox/controls.tsx",
+          "lines": "22–29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/inbox/controls.tsx#L22"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx",
+          "lines": "125–135",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx#L125"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/integrations.css",
+          "lines": "131–150",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/integrations.css#L131"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/kit.css",
+          "lines": "464–476",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/kit.css#L464"
+        },
+        {
+          "path": "packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx",
+          "lines": "141–149",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx#L141"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 65,
+          "name": "error-recovery-server-connection-form-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+          "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2"
+        },
+        {
+          "index": 69,
+          "name": "inbox-preferences-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-preferences-dark-narrow.png",
+          "sha256": "a0cd0b01f24685ecd2fba8292dffede36272f8713524a3fba001fdcb259b991f"
+        },
+        {
+          "index": 74,
+          "name": "integrations-connect-account-dialog-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-narrow.png",
+          "sha256": "a8bed31bab41d12126b0d5017f48b353fd6522914ae9687244c20e4863bb9d87"
+        },
+        {
+          "index": 84,
+          "name": "inbox-preferences-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-preferences-dark-wide.png",
+          "sha256": "18765688e919c323fa029916128ed67a0058c4a8aae22db60c96b699b6c3ea7a"
+        },
+        {
+          "index": 98,
+          "name": "integrations-connect-account-dialog-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-wide.png",
+          "sha256": "42eae2e2a2aefbedb62ebaed29d699e25c8ee5e742b306cb5a4db2077dfaada5"
+        },
+        {
+          "index": 111,
+          "name": "error-recovery-server-connection-form-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+          "sha256": "813f08e82a48d6ca1bb68c134b4997003c57cb44bcf98fd923ea5e5aed0c6d67"
+        },
+        {
+          "index": 118,
+          "name": "inbox-preferences-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-preferences-light-wide.png",
+          "sha256": "d599b676b87a4e10a6a3e5bd4758da4a27025e172b51f92e4cb447d8d4d6c81a"
+        },
+        {
+          "index": 122,
+          "name": "integrations-connect-account-dialog-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-wide.png",
+          "sha256": "90d75898c9dd5370d93debd370dca8306e3a54dc8935f9d72c2b3f84aeae621c"
+        }
+      ],
+      "recommendation": "Após SUP-01, definir receitas explícitas para diálogo compacto, formulário e painel lateral com tokens compartilhados de borda/raio/sombra/scrim e alinhamentos. O desfoque pode variar por contexto, mas deve ter uma razão funcional. Não aplicar brilho ou sombra mais pesada em todos os cards.",
+      "limits": "Juízo estético; não houve medição física de blur/shadow nem prova de falha de contraste em todos esses modais. Botão de 30 px não é automaticamente falha WCAG."
+    },
+    {
+      "id": "SUP-R03",
+      "priority": "P3",
+      "title": "Estados vazios devem oferecer a próxima ação disponível no contexto",
+      "type": "rendered observation and aesthetic/task judgment; current source parity only",
+      "observed": "Inbox vazio/indisponível mantém a instrução na coluna direita para selecionar um item inexistente. Flight Engineer explica a limitação web/desktop mas não fornece ação de continuação naquela tela. Nenhum deles foi classificado como bloqueio funcional pelos screenshots.",
+      "evidence": [
+        {
+          "index": 64,
+          "name": "flight-engineer-web-unavailable-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2dc76-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-wide.png",
+          "sha256": "439ddae8638415204fef454c49d80a3b11fef35bda082ce13fa4718e3e19439f"
+        },
+        {
+          "index": 82,
+          "name": "flight-engineer-web-unavailable-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-acb38-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-narrow.png",
+          "sha256": "98dbf203d39325aae580a7c805c6c38282f0cfbe5254800933f9c5af987bb305"
+        },
+        {
+          "index": 83,
+          "name": "inbox-empty-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-empty-dark-wide.png",
+          "sha256": "09c65f217aefcecb8a76b19d54240f1cd955a1673e53a55a86cc3f57b72d3683"
+        },
+        {
+          "index": 85,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/test-finished-1.png",
+          "sha256": "be58fcc8700f0cfd46790288e5f423f4b503412d1b181de85b06406a8d9643f6"
+        },
+        {
+          "index": 117,
+          "name": "inbox-empty-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-empty-light-wide.png",
+          "sha256": "1578b682414930e8329fe8e30bc1c9fcfec78f12d45309f4f0d036dbef7d7019"
+        },
+        {
+          "index": 119,
+          "name": "inbox-read-unavailable-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-wide.png",
+          "sha256": "647821a023c834507c8c311eab7329321000fa6cb2bc6d374bf28de5e7b90b02"
+        },
+        {
+          "index": 130,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b8f18-the-real-web-platform-limit-chromium/test-finished-1.png",
+          "sha256": "173cb7cd4c89da81af0c89a5031cb0cc52591330ebe988198ce446fb78b7a180"
+        }
+      ],
+      "recommendation": "No Inbox, adaptar a coluna de leitura ao estado do feed; no Flight Engineer, quando houver destino suportado, oferecer instrução/ação concreta para continuar no desktop. Evitar dupla ilustração vazia para um único estado.",
+      "limits": "Não foram exercitados deep links ou instalador; não inventar ação se plataforma/contrato não oferecer."
+    }
+  ],
+  "coverageNotes": [
+    {
+      "images": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "kind": "design-assessment",
+      "note": "UI29: restrained asymmetric two-column composition with consistent 24 px gutters, typographic hierarchy and full-width mobile Resume action; no visible overlap in these frames. Desktop 800 requires vertical scrolling; not itself defect. Light mode has heavier background/translucency and nested shadow treatment; preserve identity and tune hierarchy rather than redesign. Empty Meetings/material changes remain readable but unactionable source-status copy."
+    },
+    {
+      "images": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "kind": "design-assessment",
+      "note": "UI29 Portuguese chrome wraps cleanly; test record titles deliberately remain source English. UI33 desktop list/search/editor has clear action hierarchy and unobstructed access popover; focused objective shows visible focus ring. New-case editor uses controlled width and aligned three-column date/currency row."
+    },
+    {
+      "images": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "kind": "design-assessment",
+      "note": "UI33 review and 320 px list preserve readable wrapping and contained actions. Mobile review capture is scrolled (title above viewport), so not counted as title-clipping defect. Refinement candidates: search placeholder visually truncates without ellipsis at 320; review uses ISO dates while editor uses localized date input. No obvious destructive-action ambiguity in these snapshots."
+    },
+    {
+      "images": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "kind": "design-assessment",
+      "note": "UI33 light and pt-BR desktop keep layout and primary CTA legible. Wording create decision/new case and review Cancel may overlap PR #716; not filed anew. Date display remains ISO in Portuguese review; potential refinement, not data corruption. No measured text-contrast certification done on these images."
+    },
+    {
+      "images": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "kind": "historical-observation",
+      "note": "UI55 unavailable state shows only generic title and very wide Refresh receipt action. Mobile preview has three nested rounded surfaces and all six change buckets incl zero counts closed; information density is low. Captures show older access controls; verify auth wrapper changes before treating current top chrome as equivalent."
+    },
+    {
+      "images": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "kind": "observed-refinement",
+      "note": "Files import preview exposes long /versions/@id=.../lines/@id=.../desc:before paths with 'missing' and lowercase raw bucket names; this is implementation-facing diff copy, not a readable business review. All six buckets take ~490 px desktop even four have count 0; primary Apply below. Source-file form keeps alignment but native Choose File merges action+truncated filename and destination truncates while adjacent unused width exists. Needs source tracing and parity."
+    },
+    {
+      "images": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "kind": "observed-refinement",
+      "note": "UI55 light form maintains field baselines; bare native checkbox square differs from rest of glass controls. UI56 same diff-density/copy issue as UI55 and nested card shadow in light theme. Current own imports files unchanged from artifact source; shared detail/table changes not imported by this component."
+    },
+    {
+      "images": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "kind": "observed-refinement",
+      "note": "UI57 confirmed receipt repeats full 64-character hash twice, raw ISO time and unlabeled numeric revisions (3/2), preceded by six diff groups. At 320 these machine identifiers dominate receipt (~140 px). Source-backed receipt formatting issue to trace. Denied state is readable, with semantic left stripe and no accidental control overflow."
+    },
+    {
+      "images": [
+        32,
+        33,
+        34,
+        35
+      ],
+      "kind": "coverage",
+      "note": "Denied/unavailable responsive endings inspected. Generic error copy has recovery action in test-finished-1 but not denied state; no error cause/frequency inferred from test-finished captures."
+    },
+    {
+      "images": [
+        36,
+        37,
+        38,
+        39
+      ],
+      "kind": "observed-refinement",
+      "note": "Documents empty/extraction state exposes technical manual fields Existing record ID and Current record version (CAS), server-enforcement copy and UUID-only Document selection. Multiple same-weight full-width cards/actions fragment workflow; at 320 initial registration occupies whole viewport before existing document selection. Disabled controls excluded from contrast claims. Fields stay within viewport and labels wrap."
+    },
+    {
+      "images": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "kind": "design-assessment",
+      "note": "Extraction controls have consistent dimensions and grid baselines but candidate is represented as small button inside a full-width bordered card, itself inside Candidates card, plus full-width evidence button. Same nested-depth/density issue; candidate value/status/revision concatenated with middots instead of labeled columns. No overflow seen at 320."
+    },
+    {
+      "images": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "kind": "design-assessment",
+      "note": "UI59 confirmed evidence adds readable selected stripe, source quote and original link; no wrapping overflow at 320. Source file named UUID.txt may be deliberate test filename, so do not classify UUID filename itself as generated-identifier bug without source check. Macro card depth and disproportionately wide Refresh sources remain refinement targets. Open original has weak text-link affordance relative to actions."
+    },
+    {
+      "images": [
+        48,
+        49,
+        50,
+        51
+      ],
+      "kind": "design-assessment",
+      "note": "UI59 review exposes a clear confirm action and separate rejection reason/page. At desktop actions stretch >1000 px, the single-digit Reviewed source page input also fills whole card; opportunity for task-sized fields and grouped footer. Mobile reflow is contained. UI60 prerequisite preserves source evidence rather than claiming scenario success; screenshot does not prove complete scenario flow."
+    },
+    {
+      "images": [
+        52,
+        53,
+        54,
+        55
+      ],
+      "kind": "coverage",
+      "note": "UI60 prerequisite shows destination unavailable reason and disables preview; no successful scenario creation coverage. Source revocation replaces content with generic unavailable+retry; no source content leaks visible. Candidate reference doc_... remains inline in preview explanation. No runtime access behavior re-executed."
+    },
+    {
+      "images": [
+        56,
+        57
+      ],
+      "kind": "coverage",
+      "note": "UI60 revoked light and final capture inspected; same generic error/retry. Files42 unique complete."
+    },
+    {
+      "images": [
+        58,
+        59
+      ],
+      "kind": "design-assessment",
+      "note": "Add server desktop modal: compact controls and grayscale primary button versus native SF 44px blue primary actions; modal backdrop depth coherent. Server failure linked inline to red address input, not only toast. Narrow target sizing to inspect."
+    },
+    {
+      "images": [
+        60,
+        61,
+        62,
+        63
+      ],
+      "kind": "design-assessment",
+      "note": "Command palette at390: contained overlay, sufficient side margin, visible selected row, search and empty states readable. Keyboard shortcuts tiny but secondary; mobile soft keyboard not shown, so keyboard-occlusion unverified. No-results container retains considerable empty height (design judgment). Server final matches inline error."
+    },
+    {
+      "images": [
+        64,
+        65,
+        66,
+        67
+      ],
+      "kind": "design-assessment",
+      "note": "Flight Engineer explains web limitation, but leaves no next step. Mobile Add server is flush to screen edges unlike command palette 12px inset, remains two columns for credentials and compact ~30px footer buttons; legible and contained, but inconsistent shared-dialog sizing/material recipe. Not claimed WCAG target failure; standard minimum differs from 44px design target."
+    },
+    {
+      "images": [
+        68,
+        69,
+        70,
+        71
+      ],
+      "kind": "design-assessment",
+      "note": "Inbox narrow390: title/subtitle and card inset consistent; empty/error centered; source rows distinguish message versus notification with context. Tab strip shows Notifications partly offscreen (likely horizontal scroll, must inspect DOM before classifying); search reduced to icon-sized field. Customize uses larger44px footer buttons than Add server. Toggles visually compact; hit area not measured."
+    },
+    {
+      "images": [
+        72,
+        73,
+        74,
+        75
+      ],
+      "kind": "design-assessment",
+      "note": "Inbox selected detail390 retains back/original/more toolbar; readable16px-ish message body and distinct next-action block. Integration form uses coherent inset16px modal,44px controls and blue Save (clear contrast with legacy Add server). Host-denied copy is technical and gives Refresh only; no misclassified functional authorization defect. Own integration source parity covered by b8 compare (not changed)."
+    },
+    {
+      "images": [
+        76,
+        77,
+        78,
+        79
+      ],
+      "kind": "design-assessment",
+      "note": "Integration empty group calm and action discoverable. Project Board empty/error centered and explanatory, details drawer fits520px and long mixed-script title wraps rather than truncates. Material hierarchy separates overlay and stage; 12px metadata and30px actions compact. No complete keyboard/navigation or screen-reader behavior demonstrated by pixels."
+    },
+    {
+      "images": [
+        80,
+        81,
+        82,
+        83
+      ],
+      "kind": "design-assessment",
+      "note": "Board desktop has aligned equal-width columns, coherent progress segmentation and compact metadata; deliberate title truncation on board opens full drawer. Flight web limitation unchanged. Inbox desktop empty creates two simultaneous empty states: left 'nothing needs you', right asks user to select item despite zero items—minor copy/action-state mismatch, not blocker."
+    },
+    {
+      "images": [
+        84,
+        85,
+        86,
+        87
+      ],
+      "kind": "design-assessment",
+      "note": "Inbox desktop selected content has a clean master/detail hierarchy, readable message line length and one primary next action. Preferences modal visual borders/material consistent with native but desktop footer30px, mobile44px. RAG empty shows declared pipeline below question; interface is technical by purpose, so pipeline jargon is not automatically a defect; fine monospaced explanatory text warrants source sizing review."
+    },
+    {
+      "images": [
+        88,
+        89,
+        90
+      ],
+      "kind": "design-assessment",
+      "note": "RAG pipeline desktop equal row rhythm, aligned segmented controls and numeric fields; monospaced explanations smaller than main UI, but no clipping in captured desktop states. Empty passes repeated with Files. No successful query result shown."
+    },
+    {
+      "images": [
+        91
+      ],
+      "kind": "finding-candidate",
+      "note": "RAG failure displays four parallel notices for one failed load: two cards Could not load Rag Studio, inline Request failed and Request failed toast, with no visible retry action. Trace source for actionable recovery and deduplicate feedback; own sources unchanged from artifact base."
+    },
+    {
+      "images": [
+        92,
+        93,
+        94,
+        95
+      ],
+      "kind": "design-assessment",
+      "note": "Board390 error and overview keep containment; detail drawer full title including mixed scripts wraps across six lines, action buttons enlarge44px, section separators consistent. Board page uses wider inner margins than Inbox/Integrations, reducing usable width at narrow size (refinement only; 320 not in this group)."
+    },
+    {
+      "images": [
+        96,
+        97,
+        98,
+        99
+      ],
+      "kind": "design-assessment",
+      "note": "Board narrow shows horizontal stage strip with next-column peek; not counted as page overflow defect (board scrolling is intentional). Integration desktop uses centered480px modal, no backdrop blur in captured state versus Inbox/Server blur; varying material recipes even within shared UI. Header/fields aligned. Host denial has inline refresh recovery."
+    },
+    {
+      "images": [
+        100,
+        101,
+        102,
+        103
+      ],
+      "kind": "coverage",
+      "note": "Integration empty desktop and command palette desktop results/empty/final inspected. Palette640px width and stable height avoid layout jump; selected item distinct. No visual overlap. Empty space not bug by itself."
+    },
+    {
+      "images": [
+        104,
+        105,
+        106,
+        107
+      ],
+      "kind": "design-assessment",
+      "note": "RAG390 pipeline controls stack to left and preserve44px targets; values align and labels wrap. Long technical page becomes many scroll heights, but intentional configuration depth is not itself bug. Monospaced explanatory type remains fine (~11px source pending); no horizontal overflow in snapshots."
+    },
+    {
+      "images": [
+        108,
+        109,
+        110,
+        111
+      ],
+      "kind": "coverage",
+      "note": "RAG390 failure repeats desktop feedback pattern; bottom toast covers portion of secondary error but transient toast alone not flagged as occlusion bug. Metric/fusion/compare controls contained. Add server light uses near-square outer radius and black primary while integration modal uses16px/blue—confirmed visual recipe divergence."
+    },
+    {
+      "images": [
+        112,
+        113,
+        114,
+        115
+      ],
+      "kind": "coverage",
+      "note": "Light server error remains inline and has visible address border; command palette light selected row and text remain visually legible. Contrast not numerically measured for these surfaces."
+    },
+    {
+      "images": [
+        116,
+        117,
+        118,
+        119
+      ],
+      "kind": "design-assessment",
+      "note": "Inbox light pane separation uses subtle background difference and clear border; identical left/right center empty states reinforce misleading selection request when read fails. Customize spacing and switch alignment consistent, solid white modal conveys depth well. No visual control overlap."
+    },
+    {
+      "images": [
+        120,
+        121,
+        122,
+        123
+      ],
+      "kind": "coverage",
+      "note": "Light Inbox selected message and integration guidance/dialog/denial inspected: composition persists, original/source links visible, active primary button clear. Integration modal fields blank but essential-boundary contrast not measured in this supplement; do not infer ratios visually."
+    },
+    {
+      "images": [
+        124,
+        125,
+        126,
+        127
+      ],
+      "kind": "coverage",
+      "note": "Integration empty and RAG light empty/pipeline/maintenance captured. Numeric inputs appropriately constrained88px rather than full width. Fine mono help text is legible at inspected scale but small; no measured contrast or zoom reflow certification."
+    },
+    {
+      "images": [
+        128,
+        129,
+        130,
+        131
+      ],
+      "kind": "coverage",
+      "note": "Light RAG confirms four notices during source+pipeline failure episode; two endpoints may fail independently, so do not call it four notices for one request. Flight Engineer web limit and Board empty light inspected; same lack of direct next-step button in descriptive empty limits."
+    },
+    {
+      "images": [
+        132,
+        133,
+        134,
+        135
+      ],
+      "kind": "coverage",
+      "note": "Project Board light long mixed-script issue wraps fully in drawer; no overflow in inspected desktop bounds. Read failure has explicit Retry. Stage columns equal-width, clear count+text+dot states; selected task truncation on board has full-title drawer. These are rendered observations, not accessibility or interaction certification."
+    }
+  ],
+  "limitations": [
+    "All screenshots are historical Actions evidence, not a new runtime session; current relevance is bounded by file comparisons and source mechanisms.",
+    "No interaction timing, frequency of flakiness, GPU performance, actual browser computed typography or physical blur/shadow measured.",
+    "No universal contrast/WCAG, keyboard/screen-reader or 200–400% zoom claim. Supplemental controls received no new contrast measurements.",
+    "Files UI60 captures confirmed prerequisite with no compatible authorized destination and revoked source; it does not show successful end-to-end scenario application.",
+    "RAG captures empty declared pipeline, maintenance controls, revision controls and simultaneous read failure, not successful Ask/result quality.",
+    "Project Board uses synthetic records and long mixed-script title; truncation on board paired with full-title drawer is intentional disclosure, not a filed defect.",
+    "Some mobile horizontally scrolling tabs/boards are intentional; screenshot-only partial tabs were not promoted to bugs.",
+    "UUID.txt document filenames are fixture data; source dropdown renders source.label. They were not falsely reported as ID-for-name defects.",
+    "Active PR statuses/overlap must be integrated by root at current heads; this report concerns pinned dev only."
+  ],
+  "images": [
+    {
+      "index": 0,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI29-dark-1440x800-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI29-dark-1440x800-test-data.png",
+      "sha256": "3b29ca13ba2f5b5fe83379da97162e59652778f9c678d1175ec173d27b981889",
+      "dimensions": [
+        1440,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 1,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI29-dark-390-resume-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI29-dark-390-resume-test-data.png",
+      "sha256": "de523dfeff7cbf7486043f05ef057045e521cad868ae70a5ee1a3ecaad7e2d3f",
+      "dimensions": [
+        390,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 2,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI29-dark-desktop-resume-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI29-dark-desktop-resume-test-data.png",
+      "sha256": "d58a400c8ae1c200a10366985949a404359195c5455670439f6ad33f751300e1",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 3,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI29-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI29-light-desktop-test-data.png",
+      "sha256": "4d45e673fa5dbd337496cc2dcd558b4181f1b7e24fe0bc708816328867c2af67",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 4,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI29-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI29-pt-BR-dark-desktop-test-data.png",
+      "sha256": "1616835edea1b0fb5c5685de0667af1be5bbb2d015f09026caa0f5cf680bfbf7",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 5,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-dark-1440x800-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-dark-1440x800-test-data.png",
+      "sha256": "268d22551247914822d011722c6262ee8c76e4c60d61670f01725744bbd7c4d6",
+      "dimensions": [
+        1440,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 6,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-dark-desktop-access-menu-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-dark-desktop-access-menu-test-data.png",
+      "sha256": "eb2e0d10e849875de8e4807d36251b87301b7f5bdc0b54222e59a39002634d42",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 7,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-dark-desktop-editor-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-dark-desktop-editor-test-data.png",
+      "sha256": "6308e50c26a2dc9c8258e11faec07e4c1049f9e7285c43d8ca809a2912f5dad2",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 8,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-dark-desktop-inline-review-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-dark-desktop-inline-review-test-data.png",
+      "sha256": "efb7e6b2f66b4ce41f022af1ea26fe02d5d625108a08963c1e4273842310cf59",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 9,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-light-320-inline-review-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-light-320-inline-review-test-data.png",
+      "sha256": "b20acfddfb67c7b5d606281b0d8aded0d60d9a4f3a0d66a0a596f343c4a8baf9",
+      "dimensions": [
+        320,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 10,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-dark-desktop-test-data.png",
+      "sha256": "da34ea55ffd3394ed6faafc81ef28db32942095c0d4af430658c559b74f26a87",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 11,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-light-320-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-light-320-test-data.png",
+      "sha256": "93741bea4fc1ec6d6e123509444853a2a9c3e3b269c46b5679fd7cd0e216e012",
+      "dimensions": [
+        320,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 12,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-light-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-light-desktop-test-data.png",
+      "sha256": "884960d4635537051aefc9c3464c94ce99bf27c78b8f8b184918fb26eb719a4f",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 13,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-pt-BR-dark-desktop-editor-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-pt-BR-dark-desktop-editor-test-data.png",
+      "sha256": "d1d5135a03c148f4a52097257d5f0810978288ae5c31d9512b36e6593fe5475b",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 14,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-pt-BR-dark-desktop-inline-review-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-pt-BR-dark-desktop-inline-review-test-data.png",
+      "sha256": "377380806a861ed7d389ab190967a33ae05e18459beff64a023496a123fef36c",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 15,
+      "group": "native-dashboard",
+      "run": 45086595355,
+      "source": "e315777d9ae9631321c254455aef3961cb651d94",
+      "artifact": 14779259534,
+      "name": "UI33-pt-BR-dark-desktop-test-data.png",
+      "path": "artifact-extract/additional/native-dashboard/packages/app-shell/e2e/test-results/sucafina-design-wave-one-i-1695b-ce-data-review-and-captures-chromium/UI33-pt-BR-dark-desktop-test-data.png",
+      "sha256": "c5e770e8b871d8c8d831b347bbafc939de7ba9844b0138af73ffd38317a494e3",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 16,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-lost-delivery-unavailable-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-lost-delivery-unavailable-dark-320.png",
+      "sha256": "0543b4e8f7410a439992152e84caddd5aaefe6b9d1f4c8cb353d20e056bc3e89",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 17,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-lost-delivery-unavailable-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-lost-delivery-unavailable-dark-desktop.png",
+      "sha256": "6acc5421486739e380c32746e1bb8e34a3aa45e0252a0574b92ea42e4eeb548b",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 18,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-lost-delivery-unavailable-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-lost-delivery-unavailable-light-desktop.png",
+      "sha256": "7c0700a9cb58adc2ce729f9e40b4b2cfbf685133cfdacbea0a0584648ca9c478",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 19,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-original-preview-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-320.png",
+      "sha256": "60be760f5a94443a9ab0070c37ae96307acc0fd5986ab5016738c3c56a98fbc5",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 20,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-original-preview-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-desktop.png",
+      "sha256": "9709ea4d556e101c90a389bb7982d86384f7e2051d97d8c0407e2821ddc453ab",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 21,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-original-preview-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-light-desktop.png",
+      "sha256": "08d6acab765f8a100507b8875a608dbafeb21f5bd38fcdd3b418e079119712ee",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 22,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-source-file-selected-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-source-file-selected-dark-320.png",
+      "sha256": "8152fde502acd34407cbeafba74e7aad9f20b056672142185522023a828702e3",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 23,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-source-file-selected-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-source-file-selected-dark-desktop.png",
+      "sha256": "5df3093c345e2dc3158ba56fd68afe04d8ee053ba6deccba7a72d53b01ba28a8",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 24,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI55-source-file-selected-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-source-file-selected-light-desktop.png",
+      "sha256": "7d9bcea7bc9a606b4a4a0e0e78db0ed6176e57f54fc26a48bb33207f37e1b286",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 25,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI56-original-manifest-preview-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-320.png",
+      "sha256": "4667051261394d6ecb223f9b1509a3080da256bb6c799ba6a7e72a7849021765",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 26,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI56-original-manifest-preview-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-desktop.png",
+      "sha256": "8813e27ca69ed5d16a1ea35f94eb5651002ae9a30aa7f7c6857f7547563c0ed9",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 27,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI56-original-manifest-preview-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-light-desktop.png",
+      "sha256": "4f493020bbffae2c4e498beb7d96b36dd6500941e36c05645006cfb0a96f5b91",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 28,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-original-confirmed-receipt-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-desktop.png",
+      "sha256": "50da1607e0c346d61e1af3c5be8b844aae0d9b70c1982875212488a56181a7c4",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 29,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-original-confirmed-receipt-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-320.png",
+      "sha256": "5f56c5e94bf909d438866085546645b97b6550a9163987f38687443da6296304",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 30,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-original-confirmed-receipt-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-light-desktop.png",
+      "sha256": "ceb4c6c6ccd3d794d7c886d4004072287d27208c381894eab6605490b2b0b434",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 31,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-real-owner-denied-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-real-owner-denied-dark-320.png",
+      "sha256": "13d324e52fabc6b1d44f469ba5b0b035b1855087e708f87198122f32875112f9",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 32,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-real-owner-denied-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-real-owner-denied-dark-desktop.png",
+      "sha256": "c000c7765e0fe943782901718cd0efd5e38c6ff867bbdcc0dd437580dbc311f3",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 33,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI57-real-owner-denied-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-real-owner-denied-light-desktop.png",
+      "sha256": "2ad523a47ee3f1cf6d32f739e5b0522fdc673516a1d66c57806ebe17e3ea5663",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 34,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-finished-1.png",
+      "sha256": "b4619f73b25e63643e3dabf7632be520a457a67d258499fd743e4ea33855237b",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 35,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "test-finished-2.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-finished-2.png",
+      "sha256": "cd1c843a74d714d0a1ecb029c9da70968984e2338edcf38fdfc1a0de7695512a",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 36,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-admitted-empty-evidence-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-320.png",
+      "sha256": "e3246f15884cc55360a9425f86ef98e4acdb5ff3fa1f90282409898b48b5b924",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 37,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-admitted-empty-evidence-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-desktop.png",
+      "sha256": "8faae30f55bf4c741fee4ed8ced61d3a9cb7b62e6d4af6f33be5541520c9b643",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 38,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-authorized-extraction-fields-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-320.png",
+      "sha256": "9fc6ca2a981614e50bdb22bde677233257f2fd00de580259b1f1b34ad4eaf3ac",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 39,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-admitted-empty-evidence-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-light-desktop.png",
+      "sha256": "e1cfe37bc095db071447f8836a917afc5c65d310b3f8c193acb04b7fcac4aeee",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 40,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-authorized-extraction-fields-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-desktop.png",
+      "sha256": "93eb9608031ff861f6ee16fe6f8d122392ff163b19a9270dda7dddffb62dedcd",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 41,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-authorized-extraction-fields-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-light-desktop.png",
+      "sha256": "e88ad2ddad9652681b24bb71ec9d2a92baf6fb02603d0f62071007cd444ca323",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 42,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-original-extracted-candidate-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-320.png",
+      "sha256": "1622ea46f5ddb36abaab0e1499214dc437e6a369c669b8ac5324b8891ecd3292",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 43,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-original-extracted-candidate-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-desktop.png",
+      "sha256": "3cc36cee7fd2ec6ba7cdcd30c68896140613b3d9ed77874baeea94a9db50fe02",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 44,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI58-original-extracted-candidate-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-light-desktop.png",
+      "sha256": "9640b772513cdd00d529784bfb1659e57cee1be91a0cf414e29c9352b6587950",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 45,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-original-confirmed-evidence-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-dark-320.png",
+      "sha256": "188246fee5cd32d6468499ab230f8315aeff8efa8d2119933161dd99b6e23c38",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 46,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-original-confirmed-evidence-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-dark-desktop.png",
+      "sha256": "46ded135b05178d47be06ddbe601122a265923efbe4c3a7793a59d01835a81f6",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 47,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-original-confirmed-evidence-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-light-desktop.png",
+      "sha256": "85c2feefc271f8db4faaef1981bdd08a52203672e9aedf745de23721870def86",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 48,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-source-confirmation-review-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-dark-320.png",
+      "sha256": "1777e20d304c7e50def9a3f6821b4d48015d44f68e61353474584980b1db0550",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 49,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-source-confirmation-review-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-dark-desktop.png",
+      "sha256": "29b23941bef1a20c29a0517f4f6267f650632d64d9696887cbbca92c22bdd4b9",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 50,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI59-source-confirmation-review-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-light-desktop.png",
+      "sha256": "10043b1e8015f247af8f8fa2dfdfbf536b93e04b55b27d48a3f4b38c4c83ac77",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 51,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-confirmed-source-prerequisite-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-dark-320.png",
+      "sha256": "39925ed84596cd07adc4fc9e3e78601d97510716a5b9c59d34bf1bf971539f4f",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 52,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-confirmed-source-prerequisite-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-dark-desktop.png",
+      "sha256": "17d427f2b09a16270e5e22115aa3ed1d9b28d011a0e90dfe54cd4dfccaa73a9d",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 53,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-confirmed-source-prerequisite-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-light-desktop.png",
+      "sha256": "f8f6613e5cd7a0d888d1fab632a5e62a65a98b5a56f3899c67f1eb1e54d29750",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 54,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-source-revoked-dark-320.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-dark-320.png",
+      "sha256": "6d809a502afdf706a8ef3090c5b4bffdade5e197b2c2f0d11dd00c79b15e8a58",
+      "dimensions": [
+        320,
+        800
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 55,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-source-revoked-dark-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-dark-desktop.png",
+      "sha256": "7397237d95fc20fd9e57b1723163181de61e6d807d6db14526083208fa64333a",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 56,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "UI60-source-revoked-light-desktop.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-light-desktop.png",
+      "sha256": "0a20dff8d83539f5e633baae3805e9c0cffbcec3bb40cf57013fbca71eb3d331",
+      "dimensions": [
+        1440,
+        1100
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 57,
+      "group": "files-native",
+      "run": 45090119567,
+      "source": "faddf7019c186fb93c29ada3297c327765200463",
+      "artifact": 14780828009,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/test-finished-1.png",
+      "sha256": "b6deb7a2cac87765b227058546f201226a918f698211a96cd8b43ff507c20750",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 58,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-connection-form-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+      "sha256": "9b5bfca80dc45c0a04bd9008ce940c30878e0f9a48427ef25cc52610048cc9f5",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 59,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-health-failure-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-wide.png",
+      "sha256": "42dfcdeda2997bc491ed533b8946f85ee60ca07e3f4b500e0d248a474a227159",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 60,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+      "sha256": "ca853b53e87dc3db6288eb1ab7786ae6ab1b75d063b6cce011092bf4fb88f243",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 61,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-command-results-overlay-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2760d-d-results-and-empty-overlay-chromium/search-command-results-overlay-dark-narrow.png",
+      "sha256": "50a5a505237e2c4fec3b509684e981b08a2c7e06e90f46505994e676e5b44027",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 62,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-no-results-overlay-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2760d-d-results-and-empty-overlay-chromium/search-no-results-overlay-dark-narrow.png",
+      "sha256": "cb17a7cf3bacc3448fecf207a845b97200768422c38f2f5920019e9a8d14c852",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 63,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2760d-d-results-and-empty-overlay-chromium/test-finished-1.png",
+      "sha256": "ffa0e1b032c3ed7aadae3ff0e0f75d0628ecf587d53135798787eb5c2f7ee5a5",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 64,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "flight-engineer-web-unavailable-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2dc76-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-wide.png",
+      "sha256": "439ddae8638415204fef454c49d80a3b11fef35bda082ce13fa4718e3e19439f",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 65,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-connection-form-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+      "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 66,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-health-failure-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+      "sha256": "b9b1c2213263f55b94e025423043ca540b41b46bb79132b625287e679dfb405a",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 67,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+      "sha256": "50ca601899826c4e17b81859bd0c3b709fe90b831d0c3c3d100a089cd5c8296c",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 68,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-empty-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-empty-dark-narrow.png",
+      "sha256": "a6c9c1eb2fa1f12acd028ff846fb2fad34857bbcb1e6070c17b5aad0d86aa63c",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 69,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-preferences-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-preferences-dark-narrow.png",
+      "sha256": "a0cd0b01f24685ecd2fba8292dffede36272f8713524a3fba001fdcb259b991f",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 70,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-read-unavailable-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-read-unavailable-dark-narrow.png",
+      "sha256": "ac0ef5705b17b88c217cd7caa952d137c6380fa628a5a0828ae24b958333431d",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 71,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-synthetic-source-list-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-synthetic-source-list-dark-narrow.png",
+      "sha256": "bf4da2a707839e6f66aa992dbb1767b69543fb40e2e38cc3e43a40aa65fd11e3",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 72,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-selected-source-detail-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-dark-narrow.png",
+      "sha256": "8c5be4145e63932c758facbb83eea8b2136c6111c9610063fcbcd3fa9ed73247",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 73,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-available-providers-guidance-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-available-providers-guidance-dark-narrow.png",
+      "sha256": "78e1662d2e0aff43db3fbc2194558590aa73b4f96c0f28fdbc1dfa4687b212ba",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 74,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-connect-account-dialog-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-narrow.png",
+      "sha256": "a8bed31bab41d12126b0d5017f48b353fd6522914ae9687244c20e4863bb9d87",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 75,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-denied-read-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-denied-read-dark-narrow.png",
+      "sha256": "d5bfc433062099c3e5ce405d1e5406551831a1f59135dc97ff3c8a1548e7e5ff",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 76,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-empty-accounts-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-dark-narrow.png",
+      "sha256": "619b7e2d70e10b5993aacb75bcc09277b49cc199dfce655b207ee58df84ff03d",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 77,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-empty-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-empty-dark-wide.png",
+      "sha256": "2e36cb9c904b492980dae6ffa3a233ccfb9cbdd66371865722cba86fc9f114d7",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 78,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-issue-detail-panel-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-wide.png",
+      "sha256": "7bdd621dd4226fbfabda44e5e52b764eba69d669b6c8ab642890989990de2700",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 79,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-read-unavailable-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-read-unavailable-dark-wide.png",
+      "sha256": "95893b22b1f59d479cde236635480498bab780a9828f5006aa3efe1080ca8fe0",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 80,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-project-overview-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-dark-wide.png",
+      "sha256": "6f1d76bff1eb6ae314e5b9a27aa58b006a946003e8fd9dad30a55efe8bd2cacd",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 81,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-stage-board-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-dark-wide.png",
+      "sha256": "da28dbd4f6a8e241e7f721f702dcf0f6d9a35e4dfdaae970e801cd71c8ed580b",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 82,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "flight-engineer-web-unavailable-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-acb38-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-narrow.png",
+      "sha256": "98dbf203d39325aae580a7c805c6c38282f0cfbe5254800933f9c5af987bb305",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 83,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-empty-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-empty-dark-wide.png",
+      "sha256": "09c65f217aefcecb8a76b19d54240f1cd955a1673e53a55a86cc3f57b72d3683",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 84,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-preferences-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-preferences-dark-wide.png",
+      "sha256": "18765688e919c323fa029916128ed67a0058c4a8aae22db60c96b699b6c3ea7a",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 85,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/test-finished-1.png",
+      "sha256": "be58fcc8700f0cfd46790288e5f423f4b503412d1b181de85b06406a8d9643f6",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 86,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-selected-source-detail-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-dark-wide.png",
+      "sha256": "bec06c3f9578ce52dd62850965dff6144e800cb0402dcb25dcc446e31658d0dd",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 87,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-empty-files-declared-pipeline-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-wide.png",
+      "sha256": "11a74c422c3b74d37911bab31f158a04faad9662322ba64bcac1f320fe209041",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 88,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-maintenance-passes-and-comparison-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-wide.png",
+      "sha256": "73f3f7290bb4dfa62957405278017703e44edbf8606acf884e7a1ccdb30d35db",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 89,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-controls-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-dark-wide.png",
+      "sha256": "7deba36fd753fd19e7bace9fe5f5ff446a66a5375215d78c07e24e504523ad78",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 90,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-model-and-metric-controls-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-dark-wide.png",
+      "sha256": "a6db0425cd96415589dfcc3343c06e82d215c80d8bd42eb6eb52a7d96898b805",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 91,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+      "sha256": "b581125818fee1a3d09f78af7d78c281827addfdc1aaf36c5ce722959ae08c6a",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 92,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-empty-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-empty-dark-narrow.png",
+      "sha256": "57c0d7dade906bbee7a5fce7a5395ae40e484bffe834d2dcecef2e606c257902",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 93,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-issue-detail-panel-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-narrow.png",
+      "sha256": "ce079b0181579cacd1118312e554d7ec6790cae1cc19bd96ff88816fb62ebbac",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 94,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-read-unavailable-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-read-unavailable-dark-narrow.png",
+      "sha256": "31c40122af5a5d18400f30d2c53b229e95e4091561d199f10f9a9e29df2e842f",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 95,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-project-overview-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-dark-narrow.png",
+      "sha256": "5c31a035fd92ba73df02775c0e42e358a62485cd8c5e5ed4219ae939ff9d8c67",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 96,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-stage-board-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-dark-narrow.png",
+      "sha256": "348c77e04d55d24e516eb75b34970a8e662cf0f3012ec153455ac57de7be59e3",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 97,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-available-providers-guidance-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-available-providers-guidance-dark-wide.png",
+      "sha256": "e2826ffd59d7368a7b62c3eca41c6dba2fefd354d0427de46e10d5d7e381a6d1",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 98,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-connect-account-dialog-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-wide.png",
+      "sha256": "42eae2e2a2aefbedb62ebaed29d699e25c8ee5e742b306cb5a4db2077dfaada5",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 99,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-denied-read-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-denied-read-dark-wide.png",
+      "sha256": "5bb3c08ac42fc9ff6c3abc154440ac5ac53cad0d076ba4473c256a77c92cff2d",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 100,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-empty-accounts-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-dark-wide.png",
+      "sha256": "163f9e830ced2e0459819e0a1850b848dd4e14a444cb41e1fd5592250947d407",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 101,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-command-results-overlay-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-d9db3-d-results-and-empty-overlay-chromium/search-command-results-overlay-dark-wide.png",
+      "sha256": "a409e64c833d9ac4a08cf29b1c6d2b9b5fcd4b96d9af9d7aec7a98579e37e791",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 102,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-no-results-overlay-dark-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-d9db3-d-results-and-empty-overlay-chromium/search-no-results-overlay-dark-wide.png",
+      "sha256": "d6037a64c4934b23515ddd543db2d71ce1a574ab8983942e13466833ef92b46e",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 103,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-d9db3-d-results-and-empty-overlay-chromium/test-finished-1.png",
+      "sha256": "8a4b2aaa11f75cae2de5dabf7d322f70dc4738ffe1748b4eb1b57d2e219a18ed",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 104,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-empty-files-declared-pipeline-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-narrow.png",
+      "sha256": "943d8db199760578ba637626ef3f6f8c0d5c415961d261740764c0aa853d95bc",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 105,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-maintenance-passes-and-comparison-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-narrow.png",
+      "sha256": "412fc0a1d67c26036d5069dee20a229c430e61ae74bbf18c52a53ffc644c48de",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 106,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-controls-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-dark-narrow.png",
+      "sha256": "1fb05e60bc6d01243ee5fead7da729f8cdae81ec3224174c4d01edfe0e38d59a",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 107,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-model-and-metric-controls-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-dark-narrow.png",
+      "sha256": "86b69ef3ad301be2b9094939045101696ca7c54bfc6111191dac9b1c964a33b4",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 108,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-numeric-metric-and-fusion-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-dark-narrow.png",
+      "sha256": "cdb4dd3aaf8ad7a2465c49e9c97d072b859f2e4b809bdb27af90d00323fc2b7e",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 109,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+      "sha256": "a785f7e15984f009d1a1052033964bc59da3df37613e43588ee1881c03464825",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 110,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-revision-comparison-controls-dark-narrow.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-dark-narrow.png",
+      "sha256": "059f6f8c96858180f6251267ab09e434a564f71edae6d72545d6925d75cccc39",
+      "dimensions": [
+        390,
+        844
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 111,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-connection-form-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+      "sha256": "813f08e82a48d6ca1bb68c134b4997003c57cb44bcf98fd923ea5e5aed0c6d67",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 112,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "error-recovery-server-health-failure-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+      "sha256": "daeb948f9839b1e144f71c781f49d9229925d6015bef8fa4305ce9078b581e26",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 113,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+      "sha256": "7073975a2e77a74d96033810c2356a51dd65c76842a8e40a81263e7a4afec722",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 114,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-command-results-overlay-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-457bf-d-results-and-empty-overlay-chromium/search-command-results-overlay-light-wide.png",
+      "sha256": "982dd325b8da0a2d3f11a7d9dddcf62cbe1bf37bd392c72111b4daa94775486f",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 115,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "search-no-results-overlay-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-457bf-d-results-and-empty-overlay-chromium/search-no-results-overlay-light-wide.png",
+      "sha256": "c6d26aa4fd10c83b4b50f91353739261bddb13aa97457e8d6e638005b03569ae",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 116,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-457bf-d-results-and-empty-overlay-chromium/test-finished-1.png",
+      "sha256": "16f3180324f3b5de9a5fc6a5f17a57f5aad8d87dca5e821d2b25f42cfbdf912b",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 117,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-empty-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-empty-light-wide.png",
+      "sha256": "1578b682414930e8329fe8e30bc1c9fcfec78f12d45309f4f0d036dbef7d7019",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 118,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-preferences-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-preferences-light-wide.png",
+      "sha256": "d599b676b87a4e10a6a3e5bd4758da4a27025e172b51f92e4cb447d8d4d6c81a",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 119,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-read-unavailable-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-wide.png",
+      "sha256": "647821a023c834507c8c311eab7329321000fa6cb2bc6d374bf28de5e7b90b02",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 120,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "inbox-selected-source-detail-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-light-wide.png",
+      "sha256": "f2b227b995be87981f25953f2887f4b38b5b927199020bd6499a2f8f44b2f4ac",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 121,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-available-providers-guidance-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-available-providers-guidance-light-wide.png",
+      "sha256": "c1dd012e338a335033309f0f36b99a95adb2a28726bd50c62a63a4fb355f9c60",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 122,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-connect-account-dialog-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-wide.png",
+      "sha256": "90d75898c9dd5370d93debd370dca8306e3a54dc8935f9d72c2b3f84aeae621c",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 123,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-denied-read-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-denied-read-light-wide.png",
+      "sha256": "ee2c80e833f19088daef8d3d77b3460e541eb923ca22967c16f23f54cfb61e88",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 124,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "integrations-empty-accounts-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-light-wide.png",
+      "sha256": "1fd55c90d4b5d14ecdf2344ed38812ca98c8a10036bd353c25f70c50e95f2ff1",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 125,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-empty-files-declared-pipeline-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-light-wide.png",
+      "sha256": "c48a97cf5378268fd505eb46524d6676cf616f670b53c0778f18737ef9f86756",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 126,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-maintenance-passes-and-comparison-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-light-wide.png",
+      "sha256": "0fa0201afc87cf94a9e79b76211aa36186aa42ee23521ee63ca22337f9ccc52d",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 127,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-controls-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-wide.png",
+      "sha256": "fcf4d9ed25da526e60c4c701b0e66cede5367866a6fba74fe557f319903da893",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 128,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-pipeline-model-and-metric-controls-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-wide.png",
+      "sha256": "5c35718a40d8f2c217aa4a200b01c65ff05a91ab3f2eb870ada4f3697a38522a",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 129,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "rag-studio-source-and-pipeline-unavailable-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-wide.png",
+      "sha256": "239030e20c65acd9b383191f84b1d651c0f062222012304fe344f41816421bbf",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 130,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "test-finished-1.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b8f18-the-real-web-platform-limit-chromium/test-finished-1.png",
+      "sha256": "173cb7cd4c89da81af0c89a5031cb0cc52591330ebe988198ce446fb78b7a180",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 131,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-empty-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-empty-light-wide.png",
+      "sha256": "d67ece61ba614e51d703d08cff99cecbdf3cea7ca7ae65489ffe09a60fcfee25",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 132,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-issue-detail-panel-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-light-wide.png",
+      "sha256": "c0c9cbf0a4fd08aeb6380cb8bac57a787b9089c63406475818dc3c9aa80d81a6",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 133,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-read-unavailable-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-read-unavailable-light-wide.png",
+      "sha256": "4be37be7d6f0ed66bdfb73e6fcfddb12fb27fbef3830a346ca8d2ee6c41899b2",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 134,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-stage-board-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-wide.png",
+      "sha256": "d4d7ef60029fc71fd02fd3e68081d68997ddd88c9e1631d4bedaabbdc24cf0ed",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    },
+    {
+      "index": 135,
+      "group": "shared-components",
+      "run": 45088732308,
+      "source": "b8f76cc16fe40240e7d9e5739ecb8280142972e2",
+      "artifact": 14780570832,
+      "name": "project-board-synthetic-project-overview-light-wide.png",
+      "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-light-wide.png",
+      "sha256": "2a21d78a1db7d33c471dd1d8c9cf2f181d6bca7361b3bc008c820f279b3f3e54",
+      "dimensions": [
+        1440,
+        1000
+      ],
+      "uniqueInGroup": true,
+      "viewed": true
+    }
+  ],
+  "sourceReadAdditional": [
+    "packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx",
+    "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+    "packages/app-shell/src/orchestra/chapters/rag-studio/page.tsx",
+    "packages/app-shell/src/orchestra/chapters/rag-studio/source-read.ts",
+    "packages/app-shell/src/orchestra/chapters/rag-studio/pipeline.ts",
+    "packages/app-shell/src/orchestra/chapters/rag-studio/question.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+    "packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx",
+    "packages/app-shell/src/components/settings-v2/settings-v2.css",
+    "packages/ui/src/v2/components/dialog-v2.tsx",
+    "packages/ui/src/v2/components/dialog-v2.css",
+    "packages/app-shell/src/orchestra/chapters/inbox/controls.tsx",
+    "packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx",
+    "packages/app-shell/src/orchestra/chapters/integrations.css",
+    "packages/app-shell/e2e/orchestra/shared-visual.spec.ts"
+  ]
+}

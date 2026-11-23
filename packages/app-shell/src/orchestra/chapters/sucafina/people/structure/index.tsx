@@ -1,6 +1,7 @@
 import { For, Show, createMemo, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
+import { sfPeopleCollectionHref } from "../paths"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
@@ -113,7 +114,10 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
   const version = (kind: string, id: string) => current()?.value.versions[kind + ":" + id] ?? 0
   const close = () => {
     setLocal("selection", undefined)
-    if (props.route.kind !== "entry") navigate(-1)
+    if (props.route.kind !== "entry") {
+      const href = sfPeopleCollectionHref(props.route)
+      if (href) navigate(href)
+    }
   }
 
   async function saveRecord(

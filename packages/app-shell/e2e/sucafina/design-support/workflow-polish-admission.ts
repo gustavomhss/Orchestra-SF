@@ -4,6 +4,7 @@ import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { ServerConnection } from "../../../src/context/server-connection"
 import { capture, scheme } from "./wave-three"
 import type { WorkflowOwner } from "./workflow-polish-source"
+import { forwardOnce } from "../operations-support/runtime"
 
 export type WorkflowRequirement = Readonly<{ operationId: string; family?: string; resource?: string }>
 
@@ -54,16 +55,64 @@ export async function captureWorkflowRefusal(
   target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
   target.searchParams.set("project", owner.projectId)
   target.searchParams.set("installation", owner.installationId)
-  expect((await page.goto(target.href))?.status()).toBe(200)
   const host = page.locator('[data-sf-host="owner-runtime231"]')
+  const contextUrl = (url: URL) => url.origin === owner.publicOrigin &&
+    url.pathname === owner.mount + "/api/ui/context" &&
+    url.searchParams.get("projectId") === owner.projectId &&
+    url.searchParams.get("installationId") === owner.installationId &&
+    url.searchParams.get("hostId") === owner.hostId
+  let homeAvailable = false
+  let routeAdmission: Awaited<ReturnType<typeof forwardOnce>> | undefined
+  const providerAdmission = await forwardOnce(page, contextUrl, "GET", async (response) => {
+    expect(response.status()).toBe(200)
+    const result = Schema.decodeUnknownSync(SfContextResult)(await response.json())
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("The original provider context did not admit this owner")
+    expect(result.value.stamp).toMatchObject({
+      installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+    })
+    homeAvailable = result.value.availability.some((resource) => resource.operations.some((operation) =>
+      operation.operationId === "projection.home" && operation.state === "ready" && operation.operational))
+    routeAdmission = await forwardOnce(page, contextUrl, "GET", async (routeResponse) => {
+      expect(routeResponse.status()).toBe(200)
+      // Hold only the original route reply while checking the real loading UI.
+      // The source response is delivered unchanged immediately after these assertions.
+      await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
+      await expect(host).toHaveAttribute("data-sf-view-state", "resolving")
+      const pending = host.locator('[data-sf-f01="loading"]')
+      await expect(pending.locator('[data-sf-state="loading"]')).toBeVisible()
+      await expect(pending.getByRole("alert")).toHaveCount(0)
+      await expect(pending.getByRole("button", { name: "Try again", exact: true })).toHaveCount(0)
+      await expect(pending.getByRole("button", { name: "Return to Today", exact: true })).toHaveCount(0)
+      await capture(page, info, surface + "-native-host-loading-original-read")
+    })
+  })
+  try {
+    const [response] = await Promise.all([page.goto(target.href), providerAdmission.completed])
+    expect(response?.status()).toBe(200)
+    expect(routeAdmission).toBeDefined()
+    await routeAdmission!.completed
+  } finally {
+    await providerAdmission.close()
+    await routeAdmission?.close()
+  }
   const verify = async () => {
     await expect(host).toHaveCount(1)
     await expect(host).toHaveAttribute("data-sf-discovery-state", "ready")
     await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
     await expect(host).toHaveAttribute("data-sf-view-state", "denied")
-    await expect(host.locator('[data-sf-f01="not-admitted"]')).toHaveText("Sucafina route not admitted")
+    const refusal = host.locator('[data-sf-f01="not-admitted"]')
+    await expect(refusal).toHaveCount(1)
+    if (surface === "UI64" || surface === "UI66") {
+      await expect(refusal).toHaveAttribute("data-sf-route-unavailable", surface)
+      await expect(refusal.getByRole("status")).toBeVisible()
+    } else {
+      await expect(refusal.getByRole("alert").locator(".sf-state-title")).toHaveText("This page is unavailable in the current context. Refresh access to check again.")
+      await expect(refusal.getByRole("button", { name: "Try again", exact: true })).toBeVisible()
+      await expect(refusal.getByRole("button", { name: "Return to Today", exact: true })).toHaveCount(homeAvailable ? 1 : 0)
+    }
     await expect(host.locator("[data-sf-surface]")).toHaveCount(0)
-    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(0)
+    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
     await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
     await expect(page).toHaveURL(target.href)
   }
@@ -72,7 +121,8 @@ export async function captureWorkflowRefusal(
     contentType: "application/json",
     body: JSON.stringify({ surface, path, source: "original isolated installed producer",
       state: "native-host-refusal", leafRendered: false, leafVisualApprovalClaimed: false,
-      syntheticSuccess: false, liveMicrosoftClaimed: false, requirements: proof.requirements }, null, 2),
+      syntheticSuccess: false, liveMicrosoftClaimed: false, homeAvailable, loadingCheckedBeforeOriginalRouteReply: true,
+      requirements: proof.requirements }, null, 2),
   })
   const viewport = page.viewportSize()
   const color = await page.locator("html").getAttribute("data-color-scheme")

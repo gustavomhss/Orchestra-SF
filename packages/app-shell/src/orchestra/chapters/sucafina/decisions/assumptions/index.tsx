@@ -7,6 +7,8 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
+import { sfDecisionCategoryKey } from "./presentation"
+import { SfDecisionGaps } from "./gaps"
 import "../cases/n24.css"
 import "../intent/decision.css"
 import "../../reviews/workflows.css"
@@ -34,6 +36,10 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
   const divergences = createMemo(() =>
     [...new Set((caseData.read.projection?.events ?? []).flatMap((event) => event.factualGaps))],
   )
+  const categoryText = (value: string) => {
+    const label = sfDecisionCategoryKey(value)
+    return label ? t(label) : value
+  }
   const status = (): SfUiState => caseData.read.state === "ready" && filtered().length === 0
     ? (record()?.assumptions.length ? "filtered-empty" : "empty") : caseData.read.state
 
@@ -104,12 +110,14 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
                 <h2>{t("sf.ui36.primary")}</h2>
                 <p><bdi>{item().text}</bdi></p>
                 <p>{t("sf.ui36.state")}: {t(item().state === "open" ? "sf.ui36.open" : item().state === "confirmed" ? "sf.ui36.confirmed" : "sf.ui36.rejected")}</p>
-                <h3>{t("sf.ui36.source")}</h3>
-                <ul class="sf-n24-list">
-                  <For each={item().evidenceRefs}>{(source) =>
-                    <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi></li>}
-                  </For>
-                </ul>
+                <details class="sf-decision-source-scope">
+                  <summary>{t("sf.ui36.source")}</summary>
+                  <ul class="sf-n24-list">
+                    <For each={item().evidenceRefs}>{(source) =>
+                      <li><bdi>{source.refId}</bdi> · <bdi>{source.evidenceLevel}</bdi></li>}
+                    </For>
+                  </ul>
+                </details>
                 <p role="status">{t("sf.ui36.noMutation")}</p>
               </section>}
             </Show>
@@ -118,13 +126,21 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
               <section class="sf-n24-section" aria-labelledby="sf-n24-missing">
                 <h2 id="sf-n24-missing">{t("sf.ui36.missing")}</h2>
                 <Show when={missing().length} fallback={<p>{t("sf.ui36.noGaps")}</p>}>
-                  <ul class="sf-n24-list"><For each={missing()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>
+                  <ul class="sf-n24-list"><For each={missing()}>{(issue) =>
+                    <li><bdi>{categoryText(issue)}</bdi></li>}
+                  </For></ul>
+                  <Show when={missing().some((value) => sfDecisionCategoryKey(value))}>
+                    <details class="sf-decision-source-scope">
+                      <summary>{t("sf.ui36.sourceDetails")}</summary>
+                      <ul class="sf-n24-list"><For each={missing()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>
+                    </details>
+                  </Show>
                 </Show>
               </section>
               <section class="sf-n24-section" aria-labelledby="sf-n24-divergences">
                 <h2 id="sf-n24-divergences">{t("sf.ui36.divergences")}</h2>
                 <Show when={divergences().length} fallback={<p>{t("sf.ui36.noDivergences")}</p>}>
-                  <ul class="sf-n24-list"><For each={divergences()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>
+                  <SfDecisionGaps values={divergences()} />
                 </Show>
               </section>
             </div>

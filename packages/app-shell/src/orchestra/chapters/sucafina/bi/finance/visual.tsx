@@ -11,6 +11,9 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
   const model = createMemo(() => sfBiChartModel(props.viewId, props.projection, props.copy, locale()))
   const fmt = (n: number | null) => n === null ? t(sfBiKey(props.copy + ".missing")) :
     new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(n)
+  const currencyLabel = (value: string | undefined) => value === "unspecified" &&
+    props.projection.projection.context.currency === "unspecified"
+    ? t(sfBiKey(props.copy + ".currencyUnspecified")) : value
   const assigned = () => new Map(props.projection.projection.values.map((value) => [value.id, value]))
   const waterfall = () => props.viewId === "BI02" ? props.projection.presentation.waterfall : undefined
   const timeline = () => props.viewId === "BI08" ? props.projection.presentation.timeline : undefined
@@ -23,7 +26,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
         { label: { key: sfBiKey(props.copy + ".context.period") },
           value: { kind: "data", text: sfBiPeriodLabel(props.projection.projection.context.period.start, props.projection.projection.context.period.end, locale()) } },
         { label: { key: sfBiKey(props.copy + ".context.currency") },
-          value: { kind: "data", text: props.projection.projection.context.currency } },
+          value: { kind: "data", text: currencyLabel(props.projection.projection.context.currency) ?? "" } },
         { label: { key: sfBiKey(props.copy + ".context.version") },
           value: { kind: "data", text: String(props.projection.projection.version) + " / " + props.projection.projection.engineVersion } },
       ]}
@@ -53,7 +56,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
               <figure class="sf-bi-series" data-sf-bi-role={series.semanticToken}>
                 <figcaption id={captionId}>
                   <strong>{rows()[0]?.label ?? t(series.label.key)}</strong>
-                  <span class="sf-bi-unit">{rows()[0]?.unit}</span>
+                  <span class="sf-bi-unit">{currencyLabel(rows()[0]?.unit)}</span>
                 </figcaption>
                 <div class="sf-bi-chart-scroll" role="region" aria-labelledby={captionId} tabIndex={0}>
                   <svg viewBox={"0 0 700 " + chartHeight()} style={{ "min-block-size": chartHeight() + "px" }}
@@ -67,7 +70,7 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                         return (
                           <g data-sf-value-id={row.id} data-sf-evidence={row.evidence}
                             data-sf-value-kind={row.value === null ? "missing" : "known"}>
-                            <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + row.unit}</title>
+                            <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + currencyLabel(row.unit)}</title>
                             <text x="6" y={index() * 43 + 31} class="sf-bi-axis-label">{row.period}</text>
                             <Show when={row.value !== null} fallback={
                               <text x="360" y={index() * 43 + 31} class="sf-bi-axis-label">
@@ -88,6 +91,20 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
                     </For>
                   </svg>
                 </div>
+                <dl class="sf-bi-mobile-values">
+                  <For each={rows()}>{(row) => <div data-sf-mobile-value-id={row.id}
+                    data-sf-evidence={row.evidence} data-sf-value-kind={row.value === null ? "missing" : "known"}>
+                    <dt>{row.period}</dt>
+                    <dd><strong>{fmt(row.value)}</strong><span>{currencyLabel(row.unit)}</span></dd>
+                    <Show when={row.value !== null}>
+                      <span class="sf-bi-mobile-track" aria-hidden="true">
+                        <span class="sf-bi-mobile-mark" data-negative={row.value !== null && row.value < 0}
+                          style={{ width: (row.value === null ? 0 : Math.abs(row.value) / extent() * 50) + "%",
+                            left: row.value !== null && row.value < 0 ? (50 - Math.abs(row.value) / extent() * 50) + "%" : "50%" }} />
+                      </span>
+                    </Show>
+                  </div>}</For>
+                </dl>
                 <div class="sf-bi-source-actions">
                   <For each={rows().filter((row) => row.evidenceRef)}>
                     {(row) => <button class="mx-btn" type="button"

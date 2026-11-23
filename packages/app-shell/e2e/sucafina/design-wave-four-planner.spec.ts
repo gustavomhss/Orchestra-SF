@@ -1,5 +1,6 @@
 import { expect, type Browser, type Locator, type Page, type TestInfo } from "@playwright/test"
-import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, reviewActions } from "./design-support/wave-four"
+import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, reviewActions, originalRead, originalReads, armOriginalRead } from "./design-support/wave-four"
+import { forwardOnce } from "./operations-support/runtime"
 import { waveThreeData } from "./design-support/wave-three-data"
 import { waveFourPlannerData } from "./design-support/wave-four-planner-data"
 import type { DesignInstallation } from "./design-support/installation"
@@ -22,8 +23,20 @@ const review = (page: Page) => page.locator('[data-component="sf-change-review"]
 async function go(page: Page, owner: Owner, installation: DesignInstallation, screen: Screen, portuguese = false) {
   const url = new URL(screen.path, installation.origin)
   url.searchParams.set("year", String(installation.year))
-  await enter(page, owner, url.href, portuguese ? screen.br : screen.title)
-  await expect(page.locator('[data-sf-surface="' + screen.id + '"]')).toHaveAttribute("data-sf-wave", "four")
+  const query = { year: String(installation.year) }
+  const operations = screen.id === "CAP23-compare"
+    ? [{ path: "/api/ui/pages/CAP23", query }, { path: "/api/ui/pages/CAP17", query }, { path: "/api/ui/pages/CAP17", query }]
+    : [{ path: "/api/ui/pages/" + screen.id, query }]
+  const receipts = await enter(page, owner, url.href, portuguese ? screen.br : screen.title, undefined, operations)
+  const surface = page.locator('[data-sf-surface="' + screen.id + '"]')
+  await expect(surface).toHaveAttribute("data-sf-wave", "four")
+  if (screen.id === "CAP23-compare") {
+    const source = await surface.getByLabel(portuguese ? "Versão de origem" : "Source version", { exact: true }).inputValue()
+    const comparison = await surface.getByLabel(portuguese ? "Comparar orçamento" : "Compare budget", { exact: true }).inputValue()
+    expect(source).not.toBe(comparison)
+    expect(receipts!.filter((receipt) => new URL(receipt.request.url()).pathname.endsWith("/CAP17"))
+      .map((receipt) => new URL(receipt.request.url()).searchParams.get("version")).sort()).toEqual([source, comparison].sort())
+  }
 }
 async function width(page: Page, pixels: 1440 | 320) {
   await page.setViewportSize({ width: pixels, height: pixels === 320 ? 900 : 1100 })
@@ -44,33 +57,73 @@ async function views(page: Page, info: TestInfo, id: string) {
   await scheme(page, "dark")
   await width(page, 320)
 }
-async function confirm(page: Page, installation: DesignInstallation, sourcePage: string, action: string, label: string, collection?: string) {
-  const saved = page.waitForResponse((response) => {
-    const request = response.request()
-    if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
-    const input = request.postDataJSON()
-    return input?.page === sourcePage && input.action === action && (collection === undefined || input.values?.collection === collection)
-  }).then((response) => ({
-    status: response.status(), contentType: response.headers()["content-type"],
-  })).catch(() => undefined)
-  await review(page).getByRole("button", { name: label, exact: true }).click()
-  const response = await saved
-  if (!response) throw new Error("The original Planner producer did not return a command response")
-  expect(response.status).toBe(200)
-  expect(response.contentType).toContain("application/json")
-  // CDP body retrieval was unavailable after completed native requests in CI.
-  // Observe the real HTTP status and the UI's
-  // acknowledged transition instead; every caller also requires an exact fresh
-  // canonical readback and exactly one POST, independent of the edited draft.
-  await expect(review(page)).toHaveCount(0)
-  const host = page.locator('[data-sf-host="owner-runtime231"]')
-  await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
-  await expect(host).toHaveAttribute("data-sf-view-state", "ready")
-  await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
-  await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
-  console.info("SF_DESIGN_COMMAND " + JSON.stringify({ sourcePage, action, status: response.status,
-    acknowledgement: "native review completed; canonical readback follows" }))
+async function confirm(page: Page, owner: Owner, installation: DesignInstallation, sourcePage: string, action: string, label: string, collection?: string) {
+  const capability = ({ Headcount: "CAP20", "Entities & allocations": "CAP21", "FX rates": "CAP22", Versions: "CAP23" } as const)[sourcePage as "Headcount" | "Entities & allocations" | "FX rates" | "Versions"]
+  if (!capability) throw new Error("A Planner confirmation needs its exact native readback")
+  const reads: Awaited<ReturnType<typeof armOriginalRead>>[] = []
+  const saved = await forwardOnce(page, (url) => url.origin === installation.origin &&
+    url.pathname === installation.mount + "/planner", "POST", async (response) => {
+    expect(response.status()).toBe(200)
+    expect(await response.json()).toMatchObject({ ok: true })
+    // Versions copy refreshes once, then navigates to the newly admitted list.
+    for (let index = 0; index < (sourcePage === "Versions" && action === "copy" ? 2 : 1); index++)
+      reads.push(await armOriginalRead(page, owner, { path: "/api/ui/pages/" + capability,
+        query: { year: String(installation.year) } }))
+  })
+  try {
+    const [{ response, request }] = await Promise.all([
+      saved.completed, review(page).getByRole("button", { name: label, exact: true }).click(),
+    ])
+    expect(request.postDataJSON()).toMatchObject({ page: sourcePage, action,
+      ...(collection === undefined ? {} : { values: { collection } }) })
+    expect(reads.length).toBeGreaterThan(0)
+    await Promise.all(reads.map((read) => read.completed))
+    await expect(review(page)).toHaveCount(0)
+    const host = page.locator('[data-sf-host="owner-runtime231"]')
+    await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
+    await expect(host).toHaveAttribute("data-sf-view-state", "ready")
+    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
+    await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
+    console.info("SF_DESIGN_COMMAND " + JSON.stringify({ sourcePage, action, status: response.status(),
+      acknowledgement: "original accepted body and subsequent native readback received" }))
+  } finally {
+    await saved.close()
+    await Promise.all(reads.map((read) => read.close()))
+  }
 }
+async function selectVersion(page: Page, owner: Owner, installation: DesignInstallation,
+  capability: "CAP20" | "CAP22", control: Locator, label: string) {
+  const option = control.locator("option").filter({ hasText: label })
+  await expect(option).toHaveCount(1)
+  await expect(option).toHaveText(label)
+  const value = await option.getAttribute("value")
+  if (!value) throw new Error("The original version option requires its source identity")
+  if (await control.inputValue() === value) return
+  await originalRead(page, owner, { path: "/api/ui/pages/" + capability,
+    query: { year: String(installation.year), version: value } }, () => control.selectOption(value))
+  await expect(control).toHaveValue(value)
+}
+async function compareVersion(page: Page, owner: Owner, installation: DesignInstallation, label: "Source version" | "Compare budget", name: string) {
+  const surface = page.locator('[data-sf-surface="CAP23-compare"]')
+  const control = surface.getByLabel(label, { exact: true })
+  const option = control.locator("option").filter({ hasText: name })
+  await expect(option).toHaveCount(1)
+  await expect(option).toHaveText(name)
+  const value = await option.getAttribute("value")
+  if (!value) throw new Error("The original comparison option requires its source identity")
+  if (await control.inputValue() === value) return
+  const other = await surface.getByLabel(label === "Source version" ? "Compare budget" : "Source version", { exact: true }).inputValue()
+  expect(value).not.toBe(other)
+  await originalReads(page, owner, [value, other].map((version) => ({
+    path: "/api/ui/pages/CAP17", query: { year: String(installation.year), version },
+  })), () => control.selectOption(value))
+  await expect(control).toHaveValue(value)
+}
+async function versionRoute(page: Page, owner: Owner, installation: DesignInstallation, action: () => Promise<unknown>) {
+  await originalRead(page, owner, { path: "/api/ui/pages/CAP23",
+    query: { year: String(installation.year) } }, action)
+}
+
 async function discard(page: Page, editor: Locator) {
   page.once("dialog", async (dialog) => {
     expect(dialog.type()).toBe("confirm")
@@ -126,7 +179,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
   await waveFourTest.step("CAP20 · source roster, draft preservation, review and persisted position", async () => {
     await go(page, owner, installation, screens[0])
     const surface = page.locator('[data-sf-surface="CAP20"]')
-    await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
+    await selectVersion(page, owner, installation, "CAP20", surface.getByLabel("Version", { exact: true }), waveThreeData.planner.version)
     await ready(page, "Headcount")
     const positions = surface.locator(".sf-u08-positions")
     await expect(positions.locator("tbody tr")).toHaveCount(3)
@@ -152,6 +205,9 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(surface).toBeHidden()
     await expect(review(page)).toContainText("0.9")
+    await expect(review(page).locator(".sf-s03-head .sf-s03-scope"))
+      .toHaveText(waveThreeData.planner.version + " · " + installation.year)
+    await review(page).locator(".sf-s03-unchanged > summary").click()
     await expect(review(page).getByRole("region", { name: "Rate card", exact: true })
       .locator('[data-version="proposed"] .sf-s03-field-value'))
       .toHaveText(waveFourPlannerData.headcount.rate + " · " + rateRef)
@@ -166,11 +222,11 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
-    await confirm(page, installation, "Headcount", "save", "Save position", "positions")
+    await confirm(page, owner, installation, "Headcount", "save", "Save position", "positions")
     expect(savedPositionRateRefs).toEqual([rateRef])
     expect(mutations).toHaveLength(before + 1)
     await go(page, owner, installation, screens[0])
-    await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
+    await selectVersion(page, owner, installation, "CAP20", surface.getByLabel("Version", { exact: true }), waveThreeData.planner.version)
     await ready(page, "Headcount")
     await positionRow.getByRole("button", { name: "Show details", exact: true }).click()
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("0.9")
@@ -184,6 +240,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await surface.getByRole("button", { name: "Sync roster", exact: true }).click()
     await expect(review(page)).toContainText("No roster preview was supplied")
     await expect(review(page).getByRole("button", { name: "Sync roster", exact: true })).toBeDisabled()
+    await expect(review(page).locator('.sf-s03-notice[role="alert"] li')).toHaveText(["Action not admitted by the original producer."])
     await reviewActions(page)
     await capture(page, info, "CAP20-dark-desktop-unavailable-roster-impact-test-data")
     await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -235,6 +292,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await expect(allocation).toBeVisible()
     await allocation.getByRole("button", { name: "Edit", exact: true }).click()
     const editor = surface.locator(".sf-n20-editor")
+    await expect(editor.getByRole("heading", { level: 2 })).toHaveText("Edit allocation")
     const first = editor.getByLabel(waveFourPlannerData.allocations.entity + " Percentage", { exact: true })
     const second = editor.getByLabel(waveFourPlannerData.allocations.secondEntity + " Percentage", { exact: true })
     await first.fill("60")
@@ -249,6 +307,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(review(page)).toContainText("60%")
     await expect(review(page)).toContainText("40%")
+    await expect(review(page).locator(".sf-s03-head .sf-s03-scope")).toHaveText(waveFourPlannerData.allocations.allocation)
     await reviewActions(page)
     await capture(page, info, "CAP21-dark-320-distribution-review-test-data")
     await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -260,7 +319,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await confirm(page, installation, "Entities & allocations", "save", "Save", "allocations")
+    await confirm(page, owner, installation, "Entities & allocations", "save", "Save", "allocations")
     expect(mutations).toHaveLength(before + 1)
     await ready(page, "Entities & allocations")
     await detail.getByRole("button", { name: "Return to list", exact: true }).click()
@@ -302,7 +361,7 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
   await waveFourTest.step("CAP22 · known and missing rates, provenance, review preservation and source readback", async () => {
     await go(page, owner, installation, screens[2])
     const surface = page.locator('[data-sf-surface="CAP22"]')
-    await surface.getByLabel("Plan version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await selectVersion(page, owner, installation, "CAP22", surface.getByLabel("Plan version", { exact: true }), waveThreeData.planner.version + " · " + installation.year)
     await ready(page, "FX rates")
     const rates = surface.locator(".sf-n20-fx-rates")
     await expect(rates.locator('[data-sf-rate-state="known"]')).toHaveText("1.08")
@@ -325,6 +384,8 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(review(page)).toContainText("1.09")
     await expect(review(page)).toContainText(observation)
+    await expect(review(page).locator(".sf-s03-head .sf-s03-scope"))
+      .toHaveText(waveThreeData.planner.version + " · " + installation.year)
     await reviewActions(page)
     await capture(page, info, "CAP22-dark-320-provenance-review-test-data")
     await review(page).getByRole("button", { name: "Revise", exact: true }).click()
@@ -335,10 +396,10 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await confirm(page, installation, "FX rates", "save", "Save")
+    await confirm(page, owner, installation, "FX rates", "save", "Save")
     expect(mutations).toHaveLength(before + 1)
     await go(page, owner, installation, screens[2])
-    await surface.getByLabel("Plan version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await selectVersion(page, owner, installation, "CAP22", surface.getByLabel("Plan version", { exact: true }), waveThreeData.planner.version + " · " + installation.year)
     await ready(page, "FX rates")
     await expect(euro.locator('[data-sf-rate-state="known"]')).toHaveText("1.09")
     await expect(euro.locator("time")).toHaveAttribute("datetime", observation)
@@ -369,8 +430,23 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await expect.poll(async () => (await primary.boundingBox())?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(200)
     // Scroll the real table to its existing actions without invoking a command.
     await primary.getByRole("button", { name: "Delete version", exact: true }).scrollIntoViewIfNeeded()
+    const actionContext = primary.locator(".sf-u46-action-context")
+    await expect(actionContext).toBeInViewport({ ratio: 1 })
+    await expect(actionContext.locator("bdi")).toHaveText(waveThreeData.planner.version)
+    await expect(actionContext.locator("span")).toHaveText(installation.year + " · Draft")
     await capture(page, info, "CAP23-dark-320-version-actions-test-data")
-    await primary.getByRole("button", { name: "Open record", exact: true }).click()
+    const versionRef = await primary.getAttribute("data-sf-row")
+    expect(versionRef).toBeTruthy()
+    const beforeDeleteReview = mutations.length
+    await primary.getByRole("button", { name: "Delete version", exact: true }).click()
+    await expect(review(page).locator(".sf-s03-head .sf-s03-scope")).toHaveText(waveThreeData.planner.version)
+    const originalSource = review(page).locator(".sf-s03-snapshot").first()
+    await originalSource.locator("summary").click()
+    await expect(originalSource.locator("code")).toHaveText(versionRef!)
+    await expect(review(page).getByRole("button", { name: "Delete version", exact: true })).toBeEnabled()
+    await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
+    expect(mutations).toHaveLength(beforeDeleteReview)
+    await versionRoute(page, owner, installation, () => primary.getByRole("button", { name: "Open record", exact: true }).click())
     await ready(page, "Versions")
     const detail = surface.locator("[data-sf-record-detail]")
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(waveThreeData.planner.version)
@@ -389,16 +465,16 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
     await detail.getByRole("button", { name: "Save version", exact: true }).click()
-    await confirm(page, installation, "Versions", "save", "Save version")
+    await confirm(page, owner, installation, "Versions", "save", "Save version")
     await ready(page, "Versions")
     await expect(detail.getByRole("heading", { name: revised, exact: true })).toBeVisible()
     expect(mutations).toHaveLength(before + 1)
-    await detail.getByRole("button", { name: "Back", exact: true }).click()
+    await versionRoute(page, owner, installation, () => detail.getByRole("button", { name: "Back", exact: true }).click())
     await expect(list).toContainText(revised)
     // Fresh native entry proves the rename independently of the local version draft.
     await go(page, owner, installation, screens[3])
     await expect(list).toContainText(revised)
-    await page.getByRole("button", { name: "Create version", exact: true }).click()
+    await versionRoute(page, owner, installation, () => page.getByRole("button", { name: "Create version", exact: true }).click())
     await ready(page, "Versions")
     const create = surface.locator(".sf-u46-new")
     await create.getByLabel("Name", { exact: true }).fill(copyName)
@@ -411,16 +487,16 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await expect(create.getByLabel("Name", { exact: true })).toHaveValue(copyName)
     expect(mutations).toHaveLength(before + 1)
     await source.getByRole("button", { name: "Copy version", exact: true }).click()
-    await confirm(page, installation, "Versions", "copy", "Copy version")
+    await confirm(page, owner, installation, "Versions", "copy", "Copy version")
     await ready(page, "Versions")
     // The mounted producer confirms the command without returning a record ID.
     // Open the copy from the newly authorized list, as the native page requires.
     const copied = list.locator("tr[data-sf-row]").filter({ has: page.getByText(copyName, { exact: true }) })
     await expect(copied).toHaveCount(1)
-    await copied.getByRole("button", { name: "Open record", exact: true }).click()
+    await versionRoute(page, owner, installation, () => copied.getByRole("button", { name: "Open record", exact: true }).click())
     await ready(page, "Versions")
     await expect(detail.getByRole("heading", { name: copyName, exact: true })).toBeVisible()
-    await detail.getByRole("button", { name: "Back", exact: true }).click()
+    await versionRoute(page, owner, installation, () => detail.getByRole("button", { name: "Back", exact: true }).click())
     await expect(list).toContainText(copyName)
     expect(mutations).toHaveLength(before + 2)
     await capture(page, info, "CAP23-dark-desktop-confirmed-copy-test-data")
@@ -430,8 +506,8 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     const before = mutations.length
     await go(page, owner, installation, screens[4])
     const comparison = page.locator('[data-sf-surface="CAP23-compare"]')
-    await comparison.getByLabel("Compare budget", { exact: true }).selectOption({ label: copyName })
-    await comparison.getByLabel("Source version", { exact: true }).selectOption({ label: revised })
+    await compareVersion(page, owner, installation, "Compare budget", copyName)
+    await compareVersion(page, owner, installation, "Source version", revised)
     await expect(comparison.locator(".sf-u46-monthly tbody tr")).toHaveCount(12)
     await expect(comparison.locator(".sf-u46-compare-content")).toContainText(revised)
     await expect(comparison.locator(".sf-u46-compare-content")).toContainText(copyName)
@@ -445,6 +521,20 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await expect.poll(() => monthly.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
     await reflow(page)
     await capture(page, info, "CAP23-dark-320-keyboard-monthly-scroll-test-data")
+    const monthHeader = monthly.getByRole("columnheader", { name: "Month", exact: true })
+    const monthlyHeading = comparison.locator(".sf-u46-compare-panel").filter({ has: page.locator(".sf-u46-monthly") }).getByRole("heading", { name: "Budget", exact: true })
+    const headingLeft = (await monthlyHeading.boundingBox())!.x
+    for (const endpoint of ["start", "end"] as const) {
+      await monthly.evaluate((element, end) => { element.scrollLeft = end ? element.scrollWidth : 0 }, endpoint === "end")
+      await expect.poll(() => monthly.evaluate((element, end) =>
+        Math.abs(element.scrollLeft - (end ? element.scrollWidth - element.clientWidth : 0)), endpoint === "end")).toBeLessThanOrEqual(1)
+      const scrollerBox = (await monthly.boundingBox())!
+      const headerBox = (await monthHeader.boundingBox())!
+      expect(headerBox.x).toBeGreaterThanOrEqual(scrollerBox.x - 1)
+      expect(headerBox.x + headerBox.width).toBeLessThanOrEqual(scrollerBox.x + scrollerBox.width + 1)
+      expect(Math.abs((await monthlyHeading.boundingBox())!.x - headingLeft)).toBeLessThanOrEqual(1)
+    }
+    await capture(page, info, "CAP23-dark-320-monthly-scroll-end-identity-test-data")
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
   })

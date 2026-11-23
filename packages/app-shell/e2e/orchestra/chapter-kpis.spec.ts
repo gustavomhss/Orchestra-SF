@@ -440,6 +440,7 @@ for (const view of [
     await expect(value(page, "tokens")).toHaveText(view.unavailable)
     await expect(value(page, "commits")).toHaveText(view.noRepository)
     await expect(value(page, "pullRequests")).toHaveText(view.notConnected)
+    await expect(home(page).locator('.home-kpi[data-state]:not([data-state="loading"]) .home-bars')).toHaveCount(0)
     await page.evaluate(async () => { await document.fonts.ready })
     const measurements = await home(page).locator(".home-kpi-value").evaluateAll((items) => items.map((element) => ({
       tile: element.closest("[data-tile]")?.getAttribute("data-tile"),
@@ -447,6 +448,7 @@ for (const view of [
       state: element.getAttribute("data-state"),
       clientWidth: element.clientWidth,
       scrollWidth: element.scrollWidth,
+      tileHeight: element.closest(".home-kpi")?.getBoundingClientRect().height,
     })))
     await info.attach("home-narrow-state-measurements", {
       body: JSON.stringify({ view, measurements }, null, 2),

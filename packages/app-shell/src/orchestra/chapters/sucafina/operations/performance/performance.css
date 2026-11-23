@@ -100,3 +100,13 @@
   .sf-u31-quarters > div { border-inline-start: 0; padding-inline-start: 0; }
   .sf-u31-editor > .sf-u31-actions button,.sf-u31-sub-detail > .sf-u31-section-head .sf-u31-actions button { flex: 1 1 100%; }
 }
+
+.sf-u31-weight-context { display: grid; gap: 16px; min-inline-size: 0; padding: 16px; border: 1px solid var(--orchestra-warm); border-radius: var(--orchestra-radius-md); background: var(--mx-soft); }
+.sf-u31-weight-context .sf-u31-confirm { margin: 0; }
+.sf-u31-weight-record { min-inline-size: 0; margin-block: 16px; }
+.sf-u31-weight-record :is(h4,h5) { margin: 0 0 8px; font-size: var(--orchestra-font-size-md); overflow-wrap: anywhere; }
+.sf-u31-weight-record > .sf-u31-weight-record { border-inline-start: 1px solid var(--mx-line); padding-inline-start: 16px; }
+.sf-u31-weight-context .sf-s03-field-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@container sf-frame (max-width: 480px) {
+  .sf-u31-weight-context .sf-s03-field-list { grid-template-columns: minmax(0,1fr); }
+}

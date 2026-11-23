@@ -71,6 +71,11 @@ function comparable(value: SfDisplayValue): boolean {
   return true
 }
 
+/** Keep producer reason order and identity; parameter order is not a new reason. */
+export function sfReviewReasons(reasons: readonly SfMessage[]): readonly SfMessage[] {
+  return reasons.filter((reason, index) => !reasons.slice(0, index).some((prior) => sameMessage(prior, reason)))
+}
+
 function sameMessage(a: SfMessage, b: SfMessage): boolean {
   if (a.key !== b.key) return false
   const keys = Object.keys(a.params ?? {})

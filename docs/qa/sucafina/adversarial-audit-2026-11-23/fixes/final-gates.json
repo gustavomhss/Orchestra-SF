@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "source": "d522399b7542bb3fc2a12c516213be7f76098678",
+  "snapshot": "240e9eb4fe9a5e4ae13d70848c5b3be9079d3740",
+  "run": 45261780999,
+  "job": 137998141479,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261780999",
+  "runner": "Existing Linux test-ci, strict Omni",
+  "checks": {
+    "appShellTypecheck": "passed",
+    "e2eTypecheck": "passed",
+    "semantic": {
+      "passed": 28,
+      "failed": 0,
+      "assertions": 122
+    },
+    "browserDom": {
+      "passed": 132,
+      "failed": 0,
+      "assertions": 1822
+    },
+    "wrapper": {
+      "passed": 6,
+      "failed": 0
+    },
+    "palettes": {
+      "files": 7,
+      "byteChanges": []
+    },
+    "omni": {
+      "declared": 6,
+      "spawns": 8,
+      "delegated": 0,
+      "positiveControl": "passed"
+    }
+  },
+  "guard": {
+    "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 189,
+    "findings": [
+      {
+        "rule": "test-assertions-removed",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+        "line": null,
+        "message": "This change removes assertions from a test file. Check that the behavior they pinned is really gone.",
+        "excerpt": null,
+        "match": null
+      },
+      {
+        "rule": "test-assertions-removed",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": null,
+        "message": "This change removes assertions from a test file. Check that the behavior they pinned is really gone.",
+        "excerpt": null,
+        "match": null
+      }
+    ],
+    "errors": [],
+    "approved": [],
+    "touchesGuards": false
+  },
+  "warningReview": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+      "disposition": "Four original journeys moved into one shared implementation with 1+3 named registrations. All 126 original assertion lines and step titles retained; 135 sites follow explicit quotation checks. Requests5 and unchanged Behavior4 cases qualify their scopes.",
+      "reference": "behavior-evidence.json"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+      "disposition": "Original workflow assertions moved into mapped source cases: 137→163 sites. The reading split preserves 67 statements across two named specs and the original 660/720-second limits.",
+      "references": [
+        "reading-test-map.json",
+        "reading-evidence.json"
+      ]
+    }
+  ],
+  "diagnosticRedaction": {
+    "cases": 2,
+    "assertions": 21,
+    "meaning": "Original failure stays rejected; headers, URL credentials/query, raw cause and raw stack do not reach reporter. Useful method/path/error type/status assertions remain.",
+    "transportChanged": false
+  },
+  "scope": {
+    "productRoots": [
+      "packages/app-shell"
+    ],
+    "documentationRoot": "docs/qa/sucafina/adversarial-audit-2026-11-23",
+    "backendChanged": false,
+    "workflowChanged": false,
+    "ciRequestIntegrated": false,
+    "wrapperIntegrated": false
+  },
+  "limits": [
+    "Passing runs qualify their assertions and source, not universal UI perfection or zero flakiness.",
+    "Snapshot-only request and wrapper do not enter the product branch. Final documentation commits may follow without changing this tested source tree."
+  ]
+}

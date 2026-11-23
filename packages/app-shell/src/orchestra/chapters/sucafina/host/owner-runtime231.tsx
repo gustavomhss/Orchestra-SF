@@ -9,7 +9,7 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, createSignal, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, createSignal, onCleanup, on, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { DropdownMenu } from "@orchestra/ui/dropdown-menu"
@@ -33,10 +33,12 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
-import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeChapter } from "./native-chapter-entry"
+import { bindSfNativeChapterNavigation, confirmSfOwnerExit, sfNativeOwnerChapterRequest, sfReadyOwnerSelection, transitionSfNativeChapter } from "./native-chapter-entry"
 import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
 import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfSourceNavigation } from "./source-navigation"
+import { SfPageFrame, type SfCopyKey } from "../shared/frame"
+import { SfStatePanel } from "../shared/states"
 import { sfUnavailableScheduleOwner, SfUnavailableScheduleView } from "./schedule-unavailable"
 import { sfUnavailableRoutineCatalogOwner, SfUnavailableRoutineCatalogView } from "./routine-catalog-unavailable"
 
@@ -272,10 +274,54 @@ function MountedSurface(props: Readonly<{
   const unavailableSchedule = () => props.gate() && props.view().status === "denied"
     ? sfUnavailableScheduleOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
     : undefined
+  const [homeReturn, setHomeReturn] = createStore({ pending: false, failed: false })
+  let homeRequest: AbortController | undefined
+  const resetHomeReturn = () => {
+    homeRequest?.abort()
+    homeRequest = undefined
+    setHomeReturn({ pending: false, failed: false })
+  }
+  createEffect(on(() => [handle.generation(), props.view().status, location.pathname, location.search],
+    resetHomeReturn))
+  onCleanup(resetHomeReturn)
+  const homeTarget = () => {
+    const state = handle.state()
+    if (state.status !== "ready" || props.view().status === "resolving" ||
+      !state.context.availability.some((resource) => resource.operations.some((operation) =>
+        operation.operationId === "projection.home" && operation.state === "ready" && operation.operational))) return
+    const selection = sfReadyOwnerSelection(state)
+    const href = selection && sfNativeOwnerChapterRequest("sf-home", selection)
+    return href ? { href, ownerKey: state.ownerKey } : undefined
+  }
+  const returnHome = async () => {
+    const target = homeTarget()
+    if (!target || homeReturn.pending) return
+    const request = new AbortController()
+    homeRequest = request
+    setHomeReturn({ pending: true, failed: false })
+    try {
+      const result = await props.navigation.requestNativeTransition(target.href, "sidebar", {
+        expectedOwnerKey: target.ownerKey, signal: request.signal,
+      })
+      if (homeRequest !== request || request.signal.aborted) return
+      const failed = result.status === "denied" || result.status === "unavailable" || result.status === "invalid-link"
+      if (failed) console.error("Sucafina return to Today refused", result.status)
+      setHomeReturn("failed", failed)
+    } catch {
+      if (homeRequest !== request || request.signal.aborted) return
+      console.error("Sucafina return to Today failed")
+      setHomeReturn("failed", true)
+    } finally {
+      if (homeRequest === request) {
+        homeRequest = undefined
+        setHomeReturn("pending", false)
+      }
+    }
+  }
   const polishedSurface = () => {
     const surface = current()?.surfaceId
     return !!unavailableRoutineCatalog() || !!unavailableSchedule() || surface !== undefined &&
-      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|3[0-9]|4[01]|5[7-9]|6[0-9]|70)$/.test(surface))
+      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|[3-6][0-9]|70)$/.test(surface))
   }
   return (
     <>
@@ -316,7 +362,19 @@ function MountedSurface(props: Readonly<{
       <SfSourceNavigation route={current} navigation={props.navigation} />
       <Switch fallback={
         <Show when={unavailableRoutineCatalog()} fallback={
-          <Show when={unavailableSchedule()} fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+          <Show when={unavailableSchedule()} fallback={<div data-sf-f01={props.view().status === "resolving" ? "loading" : "not-admitted"}>
+            <SfPageFrame titleKey={(props.view().status === "resolving" ? "sf.common.loading" : "sf.common.unavailable") as SfCopyKey}
+              context={[]} tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
+              <SfStatePanel state={props.view().status === "resolving" ? "loading" : "unavailable"}
+                messageKey={(props.view().status === "resolving" ? "sf.common.loading" :
+                  homeReturn.failed ? "sf.common.returnHomeFailed" : "sf.common.routeUnavailable") as SfCopyKey}
+                onRetryRead={() => { void handle.reload() }} />
+              <Show when={homeTarget()}>
+                <button class="mx-btn" type="button" disabled={homeReturn.pending} aria-busy={homeReturn.pending}
+                  onClick={() => { void returnHome() }}>{language.t("sf.common.returnHome")}</button>
+              </Show>
+            </SfPageFrame>
+          </div>}>
             {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}
           </Show>
         }>

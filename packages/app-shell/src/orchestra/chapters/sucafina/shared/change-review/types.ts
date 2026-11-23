@@ -1,3 +1,4 @@
+import type { JSX } from "solid-js"
 import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import type {
@@ -14,6 +15,7 @@ export type SfReviewField = Readonly<{
 
 export type SfReviewSnapshot =
   | Readonly<{ kind: "persisted"; ref: SfRef; version: SfVersion; fields: readonly SfReviewField[] }>
+  | Readonly<{ kind: "source"; version: SfVersion; scope: SfText; fields: readonly SfReviewField[] }>
   | Readonly<{ kind: "draft"; intentRef: SfIntentRef; sourceRef: SfRef | null; sourceVersion: SfVersion | null; fields: readonly SfReviewField[] }>
   | Readonly<{ kind: "not-provided"; reason: SfMessage }>
 
@@ -60,6 +62,7 @@ export type SfChangeReviewProps = Readonly<{
   confirmation: SfReviewConfirmation
   state: SfUiState
   busy?: boolean
+  confirmationContext?: JSX.Element
   onConfirm: (review: Extract<SfReviewConfirmation, { kind: "admitted" }>) => void
   onRevise: () => void
   onCancel: () => void
