@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Inspect the original Import lifecycle and Preview CPU diagnostic receipts. Preserve original product authority, callbacks, SQL, guards and deadlines. Any product correction requires all six complete original campaigns before acceptance or merge."
+    "nextAction": "Inspect the original Importfault diagnostic receipt and complete the read-only optimization proof review. Preserve original authority, callbacks, SQL, snapshot semantics and deadlines. Any product correction requires all six complete original campaigns before acceptance or merge."
   },
-  "updatedAt": "2026-11-23T18:21:31Z",
+  "updatedAt": "2026-11-23T18:57:10Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3449,6 +3449,45 @@
       "import2ChronologyCorrected": true,
       "import2SpecPathCorrected": true,
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T18:57:10Z",
+      "status": "DIAGNOSTIC_RESULTS_AND_ORIGINAL_GATE_RECIPES_PERSISTED_IMPORTFAULT_IN_PROGRESS",
+      "by": "/root/audit_checkpoint",
+      "importLifecycle": {
+        "overlay": "cd69b406c3762d4c3081d29199e8672576864ae3",
+        "snapshot": "c82888d03f5160e9469cd11de3931eac8c1fb5a6",
+        "run": 45237239917,
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
+        "failure": "Original independent GET returned403 before UI56; cause unresolved."
+      },
+      "previewCpu": {
+        "overlay": "c9e38dc3058622f410e1fbe4ca560b1776984f79",
+        "snapshot": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
+        "run": 45237328267,
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
+        "profileLines": 61,
+        "profileSamples": 4422,
+        "visualInspectionClaimed": false
+      },
+      "importFault": {
+        "overlay": "b7d1ab39996c290983b4453d9840197b17ed408b",
+        "snapshot": "281b18aad374a48cab3a16233fb1bdaae628eb55",
+        "run": 45243361002,
+        "testJob": 137933601636,
+        "status": "IN_PROGRESS",
+        "staticReview": "PASS_DIAGNOSTIC_ONLY"
+      },
+      "exactOriginalC3SnapshotRecipesPersisted": 6,
+      "presenceProbeSubstitutionApproved": false,
+      "durableRecovery": {
+        "priorRecordsCommit": "25d7adfe2f35144ebd280e3e6e950e5d92462337",
+        "volatileStateLossReportedAt": "2026-11-23T18:46:35Z",
+        "remoteBlobsAndRefsPreserved": true
+      },
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "devUnchanged": "e115b667d845822a1df5f523bbfd828ab57ca978",
       "qualification": false
     }
   ],
@@ -6356,7 +6395,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T18:21:31Z",
+    "observedAt": "2026-11-23T18:57:10Z",
     "qualification": false,
     "experiments": [
       {
@@ -8604,16 +8643,16 @@
         "snapshotTree": "3dcff4cb0c413e03d8cd439cb5dd6a2f13f6a8ed",
         "run": 45237239917,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45237239917",
-        "status": "IN_PROGRESS",
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
         "testJob": 137912093763,
         "workflowObservation": {
-          "observedAt": "2026-11-23T18:21:31Z",
+          "observedAt": "2026-11-23T18:57:10Z",
           "by": "/root/audit_checkpoint",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "headSha": "c82888d03f5160e9469cd11de3931eac8c1fb5a6",
           "createdAt": "2026-11-23T18:19:58Z",
-          "updatedAt": "2026-11-23T18:20:01Z"
+          "updatedAt": "2026-11-23T18:29:14Z"
         },
         "originalRequest": {
           "path": ".ci-run.json",
@@ -8664,7 +8703,167 @@
           "readbackVerifiedCommitAndSnapshotPaths": true
         },
         "purpose": "Distinguish original import fence/scope changes and bounded-body cancellation from assertion rejection and teardown; do not infer cause from afterEach chronology alone.",
-        "interpretationLimit": "A spec catch marker timestamps the original rejected await as observed by the spec; it is not an instrument inside Playwright's deadline implementation. This snapshot is diagnostic and cannot qualify the product."
+        "interpretationLimit": "A spec catch marker timestamps the original rejected await as observed by the spec; it is not an instrument inside Playwright's deadline implementation. This snapshot is diagnostic and cannot qualify the product.",
+        "result": {
+          "status": "FAILED_ORIGINAL_INDEPENDENT_IMPORT_REFERENCE_403_BEFORE_UI56",
+          "qualification": false,
+          "causeEstablished": false,
+          "jobs": [
+            {
+              "id": 137912093763,
+              "name": "test (ubuntu-24.04)",
+              "status": "completed",
+              "conclusion": "failure",
+              "startedAt": "2026-11-23T18:20:01Z",
+              "completedAt": "2026-11-23T18:29:03Z"
+            },
+            {
+              "id": 137917797387,
+              "name": "cleanup",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-11-23T18:29:05Z",
+              "completedAt": "2026-11-23T18:29:13Z"
+            }
+          ],
+          "browserTests": {
+            "passed": 1,
+            "failed": 1,
+            "reportedDuration": "7.9m",
+            "evidenceAttribution": "Full log inspected by /root and /root/import_lifecycle; job receipts read directly by /root/audit_checkpoint."
+          },
+          "failure": {
+            "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
+            "originalBlob": "c407b9b67c7f3142935d10ba524d36399f618250",
+            "line": 107,
+            "stage": "independent-reference-read",
+            "expectedHttpStatus": 200,
+            "actualHttpStatus": 403,
+            "producerStatus": "denied",
+            "at": "2026-11-23T18:24:59.650Z",
+            "elapsedMs": 11325,
+            "request": {
+              "originalMethod": "GET",
+              "actor": "Playwright BrowserContext APIRequestContext",
+              "maxRetries": 0,
+              "timeoutMs": 40000
+            },
+            "failureHookAt": "2026-11-23T18:24:59.936Z",
+            "nativeViewAt": "2026-11-23T18:24:59.962Z",
+            "pageCloseAt": "2026-11-23T18:25:00.716Z",
+            "sourceUnchanged": true
+          },
+          "precedingPreview": {
+            "previewActionFenceAt": [
+              "2026-11-23T18:24:26.671Z",
+              "2026-11-23T18:24:26.672Z"
+            ],
+            "admissionOkAt": "2026-11-23T18:24:33.554Z",
+            "at": "2026-11-23T18:24:48.242Z",
+            "httpStatus": 200,
+            "producerStatus": "ok",
+            "manifestState": "preview",
+            "domainApplied": false,
+            "nativeFinishedAt": "2026-11-23T18:24:48.489Z",
+            "deliveredAt": "2026-11-23T18:24:48.493Z"
+          },
+          "lifecycle": {
+            "events": 18,
+            "chapters": [
+              "UI55"
+            ],
+            "ui56Reached": false,
+            "portugueseImportReached": false,
+            "fenceAfterPreviewEvents": 0,
+            "browserRequestFailedEvents": 0,
+            "refreshClickMarkers": 0,
+            "headingExpectationMarkers": 0,
+            "loadReferenceMarkers": 0,
+            "readerErrorMarkers": 0,
+            "readerCancelMarkers": 0,
+            "limit": "The independent Playwright request occurs before UI56 and does not use browser readJsonBounded. This run does not establish the earlier Import2 UI56 cause."
+          },
+          "log": {
+            "bytes": 3367615,
+            "characters": 3362714,
+            "lines": 1602,
+            "sha256": "a4f2247b8572946161be8e2ee571599405f24ce6f730310df3d4eac5715122ed",
+            "encoding": "UTF-8 including BOM",
+            "reportedBy": "/root/import_lifecycle",
+            "characterCountConfirmedBy": "/root",
+            "ownFullLogInspection": false
+          },
+          "artifact": {
+            "id": 14850940681,
+            "name": "playwright-ubuntu-24.04-1",
+            "bytes": 36627640,
+            "digest": "b99b13a4d28dea34ad4753c96f35416d8b565a1b6d3e7bec82f701639dacbcb9",
+            "expiresAt": "2026-11-30T18:28:57Z",
+            "reportedBy": "/root/import_lifecycle",
+            "archiveOnlyImagesOrJsonInspectedByAudit": false
+          },
+          "visualEvidence": {
+            "format": "SF_DESIGN_PREVIEW JPEG chunks",
+            "manifestReportedBy": "/root/import_lifecycle",
+            "chunkCountReportedByRoot": 150,
+            "completeJPEGCount": 31,
+            "captureGroups": {
+              "UI55SetupAndOptions": 6,
+              "failedNativeWaveThree": 1,
+              "UI51ToUI53IncludingPortuguese": 24
+            },
+            "visuallyReviewedUniqueNames": [
+              "FAILED-native-wave-three-test-data",
+              "UI55-dark-390-selected-file-options"
+            ],
+            "visuallyReviewedUniqueCount": 2,
+            "allFramesVisuallyReviewed": false,
+            "unreviewedUniqueCount": 29,
+            "reviews": [
+              {
+                "by": "/root",
+                "names": [
+                  "FAILED-native-wave-three-test-data"
+                ],
+                "count": 1,
+                "unreviewedByThisAgent": 30,
+                "completePartsOfViewedFailure": 6,
+                "findings": [
+                  "UI55 remains at Select file, reading the original preview/source details, with disabled controls.",
+                  "No additional conclusive visual defect established in this interrupted state."
+                ]
+              },
+              {
+                "by": "/root/import_lifecycle",
+                "names": [
+                  "FAILED-native-wave-three-test-data",
+                  "UI55-dark-390-selected-file-options"
+                ],
+                "count": 2,
+                "unreviewedByThisAgent": 29,
+                "findings": [
+                  "File and destination retained while UI55 is reading-source.",
+                  "Captured mobile options legible."
+                ]
+              }
+            ],
+            "limits": [
+              "No visual inspection attributed to audit_checkpoint.",
+              "29 captures have no visual-review claim from these reviewers.",
+              "No UI56 or Portuguese import state was reached; no archive-only PNG/JSON was inspected."
+            ]
+          },
+          "cleanup": {
+            "ciBranch": "ci-run-linux-sf613-importlife",
+            "ciBranchReported404By": "/root/import_lifecycle",
+            "overlayBranch": "sf613-importlife",
+            "overlayCommit": "cd69b406c3762d4c3081d29199e8672576864ae3",
+            "overlayIntactReportedBy": "/root/import_lifecycle"
+          },
+          "interpretation": "Actual denied response from the original independent GET after successful preview; not expiry of its original40s request deadline. Authority/queue cause unresolved; no scheduling, SQL, deadline or producer-branch correction justified yet."
+        },
+        "resultRecordedAt": "2026-11-23T18:57:10Z",
+        "cleanupJob": 137917797387
       },
       {
         "name": "ISOLATED_PORTFOLIO_PREVIEW_JSC_SAMPLING",
@@ -8678,7 +8877,7 @@
         "snapshot": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
         "snapshotTree": "5c7cdfd41ca091aad913c7a2f57a00a0656a0eee",
         "run": 45237328267,
-        "status": "IN_PROGRESS",
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
         "launchReportedBy": "/root",
         "launchReportAt": "2026-11-23T18:21:31Z",
         "originalRequest": {
@@ -8757,14 +8956,297 @@
         "interpretationLimit": "Whole-isolate observed stacks, not CPU or wall-time fractions. Native report allocation and effective native-stop time are not bounded or inferred. Source URLs and function names are filtered; no original request/assertion/deadline was replaced.",
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45237328267",
         "workflowObservation": {
-          "observedAt": "2026-11-23T18:21:31Z",
+          "observedAt": "2026-11-23T18:57:10Z",
+          "by": "/root/audit_checkpoint",
+          "status": "completed",
+          "conclusion": "failure",
+          "headSha": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
+          "createdAt": "2026-11-23T18:20:26Z",
+          "updatedAt": "2026-11-23T18:33:27Z"
+        },
+        "result": {
+          "status": "FAILED_ORIGINAL_PREVIEW_DEADLINE_BI_PASSED_PROFILE_DELIVERED",
+          "qualification": false,
+          "jobs": [
+            {
+              "id": 137912392307,
+              "name": "test (ubuntu-24.04)",
+              "status": "completed",
+              "conclusion": "failure",
+              "startedAt": "2026-11-23T18:20:30Z",
+              "completedAt": "2026-11-23T18:33:14Z"
+            },
+            {
+              "id": 137920404344,
+              "name": "cleanup",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-11-23T18:33:17Z",
+              "completedAt": "2026-11-23T18:33:27Z"
+            }
+          ],
+          "browserTests": {
+            "passed": 1,
+            "failed": "Original Portfolio Preview60000ms",
+            "passedJourney": "BI"
+          },
+          "profile": {
+            "reportedBy": "/root/preview_cpu",
+            "prefix": "SF_PORTFOLIO_JSC",
+            "schema": "sf-portfolio-jsc-v1",
+            "complete": true,
+            "lines": 61,
+            "bytesIncludingPrefixesAndNewlines": 49536,
+            "maximumLineBytes": 1703,
+            "parseErrors": 0,
+            "dropped": 0,
+            "outputErrors": 0,
+            "startedAt": "2026-11-23T18:28:44.128Z",
+            "requestedWindowMs": 45000,
+            "signalReason": "diagnostic-window-pulse",
+            "signalMs": 45063,
+            "deliveredMs": 45177,
+            "signalToDeliveryMs": 114,
+            "summaryCompleteMs": 45245,
+            "nativeReportAllocationBounded": false,
+            "effectiveNativeStopMs": null,
+            "intervalRequestedUs": 10000,
+            "actualTraces": 4422,
+            "actualSources": 63,
+            "traceTruncated": 0,
+            "sourceTruncated": 0,
+            "frameTruncatedSamples": 0,
+            "sourceUnknown": 3,
+            "mapOverflow": 0,
+            "runtime": {
+              "version": "1.3.14",
+              "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+            },
+            "self": {
+              "retainedSites": 298,
+              "exportedSites": 60,
+              "exportedSamples": 4092,
+              "samplesBeyondTop60": 330,
+              "unknownSamples": 4024,
+              "unknownLimit": "Includes native/builtin frames without sourceURL; validated native names and nearest repository attribution remain available."
+            },
+            "inclusive": {
+              "retainedSites": 1066,
+              "exportedSites": 60,
+              "attributionsBeyondTop60": 9825
+            },
+            "nativeNearest": {
+              "retainedSites": 204,
+              "exportedSites": 60,
+              "exportedSamples": 3195,
+              "samplesBeyondTop60": 259,
+              "nativeLeafSamples": 3477,
+              "unknownSamples": 23,
+              "topReported": [
+                {
+                  "leaf": "lstatSync",
+                  "nearest": "requireDatabaseFile",
+                  "samples": 463
+                },
+                {
+                  "leaf": "stringify",
+                  "nearest": "digestSfValue",
+                  "samples": 421
+                },
+                {
+                  "leaf": "parse",
+                  "nearest": "materializeSnapshot",
+                  "samples": 387
+                },
+                {
+                  "leaf": "structuredClone",
+                  "nearest": "modules/sucafina/Sucafinav1/product/integration/state-provider.ts:424",
+                  "samples": 237
+                },
+                {
+                  "leaf": "sort",
+                  "nearest": "canonical",
+                  "samples": 177
+                },
+                {
+                  "leaf": "structuredClone",
+                  "nearest": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts:287",
+                  "samples": 112
+                },
+                {
+                  "leaf": "update",
+                  "nearest": "digestSfValue",
+                  "samples": 109
+                },
+                {
+                  "leaf": "structuredClone",
+                  "nearest": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts:97",
+                  "samples": 107
+                }
+              ]
+            },
+            "critical": {
+              "retainedPaths": 1335,
+              "exportedPaths": 20,
+              "exportedSamples": 1237,
+              "samplesBeyondTop20": 3110,
+              "depthTruncatedSamples": 510,
+              "unknownSamples": 75
+            },
+            "interpretation": "Whole-isolate sampled stacks during the first original Portfolio evaluation, not CPU or wall-time fractions. Inclusive sites overlap. Native stop and report allocation are not inferred. No per-reader attribution identifies how much of state-provider:424 belongs to preferences."
+          },
+          "fullReceiptPending": false,
+          "log": {
+            "characters": 4814409,
+            "characterCountReportedBy": "/root/preview_cpu",
+            "sha256": null,
+            "byteCount": null,
+            "ownFullLogInspection": false
+          },
+          "evidenceLimits": [
+            "Full profile statistics and log character count reported by /root/preview_cpu; job results independently confirmed through GitHub jobs API by /root/audit_checkpoint.",
+            "Complete log byte count/hash and a visual review receipt for this run were not supplied; this checkpoint claims no pixel inspection of this run.",
+            "The preferences-only projection proposal lacks a private proof preserving full-state clone exceptions/hooks and was not approved or applied.",
+            "All diagnostic code remains excluded from product qualification."
+          ]
+        },
+        "resultRecordedAt": "2026-11-23T18:57:10Z",
+        "testJob": 137912392307,
+        "cleanupJob": 137920404344
+      },
+      {
+        "name": "ISOLATED_IMPORT_REFERENCE_AUTHORITY_AND_QUEUE_FAULT",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "baseSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "diagnosticOnly": true,
+        "reportedAt": "2026-11-23T18:57:10Z",
+        "branch": "ci-run-linux-sf613-importfault",
+        "snapshot": "281b18aad374a48cab3a16233fb1bdaae628eb55",
+        "snapshotTree": "1d1ace0639d3452ca7b3c7b70c967c01491325e6",
+        "run": 45243361002,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45243361002",
+        "status": "IN_PROGRESS",
+        "testJob": 137933601636,
+        "originalRequest": {
+          "path": ".ci-run.json",
+          "blob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+          "campaign": "collaboration",
+          "testCount": 2
+        },
+        "sourceOverlay": {
+          "branch": "sf613-importfault",
+          "commit": "b7d1ab39996c290983b4453d9840197b17ed408b",
+          "tree": "b6f0c999491d2fc4590f112a7a5d42f35891a731",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "paths": [
+            {
+              "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+              "blob": "40efbaa055cca1f4bd9aedb93639c26d90f3abbf"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "blob": "cd7263d802fd26e559749c9c2d9acb53aa6e3482"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/import-fault-profile.ts",
+              "blob": "c7d34984d40299730a4c22724b388ca3d2173338"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+              "blob": "597ec4b6446395981a2c3ee206eb95ba90d8af9c"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+              "blob": "38bfa60b41a6e19a013be9cc3091525502c3acd0"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+              "blob": "9ca65dc2829ddfbca43afeed921448715c090727"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+              "blob": "fe5914829532c7162dcff8897d07c56aed3eaac1"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+              "blob": "af9e18147095b489169435dba8b20cc0cb695f53"
+            },
+            {
+              "path": "packages/client/src/sucafina/transport.ts",
+              "blob": "04123dd4c9e5da2c445494dd8fd86fa9eb84fb8d"
+            }
+          ]
+        },
+        "workflowObservation": {
+          "observedAt": "2026-11-23T18:57:10Z",
           "by": "/root/audit_checkpoint",
           "status": "in_progress",
           "conclusion": null,
-          "headSha": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
-          "createdAt": "2026-11-23T18:20:26Z",
-          "updatedAt": "2026-11-23T18:20:30Z"
-        }
+          "headSha": "281b18aad374a48cab3a16233fb1bdaae628eb55",
+          "createdAt": "2026-11-23T18:54:48Z",
+          "updatedAt": "2026-11-23T18:54:52Z"
+        },
+        "jobObservation": [
+          {
+            "id": 137933601636,
+            "name": "test (ubuntu-24.04)",
+            "status": "in_progress",
+            "conclusion": null,
+            "startedAt": "2026-11-23T18:54:51Z",
+            "completedAt": null
+          }
+        ],
+        "independentReview": {
+          "status": "PASS_STATIC_DIAGNOSTIC_ONLY",
+          "reviewedBy": "/root/audit_checkpoint",
+          "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "blobs": {
+            "helper": "c7d34984d40299730a4c22724b388ca3d2173338",
+            "localStore": "597ec4b6446395981a2c3ee206eb95ba90d8af9c",
+            "productAuthority": "cd7263d802fd26e559749c9c2d9acb53aa6e3482",
+            "nativeFixture": "40efbaa055cca1f4bd9aedb93639c26d90f3abbf",
+            "installation": "38bfa60b41a6e19a013be9cc3091525502c3acd0"
+          },
+          "allDiffsInspected": true,
+          "originalSqlLinesIdentical": true,
+          "originalAwaitCounts": {
+            "localStore": 21,
+            "authority": 26,
+            "nativeFixture": 13,
+            "installation": 16
+          },
+          "originalLocalThenCount": 7,
+          "originalDeadlineAndPendingPreserved": true,
+          "authorityCurrentAndAuthenticateCountsPreserved": true,
+          "logsOnlyTerminalGetReferenceDenial": true,
+          "additionalFrontendOverlayAlreadyReviewed": true,
+          "maximumEmittedLinesPerProcess": 64,
+          "maximumForwardedLinesPerProcess": 64,
+          "maximumAsciiLineBytesIncludingPrefixAndNewline": 1024,
+          "representativePacketBytes": 755,
+          "qualification": false,
+          "limitations": [
+            "IDs and active fields identify ephemeral operations of one LocalStore instance; they do not prove ownership of an external SQLite lock.",
+            "Queue/body/finalize/cleanup phase describes the observed operation stage; connection includes its acquisition/cleanup internals.",
+            "WeakMap preserves the first metadata record for the exact error object; a reused error object can refer to an earlier operation.",
+            "Emitter and forwarder have separate process-global64-line counters; the expected serial child/parent forwarding processes each cap their role.",
+            "Logger or validation failure and exhausted budgets may suppress diagnostics; absence is not proof that authorization did not fail.",
+            "No new CI/typecheck was executed by this reviewer; this snapshot cannot qualify product source.",
+            "A reason set by mark is the first negative observation, which may precede terminal refusal in a partial surface path. It is not proof of the exclusive cause. caught(error) overwrites it with classification of the original exception."
+          ],
+          "maximumLineCountersAreSeparate": true,
+          "limitsApplyToNewBackendFaultLoggerOnly": true,
+          "existingFrontendLifecycleLoggingPreserved": true
+        },
+        "parentReview": {
+          "by": "/root",
+          "status": "ACK_STATIC_DIAGNOSTIC_ONLY",
+          "reasonInterpretationCaveat": "The mark reason is the first negative observation and is not an exclusive causal conclusion; caught(error) replaces it with the original exception class."
+        },
+        "purpose": "Observe the original terminal GET import-reference denial and the phase of the exact original LocalStore exception, without changing scheduling, promises, SQL, request callbacks, authority branches or deadlines.",
+        "interpretationLimit": "Only the new backend fault logger is fault-only; the four existing frontend lifecycle diagnostics remain. Local operation IDs do not identify an external SQLite lock owner. Results are pending and cannot qualify C3."
       }
     ]
   },
@@ -10101,6 +10583,35 @@
         "projectionRuntimeCurrentMs": 133.053
       },
       "limit": "C17 profile attribution does not establish the distribution inside the separate Preview selection's49.133s."
+    },
+    "presenceProbeReview": {
+      "status": "NOT_APPROVED_AS_DROP_IN_PRESENCE_SUBSTITUTION",
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "reviewedBy": "/root/audit_checkpoint",
+      "readOnly": true,
+      "patchCreated": false,
+      "ciRun": false,
+      "paths": [
+        "apps/cli/src/sucafina-product/finance-pair-observation.ts:49",
+        "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts:52"
+      ],
+      "helper": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts:139",
+      "findings": [
+        "Identity registration proves LocalStore lexical presence and preserves original local requireScope; unknown/modified adapters require original fallback.",
+        "Helper bypasses source forwarder's readCheckScope, so a closed source frame with open LocalStore can invoke work that the original rejects first.",
+        "Presence omits full snapshot materialization/validation effects and exceptions under mutable invalid data or codec hooks.",
+        "Existing planner root use has additional preconditions and health checks; it does not prove equivalence at these early work-return branches.",
+        "Original Finance actual snapshot observations at86/105 must remain."
+      ],
+      "coverage": [
+        "Finance pair tests preserve root/work/scenario/rule counts and outputs, fallback and no replay.",
+        "CurrentChoice readonly tests cover method/owner drift, closed children, poison, abort and no replacement invocation.",
+        "LocalStore tests cover physical/lexical/data/copy/late-hook and full-validation failure behavior.",
+        "C17 original complete producer/reopen/cycle/revocation remains required.",
+        "Portfolio criteria invocation tests exist but are not selected explicitly by the recovered Technical/Release wrappers."
+      ],
+      "gap": "No examined original test isolates closed source frame with open LocalStore at these two probes or full-read exception versus skipped-copy work invocation.",
+      "persistedAt": "2026-11-23T18:57:10Z"
     }
   },
   "portfolioHistoryAbortInvestigation": {
@@ -10195,6 +10706,208 @@
       "nextEvidenceNeeded": "Original effect/cleanup sequence plus boolean changes to owner/route/refresh and history completion/live/signal, alongside original requestfailed errorText. No new request, cancellation or oracle alteration.",
       "productChangeJustified": false,
       "qualification": false
+    }
+  },
+  "originalC3SnapshotRecipes": {
+    "verifiedBy": "/root/audit_checkpoint",
+    "verifiedSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "verifiedSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+    "snapshots": [
+      {
+        "name": "T9",
+        "commit": "905d830e40a13b31d741ecea8028a2b819615c52",
+        "tree": "90d58aa815cd8c39939b6531d960b17ce5df6e5b",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "5837e17e056b2c8b9c9581e4410f2d8e17de8856",
+            "status": "added"
+          },
+          {
+            "path": "apps/cli/test/sucafina-finish-verification.test.ts",
+            "blob": "5919e881fee02b02097e1aa96a94607b38361988",
+            "status": "added"
+          }
+        ]
+      },
+      {
+        "name": "Release5",
+        "commit": "643d4480d79af5c6150b392925b260ebe5170222",
+        "tree": "e3166a8159fa88d9f1a645018d40ae2c97153a52",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "5837e17e056b2c8b9c9581e4410f2d8e17de8856",
+            "status": "added"
+          },
+          {
+            "path": "apps/cli/test/fixture/sucafina-release-runtime.test.ts",
+            "blob": "932229abb298f1fa6a96cfcc345480268f17f556",
+            "status": "added"
+          },
+          {
+            "path": "apps/cli/test/sucafina-finish-verification.test.ts",
+            "blob": "7632f3c0474e386166e7ca58f166360fd9f06d1f",
+            "status": "added"
+          },
+          {
+            "path": "package.json",
+            "blob": "16e720dee8dbc5d90f011970f821fa996307e3d0",
+            "status": "modified"
+          }
+        ]
+      },
+      {
+        "name": "A8",
+        "commit": "6579e98e972fa624749b58c5da25063731814a34",
+        "tree": "b341a4f13519572937915e3d97a9288d10536bac",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "a11922821a47594d76397582be38f9b7940177ca",
+            "status": "added"
+          }
+        ]
+      },
+      {
+        "name": "RA5",
+        "commit": "38ca1783d1a14c90d31fc1e9d4ff488a48b9a8e3",
+        "tree": "d06f3373b49e217e40d237ed81b8fa1fd5335f5d",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "a11922821a47594d76397582be38f9b7940177ca",
+            "status": "added"
+          },
+          {
+            "path": "package.json",
+            "blob": "16e720dee8dbc5d90f011970f821fa996307e3d0",
+            "status": "modified"
+          }
+        ]
+      },
+      {
+        "name": "C8",
+        "commit": "3e6163b8f8be024cc1eac033e80be9ef00304859",
+        "tree": "4b9cc2df0222f82d696175d14af0c7766bf20a20",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+            "status": "added"
+          }
+        ]
+      },
+      {
+        "name": "R8",
+        "commit": "5305558fe2848eb1066eb63e1e32e992485d34c9",
+        "tree": "933ab9fc60b04b07045c704c5d5522a2f43c5bdd",
+        "parents": [
+          "97c921ab0054bd5154227593adcbcca56b0538c3"
+        ],
+        "overlays": [
+          {
+            "path": ".ci-run.json",
+            "blob": "af8d722d60cd3eac4da7d7d39660b7722db057bf",
+            "status": "added"
+          }
+        ]
+      }
+    ],
+    "normalPackageBlob": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+    "releasePackageBlob": "16e720dee8dbc5d90f011970f821fa996307e3d0",
+    "normalPackageManager": "bun@1.3.14",
+    "releasePackageManager": "bun@1.4.1",
+    "releasePackageExactlyOneSubstitution": true,
+    "releaseRuntimeVersion": "1.4.1",
+    "releaseRuntimeRevision": "4661e494f052c83c80dade1318e5710238340be6",
+    "wrapperCounts": {
+      "technical": 15,
+      "release": 5
+    },
+    "reconstructionRequirements": [
+      "Make each snapshot a direct child of the corrected product source; rebind only source/sourceTree literals in the two wrappers, preserving all original gates, assertions, requests and deadlines.",
+      "Derive Release package.json from the corrected source by the single packageManager replacement; copying the old whole blob would be wrong if the source package changed.",
+      "Keep technical wrapper dev 346af44f4aac7bf1eb9821d4c5482bacf233a706 as the historical English-copy origin. The guard independently fetches current origin/dev and calculates its actual merge base.",
+      "Keep historicalCompositionBase 4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc as provenance.",
+      "Release wrapper expects exactly its four overlay paths and exact Bun version/revision.",
+      "Release fixture retains clone-tree inadmissibility on Bun 1.4.1 and native fallback byte/getter/call/exception/cycle/shared-buffer behavior.",
+      "No unexpected product, workflow, dependency or lockfile delta was found. Release runtime control is not tar/artifact qualification."
+    ],
+    "persistedAt": "2026-11-23T18:57:10Z",
+    "originalRequests": {
+      "technical": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-finish-verification.test.ts",
+          "--timeout",
+          "600000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "analytics": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-analytics.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "collaboration": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-collab.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "reviews": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-reviews.spec.ts"
+        ],
+        "config": "e2e/playwright.production.config.ts",
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
     }
   }
 }
