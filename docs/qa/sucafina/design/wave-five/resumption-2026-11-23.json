@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Resolve original C17, Portfolio Preview and import-reference failures and observe the BI06 Portuguese failure without changing oracles, deadlines or authority guards. C3 has five failed campaigns and one passed Reviews campaign; no global qualification, acceptance promotion or merge claim."
   },
-  "updatedAt": "2026-11-23T17:28:52Z",
+  "updatedAt": "2026-11-23T17:41:08Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3391,6 +3391,19 @@
       ],
       "diagnosticCommit": "ae2e83b602f2c40e2ba43c45ec44d3bd6b8afc27",
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:41:08Z",
+      "status": "COST_PROFILE_V2_BOTH_PASSED_IMPORT_DIAGNOSTIC_NEGATIVE_BI_PENDING",
+      "passedDiagnosticRuns": [
+        45228677194,
+        45228685376
+      ],
+      "failedDiagnosticRun": 45227603509,
+      "pendingDiagnosticRun": 45228925610,
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "descriptorUnrollCancelled": true,
       "qualification": false
     }
   ],
@@ -6298,7 +6311,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T17:28:52Z",
+    "observedAt": "2026-11-23T17:41:08Z",
     "qualification": false,
     "experiments": [
       {
@@ -6672,6 +6685,1608 @@
           "counterInterpretation": "1952 is business.results.readForCalculation calls, not SQL queries or Planner prepares.",
           "qualification": false
         }
+      },
+      {
+        "name": "ISOLATED_C17_COST_PROFILE_V2_NORMAL",
+        "run": 45228677194,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228677194",
+        "snapshot": "d03c9b22551838030d8d336c6ea79a2521fe66e6",
+        "snapshotTree": "3d10bc2cf040d95e96c092685784e08f3e3fd87d",
+        "branch": "ci-run-linux-sf613-cost2",
+        "createdAt": "2026-11-23T17:31:56Z",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "instrumentationPaths": 9,
+        "configuredBuckets": 22,
+        "status": "PASSED",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "wrapperScope": "Three original selected focal wrappers; original controls and storage/C17, with unchanged deadlines and assertions.",
+        "result": {
+          "jobs": [
+            {
+              "id": 137881991695,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:36:13Z"
+            },
+            {
+              "id": 137884722751,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:36:23Z"
+            }
+          ],
+          "controlGroup": {
+            "passed": 47,
+            "failed": 0
+          },
+          "storageGroup": {
+            "passed": 60,
+            "skipped": 2,
+            "failed": 0,
+            "skips": "Original inherited skips unchanged."
+          },
+          "omni": {
+            "declaredTests": 3,
+            "spawns": 5,
+            "delegated": 0
+          },
+          "C17": {
+            "passed": true,
+            "observedTestDurationMs": 99904.01,
+            "outerPhaseMs": 71177,
+            "ancestryPhaseMs": 27259,
+            "phaseDurationAttribution": "Exact phase durations reported by /root; profile elapsedMs below are cumulative checkpoint times, not individual phase durations.",
+            "originalCooperativeDeadlineMs": 105000,
+            "originalTestDeadlineMs": 120000
+          },
+          "log": {
+            "job": 137881991695,
+            "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228677194/job/137881991695",
+            "bytes": 108293,
+            "sha256": "bb9e99b24d504fcf8029166e212938c6466cd735fe33bb75b3cf67d74fbd5367"
+          },
+          "profiles": [
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5311127Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "initialize",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 15,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 46,
+                  "milliseconds": 0.16,
+                  "maximumMs": 0.018
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 101,
+                  "milliseconds": 0.324,
+                  "maximumMs": 0.031
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 101,
+                  "milliseconds": 0.212,
+                  "maximumMs": 0.024
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 9,
+                  "milliseconds": 0.392,
+                  "maximumMs": 0.111
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 6,
+                  "milliseconds": 0.017,
+                  "maximumMs": 0.005
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 8,
+                  "milliseconds": 0.155,
+                  "maximumMs": 0.036
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5336412Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "produce-inner",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 1021,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 18314,
+                  "milliseconds": 27.048,
+                  "maximumMs": 0.032
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 25714,
+                  "milliseconds": 272.199,
+                  "maximumMs": 2.799
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 26112,
+                  "milliseconds": 245.875,
+                  "maximumMs": 2.793
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 9,
+                  "milliseconds": 1.535,
+                  "maximumMs": 0.443
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 3989,
+                  "milliseconds": 19.706,
+                  "maximumMs": 2.265
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 56,
+                  "milliseconds": 9.912,
+                  "maximumMs": 2.229
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 7747,
+                  "milliseconds": 149.604,
+                  "maximumMs": 1.919
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 419,
+                  "milliseconds": 102.226,
+                  "maximumMs": 2.253
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 419,
+                  "milliseconds": 2.593,
+                  "maximumMs": 0.034
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 419,
+                  "milliseconds": 7.606,
+                  "maximumMs": 0.08
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 419,
+                  "milliseconds": 10.054,
+                  "maximumMs": 0.062
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 419,
+                  "milliseconds": 2.229,
+                  "maximumMs": 0.035
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 419,
+                  "milliseconds": 31.501,
+                  "maximumMs": 0.176
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 419,
+                  "milliseconds": 6.744,
+                  "maximumMs": 0.105
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 418,
+                  "milliseconds": 12.811,
+                  "maximumMs": 0.07
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 106,
+                  "milliseconds": 34.045,
+                  "maximumMs": 3.088
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 106,
+                  "milliseconds": 9.058,
+                  "maximumMs": 0.143
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 33,
+                  "milliseconds": 1.359,
+                  "maximumMs": 0.102
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 99,
+                  "milliseconds": 2.568,
+                  "maximumMs": 0.091
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 33,
+                  "milliseconds": 19.183,
+                  "maximumMs": 1.295
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5357288Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "produce-outer",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 72200,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 3031753,
+                  "milliseconds": 3790.017,
+                  "maximumMs": 6.286
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 2299834,
+                  "milliseconds": 18152.978,
+                  "maximumMs": 8.198
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 2351740,
+                  "milliseconds": 16397.65,
+                  "maximumMs": 8.186
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 820871,
+                  "milliseconds": 2905.065,
+                  "maximumMs": 2.516
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 232114,
+                  "milliseconds": 1146.68,
+                  "maximumMs": 7.93
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 995,
+                  "milliseconds": 209.731,
+                  "maximumMs": 2.987
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 119160,
+                  "milliseconds": 4364.847,
+                  "maximumMs": 4.517
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 45863,
+                  "milliseconds": 8000.219,
+                  "maximumMs": 8.235
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 45863,
+                  "milliseconds": 270.688,
+                  "maximumMs": 1.904
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 45863,
+                  "milliseconds": 835.039,
+                  "maximumMs": 2.46
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 45863,
+                  "milliseconds": 1230.249,
+                  "maximumMs": 2.178
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 45863,
+                  "milliseconds": 233.286,
+                  "maximumMs": 0.054
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 45863,
+                  "milliseconds": 2485.465,
+                  "maximumMs": 6.049
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 45863,
+                  "milliseconds": 800.695,
+                  "maximumMs": 6.437
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 1706,
+                  "milliseconds": 49.517,
+                  "maximumMs": 0.068
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 14494,
+                  "milliseconds": 3824.776,
+                  "maximumMs": 4.091
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 14494,
+                  "milliseconds": 1168.672,
+                  "maximumMs": 7.169
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 4597,
+                  "milliseconds": 128.097,
+                  "maximumMs": 0.072
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 12993,
+                  "milliseconds": 282.057,
+                  "maximumMs": 2.119
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 4198,
+                  "milliseconds": 2315.326,
+                  "maximumMs": 3.098
+                },
+                {
+                  "bucket": "localAuthorityAclGuard",
+                  "calls": 820863,
+                  "milliseconds": 1653.421,
+                  "maximumMs": 3.708
+                },
+                {
+                  "bucket": "prepareAclClone",
+                  "calls": 44156,
+                  "milliseconds": 18.242,
+                  "maximumMs": 0.028
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5370399Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "reopen",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 72208,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 2,
+                  "milliseconds": 0.022,
+                  "maximumMs": 0.014
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5384448Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "resolve-reopened-ancestry",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 99467,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 1192497,
+                  "milliseconds": 1525.621,
+                  "maximumMs": 2.52
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 884170,
+                  "milliseconds": 6877.662,
+                  "maximumMs": 7.582
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 903912,
+                  "milliseconds": 6222.755,
+                  "maximumMs": 7.576
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 331257,
+                  "milliseconds": 1193.301,
+                  "maximumMs": 3.247
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 87101,
+                  "milliseconds": 438.275,
+                  "maximumMs": 7.59
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 82,
+                  "milliseconds": 23.613,
+                  "maximumMs": 0.419
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 34537,
+                  "milliseconds": 1492.683,
+                  "maximumMs": 2.605
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 17832,
+                  "milliseconds": 3067.502,
+                  "maximumMs": 2.779
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 17832,
+                  "milliseconds": 103.951,
+                  "maximumMs": 0.053
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 17832,
+                  "milliseconds": 324.008,
+                  "maximumMs": 2.344
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 17832,
+                  "milliseconds": 473.022,
+                  "maximumMs": 0.079
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 17832,
+                  "milliseconds": 88.182,
+                  "maximumMs": 0.057
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 17832,
+                  "milliseconds": 968.459,
+                  "maximumMs": 2.601
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 17832,
+                  "milliseconds": 313.148,
+                  "maximumMs": 2.502
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 48,
+                  "milliseconds": 1.614,
+                  "maximumMs": 0.062
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 5664,
+                  "milliseconds": 1511.419,
+                  "maximumMs": 3.168
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 5664,
+                  "milliseconds": 451.08,
+                  "maximumMs": 2.253
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 1796,
+                  "milliseconds": 50.189,
+                  "maximumMs": 0.079
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 5062,
+                  "milliseconds": 106.638,
+                  "maximumMs": 0.077
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 1633,
+                  "milliseconds": 909.361,
+                  "maximumMs": 9.401
+                },
+                {
+                  "bucket": "localAuthorityAclGuard",
+                  "calls": 331254,
+                  "milliseconds": 664.805,
+                  "maximumMs": 2.509
+                },
+                {
+                  "bucket": "prepareAclClone",
+                  "calls": 17784,
+                  "milliseconds": 7.31,
+                  "maximumMs": 0.028
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5394685Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "reject-persisted-cycle",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 99486,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 188,
+                  "milliseconds": 0.379,
+                  "maximumMs": 0.028
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 183,
+                  "milliseconds": 2.186,
+                  "maximumMs": 0.161
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 216,
+                  "milliseconds": 1.819,
+                  "maximumMs": 0.144
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 2,
+                  "milliseconds": 1.338,
+                  "maximumMs": 0.676
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 23,
+                  "milliseconds": 0.073,
+                  "maximumMs": 0.006
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 83,
+                  "milliseconds": 3.636,
+                  "maximumMs": 0.251
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:36:09.5404559Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "recovery-and-revocation",
+              "runtime": {
+                "version": "1.3.14",
+                "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 99897,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 6383,
+                  "milliseconds": 10.105,
+                  "maximumMs": 0.03
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 8879,
+                  "milliseconds": 105.96,
+                  "maximumMs": 2.916
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 9043,
+                  "milliseconds": 95.416,
+                  "maximumMs": 2.91
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 2,
+                  "milliseconds": 1.294,
+                  "maximumMs": 0.647
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 1334,
+                  "milliseconds": 5.366,
+                  "maximumMs": 0.036
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 20,
+                  "milliseconds": 6.206,
+                  "maximumMs": 0.483
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 2736,
+                  "milliseconds": 110.52,
+                  "maximumMs": 2.728
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 132,
+                  "milliseconds": 29.335,
+                  "maximumMs": 0.292
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 132,
+                  "milliseconds": 0.806,
+                  "maximumMs": 0.032
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 132,
+                  "milliseconds": 2.383,
+                  "maximumMs": 0.058
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 132,
+                  "milliseconds": 3.087,
+                  "maximumMs": 0.054
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 132,
+                  "milliseconds": 0.673,
+                  "maximumMs": 0.02
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 132,
+                  "milliseconds": 8.159,
+                  "maximumMs": 0.111
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 132,
+                  "milliseconds": 2.016,
+                  "maximumMs": 0.044
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 132,
+                  "milliseconds": 3.944,
+                  "maximumMs": 0.063
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 44,
+                  "milliseconds": 10.769,
+                  "maximumMs": 0.342
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 44,
+                  "milliseconds": 3.515,
+                  "maximumMs": 0.124
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 12,
+                  "milliseconds": 0.485,
+                  "maximumMs": 0.057
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 36,
+                  "milliseconds": 0.91,
+                  "maximumMs": 0.054
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 12,
+                  "milliseconds": 8.914,
+                  "maximumMs": 3.003
+                }
+              ]
+            }
+          ],
+          "interpretation": "Instrumentation-only observation. Durations are inclusive and nested buckets/awaits overlap. canonicalSfValue is nested in digestSfValue; projection runtime checks include capture current checks. Do not sum buckets or infer global/full qualification.",
+          "qualification": false
+        }
+      },
+      {
+        "name": "ISOLATED_C17_COST_PROFILE_V2_RELEASE",
+        "run": 45228685376,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228685376",
+        "snapshot": "1fd850c1c3343f88c09d95def09cd5e3cad9d5fc",
+        "snapshotTree": "aa7ed82fe3c4c03178109ab35c7ce85d89720425",
+        "branch": "ci-run-linux-sf613-costrelease2",
+        "createdAt": "2026-11-23T17:31:59Z",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "instrumentationPaths": 9,
+        "configuredBuckets": 22,
+        "status": "PASSED",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "wrapperScope": "Three original selected focal wrappers; original controls and storage/C17, with unchanged deadlines and assertions.",
+        "releaseOverlayCheck": {
+          "exactPathCount": 13,
+          "originalAssertionMaintained": true
+        },
+        "result": {
+          "jobs": [
+            {
+              "id": 137882023932,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:36:02Z"
+            },
+            {
+              "id": 137884596347,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:36:07Z"
+            }
+          ],
+          "controlGroup": {
+            "passed": 11,
+            "failed": 0
+          },
+          "storageGroup": {
+            "passed": 60,
+            "skipped": 2,
+            "failed": 0,
+            "skips": "Original inherited skips unchanged."
+          },
+          "omni": {
+            "declaredTests": 3,
+            "spawns": 7,
+            "delegated": 0
+          },
+          "C17": {
+            "passed": true,
+            "observedTestDurationMs": 88864.23,
+            "outerPhaseMs": 63369,
+            "ancestryPhaseMs": 24289,
+            "phaseDurationAttribution": "Exact phase durations reported by /root; profile elapsedMs below are cumulative checkpoint times, not individual phase durations.",
+            "originalCooperativeDeadlineMs": 105000,
+            "originalTestDeadlineMs": 120000
+          },
+          "log": {
+            "job": 137882023932,
+            "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228685376/job/137882023932",
+            "bytes": 110621,
+            "sha256": "f1674f1bab078fc9506226a5af6cfe214b8c35121a9db3ae4712e92d6f4774d0"
+          },
+          "profiles": [
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6731793Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "initialize",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 15,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 46,
+                  "milliseconds": 0.14,
+                  "maximumMs": 0.025
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 101,
+                  "milliseconds": 0.314,
+                  "maximumMs": 0.024
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 101,
+                  "milliseconds": 0.2,
+                  "maximumMs": 0.02
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 9,
+                  "milliseconds": 0.357,
+                  "maximumMs": 0.103
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 6,
+                  "milliseconds": 0.02,
+                  "maximumMs": 0.007
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 8,
+                  "milliseconds": 0.155,
+                  "maximumMs": 0.035
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6745496Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "produce-inner",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 857,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 18314,
+                  "milliseconds": 30.486,
+                  "maximumMs": 2.201
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 25714,
+                  "milliseconds": 202.779,
+                  "maximumMs": 2.183
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 26112,
+                  "milliseconds": 177.338,
+                  "maximumMs": 2.177
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 9,
+                  "milliseconds": 1.471,
+                  "maximumMs": 0.329
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 3989,
+                  "milliseconds": 17.369,
+                  "maximumMs": 2.012
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 56,
+                  "milliseconds": 9.864,
+                  "maximumMs": 2.343
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 7747,
+                  "milliseconds": 109.669,
+                  "maximumMs": 1.913
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 419,
+                  "milliseconds": 91.797,
+                  "maximumMs": 2.693
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 419,
+                  "milliseconds": 2.259,
+                  "maximumMs": 0.029
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 419,
+                  "milliseconds": 6.247,
+                  "maximumMs": 0.051
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 419,
+                  "milliseconds": 8.862,
+                  "maximumMs": 0.049
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 419,
+                  "milliseconds": 1.997,
+                  "maximumMs": 0.021
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 419,
+                  "milliseconds": 31.845,
+                  "maximumMs": 2.43
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 419,
+                  "milliseconds": 5.371,
+                  "maximumMs": 0.039
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 418,
+                  "milliseconds": 11.692,
+                  "maximumMs": 0.073
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 106,
+                  "milliseconds": 29.034,
+                  "maximumMs": 2.44
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 106,
+                  "milliseconds": 8.264,
+                  "maximumMs": 0.116
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 33,
+                  "milliseconds": 1.416,
+                  "maximumMs": 0.118
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 99,
+                  "milliseconds": 2.739,
+                  "maximumMs": 0.109
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 33,
+                  "milliseconds": 14.828,
+                  "maximumMs": 1.288
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6763989Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "produce-outer",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 64229,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 3031753,
+                  "milliseconds": 4017.393,
+                  "maximumMs": 6.756
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 2299834,
+                  "milliseconds": 14116.557,
+                  "maximumMs": 5.629
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 2351740,
+                  "milliseconds": 12066.822,
+                  "maximumMs": 5.612
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 820871,
+                  "milliseconds": 3584.178,
+                  "maximumMs": 3.156
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 232114,
+                  "milliseconds": 985.671,
+                  "maximumMs": 2.036
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 995,
+                  "milliseconds": 216.847,
+                  "maximumMs": 3.216
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 119160,
+                  "milliseconds": 3709.372,
+                  "maximumMs": 3.275
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 45863,
+                  "milliseconds": 7062.244,
+                  "maximumMs": 8.565
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 45863,
+                  "milliseconds": 272.049,
+                  "maximumMs": 0.108
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 45863,
+                  "milliseconds": 735.982,
+                  "maximumMs": 8.299
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 45863,
+                  "milliseconds": 1143.893,
+                  "maximumMs": 2.019
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 45863,
+                  "milliseconds": 231.155,
+                  "maximumMs": 0.11
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 45863,
+                  "milliseconds": 2256.441,
+                  "maximumMs": 7.316
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 45863,
+                  "milliseconds": 687.768,
+                  "maximumMs": 2.089
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 1706,
+                  "milliseconds": 48.607,
+                  "maximumMs": 1.914
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 14494,
+                  "milliseconds": 3542.079,
+                  "maximumMs": 7.411
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 14494,
+                  "milliseconds": 1112.547,
+                  "maximumMs": 2.191
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 4597,
+                  "milliseconds": 133.053,
+                  "maximumMs": 2.009
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 12993,
+                  "milliseconds": 278.129,
+                  "maximumMs": 2.007
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 4198,
+                  "milliseconds": 1755.758,
+                  "maximumMs": 2.655
+                },
+                {
+                  "bucket": "localAuthorityAclGuard",
+                  "calls": 820863,
+                  "milliseconds": 1614.104,
+                  "maximumMs": 2.281
+                },
+                {
+                  "bucket": "prepareAclClone",
+                  "calls": 44156,
+                  "milliseconds": 15.782,
+                  "maximumMs": 1.477
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6776737Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "reopen",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 64236,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 2,
+                  "milliseconds": 0.019,
+                  "maximumMs": 0.013
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6790185Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "resolve-reopened-ancestry",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 88525,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 1192497,
+                  "milliseconds": 1577.974,
+                  "maximumMs": 2.151
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 884170,
+                  "milliseconds": 5338.199,
+                  "maximumMs": 6.616
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 903912,
+                  "milliseconds": 4547.237,
+                  "maximumMs": 6.601
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 331257,
+                  "milliseconds": 1421.027,
+                  "maximumMs": 3.666
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 87101,
+                  "milliseconds": 370.368,
+                  "maximumMs": 1.884
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 82,
+                  "milliseconds": 24.919,
+                  "maximumMs": 2.176
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 34537,
+                  "milliseconds": 1292.193,
+                  "maximumMs": 2.229
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 17832,
+                  "milliseconds": 2805.699,
+                  "maximumMs": 7.085
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 17832,
+                  "milliseconds": 108.831,
+                  "maximumMs": 0.044
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 17832,
+                  "milliseconds": 291.978,
+                  "maximumMs": 2.242
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 17832,
+                  "milliseconds": 455.532,
+                  "maximumMs": 1.727
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 17832,
+                  "milliseconds": 93.122,
+                  "maximumMs": 1.602
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 17832,
+                  "milliseconds": 932.732,
+                  "maximumMs": 6.865
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 17832,
+                  "milliseconds": 275.804,
+                  "maximumMs": 2.147
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 48,
+                  "milliseconds": 1.398,
+                  "maximumMs": 0.058
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 5664,
+                  "milliseconds": 1373.369,
+                  "maximumMs": 3.12
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 5664,
+                  "milliseconds": 431.325,
+                  "maximumMs": 0.154
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 1796,
+                  "milliseconds": 50.651,
+                  "maximumMs": 0.066
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 5062,
+                  "milliseconds": 102.755,
+                  "maximumMs": 0.065
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 1633,
+                  "milliseconds": 671.938,
+                  "maximumMs": 2.363
+                },
+                {
+                  "bucket": "localAuthorityAclGuard",
+                  "calls": 331254,
+                  "milliseconds": 640.378,
+                  "maximumMs": 2.152
+                },
+                {
+                  "bucket": "prepareAclClone",
+                  "calls": 17784,
+                  "milliseconds": 5.731,
+                  "maximumMs": 0.031
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6800581Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "reject-persisted-cycle",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 88542,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 188,
+                  "milliseconds": 0.317,
+                  "maximumMs": 0.01
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 183,
+                  "milliseconds": 1.663,
+                  "maximumMs": 0.132
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 216,
+                  "milliseconds": 1.34,
+                  "maximumMs": 0.116
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 2,
+                  "milliseconds": 1.288,
+                  "maximumMs": 0.648
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 23,
+                  "milliseconds": 0.062,
+                  "maximumMs": 0.005
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 83,
+                  "milliseconds": 2.896,
+                  "maximumMs": 0.14
+                }
+              ]
+            },
+            {
+              "deliveredAt": "2026-11-23T17:35:59.6810997Z",
+              "schema": "sf-c17-cost-v2",
+              "qualification": false,
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "fixture": "calculation-ancestry-composition",
+              "phase": "recovery-and-revocation",
+              "runtime": {
+                "version": "1.4.1",
+                "revision": "4661e494f052c83c80dade1318e5710238340be6"
+              },
+              "clock": "performance.now",
+              "timing": "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",
+              "elapsedMs": 88860,
+              "counters": [
+                {
+                  "bucket": "localPhysicalGuard",
+                  "calls": 6383,
+                  "milliseconds": 9.759,
+                  "maximumMs": 0.025
+                },
+                {
+                  "bucket": "digestSfValue",
+                  "calls": 8879,
+                  "milliseconds": 74.72,
+                  "maximumMs": 1.54
+                },
+                {
+                  "bucket": "canonicalSfValue",
+                  "calls": 9043,
+                  "milliseconds": 63.34,
+                  "maximumMs": 1.533
+                },
+                {
+                  "bucket": "localDecodeSnapshot",
+                  "calls": 2,
+                  "milliseconds": 1.13,
+                  "maximumMs": 0.584
+                },
+                {
+                  "bucket": "sourceIdentities",
+                  "calls": 1334,
+                  "milliseconds": 4.398,
+                  "maximumMs": 0.028
+                },
+                {
+                  "bucket": "localCloneSnapshot",
+                  "calls": 20,
+                  "milliseconds": 5.297,
+                  "maximumMs": 0.343
+                },
+                {
+                  "bucket": "localMaterializeSnapshot",
+                  "calls": 2736,
+                  "milliseconds": 78.478,
+                  "maximumMs": 1.596
+                },
+                {
+                  "bucket": "observe",
+                  "calls": 132,
+                  "milliseconds": 23.988,
+                  "maximumMs": 0.241
+                },
+                {
+                  "bucket": "observeScopeClone",
+                  "calls": 132,
+                  "milliseconds": 0.754,
+                  "maximumMs": 0.028
+                },
+                {
+                  "bucket": "authorizeFirst",
+                  "calls": 132,
+                  "milliseconds": 1.833,
+                  "maximumMs": 0.04
+                },
+                {
+                  "bucket": "projectorSnapshotClone",
+                  "calls": 132,
+                  "milliseconds": 2.787,
+                  "maximumMs": 0.051
+                },
+                {
+                  "bucket": "projectorScopeClone",
+                  "calls": 132,
+                  "milliseconds": 0.653,
+                  "maximumMs": 0.011
+                },
+                {
+                  "bucket": "projectScope",
+                  "calls": 132,
+                  "milliseconds": 7.232,
+                  "maximumMs": 0.076
+                },
+                {
+                  "bucket": "authorizeSecond",
+                  "calls": 132,
+                  "milliseconds": 1.561,
+                  "maximumMs": 0.037
+                },
+                {
+                  "bucket": "prepareFullClone",
+                  "calls": 132,
+                  "milliseconds": 3.597,
+                  "maximumMs": 0.059
+                },
+                {
+                  "bucket": "schemaOutputValidation",
+                  "calls": 44,
+                  "milliseconds": 11.382,
+                  "maximumMs": 2.12
+                },
+                {
+                  "bucket": "schemaOutputClone",
+                  "calls": 44,
+                  "milliseconds": 3.382,
+                  "maximumMs": 0.107
+                },
+                {
+                  "bucket": "projectionRuntimeCurrent",
+                  "calls": 12,
+                  "milliseconds": 0.392,
+                  "maximumMs": 0.046
+                },
+                {
+                  "bucket": "captureRuntimeCurrent",
+                  "calls": 36,
+                  "milliseconds": 0.791,
+                  "maximumMs": 0.044
+                },
+                {
+                  "bucket": "contextIdentityPreparation",
+                  "calls": 12,
+                  "milliseconds": 4.618,
+                  "maximumMs": 0.409
+                }
+              ]
+            }
+          ],
+          "interpretation": "Instrumentation-only observation. Durations are inclusive and nested buckets/awaits overlap. canonicalSfValue is nested in digestSfValue; projection runtime checks include capture current checks. Do not sum buckets or infer global/full qualification.",
+          "qualification": false
+        }
+      },
+      {
+        "name": "ISOLATED_IMPORT_REFERENCE_AUTHORITY_PROFILE",
+        "run": 45227603509,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45227603509",
+        "snapshot": "77ac5221b5cbecc8e6873baeae9cc59c77cbc25f",
+        "snapshotTree": "bf5a97b794b1d46bb90d8c9ece2e1c4662a6edfe",
+        "branch": "ci-run-linux-sf613-importprofile",
+        "createdAt": "2026-11-23T17:25:59Z",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "status": "FAILED",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "result": {
+          "jobs": [
+            {
+              "id": 137878182666,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:36:00Z"
+            },
+            {
+              "id": 137884584843,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:36:05Z"
+            }
+          ],
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "attribution": "Run identifiers/job completion confirmed directly by here_github_activity; original trace interpretation reported by /root, with sf613_candidate investigating authority.",
+          "traceSummary": {
+            "events": 18,
+            "requests": 1,
+            "firstNegativeRevalidateOrdinal": 4,
+            "firstNegativeAt": "2026-11-23T17:31:31.663Z",
+            "identityPresent": false,
+            "admission": true,
+            "signalAborted": false,
+            "leaseUntil": "2026-11-23T17:36:25.601Z",
+            "status": "denied",
+            "reason": "preview-access-unavailable",
+            "manifestReadStarted": false
+          },
+          "causeEstablished": false,
+          "investigation": "Missing identity is observed. A possible 5000ms authority lock timeout is a hypothesis under separate investigation, not a conclusion.",
+          "qualification": false
+        }
       }
     ]
   },
@@ -7035,7 +8650,7 @@
     "run": 45222244398,
     "job": 137859301867,
     "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222244398/job/137859301867",
-    "status": "CAUSE_NOT_ESTABLISHED_DIAGNOSTIC_OVERLAY_PREPARED",
+    "status": "CAUSE_NOT_ESTABLISHED_ORIGINAL_ANALYTICS_DIAGNOSTIC_RUNNING",
     "qualification": false,
     "evidence": {
       "originalPortugueseBi06LoadingFailedAt": "2026-11-23T17:09:44.2155277Z",
@@ -7101,7 +8716,7 @@
       "prefix": "SF_BI_ABORT_PROFILE",
       "schema": "sf-bi-abort-v1",
       "qualification": false,
-      "dispatched": false,
+      "dispatched": true,
       "promotedToProduct": false,
       "semantics": "Bounded primitive metadata immediately before the existing UI aborts and JSON size-limit reader.cancel. Preserve all three original activeController.abort calls, guards, native signal reasons, requests, body oracle, 32 MiB limit, assertions, deadlines and retries. untrack contains diagnostic context/store reads to avoid adding reactive dependencies. Existing observePage forwards permitted scalar fields on both English and Portuguese pages.",
       "forwardingBounds": {
@@ -7115,7 +8730,60 @@
         "originalUiAbortSites": 3,
         "resultUiAbortSites": 3,
         "testsNotRun": true
+      },
+      "dispatch": {
+        "run": 45228925610,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228925610",
+        "snapshot": "863b76f70742765ec273c7e6ebe63ba07dfca11a",
+        "snapshotTree": "5e09970a72c1dc997e3000039462686dba3c9f0c",
+        "branch": "ci-run-linux-sf613-biabort",
+        "createdAt": "2026-11-23T17:33:19Z",
+        "testJob": 137882866214,
+        "originalAnalyticsRecipe": true,
+        "overlayPaths": 4,
+        "scope": "Three diagnostic files plus original Analytics .ci-run.json. Both original Analytics tests.",
+        "review": "here_github_activity, /root and session_diagnostic_limits static reviews; dispatched by /root.",
+        "status": "PENDING",
+        "qualification": false
       }
+    }
+  },
+  "pureCostReview": {
+    "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "selectionCompareCalls": {
+      "selectionReads": 2,
+      "comparesPerSelectionRead": 2,
+      "total": 4
+    },
+    "nativeGuard": {
+      "explicitPins": 41,
+      "descriptorFields": 6,
+      "hasOwnPerEqualDescriptor": 18,
+      "sameValuePerNativeCompleteDescriptor": 4,
+      "bootstrapGuarantee": "Identity after module bootstrap, not native attestation of an environment modified earlier."
+    },
+    "conditionalOptimization": "Only reducing pure comparator dispatch within each descriptor, preserving all pin reads and boundaries, could avoid changing callback/authority/SQL semantics. Measurements pending; no patch prepared.",
+    "adversarialControls": [
+      "Missing own value versus own undefined; data/accessor shape transitions; no inherited getter invocation.",
+      "NaN SameValue remains equal and -0/+0 remain different, through pinned prototype field in isolated runtime.",
+      "Getter/setter identity and descriptor flags must remain exact, without calling target accessor.",
+      "Pre-bootstrap replacement reader can produce ambiguous descriptor objects; fallback must not introduce observable traps/getters before the generic comparison."
+    ],
+    "observedAt": "2026-11-23T17:41:08Z",
+    "patchCreated": false,
+    "descriptorUnrollDecision": {
+      "status": "CANCELLED_BEFORE_IMPLEMENTATION",
+      "by": "/root",
+      "basis": "Both profile2 runtimes measure capture runtime checking at approximately 0.28s in the outer checkpoint; this does not support a material C17 bottleneck or sufficient deadline improvement.",
+      "normal": {
+        "captureRuntimeCurrentMs": 282.057,
+        "projectionRuntimeCurrentMs": 128.097
+      },
+      "release": {
+        "captureRuntimeCurrentMs": 278.129,
+        "projectionRuntimeCurrentMs": 133.053
+      },
+      "limit": "C17 profile attribution does not establish the distribution inside the separate Preview selection's49.133s."
     }
   }
 }
