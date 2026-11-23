@@ -10,17 +10,19 @@ import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { Effect } from "effect"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfDecisionDomainServices } from "../../../../../../../apps/cli/src/sucafina-product/decision-domain-services.ts"
 import { createSfPlannerRecallObservation } from "../../../../../../../apps/cli/src/sucafina-product/planner-recall-observation.ts"
 import { createSfPlannerRecordProofScope, pinSfPlannerRecordReaders } from "../../../../../../../apps/cli/src/sucafina-product/planner-record-proof-scope.ts"
 import type { AuthorizedCaseProjection } from "../../../../product/contracts/business-context.ts"
-import type { CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
+import type { CaseLedgerEvent, DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { SfStateResult } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
-import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { probeSfAtlasScanner } from "../../../../product/host-binding/atlas-scanner.ts"
+import { createDashboardSourceIssuer } from "../../../../product/integration/dashboard-sources.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enqueueSfLedgerEvent } from "../../../../product/integration/ledger-outbox.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
@@ -40,7 +42,7 @@ function ok<Value>(result: PortResult<Value> | SfStateResult<Value>): Value {
   return result.value
 }
 
-async function fixture(deadline: Deadline, withScanner = false) {
+async function fixture(deadline: Deadline, withScanner = false, withOpenAssumptions = false) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-planner-recall-proof-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const store = await openLocalStore(path.join(directory, "store"))
@@ -88,7 +90,7 @@ async function fixture(deadline: Deadline, withScanner = false) {
     origin, policyVersion: "planner-recall-policy", persistence, proposalCoverageWrites: writes,
     grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
       operations: ["sf_case_draft", "sf_case_read", "sf_decision_recall", "sf_forecast_compare", "sf_scenario_simulate"],
-      humanActions: [] }],
+      humanActions: withOpenAssumptions ? ["decisions.edit"] : [] }],
     authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true,
       roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
     environment: async () => {
@@ -103,6 +105,13 @@ async function fixture(deadline: Deadline, withScanner = false) {
     authorizeDocument: async () => undefined })
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: writes })
   deadline.own(() => business.dispose())
+  const domain = withOpenAssumptions ? createSfDecisionDomainServices({ authority, business,
+    baseline: business.baselineCoverage, proposalCoverageWrites: writes, signalRegistryWrites: new WeakSet<object>(),
+    selectedCase: business.selectedCase }) : undefined
+  if (domain) {
+    business.bindDecisionDomain(domain)
+    deadline.own(() => domain.dispose())
+  }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("planner", async (snapshot) => {
     snapshot.data = { versions: [{ id: "v0", name: "Observed forecast", year: 2027, closed: 0,
@@ -141,6 +150,33 @@ async function fixture(deadline: Deadline, withScanner = false) {
     return { id: value.id, incarnation: value.incarnation, version: value.version }
   }
   const current = await draft("Current authorized review"), previous = await draft("Previous authorized review")
+  const editAssumptions = async (ref: CaseRef, assumptions: DecisionCase["assumptions"]) => {
+    if (!domain) throw new Error("The original human case editor is required")
+    const payload = { caseRef: encodeCaseRef(ref) }
+    const observed = await ui("sf_case_read", payload, async (call) => ok(await business.cases.read(payload, call)))
+    expect({ id: observed.case.id, incarnation: observed.case.incarnation, version: observed.case.version }).toEqual(ref)
+    const edit = { caseRef: structuredClone(ref), objective: observed.case.objective,
+      criteria: structuredClone(observed.case.criteria), sourceRefs: structuredClone(observed.case.sourceRefs),
+      horizon: structuredClone(observed.case.horizon), currency: observed.case.currency, assumptions: structuredClone(assumptions) }
+    const call = ok(await authority.human.admit(request(), "decisions.edit", edit))
+    try {
+      return await business.withCase(call, ref, { allowHistoricalRetry: true }, () => domain.management.edit(edit, call))
+    } finally { authority.human.finish(call) }
+  }
+  if (withOpenAssumptions) {
+    // Use the native human command before either real ledger event is staged.
+    // Both cases retain uncertainty; the observation never confirms an assumption.
+    for (const ref of [current, previous]) {
+      const assumptions: DecisionCase["assumptions"] = [
+        { id: randomUUID(), text: "Service cost remains subject to review", state: "open", evidenceRefs: [structuredClone(source)] },
+        { id: randomUUID(), text: "Operational impact remains unconfirmed", state: "open", evidenceRefs: [structuredClone(source)] },
+      ]
+      Object.assign(ref, ok(await editAssumptions(ref, assumptions)).caseRef)
+      const payload = { caseRef: encodeCaseRef(ref) }
+      const after = await ui("sf_case_read", payload, async (call) => ok(await business.cases.read(payload, call)))
+      expect(after.case.assumptions).toEqual(assumptions)
+    }
+  }
   const selections = new WeakMap<TrustedDomainContext, { ref: CaseRef; current: () => boolean }>()
   const atlas = business.evidence.current
   if (!atlas) throw new Error("The canonical Atlas context is required")
@@ -196,7 +232,7 @@ async function fixture(deadline: Deadline, withScanner = false) {
     return { ref, event, outbox }
   }
   return { authority, business, persistence, control, source, current, previous, period, ui, withSelected, observer,
-    recordProof, measure, snapshot, stage, scanner, request }
+    recordProof, measure, snapshot, stage, scanner, request, editAssumptions }
 }
 
 function expectIndependentRoots(roots: readonly RootObservation[]) {
@@ -355,8 +391,8 @@ function gate() {
 }
 
 /** Each case opens a new native store, authority and real Atlas publication. */
-async function publishedRecallFixture(deadline: Deadline) {
-  const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true))
+async function publishedRecallFixture(deadline: Deadline, withOpenAssumptions = false) {
+  const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true, withOpenAssumptions))
   const scanner = f.scanner, memory = f.business.atlasRecall()?.memory
   if (!scanner || !memory) throw new Error("The canonical scanner and Atlas reader are required")
   const staged = await deadline.phase("stage-real-precedent", () => f.stage(f.previous))
@@ -661,6 +697,165 @@ test("Planner Recall refuses changed case selections and Atlas publication closu
         expect((await f.business.caseRecall(input, call)).status).toBe("unavailable")
       })
       expect(await f.snapshot()).toEqual(changed)
+    })
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains", async () => {
+  const deadline = compositionTestDeadline("planner-recall-open-assumptions")
+  try {
+    const { f, incoming, canonical, baseline, publishedState } = await publishedRecallFixture(deadline, true)
+    const originalAssumptions = new Map([f.current, f.previous].map((ref) => {
+      const value = publishedState.cases[ref.id]
+      if (!value || value.version !== ref.version) throw new Error("The published case revision is unavailable")
+      expect(value.assumptions).toHaveLength(2)
+      expect(value.assumptions.every((item) => item.state === "open")).toBe(true)
+      expect(value.assumptions.map((item) => item.evidenceRefs)).toEqual([[f.source], [f.source]])
+      return [ref.id, structuredClone(value.assumptions)] as const
+    }))
+
+    await deadline.phase("open-uncertainty-preserves-the-complete-installed-recall", async () => {
+      const roots: RootObservation[] = []
+      for (let phase = 0; phase < 2; phase++) {
+        const input = incoming()
+        await f.ui("sf_decision_recall", input, async (call) => {
+          const measured = await f.measure(() => f.business.withCase(call, f.current, {}, async () => {
+            expectIndependentRoots(f.control.roots)
+            f.control.roots = []
+            return { status: "ok", value: await f.business.caseRecall(input, call) }
+          }))
+          expect(recallOk(ok(measured.value))).toEqual(baseline)
+          expectIndependentRoots(measured.roots)
+          roots.push(...measured.roots)
+          expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+        })
+      }
+      expect(new Set(roots.map((root) => root.identity)).size).toBe(4)
+      const after = await f.snapshot()
+      expect(after).toEqual(publishedState)
+      for (const ref of [f.current, f.previous])
+        expect(after.cases[ref.id]!.assumptions).toEqual(originalAssumptions.get(ref.id)!)
+    })
+
+    await deadline.phase("an-admitted-terminal-hit-still-refuses-revocation-at-egress", async () => {
+      const input = incoming()
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, canonicalSources = 0, revoked = 0
+        let produced: RecallResult | undefined
+        try {
+          f.control.afterRoot = async (count) => {
+            expect(count).toBe(1)
+            expect(reads).toBe(1)
+            expect(canonicalSources).toBe(1)
+            if (!produced) throw new Error("The complete Recall must precede revocation")
+            expect(recallOk(produced)).toEqual(baseline)
+            revoked++
+            f.control.active = false
+          }
+          const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+            reads++
+            const native = currentSfPlannerReadonlySnapshotScope(f.persistence)
+            expect(native?.current()).toBe(true)
+            expect(native?.identity).toBe(f.control.roots[0]!.identity)
+            expect(native?.bytesIdentity).toBe(f.control.roots[0]!.bytesIdentity)
+            // This explicit observer owns the fixture's recordProof. The two
+            // installed Recalls above separately qualify the business composition.
+            const read = async () => {
+              canonicalSources++
+              return f.business.context.resolve(structuredClone(f.source), call)
+            }
+            const first = await f.recordProof.observe(structuredClone(f.source), call, read)
+            const second = await f.recordProof.observe(structuredClone(f.source), call, read)
+            expect(first.state).toBe("fresh")
+            expect(first.currentRef).toEqual(f.source)
+            expect(first.authorizedProjection).toBeDefined()
+            expect(second).toEqual(first)
+            expect(canonicalSources).toBe(1)
+            produced = await canonical(input, call)
+            return produced
+          }))
+          expect(measured.value.status).toBe("unavailable")
+          if (!produced) throw new Error("The real Recall did not complete inside its admitted owner")
+          expect(recallOk(produced)).toEqual(baseline)
+          expect(reads).toBe(1)
+          expect(canonicalSources).toBe(1)
+          expect(revoked).toBe(1)
+          expect(measured.roots).toHaveLength(1)
+        } finally { f.control.active = true }
+      })
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("unknown-states-and-foreign-evidence-remain-human-command-refusals", async () => {
+      const before = await f.snapshot()
+      const unknown = structuredClone(originalAssumptions.get(f.current.id)!)
+      expect(Reflect.set(unknown[0]!, "state", "unknown")).toBe(true)
+      expect(await f.editAssumptions(f.current, unknown)).toMatchObject({ status: "needs-input", reason: "invalid-case-edit" })
+      expect(await f.snapshot()).toEqual(before)
+      const foreign = structuredClone(f.source)
+      foreign.projectId = "another-project"
+      foreign.refDigest = digestSfEvidenceRef(foreign)
+      const assumptions = structuredClone(originalAssumptions.get(f.current.id)!)
+      expect(Reflect.set(assumptions[0]!, "evidenceRefs", [foreign])).toBe(true)
+      expect(await f.editAssumptions(f.current, assumptions)).toMatchObject({ status: "denied", reason: "case-access-unavailable" })
+      expect(await f.snapshot()).toEqual(before)
+    })
+
+    const expectCanonicalFallback = async (assumptions: DecisionCase["assumptions"]) => {
+      const before = await f.snapshot()
+      const input = { caseRef: encodeCaseRef(f.current) }
+      // The private version comes from the completed human command, not from
+      // parsing the public id/incarnation selector.
+      const ref = structuredClone(f.current), selected = digestSfValue(ref)
+      await f.ui("sf_case_read", input, async (call) => {
+        let reads = 0
+        let produced: PortResult<AuthorizedCaseProjection> | undefined
+        const measured = await f.measure(() => f.observer.read(input, call, async () => {
+          reads++
+          expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+          produced = await f.business.cases.read(input, call)
+          return produced
+        }, { ref, current: () => digestSfValue(f.current) === selected }))
+        if (!produced) throw new Error("The unsupported case did not reach its complete canonical reader")
+        expect(measured.value).toEqual(produced)
+        expect(ok(measured.value).case).toMatchObject(f.current)
+        expect(ok(measured.value).case.assumptions).toEqual(assumptions)
+        expect(reads).toBe(1)
+        // Only the unsupported witness ran in a root. The complete producer
+        // ran once after that root closed; it did not borrow a Planner proof.
+        expect(measured.roots).toHaveLength(1)
+      })
+      expect(await f.snapshot()).toEqual(before)
+    }
+
+    await deadline.phase("confirmed-and-rejected-assumptions-keep-the-canonical-reader", async () => {
+      for (const state of ["confirmed", "rejected"] as const) {
+        const assumptions = originalAssumptions.get(f.current.id)!.map((item) => ({ ...structuredClone(item), state }))
+        Object.assign(f.current, ok(await f.editAssumptions(f.current, assumptions)).caseRef)
+        await expectCanonicalFallback(assumptions)
+      }
+    })
+
+    await deadline.phase("an-open-assumption-with-real-dashboard-evidence-keeps-the-canonical-reader", async () => {
+      const selection = { page: "Executive Dashboard", fields: ["executive"], period: structuredClone(f.period) }
+      const issue = createDashboardSourceIssuer({ host: f.authority.host, scopedSources: f.persistence })
+      const evidence = await f.ui("sf_case_read", selection, async (call) => {
+        const issued = ok(await issue(selection, call)).evidence
+        expect(issued.target.surface).toBe("dashboard")
+        const resolved = await f.business.context.resolve(issued, call)
+        expect(resolved.state).toBe("fresh")
+        expect(resolved.currentRef).toEqual(issued)
+        expect(resolved.authorizedProjection).toBeDefined()
+        return issued
+      })
+      const assumptions = structuredClone(originalAssumptions.get(f.current.id)!)
+      expect(Reflect.set(assumptions[0]!, "evidenceRefs", [evidence])).toBe(true)
+      Object.assign(f.current, ok(await f.editAssumptions(f.current, assumptions)).caseRef)
+      await expectCanonicalFallback(assumptions)
+      const after = await f.snapshot()
+      expect(after.atlas).toEqual(publishedState.atlas)
+      expect(after.outbox).toEqual(publishedState.outbox)
+      expect(after.cases[f.previous.id]).toEqual(publishedState.cases[f.previous.id])
     })
   } finally { await deadline.close() }
 }, 120_000)
