@@ -50,7 +50,7 @@ export function createSfPortfolioAuthority(input: {
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
-    const result = await compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios, scenarios: { resolve: async (reference, context) => {
+    const result = await compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios, observeSources: business.observePlannerSources, scenarios: { resolve: async (reference, context) => {
       const observation = structuredClone(await scenarios.resolve(reference, context))
       observed.set(reference, observation)
       return observation
@@ -85,7 +85,7 @@ export function createSfPortfolioAuthority(input: {
     },
   })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
-    compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios,
+    compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios, observeSources: business.observePlannerSources,
       // The outer Portfolio cache excludes selected criteria. Each canonical
       // scenario pair may own a separate read root; the criterion producer
       // and every later comparison phase still perform their original reads.
