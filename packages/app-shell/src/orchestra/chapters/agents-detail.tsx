@@ -248,7 +248,11 @@ export function AgentScreen(props: {
             </Show>
             <span class="mx-badge">
               {language.t(
-                props.agent.mode === "subagent" ? "orchestra.agents.kind.subagent" : "orchestra.agents.kind.primary",
+                props.agent.mode === "subagent"
+                  ? "orchestra.agents.kind.subagent"
+                  : props.agent.mode === "all"
+                    ? "orchestra.agents.mode.all"
+                    : "orchestra.agents.kind.primary",
               )}
             </span>
             <span

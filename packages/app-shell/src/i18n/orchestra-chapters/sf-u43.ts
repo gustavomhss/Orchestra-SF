@@ -27,6 +27,7 @@ export const SF_U43_COPY = {
   "sf.ui32.nativeUnavailable": "Native views and preferred entry are not available until the V2 producer is installed and admitted.",
   "sf.ui32.noPseudoView": "Legacy views are not native routes. No new view, entry preference, or migration has been saved.",
   "sf.ui32.entryUnavailable": "The application may resolve a preferred entry only after a current per-owner, per-installation V2 authorization and CAS check.",
+  "sf.ui32.removalProposed": "This saved view will be removed.",
 } as const
 
 export const SF_U43_COPY_BR: Readonly<Record<keyof typeof SF_U43_COPY, string>> = {
@@ -57,4 +58,5 @@ export const SF_U43_COPY_BR: Readonly<Record<keyof typeof SF_U43_COPY, string>> 
   "sf.ui32.nativeUnavailable": "As vistas nativas e a entrada preferida não estão disponíveis até a instalação e admissão do produtor V2.",
   "sf.ui32.noPseudoView": "Vistas legadas não são rotas nativas. Nenhuma nova vista, preferência de entrada ou migração foi salva.",
   "sf.ui32.entryUnavailable": "A aplicação só pode resolver uma entrada preferida após a autorização V2 atual, por usuário e instalação, e a verificação CAS.",
+  "sf.ui32.removalProposed": "Esta vista salva será removida.",
 }

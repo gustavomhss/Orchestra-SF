@@ -1,4 +1,4 @@
-import { createEffect, createMemo, For, Match, onCleanup, on, Show, Switch, type JSX } from "solid-js"
+import { createEffect, createMemo, createSignal, createUniqueId, For, Match, onCleanup, onMount, on, Show, Switch, type JSX } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { DataProvider } from "@orchestra/session-ui/context"
 import { Message } from "@orchestra/session-ui/message-part"
@@ -26,6 +26,16 @@ export function SfTeamSessionWorkspace(props: Props): JSX.Element {
   const language = useLanguage(), workspace = props.runtime.sessions
   const state = workspace.state
   const [ui, setUi] = createStore({ query: "" })
+  const [compact, setCompact] = createSignal(false)
+  const [historyExpanded, setHistoryExpanded] = createSignal(false)
+  const historyId = createUniqueId()
+  onMount(() => {
+    const query = window.matchMedia("(max-width: 980px)")
+    const update = () => setCompact(query.matches)
+    update()
+    query.addEventListener("change", update)
+    onCleanup(() => query.removeEventListener("change", update))
+  })
   const [rows, setRows] = createStore<{ items: TeamTranscriptRow[] }>({ items: [] })
   const active = () => state.active ? state.threads[state.active] : undefined
   const profile = () => props.runtime.current()?.context.stamp.team?.owner.profile
@@ -105,6 +115,17 @@ export function SfTeamSessionWorkspace(props: Props): JSX.Element {
       </Match>
       <Match when={state.status === "ready"}>
         <aside class="sf-team-session-list" aria-label={language.t("sf.teams.chatRecent")}>
+          <Show when={compact()}>
+            <button type="button" class="mx-btn sf-team-session-history-toggle" data-sf-history-toggle
+              aria-expanded={historyExpanded()} aria-controls={historyId}
+              onClick={() => setHistoryExpanded((open) => !open)}>
+              <span>{language.t("sf.teams.chatRecent")}</span>
+              <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="m4 6 4 4 4-4" />
+              </svg>
+            </button>
+          </Show>
+          <div id={historyId} class="sf-team-session-history" data-sf-history-panel hidden={compact() && !historyExpanded()}>
           <button type="button" class="mx-btn" disabled={props.busy || state.busy} data-sf-new-chat onClick={() => open()}>
             {language.t("sf.teams.newChat")}
           </button>
@@ -116,7 +137,7 @@ export function SfTeamSessionWorkspace(props: Props): JSX.Element {
               <button type="submit" class="mx-btn" disabled={props.busy}>{language.t("common.search.placeholder")}</button>
             </div>
           </form>
-          <h2>{language.t("sf.teams.chatRecent")}</h2>
+          <Show when={!compact()}><h2>{language.t("sf.teams.chatRecent")}</h2></Show>
           <Show when={state.recent.length} fallback={<p>{language.t("sf.teams.chatEmpty")}</p>}>
             <ul><For each={state.recent}>{(info) => <li>
               <button type="button" class="sf-team-session-item" disabled={props.busy || state.busy}
@@ -134,6 +155,7 @@ export function SfTeamSessionWorkspace(props: Props): JSX.Element {
             </li>}</For></ul>
           </Show>
           <Show when={!state.persistent}><p role="status">{language.t("sf.teams.windowEphemeral")}</p></Show>
+          </div>
         </aside>
         <div class="sf-team-session-main">
           <nav class="sf-team-session-tabs" aria-label={language.t("sf.teams.chatOpen")}>

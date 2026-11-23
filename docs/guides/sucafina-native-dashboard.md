@@ -2,6 +2,14 @@
 
 Este guia descreve as telas nativas de orçamento, pessoas, portfólio, operações e planejamento da Sucafina. As ações disponíveis dependem do seu acesso à instalação e aos dados.
 
+## Navegação, valores e revisões
+
+O caminho no cabeçalho identifica o capítulo e a página atual. Nas telas de negócio, título, descrição, filtros e ação principal seguem a mesma ordem. As referências técnicas ficam junto dos detalhes da fonte; quando existe um nome autorizado, ele é a informação principal do registro.
+
+A revisão de alterações organiza os valores por campo, com rótulos para o valor atual e o proposto. Expandir um detalhe conserva a referência original. Valores ausentes, indefinidos, nulos, vazios, zero e falso permanecem distintos; formatação de datas, números e estados não altera o conteúdo enviado.
+
+Na etapa de sourcing de uma compra, a tela explica quando o envio da ordem de compra ainda não está disponível. Depois da aprovação exigida, o envio continua na etapa PO com a revisão e as permissões daquela operação.
+
 ## Visão executiva e referências
 
 A navegação da visão executiva permite abrir a pauta de revisão, os Hot Topics e ações, os riscos e as partes interessadas disponíveis para seu acesso. Os rótulos e as referências acompanham o idioma selecionado.

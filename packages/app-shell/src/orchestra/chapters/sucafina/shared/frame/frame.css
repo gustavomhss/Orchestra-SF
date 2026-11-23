@@ -1,3 +1,5 @@
+@import "../foundation.css";
+
 /* F03: a composition layer over Orchestra's native Mx kit, not a new skin.
    All paint, type and motion read the existing theme tokens. */
 .sf-page-frame {
@@ -210,3 +212,47 @@
     animation-duration: 0ms;
   }
 }
+
+/* Page actions share the title's axis. Form/review actions stay in their owner. */
+.sf-page-frame .sf-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--sf-space-2);
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-page-actions .sf-action { max-inline-size: var(--sf-field-width); }
+.sf-page-frame .mx-heading { align-items: flex-start; }
+.sf-page-frame .mx-heading p { line-height: 1.6; max-inline-size: var(--sf-reading-width); }
+.sf-page-frame .sf-frame-body { line-height: 1.6; }
+.sf-page-context {
+  gap: var(--sf-space-3) var(--sf-space-6);
+  padding-block: var(--sf-space-3) var(--sf-space-4);
+}
+.sf-page-context dd { font-variant-numeric: tabular-nums; }
+.sf-context-bar, .sf-chart-frame {
+  box-shadow: var(--mx-card-shadow);
+  transition: border-color var(--orchestra-duration-fast) var(--orchestra-ease-out);
+}
+.sf-context-bar:focus-within, .sf-chart-frame:focus-within { border-color: var(--mx-rim); }
+.sf-action-reason {
+  max-inline-size: var(--sf-field-width);
+  font-size: var(--orchestra-font-size-sm);
+  line-height: 1.5;
+}
+.sf-numeric { font-variant-numeric: tabular-nums; overflow-wrap: normal; word-break: normal; }
+.sf-unit { display: inline; white-space: normal; }
+.sf-chart-table :is(th, td) { overflow-wrap: normal; word-break: normal; }
+.sf-chart-table :is(code, bdi) { overflow-wrap: anywhere; }
+@container sf-frame (max-width: 767px) {
+  .sf-page-frame .sf-page-actions { justify-content: flex-start; }
+  .sf-page-frame .mx-heading > div:last-child .sf-page-actions .sf-action { inline-size: auto; max-inline-size: 100%; }
+}
+@container sf-frame (max-width: 479px) {
+  .sf-page-frame .sf-page-actions { gap: var(--sf-space-2); }
+  .sf-page-frame .sf-page-actions .sf-action { flex: 1 1 auto; }
+}
+
+/* The separating space belongs to the text, including selection and copy. */
+.sf-unit { margin-inline-start: 0; }

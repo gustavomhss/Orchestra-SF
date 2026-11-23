@@ -13,6 +13,7 @@ import { sfDecisionControls, sfPortfolioReady, sfSensitivityEvaluate,
   type SfSensitivityRequest, type SfSensitivityUnits } from "../scenarios/producer"
 import type { SfCaseControls, SfSensitivityResultView } from "../scenarios/model"
 import "./sensitivity.css"
+import "../../reviews/workflows.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
 const horizonLabel = (start: string, end: string, locale: string) => {
@@ -245,7 +246,7 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-sensitivity" data-sf-sensitivity data-sf-surface="UI44">
+      <section data-sf-wave="polish" class="sf-u19-sensitivity sf-workflow" data-sf-sensitivity data-sf-surface="UI44">
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
           <Show when={store.message}><p role="status" class="sf-u19-message">{t(store.message!)}</p></Show>
@@ -268,10 +269,10 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
               onRetryRead={() => setRefresh((n) => n + 1)}>
               <Show when={selection()}>
                 {(current) => <>
-                  <header class="sf-u19-sensitivity-header"><h2>{current().objective}</h2>
+                  <header class="sf-u19-sensitivity-header sf-section-header"><h2>{current().objective}</h2>
                     <p>{current().currency} · {horizonLabel(current().horizon.start, current().horizon.end, language.intl())}</p></header>
                   <Show when={routeResult()} fallback={
-                    <section class="sf-u19-sensitivity-form">
+                    <section class="sf-u19-sensitivity-form sf-section sf-form">
                       <p>{t("sf.u19.sensitivity.choose")}</p>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.sensitivity.choose")}</legend>
@@ -320,7 +321,9 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                               </label>
                               <label class="sf-u19-sensitivity-field">{t("sf.u19.sensitivity.operator")}
                                 <select value={store.operator} onChange={(event) => { set("operator", event.currentTarget.value as View["operator"]); set("review", false) }}>
-                                  <option value="lte">≤</option><option value="gte">≥</option><option value="eq">=</option>
+                                  <option value="lte">{t("sf.u19.operator.lte")} (≤)</option>
+                                  <option value="gte">{t("sf.u19.operator.gte")} (≥)</option>
+                                  <option value="eq">{t("sf.u19.operator.eq")} (=)</option>
                                 </select>
                               </label>
                               <label class="sf-u19-sensitivity-field">{t("sf.u19.sensitivity.thresholdValue")}
@@ -341,12 +344,24 @@ export function SfSensitivityView(props: SfSurfaceProps<"UI44">): JSX.Element {
                             <Show when={store.review && request()}>
                               <section class="sf-u19-review" role="region" aria-label={t("sf.u19.sensitivity.preview")}>
                                 <h3>{t("sf.u19.sensitivity.preview")}</h3>
-                                <dl><div><dt>{t("sf.u19.sensitivity.scenario")}</dt><dd><bdi>{store.scenarioRef}</bdi></dd></div>
-                                  <div><dt>{t("sf.u19.sensitivity.parameter")}</dt><dd>{store.parameterRef}</dd></div>
-                                  <div><dt>{t("sf.u19.sensitivity.thresholdValue")}</dt><dd>{store.operator} {store.criterionValue} {store.units?.resultUnit}</dd></div>
+                                <dl><div><dt>{t("sf.u19.sensitivity.scenario")}</dt><dd>{scenarios().find((item) => item.ref === store.scenarioRef)?.title ?? t("sf.u19.results.sourceUnknown")}</dd></div>
+                                  <div><dt>{t("sf.u19.sensitivity.baseline")}</dt><dd>{scenarios().find((item) => item.ref === store.baselineRef)?.title ?? t("sf.u19.results.sourceUnknown")}</dd></div>
+                                  <div><dt>{t("sf.u19.sensitivity.parameter")}</dt><dd>{parameters().find((item) => item.ref === store.parameterRef)?.label ?? t("sf.u19.results.sourceUnknown")}</dd></div>
+                                  <div><dt>{t("sf.u19.sensitivity.thresholdValue")}</dt><dd>{language.t("sf.u19.sensitivity.reviewCriterion" as Parameters<typeof language.t>[0], {
+                                    operator: t(`sf.u19.operator.${store.operator}`), value: store.criterionValue, unit: store.units?.resultUnit ?? "",
+                                  })}</dd></div>
                                   <div><dt>{t("sf.u19.sensitivity.basis")}</dt><dd>{store.minimum} — {store.maximum} ({store.steps}) {store.units?.parameterUnit}</dd></div></dl>
+                                <details class="sf-technical-details">
+                                  <summary>{t("sf.u19.sourceDetails")}</summary>
+                                  <dl>
+                                    <div><dt>{t("sf.u19.sensitivity.scenario")}</dt><dd><bdi>{store.scenarioRef}</bdi></dd></div>
+                                    <div><dt>{t("sf.u19.sensitivity.baseline")}</dt><dd><bdi>{store.baselineRef}</bdi></dd></div>
+                                    <div><dt>{t("sf.u19.sensitivity.parameter")}</dt><dd><bdi>{store.parameterRef}</bdi></dd></div>
+                                    <div><dt>{t("sf.u19.sensitivity.criterion")}</dt><dd><bdi>{store.ruleId}</bdi></dd></div>
+                                  </dl>
+                                </details>
                                 <p>{t("sf.u19.scenarios.notCalculated")}</p>
-                                <div class="sf-u19-buttons">
+                                <div class="sf-u19-buttons sf-form-actions">
                                   <button type="button" class="mx-btn primary" disabled={store.busy || store.outcomeUnknown || !request()}
                                     onClick={evaluate}>{t("sf.u19.sensitivity.confirm")}</button>
                                   <button type="button" class="mx-btn" onClick={() => set("review", false)}>{t("sf.u19.action.cancel")}</button>

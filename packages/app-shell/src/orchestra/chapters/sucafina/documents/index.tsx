@@ -880,7 +880,6 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
           </Show>
         </SfStatePanel>
         <Show when={state.status === "unavailable" || state.status === "outcome-unknown" || state.status === "stale"}>
-          <p role="alert" class="sf-files-note">{t(message())}</p>
           <Show when={state.phase === "unknown"}>
             <button type="button" class="mx-btn" disabled={state.busy}
               onClick={refresh}>{t("sf.u24.reconcile")}</button>

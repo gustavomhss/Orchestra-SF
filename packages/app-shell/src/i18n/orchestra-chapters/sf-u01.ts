@@ -34,6 +34,15 @@ export const SF_U01_COPY = {
   "sf.ui29.forecastCapex": "Capital forecast (source units)",
   "sf.ui29.forecastSource": "Authorized source",
   "sf.ui29.changesNotProjected": "Material changes are not supplied by this projection.",
+  "sf.ui29.state.critical": "Critical",
+  "sf.ui29.state.high": "High",
+  "sf.ui29.state.normal": "Normal",
+  "sf.ui29.state.open": "Open",
+  "sf.ui29.state.progress": "In progress",
+  "sf.ui29.state.blocked": "Blocked",
+  "sf.ui29.state.done": "Done",
+  "sf.ui29.state.mitigating": "Mitigation in progress",
+  "sf.ui29.state.closed": "Closed",
 } as const
 
 export const SF_U01_COPY_BR: Readonly<Record<keyof typeof SF_U01_COPY, string>> = {
@@ -71,4 +80,13 @@ export const SF_U01_COPY_BR: Readonly<Record<keyof typeof SF_U01_COPY, string>> 
   "sf.ui29.forecastCapex": "Previsão de capital (unidade da fonte)",
   "sf.ui29.forecastSource": "Fonte autorizada",
   "sf.ui29.changesNotProjected": "Esta projeção não fornece mudanças materiais.",
+  "sf.ui29.state.critical": "Crítica",
+  "sf.ui29.state.high": "Alta",
+  "sf.ui29.state.normal": "Normal",
+  "sf.ui29.state.open": "Aberto",
+  "sf.ui29.state.progress": "Em andamento",
+  "sf.ui29.state.blocked": "Bloqueado",
+  "sf.ui29.state.done": "Concluído",
+  "sf.ui29.state.mitigating": "Em mitigação",
+  "sf.ui29.state.closed": "Encerrado",
 }

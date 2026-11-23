@@ -4,6 +4,10 @@ import { waveThreeData } from "./design-support/wave-three-data"
 import { waveFourPlannerData } from "./design-support/wave-four-planner-data"
 import type { DesignInstallation } from "./design-support/installation"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP20", path: "/orchestra/sf-planner/headcount", title: "Headcount", br: "Headcount" },
   { id: "CAP21", path: "/orchestra/sf-planner/allocations", title: "Entities & allocations", br: "Entidades e alocações" },
@@ -110,9 +114,13 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
   expect(info.project.metadata.bundle, "maintained production browser runner").toBe("production")
   const messages = observePage(page)
   const mutations: string[] = []
+  const savedPositionRateRefs: unknown[] = []
   page.on("request", (request) => {
-    if (request.method() === "POST" && new URL(request.url()).pathname === installation.mount + "/planner")
-      mutations.push(request.postDataJSON().page + "/" + request.postDataJSON().action)
+    if (request.method() !== "POST" || new URL(request.url()).pathname !== installation.mount + "/planner") return
+    const input = request.postDataJSON()
+    mutations.push(input.page + "/" + input.action)
+    if (input.page === "Headcount" && input.action === "save" && input.values?.collection === "positions")
+      savedPositionRateRefs.push(input.values.rateId)
   })
 
   await waveFourTest.step("CAP20 · source roster, draft preservation, review and persisted position", async () => {
@@ -130,14 +138,23 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     const detail = surface.locator("[data-sf-headcount-position]")
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(waveFourPlannerData.headcount.position)
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("1")
-    await expect(detail.getByRole("region", { name: "Monthly cost", exact: true }).locator("tbody td")).toHaveCount(12)
+    const rateCard = detail.getByRole("combobox", { name: "Rate card", exact: true })
+    await expect(rateCard.locator("option:checked")).toHaveText(waveFourPlannerData.headcount.rate)
+    const rateRef = await rateCard.inputValue()
+    expect(rateRef).not.toBe("")
+    await expect(detail.getByRole("region", { name: "Monthly cost (USD)", exact: true }).locator("tbody td")).toHaveCount(12)
     await detail.getByLabel("FTE", { exact: true }).fill("0.9")
     await scrollPageTop(page)
     await capture(page, info, "CAP20-dark-320-position-editor-test-data")
+    await rateCard.scrollIntoViewIfNeeded()
+    await capture(page, info, "CAP20-dark-320-rate-card-label-test-data")
     const before = mutations.length
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(surface).toBeHidden()
     await expect(review(page)).toContainText("0.9")
+    await expect(review(page).getByRole("region", { name: "Rate card", exact: true })
+      .locator('[data-version="proposed"] .sf-s03-field-value'))
+      .toHaveText(waveFourPlannerData.headcount.rate + " · " + rateRef)
     await reviewActions(page)
     await capture(page, info, "CAP20-dark-320-position-review-test-data")
     expect(mutations).toHaveLength(before)
@@ -149,13 +166,16 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
-    await confirm(page, installation, "Headcount", "save", "Review changes", "positions")
+    await confirm(page, installation, "Headcount", "save", "Save position", "positions")
+    expect(savedPositionRateRefs).toEqual([rateRef])
     expect(mutations).toHaveLength(before + 1)
     await go(page, owner, installation, screens[0])
     await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
     await ready(page, "Headcount")
     await positionRow.getByRole("button", { name: "Show details", exact: true }).click()
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("0.9")
+    await expect(rateCard).toHaveValue(rateRef)
+    await expect(rateCard.locator("option:checked")).toHaveText(waveFourPlannerData.headcount.rate)
     // The mounted roster can be reopened without clearing the selected record or its draft owner.
     await positions.locator("summary").click()
     await expect(positionRow).toContainText("0.9")
@@ -163,7 +183,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await capture(page, info, "CAP20-dark-desktop-confirmed-source-test-data")
     await surface.getByRole("button", { name: "Sync roster", exact: true }).click()
     await expect(review(page)).toContainText("No roster preview was supplied")
-    await expect(review(page).getByRole("button", { name: "Review changes", exact: true })).toBeDisabled()
+    await expect(review(page).getByRole("button", { name: "Sync roster", exact: true })).toBeDisabled()
     await reviewActions(page)
     await capture(page, info, "CAP20-dark-desktop-unavailable-roster-impact-test-data")
     await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
@@ -300,7 +320,7 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await surface.getByLabel("Plan version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
     await ready(page, "FX rates")
     await expect(euro.locator('[data-sf-rate-state="known"]')).toHaveText("1.09")
-    await expect(euro).toContainText(observation)
+    await expect(euro.locator("time")).toHaveAttribute("datetime", observation)
     await expect(rates.locator('[data-sf-rate-state="missing"]')).toHaveText("No rate")
     await capture(page, info, "CAP22-dark-desktop-confirmed-provenance-test-data")
     await page.getByRole("button", { name: "Add currency", exact: true }).click()
@@ -322,6 +342,13 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     expect(await list.locator("tr[data-sf-row]").count()).toBeGreaterThanOrEqual(2)
     await views(page, info, "CAP23-version-ledger")
     const primary = list.locator("tr[data-sf-row]").filter({ has: page.getByText(waveThreeData.planner.version, { exact: true }) })
+    await expect(primary.getByRole("cell", { name: "Draft", exact: true })).toBeVisible()
+    for (const name of ["Copy version", "Lock version", "Make official", "Delete version"])
+      await expect(primary.getByRole("button", { name, exact: true })).toBeVisible()
+    await expect.poll(async () => (await primary.boundingBox())?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(200)
+    // Scroll the real table to its existing actions without invoking a command.
+    await primary.getByRole("button", { name: "Delete version", exact: true }).scrollIntoViewIfNeeded()
+    await capture(page, info, "CAP23-dark-320-version-actions-test-data")
     await primary.getByRole("button", { name: "Open record", exact: true }).click()
     await ready(page, "Versions")
     const detail = surface.locator("[data-sf-record-detail]")
@@ -329,19 +356,19 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await detail.getByLabel("Name", { exact: true }).fill(revised)
     await capture(page, info, "CAP23-dark-320-version-editor-test-data")
     const before = mutations.length
-    await detail.getByRole("button", { name: "Save", exact: true }).click()
+    await detail.getByRole("button", { name: "Save version", exact: true }).click()
     await expect(review(page)).toContainText(revised)
     await reviewActions(page)
     await capture(page, info, "CAP23-dark-320-version-review-test-data")
     await review(page).getByRole("button", { name: "Revise", exact: true }).click()
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(revised)
-    await detail.getByRole("button", { name: "Save", exact: true }).click()
+    await detail.getByRole("button", { name: "Save version", exact: true }).click()
     await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(revised)
     expect(mutations).toHaveLength(before)
     await width(page, 1440)
-    await detail.getByRole("button", { name: "Save", exact: true }).click()
-    await confirm(page, installation, "Versions", "save", "Confirm")
+    await detail.getByRole("button", { name: "Save version", exact: true }).click()
+    await confirm(page, installation, "Versions", "save", "Save version")
     await ready(page, "Versions")
     await expect(detail.getByRole("heading", { name: revised, exact: true })).toBeVisible()
     expect(mutations).toHaveLength(before + 1)
@@ -355,15 +382,15 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     const create = surface.locator(".sf-u46-new")
     await create.getByLabel("Name", { exact: true }).fill(copyName)
     const source = create.locator("li").filter({ hasText: revised })
-    await source.getByRole("button", { name: "copy", exact: true }).click()
+    await source.getByRole("button", { name: "Copy version", exact: true }).click()
     await expect(review(page)).toContainText(copyName)
     await reviewActions(page)
     await capture(page, info, "CAP23-dark-desktop-copy-review-test-data")
     await review(page).getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(create.getByLabel("Name", { exact: true })).toHaveValue(copyName)
     expect(mutations).toHaveLength(before + 1)
-    await source.getByRole("button", { name: "copy", exact: true }).click()
-    await confirm(page, installation, "Versions", "copy", "Confirm")
+    await source.getByRole("button", { name: "Copy version", exact: true }).click()
+    await confirm(page, installation, "Versions", "copy", "Copy version")
     await ready(page, "Versions")
     // The mounted producer confirms the command without returning a record ID.
     // Open the copy from the newly authorized list, as the native page requires.

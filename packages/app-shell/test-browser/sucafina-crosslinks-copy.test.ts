@@ -75,7 +75,8 @@ const owner = {
   },
 }
 const fixtures: Record<string, object> = {
-  context: { useSfContext: () => owner },
+  // Decorative readable consumers share this exact owner; no additional authority or grant is manufactured.
+  context: { useSfContext: () => owner, useSfReadableContext: () => owner },
   language: { useLanguage: () => ({
     t: translate, intl: () => locale() === "en" ? "en-US" : "pt-BR",
     plural: (key: string, _count: number, values: Record<string, string | number>) => translate(key, values),

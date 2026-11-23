@@ -385,9 +385,11 @@ export const createSfHostRuntimeWithRoutineNative = async (
           if (installed.includes(business.descriptors[index]!)) business.descriptors.splice(index, 1)
       }
     } })
+  const routineGeneration = async () => await state.models?.() ? state.generation : undefined
+  const routineGenerationCurrent = (observed: number) => state.generation === observed
   const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
-    generation: async () => await state.models?.() ? state.generation : undefined })
+    generation: routineGeneration })
   // The original A09 POST remains the only human run continuation. IDs and approvals cannot stand in for it.
   const authorizeNativeHumanRun = async (context: TrustedUiContext, command: SfRoutineNativeHumanRunCommand) => {
     const request = authority.host.requestFor(context)
@@ -413,7 +415,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     governance: routineGovernance,
     requestFor: authority.host.requestFor,
     authorize: authority.authority.revalidateDomainContext,
-    generation: async () => await state.models?.() ? state.generation : undefined,
+    generation: routineGeneration,
     authorizeRun: authorizeNativeHumanRun,
     publication: routinePublication.publication,
     resolveCase: business.resolveCase,
@@ -1159,7 +1161,8 @@ export const createSfHostRuntimeWithRoutineNative = async (
           binding: input.nativeReadBinding, source: () => {
             if (!identity() || services.nativeUiProducts !== nativeUiProducts) return undefined
             const publication = routinePublication.publication()
-            return publication ? { producer: nativeUiProducts, publication, resources: routineRuntime.resources,
+            return publication ? { producer: nativeUiProducts, publication, resources: routineRuntime.resources, generation: routineGeneration,
+              generationCurrent: routineGenerationCurrent,
               dependencies: [nativeUiProducts.routines, nativeUiProducts.withCase, business.cases, business.cases.read,
                 nativePhases.services.routines, nativePhases.services.readExecution, nativePhases.services.openResult,
                 services.routineEvidence, services.dispatch, authority, routineRuntime, routineOwners] } : undefined

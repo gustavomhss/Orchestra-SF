@@ -16,6 +16,7 @@ import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { readSfAuthorizedImportHistoryReference } from "./history"
 import "./imports.css"
+import "../reviews/workflows.css"
 import "../documents/records.css"
 
 type ImportSurface = "planner" | "dashboard"
@@ -604,9 +605,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
-      <section class="sf-files" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
+      <section class="sf-files" classList={{ "sf-workflow": props.surfaceId === "UI55" || props.surfaceId === "UI56" }}
+        data-sf-leaf="u23" data-sf-surface={props.surfaceId}
         data-sf-records={props.surfaceId === "UI57" || isExport() ? "six" : undefined}
-        data-sf-wave={props.surfaceId === "UI57" || isExport() ? "six" : undefined}
+        data-sf-wave={props.surfaceId === "UI57" || isExport() ? "six" : "polish"}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())}
           onRetryRead={state.phase === "unknown" ? undefined : () => { if (isHistory()) void loadHistory(); else if (isReference()) void loadReference(); else if (isImport()) void discover(); else if (isExport()) {
@@ -618,8 +620,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           } : undefined}>
           <Show when={isImport()}>
             <div class="sf-files-fields">
-              <label>{t("sf.u23.source")}
-                <select aria-label={t("sf.u23.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+              <label>{t("sf.u23.label.source")}
+                <select aria-label={t("sf.u23.label.source")} value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
               </label>
@@ -663,7 +665,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   onChange={(e) => { change(); setState("replace", e.currentTarget.checked) }} />
                   {t("sf.u23.replace")}</label>
               </Show>
-              <label>{t("sf.u23.headerRow")}
+              <label>{t("sf.u23.label.headerRow")}
                 <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
                   onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
               </label>
@@ -701,7 +703,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           </Show>
           <Show when={isReference()}>
             <div class="sf-files-fields">
-              <label>{t("sf.u23.source")}
+              <label>{t("sf.u23.label.source")}
                 <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
@@ -796,12 +798,21 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <Show when={changeSummary(kind).length === 0}><p>{t("sf.u23.noImpact")}</p></Show>
                   <For each={changeSummary(kind)}>{(entry) => <article class="sf-files-change">
                     <Show when={props.surfaceId === "UI57"} fallback={<>
-                    <h3>{entry.path}</h3>
-                    <p>{displayValue(entry.before)} → {displayValue(entry.after)}</p>
-                    <p>{entry.source.kind === "file"
-                      ? entry.source.sheet + " · " + t("sf.u23.row") + " " + entry.source.row +
-                        ", " + t("sf.u23.column") + " " + entry.source.column + " · " + entry.source.address
-                      : entry.source.reference}</p>
+                    <h3>{entry.source.kind === "file" ? t("sf.u23.changeCell", {
+                      sheet: entry.source.sheet, row: entry.source.row, column: entry.source.column,
+                    }) : t("sf.u23.sourceChange")}</h3>
+                    <div class="sf-files-diff">
+                      <div><h4>{t("sf.u23.before")}</h4><p>{displayValue(entry.before)}</p></div>
+                      <div><h4>{t("sf.u23.after")}</h4><p>{displayValue(entry.after)}</p></div>
+                    </div>
+                    <details class="sf-technical-details">
+                      <summary>{t("sf.u23.sourceDetails")}</summary>
+                      <p>{t("sf.u23.fieldReference")}: <code>{entry.path}</code></p>
+                      <p>{entry.source.kind === "file"
+                        ? entry.source.sheet + " · " + t("sf.u23.row") + " " + entry.source.row +
+                          ", " + t("sf.u23.column") + " " + entry.source.column + " · " + entry.source.address
+                        : entry.source.reference}</p>
+                    </details>
                     </>}>
                       <h3>{entry.source.kind === "file" ? t("sf.u23.changeCell", {
                         sheet: entry.source.sheet, row: entry.source.row, column: entry.source.column,
@@ -833,7 +844,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <p>{item.id} · {item.at} · {item.status} · {item.version}</p>}</For>
               </section>}
             </Show>
-            <div class="sf-files-actions">
+            <div class="sf-files-actions sf-form-actions">
               <Show when={isImport()}>
                 <button type="button" class="mx-btn" disabled={editLocked()}
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button>
@@ -912,9 +923,6 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </div>
           </Show>
         </SfStatePanel>
-        <Show when={state.status === "unavailable" || state.status === "outcome-unknown" || state.status === "stale"}>
-          <p role="alert" class="sf-files-note">{t(message())}</p>
-        </Show>
         <Show when={state.phase === "unknown" && state.manifest && permitted("files.import-reference")}>
           <button type="button" class="mx-btn" disabled={state.busy}
             onClick={() => { void reconcile() }}>{t("sf.u23.reconcile")}</button>

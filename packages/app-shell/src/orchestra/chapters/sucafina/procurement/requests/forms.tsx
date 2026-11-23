@@ -131,18 +131,24 @@ export function SfPurchaseOrderForm(props: PoProps) {
         fallback={<p role="alert">{copy("sf.u11.remaining.invalidPo")}</p>}>
         <For each={props.value.lines}>{(line, index) =>
           <fieldset class="sf-u11-line" data-sf-line-ref={line.id ?? undefined}>
-            <legend>{line.id ?? String(index() + 1)}</legend>
+            <legend title={line.id ?? undefined}>{copy("sf.u11.remaining.field.lines")} · {index() + 1}</legend>
+            <Show when={line.id}><small class="sf-u11-reference">{line.id}</small></Show>
             <div class="sf-u11-fields">
               <For each={lineFields}>{(field) =>
                 <label class="sf-u11-field" data-field={field}>
                   <span>{copy(tKey("sf.u11.remaining.field." + field))}</span>
-                  <input
-                    type={field === "qty" || field === "unitPrice" ? "number" : "text"}
-                    step={field === "qty" || field === "unitPrice" ? "any" : undefined}
-                    value={textValue(line[field])}
-                    onInput={(event) => updateLine(index(), field,
-                      (field === "qty" || field === "unitPrice")
-                        ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)} />
+                  <Show when={field === "desc" || field === "notes"} fallback={
+                    <input
+                      type={field === "qty" || field === "unitPrice" ? "number" : "text"}
+                      step={field === "qty" || field === "unitPrice" ? "any" : undefined}
+                      value={textValue(line[field])}
+                      onInput={(event) => updateLine(index(), field,
+                        (field === "qty" || field === "unitPrice")
+                          ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)} />
+                  }>
+                    <textarea rows={3} value={textValue(line[field])}
+                      onInput={(event) => updateLine(index(), field, event.currentTarget.value)} />
+                  </Show>
                 </label>
               }</For>
             </div>

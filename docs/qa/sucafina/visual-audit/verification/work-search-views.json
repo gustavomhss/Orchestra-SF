@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "verificar_status_disponivel",
+  "reviewDate": "2026-11-23",
+  "scope": "UI30 My work, UI31 private search, UI32 saved views; Decisions4 artifact",
+  "repository": "gustavomhss/Orchestra-SF",
+  "snapshot": "599cec18463ccb05faf5f546b5a4f2d96b1d5491",
+  "run": {
+    "id": 45090124098,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45090124098",
+    "jobId": 137417554851,
+    "artifactId": 14781572399,
+    "conclusion": "success",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "flaky": 0,
+    "durationMs": 898678.487
+  },
+  "review": {
+    "namedCheckpoints": 22,
+    "uniqueNamedPixels": 22,
+    "automaticFinals": 1,
+    "level": "Every listed original was viewed at full size.",
+    "formats": [
+      "English dark 1440×1100",
+      "English light 1440×1100",
+      "English light 320×900",
+      "Brazilian Portuguese dark 1440×1100"
+    ],
+    "darkMobileInThisSubset": false
+  },
+  "findings": [],
+  "observations": [
+    "UI30 assigned-work columns now display Handoff and Procurement and readable Requisition/Sourcing/Purchase order approval states without mid-word breaks. The action name and Open record stay primary; technical references are not repeated in every row.",
+    "UI30 authorized handoff detail keeps source-provided Action/Status business pairs visible after the structured owner, type, state and source-version fields. Source identity/provenance disclosure remains separate.",
+    "UI30 initial period prompt, authorized detail and filtered-empty states fit their captured widths. The unknown owner and actual 127.0.0.1 installation identity remain truthful.",
+    "UI31 query and result cards now each have complete borders and radii. Initial, required-query validation, empty-source, mobile and Portuguese frames confirm coherent section spacing.",
+    "UI32 editor, source-preserving comparison and confirmed version2 readback are legible. Original, current-source and proposed values remain separate; removal shows unavailable proposed values without replacing them with source values.",
+    "UI32 dedicated mobile review-actions capture displays Cancel review, Revise and Confirm save fully, after the vertically stacked density comparison.",
+    "No new material visual defect was identified in the visible portions of this subset."
+  ],
+  "sourceProof": {
+    "UI30": {
+      "areas": [
+        "UI30"
+      ],
+      "schemes": [
+        "dark",
+        "light"
+      ],
+      "locales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "widths": [
+        1440,
+        320
+      ],
+      "confirmedBrowserWrites": 0,
+      "source": "genuine native installation; original Procurement collection and local Handoff command, private search and original V1 preferences",
+      "limitations": [
+        "Procurement work-item detail returned 503 in the earlier run; positive Work detail uses the original Hot Topic handoff",
+        "No uploaded searchable document",
+        "Native V2 views and preferred entry are not admitted",
+        "Actual browser zoom not measured"
+      ],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "UI31": {
+      "areas": [
+        "UI31"
+      ],
+      "schemes": [
+        "dark",
+        "light"
+      ],
+      "locales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "widths": [
+        1440,
+        320
+      ],
+      "confirmedBrowserWrites": 0,
+      "source": "genuine native installation; original Procurement collection and local Handoff command, private search and original V1 preferences",
+      "limitations": [
+        "Procurement work-item detail returned 503 in the earlier run; positive Work detail uses the original Hot Topic handoff",
+        "No uploaded searchable document",
+        "Native V2 views and preferred entry are not admitted",
+        "Actual browser zoom not measured"
+      ],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "UI32": {
+      "areas": [
+        "UI32"
+      ],
+      "schemes": [
+        "dark",
+        "light"
+      ],
+      "locales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "widths": [
+        1440,
+        320
+      ],
+      "confirmedBrowserWrites": 1,
+      "source": "genuine native installation; original Procurement collection and local Handoff command, private search and original V1 preferences",
+      "limitations": [
+        "Procurement work-item detail returned 503 in the earlier run; positive Work detail uses the original Hot Topic handoff",
+        "No uploaded searchable document",
+        "Native V2 views and preferred entry are not admitted",
+        "Actual browser zoom not measured"
+      ],
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  },
+  "resolvedIssues": [
+    {
+      "issue": "UI30 technical kind/state codes and narrow table columns in the principal work list",
+      "resolution": "Known canonical labels and adjusted type/state widths are visible; unknown producer values remain unmodified."
+    },
+    {
+      "issue": "UI30 source details were initially collapsed too broadly",
+      "resolution": "Source-provided business label/value pairs remain visible; only identity and provenance are grouped under disclosure."
+    },
+    {
+      "issue": "UI31 query/results retained old joined-card edge treatment after vertical gaps were added",
+      "resolution": "Independent full borders and radii are verified in dark/light desktop and light320."
+    }
+  ],
+  "limits": [
+    "UI30 positive work detail is the original Hot Topic handoff. The earlier Procurement detail503 is not converted into a positive claim.",
+    "UI30 light320 detail ends above its lower source fields and destination buttons; those lower mobile portions are not visually qualified by this capture.",
+    "UI31 captures initial, invalid and genuinely empty authorized-source search. No uploaded searchable document or populated result set is claimed.",
+    "UI32 performs one original V1 preference save and confirms version2 readback. The removal frame is a review; no second browser write is claimed.",
+    "Native V2 views and preferred entry remain not admitted. The existing prerequisite copy explicitly references that producer; no availability was invented.",
+    "Dark mobile, physical device behavior and actual browser zoom are not proved by these22 checkpoints.",
+    "UI33 entry/new Cases belongs to wave-one; Decisions4 itself covers UI34–41 separately and does not contain a named UI33 capture."
+  ],
+  "attachments": {
+    "index": "image-index.json",
+    "runtime": "test-ci-evidence/playwright-runtime.json",
+    "source": "source-attachments.json"
+  },
+  "images": [
+    {
+      "index": 1,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-dark-desktop-before-query.png",
+      "sha256": "8edafff1d78500dba16261c872585444c5ba59abc5f83d252d3a850f0ab6ee52",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 2,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-dark-desktop-required-query.png",
+      "sha256": "4322a7d780167d884aee3af760ccce3946b3b52a14f4726bef0a8756f61f2472",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 3,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-dark-desktop-source-empty.png",
+      "sha256": "f33a995a7e1867fa9a35881c08ea756b6eedead81fe78d32d544a85bc8c9a7a6",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 4,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-light-320-source-empty.png",
+      "sha256": "029f0f175c14db23816a11de5c19e5376a0e1fefa93f3f2a2def6736cd8ef6b6",
+      "size": [
+        320,
+        900
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 5,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-light-desktop-source-empty.png",
+      "sha256": "3d2aa5d0b0398f75b88f088fc28d1572d8458cf818ce8e380e6c457d2861732b",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 6,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--54148-use-their-admitted-producer-chromium/UI31-pt-BR-dark-desktop.png",
+      "sha256": "354994ab178758f38a55d5eeb7fed6b894d7134b7b3bc1c4e8e95b965c6ad9bf",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 7,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-dark-desktop-assigned-work.png",
+      "sha256": "0bcdf5738f7884e35341304968069f4a5f09927ffcb26614280be53f6969371c",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 8,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-dark-desktop-authorized-detail.png",
+      "sha256": "d1c01ac8551fd77c31402b93107774fe850f65609fa5c85f2cb553d881713ee4",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 9,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-dark-desktop-choose-period.png",
+      "sha256": "2c20d909e152cedb22af7bbd6670c5169fffb8df77fe312b112a77517bd36f06",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 10,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-light-320-authorized-detail.png",
+      "sha256": "5ebd34a830ea578b169019c5c784c1b64dc40b11d3046b04dfbcefac7159c287",
+      "size": [
+        320,
+        900
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 11,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-light-320-filtered-empty.png",
+      "sha256": "ce31d8dff09491840dc850043e1834d492619a06696cd3a336d0ea2d6a972843",
+      "size": [
+        320,
+        900
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 12,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-light-desktop-authorized-detail.png",
+      "sha256": "1489dce42e96bf94a0067a0d3001dca828323d63b6e07315137accef478f48b9",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 13,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/UI30-pt-BR-dark-desktop.png",
+      "sha256": "b3871e534f2daa90d156f18e5885fa945dde9669aba1bd687d5fa614a417efe7",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 15,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-dark-desktop-existing-view-editor.png",
+      "sha256": "cde5ce9d7ef165da78665cb3d683da7810c4ff45fc60708422d09f14fe52c009",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 16,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-dark-desktop-existing-view-list.png",
+      "sha256": "cb138f722f9f973d982df49cac9f38dd583ebc000e4c61f0e10af13b559c9a91",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 17,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-dark-desktop-existing-view-review.png",
+      "sha256": "91427605aae10a30e5b9d5dabbbd9a2128878180c653faacd212f3c5ae6d3c45",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 18,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-light-320-existing-view-review-actions.png",
+      "sha256": "70614743c6a358b9810f77ec51ec77a40b47aaa1c37e1d98316ab4d192b05191",
+      "size": [
+        320,
+        900
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 19,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-light-desktop-confirmed-view-readback.png",
+      "sha256": "5190de218b18969a4112b06925a762383230197af55dbaf399f79f97df7c54b7",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 20,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-light-desktop-existing-view-review.png",
+      "sha256": "5d5591ea849ee8623a9e34a7b438641d1ea37dccf721fffc473412ebc02c08f3",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 21,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-light-desktop-native-v2-unavailable.png",
+      "sha256": "85c125c07314bae85601a8920bf9dd6b4bfc864648eb51386754646378b1750a",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 22,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-light-desktop-removal-review.png",
+      "sha256": "1fdf5631173667117bd077e648773fe6627c891c1d38ff5fb9ded42ad2370144",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 23,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--92da9-use-their-admitted-producer-chromium/UI32-pt-BR-dark-desktop.png",
+      "sha256": "da8bb8d7efc459a382944952303f8d5fd5748330a5f1718ddb4740d8a9b8efd2",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    }
+  ],
+  "automaticFinals": [
+    {
+      "index": 14,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions4/packages/app-shell/e2e/test-results/sucafina-design-wave-four--5afa9-use-their-admitted-producer-chromium/test-finished-1.png",
+      "sha256": "786076459437d563897d527cefd1b4a2915c0a01b59d55804af6120e8aab2822",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original",
+      "description": "Authorized native Hot Topic destination after My work navigation; not counted as additional named workflow coverage."
+    }
+  ]
+}

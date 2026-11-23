@@ -22,6 +22,7 @@ import {
 } from "./model"
 import "./u18.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 type View = {
   state: SfUiState
@@ -271,13 +272,13 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
     <SfPageFrame
       titleKey={u18Key("sf.ui38.title")}
       context={selected() ? [{
-        id: "case", label: u18Message("sf.common.chooseCase"),
+        id: "case", label: u18Message("sf.u18.choice.currentCase"),
         value: { kind: "data", text: selected()!.title },
       }] : []}
       tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="comparison"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-decision-page sf-decision-choice" data-sf-wave="four" data-sf-decision="UI38" data-sf-surface="UI38">
+      <div class="sf-decision-page sf-decision-choice sf-workflow" data-sf-wave="four" data-sf-decision="UI38" data-sf-surface="UI38">
       <SfStatePanel
         state={currentState()} messageKey={u18ErrorKey(currentState())}
         onRetryRead={view.outcome === "unknown" ? undefined : () => void read()}
@@ -368,9 +369,23 @@ function sameRouteCase(routeRef: string, id: string, incarnation: string) {
 }
 
 function postedFields(promotion: SfChoiceReview["promotion"]): readonly SfReviewField[] {
-  const label = (path: string) => ({ key: u18Key("sf.u18.choice.conditionNamed"), params: { note: path } })
-  const text = (path: string, value: string): SfReviewField => ({
-    path, label: label(path), value: { kind: "text", text: { kind: "data", text: value } },
+  const labels = {
+    "caseRef.id": "sf.u18.field.case",
+    "caseRef.incarnation": "sf.u18.field.caseInstance",
+    "caseRef.version": "sf.u18.field.caseVersion",
+    choiceId: "sf.u18.field.choice",
+    choiceDigest: "sf.u18.field.choiceFingerprint",
+    "alternativeRef.id": "sf.u18.field.alternative",
+    "alternativeRef.version": "sf.u18.field.alternativeVersion",
+    resultRef: "sf.u18.field.result",
+    resultDigest: "sf.u18.field.resultFingerprint",
+    coverageRef: "sf.u18.field.coverage",
+    "scenario.baseRef": "sf.u18.field.baseline",
+    "scenario.operations": "sf.u18.field.operations",
+    "scenario.assumptions": "sf.u18.field.assumptions",
+  } as const
+  const text = (path: keyof typeof labels, value: string): SfReviewField => ({
+    path, label: { key: u18Key(labels[path]) }, value: { kind: "text", text: { kind: "data", text: value } },
   })
   const scenario = promotion.scenario
   return [

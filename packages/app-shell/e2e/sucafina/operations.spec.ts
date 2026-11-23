@@ -4,6 +4,13 @@ import { documentJourney } from "./operations-support/documents"
 import { exportRecordJourney } from "./operations-support/final-records-export"
 import { nativeRecordScenarioJourney } from "./operations-support/final-records-native-scenario"
 import { captureRecordFailure } from "./operations-support/final-records"
+import type { WorkflowCapture } from "./design-support/workflow-polish-capture"
+
+// The optional upstream capture suite registers hooks during module loading.
+// Keep those hooks scoped to its existing opt-in mode.
+const captureWorkflows: WorkflowCapture | undefined = process.env.SF_WORKFLOW_VISUAL_CAPTURE === "1"
+  ? (await import("./design-support/workflow-polish-capture")).captureWorkflowState
+  : undefined
 
 test.describe("CI-UI-OPERATIONS", () => {
   test.describe.configure({ retries: 0 })
@@ -19,15 +26,15 @@ test.describe("CI-UI-OPERATIONS", () => {
   test("OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01" })
     // The installed journey includes independent receipt, logout and foreign-owner reads after the Apply.
-    test.setTimeout(210_000)
-    await importJourney(page, info)
+    test.setTimeout(captureWorkflows ? 420_000 : 210_000)
+    await importJourney(page, info, captureWorkflows)
   })
 
   test("OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation", async ({ page }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19" })
     // Download follows a fresh signed access check and the installed scanner can use most of the default budget.
-    test.setTimeout(180_000)
-    await documentJourney(page, info)
+    test.setTimeout(captureWorkflows ? 420_000 : 180_000)
+    await documentJourney(page, info, captureWorkflows)
   })
 
   test("OP-EXPORT-01 UI68 delivers the exact authorized Planner file", async ({ page }, info) => {

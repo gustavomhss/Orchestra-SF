@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "verificar_status_disponivel",
+  "reviewDate": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "snapshot": "66ea81556dc7bcdff58f9b379b506b7abd519ab4",
+  "run": {
+    "id": 45090119567,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45090119567",
+    "jobId": 137417542002,
+    "artifactId": 14780828009,
+    "conclusion": "success",
+    "tests": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retries": 0,
+      "durationMs": 222180.81
+    }
+  },
+  "evidenceType": "compiled production UI with original isolated installed producers; native source operations and receipts",
+  "reviewed": {
+    "namedCheckpoints": 21,
+    "uniqueNamedImageHashes": 21,
+    "semanticStates": 7,
+    "automaticFinalImages": 3,
+    "level": "Every listed original image was viewed at full size; no contact-sheet-only approval.",
+    "formats": [
+      "dark 1440×1100",
+      "light 1440×1100",
+      "dark 320×800"
+    ],
+    "lightMobile": false
+  },
+  "findings": [],
+  "observations": [
+    "UI58 upload, source, search, candidates and extraction sections have distinct borders and vertical gaps. The added lower extraction checkpoint shows Field label, Type, Unit and the disabled action together at 320px and both desktop themes.",
+    "UI58 original extraction shows Price 42 USD as Extracted, without a confirmation claim.",
+    "UI59 confirmation review displays Price 42 USD, source revision and exact excerpt, Keep editing, Confirm this field, required rejection reason and reviewed source page. All review controls are visible in the 320px checkpoint.",
+    "UI59 independent confirmed readback displays the confirmed candidate, source document identity, exact excerpt and Open original. Provenance remains visible.",
+    "UI60 original confirmed evidence is visible. Both desktop themes display the authorized-destination prerequisite, an empty compatible destination selection and disabled Preview scenario.",
+    "UI60 source revocation removes all source text and candidates and shows Currently unavailable with Try again in all three formats.",
+    "No additional P0/P1/P2 visual defect was identified in the visible portions of these originals."
+  ],
+  "realOperationEvidence": {
+    "upload": {
+      "httpStatus": 200,
+      "contentType": "application/json; charset=utf-8",
+      "scannerConfigured": true,
+      "source": "one forwarded original POST",
+      "responseSubstituted": false,
+      "automaticRetries": 0,
+      "priorBodyToolFailureQualifiedProducer": false
+    },
+    "import": {
+      "applyRequests": 1,
+      "recovery": "Original Apply response delivery lost; explicit Refresh receipt and independent result-route reread recovered the same receipt.",
+      "revocation": "Cross-tab logout blocked receipt refresh at context preflight; producer denied exact reference.",
+      "isolation": "Separately signed-in viewer could export committed data but could not read owner receipt."
+    },
+    "document": {
+      "format": "UTF-8 text",
+      "candidate": "Price 42 USD, original range text:7-9, revision 1",
+      "confirmationVersion": 1,
+      "sourceRevocation": {
+        "assetStatus": 403,
+        "evidenceStatus": 409,
+        "candidateStatus": 503,
+        "discoveryCount": 0
+      }
+    }
+  },
+  "resolvedIssues": [
+    {
+      "issue": "Documents/imports state-content wrapper lost section gaps",
+      "resolution": "Local sf-files/sf-workflow layout retains original state wrapper and restores spaced sections; UI58/59 originals confirm the gap."
+    },
+    {
+      "issue": "CAP18 Sign out locator expected a button despite the native Context and access menu",
+      "resolution": "QA opens the actual menu and activates its enabled Sign out menuitem; cross-tab and producer denial assertions still pass."
+    },
+    {
+      "issue": "Supplier record identity locator expected an obsolete paragraph",
+      "resolution": "QA opens Record reference in the native details disclosure, checks exact SUP-00002, then retains original deletion/CAS/source revocation assertions."
+    },
+    {
+      "issue": "CDP response body retrieval failed on a prior real upload",
+      "resolution": "QA observes the exactly-once forward of the original response, preserving its status/body/headers; no response substitution or automatic write retry."
+    }
+  ],
+  "limits": [
+    "These are isolated production installations, not live Microsoft/Teams sessions.",
+    "There is no light-mobile screenshot in this cohort.",
+    "UI60 at 320px shows the source and confirmed candidate above the fold; its lower destination/preview controls are not visually qualified at 320px by this artifact.",
+    "UI59 confirmed and UI60 prerequisite mobile screenshots do not include every lower field; claims are limited to visible portions. The full confirmation review and UI58 extraction controls have dedicated lower captures.",
+    "Planner scenario preview and application are not proven by this fixture. No compatible authorized destination exists in the captured state.",
+    "The real document format is UTF-8 text. PDF/DOCX extraction and OCR are not claimed.",
+    "Prior bootstrap, request-selection and stale-locator failures are not counted as qualified screens or successful business journeys."
+  ],
+  "attachments": {
+    "index": "image-index.json",
+    "runtime": "test-ci-evidence/playwright-runtime.json",
+    "source": "source-attachments.json"
+  },
+  "images": [
+    {
+      "index": 21,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-320.png",
+      "sha256": "e3246f15884cc55360a9425f86ef98e4acdb5ff3fa1f90282409898b48b5b924",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 22,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-desktop.png",
+      "sha256": "8faae30f55bf4c741fee4ed8ced61d3a9cb7b62e6d4af6f33be5541520c9b643",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 23,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-light-desktop.png",
+      "sha256": "e1cfe37bc095db071447f8836a917afc5c65d310b3f8c193acb04b7fcac4aeee",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 24,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-320.png",
+      "sha256": "9fc6ca2a981614e50bdb22bde677233257f2fd00de580259b1f1b34ad4eaf3ac",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 25,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-desktop.png",
+      "sha256": "93eb9608031ff861f6ee16fe6f8d122392ff163b19a9270dda7dddffb62dedcd",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 26,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-light-desktop.png",
+      "sha256": "e88ad2ddad9652681b24bb71ec9d2a92baf6fb02603d0f62071007cd444ca323",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 27,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-320.png",
+      "sha256": "1622ea46f5ddb36abaab0e1499214dc437e6a369c669b8ac5324b8891ecd3292",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 28,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-desktop.png",
+      "sha256": "3cc36cee7fd2ec6ba7cdcd30c68896140613b3d9ed77874baeea94a9db50fe02",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 29,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-light-desktop.png",
+      "sha256": "9640b772513cdd00d529784bfb1659e57cee1be91a0cf414e29c9352b6587950",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 30,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-dark-320.png",
+      "sha256": "188246fee5cd32d6468499ab230f8315aeff8efa8d2119933161dd99b6e23c38",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 31,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-dark-desktop.png",
+      "sha256": "46ded135b05178d47be06ddbe601122a265923efbe4c3a7793a59d01835a81f6",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 32,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-original-confirmed-evidence-light-desktop.png",
+      "sha256": "85c2feefc271f8db4faaef1981bdd08a52203672e9aedf745de23721870def86",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 33,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-dark-320.png",
+      "sha256": "1777e20d304c7e50def9a3f6821b4d48015d44f68e61353474584980b1db0550",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 34,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-dark-desktop.png",
+      "sha256": "29b23941bef1a20c29a0517f4f6267f650632d64d9696887cbbca92c22bdd4b9",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 35,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI59-source-confirmation-review-light-desktop.png",
+      "sha256": "10043b1e8015f247af8f8fa2dfdfbf536b93e04b55b27d48a3f4b38c4c83ac77",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 36,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-dark-320.png",
+      "sha256": "39925ed84596cd07adc4fc9e3e78601d97510716a5b9c59d34bf1bf971539f4f",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 37,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-dark-desktop.png",
+      "sha256": "17d427f2b09a16270e5e22115aa3ed1d9b28d011a0e90dfe54cd4dfccaa73a9d",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 38,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-confirmed-source-prerequisite-light-desktop.png",
+      "sha256": "f8f6613e5cd7a0d888d1fab632a5e62a65a98b5a56f3899c67f1eb1e54d29750",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 39,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-dark-320.png",
+      "sha256": "6d809a502afdf706a8ef3090c5b4bffdade5e197b2c2f0d11dd00c79b15e8a58",
+      "size": [
+        320,
+        800
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 40,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-dark-desktop.png",
+      "sha256": "7397237d95fc20fd9e57b1723163181de61e6d807d6db14526083208fa64333a",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 41,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI60-source-revoked-light-desktop.png",
+      "sha256": "0a20dff8d83539f5e633baae3805e9c0cffbcec3bb40cf57013fbca71eb3d331",
+      "size": [
+        1440,
+        1100
+      ],
+      "review": "full-original"
+    }
+  ],
+  "automaticFinals": [
+    {
+      "index": 19,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-finished-1.png",
+      "sha256": "b4619f73b25e63643e3dabf7632be520a457a67d258499fd743e4ea33855237b",
+      "size": [
+        1280,
+        720
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 20,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-finished-2.png",
+      "sha256": "cd1c843a74d714d0a1ecb029c9da70968984e2338edcf38fdfc1a0de7695512a",
+      "size": [
+        1280,
+        720
+      ],
+      "review": "full-original"
+    },
+    {
+      "index": 42,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-files6/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/test-finished-1.png",
+      "sha256": "b6deb7a2cac87765b227058546f201226a918f698211a96cd8b43ff507c20750",
+      "size": [
+        1280,
+        720
+      ],
+      "review": "full-original"
+    }
+  ]
+}

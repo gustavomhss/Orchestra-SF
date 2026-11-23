@@ -16,6 +16,7 @@ import {
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
+import "../../reviews/workflows.css"
 import "../presentation.css"
 import "./runs.css"
 

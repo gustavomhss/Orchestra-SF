@@ -128,6 +128,11 @@ export function TeamProfileAdministration(props: Readonly<{
     void configure("enable", decoded.value)
   }
   const ready = () => ui.view.status === "ready" ? ui.view : undefined
+  const teamName = (id: string) => {
+    const teams = props.context.profile.teams
+    return teams.status === "ready" || teams.status === "selection-required"
+      ? teams.choices.find((choice) => choice.profile.teamObjectId === id)?.displayName : undefined
+  }
   onMount(() => {
     // A pending/conflicted write needs an explicit new read, including after focus or history remounts.
     if (!props.notice || props.notice === "sf.teams.adminSaved") void read()
@@ -141,9 +146,9 @@ export function TeamProfileAdministration(props: Readonly<{
     }
     operation?.abort()
   })
-  return <section class="mx-card flex w-full flex-col gap-4" data-sf-team-administration={ui.view.status}>
+  return <section class="sf-team-administration" data-sf-team-administration={ui.view.status}>
     <header>
-      <h2 class="text-lg font-semibold">{language.t("sf.teams.administration")}</h2>
+      <h2 class="sf-team-section-title">{language.t("sf.teams.administration")}</h2>
       <p>{language.t("sf.teams.adminDescription")}</p>
     </header>
     <Show when={ui.view.status === "loading"}><p role="status">{language.t("sf.ui67.loading")}</p></Show>
@@ -162,27 +167,32 @@ export function TeamProfileAdministration(props: Readonly<{
             setUi("view", reconcile({ status: "unavailable" }))
           }} />
       }</Show>
-      <form class="flex flex-col gap-2" onSubmit={(event) => { event.preventDefault(); enable() }}>
+      <form class="sf-team-enable-form" onSubmit={(event) => { event.preventDefault(); enable() }}>
         <label for={inputId}>{language.t("sf.teams.teamId")}</label>
-        <input id={inputId} data-sf-team-id-input class="mx-btn" autocomplete="off" maxlength={36}
+        <input id={inputId} data-sf-team-id-input class="sf-team-input" autocomplete="off" maxlength={36}
           value={ui.input} disabled={ui.busy || !!ui.configuration} aria-describedby={inputId + "-help"} aria-invalid={ui.invalid}
           onInput={(event) => setUi({ input: event.currentTarget.value, invalid: false })} />
         <p id={inputId + "-help"}>{language.t("sf.teams.enterTeam")}</p>
-        <button type="submit" class="mx-btn self-start" disabled={ui.busy || !!ui.configuration}>{language.t("sf.teams.enable")}</button>
+        <button type="submit" class="mx-btn primary" disabled={ui.busy || !!ui.configuration}>{language.t("sf.teams.enable")}</button>
       </form>
       <Show when={view().profiles.length} fallback={<p>{language.t("sf.teams.adminEmpty")}</p>}>
-        <ul class="flex flex-col gap-3"><For each={view().profiles.slice(0, ui.limit)}>{(row) =>
-          <li class="flex flex-wrap items-center gap-2" data-sf-admin-team={row.profile.teamObjectId}>
-            <bdi class="break-all">{row.profile.teamObjectId}</bdi>
-            <span>{language.t(row.enabled ? "sf.teams.enabled" : "sf.teams.disabled")}</span>
+        <ul class="sf-team-profiles"><For each={view().profiles.slice(0, ui.limit)}>{(row) =>
+          <li class="sf-team-profile-row" data-sf-admin-team={row.profile.teamObjectId}>
+            <div class="sf-team-profile-identity">
+              <strong><bdi>{teamName(row.profile.teamObjectId) || row.profile.teamObjectId}</bdi></strong>
+              <Show when={teamName(row.profile.teamObjectId)}><code><bdi>{row.profile.teamObjectId}</bdi></code></Show>
+            </div>
+            <span class="mx-badge" classList={{ good: row.enabled }}>{language.t(row.enabled ? "sf.teams.enabled" : "sf.teams.disabled")}</span>
+            <div class="sf-team-row-actions">
             <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration}
               data-sf-admin-action={row.enabled ? "disable" : "enable"}
               onClick={() => void configure(row.enabled ? "disable" : "enable", row.profile)}>
               {language.t(row.enabled ? "sf.teams.disable" : "sf.teams.enable")}</button>
             <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration} data-sf-admin-configuration
               onClick={() => setUi("configuration", row.profile)}>{language.t("sf.teams.configureChat")}</button>
-            <button type="button" class="mx-btn" disabled={ui.busy || !!ui.configuration} data-sf-admin-action="remove"
+            <button type="button" class="mx-btn danger" disabled={ui.busy || !!ui.configuration} data-sf-admin-action="remove"
               onClick={() => void configure("remove", row.profile)}>{language.t("sf.teams.remove")}</button>
+            </div>
           </li>
         }</For></ul>
       </Show>

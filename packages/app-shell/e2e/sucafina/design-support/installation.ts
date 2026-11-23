@@ -137,7 +137,13 @@ export async function authenticateDesignInstallation(context: BrowserContext, in
   const found = await context.request.get(discovery.href, { timeout: 20_000 })
   if (found.status() !== 200) throw new Error("Native installation discovery failed (" + found.status() + ")")
   const list = Schema.decodeUnknownSync(SfInstallationList, { onExcessProperty: "error" })(await found.json())
-  if (list.installations.length !== 1) throw new Error("Expected exactly one actual installed owner")
+  console.info("SF_DESIGN_DISCOVERY " + JSON.stringify({
+    selector: "native-workspace",
+    count: list.installations.length,
+    installations: list.installations.map(({ installationId, projectId, hostId }) => ({ installationId, projectId, hostId })),
+  }))
+  if (list.installations.length !== 1)
+    throw new Error("Expected exactly one actual installed owner (received " + list.installations.length + ")")
   const descriptor = list.installations[0]!
   if (descriptor.authMode !== "local-operator" || descriptor.publicOrigin !== installed.origin || descriptor.mount !== installed.mount)
     throw new Error("Discovered owner does not match the actual local operator installation")

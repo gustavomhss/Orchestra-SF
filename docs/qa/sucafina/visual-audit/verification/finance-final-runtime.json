@@ -1,0 +1,446 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/video_inventario",
+  "reviewedAtUtc": "2026-11-23T02:48:58.496647+00:00",
+  "status": "PASS_RUNTIME_FOR_FINANCE7",
+  "scope": {
+    "spec": "packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts",
+    "originalCases": 2,
+    "focus": "Runtime closure of the restored 15,000 ms CAP19 original-response deadline.",
+    "productChangesDuringReview": false,
+    "newCiDuringReview": false,
+    "visualImagesOpenedDuringReview": 0,
+    "newVisualApprovalClaimed": false
+  },
+  "provenance": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "run": 45101169602,
+    "job": 137452102840,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45101169602",
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45101169602/job/137452102840",
+    "runStatus": "completed",
+    "runConclusion": "success",
+    "runAttempt": 1,
+    "snapshot": "edbc27f05879de702ba30161e97561bd740ec923",
+    "product": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+    "branch": "ci-run-linux-polishfinance7",
+    "artifactId": 14785164854,
+    "artifactName": "playwright-ubuntu-24.04-1",
+    "artifact": {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/artifact.zip",
+      "bytes": 56311336,
+      "sha256": "0fca628c31339500603bf915112fd5910447f71072b992ec12bf06c46bd10421"
+    },
+    "publishedDigest": "sha256:0fca628c31339500603bf915112fd5910447f71072b992ec12bf06c46bd10421",
+    "artifactDigestMatches": true,
+    "specBlobAtProductAndSnapshot": "2154051f13c24cb78dd21b6ac583aee8de8c3f95",
+    "reviewedRepairCommit": "23cf5e37aa0e6ab0605ad8a8d074aee3444bc506"
+  },
+  "selection": {
+    "request": {
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "@orchestra/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-three-finance.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "platform": "linux",
+      "arch": "x64",
+      "sha": "edbc27f05879de702ba30161e97561bd740ec923"
+    },
+    "selectedTestIds": [
+      "d7712102708a8ef873f9-efa3caf68c8963ace565",
+      "d7712102708a8ef873f9-a9b193f35b537af7d646"
+    ],
+    "executedTestIds": [
+      "d7712102708a8ef873f9-efa3caf68c8963ace565",
+      "d7712102708a8ef873f9-a9b193f35b537af7d646"
+    ],
+    "selectionEqualsExecution": true,
+    "bundle": "production",
+    "browser": "chromium",
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "testLevelTrace": "off",
+    "testLevelVideo": "off",
+    "artifactTraceFiles": [],
+    "artifactVideoFiles": [],
+    "selectionReportNote": "The --list selection report labels unexecuted selected cases skipped. It is not the runtime result. The runtime report records zero skipped cases."
+  },
+  "runtime": {
+    "stats": {
+      "startTime": "2026-11-23T02:37:32.893Z",
+      "duration": 273084.19800000003,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "errors": [],
+    "projectConfig": [
+      {
+        "name": "chromium",
+        "retries": 0,
+        "repeatEach": 1
+      }
+    ],
+    "tests": [
+      {
+        "id": "d7712102708a8ef873f9-efa3caf68c8963ace565",
+        "title": "installed native finance wave · CAP05 and CAP14 original financial commands",
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 18,
+        "status": "expected",
+        "expectedStatus": "passed",
+        "annotations": [],
+        "timeoutMs": 300000,
+        "results": [
+          {
+            "status": "passed",
+            "retry": 0,
+            "duration": 56586,
+            "startTime": "2026-11-23T02:38:23.891Z",
+            "errors": []
+          }
+        ]
+      },
+      {
+        "id": "d7712102708a8ef873f9-a9b193f35b537af7d646",
+        "title": "installed native finance wave · CAP17 CAP18 CAP19 original planner commands",
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 264,
+        "status": "expected",
+        "expectedStatus": "passed",
+        "annotations": [],
+        "timeoutMs": 300000,
+        "results": [
+          {
+            "status": "passed",
+            "retry": 0,
+            "duration": 60144,
+            "startTime": "2026-11-23T02:40:12.948Z",
+            "errors": []
+          }
+        ]
+      }
+    ]
+  },
+  "deadline": {
+    "milliseconds": 15000,
+    "armedBeforeSaveClick": true,
+    "observerInstalledBeforeDeadline": true,
+    "responseSource": "The original APIResponse from unchanged forwardOnce, not the Chromium response-body cache.",
+    "wait": "Promise.race([saved.completed, deadline.promise]) inside Promise.all with the actual Save project click.",
+    "cleanup": "The existing local finally clears the timer and awaits saved.close() on success or failure.",
+    "outerTestTimeoutMs": 300000,
+    "outerTimeoutUsedAsResponseDeadline": false,
+    "observedSuccessPath": {
+      "saveClickStartUtc": "2026-11-23T02:41:39.939Z",
+      "postMethodAssertionStartUtc": "2026-11-23T02:41:40.075Z",
+      "bodyOkAssertionStartUtc": "2026-11-23T02:41:40.083Z",
+      "clickStartToPostMethodAssertionMs": 136,
+      "clickStartToBodyOkAssertionMs": 144,
+      "interpretation": "These are report-step intervals, not a direct wire-latency measurement or a timestamp of the timer being armed. The real save succeeded while the explicit deadline was active."
+    }
+  },
+  "contractReview": {
+    "wholeFileReverseDeltaMatchesAncestor": true,
+    "allExpectLinesIdentical": true,
+    "expectCallLineCount": 118,
+    "unchangedSharedObserverBlobs": [
+      {
+        "ref": "abfd60694f76311f48274fafe4292cd813d7efff",
+        "blob": "d3f50920d69cd04029298d286f5b08fc02c21349"
+      },
+      {
+        "ref": "edbc27f05879de702ba30161e97561bd740ec923",
+        "blob": "d3f50920d69cd04029298d286f5b08fc02c21349"
+      }
+    ],
+    "postAssertions": [
+      "Exact original installation origin and /planner path observed for POST.",
+      "request.method() remains POST.",
+      "Request body remains page CAPEX, action save, values.collection projects.",
+      "Original response.ok() remains true and response JSON remains {ok:true}.",
+      "Review closes; the original CAPEX page reaches ready.",
+      "Exactly one additional POST is required for the save, using the existing before counter.",
+      "A fresh native entry reselects the same version, opens the same project and reads the persisted revised description."
+    ],
+    "casAndAuthority": "The deadline repair modifies only test waiting/cleanup. It does not edit the producer, source/version payload, authorization, owner admission or compare-and-swap implementation. The complete surrounding spec is byte-identical after reversing only this deadline delta. This run proves the original successful command and readback; it does not add a stale-version rejection scenario.",
+    "observerContract": "Shared forwardOnce is byte-identical between the pre-repair root and the executed snapshot: d3f50920d69cd04029298d286f5b08fc02c21349. No retry, redirect, response substitution or synthetic success was introduced.",
+    "sourcePostCountInterpretation": "The planner attachment records two /sucafina/planner POSTs over the entire journey. The scoped save assertion still requires exactly one additional POST; the receipt does not equate the whole-journey total with save count."
+  },
+  "observedCap19Steps": [
+    {
+      "title": "Click locator('[data-sf-surface=\"CAP19\"]').locator('[data-sf-record-detail]').getByRole('button', { name: 'Review changes', exact: true })",
+      "startTime": "2026-11-23T02:41:39.834Z",
+      "durationMs": 97,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 465,
+        "column": 79
+      }
+    },
+    {
+      "title": "Click locator('[data-sf-surface=\"CAP19\"]').locator('[data-component=\"sf-change-review\"]').getByRole('button', { name: 'Save project', exact: true })",
+      "startTime": "2026-11-23T02:41:39.939Z",
+      "durationMs": 116,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 479,
+        "column": 75
+      }
+    },
+    {
+      "title": "Expect \"toBe\"",
+      "startTime": "2026-11-23T02:41:40.075Z",
+      "durationMs": 0,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 481,
+        "column": 32
+      }
+    },
+    {
+      "title": "Expect \"toMatchObject\"",
+      "startTime": "2026-11-23T02:41:40.075Z",
+      "durationMs": 1,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 482,
+        "column": 38
+      }
+    },
+    {
+      "title": "Expect \"toBe\"",
+      "startTime": "2026-11-23T02:41:40.076Z",
+      "durationMs": 1,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 483,
+        "column": 29
+      }
+    },
+    {
+      "title": "Expect \"toMatchObject\"",
+      "startTime": "2026-11-23T02:41:40.083Z",
+      "durationMs": 0,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 484,
+        "column": 37
+      }
+    },
+    {
+      "title": "Expect \"toHaveCount\" locator('[data-sf-surface=\"CAP19\"]').locator('[data-component=\"sf-change-review\"]')",
+      "startTime": "2026-11-23T02:41:40.086Z",
+      "durationMs": 3,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 489,
+        "column": 26
+      }
+    },
+    {
+      "title": "Expect \"toHaveLength\"",
+      "startTime": "2026-11-23T02:41:41.972Z",
+      "durationMs": 0,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 491,
+        "column": 19
+      }
+    },
+    {
+      "title": "Select option locator('[data-sf-surface=\"CAP19\"]').getByLabel('Version', { exact: true })",
+      "startTime": "2026-11-23T02:41:46.466Z",
+      "durationMs": 13,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 494,
+        "column": 58
+      }
+    },
+    {
+      "title": "Click locator('[data-sf-surface=\"CAP19\"]').getByRole('tab', { name: 'Projects', exact: true })",
+      "startTime": "2026-11-23T02:41:48.367Z",
+      "durationMs": 14,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 496,
+        "column": 71
+      }
+    },
+    {
+      "title": "Click locator('[data-sf-surface=\"CAP19\"]').locator('[data-sf-project]').filter({ hasText: 'Design test data · Infrastructure modernisation' }).getByRole('button', { name: 'Edit project', exact: true })",
+      "startTime": "2026-11-23T02:41:48.381Z",
+      "durationMs": 39,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 497,
+        "column": 78
+      }
+    },
+    {
+      "title": "Expect \"toHaveValue\" locator('[data-sf-surface=\"CAP19\"]').locator('[data-sf-record-detail]').getByLabel('Description', { exact: true })",
+      "startTime": "2026-11-23T02:41:48.421Z",
+      "durationMs": 4,
+      "error": null,
+      "location": {
+        "file": "sucafina/design-wave-three-finance.spec.ts",
+        "line": 498,
+        "column": 69
+      }
+    }
+  ],
+  "sourceAttachments": {
+    "finance-dashboard-pt-BR-diagnostics": {
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "native-finance-dashboard-wave-three-evidence": {
+      "source": "isolated original producers; no mocked requests, grants, projections or receipts",
+      "areas": [
+        "CAP05",
+        "CAP14"
+      ],
+      "widths": [
+        1440,
+        320
+      ],
+      "schemes": [
+        "dark",
+        "light"
+      ],
+      "locales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "actualBrowserZoom": "not measured",
+      "confirmedCommands": [
+        "CAP05.save-entry",
+        "CAP14.save"
+      ],
+      "sourcePostPaths": [
+        "/sucafina/dashboard",
+        "/sucafina/dashboard"
+      ],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "finance-planner-pt-BR-diagnostics": {
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "native-finance-planner-wave-three-evidence": {
+      "source": "isolated original producers; no mocked requests, grants, projections or receipts",
+      "areas": [
+        "CAP17",
+        "CAP18",
+        "CAP19"
+      ],
+      "widths": [
+        1440,
+        320
+      ],
+      "schemes": [
+        "dark",
+        "light"
+      ],
+      "locales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "actualBrowserZoom": "not measured",
+      "confirmedCommands": [
+        "CAP19.save"
+      ],
+      "sourcePostPaths": [
+        "/sucafina/planner",
+        "/sucafina/planner"
+      ],
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  },
+  "reviewedFiles": [
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/test-ci-evidence/playwright-runtime.json",
+      "bytes": 5467773,
+      "sha256": "cf22ae7a19690599a6180c6909b194099d0f18541d3136581d4a3b1a5978abe6"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/test-ci-evidence/playwright-selection.json",
+      "bytes": 3079,
+      "sha256": "2a9967cd1401841077e872575805dfe70e979b0d33386dc8951217446f65a6f4"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/test-ci-evidence/request.json",
+      "bytes": 387,
+      "sha256": "f61cb48e8c3c7c7e15ef7bbce26f4dd8ed5434768f9f83395f4c4302a5ffa9cc"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/report-json/report.json",
+      "bytes": 9264,
+      "sha256": "48b2ce1793107a8609989e0099c396347348a41e24f95bbe3156c183c447045d"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/report-json/d7712102708a8ef873f9.json",
+      "bytes": 6478785,
+      "sha256": "14bf211caef03fc01057386dde07d7dd6ef0373c48616cefc424f4c5abc2b370"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/runtime-summary.json",
+      "bytes": 1433,
+      "sha256": "c93e74fc21d24007f59fc7c9c59de340153d6b29b5ab841627271050d9621187"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/source-attachments.json",
+      "bytes": 1394,
+      "sha256": "ec3bec09eaf0f95f48cc34ad32b08e66cf4f1e04aaaabf44f57705a33bfb950f"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/github-provenance.json",
+      "bytes": 5976,
+      "sha256": "6cf18c831f9e3b1543fb65258b6a4337e774843ef76ef87cc0abab1be3f02472"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-finance7/job-log-excerpts.txt",
+      "bytes": 1661,
+      "sha256": "9a9bb4a8e8bab1535a0a7acd9ea284a7110d1977d473feef012dddc10e0d93e2"
+    }
+  ],
+  "priorDeadlineCodeReviewReceipt": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/finance-response-deadline-receipt.json",
+    "bytes": 4147,
+    "sha256": "f1bb3668350d19e52dc9e1aa1fbaa40b537d45396e2f2e730816af5d8ce38e3a"
+  },
+  "limits": [
+    "No new visual sweep was performed; existing screenshots in the artifact were not visually re-approved.",
+    "The 15-second failure branch was not forced during this successful run.",
+    "The timer bounds waiting for the original response; it is not a demonstrated cancellation mechanism for an already in-flight producer request.",
+    "No separate stale-version/CAS rejection scenario was added by the deadline change. Existing successful producer authorization and readback remain exercised.",
+    "This receipt qualifies Finance7 at the recorded snapshot/product. Later UI49 CSS work belongs to its own validation.",
+    "Conditional workflow setup steps can be skipped by platform. The zero-skipped claim refers to the two original test cases, as recorded in playwright-runtime.json."
+  ]
+}

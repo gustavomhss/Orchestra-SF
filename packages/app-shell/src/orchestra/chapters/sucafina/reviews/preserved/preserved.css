@@ -24,3 +24,7 @@
 .sf-n28-compare-value { display: grid; gap: .25rem; min-width: 12rem; overflow-wrap: anywhere; }
 .sf-n28-change-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-block-start: .25rem; }
 .sf-n28-change-tags span { font-size: .8em; font-weight: 500; }
+
+/* Three comparison columns keep readable labels while the existing region scrolls. */
+.sf-n28[data-sf-surface="UI49"] .sf-n28-scroll table { min-width: 48rem; }
+.sf-n28[data-sf-surface="UI49"] .sf-n28-scroll tr > th:first-child { min-width: 16rem; }

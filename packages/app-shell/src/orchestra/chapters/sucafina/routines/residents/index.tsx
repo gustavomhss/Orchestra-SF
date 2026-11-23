@@ -11,6 +11,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority, n29StateKey, useN29Copy } from "../catalog/ui"
 import { operationGranted, StatusText, WhenText } from "../../reviews/labels"
+import "../../reviews/workflows.css"
 import "../presentation.css"
 import "./residents.css"
 

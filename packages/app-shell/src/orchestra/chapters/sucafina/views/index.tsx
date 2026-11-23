@@ -15,6 +15,7 @@ import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../shared/change-review"
 import "./views.css"
+import "../reviews/workflows.css"
 
 type ListEntry = Extract<Schema.Schema.Type<typeof SfViewsList.Output>, { status: "ok" }>["value"][number]
 type RecordView = Extract<Schema.Schema.Type<typeof SfViewsOpen.Output>, { status: "ok" }>["value"]
@@ -348,7 +349,7 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       layout="work"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-saved-views" data-sf-surface="UI32" data-sf-polish="planner" data-sf-wave="four" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
+      <div class="sf-saved-views sf-workflow" data-sf-surface="UI32" data-sf-polish="planner" data-sf-wave="four" data-sf-views-stage={reviewKind() ? "review" : screen.detail ? "editor" : "list"}>
       <section class="sf-saved-view-collection" aria-labelledby="sf-u43-legacy">
         <h2 id="sf-u43-legacy">{t(key("sf.ui32.legacy"))}</h2>
         <p>{t(key("sf.ui32.legacyDescription"))}</p>
@@ -476,7 +477,9 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
             }}
             base={snapshot(context.record, context.record.view)}
             current={snapshot(context.record, context.record.view)}
-            proposed={snapshot(context.record, context.draft.value)}
+            proposed={context.kind === "remove"
+              ? { kind: "not-provided", reason: message("sf.ui32.removalProposed") }
+              : snapshot(context.record, context.draft.value)}
             effects={[]}
             coverage={{ state: "complete", summary: message("sf.ui32.legacyReviewScope"), reasons: [], knownCount: null, expectedCount: null }}
             blockingReasons={[]}

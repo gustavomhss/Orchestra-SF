@@ -61,14 +61,17 @@ test(`catalog, filter, exact reader, safe text and keyboard in both directions`,
   await read.focus()
   await page.keyboard.press("Enter")
   await expect(dialog.locator("h2")).toHaveText(`Read ${catalog[1].name}`)
+  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(catalog[1].description)
+  await expect(dialog.locator("[data-skill-reader]").getByRole("heading", { name: "Notes", exact: true })).toBeVisible()
+  await dialog.getByText("Source and access", { exact: true }).click()
   await expect(instructions).toHaveValue(catalog[1].content)
   await expect(instructions).not.toBeEditable()
-  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(
+  await expect(dialog.locator(".orchestra-skill-source p")).toHaveText(
     `Stored at ${catalog[1].location}. Global skills are read-only here.`,
   )
   await expect(dialog.getByRole("button", { name: "Save" })).toHaveCount(0)
   await expect(dialog.getByRole("button", { name: "Remove skill" })).toHaveCount(0)
-  await dialog.getByRole("button", { name: "Cancel" }).click()
+  await dialog.getByRole("button", { name: "Close", exact: true }).click()
   await expect(dialog).toHaveCount(0)
 
   // Closing a dialog queues its close event; opening the next dialog before that event runs must not let it
@@ -84,12 +87,15 @@ test(`catalog, filter, exact reader, safe text and keyboard in both directions`,
     const closed = new Promise((resolve) => previous.addEventListener("close", resolve, { once: true }))
     previous.close()
     next.click()
-    await Promise.race([closed, new Promise((resolve) => setTimeout(resolve, 1000))])
+    await closed
   })
   await expect(dialog).toHaveCount(1)
   await expect(dialog.locator("h2")).toHaveText(`Read ${catalog[1].name}`)
+  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(catalog[1].description)
+  await expect(dialog.locator("[data-skill-reader]").getByRole("heading", { name: "Notes", exact: true })).toBeVisible()
+  await dialog.getByText("Source and access", { exact: true }).click()
   await expect(instructions).toHaveValue(catalog[1].content)
-  await dialog.getByRole("button", { name: "Cancel" }).click()
+  await dialog.getByRole("button", { name: "Close", exact: true }).click()
   await expect(dialog).toHaveCount(0)
 
   const search = chapter.getByRole("textbox", { name: "Search skills" })
@@ -112,13 +118,39 @@ test(`catalog, filter, exact reader, safe text and keyboard in both directions`,
   await expect(instructions).toHaveValue(catalog[0].content)
 })
 
+for (const scheme of ["dark", "light"] as const) {
+  test(`read-only skill document reflows at 390px in ${scheme}`, async ({ page }) => {
+    await setup(page, { scheme })
+    await openSkills(page)
+    await page.setViewportSize({ width: 390, height: 844 })
+    const card = page.locator('[data-chapter="skills"] .skills-card').filter({
+      has: page.getByRole("heading", { name: "Release notes", exact: true }),
+    })
+    await card.getByRole("button", { name: "Read", exact: true }).click()
+    const dialog = page.getByRole("dialog")
+    await expect(dialog.locator("[data-skill-reader]").getByRole("heading", { name: "Notes", exact: true })).toBeVisible()
+    await expect(dialog.getByRole("button", { name: "Close", exact: true })).toBeInViewport()
+    expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+    const bounds = await dialog.boundingBox()
+    expect(bounds).not.toBeNull()
+    expect(bounds!.x).toBeGreaterThanOrEqual(0)
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390)
+    await page.screenshot({ path: test.info().outputPath(`skill-reader-${scheme}-390.png`) })
+    await dialog.getByText("Source and access", { exact: true }).click()
+    await expect(dialog.getByRole("textbox", { name: "Instructions" })).toHaveValue(catalog[1].content)
+    await expect(dialog.getByRole("textbox", { name: "Instructions" })).not.toBeEditable()
+    await dialog.getByRole("button", { name: "Close", exact: true }).click()
+    await expect(dialog).toHaveCount(0)
+  })
+}
+
 test(`create, edit, remove, read-only skills and reload notice`, async ({ page }) => {
   const writes: { method: string; url: string; body: unknown }[] = []
   const builtin = {
     name: "style-guide",
     description: "Follow the house style",
     location: "/builtin/style-guide.md",
-    content: "# Built in\n",
+    content: "# Built in\n\n<script>window.__skillReadInjected = true</script>\n",
   }
   const governed = {
     name: "own_policy",
@@ -138,10 +170,15 @@ test(`create, edit, remove, read-only skills and reload notice`, async ({ page }
 
   await cards.last().getByRole("button", { name: "Read", exact: true }).click()
   await expect(dialog.locator("h2")).toHaveText(`Read ${builtin.name}`)
-  await expect(dialog.locator(".mx-dialog-head p")).toHaveText("Built into the server. Read-only.")
+  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(builtin.description)
+  await expect(dialog.locator("[data-skill-reader]").getByRole("heading", { name: "Built in", exact: true })).toBeVisible()
+  await expect(dialog.locator("[data-skill-reader] script")).toHaveCount(0)
+  expect(await page.evaluate(() => "__skillReadInjected" in window)).toBe(false)
+  await dialog.getByText("Source and access", { exact: true }).click()
+  await expect(dialog.locator(".orchestra-skill-source p")).toHaveText("Built into the server. Read-only.")
   await expect(dialog.getByRole("textbox", { name: "Instructions" })).toHaveValue(builtin.content)
   await expect(dialog.getByRole("textbox", { name: "Instructions" })).not.toBeEditable()
-  await expect(dialog.getByRole("textbox", { name: "Name" })).not.toBeEditable()
+  await expect(dialog.getByRole("textbox", { name: "Name" })).toHaveCount(0)
   await expect(dialog.getByRole("button", { name: "Save" })).toHaveCount(0)
   await expect(dialog.getByRole("button", { name: "Remove skill" })).toHaveCount(0)
   await dialog.getByRole("button", { name: "Close dialog" }).click()
@@ -149,10 +186,14 @@ test(`create, edit, remove, read-only skills and reload notice`, async ({ page }
 
   await cards.nth(1).getByRole("button", { name: "Read", exact: true }).click()
   await expect(dialog.locator("h2")).toHaveText(`Read ${governed.name}`)
-  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(
+  await expect(dialog.locator(".mx-dialog-head p")).toHaveText(governed.description)
+  await expect(dialog.locator("[data-skill-reader]").getByRole("heading", { name: "Policy", exact: true })).toBeVisible()
+  await dialog.getByText("Source and access", { exact: true }).click()
+  await expect(dialog.locator(".orchestra-skill-source p")).toHaveText(
     `Stored at ${governed.location}. Governed by Atlas, so it is read-only.`,
   )
-  await expect(dialog.getByRole("textbox", { name: "Description" })).not.toBeEditable()
+  await expect(dialog.getByRole("textbox", { name: "Instructions" })).toHaveValue(governed.content)
+  await expect(dialog.getByRole("textbox", { name: "Description" })).toHaveCount(0)
   await expect(dialog.getByRole("button", { name: "Save" })).toHaveCount(0)
   await expect(dialog.getByRole("button", { name: "Remove skill" })).toHaveCount(0)
   await page.keyboard.press("Escape")
@@ -220,7 +261,7 @@ test(`create, edit, remove, read-only skills and reload notice`, async ({ page }
   await dialog.getByRole("button", { name: "Remove skill" }).click()
   await expect(dialog.locator("h2")).toHaveText("Remove this skill?")
   await expect(dialog.locator(".mx-dialog-head p")).toHaveText(`Deletes ${created}.`)
-  await dialog.getByRole("button", { name: "Confirm" }).click()
+  await dialog.getByRole("button", { name: "Remove skill", exact: true }).click()
   await expect(dialog).toHaveCount(0)
   await expect(cards.locator("h3")).toHaveText(["boundary-check", governed.name, catalog[1].name, builtin.name])
   expect(writes).toHaveLength(4)
@@ -374,7 +415,7 @@ for (const method of ["PUT", "DELETE"] as const) {
     }
     if (method === "DELETE") {
       await dialog.getByRole("button", { name: "Remove skill", exact: true }).click()
-      await dialog.getByRole("button", { name: "Confirm", exact: true }).click()
+      await dialog.getByRole("button", { name: "Remove skill", exact: true }).click()
     }
     await started.promise
     await expect(dialog.getByRole("button", { name: "Cancel", exact: true })).toBeDisabled()

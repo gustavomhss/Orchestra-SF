@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "git_video_recuperacao",
+  "reviewedAt": "2026-11-23",
+  "scope": "Matrix5 peer visual review of UI67 and UI68 only",
+  "verdict": "No material visual defect found in the six captured originals. This is not a passing verdict for Matrix5 or its fifth journey.",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "productCommit": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "snapshot": "96e6f421415acbabf74e282a5122d0ab31f8f9f4",
+    "runId": 45095081578,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45095081578",
+    "runtimeReport": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/test-ci-evidence/playwright-runtime.json",
+    "imageIndex": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/image-index.json"
+  },
+  "runtime": {
+    "passed": 3,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "stats": {
+      "startTime": "2026-11-23T01:32:50.711Z",
+      "duration": 1043548.896,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 2,
+      "flaky": 0
+    },
+    "failures": [
+      {
+        "journey": "workflow polish: original agenda, preserved review, comparison and report selection",
+        "observedError": "UI50 getByLabel('Office format', { exact: true }) not found"
+      },
+      {
+        "journey": "workflow polish: routines, schedules, exports and local context",
+        "observedError": "route.fulfill: Route is already handled!",
+        "context": "UI67/UI68 checkpoints preceded the UI69 observation failure. Fifth journey is failed, not passed."
+      }
+    ],
+    "basis": "Independently read the executed playwright-runtime.json; did not count screenshots or selection-only metadata as passing tests."
+  },
+  "method": {
+    "originalsOpenedIndividually": 6,
+    "uniqueHashesViewed": 6,
+    "contactSheetsReviewed": [],
+    "indices": [
+      62,
+      63,
+      64,
+      65,
+      66,
+      67
+    ]
+  },
+  "observations": [
+    {
+      "area": "UI67",
+      "indices": [
+        62,
+        63,
+        64
+      ],
+      "state": "Original local-operator context",
+      "variants": [
+        "dark 320×800",
+        "dark 1440×1100",
+        "light 1440×1100"
+      ],
+      "result": "Heading, explanation and current-context card are readable. Server/project/installation/identity are preserved. The identifiers wrap within the 320px card without visible horizontal clipping; desktop uses aligned columns. Refresh access and Sign out remain visible.",
+      "boundary": "This is the actual local-operator fixture context, not a live Teams or Microsoft authentication proof. No refresh/sign-out action outcome is established by these screenshots."
+    },
+    {
+      "area": "UI68",
+      "indices": [
+        65,
+        66,
+        67
+      ],
+      "state": "Original export format unavailable for the current project and access",
+      "variants": [
+        "dark 320×800",
+        "dark 1440×1100",
+        "light 1440×1100"
+      ],
+      "result": "The selected XLSX format, explicit prerequisite message and disabled Export action remain visible in all three variants. Text wraps inside the narrow panel; heading, warning and format field have distinct visual grouping.",
+      "boundary": "Availability state only: no export was authorized or generated, no file/download validation is claimed."
+    }
+  ],
+  "newFindings": [],
+  "limitations": [
+    "All six original files were individually opened at original dimensions; this receipt covers no other Matrix5 screenshot.",
+    "These frames were captured before the later UI69 observer error. The fifth journey and overall cohort remain failed in this run.",
+    "UI50 composition/association and UI69 observer corrections are outside this review and still require their own later verification.",
+    "A screenshot establishes the visible captured state, not all offscreen controls, interaction behavior, keyboard access or measured contrast.",
+    "No product edit, local product execution or CI dispatch was performed."
+  ],
+  "originalsReviewed": [
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI67-original-local-operator-context-dark-320.png",
+      "sha256": "3c2655793dd143de611cdb3ea60d842a7aab65dcf6c3e63bdbcba20b35433656",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI67-original-local-operator-context-dark-320-5451dcc45918af534d919261b44e1b6b531ae5a1.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/f35154c045e828b78677773d8d23469eea47df2e.png"
+      ],
+      "size": [
+        320,
+        800
+      ],
+      "semantic_names": [
+        "UI67-original-local-operator-context-dark-320"
+      ],
+      "index": 62
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI67-original-local-operator-context-dark-desktop.png",
+      "sha256": "1cb3df03ef87ee065c23616d5f0532335d8fe0c8b8388a4bfd6ef963a45961d3",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI67-original-local-operator-context-dark-desktop-cc36920b05afcd5fb96ac57ff2ce05a427ba3555.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/43c378e24736cfecddfb0c2e861d693aa492719c.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "semantic_names": [
+        "UI67-original-local-operator-context-dark-desktop"
+      ],
+      "index": 63
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI67-original-local-operator-context-light-desktop.png",
+      "sha256": "0f2e06850fbe185b3b6e895a2adcfb283cc91c1a83705e609455055d1f8399cc",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI67-original-local-operator-context-light-desktop-4f42cf1dab17a886153ef14fc9ec9782f43810f2.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/121d4256feb5a56c98a0ffab6327ed26455193a5.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "semantic_names": [
+        "UI67-original-local-operator-context-light-desktop"
+      ],
+      "index": 64
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI68-original-export-availability-dark-320.png",
+      "sha256": "61da3f4fa5aa834e66bc60ad0cf52e0bac33bc8f7042cbfcefe966aad2e2801e",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI68-original-export-availability-dark-320-a062632ab3690848803db9489120f5c572e5d9ea.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/9902b9263a21a6d28250c9f1ff0b0d78450e5031.png"
+      ],
+      "size": [
+        320,
+        800
+      ],
+      "semantic_names": [
+        "UI68-original-export-availability-dark-320"
+      ],
+      "index": 65
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI68-original-export-availability-dark-desktop.png",
+      "sha256": "74adb3347a9e471fb53de34497e7da586ac23dde9e730bd1e39c0c18b4ef595a",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI68-original-export-availability-dark-desktop-50714c658f26c86868456132cfcf04e1ecf699a8.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/14a324270278bbae4452a5c069f5be23546d5450.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "semantic_names": [
+        "UI68-original-export-availability-dark-desktop"
+      ],
+      "index": 66
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI68-original-export-availability-light-desktop.png",
+      "sha256": "8f2952fbf3eaf0af339b195c9a4315b26e7a62a93941dcbf825c018e7d734a1a",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/attachments/UI68-original-export-availability-light-desktop-3a11d52471eb335630f5dd358f16488c2aec3cde.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/playwright-report/data/e11d578f4b7c4a4cd2c61e09aaf4b67737096aba.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "semantic_names": [
+        "UI68-original-export-availability-light-desktop"
+      ],
+      "index": 67
+    }
+  ]
+}

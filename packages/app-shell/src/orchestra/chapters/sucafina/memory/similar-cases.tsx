@@ -355,7 +355,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   return (
     <SfPageFrame titleKey={k("sf.ui62.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory sf-memory-similarity sf-workflow" data-sf-wave="six" data-sf-surface="UI62">
+      <section class="sf-memory sf-memory-similarity" data-sf-wave="six" data-sf-surface="UI62">
         <Show when={privacy() === "ready" && (view.catalogState === "ready" || view.catalogState === "empty")}>
           <form class="sf-memory-similarity-form sf-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
             <p class="sf-memory-help">{t("sf.u26.similarQueryHelp")}</p>

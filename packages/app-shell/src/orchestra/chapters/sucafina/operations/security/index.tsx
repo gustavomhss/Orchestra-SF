@@ -650,10 +650,14 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
         <textarea name={name} aria-label={t(key("design.field." + name))} value={stringOf(values()[name])}
           onInput={(event) => edit(name, event.currentTarget.value)} />
       }>
-        <input name={name} aria-label={t(key("design.field." + name))} type={inputType} min={inputType === "number" ? 0 : undefined}
+        <input name={name} aria-label={t(key("design.field." + name))} type={inputType} lang={language.intl()}
+          aria-describedby={inputType === "date" ? "sf-security-date-" + name : undefined} min={inputType === "number" ? 0 : undefined}
           step={inputType === "number" ? "any" : undefined}
           value={stringOf(values()[name])}
           onInput={(event) => edit(name, event.currentTarget.value)} />
+      </Show>
+      <Show when={inputType === "date"}>
+        <small id={"sf-security-date-" + name} class="sf-security-caption">{incidentDateLabel(stringOf(values()[name]), language.intl())}</small>
       </Show>
     </label>
   )
@@ -736,7 +740,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
         }>
           <Show when={state.state === "partial"}>
             <p role="status">{t(common("partial"))}</p>
-            <button type="button" onClick={refresh}>{t(common("retry"))}</button>
+            <button class="mx-btn" type="button" onClick={refresh}>{t(common("retry"))}</button>
           </Show>
           <Show when={state.state === "empty" || state.state === "filtered-empty"}>
             <p role="status">{t(state.state === "empty" ? common("empty") : common("filterEmpty"))}</p>
@@ -1001,9 +1005,9 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
 
           <Show when={state.operationState === "conflict"}>
             <p role="alert">{t(common("conflict"))}</p>
-            <button type="button" onClick={refresh}>{t(common("retry"))}</button>
+            <button class="mx-btn" type="button" onClick={refresh}>{t(common("retry"))}</button>
             <Show when={state.editor && activeDraft()}>
-              <button type="button" onClick={discardCurrent}>{t(common("discard"))}</button>
+              <button class="mx-btn" type="button" onClick={discardCurrent}>{t(common("discard"))}</button>
             </Show>
           </Show>
           <Show when={state.operationState === "saved"}><p role="status">{t(common("saved"))}</p></Show>
@@ -1031,7 +1035,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                   <Show when={!editor.review} fallback={
                     <Show when={activeDraft()} keyed>{(snapshot) => <>
                       <Show when={state.operationState === "unknown"}>
-                        <button type="button" class="mx-btn" disabled={state.submitting}
+                        <button class="mx-btn" type="button" disabled={state.submitting}
                           onClick={refresh}>{t("sf.s03.checkOutcome" as SfCopyKey)}</button>
                       </Show>
                       <fieldset disabled={reviewLocked()} aria-busy={state.submitting}
@@ -1177,10 +1181,10 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                         <button class="mx-btn primary" type="submit" disabled={state.submitting || !validForm(editor, values(), editorPage)}>
                           {t(common("review"))}
                         </button>
-                        <button type="button" onClick={closeEditor}>
+                        <button class="mx-btn" type="button" onClick={closeEditor}>
                           {t(common("close"))}
                         </button>
-                        <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                        <button class="mx-btn" type="button" disabled={state.submitting || state.operationState === "unknown"}
                           onClick={discardCurrent}>{t(common("discard"))}</button>
                       </div>
                     </form>

@@ -1,0 +1,1791 @@
+{
+  "schema": "orchestra.interface-polish.performance.v1",
+  "phase": "baseline",
+  "source": "346af44f4aac7bf1eb9821d4c5482bacf233a706",
+  "snapshot": "54d87040ee72c441a77e426cb8660a0a89fac691",
+  "runId": 45078591244,
+  "jobId": 137381298724,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45078591244",
+  "command": {
+    "runner": "playwright",
+    "config": "e2e/performance/playwright.config.ts",
+    "spec": "e2e/performance/timeline/session-tab-switch-benchmark.spec.ts",
+    "renderer": "current",
+    "repeats": 3,
+    "workers": 1,
+    "retries": 0
+  },
+  "scope": "Production Chromium session-tab renderer benchmark. This does not measure authenticated Microsoft Teams latency.",
+  "records": [
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks cold and hot session tab switching",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 0,
+      "context": {
+        "project": "chromium",
+        "platform": "linux"
+      },
+      "metrics": {
+        "results": {
+          "cold": [
+            {
+              "firstDestinationObservedMs": 169.79999999998836,
+              "firstCorrectObservedMs": 169.79999999998836,
+              "stableObservedMs": 264.8999999999942,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 141.89999999999418,
+              "firstCorrectObservedMs": 141.89999999999418,
+              "stableObservedMs": 220,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 172.39999999999418,
+              "firstCorrectObservedMs": 172.39999999999418,
+              "stableObservedMs": 226.10000000000582,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 138.10000000000582,
+              "firstCorrectObservedMs": 138.10000000000582,
+              "stableObservedMs": 195.60000000000582,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 3,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 157.40000000002328,
+              "firstCorrectObservedMs": 157.40000000002328,
+              "stableObservedMs": 205.30000000001746,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ],
+          "hot": [
+            {
+              "firstDestinationObservedMs": 78,
+              "firstCorrectObservedMs": 78,
+              "stableObservedMs": 146.19999999998254,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 72.79999999998836,
+              "firstCorrectObservedMs": 72.79999999998836,
+              "stableObservedMs": 139.89999999999418,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 77.89999999999418,
+              "firstCorrectObservedMs": 77.89999999999418,
+              "stableObservedMs": 142.29999999998836,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 65.20000000001164,
+              "firstCorrectObservedMs": 65.20000000001164,
+              "stableObservedMs": 147.5,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 71.5,
+              "firstCorrectObservedMs": 71.5,
+              "stableObservedMs": 139.39999999999418,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ]
+        },
+        "summary": {
+          "cold": {
+            "firstDestinationObservedMs": {
+              "min": 138.10000000000582,
+              "median": 157.40000000002328,
+              "max": 172.39999999999418,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 138.10000000000582,
+              "median": 157.40000000002328,
+              "max": 172.39999999999418,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 195.60000000000582,
+              "median": 220,
+              "max": 264.8999999999942,
+              "missing": 0
+            }
+          },
+          "hot": {
+            "firstDestinationObservedMs": {
+              "min": 65.20000000001164,
+              "median": 72.79999999998836,
+              "max": 78,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 65.20000000001164,
+              "median": 72.79999999998836,
+              "max": 78,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 139.39999999999418,
+              "median": 142.29999999998836,
+              "max": 147.5,
+              "missing": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks v2 session tab switching with and without the review pane",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 0,
+      "context": {
+        "project": "chromium",
+        "platform": "linux",
+        "runs": 5,
+        "reviewDiffs": 72
+      },
+      "metrics": {
+        "results": {
+          "closed": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 132.19999999998254,
+                "firstCorrectObservedMs": 132.19999999998254,
+                "stableObservedMs": 196,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 136.10000000000582,
+                "firstCorrectObservedMs": 136.10000000000582,
+                "stableObservedMs": 177.30000000001746,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 125,
+                "firstCorrectObservedMs": 125,
+                "stableObservedMs": 188.19999999998254,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 126.29999999998836,
+                "firstCorrectObservedMs": 126.29999999998836,
+                "stableObservedMs": 183.59999999997672,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 150.5,
+                "firstCorrectObservedMs": 150.5,
+                "stableObservedMs": 220.60000000000582,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 80.10000000000582,
+                "firstCorrectObservedMs": 80.10000000000582,
+                "stableObservedMs": 146.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 3,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 69.39999999999418,
+                "firstCorrectObservedMs": 69.39999999999418,
+                "stableObservedMs": 126.69999999998254,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 84.79999999998836,
+                "firstCorrectObservedMs": 84.79999999998836,
+                "stableObservedMs": 130.70000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 92.90000000002328,
+                "firstCorrectObservedMs": 92.90000000002328,
+                "stableObservedMs": 174.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 62.5,
+                "firstCorrectObservedMs": 62.5,
+                "stableObservedMs": 147.69999999998254,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ]
+          },
+          "open": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 146.70000000001164,
+                "firstCorrectObservedMs": 146.70000000001164,
+                "stableObservedMs": 271.8999999999942,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 143.40000000002328,
+                "firstCorrectObservedMs": 143.40000000002328,
+                "stableObservedMs": 261.4000000000233,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 129.10000000000582,
+                "firstCorrectObservedMs": 129.10000000000582,
+                "stableObservedMs": 240.10000000000582,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 130.19999999998254,
+                "firstCorrectObservedMs": 130.19999999998254,
+                "stableObservedMs": 240.69999999998254,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 121.5,
+                "firstCorrectObservedMs": 121.5,
+                "stableObservedMs": 230,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 92.10000000000582,
+                "firstCorrectObservedMs": 92.10000000000582,
+                "stableObservedMs": 152.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 49.60000000000582,
+                "firstCorrectObservedMs": 49.60000000000582,
+                "stableObservedMs": 139.60000000000582,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 98.60000000000582,
+                "firstCorrectObservedMs": 98.60000000000582,
+                "stableObservedMs": 180.10000000000582,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 105.69999999998254,
+                "firstCorrectObservedMs": 105.69999999998254,
+                "stableObservedMs": 161.89999999999418,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 102.20000000001164,
+                "firstCorrectObservedMs": 102.20000000001164,
+                "stableObservedMs": 171.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ]
+          }
+        },
+        "summary": {
+          "closed": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 125,
+                "median": 132.19999999998254,
+                "max": 150.5,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 125,
+                "median": 132.19999999998254,
+                "max": 150.5,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 177.30000000001746,
+                "median": 188.19999999998254,
+                "max": 220.60000000000582,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 62.5,
+                "median": 80.10000000000582,
+                "max": 92.90000000002328,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 62.5,
+                "median": 80.10000000000582,
+                "max": 92.90000000002328,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 126.69999999998254,
+                "median": 146.5,
+                "max": 174.5,
+                "missing": 0
+              }
+            }
+          },
+          "open": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 121.5,
+                "median": 130.19999999998254,
+                "max": 146.70000000001164,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 121.5,
+                "median": 130.19999999998254,
+                "max": 146.70000000001164,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 230,
+                "median": 240.69999999998254,
+                "max": 271.8999999999942,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 49.60000000000582,
+                "median": 98.60000000000582,
+                "max": 105.69999999998254,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 49.60000000000582,
+                "median": 98.60000000000582,
+                "max": 105.69999999998254,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 139.60000000000582,
+                "median": 161.89999999999418,
+                "max": 180.10000000000582,
+                "missing": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks cold and hot session tab switching",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 1,
+      "context": {
+        "project": "chromium",
+        "platform": "linux"
+      },
+      "metrics": {
+        "results": {
+          "cold": [
+            {
+              "firstDestinationObservedMs": 167.5,
+              "firstCorrectObservedMs": 167.5,
+              "stableObservedMs": 197.10000000000582,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 159.39999999999418,
+              "firstCorrectObservedMs": 159.39999999999418,
+              "stableObservedMs": 232,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 3,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 131.5,
+              "firstCorrectObservedMs": 131.5,
+              "stableObservedMs": 211.80000000001746,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 124.39999999999418,
+              "firstCorrectObservedMs": 124.39999999999418,
+              "stableObservedMs": 197.89999999999418,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 127.30000000001746,
+              "firstCorrectObservedMs": 127.30000000001746,
+              "stableObservedMs": 211.80000000001746,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ],
+          "hot": [
+            {
+              "firstDestinationObservedMs": 79.5,
+              "firstCorrectObservedMs": 79.5,
+              "stableObservedMs": 156,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 46.5,
+              "firstCorrectObservedMs": 46.5,
+              "stableObservedMs": 104.10000000000582,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 84.39999999999418,
+              "firstCorrectObservedMs": 84.39999999999418,
+              "stableObservedMs": 145.69999999998254,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 89.19999999998254,
+              "firstCorrectObservedMs": 89.19999999998254,
+              "stableObservedMs": 159.19999999998254,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 81.60000000000582,
+              "firstCorrectObservedMs": 81.60000000000582,
+              "stableObservedMs": 150.5,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ]
+        },
+        "summary": {
+          "cold": {
+            "firstDestinationObservedMs": {
+              "min": 124.39999999999418,
+              "median": 131.5,
+              "max": 167.5,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 124.39999999999418,
+              "median": 131.5,
+              "max": 167.5,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 197.10000000000582,
+              "median": 211.80000000001746,
+              "max": 232,
+              "missing": 0
+            }
+          },
+          "hot": {
+            "firstDestinationObservedMs": {
+              "min": 46.5,
+              "median": 81.60000000000582,
+              "max": 89.19999999998254,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 46.5,
+              "median": 81.60000000000582,
+              "max": 89.19999999998254,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 104.10000000000582,
+              "median": 150.5,
+              "max": 159.19999999998254,
+              "missing": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks v2 session tab switching with and without the review pane",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 1,
+      "context": {
+        "project": "chromium",
+        "platform": "linux",
+        "runs": 5,
+        "reviewDiffs": 72
+      },
+      "metrics": {
+        "results": {
+          "closed": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 137.20000000001164,
+                "firstCorrectObservedMs": 137.20000000001164,
+                "stableObservedMs": 185.39999999999418,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 119.70000000001164,
+                "firstCorrectObservedMs": 119.70000000001164,
+                "stableObservedMs": 199.29999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 132,
+                "firstCorrectObservedMs": 132,
+                "stableObservedMs": 185.09999999997672,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 3,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 137.70000000001164,
+                "firstCorrectObservedMs": 137.70000000001164,
+                "stableObservedMs": 180.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 3,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 119.90000000002328,
+                "firstCorrectObservedMs": 119.90000000002328,
+                "stableObservedMs": 205.90000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 91.5,
+                "firstCorrectObservedMs": 91.5,
+                "stableObservedMs": 134.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 76.20000000001164,
+                "firstCorrectObservedMs": 76.20000000001164,
+                "stableObservedMs": 144.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 92.29999999998836,
+                "firstCorrectObservedMs": 92.29999999998836,
+                "stableObservedMs": 141.10000000003492,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 77.89999999996508,
+                "firstCorrectObservedMs": 77.89999999996508,
+                "stableObservedMs": 149.70000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 74.70000000001164,
+                "firstCorrectObservedMs": 74.70000000001164,
+                "stableObservedMs": 127.70000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ]
+          },
+          "open": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 124.09999999997672,
+                "firstCorrectObservedMs": 124.09999999997672,
+                "stableObservedMs": 252.29999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 147.29999999998836,
+                "firstCorrectObservedMs": 147.29999999998836,
+                "stableObservedMs": 248.09999999997672,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 135.89999999996508,
+                "firstCorrectObservedMs": 135.89999999996508,
+                "stableObservedMs": 245.79999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 118,
+                "firstCorrectObservedMs": 118,
+                "stableObservedMs": 231,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 131.90000000002328,
+                "firstCorrectObservedMs": 131.90000000002328,
+                "stableObservedMs": 252.10000000003492,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 96.79999999998836,
+                "firstCorrectObservedMs": 96.79999999998836,
+                "stableObservedMs": 177.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 96.80000000004657,
+                "firstCorrectObservedMs": 96.80000000004657,
+                "stableObservedMs": 152.90000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 74.20000000001164,
+                "firstCorrectObservedMs": 74.20000000001164,
+                "stableObservedMs": 123.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 95.79999999998836,
+                "firstCorrectObservedMs": 95.79999999998836,
+                "stableObservedMs": 161,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 70.5,
+                "firstCorrectObservedMs": 70.5,
+                "stableObservedMs": 132.40000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ]
+          }
+        },
+        "summary": {
+          "closed": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 119.70000000001164,
+                "median": 132,
+                "max": 137.70000000001164,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 119.70000000001164,
+                "median": 132,
+                "max": 137.70000000001164,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 180.20000000001164,
+                "median": 185.39999999999418,
+                "max": 205.90000000002328,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 74.70000000001164,
+                "median": 77.89999999996508,
+                "max": 92.29999999998836,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 74.70000000001164,
+                "median": 77.89999999996508,
+                "max": 92.29999999998836,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 127.70000000001164,
+                "median": 141.10000000003492,
+                "max": 149.70000000001164,
+                "missing": 0
+              }
+            }
+          },
+          "open": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 118,
+                "median": 131.90000000002328,
+                "max": 147.29999999998836,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 118,
+                "median": 131.90000000002328,
+                "max": 147.29999999998836,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 231,
+                "median": 248.09999999997672,
+                "max": 252.29999999998836,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 70.5,
+                "median": 95.79999999998836,
+                "max": 96.80000000004657,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 70.5,
+                "median": 95.79999999998836,
+                "max": 96.80000000004657,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 123.20000000001164,
+                "median": 152.90000000002328,
+                "max": 177.20000000001164,
+                "missing": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks cold and hot session tab switching",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 2,
+      "context": {
+        "project": "chromium",
+        "platform": "linux"
+      },
+      "metrics": {
+        "results": {
+          "cold": [
+            {
+              "firstDestinationObservedMs": 140.5,
+              "firstCorrectObservedMs": 140.5,
+              "stableObservedMs": 242.10000000003492,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 3,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 162.60000000003492,
+              "firstCorrectObservedMs": 162.60000000003492,
+              "stableObservedMs": 226.80000000004657,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 134.80000000004657,
+              "firstCorrectObservedMs": 134.80000000004657,
+              "stableObservedMs": 184.5,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 135.19999999995343,
+              "firstCorrectObservedMs": 135.19999999995343,
+              "stableObservedMs": 222.39999999996508,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 128.20000000001164,
+              "firstCorrectObservedMs": 128.20000000001164,
+              "stableObservedMs": 162.89999999996508,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ],
+          "hot": [
+            {
+              "firstDestinationObservedMs": 86.59999999997672,
+              "firstCorrectObservedMs": 86.59999999997672,
+              "stableObservedMs": 147.70000000001164,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 90.5,
+              "firstCorrectObservedMs": 90.5,
+              "stableObservedMs": 151.29999999998836,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 54.5,
+              "firstCorrectObservedMs": 54.5,
+              "stableObservedMs": 102.5,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 53.09999999997672,
+              "firstCorrectObservedMs": 53.09999999997672,
+              "stableObservedMs": 96.5,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 1,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            },
+            {
+              "firstDestinationObservedMs": 90.20000000001164,
+              "firstCorrectObservedMs": 90.20000000001164,
+              "stableObservedMs": 157.79999999998836,
+              "wrongDestinationSamples": 0,
+              "blankSamples": 2,
+              "unknownSamples": 0,
+              "sourceSamples": 0,
+              "reviewFileHostMissingSamples": 0,
+              "reviewFileHostReplacedSamples": 0,
+              "reviewHeaders": [],
+              "reviewReplacedLevels": []
+            }
+          ]
+        },
+        "summary": {
+          "cold": {
+            "firstDestinationObservedMs": {
+              "min": 128.20000000001164,
+              "median": 135.19999999995343,
+              "max": 162.60000000003492,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 128.20000000001164,
+              "median": 135.19999999995343,
+              "max": 162.60000000003492,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 162.89999999996508,
+              "median": 222.39999999996508,
+              "max": 242.10000000003492,
+              "missing": 0
+            }
+          },
+          "hot": {
+            "firstDestinationObservedMs": {
+              "min": 53.09999999997672,
+              "median": 86.59999999997672,
+              "max": 90.5,
+              "missing": 0
+            },
+            "firstCorrectObservedMs": {
+              "min": 53.09999999997672,
+              "median": 86.59999999997672,
+              "max": 90.5,
+              "missing": 0
+            },
+            "stableObservedMs": {
+              "min": 96.5,
+              "median": 147.70000000001164,
+              "max": 157.79999999998836,
+              "missing": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "schemaVersion": 2,
+      "runID": "2026-11-22T22-36-39-745Z-3526",
+      "name": "benchmarks v2 session tab switching with and without the review pane",
+      "status": "passed",
+      "expectedStatus": "passed",
+      "retry": 0,
+      "repeatEachIndex": 2,
+      "context": {
+        "project": "chromium",
+        "platform": "linux",
+        "runs": 5,
+        "reviewDiffs": 72
+      },
+      "metrics": {
+        "results": {
+          "closed": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 126.89999999996508,
+                "firstCorrectObservedMs": 126.89999999996508,
+                "stableObservedMs": 202.79999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 122.70000000001164,
+                "firstCorrectObservedMs": 122.70000000001164,
+                "stableObservedMs": 192,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 132.09999999997672,
+                "firstCorrectObservedMs": 132.09999999997672,
+                "stableObservedMs": 190.39999999996508,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 3,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 131.29999999998836,
+                "firstCorrectObservedMs": 131.29999999998836,
+                "stableObservedMs": 167.09999999997672,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 123.69999999995343,
+                "firstCorrectObservedMs": 123.69999999995343,
+                "stableObservedMs": 180.59999999997672,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 81.20000000001164,
+                "firstCorrectObservedMs": 81.20000000001164,
+                "stableObservedMs": 144.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 59.600000000034925,
+                "firstCorrectObservedMs": 59.600000000034925,
+                "stableObservedMs": 137.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 75.70000000001164,
+                "firstCorrectObservedMs": 75.70000000001164,
+                "stableObservedMs": 145.20000000001164,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 3,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 97.29999999998836,
+                "firstCorrectObservedMs": 97.29999999998836,
+                "stableObservedMs": 158.19999999995343,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 91.20000000001164,
+                "firstCorrectObservedMs": 91.20000000001164,
+                "stableObservedMs": 151.10000000003492,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [],
+                "reviewReplacedLevels": []
+              }
+            ]
+          },
+          "open": {
+            "cold": [
+              {
+                "firstDestinationObservedMs": 132.29999999998836,
+                "firstCorrectObservedMs": 132.29999999998836,
+                "stableObservedMs": 246.79999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 135.59999999997672,
+                "firstCorrectObservedMs": 135.59999999997672,
+                "stableObservedMs": 254.79999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 120.59999999997672,
+                "firstCorrectObservedMs": 120.59999999997672,
+                "stableObservedMs": 244.79999999998836,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 151.70000000001164,
+                "firstCorrectObservedMs": 151.70000000001164,
+                "stableObservedMs": 268.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 118.40000000002328,
+                "firstCorrectObservedMs": 118.40000000002328,
+                "stableObservedMs": 232.5,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ],
+            "hot": [
+              {
+                "firstDestinationObservedMs": 69.09999999997672,
+                "firstCorrectObservedMs": 69.09999999997672,
+                "stableObservedMs": 133.89999999996508,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 95.20000000001164,
+                "firstCorrectObservedMs": 95.20000000001164,
+                "stableObservedMs": 165.40000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 68.10000000003492,
+                "firstCorrectObservedMs": 68.10000000003492,
+                "stableObservedMs": 127.90000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 118.70000000001164,
+                "firstCorrectObservedMs": 118.70000000001164,
+                "stableObservedMs": 173.40000000002328,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 2,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              },
+              {
+                "firstDestinationObservedMs": 76.69999999995343,
+                "firstCorrectObservedMs": 76.69999999995343,
+                "stableObservedMs": 126.39999999996508,
+                "wrongDestinationSamples": 0,
+                "blankSamples": 1,
+                "unknownSamples": 0,
+                "sourceSamples": 0,
+                "reviewFileHostMissingSamples": 0,
+                "reviewFileHostReplacedSamples": 0,
+                "reviewHeaders": [
+                  "Mgenerated-000.tssrc/review/+3-3"
+                ],
+                "reviewReplacedLevels": []
+              }
+            ]
+          }
+        },
+        "summary": {
+          "closed": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 122.70000000001164,
+                "median": 126.89999999996508,
+                "max": 132.09999999997672,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 122.70000000001164,
+                "median": 126.89999999996508,
+                "max": 132.09999999997672,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 167.09999999997672,
+                "median": 190.39999999996508,
+                "max": 202.79999999998836,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 59.600000000034925,
+                "median": 81.20000000001164,
+                "max": 97.29999999998836,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 59.600000000034925,
+                "median": 81.20000000001164,
+                "max": 97.29999999998836,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 137.5,
+                "median": 145.20000000001164,
+                "max": 158.19999999995343,
+                "missing": 0
+              }
+            }
+          },
+          "open": {
+            "cold": {
+              "firstDestinationObservedMs": {
+                "min": 118.40000000002328,
+                "median": 132.29999999998836,
+                "max": 151.70000000001164,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 118.40000000002328,
+                "median": 132.29999999998836,
+                "max": 151.70000000001164,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 232.5,
+                "median": 246.79999999998836,
+                "max": 268.5,
+                "missing": 0
+              }
+            },
+            "hot": {
+              "firstDestinationObservedMs": {
+                "min": 68.10000000003492,
+                "median": 76.69999999995343,
+                "max": 118.70000000001164,
+                "missing": 0
+              },
+              "firstCorrectObservedMs": {
+                "min": 68.10000000003492,
+                "median": 76.69999999995343,
+                "max": 118.70000000001164,
+                "missing": 0
+              },
+              "stableObservedMs": {
+                "min": 126.39999999996508,
+                "median": 133.89999999996508,
+                "max": 173.40000000002328,
+                "missing": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

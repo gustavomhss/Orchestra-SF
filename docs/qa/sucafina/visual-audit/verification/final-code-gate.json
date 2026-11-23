@@ -1,0 +1,195 @@
+{
+  "schema": "sf-interface-polish-gate/v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+  "snapshot": "1c6ab9a9995536fc1b212aa9f81aedd37123ee11",
+  "run": 45101173066,
+  "job": 137452114130,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45101173066",
+  "conclusion": "success",
+  "guard": {
+    "base": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 228,
+    "findings": [
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 43,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  waveFourTest.setTimeout(660_000)",
+        "match": [
+          15,
+          33
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 184,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  waveFourTest.setTimeout(720_000)",
+        "match": [
+          15,
+          33
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 200,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "    await expect(available.getByRole(\"listitem\")).toHaveCount(1, { timeout: 40_000 })",
+        "match": [
+          65,
+          84
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 205,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "    await expect(preview).toBeVisible({ timeout: 40_000 })",
+        "match": [
+          38,
+          57
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 213,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "    await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+        "match": [
+          40,
+          59
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 263,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  await expect(compare.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+        "match": [
+          136,
+          155
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 286,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  waveFourTest.setTimeout(720_000)",
+        "match": [
+          15,
+          33
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 355,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  waveFourTest.setTimeout(480_000)",
+        "match": [
+          15,
+          33
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 376,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "      }, { timeout: 40_000 }).then(async (response) => {",
+        "match": [
+          9,
+          28
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 400,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "    await expect(similar.locator(\".sf-memory-candidates\")).toBeVisible({ timeout: 40_000 })",
+        "match": [
+          71,
+          90
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 408,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  waveFourTest.setTimeout(660_000)",
+        "match": [
+          15,
+          33
+        ]
+      },
+      {
+        "rule": "test-timeout-raised",
+        "severity": "warn",
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "line": 550,
+        "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "excerpt": "  await review.getByRole(\"button\", { name: \"Cancel review\", exact: true }).click({ timeout: 15_000 })",
+        "match": [
+          81,
+          100
+        ]
+      }
+    ],
+    "errors": [],
+    "approved": [],
+    "touchesGuards": false
+  },
+  "summaryLines": [
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"app-shell typecheck\",\"command\":[\"/home/runner/.bun/bin/bun\",\"typecheck\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"fetch pinned guard base\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=1\",\"origin\",\"a5eee3584da531d087a419b8f3ef29d3881117c7:refs/remotes/origin/dev\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"gate\":\"resolve pinned guard base\",\"command\":[\"git\",\"rev-parse\",\"--verify\",\"refs/remotes/origin/dev^{commit}\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"gate\":\"guardrails\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"check:guards\",\"--base\",\"origin/dev\",\"--json\"],\"cwd\":\".\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"palette generation\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"script/orchestra-palettes.ts\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"gate\":\"palette byte parity\",\"files\":7,\"changed\":[]}",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"app-shell e2e typecheck\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck:e2e\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"review comparison\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"--conditions=solid\",\"--preload\",\"./happydom.ts\",\"./src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts\",\"./src/context/layout-route.test.ts\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    " 13 pass",
+    " 0 fail",
+    "Ran 13 tests across 2 files. [146.00ms]",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"browser command and Team regressions\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"--conditions=browser\",\"--preload\",\"./happydom.ts\",\"./test-browser/sucafina-confirmation-payload.test.ts\",\"./test-browser/sucafina-draft-confirmation.test.ts\",\"./test-browser/sucafina-decision-command.test.ts\",\"./test-browser/sucafina-procurement-command.test.ts\",\"./test-browser/sucafina-saved-view-command.test.ts\",\"./test-browser/sucafina-vendor-contract-command.test.ts\",\"./test-browser/sucafina-preserved-review-model.test.ts\",\"./test-browser/team-profile.test.ts\",\"./test-browser/team-profile-configuration.test.ts\",\"./test-browser/team-profile-navigation.test.ts\",\"./test-browser/team-session-page.test.ts\",\"./test-browser/sucafina-team-domain.test.ts\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    " 100 pass",
+    " 0 fail",
+    "Ran 100 tests across 12 files. [6.06s]",
+    "{\"verification\":\"sf-interface-polish\",\"candidate\":\"1c6ab9a9995536fc1b212aa9f81aedd37123ee11\",\"run\":\"45101173066\",\"guardBase\":\"a5eee3584da531d087a419b8f3ef29d3881117c7\"}",
+    "{\"gate\":\"core typecheck\",\"command\":[\"/home/runner/.bun/bin/bun\",\"typecheck\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "omni positive control [212e80731ce9eeadd5f699a51940e3ea]: pass (declared: 7 test(s) in test/sucafina-polish-verification.test.ts); 9 omni spawn(s), 0 delegated.",
+    " 7 pass",
+    " 0 fail",
+    "Ran 7 tests across 1 file. [48.38s]"
+  ],
+  "interpretation": "The snapshot's path count includes the two disposable request/wrapper files and both sides of relevant renames. Those temporary files are not product changes. Advisory timeout warnings remain explicit; no suppression, approval override, gate finding or configuration error is present."
+}

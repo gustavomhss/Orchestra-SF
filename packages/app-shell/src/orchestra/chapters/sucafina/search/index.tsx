@@ -10,6 +10,7 @@ import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
 import "./search.css"
+import "../reviews/workflows.css"
 
 type Result = Extract<Schema.Schema.Type<typeof SfProjectionSearch.Output>, { status: "ok" }>["value"]
 type Match = Result["matches"][number]
@@ -180,7 +181,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <div class="sf-search" data-sf-surface="UI31" data-sf-polish="planner" data-sf-wave="four">
+      <div class="sf-search sf-workflow" data-sf-surface="UI31" data-sf-polish="planner" data-sf-wave="four">
       <section class="sf-search-query" aria-labelledby="sf-u42-query">
         <h2 id="sf-u42-query">{t(key("sf.ui31.query"))}</h2>
         <Show when={owner.state().status === "ready" && !privateRouteReady()}>

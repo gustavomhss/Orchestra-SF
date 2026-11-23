@@ -8,10 +8,11 @@ import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
-import { preservedMeetingLine, readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
+import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
 import "./preserved.css"
+import "../workflows.css"
 
 const key = (value: string) => value as SfCopyKey
 
@@ -157,7 +158,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         onInvoke: () => setStore("presenting", (value) => !value),
       } : undefined}
     >
-      <div class="sf-n28 sf-n28-preserved" data-sf-surface="UI48" data-sf-presentation={store.presenting}>
+      <div data-sf-wave="polish" class="sf-n28 sf-n28-preserved sf-workflow" data-sf-surface="UI48" data-sf-presentation={store.presenting}>
         <SfStatePanel
           state={store.status}
           messageKey={key(!ref() ? "sf.u32.listUnavailable" : "sf.u32.reviewUnavailable")}
@@ -172,7 +173,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   <div><dt>{t("sf.u32.created")}</dt><dd><WhenText iso={review().createdAt} /></dd></div>
                 </dl>
               </header>
-              <section class="sf-n28-section" aria-label={t("sf.u32.sections")}>
+              <section class="sf-n28-section sf-section" aria-label={t("sf.u32.sections")}>
                 <h2>{t("sf.u32.sections")}</h2>
                 <ol class="sf-n28-items">
                   <For each={review().sections}>
@@ -182,16 +183,17 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                       <p>{t("sf.u32.records")}: {section.count}</p>
                       <Show when={readPreservedProjection(section.content)}
                         fallback={<p role="status">{t("sf.u32.materialUnavailable")}</p>}>
-                        {(projection) => <section aria-label={t("sf.u32.values")} class="sf-n28-section">
+                        {(projection) => <section aria-label={t("sf.u32.values")} class="sf-n28-section sf-section">
                           <h4>{t("sf.u32.values")}</h4>
                           <dl class="sf-n28-values">
                             <For each={projection().values}>
                               {(value) => <div>
-                                <dt>{value.id}</dt>
+                                <dt>{t("sf.u32.value")}
+                                  <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
+                                </dt>
                                 <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} />}</span>
-                                  <Show when={value.unit}><span> {value.unit}</span></Show>
-                                  <Show when={value.currency}><span> {value.currency}</span></Show>
+                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} unit={value.unit} />}</span>
+                                                                    <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
                                   <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
                                 </dd>
                               </div>}
@@ -200,7 +202,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                         </section>}
                       </Show>
                       <Show when={section.sourceRefs.length}>
-                        <section class="sf-n28-section">
+                        <section class="sf-n28-section sf-section">
                           <h4>{t("sf.u32.sources")}</h4>
                           <ul>
                             <For each={section.sourceRefs}>{(source) => <li>
@@ -224,28 +226,29 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                 updateBusy={store.updateStatus === "loading"}
               />
               <Show when={store.sourceLinks.length}>
-                <nav aria-label={SF_U32_COPY["sf.u32.authorizedSources"]}>
+                <nav aria-label={t("sf.u32.authorizedSources")}>
                   <For each={store.sourceLinks}>{(link) => <a href={link.url}>{link.label}</a>}</For>
                 </nav>
               </Show>
               <SfPreservedAnswer review={review()} />
-              <section class="sf-n28-section" aria-label={t("sf.u32.comments")}>
+              <section class="sf-n28-section sf-section" aria-label={t("sf.u32.comments")}>
                 <h2>{t("sf.u32.comments")}</h2>
                 <Show when={review().comments.length} fallback={<p>{t("sf.u32.none")}</p>}>
                   <ol class="sf-n28-items">
                     <For each={review().comments}>{(comment) => <li class="mx-card">
                       <p>{comment.content}</p>
-                      <small>{comment.authorRef} · <WhenText iso={comment.createdAt} /></small>
+                      <small><WhenText iso={comment.createdAt} /></small>
+                      <details class="sf-technical-details"><summary>{t("sf.u32.authorReference")}</summary><bdi>{comment.authorRef}</bdi></details>
                     </li>}</For>
                   </ol>
                 </Show>
               </section>
-              <div class="sf-n28-actions">
+              <div class="sf-n28-actions sf-form-actions">
                 <button type="button" class="mx-btn" onClick={() => { void update() }}
                   disabled={store.updateStatus === "loading" || store.status !== "ready"}>{t("sf.u32.update")}</button>
               </div>
               <Show when={store.successor}>
-                {(next) => <section class="mx-card sf-n28-section" data-sf-successor-availability={next().available}>
+                {(next) => <section class="mx-card sf-n28-section sf-section" data-sf-successor-availability={next().available}>
                   <p role="status">{t(next().available ? "sf.u32.updateReady" : "sf.u32.updateBlocked")}</p>
                   <h3>{t("sf.u32.confirmations")}</h3>
                   <ul><For each={next().confirmations}>{(item) => <li>{item.label}</li>}</For></ul>
@@ -272,6 +275,8 @@ function SfPreservedMeeting(props: {
   onUpdate: () => void
   updateBusy: boolean
 }) {
+  const language = useLanguage()
+  const t = (value: keyof typeof SF_U32_COPY) => language.t(value as Parameters<typeof language.t>[0])
   const section = () => props.review.sections[Math.max(0, Math.min(props.topic, props.review.sections.length - 1))]
   const projection = () => {
     const current = section()
@@ -283,29 +288,44 @@ function SfPreservedMeeting(props: {
     return [...new Map(current.values.flatMap((value) => value.sourceRefs).map((ref) => [ref.refId, ref])).values()]
   }
   return (
-    <section class="sf-n28-section" aria-label={SF_U32_COPY["sf.u32.meeting"]}>
-      <p role="status">{`Preserved review ${props.review.id} v${props.review.version} · ${props.review.createdAt}`}</p>
+    <section class="sf-n28-section sf-section" aria-label={t("sf.u32.meeting")}>
+      <p class="sf-workflow-note">{t("sf.u32.version")}: {props.review.version} · <WhenText iso={props.review.createdAt} /></p>
+      <details class="sf-technical-details"><summary>{t("sf.u32.ref")}</summary><bdi>{props.review.id}</bdi></details>
       <Show when={section()}>
         {(current) => <>
           <h2>{current().title}</h2>
-          <p>{current().period.start} – {current().period.end} · {current().count} records</p>
-          <Show when={projection()} fallback={<p>{SF_U32_COPY["sf.u32.materialUnavailable"]}</p>}>
+          <p><PeriodText start={current().period.start} end={current().period.end} /> · {t("sf.u32.records")}: {current().count}</p>
+          <Show when={projection()} fallback={<p>{t("sf.u32.materialUnavailable")}</p>}>
             {(shown) => <ul>
-              <For each={shown().values}>{(value) => <li>{preservedMeetingLine(value)}</li>}</For>
+              <For each={shown().values}>{(value) => <li>
+                <strong><AmountText value={value.value} currency={value.currency} unit={value.unit} /></strong>
+                <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
+                                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
+                <details class="sf-technical-details">
+                  <summary>{t("sf.u32.inspectSource")}</summary>
+                  <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>
+                  <Show when={value.sourceRefs.length} fallback={<p>{t("sf.u32.notRecorded")}</p>}>
+                    <ul><For each={value.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
+                  </Show>
+                </details>
+              </li>}</For>
             </ul>}
           </Show>
           <Show when={sources().length}>
-            <ul aria-label={SF_U32_COPY["sf.u32.sourceNav"]}>
+            <ul class="sf-n28-items" aria-label={t("sf.u32.sourceNav")}>
               <For each={sources()}>{(source) => <li>
-                <button type="button" onClick={() => props.onSource(source.refId)}>{`Open source ${source.refId}`}</button>
+                <button type="button" class="mx-btn" onClick={() => props.onSource(source.refId)}>{t("sf.u32.openSource")}</button>
+                <details class="sf-technical-details"><summary>{t("sf.u32.sources")}</summary><bdi>{source.refId}</bdi></details>
               </li>}</For>
             </ul>
           </Show>
         </>}
       </Show>
-      <button type="button" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{SF_U32_COPY["sf.u32.previousTopic"]}</button>
-      <button type="button" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{SF_U32_COPY["sf.u32.nextTopic"]}</button>
-      <button type="button" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{SF_U32_COPY["sf.u32.checkUpdates"]}</button>
+      <div class="sf-form-actions">
+        <button type="button" class="mx-btn" disabled={props.topic <= 0} onClick={() => props.onTopic(props.topic - 1)}>{t("sf.u32.previousTopic")}</button>
+        <button type="button" class="mx-btn" disabled={props.topic >= props.review.sections.length - 1} onClick={() => props.onTopic(props.topic + 1)}>{t("sf.u32.nextTopic")}</button>
+        <button type="button" class="mx-btn" disabled={props.updateBusy} onClick={() => props.onUpdate()}>{t("sf.u32.checkUpdates")}</button>
+      </div>
     </section>
   )
 }

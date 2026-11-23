@@ -1,3 +1,5 @@
+@import "../foundation.css";
+
 /* S01 uses Orchestra's existing Mx palette, font, focus and spacing tokens.
    No new app shell, sidebar or independently themed surface is introduced. */
 .sf-s01-table {
@@ -200,3 +202,36 @@
     animation-duration: 0ms !important;
   }
 }
+
+/* Keep words readable and make horizontal overflow a named keyboard region. */
+.sf-s01-table-scroll {
+  box-shadow: var(--mx-card-shadow);
+  scrollbar-color: var(--mx-dim) var(--mx-soft);
+}
+.sf-s01-table-scroll:focus-visible {
+  outline: var(--sf-focus-width) solid var(--mx-blue);
+  outline-offset: var(--sf-focus-width);
+}
+.sf-s01-table table {
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.55;
+}
+.sf-s01-table :is(th, td) { overflow-wrap: normal; word-break: normal; }
+.sf-s01-table :is(th, td) :is(code, bdi, .sf-technical-details) { overflow-wrap: anywhere; }
+.sf-s01-table th {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  font-family: var(--mx-emphasis);
+}
+.sf-s01-table tbody tr:last-child td { border-block-end: 0; }
+.sf-s01-table tbody tr:not(.sf-s01-selected):hover { background: var(--mx-soft); }
+.sf-s01-table .sf-s01-selected { background: var(--mx-enabled); }
+.sf-s01-row-open { overflow-wrap: normal; }
+.sf-s01-primary-cell { gap: var(--sf-space-1) var(--sf-space-2); }
+.sf-s01-cell-value { line-height: 1.55; }
+.sf-s01-align-end { font-variant-numeric: tabular-nums; }
+.sf-s01-action-reason { font-size: var(--orchestra-font-size-sm); }
+.sf-s01-table[data-sf-density="comfortable"] :is(.sf-s01-row-open, .sf-s01-row-actions button) {
+  min-block-size: var(--sf-control-height);
+}
+.sf-s01-list-detail .sf-s01-table-scroll { box-shadow: none; }

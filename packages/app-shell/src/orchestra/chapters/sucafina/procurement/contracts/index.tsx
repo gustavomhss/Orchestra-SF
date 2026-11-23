@@ -18,7 +18,7 @@ import type { SfDraftState } from "../../shared/draft"
 import { SF_U15_COPY } from "@/i18n/orchestra-chapters/sf-u15"
 import {
   decodeVendorContractsPage, vendorAuthorizedAction, vendorCommandInput,
-  vendorEditFromRecord, vendorRef, vendorVersion,
+  vendorAmountText, vendorEditFromRecord, vendorRef, vendorVersion,
   type SfVendorAction, type SfVendorContract, type SfVendorEdit, type SfVendorRead, type SfVendorSave,
 } from "./model"
 import "./contracts.css"
@@ -47,7 +47,7 @@ const EDIT_SECTIONS: readonly { id: string; title: Key; fields: readonly Field[]
   { id: "notes", title: "sf.u15.notes", fields: ["notes"] },
 ]
 function fieldKey(field: Field): Key { return ("sf.u15.field." + field) as Key }
-function editFields(values: SfVendorEdit): readonly SfReviewField[] {
+function editFields(values: SfVendorEdit, locale: string): readonly SfReviewField[] {
   return FIELDS.map((field) => {
     const value = values[field]
     const option = field === "amtType" && ["total", "monthly", "annual"].includes(String(value)) ||
@@ -59,7 +59,7 @@ function editFields(values: SfVendorEdit): readonly SfReviewField[] {
         : { kind: "text" as const, text: value === ""
           ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
           : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
-            : dataText(String(value)) },
+            : dataText(field === "amount" ? vendorAmountText(value, locale) : String(value)) },
     }
   })
 }
@@ -105,8 +105,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     value === "auto" ? t("sf.u15.option.auto") : value
   const readField = (row: SfVendorContract, field: Field) => {
     const value = row[field]
-    if (field === "amount" && typeof value === "number")
-      return new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 20 }).format(value)
+    if (field === "amount") return vendorAmountText(value, language.intl())
     return field === "amtType" || field === "renewType" ? optionText(safeField(row, field)) : safeField(row, field)
   }
   const routeRef = () =>
@@ -444,10 +443,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const base = selectedRow()
     const original: SfReviewSnapshot | null = base && ref
       ? { kind: "persisted", ref, version: review.version,
-        fields: editFields(vendorEditFromRecord(base)) } : null
+        fields: editFields(vendorEditFromRecord(base), language.intl()) } : null
     const actionKey = review.action === "save" ? "sf.u15.save" : "sf.u15.delete"
     const fields = review.action === "delete"
-      ? editFields(vendorEditFromRecord(base)) : editFields(review.values)
+      ? editFields(vendorEditFromRecord(base), language.intl()) : editFields(review.values, language.intl())
     return <fieldset class="sf-u15-review-controls" disabled={view.sending || view.outcomeUnknown}
       aria-label={t("sf.u15.reviewScope")}><SfChangeReview
       operation={{ ref: review.operationRef, label: message(actionKey), scope: dataText(t("sf.u15.reviewScope")) }}
@@ -459,7 +458,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       coverage={{ state: "complete", summary: message("sf.u15.reviewSummary"),
         reasons: [], knownCount: fields.length, expectedCount: fields.length }}
       blockingReasons={[]}
-      confirmation={{ kind: "admitted", labelKey: key("sf.u15.confirm"),
+      confirmation={{ kind: "admitted", labelKey: key(actionKey),
         purpose: review.action, binding: { kind: "catalog-command",
           operationId: review.action === "save" ? "domain.command.CAP14.save" : "domain.command.CAP14.delete",
           version: { kind: "record", expectedVersion: review.version },
