@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite"
 import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
+import { rememberSfImportStorageFault } from "./import-fault-profile.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
 import { types } from "node:util"
@@ -84,6 +85,8 @@ export function consumeLocalTransactionAbort(observation: object, error: unknown
   transaction.consumed = true
   return Object.freeze({ storageIdentity: transaction.storageIdentity, transactionId: transaction.transactionId })
 }
+
+let importFaultStoreSequence = 0
 
 export async function openLocalStore(directory: string, options: {
   lockTimeoutMs?: number
@@ -292,6 +295,15 @@ export async function openLocalStore(directory: string, options: {
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
+  // Diagnostic IDs are ephemeral per process/store. An active local operation is not proof of an external SQL lock owner.
+  type FaultPhase = "queue" | "connection" | "begin-lock" | "begin-check" | "pre-work" | "work" | "finalize" | "cleanup"
+  type FaultOperation = {
+    id: number; kind: string; phase: FaultPhase; started: number; phaseAt: number; admittedAt: number
+    signal: AbortSignal | undefined; error: unknown; errorPhase: FaultPhase | undefined
+  }
+  const faultStore = ++importFaultStoreSequence
+  let faultOperationSequence = 0
+  let faultActive: FaultOperation | undefined
   // Only the serialized top-level writer borrows this connection. Each use
   // still acquires a new SQL lock and finishes its own transaction.
   const writer: { db?: Database } = {}
@@ -327,7 +339,8 @@ export async function openLocalStore(directory: string, options: {
     }
   }
   const abortRoots = new WeakMap<Database, LocalTransactionAbort>()
-  const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
+  const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal,
+    kind = write ? "write" : "read"): Promise<T> => {
     if (lifecycle.closed) {
       const scope = context.getStore()
       // An admitted readonly root may drain during disposal, but a rejected
@@ -350,32 +363,54 @@ export async function openLocalStore(directory: string, options: {
     }
     const previous = write ? queue.tail : undefined
     const deadline = performance.now() + timeout
+    const fault: FaultOperation = {
+      id: ++faultOperationSequence, kind, phase: "queue", started: deadline - timeout,
+      phaseAt: deadline - timeout, admittedAt: 0, signal, error: undefined, errorPhase: undefined,
+    }
+    const activeAtEntry = faultActive?.id ?? 0
+    const phase = (value: FaultPhase) => {
+      try { fault.phase = value; fault.phaseAt = performance.now() }
+      catch { /* Diagnostic timing cannot affect the original operation. */ }
+    }
+    const failedPhase = (error: unknown) => {
+      try { fault.error = error; fault.errorPhase = fault.phase }
+      catch { /* Preserve the original caught object and its rejection. */ }
+    }
     const pending = (async () => {
       // Serialize writers within this instance instead of making maintenance
       // contend with its own business transaction in WAL. Credential reads
       // remain independent because authentication awaits them inside that transaction.
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+      phase("connection")
+      if (write) { fault.admittedAt = fault.phaseAt; faultActive = fault }
       signal?.throwIfAborted()
       const db = write ? acquireWriter() : acquireAuthReader()
       const status = { completed: false }
       const failure: { failed: boolean; error?: unknown } = { failed: false }
       try {
         if (write) {
+          phase("begin-lock")
           await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+          phase("begin-check")
           requireDatabaseFile()
         }
+        phase("pre-work")
         signal?.throwIfAborted()
+        phase("work")
         const value = await work(db)
+        phase("finalize")
         if (!write && db.inTransaction) throw new Error("Local authentication read opened a transaction")
         if (inherited) requireScope(inherited)
         requireDatabaseFile()
         status.completed = true
         return value
       } catch (error) {
+        failedPhase(error)
         failure.failed = true
         failure.error = error
         throw error
       } finally {
+        phase("cleanup")
         const rollback = { confirmed: false }
         try {
           try {
@@ -384,6 +419,7 @@ export async function openLocalStore(directory: string, options: {
               rollback.confirmed = true
             }
           } catch (error) {
+            failedPhase(error)
             status.completed = false
             throw error
           } finally {
@@ -409,7 +445,28 @@ export async function openLocalStore(directory: string, options: {
     }
     active.add(pending)
     // Register both handlers without creating an unobserved rejecting cleanup promise.
-    void pending.then(() => active.delete(pending), () => active.delete(pending))
+    void pending.then(() => {
+      if (faultActive === fault) faultActive = undefined
+      return active.delete(pending)
+    }, (error) => {
+      rememberSfImportStorageFault(error, () => {
+        const at = performance.now()
+        const owner = faultActive
+        return {
+          store: faultStore, operation: fault.id, opKind: fault.kind,
+          phase: fault.error === error ? fault.errorPhase ?? fault.phase : fault.phase,
+          opElapsedMs: Math.round(at - fault.started), budgetMs: timeout, write,
+          signalPresent: !!signal, signalAborted: signal?.aborted ?? false, previousPresent: !!previous,
+          activeAtEntry, active: owner?.id ?? 0, activeKind: owner?.kind ?? "none",
+          activePhase: owner?.phase ?? "none", activeElapsedMs: owner ? Math.round(at - owner.admittedAt) : 0,
+          activePhaseElapsedMs: owner ? Math.round(at - owner.phaseAt) : 0,
+          activeSignalPresent: !!owner?.signal, activeAborted: owner?.signal?.aborted ?? false,
+          sameActive: activeAtEntry !== 0 && activeAtEntry === owner?.id,
+        }
+      })
+      if (faultActive === fault) faultActive = undefined
+      return active.delete(pending)
+    })
     return pending
   }
 
@@ -551,7 +608,7 @@ export async function openLocalStore(directory: string, options: {
           delete aclCopies.planner
           delete aclCopies.procurement
         }
-      }, transactionOptions?.signal),
+      }, transactionOptions?.signal, "snapshot-root"),
     currentSnapshotScope: () => {
       const scope = context.getStore()
       if (!scope) return undefined
@@ -765,7 +822,7 @@ export async function openLocalStore(directory: string, options: {
           db.exec("COMMIT")
         }
         return result.value
-      }, transactionOptions?.signal)
+      }, transactionOptions?.signal, "transaction")
     },
     transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {
@@ -812,7 +869,7 @@ export async function openLocalStore(directory: string, options: {
           db.exec("COMMIT")
         }
         return result.value
-      }, transactionOptions?.signal),
+      }, transactionOptions?.signal, "transaction-all"),
     secrets: {
       put: (key, bytes, expiresAt) => operation(true, async (db) => {
         if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")

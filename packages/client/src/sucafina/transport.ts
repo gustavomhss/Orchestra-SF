@@ -221,10 +221,23 @@ export function createSfTransport(options: Readonly<{
       if (operation.operationId.startsWith("files.") && !stamp)
         return failure("contract-unavailable")
       const fileOwner = webFiles && stamp ? { ...stamp } : undefined
+      const importReference = webFiles && operation.operationId === "files.import-reference"
+      const importReferenceTicket = importReference ? ++importReferenceLifecycleTickets : 0
+      let importAuthorityReads = 0
+      const importPhase = (label: string, fields: () => Readonly<Record<string, string | number | boolean>> = () => ({})) => {
+        if (!importReference) return
+        importJsonLifecycle(label, () => ({ ticket: importReferenceTicket, aborted: call.signal.aborted, ...fields() }))
+      }
       const currentFileOwner = () => !!fileOwner && !!stamp && isCurrent() &&
         !call.signal.aborted && equalContextStamp(stamp, fileOwner)
-      const revalidateFileOwner = async () => !!fileOwner && currentFileOwner() &&
-        await refreshSfFileAuthority(options, fileOwner, operation.operationId, call.signal) && currentFileOwner()
+      const revalidateFileOwner = async () => {
+        const phase = ++importAuthorityReads === 1 ? "reference-pre-context" : "reference-post-context"
+        importPhase(phase + "-begin")
+        const live = !!fileOwner && currentFileOwner() &&
+          await refreshSfFileAuthority(options, fileOwner, operation.operationId, call.signal) && currentFileOwner()
+        importPhase(phase + "-end", () => ({ live }))
+        return live
+      }
       // ctx.context expectations are ALWAYS taken from the approved descriptor.
       // The frozen F01 signatures allow an undefined public argument, while the
       // catalog requires exactly this private three-field query; never trust an
@@ -429,6 +442,7 @@ export function createSfTransport(options: Readonly<{
         try {
           dispatched = true
           rememberIntent()
+          importPhase("reference-fetch-begin")
           const result = await options.fetch(route, {
             method: metadata.method,
             credentials: "same-origin",
@@ -438,6 +452,7 @@ export function createSfTransport(options: Readonly<{
             headers,
             ...(requestBody !== undefined ? { body: requestBody } : {}),
           })
+          importPhase("reference-fetch-resolved")
           const extracted = publicHeaders(result.headers)
           if (result.status === 401 || result.status === 403) clear()
           if (isBytes && (result.status === 401 || result.status === 403)) {
@@ -457,10 +472,15 @@ export function createSfTransport(options: Readonly<{
           } else if (!isJsonContentType(result.headers.get("content-type"))) {
             response = failure("invalid-response")
           } else {
+            importPhase("reference-body-begin")
             const wire = await readJsonBounded(result)
+            importPhase("reference-body-decoded", () => ({ resultPresent: wire !== undefined }))
             response = wire === undefined ? failure("invalid-response") : { status: result.status, headers: extracted, body: wire }
           }
-        } catch { response = failure("network") }
+        } catch {
+          importPhase("reference-request-caught")
+          response = failure("network")
+        }
       }
       if (!isCurrent() || call.signal.aborted) {
         if (mutating && dispatched) return failure("outcome-unknown")
@@ -528,6 +548,7 @@ export function createSfTransport(options: Readonly<{
       return { kind: "response", status: response.status, headers: response.headers, body: parsedOutput.value }
       } finally {
         if (mutating) mutationInFlight.delete(key!)
+        importPhase("reference-execute-settled")
       }
     },
     /**
@@ -908,6 +929,21 @@ function publicHeaders(source: Headers | SfPublicHeaders): SfPublicHeaders {
  * Bounded JSON ingestion: content-length is only a hint, so enforce the limit
  * on actual streamed bytes. Never render or log invalid producer JSON/HTML.
  */
+let importJsonLifecycleLines = 0
+let importReferenceLifecycleTickets = 0
+function importJsonLifecycle(label: string, fields: () => Readonly<Record<string, string | number | boolean>>) {
+  try {
+    if (importJsonLifecycleLines >= 128) return
+    const message = "SF_IMPORT_LIFECYCLE " + JSON.stringify({
+      schema: "sf-import-lifecycle-v1", qualification: false, source: "transport", label,
+      timeMs: Date.now(), ...fields(),
+    })
+    if (message.length + 1 > 1024 || !/^[\x20-\x7e]+$/.test(message)) return
+    importJsonLifecycleLines++
+    console.info(message)
+  } catch { /* Diagnostic failure cannot change the original bounded read. */ }
+}
+
 async function readJsonBounded(response: Response): Promise<unknown | undefined> {
   const MAX_JSON_BYTES = 32 * 1024 * 1024
   const declared = response.headers.get("content-length")
@@ -922,6 +958,7 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
       if (chunk.done) break
       size += chunk.value.byteLength
       if (size > MAX_JSON_BYTES) {
+        importJsonLifecycle("reader-cancel", () => ({ reason: "json-size-limit", size, limit: MAX_JSON_BYTES }))
         await reader.cancel().catch(() => undefined)
         return undefined
       }
@@ -932,7 +969,15 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
     let offset = 0
     for (const chunk of chunks) { all.set(chunk, offset); offset += chunk.byteLength }
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(all))
-  } catch { return undefined }
+  } catch (error) {
+    importJsonLifecycle("reader-error", () => ({
+      reason: error instanceof Error && error.name === "AbortError" ? "abort-error" :
+        error instanceof SyntaxError ? "syntax-error" : error instanceof TypeError ? "type-error" :
+        error instanceof Error ? "other-error" : "non-error",
+      size, limit: MAX_JSON_BYTES,
+    }))
+    return undefined
+  }
   finally { reader.releaseLock() }
 }
 

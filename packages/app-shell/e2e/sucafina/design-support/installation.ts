@@ -4,6 +4,7 @@ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { createSfImportFaultForwarder } from "../../../../../modules/sucafina/Sucafinav1/runtime/import-fault-profile.ts"
 
 export type DesignInstallation = {
   root: string
@@ -70,7 +71,9 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
         forceKillAfter: "10 seconds",
       }))
       owned.child = child
+      const forwardImportFault = createSfImportFaultForwarder()
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+        forwardImportFault(line)
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))

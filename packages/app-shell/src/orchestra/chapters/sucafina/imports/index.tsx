@@ -97,6 +97,24 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   let controller = new AbortController()
   let applyIntent: Readonly<{ id: string; version: number; digest: string; key: string }> | undefined
   let installedScope: string | undefined
+  let lifecycleLines = 0
+  // Diagnostic-only: extra reactive reads are isolated, bounded and never affect the action.
+  const lifecycle = (label: string, fields?: () => Readonly<Record<string, string | number | boolean>>) => {
+    try {
+      untrack(() => {
+        if (lifecycleLines >= 128) return
+        const message = "SF_IMPORT_LIFECYCLE " + JSON.stringify({
+          schema: "sf-import-lifecycle-v1", qualification: false, source: "imports", label,
+          timeMs: Date.now(), chapter: props.surfaceId, generation,
+          controllerPresent: !!controller, aborted: controller.signal.aborted,
+          status: state.status, phase: state.phase, busy: state.busy, ...fields?.(),
+        })
+        if (message.length + 1 > 1024 || !/^[\x20-\x7e]+$/.test(message)) return
+        lifecycleLines++
+        console.info(message)
+      })
+    } catch { /* Diagnostic failure cannot change the original action or rejection. */ }
+  }
 
   const ownerStamp = () => {
     const context = auth.state()
@@ -104,9 +122,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       ? String(context.ownerKey) + ":" + context.context.stamp.accessRevision + ":" + auth.generation()
       : undefined
   }
-  const fence = () => {
+  const fence = (caller: string) => {
+    lifecycle("fence-before", () => ({ caller }))
     generation += 1
     controller.abort()
+    lifecycle("fence-aborted", () => ({ caller }))
     controller = new AbortController()
     return { generation, stamp: ownerStamp(), signal: controller.signal }
   }
@@ -151,7 +171,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const editLocked = () => state.busy || state.phase === "unknown" || state.phase === "submitting"
   const newSource = (surface: ImportSurface) => {
     if (editLocked()) return
-    fence()
+    fence("new-source")
     revokeExport()
     clearReview()
     setState({ surface, targets: [], discovery: undefined, selectionRef: "",
@@ -159,14 +179,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   }
   const change = () => {
     // A file/target/option change invalidates any reviewed source version.
-    fence()
+    fence("change")
     clearReview()
     setState({ status: "ready", phase: "selecting" })
   }
   const changePeriod = (field: "start" | "end", value: string) => {
     if (state[field] === value || editLocked()) return
     // Targets are period-bound; a reply from the prior period cannot restore selection.
-    fence()
+    fence("change-period")
     clearReview()
     setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true,
       status: "ready", phase: "selecting", busy: false })
@@ -184,7 +204,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const requested: TargetDiscovery = {
       surface: state.surface, start: state.start, end: state.end, owner,
     }
-    const token = fence()
+    const token = fence("discover")
     // Keep the native file/date controls mounted while the read is in flight.
     // SfStatePanel removes its children on "loading", losing the browser FileList.
     setState({ status: "ready", busy: true, targets: [], discovery: undefined, selectionRef: "" })
@@ -234,12 +254,34 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const loadReference = async () => {
     const route = props.route
     if (!("manifestId" in route.params)) return
-    const token = fence()
+    lifecycle("load-reference-begin")
+    const token = fence("load-reference")
     setState({ busy: true, status: "loading" })
-    const result = await refreshReference(route.params.manifestId, state.surface, token)
-    if (current(token) && result && route.kind === "review" && result.manifest.state === "preview" && !result.receipt)
+    let result: Reference | undefined
+    try {
+      result = await refreshReference(route.params.manifestId, state.surface, token)
+    } catch (error) {
+      lifecycle("load-reference-catch", () => ({
+        ticket: token.generation, tokenAborted: token.signal.aborted,
+        reason: error instanceof Error && error.name === "AbortError" ? "abort-error" :
+          error instanceof TypeError ? "type-error" : error instanceof Error ? "other-error" : "non-error",
+      }))
+      throw error
+    }
+    lifecycle("load-reference-result", () => ({
+      ticket: token.generation, tokenAborted: token.signal.aborted, resultPresent: !!result,
+    }))
+    const reviewingLive = current(token)
+    lifecycle("load-reference-live", () => ({
+      ticket: token.generation, tokenAborted: token.signal.aborted, live: reviewingLive, check: "reviewing",
+    }))
+    if (reviewingLive && result && route.kind === "review" && result.manifest.state === "preview" && !result.receipt)
       setState("phase", "reviewing")
-    if (current(token) && !result) setState("busy", false)
+    const busyLive = current(token)
+    lifecycle("load-reference-live", () => ({
+      ticket: token.generation, tokenAborted: token.signal.aborted, live: busyLive, check: "busy",
+    }))
+    if (busyLive && !result) setState("busy", false)
   }
   const loadHistory = async () => {
     if (props.surfaceId !== "UI57" || props.route.kind !== "history") return
@@ -253,7 +295,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       setState("status", currentOwner.status === "denied" ? "denied" : "unavailable")
       return
     }
-    const token = fence()
+    const token = fence("load-history")
     clearReview()
     setState({ status: "loading", busy: true })
     const stamp = currentOwner.context.stamp
@@ -290,7 +332,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       setState("status", "invalid")
       return
     }
-    const token = fence()
+    const token = fence("preview")
     clearReview()
     // Admission and preview are busy actions, not a new page load. Unmounting
     // SfStatePanel here would discard the selected native file input.
@@ -325,7 +367,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   }
   const cancelPreview = () => {
     if (editLocked()) return
-    fence()
+    fence("cancel-preview")
     clearReview()
     setState({ status: "ready", busy: false })
   }
@@ -338,7 +380,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       (props.surfaceId === "UI55" && (!state.reviewedSelectionRef ||
         selectedTarget()?.selectionRef !== state.reviewedSelectionRef)) ||
       !permitted("files.import-apply")) return
-    const token = fence()
+    const token = fence("apply-reviewed")
     setState({ busy: true, status: "ready" })
     const source = manifest.context.surface
     if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
@@ -381,7 +423,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const reconcile = async () => {
     const ref = applyIntent?.id ?? state.manifest?.id
     if (!ref || state.busy || !permitted("files.import-reference")) return
-    const token = fence()
+    const token = fence("reconcile")
     const pending = state.phase === "unknown"
     setState({ busy: true, status: pending ? "outcome-unknown" : isImport() ? "ready" : "loading" })
     const source = state.manifest?.context.surface ?? state.surface
@@ -453,7 +495,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       setState("status", "unavailable")
       return
     }
-    const token = fence()
+    const token = fence("download")
     revokeExport()
     setState({ busy: true, status: "loading" })
     // Re-read the selected PO from its authorized producer immediately before exporting.
@@ -532,9 +574,19 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     // A same-owner context publication must not erase an in-progress import.
     // Revoke private state on an actual route, authority or session transition.
     if (scope === installedScope) return
+    const previousScope = installedScope
     installedScope = scope
     untrack(() => {
-      fence()
+      lifecycle("scope-change", () => {
+        const previous: unknown[] = previousScope === undefined ? [] : JSON.parse(previousScope)
+        const next: unknown[] = JSON.parse(scope)
+        return {
+          initialScope: previousScope === undefined, routeKindChanged: previous[0] !== next[0],
+          chapterChanged: previous[1] !== next[1], hrefChanged: previous[2] !== next[2],
+          ownerStampChanged: previous[3] !== next[3], authStatusChanged: previous[4] !== next[4],
+        }
+      })
+      fence("scope-change")
       revokeExport()
       applyIntent = undefined
       setState({ status: ready ? "ready" : authStatus === "resolving" ? "loading" :
@@ -551,7 +603,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       // Route-param consumers require an explicit producer surface.
     })
   })
-  onCleanup(() => { fence(); revokeExport() })
+  onCleanup(() => { fence("cleanup"); revokeExport() })
 
   const title = () => "sf." + props.surfaceId.toLowerCase() + ".title"
   const message = () =>
@@ -672,7 +724,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               else void download()
             } }}
           onBack={isHistory() && state.status === "not-found" ? () => {
-            fence(); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
+            fence("history-back"); clearReview(); setState({ status: "ready", historyRef: "", busy: false })
           } : undefined}>
           <Show when={isImport()}>
             {/* The browser FileList and options stay mounted when the preview takes the canvas. */}
@@ -770,7 +822,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 <input type="text" maxlength="512" required autocomplete="off" spellcheck={false}
                   value={state.historyRef} disabled={editLocked()}
                   onInput={(event) => {
-                    fence()
+                    fence("history-input")
                     clearReview()
                     setState({ historyRef: event.currentTarget.value, status: "ready", busy: false })
                   }} />

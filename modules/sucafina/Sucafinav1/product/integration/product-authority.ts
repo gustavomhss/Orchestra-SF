@@ -7,6 +7,7 @@ import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
 import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
+import { createSfImportFaultTrace, type SfImportFaultTrace } from "../../runtime/import-fault-profile.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { SfHostRuntime } from "../contracts/host-context.ts"
 import type { DomainPortHost } from "../contracts/ports.ts"
@@ -126,19 +127,24 @@ export function createSfProductAuthority(input: {
     } }
   }
   const principal = async (request: Request, dashboard: Pick<Snapshot, "data">,
-    supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean) => {
+    supplied?: { planner: Pick<Snapshot, "data">; procurement: Pick<Snapshot, "data"> }, suppliedCurrent?: () => boolean,
+    trace?: SfImportFaultTrace) => {
     const projection = supplied ? undefined : (observeAuthority(["planner", "procurement"]) ?? authorityData(["planner", "procurement"]))
     const snapshots = supplied ?? projection?.snapshots ?? currentSfSiblingSnapshots(input.persistence)
     const currentRead = suppliedCurrent ?? projection?.current
-    if (!snapshots) return undefined
+    if (!snapshots) { trace?.mark("snapshots-unavailable"); return undefined }
     const current = identity()
     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
-      (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) return undefined
+      (request.headers.has("origin") && request.headers.get("origin") !== input.origin)) {
+      trace?.mark("identity-origin-or-abort")
+      return undefined
+    }
     const identityDigest = digestSfValue(current)
     const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
-      if (currentRead && !currentRead()) return undefined
+      if (currentRead && !currentRead()) { trace?.mark("current-before-authenticate"); return undefined }
       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
-      if (!actor || (currentRead && !currentRead())) return undefined
+      if (!actor) return undefined
+      if (currentRead && !currentRead()) { trace?.mark("current-after-authenticate"); return undefined }
       const access = object(object(snapshot.data.access)[actor.id])
       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
         (access.domains !== undefined && (!Array.isArray(access.domains) || access.domains.some((value) => typeof value !== "string"))))
@@ -147,28 +153,34 @@ export function createSfProductAuthority(input: {
         domains: Array.isArray(access.domains) ? [...access.domains].toSorted() : [] }
     }
     const observed = await Promise.all(surfaces.map((surface) => observe(surface, surface === "dashboard" ? dashboard : snapshots[surface])))
-    if (currentRead && !currentRead()) return undefined
+    if (currentRead && !currentRead()) { trace?.mark("current-after-surfaces"); return undefined }
     const present = observed.filter((entry) => entry !== undefined)
     const first = present[0]?.actor
-    if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) return undefined
+    if (!first?.id || first.id.startsWith("local:") || present.some((entry) => entry.actor.id !== first.id) || request.signal.aborted) {
+      trace?.mark("principal-consistency-or-abort")
+      return undefined
+    }
     const grant = grants.find((entry) => entry.principalRef === first.id)
-    if (!grant) return undefined
+    if (!grant) { trace?.mark("grant-unavailable"); return undefined }
     const roles = present.flatMap((entry) => entry.actor.roles.filter((role) => role.surface === entry.surface))
       .map((role) => ({ surface: role.surface, role: role.role })).toSorted((a, b) => `${a.surface}:${a.role}`.localeCompare(`${b.surface}:${b.role}`))
-    if (!roles.length) return undefined
+    if (!roles.length) { trace?.mark("roles-unavailable"); return undefined }
     const canWrite = present.some((entry) => entry.actor.canWrite)
     const scopes = present.map((entry) => ({ surface: entry.surface, assigned: entry.assigned, domains: entry.domains }))
     const accessRevision = digestSfValue({ installationId: current.installationId, projectId: current.projectId,
       principalRef: first.id, roles, scopes, canWrite, namespaces: [...grant.namespaces].toSorted(), operations: [...grant.operations].toSorted(), humanActions: [...grant.humanActions ?? []].toSorted(), policyVersion: input.policyVersion })
-    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) return undefined
+    if (digestSfValue(identity()) !== identityDigest || (currentRead && !currentRead())) {
+      trace?.mark("identity-or-current-after-digest")
+      return undefined
+    }
     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
   }
-  const resolve = async (request: Request) => {
+  const resolve = async (request: Request, trace?: SfImportFaultTrace) => {
     const observed = observeAuthority(surfaces) ?? authorityData(surfaces)
-    if (observed) return principal(request, observed.snapshots.dashboard, observed.snapshots, observed.current)
-    if (!input.persistence.currentSnapshots) return undefined
+    if (observed) return principal(request, observed.snapshots.dashboard, observed.snapshots, observed.current, trace)
+    if (!input.persistence.currentSnapshots) { trace?.mark("current-snapshots-reader-unavailable"); return undefined }
     const snapshots = input.persistence.currentSnapshots()
-    if (snapshots) return principal(request, snapshots.dashboard, snapshots)
+    if (snapshots) return principal(request, snapshots.dashboard, snapshots, undefined, trace)
     const persistence = input.persistence
     const fence = hasSfDashboardSourceFence(persistence) ? persistence.dashboardSourceFence : undefined
     const read = fence?.readDashboardAuthority
@@ -176,13 +188,16 @@ export function createSfProductAuthority(input: {
       const current = () => input.persistence === persistence && persistence.dashboardSourceFence === fence &&
         fence.readDashboardAuthority === read && hasSfDashboardSourceFence(persistence)
       const resolved = await read.call(fence, async () => {
-        const authority = current() ? observeAuthority(surfaces) : undefined
-        if (!authority) return undefined
-        return principal(request, authority.snapshots.dashboard, authority.snapshots, () => current() && authority.current())
+        const active = current()
+        const authority = active ? observeAuthority(surfaces) : undefined
+        if (!authority) { trace?.mark(active ? "root-authority-unavailable" : "root-fence-changed"); return undefined }
+        return principal(request, authority.snapshots.dashboard, authority.snapshots, () => current() && authority.current(), trace)
       }, request.signal) as Awaited<ReturnType<typeof principal>>
-      return !request.signal.aborted && current() ? resolved : undefined
+      const retained = !request.signal.aborted && current()
+      if (!retained) trace?.mark("root-result-no-longer-current")
+      return retained ? resolved : undefined
     }
-    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), {
+    return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot, undefined, undefined, trace) }), {
       signal: request.signal, ...(hasSfDashboardSourceFence(input.persistence)
         ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}),
     })
@@ -252,7 +267,11 @@ export function createSfProductAuthority(input: {
         operation.startsWith("sf-human:") ? operation.slice("sf-human:".length) : undefined
       const readOperation = operation === "sf_review_prepare" ||
         readAction !== undefined && Object.hasOwn(collaborationReads, readAction)
-      const actor = readOperation ? await resolve(request) : await resolve(request).catch(() => undefined)
+      const trace = createSfImportFaultTrace(request, operation)
+      const actor = readOperation ? await resolve(request, trace) : await resolve(request, trace).catch((error: unknown) => {
+        trace?.caught(error)
+        return undefined
+      })
       if (operation.startsWith("sf-read:")) {
         const read = collaborationReads[operation.slice("sf-read:".length)]
         if (!actor || !read || !actor.grant.operations.includes(read.operation) || read.namespaces.some((namespace) => !actor.grant.namespaces.includes(namespace))) return undefined
@@ -261,7 +280,11 @@ export function createSfProductAuthority(input: {
       }
       if (!actor || !(operation.startsWith("sf-human:")
         ? (actor.canWrite || sfHumanReadActions.some((action) => operation === `sf-human:${action}`)) && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
-        : actor.grant.operations.includes(operation))) return undefined
+        : actor.grant.operations.includes(operation))) {
+        trace?.mark(actor ? "operation-grant-unavailable" : "resolve-returned-undefined")
+        trace?.emit(!!actor)
+        return undefined
+      }
       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
