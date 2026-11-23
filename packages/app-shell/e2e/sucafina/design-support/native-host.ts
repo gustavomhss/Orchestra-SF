@@ -25,6 +25,17 @@ if (!privateRoot || !path.isAbsolute(privateRoot)) throw new Error("Private capt
 if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
+const scanner = (() => {
+  const raw = process.argv[4]
+  if (raw === undefined) return undefined
+  const value: unknown = JSON.parse(raw)
+  if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).length !== 2 ||
+      !("host" in value) || value.host !== "127.0.0.1" || !("port" in value) ||
+      typeof value.port !== "number" || !Number.isInteger(value.port) || value.port < 1 || value.port > 65535)
+    throw new Error("The native capture scanner must be the qualified loopback ClamD")
+  return { host: "127.0.0.1" as const, port: value.port }
+})()
+
 const secondWave = process.argv[3] === "two"
 const decisionsWave = process.argv[3] === "four-decisions"
 const fourthWave = process.argv[3] === "four" || decisionsWave
@@ -66,6 +77,7 @@ const program = Effect.scoped(Effect.gen(function* () {
   const installed = yield* withNativeInstallation({
     webRoot,
     serverPassword,
+    ...(scanner ? { scanner } : {}),
     seed: async ({ config, store, actorId }) => {
       configuration = config
       process.stdout.write("SF_DESIGN_STAGE configuration\n")

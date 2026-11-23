@@ -59,7 +59,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     if (!caseValue) throw new Error("The original decision case has no selector value")
     await cases.selectOption(caseValue)
     await expect(cases).toHaveValue(caseValue)
-    await surface.getByLabel("Task / purpose", { exact: true }).fill("Design test data · Review the current authorized case")
+    await surface.getByRole("textbox", { name: "Task / purpose", exact: true }).fill("Design test data · Review the current authorized case")
     const recipes = surface.getByRole("button", { name: "Find published recipes", exact: true })
     if (await recipes.isEnabled()) {
       await recipes.click()
