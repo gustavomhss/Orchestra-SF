@@ -38,6 +38,7 @@ import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfE
 import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfSourceNavigation } from "./source-navigation"
 import { sfUnavailableScheduleOwner, SfUnavailableScheduleView } from "./schedule-unavailable"
+import { sfUnavailableRoutineCatalogOwner, SfUnavailableRoutineCatalogView } from "./routine-catalog-unavailable"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -265,12 +266,15 @@ function MountedSurface(props: Readonly<{
   })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
+  const unavailableRoutineCatalog = () => props.gate() && props.view().status === "denied"
+    ? sfUnavailableRoutineCatalogOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
+    : undefined
   const unavailableSchedule = () => props.gate() && props.view().status === "denied"
     ? sfUnavailableScheduleOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
     : undefined
   const polishedSurface = () => {
     const surface = current()?.surfaceId
-    return !!unavailableSchedule() || surface !== undefined &&
+    return !!unavailableRoutineCatalog() || !!unavailableSchedule() || surface !== undefined &&
       (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|3[0-9]|4[01]|5[7-9]|6[0-9]|70)$/.test(surface))
   }
   return (
@@ -311,8 +315,12 @@ function MountedSurface(props: Readonly<{
     <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
       <SfSourceNavigation route={current} navigation={props.navigation} />
       <Switch fallback={
-        <Show when={unavailableSchedule()} fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
-          {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}
+        <Show when={unavailableRoutineCatalog()} fallback={
+          <Show when={unavailableSchedule()} fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+            {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}
+          </Show>
+        }>
+          {(snapshot) => <SfUnavailableRoutineCatalogView owner={snapshot()} />}
         </Show>
       }>
         <Match when={current()?.surfaceId === "UI29"}>

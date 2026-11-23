@@ -1,5 +1,10 @@
 // New context copy is frozen in native-ui surface-manifest.json UI67.
 export const SF_CONTEXT_COPY = {
+  "sf.ui64.unavailableDescription": "Check routine availability for this installation.",
+  "sf.ui64.unavailableTitle": "Routine catalog is unavailable",
+  "sf.ui64.unavailableMessage": "Routine planning is unavailable in this context. You can return to decisions or review the current context. No routine has been prepared or run.",
+  "sf.ui64.returnToDecisions": "Back to decisions",
+  "sf.ui64.reviewContext": "Review context",
   "sf.ui66.unavailableDescription": "Check the availability of schedules for this installation.",
   "sf.ui66.unavailableTitle": "Scheduling is unavailable",
   "sf.ui66.unavailableMessage": "This installation does not currently provide scheduling. You can return to the routine catalog; no schedule has been created or changed.",
@@ -95,6 +100,11 @@ export const SF_CONTEXT_COPY = {
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
+  "sf.ui64.unavailableDescription": "Confira a disponibilidade das rotinas nesta instalação.",
+  "sf.ui64.unavailableTitle": "Catálogo de rotinas indisponível",
+  "sf.ui64.unavailableMessage": "O planejamento de rotinas está indisponível neste contexto. Você pode voltar às decisões ou revisar o contexto atual. Nenhuma rotina foi preparada ou executada.",
+  "sf.ui64.returnToDecisions": "Voltar às decisões",
+  "sf.ui64.reviewContext": "Revisar contexto",
   "sf.ui66.unavailableDescription": "Confira a disponibilidade dos agendamentos nesta instalação.",
   "sf.ui66.unavailableTitle": "Agendamentos indisponíveis",
   "sf.ui66.unavailableMessage": "Esta instalação ainda não disponibiliza agendamentos. Você pode voltar ao catálogo de rotinas; nenhuma programação foi criada ou alterada.",
