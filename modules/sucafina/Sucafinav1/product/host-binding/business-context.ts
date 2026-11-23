@@ -119,8 +119,8 @@ function assembleSfBusinessContext(host: {
 
   const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => {
     const read = () => resolveAncestry(ref, call, new Set())
-    return host.observePlannerRecord && ref.kind === "record" && ref.target.surface === "planner" &&
-      ref.target.recordType === "planner-version" ? host.observePlannerRecord(ref, call, read) : read()
+    return host.observePlannerRecord && ref.kind === "record" && ref.target?.surface === "planner" &&
+      ref.target?.recordType === "planner-version" ? host.observePlannerRecord(ref, call, read) : read()
   }
   const service: BusinessContextService = {
     resolve,
