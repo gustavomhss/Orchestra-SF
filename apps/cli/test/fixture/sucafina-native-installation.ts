@@ -83,9 +83,10 @@ export function withNativeInstallation(input: {
     }))
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      if (/^SF_DESIGN_STAGE recall-[a-z-]+$/.test(line)) console.info(line)
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
