@@ -72,12 +72,12 @@ function observeDocumentCatalog(page: Page, account: Account, info: TestInfo) {
   page.on("request", requested)
   page.on("requestfailed", failed)
   page.on("response", responded)
-  return async (failed = false) => {
+  return async (catalogFailed = false) => {
     page.off("request", requested)
     page.off("requestfailed", failed)
     page.off("response", responded)
     const evidence = JSON.stringify({ elapsedMs: Math.round(performance.now() - started), events, dropped })
-    if (failed || !events.some((event) => event.mode === "document-sources" && event.phase === "response" && event.status === 200))
+    if (catalogFailed || !events.some((event) => event.mode === "document-sources" && event.phase === "response" && event.status === 200))
       console.info("SF_FILES_DOCUMENT_CATALOG_PHASES", evidence)
     await info.attach("operations-document-catalog-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
   }

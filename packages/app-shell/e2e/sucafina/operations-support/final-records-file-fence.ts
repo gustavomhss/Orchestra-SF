@@ -11,7 +11,8 @@ type Observed = Awaited<ReturnType<typeof forwardOnce>>
 /**
  * Observe the original Files response and its original outgoing F01 fence.
  * The transport revalidates authority before releasing JSON to the consumer.
- * Neither observer emits, retries or changes a request or response.
+ * Each observer forwards the selected original request once and delivers its
+ * original response, with no additional request, retry or substitution.
  */
 export async function observeRecordFileOperation(page: Page, account: Account, expected: SfContextStamp | Promise<SfContextStamp>,
   operation: FileOperation, endpoint: Parameters<typeof forwardOnce>[1], method: "GET" | "POST") {
