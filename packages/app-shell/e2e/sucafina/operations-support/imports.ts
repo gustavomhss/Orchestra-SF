@@ -3,7 +3,7 @@ import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
@@ -175,6 +175,55 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
   }
 }
 
+/** One read-only recovery, only after an observed CAP23 read failure, inside the original 10s budget. */
+async function reconcileCreatedVersion(page: Page, account: Account, createdRow: Locator, info: TestInfo) {
+  const source = account.baseURL + "/api/ui/pages/CAP23"
+  const matches = (request: Request) => request.method() === "GET" &&
+    new URL(request.url()).origin === account.origin && new URL(request.url()).pathname === new URL(source).pathname
+  const failures: { kind: "transport" | "http"; detail: string | number }[] = []
+  const failed = (request: Request) => {
+    if (matches(request) && failures.length < 8)
+      failures.push({ kind: "transport", detail: (request.failure()?.errorText ?? "failed").slice(0, 160) })
+  }
+  const responded = (response: Response) => {
+    if (matches(response.request()) && response.status() >= 400 && failures.length < 8)
+      failures.push({ kind: "http", detail: response.status() })
+  }
+  page.on("requestfailed", failed)
+  page.on("response", responded)
+  const deadline = Date.now() + 10_000
+  const remaining = () => Math.max(1, deadline - Date.now())
+  let recoveryAttempted = false
+  let independentVersion: string | undefined
+  try {
+    await expect.poll(async () => {
+      if (await createdRow.count() === 1) return 1
+      if (failures.length && !recoveryAttempted) {
+        recoveryAttempted = true
+        // The save already returned200. Do not repeat it. Check the same original
+        // source independently, then use a native browser reload to reopen it.
+        const response = await page.request.get(source, { maxRetries: 0, timeout: remaining() })
+        expect(response.status()).toBe(200)
+        const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await response.json())
+        if (body.status !== "ok") throw new Error("The original CAP23 readback is unavailable")
+        expect(body.context.principalRef).toBe(account.principal)
+        expect(body.value.data.versions).toHaveLength(1)
+        independentVersion = body.value.data.versions[0]!.id
+        expect(body.value.versions["versions:" + independentVersion]?.version).toBe(1)
+        expect((await page.reload({ timeout: remaining() }))?.status()).toBe(200)
+      }
+      return createdRow.count()
+    }, { timeout: 10_000, message: "the same original CAP23 version is visible after its single acknowledged save" }).toBe(1)
+    if (independentVersion) await expect(createdRow).toHaveAttribute("data-sf-row", independentVersion)
+  } finally {
+    page.off("requestfailed", failed)
+    page.off("response", responded)
+    if (failures.length || recoveryAttempted) await observation(info, "operations-import-version-readback", {
+      failures, recoveryAttempted, independentVersion, repeatedSave: false, readbackBudgetMs: 10_000,
+    })
+  }
+}
+
 async function prepareImport(page: Page, account: Account, generate: Locator, sourceDigest: string, info: TestInfo) {
   const close: (() => Promise<void>)[] = []
   let prepared: { preview: ImportManifest; referenceURL: string } | undefined
@@ -234,6 +283,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
   // CAP23 acknowledges the save; read the single record from this isolated installation.
   const createdRow = surface.locator("tr[data-sf-row]")
+  await reconcileCreatedVersion(page, account, createdRow, info)
   await expect(createdRow).toHaveCount(1)
   await expect(createdRow).toHaveAttribute("data-sf-row", /\S+/)
   const version = (await createdRow.getAttribute("data-sf-row"))!
