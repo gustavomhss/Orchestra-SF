@@ -5,6 +5,7 @@ import { captureFinalSurface } from "./design-support/final-capture"
 import { finalMemoryData, seedFinalMemory } from "./design-support/final-memory-seed"
 import { withFinalMemoryPortuguese } from "./design-support/final-memory-browser"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
+import { finalMemoryPlans } from "./design-support/final-memory-inventory"
 
 waveFourTest.use({ designWave: "four-decisions" })
 waveFourTest.beforeEach(async ({ page }, info) => {
@@ -61,7 +62,7 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     expect(seeded.initialConditionCount).toBe(0)
     await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
     const choice = surface.locator('[data-sf-memory-choice="' + seeded.choiceId + '"]')
-    await expect(choice).toContainText(waveFourDecisionsData.plannerCandidate)
+    await expect(choice).toContainText(finalMemoryPlans.candidate)
     await expect(choice).toContainText(finalMemoryData.reason)
     await choice.getByRole("button", { name: "Review choice outcome", exact: true }).click()
     const outcome = surface.locator("[data-sf-memory-outcome]")
@@ -194,7 +195,7 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     caseVersion: seeded.caseRef.version, period: seeded.period, expected: seeded.expected, observed: seeded.observed,
     delta: seeded.delta, browserMemorySelectionCommands: memoryWrites.length,
     choicesWithoutConditions: 1, initialConditionCount: seeded.initialConditionCount,
-    limitations: ["Other decision cost categories remain pending.", "No causal effect inferred.", "Actual browser zoom not measured."],
+    limitations: ["The separate original predecessor retains pending cost categories; the January inventory has nine producer-confirmed components.", "No causal effect inferred.", "Actual browser zoom not measured."],
   }, null, 2) })
 })
 
@@ -235,6 +236,10 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   await enter(page, owner, installation.origin + "/orchestra/sf-home/administration", "Local administration")
   const surface = page.locator('[data-sf-surface="UI69"]')
   await expect(surface).toHaveAttribute("data-sf-owner", "local-operator")
+  await expect(surface.locator("[data-sf-admin-access]")).toContainText("You are signed in as the local operator.")
+  await expect(surface.locator("[data-sf-admin-state]")).toHaveAttribute("data-sf-admin-state", "unavailable")
+  await expect(surface.locator("[data-sf-admin-state]")).toContainText("Notifications and backup history are currently unavailable")
+  await expect(surface.locator("[data-sf-backup], [data-sf-notification]")).toHaveCount(0)
   const settings = surface.locator("[data-sf-summary-settings]")
   const version = settings.locator("[data-sf-summary-version]")
   const before = Number(await version.textContent())
@@ -243,14 +248,14 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   const proposed = !await projects.isChecked()
   await projects.setChecked(proposed)
   await captureFinalSurface(page, info, "UI69", "dark-desktop-summary-settings", { preview: true })
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const review = settings.locator('[data-component="sf-change-review"]')
   await expect(review).toBeVisible()
   await expect(settings.locator("[data-sf-summary-form]")).toBeHidden()
   expect(writes).toEqual([])
   await review.getByRole("button", { name: "Revise", exact: true }).click()
   await expect(projects).toBeChecked({ checked: proposed })
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   await scheme(page, "light")
   await scrollPageTop(page)
   await captureFinalSurface(page, info, "UI69", "light-desktop-summary-review")
@@ -261,7 +266,7 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   await review.getByRole("button", { name: "Cancel review", exact: true }).click()
   await expect(projects).toBeChecked({ checked: proposed })
   expect(writes).toEqual([])
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const saved = page.waitForResponse((response) => summaryMutation(response.request())).then((response) => response.status())
   await review.getByRole("button", { name: "Save summaries", exact: true }).click()
   expect(await saved).toBe(200)
