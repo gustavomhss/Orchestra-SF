@@ -2,6 +2,8 @@ import { expect, type Page, type Route } from "@playwright/test"
 import { Schema } from "effect"
 import { SfInstallationList, SfTeamContextResult, SfTeamInstallationDescriptor } from "@orchestra/schema/sucafina/context"
 import { TeamProfile } from "@orchestra/schema/sucafina/team-profile"
+import { Session } from "@orchestra/schema/session"
+import { SessionEvent } from "@orchestra/schema/session-event"
 
 // COMPONENT VISUAL / not Microsoft live. The built application's entry, providers,
 // strict readers, SDK, components and CSS are original. Only HTTP responses are fixtures,
@@ -88,6 +90,9 @@ export async function installTeamsVisual(
   const unexpected: string[] = []
   const assets = new Set<string>()
   const events = new Map<Route, { team: string; release(): void }>()
+  type HeldRecentRead = { team: string; entered(): void; proceed: Promise<void>; release(): void }
+  const heldRecentReads = new Set<HeldRecentRead>()
+  let nextRecentRead: HeldRecentRead | undefined
   await page.addInitScript(({ scheme }) => {
     // User preferences only; no app state, authority, DOM or production globals are replaced.
     localStorage.setItem("language.v1", JSON.stringify({ locale: "en" }))
@@ -158,7 +163,15 @@ export async function installTeamsVisual(
         expect(selector.profile.installationId).toBe(teamsVisualBinding.installationId)
         expect(selector.profile.tenantId).toBe(teamsVisualBinding.tenantId)
         const team = selector.profile.teamObjectId
-        if (path.endsWith("/api/session")) return json(route, { namespace: namespace(team), cursor: {}, data: [] })
+        if (path.endsWith("/api/session")) {
+          const held = nextRecentRead?.team === team ? nextRecentRead : undefined
+          if (held) {
+            nextRecentRead = undefined
+            held.entered()
+            try { await held.proceed } finally { heldRecentReads.delete(held) }
+          }
+          return json(route, { namespace: namespace(team), cursor: {}, data: [] })
+        }
         if (path.endsWith("/api/session/active")) return json(route, { namespace: namespace(team), data: {} })
         // Playwright fulfill is finite, not a streaming server. Keep the real HTTP request
         // pending to capture READY / CONNECTING honestly; never claim an open live stream.
@@ -211,7 +224,38 @@ export async function installTeamsVisual(
         } finally { entry.release() }
       }
     },
+    async openEventStreamWithHeldRefresh() {
+      // fulfill() is still a finite HTTP response. A valid durable event causes
+      // the original controller to refresh its list. Holding only that GET lets
+      // the real consumer remain OPEN until the test releases it, then EOF must
+      // still retire the workspace. This is not a persistent or live SSE server.
+      expect(events.size, "Exactly one current Team stream is awaiting its response").toBe(1)
+      expect(nextRecentRead, "A list-read barrier is not already armed").toBeUndefined()
+      const [route, entry] = [...events][0]!
+      const entered = Promise.withResolvers<void>(), proceed = Promise.withResolvers<void>()
+      const held: HeldRecentRead = {
+        team: entry.team, entered: () => entered.resolve(), proceed: proceed.promise, release: () => proceed.resolve(),
+      }
+      nextRecentRead = held
+      heldRecentReads.add(held)
+      const sessionID = Session.ID.create()
+      const event = Schema.encodeSync(SessionEvent.Deleted)(Schema.decodeUnknownSync(SessionEvent.Deleted)({
+        id: "evt_deleted_visual_recovery", type: "session.next.deleted",
+        durable: { aggregateID: sessionID, seq: 1, version: 1 }, data: { timestamp: 10, sessionID },
+      }))
+      events.delete(route)
+      try {
+        await route.fulfill({
+          status: 200, contentType: "text/event-stream", headers: { "cache-control": "no-store" },
+          body: "data: " + JSON.stringify({ namespace: namespace(entry.team), event }) + "\n\n",
+        })
+      } finally { entry.release() }
+      return { event, received: entered.promise, release: held.release }
+    },
     async dispose() {
+      nextRecentRead = undefined
+      for (const held of heldRecentReads) held.release()
+      heldRecentReads.clear()
       for (const [route, entry] of [...events]) {
         events.delete(route)
         try { await route.abort("aborted") } catch { /* A failed test may already have closed its page. */ }

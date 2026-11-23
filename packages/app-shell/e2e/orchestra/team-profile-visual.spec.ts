@@ -463,5 +463,35 @@ test("adversarial audit: reconnecting the same Team retains a never-submitted dr
     expect(writes, "Transport recovery must not submit or retry a user operation").toEqual([])
     await attachFixtureEvidence(info, fixture)
     await expect(editor, "A never-submitted draft must return after the same full authority is revalidated").toHaveText(draft)
+
+    // CONNECTING alone does not establish recovery. Deliver one contract-valid
+    // event on the new connection, then hold its original list refresh until the
+    // OPEN state and its notice are observed. Releasing it must expose finite EOF.
+    const opened = await fixture.openEventStreamWithHeldRefresh()
+    try {
+      await opened.received
+      await expect(workspace).toHaveAttribute("data-sf-session-stream", "open")
+      await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
+      await expect(editor).toHaveText(draft)
+      const stopped = shell.getByText("Chat updates stopped. Refresh access before continuing.", { exact: true })
+      await capture(page, info, "audit-unsent-after-valid-open-event", "dark")
+      await info.attach("audit-open-stream-recovery", {
+        contentType: "application/json",
+        body: JSON.stringify({
+          classification: "Original production UI; finite HTTP fixture held at its original event-triggered list read, not persistent/live SSE",
+          event: opened.event,
+          state: await workspace.getAttribute("data-sf-session-state"),
+          stream: await workspace.getAttribute("data-sf-session-stream"),
+          observedDraft: await editor.textContent(),
+          stoppedNoticeCount: await stopped.count(),
+          requests: fixture.requests.slice(before),
+          writes: fixture.requests.filter((request) => request.method !== "GET"),
+        }, null, 2),
+      })
+      await expect.soft(stopped, "A valid event on the recovered stream retires the previous interruption notice").toHaveCount(0)
+      expect(fixture.requests.filter((request) => request.method !== "GET"), "OPEN recovery has no write").toEqual([])
+    } finally { opened.release() }
+    await expect(workspace).toHaveAttribute("data-sf-session-state", "unavailable")
+    await expect(workspace.getByRole("alert")).toContainText("Chat updates stopped. Refresh access before continuing.")
   } finally { await fixture.dispose() }
 })
