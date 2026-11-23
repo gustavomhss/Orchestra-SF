@@ -721,8 +721,21 @@ for (const variant of [
     await page.screenshot({ path, animations: "disabled", fullPage: true })
     await info.attach(name, { path, contentType: "image/png" })
     await info.attach(name + "-geometry", { contentType: "application/json",
-      body: JSON.stringify({ classification: "production-component-observation", variant, geometry,
+      body: JSON.stringify({ classification: "production-component-regression", variant, geometry,
         backendQualified: false }, null, 2) })
+    expect(geometry.dialog.scrollWidth).toBeLessThanOrEqual(geometry.dialog.clientWidth + 1)
+    expect(geometry.header.scrollWidth).toBeLessThanOrEqual(geometry.header.clientWidth + 1)
+    expect(geometry.subtitle.scrollWidth).toBeLessThanOrEqual(geometry.subtitle.clientWidth + 1)
+    for (const element of [geometry.header, geometry.subtitle, geometry.close]) {
+      expect(element.left).toBeGreaterThanOrEqual(geometry.dialog.left)
+      expect(element.right).toBeLessThanOrEqual(geometry.dialog.right)
+      expect(element.top).toBeGreaterThanOrEqual(geometry.dialog.top)
+      expect(element.bottom).toBeLessThanOrEqual(geometry.dialog.bottom)
+    }
+    await expect(tools.getByRole("heading", { name: "online tools", exact: true })).toBeInViewport()
+    await expect(tools.getByRole("button", { name: "Close dialog", exact: true })).toBeInViewport()
+    await expect(tools.getByRole("button", { name: "Cancel", exact: true })).toBeInViewport()
+    for (const name of ["search_docs", "read_page"]) await expect(tools.getByText(name, { exact: true })).toBeInViewport()
     await page.keyboard.press("Escape")
     await expect(tools).toHaveCount(0)
     await expect(opener).toBeFocused()

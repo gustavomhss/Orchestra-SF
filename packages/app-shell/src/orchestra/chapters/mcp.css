@@ -63,3 +63,12 @@
 .orchestra-mcp-dialog .orchestra-mcp-dialog-note {
   margin: 0 0 16px;
 }
+
+/* Long endpoints must stay in the header instead of scrolling the modal to its close button. */
+.orchestra-mcp-dialog .mx-dialog-head > div {
+  min-inline-size: 0;
+}
+
+.orchestra-mcp-dialog .mx-dialog-head p {
+  overflow-wrap: anywhere;
+}
