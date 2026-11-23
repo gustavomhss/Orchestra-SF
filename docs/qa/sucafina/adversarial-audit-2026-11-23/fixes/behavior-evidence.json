@@ -47,5 +47,60 @@
       "failed": 0,
       "assertions": 231
     }
+  },
+  "nativeCombinedFirstAttempt": {
+    "snapshot": "3cb587ec1b1437b56d2ed4a90c7d9721fe8005a0",
+    "run": 45209857978,
+    "job": 137815409729,
+    "tests": {
+      "passed": 0,
+      "failed": 8
+    },
+    "coverage": "Failed during first native admission/page loading before finding-specific assertions; no qualification claimed",
+    "consoleErrors": 0,
+    "pageErrors": 0
+  },
+  "filesFirstComposedAttempt": {
+    "snapshot": "49fa3ffeb4e98675ce0b3a3934645004e40909e5",
+    "run": 45212950301,
+    "job": 137826333550,
+    "tests": {
+      "passed": 3,
+      "failed": 1
+    },
+    "passed": [
+      "OP-IMPORT",
+      "OP-EXPORT",
+      "OP-SCENARIO"
+    ],
+    "failed": [
+      "OP-DOC"
+    ],
+    "artifact": {
+      "id": 14836848732,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 15877933,
+      "sha256": "330dbe36cabd28a4726fb2b19ec517afc12d414f157180992e059094ffdede02"
+    },
+    "import": {
+      "sourceGaps": 4,
+      "applyRequests": 1,
+      "receiptChangedFields": 3,
+      "ui55Assertions": true,
+      "ui56Assertions": false,
+      "ui55Ui56Pngs": false
+    },
+    "overallGreen": false
+  },
+  "readSynchronization": {
+    "helperCommits": [
+      "4f61f409de342f4a00396c9ea985c4f5036d1960",
+      "33cf939f9fdbe095b2f87f0b6e3d98381f69c217"
+    ],
+    "ui55Ui56PermanentCoverageCommit": "168d51a351c203e5c0635dd44398726205c7a100",
+    "newNumericTimeouts": 0,
+    "retries": 0,
+    "producerChanges": 0,
+    "qualification": "Composed rerun pending"
   }
 }

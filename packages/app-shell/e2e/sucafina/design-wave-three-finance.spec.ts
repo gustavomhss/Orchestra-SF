@@ -1,5 +1,5 @@
-import { expect, type Page } from "@playwright/test"
-import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { expect, type Locator, type Page } from "@playwright/test"
+import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter, originalRead, armOriginalRead } from "./design-support/wave-three"
 import { forwardOnce } from "./operations-support/runtime"
 import { waveThreeData } from "./design-support/wave-three-data"
 
@@ -31,7 +31,10 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
   const go = async (screen: typeof screens[number], target = page, portuguese = false) => {
     const url = new URL(screen.path, installation.origin)
     if (screen.id !== "CAP14") url.searchParams.set("year", String(installation.year))
-    await enter(target, owner, url.href, portuguese ? screen.br : screen.title)
+    await enter(target, owner, url.href, portuguese ? screen.br : screen.title, undefined, {
+      path: "/api/ui/pages/" + screen.id,
+      ...(screen.id === "CAP14" ? {} : { query: { year: String(installation.year) } }),
+    })
   }
   const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
@@ -56,8 +59,9 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await expect(list.locator("tr[data-sf-row]")).toHaveCount(0)
     await list.getByRole("button", { name: "Clear search", exact: true }).click()
     await expect(list.locator("tr[data-sf-row]")).toHaveCount(3)
-    await list.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.capex.primary })
-      .getByRole("button", { name: "Open record", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP05", query: { year: String(installation.year) } }, () =>
+      list.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.capex.primary })
+        .getByRole("button", { name: "Open record", exact: true }).click())
     const detail = page.locator("[data-sf-capex-detail]")
     await expect(detail.getByRole("heading", { name: waveThreeData.capex.primary, exact: true })).toBeVisible()
     await expect(detail.locator("tr[data-sf-month]")).toHaveCount(12)
@@ -112,13 +116,16 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await capture(page, info, "CAP05-dark-320-month-review-actions-test-data")
     await desktop()
     const beforeSave = posts.length
-    await month.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP05", query: { year: String(installation.year) } }, () =>
+      month.locator('[data-component="sf-change-review"]').getByRole("button", { name: "Save", exact: true }).click())
     await expect(month).toHaveCount(0)
     await expect(january).toContainText("19,500")
     expect(posts).toHaveLength(beforeSave + 1)
-    await detail.getByRole("button", { name: "Back to projects", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP05", query: { year: String(installation.year) } }, () =>
+      detail.getByRole("button", { name: "Back to projects", exact: true }).click())
     await expect(list).toBeVisible()
-    await surface.getByRole("button", { name: "New CAPEX project", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP05", query: { year: String(installation.year) } }, () =>
+      surface.getByRole("button", { name: "New CAPEX project", exact: true }).click())
     const create = page.locator('.sf-budget-editor[data-sf-action="save"]')
     await create.getByLabel("Project name", { exact: true }).fill("Design test data · New investment review")
     await create.getByLabel("Annual budget", { exact: true }).fill("48000")
@@ -127,7 +134,8 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await create.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(create.locator('[data-component="sf-change-review"]')).toContainText("48,000")
     await create.getByRole("button", { name: "Revise", exact: true }).click()
-    await discardBudgetDraft(page, "save")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP05", query: { year: String(installation.year) } }, () =>
+      discardBudgetDraft(page, "save"))
     await expect(list.locator("tr[data-sf-row]")).toHaveCount(3)
   })
 
@@ -171,7 +179,8 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await expect(stage.getByRole("heading", { name: "Documents referenced by the source", exact: true })).toBeVisible()
     await scrollPageTop(page)
     await capture(page, info, "CAP14-dark-desktop-contract-detail-test-data")
-    await stage.getByRole("button", { name: "Edit contract", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP14" }, () =>
+      stage.getByRole("button", { name: "Edit contract", exact: true }).click())
     await expect(stage).toHaveAttribute("data-sf-contract-stage", "edit")
     const editor = stage.getByRole("form", { name: "Edit contract", exact: true })
     await expect(editor.locator("[data-field]")).toHaveCount(15)
@@ -206,13 +215,15 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
       const body = request.postDataJSON()
       return body?.page === "Vendor Contracts" && body?.action === "save"
     })
-    await review.getByRole("button", { name: "Save contract", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP14" }, () =>
+      review.getByRole("button", { name: "Save contract", exact: true }).click())
     const body: unknown = (await saving).postDataJSON()
     expect(body).toMatchObject({ page: "Vendor Contracts", action: "save", values: { notice: "120 days" } })
     expect(body).not.toHaveProperty("values.currency")
     await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
     expect(posts).toHaveLength(before + 1)
-    await surface.getByRole("button", { name: "Discard changes", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP14" }, () =>
+      surface.getByRole("button", { name: "Discard changes", exact: true }).click())
     await expect(stage).toHaveAttribute("data-sf-contract-stage", "detail")
     await expect(stage.locator('[data-sf-field="notice"] dd')).toHaveText("120 days")
     await expect(stage.locator('[data-sf-field="currency"] dd')).toHaveText("USD")
@@ -221,7 +232,8 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await reviewActions(page)
     await capture(page, info, "CAP14-dark-desktop-delete-review-test-data")
     await stage.getByRole("button", { name: "Cancel review", exact: true }).click()
-    await stage.getByRole("button", { name: "Back to contracts", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP14" }, () =>
+      stage.getByRole("button", { name: "Back to contracts", exact: true }).click())
     await surface.getByRole("button", { name: "New contract", exact: true }).click()
     const create = surface.getByRole("form", { name: "New contract", exact: true })
     await expect(create.locator("[data-sf-currency]")).toContainText("Source currency not specified")
@@ -295,7 +307,10 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
   const go = async (screen: typeof screens[number], target = page, portuguese = false) => {
     const url = new URL(screen.path, installation.origin)
     if (screen.id !== "CAP14") url.searchParams.set("year", String(installation.year))
-    await enter(target, owner, url.href, portuguese ? screen.br : screen.title)
+    await enter(target, owner, url.href, portuguese ? screen.br : screen.title, undefined, {
+      path: "/api/ui/pages/" + screen.id,
+      ...(screen.id === "CAP14" ? {} : { query: { year: String(installation.year) } }),
+    })
   }
   const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
@@ -304,7 +319,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await go(screens[2])
     await scheme(page, "dark")
     const overview = page.locator('[data-sf-surface="CAP17"]')
-    await overview.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
+    await selectFinanceVersion(page, owner, installation.year, "CAP17", overview.getByLabel("Version", { exact: true }), waveThreeData.planner.version)
     await ready(page, "Overview")
     await expect(overview.getByLabel("Version", { exact: true }).locator("option:checked")).toHaveText(waveThreeData.planner.version)
     await expect(overview.locator(".sf-u06-metric")).toHaveCount(4)
@@ -317,7 +332,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await narrow()
     await scrollPageTop(page)
     await capture(page, info, "CAP17-light-320-summary-test-data")
-    await overview.getByLabel("Compare budget", { exact: true }).selectOption({ label: waveThreeData.planner.comparison })
+    await selectFinanceVersion(page, owner, installation.year, "CAP17", overview.getByLabel("Compare budget", { exact: true }), waveThreeData.planner.comparison, "filter", await overview.getByLabel("Version", { exact: true }).inputValue())
     await ready(page, "Overview")
     await expect(overview.locator(".sf-u06-comparison-list tbody tr")).toHaveCount(2)
     await overview.getByRole("region", { name: "Budget comparison table", exact: true }).scrollIntoViewIfNeeded()
@@ -330,7 +345,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await go(screens[3])
     const surface = page.locator('[data-sf-surface="CAP18"]')
     const version = surface.getByLabel("Version", { exact: true })
-    await version.selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await selectFinanceVersion(page, owner, installation.year, "CAP18", version, waveThreeData.planner.version + " · " + installation.year)
     await ready(page, "OPEX")
     await expect(version.locator("option:checked")).toHaveText(waveThreeData.planner.version + " · " + installation.year)
     const grid = surface.getByRole("grid", { name: "Monthly values", exact: true })
@@ -447,7 +462,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
   await waveThreeTest.step("CAP19 · monthly plan, project approval and one confirmed project change", async () => {
     await go(screens[4])
     const surface = page.locator('[data-sf-surface="CAP19"]')
-    await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await selectFinanceVersion(page, owner, installation.year, "CAP19", surface.getByLabel("Version", { exact: true }), waveThreeData.planner.version + " · " + installation.year)
     await ready(page, "CAPEX")
     const grid = surface.getByRole("grid", { name: "Monthly values", exact: true })
     await expect(grid).toHaveAttribute("aria-colcount", "14")
@@ -489,8 +504,15 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     const before = posts.length
     // Retain the one original producer response outside Chromium's body cache.
     // The shared observer forwards it unchanged with redirects and retries disabled.
+    const savedVersion = await surface.getByLabel("Version", { exact: true }).inputValue()
+    let readback: Awaited<ReturnType<typeof armOriginalRead>> | undefined
     const saved = await forwardOnce(page, (url) =>
-      url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST")
+      url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST", async (response) => {
+      expect(response.status()).toBe(200)
+      expect(await response.json()).toMatchObject({ ok: true })
+      readback = await armOriginalRead(page, owner, { path: "/api/ui/pages/CAP19",
+        query: { year: String(installation.year), version: savedVersion } })
+    })
     // This is the original response failure deadline, not a readiness delay.
     const deadline = Promise.withResolvers<never>()
     const deadlineTimer = setTimeout(() => {
@@ -505,16 +527,19 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
       expect(request.postDataJSON()).toMatchObject({ page: "CAPEX", action: "save", values: { collection: "projects" } })
       expect(response.ok()).toBe(true)
       expect(await response.json()).toMatchObject({ ok: true })
+      expect(readback).toBeDefined()
+      await readback!.completed
     } finally {
       clearTimeout(deadlineTimer)
       await saved.close()
+      await readback?.close()
     }
     await expect(review).toHaveCount(0)
     await ready(page, "CAPEX")
     expect(posts).toHaveLength(before + 1)
     // A fresh native entry must read the persisted project, independent of the edit draft.
     await go(screens[4])
-    await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+    await selectFinanceVersion(page, owner, installation.year, "CAP19", surface.getByLabel("Version", { exact: true }), waveThreeData.planner.version + " · " + installation.year)
     await ready(page, "CAPEX")
     await surface.getByRole("tab", { name: "Projects", exact: true }).click()
     await project.getByRole("button", { name: "Edit project", exact: true }).click()
@@ -557,7 +582,7 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
       if (screen.id === "CAP18") {
         const surface = localized.locator('[data-sf-surface="CAP18"]')
-        await surface.getByLabel("Versão", { exact: true }).selectOption({ label: waveThreeData.planner.version + " · " + installation.year })
+        await selectFinanceVersion(localized, owner, installation.year, "CAP18", surface.getByLabel("Versão", { exact: true }), waveThreeData.planner.version + " · " + installation.year)
         await ready(localized, "OPEX")
         await surface.getByRole("tab", { name: "Linhas", exact: true }).click()
         await surface.locator(".sf-u07-lines-panel tr[data-sf-row]").filter({ hasText: waveThreeData.planner.opex })
@@ -626,6 +651,21 @@ async function verifyNativeScroller(page: Page) {
   await scroller.evaluate((element) => element.scrollTo({ top: element.scrollHeight, behavior: "instant" }))
   await expect.poll(() => scroller.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
   await scrollPageTop(page)
+}
+
+async function selectFinanceVersion(page: Page, owner: Parameters<typeof enter>[1], year: number,
+  capability: "CAP17" | "CAP18" | "CAP19", control: Locator, label: string,
+  selector: "version" | "filter" = "version", selectedVersion?: string) {
+  const option = control.locator("option").filter({ hasText: label })
+  await expect(option).toHaveCount(1)
+  await expect(option).toHaveText(label)
+  const value = await option.getAttribute("value")
+  if (!value) throw new Error("A source selection requires the original option identity")
+  if (await control.inputValue() === value) return
+  await originalRead(page, owner, { path: "/api/ui/pages/" + capability,
+    query: { year: String(year), ...(selectedVersion ? { version: selectedVersion } : {}), [selector]: value },
+  }, () => control.selectOption(value))
+  await expect(control).toHaveValue(value)
 }
 
 async function discardBudgetDraft(page: Page, action: string) {
