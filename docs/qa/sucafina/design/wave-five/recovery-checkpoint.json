@@ -567,7 +567,9 @@
           "sha": "16e720dee8dbc5d90f011970f821fa996307e3d0"
         }
       ],
-      "run": 45121911981
+      "run": 45121911981,
+      "receipt": "docs/qa/sucafina/design/wave-five/recovery-receipts/u15-clone-capture-release.json",
+      "status": "completed"
     },
     "purpose": "Compare existing clone-tree, direct bytes and original unregistered fallback; compare private captured tree against original copy without redirecting product callers.",
     "expected": {
@@ -582,6 +584,23 @@
       "Release retains original clone refusal, no new fast-path admission.",
       "Four recorded lane orders are not a fully position-balanced three-lane design.",
       "Whole-fixture clone aliasing is not claimed to match all BCS contexts."
-    ]
+    ],
+    "decision": {
+      "capturedTree": "REJECTED_NO_CONSISTENT_PREPARATION_BENEFIT",
+      "directCloneBytes": "P17_CANDIDATE_RESTRICTED_TO_EXISTING_CLONE_BIRTH_PROOF",
+      "notClaimed": [
+        "Generic serializer speedup",
+        "Installed Preview improvement",
+        "New Release clone admission"
+      ],
+      "reason": "Direct bytes improved both large fixture categories versus the existing tree branch in all four pairs. Unregistered native fallback remained faster in four of five categories. Actual product qualification is still required."
+    }
+  },
+  "pendingP17": {
+    "parent": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "canonicalBlob": "bbd63c8e31c3ac69df170c991cd6ea9b0260b49a",
+    "cloneBlob": "456a03f61ba47fa0d2cceed33ff456fc0a0802c0",
+    "permanentTests": "pending",
+    "qualification": false
   }
 }
