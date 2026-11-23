@@ -465,7 +465,32 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await targetRecord.selectOption({ label: targetLabel })
   await expect(targetRecord).toHaveValue(supplier)
   await expect(attachDocument).toBeDisabled()
-  await captureRecord(page, info, "UI58", "register-authorized-target")
+  const uploadViewport = page.viewportSize()
+  const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
+  for (const scheme of ["dark", "light"] as const) {
+    if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
+      await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({ width, height: width === 1440 ? 1100 : 900 })
+      await expect(targetRecord).toBeEnabled()
+      await expect(targetRecord).toHaveValue(supplier)
+      await expect(register.getByRole("button", { name: "Refresh records", exact: true })).toBeEnabled()
+      const bounds = await targetRecord.evaluate((element) => {
+        const box = element.getBoundingClientRect()
+        const form = element.closest("form")!.getBoundingClientRect()
+        return { left: box.left, right: box.right, width: box.width, formLeft: form.left, formRight: form.right }
+      })
+      expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft - 1)
+      expect(bounds.right).toBeLessThanOrEqual(bounds.formRight + 1)
+      expect(bounds.width).toBeGreaterThan(80)
+      await captureRecord(page, info, "UI58", "register-authorized-target-" + scheme + "-" + width)
+    }
+  }
+  if (uploadViewport) await page.setViewportSize(uploadViewport)
+  if (await page.locator("html").getAttribute("data-color-scheme") !== uploadTheme)
+    await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+  await expect(page.locator("html")).toHaveAttribute("data-color-scheme", uploadTheme ?? "dark")
   const catalogFilename = "catalog-" + filename
   const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
   await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
