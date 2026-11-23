@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "FINAL_BROWSER_QUALIFICATION_IN_PROGRESS",
+  "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
   "base": "a5eee3584da531d087a419b8f3ef29d3881117c7",
   "branch": "sf-final-fourteen",
   "target": "dev",
@@ -311,10 +311,26 @@
       "compositionCommit": "722b703b060e5cc578fa8d23568b3f9c56d72077",
       "exactUpstreamBlobs": 23,
       "unionStylesheet": "local-administration/administration.css"
+    },
+    "parallelVisualRoundThree": {
+      "number": 716,
+      "status": "MERGED",
+      "mergeCommit": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+      "compositionCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+      "exactUpstreamBlobs": 22,
+      "overlapPaths": 0
     }
   },
   "originalBase": "a5eee3584da531d087a419b8f3ef29d3881117c7",
-  "integrationBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
-  "productCandidate": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
-  "pullRequest": 713
+  "integrationBase": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+  "productCandidate": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+  "pullRequest": 713,
+  "qualification": {
+    "technicalReport": "technical.json",
+    "browserReport": "VALIDATION.md",
+    "positiveMaterialitySignalsQualified": false,
+    "positiveRecallQualified": false,
+    "recallRefusalQualified": true,
+    "localCancellationQualified": true
+  }
 }

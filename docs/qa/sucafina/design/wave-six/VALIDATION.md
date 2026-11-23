@@ -1,6 +1,6 @@
 # Validação do sexto lote — UI57–UI70
 
-O escopo contém 14 áreas e 25 padrões de rota existentes. Uma área de design, uma captura, uma operação original e uma capacidade operacional são evidências diferentes.
+O escopo contém 14 áreas e 25 padrões de rota existentes. A qualificação do lote está concluída para os estados e operações descritos abaixo, com os limites das fontes preservados. Uma área de design, uma captura, uma operação original e uma capacidade operacional são evidências diferentes.
 
 ## Matriz de qualificação
 
@@ -18,6 +18,9 @@ O escopo contém 14 áreas e 25 padrões de rota existentes. Uma área de design
 | UI61 cancelamento local | 2 jornadas passaram: um GET nativo por consulta, ERR_ABORTED, condição retida, zero reenvio e seleção limpa; 12 PNG e 8 JPEG | [45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989) |
 | Guardrails e tipos E2E após observador POST | Gate18 passou os 2 checks afetados; 78 regras, 106 paths, zero erros/exceções e 12 avisos de declaração de prazo | [45123446736](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123446736) |
 | Recall UI62 R16 | Resposta original 503, schema fechado: `unavailable / similarity-source-unavailable`. O teste positivo permanece falho; correspondência positiva não é qualificada | [45123256492](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123256492) |
+| Guardrails e tipos após UI62 | Gate19 passou os 3 checks afetados; 78 regras, 140 paths, zero erros/exceções e 15 avisos de declaração de prazo | [45126501994](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126501994) |
+| Composição final com #716 | Gate20 passou os 4 checks afetados; 78 regras, 140 paths, zero erros/exceções; 15 avisos de declaração de prazo; 7 paletas regeneradas sem diferença | [45126798245](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126798245) |
+| UI62 recusa original R17 | 1 jornada passou em EN/pt-BR: um POST por locale, 503 fechado, critérios retidos, zero falso vazio; 6 PNG e 5 JPEG | [45126521339](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126521339) |
 <!-- END_FINAL_MATRIX -->
 
 Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION.md](DEV-COMPOSITION.md) e [DEV-COMPOSITION.json](DEV-COMPOSITION.json). O arquivo [technical.json](technical.json) conserva os contadores primários do gate.
@@ -30,7 +33,7 @@ Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION
 | UI58/UI59 | Origem autorizada, anexo, ClamD, extração/trecho/hash, confirmação e revogação | Extração permanece candidata até confirmação; CAS e autoridade intactos |
 | UI60 | Prévia positiva R15 passou os 28 asserts originais: evidência 42 USD, baseline 420 USD preservado e `domainApplied=false`; fixture restrita mantém negativa | Total continua indisponível por cobertura incompleta; vinculação persistente não é afirmada |
 | UI61 | Condições independentes; consultas explícitas e cancelamento local de materialidade e sinais | R11 não recebeu materialidade em 40s; resultados positivos de materialidade/sinais e interrupção remota não são qualificados |
-| UI62 | Caso atual, pergunta privada e candidatos da fonte original | Recusa original `similarity-source-unavailable` em R16; nenhuma correspondência positiva ou causa interna exclusiva é presumida |
+| UI62 | R17 passou EN/pt-BR: resposta original 503 fechada, pergunta fora da URL, candidato e critérios retidos, edição/limpeza sem novo POST | Recusa `similarity-source-unavailable`; nenhuma correspondência positiva ou causa interna exclusiva é presumida |
 | UI63 | Escolha registrada, referência opaca e resposta original `coverage-incomplete` | Sem comparação numérica prevista/observada qualificada |
 | UI64 | Entrada contextual indisponível; F01 negado; zero folhas; retornos reais por teclado | Catálogo/preparo não operacionais; rota histórica de admissão preservada sem jornada positiva |
 | UI65 | Estado sem execução selecionada e retorno no mesmo proprietário | Sem C07 executado nem saída C08 positiva |
@@ -62,6 +65,8 @@ Cada navegação completa observa as duas leituras F01 originais — provider e 
 
 O helper encaminha uma vez o pedido real, com zero retries e zero redirects, lê o corpo durável do APIResponse original e entrega essa mesma resposta integral ao navegador. Isso evita a perda do corpo no cache transitório do Chromium. Registro e limpeza são aguardados. Não há resposta fabricada nem reenvio para obter sucesso.
 
+O focal UI62 R17 observa um único POST original por locale e aceita, no seu observador local, somente o erro de console 503 ligado à URL e ao Request exatos da resposta verificada. Em cada locale houve uma ocorrência desse erro original; zero erros inesperados e zero erros de página. O helper global e o spec positivo não recebem exceção. Editar a pergunta ou limpar o caso não gera outro POST. As 114 expectativas originais do positivo permanecem, e esse resultado continua não qualificado.
+
 Cada leitura conserva 40s; o DOM conserva 10s; as jornadas preservam seus prazos originais. O cancelamento de sinais vem por último e aborta somente a espera local. A captura escolhe o tema com o controle de desktop visível antes de reduzir a largura. UI69 observa o GET de releitura original após o único POST e confere stamp, CAS, versão+1 e páginas antes do DOM.
 
 A montagem visual duplicada de UI59 em pt-BR ficou no opt-in visual original; os oracles funcionais, inclusive revogação e consulta final ao catálogo vazio, permanecem. Os relatórios por grupo preservam o resultado real de cada tentativa.
@@ -70,7 +75,7 @@ A montagem visual duplicada de UI59 em pt-BR ficou no opt-in visual original; os
 
 A [galeria](evidence/README.md) reúne JPEGs do navegador; os artefatos de CI conservam os PNGs e o relatório integral. [manifest.json](evidence/manifest.json) atribui cada imagem ao estado, snapshot, run, job e blob.
 
-As revisões cobrem estados selecionados em temas nativos claro/escuro, EN/pt-BR e larguras de 320/360 px. Não equivalem a auditoria de todas as combinações, zoom real ou contraste numérico. O recorte UI70 light 360 mostra o meio da lista de skills, não o seletor de caso nem o painel humano; sua inspeção visual se limita à região visível.
+As revisões cobrem estados selecionados em temas nativos claro/escuro, EN/pt-BR e larguras de 320/360 px. Não equivalem a auditoria de todas as combinações, zoom real ou contraste numérico. O recorte UI70 light 360 mostra o meio da lista de skills, não o seletor de caso nem o painel humano; sua inspeção visual se limita à região visível. Os recortes UI62 a 320px estão rolados para candidatos e recusa: não exibem o título, o seletor original ou a pergunta completa. Os cinco JPEGs finais UI62 foram abertos pelo root; EN escuro desktop e BR claro 320px receberam também revisão de Rotinas.
 
 Os blobs são associados à árvore pelo SHA retornado pelo GitHub. A leitura binária independente não está disponível no conector textual; a revisão usa os bytes exatos emitidos pelo CI. Não se afirma releitura binária ou hash local independente.
 

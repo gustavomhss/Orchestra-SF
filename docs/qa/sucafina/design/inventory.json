@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "repository": "gustavomhss/Orchestra-SF",
-  "date": "2026-11-21",
+  "date": "2026-11-23",
   "target": {
     "branch": "dev",
     "createdFrom": "dev",
     "baseCommit": "a5eee3584da531d087a419b8f3ef29d3881117c7",
-    "latestDevInspected": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "latestDevInspected": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
     "implementationBranch": "sf-final-fourteen",
     "pullRequest": 713,
     "nativeFrontendPresent": true,
@@ -45,9 +45,9 @@
     "acceptedForIntegrationAreas": 55,
     "implementedPendingUserReviewAreas": 0,
     "mergedAreas": 41,
-    "qualifiedCandidateAreas": 0,
+    "qualifiedCandidateAreas": 14,
     "mergedAreasAsOf": "Confirmed before PR713. Actual merged state of the additional14 areas is authoritative in PR713.",
-    "countingBasis": "41 previously merged design areas plus14 implemented candidate areas. UI64/UI66 contextual unavailable presentations do not imply operational catalog or Schedule."
+    "countingBasis": "41 design areas confirmed merged before PR713 plus14 implemented and qualified candidate areas. Actual integration status is authoritative in PR713. UI64/UI66 contextual unavailable presentations do not imply operational catalog or Schedule."
   },
   "scope": "Only native Sucafina pages. HuGR Orchestra core and legacy HTML console excluded.",
   "firstWave": [
@@ -56,7 +56,7 @@
     "CAP01"
   ],
   "verification": {
-    "status": "FINAL_BROWSER_QUALIFICATION_IN_PROGRESS",
+    "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
     "report": "wave-six/VALIDATION.md",
     "previousEvidencePreservedIn": "fourthWaveVerification",
     "technical": {
@@ -177,7 +177,7 @@
       "product": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
       "snapshot": "9e4a5a13f80b25f260eb2f0e61447de016966dd5",
       "tree": "381bbc81bb1707dfe873936d15b25091822d701a",
-      "status": "DISPATCHED",
+      "status": "PASSED",
       "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
       "checks": [
         "guardrails",
@@ -187,6 +187,45 @@
       "snapshotOnlyPaths": [
         ".ci-run.json",
         "apps/cli/test/sucafina-final14-verification.test.ts"
+      ],
+      "run": 45123446736,
+      "conclusion": "success",
+      "job": 137522272062,
+      "cleanupJob": 137522514797,
+      "guard": {
+        "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+        "rules": 78,
+        "files": 106,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 12,
+        "warningRules": [
+          "test-timeout-raised"
+        ],
+        "touchesGuards": false
+      },
+      "commands": [
+        {
+          "gate": "fetch pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "guardrails",
+          "exitCode": 0
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "exitCode": 0
+        }
+      ],
+      "summaries": [
+        " 2 pass",
+        " 0 fail",
+        " 6 expect() calls"
       ]
     },
     "records": {
@@ -217,17 +256,6 @@
       "job": 137502251987,
       "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
       "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
-      "latestJobs": [
-        {
-          "id": 137502251987,
-          "status": "in_progress",
-          "conclusion": null,
-          "completed": null,
-          "step": [
-            "Run tests"
-          ]
-        }
-      ],
       "status": "PARTIAL",
       "passed": 3,
       "failed": 2,
@@ -244,8 +272,8 @@
       "jpegPreviews": 14,
       "artifact": 14792609948,
       "limits": [
-        "UI61 materiality exceeded original40s; recorded conditions200",
-        "UI62 recall originalPOST503; reason under investigation"
+        "UI61 R11 materiality original GET did not return a response within its original 40s; native local cancellation was later qualified in UI61 R15.",
+        "UI62 R11 original POST returned 503; its exact closed reason was later observed in R16. Positive matching remains unqualified."
       ]
     },
     "administration": {
@@ -266,7 +294,225 @@
         "sha256": "e96bcbaa3476f06f23e24503b15ccc7de412fe279784f1967e1d4176571cf533"
       },
       "sourceReview": "UI61 later delta is isolated; administration production dependencies unchanged"
-    }
+    },
+    "technicalRecallFollowup": {
+      "branch": "ci-run-linux-sf-final14-gate19-20261123",
+      "product": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "snapshot": "ffd074c142b144ed1555bdde0bcbd06865893455",
+      "tree": "702fba222bc89b28d6c6b61712bfd593bf97dfe4",
+      "status": "PASSED",
+      "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "checks": [
+        "app-shell typecheck",
+        "guardrails",
+        "app-shell e2e typecheck"
+      ],
+      "reason": "Two UI62 product files and its permanent negative E2E spec changed after Gate18; backend, Core, CLI, client, schema and generated palettes unchanged",
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-final14-verification.test.ts"
+      ],
+      "run": 45126501994,
+      "job": 137531935301,
+      "cleanupJob": 137532374110,
+      "conclusion": "success",
+      "guard": {
+        "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+        "rules": 78,
+        "files": 140,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 15,
+        "warningRules": [
+          "test-timeout-raised"
+        ],
+        "touchesGuards": false
+      },
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "fetch pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "guardrails",
+          "exitCode": 0
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "exitCode": 0
+        }
+      ],
+      "summaries": [
+        " 3 pass",
+        " 0 fail",
+        " 7 expect() calls"
+      ]
+    },
+    "latestCompositionGate": {
+      "branch": "ci-run-linux-sf-final14-gate20-20261123",
+      "product": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+      "snapshot": "f8091e294ba66a5fa3c190eb8a422aafe583b88f",
+      "tree": "26afb06aa81486db9ab3edb3e0b6f79d3a61ca31",
+      "status": "PASSED",
+      "guardBase": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+      "checks": [
+        "app-shell typecheck",
+        "guardrails",
+        "palette byte parity",
+        "app-shell e2e typecheck"
+      ],
+      "reason": "Compose all 22 exact PR716 upstream blobs; no overlap or backend/client/Core/schema changes. The inherited Settings stylesheet and five generated palette outputs require final parity check.",
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-final14-verification.test.ts"
+      ],
+      "run": 45126798245,
+      "job": 137532884939,
+      "conclusion": "success",
+      "cleanupJob": 137533439523,
+      "guard": {
+        "base": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+        "rules": 78,
+        "files": 140,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 15,
+        "warningRules": [
+          "test-timeout-raised"
+        ],
+        "touchesGuards": false
+      },
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "fetch pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "guardrails",
+          "exitCode": 0
+        },
+        {
+          "gate": "palette generation",
+          "exitCode": 0
+        },
+        {
+          "gate": "palette byte parity",
+          "files": 7,
+          "changed": []
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "exitCode": 0
+        }
+      ],
+      "summaries": [
+        " 4 pass",
+        " 0 fail",
+        " 11 expect() calls"
+      ],
+      "palette": {
+        "gate": "palette byte parity",
+        "files": 7,
+        "changed": []
+      }
+    },
+    "consultation": {
+      "run": 45122439989,
+      "job": 137519060570,
+      "snapshot": "b0931669e80589776a6ce8a1e63b8957a5e2d280",
+      "product": "d62c4b500695d248240a48944461a0d2262a589f",
+      "status": "PASSED",
+      "tree": "281e02354da5d32338d1caa263f91fffd4260b6a",
+      "passed": 2,
+      "failed": 0,
+      "minutes": 11.7,
+      "captures": 12,
+      "artifact": {
+        "id": 14795160692,
+        "bytes": 8799295,
+        "sha256": "3383ed2d70acba50d8758409be2c7a2980dd308d8b735f2bd0be4273aee2c461"
+      },
+      "originalNativeRequestsEach": 1,
+      "abort": "net::ERR_ABORTED",
+      "originalResultQualified": false,
+      "sourceReconciliationStopped": "not-claimed",
+      "jpegPreviews": 8,
+      "reviewedCentralFrames": 4
+    },
+    "recallSource": {
+      "snapshot": "de718cd31d6e38a22934274a8d4bba72b108587f",
+      "tree": "8119baafb34c21effeadcba54653f9b366e1ae55",
+      "product": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+      "branch": "ci-run-linux-sf-final-ui62-r16-20261123",
+      "job": 137521673423,
+      "status": "POSITIVE_EXPECTATION_FAILED_ORIGINAL_REFUSAL_OBSERVED",
+      "run": 45123256492,
+      "httpStatus": 503,
+      "originalBody": {
+        "status": "unavailable",
+        "reason": "similarity-source-unavailable"
+      },
+      "closedDecodePassed": true,
+      "artifact": 14795175598,
+      "cause": "Collapsed original category; exclusive inner cause not established"
+    },
+    "recallRefusal": {
+      "run": 45126521339,
+      "job": 137531996165,
+      "snapshot": "1fd0a8010947a0e86be5dc2d83e1dda8abe2884e",
+      "tree": "b16a28a4cd8d20de7c8190f1d2f855795541de5e",
+      "product": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "status": "PASSED",
+      "snapshotOnlyPaths": [
+        ".ci-run.json"
+      ],
+      "passed": 1,
+      "failed": 0,
+      "minutes": 6.3,
+      "captures": 6,
+      "jpegPreviews": 5,
+      "locales": [
+        "en",
+        "pt-BR"
+      ],
+      "requestsEach": 1,
+      "httpStatus": 503,
+      "originalBody": {
+        "status": "unavailable",
+        "reason": "similarity-source-unavailable"
+      },
+      "closedDecodePassed": true,
+      "positiveQualified": false,
+      "eachLocaleConsoleErrors": {
+        "allowedExactOriginal503": 1,
+        "unexpected": 0,
+        "pageErrors": 0
+      },
+      "artifact": {
+        "id": 14796665565,
+        "bytes": 4973273,
+        "sha256": "daaf2f70e83b468589022e8dbfa12307fd93a1f9290b9d2d140106176359bc50"
+      },
+      "cleanupJob": 137534936925,
+      "conclusion": "success"
+    },
+    "browserEvidence": "Selected actual states reviewed by root and peer agents; limits and original partial runs retained"
   },
   "surfaces": [
     {
@@ -284,7 +530,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/index.tsx",
           "blobSha": "f83d1b9df785a6c2abaae2d5d032e3c7f1da0687",
-          "previousBlobSha": "81d4dd0c878f8b8a7a3a36a1eea8d668d714f69f"
+          "previousBlobSha": "81d4dd0c878f8b8a7a3a36a1eea8d668d714f69f",
+          "candidateBlobSha": "c2da4454a18863093a6ddf5fe1534110e2ce1f35",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -328,7 +576,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/index.tsx",
-          "blobSha": "3d75f9688ac6543c131d13084baf54f2dba1de2a"
+          "blobSha": "3d75f9688ac6543c131d13084baf54f2dba1de2a",
+          "candidateBlobSha": "3d75f9688ac6543c131d13084baf54f2dba1de2a",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -364,7 +614,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
-          "blobSha": "f82946f091f58090491b39adf36d97e45310dac2"
+          "blobSha": "f82946f091f58090491b39adf36d97e45310dac2",
+          "candidateBlobSha": "f82946f091f58090491b39adf36d97e45310dac2",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -412,7 +664,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/index.tsx",
-          "blobSha": "d7108f52118bebeb32010a4a3b0221c650f4bdce"
+          "blobSha": "d7108f52118bebeb32010a4a3b0221c650f4bdce",
+          "candidateBlobSha": "d7108f52118bebeb32010a4a3b0221c650f4bdce",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -460,7 +714,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/capex/index.tsx",
-          "blobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470"
+          "blobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470",
+          "candidateBlobSha": "87a847f859fc15c5473a0ba6f778700be5e0e470",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -505,7 +761,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
           "blobSha": "2e80843571f1c60b7949c15ef8c36c724a6c1d9c",
-          "previousBlobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1"
+          "previousBlobSha": "0912fc52ea5423a1e6ef24863ff68c9007901dc1",
+          "candidateBlobSha": "f045b5d8d83bedcb910d379f004dc8ccecd4d7a4",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -570,7 +828,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
           "blobSha": "8b8bb7beb784d225df67e4c9476e668ac1e1e4e2",
-          "previousBlobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64"
+          "previousBlobSha": "c4b9cb76fb617b405c01069f84fb95b381122f64",
+          "candidateBlobSha": "21a9ebb0adaaee7120ad90f0e18f5f8f4f851083",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -631,7 +891,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
           "blobSha": "29aec81cc8b0dbf7e385ddbe9a1bd73f4c76c4bd",
-          "previousBlobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585"
+          "previousBlobSha": "fcdb83cfc20e0168fdf27479f8aa009b59821585",
+          "candidateBlobSha": "67b36f7f8f250b439778bd8bcc527086d64e212c",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -676,7 +938,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
           "blobSha": "938963d23aff1cbe6b5a4354dc4952d044ac91b0",
-          "previousBlobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b"
+          "previousBlobSha": "55e80ff7253bae9c8cf4b2d9db394251879d1b2b",
+          "candidateBlobSha": "938963d23aff1cbe6b5a4354dc4952d044ac91b0",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -737,7 +1001,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
           "blobSha": "68f9aca8322be859078f70274389e3d64f042ba6",
-          "previousBlobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24"
+          "previousBlobSha": "373e2389aa6d1690c1bb5e9156bab67e5f147b24",
+          "candidateBlobSha": "a291395bcdd269a904d366ffda5f245b161c8374",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -794,7 +1060,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
           "blobSha": "fa0af934b7e952e44399501ad0e61e174f4e0f5c",
-          "previousBlobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2"
+          "previousBlobSha": "6150473ed6f7bcc3d5234f68551ed9e4e5864bc2",
+          "candidateBlobSha": "e2a1d4ba6d8b478beb9c84ca1ce8b1c8da75c6a8",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -855,7 +1123,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
           "blobSha": "11a5742a08851f08d48695a18c5a91dc02eb6908",
-          "previousBlobSha": "bdc686c4efa75672991de61b215be0691fc54cd4"
+          "previousBlobSha": "bdc686c4efa75672991de61b215be0691fc54cd4",
+          "candidateBlobSha": "8d81a3270339078b0993c165dba3c2333f79a9c6",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -912,7 +1182,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/index.tsx",
           "blobSha": "eb1e0c6d7617fc02cc89086323cd3c700ce148fd",
-          "previousBlobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72"
+          "previousBlobSha": "9f55c881506896e756a9a9f5ad4e1f23d05fde72",
+          "candidateBlobSha": "eb1e0c6d7617fc02cc89086323cd3c700ce148fd",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -969,7 +1241,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
           "blobSha": "dc8df021cc3a23127ae2187476f9ea1175812b8e",
-          "previousBlobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f"
+          "previousBlobSha": "f1e8a88f37563a6276f56cc38b36f4821d5a741f",
+          "candidateBlobSha": "97675194bd3812eff3f16a93023d178e8114fb32",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1026,7 +1300,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/stakeholders/index.tsx",
           "blobSha": "b23db34f419fa64fa281af3f23319092a885cff4",
-          "previousBlobSha": "aebff25e95fb0014518b80ff8d85e0474833e856"
+          "previousBlobSha": "aebff25e95fb0014518b80ff8d85e0474833e856",
+          "candidateBlobSha": "b23db34f419fa64fa281af3f23319092a885cff4",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1079,7 +1355,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
           "blobSha": "1691c2d651e3bc5655bda000ee1f1540fadf156e",
-          "previousBlobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f"
+          "previousBlobSha": "e4cd8eb36184d210879fd1b535c0596b9649714f",
+          "candidateBlobSha": "6e3a4a0891637c6a655c8de6ab618175a7026fbc",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1124,7 +1402,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/index.tsx",
           "blobSha": "a296e9c6292433bd9224669be34097470c44e424",
-          "previousBlobSha": "eae3664b7e0db079259774446f0fa305da541de4"
+          "previousBlobSha": "eae3664b7e0db079259774446f0fa305da541de4",
+          "candidateBlobSha": "a296e9c6292433bd9224669be34097470c44e424",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1180,7 +1460,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/index.tsx",
-          "blobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143"
+          "blobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143",
+          "candidateBlobSha": "b6274f9f22ac3a5a5c85a7b0c3c19efeb4519143",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1240,7 +1522,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/capex/index.tsx",
-          "blobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1"
+          "blobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1",
+          "candidateBlobSha": "771f8524a5972cbf19473b7b4173a0d97accfae1",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1305,7 +1589,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
           "blobSha": "3357f14b20086aac70bf5f108651c129cb9c89db",
-          "previousBlobSha": "45badcf55818ed04351fda974ef713da0a0ef523"
+          "previousBlobSha": "45badcf55818ed04351fda974ef713da0a0ef523",
+          "candidateBlobSha": "e147ad8fae38eec4ffbb449e52c5460e15e88e9a",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1371,7 +1657,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
           "blobSha": "32c42540b3c92f4fbef6f1fd6ec91c3914162c34",
-          "previousBlobSha": "06b02b7408b35b9e13442621ab45b35c23161d7f"
+          "previousBlobSha": "06b02b7408b35b9e13442621ab45b35c23161d7f",
+          "candidateBlobSha": "faebb0e627db3b4098d2ab13308012420704c56e",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1428,7 +1716,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
           "blobSha": "b3bf77199c16df20d80e0af8cf0b05e7930954fa",
-          "previousBlobSha": "01c837c2379a3be78e402e9e82de9d63009ebd22"
+          "previousBlobSha": "01c837c2379a3be78e402e9e82de9d63009ebd22",
+          "candidateBlobSha": "77104a08051288a0992b609a6ba484f3e04ef5c3",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1498,12 +1788,16 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
           "blobSha": "bdb0107e305f53add1503280b7e4b43525b703f1",
-          "previousBlobSha": "da4e99a66b686aa263de0ecfae76ee7cd189271e"
+          "previousBlobSha": "da4e99a66b686aa263de0ecfae76ee7cd189271e",
+          "candidateBlobSha": "50c5945201e31ea4ecbe49619b1f382cd4f07ed9",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
           "blobSha": "2102c9264c0fad43324e3b24613861b94cb45a7f",
-          "previousBlobSha": "c7332911b34925443dd65f2ee846ccb21f71eeea"
+          "previousBlobSha": "c7332911b34925443dd65f2ee846ccb21f71eeea",
+          "candidateBlobSha": "927c488bd8c03e5ee70fb5bbc964485af8ff02b0",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1563,7 +1857,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
           "blobSha": "e3e436d0fc0bc17524b3041185ea8045fa241004",
-          "previousBlobSha": "a9107579d40e8a54741923831d487539c484c1da"
+          "previousBlobSha": "a9107579d40e8a54741923831d487539c484c1da",
+          "candidateBlobSha": "cc8864838878860bf11a30b26d5f39ee19b7306a",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1647,17 +1943,23 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
           "blobSha": "c13b809fe73f7d5f83a24e90aae6fa490ad93faf",
-          "previousBlobSha": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b"
+          "previousBlobSha": "ff532b5a275d01299bf8fccead910c1b7a4e1e5b",
+          "candidateBlobSha": "bd9dfd4bf89f5d2aa9b24f0d6cd8989d64c9b1a8",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
           "blobSha": "98a04c2608414744f44b2afa0326799a1023aa32",
-          "previousBlobSha": "98a04c2608414744f44b2afa0326799a1023aa32"
+          "previousBlobSha": "98a04c2608414744f44b2afa0326799a1023aa32",
+          "candidateBlobSha": "98a04c2608414744f44b2afa0326799a1023aa32",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
           "blobSha": "134f6f705f05d87afd318aa9f7d0ff9aa1a080e2",
-          "previousBlobSha": "ff5f04a77bd25f3ffe0019d5f7350fc24a33d272"
+          "previousBlobSha": "ff5f04a77bd25f3ffe0019d5f7350fc24a33d272",
+          "candidateBlobSha": "6815d1793efc18772a77fb94d7b7ff2a1a864baa",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1725,12 +2027,16 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
           "blobSha": "dda95a55eb9320a0f3d34b6900fece92bbe5689b",
-          "previousBlobSha": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff"
+          "previousBlobSha": "9b2f7a159eca70a5c4d8cb46309ceee9f15c05ff",
+          "candidateBlobSha": "dda95a55eb9320a0f3d34b6900fece92bbe5689b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
           "blobSha": "b4f6cae4fa2614960e7c999d19c8af49a515ba99",
-          "previousBlobSha": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d"
+          "previousBlobSha": "1948c63e1304d2fcc7e9923a2e29db3c7e57272d",
+          "candidateBlobSha": "8aa3df6e4ac35b0fdaca5aa0328af2eb20c23ac5",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1800,7 +2106,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
           "blobSha": "ac06b58419f86affee8a438f937281cc108b031e",
-          "previousBlobSha": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90"
+          "previousBlobSha": "881c8d4ec6c2f20cc7d19ea57ba1efbe8566fd90",
+          "candidateBlobSha": "a221d852e08d18bd2ac6dd9ce2d1cc5607040179",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1857,7 +2165,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
           "blobSha": "08ca2dcd4953d225ca6f7f3e43536a92271b11d5",
-          "previousBlobSha": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf"
+          "previousBlobSha": "c7e6818389a6b12cd21ebb123e7b65c13afb39bf",
+          "candidateBlobSha": "08ca2dcd4953d225ca6f7f3e43536a92271b11d5",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1914,7 +2224,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
           "blobSha": "924d5acb95903da0434c5e87ede48a1a87805e45",
-          "previousBlobSha": "3f777bf0485a5e4d27b716d3e0d40291953f2021"
+          "previousBlobSha": "3f777bf0485a5e4d27b716d3e0d40291953f2021",
+          "candidateBlobSha": "aa0b2985a1c09c13c2c66a1fe193e00f8a6ed04a",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -1947,7 +2259,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
           "blobSha": "51aa26bc26f5adb7d4c528d078efad06f78f18b7",
-          "previousBlobSha": "d012691ea65e0de4185f4942967c0d2ca9044161"
+          "previousBlobSha": "d012691ea65e0de4185f4942967c0d2ca9044161",
+          "candidateBlobSha": "7820dd80def59ff9a7b61828fa69c8b80a0d2e7c",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2006,7 +2320,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
           "blobSha": "5c1dfd8f77631d315bdacc3fa976232d03ea18b4",
-          "previousBlobSha": "c64e321bf6212dc24494034ca29270285391e899"
+          "previousBlobSha": "c64e321bf6212dc24494034ca29270285391e899",
+          "candidateBlobSha": "8b194bbae84bf70df89ce77223d720ffec34808f",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2071,7 +2387,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
           "blobSha": "d2065ccbf7e50d3aba85818ca76fd92922b31dce",
-          "previousBlobSha": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5"
+          "previousBlobSha": "16db968cbe6c5bfbaa40521aff74f2c83bb51be5",
+          "candidateBlobSha": "011baf50a1ae30199c56479d717b642fcd22f0b1",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2137,7 +2455,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
           "blobSha": "1ddc7778d2b56c0fcd7342b14b1b875b3df8f307",
-          "previousBlobSha": "a22b650d1388545a58f165fb0ca91c70d84071b2"
+          "previousBlobSha": "a22b650d1388545a58f165fb0ca91c70d84071b2",
+          "candidateBlobSha": "b62de72cd7aa62a9c0ce7e97c0d0c12764c3949a",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2170,7 +2490,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
           "blobSha": "f7f2bd567947d9ffd3f408b6600d13cac2beca21",
-          "previousBlobSha": "d64e5c7ca7126d0397afd323a780bbab5725f774"
+          "previousBlobSha": "d64e5c7ca7126d0397afd323a780bbab5725f774",
+          "candidateBlobSha": "e93d1e58ca2ff4b41d1caf8271efed0901fdfdf0",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2242,7 +2564,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
           "blobSha": "f6e954f779f5080a831f59c3066922a942e4dfb4",
-          "previousBlobSha": "2a4472606a1fe05c8d96044c4dc979322d048349"
+          "previousBlobSha": "2a4472606a1fe05c8d96044c4dc979322d048349",
+          "candidateBlobSha": "501ebc57404e2e3d5f7755c7066ff7c5225ceec6",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2305,7 +2629,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
           "blobSha": "992ad31cbeb950b4fdaab9de3a620723d38dca24",
-          "previousBlobSha": "80297cb0719c05aa0241fa8023322853561678de"
+          "previousBlobSha": "80297cb0719c05aa0241fa8023322853561678de",
+          "candidateBlobSha": "4eb7154628357f5dc6ef570acd72f09f21564ce5",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2369,7 +2695,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
           "blobSha": "eedb5e7c9210690e3c70e3e5036d5552a10c0b6b",
-          "previousBlobSha": "ca1a807d6d43bea5493b7d8545505988ee28dfd7"
+          "previousBlobSha": "ca1a807d6d43bea5493b7d8545505988ee28dfd7",
+          "candidateBlobSha": "724ea731528e8d0744d40e158a4d3b77b37c49e0",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2433,7 +2761,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
           "blobSha": "49e186efdd3e8da74414afd12fa88499cbe6386b",
-          "previousBlobSha": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29"
+          "previousBlobSha": "c1a7d08fa1dffb7f0469dbb53dd9fc49d93aec29",
+          "candidateBlobSha": "ad2b84873fefe5726e72da3f6367b0288090bdfa",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2498,7 +2828,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
           "blobSha": "dbbf131007bbf8efe71952fdf3550c3b2be014f7",
-          "previousBlobSha": "0e531465198c208e53eadae54f128bc664300ec9"
+          "previousBlobSha": "0e531465198c208e53eadae54f128bc664300ec9",
+          "candidateBlobSha": "d028b56c1e83105b7b15e123a9c9450d9875b3be",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2562,7 +2894,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
           "blobSha": "93b792fa9ebbe981f447ac2b4520623416f2244d",
-          "previousBlobSha": "6571685621d4103c8da30dc769d1be61d43ab4bd"
+          "previousBlobSha": "6571685621d4103c8da30dc769d1be61d43ab4bd",
+          "candidateBlobSha": "19041b50a842bace6b25f5ddb4058252a903db50",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2627,7 +2961,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
           "blobSha": "6a44140073afd88819c6de8c47daeb7303e199fc",
-          "previousBlobSha": "52d194c16837a41d19d2d535321483585bbef801"
+          "previousBlobSha": "52d194c16837a41d19d2d535321483585bbef801",
+          "candidateBlobSha": "20fd0de401d41236fbab3c63fc8fc189ca670a10",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2694,7 +3030,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
-          "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb"
+          "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb",
+          "candidateBlobSha": "012407807f10a2d39ae5c64eb43d4feb4bbcf076",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2719,7 +3057,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
-          "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb"
+          "blobSha": "f06b8cf7dd0dc1862638c4f41a06567f404f47eb",
+          "candidateBlobSha": "012407807f10a2d39ae5c64eb43d4feb4bbcf076",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2748,7 +3088,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
-          "blobSha": "00b4e852abefc7d16e4ac3dc4905f84d1ab8b887"
+          "blobSha": "00b4e852abefc7d16e4ac3dc4905f84d1ab8b887",
+          "candidateBlobSha": "a7e5bcc6b23b2340f7d41b0b744d0090075d2848",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2773,7 +3115,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
-          "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05"
+          "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05",
+          "candidateBlobSha": "e4d5ee33c7db35aa9f039360ab4ee06692ed9acf",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2798,7 +3142,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
-          "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05"
+          "blobSha": "1f161bf134525a2f0238dfae5a2d26440e14cd05",
+          "candidateBlobSha": "e4d5ee33c7db35aa9f039360ab4ee06692ed9acf",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2823,7 +3169,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
-          "blobSha": "cca0ff786798f3a2548e2d09482092fc6d418a74"
+          "blobSha": "cca0ff786798f3a2548e2d09482092fc6d418a74",
+          "candidateBlobSha": "67bbacae8a306c9306701425f7ab2e08384d1624",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2856,7 +3204,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
-          "blobSha": "b1f69b529ee76a3fed764cdf6ff5c8e15f5596bc"
+          "blobSha": "b1f69b529ee76a3fed764cdf6ff5c8e15f5596bc",
+          "candidateBlobSha": "d7084491b08f5b79c95403ab03edc0d89c140563",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2881,7 +3231,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
-          "blobSha": "55b68800500157c4e349f00bf66abf3c78c4d5c2"
+          "blobSha": "55b68800500157c4e349f00bf66abf3c78c4d5c2",
+          "candidateBlobSha": "aec5aa200804ac6e1965b10c9293a61f43c9d4dc",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2910,7 +3262,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
-          "blobSha": "1afcc5432177c76bae5b2ff1fc9e3b91a4011277"
+          "blobSha": "1afcc5432177c76bae5b2ff1fc9e3b91a4011277",
+          "candidateBlobSha": "1f1f1950a596df948fc3b5dd9601866f6b942849",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2943,7 +3297,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
-          "blobSha": "5a9041af6d2614ca9ec7c89a6d04b0ba243ad201"
+          "blobSha": "5a9041af6d2614ca9ec7c89a6d04b0ba243ad201",
+          "candidateBlobSha": "61f7dfcf1fd677f2f4d081471649e3b6d7f7b782",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2968,7 +3324,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
-          "blobSha": "00fa125b3293aab584500fa4e4032d76a7b95e10"
+          "blobSha": "00fa125b3293aab584500fa4e4032d76a7b95e10",
+          "candidateBlobSha": "b929cc72ad36b1b7a0c8e7f396a2927da5c47bd5",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -2993,7 +3351,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
-          "blobSha": "fd198d9ac14d91e6ceae77ebbccc458a5fa273dc"
+          "blobSha": "fd198d9ac14d91e6ceae77ebbccc458a5fa273dc",
+          "candidateBlobSha": "31520e449cd8cf19db7b1b9cbe04887485727783",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -3018,7 +3378,9 @@
       "components": [
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
-          "blobSha": "b94e14891670febb2f7a2dba9b5a07ef191d6df1"
+          "blobSha": "b94e14891670febb2f7a2dba9b5a07ef191d6df1",
+          "candidateBlobSha": "a395f937053764e0c62875450adab4405b9ff495",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -3044,7 +3406,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
           "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
-          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a",
+          "candidateBlobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -3070,7 +3434,9 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
           "blobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
-          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a"
+          "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a",
+          "candidateBlobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
@@ -3105,17 +3471,19 @@
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
           "blobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
           "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a",
-          "sixthWavePreviousBlobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402"
+          "sixthWavePreviousBlobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "candidateBlobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "records",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/records/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3127,7 +3495,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 1,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3157,17 +3525,19 @@
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
           "blobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
           "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80",
-          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5"
+          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "candidateBlobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "records",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/records/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3179,7 +3549,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 2,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3201,17 +3571,19 @@
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
           "blobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
           "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80",
-          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5"
+          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "candidateBlobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "records",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/records/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3223,7 +3595,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 3,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3245,17 +3617,19 @@
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
           "blobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
           "previousBlobSha": "1f012ea2cecc1f37e7273853ee08c75ce345ea80",
-          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5"
+          "sixthWavePreviousBlobSha": "429dc4c18fe3efda69462552b448680f75834ee5",
+          "candidateBlobSha": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "records",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/records/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3267,7 +3641,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 4,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3292,29 +3666,31 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
           "blobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
-          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a"
+          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a",
+          "candidateBlobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "memory",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/memory/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
         "registeredRoutePatterns": 2,
         "limits": [
-          "Cancelar a espera nesta tela não comprova interrupção do produtor."
+          "Native local cancellation and retained conditions qualified; positive materiality/signals results and remote cancellation are not qualified."
         ]
       },
       "presentInCandidate": true,
       "sixthWaveOrder": 5,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3335,34 +3711,38 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
           "blobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
-          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a"
+          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a",
+          "candidateBlobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         },
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
-          "blobSha": "43d1c91c582aec146614d6b545fa2d87d7ecfe21",
-          "sixthWavePreviousBlobSha": "cc6b59085d968b410423aee161bc925d961cbf7a"
+          "blobSha": "33695689832e97eb3d1f9c613ce44e6e786f27e7",
+          "sixthWavePreviousBlobSha": "cc6b59085d968b410423aee161bc925d961cbf7a",
+          "candidateBlobSha": "33695689832e97eb3d1f9c613ce44e6e786f27e7",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "memory",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/memory/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
         "registeredRoutePatterns": 1,
         "limits": [
-          "Referências atuais e autorizadas; pergunta não entra na URL."
+          "Original503 similarity-source-unavailable and retained private criteria qualified in EN/pt-BR; positive matching and exclusive internal cause remain unqualified."
         ]
       },
       "presentInCandidate": true,
       "sixthWaveOrder": 6,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3387,17 +3767,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
           "blobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
-          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a"
+          "sixthWavePreviousBlobSha": "f1d3e117c39615a2f48934eb785fc06502b37b8a",
+          "candidateBlobSha": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "memory",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/memory/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3409,7 +3791,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 7,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3438,17 +3820,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
           "blobSha": "4960bc661837cbd0b7b84ec773a1b30f02421ad0",
-          "sixthWavePreviousBlobSha": "4f32d9f5de6f35aea15f7875e075a5e2e8a67750"
+          "sixthWavePreviousBlobSha": "4f32d9f5de6f35aea15f7875e075a5e2e8a67750",
+          "candidateBlobSha": "4960bc661837cbd0b7b84ec773a1b30f02421ad0",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "routines",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/routines/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3476,7 +3860,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 8,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3501,17 +3885,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
           "blobSha": "1f150288847844b55d1c16b8a95ef01cb1bff1a3",
-          "sixthWavePreviousBlobSha": "7e0575c9fb9300476b51bbdbdc85917fcac84cc2"
+          "sixthWavePreviousBlobSha": "7e0575c9fb9300476b51bbdbdc85917fcac84cc2",
+          "candidateBlobSha": "1f150288847844b55d1c16b8a95ef01cb1bff1a3",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "routines",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/routines/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3523,7 +3909,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 9,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3552,17 +3938,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx",
           "blobSha": "5446f4a7082ededa609c0ed41dc73a06d55b354b",
-          "sixthWavePreviousBlobSha": "a8ea8d4b045e595800921588952cd5206780fabd"
+          "sixthWavePreviousBlobSha": "a8ea8d4b045e595800921588952cd5206780fabd",
+          "candidateBlobSha": "5446f4a7082ededa609c0ed41dc73a06d55b354b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "routines",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/routines/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3590,7 +3978,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 10,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3611,17 +3999,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
           "blobSha": "76d1df3a5acec67f85db553e9b5c7ce933022759",
-          "sixthWavePreviousBlobSha": "4d85bef1c895c29701e9528b30be45b0fb424400"
+          "sixthWavePreviousBlobSha": "4d85bef1c895c29701e9528b30be45b0fb424400",
+          "candidateBlobSha": "76d1df3a5acec67f85db553e9b5c7ce933022759",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "memory",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/memory/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3633,7 +4023,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 11,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3655,17 +4045,19 @@
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
           "blobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
           "previousBlobSha": "d74a95fefd5283ce58893468494bb3bcbce9f11a",
-          "sixthWavePreviousBlobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402"
+          "sixthWavePreviousBlobSha": "48f3bc53be4559e55ed684a84cacd22db38e9402",
+          "candidateBlobSha": "326921a11e1ad8da2ac008546d934988bd3edc9b",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "records",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/records/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3677,7 +4069,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 12,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3698,17 +4090,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
           "blobSha": "22289f3c9e7240cef62b6aab0e484b311087abc6",
-          "sixthWavePreviousBlobSha": "638a209f6cd0967c29a6e0f82c957d8fe3c69579"
+          "sixthWavePreviousBlobSha": "638a209f6cd0967c29a6e0f82c957d8fe3c69579",
+          "candidateBlobSha": "22289f3c9e7240cef62b6aab0e484b311087abc6",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "memory",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/memory/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3720,7 +4114,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 13,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3741,17 +4135,19 @@
         {
           "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
           "blobSha": "3aca0b8c5d067bcfcef9897e6ca21100f73b8d61",
-          "sixthWavePreviousBlobSha": "0957e6b67f2cc6169444782acfb5fbf2b5a601ac"
+          "sixthWavePreviousBlobSha": "0957e6b67f2cc6169444782acfb5fbf2b5a601ac",
+          "candidateBlobSha": "3aca0b8c5d067bcfcef9897e6ca21100f73b8d61",
+          "candidateCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19"
         }
       ],
       "presentInTargetDev": true,
-      "visualVerification": "FINAL_QUALIFICATION_IN_PROGRESS",
-      "status": "REFINED_QUALIFICATION_IN_PROGRESS",
+      "visualVerification": "REAL_BROWSER_STATES_REVIEWED_WITH_DOCUMENTED_LIMITS",
+      "status": "REFINED_AND_QUALIFIED_WITH_SOURCE_LIMITS",
       "designWork": {
-        "status": "QUALIFICATION_IN_PROGRESS",
+        "status": "QUALIFIED_WITH_DOCUMENTED_SOURCE_LIMITS",
         "group": "routines",
         "branch": "sf-final-fourteen",
-        "productCommit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+        "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
         "scope": "wave-six/scope.json",
         "report": "wave-six/routines/VALIDATION.md",
         "gallery": "wave-six/evidence/README.md",
@@ -3763,7 +4159,7 @@
       "presentInCandidate": true,
       "sixthWaveOrder": 14,
       "integration": {
-        "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+        "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
         "pullRequest": 713,
         "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
         "personalUserVisualReviewClaimed": false
@@ -3899,12 +4295,19 @@
     }
   },
   "candidateSource": {
-    "commit": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
-    "nativeTree": "2d887bfe1c116d2fee2748d644dd243de130afa5",
-    "appShellSourceTree": "24c59a46f0dfefb1181e3a4ec2cb7c1a3a225216",
+    "commit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "nativeTree": "6e3bb88d38e9246d7acb368e2a55af51622c2b9f",
+    "appShellSourceTree": "80a1992c0c89e68550e2a88273554f358506298f",
     "routeRegistryBlob": "6e1e711e2ff3a95e460026053cb91772693da572",
     "routeRegistryUnchanged": true,
-    "sourceAudit": "wave-six/DEV-COMPOSITION.json"
+    "sourceAudit": "wave-six/DEV-COMPOSITION.json",
+    "appShellE2ETree": "d0f1211921434c7dbe24994ec6739e566298a09e",
+    "componentAudit": {
+      "componentReferences": 75,
+      "uniqueComponentFiles": 66,
+      "missing": 0,
+      "method": "Each component.candidateBlobSha is matched to the untruncated native Git subtree at candidateCommit; historical blobSha fields are retained for prior waves."
+    }
   },
   "firstWaveVerifiedSnapshot": {
     "target": {
@@ -4018,11 +4421,11 @@
     "portugueseCaptureCount": 11
   },
   "integration": {
-    "status": "AUTHORIZED_PENDING_FINAL_QUALIFICATION",
+    "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
     "targetBranch": "dev",
-    "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "base": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
     "originalBase": "a5eee3584da531d087a419b8f3ef29d3881117c7",
-    "productCommit": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "productCommit": "8b8a9eb153374031d88315195b4af2b1a25eae19",
     "pullRequest": 713,
     "authorization": "IMPLEMENTATION_REVIEW_AND_MERGE_EXPLICITLY_AUTHORIZED",
     "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
@@ -5132,7 +5535,7 @@
     "UI70"
   ],
   "sixthWaveDelivery": {
-    "status": "FINAL_BROWSER_QUALIFICATION_IN_PROGRESS",
+    "status": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS",
     "appliedToProduct": true,
     "appliedToBranch": "sf-final-fourteen",
     "targetBranch": "dev",
@@ -5165,6 +5568,8 @@
     "authorization": "IMPLEMENTATION_REVIEW_AND_MERGE_EXPLICITLY_AUTHORIZED",
     "personalUserVisualReviewClaimed": false,
     "mergeStatusAuthority": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
-    "operationalScope": "Presentation and qualified original operations only; unavailable boundaries remain explicit."
+    "operationalScope": "Presentation and qualified original operations only; unavailable boundaries remain explicit.",
+    "codeCandidate": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "integrationBase": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e"
   }
 }

@@ -1373,17 +1373,26 @@
     "method": "Upstream commit is a direct parent; exact Git tree diff against composition has no intersecting upstream-only paths."
   },
   "currentCandidate": {
-    "code": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
-    "nativeSource": "2d887bfe1c116d2fee2748d644dd243de130afa5",
+    "code": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "nativeSource": "6e3bb88d38e9246d7acb368e2a55af51622c2b9f",
     "cliSource": "00d7f39405ffaf63925f80af355af5267f82d89a",
     "cliTests": "04ba93588dedf41adfd8444b051e6cd13976f183",
-    "appShellSource": "24c59a46f0dfefb1181e3a4ec2cb7c1a3a225216",
+    "appShellSource": "80a1992c0c89e68550e2a88273554f358506298f",
+    "appShellE2E": "d0f1211921434c7dbe24994ec6739e566298a09e",
     "core": "2fa2ba3b0cb0346c2b934ca0cdf3081db86fc176",
     "schema": "65ad5f67d9a5f35054f77e78bd475f8c584167ae",
     "client": "0326f30a3a2c6d1437c75508f0ad6ce540f1fd5c",
+    "clientSource": "6d4a0891c055c4944c43b3cf66483944c4c691ae",
+    "clientTests": "c42361fb7ecec4a09cdf4bf3277643e7d9ad9e96",
     "routeRegistry": "6e1e711e2ff3a95e460026053cb91772693da572",
-    "runtimeTreeSource": "d62c4b500695d248240a48944461a0d2262a589f",
-    "latestDelta": "Only permanent E2E recall helper and caller changed after the runtime tree source"
+    "runtimeTreeSource": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "latestDelta": "Exact composition of all22 upstream PR716 paths. Own UI62 product and permanent negative spec remain exact to c59e406.",
+    "componentAudit": {
+      "componentReferences": 75,
+      "uniqueComponentFiles": 66,
+      "missing": 0,
+      "method": "Each component.candidateBlobSha is matched to the untruncated native Git subtree at candidateCommit; historical blobSha fields are retained for prior waves."
+    }
   },
   "technical": {
     "branch": "ci-run-linux-sf-final14-gate17-20261123",
@@ -1524,17 +1533,6 @@
       "job": 137502251987,
       "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
       "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
-      "latestJobs": [
-        {
-          "id": 137502251987,
-          "status": "in_progress",
-          "conclusion": null,
-          "completed": null,
-          "step": [
-            "Run tests"
-          ]
-        }
-      ],
       "status": "PARTIAL",
       "passed": 3,
       "failed": 2,
@@ -1551,8 +1549,8 @@
       "jpegPreviews": 14,
       "artifact": 14792609948,
       "limits": [
-        "UI61 materiality exceeded original40s; recorded conditions200",
-        "UI62 recall originalPOST503; reason under investigation"
+        "UI61 R11 materiality original GET did not return a response within its original 40s; native local cancellation was later qualified in UI61 R15.",
+        "UI62 R11 original POST returned 503; its exact closed reason was later observed in R16. Positive matching remains unqualified."
       ]
     },
     "administration": {
@@ -1613,6 +1611,46 @@
       "closedDecodePassed": true,
       "artifact": 14795175598,
       "cause": "Collapsed original category; exclusive inner cause not established"
+    },
+    "recall17": {
+      "run": 45126521339,
+      "job": 137531996165,
+      "snapshot": "1fd0a8010947a0e86be5dc2d83e1dda8abe2884e",
+      "tree": "b16a28a4cd8d20de7c8190f1d2f855795541de5e",
+      "product": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "status": "PASSED",
+      "snapshotOnlyPaths": [
+        ".ci-run.json"
+      ],
+      "passed": 1,
+      "failed": 0,
+      "minutes": 6.3,
+      "captures": 6,
+      "jpegPreviews": 5,
+      "locales": [
+        "en",
+        "pt-BR"
+      ],
+      "requestsEach": 1,
+      "httpStatus": 503,
+      "originalBody": {
+        "status": "unavailable",
+        "reason": "similarity-source-unavailable"
+      },
+      "closedDecodePassed": true,
+      "positiveQualified": false,
+      "eachLocaleConsoleErrors": {
+        "allowedExactOriginal503": 1,
+        "unexpected": 0,
+        "pageErrors": 0
+      },
+      "artifact": {
+        "id": 14796665565,
+        "bytes": 4973273,
+        "sha256": "daaf2f70e83b468589022e8dbfa12307fd93a1f9290b9d2d140106176359bc50"
+      },
+      "cleanupJob": 137534936925,
+      "conclusion": "success"
     }
   },
   "clientChange": {
@@ -1781,9 +1819,10 @@
         "path": "docs/guides/sucafina-native-dashboard.md",
         "previousTextPreserved": true,
         "originalCharacters": 11731,
-        "addedCharacters": 6798,
+        "addedCharacters": 7218,
         "insertionOffset": 9118,
-        "method": "Insert wave-six operational sections before Planner; no original character removed or changed"
+        "method": "Insert wave-six operational sections before Planner; no original character removed or changed",
+        "composition": "00543f1afdfb50b72fb287c183ded32968db2ba0"
       }
     }
   },
@@ -1950,7 +1989,6 @@
       "root",
       "final_routines"
     ],
-    "pending": "Original browser cancellation proof",
     "spec": {
       "path": "packages/app-shell/e2e/sucafina/final-memory-consultation.spec.ts",
       "blob": "f70affa847e9d8a08de8ac6f0c49cd392e4502af",
@@ -1961,7 +1999,8 @@
       "originalPositiveSpecUnchanged": "642d37f11af0bd8c680c369facd838bcbad11007",
       "nativeBrowserAbort": true,
       "noServerStopClaim": true
-    }
+    },
+    "status": "NATIVE_CANCELLATION_QUALIFIED"
   },
   "recallObserver": {
     "source": "5eb7dba721746f44a700dff158ca0a04af3e0ee6",
@@ -1973,6 +2012,354 @@
     "positiveAssertionsUnchanged": 114,
     "originalResponseForwardedOnce": true,
     "original40s": true,
-    "guardAndE2EFollowupRequired": true
-  }
+    "guardAndE2EFollowupRequired": false,
+    "qualifiedBy": 45123446736
+  },
+  "upstream716": {
+    "previousHead": "00543f1afdfb50b72fb287c183ded32968db2ba0",
+    "previousCodeCandidate": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+    "upstream": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+    "head": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "tree": "80d9d21f2779c1888efa09e927c408a9aed03763",
+    "paths": [
+      {
+        "path": "docs/qa/sucafina/visual-audit/ROUND-THREE.md",
+        "sha": "159aef1670431c8acfd27dbd6abc0e28a6f35e22",
+        "status": "added"
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/round-three-runs.json",
+        "sha": "3d7ad7cc9c6f831870580a6ef2ee378595c15b4a",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "sha": "9093a97a0a4afcdc8d3af849507bbf2e74f27dbc",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-settings.spec.ts",
+        "sha": "f8ac5b8181bde56ec21301334dad95374676f038",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts",
+        "sha": "d8356c5afb3d68dd120100084105f1186f4c8d6a",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/components/dialog-connect-provider.css",
+        "sha": "a40ef1abc1495293af6275b30b831212d45ccd8f",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/src/components/dialog-connect-provider.tsx",
+        "sha": "f26cd20c9b74d1a82a883bbac6bda1597ea97cea",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/components/settings-v2/view/settings-view.css",
+        "sha": "3ee64477fb6151d9ae83db3f15814a21ebda28b1",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+        "sha": "a96c1e62d8b70014917cd99dfccdb4c65c689160",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/context/global-sync/bootstrap.ts",
+        "sha": "614e23524ef597ecffeac3111b997bd7a66189f1",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/DESIGN.md",
+        "sha": "8b08c1fb20d7075b3afb21c60ce2ef48eb0d430e",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+        "sha": "501ebc57404e2e3d5f7755c7066ff7c5225ceec6",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+        "sha": "4eb7154628357f5dc6ef570acd72f09f21564ce5",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+        "sha": "d028b56c1e83105b7b15e123a9c9450d9875b3be",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+        "sha": "724ea731528e8d0744d40e158a4d3b77b37c49e0",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+        "sha": "19041b50a842bace6b25f5ddb4058252a903db50",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/planning.css",
+        "sha": "c850d5cdc98b32d8f6d463041d27d375a194bb72",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-amoled.css",
+        "sha": "2511fb18f524e0759a3be4748c4bda0f2ca6b472",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-github.css",
+        "sha": "cb9859c424a2cb7a9387522a30c7d801f15168fe",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-graphite.css",
+        "sha": "4f988690e750f9eea8cec829b35440ba0038da33",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-gruvbox.css",
+        "sha": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-nord.css",
+        "sha": "4415c05c92279e52e73b7637e89dfb0b59ab281e",
+        "status": "modified"
+      }
+    ],
+    "exactCopiedPaths": 22,
+    "overlap": [],
+    "verification": {
+      "exactPaths": 22,
+      "overlapPaths": 0,
+      "prior715Unchanged": 21,
+      "prior715LegitimatelyAdvanced": [
+        "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "packages/app-shell/src/orchestra/DESIGN.md"
+      ],
+      "reviewers": [
+        "root",
+        "final_records",
+        "final_routines"
+      ],
+      "recordsDependencyParity": "imports/,documents/,operations.spec.ts,operations-support/,six shared navigation/capture/installation helpers exact to RecordsR15. CAP23 only gains32px logical native-arrow padding; handlers/options/payload/CAS unchanged.",
+      "routineDependencyScope": "No routines/host/context/shared/workflows/i18n/client/Core/schema changes; new CSS selectors absent from four routine leaves. Original R18 not rerun or relabeled as post716."
+    }
+  },
+  "technicalRecallFollowup": {
+    "branch": "ci-run-linux-sf-final14-gate19-20261123",
+    "product": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+    "snapshot": "ffd074c142b144ed1555bdde0bcbd06865893455",
+    "tree": "702fba222bc89b28d6c6b61712bfd593bf97dfe4",
+    "status": "PASSED",
+    "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "checks": [
+      "app-shell typecheck",
+      "guardrails",
+      "app-shell e2e typecheck"
+    ],
+    "reason": "Two UI62 product files and its permanent negative E2E spec changed after Gate18; backend, Core, CLI, client, schema and generated palettes unchanged",
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-final14-verification.test.ts"
+    ],
+    "run": 45126501994,
+    "job": 137531935301,
+    "cleanupJob": 137532374110,
+    "conclusion": "success",
+    "guard": {
+      "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "rules": 78,
+      "files": 140,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 15,
+      "warningRules": [
+        "test-timeout-raised"
+      ],
+      "touchesGuards": false
+    },
+    "commands": [
+      {
+        "gate": "app-shell typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "fetch pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "resolve pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "guardrails",
+        "exitCode": 0
+      },
+      {
+        "gate": "app-shell e2e typecheck",
+        "exitCode": 0
+      }
+    ],
+    "summaries": [
+      " 3 pass",
+      " 0 fail",
+      " 7 expect() calls"
+    ]
+  },
+  "technicalCompositionFollowup": {
+    "branch": "ci-run-linux-sf-final14-gate20-20261123",
+    "product": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "snapshot": "f8091e294ba66a5fa3c190eb8a422aafe583b88f",
+    "tree": "26afb06aa81486db9ab3edb3e0b6f79d3a61ca31",
+    "status": "PASSED",
+    "guardBase": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+    "checks": [
+      "app-shell typecheck",
+      "guardrails",
+      "palette byte parity",
+      "app-shell e2e typecheck"
+    ],
+    "reason": "Compose all 22 exact PR716 upstream blobs; no overlap or backend/client/Core/schema changes. The inherited Settings stylesheet and five generated palette outputs require final parity check.",
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-final14-verification.test.ts"
+    ],
+    "run": 45126798245,
+    "job": 137532884939,
+    "conclusion": "success",
+    "cleanupJob": 137533439523,
+    "guard": {
+      "base": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+      "rules": 78,
+      "files": 140,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 15,
+      "warningRules": [
+        "test-timeout-raised"
+      ],
+      "touchesGuards": false
+    },
+    "commands": [
+      {
+        "gate": "app-shell typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "fetch pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "resolve pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "guardrails",
+        "exitCode": 0
+      },
+      {
+        "gate": "palette generation",
+        "exitCode": 0
+      },
+      {
+        "gate": "palette byte parity",
+        "files": 7,
+        "changed": []
+      },
+      {
+        "gate": "app-shell e2e typecheck",
+        "exitCode": 0
+      }
+    ],
+    "summaries": [
+      " 4 pass",
+      " 0 fail",
+      " 11 expect() calls"
+    ],
+    "palette": {
+      "gate": "palette byte parity",
+      "files": 7,
+      "changed": []
+    }
+  },
+  "recallUx": {
+    "source": "8b6a897f26b607819bbd7f2f310a06496e117e80",
+    "composition": "77559bc2c37ababd26e2adbcb79291a4d39fd8bb",
+    "reviewers": [
+      "root",
+      "final_routines",
+      "final_records"
+    ],
+    "paths": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-memory-recall-unavailable.spec.ts",
+        "sha": "0e4923bed38807fc370304f3e32efeff6849f56e"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+        "sha": "33695689832e97eb3d1f9c613ce44e6e786f27e7"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts",
+        "sha": "7b8fd316a56b58d01b52a4532f2babf1ceeac640"
+      }
+    ],
+    "positiveSpec": "719e7416e91fb4276236ff6324c8ff3e6e02e57a",
+    "positiveAssertions": 114,
+    "sourceResponse": {
+      "httpStatus": 503,
+      "status": "unavailable",
+      "reason": "similarity-source-unavailable"
+    },
+    "exclusiveCause": "not-established",
+    "status": "ORIGINAL_SOURCE_REFUSAL_QUALIFIED",
+    "visualSpecSource": "aa15b6d8fc2ace24a49131447ffecd3fcf3db910",
+    "finalComposition": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+    "proof": {
+      "run": 45126521339,
+      "job": 137531996165,
+      "snapshot": "1fd0a8010947a0e86be5dc2d83e1dda8abe2884e",
+      "tree": "b16a28a4cd8d20de7c8190f1d2f855795541de5e",
+      "product": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "status": "PASSED",
+      "snapshotOnlyPaths": [
+        ".ci-run.json"
+      ],
+      "passed": 1,
+      "failed": 0,
+      "minutes": 6.3,
+      "captures": 6,
+      "jpegPreviews": 5,
+      "locales": [
+        "en",
+        "pt-BR"
+      ],
+      "requestsEach": 1,
+      "httpStatus": 503,
+      "originalBody": {
+        "status": "unavailable",
+        "reason": "similarity-source-unavailable"
+      },
+      "closedDecodePassed": true,
+      "positiveQualified": false,
+      "eachLocaleConsoleErrors": {
+        "allowedExactOriginal503": 1,
+        "unexpected": 0,
+        "pageErrors": 0
+      },
+      "artifact": {
+        "id": 14796665565,
+        "bytes": 4973273,
+        "sha256": "daaf2f70e83b468589022e8dbfa12307fd93a1f9290b9d2d140106176359bc50"
+      }
+    }
+  },
+  "qualificationStatus": "QUALIFIED_FOR_MERGE_WITH_DOCUMENTED_SOURCE_LIMITS"
 }

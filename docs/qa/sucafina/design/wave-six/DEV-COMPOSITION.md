@@ -93,18 +93,60 @@ O único cruzamento de produto é `local-administration/administration.css`: a r
 
 As mudanças em `SfRecordDetail`, `SfTable` e seletores de outros capítulos não são dependências das folhas deste lote, conforme revisão de imports, seletores e estilos compartilhados. Não houve alteração de backend, cliente, schemas, registro de rotas, transporte, frame, estados, tokens ou paleta nesse avanço. A árvore agregada de app-shell mudou pelo upstream; não é apresentada como byte-idêntica à execução R18. A evidência anterior é reaproveitada somente nos caminhos cuja dependência permaneceu intacta.
 
-Dos 239 arquivos originalmente exclusivos de #710, 238 continuam sem diferença final. O guia nativo recebeu uma inserção de 6.798 caracteres antes da seção Planner; a comparação confirma que seus 11.731 caracteres originais permanecem intactos e na mesma ordem. Isso é uma atualização documental intencional posterior, separada da preservação byte a byte comprovada no merge de #710.
+Na conferência após #715 e antes de #716, dos 239 arquivos originalmente exclusivos de #710, 238 continuavam sem diferença. O guia nativo recebeu uma inserção final de 7.218 caracteres antes da seção Planner; a comparação confirma que seus 11.731 caracteres originais permanecem intactos e na mesma ordem. Isso é uma atualização documental intencional posterior, separada da preservação byte a byte comprovada no merge de #710.
+
+## Integração posterior de dev — PR #716
+
+O merge `8b8a9eb153374031d88315195b4af2b1a25eae19`, árvore `80d9d21f2779c1888efa09e927c408a9aed03763`, tem os pais `00543f1afdfb50b72fb287c183ded32968db2ba0` e `b71ecbcc644ee3363ccd1ce0e149c08c80e6130e`. A comparação dos 137 paths próprios com os 22 paths desse avanço encontrou zero sobreposição. Todos os 22 blobs foram copiados exatamente do upstream. Dos 23 blobs exclusivos de #715, 21 permanecem idênticos; `chapter-providers.spec.ts` e `orchestra/DESIGN.md` avançam legitimamente para os blobs de #716. A regra combinada de Administração local permanece uma única vez.
+
+O avanço modifica Settings, o diálogo de providers, o tratamento de cancelamento de uma leitura de providers substituída, apresentações de Decisions e o espaço reservado à seta dos selects do Planner. As cinco paletas geradas mudam apenas o foco dos radios de permissão de Settings. Não muda produtores SF, grants, schemas, rotas, cliente, Core ou CLI. A composição executa novamente os checks afetados de tipos app-shell, guards contra o novo dev, geração/paridade de paletas e tipos E2E; o resultado primário está na matriz central.
+
+A revisão de dependências não encontrou mudanças nos quatro ramos de Rotinas exercitados em R18. Os novos seletores não aparecem nessas folhas. Registros conserva suas folhas, dicionários, spec, `operations-support/` e os seis helpers compartilhados exatos a R15. A precondição CAP23 recebe somente padding lógico de 32px para a seta nativa; markup, opções, handlers, produtores, payloads e CAS não mudam. A leitura de providers preserva as falhas comuns e trata somente o cancelamento real da consulta substituída. Essas são conclusões de revisão de fonte; não são novas execuções das jornadas.
+
+## Candidato final e fronteiras de paridade
+
+Candidato de código: `8b8a9eb153374031d88315195b4af2b1a25eae19`. Os SHAs foram consultados na API Git após a composição #716:
+
+| Parte | SHA |
+| --- | --- |
+| App-shell fonte | `80a1992c0c89e68550e2a88273554f358506298f` |
+| App-shell E2E | `d0f1211921434c7dbe24994ec6739e566298a09e` |
+| Sucafina nativa | `6e3bb88d38e9246d7acb368e2a55af51622c2b9f` |
+| CLI fonte | `00d7f39405ffaf63925f80af355af5267f82d89a` |
+| CLI testes | `04ba93588dedf41adfd8444b051e6cd13976f183` |
+| Core | `2fa2ba3b0cb0346c2b934ca0cdf3081db86fc176` |
+| Schemas | `65ad5f67d9a5f35054f77e78bd475f8c584167ae` |
+| Cliente fonte | `6d4a0891c055c4944c43b3cf66483944c4c691ae` |
+| Cliente testes | `c42361fb7ecec4a09cdf4bf3277643e7d9ad9e96` |
+| Registro de rotas | `6e1e711e2ff3a95e460026053cb91772693da572` |
+
+CLI fonte/testes continuam exatos ao Native69. Core, schema e os ramos do cliente continuam qualificados pelo Gate17. Não se afirma igualdade da árvore agregada do app-shell entre jornadas de datas diferentes: a revisão identifica as folhas e dependências preservadas, e cada imagem conserva seu próprio source.
+
+Depois de #715, UI61 recebeu cancelamento local de materialidade, bloqueio de clique duplicado, fences de identidade e três pares de copy. UI62 recebeu uma mensagem específica somente após a recusa original fechada `similarity-source-unavailable`, preservando pergunta e candidatos e limpando o aviso ao mudar critérios. A resposta de sucesso, DTOs e autorizações permanecem intactos. As 114 expectativas do spec positivo de Memória continuam preservadas; seu resultado positivo não é qualificado por um teste de recusa.
+
+## Execuções finais e preservação dos oráculos
+
+| Lane | Fonte de código | Snapshot |
+| --- | --- | --- |
+| Gate17 completo | `d62c4b500695d248240a48944461a0d2262a589f` | `f76d89f2b6b4791034da108c5a6f80840da2e11e` |
+| Gate18, observação POST | `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7` | `9e4a5a13f80b25f260eb2f0e61447de016966dd5` |
+| Gate19, UI62 final | `c59e406da0585a5b78f04e0689ba73ef48a3e9fe` | `ffd074c142b144ed1555bdde0bcbd06865893455` |
+| Gate20, composição #716 | `8b8a9eb153374031d88315195b4af2b1a25eae19` | `f8091e294ba66a5fa3c190eb8a422aafe583b88f` |
+| Registros R15 | `d5f620aeee7a9db0e83d195ffada03c703f3a59d` | `f312587515353b15f59c5c362678d3090e167677` |
+| UI69 após #715 | `722b703b060e5cc578fa8d23568b3f9c56d72077` | `4d1aa02cca18a6116933c9a23acf50767fba6271` |
+| UI61 cancelamento R15 | `d62c4b500695d248240a48944461a0d2262a589f` | `b0931669e80589776a6ce8a1e63b8957a5e2d280` |
+| UI62 recusa R17 | `c59e406da0585a5b78f04e0689ba73ef48a3e9fe` | `1fd0a8010947a0e86be5dc2d83e1dda8abe2884e` |
+
+Gate17 passou nove checks, incluindo 12 testes de codecs/243 asserts, 11 regressões existentes/37 asserts e um skip preexistente. Gate18 passou os dois checks afetados após o observador POST. Gate19 passou os três checks afetados após os dois arquivos de produto UI62 e seu spec negativo: tipos app-shell, guards e tipos E2E. Os resultados e contadores de todos os gates constam de [technical.json](technical.json); a [matriz final](VALIDATION.md) registra Gate20 com quatro checks aprovados contra o dev de #716 e R17 com a jornada EN/pt-BR aprovada. Gate20 manteve as sete saídas geradas sem diferença; 78 regras examinaram 140 paths, com zero erros/exceções e 15 avisos de declaração de prazo.
+
+Registros R15 passou as quatro jornadas, incluindo as precondições CAP23/CAP27 que usam os componentes S01 alterados por #715. Administração local passou sua jornada original depois de #715. O wrapper desse focal só seleciona por arquivo o corpo original byte-idêntico; a tentativa anterior com `--grep` foi recusada pelo validador antes de qualquer teste e não é uma falha funcional da tela.
+
+As duas jornadas UI61 de cancelamento passaram com um GET nativo por consulta, `net::ERR_ABORTED`, condições preservadas e zero reenvio automático. Elas não qualificam resultado positivo de materialidade/sinais, parada remota, rollback nem chegada tardia de corpo. O R16 qualificou a observação da recusa original 503; o positivo continuou falhando em seu requisito 200 e na expectativa de console. O spec negativo R17 passou em EN/pt-BR, é separado, preserva o original e verifica explicitamente a resposta fechada, a retenção dos critérios e a ausência de falso vazio. Houve um POST e um erro de console503 da URL exata por locale, sem erro inesperado ou erro de página.
+
+Snapshots de CI conservam apenas o pedido original e, quando necessário, wrappers descartáveis. Nenhum `.ci-run.json`, wrapper técnico, permissão nova, alteração de workflow/Azure ou allowlist entra no produto. Os arquivos de teste permanentes preservam os prazos originais e não criam respostas de sucesso.
 
 ## Revisão e integração
 
-O código composto `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7` conserva CLI fonte/testes, Core, schemas e cliente do checkpoint já qualificado. Sua árvore de app-shell fonte é `24c59a46f0dfefb1181e3a4ec2cb7c1a3a225216` e o subtree nativo é `2d887bfe1c116d2fee2748d644dd243de130afa5`. A mudança posterior a #715 em produto se limita à consulta local de materialidade: cancelamento, bloqueio de clique duplicado, fences de identidade e três pares de copy. Os campos e a semântica de resultados UI63 não mudaram; UI62 retorna seu consumidor separado antes desse estado local.
+A revisão compartilhada cobriu admissões independentes, revogação, identidade depois da limpeza, origem privada, época de configuração, cópia EN/pt-BR e conservação dos corpos originais. As revisões visuais e seus enquadramentos estão na [galeria](evidence/README.md).
 
-Gate17 passou nove checks no source `d62c4b500695d248240a48944461a0d2262a589f`, snapshot `f76d89f2b6b4791034da108c5a6f80840da2e11e`, [run 45122426354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122426354). O base é `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`: 78 regras, 105 paths, zero erros, zero exceções aprovadas e 13 avisos de declaração de prazo. Gate18 verifica apenas guards e tipos E2E após dois arquivos de observação de recall; os outros caminhos de runtime não foram alterados.
-
-Registros R15 passou as quatro jornadas no source `d5f620aeee7a9db0e83d195ffada03c703f3a59d`, snapshot `f312587515353b15f59c5c362678d3090e167677`, [run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778). Isso inclui as precondições CAP23/CAP27 que usam os componentes S01 alterados pelo upstream. O source posterior do Gate17 conserva os quatro helpers de Registros exatos; o único delta foi UI61 e seu spec de cancelamento.
-
-Administração local passou a jornada original depois de #715: source `722b703b060e5cc578fa8d23568b3f9c56d72077`, snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`, [run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514). O wrapper apenas seleciona por arquivo o corpo original byte-idêntico, conserva todos os oráculos e não entra no produto. A tentativa anterior com `--grep` foi recusada pelo validador do pedido antes de qualquer teste; não é uma falha funcional da tela.
-
-A revisão compartilhada cobriu admissões independentes, revogação, identidade depois da limpeza, origem privada, época de configuração e conservação dos corpos originais. As revisões visuais e seus enquadramentos estão na [galeria](evidence/README.md).
-
-A autorização da sessão abrange o merge em `dev`. O [PR #713](https://github.com/gustavomhss/Orchestra-SF/pull/713) é a fonte de autoridade sobre o estado efetivo e o SHA do merge. Documentação e evidências posteriores ao candidato de código não são apresentadas como novas alterações de runtime.
+A autorização da sessão abrange o merge em `dev`. O [PR #713](https://github.com/gustavomhss/Orchestra-SF/pull/713) é a autoridade sobre o estado efetivo e o SHA do merge. Documentação e evidências posteriores ao candidato de código não são apresentadas como novas alterações de runtime.
