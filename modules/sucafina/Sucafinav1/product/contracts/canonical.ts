@@ -1,5 +1,5 @@
 /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
-import { sfCanonicalCloneBytes } from "./canonical-clone.ts"
+import { sfCanonicalCloneTree } from "./canonical-clone.ts"
 import type { BusinessEvidenceRef } from "./business-context.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 
@@ -174,7 +174,9 @@ export function sfCanonicalSerializerUnhooked() {
 }
 
 export function canonicalSfValue(value: unknown): string {
-  return sfCanonicalCloneBytes(value) ?? JSON.stringify(canonical(value))
+  const tree = sfCanonicalCloneTree(value)
+  if (tree) return JSON.stringify(tree)
+  return JSON.stringify(canonical(value))
 }
 
 export function digestSfValue(value: unknown): string {
