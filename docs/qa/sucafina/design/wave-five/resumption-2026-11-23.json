@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Await all six original full campaigns on 97c921ab, review their actual native visual evidence and exact-source results, then apply the prepared documentation closure plan in two phases: qualified but unmerged at55/70, followed by merge-confirmed70/70."
   },
-  "updatedAt": "2026-11-23T17:01:43Z",
+  "updatedAt": "2026-11-23T17:05:16Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3290,6 +3290,16 @@
       ],
       "archivedVisualJpegsFromCandidateAgent": 132,
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:05:16Z",
+      "status": "C3_RELEASE_FAILED_RA4_HISTORICAL_MEASUREMENT_FAILED",
+      "failedRuns": [
+        45222235167,
+        45220898500
+      ],
+      "currentCandidate": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -3355,7 +3365,7 @@
     "fullCampaignQualification": false,
     "fullCampaigns": {
       "round": "C3",
-      "status": "PENDING",
+      "status": "FAILED_RELEASE_WITH_FIVE_PENDING",
       "qualification": false,
       "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
@@ -3396,16 +3406,97 @@
           "branch": "ci-run-linux-sf613-release5",
           "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
           "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
-          "status": "PENDING",
+          "status": "FAILED",
           "qualification": false,
           "workflowObservation": {
-            "observedAt": "2026-11-23T17:01:43Z",
-            "status": "in_progress",
-            "conclusion": null,
+            "observedAt": "2026-11-23T17:05:16Z",
+            "status": "completed",
+            "conclusion": "failure",
             "createdAt": "2026-11-23T16:57:10Z",
-            "updatedAt": "2026-11-23T16:57:13Z"
+            "updatedAt": "2026-11-23T17:01:07Z"
           },
-          "result": null
+          "result": {
+            "outcome": "FAILED_ORIGINAL_C17_DEADLINE_IN_FULL_RELEASE_CAMPAIGN",
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "testJob": {
+              "id": 137859265541,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:00:57Z"
+            },
+            "cleanupJob": {
+              "id": 137861714442,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:01:06Z"
+            },
+            "wrapper": {
+              "passed": 4,
+              "failed": 1
+            },
+            "successfulUnderlyingGroups": [
+              {
+                "name": "Planner projection references",
+                "passed": 12,
+                "failed": 0
+              },
+              {
+                "name": "Canonical/Release controls including P18",
+                "passed": 11,
+                "failed": 0
+              },
+              {
+                "name": "UI authority and context integrity",
+                "passed": 27,
+                "failed": 0
+              }
+            ],
+            "storageGroup": {
+              "passed": 59,
+              "skipped": 2,
+              "failed": 1,
+              "skips": "Original inherited skips; unchanged."
+            },
+            "C17": {
+              "originalCooperativeDeadlineMs": 105000,
+              "observedTestDurationMs": 105005.53,
+              "outer": {
+                "businessObservationElapsedMs": 87711,
+                "phaseMs": 87712,
+                "elapsedMs": 88954,
+                "businessResultsReadForCalculationCalls": 1952,
+                "businessResultsReadForCalculationCompleted": 1952,
+                "aborted": false
+              },
+              "reopen": {
+                "phaseMs": 6,
+                "elapsedMs": 88962,
+                "aborted": false
+              },
+              "ancestry": {
+                "phaseMs": 16040,
+                "elapsedMs": 105002,
+                "aborted": true
+              },
+              "cycleAndRevocationReached": false,
+              "counterInterpretation": "business.results.readForCalculation calls; not SQL queries or Planner prepares."
+            },
+            "runtime": {
+              "version": "1.4.1",
+              "revision": "4661e494f052c83c80dade1318e5710238340be6",
+              "cloneTreeAdmitted": false,
+              "nativeFallbackBytesMatched": true
+            },
+            "omni": {
+              "declaredTests": 5,
+              "spawns": 9,
+              "delegated": 0,
+              "passed": true
+            },
+            "qualification": false,
+            "artifactReleaseQualification": false,
+            "countInterpretation": "Wrapper and underlying groups remain separate.",
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222235167/job/137859265541"
+          }
         },
         {
           "name": "analytics",
@@ -3597,15 +3688,99 @@
         "run": 45220898500,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45220898500",
         "snapshot": "2699b9d8617b3f449c240e81acbcfcde9753c01f",
-        "status": "PENDING",
+        "status": "FAILED",
         "workflowObservation": {
-          "observedAt": "2026-11-23T17:01:43Z",
-          "status": "in_progress",
-          "conclusion": null,
-          "updatedAt": "2026-11-23T16:49:55Z"
+          "observedAt": "2026-11-23T17:05:16Z",
+          "status": "completed",
+          "conclusion": "failure",
+          "updatedAt": "2026-11-23T17:02:32Z"
         },
         "qualification": false,
-        "role": "Historical P18 source measurement without the new CSS; not current candidate qualification."
+        "role": "Historical P18 source measurement without the new CSS; not current candidate qualification.",
+        "result": {
+          "outcome": "FAILED_ORIGINAL_PORTFOLIO_PREVIEW_RESPONSE_DEADLINE",
+          "source": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+          "sourceTree": "f5ac369ca2a3c23e939ac0fa259eb6e861aab83c",
+          "testJob": {
+            "id": 137854537221,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T17:02:22Z"
+          },
+          "cleanupJob": {
+            "id": 137862668744,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T17:02:31Z"
+          },
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "failure": {
+            "operation": "decision-portfolio-preview",
+            "originalDeadlineMs": 60000,
+            "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for response",
+            "observedLeaf": "Running / Preview unavailable",
+            "UI43UI44Reached": false
+          },
+          "success": "Original BI EN/PT journey completed.",
+          "previewEvidence": {
+            "jpegCount": 47,
+            "chunkLines": 212,
+            "names": [
+              "UI42-list-dark-desktop-test-data",
+              "UI42-list-light-desktop-test-data",
+              "UI42-list-dark-390-test-data",
+              "UI42-list-light-320-test-data",
+              "UI42-empty-authorized-case-test-data",
+              "UI42-configure-focused-candidate-test-data",
+              "FAILED-native-wave-three-test-data",
+              "UI45-question-catalog-dark-desktop-test-data",
+              "UI45-question-catalog-light-desktop-test-data",
+              "UI45-question-catalog-dark-390-test-data",
+              "UI45-question-catalog-light-320-test-data",
+              "UI45-authorized-financial-context-test-data",
+              "UI45-financial-source-values-test-data",
+              "UI46-financial-selected-context-test-data",
+              "UI46-financial-original-values-dark-desktop-test-data",
+              "UI46-financial-original-values-light-desktop-test-data",
+              "UI46-financial-original-values-dark-390-test-data",
+              "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+              "UI46-financial-original-values-light-320-test-data",
+              "UI46-financial-original-values-light-320-scrolled-values-test-data",
+              "UI46-financial-source-table-dark-desktop-test-data",
+              "UI46-financial-source-table-light-desktop-test-data",
+              "UI46-financial-source-table-dark-390-test-data",
+              "UI46-financial-source-table-light-320-test-data",
+              "UI46-resolved-original-source-1-test-data",
+              "UI46-resolved-original-source-2-test-data",
+              "UI46-operations-original-coverage-test-data",
+              "UI46-operations-original-values-dark-desktop-test-data",
+              "UI46-operations-original-values-light-desktop-test-data",
+              "UI46-operations-original-values-dark-390-test-data",
+              "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+              "UI46-operations-original-values-light-320-test-data",
+              "UI46-operations-original-values-light-320-scrolled-values-test-data",
+              "UI46-operations-original-table-dark-desktop-test-data",
+              "UI46-operations-original-table-light-desktop-test-data",
+              "UI46-operations-original-table-dark-390-test-data",
+              "UI46-operations-original-table-light-320-test-data",
+              "UI46-operations-dark-320-test-data",
+              "UI46-operations-resolved-original-source-test-data",
+              "UI46-source-empty-sensitivity-catalog-test-data",
+              "UI45-pt-BR-dark-desktop-catalog-test-data",
+              "UI46-pt-BR-dark-desktop-values-test-data",
+              "UI46-pt-BR-dark-320-values-test-data",
+              "UI46-pt-BR-dark-desktop-operations-test-data",
+              "UI46-pt-BR-dark-320-operations-test-data",
+              "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+              "UI46-pt-BR-dark-320-operations-scrolled-units-test-data"
+            ],
+            "visuallyReviewed": false,
+            "interpretation": "Names/count reconstructed from log only; no claim of pixel or archive inspection."
+          },
+          "qualification": false,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45220898500/job/137854537221"
+        }
       }
     ]
   },
