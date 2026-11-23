@@ -93,7 +93,7 @@ export function withNativeInstallation(input: {
       const failed = input.memoryPrecedent && /^SF_NATIVE_MEMORY_FAILED (input|owner|scanner|manifest|admission|case|ledger|publication|receipt) ([a-z-]+)$/.exec(line)
       if (failed) return Effect.asVoid(Deferred.fail(published, new Error("Canonical memory precedent preparation failed: " + failed[1] + " (" + failed[2] + ")")))
       return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
-    }))))
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
