@@ -188,11 +188,20 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       expect(contextResponse.status()).toBe(200)
       const current = Schema.decodeUnknownSync(SfContextResult)(await contextResponse.json())
       if (current.status !== "ok") throw new Error("The native scenario owner could not be read")
-      const reported = current.value.availability.flatMap((resource) => resource.family === "files" ? resource.operations : [])
-      for (const operation of ["files.document-candidates", "files.document-scenario-targets", "files.document-scenario-preview"]) {
-        const matches = reported.filter((entry) => entry.operationId === operation)
-        expect(matches).toHaveLength(1)
-        expect(matches[0]).toMatchObject({ state: "ready", operational: true })
+      // The original F01 catalog publishes candidates in both documents and
+      // evidence. Scenario target/preview operations belong to their own resource.
+      for (const [resource, operations] of [
+        ["documents", ["files.document-candidates"]],
+        ["evidence", ["files.document-candidates"]],
+        ["document-scenario", ["files.document-scenario-targets", "files.document-scenario-preview"]],
+      ] as const) {
+        const resources = current.value.availability.filter((entry) => entry.family === "files" && entry.resource === resource)
+        expect(resources).toHaveLength(1)
+        for (const operation of operations) {
+          const matches = resources[0].operations.filter((entry) => entry.operationId === operation)
+          expect(matches).toHaveLength(1)
+          expect(matches[0]).toMatchObject({ state: "ready", operational: true })
+        }
       }
       await enterNativeScenario(page, account, confirmed.fileRef)
       const surface = page.locator('[data-sf-surface="UI60"]')
