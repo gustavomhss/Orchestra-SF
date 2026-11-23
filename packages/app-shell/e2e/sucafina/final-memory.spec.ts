@@ -5,6 +5,7 @@ import { captureFinalSurface } from "./design-support/final-capture"
 import { finalMemoryData, seedFinalMemory } from "./design-support/final-memory-seed"
 import { withFinalMemoryPortuguese } from "./design-support/final-memory-browser"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
+import { finalMemoryPlans } from "./design-support/final-memory-inventory"
 
 waveFourTest.use({ designWave: "four-decisions" })
 waveFourTest.beforeEach(async ({ page }, info) => {
@@ -22,12 +23,12 @@ function summaryMutation(request: Request) {
   } catch { return false }
 }
 
-async function selectMemory(page: Page, reference: string, localized = false) {
+async function selectMemory(page: Page, reference: string, area: "UI61" | "UI63", localized = false) {
   const picker = page.locator("[data-sf-memory-case]")
   await expect(picker.locator("option", { hasText: finalMemoryData.objective })).toHaveCount(1)
   await picker.selectOption(reference)
   await page.getByRole("button", { name: localized ? "Consultar caso autorizado" : "Read authorized case", exact: true }).click()
-  await expect(page.locator("[data-sf-condition-id]")).toHaveCount(1)
+  await expect(page.locator(area === "UI61" ? "[data-sf-condition-id]" : "[data-sf-memory-choice]")).toHaveCount(1)
 }
 
 waveFourTest("UI61–UI63 · original condition, month outcome and authorized case recall", async ({ page, browser, installation, owner }, info) => {
@@ -52,14 +53,54 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
       memoryWrites.push(url.searchParams.get("sf")!)
   })
 
+  await waveFourTest.step("UI63 opens a real recorded choice without a condition and reopens its opaque outcome locator", async () => {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes", "Expected and observed")
+    await scheme(page, "dark")
+    const surface = page.locator('[data-sf-surface="UI63"]')
+    await selectMemory(page, seeded.reference, "UI63")
+    expect(seeded.initialConditionCount).toBe(0)
+    await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
+    const choice = surface.locator('[data-sf-memory-choice="' + seeded.choiceId + '"]')
+    await expect(choice).toContainText(finalMemoryPlans.candidate)
+    await expect(choice).toContainText(finalMemoryData.reason)
+    await choice.getByRole("button", { name: "Review choice outcome", exact: true }).click()
+    const outcome = surface.locator("[data-sf-memory-outcome]")
+    await expect(outcome).toBeVisible()
+    await expect(outcome.locator("[data-sf-memory-expected]")).toHaveText(String(seeded.expected) + " USD")
+    await expect(outcome.locator("[data-sf-memory-observed]")).toHaveText(String(seeded.observed) + " USD")
+    await expect(outcome.locator("[data-sf-memory-delta]")).toHaveText(String(seeded.delta))
+    await expect(outcome).toContainText("No causal attribution is made from an observed difference.")
+    await expect(choice.getByRole("button", { name: "Review choice outcome", exact: true })).toHaveAttribute("aria-expanded", "true")
+    await scrollPageTop(page)
+    await captureFinalSurface(page, info, "UI63", "dark-desktop-recorded-choice-no-condition", { preview: true })
+    await surface.locator("[data-sf-memory-case]").selectOption("")
+    await expect(outcome).toBeHidden()
+    await expect(surface.locator("[data-sf-memory-choice]")).toHaveCount(0)
+    await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
+    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed")
+    await expect(outcome).toBeVisible()
+    await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
+    await captureFinalSurface(page, info, "UI63", "dark-desktop-source-comparison")
+    await scheme(page, "light")
+    await captureFinalSurface(page, info, "UI63", "light-desktop-source-comparison")
+    await page.setViewportSize({ width: 320, height: 900 })
+    await reflow(page)
+    await captureFinalSurface(page, info, "UI63", "light-320-source-comparison")
+  })
+
+  const registered = await seeded.registerCondition()
+
   await waveFourTest.step("UI61 selects the original case, reopens its registered condition and clears detail on a new selection", async () => {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await scheme(page, "dark")
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/signals", "Signals")
     const surface = page.locator('[data-sf-surface="UI61"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "six")
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
     await captureFinalSurface(page, info, "UI61", "dark-desktop-case-selection")
-    await selectMemory(page, seeded.reference)
-    const condition = surface.locator('[data-sf-condition-id="' + seeded.conditionId + '"]')
+    await selectMemory(page, seeded.reference, "UI61")
+    const condition = surface.locator('[data-sf-condition-id="' + registered.conditionId + '"]')
     await expect(condition).toContainText(finalMemoryData.condition)
     await condition.getByRole("button", { name: "Review condition", exact: true }).click()
     const materiality = surface.locator("[data-sf-memory-materiality]")
@@ -80,30 +121,6 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
   })
 
-  await waveFourTest.step("UI63 compares only the original closed-month observation and reopens its opaque locator", async () => {
-    await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes", "Expected and observed")
-    await scheme(page, "dark")
-    const surface = page.locator('[data-sf-surface="UI63"]')
-    await selectMemory(page, seeded.reference)
-    await surface.getByRole("button", { name: "Review choice outcome", exact: true }).click()
-    const outcome = surface.locator("[data-sf-memory-outcome]")
-    await expect(outcome).toBeVisible()
-    await expect(outcome.locator("[data-sf-memory-expected]")).toHaveText(String(seeded.expected) + " USD")
-    await expect(outcome.locator("[data-sf-memory-observed]")).toHaveText(String(seeded.observed) + " USD")
-    await expect(outcome.locator("[data-sf-memory-delta]")).toHaveText(String(seeded.delta))
-    await expect(outcome).toContainText("No causal attribution is made from an observed difference.")
-    await enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed")
-    await expect(outcome).toBeVisible()
-    await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
-    await captureFinalSurface(page, info, "UI63", "dark-desktop-source-comparison", { preview: true })
-    await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI63", "light-desktop-source-comparison")
-    await page.setViewportSize({ width: 320, height: 900 })
-    await reflow(page)
-    await captureFinalSurface(page, info, "UI63", "light-320-source-comparison")
-  })
-
   await waveFourTest.step("UI62 sends a private recall question and explicit authorized candidates to the original producer", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, installation.origin + "/orchestra/sf-memory/cases", "Similar cases")
@@ -116,7 +133,8 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     await precedent.check()
     const response = page.waitForResponse((reply) => reply.request().method() === "POST" &&
       new URL(reply.url()).searchParams.get("sf") === "memory-similar-cases", { timeout: 40_000 })
-      .then(async (reply) => ({ status: reply.status(), url: reply.url(), body: reply.request().postDataJSON() as unknown }))
+      .then(async (reply) => ({ status: reply.status(), url: reply.url(), body: reply.request().postDataJSON() as unknown,
+        result: await reply.json() as unknown }))
     await surface.getByRole("button", { name: "Find similar cases", exact: true }).click()
     const original = await response
     expect(original.status).toBe(200)
@@ -124,7 +142,26 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     expect(page.url()).not.toContain(encodeURIComponent(query))
     expect(original.body).toMatchObject({ query, caseId: seeded.caseRef.id, incarnation: seeded.caseRef.incarnation,
       version: seeded.caseRef.version, period: seeded.period, includeHistorical: false })
-    await expect(surface.locator('[data-sf-state="loading"]')).toHaveCount(0)
+    const result = original.result
+    if (!result || typeof result !== "object" || !("status" in result) || result.status !== "ok" ||
+        !("matches" in result) || !Array.isArray(result.matches))
+      throw new Error("Original similar-case response omitted its authorized matches")
+    const matches: readonly unknown[] = result.matches
+    if (matches.length === 0) {
+      await expect(surface.getByText("No authorized matching cases were returned for this selection.", { exact: true })).toBeVisible()
+    } else {
+      await expect(surface.locator("[data-sf-similar-case]")).toHaveCount(matches.length)
+      for (const match of matches) {
+        if (!match || typeof match !== "object" || !("memoryRecordRef" in match) || typeof match.memoryRecordRef !== "string")
+          throw new Error("Original match omitted its evidence event")
+        const row = surface.locator("[data-sf-memory-record]").filter({ has: page.locator("strong", { hasText: waveFourDecisionsData.objective }) })
+        await expect(row).toHaveCount(matches.length)
+        const event = surface.locator('[data-sf-memory-record="' + match.memoryRecordRef + '"]')
+        await event.getByRole("button", { name: "Open original case", exact: true }).click()
+        await expect(surface.locator("[data-sf-similar-detail]")).toContainText(waveFourDecisionsData.objective)
+      }
+    }
+    await info.attach("UI62-original-recall-count", { body: JSON.stringify({ matchingCases: matches.length }), contentType: "application/json" })
     await captureFinalSurface(page, info, "UI62", "dark-desktop-original-recall", { preview: true })
     await scheme(page, "light")
     await captureFinalSurface(page, info, "UI62", "light-desktop-original-recall")
@@ -139,7 +176,7 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
 
   await withFinalMemoryPortuguese(browser, page, installation, async (localized) => {
     await enter(localized, owner, installation.origin + "/orchestra/sf-memory/signals", "Sinais")
-    await selectMemory(localized, seeded.reference, true)
+    await selectMemory(localized, seeded.reference, "UI61", true)
     await localized.getByRole("button", { name: "Revisar condição", exact: true }).click()
     await expect(localized.locator("[data-sf-memory-materiality]")).toBeVisible()
     await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
@@ -156,8 +193,9 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
   await info.attach("UI61-UI63-original-memory-evidence", { contentType: "application/json", body: JSON.stringify({
     areas: ["UI61", "UI62", "UI63"], source: "original human decision, memory and Planner HTTP producers",
     caseVersion: seeded.caseRef.version, period: seeded.period, expected: seeded.expected, observed: seeded.observed,
-    delta: seeded.delta, browserMemoryMutations: memoryWrites.length,
-    limitations: ["Other decision cost categories remain pending.", "No causal effect inferred.", "Actual browser zoom not measured."],
+    delta: seeded.delta, browserMemorySelectionCommands: memoryWrites.length,
+    choicesWithoutConditions: 1, initialConditionCount: seeded.initialConditionCount,
+    limitations: ["The separate original predecessor retains pending cost categories; the January inventory has nine producer-confirmed components.", "No causal effect inferred.", "Actual browser zoom not measured."],
   }, null, 2) })
 })
 
@@ -198,6 +236,10 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   await enter(page, owner, installation.origin + "/orchestra/sf-home/administration", "Local administration")
   const surface = page.locator('[data-sf-surface="UI69"]')
   await expect(surface).toHaveAttribute("data-sf-owner", "local-operator")
+  await expect(surface.locator("[data-sf-admin-access]")).toContainText("You are signed in as the local operator.")
+  await expect(surface.locator("[data-sf-admin-state]")).toHaveAttribute("data-sf-admin-state", "unavailable")
+  await expect(surface.locator("[data-sf-admin-state]")).toContainText("Notifications and backup history are currently unavailable")
+  await expect(surface.locator("[data-sf-backup], [data-sf-notification]")).toHaveCount(0)
   const settings = surface.locator("[data-sf-summary-settings]")
   const version = settings.locator("[data-sf-summary-version]")
   const before = Number(await version.textContent())
@@ -206,14 +248,14 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   const proposed = !await projects.isChecked()
   await projects.setChecked(proposed)
   await captureFinalSurface(page, info, "UI69", "dark-desktop-summary-settings", { preview: true })
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const review = settings.locator('[data-component="sf-change-review"]')
   await expect(review).toBeVisible()
   await expect(settings.locator("[data-sf-summary-form]")).toBeHidden()
   expect(writes).toEqual([])
   await review.getByRole("button", { name: "Revise", exact: true }).click()
   await expect(projects).toBeChecked({ checked: proposed })
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   await scheme(page, "light")
   await scrollPageTop(page)
   await captureFinalSurface(page, info, "UI69", "light-desktop-summary-review")
@@ -224,7 +266,7 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   await review.getByRole("button", { name: "Cancel review", exact: true }).click()
   await expect(projects).toBeChecked({ checked: proposed })
   expect(writes).toEqual([])
-  await settings.getByRole("button", { name: "Review", exact: true }).click()
+  await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const saved = page.waitForResponse((response) => summaryMutation(response.request())).then((response) => response.status())
   await review.getByRole("button", { name: "Save summaries", exact: true }).click()
   expect(await saved).toBe(200)

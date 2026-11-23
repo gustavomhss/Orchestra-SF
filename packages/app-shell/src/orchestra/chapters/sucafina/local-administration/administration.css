@@ -11,8 +11,11 @@
   color: var(--mx-strong);
   font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
 }
+.sf-u28-access { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sf-admin-small-gap) var(--sf-admin-row-gap); margin: 0 0 var(--sf-admin-gap); color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-u28-access strong { color: var(--mx-strong); font-weight: 600; }
+.sf-u28-source-status { min-inline-size: 0; }
 .sf-u28-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sf-admin-gap); min-inline-size: 0; }
-.sf-u28-layout > section, .sf-u28-summaries {
+.sf-u28-layout > section, .sf-u28-summaries, .sf-u28-source-status {
   min-inline-size: 0;
   padding: var(--sf-admin-padding);
   border: var(--sf-admin-hairline) solid var(--mx-line);

@@ -107,6 +107,7 @@ import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfRoutineReadingHealth } from "./native-ui/routine-health.ts"
 import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
@@ -1138,6 +1139,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
               operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
               producer, operation, business.withCase, business.cases, input.persistence] }
           } }, request, stamp),
+        observeSfRoutineReadingHealth({ ui: authority.ui, state: authority.state, persistence: input.persistence,
+          binding: input.nativeReadBinding, source: () => {
+            if (!identity() || services.nativeUiProducts !== nativeUiProducts) return undefined
+            const publication = routinePublication.publication()
+            return publication ? { producer: nativeUiProducts, publication, resources: routineRuntime.resources,
+              dependencies: [nativeUiProducts.routines, nativeUiProducts.withCase, business.cases, business.cases.read,
+                nativePhases.services.routines, nativePhases.services.readExecution, nativePhases.services.openResult,
+                services.routineEvidence, services.dispatch, authority, routineRuntime, routineOwners] } : undefined
+          },
+        }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
       return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])

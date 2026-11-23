@@ -9,7 +9,8 @@ import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
-import { captureRecord, captureRecordVariants, capturePortugueseRecord } from "./final-records"
+import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
+import { captureRecord, captureRecordVariants, captureRecordDetail, capturePortugueseRecord, describeRecordPage } from "./final-records"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -168,6 +169,7 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
 export async function documentJourney(page: Page, info: TestInfo) {
   const account = await login(page, "first", "suppliers")
+  const scenarioFixture = await prepareRecordScenario(page, account)
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
   const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
@@ -355,11 +357,12 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(register.getByRole("button", { name: "Scan and attach to record", exact: true })).toBeDisabled()
   await captureRecord(page, info, "UI58", "register-awaits-source")
   await register.locator("summary").click()
+  await document.selectOption({ value: selected[0]!.selectionRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
   await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
     await expect(localized.getByRole("option", { name: filename, exact: true })).toHaveCount(1)
+    await localized.getByRole("combobox", { name: "Documento", exact: true }).selectOption({ value: selected[0]!.selectionRef })
   })
-  await document.selectOption({ value: selected[0]!.selectionRef })
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([
     observe(page, endpoint("document-admit"), "POST", async (response) => {
@@ -482,6 +485,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(page).toHaveURL(scenarioURL.href)
   expect(await valueOf<DocumentEvidence[]>((await scenarioCandidates.completed).response)).toEqual([confirmed])
   const scenario = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI60"]')
+  await describeRecordPage(page, info, "scenario-candidates-read")
   const scenarioCard = scenario.locator(confirmedSelector)
   const scenarioAction = scenarioCard.getByRole("button", { name: scenarioLabel, exact: true })
   await expect(scenarioAction).toBeVisible()
@@ -494,7 +498,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
-  await captureRecordVariants(page, info, "UI60", "confirmed-evidence")
+  await previewRecordScenario(page, info, account, confirmed, scenarioFixture)
+  await captureRecordVariants(page, info, "UI60", "authorized-scenario-preview", false)
+  await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence", scenario.locator('[data-sf-scenario="preview"]'))
   await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
     await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
     await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
@@ -579,6 +585,6 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(readerCatalog.locator("[data-sf-evidence-id]")).toHaveCount(0)
   await expect(readerCatalog.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
-  await observation(info, "operations-document-real-reference", { supplier, asset: assetURL.searchParams.get("asset"), blobDigest, documentRef, schema, candidate, confirmed, scenario: "UI60 confirmed evidence read; Planner preview not proven by this fixture", sourceRevocation: { assetStatus: revokedAsset.status(), evidenceStatus: revokedSource.status(), candidateStatus: revokedCandidateRead.status(), discoveryCount: 0 }, supportedFormat: "UTF-8 text; no OCR assertion" })
+  await observation(info, "operations-document-real-reference", { supplier, asset: assetURL.searchParams.get("asset"), blobDigest, documentRef, schema, candidate, confirmed, scenario: "UI60 confirmed evidence and original Planner preview; exact target, document reference, domainApplied=false and unchanged baseline/CAS are attached separately", sourceRevocation: { assetStatus: revokedAsset.status(), evidenceStatus: revokedSource.status(), candidateStatus: revokedCandidateRead.status(), discoveryCount: 0 }, supportedFormat: "UTF-8 text; no OCR assertion" })
   await reader.close()
 }

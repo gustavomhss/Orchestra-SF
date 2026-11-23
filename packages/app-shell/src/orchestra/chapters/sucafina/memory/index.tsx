@@ -3,6 +3,7 @@ import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U26_COPY } from "@/i18n/orchestra-chapters/sf-u26"
 import { createSfMemoryClient } from "@orchestra/client/sucafina/memory"
+import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { SfMemory } from "@orchestra/schema/sucafina/memory"
 import { useSfContext } from "../context"
 import type { SfSurfaceProps } from "../context/contracts"
@@ -18,12 +19,14 @@ type Signals = Extract<typeof SfMemory.operations["intelligence.memory-signals"]
 type Material = Extract<typeof SfMemory.operations["intelligence.memory-materiality"]["output"]["Type"], { status: "ok" }>
 type Outcome = Extract<typeof SfMemory.operations["intelligence.memory-outcome"]["output"]["Type"], { status: "comparable" }>
 type CaseQuery = { caseId: string; incarnation: string; version: number }
+type RecordedChoice = { id: string; title: string; reason: string; at: string }
 type ReadState = "idle" | SfUiState
 type MemoryViewState = {
   caseId: string; incarnation: string; versionText: string
   active: CaseQuery | null
   catalog: readonly string[]
   conditions: Conditions
+  choices: readonly RecordedChoice[]
   signals: Signals
   selectedCondition: string
   selectedChoice: string
@@ -48,19 +51,21 @@ const stateFrom = (result: MemoryOperationResult): SfUiState => {
   }
 }
 
-const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "signals" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "listState" | "detailState" | "catalogState" | "message"> = {
-  active: null, catalog: [], conditions: [], signals: [], selectedCondition: "", selectedChoice: "",
+const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "listState" | "detailState" | "catalogState" | "message"> = {
+  active: null, catalog: [], conditions: [], choices: [], signals: [], selectedCondition: "", selectedChoice: "",
   material: null, outcome: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
 }
 
 /**
  * U26 / UI61–UI63. UI61/UI63 retain the seven A14 memory operations and use
- * the admitted C09 case catalogue for selection. UI62 delegates to the typed
+ * the admitted C09 case catalogue for selection. UI63 reads recorded choices
+ * from the original case projection; a signal condition is not a prerequisite.
+ * UI62 delegates to the typed
  * CaseRecall consumer. No new authority or server admission is derived here.
  */
 export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Element {
   // UI62 has a real C09/C17 producer and its own owner-fenced typed consumer.
-  // UI61/UI63 retain the original memory reads; the picker uses C09's case catalogue.
+  // The picker and recorded choices use C09; memory results remain original A14 reads.
   if (props.surfaceId === "UI62") return <SfSimilarCasesView {...(props as SfSurfaceProps<"UI62">)} />
   const owner = useSfContext()
   const language = useLanguage()
@@ -129,7 +134,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     requestEpoch += 1
     listAbort?.abort()
     detailAbort?.abort()
-    setView({ active: null, conditions: [], signals: [], material: null, outcome: null,
+    setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null,
       selectedCondition: "", selectedChoice: "", listState: "idle", detailState: "idle", message: null })
     setView(field, value)
   }
@@ -156,9 +161,47 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const epoch = requestEpoch
     const client = createSfMemoryClient(ready.transport)
     setView({
-      active: caseRef, conditions: [], signals: [], material: null, outcome: null,
+      active: caseRef, conditions: [], choices: [], signals: [], material: null, outcome: null,
       selectedCondition: "", selectedChoice: "", listState: "loading", detailState: "idle", message: null,
     })
+    if (props.surfaceId === "UI63") {
+      // Outcomes belong to recorded choices, including choices with no signal condition.
+      // The original C09 reader enforces current per-case authority and the F02 stamp.
+      if (!ready.context.availability.some((entry) => entry.operations.some((operation) =>
+        operation.operationId === "projection.case" && operation.state === "ready" && operation.operational))) {
+        setView("listState", "unavailable")
+        return
+      }
+      const result = await createSfDecisionsClient(ready.transport)["projection.case"]({
+        caseRef: "case:" + encodeURIComponent(caseRef.caseId) + ":" + encodeURIComponent(caseRef.incarnation),
+      }, { signal }).catch(() => undefined)
+      if (!current(epoch, generation, signal) || owner.ready() !== ready) return
+      if (result?.kind !== "response" || result.body.status !== "ok") {
+        setView({ choices: [], listState: result ? stateFrom(result) : "unavailable" })
+        if (result?.kind === "response" && result.body.status === "denied") setView("active", null)
+        return
+      }
+      const original = result.body.value.projection.case
+      if (original.id !== caseRef.caseId || original.incarnation !== caseRef.incarnation ||
+          original.version !== caseRef.version) {
+        setView("listState", "stale")
+        return
+      }
+      if (original.choices.some((choice) => !choice.id.trim()) ||
+          new Set(original.choices.map((choice) => choice.id)).size !== original.choices.length) {
+        setView("listState", "unavailable")
+        return
+      }
+      const choices = original.choices.map((choice) => ({
+        id: choice.id,
+        title: original.alternatives.find((alternative) =>
+          alternative.id === choice.alternativeId && alternative.version === choice.alternativeVersion)?.title || choice.id,
+        reason: choice.reason,
+        at: choice.at,
+      }))
+      setView({ choices, listState: choices.length ? "ready" : "empty" })
+      return
+    }
     // Both are current ACL reads, not a cached similarity or re-evaluation.
     const [conditions, signals] = await Promise.allSettled([
       client["intelligence.memory-conditions"](caseRef, { signal }),
@@ -208,7 +251,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   const readOutcome = async (choiceId: string) => {
     const ready = owner.ready()
     const caseRef = view.active
-    if (!ready || !caseRef || !view.conditions.some((item) => item.choiceId === choiceId)) return
+    if (!ready || !caseRef || !view.choices.some((item) => item.id === choiceId)) return
     detailAbort?.abort()
     detailAbort = new AbortController()
     const signal = detailAbort.signal
@@ -263,6 +306,12 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     void readReference(selectionRef)
     onCleanup(() => detailAbort?.abort())
   })
+  const choiceDate = (value: string) => {
+    const parsed = new Date(value)
+    return Number.isNaN(parsed.getTime()) ? value : new Intl.DateTimeFormat(language.intl(), {
+      dateStyle: "medium", timeStyle: "short",
+    }).format(parsed)
+  }
   // UI62 is delegated to SfSimilarCasesView in the early return above; these branches are UI61/UI63 only.
   const title = () => props.surfaceId === "UI63" ? "sf.ui63.title" : "sf.ui61.title"
   const detailMessage = (): keyof typeof SF_U26_COPY | "sf.common.loading" | "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.stale" | "sf.common.invalidLink" =>
@@ -320,24 +369,44 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
         <SfStatePanel state={pageState()} messageKey={k(pageMessage())}
           onRetryRead={view.active && privacy() === "ready" ? () => void loadCase(view.active!) : undefined}>
           <Show when={view.active}>
-            <section class="sf-memory-section sf-section">
-              <h2>{t("sf.u26.conditions")}</h2>
-              <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>
-                <ul class="sf-memory-list">
-                  <For each={view.conditions}>{(condition) => (
-                    <li data-selected={props.surfaceId === "UI63" ? view.selectedChoice === condition.choiceId : view.selectedCondition === condition.conditionId} data-sf-condition-id={condition.conditionId} data-sf-choice-id={condition.choiceId}>
-                      <div><strong>{condition.label}</strong>
-                        <small>{t("sf.u26.criterion")}: {condition.criterionId} · {t("sf.u26.period")}: {condition.period.start} – {condition.period.end}</small>
-                      </div>
-                      <button type="button" class="mx-btn" aria-expanded={props.surfaceId === "UI63" ? view.selectedChoice === condition.choiceId : view.selectedCondition === condition.conditionId} onClick={() => void (
-                        props.surfaceId === "UI63" ? readOutcome(condition.choiceId) : readMateriality(condition.conditionId)
-                      )}>{props.surfaceId === "UI63" ? t("sf.u26.outcomeDetail") : t("sf.u26.conditionDetail")}</button>
-                    </li>
-                  )}</For>
-                </ul>
-              </Show>
-            </section>
+            <Show when={props.surfaceId === "UI63"}>
+              <section class="sf-memory-section sf-section">
+                <h2>{t("sf.u26.recordedChoices")}</h2>
+                <p class="sf-memory-help">{t("sf.u26.selectChoice")}</p>
+                <Show when={view.choices.length} fallback={<p>{t("sf.u26.noChoices")}</p>}>
+                  <ul class="sf-memory-list">
+                    <For each={view.choices}>{(choice) => (
+                      <li data-sf-memory-choice={choice.id} data-selected={view.selectedChoice === choice.id}>
+                        <div>
+                          <strong>{choice.title}</strong>
+                          <small>{t("sf.u26.recordedAt")}: <time dateTime={choice.at}>{choiceDate(choice.at)}</time></small>
+                          <Show when={choice.reason}><p>{choice.reason}</p></Show>
+                        </div>
+                        <button type="button" class="mx-btn" aria-expanded={view.selectedChoice === choice.id}
+                          onClick={() => void readOutcome(choice.id)}>{t("sf.u26.outcomeDetail")}</button>
+                      </li>
+                    )}</For>
+                  </ul>
+                </Show>
+              </section>
+            </Show>
             <Show when={props.surfaceId === "UI61"}>
+              <section class="sf-memory-section sf-section">
+                <h2>{t("sf.u26.conditions")}</h2>
+                <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>
+                  <ul class="sf-memory-list">
+                    <For each={view.conditions}>{(condition) => (
+                      <li data-selected={view.selectedCondition === condition.conditionId} data-sf-condition-id={condition.conditionId} data-sf-choice-id={condition.choiceId}>
+                        <div><strong>{condition.label}</strong>
+                          <small>{t("sf.u26.criterion")}: {condition.criterionId} · {t("sf.u26.period")}: {condition.period.start} – {condition.period.end}</small>
+                        </div>
+                        <button type="button" class="mx-btn" aria-expanded={view.selectedCondition === condition.conditionId}
+                          onClick={() => void readMateriality(condition.conditionId)}>{t("sf.u26.conditionDetail")}</button>
+                      </li>
+                    )}</For>
+                  </ul>
+                </Show>
+              </section>
               <section class="sf-memory-section sf-section">
                 <h2>{t("sf.u26.signals")}</h2>
                 <Show when={view.signals.length} fallback={<p>{t("sf.u26.noSignals")}</p>}>

@@ -116,6 +116,7 @@ export type CreateSfHostRuntime = (input: {
   nativeReadBinding?: (operationId:
     | "projection.review" | "dashboard.dashboard-review" | "files.document-sources"
     | "views.list" | "views.open" | "views.save" | "views.remove"
+    | "routines.catalog" | "routines.read-admission" | "routines.read-run" | "projection.routine"
     | "dashboard.dashboard-workbench" | "dashboard.dashboard-hot-topic-source" | "dashboard.dashboard-draft-read"
     | "dashboard.dashboard-hot-topic-draft" | "dashboard.dashboard-hot-topic-drafts" | "dashboard.dashboard-hot-topic-draft-outcome" | "dashboard.dashboard-capture"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"

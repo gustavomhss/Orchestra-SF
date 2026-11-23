@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack, type JSX } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { A } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
@@ -114,6 +114,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   let controller = new AbortController()
   let mutationUnknown = false
   let uploadFile: File | undefined
+  let installedScope: string | undefined
   const ownerStamp = () => {
     const context = auth.state()
     return context.status === "ready"
@@ -509,22 +510,30 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const selectedOwner = ownerStamp()
     const routeKind = props.route.kind
     const section = props.surfaceId
-    fence()
-    mutationUnknown = false
-    uploadFile = undefined
-    setState({
-      uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
-      rejectionReason: "", rejectionPage: "1", linkedRef: "",
-      status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
-        auth.state().status === "unauthenticated" ? "session-expired" :
-        auth.state().status === "denied" ? "denied" : "unavailable",
-      requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
-      opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
-      requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+    const authStatus = auth.state().status
+    const scope = JSON.stringify([routeKind, section, props.route.href, selectedOwner, authStatus, !!ready])
+    // A same-owner context publication must not erase a document read or confirmation.
+    // Actual route, authority and session transitions still abort and clear all private state.
+    if (scope === installedScope) return
+    installedScope = scope
+    untrack(() => {
+      fence()
+      mutationUnknown = false
+      uploadFile = undefined
+      setState({
+        uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
+        rejectionReason: "", rejectionPage: "1", linkedRef: "",
+        status: ready ? "ready" : authStatus === "resolving" ? "loading" :
+          authStatus === "unauthenticated" ? "session-expired" :
+          authStatus === "denied" ? "denied" : "unavailable",
+        requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
+        opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
+        requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+      })
+      if (!ready || !selectedOwner) return
+      if (section === "UI58" && routeKind !== "detail") void loadCatalog()
+      else void loadRouteCandidates()
     })
-    if (!ready || !selectedOwner) return
-    if (section === "UI58" && routeKind !== "detail") void loadCatalog()
-    else void loadRouteCandidates()
   })
   onCleanup(() => { fence(); clearSelection() })
 
@@ -643,7 +652,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="button" class="mx-btn" disabled={state.busy}
                 onClick={() => { void loadSources() }}>{t("sf.u24.refresh")}</button>
-              <label>{t("sf.u24.document")}
+              <label class="sf-records-document-choice">{t("sf.u24.document")}
                 <select value={state.sourceSelectionRef} disabled={state.busy || !state.sources.length}
                   onChange={(e) => { clearOnSourceChange(); setState("sourceSelectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u24.chooseDocument")}</option>
@@ -750,31 +759,6 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
             </Show>
           </Show>
           <Show when={evidence() || (catalog() && state.documentRef)}>
-            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void extractField() }}>
-              <h2>{t("sf.u24.fields")}</h2>
-              <p>{t("sf.u24.fieldHelp")}</p>
-              <label>{t("sf.u24.field")}
-                <input maxlength="120" required value={state.fieldId} disabled={state.busy}
-                  onInput={(e) => setState("fieldId", e.currentTarget.value)} />
-              </label>
-              <label>{t("sf.u24.type")}
-                <select value={state.fieldType} disabled={state.busy}
-                  onChange={(e) => setState("fieldType", e.currentTarget.value as LeafState["fieldType"])}>
-                  <option value="string">{t("sf.u24.text")}</option>
-                  <option value="number">{t("sf.u24.number")}</option>
-                  <option value="boolean">{t("sf.u24.boolean")}</option>
-                  <option value="date">{t("sf.u24.date")}</option>
-                </select>
-              </label>
-              <label>{t("sf.u24.unit")}
-                <input maxlength="40" value={state.fieldUnit} disabled={state.busy}
-                  onInput={(e) => setState("fieldUnit", e.currentTarget.value)} />
-              </label>
-              <button type="submit" class="mx-btn primary"
-                disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
-                  state.phase === "unknown" || !permitted("files.document-schema") ||
-                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
-            </form>
             <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
               <section class="sf-files-section sf-records-evidence-review" data-sf-confirmation="review">
                 <h2>{t("sf.ui59.title")}</h2>
@@ -808,6 +792,33 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 </details>
               </section>
             </Show>
+            <details class="sf-records-extraction" open={!evidence() || !state.candidates.length}>
+              <summary>{t("sf.u24.fields")}</summary>
+            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void extractField() }}>
+              <p>{t("sf.u24.fieldHelp")}</p>
+              <label>{t("sf.u24.field")}
+                <input maxlength="120" required value={state.fieldId} disabled={state.busy}
+                  onInput={(e) => setState("fieldId", e.currentTarget.value)} />
+              </label>
+              <label>{t("sf.u24.type")}
+                <select value={state.fieldType} disabled={state.busy}
+                  onChange={(e) => setState("fieldType", e.currentTarget.value as LeafState["fieldType"])}>
+                  <option value="string">{t("sf.u24.text")}</option>
+                  <option value="number">{t("sf.u24.number")}</option>
+                  <option value="boolean">{t("sf.u24.boolean")}</option>
+                  <option value="date">{t("sf.u24.date")}</option>
+                </select>
+              </label>
+              <label>{t("sf.u24.unit")}
+                <input maxlength="40" value={state.fieldUnit} disabled={state.busy}
+                  onInput={(e) => setState("fieldUnit", e.currentTarget.value)} />
+              </label>
+              <button type="submit" class="mx-btn primary"
+                disabled={!state.documentRef || !state.fieldId.trim() || state.busy ||
+                  state.phase === "unknown" || !permitted("files.document-schema") ||
+                  !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
+            </form>
+            </details>
           </Show>
           <Show when={scenarioView()}>
             <section class="sf-files-section sf-records-scenario">

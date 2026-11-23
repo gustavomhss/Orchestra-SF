@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import type { Page, TestInfo } from "@playwright/test"
+import type { Locator, Page, TestInfo } from "@playwright/test"
 import { captureFinalSurface } from "../design-support/final-capture"
 
 type RecordArea = "UI57" | "UI58" | "UI59" | "UI60" | "UI68"
@@ -22,18 +22,29 @@ export async function captureRecord(page: Page, info: TestInfo, area: RecordArea
 }
 
 /** Read the same actual state through the native theme toggle and two viewport widths. */
-export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string) {
+export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string, preview = true) {
   const original = page.viewportSize()
   const previous = await page.locator("html").getAttribute("data-color-scheme")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await theme(page, "dark")
-  await captureRecord(page, info, area, state + "-dark-desktop", true)
+  await captureRecord(page, info, area, state + "-dark-desktop", preview)
   await theme(page, "light")
   await captureRecord(page, info, area, state + "-light-desktop")
   await page.setViewportSize({ width: 320, height: 900 })
   await captureRecord(page, info, area, state + "-light-narrow")
   if (original) await page.setViewportSize(original)
   await theme(page, previous === "light" ? "light" : "dark")
+}
+
+/** Keep a detailed review in the actual scroll position as an additional, clearly named capture. */
+export async function captureRecordDetail(page: Page, info: TestInfo, area: RecordArea,
+  state: string, region: Locator) {
+  const original = page.viewportSize()
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await region.scrollIntoViewIfNeeded()
+  await expect(region).toBeInViewport()
+  await captureFinalSurface(page, info, area, state, { preview: true })
+  if (original) await page.setViewportSize(original)
 }
 
 /** Reuse the same authorized session with the native persisted language preference. */
@@ -65,5 +76,41 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
     await captureRecord(localized, info, area, state + "-pt-br-desktop", true)
   } finally {
     await context.close()
+  }
+}
+
+export async function describeRecordPage(page: Page, info: TestInfo, state: string) {
+  const observation = await page.evaluate(() => {
+    const host = document.querySelector('[data-sf-host="owner-runtime231"]')
+    return {
+      pathname: location.pathname,
+      host: host ? Object.fromEntries(["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"]
+        .map((attribute) => [attribute, host.getAttribute(attribute)])) : null,
+      leaves: Array.from(document.querySelectorAll("[data-sf-surface]")).map((leaf) => ({
+        surface: leaf.getAttribute("data-sf-surface"), phase: leaf.getAttribute("data-sf-phase"),
+        state: leaf.getAttribute("data-sf-read-state"), text: leaf.textContent?.slice(0, 6000),
+      })),
+      headings: Array.from(document.querySelectorAll("h1")).map((heading) => heading.textContent),
+      alerts: Array.from(document.querySelectorAll('[role="alert"]')).map((alert) => alert.textContent?.slice(0, 1000)),
+      text: host?.textContent?.slice(0, 8000),
+    }
+  })
+  console.info("SF_FINAL_RECORDS_STATE " + JSON.stringify({ state, ...observation }))
+  await info.attach("final-records-state-" + state, { body: JSON.stringify(observation, null, 2), contentType: "application/json" })
+}
+
+export async function captureRecordFailure(page: Page, info: TestInfo) {
+  const tabs = page.context().pages()
+  for (const [index, tab] of tabs.entries()) {
+    if (tab.isClosed()) continue
+    await describeRecordPage(tab, info, "failure-tab-" + index)
+    const original = await tab.screenshot({ type: "png", fullPage: true, animations: "disabled" })
+    await info.attach("final-records-failure-tab-" + index, { body: original, contentType: "image/png" })
+    const preview = await tab.screenshot({ type: "jpeg", quality: 60, fullPage: false, animations: "disabled" })
+    if (preview.byteLength <= 393_216)
+      console.info("SF_FINAL_RECORDS_FAILURE_VISUAL " + JSON.stringify({
+        test: info.title, tab: index, pathname: new URL(tab.url()).pathname,
+        mimeType: "image/jpeg", bytes: preview.byteLength, base64: preview.toString("base64"),
+      }))
   }
 }
