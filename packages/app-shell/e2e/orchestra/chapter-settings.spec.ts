@@ -482,6 +482,7 @@ test("v2: Disconnect removes stored credentials, confirms removing several, expl
 for (const sample of [
   { width: 320, scheme: "dark", locale: "en", lang: "en" },
   { width: 390, scheme: "light", locale: "br", lang: "pt-BR" },
+  { width: 800, scheme: "dark", locale: "en", lang: "en" },
 ] as const) {
   test(`narrow Settings keeps sections, permissions and model controls usable at ${sample.width}px in ${sample.locale}`, async ({
     page,
@@ -495,6 +496,7 @@ for (const sample of [
     await expect(page.locator("html")).toHaveAttribute("data-color-scheme", sample.scheme)
     const view = page.locator('[data-mx-page="settings"]')
     const nav = view.locator(".settings-nav")
+    if (sample.locale === "br") await expect(view.getByText("Idioma", { exact: true })).toBeVisible()
     await expect(nav.getByRole("button")).toHaveCount(9)
     await expect(view.locator('[data-slot="orchestra-palette-row"]').getByRole("radio")).toHaveCount(8)
     await expect(view.locator('[data-action="settings-language"]')).toBeVisible()
@@ -559,11 +561,41 @@ for (const sample of [
     await expect(view.locator('[data-model="openai/gpt-5"] .mx-badge')).toBeVisible()
     await capture("models")
     await inspect("models", ".orchestra-settings .mx-row[data-model]")
+    const overlaps = await modelCopyOverlaps(page)
+    expect.soft(overlaps, "Model names and metadata stay clear of every action").toEqual([])
     await testInfo.attach("settings-narrow-layout", {
-      body: JSON.stringify({ sample, measurements }, null, 2),
+      body: JSON.stringify({ sample, measurements, overlaps }, null, 2),
       contentType: "application/json",
     })
   })
+}
+
+
+async function modelCopyOverlaps(page: Page) {
+  return page.locator(".orchestra-settings .mx-row[data-model]").evaluateAll((rows) =>
+    rows.flatMap((row) => {
+      const controls = Array.from(row.querySelectorAll("button, .mx-badge"))
+      return Array.from(row.querySelectorAll("strong, small")).flatMap((label) => {
+        const range = document.createRange()
+        range.selectNodeContents(label)
+        return Array.from(range.getClientRects()).flatMap((text) =>
+          controls.flatMap((control) => {
+            const box = control.getBoundingClientRect()
+            const width = Math.min(text.right, box.right) - Math.max(text.left, box.left)
+            const height = Math.min(text.bottom, box.bottom) - Math.max(text.top, box.top)
+            if (width <= 1 || height <= 1) return []
+            return [{
+              model: row.getAttribute("data-model"),
+              text: label.textContent,
+              control: control.getAttribute("aria-label") ?? control.textContent,
+              width,
+              height,
+            }]
+          }),
+        )
+      })
+    }),
+  )
 }
 
 async function narrowRows(page: Page, selector: string) {
