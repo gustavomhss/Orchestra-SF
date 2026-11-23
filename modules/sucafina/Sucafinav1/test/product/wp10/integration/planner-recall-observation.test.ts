@@ -370,7 +370,7 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
     await deadline.phase("malformed-selection-keeps-canonical-pre-admission-refusal", async () => {
       const before = await f.snapshot()
       const input = incoming()
-      input.caseRef.id = ""
+      expect(Reflect.set(input, "caseRef", null)).toBe(true)
       await f.ui("sf_decision_recall", input, async (call) => {
         let reads = 0, produced: RecallResult | undefined
         const measured = await f.measure(() => f.observer.recall(input, call, async () => {
