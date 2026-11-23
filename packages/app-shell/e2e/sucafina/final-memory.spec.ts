@@ -5,6 +5,7 @@ import { captureFinalSurface } from "./design-support/final-capture"
 import { finalMemoryData, seedFinalMemory } from "./design-support/final-memory-seed"
 import { observeFinalMemoryOutcomeFailures, withFinalMemoryPortuguese } from "./design-support/final-memory-browser"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
+import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
 waveFourTest.use({ designWave: "four-decisions" })
 waveFourTest.beforeEach(async ({ page }, info) => {
@@ -35,7 +36,20 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
   const outcomeFailures = observeFinalMemoryOutcomeFailures(page)
   const failures: unknown[] = []
   const independently = async (name: string, work: () => Promise<void>) => {
-    try { await waveFourTest.step(name, work) } catch (error) { failures.push(error) }
+    try {
+      await waveFourTest.step(name, work)
+      console.info("SF_FINAL_MEMORY_STEP " + JSON.stringify({ name, status: "passed" }))
+    } catch (error) {
+      failures.push(error)
+      // Bound diagnostics to assertion text and source locations; never emit request headers.
+      const clean = (value: string) => value.replace(/\u001b\[[0-9;]*m/g, "").slice(0, 300)
+      const detail = error instanceof Error ? {
+        kind: error.name, summary: clean(error.message.split("\n")[0] ?? ""),
+        assertion: error.message.split("\n").filter((line) => /^(Locator:|Expected:|Received:)/.test(line)).map(clean).slice(0, 3),
+        location: (error.stack ?? "").split("\n").filter((line) => /^\s*at /.test(line)).map(clean).slice(0, 3),
+      } : { kind: typeof error }
+      console.info("SF_FINAL_MEMORY_STEP " + JSON.stringify({ name, status: "failed", detail }))
+    }
   }
   const seeded = await seedFinalMemory({
     actorId: installation.actorId,
@@ -81,7 +95,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     await expect(outcome).toBeHidden()
     await expect(surface.locator("[data-sf-memory-choice]")).toHaveCount(0)
     await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
-    await outcomeFailures.expectUnavailable(() => enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Expected and observed"))
+    await outcomeFailures.expectUnavailable(() => enter(page, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + encodeSfRouteRef(seeded.selectionRef), "Expected and observed"))
     await expect(outcome).toHaveAttribute("data-sf-memory-reason", "coverage-incomplete")
     await expect(surface.locator("[data-sf-memory-case]")).toHaveCount(0)
     await captureFinalSurface(page, info, "UI63", "dark-desktop-incomplete-coverage")
@@ -186,7 +200,7 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
         await captureFinalSurface(localized, info, "UI61", "pt-br-dark-desktop-condition")
       })
       await independently("UI63 Portuguese incomplete coverage", async () => {
-        await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + seeded.selectionRef, "Previsto e observado"))
+        await localizedOutcomes.expectUnavailable(() => enter(localized, owner, installation.origin + "/orchestra/sf-memory/outcomes/" + encodeSfRouteRef(seeded.selectionRef), "Previsto e observado"))
         await expect(localized.locator("[data-sf-memory-outcome-status]")).toContainText("Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta.")
         await expect(localized.locator("[data-sf-memory-outcome]")).toHaveCount(0)
         await captureFinalSurface(localized, info, "UI63", "pt-br-dark-desktop-incomplete-coverage")
@@ -198,9 +212,11 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
       })
     })
   })
-  expect(memoryWrites).toEqual([])
-  expect(diagnostics.pageErrors).toEqual([])
-  outcomeFailures.assertOnlyExpectedErrors(diagnostics.consoleErrors)
+  await independently("No memory selection command was issued by the browser", async () => { expect(memoryWrites).toEqual([]) })
+  await independently("Memory pages emitted no JavaScript errors", async () => { expect(diagnostics.pageErrors).toEqual([]) })
+  await independently("Memory console contains only verified original coverage refusals", async () => {
+    outcomeFailures.assertOnlyExpectedErrors(diagnostics.consoleErrors)
+  })
   if (failures.length) throw new AggregateError(failures, "Independent original-memory journeys failed")
   await info.attach("UI61-UI63-original-memory-evidence", { contentType: "application/json", body: JSON.stringify({
     areas: ["UI61", "UI62", "UI63"], source: "original human decision, memory and Planner HTTP producers",

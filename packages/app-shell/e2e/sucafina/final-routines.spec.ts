@@ -61,11 +61,15 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   console.info("SF_FINAL_ROUTINES_AVAILABILITY " + JSON.stringify(availability))
 
   await waveFourTest.step("UI64 keeps case authority and unpublished admission visibly separate", async () => {
-    const choicesResponse = page.waitForResponse(async (reply) =>
-      reply.status() === 200 && analysisAction(reply) === "choices" && await reply.finished() === null)
-      .then((reply) => reply.json())
     await enter(page, owner, new URL(screens[0].path, installation.origin).href, screens[0].en)
-    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await choicesResponse)
+    // Read the same original source through this context's authenticated session.
+    // The UI effect can release its response after consuming it; its CDP body is not a durable oracle.
+    const choicesResponse = await page.context().request.post(installation.origin + installation.mount + "/dashboard?sf=workbench-analysis", {
+      headers: { Origin: installation.origin, "Idempotency-Key": crypto.randomUUID() },
+      data: { action: "choices" },
+    })
+    expect(choicesResponse.status()).toBe(200)
+    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await choicesResponse.json())
     expect(choiceBody.status).toBe("ok")
     if (choiceBody.status !== "ok") throw new Error("The original authorized case source is unavailable")
     const sourceCases = choiceBody.value.cases.filter((entry) => entry.label === waveFourDecisionsData.objective)
