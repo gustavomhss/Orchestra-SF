@@ -86,6 +86,10 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
   const rows = (collection: Catalog) => screen.page?.value.data[collection] ?? []
   const selectedRow = () => rows(screen.collection).find((row) => row.id === screen.selected)
   const entityLabel = (id: string) => rows("entities").find((entity) => entity.id === id)?.name ?? id
+  const entityReference = (id: string) => {
+    const entity = rows("entities").find((item) => item.id === id)
+    return entity?.name ? entity.name + " · " + id : id
+  }
   const currentValue = () => {
     const state = draft()?.snapshot()
     return state?.availability === "active" ? state.value : null
@@ -398,7 +402,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     ...(value.collection === "allocations" ? [
       field("sf.cap21.field.contractRef.label", value.contractRef),
       field("sf.cap21.field.splits.label", value.splits.map((split) =>
-        entityLabel(split.entityRef) + ": " + split.percent + "%").join(", ")),
+        entityReference(split.entityRef) + ": " + split.percent + "%").join(", ")),
       field("sf.cap21.field.total.label", String(splitTotal(value.splits)) + "%"),
     ] : []),
   ]

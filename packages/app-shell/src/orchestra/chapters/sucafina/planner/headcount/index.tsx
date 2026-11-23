@@ -249,11 +249,21 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     setState("review", review)
     if (kind === "position-save") positionDraft(pos()!)?.setPhase("reviewing")
   }
+  // A label can be shared by distinct source records. Keep identity in the comparable review value.
+  const rateReviewLabel = (id: unknown) => {
+    const found = state.page?.data.rates?.find((item) => item.id === id)
+    return found?.name ? found.name + " · " + String(id) : String(id)
+  }
+  const rateNameCounts = createMemo(() => {
+    const counts = new Map<string, number>()
+    for (const item of state.page?.data.rates ?? []) counts.set(item.name, (counts.get(item.name) ?? 0) + 1)
+    return counts
+  })
   const fields = (values: object): SfReviewField[] =>
     Object.entries(values).map(([path, value]) => ({
       path, label: msg("sf.u08." + (path === "locs" ? "locations" : path === "cur" ? "currency" : path)),
       value: display(typeof value === "boolean" ? t(value ? "sf.u08.inPlan" : "sf.u08.excluded") :
-        path === "rateId" ? state.page?.data.rates?.find((rate) => rate.id === value)?.name ?? String(value) :
+        path === "rateId" ? rateReviewLabel(value) :
         String(value)),
     }))
   const baseFields = createMemo<SfReviewField[]>(() => {
@@ -523,7 +533,8 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                                     <option value={activePosition()?.value.rateId ?? ""}>{activePosition()?.value.rateId}</option>
                                   </Show>
                                   <For each={rates()}>{(item) =>
-                                    <option value={item.id}>{item.name || item.id}</option>}
+                                    <option value={item.id}>{item.name && (rateNameCounts().get(item.name) ?? 0) > 1
+                                      ? item.name + " · " + item.id : item.name || item.id}</option>}
                                   </For>
                                 </select>
                               )}

@@ -174,7 +174,13 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   }
   const fields = (pages: readonly SummaryPage[]): readonly SfReviewField[] => [{
     path: "pages", label: message("sf.u28.summaries"),
-    value: { kind: "text", text: { kind: "data", text: pages.map(pageTitle).join(", ") } },
+    value: {
+      kind: "list",
+      items: pages.map((page) => ({
+        kind: "text",
+        text: { kind: "message", message: message(titles[page]) },
+      })),
+    },
   }]
   const persisted = () => {
     const source = visible()

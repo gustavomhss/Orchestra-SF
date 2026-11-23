@@ -68,7 +68,20 @@ const actionKey: Record<SfRequestCommand, Key> = {
   cancel: "sf.u11.remaining.cancel",
   delete: "sf.u11.remaining.delete",
 }
-function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): readonly SfReviewField[] {
+function reviewValue(field: string, actual: unknown, locale: string): SfReviewField["value"] {
+  if (actual === undefined || actual === null)
+    return { kind: "missing", reason: { key: sfCommonKey("sf.common.unknown") } }
+  if (field === "type" && (actual === "product" || actual === "service"))
+    return { kind: "text", text: { kind: "message", message: message(actual === "product"
+      ? "sf.u11.remaining.product" : "sf.u11.remaining.service") } }
+  if (typeof actual === "boolean")
+    return { kind: "boolean", value: actual,
+      trueLabel: message("sf.u11.remaining.yes"), falseLabel: message("sf.u11.remaining.no") }
+  return { kind: "text", text: dataText(typeof actual === "number" && Number.isFinite(actual)
+    ? new Intl.NumberFormat(locale, { maximumSignificantDigits: 21 }).format(actual)
+    : typeof actual === "object" ? JSON.stringify(actual) : String(actual)) }
+}
+function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind, locale: string): readonly SfReviewField[] {
   if (!values) return []
   const fields = kind === "pr" ? PR_FIELDS : PO_FIELDS
   return fields.filter((field) => Object.prototype.hasOwnProperty.call(values, field)).map((field) => {
@@ -76,11 +89,7 @@ function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): read
     return {
       path: kind + "." + field,
       label: message(("sf.u11.remaining.field." + field) as Key),
-      value: actual === undefined || actual === null
-        ? { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } }
-        : { kind: "text" as const, text: dataText(
-          typeof actual === "object" ? JSON.stringify(actual) : String(actual),
-        ) },
+      value: reviewValue(field, actual, locale),
     }
   })
 }
@@ -621,11 +630,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const fields = intent.action === "cancel" ? [
       { path: "reason", label: message("sf.u11.remaining.reason"),
         value: { kind: "text" as const, text: dataText(intent.reason) } },
-    ] : fieldsOf(intent.po ?? intent.pr, editKind)
+    ] : fieldsOf(intent.po ?? intent.pr, editKind, language.intl())
     const persisted = row()
     const original: SfReviewSnapshot | null = persisted && intent.ref
       ? { kind: "persisted", ref: intent.ref, version: intent.version,
-        fields: fieldsOf(intent.po ? poFromRecord(persisted) : prFromRecord(persisted), editKind) } : null
+        fields: fieldsOf(intent.po ? poFromRecord(persisted) : prFromRecord(persisted), editKind, language.intl()) } : null
     const operationId = ("domain.command.CAP25." + uiCommandAction(intent.action)) as
       "domain.command.CAP25.create" | "domain.command.CAP25.save" |
       "domain.command.CAP25.submit_pr" | "domain.command.CAP25.submit_po" |
