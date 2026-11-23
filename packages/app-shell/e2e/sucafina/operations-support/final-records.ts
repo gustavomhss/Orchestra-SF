@@ -89,14 +89,17 @@ export async function describeRecordPage(page: Page, info: TestInfo, state: stri
 }
 
 export async function captureRecordFailure(page: Page, info: TestInfo) {
-  if (page.isClosed()) return
-  await describeRecordPage(page, info, "failure")
-  const original = await page.screenshot({ type: "png", fullPage: true, animations: "disabled" })
-  await info.attach("final-records-failure", { body: original, contentType: "image/png" })
-  const preview = await page.screenshot({ type: "jpeg", quality: 60, fullPage: false, animations: "disabled" })
-  if (preview.byteLength <= 393_216)
-    console.info("SF_FINAL_RECORDS_FAILURE_VISUAL " + JSON.stringify({
-      test: info.title, pathname: new URL(page.url()).pathname,
-      mimeType: "image/jpeg", bytes: preview.byteLength, base64: preview.toString("base64"),
-    }))
+  const tabs = page.context().pages()
+  for (const [index, tab] of tabs.entries()) {
+    if (tab.isClosed()) continue
+    await describeRecordPage(tab, info, "failure-tab-" + index)
+    const original = await tab.screenshot({ type: "png", fullPage: true, animations: "disabled" })
+    await info.attach("final-records-failure-tab-" + index, { body: original, contentType: "image/png" })
+    const preview = await tab.screenshot({ type: "jpeg", quality: 60, fullPage: false, animations: "disabled" })
+    if (preview.byteLength <= 393_216)
+      console.info("SF_FINAL_RECORDS_FAILURE_VISUAL " + JSON.stringify({
+        test: info.title, tab: index, pathname: new URL(tab.url()).pathname,
+        mimeType: "image/jpeg", bytes: preview.byteLength, base64: preview.toString("base64"),
+      }))
+  }
 }

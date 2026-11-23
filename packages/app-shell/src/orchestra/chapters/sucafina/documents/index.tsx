@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack, type JSX } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { A } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
@@ -114,6 +114,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   let controller = new AbortController()
   let mutationUnknown = false
   let uploadFile: File | undefined
+  let installedScope: string | undefined
   const ownerStamp = () => {
     const context = auth.state()
     return context.status === "ready"
@@ -509,22 +510,30 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const selectedOwner = ownerStamp()
     const routeKind = props.route.kind
     const section = props.surfaceId
-    fence()
-    mutationUnknown = false
-    uploadFile = undefined
-    setState({
-      uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
-      rejectionReason: "", rejectionPage: "1", linkedRef: "",
-      status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
-        auth.state().status === "unauthenticated" ? "session-expired" :
-        auth.state().status === "denied" ? "denied" : "unavailable",
-      requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
-      opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
-      requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+    const authStatus = auth.state().status
+    const scope = JSON.stringify([routeKind, section, props.route.href, selectedOwner, authStatus, !!ready])
+    // A same-owner context publication must not erase a document read or confirmation.
+    // Actual route, authority and session transitions still abort and clear all private state.
+    if (scope === installedScope) return
+    installedScope = scope
+    untrack(() => {
+      fence()
+      mutationUnknown = false
+      uploadFile = undefined
+      setState({
+        uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
+        rejectionReason: "", rejectionPage: "1", linkedRef: "",
+        status: ready ? "ready" : authStatus === "resolving" ? "loading" :
+          authStatus === "unauthenticated" ? "session-expired" :
+          authStatus === "denied" ? "denied" : "unavailable",
+        requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
+        opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
+        requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+      })
+      if (!ready || !selectedOwner) return
+      if (section === "UI58" && routeKind !== "detail") void loadCatalog()
+      else void loadRouteCandidates()
     })
-    if (!ready || !selectedOwner) return
-    if (section === "UI58" && routeKind !== "detail") void loadCatalog()
-    else void loadRouteCandidates()
   })
   onCleanup(() => { fence(); clearSelection() })
 
