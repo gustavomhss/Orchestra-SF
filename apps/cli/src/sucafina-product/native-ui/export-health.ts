@@ -80,7 +80,7 @@ export async function observeSfExportHealth(input: { source: () => Source | unde
     }
     return { commit: false, value: { operations, fence: digestSfValue({
       actor, policy, pages, data: publicSfData(snapshot.data), versions: snapshot.versions,
-      directory: environment.directory, bankKey: environment.bankKey,
+      directory: environment.directory, bankKey: environment.bankKey ? Array.from(environment.bankKey) : undefined,
     }) } }
   }, { signal: request.signal })
   if (!current() || !await admitted()) return []
