@@ -1,0 +1,218 @@
+{
+  "schema": "sf613-catalog-release6-receipt-v1",
+  "recordedAt": "2026-11-23T20:43:38Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "originalReleaseCampaignPassed": true,
+  "fullCompositionQualified": false,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "branch": "sf613-catalog",
+    "isolated": true
+  },
+  "snapshot": {
+    "commit": "ced9c41e9640e50e595e800e1340a7235e1863fd",
+    "tree": "d6b0f4dd8da9fbed6af7d0e43ed884cf56d9acbd",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "temporaryBranch": "ci-run-linux-sf613-catalogrelease",
+    "temporaryBranchVerified404": true,
+    "paths": [
+      {
+        "path": ".ci-run.json",
+        "blob": "5837e17e056b2c8b9c9581e4410f2d8e17de8856"
+      },
+      {
+        "path": "apps/cli/test/sucafina-finish-verification.test.ts",
+        "blob": "2cec10b60534a801210dc13618bbc0e355c4821b"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-release-runtime.test.ts",
+        "blob": "932229abb298f1fa6a96cfcc345480268f17f556"
+      },
+      {
+        "path": "package.json",
+        "blob": "16e720dee8dbc5d90f011970f821fa996307e3d0"
+      }
+    ],
+    "wrapperReverseExactToRelease5AfterOnlySourceAndTreeRebinding": true,
+    "originalWrapperBlob": "7632f3c0474e386166e7ca58f166360fd9f06d1f"
+  },
+  "ci": {
+    "id": 45261218178,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261218178",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-23T20:37:03Z",
+    "updatedAt": "2026-11-23T20:41:02Z",
+    "headSha": "ced9c41e9640e50e595e800e1340a7235e1863fd",
+    "jobs": [
+      {
+        "id": 137996158692,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:37:05Z",
+        "completedAt": "2026-11-23T20:40:51Z"
+      },
+      {
+        "id": 137998441788,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:40:53Z",
+        "completedAt": "2026-11-23T20:41:01Z"
+      }
+    ]
+  },
+  "environment": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "runtime": {
+    "version": "1.4.1",
+    "revision": "4661e494f052c83c80dade1318e5710238340be6",
+    "platform": "linux",
+    "arch": "x64",
+    "plannerCapability": true,
+    "cloneTreeAdmitted": false,
+    "nativeFallbackBytesMatched": true,
+    "packageManagerOnlyOverrideVerifiedInOriginalWrapper": true
+  },
+  "result": {
+    "outer": {
+      "passed": 5,
+      "failed": 0,
+      "expectCalls": 24,
+      "durationSeconds": 124.34
+    },
+    "groups": [
+      {
+        "name": "Planner projection references",
+        "passed": 12,
+        "failed": 0,
+        "expectCalls": 72
+      },
+      {
+        "name": "Original canonical, clone bytes, Release fallback and Planner preparation",
+        "passed": 11,
+        "failed": 0,
+        "expectCalls": 160
+      },
+      {
+        "name": "UI authority and context integrity",
+        "passed": 27,
+        "failed": 0,
+        "expectCalls": 221
+      },
+      {
+        "name": "Original four-file LocalStore/CurrentChoice/C17/finance composition",
+        "passed": 60,
+        "skipped": 2,
+        "failed": 0,
+        "expectCalls": 1213,
+        "commandDurationMs": 122956,
+        "skips": "Original unchanged foreign UID directory/database cases requiring root fixture privileges."
+      }
+    ],
+    "C17": {
+      "passed": true,
+      "testDurationMs": 82708.11,
+      "originalCooperativeDeadlineMs": 105000,
+      "originalOuterTestDeadlineMs": 120000,
+      "initializeMs": 12,
+      "inner": {
+        "phaseMs": 780,
+        "canonicalResultReads": 14,
+        "completed": 14,
+        "aborted": false
+      },
+      "outer": {
+        "phaseMs": 59296,
+        "canonicalResultReads": 1952,
+        "completed": 1952,
+        "aborted": false
+      },
+      "reopenMs": 5,
+      "ancestryMs": 22284,
+      "persistedCycleRejectionMs": 12,
+      "recoveryAndRevocationMs": 306,
+      "allPhasesReturnedWithoutAbort": true,
+      "countInterpretation": "canonicalResultReads are business.results.readForCalculation calls, not SQL queries or Planner prepares."
+    },
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 5,
+      "spawns": 9,
+      "delegated": 0
+    },
+    "outputTruncated": false
+  },
+  "log": {
+    "characters": 105501,
+    "utf8Bytes": 105503,
+    "sha256": "83913a4af539f7b25539626eb515369baa287a6830de38f9298b6662e5b9f654",
+    "lineCount": 1087,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "evidenceLines": [
+      "2026-11-23T20:38:44.7988000Z {\"gate\":\"fetch source parent\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"ced9c41e9640e50e595e800e1340a7235e1863fd\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":188,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:44.8018910Z {\"gate\":\"snapshot identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:44.8170265Z {\"gate\":\"source identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":15,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:44.8201265Z {\"gate\":\"snapshot-only overlay paths\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"git\",\"diff\",\"--name-only\",\"HEAD^\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:44.8234909Z {\"gate\":\"original source package manager\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"git\",\"show\",\"HEAD^:package.json\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:45.3173074Z {\"gate\":\"8 synchronous planner byte controls and 4 isolated loading controls\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/planner-projection-source-refs.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":492,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:45.3182003Z  12 pass",
+      "2026-11-23T20:38:45.3182201Z  0 fail",
+      "2026-11-23T20:38:45.3182401Z  72 expect() calls",
+      "2026-11-23T20:38:45.7541990Z {\"gate\":\"2 original canonical, 3 clone byte, 3 Release fallback and 3 Planner preparation controls\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/canonical-native.test.ts\",\"./test/canonical-clone-bytes.test.ts\",\"./test/product/wp10/integration/planner-source-preparation.test.ts\",\"/home/runner/work/Orchestra-SF/Orchestra-SF/apps/cli/test/fixture/sucafina-release-runtime.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":436,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:45.7546847Z SF_RELEASE_RUNTIME_CHECK {\"qualification\":false,\"scope\":\"snapshot-runtime-controls\",\"version\":\"1.4.1\",\"revision\":\"4661e494f052c83c80dade1318e5710238340be6\",\"platform\":\"linux\",\"arch\":\"x64\",\"plannerCapability\":true,\"cloneTreeAdmitted\":false,\"nativeFallbackBytesMatched\":true}",
+      "2026-11-23T20:38:45.7559388Z  11 pass",
+      "2026-11-23T20:38:45.7559582Z  0 fail",
+      "2026-11-23T20:38:45.7559795Z  160 expect() calls",
+      "2026-11-23T20:38:45.7786673Z {\"gate\":\"original UI authority and context integrity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/ui-authority.test.ts\",\"./test/product/wp10/integration/ui-context-integrity.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":23,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:38:45.7808231Z  27 pass",
+      "2026-11-23T20:38:45.7808431Z  0 fail",
+      "2026-11-23T20:38:45.7808610Z  221 expect() calls",
+      "2026-11-23T20:40:48.7359443Z {\"gate\":\"CurrentChoice readonly storage and nested calculation composition\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"ced9c41e9640e50e595e800e1340a7235e1863fd\",\"run\":\"45261218178\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/local-store.test.ts\",\"./test/product/wp10/integration/current-choice-readonly.test.ts\",\"./test/product/wp10/integration/calculation-ancestry-composition.test.ts\",\"./test/product/wp10/integration/finance-pair-observation.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":122956,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:40:48.7361984Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"started\",\"elapsedMs\":0}",
+      "2026-11-23T20:40:48.7362850Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"returned\",\"phaseMs\":12,\"elapsedMs\":12,\"aborted\":false}",
+      "2026-11-23T20:40:48.7363810Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"started\",\"elapsedMs\":12}",
+      "2026-11-23T20:40:48.7364817Z SF_CALCULATION_ANCESTRY {\"phase\":\"produce-inner\",\"elapsedMs\":780,\"canonicalResultReads\":14,\"canonicalResultReadsCompleted\":14,\"aborted\":false}",
+      "2026-11-23T20:40:48.7365883Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"returned\",\"phaseMs\":780,\"elapsedMs\":792,\"aborted\":false}",
+      "2026-11-23T20:40:48.7366656Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"started\",\"elapsedMs\":794}",
+      "2026-11-23T20:40:48.7367394Z SF_CALCULATION_ANCESTRY {\"phase\":\"produce-outer\",\"elapsedMs\":59296,\"canonicalResultReads\":1952,\"canonicalResultReadsCompleted\":1952,\"aborted\":false}",
+      "2026-11-23T20:40:48.7368205Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"returned\",\"phaseMs\":59296,\"elapsedMs\":60091,\"aborted\":false}",
+      "2026-11-23T20:40:48.7368941Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reopen\",\"state\":\"started\",\"elapsedMs\":60092}",
+      "2026-11-23T20:40:48.7397514Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reopen\",\"state\":\"returned\",\"phaseMs\":5,\"elapsedMs\":60097,\"aborted\":false}",
+      "2026-11-23T20:40:48.7398722Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"resolve-reopened-ancestry\",\"state\":\"started\",\"elapsedMs\":60097}",
+      "2026-11-23T20:40:48.7399568Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"resolve-reopened-ancestry\",\"state\":\"returned\",\"phaseMs\":22284,\"elapsedMs\":82381,\"aborted\":false}",
+      "2026-11-23T20:40:48.7400378Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reject-persisted-cycle\",\"state\":\"started\",\"elapsedMs\":82385}",
+      "2026-11-23T20:40:48.7401197Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reject-persisted-cycle\",\"state\":\"returned\",\"phaseMs\":12,\"elapsedMs\":82397,\"aborted\":false}",
+      "2026-11-23T20:40:48.7402006Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"recovery-and-revocation\",\"state\":\"started\",\"elapsedMs\":82399}",
+      "2026-11-23T20:40:48.7402826Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"recovery-and-revocation\",\"state\":\"returned\",\"phaseMs\":306,\"elapsedMs\":82705,\"aborted\":false}",
+      "2026-11-23T20:40:48.7469488Z (pass) C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority [82708.11ms]",
+      "2026-11-23T20:40:48.7471991Z  60 pass",
+      "2026-11-23T20:40:48.7472174Z  2 skip",
+      "2026-11-23T20:40:48.7472335Z  0 fail",
+      "2026-11-23T20:40:48.7472521Z  1213 expect() calls",
+      "2026-11-23T20:40:48.7473273Z (pass) CurrentChoice readonly composition preserves real LocalStore and calculation authority [122957.20ms]",
+      "2026-11-23T20:40:48.7474048Z  5 pass",
+      "2026-11-23T20:40:48.7474214Z  0 fail",
+      "2026-11-23T20:40:48.7474403Z  24 expect() calls",
+      "2026-11-23T20:40:48.7475235Z omni positive control [e75c74bf0e33826eb62033aba96962c8]: pass (declared: 5 test(s) in test/sucafina-finish-verification.test.ts); 9 omni spawn(s), 0 delegated."
+    ]
+  },
+  "limits": [
+    "This is the original Release runtime campaign on source7d5aa66c only, not a release tar/artifact qualification.",
+    "One observed passing campaign does not prove Catalog caused the changed C17 timing; no such causal attribution is made.",
+    "No global composition qualification, product promotion, merge or deployment."
+  ]
+}

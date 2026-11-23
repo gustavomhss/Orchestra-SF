@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Inspect the completed original C9 failure on isolated Catalog source7d5aa66c; await and inspect the five other original campaigns (T10, Release6, A9, RA6, R9) on that exact source. Focused original/new Catalog tests and core typecheck passed, which does not qualify the overall candidate. Preserve all six original gate requirements and deadlines; no PR promotion or merge."
+    "nextAction": "Repair the original normal-runtime C17 deadline and remaining UI56 Import delay; inspect Catalog Filephases and remaining A9/RA6/R9 receipts. Release6 and focused Catalog controls passed on isolated source7d5aa66c, but T10 and C9 failed. Preserve selected authorization/generation boundaries and original deadlines; do not promote or merge. Both canonical key-order candidates are rejected after regressions across all five real C14 fixture categories."
   },
-  "updatedAt": "2026-11-23T20:39:27Z",
+  "updatedAt": "2026-11-23T20:47:55Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3691,6 +3691,50 @@
       "priorRecordsCommit": "a421d3c8e67869f92bc3dfebb42d49cb93e459cf",
       "qualification": false,
       "productPromoted": false,
+      "merged": false
+    },
+    {
+      "recordedAt": "2026-11-23T20:47:55Z",
+      "status": "CATALOG_T10_C9_FAILED_RELEASE6_PASSED_KEYORDER_REJECTED",
+      "by": "/root/audit_catalog",
+      "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+      "technical": {
+        "run": 45261180250,
+        "conclusion": "failure",
+        "outerPassed": 14,
+        "outerFailed": 1,
+        "C17TestMs": 105008.5,
+        "receiptBlob": "c86ea74ade1cf865f59d39e6513c6e4daa5fc005"
+      },
+      "release": {
+        "run": 45261218178,
+        "conclusion": "success",
+        "outerPassed": 5,
+        "outerFailed": 0,
+        "C17TestMs": 82708.11,
+        "receiptBlob": "de636e75ee36b19fdfd2c89d0576d5b90e6e811c"
+      },
+      "collaboration": {
+        "run": 45260427535,
+        "conclusion": "failure",
+        "passed": 1,
+        "failed": 1,
+        "receiptBlob": "63c69c0fde8502887448b10ad878c170266431c2"
+      },
+      "keyorder": {
+        "run": 45261353346,
+        "functionalTestsPassed": true,
+        "productDecision": "REJECTED_BOTH_CANDIDATES",
+        "receiptBlob": "1521f44ee889e26e9aa94f3035edf8f49332674d"
+      },
+      "catalogFilephases": {
+        "run": 45262019948,
+        "snapshot": "3f20ed7e2c832d979b669001a4bed2d7c40b6101",
+        "qualification": false
+      },
+      "priorRecordsCommit": "162a39ed8026fc102797c883392bc811ece7b996",
+      "qualification": false,
+      "promoted": false,
       "merged": false
     }
   ],
@@ -6598,7 +6642,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T20:33:38Z",
+    "observedAt": "2026-11-23T20:47:55Z",
     "qualification": false,
     "experiments": [
       {
@@ -11180,6 +11224,54 @@
           "inventoryOnly": 36,
           "thisReviewerViewed": 0
         }
+      },
+      {
+        "name": "ISOLATED_CATALOG_CANDIDATE_FILEPHASES",
+        "baseSource": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+        "baseSourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+        "sourceOverlay": {
+          "branch": "sf613-catalogphases",
+          "commit": "f791d58fac94a895628eed1758079385db4a9b95",
+          "tree": "36c25d2e9da2c92c41a972334df320622615a90e",
+          "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+          "diagnosticPaths": 9
+        },
+        "snapshot": "3f20ed7e2c832d979b669001a4bed2d7c40b6101",
+        "snapshotTree": "eca292acfa7b4cbb6dbf6a0773b7dbeb52ed5d62",
+        "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+        "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+        "totalChangedPaths": 10,
+        "run": 45262019948,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45262019948",
+        "createdAt": "2026-11-23T20:41:45Z",
+        "status": "IN_PROGRESS",
+        "observedAt": "2026-11-23T20:43:52Z",
+        "headShaVerified": true,
+        "purpose": "Locate the remaining original Import pre/post-context and fetch/body intervals after the Catalog correction.",
+        "overlayAttribution": "Root reports exact previously reviewed nine Filephases blobs reapplied to the Catalog candidate.",
+        "originalTestsAndDeadlinesUnchanged": true,
+        "diagnosticOnly": true,
+        "promoteDiagnosticCode": false,
+        "qualification": false
+      },
+      {
+        "name": "ISOLATED_CANONICAL_KEYORDER_FIXTURE_COMPARISON",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "run": 45261353346,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261353346",
+        "status": "COMPLETED_DIAGNOSTIC_SUCCESS_CANDIDATES_REJECTED",
+        "testJob": 137996626989,
+        "cleanupJob": 137997651194,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/keyorder-2026-11-23.json",
+          "blob": "1521f44ee889e26e9aa94f3035edf8f49332674d"
+        },
+        "decision": "Reject both already-sorted scan and bounded last-shape-per-length memo: each regresses on all five original C14 fixture categories. No release or installed-flow follow-up, no product adoption.",
+        "qualification": false,
+        "productAdopted": false,
+        "reportedBy": "/root/canonical_perf",
+        "receiptReviewedBy": "/root/audit_catalog",
+        "observedAt": "2026-11-23T20:47:55Z"
       }
     ]
   },
@@ -12868,6 +12960,25 @@
       ],
       "recordedAt": "2026-11-23T20:01:58Z",
       "receiptBlob": "53215bd50d77a6362f801d0363d85b4b3ecea5cb"
+    },
+    "canonicalKeyOrderDecision": {
+      "name": "ISOLATED_CANONICAL_KEYORDER_FIXTURE_COMPARISON",
+      "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "run": 45261353346,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261353346",
+      "status": "COMPLETED_DIAGNOSTIC_SUCCESS_CANDIDATES_REJECTED",
+      "testJob": 137996626989,
+      "cleanupJob": 137997651194,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/keyorder-2026-11-23.json",
+        "blob": "1521f44ee889e26e9aa94f3035edf8f49332674d"
+      },
+      "decision": "Reject both already-sorted scan and bounded last-shape-per-length memo: each regresses on all five original C14 fixture categories. No release or installed-flow follow-up, no product adoption.",
+      "qualification": false,
+      "productAdopted": false,
+      "reportedBy": "/root/canonical_perf",
+      "receiptReviewedBy": "/root/audit_catalog",
+      "observedAt": "2026-11-23T20:47:55Z"
     }
   },
   "portfolioHistoryAbortInvestigation": {
@@ -13167,7 +13278,7 @@
     }
   },
   "catalogAvailabilityCandidate": {
-    "status": "FOCUSED_PASSED_SIX_ORIGINAL_CAMPAIGNS_LAUNCHED_C9_FAILED",
+    "status": "PARTIAL_RESULTS_T10_C9_FAILED_RELEASE6_PASSED",
     "recordedAt": "2026-11-23T20:32:06Z",
     "source": {
       "branch": "sf613-catalog",
@@ -13221,11 +13332,19 @@
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260427535",
         "createdAt": "2026-11-23T20:32:30Z",
         "headShaVerified": true,
-        "observedAt": "2026-11-23T20:39:27Z",
+        "observedAt": "2026-11-23T20:47:55Z",
         "label": "C9",
         "conclusion": "failure",
         "updatedAt": "2026-11-23T20:39:11Z",
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": false,
+        "testJob": 137993395560,
+        "cleanupJob": 137997397599,
+        "completedLogReviewPending": false,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-c9-2026-11-23.json",
+          "blob": "63c69c0fde8502887448b10ad878c170266431c2"
+        }
       },
       "technical": {
         "label": "T10",
@@ -13234,13 +13353,21 @@
         "branch": "ci-run-linux-sf613-catalogtechnical",
         "snapshot": "1066f85e3ef4cb5c6109b44c5381aa7b2f43adff",
         "snapshotTree": "47e9a7ab447ff8a39db2a4ba9db88da25057815f",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "createdAt": "2026-11-23T20:36:49Z",
-        "updatedAt": "2026-11-23T20:36:52Z",
-        "observedAt": "2026-11-23T20:39:27Z",
+        "updatedAt": "2026-11-23T20:45:06Z",
+        "observedAt": "2026-11-23T20:47:55Z",
         "headShaVerified": true,
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": false,
+        "testJob": 137996023028,
+        "cleanupJob": 138000898213,
+        "completedLogReviewPending": false,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-t10-2026-11-23.json",
+          "blob": "c86ea74ade1cf865f59d39e6513c6e4daa5fc005"
+        }
       },
       "release": {
         "label": "Release6",
@@ -13249,13 +13376,21 @@
         "branch": "ci-run-linux-sf613-catalogrelease",
         "snapshot": "ced9c41e9640e50e595e800e1340a7235e1863fd",
         "snapshotTree": "d6b0f4dd8da9fbed6af7d0e43ed884cf56d9acbd",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "createdAt": "2026-11-23T20:37:03Z",
-        "updatedAt": "2026-11-23T20:37:06Z",
-        "observedAt": "2026-11-23T20:39:27Z",
+        "updatedAt": "2026-11-23T20:41:02Z",
+        "observedAt": "2026-11-23T20:47:55Z",
         "headShaVerified": true,
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": true,
+        "testJob": 137996158692,
+        "cleanupJob": 137998441788,
+        "completedLogReviewPending": false,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-release6-2026-11-23.json",
+          "blob": "de636e75ee36b19fdfd2c89d0576d5b90e6e811c"
+        }
       },
       "analytics": {
         "label": "A9",
@@ -13305,7 +13440,36 @@
     },
     "originalCampaignReceipt": {
       "path": "docs/qa/sucafina/design/wave-five/catalog-original-campaigns-2026-11-23.json",
-      "blob": "b8b99c45713d63e50facf81769856b169fe5098c"
+      "blob": "04cedd247e93f3753587a844108cdfc847cc96e5"
+    },
+    "partialResults": {
+      "technical": {
+        "run": 45261180250,
+        "outerPassed": 14,
+        "outerFailed": 1,
+        "failure": "Original C17 normal-runtime cooperative105000ms deadline",
+        "C17TestMs": 105008.5,
+        "outerResultReads": 1952,
+        "ancestryAborted": true
+      },
+      "release": {
+        "run": 45261218178,
+        "outerPassed": 5,
+        "outerFailed": 0,
+        "C17TestMs": 82708.11,
+        "outerResultReads": 1952,
+        "allC17PhasesCompleted": true
+      },
+      "collaboration": {
+        "run": 45260427535,
+        "passed": 1,
+        "failed": 1,
+        "failure": "Original UI56 heading expectation10000ms",
+        "completeJpegGroups": 38,
+        "rootViewed": 2,
+        "inventoryOnly": 36
+      },
+      "qualification": false
     }
   },
   "suspendedImportContextDraft": {

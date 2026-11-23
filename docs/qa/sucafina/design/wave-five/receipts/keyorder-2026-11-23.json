@@ -1,0 +1,863 @@
+{
+  "schemaVersion": 1,
+  "kind": "canonical-key-order-fixture-microdiagnostic",
+  "qualification": false,
+  "decision": "Reject both already-sorted scan and bounded last-shape-per-length memo: each regresses on all five original C14 fixture categories. No release or installed-flow follow-up, no product adoption.",
+  "run": 45261353346,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261353346",
+  "status": "success",
+  "source": {
+    "branch": "sf613-keyorder",
+    "commit": "29302b309928bf6240dda3affd2ee0405e83f9f1",
+    "tree": "38ece4642943e708fbf27744498d99b2262f3d34",
+    "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "productCanonicalBlobUnchanged": "461c1728b9c6081d0ade0183bc194382523764f3",
+    "paths": [
+      {
+        "path": "apps/cli/test/fixture/sucafina-keyorder-diagnostic.ts",
+        "blob": "c0536c3b262b514f372d5c630bf898acd74e3c54"
+      },
+      {
+        "path": "apps/cli/test/sucafina-keyorder-diagnostic.test.ts",
+        "blob": "015a29aff74af439c32772d020eb3bf456cd9032"
+      }
+    ]
+  },
+  "snapshot": {
+    "commit": "20bcc1445d2a707cd3731d492c38561fd2b9de0a",
+    "tree": "2046cdf898940c1cd7674b656f2b8afee1e95a35",
+    "branch": "ci-run-linux-sf613-keyorder",
+    "parent": "29302b309928bf6240dda3affd2ee0405e83f9f1",
+    "paths": [
+      {
+        "path": "apps/cli/test/sucafina-keyorder-verification.test.ts",
+        "blob": "1d6231f5b1bbdc20352057be39f6550c64f40bd6"
+      },
+      {
+        "path": ".ci-run.json",
+        "blob": "0cdcd26c7eb3f388a656e2d3768e1d8336b4b75b"
+      }
+    ]
+  },
+  "functional": {
+    "driver": {
+      "passed": 3,
+      "failed": 0,
+      "assertions": 7
+    },
+    "diagnostic": {
+      "passed": 4,
+      "failed": 0,
+      "assertions": 1533
+    },
+    "cliTypecheck": "pass",
+    "commands": 5,
+    "omni": {
+      "verdict": "pass",
+      "declared": 3,
+      "spawns": 5,
+      "delegated": 0
+    }
+  },
+  "runtime": {
+    "version": "1.3.14",
+    "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "runner": "ubuntu-24.04",
+    "omni": "strict",
+    "channel": "prod"
+  },
+  "main": {
+    "job": 137996626989,
+    "status": "success",
+    "decodedLogGitBlob": "00ae7bd2c6a6293574d768b2857817526702222f",
+    "decodedLogBytes": 76090,
+    "firstLogLine": "﻿2026-11-23T20:37:51.9022412Z Current runner version: '2.338.2'",
+    "lastLogLine": "2026-11-23T20:39:30.9052683Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/"
+  },
+  "cleanup": {
+    "job": 137997651194,
+    "status": "success",
+    "decodedLogGitBlob": "be36831c6cf5c4f03c0f812af45306439033e322",
+    "decodedLogBytes": 2295,
+    "firstLogLine": "﻿2026-11-23T20:39:35.3867377Z Current runner version: '2.338.2'",
+    "lastLogLine": "2026-11-23T20:39:41.6380643Z Cleaning up orphan processes"
+  },
+  "branchDeleted404": true,
+  "artifacts": [],
+  "output": {
+    "records": 10,
+    "maximumRecords": 10,
+    "maximumRecordBytes": 4096,
+    "actualMaximumLineBytes": 704,
+    "measuredRecordCallsPerLane": 2696000,
+    "measuredLanes": 3,
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  },
+  "summaries": [
+    {
+      "fixture": "tagged-values",
+      "recordsPerPass": 2,
+      "sortedRatio": 1.4350478278254206,
+      "memoRatio": 1.1275630038279036,
+      "sortedTotalsMs": 15.668,
+      "originalTotalsMs": 10.804,
+      "memoTotalsMs": 12.129,
+      "memoHitFraction": 0.499875
+    },
+    {
+      "fixture": "evidence-reference",
+      "recordsPerPass": 3,
+      "sortedRatio": 1.158651894482345,
+      "memoRatio": 2.1421325784383107,
+      "sortedTotalsMs": 41.11,
+      "originalTotalsMs": 34.675000000000004,
+      "memoTotalsMs": 74.37,
+      "memoHitFraction": 0.33325
+    },
+    {
+      "fixture": "captured-context",
+      "recordsPerPass": 35,
+      "sortedRatio": 1.351939244836461,
+      "memoRatio": 1.152727552449285,
+      "sortedTotalsMs": 111.74,
+      "originalTotalsMs": 82.542,
+      "memoTotalsMs": 95.049,
+      "memoHitFraction": 0.9142857142857143
+    },
+    {
+      "fixture": "aliased-projection",
+      "recordsPerPass": 256,
+      "sortedRatio": 1.1649660306388716,
+      "memoRatio": 1.8128338923823168,
+      "sortedTotalsMs": 801.425,
+      "originalTotalsMs": 692.818,
+      "memoTotalsMs": 1252.047,
+      "memoHitFraction": 0.4999921875
+    },
+    {
+      "fixture": "distinct-projection",
+      "recordsPerPass": 256,
+      "sortedRatio": 1.1742013180017885,
+      "memoRatio": 1.8206788215919834,
+      "sortedTotalsMs": 802.495,
+      "originalTotalsMs": 684.775,
+      "memoTotalsMs": 1257.379,
+      "memoHitFraction": 0.4999921875
+    },
+    {
+      "fixture": "ordered-stress",
+      "recordsPerPass": 1,
+      "sortedRatio": 0.2965957704291884,
+      "memoRatio": 0.2848329288244421,
+      "sortedTotalsMs": 28.662,
+      "originalTotalsMs": 97.95700000000001,
+      "memoTotalsMs": 27.796,
+      "memoHitFraction": 0.99975
+    },
+    {
+      "fixture": "wide-repeat-stress",
+      "recordsPerPass": 1,
+      "sortedRatio": 1.0189424696850704,
+      "memoRatio": 0.305306286365893,
+      "sortedTotalsMs": 133.578,
+      "originalTotalsMs": 131.19400000000002,
+      "memoTotalsMs": 40.167,
+      "memoHitFraction": 0.99975
+    },
+    {
+      "fixture": "same-length-churn-stress",
+      "recordsPerPass": 16,
+      "sortedRatio": 1.092808098325295,
+      "memoRatio": 2.3536749797144934,
+      "sortedTotalsMs": 416.972,
+      "originalTotalsMs": 380.808,
+      "memoTotalsMs": 897.012,
+      "memoHitFraction": 0
+    }
+  ],
+  "records": [
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "start",
+      "lanes": [
+        "original",
+        "already-sorted",
+        "bounded-key-memo"
+      ],
+      "method": "Object.keys plus sort only, repeated records preserve alias traversal weighting",
+      "warmupPassesPerLane": 100,
+      "pairs": 4,
+      "measurementsMultiplier": 4,
+      "wholeCanonicalMeasured": false,
+      "installedPreviewMeasured": false,
+      "originalHasherChanged": false,
+      "maximumKeys": 64,
+      "maximumRetainedStringUnits": 65536,
+      "countersIncludedInTiming": true
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "tagged-values",
+      "recordsPerPass": 2,
+      "iterationsPerLane": 4000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          2.796,
+          3.91,
+          3.024,
+          4000,
+          3999,
+          1,
+          4000,
+          0,
+          26
+        ],
+        [
+          1,
+          2.659,
+          4.081,
+          3.074,
+          4000,
+          3999,
+          1,
+          4000,
+          0,
+          26
+        ],
+        [
+          2,
+          2.689,
+          3.945,
+          3.001,
+          4000,
+          3999,
+          1,
+          4000,
+          0,
+          26
+        ],
+        [
+          2,
+          2.66,
+          3.732,
+          3.03,
+          4000,
+          3999,
+          1,
+          4000,
+          0,
+          26
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "evidence-reference",
+      "recordsPerPass": 3,
+      "iterationsPerLane": 4000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          9.248,
+          11.671,
+          18.37,
+          0,
+          3999,
+          8001,
+          0,
+          0,
+          158
+        ],
+        [
+          1,
+          8.471,
+          9.804,
+          19.678,
+          0,
+          3999,
+          8001,
+          0,
+          0,
+          158
+        ],
+        [
+          2,
+          8.478,
+          9.834,
+          18.089,
+          0,
+          3999,
+          8001,
+          0,
+          0,
+          158
+        ],
+        [
+          2,
+          8.478,
+          9.801,
+          18.233,
+          0,
+          3999,
+          8001,
+          0,
+          0,
+          158
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "captured-context",
+      "recordsPerPass": 35,
+      "iterationsPerLane": 2000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          21.17,
+          28.911,
+          24.545,
+          2000,
+          64000,
+          6000,
+          0,
+          0,
+          38
+        ],
+        [
+          1,
+          20.365,
+          28.047,
+          23.524,
+          2000,
+          64000,
+          6000,
+          0,
+          0,
+          38
+        ],
+        [
+          2,
+          20.534,
+          27.479,
+          23.621,
+          2000,
+          64000,
+          6000,
+          0,
+          0,
+          38
+        ],
+        [
+          2,
+          20.473,
+          27.303,
+          23.359,
+          2000,
+          64000,
+          6000,
+          0,
+          0,
+          38
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "aliased-projection",
+      "recordsPerPass": 256,
+      "iterationsPerLane": 1000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          172.765,
+          199.911,
+          311.781,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          1,
+          178.228,
+          200.547,
+          312.096,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          2,
+          170.968,
+          200.585,
+          317.037,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          2,
+          170.857,
+          200.382,
+          311.133,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "distinct-projection",
+      "recordsPerPass": 256,
+      "iterationsPerLane": 1000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          170.419,
+          200.277,
+          313.852,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          1,
+          171.545,
+          199.689,
+          308.731,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          2,
+          171.286,
+          201.216,
+          308.262,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ],
+        [
+          2,
+          171.525,
+          201.313,
+          326.534,
+          0,
+          127998,
+          128002,
+          0,
+          0,
+          270
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "ordered-stress",
+      "recordsPerPass": 1,
+      "iterationsPerLane": 4000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          25.084,
+          7.475,
+          6.948,
+          4000,
+          3999,
+          1,
+          0,
+          0,
+          320
+        ],
+        [
+          1,
+          24.178,
+          7.179,
+          6.979,
+          4000,
+          3999,
+          1,
+          0,
+          0,
+          320
+        ],
+        [
+          2,
+          24.174,
+          7.162,
+          6.951,
+          4000,
+          3999,
+          1,
+          0,
+          0,
+          320
+        ],
+        [
+          2,
+          24.521,
+          6.846,
+          6.918,
+          4000,
+          3999,
+          1,
+          0,
+          0,
+          320
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "wide-repeat-stress",
+      "recordsPerPass": 1,
+      "iterationsPerLane": 4000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          33.4,
+          33.518,
+          10.264,
+          0,
+          3999,
+          1,
+          0,
+          0,
+          480
+        ],
+        [
+          1,
+          32.505,
+          33.301,
+          9.859,
+          0,
+          3999,
+          1,
+          0,
+          0,
+          480
+        ],
+        [
+          2,
+          32.519,
+          33.55,
+          10.212,
+          0,
+          3999,
+          1,
+          0,
+          0,
+          480
+        ],
+        [
+          2,
+          32.77,
+          33.209,
+          9.832,
+          0,
+          3999,
+          1,
+          0,
+          0,
+          480
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "same-length-churn-stress",
+      "recordsPerPass": 16,
+      "iterationsPerLane": 4000,
+      "columns": [
+        "firstLane",
+        "originalMs",
+        "sortedMs",
+        "memoMs",
+        "alreadyOrdered",
+        "memoHits",
+        "memoMisses",
+        "memoRefused",
+        "memoClears",
+        "retainedUnits"
+      ],
+      "pairs": [
+        [
+          0,
+          95.801,
+          104.652,
+          224.708,
+          0,
+          0,
+          64000,
+          0,
+          0,
+          320
+        ],
+        [
+          1,
+          94.928,
+          104.675,
+          224.199,
+          0,
+          0,
+          64000,
+          0,
+          0,
+          320
+        ],
+        [
+          2,
+          94.962,
+          103.815,
+          222.603,
+          0,
+          0,
+          64000,
+          0,
+          0,
+          320
+        ],
+        [
+          2,
+          95.117,
+          103.83,
+          225.502,
+          0,
+          0,
+          64000,
+          0,
+          0,
+          320
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-keyorder-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "complete",
+      "fixtures": 8,
+      "measuredRecordCallsPerLane": 2696000,
+      "timeThresholdApplied": false,
+      "productAdoption": false
+    }
+  ],
+  "controls": [
+    "2026-11-23T20:38:55.5614964Z {\"gate\":\"fetch source parent\",\"source\":\"29302b309928bf6240dda3affd2ee0405e83f9f1\",\"sourceTree\":\"38ece4642943e708fbf27744498d99b2262f3d34\",\"snapshot\":\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\",\"run\":\"45261353346\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":199,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T20:38:55.5643095Z {\"gate\":\"snapshot identity\",\"source\":\"29302b309928bf6240dda3affd2ee0405e83f9f1\",\"sourceTree\":\"38ece4642943e708fbf27744498d99b2262f3d34\",\"snapshot\":\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\",\"run\":\"45261353346\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T20:38:55.5788244Z {\"gate\":\"source identity\",\"source\":\"29302b309928bf6240dda3affd2ee0405e83f9f1\",\"sourceTree\":\"38ece4642943e708fbf27744498d99b2262f3d34\",\"snapshot\":\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\",\"run\":\"45261353346\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":15,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T20:38:55.5798876Z (pass) snapshot identifies the exact reviewed diagnostic source and tree [226.96ms]",
+    "2026-11-23T20:39:03.9015088Z {\"gate\":\"four key-order controls and paired fixture comparison\",\"source\":\"29302b309928bf6240dda3affd2ee0405e83f9f1\",\"sourceTree\":\"38ece4642943e708fbf27744498d99b2262f3d34\",\"snapshot\":\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\",\"run\":\"45261353346\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/sucafina-keyorder-diagnostic.test.ts\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":8320,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T20:39:03.9029559Z (pass) key ordering retains observable behavior and reports paired timings [8321.83ms]",
+    "2026-11-23T20:39:03.9056742Z (pass) key-order candidates preserve native order and observe every current key set [11.75ms]",
+    "2026-11-23T20:39:03.9057270Z (pass) key-order candidates retain key traps and original method getters, receivers and errors [0.53ms]",
+    "2026-11-23T20:39:03.9057775Z (pass) memo arrays remain private under prototype setters and later map mutation [0.59ms]",
+    "2026-11-23T20:39:03.9058315Z (pass) paired key-order microcomparison measures guards and bounded memo overhead [8286.62ms]",
+    "2026-11-23T20:39:03.9058898Z  4 pass",
+    "2026-11-23T20:39:03.9059103Z  0 fail",
+    "2026-11-23T20:39:03.9059337Z  1533 expect() calls",
+    "2026-11-23T20:39:30.3151544Z {\"gate\":\"CLI package typecheck\",\"source\":\"29302b309928bf6240dda3affd2ee0405e83f9f1\",\"sourceTree\":\"38ece4642943e708fbf27744498d99b2262f3d34\",\"snapshot\":\"20bcc1445d2a707cd3731d492c38561fd2b9de0a\",\"run\":\"45261353346\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":26412,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T20:39:30.3154861Z (pass) CLI package preserves its original types [26413.77ms]",
+    "2026-11-23T20:39:30.3162731Z omni positive control [976dfb80458cbacebf1d6aa418ee922a]: pass (declared: 3 test(s) in test/sucafina-keyorder-verification.test.ts); 5 omni spawn(s), 0 delegated.",
+    "2026-11-23T20:39:30.3163547Z  3 pass",
+    "2026-11-23T20:39:30.3163739Z  0 fail",
+    "2026-11-23T20:39:30.3163903Z  7 expect() calls"
+  ],
+  "limits": [
+    "Key enumeration and sorting only; no whole-canonical, installed Preview, C17 or production qualification.",
+    "Same-runner alternating paired timings, not cross-runtime causal evidence or statistical confidence intervals.",
+    "Diagnostic counters and complete runtime guard overhead are included in measured candidate timings.",
+    "Source field in SF_CANONICAL_KEYORDER_DIAGNOSTIC records identifies unchanged product C3; the wrapper separately verifies actual diagnostic source, tree and snapshot.",
+    "The original five C14 fixtures are reused. Three additional stress cases are separately labeled and are not evidence of installed workload distribution.",
+    "Both candidates pass the finite observable-behavior controls; this is not a universal proof for arbitrary JavaScript or intrinsics modified before module bootstrap.",
+    "Fresh Object.keys calls, key traps, method getters, receiver, error controls and private memo mutation isolation are tested. No domain values or object references are cached.",
+    "Original product code, SQL/auth/generation boundaries, workflow files and original task deadlines remain unchanged.",
+    "The diagnostic test has its original120000ms bound; snapshot process and wrapper envelopes180000/240000ms include startup, without increasing that test bound.",
+    "Logs are preserved as content-addressed Git blobs; no SHA-256 is claimed for the decoded logs."
+  ]
+}

@@ -1,0 +1,835 @@
+{
+  "schema": "sf613-catalog-t10-receipt-v1",
+  "recordedAt": "2026-11-23T20:46:12Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "originalTechnicalCampaignPassed": false,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "branch": "sf613-catalog",
+    "isolated": true
+  },
+  "snapshot": {
+    "commit": "1066f85e3ef4cb5c6109b44c5381aa7b2f43adff",
+    "tree": "47e9a7ab447ff8a39db2a4ba9db88da25057815f",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "temporaryBranch": "ci-run-linux-sf613-catalogtechnical",
+    "temporaryBranchVerified404": true,
+    "paths": [
+      {
+        "path": ".ci-run.json",
+        "blob": "5837e17e056b2c8b9c9581e4410f2d8e17de8856"
+      },
+      {
+        "path": "apps/cli/test/sucafina-finish-verification.test.ts",
+        "blob": "fb5e4c896f40a174e62effdd7a7309b497ae4105"
+      }
+    ],
+    "wrapperReverseExactToT9AfterOnlySourceAndTreeRebinding": true,
+    "originalWrapperBlob": "5919e881fee02b02097e1aa96a94607b38361988"
+  },
+  "ci": {
+    "id": 45261180250,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261180250",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-23T20:36:49Z",
+    "updatedAt": "2026-11-23T20:45:06Z",
+    "headSha": "1066f85e3ef4cb5c6109b44c5381aa7b2f43adff",
+    "jobs": [
+      {
+        "id": 137996023028,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:36:51Z",
+        "completedAt": "2026-11-23T20:44:57Z"
+      },
+      {
+        "id": 138000898213,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:44:59Z",
+        "completedAt": "2026-11-23T20:45:05Z"
+      }
+    ]
+  },
+  "environment": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "result": {
+    "outcome": "FAILED_ONLY_ORIGINAL_C17_DEADLINE",
+    "outer": {
+      "passed": 14,
+      "failed": 1,
+      "expectCalls": 568,
+      "durationSeconds": 444.23
+    },
+    "successfulGroups": [
+      {
+        "name": "Captured context and canonical controls",
+        "passed": 47
+      },
+      {
+        "name": "Planner projection references",
+        "passed": 12
+      },
+      {
+        "name": "C08 selection and proof order",
+        "passed": 15
+      },
+      {
+        "name": "UI authority and context integrity",
+        "passed": 27
+      },
+      {
+        "name": "Source/authority/storage contracts",
+        "passed": 63
+      },
+      {
+        "name": "Original DOM payload and copy regressions",
+        "passed": 7
+      },
+      {
+        "name": "Core process/filesystem/layer-node",
+        "passed": 41
+      }
+    ],
+    "storageGroup": {
+      "passed": 59,
+      "skipped": 2,
+      "failed": 1,
+      "commandDurationMs": 171214,
+      "skips": "Original unchanged foreign UID directory/database cases requiring root fixture privileges."
+    },
+    "C17": {
+      "passed": false,
+      "error": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+      "testDurationMs": 105008.5,
+      "originalCooperativeDeadlineMs": 105000,
+      "originalOuterTestDeadlineMs": 120000,
+      "inner": {
+        "phaseMs": 1390,
+        "canonicalResultReads": 14,
+        "completed": 14,
+        "aborted": false
+      },
+      "outer": {
+        "phaseMs": 100462,
+        "canonicalResultReads": 1952,
+        "completed": 1952,
+        "aborted": false
+      },
+      "reopen": {
+        "phaseMs": 9,
+        "aborted": false
+      },
+      "ancestry": {
+        "phaseMs": 3115,
+        "elapsedMs": 105002,
+        "aborted": true
+      },
+      "persistedCycleAndRevocationReached": false,
+      "countInterpretation": "canonicalResultReads are business.results.readForCalculation calls, not SQL queries or Planner prepares."
+    },
+    "typechecks": [
+      {
+        "name": "CLI package typecheck",
+        "cwd": "apps/cli",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationMs": 42333
+      },
+      {
+        "name": "Sucafina package typecheck",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationMs": 40936
+      },
+      {
+        "name": "app-shell typecheck",
+        "cwd": "packages/app-shell",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "durationMs": 22437
+      },
+      {
+        "name": "app-shell e2e typecheck",
+        "cwd": "packages/app-shell",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck:e2e"
+        ],
+        "exitCode": 0,
+        "durationMs": 7342
+      }
+    ],
+    "guards": {
+      "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "bootstrap": false,
+      "rules": 78,
+      "files": 825,
+      "findings": [
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 89,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    globalThis.structuredClone = (value, options) => {",
+          "match": [
+            4,
+            33
+          ]
+        },
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 95,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    finally { globalThis.structuredClone = original }",
+          "match": [
+            14,
+            43
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 110,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 13,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(780_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 14,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 72,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 89,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 98,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 156,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 203,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+          "match": [
+            129,
+            149
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 438,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+          "match": [
+            113,
+            132
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 444,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(660_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 445,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 471,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            125,
+            144
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 486,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            116,
+            135
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 527,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 616,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    }, { timeout: 60_000 })",
+          "match": [
+            7,
+            26
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 661,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 20,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  collabTest.setTimeout(900_000)",
+          "match": [
+            13,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 21,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 103,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+          "match": [
+            109,
+            128
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 142,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+          "match": [
+            68,
+            87
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 263,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(600_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 264,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 66,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 40_000 }).then(async (response) => {",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 79,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })",
+          "match": [
+            66,
+            85
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 101,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+          "match": [
+            105,
+            124
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 113,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+          "match": [
+            100,
+            119
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 124,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            36,
+            55
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 128,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            38,
+            57
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 135,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(420_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 136,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 153,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+          "match": [
+            78,
+            97
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(720_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 219,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 237,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            69,
+            88
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 326,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+          "match": [
+            139,
+            158
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 405,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            83,
+            102
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 437,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            90,
+            109
+          ]
+        }
+      ],
+      "errors": [],
+      "approved": [],
+      "touchesGuards": false
+    },
+    "guardSummary": {
+      "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "rules": 78,
+      "files": 825,
+      "errors": [],
+      "approved": [],
+      "warnings": 40,
+      "warningsNotWaived": true
+    },
+    "bilingualParity": {
+      "passed": true,
+      "catalogs": [
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+          "preserved": 78,
+          "added": 41
+        },
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+          "preserved": 31,
+          "added": 6
+        },
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+          "preserved": 100,
+          "added": 15
+        },
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+          "preserved": 27,
+          "added": 4
+        },
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+          "preserved": 73,
+          "added": 3
+        },
+        {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+          "preserved": 70,
+          "added": 7
+        }
+      ]
+    },
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 15,
+      "spawns": 26,
+      "delegated": 0
+    },
+    "outputTruncated": false
+  },
+  "log": {
+    "characters": 156519,
+    "utf8Bytes": 156521,
+    "sha256": "b752dcc9a97dc45ff269c3d4fab6bd41c2f81884442def00765cd59eb9a39208",
+    "lineCount": 1364,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "evidenceLines": [
+      "2026-11-23T20:37:31.3735897Z {\"gate\":\"fetch source parent\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":317,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:31.3778483Z {\"gate\":\"snapshot identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:31.4012725Z {\"gate\":\"source identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":23,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:33.0777866Z {\"gate\":\"26 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/captured-context-identity.test.ts\",\"./test/canonical-native.test.ts\",\"./test/product/wp10/integration/canonical-clone.test.ts\",\"./test/canonical-clone-bytes.test.ts\",\"./test/product/wp10/integration/planner-source-preparation.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":1673,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:33.0839502Z  47 pass",
+      "2026-11-23T20:37:33.0839812Z  0 fail",
+      "2026-11-23T20:37:33.0840305Z  794 expect() calls",
+      "2026-11-23T20:37:34.0200196Z {\"gate\":\"8 synchronous planner byte controls and 4 isolated loading controls\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/planner-projection-source-refs.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":941,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:34.0218506Z  12 pass",
+      "2026-11-23T20:37:34.0218730Z  0 fail",
+      "2026-11-23T20:37:34.0218960Z  72 expect() calls",
+      "2026-11-23T20:37:38.1789501Z {\"gate\":\"14 C08 selection and 1 original coverage proof controls\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/coverage-case-selection.test.ts\",\"./test/product/wp10/integration/coverage-proof-order.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":4157,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:38.1812874Z  15 pass",
+      "2026-11-23T20:37:38.1813091Z  0 fail",
+      "2026-11-23T20:37:38.1813347Z  175 expect() calls",
+      "2026-11-23T20:37:38.2427172Z {\"gate\":\"original UI authority and context integrity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/ui-authority.test.ts\",\"./test/product/wp10/integration/ui-context-integrity.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":62,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:37:38.2460726Z  27 pass",
+      "2026-11-23T20:37:38.2460944Z  0 fail",
+      "2026-11-23T20:37:38.2461177Z  221 expect() calls",
+      "2026-11-23T20:40:29.4581386Z {\"gate\":\"CurrentChoice readonly storage and nested calculation composition\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/local-store.test.ts\",\"./test/product/wp10/integration/current-choice-readonly.test.ts\",\"./test/product/wp10/integration/calculation-ancestry-composition.test.ts\",\"./test/product/wp10/integration/finance-pair-observation.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":1,\"durationMs\":171214,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:40:29.4586716Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"started\",\"elapsedMs\":0}",
+      "2026-11-23T20:40:29.4588477Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"returned\",\"phaseMs\":19,\"elapsedMs\":20,\"aborted\":false}",
+      "2026-11-23T20:40:29.4589588Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"started\",\"elapsedMs\":20}",
+      "2026-11-23T20:40:29.4591134Z SF_CALCULATION_ANCESTRY {\"phase\":\"produce-inner\",\"elapsedMs\":1390,\"canonicalResultReads\":14,\"canonicalResultReadsCompleted\":14,\"aborted\":false}",
+      "2026-11-23T20:40:29.4592328Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"returned\",\"phaseMs\":1390,\"elapsedMs\":1409,\"aborted\":false}",
+      "2026-11-23T20:40:29.4593412Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"started\",\"elapsedMs\":1413}",
+      "2026-11-23T20:40:29.4594729Z SF_CALCULATION_ANCESTRY {\"phase\":\"produce-outer\",\"elapsedMs\":100462,\"canonicalResultReads\":1952,\"canonicalResultReadsCompleted\":1952,\"aborted\":false}",
+      "2026-11-23T20:40:29.4596214Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"returned\",\"phaseMs\":100462,\"elapsedMs\":101875,\"aborted\":false}",
+      "2026-11-23T20:40:29.4597296Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reopen\",\"state\":\"started\",\"elapsedMs\":101877}",
+      "2026-11-23T20:40:29.4598353Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"reopen\",\"state\":\"returned\",\"phaseMs\":9,\"elapsedMs\":101887,\"aborted\":false}",
+      "2026-11-23T20:40:29.4600948Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"resolve-reopened-ancestry\",\"state\":\"started\",\"elapsedMs\":101887}",
+      "2026-11-23T20:40:29.4603068Z SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"resolve-reopened-ancestry\",\"state\":\"returned\",\"phaseMs\":3115,\"elapsedMs\":105002,\"aborted\":true}",
+      "2026-11-23T20:40:29.4822085Z (fail) C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority [105008.50ms]",
+      "2026-11-23T20:40:29.4829126Z (fail) C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority [105008.50ms]",
+      "2026-11-23T20:40:29.4830333Z  59 pass",
+      "2026-11-23T20:40:29.4830673Z  2 skip",
+      "2026-11-23T20:40:29.4830992Z  1 fail",
+      "2026-11-23T20:40:29.4831329Z  1202 expect() calls",
+      "2026-11-23T20:41:11.7949521Z {\"gate\":\"CLI package typecheck\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":42333,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:41:52.7319274Z {\"gate\":\"Sucafina package typecheck\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":40936,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:41:52.7385893Z {\"gate\":\"inspect history completeness\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"rev-parse\",\"--is-shallow-repository\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":5,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:18.4833578Z {\"gate\":\"fetch current dev and source ancestry\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--unshallow\",\"origin\",\"+refs/heads/dev:refs/remotes/origin/dev\",\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":25744,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:18.4880921Z {\"gate\":\"current dev identity\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"rev-parse\",\"--verify\",\"refs/remotes/origin/dev^{commit}\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":5,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:18.4973022Z {\"gate\":\"actual guard merge base\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"merge-base\",\"HEAD\",\"origin/dev\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":9,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:18.4979447Z {\"gate\":\"guard ancestry\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"dev\":\"e115b667d845822a1df5f523bbfd828ab57ca978\",\"mergeBase\":\"e115b667d845822a1df5f523bbfd828ab57ca978\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\",\"command\":\"bun run check:guards --base origin/dev --json\"}",
+      "2026-11-23T20:42:20.9313023Z {\"gate\":\"canonical guardrails\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"check:guards\",\"--base\",\"origin/dev\",\"--json\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":2434,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:43.3697581Z {\"gate\":\"app-shell typecheck\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"typecheck\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"durationMs\":22437,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7134661Z {\"gate\":\"app-shell e2e typecheck\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck:e2e\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"durationMs\":7342,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7204894Z {\"gate\":\"read pinned English source sf-u23\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":5,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7222884Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts\",\"preserved\":78,\"added\":41}",
+      "2026-11-23T20:42:50.7266006Z {\"gate\":\"read pinned English source sf-u25\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7275644Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts\",\"preserved\":31,\"added\":6}",
+      "2026-11-23T20:42:50.7325077Z {\"gate\":\"read pinned English source sf-u32\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":5,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7339418Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts\",\"preserved\":100,\"added\":15}",
+      "2026-11-23T20:42:50.7378345Z {\"gate\":\"read pinned English source sf-u33\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7383241Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts\",\"preserved\":27,\"added\":4}",
+      "2026-11-23T20:42:50.7417723Z {\"gate\":\"read pinned English source sf-u38\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7422911Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts\",\"preserved\":73,\"added\":3}",
+      "2026-11-23T20:42:50.7473340Z {\"gate\":\"read pinned English source sf-u44\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"git\",\"show\",\"346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":5,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:42:50.7477311Z {\"gate\":\"bilingual parity\",\"file\":\"packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts\",\"preserved\":70,\"added\":7}",
+      "2026-11-23T20:44:49.8091943Z {\"gate\":\"reconciled authority storage and source contracts\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/ui-authority.test.ts\",\"./test/teams-profile/policy-store.test.ts\",\"./test/teams-profile/private-connection-store.test.ts\",\"./test/procurement-answer-source.test.ts\",\"./test/po-operational-health.test.ts\",\"./test/product/wp10/integration/confirmation-selection-sqlite.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":119060,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:44:49.8182270Z  63 pass",
+      "2026-11-23T20:44:49.8182601Z  0 fail",
+      "2026-11-23T20:44:49.8182942Z  569 expect() calls",
+      "2026-11-23T20:44:52.8867072Z {\"gate\":\"reconciled confirmation and imports DOM regressions\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"--conditions=browser\",\"--preload\",\"./happydom.ts\",\"./test-browser/sucafina-confirmation-payload.test.ts\",\"./test-browser/sucafina-imports-copy.test.ts\"],\"cwd\":\"packages/app-shell\",\"exitCode\":0,\"durationMs\":3076,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:44:52.8878541Z  7 pass",
+      "2026-11-23T20:44:52.8878837Z  0 fail",
+      "2026-11-23T20:44:52.8879066Z  147 expect() calls",
+      "2026-11-23T20:44:54.9500626Z {\"gate\":\"core process filesystem and layer-node regressions\",\"source\":\"7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f\",\"sourceTree\":\"5047ea10712ed52783a9fb4e16334463e51786c5\",\"snapshot\":\"1066f85e3ef4cb5c6109b44c5381aa7b2f43adff\",\"run\":\"45261180250\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/process/process.test.ts\",\"./test/fs-util-temp.test.ts\",\"./test/effect/layer-node/layer-node.test.ts\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":2062,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:44:54.9551546Z  41 pass",
+      "2026-11-23T20:44:54.9551852Z  0 fail",
+      "2026-11-23T20:44:54.9552186Z  86 expect() calls",
+      "2026-11-23T20:44:54.9553088Z  14 pass",
+      "2026-11-23T20:44:54.9553367Z  1 fail",
+      "2026-11-23T20:44:54.9553663Z  568 expect() calls",
+      "2026-11-23T20:44:54.9555338Z omni positive control [476703631ae09fc2ba916b0ed9552ed5]: pass (declared: 15 test(s) in test/sucafina-finish-verification.test.ts); 26 omni spawn(s), 0 delegated."
+    ]
+  },
+  "limits": [
+    "The complete original normal-runtime technical campaign still fails despite a passing Release6 runtime campaign on the same product source.",
+    "No performance causality is attributed to Catalog; no diagnostic passes replace this original failed gate.",
+    "No global composition qualification, product promotion, merge or deployment."
+  ],
+  "runtime": {
+    "version": "1.3.14",
+    "logRevisionPrefix": "0d9b296a",
+    "packageManagerOverride": false
+  }
+}

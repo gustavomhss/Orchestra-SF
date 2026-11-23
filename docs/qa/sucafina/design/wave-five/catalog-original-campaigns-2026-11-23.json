@@ -57,14 +57,21 @@
       "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
       "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
       "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "createdAt": "2026-11-23T20:36:49Z",
-      "updatedAt": "2026-11-23T20:36:52Z",
+      "updatedAt": "2026-11-23T20:45:06Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T20:46:12Z",
       "qualification": false,
-      "completedLogReviewPending": false
+      "completedLogReviewPending": false,
+      "campaignPassed": false,
+      "testJob": 137996023028,
+      "cleanupJob": 138000898213,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-t10-2026-11-23.json",
+        "blob": "c86ea74ade1cf865f59d39e6513c6e4daa5fc005"
+      }
     },
     {
       "name": "release",
@@ -83,14 +90,21 @@
       "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
       "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
       "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "createdAt": "2026-11-23T20:37:03Z",
-      "updatedAt": "2026-11-23T20:37:06Z",
+      "updatedAt": "2026-11-23T20:41:02Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T20:46:12Z",
       "qualification": false,
-      "completedLogReviewPending": false
+      "completedLogReviewPending": false,
+      "campaignPassed": true,
+      "testJob": 137996158692,
+      "cleanupJob": 137998441788,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-release6-2026-11-23.json",
+        "blob": "de636e75ee36b19fdfd2c89d0576d5b90e6e811c"
+      }
     },
     {
       "name": "analytics",
@@ -152,9 +166,16 @@
       "createdAt": "2026-11-23T20:32:30Z",
       "updatedAt": "2026-11-23T20:39:11Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T20:46:12Z",
       "qualification": false,
-      "completedLogReviewPending": true
+      "completedLogReviewPending": false,
+      "campaignPassed": false,
+      "testJob": 137993395560,
+      "cleanupJob": 137997397599,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-c9-2026-11-23.json",
+        "blob": "63c69c0fde8502887448b10ad878c170266431c2"
+      }
     },
     {
       "name": "reviews",
@@ -183,8 +204,9 @@
     "blob": "a8f7ea36775b35b0574c9db195dfbaefcef9a37d"
   },
   "limits": [
-    "C9 workflow metadata reports failure; detailed completed-log diagnosis is owned by /root and is not yet included here.",
-    "Five other campaigns remain in progress at this observation.",
+    "T10 fails only the original normal-runtime C17 deadline; C9 fails the original UI56 heading expectation. Release6 passes its original full source-runtime campaign.",
+    "A9, RA6 and R9 retain their individually timestamped previous observations; no later completed-log receipts have been added here yet.",
     "No global qualification, PR promotion, merge or production deployment."
-  ]
+  ],
+  "updatedAt": "2026-11-23T20:46:12Z"
 }

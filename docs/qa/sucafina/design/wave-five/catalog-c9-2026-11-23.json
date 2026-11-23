@@ -1,0 +1,459 @@
+{
+  "schema": "sf613-catalog-c9-receipt-v1",
+  "recordedAt": "2026-11-23T20:45:15Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "isolated": true
+  },
+  "snapshot": {
+    "commit": "9a5f6e7e00b3a6c91613cf3263b827e81debc25f",
+    "tree": "2439e6d3afc8a6392af259f23f7b414ba37f2a79",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+    "diagnosticOverlay": false,
+    "originalSpecsAndDeadlinesUnchanged": true,
+    "temporaryBranch": "ci-run-linux-sf613-catalogcollab",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45260427535,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260427535",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-23T20:32:30Z",
+    "updatedAt": "2026-11-23T20:39:11Z",
+    "headSha": "9a5f6e7e00b3a6c91613cf3263b827e81debc25f",
+    "jobs": [
+      {
+        "id": 137993395560,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:32:32Z",
+        "completedAt": "2026-11-23T20:39:06Z"
+      },
+      {
+        "id": 137997397599,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:39:08Z",
+        "completedAt": "2026-11-23T20:39:11Z"
+      }
+    ]
+  },
+  "testResult": {
+    "passed": 1,
+    "failed": 1,
+    "duration": "5.4m",
+    "failure": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 195,
+      "timeoutMs": 10000,
+      "expectedHeading": "Simulation · no domain changes applied",
+      "actual": "element not found; native-view text and root-viewed original failure JPEG show Loading",
+      "originalFailureCaptureAt": "2026-11-23T20:36:54.0101230Z",
+      "assertionReportedAt": "2026-11-23T20:36:55.9443101Z"
+    },
+    "otherOriginalTest": "passed",
+    "earlier403Reproduced": false
+  },
+  "log": {
+    "characters": 4111769,
+    "utf8Bytes": 4118465,
+    "sha256": "65c4260619b37a40041ab0fb2fd45d23916d37150feac1b33e3c33e2c5f4c4de",
+    "lineCount": 1677,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "evidenceLines": [
+      "2026-11-23T20:35:55.7903520Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-targets\",\"method\":\"GET\",\"failure\":null}",
+      "2026-11-23T20:36:03.6490425Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-admission\",\"httpStatus\":200,\"producerStatus\":\"ok\",\"instrumentation\":\"CDP response-stage observation; no replay\"}",
+      "2026-11-23T20:36:03.6526826Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfailed\",\"mode\":\"import-admit\",\"method\":\"POST\",\"failure\":\"net::ERR_ABORTED\"}",
+      "2026-11-23T20:36:08.6303895Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"preview-producer-response\",\"httpStatus\":200,\"producerStatus\":\"ok\",\"codecStatus\":\"ok\",\"typed\":\"Some\",\"activity\":\"previewing\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T20:36:08.6394875Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-preview\",\"manifestId\":\"9b33882c07223e6aa1dcacfbbb446ea4b4b67bf8174257093e174a6fda540574\",\"state\":\"preview\",\"sourceDigest\":\"4b19e0a7f7c57bfce21e30c2b0222988b2c8c9558066a81ff180806105695268\",\"domainApplied\":false}",
+      "2026-11-23T20:36:08.7764681Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-preview\",\"method\":\"POST\",\"failure\":null}",
+      "2026-11-23T20:36:08.7848165Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"preview-delivered\",\"activity\":\"previewing\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T20:36:15.2061808Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"independent-reference-read\",\"elapsedMs\":6494,\"httpStatus\":200,\"producerStatus\":\"ok\",\"activity\":\"reading-source\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T20:36:21.5390904Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-reference\",\"method\":\"GET\",\"failure\":null}",
+      "2026-11-23T20:36:49.8651066Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfailed\",\"mode\":\"import-reference\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"}",
+      "2026-11-23T20:36:54.0101230Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"wave-three-failure\",\"consoleErrors\":[],\"pageErrors\":[]}",
+      "2026-11-23T20:36:54.0157429Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"native-view\",\"state\":{\"discovery\":\"ready\",\"provider\":\"ready\",\"view\":\"ready\",\"text\":\"Context and access⁨127.0.0.1:33963⁩ · Import previewImport previewReview the original simulation, source context and item changes.1Choose destination2Select file3Review previewLoading…\"}}"
+    ],
+    "failureLines": [
+      "2026-11-23T20:36:55.9445439Z     Timeout: 10000ms",
+      "2026-11-23T20:36:55.9450767Z     > 195 |     await expect(surface.getByRole(\"heading\", { name: \"Simulation · no domain changes applied\", exact: true })).toBeVisible()",
+      "2026-11-23T20:39:00.6213130Z \u001b[1A\u001b[2K  1 failed",
+      "2026-11-23T20:39:00.6214452Z   1 passed (5.4m)"
+    ]
+  },
+  "artifact": {
+    "id": 14861441197,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 43957635,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861441197",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861441197/zip",
+    "expired": false,
+    "created_at": "2026-11-23T20:39:03Z",
+    "expires_at": "2026-11-30T20:39:00Z",
+    "updated_at": "2026-11-23T20:39:03Z",
+    "digest": "sha256:164b5f5c8e7104ec5270d2d6e0444ee4c6dbc0aed62aa70735823b44b2497612",
+    "workflow_run": {
+      "id": 45260427535,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-linux-sf613-catalogcollab",
+      "head_sha": "9a5f6e7e00b3a6c91613cf3263b827e81debc25f"
+    }
+  },
+  "captures": {
+    "inventory": [
+      {
+        "name": "UI55-setup-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:35:48.3100848Z",
+        "last": "2026-11-23T20:35:48.5082712Z"
+      },
+      {
+        "name": "UI55-setup-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:35:49.0095865Z",
+        "last": "2026-11-23T20:35:49.1786474Z"
+      },
+      {
+        "name": "UI55-setup-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:35:49.2071445Z",
+        "last": "2026-11-23T20:35:49.2631704Z"
+      },
+      {
+        "name": "UI55-setup-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:35:49.5468852Z",
+        "last": "2026-11-23T20:35:49.6295516Z"
+      },
+      {
+        "name": "UI55-dark-desktop-selected-file-options",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:01.3444691Z",
+        "last": "2026-11-23T20:36:01.5419564Z"
+      },
+      {
+        "name": "UI55-dark-390-selected-file-options",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:36:01.5700675Z",
+        "last": "2026-11-23T20:36:01.5978574Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:28.4917260Z",
+        "last": "2026-11-23T20:36:28.6432526Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:29.1237625Z",
+        "last": "2026-11-23T20:36:29.3279365Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:36:29.3703423Z",
+        "last": "2026-11-23T20:36:29.4341074Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:36:29.6793574Z",
+        "last": "2026-11-23T20:36:29.7416179Z"
+      },
+      {
+        "name": "UI55-dark-desktop-field-change",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:30.2986962Z",
+        "last": "2026-11-23T20:36:30.4232578Z"
+      },
+      {
+        "name": "UI55-dark-desktop-complete-source-impact",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:30.8311091Z",
+        "last": "2026-11-23T20:36:30.9806704Z"
+      },
+      {
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:36:31.4492380Z",
+        "last": "2026-11-23T20:36:31.6916872Z"
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:36:54.3972075Z",
+        "last": "2026-11-23T20:36:54.5025502Z"
+      },
+      {
+        "name": "UI51-relationship-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:11.5061228Z",
+        "last": "2026-11-23T20:38:11.6801657Z"
+      },
+      {
+        "name": "UI51-relationship-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:12.2381235Z",
+        "last": "2026-11-23T20:38:12.4027953Z"
+      },
+      {
+        "name": "UI51-relationship-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:12.4324013Z",
+        "last": "2026-11-23T20:38:12.4875911Z"
+      },
+      {
+        "name": "UI51-relationship-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:12.7195082Z",
+        "last": "2026-11-23T20:38:12.8021545Z"
+      },
+      {
+        "name": "UI51-dark-desktop-removal-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:13.2696684Z",
+        "last": "2026-11-23T20:38:13.4058769Z"
+      },
+      {
+        "name": "UI51-dark-desktop-explicit-editor",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:18.9085473Z",
+        "last": "2026-11-23T20:38:19.0689924Z"
+      },
+      {
+        "name": "UI51-dark-desktop-create-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:19.3541130Z",
+        "last": "2026-11-23T20:38:19.4697704Z"
+      },
+      {
+        "name": "UI51-dark-desktop-case-alias-empty",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:24.6357703Z",
+        "last": "2026-11-23T20:38:24.8420939Z"
+      },
+      {
+        "name": "UI52-discussion-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:29.5489515Z",
+        "last": "2026-11-23T20:38:29.7032547Z"
+      },
+      {
+        "name": "UI52-discussion-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:30.0856359Z",
+        "last": "2026-11-23T20:38:30.2549706Z"
+      },
+      {
+        "name": "UI52-discussion-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:30.2871493Z",
+        "last": "2026-11-23T20:38:30.3363027Z"
+      },
+      {
+        "name": "UI52-discussion-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:30.6213764Z",
+        "last": "2026-11-23T20:38:30.6818005Z"
+      },
+      {
+        "name": "UI52-dark-desktop-origin-unsent-draft",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:38:31.2420496Z",
+        "last": "2026-11-23T20:38:31.4667612Z"
+      },
+      {
+        "name": "UI52-dark-390-unsent-draft",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:31.4825054Z",
+        "last": "2026-11-23T20:38:31.5225837Z"
+      },
+      {
+        "name": "UI53-material-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:36.6292173Z",
+        "last": "2026-11-23T20:38:36.8132158Z"
+      },
+      {
+        "name": "UI53-material-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:37.2402916Z",
+        "last": "2026-11-23T20:38:37.4098008Z"
+      },
+      {
+        "name": "UI53-material-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:37.4502185Z",
+        "last": "2026-11-23T20:38:37.4901997Z"
+      },
+      {
+        "name": "UI53-material-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:38:37.7310875Z",
+        "last": "2026-11-23T20:38:37.7923666Z"
+      },
+      {
+        "name": "UI53-dark-desktop-confirmation-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:38.3322364Z",
+        "last": "2026-11-23T20:38:38.4532761Z"
+      },
+      {
+        "name": "UI53-dark-desktop-original-receipt",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:39.5806528Z",
+        "last": "2026-11-23T20:38:39.7221057Z"
+      },
+      {
+        "name": "UI53-dark-desktop-recorded-validity",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:44.1388851Z",
+        "last": "2026-11-23T20:38:44.3074980Z"
+      },
+      {
+        "name": "UI51-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:50.0474535Z",
+        "last": "2026-11-23T20:38:50.2343718Z"
+      },
+      {
+        "name": "UI52-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:38:54.6421523Z",
+        "last": "2026-11-23T20:38:54.8158676Z"
+      },
+      {
+        "name": "UI53-pt-BR-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:38:59.3006395Z",
+        "last": "2026-11-23T20:38:59.4419272Z"
+      }
+    ],
+    "completeCount": 38,
+    "actuallyViewedByRoot": [
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "observation": "UI56 Import preview screen shows Loading; no expected simulation heading."
+      },
+      {
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "observation": "Original selected file and options remain after preview cancellation."
+      }
+    ],
+    "rootReportAttribution": "Visual observations supplied directly by /root; this reviewer inspected log inventory only.",
+    "actuallyViewedByThisReviewer": 0,
+    "inventoryOnlyCount": 36,
+    "noUi56SuccessCapture": true,
+    "noPortugueseImportCapture": true
+  },
+  "findings": [
+    "The unchanged original UI56 heading expectation still fails within10000ms after the Catalog correction.",
+    "Original UI55 preview and independent reference read completed with HTTP200. The latter original diagnostic reports6494ms.",
+    "UI56 import-reference GET recorded net::ERR_ABORTED at20:36:49.8651066Z. Earlier import-admit POST also recorded ERR_ABORTED, followed by a successful preview. These events do not prove client fetch-Promise rejection.",
+    "No HTTP403 appears in the original import diagnostic response markers; the earlier403 variation remains unresolved."
+  ],
+  "limits": [
+    "Original spec logging is retained, but no Filephases client lifecycle overlay exists here; exact pre/post-context intervals and Promise outcome are not proven by this run.",
+    "38 complete JPEG groups exist; root viewed exactly two,36 are inventory-only. No visual inspection by this reviewer or user is claimed.",
+    "No global qualification, source promotion, merge or deployment."
+  ],
+  "nextMeasurement": {
+    "name": "Catalog candidate Filephases",
+    "run": 45262019948,
+    "sourceOverlay": "f791d58fac94a895628eed1758079385db4a9b95",
+    "snapshot": "3f20ed7e2c832d979b669001a4bed2d7c40b6101",
+    "qualification": false,
+    "status": "IN_PROGRESS"
+  }
+}
