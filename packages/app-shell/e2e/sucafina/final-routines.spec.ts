@@ -77,7 +77,7 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
   const enterSurface = (target: Page, href: string, title: string) =>
     navigateFinalSurface({ ...navigation(target), href, title })
   const enterResidents = async (target: Page, title: string) => {
-    const inventory = observeFinalGet(target, installation.origin, installation.mount + "/api/ui/projections/residents")
+    const inventory = await observeFinalGet(target, installation.origin, installation.mount + "/api/ui/projections/residents")
     try {
       await navigateFinalSurface({
         ...navigation(target), href: new URL(screens[3].path, installation.origin).href, title,
@@ -97,7 +97,7 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
           }))
         },
       })
-    } finally { inventory.close() }
+    } finally { await inventory.close() }
   }
 
   if (group === "availability") {
@@ -142,7 +142,7 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
       }
       await returnLink.focus()
       await expect(returnLink).toBeFocused()
-      const decisions = observeFinalGet(page, installation.origin, installation.mount + "/api/ui/projections/cases")
+      const decisions = await observeFinalGet(page, installation.origin, installation.mount + "/api/ui/projections/cases")
       try {
         await observeFinalNavigation({
           ...navigation(page), contextReads: 1, action: () => returnLink.press("Enter"),
@@ -155,7 +155,7 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
         if (list.status !== "ok") throw new Error("The original decision list did not succeed")
         expect(list.context).toEqual(sourceStamp)
         await ready(page, "Decisions")
-      } finally { decisions.close() }
+      } finally { await decisions.close() }
       await expect(page.getByRole("heading", { level: 2, name: "Decision cases", exact: true })).toBeVisible()
       await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
       await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions" &&
@@ -297,13 +297,13 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
         context.value.availability.some((entry) => entry.resource === "analysis" &&
           entry.operations.some((operation) => operation.operationId === operationId && operation.state === "ready" && operation.operational)))
       const historyResponse = analysisAvailable ? page.waitForResponse((reply) => analysisAction(reply) === "list") : undefined
-      const humanResponse = observeFinalGet(page, installation.origin, installation.mount + "/api/ui/projections/case")
+      const humanResponse = await observeFinalGet(page, installation.origin, installation.mount + "/api/ui/projections/case")
       const originalHuman = await (async () => {
         try {
           await cases.selectOption(caseValue)
           await expect(cases).toHaveValue(caseValue)
           return await humanResponse.next()
-        } finally { humanResponse.close() }
+        } finally { await humanResponse.close() }
       })()
       expect(originalHuman.status).toBe(200)
       const human = Schema.decodeUnknownSync(SfDecisions.operations["projection.case"].output,

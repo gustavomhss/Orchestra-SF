@@ -1,4 +1,4 @@
-import { expect, type Page, type Request, type Response } from "@playwright/test"
+import { expect, type Page, type APIResponse, type Request, type Route } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, type SfContext, type SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { ServerConnection } from "../../../src/context/server-connection"
@@ -15,15 +15,16 @@ function boundedOriginalRead<T>(value: Promise<T>, label: string): Promise<T> {
 
 export type FinalOriginalGet = Readonly<{
   request: Request
-  response: Response
+  response: APIResponse
   url: string
   status: number
   body: unknown
 }>
 
-/** Observe distinct original JSON GET requests. This never sends, retries,
- * intercepts, fulfills or cancels a request. Non-200 bodies remain original. */
-export function observeFinalGet(page: Page, origin: string, pathname: string, count: 1 | 2 = 1,
+/** Keep the original producer bytes outside Chromium's transient response cache.
+ * Each selected GET is forwarded once, as in operations-support/runtime.ts.
+ * Redirects/retries stay disabled; the browser receives the unchanged APIResponse. */
+export async function observeFinalGet(page: Page, origin: string, pathname: string, count: 1 | 2 = 1,
   matches?: (url: URL) => boolean) {
   const slots = Array.from({ length: count }, () => {
     let resolve!: (value: FinalOriginalGet | PromiseLike<FinalOriginalGet>) => void
@@ -36,25 +37,37 @@ export function observeFinalGet(page: Page, origin: string, pathname: string, co
   let received = 0
   let consumed = 0
   let closed = false
-  const capture = (request: Request) => {
-    const url = new URL(request.url())
-    if (closed || received >= count || identities.has(request) || request.method() !== "GET" ||
-        url.origin !== origin || url.pathname !== pathname || (matches && !matches(url))) return
-    identities.add(request)
+  const match = (url: URL) => url.origin === origin && url.pathname === pathname && (!matches || matches(url))
+  const capture = async (route: Route) => {
+    const request = route.request()
+    if (closed || received >= count || request.method() !== "GET") {
+      await route.fallback()
+      return
+    }
     const slot = slots[received++]
     if (!slot) throw new Error("The original GET observation has no slot")
     const read = boundedOriginalRead((async () => {
-      const response = await request.response()
-      if (!response) throw new Error("The original GET had no response: " + pathname)
-      const body: unknown = await response.json()
-      console.info("SF_FINAL14_ORIGINAL_GET " + JSON.stringify({
-        pathname, status: response.status(),
-      }))
-      return { request, response, url: response.url(), status: response.status(), body }
+      expect(identities.has(request), "Each original GET must have a distinct Request").toBe(false)
+      identities.add(request)
+      const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: originalReadDeadline })
+      try {
+        const body: unknown = await response.json()
+        console.info("SF_FINAL14_ORIGINAL_GET " + JSON.stringify({
+          pathname, status: response.status(),
+        }))
+        return { request, response, url: response.url(), status: response.status(), body }
+      } finally {
+        await route.fulfill({ response })
+      }
     })(), "Original GET " + pathname)
     slot.resolve(read)
+    await read.catch(async (error: unknown) => {
+      slot.reject(error)
+      // Cleanup after the observation failed; never resend the producer request.
+      await route.abort("failed").catch(() => undefined)
+    })
   }
-  page.on("request", capture)
+  await page.route(match, capture)
   return {
     next(): Promise<FinalOriginalGet> {
       if (closed) return Promise.reject(new Error("The original GET observer is closed"))
@@ -62,11 +75,14 @@ export function observeFinalGet(page: Page, origin: string, pathname: string, co
       if (!slot) return Promise.reject(new Error("No additional original GET was requested by this observation"))
       return boundedOriginalRead(slot.promise, "Observed GET " + pathname)
     },
-    close() {
+    async close() {
       if (closed) return
       closed = true
-      page.off("request", capture)
       for (const slot of slots) slot.reject(new Error("The original GET observation ended"))
+      if (page.isClosed()) return
+      await page.unroute(match, capture).catch((error: unknown) => {
+        if (!page.isClosed()) throw error
+      })
     },
   }
 }
@@ -85,7 +101,7 @@ export async function observeFinalNavigation(input: FinalNavigationBase & Readon
   contextReads: 1 | 2
   action: () => Promise<unknown>
 }>): Promise<SfContext> {
-  const observed = observeFinalGet(input.page, input.installation.origin,
+  const observed = await observeFinalGet(input.page, input.installation.origin,
     input.installation.mount + "/api/ui/context", input.contextReads)
   const completed = (async () => {
     const requests = new Set<Request>()
@@ -120,7 +136,7 @@ export async function observeFinalNavigation(input: FinalNavigationBase & Readon
     await input.action()
     return await completed
   } finally {
-    observed.close()
+    await observed.close()
   }
 }
 
