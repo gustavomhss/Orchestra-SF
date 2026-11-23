@@ -115,12 +115,16 @@ export type CreateSfHostRuntime = (input: {
   /** Exact installed binding identity; not an authorization or a serialized readiness claim. */
   nativeReadBinding?: (operationId:
     | "projection.review" | "dashboard.dashboard-review" | "files.document-sources"
+    | "files.document-scenario-targets" | "files.document-scenario-preview"
     | "views.list" | "views.open" | "views.save" | "views.remove"
+    | "routines.catalog" | "routines.read-admission" | "routines.read-run" | "projection.routine"
     | "dashboard.dashboard-workbench" | "dashboard.dashboard-hot-topic-source" | "dashboard.dashboard-draft-read"
     | "dashboard.dashboard-hot-topic-draft" | "dashboard.dashboard-hot-topic-drafts" | "dashboard.dashboard-hot-topic-draft-outcome" | "dashboard.dashboard-capture"
     | "decisions.command.sf_case_draft" | "decisions.decision-edit" | "decisions.controls.read"
     | "decisions.choice.read" | "decisions.command.sf_question_prepare"
     | "intelligence.analysis.choices" | "intelligence.analysis.list"
+    | "intelligence.memory-catalog" | "intelligence.memory-conditions" | "intelligence.memory-signals"
+    | "intelligence.memory-materiality" | "intelligence.memory-outcome"
     | "decisions.decision-review" | "decisions.decision-apply" | "decisions.decision-recover"
     | "bi.bi-options" | "bi.bi-data" | "bi.bi-source" | "bi.bi-decision"
     | "collaboration.relation-read" | "collaboration.relation-create" | "collaboration.relation-remove"

@@ -5,9 +5,27 @@
    written here as `font-family: var(--mx-emphasis); font-weight: 600`. */
 html[data-color-scheme] body[data-new-layout] .orchestra-settings {
   --settings-hairline: rgba(160, 181, 200, 0.08);
+  --settings-narrow-gutter: 16px;
+  --settings-narrow-top: 28px;
+  --settings-narrow-bottom: 40px;
+  --settings-narrow-gap: 12px;
+  --settings-nav-gap: 4px;
+  --settings-control-target: 44px;
+  --settings-model-mark: 22px;
+  --settings-focus-width: 2px;
+  --settings-copy-leading: 1.5;
 }
 html[data-color-scheme="light"] body[data-new-layout] .orchestra-settings {
   --settings-hairline: rgba(70, 84, 98, 0.1);
+}
+.orchestra-settings {
+  container-name: orchestra-settings;
+  container-type: inline-size;
+}
+.orchestra-settings .settings-body {
+  min-inline-size: 0;
+  container-name: orchestra-settings-panel;
+  container-type: inline-size;
 }
 .orchestra-settings .inner {
   inline-size: min(1020px, calc(100% - 72px));
@@ -49,10 +67,14 @@ html[data-color-scheme="light"] body[data-new-layout] .orchestra-settings {
   font-family: var(--mx-emphasis);
   font-weight: 600;
 }
-.orchestra-settings .settings-nav button:focus-visible,
-.orchestra-settings .seg button:focus-visible {
+.orchestra-settings .settings-nav button:focus-visible {
   outline: 1px solid var(--mx-blue);
   outline-offset: 1px;
+}
+
+.orchestra-settings .seg button:focus-visible {
+  outline: var(--settings-focus-width) solid var(--mx-blue);
+  outline-offset: calc(-1 * var(--settings-focus-width));
 }
 
 /* Direct children only: card titles and copy keep the kit's `.mx-card` styles, as in the mock. */
@@ -286,7 +308,7 @@ html[data-color-scheme="light"] body[data-new-layout] .orchestra-settings {
   line-height: normal;
 }
 
-@media (max-width: 760px) {
+@container orchestra-settings (max-width: 760px) {
   .orchestra-settings .settings {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -294,5 +316,68 @@ html[data-color-scheme="light"] body[data-new-layout] .orchestra-settings {
     position: static;
     flex-direction: row;
     flex-wrap: wrap;
+  }
+}
+
+@container orchestra-settings (max-width: 620px) {
+  .orchestra-settings .inner {
+    inline-size: calc(100% - 2 * var(--settings-narrow-gutter));
+    padding-block: var(--settings-narrow-top) var(--settings-narrow-bottom);
+  }
+  .orchestra-settings .settings-nav {
+    gap: var(--settings-nav-gap);
+  }
+  .orchestra-settings .settings-nav button {
+    min-block-size: var(--settings-control-target);
+  }
+}
+
+@container orchestra-settings-panel (max-width: 520px) {
+  .orchestra-settings .perm-tool {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--settings-narrow-gap);
+    padding-block: var(--settings-narrow-gap);
+  }
+  .orchestra-settings .perm-tool > div:first-child {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+  .orchestra-settings .perm-tool .tdesc,
+  .orchestra-settings .perm-tool .tnote {
+    line-height: var(--settings-copy-leading);
+  }
+  .orchestra-settings .perm-tool .seg {
+    margin-inline-start: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .orchestra-settings .perm-tool .seg button {
+    inline-size: auto;
+    min-inline-size: 0;
+    block-size: var(--settings-control-target);
+  }
+  .orchestra-settings .mx-row[data-model] {
+    display: grid;
+    grid-template-columns: var(--settings-model-mark) minmax(0, 1fr) auto;
+    gap: var(--settings-narrow-gap);
+  }
+  .orchestra-settings .mx-row[data-model] .mx-grow {
+    grid-column: 2 / -1;
+    overflow-wrap: anywhere;
+  }
+  .orchestra-settings .mx-row[data-model] > .mx-badge,
+  .orchestra-settings .mx-row[data-model] > .mx-btn {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+  .orchestra-settings .mx-row[data-model] > .mx-btn {
+    min-block-size: var(--settings-control-target);
+  }
+  .orchestra-settings .mx-row[data-model] > .mx-toggle {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
   }
 }

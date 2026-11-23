@@ -22,7 +22,10 @@ export type DesignInstallation = {
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" | "four-files" = "one") {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" | "four-files" = "one", options: { scanner?: { host: "127.0.0.1"; port: number } } = {}) {
+  const scanner = options.scanner
+  if (scanner && (scanner.host !== "127.0.0.1" || !Number.isInteger(scanner.port) || scanner.port < 1 || scanner.port > 65535))
+    throw new Error("The native capture scanner must be the qualified loopback ClamD")
   if (wave === "four-files" && (process.env.GITHUB_ACTIONS !== "true" ||
       process.env.RUNNER_OS !== "Linux" || process.env.RUNNER_ARCH !== "X64" ||
       process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF"))
@@ -56,7 +59,7 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
     const installed = yield* Effect.gen(function* () {
       const ready = yield* Deferred.make<void, Error>()
       const diagnostic = { tail: "" }
-      const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave], {
+      const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
         cwd: repository,
         env: isolatedEnvironment(root),
         extendEnv: false,

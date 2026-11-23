@@ -37,6 +37,8 @@ import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeCh
 import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
 import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfSourceNavigation } from "./source-navigation"
+import { sfUnavailableScheduleOwner, SfUnavailableScheduleView } from "./schedule-unavailable"
+import { sfUnavailableRoutineCatalogOwner, SfUnavailableRoutineCatalogView } from "./routine-catalog-unavailable"
 
 /** The shell asks the live F01 owner, never a second source of draft authority. */
 let liveExitGuard237: (() => Promise<boolean>) | undefined
@@ -227,6 +229,7 @@ function MountedSurface(props: Readonly<{
   status: (status: string, generation: number, reason?: string) => void
 }>): JSX.Element {
   const handle = useSfContext()
+  const location = useLocation()
   const language = useLanguage()
   const [authBusy, setAuthBusy] = createSignal(false)
   const [authFailed, setAuthFailed] = createSignal(false)
@@ -263,10 +266,16 @@ function MountedSurface(props: Readonly<{
   })
   onCleanup(() => { props.bind(undefined); props.status("unmounted", -1) })
   const current = () => props.gate() && props.view().status === "ready" ? props.view().route : undefined
+  const unavailableRoutineCatalog = () => props.gate() && props.view().status === "denied"
+    ? sfUnavailableRoutineCatalogOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
+    : undefined
+  const unavailableSchedule = () => props.gate() && props.view().status === "denied"
+    ? sfUnavailableScheduleOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
+    : undefined
   const polishedSurface = () => {
     const surface = current()?.surfaceId
-    return surface !== undefined &&
-      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|[34][0-9]|5[0-6])$/.test(surface))
+    return !!unavailableRoutineCatalog() || !!unavailableSchedule() || surface !== undefined &&
+      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|[3-6][0-9]|70)$/.test(surface))
   }
   return (
     <>
@@ -305,7 +314,15 @@ function MountedSurface(props: Readonly<{
     <Show when={authFailed()}><p role="alert">{language.t("sf.ui67.signOutFailed")}</p></Show>
     <Show when={props.gate()} fallback={<p role="status" data-sf-f01={handle.state().status}>{message()}</p>}>
       <SfSourceNavigation route={current} navigation={props.navigation} />
-      <Switch fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+      <Switch fallback={
+        <Show when={unavailableRoutineCatalog()} fallback={
+          <Show when={unavailableSchedule()} fallback={<p role="status" data-sf-f01="not-admitted">Sucafina route not admitted</p>}>
+            {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}
+          </Show>
+        }>
+          {(snapshot) => <SfUnavailableRoutineCatalogView owner={snapshot()} />}
+        </Show>
+      }>
         <Match when={current()?.surfaceId === "UI29"}>
           <SfTodayView surfaceId="UI29" route={current() as SfSurfaceProps<"UI29">["route"]} />
         </Match>

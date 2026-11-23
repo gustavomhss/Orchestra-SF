@@ -1,10 +1,25 @@
 # Sucafina nativa — inventário e retrabalho das telas
 
+## Lote UI57–UI70 — 14 áreas integradas
+
+O [PR #713](https://github.com/gustavomhss/Orchestra-SF/pull/713) reúne as 14 áreas deste lote e seus 25 padrões de rota existentes. O usuário autorizou implementação, revisão e merge em `dev`. O lote foi mesclado em `e115b667d845822a1df5f523bbfd828ab57ca978` em 2026-11-23T07:05:53Z.
+
+[Resultado e decisões](WAVE-SIX.md) · [Validação e limites](wave-six/VALIDATION.md) · [Galeria real](wave-six/evidence/README.md) · [Mapa exato](wave-six/scope.json)
+
+| Situação após a integração deste lote | Áreas |
+| --- | ---: |
+| Anteriormente integradas (#583, #587 e #588) | 41 |
+| Áreas de design deste PR | 14 |
+| Campanha com este lote integrado | **55 de 70** |
+| UI42–UI56, frente independente do PR #613 | 15 |
+
+A contagem inclui as apresentações contextuais indisponíveis de Rotinas (UI64) e Recorrência (UI66). O catálogo conserva a negativa de prontidão; Schedule continua sem port nativo. As evidências separam design, operação original exercitada e capacidade ainda não qualificada.
+
 ## Quinto bloco — 15 áreas em qualificação
 
 O bloco **UI42–UI56** está implementado na branch `sf-design-next`, com **15 áreas e 22 padrões de rota existentes**, no [PR #613](https://github.com/gustavomhss/Orchestra-SF/pull/613). **Doze áreas (UI45–UI56) têm jornadas e evidências visuais qualificadas; UI42–UI44 ainda aguardam o resultado completo de Analytics.** A jornada limpa sobre a correção readonly integrada voltou a atingir o limite original de 60 segundos na primeira prévia, sem resposta observada; a investigação do caminho instalado continua. O registro de integração conserva também a falha original de C17 reproduzida antes da correção.
 
-O total aceito e mesclado continua em **41 de 70 áreas**. Este bloco permanece em rascunho, sem aceite visual ou merge. O inventário abaixo preserva o último baseline aceito; o andamento da quinta rodada está no seu mapa próprio.
+O total aceito e mesclado, incluindo o lote UI57–UI70, é **55 de 70 áreas**. Este bloco permanece em rascunho, sem aceite visual ou merge. O inventário abaixo preserva o baseline aceito, incluindo o PR #713; o andamento da quinta rodada está no seu mapa próprio.
 
 [Entrega e situação atual](WAVE-FIVE.md) · [Escopo das 15 áreas](wave-five/scope.json) · [Matriz técnica](wave-five/technical-verification.json) · [Integração das fontes](wave-five/SOURCE-INTEGRATION.md)
 

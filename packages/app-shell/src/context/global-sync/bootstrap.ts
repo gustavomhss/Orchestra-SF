@@ -23,7 +23,7 @@ import {
   normalizeProviderList,
 } from "./utils"
 import { formatServerError, isLocationNotFoundError } from "@/utils/server-errors"
-import { QueryClient, queryOptions } from "@tanstack/solid-query"
+import { CancelledError, QueryClient, queryOptions } from "@tanstack/solid-query"
 import { loadMcpQuery, loadMcpResourcesQuery } from "../server-sync"
 import { NormalizedProviderListResponse } from "@orchestra/session-ui/context"
 import { ScopedKey, type ServerScope } from "@/utils/server-scope"
@@ -524,6 +524,8 @@ export async function bootstrapDirectory(input: {
         input.queryClient
           .fetchQuery(loadProvidersQuery(input.scope, input.directory, input.api))
           .catch((err) => {
+            // An explicit provider refresh replaces this read; cancelling it is not a load failure.
+            if (err instanceof CancelledError) return
             // The run's failures below hand a missing directory over once.
             if (input.onMissingDirectory && isLocationNotFoundError(err)) throw err
             const project = getFilename(input.directory)

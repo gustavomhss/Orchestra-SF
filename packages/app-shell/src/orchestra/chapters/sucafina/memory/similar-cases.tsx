@@ -1,5 +1,4 @@
-import "../reviews/workflows.css"
-import { For, Show, createEffect, onCleanup } from "solid-js"
+import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -31,6 +30,7 @@ type ViewState = {
   selectedCandidates: readonly string[]
   result: SimilarOutput | null
   resultState: CaseListState
+  resultIssue: "similarity-source-unavailable" | null
   resultFilter: string
   selectedDetail: CaseRef | null
   detail: Original | null
@@ -39,7 +39,7 @@ type ViewState = {
 const INITIAL: ViewState = {
   cases: [], catalogState: "idle", selected: "", source: null, sourceState: "idle",
   query: "", includeHistorical: false, selectedCandidates: [],
-  result: null, resultState: "idle", resultFilter: "",
+  result: null, resultState: "idle", resultIssue: null, resultFilter: "",
   selectedDetail: null, detail: null, detailState: "idle",
 }
 const UNREADABLE_SOURCE = new Set(["revoked", "missing", "unavailable", "invalid"])
@@ -83,6 +83,7 @@ function stateFrom(status: string | undefined): SfUiState {
 export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const sourceLabelId = createUniqueId()
   const t = (key: keyof typeof SF_SIMILARITY217_COPY | "sf.u26.version" |
     "sf.u26.period" | "sf.u26.limitations" | "sf.u26.source" |
     "sf.common.loading" | "sf.common.noAccess" | "sf.common.unavailable" |
@@ -115,7 +116,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     ++detailSerial
     resultAbort?.abort()
     detailAbort?.abort()
-    setView({ result: null, resultState: "idle", resultFilter: "", detail: null, detailState: "idle", selectedDetail: null })
+    setView({ result: null, resultState: "idle", resultIssue: null, resultFilter: "", detail: null, detailState: "idle", selectedDetail: null })
   }
   const eraseOwner = () => {
     ++generationSerial
@@ -218,7 +219,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const next = checked ? [...new Set([...view.selectedCandidates, encoded])] :
       view.selectedCandidates.filter((item) => item !== encoded)
     if (next.length > 50) {
-      setView("resultState", "invalid")
+      setView({ resultState: "invalid", resultIssue: null })
       return
     }
     eraseResults()
@@ -231,7 +232,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const selectedCases = candidates.filter((candidate): candidate is ListedCase => candidate !== undefined)
     if (!ready || !source || !view.query.trim() || !candidates.length || candidates.length > 50 ||
       selectedCases.length !== candidates.length) {
-      setView("resultState", "invalid")
+      setView({ resultState: "invalid", resultIssue: null })
       return
     }
     eraseResults()
@@ -240,7 +241,8 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const generation = owner.generation()
     const serial = resultSerial
     const selection = { caseId: source.ref.id, incarnation: source.ref.incarnation, version: source.ref.version,
-      query: view.query.trim(), period: source.period, includeHistorical: view.includeHistorical,
+      query: view.query.trim(), period: { start: source.period.start, end: source.period.end },
+      includeHistorical: view.includeHistorical,
       candidates: selectedCases.map(({ id, incarnation, version }) => ({ id, incarnation, version })) }
     setView("resultState", "loading")
     try {
@@ -254,7 +256,10 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
           setView("catalogState", "denied")
           return
         }
-        setView("resultState", state)
+        const resultIssue = response.kind === "response" && response.body.status === "unavailable" &&
+          "reason" in response.body && response.body.reason === "similarity-source-unavailable"
+          ? "similarity-source-unavailable" : null
+        setView({ resultState: state, resultIssue })
         return
       }
       const result = response.body
@@ -305,6 +310,9 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     view.resultState === "ready" && readableMatches().length === 0 ? "empty" :
     view.resultState === "ready" && filtered().length === 0 ? "filtered-empty" :
     view.resultState
+  const originalSourceUnavailable = () =>
+    privacy() === "ready" && view.catalogState === "ready" && view.sourceState === "ready" &&
+    view.resultState === "unavailable" && view.resultIssue === "similarity-source-unavailable"
   const resultsMessage = () =>
     resultsState() === "loading" ? "sf.common.loading" :
     resultsState() === "denied" ? "sf.common.noAccess" :
@@ -313,7 +321,8 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     resultsState() === "filtered-empty" ? "sf.u26.similarFilteredEmpty" :
     resultsState() === "invalid" ? "sf.u26.similarNoSelection" :
     resultsState() === "stale" ? "sf.common.stale" :
-    resultsState() === "ready" ? "sf.u26.similarMatches" : "sf.common.unavailable"
+    resultsState() === "ready" ? "sf.u26.similarMatches" :
+    originalSourceUnavailable() ? "sf.u26.similarSourceUnavailable" : "sf.common.unavailable"
   const openOriginal = async (ref: CaseRef) => {
     const ready = owner.ready()
     if (!ready || !view.result?.matches.some((match) => equivalent(match.caseRef, ref))) return
@@ -354,12 +363,14 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   return (
     <SfPageFrame titleKey={k("sf.ui62.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section data-sf-wave="polish" class="sf-memory sf-memory-similarity sf-workflow" data-sf-surface="UI62">
+      <section class="sf-memory sf-memory-similarity" data-sf-wave="six" data-sf-surface="UI62"
+        data-sf-memory-recall-state={resultsState()}
+        data-sf-memory-recall-reason={originalSourceUnavailable() ? "similarity-source-unavailable" : undefined}>
         <Show when={privacy() === "ready" && (view.catalogState === "ready" || view.catalogState === "empty")}>
           <form class="sf-memory-similarity-form sf-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
             <p class="sf-memory-help">{t("sf.u26.similarQueryHelp")}</p>
-            <label>{t("sf.u26.similarSource")}
-              <select value={view.selected} onChange={(event) => { void changeSelected(event.currentTarget.value) }}>
+            <label><span id={sourceLabelId}>{t("sf.u26.similarSource")}</span>
+              <select aria-labelledby={sourceLabelId} value={view.selected} onChange={(event) => { void changeSelected(event.currentTarget.value) }}>
                 <option value="">{t("sf.u26.similarChoose")}</option>
                 <For each={view.cases}>{(candidate) =>
                   <option value={candidate.encoded}>{candidate.title} — {candidate.version}</option>}</For>
@@ -428,17 +439,19 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
                   <For each={filtered()}>{(match) =>
                     <li data-sf-similar-case={match.caseRef.id} data-sf-memory-record={match.memoryRecordRef}>
                       <div>
-                        <strong>{match.caseRef.id}</strong>
+                        <strong>{view.cases.find((candidate) => equivalent(candidate, match.caseRef))?.title ?? match.caseRef.id}</strong>
                         <small>{t("sf.u26.version")}: {match.caseRef.version}</small>
                         <h3>{t("sf.u26.similarWhy")}</h3>
                         <dl class="sf-memory-facts">
                           <dt>{t("sf.u26.similarMatched")}</dt><dd>{match.explanation.matchedCriteria.join(", ")}</dd>
                           <dt>{t("sf.u26.similarDifferences")}</dt><dd>{match.explanation.currentDifferences.join(", ") || "—"}</dd>
                           <dt>{t("sf.u26.similarStates")}</dt><dd>{match.explanation.sourceStates.map(sourceStateLabel).join(", ")}</dd>
-                          <dt>{t("sf.u26.similarMemoryRecord")}</dt><dd>{match.memoryRecordRef}</dd>
                         </dl>
-                        <h3>{t("sf.u26.similarSourceEvidence")}</h3>
-                        <ul><For each={match.evidenceRefs}>{(ref) => <li>{ref.refId}</li>}</For></ul>
+                        <details class="sf-memory-reference">
+                          <summary>{t("sf.u26.similarSourceEvidence")}</summary>
+                          <dl class="sf-memory-facts"><dt>{t("sf.u26.similarMemoryRecord")}</dt><dd>{match.memoryRecordRef}</dd></dl>
+                          <ul><For each={match.evidenceRefs}>{(ref) => <li>{ref.refId}</li>}</For></ul>
+                        </details>
                         <Show when={match.explanation.limitations.length}>
                           <p>{t("sf.u26.limitations")}: {match.explanation.limitations.join("; ")}</p>
                         </Show>

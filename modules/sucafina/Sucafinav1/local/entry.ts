@@ -31,6 +31,7 @@ import { observeSfDashboardPages } from "../../../../apps/cli/src/sucafina-produ
 import { observeSfDomainHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/domain-health.ts"
 import { observeSfAssetHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/asset-health.ts"
 import { observeSfPoHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/po-health.ts"
+import { observeSfExportHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/export-health.ts"
 import { createSfActionSource } from "../../../../apps/cli/src/sucafina-product/native-ui/action-source.ts"
 import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
 import { createSfOperationsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/operations.ts"
@@ -40,6 +41,7 @@ import { createSfPlannerProjectionHandlers, observeSfPlannerPages } from "../../
 import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import { createSfDecisionsProjectionHandlers, observeSfCases } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
 import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
+import { createSfResidentProjectionHandlers, observeSfResidentHealth } from "../../../../apps/cli/src/sucafina-product/native-ui/residents.ts"
 import { mountSfReviewProjection } from "../../../../apps/cli/src/sucafina-product/native-ui/review-routing"
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../product/decisions/current-choice-preview.ts"
@@ -259,6 +261,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           ...createSfProcurementProjectionHandlers(nativeDependencies),
           ...createSfDecisionsProjectionHandlers(nativeDependencies),
           ...createSfRoutinesHandlers(nativeDependencies),
+          ...createSfResidentProjectionHandlers(nativeDependencies),
           nativeReviewHandler,
         ]
       nativeProjections = mountSfNativeProjections({
@@ -274,6 +277,12 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
           return current.personalViews === producer && applicationServices.product === productBinding ? workbench : undefined
         if (operationId === "projection.review")
           return current.nativeReviewProjection === producer && projection ? nativeReviewHandler : undefined
+        if (operationId === "routines.catalog" || operationId === "routines.read-admission" ||
+          operationId === "routines.read-run" || operationId === "projection.routine") {
+          if (!nativeProjections || !("nativeUiProducts" in current) || current.nativeUiProducts !== producer) return undefined
+          const installed = nativeHandlers.filter((handler) => handler.operationId === operationId)
+          return installed.length === 1 ? installed[0] : undefined
+        }
         return current.productHttp === producer && applicationServices.product === productBinding ? productBinding : undefined
       }
       const actions = createSfActionSource(nativeDependencies, nativeHandlers)
@@ -292,12 +301,21 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
             const authority = runtime?.services?.()
             return authority && files && runtime?.identity() ? { routes: files, authority } : undefined
           } }, request, stamp),
+          observeSfExportHealth({ source: () => {
+            const authority = runtime?.services?.()
+            return authority && files && runtime?.identity() ? { routes: files, authority } : undefined
+          } }, request, stamp),
           observeSfHome(runtime?.services?.(), request, stamp),
           observeSfWorkHealth({ source: () => {
             const current = runtime?.services?.()
             return current && nativeProjections && productBinding && runtime?.identity()
               ? { runtime: current, application: nativeApplication, handlers: nativeHandlers,
                 projectionBinding: nativeProjections, productBinding } : undefined
+          } }, request, stamp),
+          observeSfResidentHealth({ source: () => {
+            const current = runtime?.services?.()
+            return current && nativeProjections && runtime?.identity()
+              ? { runtime: current, handlers: nativeHandlers, projectionBinding: nativeProjections } : undefined
           } }, request, stamp),
           observeSfCases(nativeDependencies, nativeHandlers, request, stamp),
           actions.operational(request, stamp),

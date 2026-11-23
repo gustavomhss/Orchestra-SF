@@ -40,6 +40,10 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
     return [context.ownerKey, context.context.stamp.accessRevision].join("|")
   }
   const authorizedData = () => currentOwner() === state.ownerKey && !!state.ownerKey && state.data
+  const readerAvailable = () => owner.ready()?.context.availability.some((entry) =>
+    entry.family === "domain-read" && entry.resource === "local-admin" &&
+    entry.operations.some((operation) => operation.operationId === "projection.local-admin" &&
+      operation.state === "ready" && operation.operational)) ?? false
 
   createEffect(() => {
     const context = owner.state()
@@ -57,6 +61,10 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
     }
     if (context.context.authMode !== "local-operator" || context.binding.authMode !== "local-operator") {
       setState({ ownerKey: "", data: undefined, selectedBackup: null, page: "denied" })
+      return
+    }
+    if (!readerAvailable()) {
+      setState({ page: "unavailable", ownerKey: "", data: undefined, selectedBackup: null })
       return
     }
     const ownerKey = [context.ownerKey, context.context.stamp.accessRevision].join("|")
@@ -110,7 +118,7 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
   const number = (value: number) => new Intl.NumberFormat(language.intl()).format(value)
 
   return (
-    <div class="sf-administration" data-sf-wave="polish" data-sf-surface="UI69" data-sf-owner={authorizedData() ? "local-operator" : "not-authorized"}>
+    <div class="sf-administration" data-sf-wave="six" data-sf-surface="UI69" data-sf-owner={currentOwner() ? "local-operator" : "not-authorized"}>
       <SfPageFrame
         titleKey={copyKey("sf.ui69.title")}
         subtitleKey={copyKey("sf.u28.description")}
@@ -122,15 +130,23 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
         layout="reading"
         onLayoutMode={() => undefined}
       >
+        <Show when={currentOwner()}>
+          <p class="sf-u28-access" data-sf-admin-access="local-operator" role="status">
+            <strong>{heading("sf.u28.localAccess")}</strong>
+            <span>{heading("sf.u28.localAccessReady")}</span>
+          </p>
+        </Show>
         <SfSummarySettings surfaceId="UI69" route={props.route} />
+        <section class="sf-u28-source-status" data-sf-admin-state={state.page} aria-labelledby="sf-u28-source-title">
+          <h2 id="sf-u28-source-title">{heading("sf.u28.sourceReads")}</h2>
         <SfStatePanel
           state={state.page}
           messageKey={copyKey(state.page === "loading" ? "sf.common.loading"
             : state.page === "denied" ? "sf.common.noAccess"
             : state.page === "session-expired" ? "sf.common.loginAgain"
             : state.page === "invalid" ? "sf.common.invalidLink"
-            : state.page === "stale" ? "sf.common.stale" : "sf.common.unavailable")}
-          onRetryRead={refresh}
+            : state.page === "stale" ? "sf.common.stale" : "sf.u28.sourceReadsUnavailable")}
+          onRetryRead={readerAvailable() ? refresh : undefined}
         >
           <Show when={authorizedData()}>
             <div class="sf-u28-layout">
@@ -209,6 +225,7 @@ export function SfLocalAdministrationView(props: SfSurfaceProps<"UI69">): JSX.El
             </div>
           </Show>
         </SfStatePanel>
+        </section>
       </SfPageFrame>
     </div>
   )

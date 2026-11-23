@@ -17,6 +17,7 @@ import { SfStatePanel } from "../shared/states"
 import { readSfAuthorizedImportHistoryReference } from "./history"
 import "./imports.css"
 import "../reviews/workflows.css"
+import "../documents/records.css"
 
 type ImportSurface = "planner" | "dashboard"
 type TargetDiscovery = Readonly<{ surface: ImportSurface; start: string; end: string; owner: string }>
@@ -631,7 +632,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   )
 
   return (
-    <SfPageFrame titleKey={key(title())} subtitleKey={designed() ? key(isImport() ? "sf.u23.importSubtitle" : "sf.u23.previewSubtitle") : undefined} context={[]} tabs={[]} activeTab={null}
+    <SfPageFrame titleKey={key(title())}
+      subtitleKey={designed() ? key(isImport() ? "sf.u23.importSubtitle" : "sf.u23.previewSubtitle") :
+        props.surfaceId === "UI57" ? key("sf.u23.historySubtitle") : isExport() ? key("sf.u23.exportSubtitle") : undefined}
+      context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
       primaryAction={isExport() ? {
         id: "export", labelKey: key("sf.ui68.primary"), tone: "primary",
@@ -640,8 +644,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
         busy: state.busy, onInvoke: () => { void download() },
       } : undefined}
     >
-      <section class="sf-files sf-workflow" data-sf-leaf="u23" data-sf-surface={props.surfaceId}
-        data-sf-wave={designed() ? "five" : "polish"} data-sf-phase={state.phase} data-sf-read-state={state.status}
+      <section class="sf-files" classList={{ "sf-workflow": props.surfaceId === "UI55" || props.surfaceId === "UI56" }}
+        data-sf-leaf="u23" data-sf-surface={props.surfaceId}
+        data-sf-records={props.surfaceId === "UI57" || isExport() ? "six" : undefined}
+        data-sf-wave={props.surfaceId === "UI57" || isExport() ? "six" : designed() ? "five" : "polish"}
+        data-sf-phase={state.phase} data-sf-read-state={state.status}
         data-sf-import-activity={isImport() ? state.activity : undefined}>
         <Show when={designed()}>
           <ol class="sf-files-steps" aria-label={t("sf.u23.importStages")}>
@@ -749,13 +756,17 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isHistory()}>
             <form class="sf-files-fields" data-sf-history="authorized-reference"
               onSubmit={(event) => { event.preventDefault(); void loadHistory() }}>
+              <header class="sf-records-heading">
+                <h2>{t("sf.u23.reopenImport")}</h2>
+                <p>{t("sf.u23.historyHelp")}</p>
+              </header>
               <label>{t("sf.u23.label.source")}
                 <select value={state.surface} disabled={editLocked()}
                   onChange={(event) => newSource(event.currentTarget.value as ImportSurface)}>
                   <option value="planner">{t("sf.u23.planner")}</option><option value="dashboard">{t("sf.u23.dashboard")}</option>
                 </select>
               </label>
-              <label>{t("sf.u23.label.previewRef")}
+              <label class="sf-records-reference">{t("sf.u23.label.previewRef")}
                 <input type="text" maxlength="512" required autocomplete="off" spellcheck={false}
                   value={state.historyRef} disabled={editLocked()}
                   onInput={(event) => {
@@ -792,6 +803,24 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button></Show>
               </div>
             </Show>
+            <Show when={props.surfaceId === "UI57" && state.reference?.receipt}>
+              {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
+                <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
+                <dl class="sf-records-receipt">
+                  <div><dt>{t("sf.u23.outcome")}</dt><dd>{receipt().outcome === "applied" ? t("sf.u23.outcomeApplied") :
+                    receipt().outcome === "unchanged" ? t("sf.u23.outcomeUnchanged") :
+                    receipt().outcome === "rejected" ? t("sf.u23.outcomeRejected") : receipt().outcome}</dd></div>
+                  <div><dt>{t("sf.u23.changedFields")}</dt><dd>{receipt().changedFields}</dd></div>
+                </dl>
+                <details class="sf-records-technical">
+                  <summary>{t("sf.u23.receiptDetails")}</summary>
+                  <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
+                  <For each={state.manifest!.receipts}>{(item) =>
+                    <p>{item.id} · {item.at} · {item.status} · {item.version}</p>
+                  }</For>
+                </details>
+              </section>}
+            </Show>
             <section class="sf-files-section" aria-label={t("sf.u23.context")}>
               <h2>{state.manifest!.domainApplied ? t("sf.u23.confirmed") : t("sf.u23.simulation")}</h2>
               <p>{state.manifest!.context.period.start} – {state.manifest!.context.period.end} · {state.manifest!.context.currency}</p>
@@ -801,7 +830,51 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </>}</For>
               </dl>
             </section>
-            <Show when={!designed()}><DomainImpact /></Show>
+            <Show when={!designed()}>
+            <section class="sf-files-section" aria-label={t("sf.u23.context")}>
+              <h2>{t("sf.u23.context")}</h2>
+              <Show when={props.surfaceId === "UI57"} fallback={<>
+              <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
+                <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
+                <dl>
+                  <For each={command.preview.components}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.amount === null ? t("sf.common.unknown") : item.amount} · {item.currency} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.values}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.missing}>{(item) => <>
+                    <dt>{item.field}</dt><dd>{item.reason}</dd>
+                  </>}</For>
+                </dl>
+              </article>}</For>
+              <For each={state.manifest!.issues}>{(issue) =>
+                <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
+              }</For>
+              </>}>
+                <details class="sf-records-technical sf-records-engine-details" open={!state.reference?.receipt}>
+                  <summary>{t("sf.u23.sourceDetails")}</summary>
+              <For each={state.manifest!.commands}>{(command) => <article class="mx-card">
+                <p>{command.preview.engineVersion} · {t("sf.u23.version")} {command.preview.version}</p>
+                <dl>
+                  <For each={command.preview.components}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.amount === null ? t("sf.common.unknown") : item.amount} · {item.currency} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.values}>{(item) => <>
+                    <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
+                  </>}</For>
+                  <For each={command.preview.missing}>{(item) => <>
+                    <dt>{item.field}</dt><dd>{item.reason}</dd>
+                  </>}</For>
+                </dl>
+              </article>}</For>
+              <For each={state.manifest!.issues}>{(issue) =>
+                <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
+              }</For>
+                </details>
+              </Show>
+            </section>
+            </Show>
             <section class="sf-files-section" aria-label={t("sf.u23.changes")}>
               <h2>{t("sf.u23.changes")}</h2>
               <Show when={designed()}><dl class="sf-files-change-summary">
@@ -809,11 +882,19 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <div><dt>{t("sf.u23." + kind)}</dt><dd>{new Intl.NumberFormat(language.intl()).format(changeSummary(kind).length)}</dd></div>}
                 </For>
               </dl></Show>
+              <Show when={props.surfaceId === "UI57"}>
+                <dl class="sf-records-totals">
+                  <For each={["added", "changed", "removed", "ignored", "rejected"] as const}>{(kind) =>
+                    <div><dt>{t("sf.u23." + kind)}</dt><dd>{new Intl.NumberFormat(language.intl()).format(changeSummary(kind).length)}</dd></div>
+                  }</For>
+                </dl>
+              </Show>
               <For each={["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const}>
                 {(kind) => <details>
                   <summary>{t("sf.u23." + kind)} ({changeSummary(kind).length})</summary>
                   <Show when={changeSummary(kind).length === 0}><p>{t("sf.u23.noImpact")}</p></Show>
                   <For each={changeSummary(kind)}>{(entry) => <article class="sf-files-change">
+                    <Show when={props.surfaceId === "UI57"} fallback={<>
                     <h3>{entry.source.kind === "file" ? t("sf.u23.changeCell", {
                       sheet: entry.source.sheet, row: entry.source.row, column: entry.source.column,
                     }) : t("sf.u23.sourceChange")}</h3>
@@ -829,6 +910,23 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                           ", " + t("sf.u23.column") + " " + entry.source.column + " · " + entry.source.address
                         : entry.source.reference}</p>
                     </details>
+                    </>}>
+                      <h3>{entry.source.kind === "file" ? t("sf.u23.changeCell", {
+                        sheet: entry.source.sheet, row: entry.source.row, column: entry.source.column,
+                      }) : t("sf.u23.sourceChange")}</h3>
+                      <div class="sf-records-diff">
+                        <div><h4>{t("sf.u23.before")}</h4><p>{displayValue(entry.before)}</p></div>
+                        <div><h4>{t("sf.u23.after")}</h4><p>{displayValue(entry.after)}</p></div>
+                      </div>
+                      <details class="sf-records-technical">
+                        <summary>{t("sf.u23.sourceDetails")}</summary>
+                        <p>{t("sf.u23.fieldReference")}: <code>{entry.path}</code></p>
+                        <p>{entry.source.kind === "file"
+                          ? entry.source.sheet + " · " + t("sf.u23.row") + " " + entry.source.row +
+                            ", " + t("sf.u23.column") + " " + entry.source.column + " · " + entry.source.address
+                          : entry.source.reference}</p>
+                      </details>
+                    </Show>
                     <Show when={entry.reason}><p>{entry.reason}</p></Show>
                     <Show when={kind === "ignored" || kind === "rejected"}><p>{t("sf.u23.notApplied")}</p></Show>
                   </article>}</For>
@@ -836,7 +934,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               </For>
             </section>
             <Show when={designed()}><DomainImpact /></Show>
-            <Show when={state.reference?.receipt}>
+            <Show when={props.surfaceId !== "UI57" && state.reference?.receipt}>
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
                 <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
@@ -872,10 +970,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
             </div>
           </Show>
           <Show when={isExport()}>
-            <Show when={!permitted("files.export." + state.exportKind)}>
-              <p role="status" class="sf-files-note">{t("sf.u23.exportUnavailable")}</p>
-            </Show>
-            <div class="sf-files-fields">
+            <div class="sf-files-fields sf-records-export">
+              <header class="sf-records-heading">
+                <h2>{t("sf.u23.chooseExport")}</h2>
+                <p>{t("sf.u23.exportHelp")}</p>
+              </header>
+              <Show when={!permitted("files.export." + state.exportKind)}>
+                <p role="status" class="sf-files-note">{t("sf.u23.exportUnavailable")}</p>
+              </Show>
               <label>{t("sf.u23.label.format")}
                 <select aria-label={t("sf.u23.label.format")} value={state.exportKind} disabled={state.busy}
                   onChange={(event) => {
