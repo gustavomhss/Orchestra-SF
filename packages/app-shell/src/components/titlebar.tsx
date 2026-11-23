@@ -12,6 +12,7 @@ import { LayoutRoute, useLayout, type HomeProjectSelection } from "@/context/lay
 import { usePlatform } from "@/context/platform"
 import { useCommand } from "@/context/command"
 import { useLanguage } from "@/context/language"
+import { chapterPageTitleKey } from "@/context/layout-route"
 import { useSettings } from "@/context/settings"
 import { WindowsAppMenu } from "./windows-app-menu"
 import { applyPath, backPath, forwardPath } from "./titlebar-history"
@@ -71,6 +72,12 @@ export function Titlebar(props: {
   const server = useServer()
   const navigate = useNavigate()
   const location = useLocation()
+  const nativePageLabel = () => {
+    const key = chapterPageTitleKey(location.pathname)
+    if (!key) return undefined
+    const label = language.t(key as Parameters<typeof language.t>[0])
+    return label === key ? undefined : label
+  }
   const desktop = createMediaQuery("(min-width: 768px)")
   const mobile = () => !desktop()
   const tabsMount = createMemo(() => (desktop() ? props.tabsMount : undefined))
@@ -485,7 +492,7 @@ export function Titlebar(props: {
           >
             <span>{isSucafinaBrand() ? "Sucafina" : language.t("orchestra.brand.name")}</span>
             <span aria-hidden="true">/</span>
-            <CrumbTrail label={language.t(breadcrumbLabel(layout.route()))} />
+            <CrumbTrail label={language.t(breadcrumbLabel(layout.route()))} pageLabel={nativePageLabel()} />
           </div>
         </Show>
         <Show when={tabsMount()} keyed fallback={tabControls}>

@@ -86,10 +86,10 @@ export function SfRecordDetail(props: SfRecordDetailProps): JSX.Element {
             <h2 id={titleID} tabindex="-1" data-sf-detail-heading>{copy.text(props.title)}</h2>
             <Show when={props.secondaryId}>
               {(value) => (
-                <p class="sf-s01-secondary">
-                  <span class="sf-s01-sr">{copy.t(sfS01Key("sf.s01.recordIdentity"))}: </span>
+                <details class="sf-s01-secondary">
+                  <summary>{copy.t(sfS01Key("sf.s01.recordIdentity"))}</summary>
                   <bdi>{copy.text(value())}</bdi>
-                </p>
+                </details>
               )}
             </Show>
           </div>
@@ -99,11 +99,11 @@ export function SfRecordDetail(props: SfRecordDetailProps): JSX.Element {
           </div>
         </div>
         <div class="sf-s01-detail-actions">
-          <Show when={props.primaryAction}>{(action) => <SfActionButton action={action()} />}</Show>
-          <For each={props.secondaryActions}>{(action) => <SfActionButton action={action} />}</For>
           <button type="button" class="mx-btn" onClick={() => props.onOpenPage()}>
             {copy.t(sfS01Key("sf.common.openPage"))}
           </button>
+          <For each={props.secondaryActions}>{(action) => <SfActionButton action={action} />}</For>
+          <Show when={props.primaryAction}>{(action) => <SfActionButton action={action()} />}</Show>
         </div>
       </header>
 

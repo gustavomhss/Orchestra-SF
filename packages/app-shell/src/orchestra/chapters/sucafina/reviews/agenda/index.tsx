@@ -14,6 +14,7 @@ import type { Schema } from "effect"
 import { operationGranted, PeriodText } from "../labels"
 import "./agenda.css"
 import "../wave-five.css"
+import "../workflows.css"
 
 type Section = Schema.Schema.Type<typeof SfReviewUpdate>["items"][number]
 type Preview = Readonly<{
@@ -137,7 +138,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting", status: "empty" })
+      // The owner is resolved, but no source read has been requested yet.
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined,
+        phase: "selecting", status: "empty", message: "sf.u25.sourceNeeded" })
       return
     }
     const source = untrack(() => store.sourcePage)
@@ -269,14 +272,14 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         busy: store.phase === "previewing", onInvoke: () => { void preview() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI47" data-sf-wave="five" data-phase={store.phase}>
+      <div class="sf-n28 sf-workflow" data-sf-surface="UI47" data-sf-wave="five" data-phase={store.phase}>
         <header class="sf-review-intro">
           <h2>{t(store.phase === "confirmed" ? "sf.u25.confirmedHeading" : store.phase === "reviewing" ? "sf.u25.previewTitle" : "sf.u25.prepareHeading")}</h2>
           <p>{t(store.phase === "confirmed" ? "sf.u25.created" : store.phase === "reviewing" ? "sf.u25.previewHint" : "sf.u25.prepareHint")}</p>
         </header>
         <div class="sf-review-workbench" hidden={store.phase === "reviewing" || store.phase === "confirmed"}>
         <section class="mx-card sf-review-source">
-        <form class="sf-n28-form sf-review-source-form" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
+        <form class="sf-n28-form sf-review-source-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void discover(store.sourcePage) }}>
           <label for={uid + "-page"}>{t("sf.u25.source")}</label>
           <input id={uid + "-page"} class="mx-input" value={store.sourcePage}
             onInput={(event) => setStore("sourcePage", event.currentTarget.value)}
@@ -293,7 +296,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
             <input id={uid + "-filter"} type="search" value={store.filter}
               onInput={(event) => setStore("filter", event.currentTarget.value)} />
           </label>
-          <section aria-label={t("sf.u25.available")} class="sf-n28-section">
+          <section aria-label={t("sf.u25.available")} class="sf-n28-section sf-section">
             <h2>{t("sf.u25.available")}</h2>
             <ul class="sf-n28-items">
               <For each={store.available.filter((item) => item.topic.toLocaleLowerCase().includes(store.filter.toLocaleLowerCase()))}>
@@ -314,14 +317,14 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         </section>
         <aside class="mx-card sf-review-selection">
         <Show when={store.selected.length > 0 && store.status !== "denied" && store.status !== "session-expired"} fallback={<div class="sf-review-empty"><h2>{t("sf.u25.selectionEmpty")}</h2><p>{t("sf.u25.selectionHint")}</p></div>}>
-          <section class="sf-n28-section" aria-label={t("sf.u25.selected")}>
+          <section class="sf-n28-section sf-section" aria-label={t("sf.u25.selected")}>
             <h2>{t("sf.u25.selected")}</h2>
             <p>{t("sf.u25.limit")}</p>
             <ol class="sf-n28-items" data-sf-agenda-order>
               <For each={store.selected}>{(item, index) => <li class="mx-card" data-section-id={item.id}>
                 <strong>{item.topic}</strong>
                 <p>{t("sf.u25.period")}: <PeriodText start={item.period.start} end={item.period.end} /></p>
-                <div class="sf-n28-actions">
+                <div class="sf-n28-actions sf-form-actions">
                   <button type="button" class="mx-btn" disabled={index() === 0 || store.phase === "submitting" || store.phase === "outcome-unknown"}
                     onClick={() => reorder(item.id, -1)} aria-label={t("sf.u25.up") + ": " + item.topic}>{t("sf.u25.up")}</button>
                   <button type="button" class="mx-btn" disabled={index() === store.selected.length - 1 || store.phase === "submitting" || store.phase === "outcome-unknown"}
@@ -337,7 +340,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         </aside>
         </div>
         <Show when={store.phase === "reviewing" && store.preview && store.status === "ready"}>
-          <section class="mx-card sf-n28-section sf-review-stage" data-sf-agenda-preview>
+          <section class="mx-card sf-n28-section sf-review-stage sf-section" data-sf-agenda-preview>
             <h2>{t("sf.u25.previewTitle")}</h2>
             <p>{t("sf.u25.selection")}: {store.preview?.selectionRef}</p>
             <ol>
@@ -348,7 +351,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
               </li>}</For>
             </ol>
             <p>{t("sf.u25.coverage")}</p>
-            <div class="sf-n28-actions">
+            <div class="sf-n28-actions sf-form-actions">
               <button class="mx-btn primary" disabled={!mayPreserve()} type="button" onClick={() => { void confirm() }}>
                 {t("sf.u25.confirm")}</button>
               <button class="mx-btn" type="button" onClick={invalidatePreview}>{t("sf.u25.revise")}</button>

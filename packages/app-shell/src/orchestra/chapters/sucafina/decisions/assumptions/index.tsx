@@ -9,6 +9,7 @@ import { useSfCase } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 import "../intent/decision.css"
+import "../../reviews/workflows.css"
 
 const k = (value: string) => value as SfCopyKey
 
@@ -57,7 +58,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
         onInvoke: () => caseData.reload(),
       }]}
     >
-      <div class="sf-n24 sf-decision-page sf-decision-assumptions" data-sf-wave="four" data-sf-decision="UI36" data-sf-surface="UI36">
+      <div class="sf-n24 sf-decision-page sf-decision-assumptions sf-workflow" data-sf-wave="four" data-sf-decision="UI36" data-sf-surface="UI36">
         <Show when={route()}>
           {(current) => <A class="mx-btn" href={sfDecisionHref(current(), "case", caseRef())}>{t("sf.ui35.return")}</A>}
         </Show>

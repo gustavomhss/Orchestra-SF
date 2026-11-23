@@ -1,6 +1,7 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { procurementStatusLabel } from "../presentation"
 import { useSfContext } from "../../context"
 import type { SfContext, SfEditScopeKey, SfSurfaceProps } from "../../context/contracts"
 import type { SfDraftState, SfPendingOperation } from "../../shared/draft"
@@ -16,7 +17,6 @@ import { sfDraftConflicted, sfDraftForEdit, sfRetainDraft } from "../draft-confl
 import { procurementCommandSnapshot } from "../command-snapshot"
 import { procurementNumberInput } from "../number-input"
 import type { SfU12CopyKey } from "@/i18n/orchestra-chapters/sf-u12"
-import { isPoWritable } from "../requests/model"
 import {
   editableSourcing, editableStages, quoteIsPersisted, recordedFx, requestRevision, sourcingSourceFields,
   requestVersion, uniqueRequest, type Cap25PageOk, type QuoteEdit, type SourcingAction,
@@ -146,17 +146,6 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
         resource.state!=="denied"&&resource.state!=="unavailable"&&
         resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25."+action&&
-          operation.state==="ready"&&operation.operational))
-  }
-  const poSubmitOpen=()=>{
-    const current=page(),ready=host.ready(),row=request()
-    if(!current||!ready||!row||!isPoWritable(row))return false
-    return ready.context.destinations.some((destination)=>destination.capabilityId==="CAP25"&&
-        destination.canRead&&destination.allowedActionIds.includes("submit_po"))&&
-      current.value.allowedActionIds.includes("submit_po")&&
-      ready.context.availability.some((resource)=>resource.family==="procurement"&&resource.resource==="CAP25"&&
-        resource.state!=="denied"&&resource.state!=="unavailable"&&
-        resource.operations.some((operation)=>operation.operationId==="domain.command.CAP25.submit_po"&&
           operation.state==="ready"&&operation.operational))
   }
   const read=async(token:string,requestRef:string|undefined,signal:AbortSignal):Promise<PageRead>=>{
@@ -352,31 +341,39 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     setUi("phase","reviewing")
     setUi("lastError",null)
   }
+  const actionLabel = (action: SourcingAction): SfU12CopyKey =>
+    action === "select_quote" ? "sf.u12.select" : action === "save" ? "sf.u12.save" : "sf.u12.submit"
+  const quoteNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value)
+    ? new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(value) : asString(value)
+  // Suppliers may submit more than one quote with the same name and total.
+  const quoteReference = (quote: QuoteEdit | undefined, id: string | null | undefined) =>
+    id ? (quote?.supplier ? quote.supplier + " · " + id : id) : quote?.supplier ?? id
   const quoteAmount = (quote: QuoteEdit) => {
-    const amount = quote.total == null ? "" : asString(quote.total)
+    const amount = quote.total == null ? "" : quoteNumber(quote.total)
     const currency = typeof quote.currency === "string" ? quote.currency.trim() : ""
     if (!amount && !currency) return null
-    return amount ? amount + (currency ? " " + currency : " unspecified") : currency
+    return amount ? amount + (currency ? " " + currency : " · " + language.t("sf.u02.noCurrency")) : currency
   }
   const fields=(intent:Intent):SfReviewField[]=>{
     if(intent.action==="select_quote"){
       const quote=intent.sourcing.quotes?.find((item)=>item.id===intent.quoteId)
       return [
-        {path:"quoteId",label:m("sf.u12.selectId"),value:toView(quote?.supplier??intent.quoteId)},
+        {path:"quoteId",label:m("sf.u12.selectId"),value:toView(quoteReference(quote,intent.quoteId))},
         {path:"sourcing.quote.total",label:m("sf.u12.quoteTotal"),value:toView(quote?quoteAmount(quote):null)},
       ]
     }
     return [
-      {path:"status",label:m("sf.u12.stage"),value:toView(request()?.status)},
+      {path:"status",label:m("sf.u12.stage"),value:toView(procurementStatusLabel(request()?.status ?? "", language.t))},
       {path:"sourcing.evaluator",label:m("sf.u12.evaluator"),value:toView(intent.sourcing.evaluator)},
       {path:"sourcing.selectionJustification",label:m("sf.u12.selectionJustification"),value:toView(intent.sourcing.selectionJustification)},
       {path:"sourcing.contractStrategy",label:m("sf.u12.contractStrategy"),value:toView(intent.sourcing.contractStrategy)},
       {path:"sourcing.quotes",label:m("sf.u12.quotes"),value:toView(intent.sourcing.quotes?.length)},
       ...(intent.sourcing.quotes ?? []).flatMap((quote, index) => [
+        {path:"sourcing.quotes." + index + ".supplier",label:m("sf.u12.quoteSupplier"),value:toView(quote.supplier ?? quote.id)},
         {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
         {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
       ]),
-      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(intent.sourcing.selectedId)},
+      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(quoteReference(intent.sourcing.quotes?.find((quote) => quote.id === intent.sourcing.selectedId),intent.sourcing.selectedId))},
     ]
   }
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({
@@ -393,7 +390,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(!intent||draftConflict()||draftPending()||!can(intent.action)||intent.token!==authority()||
       !sourcingDraftDispatchable(draft()?.snapshot(),intent.version,intent.action,intent.sourcing))
       return {kind:"blocked",labelKey:k(ui.sending?"sf.u12.confirm":"sf.u12.readOnly"),reasons:[m("sf.u12.readOnly")]} as const
-    return {kind:"admitted",labelKey:k("sf.u12.confirm"),purpose:
+    return {kind:"admitted",labelKey:k(actionLabel(intent.action)),purpose:
       (intent.action==="select_quote"?"select":intent.action==="save"?"save":"submit") as "select"|"submit"|"save",
       binding:{kind:"catalog-command",operationId:
         ("domain.command.CAP25."+intent.action) as
@@ -574,20 +571,28 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const criteria=edit().weights?.criteria??page()?.value.data.formSettings.criteria??[]
     const commercial=edit().weights?.commCriteria??page()?.value.data.formSettings.commCriteria??[]
     return <fieldset class="sf-u12-quote">
-      <legend>{t("sf.u12.quotes")} {index+1} · {quote.id??t("sf.u12.missing")}</legend>
+      <legend>{t("sf.u12.quotes")} {index+1}</legend>
+      <Show when={quote.id}><details class="sf-procurement-source">
+        <summary>{t("sf.u12.quoteId")}</summary><code>{quote.id}</code>
+      </details></Show>
       <div class="sf-u12-fields">
         <For each={fields}>{([name,key])=>{
           const refusal=name==="currency"?ui.fieldErrors.find((error)=>error.field==="sourcing.quotes."+index+".currency"):undefined
           const described=refusal?"sf-u12-currency-"+index:undefined
           return <>
             <label>{t(key)}
-              <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
-                step={["total","qty","unitPrice"].includes(name)?"any":undefined}
-                value={asString(quote[name])}
-                aria-invalid={refusal?"true":undefined}
-                aria-describedby={described}
-                onInput={(event)=>updateQuote(index,name,["total","qty","unitPrice"].includes(name)
-                  ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)}/>
+              <Show when={name === "description" || name === "notes"} fallback={
+                <input type={["total","qty","unitPrice"].includes(name)?"number":"text"}
+                  step={["total","qty","unitPrice"].includes(name)?"any":undefined}
+                  value={asString(quote[name])}
+                  aria-invalid={refusal?"true":undefined}
+                  aria-describedby={described}
+                  onInput={(event)=>updateQuote(index,name,["total","qty","unitPrice"].includes(name)
+                    ? procurementNumberInput(event.currentTarget.value) : event.currentTarget.value)}/>
+              }>
+                <textarea rows={3} value={asString(quote[name])}
+                  onInput={(event) => updateQuote(index, name, event.currentTarget.value)} />
+              </Show>
             </label>
             <Show when={refusal}>
               <span id={described}>{refusal?.message}</span>
@@ -708,6 +713,15 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const row=request()
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
     const recorded=row.sourcing?.quotes??[]
+    const supplierCounts = new Map<string, number>()
+    for (const quote of recorded) {
+      const label = quote.supplier ?? quote.id ?? ""
+      supplierCounts.set(label, (supplierCounts.get(label) ?? 0) + 1)
+    }
+    const supplierLabel = (quote: QuoteEdit) => {
+      const label = quote.supplier ?? quote.id ?? ""
+      return (supplierCounts.get(label) ?? 0) > 1 && quote.id ? quoteReference(quote, quote.id) ?? label : label
+    }
     const fx=recordedFx(row)
     const facts=row.sourcing?.comparison??null
     const limited=!!facts&&facts.eligibleCount<2
@@ -728,7 +742,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <label>{t("sf.u12.quotes")}
           <input type="search" value={ui.search} onInput={(event)=>setUi("search",event.currentTarget.value)}/>
         </label>
-        <label>{t("sf.u12.stage")}
+        <label>{t("sf.u12.sort")}
           <select value={ui.sort} onChange={(event)=>setUi("sort",event.currentTarget.value as typeof ui.sort)}>
             <option value="source">{t("sf.u12.quotes")}</option>
             <option value="supplier">{t("sf.u12.quoteSupplier")}</option>
@@ -740,10 +754,10 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         rows={quotes()}
         getRowKey={(quote)=>(quote.id??"") as SfRef}
         columns={[
-          {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:120,weight:2},render:(quote)=><>{quote.supplier??""}</>},
+          {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:220,weight:2},render:(quote)=><>{supplierLabel(quote)}</>},
           {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??""}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
-          {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{asString(quote.total)||t("sf.u12.missing")}</>},
+          {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{quoteNumber(quote.total)||t("sf.u12.missing")}</>},
           {id:"baseFx",labelKey:k("sf.u12.baseFx"),align:"end",widthPolicy:{kind:"content",minPx:220,maxPx:360},render:(quote)=><>{fxRow(quote)?.baseFxText??t("sf.u12.missing")}</>},
           {id:"technical",labelKey:k("sf.u12.technical"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.technicalText??""}</>},
           {id:"price",labelKey:k("sf.u12.price"),align:"end",widthPolicy:{kind:"content",minPx:72,maxPx:120},render:(quote)=><>{fxRow(quote)?.priceText??""}</>},
@@ -757,8 +771,8 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             const reason=fxRow(quote)?.excludedReason
             return <>{typeof reason==="string"?reason:""}</>
           }},
-          {id:"qty",labelKey:k("sf.u12.quoteQty"),align:"end",widthPolicy:{kind:"content",minPx:85,maxPx:140},render:(quote)=><>{asString(quote.qty)||t("sf.u12.missing")}</>},
-          {id:"unitPrice",labelKey:k("sf.u12.quotePrice"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:160},render:(quote)=><>{asString(quote.unitPrice)||t("sf.u12.missing")}</>},
+          {id:"qty",labelKey:k("sf.u12.quoteQty"),align:"end",widthPolicy:{kind:"content",minPx:85,maxPx:140},render:(quote)=><>{quoteNumber(quote.qty)||t("sf.u12.missing")}</>},
+          {id:"unitPrice",labelKey:k("sf.u12.quotePrice"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:160},render:(quote)=><>{quoteNumber(quote.unitPrice)||t("sf.u12.missing")}</>},
           {id:"scores",labelKey:k("sf.u12.quoteScores"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:260},render:(quote)=><>{scoreCopy(quote,"scores")}</>},
           {id:"cscores",labelKey:k("sf.u12.quoteCommercial"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:260},render:(quote)=><>{scoreCopy(quote,"cscores")}</>},
         ]}
@@ -780,14 +794,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       </Show>
       <Show when={!!facts&&!limited&&!facts.rankLine}><p role="status">{t("sf.u12.rankUnavailable")}</p></Show>
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
-        <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
+        <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):quoteNumber(rate)}</dd></div>)}</dl></Show>
       <p>{t("sf.u12.selectedSaved")}</p>
       <p>{t("sf.u12.noManualApproval")}</p>
       <label>{t("sf.u12.selectId")}
         <select value={ui.quoteChoice} onChange={(event)=>setUi("quoteChoice",event.currentTarget.value)}>
           <option value="">{t("sf.u12.noSelection")}</option>
           <For each={recorded.filter((quote)=>quote.id)}>{(quote)=>
-            <option value={quote.id}>{quote.supplier??quote.id} · {quote.currency??""} {asString(quote.total)}</option>
+            <option value={quote.id}>{supplierLabel(quote)} · {quoteAmount(quote)??t("sf.u12.missing")}</option>
           }</For>
         </select>
       </label>
@@ -826,7 +840,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
           <section class="sf-u12-requests"><h3>{t("sf.u12.request")}</h3>
             <ul><For each={requestRows()}>{(row)=>
               <li><button type="button" class="mx-btn" onClick={()=>setUi("selected",row.number??null)}>
-                {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · {row.status}
+                {row.number??t("sf.u12.missing")} · {row.pr?.title??""} · <span title={row.status}>{procurementStatusLabel(row.status, language.t)}</span>
               </button></li>
             }</For></ul>
           </section>
@@ -834,7 +848,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         <Show when={request()}>
           <header class="sf-u12-heading">
             <h2>{request()?.pr?.title??t("sf.u12.requestTitle")}</h2>
-            <p class="sf-u12-stage">{t("sf.u12.stage")}: {request()?.status}</p>
+            <p class="sf-u12-stage" title={request()?.status}>{t("sf.u12.stage")}: {procurementStatusLabel(request()?.status ?? "", language.t)}</p>
             <details class="sf-procurement-source"><summary>{t("sf.u12.sourceOnly")}</summary>
               <p>{t("sf.u12.version")}: {sourceVersion()??t("sf.u12.missing")}</p>
             </details>
@@ -845,7 +859,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
               <p data-request-money={request()?.number}>{request()?.moneySentence}</p>
             </Show>
           </header>
-          <Show when={request()?.status==="sourcing"||request()?.po}>
+          <Show when={request()?.status==="sourcing"||request()?.status==="src_pending"||request()?.po}>
             <section class="sf-u12-order" hidden={!!ui.review}>
               <Show when={request()?.po}>
                 <fieldset disabled>
@@ -863,7 +877,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
               <Show when={request()?.poEstimate}><p role="status">{request()?.poEstimate}</p></Show>
               <Show when={request()?.orderDifference}><p role="status">{request()?.orderDifference}</p></Show>
               <Show when={request()?.status==="sourcing"||request()?.status==="src_pending"}>
-                <button type="button" disabled={!poSubmitOpen()}>{language.t("sf.u11.remaining.submitPo")}</button>
+                <p role="note">{language.t("sf.u11.remaining.poUnavailableDuringSourcing")}</p>
               </Show>
             </section>
           </Show>
@@ -877,11 +891,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
             <Show when={ui.phase==="reviewing"&&ui.lastError}><p role="alert">{t(message(ui.lastError!))}</p></Show>
             <SfChangeReview
             operation={{ref:(ui.review?.intentRef??"CAP25:unknown") as SfOperationRef,
-              label:m("sf.u12.review"),scope:data(ui.review?.requestRef??"")}}
+              label:m(ui.review ? actionLabel(ui.review.action) : "sf.u12.review"),scope:data(request()?.pr?.title ?? ui.review?.requestRef ?? "")}}
             base={ui.review?reviewSnapshot(ui.review):null}
             current={ui.review?reviewSnapshot(ui.review):null}
             proposed={ui.review?proposed(ui.review):{kind:"not-provided",reason:m("sf.u12.unavailable")}}
-            effects={[{id:"sourcing",domain:"procurement",title:data(ui.review?.action??""),
+            effects={[{id:"sourcing",domain:"procurement",title:data(t(ui.review ? actionLabel(ui.review.action) : "sf.u12.review")),
               state:"proposed",details:[]}]}
             coverage={{state:"partial",summary:m("sf.u12.coverage"),
               reasons:ui.review?.action==="select_quote"?[]:[m("sf.u12.rankUnavailable")],knownCount:null,expectedCount:null}}

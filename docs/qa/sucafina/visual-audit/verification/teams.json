@@ -1,0 +1,428 @@
+{
+  "classification": "COMPONENT VISUAL / not Microsoft live",
+  "run": {
+    "cohort": "teams4-final",
+    "run_id": 45085918666,
+    "job_id": 137404381162,
+    "source_snapshot": "d71a8c2507d686dea97c31c822f2512c9a210508",
+    "product_head": "2752c92e8dd09c0f662baf97a1a9909125780002",
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "artifact_id": 14778942331,
+    "artifact_sha256": "5dc8281c1fd61895ca4c69d302ab4122e67e2281fd5586c7b939b3bedea319a9",
+    "artifact_bytes": 17918720,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45085918666",
+    "verification": "12 production component visual tests, two themes across 1440x1000, 390x844, 320x900; original app, HTTP fixtures. All82 screenshots triaged via 74 unique pixel hashes in 7 contact sheets; six relevant originals inspected. No new visual defect in this final Teams run."
+  },
+  "observed_outcome": "PASS12 of 12;7 contact sheets cover 82 semantic captures and 74 unique pixel hashes; 6 originals inspected; no new final Teams visual finding",
+  "metrics": {
+    "run": 45085918666,
+    "source_snapshot": "d71a8c2507d686dea97c31c822f2512c9a210508",
+    "classification": "COMPONENT VISUAL / not Microsoft live",
+    "captures": 82,
+    "unique_pixel_hashes": 74,
+    "layout_attachments": 82,
+    "attachment_count": 106,
+    "contrast_min": 4.9442454534178015,
+    "page_horizontal_overflow_max": 0,
+    "shell_horizontal_overflow_max": 0,
+    "font_sizes": [
+      "13px"
+    ],
+    "brand_assets": [
+      "/brand/sucafina/lockup-inverse.svg",
+      "/brand/sucafina/lockup-primary.svg"
+    ],
+    "composer_entry": [
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · desktop",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "dark",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 297,
+              "right": 1372,
+              "top": 839,
+              "bottom": 899
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 1336,
+              "right": 1364,
+              "top": 907,
+              "bottom": 935
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "dark",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 38,
+              "right": 337,
+              "top": 712.375,
+              "bottom": 772.375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 285,
+              "right": 329,
+              "top": 772.375,
+              "bottom": 816.375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · small-mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "dark",
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 38,
+              "right": 267,
+              "top": 779.4375,
+              "bottom": 839.4375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 215,
+              "right": 259,
+              "top": 839.4375,
+              "bottom": 883.4375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · desktop",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "light",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 297,
+              "right": 1372,
+              "top": 839,
+              "bottom": 899
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 1336,
+              "right": 1364,
+              "top": 907,
+              "bottom": 935
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "light",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 38,
+              "right": 337,
+              "top": 712.375,
+              "bottom": 772.375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 285,
+              "right": 329,
+              "top": 772.375,
+              "bottom": 816.375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · small-mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "scheme": "light",
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "targets": [
+          {
+            "name": "editor",
+            "rect": {
+              "left": 38,
+              "right": 267,
+              "top": 779.4375,
+              "bottom": 839.4375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          },
+          {
+            "name": "submit",
+            "rect": {
+              "left": 215,
+              "right": 259,
+              "top": 839.4375,
+              "bottom": 883.4375
+            },
+            "visible": true,
+            "clipped_ancestors": []
+          }
+        ]
+      }
+    ],
+    "native_scroll": [
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · desktop",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0,
+          0
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · dark · small-mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · desktop",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0,
+          0
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "test": [
+          "orchestra/team-profile-visual.spec.ts",
+          "Teams component visual · light · small-mobile",
+          "empty chat, native draft guard, expanded administration and stopped updates"
+        ],
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "input": "already fully visible",
+        "initial_visible": [
+          true,
+          true
+        ],
+        "reached_visible": [
+          true,
+          true
+        ],
+        "focus_top_delta": [
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  "inventory": "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-image-inventory.json",
+  "evidence": "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-measurements.json",
+  "summary": "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-measurements-summary.json",
+  "contact_sheets": [
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-1.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-2.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-3.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-4.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-5.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-6.jpg",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4-contact-7.jpg"
+  ],
+  "fullsize_reviewed": [
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-45990-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-empty-stream-connecting-dark-320.png",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-2d8ec-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-empty-stream-connecting-light-320.png",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-7b7be-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-history-expanded-dark-390.png",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-bc115-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-history-expanded-light-390.png",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-45990-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-draft-discard-dialog-dark-320.png",
+    "/workspace/scratch/e460075886fd/sf_visual_audit/post-fix/teams4/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-2d8ec-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-draft-discard-dialog-light-320.png"
+  ],
+  "limits": [
+    "All Teams screenshots use original built app and schema-faithful HTTP fixtures. They do not certify a live Microsoft sign-in or tenant authorization.",
+    "Computed contrast checks cover solid-layer samples; decorative image pixels, blur and glass also received visual inspection and do not form a complete WCAG audit.",
+    "Final Teams4 is component visual qualification of the original compiled production application with schema-faithful HTTP interception. It is not a live Microsoft sign-in, tenant authorization or live assistant generation receipt.",
+    "History-expanded screenshots are taken before scrolling to the later composer. The composer first-fold proof applies to the default collapsed state and after closing history, as intended; source preserves native outer scroll when expanded."
+  ]
+}

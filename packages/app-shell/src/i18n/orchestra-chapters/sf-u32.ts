@@ -111,6 +111,9 @@ export const SF_U32_COPY = {
   "sf.u32.meetingSummary": "Preserved review {{reference}} v{{version}} · {{createdAt}}",
   "sf.u32.meetingPeriod": "{{start}} – {{end}} · {{count}} records",
   "sf.u32.openSource": "Open source {{reference}}",
+  "sf.u32.authorReference": "Author reference",
+  "sf.u32.valueReference": "Value reference",
+  "sf.u32.statusReady": "Ready",
   "sf.u32.presentationHint": "Move through the preserved sections. Source updates do not replace the captured review.",
 } as const
 
@@ -226,5 +229,8 @@ export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> 
   "sf.u32.meetingSummary": "Revisão preservada {{reference}} v{{version}} · {{createdAt}}",
   "sf.u32.meetingPeriod": "{{start}} – {{end}} · {{count}} registros",
   "sf.u32.openSource": "Abrir origem {{reference}}",
+  "sf.u32.authorReference": "Referência do autor",
+  "sf.u32.valueReference": "Referência do valor",
+  "sf.u32.statusReady": "Pronto",
   "sf.u32.presentationHint": "Navegue pelas seções preservadas. As atualizações da origem não substituem a revisão preservada.",
 }

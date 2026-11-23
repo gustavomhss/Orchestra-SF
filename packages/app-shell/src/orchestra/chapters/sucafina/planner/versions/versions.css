@@ -25,3 +25,19 @@
   .sf-u46-source-choices > li { align-items: stretch; flex-direction: column; gap: 8px; }
   .sf-u46-source-choices > li > * { inline-size: 100%; }
 }
+
+/* Four ledger actions keep readable labels inside the table’s own narrow-screen scroller. */
+@media (max-width: 640px) {
+  .sf-u46-ledger .sf-s01-table td { vertical-align: top; }
+  .sf-u46-ledger .sf-s01-row-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    justify-content: normal;
+    gap: 8px;
+    inline-size: 212px;
+    min-inline-size: 212px;
+  }
+  .sf-u46-ledger .sf-s01-row-actions > * { min-inline-size: 0; }
+  .sf-u46-ledger .sf-s01-row-actions .mx-btn { inline-size: 100%; }
+}

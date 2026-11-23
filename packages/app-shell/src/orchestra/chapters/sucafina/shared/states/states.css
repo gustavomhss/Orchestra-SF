@@ -1,3 +1,5 @@
+@import "../foundation.css";
+
 /* F03 state and run primitives, entirely scoped to Orchestra's Mx palette. */
 .sf-state-panel, .sf-run-state {
   min-inline-size: 0;
@@ -90,4 +92,38 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .sf-state-skeleton *, .sf-run-state * { animation: none; transition: none; }
+}
+
+/* A single well carries the condition and its authorized recovery. */
+.sf-state-message {
+  display: grid;
+  gap: var(--sf-space-2);
+  padding: var(--sf-space-5);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+  box-shadow: var(--mx-card-shadow);
+}
+.sf-state-title {
+  max-inline-size: var(--sf-reading-width);
+  font: 600 var(--orchestra-font-size-lg)/1.5 var(--mx-sans);
+  overflow-wrap: normal;
+}
+.sf-state-details {
+  margin: 0;
+  max-inline-size: var(--sf-reading-width);
+  font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
+  overflow-wrap: normal;
+}
+.sf-state-actions { margin-block-start: var(--sf-space-2); }
+.sf-state-skeleton { margin-block-start: var(--sf-space-3); }
+.sf-state-message .sf-coverage { padding-block: var(--sf-space-1); }
+.sf-state-panel:is([data-sf-state="partial"], [data-sf-state="stale"], [data-sf-state="outcome-unknown"]) > .sf-state-message {
+  border-inline-start-color: var(--orchestra-warm);
+}
+.sf-state-panel[data-sf-state="unavailable"] > .sf-state-message { border-color: var(--mx-line); }
+.sf-run-state { gap: var(--sf-space-4); padding: var(--sf-space-5); box-shadow: var(--mx-card-shadow); }
+.sf-run-phase { font-family: var(--mx-sans); white-space: normal; }
+.sf-run-source dd { font-variant-numeric: tabular-nums; }
+@container sf-frame (max-width: 479px) {
+  .sf-state-message, .sf-run-state { padding: var(--sf-space-4); }
 }

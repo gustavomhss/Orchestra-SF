@@ -8,10 +8,11 @@ import { SfStatePanel } from "../../shared/states"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
-import { PeriodText, WhenText } from "../labels"
+import { PeriodText, StatusText, WhenText } from "../labels"
 import { SfPreservedEvidence, SfPreservedLiteral } from "../preserved/value"
 import "../preserved/preserved.css"
 import "../wave-five.css"
+import "../workflows.css"
 
 const key = (value: string) => value as SfCopyKey
 
@@ -20,6 +21,7 @@ type Translate = (value: string) => string
 /** Display only reauthorized source lineage, never a reconstructed or freshly fetched source. */
 function SourceRefList(props: { sources: readonly PreservedSourceRef[]; t: Translate }) {
   return <Show when={props.sources.length > 0} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
+    <details class="sf-technical-details"><summary>{props.t("sf.u32.inspectSource")} ({props.sources.length})</summary>
     <ul class="sf-n28-source-list">
       <For each={props.sources}>{(source) => <li>
         <span>{source.surface} / {source.type} / {source.id}</span>
@@ -32,12 +34,14 @@ function SourceRefList(props: { sources: readonly PreservedSourceRef[]; t: Trans
         </Show>
       </li>}</For>
     </ul>
+    </details>
   </Show>
 }
 
 type EvidenceRef = PreservedValue["sourceRefs"][number]
 function EvidenceList(props: { sources: readonly EvidenceRef[]; t: Translate }) {
   return <Show when={props.sources.length > 0} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
+    <details class="sf-technical-details"><summary>{props.t("sf.u32.inspectSource")} ({props.sources.length})</summary>
     <ul class="sf-n28-source-list">
       <For each={props.sources}>{(source) => <li>
         <span>{source.kind} / {source.refId}</span>
@@ -49,13 +53,14 @@ function EvidenceList(props: { sources: readonly EvidenceRef[]; t: Translate }) 
         </> : null}
       </li>}</For>
     </ul>
+    </details>
   </Show>
 }
 
 function SourceGaps(props: { gaps: ReviewProjection["missing"]; t: Translate }) {
   return <Show when={props.gaps.length > 0} fallback={<span>{props.t("sf.u32.noDeclaredGaps")}</span>}>
     <ul class="sf-n28-source-list">
-      <For each={props.gaps}>{(gap) => <li>{gap.field}: {gap.reason}</li>}</For>
+      <For each={props.gaps}>{(gap) => <li><bdi>{gap.field}</bdi>: <StatusText value={gap.reason} /></li>}</For>
     </ul>
   </Show>
 }
@@ -218,12 +223,12 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         busy: store.busy, onInvoke: () => { void read() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI49" data-sf-wave="five" data-sf-compare-state={store.state}>
+      <div class="sf-n28 sf-workflow" data-sf-surface="UI49" data-sf-wave="five" data-sf-compare-state={store.state}>
         <header class="sf-review-intro">
           <h2>{t("sf.u32.compareHeading")}</h2>
           <p>{t("sf.u32.compareHint")}</p>
         </header>
-        <form class="mx-card sf-n28-form sf-review-compare-form" onSubmit={(event) => { event.preventDefault(); void read() }}>
+        <form class="mx-card sf-n28-form sf-review-compare-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void read() }}>
           <label class="sf-n28-field" for={uid + "-previous"}>{t("sf.u32.previous")}
             <input id={uid + "-previous"} required maxlength="2048" autocomplete="off"
               value={store.previousRef} onInput={(event) => setStore({ previousRef: event.currentTarget.value,
@@ -257,9 +262,9 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                 <Show when={store.changedOrder}><p role="status">{t("sf.u32.orderChanged")}</p></Show>
                 <h3>{t("sf.u32.diff")}</h3>
                 <Show when={changed() || store.changedOrder} fallback={<p>{t("sf.u32.unchanged")}</p>}>
-                  <div class="sf-n28-section" data-sf-comparison-diff="authorized">
+                  <div class="sf-n28-section sf-section" data-sf-comparison-diff="authorized">
                     <Show when={reviewSourcesChanged()}>
-                      <section class="mx-card sf-n28-section">
+                      <section class="mx-card sf-n28-section sf-section">
                         <h4>{t("sf.u32.reviewSources")}</h4>
                         <div class="sf-n28-scroll" role="region" aria-label={t("sf.u32.reviewSources")} tabIndex={0}>
                           <table>
@@ -281,7 +286,7 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                       const valueRows = () => after() ? preservedValueRows(before, after()!) : []
                       const componentRows = () => after() ? preservedComponentRows(before, after()!) : []
                       return <Show when={after() && preservedSectionHasChanges(before, after()!)}>
-                        <section class="mx-card sf-n28-section" data-section-id={before.id}>
+                        <section class="mx-card sf-n28-section sf-section" data-section-id={before.id}>
                           <h4>{before.title}</h4>
                           <div class="sf-n28-scroll" role="region" aria-label={before.title} tabIndex={0}>
                             <table>

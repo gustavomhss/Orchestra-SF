@@ -82,6 +82,16 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   const owner = useSfContext()
   const navigate = useNavigate()
   const { t, locale } = useSfPresentation()
+  const label = (value: string | number | boolean | null | undefined) => {
+    const text = scalar(value)
+    const labels: Readonly<Record<string, SfCopyKey>> = {
+      critical: key("sf.ui29.state.critical"), high: key("sf.ui29.state.high"), normal: key("sf.ui29.state.normal"),
+      open: key("sf.ui29.state.open"), progress: key("sf.ui29.state.progress"), blocked: key("sf.ui29.state.blocked"),
+      done: key("sf.ui29.state.done"), mitigating: key("sf.ui29.state.mitigating"), closed: key("sf.ui29.state.closed"),
+    }
+    const message = labels[text]
+    return message ? t(message) : text || t(key("sf.ui29.notProjected"))
+  }
   const [screen, setScreen] = createStore<State>({ status: "loading", data: null })
   const [attention, setAttention] = createStore<Attention>({
     topicState: "loading", topics: [], riskState: "loading", risks: [],
@@ -428,9 +438,9 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                         <li class="sf-today-record" data-sf-home-topic={topic.id}>
                           <div class="sf-today-record-status">
                             <span class="sf-today-priority" data-priority={topic.priority}>
-                              {t(key("sf.ui29.priority"))}: {topic.priority ?? t(key("sf.ui29.notProjected"))}
+                              {t(key("sf.ui29.priority"))}: {label(topic.priority)}
                             </span>
-                            <span>{topic.status ?? t(key("sf.ui29.notProjected"))}</span>
+                            <span>{label(topic.status)}</span>
                           </div>
                           <button type="button" class="sf-today-title" onClick={() => openSource(
                             "/orchestra/sf-dashboard/hot-topics/" + encodeSfRouteRef(topic.id),
@@ -588,7 +598,7 @@ export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
                           </dl>
                           <p class="sf-today-risk-state">
                             <span>{t(key("sf.ui29.riskStatus"))}</span>
-                            <bdi>{scalar(risk.status) || t(key("sf.ui29.notProjected"))}</bdi>
+                            <bdi>{label(risk.status)}</bdi>
                           </p>
                         </li>
                       )}</For>

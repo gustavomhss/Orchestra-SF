@@ -1,0 +1,144 @@
+/* Shared Sucafina composition. Existing Orchestra materials remain authoritative:
+   no new blur, palette, wallpaper layer, rim or animation is introduced. */
+:where(.sf-page-frame, .sf-context-bar, .sf-chart-frame, .sf-state-panel, .sf-run-state,
+  .sf-s01-table, .sf-s01-record-detail, .sf-s02, .sf-s03-review, .sf-s03-receipts) {
+  --sf-space-1: 4px;
+  --sf-space-2: 8px;
+  --sf-space-3: 12px;
+  --sf-space-4: 16px;
+  --sf-space-5: 20px;
+  --sf-space-6: 24px;
+  --sf-space-7: 32px;
+  --sf-control-height: 44px;
+  --sf-control-compact: 32px;
+  --sf-form-width: 760px;
+  --sf-field-width: 16rem;
+  --sf-reading-width: 68ch;
+  --sf-rule: 1px;
+  --sf-focus-width: 2px;
+}
+.sf-page-frame :where(.sf-section, .sf-form) {
+  display: grid;
+  gap: var(--sf-space-5);
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sf-space-3) var(--sf-space-5);
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-section-header > :first-child { min-inline-size: 0; }
+.sf-page-frame .sf-section-header :is(h2, h3) {
+  margin: 0;
+  color: var(--mx-strong);
+  font: 600 var(--orchestra-font-size-xl)/1.4 var(--mx-sans);
+}
+.sf-page-frame .sf-section-header p {
+  margin-block: var(--sf-space-1) 0;
+  max-inline-size: var(--sf-reading-width);
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  line-height: 1.6;
+}
+.sf-page-frame .sf-form {
+  inline-size: min(100%, var(--sf-form-width));
+  margin-inline: 0;
+}
+.sf-page-frame .sf-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--sf-field-width)), 1fr));
+  gap: var(--sf-space-4) var(--sf-space-5);
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-fields > label,
+.sf-page-frame .sf-form > label {
+  display: grid;
+  align-content: start;
+  gap: var(--sf-space-2);
+  min-inline-size: 0;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-fields > :is(.sf-field-wide, label:has(textarea)) { grid-column: 1 / -1; }
+.sf-page-frame .sf-form :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--sf-control-height);
+  box-sizing: border-box;
+  border: var(--sf-rule) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--mx-raised);
+  color: var(--mx-strong);
+  padding: var(--sf-space-2) var(--sf-space-3);
+  font: var(--orchestra-font-size-md)/1.6 var(--mx-sans);
+}
+.sf-page-frame .sf-form textarea { resize: vertical; }
+.sf-page-frame .sf-form textarea[spellcheck="false"] {
+  font-family: var(--mx-mono);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-form label:has(> input:is([type="checkbox"], [type="radio"])) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sf-space-2);
+  color: var(--mx-strong);
+}
+.sf-page-frame .sf-form :is(input, select, textarea):focus-visible,
+.sf-page-frame .sf-technical-details summary:focus-visible {
+  outline: var(--sf-focus-width) solid var(--mx-blue);
+  outline-offset: var(--sf-focus-width);
+}
+.sf-page-frame .sf-form [aria-invalid="true"] { border-color: var(--mx-bad); }
+.sf-page-frame .sf-form :disabled { cursor: not-allowed; }
+.sf-page-frame .sf-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sf-space-2);
+  padding-block-start: var(--sf-space-3);
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-form-actions > :is(button, .sf-action) { min-block-size: var(--sf-control-height); }
+.sf-page-frame .sf-metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--sf-field-width)), 1fr));
+  gap: var(--sf-space-4) var(--sf-space-6);
+  min-inline-size: 0;
+  margin: 0;
+}
+.sf-page-frame .sf-metadata > div { min-inline-size: 0; }
+.sf-page-frame .sf-metadata dt {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-metadata dd {
+  margin: var(--sf-space-1) 0 0;
+  color: var(--mx-strong);
+  font-size: var(--orchestra-font-size-md);
+  overflow-wrap: anywhere;
+}
+.sf-page-frame .sf-technical-details {
+  min-inline-size: 0;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-technical-details summary {
+  cursor: pointer;
+  min-block-size: var(--sf-control-compact);
+  padding-block: var(--sf-space-2);
+}
+.sf-page-frame .sf-technical-details[open] > :not(summary) { margin-block-start: var(--sf-space-2); }
+.sf-page-frame .sf-technical-details :is(code, pre) {
+  font-family: var(--mx-mono);
+  font-size: var(--orchestra-font-size-sm);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.sf-page-frame .sf-technical-details :is(dl, p) { min-inline-size: 0; overflow-wrap: anywhere; }
+@container sf-frame (max-width: 479px) {
+  .sf-page-frame .sf-form-actions { display: grid; grid-template-columns: 1fr; }
+  .sf-page-frame .sf-form-actions > :is(button, .sf-action) { inline-size: 100%; }
+}

@@ -1,0 +1,44 @@
+{
+  "scope": "Preserved review strict JSON / reactive presentation regression",
+  "source": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+  "snapshot": "3d9fc382ea9178a3b94c96227b58164aee7252ea",
+  "run": 45095086059,
+  "job": 137433015791,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45095086059",
+  "directObservation": "Original completed GitHub Actions job log, read by this agent",
+  "commands": [
+    {
+      "gate": "browser command and Team regressions",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/sucafina-confirmation-payload.test.ts",
+        "./test-browser/sucafina-draft-confirmation.test.ts",
+        "./test-browser/sucafina-decision-command.test.ts",
+        "./test-browser/sucafina-procurement-command.test.ts",
+        "./test-browser/sucafina-saved-view-command.test.ts",
+        "./test-browser/sucafina-vendor-contract-command.test.ts",
+        "./test-browser/sucafina-preserved-review-model.test.ts",
+        "./test-browser/team-profile.test.ts",
+        "./test-browser/team-profile-configuration.test.ts",
+        "./test-browser/team-profile-navigation.test.ts",
+        "./test-browser/team-session-page.test.ts",
+        "./test-browser/sucafina-team-domain.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "preservedTests": [
+    "(pass) Preserved review JSON retains its closed schema after reactive storage > tracked periods retain every source value, period and provenance field [1.82ms]",
+    "(pass) Preserved review JSON retains its closed schema after reactive storage > only compatible original scopes compare, while source-only revisions remain nonnumeric [9.16ms]",
+    "(pass) Preserved review JSON retains its closed schema after reactive storage > unexpected producer string keys and uncloneable material stay rejected [0.83ms]"
+  ],
+  "testCount": 3,
+  "limitations": "Presentation/schema regression only. Original preserved source and native UI comparison are separately exercised by Matrix5; this receipt alone does not qualify producer success."
+}

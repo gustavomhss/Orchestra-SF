@@ -1,0 +1,2053 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/video_inventario",
+  "reviewType": "read-only focused pre-merge peer code review",
+  "reviewedAtUtc": "2026-11-23T01:40:26.811Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseSha": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+  "candidateSha": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+  "pr": {
+    "number": 710,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/710",
+    "base": "dev",
+    "baseSha": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+    "head": "sf-interface-polish",
+    "headSha": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "state": "open",
+    "draft": true,
+    "mergeable": true
+  },
+  "verdict": "APPROVED_WITH_LIMITED_CODE_REVIEW_SCOPE",
+  "materialFindings": [],
+  "conclusion": "No concrete introduced blocker was found in the final UI48/UI49, UI39, UI69 reader-boundary, canonical Core or source/profile-boundary changes reviewed. Runtime and final visual acceptance remain with the current CI cohorts and their artifact reviewers.",
+  "diff": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/compare/a5eee3584da531d087a419b8f3ef29d3881117c7...78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "status": "ahead",
+    "commits": 99,
+    "paths": 222,
+    "additions": 32208,
+    "deletions": 1223,
+    "disjointCategories": {
+      "docs": {
+        "paths": 8,
+        "additions": 25373,
+        "deletions": 0
+      },
+      "core": {
+        "paths": 4,
+        "additions": 10,
+        "deletions": 6
+      },
+      "appE2E": {
+        "paths": 33,
+        "additions": 2919,
+        "deletions": 168
+      },
+      "appBrowserTests": {
+        "paths": 10,
+        "additions": 195,
+        "deletions": 37
+      },
+      "appSource": {
+        "paths": 167,
+        "additions": 3711,
+        "deletions": 1012
+      },
+      "other": {
+        "paths": 0,
+        "additions": 0,
+        "deletions": 0
+      }
+    },
+    "groupingNotes": [
+      "appSource includes colocated unit tests.",
+      "All app-shell paths total 210: 167 src, 10 test-browser and 33 e2e.",
+      "App excluding e2e totals 177; plus e2e 33, Core 4 and docs 8 equals 222."
+    ],
+    "modifiedPaths": 197,
+    "addedPaths": 25,
+    "changedPathsContain": {
+      "ciRunJson": false,
+      "wrapperNamedFile": false,
+      "captureConfiguration": false,
+      "playwrightConfiguration": false,
+      "githubWorkflow": false,
+      "dependencyManifestOrLockfile": false,
+      "schemaProtocolServerClient": false,
+      "cliOrModules": false,
+      "guardEngineOrRules": false,
+      "spawnAllowlist": false
+    },
+    "absenceScope": "These are complete changed-path checks on the 222-file compare; they do not claim that every unchanged repository path was inventoried.",
+    "captureHelperNote": "The persistent E2E workflow-polish-capture.ts helper is intentionally present. It is a test helper, not a temporary CI request, wrapper or capture configuration.",
+    "changedFiles": [
+      {
+        "path": "docs/guides/skills.md",
+        "status": "modified",
+        "category": "docs",
+        "blobSha": "a73477ea66ecd3f2aa6a55109d602b9985b528bc",
+        "additions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "docs/guides/sucafina-native-dashboard.md",
+        "status": "modified",
+        "category": "docs",
+        "blobSha": "9d7421bdf5f6fbad61b9d903aa388dd97d5fec2f",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "docs/guides/sucafina-team-configuration.md",
+        "status": "modified",
+        "category": "docs",
+        "blobSha": "03cd740be4aea51927338e40047de8842f105694",
+        "additions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/README.md",
+        "status": "added",
+        "category": "docs",
+        "blobSha": "3c8550405026d76f987579145cc0138811d10bcd",
+        "additions": 387,
+        "deletions": 0
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/coverage.json",
+        "status": "added",
+        "category": "docs",
+        "blobSha": "3a413d41bbc6c60bba829d461b8929af3afa2e9c",
+        "additions": 8146,
+        "deletions": 0
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/findings.json",
+        "status": "added",
+        "category": "docs",
+        "blobSha": "3e3ef2ef428f10d96b9c38567788d2a4ced49d5f",
+        "additions": 13039,
+        "deletions": 0
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/performance-baseline.json",
+        "status": "added",
+        "category": "docs",
+        "blobSha": "9a42982b09c892990dd67c362cfd0ddf5f3a3d53",
+        "additions": 1791,
+        "deletions": 0
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/performance-comparison.json",
+        "status": "added",
+        "category": "docs",
+        "blobSha": "0e1d1b3fac610ef9bc00b11903187d389252e66a",
+        "additions": 1990,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-agents.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "ef17c1c2c2ecb57f938ecac9fae27031e87a5538",
+        "additions": 42,
+        "deletions": 10
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-env.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "2ec6a6d4be7d5385402f8834a5a0b630790d0140",
+        "additions": 20,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "e9464a44f95cc7e51936fc1df766af90cf065804",
+        "additions": 54,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-skills.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "a058520d81ed1b502c0e0c15b14b8621ac16efa0",
+        "additions": 52,
+        "deletions": 11
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/shared-visual.fixture.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "003eb0d23bcbd0c0344e9001f3f54f97caff6496",
+        "additions": 140,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/shared-visual.spec.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "b70aae321cf04580a36b6ada7d0ea7642e230bc8",
+        "additions": 305,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/team-profile-visual.fixture.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "d9e18b4f0f644af1ef396174ebc34544ea5820a9",
+        "additions": 222,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/team-profile-visual.spec.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "245179d83cb2a84e67de5292f6033861c5132af3",
+        "additions": 410,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/regression/orchestra-accessibility.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "d08f0182c8cef4df7ebec6d42450e7fdc2e9ed10",
+        "additions": 15,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "96168ab4f2c1dfd600aeed165a6fda910aa5f8a4",
+        "additions": 10,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "b9a3535765634f8b249bf28a4911da52721c7abc",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "084c04fa4283e100521d875a477ce3cb1bbe6a65",
+        "additions": 0,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-two.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "ebadc7ea412aeeb2efb235337ec19e567cbd65dc",
+        "additions": 0,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-admission.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "7147add9d287bb1e38a5ed2501f931c51e7d51cb",
+        "additions": 98,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-capture.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "b8a653b2b8f194f4dad6b331f44b7101b0dcbb6b",
+        "additions": 79,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-collab-seed.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "0a37cd756075a9376e4e0d3234a941629199d71b",
+        "additions": 94,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-coverage.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "1f05de37db06912c9ed61165fd98af7d35b7e703",
+        "additions": 406,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-proposal-seed.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "e99808b2e9263a89243d5310f61e1cfb7797ed7b",
+        "additions": 85,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-source.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "7225ff6e1f9fae79d796e2e551307a6d39c540ca",
+        "additions": 54,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "88d8b5553e14f692f34dc9b57e5fefde8b932e53",
+        "additions": 23,
+        "deletions": 9
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "3eae220dadf3acdc2f1c69f510649bf55a5d2c3d",
+        "additions": 40,
+        "deletions": 13
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "69a952765cfc7444ba18db9690ed01e785687b86",
+        "additions": 43,
+        "deletions": 23
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-work.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "feba93aa1414dad6a620cece283239dd4321bff0",
+        "additions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "3f0d5ab5f894f260514ac375a21f9f615c347ec4",
+        "additions": 29,
+        "deletions": 20
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-three-operations-br.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "ecad48b347c55cc9d1a94bc31eec40d5de76912f",
+        "additions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-three-operations-records.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "c01c44ba5201ba8d222f812e0fff3057f43bd064",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-three-operations.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "d93445355ede683db4d9e9bc0bf7f2dec5433417",
+        "additions": 11,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-three-people.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "4d84ed529e4b3ea43b5224e4662b983fd74b7d16",
+        "additions": 9,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-two.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "00ee4758c72ef6dbc154ee70e2876461d01a86b8",
+        "additions": 20,
+        "deletions": 15
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "status": "added",
+        "category": "appE2E",
+        "blobSha": "d8edbf001b848f7a49700dace626f0d2ea07f1bc",
+        "additions": 502,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "05ac7e82cf064fa5085de881af30d7248519947b",
+        "additions": 40,
+        "deletions": 14
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "f10f8ead85b8c0a778708eefb84cce1e259ea621",
+        "additions": 89,
+        "deletions": 14
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "status": "modified",
+        "category": "appE2E",
+        "blobSha": "957f70a56e5fa32a10c1cfeface9573af5abe5b3",
+        "additions": 7,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/components/dialog-connect-provider.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "ea1a57499a4c536833cfbf7f4d86908f1359fb07",
+        "additions": 38,
+        "deletions": 21
+      },
+      {
+        "path": "packages/app-shell/src/components/team-profile-administration.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b2e46170d8261687e604bb1fe61537617cb15acf",
+        "additions": 20,
+        "deletions": 10
+      },
+      {
+        "path": "packages/app-shell/src/components/team-profile-configuration.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a6cfcfdb7c81ce7c779ff0d5a9c27b39b55940c0",
+        "additions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/components/titlebar.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "18fbbaa79edadefa63716d17722f6016eb7c04e5",
+        "additions": 8,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/context/layout-route.test.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "02c45b5e07c5321ef26106dc35cb17f324b30049",
+        "additions": 27,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/agents.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "544f36011ff6978de587b55505f99bd998027837",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/integrations.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c7cda477a63c1718b39361be0ff27834bb5d26d5",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e838701579f75a4c4511ac6d8ed36c6d3301c9a2",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a8657c438ee6c437e44ab5cb694c92b8544e6589",
+        "additions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "383d3ea37bd101ddc53a01c84b946af3e014c2d1",
+        "additions": 18,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u02.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7788cc7d915f2296e8b142639a320fc7a9811f1b",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u05.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e5d3d0fd60a21ef5d31a0d074bf829091f859f1a",
+        "additions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u07.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "f1c6766e8db8ed5ec53b5b73f2e8ee6969a0d774",
+        "additions": 10,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u08.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "cb2813b9bd808b1c691255a78213f9eee617cd11",
+        "additions": 14,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u12.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6be0db21b553fe0b0a4da098477dad175b927174",
+        "additions": 10,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u14.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b593dcd3fb3228734fef30e12bab844d7b719570",
+        "additions": 10,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u15.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "01885058a2371fcec570ca03bd2d0ee2531d53b7",
+        "additions": 9,
+        "deletions": 9
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u18.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b98a33058d430fd245ac608538c33a94d08f5fad",
+        "additions": 32,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4511f346bc029f3a363f8f5e9562970aaa20d03d",
+        "additions": 28,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e22f2b6354d82b452c8f128590daf17923e08103",
+        "additions": 24,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e7001ed3414a90b34dd28b7c86204b266ed751e2",
+        "additions": 12,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "da5c904e97f6ffa4fedac7787ec9a684ab3c1766",
+        "additions": 22,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u30.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "5c7f6728ed67d3b988006e92e5dc24b57b6bf6de",
+        "additions": 6,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u31.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "00b1197b5d1459e01e734e056a56b940dd6d995d",
+        "additions": 7,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "fd7bb0c2edcdb74048067d77d1120ff278872e7a",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u36.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "f0b7e36fd1790c8bf9f1893456f660846a966504",
+        "additions": 11,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u37.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c82ca3e2de8d2c6b2dee733cc612f41dece2f0b3",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2bd5fcb13f51f8c08b98f097a7e1b3621ea333fb",
+        "additions": 4,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u39.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "093030f8b6cbfd5065bad46745e318354ed19ac5",
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u40.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7bdced3aca752b26cbe024b92294bc449129e26f",
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "47c7af85809c10253ab3c4a9ca09fdeb16213124",
+        "additions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u43.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e081b19f50343129064340f66f5371c9d70faebe",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u46.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "426af0e1e81c6bc4b54c85edd282ccbb739d9f65",
+        "additions": 12,
+        "deletions": 12
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u47.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "5e3617bfec44c7890cfba3370656a90def2f4f62",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/skills.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2f4de873e44b129d8e5cdb60865f78dfc3f0c5c6",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/agents-detail.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "89edfebad429cd4b01fa449405373f496ba890be",
+        "additions": 5,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/agents.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "987db25a086a78b4cdefe75810a737cb40c85076",
+        "additions": 7,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/env.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "40b2d37116eed2f04b88adc0ea33e641bffba1c1",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "d693a9638d12003faf04e5bc9894f4f0be7534d1",
+        "additions": 43,
+        "deletions": 39
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/integrations-screen.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "eb9ab5d23a19c9d9c3f2dfe55904ceb2aa6e978c",
+        "additions": 124,
+        "deletions": 115
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/integrations.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "3315fe1033063cebf463b31f2a369068cb91ac25",
+        "additions": 70,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/kit.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e0fa9a2b648265db85458e56369d57e73af9bbe5",
+        "additions": 28,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/skills-dialog.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "9af62a88aab424d102b5889e4a187224ca2bb2a3",
+        "additions": 20,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/skills.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "9966093d3c1b03350aa5c578c3654d1d2658e93e",
+        "additions": 23,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e4d5ee33c7db35aa9f039360ab4ee06692ed9acf",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/confirmations/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "31520e449cd8cf19db7b1b9cbe04887485727783",
+        "additions": 13,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/relations/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "61f7dfcf1fd677f2f4d081471649e3b6d7f7b782",
+        "additions": 4,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b929cc72ad36b1b7a0c8e7f396a2927da5c47bd5",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/context.css",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "f619513b251cf089e0d08ff2c43a6bca3601efe4",
+        "additions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7d5184d512257ecc50efce3938669e25ea93ebd7",
+        "additions": 16,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/budget.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "49a3501aa1a7db65967c3ae90efe45a584932591",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/capex/capex.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "80f2430c2db82e87aa45ff10a6b2b1ad4a7129c1",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "cd9ead98fc601e7380172f5a1a0162eeadd711d2",
+        "additions": 23,
+        "deletions": 13
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/executive.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "0be08a59b31057d30eee39bd5a811b1c76293131",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/u02.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c5f2121d136bb66ec410221d4fc2abfd800ef8f1",
+        "additions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "ed7949c6175b5404ad4f0789b99031227504bab1",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/topics.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b338c43af42354436921266dfef98aaa14e6e3e8",
+        "additions": 8,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "598da78b33871d1d1f04bfc50a290f550cb5f4a0",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4726eda816d9678c290cbfba87fb99ee1de4f440",
+        "additions": 10,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "749e1b070ae780afe4b4d5867a3b101922539ada",
+        "additions": 5,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "20fd0de401d41236fbab3c63fc8fc189ca670a10",
+        "additions": 14,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a8aea19da3a4c88d7d49df878d6878d72bdf2ca7",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/cases/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b62de72cd7aa62a9c0ce7e97c0d0c12764c3949a",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "0030413232e80ce1e76688b5fc864cfaf3753cdc",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "ad2b84873fefe5726e72da3f6367b0288090bdfa",
+        "additions": 20,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "77b1e687af06e9c430bf38cb5c5dedae366a40b3",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/intent/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e93d1e58ca2ff4b41d1caf8271efed0901fdfdf0",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4a3f569e921e5a512f1e14df2798e406099041d1",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "622c7bb17cf1794403155ecb2dd15198c15c0473",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/documents.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "114bdcc7c53dad0e87bd5694e693a10807301c5e",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "76db74391bba30f69bf1c3ac239a1402314fefcf",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "aa0b2985a1c09c13c2c66a1fe193e00f8a6ed04a",
+        "additions": 13,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "f3dd57d42132fcbbad2cd11479c3fe21d5a3ca46",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "80ff21f4849fc98acf6a403e84388513abf87804",
+        "additions": 29,
+        "deletions": 19
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "913da2f8fbcc48121c883417b97acb62fef85cce",
+        "additions": 66,
+        "deletions": 21
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c91d79afef9efdf44914891e7972f6a6e2109cff",
+        "additions": 13,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "f12f8277be7117a6344b14b2dab7ed3b3b8cbe3f",
+        "additions": 31,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "deb747dbbaf43ee739a9ad67d35e78d483810631",
+        "additions": 7,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "8384b9d05587e4597fd37f8dd360591b5c400fed",
+        "additions": 5,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6e3a4a0891637c6a655c8de6ab618175a7026fbc",
+        "additions": 18,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "24cebabd927c15344842f6035456ff43cb47ee16",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "9dd64dfec0bca80d87c153b5ad862323d8b88219",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "8d81a3270339078b0993c165dba3c2333f79a9c6",
+        "additions": 11,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e2a1d4ba6d8b478beb9c84ca1ce8b1c8da75c6a8",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "f045b5d8d83bedcb910d379f004dc8ccecd4d7a4",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/editor.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "dce539d6603035bd8af4c1bebd79002d692e7027",
+        "additions": 21,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "21a9ebb0adaaee7120ad90f0e18f5f8f4f851083",
+        "additions": 4,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/people.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "5ebd8841c1c3ee76c10a47a30b6afae99d91b18c",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "67b36f7f8f250b439778bd8bcc527086d64e212c",
+        "additions": 7,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/allocations.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c98e91dd468b578279a995f7835ea16815707b2f",
+        "additions": 19,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "faebb0e627db3b4098d2ab13308012420704c56e",
+        "additions": 18,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/compare.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e85d4a74a42cf1c87dfa1fa6ec7967dcfede3927",
+        "additions": 18,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "927c488bd8c03e5ee70fb5bbc964485af8ff02b0",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/fx.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c0b8e4a6f2e39feb9936bfd928c3fa94bc1882a8",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "77104a08051288a0992b609a6ba484f3e04ef5c3",
+        "additions": 4,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/headcount.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c460d35783b891317256c6d9536295ce85fe754a",
+        "additions": 8,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e147ad8fae38eec4ffbb449e52c5460e15e88e9a",
+        "additions": 69,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "5e549208bffe620de0ee80ca66314214c9a7526c",
+        "additions": 42,
+        "deletions": 14
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e2f3a6ae82954a291320c1ef5bbe29b9f19358c7",
+        "additions": 5,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "50c5945201e31ea4ecbe49619b1f382cd4f07ed9",
+        "additions": 9,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/versions.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2596dfbc2ac0c02f34980a0b0585fcfc558b7322",
+        "additions": 16,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/editor.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "04544efd1c338525b52b937b4199ac85d04b8abd",
+        "additions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a291395bcdd269a904d366ffda5f245b161c8374",
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b7bae4a9f6e1926942be3e82a61a06e452952988",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "012407807f10a2d39ae5c64eb43d4feb4bbcf076",
+        "additions": 9,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a7e5bcc6b23b2340f7d41b0b744d0090075d2848",
+        "additions": 23,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "8aa3df6e4ac35b0fdaca5aa0328af2eb20c23ac5",
+        "additions": 13,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/remaining.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2d2e43fe7c2cece6c4d1a9c9aff712efb9568944",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/contracts.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6d15928fb4592ca39a37859b25e3fa210438f111",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "97675194bd3812eff3f16a93023d178e8114fb32",
+        "additions": 7,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "bed358ca18a15de5a29d37ea304ad69820dc2dec",
+        "additions": 8,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "cc8864838878860bf11a30b26d5f39ee19b7306a",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/presentation.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "1099cdfd00bcc14204c96874cb5f4b8419078cfa",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/presentation.ts",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "15ef12643e95474cdc9a0587d75b2a3f7d2e644e",
+        "additions": 22,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/copy.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "69f6582cf9834c787e37d971fdd0d2968de4565d",
+        "additions": 20,
+        "deletions": 14
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/forms.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "552e68ea7fe3b5f1658178ef870e746da72f5979",
+        "additions": 14,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/page.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "bd9dfd4bf89f5d2aa9b24f0d6cd8989d64c9b1a8",
+        "additions": 27,
+        "deletions": 16
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/requests/requests.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c45b8f35a2b771c0eee50b03a6419ad28bf55863",
+        "additions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "681a1c3e5822b6ace345bd3c8248d9d1d3090623",
+        "additions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/model.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7c4172813715a6c2c7fc5a5176643597a7cff033",
+        "additions": 6,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7a3acae056f41b1ffb5f94ffddb59a41ac176713",
+        "additions": 6,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6815d1793efc18772a77fb94d7b7ff2a1a864baa",
+        "additions": 53,
+        "deletions": 39
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/sourcing.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7084b9608762f7efb284ad72813b177803f92e92",
+        "additions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a221d852e08d18bd2ac6dd9ce2d1cc5607040179",
+        "additions": 28,
+        "deletions": 9
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "67bbacae8a306c9306701425f7ab2e08384d1624",
+        "additions": 11,
+        "deletions": 8
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "25c4949edb7be54e736f56155e87ec55076efaaf",
+        "additions": 11,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/labels.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "b92a9dcfd4248a062351da8c434ea9e598c2133b",
+        "additions": 26,
+        "deletions": 13
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "d7084491b08f5b79c95403ab03edc0d89c140563",
+        "additions": 44,
+        "deletions": 24
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6b08637cde773d6e553f8bde5d8259e79e4284a9",
+        "additions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "52467f3a05846fedd4995b40a4d291ae82d0b432",
+        "additions": 8,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/workflows.css",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "6192bb15456505ee91598cc782d989bbaedcd6c4",
+        "additions": 297,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "a85ee39babc32eeba63e1dcaebf8cdc7b66b4727",
+        "additions": 4,
+        "deletions": 3
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4349cb64216550dd2d47e315205f1cfe79d246d3",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "8f01516d5993ab1239d8fd809791e2fce7e36a94",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "83afce2a016696d815b41dc609c81ec1c48e2a25",
+        "additions": 5,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "8b194bbae84bf70df89ce77223d720ffec34808f",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/search.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "1c471e0686655c3f1f3f077606b9ea96b0e301b1",
+        "additions": 3,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "27e784cd5866a33d67ec509d31d3abe12a6bfea5",
+        "additions": 103,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/compare.ts",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "4c1f8086348390a7b70080f0bc1eaea4c518756f",
+        "additions": 99,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "1cc7f0e61adfd0432fbe4c5386dabd84f51cf6c3",
+        "additions": 126,
+        "deletions": 38
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/s03.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "bbaafcaa88fa7dd979c6826bce0b02b230883c15",
+        "additions": 209,
+        "deletions": 48
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7c7e028223273f331fe0ad57b18d7250f6112745",
+        "additions": 42,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "0d6f5f38bc2b17a6051e4dff660db7dc3d5a8207",
+        "additions": 5,
+        "deletions": 5
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/foundation.css",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "4c1fb8817cb66e92043c415e86a75db63b38c985",
+        "additions": 144,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/frame.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "5b7513178b41bd90df8a324f0ee443d2767739be",
+        "additions": 46,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "ec9653bbe1be9e04ce4a8e0492d21def47a1c414",
+        "additions": 7,
+        "deletions": 9
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/presentation.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2a09f963e95d959404827d73fb401350f8534786",
+        "additions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "60f243f09a6b2533eb1fe797a3eccb831487bea2",
+        "additions": 19,
+        "deletions": 7
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/monthly-grid.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "eb14bcb72fae4eb64287f0c4a5ad20724bdd9d33",
+        "additions": 114,
+        "deletions": 37
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/states.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "dfbc613076bf6eb916975395389e8b18a60d6534",
+        "additions": 36,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e1f2ee76a074ab7e3e480d90352bc5aeb8f13008",
+        "additions": 40,
+        "deletions": 32
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "e3bf70e0440b59c081db9b3fa2c37588cf692770",
+        "additions": 35,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/wave-one.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "cf9506fe8a31398a73be6d7b5d0f74c7e95f64df",
+        "additions": 11,
+        "deletions": 11
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/views/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "011baf50a1ae30199c56479d717b642fcd22f0b1",
+        "additions": 5,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "7820dd80def59ff9a7b61828fa69c8b80a0d2e7c",
+        "additions": 50,
+        "deletions": 12
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/work.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "badd2515f861231e88663dab0b7e2c43b5c24952",
+        "additions": 7,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/crumbs.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "6e47d683d91e1c0d503bf1a9d2f67019ea974ab8",
+        "additions": 12,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/navigation.test.ts",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "c58dffa60780c8ac4dea4b8d84dd81e6d34c6b85",
+        "additions": 15,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-amoled.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "80fa4db0dfe7fe9e1c5a5d3c51fb4b7d10fed2b8",
+        "additions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-github.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "947018e4ec3517ba965176a1261860a401dfd9c6",
+        "additions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-graphite.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "1decca939945174f598656f7299f7b4e473f4bbf",
+        "additions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-gruvbox.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "26246d36e187480fb97657a5f91041ea0a3e13ff",
+        "additions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-nord.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "3ce1f51bf2aab236d5c85340ee0c8f76633963a0",
+        "additions": 22,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/pages/team-profile.css",
+        "status": "added",
+        "category": "appSource",
+        "blobSha": "da75f1bf76a91a73eb37d88e357e6ccec5dce3ab",
+        "additions": 174,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/src/pages/team-profile.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4067b5d0a423faa52e6573f0c27d03e08bcbe363",
+        "additions": 54,
+        "deletions": 24
+      },
+      {
+        "path": "packages/app-shell/src/pages/team-session.css",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "4ede105b0a2c3871293d193ed0bbda1b2869d875",
+        "additions": 83,
+        "deletions": 33
+      },
+      {
+        "path": "packages/app-shell/src/pages/team-session.tsx",
+        "status": "modified",
+        "category": "appSource",
+        "blobSha": "2d39caa8b7a6471de66b1a2bc8973a49bf430cf8",
+        "additions": 24,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/test-browser/settings-agent-state.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "9e6afce919f6ce9bd63770e682eab64c44d8852e",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-crosslinks-copy.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "b6c83a708ac5737ea467fd519265ecd1b7b9e41e",
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-imports-copy.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "d804768f711feb00f70a69f9ce1529ccfd7a5f93",
+        "additions": 13,
+        "deletions": 6
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/confirm-quote.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "56465679bb3f77f62c8209d48c044a81933c6d81",
+        "additions": 30,
+        "deletions": 10
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-preserved-review-model.test.ts",
+        "status": "added",
+        "category": "appBrowserTests",
+        "blobSha": "3059e47de1759e17f28bd7e10ad442c5e5860c33",
+        "additions": 106,
+        "deletions": 0
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-vendor-contract-command.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "528996e28c7bb64a025a006064b7d26e6a5a481a",
+        "additions": 18,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-budget-source.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "d72957a788b511dcc23aab61a45a39b0a1b7af87",
+        "additions": 19,
+        "deletions": 12
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-domain-hooks.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "3966b08cbf4d58eda21252bf8f4b67bcef2a1af8",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-profile.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "511bf0c9ae7f84a5161e5cee115cc44470e21644",
+        "additions": 4,
+        "deletions": 4
+      },
+      {
+        "path": "packages/app-shell/test-browser/team-session-page.test.ts",
+        "status": "modified",
+        "category": "appBrowserTests",
+        "blobSha": "40bafe78ca92999c16dee2ae3991be97dda2854c",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/core/src/cross-spawn-spawner.ts",
+        "status": "modified",
+        "category": "core",
+        "blobSha": "c242f8272a26a344f28a987ffc98714a637764d6",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/core/src/effect/app-node-filesystem.ts",
+        "status": "added",
+        "category": "core",
+        "blobSha": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7",
+        "additions": 7,
+        "deletions": 0
+      },
+      {
+        "path": "packages/core/src/effect/app-node-platform.ts",
+        "status": "modified",
+        "category": "core",
+        "blobSha": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa",
+        "additions": 1,
+        "deletions": 4
+      },
+      {
+        "path": "packages/core/src/fs-util.ts",
+        "status": "modified",
+        "category": "core",
+        "blobSha": "e2045ace89e442a7552e769338dce386e37947b2",
+        "additions": 1,
+        "deletions": 1
+      }
+    ]
+  },
+  "focusReviews": [
+    {
+      "id": "PEER-B01",
+      "area": "UI48 / UI49",
+      "result": "PASS_CODE_REVIEW",
+      "finding": "The snapshot boundary uses structuredClone(unwrap(content)) before the unchanged closed SfReviewDomainProjection decoder. Uncloneable content still returns undefined. Source identity, periods, values, comparison rules and authorization remain unchanged.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "detail": "readPreservedProjection only; no changes to equality, compatibility or source comparison helpers."
+        },
+        {
+          "path": "packages/app-shell/test-browser/sucafina-preserved-review-model.test.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/test-browser/sucafina-preserved-review-model.test.ts",
+          "detail": "Regression proves prior tracked-proxy rejection; exact zero/null/false/empty-string and provenance preservation; source-only changes remain nonnumeric; currency/period mismatches and extra string keys remain rejected."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+          "detail": "Lines169–225: original preservation is independently re-read and schema-validated, exact owner/period and every value count are checked, original compatible/nonnumeric assertions remain."
+        }
+      ],
+      "limitation": "The 3 browser tests were reported PASS by the Matrix owner from gate5; this reviewer did not execute them. Matrix5 final originals were not yet reviewed at this receipt time."
+    },
+    {
+      "id": "PEER-B02",
+      "area": "UI39",
+      "result": "PASS_CODE_REVIEW",
+      "finding": "Empty and filtered-empty map to their correct existing copy. Empty prepared changes no longer show duplicate fallback text because SfStatePanel already renders the empty message. State ownership, reads, permission clearing and command admission are unchanged.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/decisions/choice/model.ts",
+          "detail": "Adds only the two empty-state label mappings."
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+          "detail": "Active state still comes from owner status; fallback is suppressed only for active empty."
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "detail": "Unchanged panel shows message for non-ready state and allows empty content; denied/session-expired hide private content."
+        }
+      ],
+      "limitation": "Current Decisions6 runtime and visual result belong to the Decisions reviewer."
+    },
+    {
+      "id": "PEER-B03",
+      "area": "UI69",
+      "result": "PASS_CODE_REVIEW",
+      "finding": "The E2E test preserves two independent producer boundaries: private local-admin jobs/backups remain unavailable with HTTP503 and local-operator-reader-not-bound, while original summary settings return authorized HTTP200. It verifies exact project/installation/principal/version and source-ordered choices, opens an unsent one-choice review, cancels, and asserts no configure-summaries POST.",
+      "evidence": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+          "detail": "Lines431–499: original requests are forwarded once; closed output schemas, exact unavailable reason, absent Profile, owner/version/choice assertions and zero-write assertion retained."
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+          "detail": "Sixteen wire SummaryPage identities map to distinct typed presentation keys. Input values and configure payload retain wire identities."
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+          "detail": "Diff is presentation/layout/formatting; original authorizedData boundary and empty fallback remain."
+        }
+      ],
+      "limitation": "An unavailable private jobs/backups reader is not approval of its Profile or backup UI. Matrix5 must qualify the authorized summary UI and the actual refusal separately."
+    },
+    {
+      "id": "PEER-B04",
+      "area": "Canonical Core extraction",
+      "result": "PASS_CODE_REVIEW",
+      "finding": "All four final Core blobs exactly match reviewed Design 6e1795cf. Filesystem/path singleton definitions move to one narrow module; old app-node-platform exports them unchanged. Only the two low-level consumers change import path. Provider, SessionOwner, requestExecutor and Omni behavior are unchanged.",
+      "canonicalSourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+      "blobs": [
+        {
+          "path": "packages/core/src/cross-spawn-spawner.ts",
+          "candidateBlob": "c242f8272a26a344f28a987ffc98714a637764d6",
+          "designBlob": "c242f8272a26a344f28a987ffc98714a637764d6",
+          "equal": true
+        },
+        {
+          "path": "packages/core/src/effect/app-node-filesystem.ts",
+          "candidateBlob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7",
+          "designBlob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7",
+          "equal": true
+        },
+        {
+          "path": "packages/core/src/effect/app-node-platform.ts",
+          "candidateBlob": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa",
+          "designBlob": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa",
+          "equal": true
+        },
+        {
+          "path": "packages/core/src/fs-util.ts",
+          "candidateBlob": "e2045ace89e442a7552e769338dce386e37947b2",
+          "designBlob": "e2045ace89e442a7552e769338dce386e37947b2",
+          "equal": true
+        }
+      ],
+      "fixtureNote": "prepareSfLocalWorkspace revalidates the private physical workspace before discovery metadata. The fixture uses that exact workspace for discovery, still requires exactly one original installation, and does not create a replacement authority."
+    },
+    {
+      "id": "PEER-B05",
+      "area": "Source guards and profiles",
+      "result": "PASS_CODE_REVIEW",
+      "finding": "No guard engine/rules, source schema, producer, auth backend, route authority, spawner allowlist or workflow configuration changed in this compare. Native admission helpers record original F01 catalog evidence and host refusal without promoting unavailable leaves to ready. Teams names come only from the current authorized choices for the exact teamObjectId; selection, session/profile authority and opaque revisions remain intact.",
+      "evidence": [
+        {
+          "path": "script/guards/run.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/script/guards/run.ts",
+          "detail": "Re-read unchanged runner: rules/config load from merge-base; candidate cannot relax its own guards; setup errors and gate findings retain failing exit behavior."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-admission.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/e2e/sucafina/design-support/workflow-polish-admission.ts",
+          "detail": "Read-only source context; exact owner stamp; requires original operations; host refusal carries leafRendered=false and no live Microsoft claim."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-source.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/e2e/sucafina/design-support/workflow-polish-source.ts",
+          "detail": "Original decision-controls case reference/title/version are read and cross-checked; settled state does not manufacture ready."
+        },
+        {
+          "path": "packages/app-shell/src/components/team-profile-administration.tsx",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/src/components/team-profile-administration.tsx",
+          "detail": "New authorized display name lookup changes presentation only; existing configure/write/abort behavior retained."
+        },
+        {
+          "path": "packages/app-shell/test-browser/team-profile.test.ts",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/packages/app-shell/test-browser/team-profile.test.ts",
+          "detail": "Only refresh/logout selectors change. Scope invalidation, abort, revalidation and authorization assertions remain."
+        },
+        {
+          "path": "docs/guides/sucafina-team-configuration.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/78c48fd5d20fb747cfd267a5f2cf3fd3794f9479/docs/guides/sucafina-team-configuration.md",
+          "detail": "Corporate administration remains distinct from Team business access and personal provider/session authority; opaque revision and unknown-outcome/no-retry rules are explicit."
+        }
+      ],
+      "limitation": "Native local-operator fixtures and isolated Teams presentation tests do not qualify live Microsoft identity, corporate grants or provider connectivity."
+    }
+  ],
+  "instructionReading": {
+    "read": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md",
+      "packages/app-shell/e2e/AGENTS.md",
+      "script/guards/run.ts",
+      "docs/guides/sucafina-native-dashboard.md",
+      "docs/guides/sucafina-team-configuration.md"
+    ],
+    "coreAgents": "packages/core/AGENTS.md is absent at candidate (GitHub404); packages/core directory inventory contains no AGENTS.md. Root rules apply.",
+    "playwrightOfficial": [
+      "https://playwright.dev/docs/best-practices",
+      "https://playwright.dev/docs/actionability",
+      "https://playwright.dev/docs/test-assertions",
+      "https://playwright.dev/docs/locators",
+      "https://playwright.dev/docs/network",
+      "https://playwright.dev/docs/browser-contexts"
+    ]
+  },
+  "priorBusinessEvidence": {
+    "receiptPath": "/workspace/scratch/e460075886fd/sf_visual_audit/business-polish-receipt.json",
+    "receiptSha256": "9550ebf07282256a7eae38546d8017de0a936d9c67c1c75b4dcc38010029f8a8",
+    "scope": "CAP01–28, exact multi-source receipts; 84 contact sheets and 24 full originals actually reviewed. Historical red runs excluded from final automatic approval claims.",
+    "finalCore6Run": 45092054425,
+    "finalOps5Run": 45090642771,
+    "finalPlanning6Run": 45090646525
+  },
+  "remainingAcceptance": [
+    "Matrix5 native runtime and final original captures: UI47–50/UI69 assigned to C; UI54/UI62 follow-up assigned to this reviewer when artifact is available.",
+    "Decisions6 final native runtime and originals assigned to A.",
+    "Final root gate on exact HEAD after docs/receipt-only integration.",
+    "No production deployment or live Microsoft qualification claimed."
+  ],
+  "executionBoundaries": {
+    "productEdits": false,
+    "productShellCommands": false,
+    "testsExecuted": false,
+    "ciDispatched": false,
+    "prPosts": false,
+    "merge": false,
+    "productAccess": "GitHub MCP read only",
+    "localArtifactWritten": true,
+    "scopeLimit": "All changed paths were inventoried; this is a focused peer review of the final integration, not a fresh line-by-line audit of every historical UI change."
+  }
+}

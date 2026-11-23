@@ -27,6 +27,25 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   const owner = useSfContext()
   const language = useLanguage()
   const text = (value: string) => language.t(value as Parameters<typeof language.t>[0])
+  const titles = {
+    "Executive Dashboard": "sf.cap01.title",
+    "Hot Topics & Actions": "sf.cap02.title",
+    "Budget Overview": "sf.cap03.title",
+    "OPEX Detail": "sf.cap04.title",
+    "CAPEX Projects": "sf.cap05.title",
+    "Headcount Overview": "sf.cap06.title",
+    "Team Structure": "sf.cap07.title",
+    "Talent Review": "sf.cap08.title",
+    "Portfolio Dashboard": "sf.cap09.title",
+    "All Projects": "sf.cap10.title",
+    "IT Operations": "sf.cap11.title",
+    "IT Security KPIs": "sf.cap12.title",
+    "IT Risks": "sf.cap13.title",
+    "Vendor Contracts": "sf.cap14.title",
+    "Stakeholder Management": "sf.cap15.title",
+    "IT Performance Contract": "sf.cap16.title",
+  } as const satisfies Readonly<Record<SummaryPage, Parameters<typeof language.t>[0]>>
+  const pageTitle = (page: SummaryPage) => language.t(titles[page])
   const [state, setState] = createStore({
     page: "loading" as SfUiState,
     scope: "",
@@ -155,7 +174,13 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   }
   const fields = (pages: readonly SummaryPage[]): readonly SfReviewField[] => [{
     path: "pages", label: message("sf.u28.summaries"),
-    value: { kind: "text", text: { kind: "data", text: pages.join(", ") } },
+    value: {
+      kind: "list",
+      items: pages.map((page) => ({
+        kind: "text",
+        text: { kind: "message", message: message(titles[page]) },
+      })),
+    },
   }]
   const persisted = () => {
     const source = visible()
@@ -173,9 +198,9 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
           <Show when={state.notice}><p role="status">{text(state.notice)}</p></Show>
           <Show when={canWrite()} fallback={<>
             <p>{text("sf.common.readOnly")}</p>
-            <ul><For each={source().pages}>{(page) => <li>{page}</li>}</For></ul>
+            <ul><For each={source().pages}>{(page) => <li>{pageTitle(page)}</li>}</For></ul>
           </>}>
-            <form data-sf-summary-form data-version={source().version} onSubmit={(event) => {
+            <form hidden={state.review} data-sf-summary-form data-version={source().version} onSubmit={(event) => {
               event.preventDefault()
               if (canWrite() && !state.busy && !state.blocked) setState({ review: true, intent: crypto.randomUUID() })
             }}>
@@ -184,15 +209,15 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
                 <For each={source().availablePages}>{(page) => <label>
                   <input type="checkbox" name="pages" value={page} checked={state.selected.includes(page)}
                     onChange={(event) => select(page, event.currentTarget.checked)} />
-                  <span>{page}</span>
+                  <span>{pageTitle(page)}</span>
                 </label>}</For>
               </fieldset>
-              <button type="submit" class="mx-btn" disabled={state.busy || state.blocked || state.review}>
+              <button type="submit" class="mx-btn primary" disabled={state.busy || state.blocked || state.review}>
                 {text("sf.common.review")}
               </button>
             </form>
           </Show>
-          <button type="button" class="mx-btn" disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
+          <button type="button" class="mx-btn" hidden={state.review} disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
           <Show when={state.review && canWrite()}>
             <SfChangeReview
               operation={{ ref: state.intent as SfOperationRef,

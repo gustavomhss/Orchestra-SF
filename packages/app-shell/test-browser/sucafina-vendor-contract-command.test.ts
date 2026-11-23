@@ -5,7 +5,7 @@ import { Option, Schema } from "effect"
 import { SfNativeOperationBindings } from "@orchestra/client/sucafina/bindings"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
-import { vendorCommandInput, vendorEditFromRecord, type SfVendorEdit, type SfVendorSave } from "../src/orchestra/chapters/sucafina/procurement/contracts/model"
+import { vendorAmountText, vendorCommandInput, vendorEditFromRecord, type SfVendorEdit, type SfVendorSave } from "../src/orchestra/chapters/sucafina/procurement/contracts/model"
 
 const ref = "design-test-contract" as SfRef
 const operation = SfDomain.operations["domain.command.CAP14.save"]
@@ -26,6 +26,23 @@ function admitted(input: SfVendorSave) {
 }
 
 describe("CAP14 values cross the unchanged native schema and JSON codec", () => {
+  test("review groups exact numeric amounts without rounding source strings or changing the command", () => {
+    expect(vendorAmountText(36000, "en")).toBe("36,000")
+    expect(vendorAmountText("36000", "en")).toBe("36,000")
+    expect(vendorAmountText("36000", "pt-BR")).toBe("36.000")
+    for (const value of ["9007199254740993", "1.0000000000000001", "36000.000", " 36000 ", "NaN", "Infinity", "not a number"])
+      expect(vendorAmountText(value, "en")).toBe(value)
+    expect(vendorAmountText(Number.POSITIVE_INFINITY, "en")).toBe("Infinity")
+    expect(vendorAmountText(Number.NaN, "en")).toBe("NaN")
+    expect(vendorAmountText("", "en")).toBe("")
+    expect(vendorAmountText(null, "en")).toBe("")
+    const values = { ...complete(), amount: "36000" }
+    vendorAmountText(values.amount, "en")
+    const input = vendorCommandInput("save", ref, 1, values)
+    expect(input.values.amount).toBe("36000")
+    expect(admitted(input)).toEqual({ id: ref, version: 1, values })
+  })
+
   test("complete plain source values are admitted without adding a page or action discriminator", () => {
     const values = complete()
     const input = vendorCommandInput("save", ref, 1, values)

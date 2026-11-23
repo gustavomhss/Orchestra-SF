@@ -1,0 +1,49 @@
+/* UI67 shares the native content material and the Sucafina page axis. */
+.sf-context-page {
+  --sf-context-gap: 20px;
+  --sf-context-small-gap: 6px;
+  --sf-context-line: 1px;
+  min-inline-size: 0;
+}
+.sf-context-card {
+  display: grid;
+  gap: var(--sf-context-gap);
+  padding: var(--sf-context-gap);
+  border: var(--sf-context-line) solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+  box-shadow: var(--mx-card-shadow);
+}
+.sf-context-card h2 {
+  margin: 0;
+  font: 600 var(--orchestra-font-size-xl)/1.4 var(--mx-emphasis);
+  color: var(--mx-strong);
+}
+.sf-context-card p {
+  margin: var(--sf-context-small-gap) 0 0;
+  max-inline-size: 68ch;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.6;
+}
+.sf-context-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sf-context-gap);
+  margin: 0;
+}
+.sf-context-card dl > div { min-inline-size: 0; }
+.sf-context-card dt {
+  color: var(--mx-dim);
+  font: 500 var(--orchestra-font-size-sm)/1.5 var(--mx-sans);
+}
+.sf-context-card dd {
+  margin: var(--sf-context-small-gap) 0 0;
+  color: var(--mx-strong);
+  font: var(--orchestra-font-size-md)/1.6 var(--mx-mono);
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+@media (max-width: 620px) {
+  .sf-context-card dl { grid-template-columns: minmax(0, 1fr); }
+}

@@ -108,7 +108,20 @@ export const SF_U19_COPY = {
   "sf.u19.action.candidateRequired": "Select at least one authorized candidate.",
   "sf.u19.action.noHistoricalResult": "No recorded results for this case.",
   "sf.u19.action.cannotPromote": "Changes and promotions require a separate, producer-admitted review.",
-  "sf.u19.action.nullKnown": "Unknown is distinct from recorded zero."
+  "sf.u19.action.nullKnown": "Unknown is distinct from recorded zero.",
+  "sf.u19.sourceDetails": "Source details",
+  "sf.u19.scenarios.constraintRef": "Constraint reference",
+  "sf.u19.scenarios.constraintNamesUnavailable": "Check each constraint reference before selecting.",
+  "sf.u19.status.eligible-complete": "Eligible (complete)",
+  "sf.u19.status.conditioned": "Conditional",
+  "sf.u19.status.unavailable": "Unavailable",
+  "sf.u19.status.ineligible": "Not eligible",
+  "sf.u19.status.complete": "Complete",
+  "sf.u19.status.incompatible": "Incompatible",
+  "sf.u19.operator.lte": "At most",
+  "sf.u19.operator.gte": "At least",
+  "sf.u19.operator.eq": "Equal to",
+  "sf.u19.sensitivity.reviewCriterion": "{{operator}} {{value}} {{unit}}",
 } as const
 
 export const SF_U19_COPY_BR: Readonly<Record<keyof typeof SF_U19_COPY, string>> = {
@@ -220,5 +233,18 @@ export const SF_U19_COPY_BR: Readonly<Record<keyof typeof SF_U19_COPY, string>> 
   "sf.u19.action.candidateRequired": "Selecione ao menos um candidato autorizado.",
   "sf.u19.action.noHistoricalResult": "Sem resultados registrados para este caso.",
   "sf.u19.action.cannotPromote": "Alterações e promoções exigem revisão independente autorizada pelo produtor.",
-  "sf.u19.action.nullKnown": "Desconhecido é diferente de zero registrado."
+  "sf.u19.action.nullKnown": "Desconhecido é diferente de zero registrado.",
+  "sf.u19.sourceDetails": "Detalhes da origem",
+  "sf.u19.scenarios.constraintRef": "Referência da restrição",
+  "sf.u19.scenarios.constraintNamesUnavailable": "Confira a referência de cada restrição antes de selecionar.",
+  "sf.u19.status.eligible-complete": "Elegível (completo)",
+  "sf.u19.status.conditioned": "Condicional",
+  "sf.u19.status.unavailable": "Indisponível",
+  "sf.u19.status.ineligible": "Não elegível",
+  "sf.u19.status.complete": "Completo",
+  "sf.u19.status.incompatible": "Incompatível",
+  "sf.u19.operator.lte": "No máximo",
+  "sf.u19.operator.gte": "No mínimo",
+  "sf.u19.operator.eq": "Igual a",
+  "sf.u19.sensitivity.reviewCriterion": "{{operator}} {{value}} {{unit}}",
 }

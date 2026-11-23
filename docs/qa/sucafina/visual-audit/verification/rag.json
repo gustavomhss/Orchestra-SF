@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "scope": "Independent visual review of final Shared5 RAG originals",
+  "reviewer": "/root/git_video_recuperacao",
+  "run": {
+    "id": 45088732308,
+    "job_id": 137413185134,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45088732308",
+    "snapshot": "1572618be02ced9e23f5a358a27c6579b5dc7081",
+    "conclusion": "success",
+    "shared_total_passed": 21,
+    "shared_skipped": 0,
+    "shared_flaky": 0,
+    "rag_cases_passed": 3,
+    "rag_retries": 0,
+    "artifact_id": 14780570832,
+    "artifact_bytes": 70369613,
+    "artifact_digest_from_github": "sha256:06a544ac566944d1a32215015b9b7ebe3633dd503d4d6ee9c2223e8e92ee71b3"
+  },
+  "method": "Inspected every one of the17 unique original PNGs with view_image. Duplicate semantic checkpoints were reconciled against the image-index SHA256 groups; no contact-sheet-only claim.",
+  "inventory_source": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/image-index.json",
+  "semantic_checkpoints": 21,
+  "unique_originals_inspected": 17,
+  "variants": [
+    {
+      "name": "dark-wide",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "name": "light-wide",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "name": "dark-narrow",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "originals_inspected": [
+    {
+      "inventory_index": 30,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-wide.png",
+      "sha256": "11a74c422c3b74d37911bab31f158a04faad9662322ba64bcac1f320fe209041",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 31,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-wide.png",
+      "sha256": "73f3f7290bb4dfa62957405278017703e44edbf8606acf884e7a1ccdb30d35db",
+      "identical_semantic_aliases": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-dark-wide.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-dark-wide.png"
+      ]
+    },
+    {
+      "inventory_index": 32,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-dark-wide.png",
+      "sha256": "7deba36fd753fd19e7bace9fe5f5ff446a66a5375215d78c07e24e504523ad78",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 33,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-dark-wide.png",
+      "sha256": "a6db0425cd96415589dfcc3343c06e82d215c80d8bd42eb6eb52a7d96898b805",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 34,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+      "sha256": "b581125818fee1a3d09f78af7d78c281827addfdc1aaf36c5ce722959ae08c6a",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 47,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-narrow.png",
+      "sha256": "943d8db199760578ba637626ef3f6f8c0d5c415961d261740764c0aa853d95bc",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 48,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-narrow.png",
+      "sha256": "412fc0a1d67c26036d5069dee20a229c430e61ae74bbf18c52a53ffc644c48de",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 49,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-dark-narrow.png",
+      "sha256": "1fb05e60bc6d01243ee5fead7da729f8cdae81ec3224174c4d01edfe0e38d59a",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 50,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-dark-narrow.png",
+      "sha256": "86b69ef3ad301be2b9094939045101696ca7c54bfc6111191dac9b1c964a33b4",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 51,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-dark-narrow.png",
+      "sha256": "cdb4dd3aaf8ad7a2465c49e9c97d072b859f2e4b809bdb27af90d00323fc2b7e",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 52,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-dark-narrow.png",
+      "sha256": "059f6f8c96858180f6251267ab09e434a564f71edae6d72545d6925d75cccc39",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 53,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+      "sha256": "a785f7e15984f009d1a1052033964bc59da3df37613e43588ee1881c03464825",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 68,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-light-wide.png",
+      "sha256": "c48a97cf5378268fd505eb46524d6676cf616f670b53c0778f18737ef9f86756",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 69,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-light-wide.png",
+      "sha256": "0fa0201afc87cf94a9e79b76211aa36186aa42ee23521ee63ca22337f9ccc52d",
+      "identical_semantic_aliases": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-light-wide.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-light-wide.png"
+      ]
+    },
+    {
+      "inventory_index": 70,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-wide.png",
+      "sha256": "fcf4d9ed25da526e60c4c701b0e66cede5367866a6fba74fe557f319903da893",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 71,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-wide.png",
+      "sha256": "5c35718a40d8f2c217aa4a200b01c65ff05a91ab3f2eb870ada4f3697a38522a",
+      "identical_semantic_aliases": []
+    },
+    {
+      "inventory_index": 72,
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-shared5/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-wide.png",
+      "sha256": "239030e20c65acd9b383191f84b1d651c0f062222012304fe344f41816421bbf",
+      "identical_semantic_aliases": []
+    }
+  ],
+  "findings": [],
+  "observations": [
+    {
+      "section": "Files / Question",
+      "assessment": "Empty admitted-files state, explicit embedding-off badge and disabled Admit/Ask are legible. On390, question states reflow into a readable two-column group."
+    },
+    {
+      "section": "Pipeline",
+      "assessment": "Parser, boundary, tokenizer and word-search labels/notes are grouped by rows. Desktop controls align beside labels; narrow controls follow below them without horizontal clipping."
+    },
+    {
+      "section": "Model / numeric / metric",
+      "assessment": "Original empty OpenRouter/query model inputs, Pieces4, Dimension0, Float and Cosine selections are visible and consistent with the declared fixture. Fusion explicitly remains off until a model is named."
+    },
+    {
+      "section": "Maintenance / revision",
+      "assessment": "Passes empty state, file-dependent disabled Run controls, Remove pieces and both comparison controls are visible in subsequent scroll captures. Both revision controls fit at390; wide bottom captures jointly show numeric/fusion, maintenance and comparison."
+    },
+    {
+      "section": "Unavailable",
+      "assessment": "Both HTTP503 read failures remain explicit. Pipeline controls and Embedding is off are absent when the pipeline is unknown; no fabricated ready state."
+    }
+  ],
+  "coverage_notes": [
+    "The three wide bottom checkpoint names resolve to one image per theme because scrolling reaches the same page bottom; that image visibly contains all three blocks. These are aliases, not three distinct visual states.",
+    "Narrow screenshots use successive scroll positions; partial content at a viewport boundary is covered by later original frames and is not counted as clipping.",
+    "No new P0/P1/P2 visual finding in this scoped final RAG evidence."
+  ],
+  "limits": [
+    "Original compiled production application with schema-decoded synthetic HTTP read fixtures: component visual, not a live RAG/model/provider receipt.",
+    "No file admission, pipeline write, pass command, revision write, retrieval, embedding generation or question execution was invoked or claimed.",
+    "Pipeline fields remain at original initial values; this does not qualify populated-model or changed-configuration results.",
+    "Scroll positions use scrollIntoView for evidence. These images do not independently prove wheel/keyboard scrolling or first-fold access to every lower control.",
+    "Coverage includes dark390 and both desktop themes; no light390,320px, additional locale or unobserved state is inferred."
+  ]
+}

@@ -1,4 +1,4 @@
-import { For, Show, createMemo } from "solid-js"
+import { For, Show, createMemo, createUniqueId } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
 import { sfBiChartModel, sfBiKey, sfBiPeriodLabel, sfBiValueSource } from "./model"
 import { SfChartFrame } from "../../shared/frame"
@@ -52,16 +52,18 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
           ? model().series.filter((series) => series.points.some((point) => point.value.kind === "known"))
           : model().series}>
           {(series) => {
+            const captionId = createUniqueId()
             const rows = () => model().rows.filter((row) => series.points.some((point) => point.id === row.id))
             const extent = () => Math.max(1, ...rows().flatMap((row) => row.value === null ? [] : [Math.abs(row.value)]))
+            const chartHeight = () => Math.max(60, rows().length * 43 + 18)
             return (
               <figure class="sf-bi-series" data-sf-bi-role={series.semanticToken}>
-                <figcaption>
+                <figcaption id={captionId}>
                   <strong>{rows()[0]?.label ?? t(series.label.key)}</strong>
                   <span class="sf-bi-unit">{rows()[0]?.unit}</span>
                 </figcaption>
-                <div class="sf-bi-plot-region" role="region" aria-label={t(sfBiKey(props.copy + ".axis"))} tabIndex={0}>
-                <svg viewBox={"0 0 700 " + Math.max(60, rows().length * 43 + 18)}
+                <div class="sf-bi-plot-region sf-bi-chart-scroll" role="region" aria-labelledby={captionId} tabIndex={0}>
+                <svg viewBox={"0 0 700 " + chartHeight()} style={{ "min-block-size": chartHeight() + "px" }}
                   role="img" aria-label={t(sfBiKey(props.copy + ".axis"))}
                   class="sf-bi-svg" preserveAspectRatio="xMinYMin meet">
                   <line x1="350" y1="8" x2="350" y2={Math.max(50, rows().length * 43 + 5)}

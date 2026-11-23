@@ -33,7 +33,7 @@ const talentFields: readonly PeopleField[] = [
     ] },
   // CAP08 projection currently lacks the source leaders catalogue. Retain the
   // exact opaque leader ID as a field; never invent a leader name/membership.
-  { name: "leaderId", labelKey: key("sf.u47.leader"), input: "text" },
+  { name: "leaderId", labelKey: key("sf.u47.leader"), input: "text", hintKey: key("sf.u47.leaderHint") },
   { name: "location", labelKey: key("sf.u47.location"), input: "text" },
   { name: "start", labelKey: key("sf.u47.start"), input: "date" },
   { name: "end", labelKey: key("sf.u47.end"), input: "date" },
@@ -51,6 +51,7 @@ const talentFields: readonly PeopleField[] = [
       { value: "Lagger", labelKey: key("sf.u47.lagger") },
     ] },
   { name: "outlook", labelKey: key("sf.u47.outlook"), input: "select",
+    sourceLabels: { Grow: key("sf.u47.grow") },
     options: [
       { value: "", labelKey: key("sf.u47.notReviewed") },
       { value: "Promote", labelKey: key("sf.u47.promote") },
@@ -75,7 +76,7 @@ function toTalentValues(person: object): PeopleFormValues {
  * the source-bound bytes/preview contract.
  */
 export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const navigate = useNavigate()
   const session = createPeopleSession<TalentData>("CAP08", () => props.route.href,
     (transport, signal) => {
@@ -195,6 +196,10 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
     if (value === undefined || value === null || value === "") return t(key(
       field.name === "cls" || field.name === "outlook" ? "sf.u47.notReviewed" : "sf.u03.design.notRecorded"))
     const option = field.options?.find((entry) => entry.value === String(value))
+    const sourceLabel = field.sourceLabels?.[String(value)]
+    if (sourceLabel) return t(sourceLabel)
+    if (field.input === "date" && typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)))
+      return new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value + "T00:00:00Z"))
     return option?.labelKey ? t(option.labelKey) : String(value)
   }
   const statusLabel = (status: string) => t(key(status === "Active" ? "sf.u47.active" :

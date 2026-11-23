@@ -1,0 +1,49 @@
+{
+  "schema": "sf-interface-polish-root-visual/v1",
+  "reviewer": "root",
+  "source": "abfd60694f76311f48274fafe4292cd813d7efff",
+  "snapshot": "90755385d6a17d6ac56bada4e38437e1998fae19",
+  "run": 45098189117,
+  "artifact": 14784912750,
+  "method": "Three original PNGs opened individually with view_image; local SHA-256 bytes match the artifact image index.",
+  "originals": [
+    {
+      "index": 13,
+      "name": "UI46-original-financial-chart-dark-320",
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-320.png",
+      "sha256": "f0ef11d5767c18a0a19256b658e1bfab516575274465a450efb2dba7796c5b98",
+      "size": [
+        320,
+        800
+      ],
+      "observation": "All twelve month periods readable on left at320; title and explicit unspecified unit retained."
+    },
+    {
+      "index": 16,
+      "name": "UI46-original-financial-chart-values-dark-320",
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-values-dark-320.png",
+      "sha256": "b793d68108fff83c1462539a9bbc04c7bbfec155a1b9465f93ab00f81700fb0a",
+      "size": [
+        320,
+        800
+      ],
+      "observation": "All twelve58,000 values readable at horizontal right. Source actions remain below, outside chart scroll."
+    },
+    {
+      "index": 44,
+      "name": "UI50-authorized-report-selection-dark-320",
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-selection-dark-320.png",
+      "sha256": "b64be1afbc63ef17ed03ae6105f2745336a5f8bc83c2bde85fef29d29c307124",
+      "size": [
+        320,
+        800
+      ],
+      "observation": "Report header, primary action, contextual metadata, Format combobox, Title field and checkbox label align within the320 viewport; no fieldset overflow in this original."
+    }
+  ],
+  "limits": [
+    "Matrix6 overall failed4/1 at the wrong UI69 cancel locator; this review does not change that conclusion.",
+    "Right-side values and left-side periods appear in separate mobile scroll positions.",
+    "Review covers these originals only; lower report controls were reviewed separately by workflow agent."
+  ]
+}

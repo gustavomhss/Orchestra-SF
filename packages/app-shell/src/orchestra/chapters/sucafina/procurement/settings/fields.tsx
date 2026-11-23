@@ -19,7 +19,7 @@ const isChecked = (value: unknown): boolean => value === true || value === "true
 
 /** Exact CAP28 fieldnames only; no client policy/FX validator and no empty-to-zero coercion. */
 export function SfProcurementSettingsFields(props: Props): JSX.Element {
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
   const key = (name: string) => name as SfCopyKey
   const label = (name: string, id: string) => <label for={id}>{t(key(name))}</label>
   const edit = (name: keyof Settings, value: Settings[keyof Settings]) =>
@@ -28,6 +28,13 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
   const numberText = (value: Numeric | undefined) => value == null ? "" : String(value)
   const id = (group: string, field: string, index?: number) =>
     ["sf-u36", group, field, ...(index === undefined ? [] : [index])].join("-")
+  const uploadSize = () => {
+    const bytes = props.settings.uploadCap
+    if (typeof bytes !== "number" || !Number.isFinite(bytes) || bytes < 0) return null
+    return t(key("sf.u36.uploadReadable"), {
+      size: new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 }).format(bytes / 1_048_576),
+    })
+  }
   const scalar = (
     name: keyof Settings, copyKey: string, kind: "text" | "number" | "date" | "textarea",
   ): JSX.Element => (
@@ -149,7 +156,10 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
       <fieldset class="sf-n21-fieldset" id="sf-procurement-settings-attachments">
         <legend>{t(key("sf.u36.attachments"))}</legend>
         <div class="sf-n21-field-grid">
-          {scalar("uploadCap", "sf.u36.upload", "number")}
+          <div class="sf-n21-field">
+            {scalar("uploadCap", "sf.u36.upload", "number")}
+            <Show when={uploadSize()}>{(size) => <small class="sf-n21-field-help">{size()}</small>}</Show>
+          </div>
           {scalar("reminderDays", "sf.u36.reminder", "number")}
           {scalar("escalationDays", "sf.u36.escalation", "number")}
         </div>

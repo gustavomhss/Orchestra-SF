@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/video_inventario",
+  "reviewedAtUtc": "2026-11-23T01:57:41.955Z",
+  "verdict": "PASS_FOCUSED_CODE_REVIEW",
+  "materialFindings": [],
+  "scope": "Read-only peer review of UI50 locator and UI69 sequential explicit read observers; separate UI50 presentation delta reviewed before integration.",
+  "qa": {
+    "baseSha": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "headSha": "8544bd1a9d02e2e307dec9a047db14f0ecf127bb",
+    "commits": 1,
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "blobSha": "7e5d97a74c153175fa24445aa9169f5c3d479ca6",
+        "additions": 70,
+        "deletions": 63
+      }
+    ]
+  },
+  "ui50Presentation": {
+    "commit": "a37b1b6e599e625d1f5767d573ceea18b73286a3",
+    "parents": [
+      "fe47ab5dfebf943abaa9c9518a754b0fc17cd9b5"
+    ],
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+        "blobSha": "4929a5a150513d8d1016a80a2c3e8a5d38693aa8",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+        "blobSha": "b241752cd5c8bab26afa41b3ee2093be74c17dec",
+        "additions": 26,
+        "deletions": 1
+      }
+    ],
+    "integrationNotClaimed": true
+  },
+  "conclusions": [
+    {
+      "area": "UI50 locator",
+      "result": "PASS",
+      "evidence": "Matrix5 error-context explicitly contains combobox \"Office format\" at line 222, with Word (DOCX) and PowerPoint (PPTX) options. The change uses getByRole('combobox', {name:'Office format', exact:true}) and retains the visible assertion. Source markup is an actual select; no fallback, loose matching or omitted assertion was added.",
+      "artifact": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/error-context.md"
+    },
+    {
+      "area": "UI69 private reader",
+      "result": "PASS",
+      "evidence": "The unavailable region and Try again button exist in the original Matrix5 AX. Product local-administration/index.tsx passes onRetryRead=refresh to SfStatePanel; refresh increments the private reader revision. That reader retains local-operator and owner/generation checks. The spec awaits initial settled page and visible summary form before installing the exact private-endpoint GET observer, clicks once, awaits the original response, and closes the observer in finally. HTTP 503, closed output schema, exact unavailable reason, absent Profile and not-authorized owner remain asserted."
+    },
+    {
+      "area": "UI69 summary reader",
+      "result": "PASS",
+      "evidence": "summary-settings.tsx renders a scoped Current source button when no review is open, bound to its own refresh/read effect. The spec installs this observer only after private read verification and uses exact origin/path/method with unchanged forwardOnce. HTTP 200, status ok, exact project/installation/principal, canConfigure, source version, source-ordered available/checked pages, one changed field, proposed list, cancel and zero configure POSTs remain asserted."
+    },
+    {
+      "area": "Observer lifecycle",
+      "result": "PASS",
+      "evidence": "forwardOnce is unchanged: page.route times: 1, route.fetch maxRedirects: 0 / maxRetries: 0, original response delivered through route.fulfill, response object returned, close only removes the route. Moving observations to explicit user read actions avoids cancelled bootstrap delivery as a qualification receipt. No auth mocking, fabricated response, retry of writes, new waits or permission change is introduced."
+    },
+    {
+      "area": "Assertion preservation",
+      "result": "PASS",
+      "evidence": "Whitespace-normalized comparison of removed versus added assertion lines found only the intended getByLabel→getByRole visibility replacement missing verbatim. The prior schema/status/identity/version/catalog/delta/cancel/zero-write assertions remain."
+    },
+    {
+      "area": "UI50 presentation",
+      "result": "PASS_CODE_ONLY",
+      "evidence": "a37b1b6 adds mx-btn to the existing legacy Generate Report button, excludes checkbox/radio from the 100% text-field width rule, gives the report form two desktop columns and one mobile column, and aligns fieldset labels/action. All original handlers, wire values, blocked predicates and controls are retained.",
+      "limitation": "The post-change layout still requires the planned integrated original screenshot; this review does not claim a fresh render."
+    }
+  ],
+  "evidenceFiles": [
+    "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+    "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css"
+  ],
+  "limits": [
+    "No runtime pass is claimed for 8544bd1 or the UI50 CSS integration by this receipt.",
+    "Matrix5 remains 3 PASS / 2 FAIL; the two failures require the planned rerun.",
+    "No other interface scope was reopened."
+  ],
+  "actions": {
+    "productChanged": false,
+    "ciDispatched": false,
+    "testsExecuted": false,
+    "prPosted": false,
+    "merge": false,
+    "localReceiptOnly": true
+  }
+}

@@ -352,7 +352,7 @@ test("an uncertain prompt survives ephemeral refresh, blocks leaving and reconci
       !!view.host.querySelector("[data-sf-prompt-admitted]")?.textContent?.includes("admitted once"))
     expect(sessionRequests(view).filter((request) => request.method === "POST")).toHaveLength(2)
     expect(view.requests.some((request) => new URL(request.url).pathname.endsWith("/history") && request.method === "GET")).toBe(true)
-    view.click("header > button")
+    view.click("[data-sf-sign-out]")
     await eventually(() => view.state() === "unauthenticated")
     expect(window.location.pathname).toBe("/")
     expect(window.location.search).toBe("")

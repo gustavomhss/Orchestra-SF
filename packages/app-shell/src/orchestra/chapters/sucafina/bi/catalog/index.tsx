@@ -19,6 +19,7 @@ import { SfDecisionFigure } from "../decisions"
 import type { SfBiFinancialView, SfBiOperationalView, SfBiSnapshot, SfBiValueSource } from "../finance/model"
 import { sfBiKey, sfBiResolveValueSource } from "../finance/model"
 import "./catalog.css"
+import "../../reviews/workflows.css"
 
 const BI_CATALOG = [
   { id: "BI01", family: "finance", question: "sf.u20.question.BI01" },
@@ -313,7 +314,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       primaryAction={undefined} density="comfortable" layout="work"
       onLayoutMode={(mode) => setStore("layout", mode)}
     >
-      <section class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-surface={props.surfaceId}
+      <section class="sf-bi-catalog sf-workflow" data-sf-catalog={props.surfaceId} data-sf-surface={props.surfaceId}
         data-sf-wave="five" data-sf-stage={!store.viewId ? "catalog" : safePreview() ? "result" : "context"}
         data-sf-layout-mode={store.layout}>
         <SfStatePanel state={ownerState()}
@@ -347,7 +348,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
               </Show>
             </header>}
           </Show>
-          <form class="sf-bi-catalog-form" hidden={!store.viewId}
+          <form class="sf-bi-catalog-form sf-form sf-fields" hidden={!store.viewId}
             onSubmit={(event) => { event.preventDefault(); void chooseContext() }}>
             <label>
               {t(sfBiKey("sf.u21.view"))}

@@ -361,8 +361,11 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       return <span class="sf-s02-cell-absence">{t("sf.s02.missing")}</span>
     const amount = value.kind === "known" ? value.value : (value as Readonly<{ kind: "inherited"; value: number }>).value
     return <>
-      <span class="sf-s02-cell-amount">{formatValue(amount, cell.fractionDigits)}</span>
-      <span class="sf-s02-cell-unit">{unitLabel(value.unit)}</span>
+      <span class="sf-s02-quantity">
+        <span class="sf-s02-cell-amount">{formatValue(amount, cell.fractionDigits)}</span>
+        {" "}
+        <span class="sf-s02-cell-unit">{unitLabel(value.unit)}</span>
+      </span>
       <Show when={value.kind === "inherited"}>
         <span class="sf-s02-cell-source">{t("sf.s02.inherited")}</span>
       </Show>
@@ -511,21 +514,30 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
         <div class="sf-s02-mobile" aria-label={t("sf.s02.rowMonths")}>
           <For each={props.rows}>{(row) =>
             <details class="sf-s02-mobile-row">
-              <summary><For each={props.columns}>{(column) => column.render(row)}</For></summary>
+              <summary>
+                <span class="sf-s02-mobile-summary">
+                  <For each={props.columns}>{(column, index) =>
+                    <span class="sf-s02-mobile-meta" data-primary={index() === 0}>
+                      <Show when={index() > 0}><small>{t(column.labelKey)}</small></Show>
+                      <span>{column.render(row)}</span>
+                    </span>
+                  }</For>
+                </span>
+              </summary>
               <ul>
                 <For each={props.months}>{(month) =>
                   <li>
                     <strong>{t(month.labelKey)}</strong>
                     <For each={cellVariants(props.getRowKey(row), month.id)}>{(cell) =>
-                      <div>
-                        <span>{t(COPY_MEASURE[cell.coordinate.measure])}: </span>
-                        {renderValue(cell)}
+                      <div class="sf-s02-mobile-measure">
+                        <span class="sf-s02-measure-name">{t(COPY_MEASURE[cell.coordinate.measure])}</span>
+                        <div class="sf-s02-value">{renderValue(cell)}</div>
                         <button type="button" class="sf-s02-mobile-select"
                           aria-pressed={selected(cell.coordinate)}
                           onClick={() => props.onSelectRange({ anchor: cell.coordinate, extent: cell.coordinate })}>
                           {t("sf.s02.paste.selectStart")}
                         </button>
-                        <Show when={firstIssue(cell)}>{(reason) => <small>{reason()}</small>}</Show>
+                        <Show when={firstIssue(cell)}>{(reason) => <small class="sf-s02-reason">{reason()}</small>}</Show>
                       </div>
                     }</For>
                     <Show when={cellVariants(props.getRowKey(row), month.id).length === 0}>

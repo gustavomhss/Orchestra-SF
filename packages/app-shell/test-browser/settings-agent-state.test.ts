@@ -207,7 +207,7 @@ test("the Agents roster distinguishes all mode and keeps only Maestro's chat ent
   }), host)
   try {
     const cards = [...host.querySelectorAll("li.agent")]
-    expect(cards.map((card) => card.querySelector(".agent-role")?.textContent)).toEqual(["Lead agent", "all", "Specialist"])
+    expect(cards.map((card) => card.querySelector(".agent-role")?.textContent)).toEqual(["Lead agent", "Lead and specialist", "Specialist"])
     expect(host.querySelectorAll(".agent-chat")).toHaveLength(1)
     cards[1]!.querySelector<HTMLButtonElement>(".agent-open")!.click()
     expect(opened).toEqual(["review"])

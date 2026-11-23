@@ -15,6 +15,7 @@ import type { SfCopyKey, SfUiState } from "../../../shared/frame/types"
 import { SF_U38_COPY } from "@/i18n/orchestra-chapters/sf-u38"
 import "../u38.css"
 import "./proposals.css"
+import "../../../reviews/workflows.css"
 
 type Key = keyof typeof SF_U38_COPY
 const key = (text: Key): SfCopyKey => text as SfCopyKey
@@ -294,7 +295,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
 
   return <SfPageFrame titleKey={key("sf.ui54.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
-    <div class="sf-u38-page" data-sf-surface="UI54" data-sf-wave="five" data-sf-proposal-stage={store.review?.state === "planned" ? "review" : chosenDraft() ? "draft" : "source"}>
+    <div class="sf-u38-page sf-workflow" data-sf-surface="UI54" data-sf-wave="five" data-sf-proposal-stage={store.review?.state === "planned" ? "review" : chosenDraft() ? "draft" : "source"}>
       <header class="sf-proposal-intro"><h2>{t(key("sf.u38.proposalHeading"))}</h2><p>{t(key("sf.u38.proposalHint"))}</p></header>
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
@@ -375,7 +376,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
         <section class="sf-u38-section sf-proposal-receipt">
           <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
           <Show when={store.review?.receipt}
-            fallback={<p role="status">{t(key("sf.u38.proposalNeedsReview"))}</p>}>
+            fallback={<p role="status">{t(key("sf.u38.proposalNoReceipt"))}</p>}>
             {(receipt) => <dl class="sf-u38-meta">
               <div><dt>{t(key("sf.u38.proposalReceipt"))}</dt><dd><bdi>{receipt().id}</bdi></dd></div>
               <Show when={receipt().status}><div><dt>{t(key("sf.u38.status"))}</dt>

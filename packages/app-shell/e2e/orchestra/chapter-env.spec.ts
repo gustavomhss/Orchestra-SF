@@ -163,22 +163,36 @@ for (const scheme of ["dark", "light"]) {
     const token = page.locator('[data-env-key="TOKEN"]')
     await token.getByRole("button", { name: "Show", exact: true }).click()
     await expect(token).toContainText(`${secret}#hash`)
-    // Mock row geometry: the key stacks over its value at the same inline start, both clipped to one line.
+    // The two text lines retain their native font tokens and fit their row with its
+    // measured spacing. A body line-height change must not clip either line or add a blank line.
     const layout = await token.evaluate((row) => {
-      const key = row.querySelector("strong")!.getBoundingClientRect()
-      const value = row.querySelector("small")!.getBoundingClientRect()
+      const keyElement = row.querySelector("strong")!
+      const valueElement = row.querySelector("small")!
+      const key = keyElement.getBoundingClientRect()
+      const value = valueElement.getBoundingClientRect()
+      const keyStyle = getComputedStyle(keyElement), valueStyle = getComputedStyle(valueElement)
+      const rowStyle = getComputedStyle(row)
+      const spacing = parseFloat(valueStyle.marginBlockStart) +
+        parseFloat(rowStyle.paddingBlockStart) + parseFloat(rowStyle.paddingBlockEnd) +
+        parseFloat(rowStyle.borderBlockStartWidth) + parseFloat(rowStyle.borderBlockEndWidth)
       return {
         height: row.getBoundingClientRect().height,
+        contentHeight: key.height + value.height + spacing,
+        keyFont: keyStyle.fontSize,
+        keyToken: keyStyle.getPropertyValue("--orchestra-font-size-sm").trim(),
+        valueFont: valueStyle.fontSize,
+        valueToken: valueStyle.getPropertyValue("--orchestra-font-size-xs").trim(),
         stacked: value.top >= key.bottom - 0.5,
         start: Math.abs(key.left - value.left) < 1,
-        clipped: [row.querySelector("strong")!, row.querySelector("small")!].map((element) => {
+        clipped: [keyElement, valueElement].map((element) => {
           const style = getComputedStyle(element)
           return `${style.textOverflow} ${style.whiteSpace} ${style.overflow}`
         }),
       }
     })
-    expect(layout.height).toBeGreaterThanOrEqual(58)
-    expect(layout.height).toBeLessThanOrEqual(61)
+    expect(layout.keyFont).toBe(layout.keyToken)
+    expect(layout.valueFont).toBe(layout.valueToken)
+    expect(Math.abs(layout.height - layout.contentHeight)).toBeLessThanOrEqual(1)
     expect(layout.stacked).toBe(true)
     expect(layout.start).toBe(true)
     expect(layout.clipped).toEqual(["ellipsis nowrap hidden", "ellipsis nowrap hidden"])

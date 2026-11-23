@@ -4,6 +4,12 @@ A administração de equipes permite habilitar perfis do Microsoft Teams e edita
 
 Na entrada Web da instalação, abra **Team administration** / **Administração de equipes**. Leia a configuração atual e, na linha da equipe, escolha **Configure chat** / **Configurar chat**. O editor carrega a configuração persistida daquela equipe antes de habilitar o formulário.
 
+## Navegação e leitura
+
+O cabeçalho reúne **Atualizar acesso** e **Sair**. A seleção de equipe fica junto das ações de abrir o dashboard e iniciar um chat. Quando o contexto autorizado fornece o nome de uma equipe, esse nome identifica a seleção e a linha administrativa; o identificador original continua disponível como referência. Uma equipe sem nome fornecido pela fonte permanece identificada pelo seu ID.
+
+A administração organiza cada equipe em uma linha com seu estado e suas próprias ações. O editor de configuração mantém os campos junto da ação de salvar. Em uma janela estreita, os grupos se reorganizam e o conteúdo pode ser percorrido verticalmente. Se houver um rascunho ao sair da edição, a confirmação distingue continuar editando de descartar o rascunho.
+
 ## Modelo e agente
 
 Informe o identificador de modelo no formato `provedor/modelo`, exatamente como foi preparado para esta instalação. O campo é obrigatório neste editor: uma configuração vazia não seleciona um modelo para novas sessões do Chat. O editor não escolhe um provedor automaticamente.

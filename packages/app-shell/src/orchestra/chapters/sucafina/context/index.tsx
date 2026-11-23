@@ -3,6 +3,7 @@ import { useLanguage } from "@/context/language"
 import { createStore, reconcile } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
+import "./context.css"
 import { createSfOwnerDrafts } from "./drafts"
 import { createSfTodayResumePort, type SfCurrentResumeOwner } from "../navigation-state/resume"
 import { createSfBudgetPeriodPort, sfBudgetPeriodAvailable } from "../navigation-state/budget-period"
@@ -475,8 +476,10 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
     }
   }
   return (
+    <div class="sf-context-page" data-sf-wave="polish" data-sf-surface="UI67">
     <SfPageFrame
       titleKey={key("sf.ui67.title")}
+      subtitleKey={key("sf.ui67.description")}
       context={[]}
       tabs={[]}
       activeTab={null}
@@ -491,14 +494,21 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
         onRetryRead={() => { void owner.reload() }}
       >
         {ready() && (
-          <dl data-sf-context="authorized" aria-live="polite">
-            <dt data-sf-copy="sf.ui67.server">{language.t("sf.ui67.server")}</dt><dd>{ready()!.owner.serverKey}</dd>
-            <dt data-sf-copy="sf.ui67.project">{language.t("sf.ui67.project")}</dt><dd>{ready()!.binding.projectId}</dd>
-            <dt data-sf-copy="sf.ui67.installation">{language.t("sf.ui67.installation")}</dt><dd>{ready()!.binding.installationId}</dd>
-            <dt data-sf-copy="sf.ui67.identity">{language.t("sf.ui67.identity")}</dt><dd>{ready()!.context.stamp.principalRef}</dd>
-          </dl>
+          <section class="sf-context-card" aria-labelledby="sf-context-current">
+            <header>
+              <h2 id="sf-context-current">{language.t("sf.ui67.activeContext")}</h2>
+              <p>{language.t("sf.ui67.contextDetails")}</p>
+            </header>
+            <dl data-sf-context="authorized" aria-live="polite">
+              <div><dt data-sf-copy="sf.ui67.server">{language.t("sf.ui67.server")}</dt><dd><bdi>{ready()!.owner.serverKey}</bdi></dd></div>
+              <div><dt data-sf-copy="sf.ui67.project">{language.t("sf.ui67.project")}</dt><dd><bdi>{ready()!.binding.projectId}</bdi></dd></div>
+              <div><dt data-sf-copy="sf.ui67.installation">{language.t("sf.ui67.installation")}</dt><dd><bdi>{ready()!.binding.installationId}</bdi></dd></div>
+              <div><dt data-sf-copy="sf.ui67.identity">{language.t("sf.ui67.identity")}</dt><dd><bdi>{ready()!.context.stamp.principalRef}</bdi></dd></div>
+            </dl>
+          </section>
         )}
       </SfStatePanel>
     </SfPageFrame>
+    </div>
   )
 }

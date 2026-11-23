@@ -54,6 +54,21 @@ const value = (item: unknown): SfDisplayValue => {
 const display = (item: unknown) => typeof item === "string" ? item : item == null ? "" : String(item)
 const fieldKey = (field: string) => k(("sf.u14.field." + field) as SfU14CopyKey)
 const bankSet = new Set<string>(bankFields)
+const supplierActionLabel: Readonly<Record<SupplierAction, SfU14CopyKey>> = {
+  create: "sf.u14.create",
+  save: "sf.u14.save",
+  activate: "sf.u14.activate",
+  block: "sf.u14.block",
+  inactivate: "sf.u14.inactivate",
+  delete: "sf.u14.delete",
+  "change-bank": "sf.u14.changeBank",
+}
+const supplierStatusLabels: Readonly<Record<string, SfU14CopyKey>> = {
+  pending: "sf.u14.pending",
+  active: "sf.u14.active",
+  blocked: "sf.u14.blocked",
+  inactive: "sf.u14.inactive",
+}
 const active = (phase: Phase) => phase === "reviewing" || phase === "checking" || phase === "submitting" || phase === "verifying" || phase === "outcome-unknown"
 
 export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
@@ -61,6 +76,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
   const language = useLanguage()
   const platform = usePlatform()
   const t = (key: SfU14CopyKey) => language.t(k(key) as Parameters<typeof language.t>[0])
+  const statusLabel = (status: string | null | undefined) => {
+    const label = supplierStatusLabels[status ?? ""]
+    return label ? t(label) : status || t("sf.u14.missing")
+  }
   const [ui, setUi] = createStore<{
     token: string | null
     state: SfUiState
@@ -486,7 +505,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (!current || !row?.id || intent.ref !== row.id) return null
     return { kind: "persisted", ref: row.id as SfRef, version: intent.version,
       fields: [
-        { path: "status", label: m("sf.u14.status"), value: value(row.status) },
+        { path: "status", label: m("sf.u14.status"), value: value(statusLabel(row.status)) },
         ...(intent.action === "change-bank" ? [] : fieldsFor(supplierEdit(row), false)),
       ],
     }
@@ -497,7 +516,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (!can(intent.action) || intent.token !== authority())
       return { kind: "blocked", labelKey: k("sf.u14.readOnly"), reasons: [m("sf.u14.readOnly")] } as const
     return {
-      kind: "admitted", labelKey: k("sf.u14.confirm"), purpose: intent.action,
+      kind: "admitted", labelKey: k(supplierActionLabel[intent.action]), purpose: intent.action,
       binding: { kind: "catalog-command", operationId: ("domain.command.CAP27." + intent.action) as
         "domain.command.CAP27.create" | "domain.command.CAP27.save" | "domain.command.CAP27.activate" |
         "domain.command.CAP27.block" | "domain.command.CAP27.inactivate" |
@@ -756,10 +775,10 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
       <SfRecordDetail
         title={data(selected.legalName ?? selected.number ?? id)}
         secondaryId={data(selected.number ?? id)}
-        status={{ code:selected.status ?? "unknown", text:data(selected.status ?? t("sf.u14.missing")),
+        status={{ code:selected.status ?? "unknown", text:data(statusLabel(selected.status)),
           tone:selected.status === "active" ? "success" : selected.status === "blocked" ? "danger" : "warning" }}
         metadata={[{id:"number",label:m("sf.u14.number"),value:value(selected.number)},
-          {id:"status",label:m("sf.u14.status"),value:value(selected.status)}]}
+          {id:"status",label:m("sf.u14.status"),value:value(statusLabel(selected.status))}]}
         sections={[
           {id:"general",titleKey:k("sf.u14.general"),state:"ready",
            content:<dl class="sf-u14-record-fields">
@@ -793,7 +812,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
               <li>{t("sf.u14.auditField")}: {entry.field}</li>
             }</For></ul>},
         ]}
-        primaryAction={can("save") ? {id:"save",labelKey:k("sf.u14.save"),tone:"primary",disabled:active(ui.phase),
+        primaryAction={can("save") ? {id:"save",labelKey:k("sf.u14.edit"),tone:"primary",disabled:active(ui.phase),
           busy:false,onInvoke:()=>setUi("mode","edit")} : undefined}
         secondaryActions={[
           ...(["activate","block","inactivate"] as const).filter(can).map((action) =>
@@ -853,7 +872,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         <Show when={ui.phase !== "outcome-unknown"}>
         <Show when={!ui.review} fallback={<SfChangeReview
           operation={{ref:(ui.review?.intentRef ?? "CAP27:unknown") as SfOperationRef,
-            label:m("sf.u14.review"),scope:data(ui.review?.ref ?? t("sf.u14.create"))}}
+            label:m(ui.review ? supplierActionLabel[ui.review.action] : "sf.u14.review"),scope:data(supplier()?.legalName ?? ui.review?.ref ?? t("sf.u14.create"))}}
           base={ui.review ? baseSnapshot(ui.review) : null}
           current={ui.review ? baseSnapshot(ui.review) : null}
           proposed={{kind:"draft",intentRef:(ui.review?.intentRef ?? "CAP27:unknown") as SfIntentRef,
@@ -861,7 +880,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
             sourceVersion:ui.review?.ref ? ui.review.version : null,
             fields:ui.review ? fieldsFor(ui.review.value,ui.review.action === "change-bank") : []}}
           effects={ui.review ? [{
-            id:ui.review.action,domain:"procurement",title:data(ui.review.action),
+            id:ui.review.action,domain:"procurement",title:data(t(supplierActionLabel[ui.review.action])),
             state:"proposed",details:[],
           }] : []}
           coverage={{state:"complete",summary:m("sf.u14.coverage"),reasons:[],knownCount:1,expectedCount:1}}
@@ -898,7 +917,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
                   render:(row)=><>{row.legalName ?? ""}</>},
                 {id:"status",labelKey:k("sf.u14.status"),align:"start",
                   widthPolicy:{kind:"content",minPx:90,maxPx:170},sortKey:"status",
-                  render:(row)=><>{row.status ?? ""}</>},
+                  render:(row)=><span title={row.status ?? undefined}>{statusLabel(row.status)}</span>},
               ]}
               selectedKey={supplier()?.id as SfRef | undefined}
               sort={ui.sort} page={{kind:"none",total:rows().length}}
@@ -910,7 +929,7 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
                 if (token && ref() === selection) void refresh(token, selection)
               }}
               rowActions={(row) => actionAvailable("save") && row.id ? [{
-                id:"edit",labelKey:k("sf.u14.save"),tone:"secondary",disabled:active(ui.phase),busy:false,
+                id:"edit",labelKey:k("sf.u14.edit"),tone:"secondary",disabled:active(ui.phase),busy:false,
               }] : []}
               onRowAction={(entry) => {
                 setUi("selected", entry.recordRef)

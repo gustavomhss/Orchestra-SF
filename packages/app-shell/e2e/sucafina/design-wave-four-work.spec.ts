@@ -4,6 +4,10 @@ import { waveFourTest, enter, ready, scheme, capture, reflow, reviewActions, scr
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
 import { seedWaveFourWork } from "./design-support/wave-four-work-seed"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "UI30", path: "/orchestra/sf-work", title: "Meu trabalho" },
   { id: "UI31", path: "/orchestra/sf-home/search", title: "Busca" },

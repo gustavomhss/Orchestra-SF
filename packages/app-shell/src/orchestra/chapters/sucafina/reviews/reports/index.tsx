@@ -14,6 +14,7 @@ import { readPreservedProjection, reviewReadState, type PreservedReview } from "
 import { PeriodText, WhenText } from "../labels"
 import "./reports.css"
 import "../wave-five.css"
+import "../workflows.css"
 import { SfOpenReviewReference } from "../open-reference"
 
 type Format = "docx" | "pptx"
@@ -200,7 +201,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
         busy: store.busy, onInvoke: () => { void requestReport() },
       }}
     >
-      <div class="sf-n28" data-sf-surface="UI50" data-sf-wave="five" data-export-state={operationState()}>
+      <div class="sf-n28 sf-workflow" data-sf-surface="UI50" data-sf-wave="five" data-export-state={operationState()}>
         <header class="sf-review-intro">
           <h2>{t("sf.u33.prepareHeading")}</h2>
           <p>{t(ref() ? "sf.u33.selectionHint" : "sf.u33.prepareHint")}</p>
@@ -213,13 +214,13 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
           messageKey={key(recovery() || typeof store.marker === "string" ? "sf.common.unavailable" :
             !ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
           onRetryRead={ref() ? () => setStore("retry", (count) => count + 1) : undefined}>
-          <Show when={store.review}>{(review) => <section class="sf-n28-section" data-preserved-review={review().id}>
+          <Show when={store.review}>{(review) => <section class="sf-n28-section sf-section" data-preserved-review={review().id}>
             <dl class="sf-n28-summary mx-card">
               <div><dt>{t("sf.u33.review")}</dt><dd>{review().id}</dd></div>
               <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
               <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
             </dl>
-            <div class="mx-card sf-review-report-format">
+            <div class="mx-card sf-review-report-format sf-form sf-fields">
               <label for={uid + "-format"}>{t("sf.u33.format")}</label>
                 <select id={uid + "-format"} aria-label={t("sf.u33.format")} value={store.format}
                   disabled={store.busy || !!recovery() || store.marker !== null}
@@ -231,7 +232,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                   <option value="pptx">{t("sf.u33.pptx")}</option>
                 </select>
             </div>
-            <section class="sf-n28-section" aria-label={t("sf.u33.contents")}>
+            <section class="sf-n28-section sf-section" aria-label={t("sf.u33.contents")}>
               <h2>{t("sf.u33.contents")}</h2>
               <ul class="sf-n28-items">
                 <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id} data-source-record-count={section.count}>
@@ -255,7 +256,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               </ul>
               <Show when={!store.selected.length}><p>{t("sf.u33.noSections")}</p></Show>
             </section>
-            <section class="sf-n28-section" aria-label={t("sf.u33.comments")}>
+            <section class="sf-n28-section sf-section" aria-label={t("sf.u33.comments")}>
               <h2>{t("sf.u33.comments")}</h2>
               <p>{t("sf.u33.longNotes")}</p>
               <div class="sf-n28-notes">
@@ -265,7 +266,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                 </article>}</For>
               </div>
             </section>
-            <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
+            <section class="sf-n28-section sf-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
               <Show when={recovery()?.reason !== "outcome-unknown" && (!exportAdmitted() || store.marker !== null || !!recovery() && !store.busy)}>
                 <p role="status" data-sf-file-unavailable>{t("sf.common.unavailable")}</p>

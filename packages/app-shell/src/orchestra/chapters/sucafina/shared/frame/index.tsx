@@ -195,8 +195,13 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
         description={props.subtitleKey ? t(props.subtitleKey) : ""}
         eyebrow={eyebrow()}
         action={
-          <Show when={props.primaryAction}>
-            {(action) => <SfActionButton action={action()} variant="primary" />}
+          <Show when={props.primaryAction || props.secondaryActions.length > 0}>
+            <div class="sf-page-actions">
+              {secondary()}
+              <Show when={props.primaryAction}>
+                {(action) => <SfActionButton action={action()} variant="primary" />}
+              </Show>
+            </div>
           </Show>
         }
       >
@@ -231,13 +236,7 @@ export function SfPageFrame(props: SfPageFrameProps): JSX.Element {
               </div>
             </nav>
           </Show>
-          <Show when={props.secondaryActions.length > 0}>
-            {/* Keep secondary actions visible and keyboard reachable at every width.
-                COPY-01 has no "More actions" key; do not mislabel them as "Show details". */}
-            <div class="sf-secondary-actions">
-              <div class="sf-secondary-inline">{secondary()}</div>
-            </div>
-          </Show>
+
           <div class="sf-frame-body" data-sf-content={props.layout}>
             {props.children}
           </div>

@@ -24,6 +24,13 @@ export const SF_S03_COPY = {
   "sf.s03.cancel": "Cancel review",
   "sf.s03.confirmationBlocked": "Confirmation is not available for this review.",
   "sf.s03.coverage": "Coverage",
+  "sf.s03.comparison": "Values by field",
+  "sf.s03.changedFields": "Fields with changes",
+  "sf.s03.changed": "Changed",
+  "sf.s03.sourceDifference": "Current source differs",
+  "sf.s03.notSupplied": "Not supplied in this version",
+  "sf.s03.noFields": "No field values were supplied for this review.",
+  "sf.s03.deleteEffect": "This review requests deletion of the record.",
 } as const
 
 export const SF_S03_COPY_BR: Record<keyof typeof SF_S03_COPY, string> = {
@@ -50,4 +57,11 @@ export const SF_S03_COPY_BR: Record<keyof typeof SF_S03_COPY, string> = {
   "sf.s03.cancel": "Cancelar revisão",
   "sf.s03.confirmationBlocked": "Não é possível confirmar esta revisão.",
   "sf.s03.coverage": "Cobertura",
+  "sf.s03.comparison": "Valores por campo",
+  "sf.s03.changedFields": "Campos com alterações",
+  "sf.s03.changed": "Alterado",
+  "sf.s03.sourceDifference": "A fonte atual é diferente",
+  "sf.s03.notSupplied": "Não informado nesta versão",
+  "sf.s03.noFields": "Não foram informados valores de campos para esta revisão.",
+  "sf.s03.deleteEffect": "Esta revisão solicita a exclusão do registro.",
 }

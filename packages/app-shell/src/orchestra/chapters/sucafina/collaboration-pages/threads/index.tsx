@@ -13,6 +13,7 @@ import { SfPeriodText } from "../../collaboration/labels"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import "../presentation.css"
+import "../../reviews/workflows.css"
 import "./threads.css"
 
 type Thread = Extract<typeof SfCollaboration.operations["collaboration.thread-read"]["output"]["Type"], { status: "ok" }>["value"]
@@ -190,7 +191,7 @@ export function SfThreadView(props: SfSurfaceProps<"UI52">) {
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
-      <section class="sf-u44-thread" data-sf-surface="UI52" data-sf-wave="five" data-sf-thread-ref={ref()}>
+      <section class="sf-u44-thread sf-workflow" data-sf-surface="UI52" data-sf-wave="five" data-sf-thread-ref={ref()}>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
           onRetryRead={() => void load()}>
           <Show when={projection()}>

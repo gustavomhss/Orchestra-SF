@@ -17,6 +17,7 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import { encodeSfRouteRef } from "../../navigation-state"
 import "../presentation.css"
+import "../../reviews/workflows.css"
 import "./confirmations.css"
 
 type Scope = typeof SfConfirmationScope.Type
@@ -294,12 +295,12 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
-      <section class="sf-u44-confirm" data-sf-surface="UI53" data-sf-wave="five"
+      <section class="sf-u44-confirm sf-workflow" data-sf-surface="UI53" data-sf-wave="five"
         data-sf-stage={confirmed() || recordedRoute() ? "recorded" : presentation.reviewing ? "review" : "material"}>
-        <details class="sf-u44-selection"><summary>{t("sf.u44.sourceReferenceDetails")}</summary><p>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p></details>
+        <details class="sf-u44-selection sf-technical-details"><summary>{t("sf.u44.sourceReferenceDetails")}</summary><p>{t(recordedRoute() ? "sf.u44.confirmationId" : "sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p></details>
         <Show when={owner.state().status === "ready" && !confirmed() && !recordedRoute()}>
           <details class="sf-u44-scope-disclosure" hidden={presentation.reviewing}><summary>{t("sf.u44.prepareMaterial")}</summary>
-            <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
+            <form class="sf-u44-scope-form sf-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
               <label>{t("sf.u44.scopeJson")}<textarea data-sf-confirm-scope spellcheck={false} rows={9} required value={manualScope()}
                 disabled={busy() || !!pendingKey()} onInput={(event) => setManualScope(event.currentTarget.value)} /></label>
               <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey()}>{t("sf.u44.prepareMaterial")}</button>
@@ -329,9 +330,12 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 <div><dt>{t("sf.u44.dependencies")}</dt><dd>{scope()!.materialDependencies.length}</dd></div>
               </dl>
               <Show when={scope()!.materialDependencies.length > 0} fallback={<p data-sf-confirm-no-dependencies>{t("sf.u44.noDependencies")}</p>}>
-                <ul data-sf-confirm-dependencies><For each={scope()!.materialDependencies}>
-                  {(dependency) => <li><pre data-sf-confirm-dependency style={{ "white-space": "pre-wrap" }}>{JSON.stringify(dependency, null, 2)}</pre></li>}
-                </For></ul>
+                <details class="sf-technical-details">
+                  <summary>{t("sf.u44.dependencies")}</summary>
+                  <ul data-sf-confirm-dependencies><For each={scope()!.materialDependencies}>
+                    {(dependency) => <li><pre data-sf-confirm-dependency style={{ "white-space": "pre-wrap" }}>{JSON.stringify(dependency, null, 2)}</pre></li>}
+                  </For></ul>
+                </details>
               </Show>
               <h3>{t("sf.u44.materialValues")}</h3>
               <ul><For each={prepared()!.projection.values}>

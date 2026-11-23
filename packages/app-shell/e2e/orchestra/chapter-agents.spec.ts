@@ -38,7 +38,7 @@ for (const scheme of ["dark", "light"] as const) {
     // A lead agent is any agent that is not a subagent; the card says "Specialist" for the rest.
     expect.soft(await plan.locator(".agent-role").textContent()).toBe("Lead agent")
     expect.soft(await card(page, "research").locator(".agent-role").textContent()).toBe("Specialist")
-    expect.soft(await card(page, "review").locator(".agent-role").textContent()).toBe("Lead agent")
+    await expect(card(page, "review").locator(".agent-role")).toHaveText("Lead and specialist")
     expect.soft(await plan.locator(".agent-desc").textContent()).toBe("Plans repository work")
     await expect(plan.locator(".agent-model")).toHaveText("Reasoner")
     await expect(plan.locator(".agent-model")).toHaveAttribute("title", "example/reasoner")
@@ -532,26 +532,58 @@ test("Back while the file loads leaves the page and a late answer does not bring
   expect(mock.writes).toEqual([])
 })
 
-// Production builds hide the WIP tooltip (`showWip`), and this suite runs one, so the tooltip never opens.
-test.fixme("Escape closes the dialog while a navigation tooltip still shows behind it", async ({ page }) => {
+// Compact navigation has a real Kobalte tooltip in production; the expanded WIP mark is development-only.
+test("Escape closes the dialog while a navigation tooltip layer remains behind it", async ({ page }) => {
   const mock = await setup(page)
   await openAgents(page)
-  // The WIP row's tooltip is a Kobalte layer that also listens for Escape on the document.
+  // Observe the actual keyboard event without cancelling it or changing the native dialog/Kobalte layers.
+  const escapeObservation = await page.evaluateHandle(() => {
+    const observation = { tooltipTexts: [] as string[], dialogOpen: false, focusInside: false }
+    const record = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      const modal = document.querySelector<HTMLDialogElement>("dialog.agents-dialog[open]")
+      observation.tooltipTexts = Array.from(document.querySelectorAll('[role="tooltip"]'), (node) =>
+        node.textContent?.trim() ?? "",
+      )
+      observation.dialogOpen = modal?.open ?? false
+      observation.focusInside = modal?.contains(document.activeElement) ?? false
+      document.removeEventListener("keydown", record, true)
+    }
+    document.addEventListener("keydown", record, true)
+    return observation
+  })
+  const sidebar = page.locator('[data-component="orchestra-sidebar"]')
+  await page.getByRole("button", { name: "Collapse sidebar", exact: true }).click()
+  await expect(sidebar).toHaveCSS("width", "56px")
+  await expect(page.getByRole("button", { name: "Expand sidebar", exact: true })).toHaveAttribute("aria-expanded", "false")
   await page.locator(".orchestra-agents .mx-heading").hover()
-  await page
-    .locator('[data-component="orchestra-sidebar"]')
-    .getByRole("button", { name: "Agents", exact: true })
-    .hover()
-  await expect(page.getByRole("tooltip")).toHaveText("Work in progress, revisit before production")
+  await sidebar.getByRole("button", { name: "Agents", exact: true }).hover()
+  const tooltip = page.getByRole("tooltip", { name: "Agents", exact: true, includeHidden: true })
+  await expect(tooltip).toBeVisible()
+  await expect(tooltip).toHaveText("Agents")
+  await page.screenshot({ path: test.info().outputPath("agents-navigation-tooltip.png"), animations: "disabled" })
+
   const opener = page.getByRole("button", { name: "Create agent", exact: true })
   await opener.focus()
+  await expect(opener).toBeFocused()
   await page.keyboard.press("Enter")
   await expect(dialog(page)).toBeVisible()
-  await expect(page.getByRole("tooltip")).toHaveCount(1)
+  await expect(dialog(page).getByRole("button", { name: "Close dialog", exact: true })).toBeFocused()
+  // Native modal inertness hides the background from accessibility; its tooltip layer is still mounted.
+  // Do not capture a screenshot here: that can outlast the tooltip's normal exit animation.
+  await expect(tooltip).toHaveCount(1)
   await page.keyboard.press("Escape")
+  const observed = await escapeObservation.jsonValue()
+  expect(observed).toEqual({ tooltipTexts: ["Agents"], dialogOpen: true, focusInside: true })
+  await escapeObservation.dispose()
+  await test.info().attach("agents-escape-layer-state", {
+    body: JSON.stringify(observed, null, 2),
+    contentType: "application/json",
+  })
   await expect(dialog(page)).toHaveCount(0)
   await expect(opener).toBeFocused()
   expect(mock.writes).toEqual([])
+  await page.screenshot({ path: test.info().outputPath("agents-dialog-escape-focus-returned.png"), animations: "disabled" })
 })
 
 test("load failures offer a retry; save conflicts and unsupported servers stay explicit", async ({ page }) => {

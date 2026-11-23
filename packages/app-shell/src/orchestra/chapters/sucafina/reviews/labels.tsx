@@ -4,6 +4,16 @@ import { SfDisplayValueText, type SfCopyKey } from "../shared/frame"
 
 const key = (value: string) => value as SfCopyKey
 const statusKey: Readonly<Record<string, SfCopyKey>> = {
+  confirmed: key("sf.u44.evidenceConfirmed"),
+  estimated: key("sf.u44.evidenceEstimated"),
+  hypothetical: key("sf.u44.evidenceHypothetical"),
+  unconfirmed: key("sf.u44.reasonUnconfirmed"),
+  "incompatible-currency": key("sf.u44.reasonIncompatibleCurrency"),
+  "missing-fx": key("sf.u44.reasonMissingFx"),
+  "missing-rate": key("sf.u44.reasonMissingRate"),
+  ready: key("sf.u32.statusReady"),
+  true: key("sf.u44.yes"),
+  false: key("sf.u44.no"),
   failed: key("sf.common.failed"),
   cancelled: key("sf.common.cancelled"),
   completed: key("sf.common.completed"),
@@ -63,18 +73,21 @@ export function WhenText(props: { iso: string | undefined }) {
     : { kind: "timestamp", isoTimestamp: iso, timezone: "UTC" }} />
 }
 
-export function AmountText(props: { value: number | string | boolean | null; currency?: string | null }) {
-  if (props.value === null) return <SfDisplayValueText value={{ kind: "missing", reason: { key: key("sf.u32.explicitNull") } }} />
-  if (typeof props.value === "number" && Number.isFinite(props.value)) {
-    return <SfDisplayValueText value={{
-      kind: "number",
-      value: props.value,
-      fractionDigits: 2,
-      unit: props.currency
-        ? { kind: "currency", code: props.currency }
-        : { kind: "unspecified", label: { key: key("sf.common.unknown") } },
-    }} />
+export function AmountText(props: { value: number | string | boolean | null; currency?: string | null; unit?: string | null }) {
+  const language = useLanguage()
+  const value = () => {
+    if (props.value === null) return <SfDisplayValueText value={{ kind: "missing", reason: { key: key("sf.u32.explicitNull") } }} />
+    if (typeof props.value === "number" && Number.isFinite(props.value)) {
+      if (props.currency) return <SfDisplayValueText value={{
+        kind: "number", value: props.value, fractionDigits: 2,
+        unit: { kind: "currency", code: props.currency },
+      }} />
+      return <span class="sf-numeric">{new Intl.NumberFormat(language.intl(), {
+        maximumSignificantDigits: 21,
+      }).format(props.value)}</span>
+    }
+    if (typeof props.value === "boolean") return <StatusText value={String(props.value)} />
+    return <bdi>{props.value}</bdi>
   }
-  if (typeof props.value === "boolean") return <StatusText value="boolean" />
-  return <bdi>{props.value}</bdi>
+  return <>{value()}{props.unit && props.unit !== props.currency ? <span> {props.unit}</span> : null}</>
 }

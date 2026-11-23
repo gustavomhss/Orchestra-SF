@@ -16,6 +16,7 @@ import { sfCandidateRef, sfDecisionControls, sfPortfolioEvaluate, sfPortfolioHis
 import type { SfCaseControls, SfPortfolioCombination, SfPortfolioHistory,
   SfPortfolioResultView, SfRecordedPortfolio } from "./model"
 import "./scenarios.css"
+import "../../reviews/workflows.css"
 
 const k = (key: keyof typeof SF_U19_COPY) => key as SfCopyKey
 const horizonLabel = (start: string, end: string, locale: string) => {
@@ -219,7 +220,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       render: (row) => <span data-sf-eligibility={row.eligibility}>{t("sf.u19.results." + row.eligibility as keyof typeof SF_U19_COPY)}</span> },
     { id: "comparisonStatus", labelKey: kt("sf.u19.results.comparison"), align: "start",
       widthPolicy: { kind: "content", minPx: 105, maxPx: 180 },
-      render: (row) => <span>{row.comparisonStatus}</span> },
+      render: (row) => <span>{t(`sf.u19.status.${row.comparisonStatus}`)}</span> },
     { id: "costCoverageRefs", labelKey: kt("sf.u19.results.coverage"), align: "start",
       widthPolicy: { kind: "content", minPx: 95, maxPx: 150 },
       render: (row) => <span>{row.costCoverageRefs.length} {t("sf.u19.results.sources")}</span> },
@@ -241,7 +242,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
             if (event.currentTarget.open) set("expandedCombination", entry.id as SfRef)
             else if (store.expandedCombination === entry.id) set("expandedCombination", null)
           }}>
-          <summary>{entry.id} — {entry.eligibility} / {entry.comparisonStatus}</summary>
+          <summary><bdi>{entry.id}</bdi> — {t(`sf.u19.status.${entry.eligibility}`)} / {t(`sf.u19.status.${entry.comparisonStatus}`)}</summary>
           <dl class="sf-u19-facts">
             <div><dt>{t("sf.u19.results.sources")}</dt><dd><ul>
               <For each={entry.costCoverageRefs}>{(ref) => <li><bdi>{ref}</bdi></li>}</For>
@@ -271,7 +272,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
       } : undefined}
       secondaryActions={[]}
     >
-      <section class="sf-u19-scenarios" data-sf-scenarios data-sf-surface={props.surfaceId} data-sf-wave="five"
+      <section class="sf-u19-scenarios sf-workflow" data-sf-scenarios data-sf-surface={props.surfaceId} data-sf-wave="five"
         data-sf-stage={props.surfaceId === "UI43" ? "result" : !routedCase() ? "list" : store.preview ? "preview" : "configure"}>
         <SfStatePanel state={store.status} messageKey={k("sf.u19.case.missing")}
           onRetryRead={() => setRefresh((n) => n + 1)}>
@@ -294,7 +295,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
               onRetryRead={() => setRefresh((n) => n + 1)}>
               <Show when={selectedCase()}>
                 {(source) => <>
-                  <header class="sf-u19-case-head">
+                  <header class="sf-u19-case-head sf-section-header">
                     <h2>{source().objective}</h2>
                     <dl class="sf-u19-case-facts">
                       <div><dt>{t("sf.u19.scenarios.currency")}</dt><dd>{source().currency}</dd></div>
@@ -313,7 +314,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </button>
                     </>}</Show>
                   }>
-                    <section class="sf-u19-picker" hidden={!!store.preview}>
+                    <section class="sf-u19-picker sf-section sf-form" hidden={!!store.preview}>
                       <header class="sf-u19-picker-head"><h3>{t("sf.u19.scenarios.universe")}</h3>
                         <p>{t("sf.u19.scenarios.notCalculated")}</p></header>
                       <fieldset class="sf-u19-candidates" disabled={store.busy || store.outcomeUnknown}>
@@ -329,6 +330,7 @@ export function SfPortfolioScenariosView(props: SfSurfaceProps<"UI42" | "UI43">)
                       </fieldset>
                       <fieldset disabled={store.busy || store.outcomeUnknown}>
                         <legend>{t("sf.u19.scenarios.constraints")}</legend>
+                        <Show when={source().rules.length > 0}><p class="sf-workflow-note">{t("sf.u19.scenarios.constraintNamesUnavailable")}</p></Show>
                         <For each={source().rules}>{(rule) =>
                           <label class="sf-u19-check"><input type="checkbox" checked={store.constraints.includes(rule.id)}
                             onChange={(event) => updateSelection("constraints", rule.id, event.currentTarget.checked)} />

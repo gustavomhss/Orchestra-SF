@@ -14,6 +14,7 @@ import { operationGranted } from "../../collaboration/grant"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import "../presentation.css"
+import "../../reviews/workflows.css"
 import "./relations.css"
 
 type Relation = Extract<typeof SfCollaboration.operations["collaboration.relation-read"]["output"]["Type"], { status: "ok" }>["value"]["relations"][number]
@@ -287,12 +288,12 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
-      <div class="sf-u44-relations" data-sf-surface="UI51" data-sf-wave="five"
+      <div class="sf-u44-relations sf-workflow" data-sf-surface="UI51" data-sf-wave="five"
         data-sf-stage={reviewing() ? "review" : presentation.editing ? "editing" : "reading"}
         data-sf-relation-tools={presentation.tools ? "open" : "closed"}>
         <div class="sf-u44-relation-workspace" hidden={reviewing()}>
         <Show when={owner.state().status === "ready"}>
-          <form class="sf-u44-relation-source" onSubmit={(event) => { event.preventDefault(); void read(source()) }}>
+          <form class="sf-u44-relation-source sf-form" onSubmit={(event) => { event.preventDefault(); void read(source()) }}>
             <label>{t("sf.u44.sourceRef")}
               <input data-sf-relations-source required value={source()} onInput={(event) => {
                 setSource(event.currentTarget.value); setPreparedPair(undefined)
@@ -352,7 +353,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
         </SfStatePanel>
         </div>
         <Show when={owner.state().status === "ready" && !!source() && storageVersion() !== undefined && !pending() && granted("collaboration.relation-create")}>
-          <form class="sf-u44-relation-create" hidden={!presentation.editing} onSubmit={(event) => { event.preventDefault(); prepareManual() }}>
+          <form class="sf-u44-relation-create sf-form" hidden={!presentation.editing} onSubmit={(event) => { event.preventDefault(); prepareManual() }}>
             <header class="sf-u44-editor-heading"><div>
               <h2>{t("sf.u44.createExplicit")}</h2>
               </div><button class="mx-btn" type="button" disabled={busy()} onClick={() => setPresentation("editing", false)}>

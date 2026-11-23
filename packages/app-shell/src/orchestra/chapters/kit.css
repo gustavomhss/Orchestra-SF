@@ -57,15 +57,15 @@ html[data-color-scheme="light"] body[data-mx-kit] {
   color-scheme: dark;
 }
 
-/* The app body is 13px/24px at weight 440; the mock's pages and dialogs inherit 16px/normal/400.
+/* Page and dialog body copy follows the native 13px scale. Headings and values keep their own roles.
    Static Inter has no optical sizes, so the bundled fallback keeps its text cut at every size. */
 .mx-page,
 .mx-dialog {
   font-family: var(--mx-sans);
   font-optical-sizing: none;
-  font-size: var(--orchestra-font-size-xl);
+  font-size: var(--orchestra-font-size-md);
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.6;
 }
 html[data-color-scheme="light"] .mx-page,
 html[data-color-scheme="light"] .mx-dialog {
@@ -134,7 +134,7 @@ html[data-color-scheme="light"] .mx-dialog {
 }
 .mx-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 12px;
 }
 .mx-card {
@@ -469,7 +469,9 @@ html[data-color-scheme="light"] .mx-dialog {
   padding: 0;
   border: 1px solid var(--mx-line);
   border-radius: var(--orchestra-radius-xl);
-  background: var(--mx-modal);
+  background: var(--orchestra-float-background);
+  -webkit-backdrop-filter: var(--orchestra-float-filter);
+  backdrop-filter: var(--orchestra-float-filter);
   color: var(--mx-strong);
   box-shadow: var(--mx-highlight), var(--mx-shadow);
   overflow: hidden;
@@ -531,7 +533,7 @@ html[data-color-scheme="light"] .mx-dialog {
 }
 .mx-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 17px;
 }
 .mx-field {
@@ -616,4 +618,24 @@ html[data-color-scheme="light"] .mx-dialog {
   .mx-card {
     transition: none;
   }
+}
+
+/* Native dialogs share centering and reflow, including chapters without a custom dialog stylesheet. */
+dialog.mx-dialog:not([open]) { display: none; }
+dialog.mx-dialog:modal { position: fixed; inset: 0; margin: auto; }
+dialog.mx-dialog::backdrop { background: var(--mx-backdrop); -webkit-backdrop-filter: var(--orchestra-scrim-filter); backdrop-filter: var(--orchestra-scrim-filter); }
+.mx-heading > div { min-inline-size: 0; }
+.mx-heading h1, .mx-heading p, .mx-dialog-head h2 { overflow-wrap: anywhere; }
+.mx-toolbar, .mx-dialog-foot { flex-wrap: wrap; }
+.mx-dialog-foot > .mx-btn { max-inline-size: 100%; white-space: normal; }
+@media (max-width: 640px) {
+  .mx-page .mx-inner { inline-size: calc(100% - 32px); padding-block: 28px 40px; }
+  .mx-heading { flex-direction: column; gap: 16px; margin-block-end: 24px; }
+  .mx-heading h1 { font-size: var(--orchestra-font-size-3xl); }
+  .mx-fields { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .mx-toolbar .mx-search { flex-basis: 100%; max-inline-size: none; }
+  .mx-dialog { inline-size: calc(100vw - 24px); max-block-size: calc(100dvh - 32px); }
+  .mx-dialog-head, .mx-dialog-body { padding: 20px; }
+  .mx-dialog-foot { padding: 14px 20px; }
+  .mx-page .mx-btn, .mx-dialog .mx-btn, .mx-field :is(input:not([type="checkbox"]):not([type="radio"]), select), .mx-search { min-block-size: 44px; }
 }

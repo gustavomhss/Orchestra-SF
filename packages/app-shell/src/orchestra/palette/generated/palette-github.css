@@ -1450,7 +1450,7 @@ html[data-orchestra-palette="github"][data-color-scheme="light"] body[data-mx-ki
 }
 [data-orchestra-palette="github"] .mx-dialog {
   border: 1px solid var(--mx-line);
-  background: var(--mx-modal);
+  background: var(--orchestra-float-background);
   color: var(--mx-strong);
   box-shadow: var(--mx-highlight), var(--mx-shadow);
 }
@@ -1506,6 +1506,9 @@ html[data-orchestra-palette="github"][data-color-scheme="light"] body[data-mx-ki
 }
 [data-orchestra-palette="github"] .mx-menu button.danger {
   color: var(--mx-bad);
+}
+[data-orchestra-palette="github"] dialog.mx-dialog::backdrop {
+  background: var(--mx-backdrop);
 }
 /* orchestra/chapters/inbox/inbox.css */
 [data-orchestra-palette="github"] .inbox-page,
@@ -2327,6 +2330,24 @@ html[data-orchestra-palette="github"][data-color-scheme] body[data-new-layout] [
 }
 [data-orchestra-palette="github"] .orchestra-skills-dialog .mx-field input:read-only,
 [data-orchestra-palette="github"] .orchestra-skills-dialog .mx-field textarea:read-only {
+  color: var(--mx-dim);
+}
+[data-orchestra-palette="github"] .orchestra-skill-reader {
+  color: var(--mx-strong);
+}
+[data-orchestra-palette="github"] .orchestra-skill-reader [data-component="markdown"] :is(h1, h2, h3) {
+  color: var(--mx-strong);
+}
+[data-orchestra-palette="github"] .orchestra-skill-source {
+  border-block-start: var(--skill-reader-hairline) solid var(--mx-line);
+}
+[data-orchestra-palette="github"] .orchestra-skill-source summary {
+  color: var(--mx-dim);
+}
+[data-orchestra-palette="github"] .orchestra-skill-source summary:focus-visible {
+  outline: var(--skill-reader-focus) solid var(--mx-blue);
+}
+[data-orchestra-palette="github"] .orchestra-skill-source p {
   color: var(--mx-dim);
 }
 /* orchestra/chapters/workspaces.css */

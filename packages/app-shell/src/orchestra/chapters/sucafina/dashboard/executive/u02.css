@@ -38,3 +38,8 @@
  .sf-u02-table-scroll { border:1px solid var(--border-subtle,currentColor) }
 }
 @media (max-width:360px) { .sf-u02-stats { grid-template-columns:1fr } }
+
+.sf-u02-edit-source { margin-block: 12px; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-u02-edit-source summary { min-block-size: 36px; display: flex; align-items: center; cursor: pointer; }
+.sf-u02-edit-source p { margin-block: 4px; }
+.sf-u02-edit-source code { display: block; font-family: var(--mx-mono); overflow-wrap: anywhere; }
