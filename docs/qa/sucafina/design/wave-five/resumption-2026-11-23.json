@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Resolve original C17, Portfolio Preview and import-reference failures and observe the BI06 Portuguese failure without changing oracles, deadlines or authority guards. C3 has five failed campaigns and one passed Reviews campaign; no global qualification, acceptance promotion or merge claim."
+    "nextAction": "Continue evidence-based diagnosis of original Preview, C17, Import authority and unexplained request aborts. Preserve all original guards, requests, assertions and deadlines; qualify complete campaigns on any product correction before acceptance or merge."
   },
-  "updatedAt": "2026-11-23T17:41:08Z",
+  "updatedAt": "2026-11-23T17:54:16Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3404,6 +3404,20 @@
       "pendingDiagnosticRun": 45228925610,
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "descriptorUnrollCancelled": true,
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:54:16Z",
+      "status": "BI_ORIGINAL_PT_ABORT_NOT_REPRODUCED_PREVIEW_FAILED_HISTORY_BODY_FAILURE_RETAINED",
+      "biDiagnosticRun": 45228925610,
+      "biPassedLocales": [
+        "en",
+        "pt-BR"
+      ],
+      "historyFailureCauseEstablished": false,
+      "importTraceV2Run": 45231151064,
+      "c17CpuRun": 45231692009,
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false
     }
   ],
@@ -6311,7 +6325,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T17:41:08Z",
+    "observedAt": "2026-11-23T17:54:16Z",
     "qualification": false,
     "experiments": [
       {
@@ -8281,12 +8295,100 @@
             "leaseUntil": "2026-11-23T17:36:25.601Z",
             "status": "denied",
             "reason": "preview-access-unavailable",
-            "manifestReadStarted": false
+            "manifestReadStarted": false,
+            "elapsedMs": 8284.01,
+            "lastRevalidationDurationMs": 5839.544
           },
           "causeEstablished": false,
           "investigation": "Missing identity is observed. A possible 5000ms authority lock timeout is a hypothesis under separate investigation, not a conclusion.",
-          "qualification": false
+          "qualification": false,
+          "log": {
+            "bytes": 3369954,
+            "sha256": "8334f660e3e9388c1e2a0946d62c83d3f727ae5fec4817f27d391efcd7f9734a",
+            "attribution": "Complete original log identity reported by /root/sf613_candidate"
+          }
         }
+      },
+      {
+        "name": "ISOLATED_IMPORT_REFERENCE_AUTHORITY_PROFILE_V2",
+        "run": 45231151064,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231151064",
+        "createdAt": "2026-11-23T17:45:53Z",
+        "snapshot": "6ad7a41c7d8b235e0ce4ad69f0454cd1bb2c6347",
+        "snapshotTree": "05c1c8c0527185911c16d5c95a36f402ab2f52c6",
+        "branch": "ci-run-linux-sf613-importtrace",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "status": "PENDING",
+        "lastObservation": {
+          "by": "/root/sf613_candidate",
+          "job": 137890706317,
+          "state": "Run tests"
+        },
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "sourceOverlay": {
+          "commit": "10229c2b88ed16295e07d222762f0bad7db98063",
+          "tree": "0932a79fcedbc00ab3da409c56ed0e3110176e4c",
+          "branch": "sf613-importtrace",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "diagnosticPaths": 6,
+          "ciPaths": 7,
+          "authorityBlob": "e522348fbc4448cf50033f479846611e540f4786",
+          "helperBlob": "410d0b69ba009986bbf49ddbeed0c33ee0145aa0"
+        },
+        "independentReview": {
+          "by": "/root/here_github_activity",
+          "result": "STATIC_ACK",
+          "originalAwaitCount": 26,
+          "originalResolveRequestCalls": 8,
+          "originalCurrentReadCalls": 4,
+          "shortCircuitPreserved": true,
+          "additionalDomainAwaits": 0,
+          "diagnosticFailuresContained": true,
+          "identityOrRawErrorLogging": false,
+          "originalCollaborationRecipePreserved": true
+        },
+        "causeEstablished": false
+      },
+      {
+        "name": "ISOLATED_C17_JSC_CPU_SAMPLING",
+        "run": 45231692009,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231692009",
+        "createdAt": "2026-11-23T17:48:55Z",
+        "snapshot": "de4486ee7d52029146c0122fc999cb64f36e086d",
+        "snapshotTree": "2e42274ddae1139206fd95e074cb1b146e633c7d",
+        "branch": "ci-run-linux-sf613-c17cpu",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "status": "COMPLETED_SUCCESS_DETAILS_PENDING",
+        "workflowObservation": {
+          "observedAt": "2026-11-23T17:54:16Z",
+          "status": "completed",
+          "conclusion": "success",
+          "updatedAt": "2026-11-23T17:53:08Z"
+        },
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "sourceOverlay": {
+          "commit": "9ac70640bdd0d0f46b47be6257b2e54d02f6acf9",
+          "tree": "1220727accff6f9c0a6edad127ff24934569db75",
+          "branch": "sf613-c17cpu",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "diagnosticPaths": 2,
+          "ciPaths": 4,
+          "helperBlob": "83e7a61b0d60881ecafdd8cad50a42c74144d5dd",
+          "testBlob": "907f47d6380d7d8ee3c57305db39b244cf18586a"
+        },
+        "independentReview": {
+          "by": "/root/here_github_activity",
+          "result": "STATIC_ACK_FINAL_HARDENED_HELPER",
+          "intervalMicroseconds": 10000,
+          "originalExpectationsUnchanged": true,
+          "originalDeadlineCloseBeforeDiagnosticFinish": true,
+          "additionalDomainAwait": false,
+          "reportingFailuresContained": true,
+          "sourceRelativePathsOnly": true
+        },
+        "interpretationLimit": "Native whole-isolate JSC sampling is not wall time or CPU percentage. Results and job-level counters remain with session_diagnostic_limits pending original log analysis; workflow success alone does not qualify C3."
       }
     ]
   },
@@ -8643,14 +8745,14 @@
     "modificationsAppliedToTheseFiveFiles": false
   },
   "biAbortDiagnosis": {
-    "observedAt": "2026-11-23T17:28:52Z",
+    "observedAt": "2026-11-23T17:54:16Z",
     "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
     "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
     "campaign": "A8",
     "run": 45222244398,
     "job": 137859301867,
     "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222244398/job/137859301867",
-    "status": "CAUSE_NOT_ESTABLISHED_ORIGINAL_ANALYTICS_DIAGNOSTIC_RUNNING",
+    "status": "ORIGINAL_PT_ABORT_NOT_REPRODUCED_CAUSE_OPEN",
     "qualification": false,
     "evidence": {
       "originalPortugueseBi06LoadingFailedAt": "2026-11-23T17:09:44.2155277Z",
@@ -8743,8 +8845,846 @@
         "overlayPaths": 4,
         "scope": "Three diagnostic files plus original Analytics .ci-run.json. Both original Analytics tests.",
         "review": "here_github_activity, /root and session_diagnostic_limits static reviews; dispatched by /root.",
-        "status": "PENDING",
-        "qualification": false
+        "status": "COMPLETED_FAILURE_PREVIEW_ONLY",
+        "qualification": false,
+        "result": {
+          "testJob": {
+            "id": 137882866214,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T17:46:54Z"
+          },
+          "cleanupJob": {
+            "id": 137891350412,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T17:47:05Z"
+          },
+          "browserTests": {
+            "passed": 1,
+            "failed": 1,
+            "passedJourney": "Original BI catalog/source/data in English and Portuguese",
+            "failedJourney": "Original Portfolio Preview 60000ms waiter"
+          },
+          "originalPortugueseAbortReproduced": false,
+          "causeEstablished": false,
+          "qualification": false,
+          "log": {
+            "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45228925610/job/137882866214",
+            "bytes": 4784636,
+            "sha256": "66fea5b1a8e8fb18678755725471cfb8effa2a326ab3debcdf4121b5e4b91c74",
+            "jpegNames": 47,
+            "completeJpegs": 47,
+            "visualReviewPerformed": false
+          },
+          "profiles": {
+            "count": 59,
+            "labels": {
+              "catalog-entry": 1,
+              "start-input": 7,
+              "end-input": 6,
+              "choose-context": 6,
+              "prepare-options": 6,
+              "read-prepared": 14,
+              "selection-input": 5,
+              "prepare-data": 5,
+              "catalog-back": 1,
+              "route-view": 5,
+              "prepare-source": 3
+            },
+            "records": [
+              {
+                "at": "2026-11-23T17:45:09.5806163Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "catalog-entry",
+                "timeMs": 1795455909578,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.6001340Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455909598,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.6064827Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795455909605,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.7107510Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795455909709,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.7110889Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795455909709,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.7112273Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455909709,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:09.8305654Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "selection-input",
+                "timeMs": 1795455909828,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:10.2877023Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-data",
+                "timeMs": 1795455910238,
+                "ticket": 6,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": true,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:10.2878839Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455910239,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:12.0338853Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "catalog-back",
+                "timeMs": 1795455911955,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:23.9712109Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "route-view",
+                "timeMs": 1795455923969,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.2344041Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455924230,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.2404276Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795455924239,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.3443164Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795455924340,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.3444675Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795455924340,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.3446154Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455924340,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.4395728Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "selection-input",
+                "timeMs": 1795455924437,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.5078859Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-data",
+                "timeMs": 1795455924505,
+                "ticket": 6,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": true,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:24.5080642Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455924506,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:31.4884401Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-source",
+                "timeMs": 1795455931487,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:31.4885736Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455931487,
+                "ticket": 8,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:33.4719680Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-source",
+                "timeMs": 1795455933386,
+                "ticket": 8,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:33.4721635Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455933386,
+                "ticket": 9,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:34.7257082Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455934522,
+                "ticket": 9,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.6705854Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "route-view",
+                "timeMs": 1795455946668,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.7472529Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455946746,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.7554842Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795455946752,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.8056544Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795455946804,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.8066334Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795455946804,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.8067775Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455946804,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.9007727Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "selection-input",
+                "timeMs": 1795455946899,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.9251286Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-data",
+                "timeMs": 1795455946921,
+                "ticket": 6,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": true,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:46.9316582Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455946921,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:51.7593358Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-source",
+                "timeMs": 1795455951758,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:45:51.7595125Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455951758,
+                "ticket": 8,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.5099437Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "route-view",
+                "timeMs": 1795455964508,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.6369626Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455964635,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.6460245Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795455964644,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.7379411Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795455964736,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.7382523Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795455964736,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:04.7384083Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455964737,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.4147392Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "route-view",
+                "timeMs": 1795455990413,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.6304223Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795455990628,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.6385500Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795455990637,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.7389047Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795455990737,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.7390538Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795455990737,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.7391755Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455990737,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.8525695Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "selection-input",
+                "timeMs": 1795455990850,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.9193014Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-data",
+                "timeMs": 1795455990918,
+                "ticket": 6,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": true,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:30.9198852Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795455990918,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.0053229Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "route-view",
+                "timeMs": 1795456005004,
+                "ticket": 0,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.1086760Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "start-input",
+                "timeMs": 1795456005107,
+                "ticket": 1,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.1145164Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "end-input",
+                "timeMs": 1795456005113,
+                "ticket": 2,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.1705881Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "choose-context",
+                "timeMs": 1795456005169,
+                "ticket": 3,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.1707349Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-options",
+                "timeMs": 1795456005169,
+                "ticket": 4,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": false,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.1708773Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795456005169,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.2780234Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "selection-input",
+                "timeMs": 1795456005277,
+                "ticket": 5,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.3523373Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "prepare-data",
+                "timeMs": 1795456005350,
+                "ticket": 6,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": true,
+                "busy": false
+              },
+              {
+                "at": "2026-11-23T17:46:45.3525533Z",
+                "schema": "sf-bi-abort-v1",
+                "qualification": false,
+                "label": "read-prepared",
+                "timeMs": 1795456005351,
+                "ticket": 7,
+                "generation": 1,
+                "status": "ready",
+                "controllerPresent": true,
+                "aborted": false,
+                "busy": false
+              }
+            ],
+            "notObservedLabels": [
+              "owner-fence",
+              "cleanup",
+              "reader-cancel"
+            ],
+            "absenceLimit": "No such labels were observed in this passing BI trace. This does not establish their absence in A8 or prove every browser lifecycle cleanup emits a Solid cleanup event."
+          },
+          "originalBi06": {
+            "englishRequestFinishedAt": "2026-11-23T17:45:47.2170992Z",
+            "portugueseReadPreparedAt": "2026-11-23T17:46:45.3525533Z",
+            "portugueseTicket": 7,
+            "portugueseGeneration": 1,
+            "portugueseControllerAborted": false,
+            "portugueseRequestFinishedAt": "2026-11-23T17:46:45.6571378Z",
+            "portugueseReceiptAt": "2026-11-23T17:46:45.6895780Z",
+            "http": 200,
+            "profileAbortBetweenPreparedAndNativeCompletion": false
+          },
+          "artifact": {
+            "id": 14846782907,
+            "bytes": 45335995,
+            "zipSha256": "e281f3e4dc6f9988090a27260f7ee61f6d8555ec9e9719227a9ddf84e3f7554d",
+            "pngAndJsonExclusiveToZipInspected": false
+          },
+          "evidenceAttribution": "Original job log and job API read directly by /root/here_github_activity. Structural completeness of 47 original JPEG chunks verified; no visual review of these diagnostic JPEGs claimed."
+        }
       }
     }
   },
@@ -8785,5 +9725,49 @@
       },
       "limit": "C17 profile attribution does not establish the distribution inside the separate Preview selection's49.133s."
     }
+  },
+  "portfolioHistoryAbortInvestigation": {
+    "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+    "run": 45228925610,
+    "job": 137882866214,
+    "status": "ADDITIONAL_HISTORY_BODY_FAILURE_CAUSE_OPEN",
+    "qualification": false,
+    "observation": {
+      "operation": "decision-portfolio-results",
+      "sequence": 2,
+      "requestAt": "2026-11-23T17:42:15.0614235Z",
+      "requestFailedAt": "2026-11-23T17:42:15.5349957Z",
+      "responseBodyUnavailableAt": "2026-11-23T17:42:15.5364903Z",
+      "http": 200,
+      "requestElapsedMs": 473,
+      "ownerBinding": "exact",
+      "previewSequence": 3,
+      "previewRequestedAt": "2026-11-23T17:42:16.5245614Z",
+      "previewOriginalWaiterDeadlineMs": 60000
+    },
+    "sourceFindings": [
+      "The preceding empty-case history request sequence1 completed HTTP200/status ok at17:41:51.7326977Z. Sequence2 is a separate main-case history read.",
+      "UI42 source-read createEffect lines81–134 registers controller.abort only in cleanup; it reads owner state/generation, route identity and explicit refresh.",
+      "Original test lines58–69 changes candidate, constraints and exploration limit. Their UI handlers update local selection/preview state without an explicit history-controller abort. Preview creates a different controller.",
+      "The original timing helper logs failed request and HTTP200 body-unavailable but no request failure reason or initiating lifecycle event. The failure must not be labelled expected cancellation or a deliberate negative assertion.",
+      "Root requested further read-only analysis of synchronous effect dependencies, including pre-first-await producer/transport calls and owner/route activity. No product patch or new campaign authorized by this investigation."
+    ],
+    "paths": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+        "blob": "3b1b43b62d9badb1d6e9ae34ad89f81a839e1d94"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/producer.ts",
+        "blob": "cc4680188c1004349e7a7b25e84ce68366aea1a0"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts"
+      }
+    ]
   }
 }
