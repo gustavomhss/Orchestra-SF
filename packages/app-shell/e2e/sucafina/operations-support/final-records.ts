@@ -22,16 +22,16 @@ export async function captureRecord(page: Page, info: TestInfo, area: RecordArea
 }
 
 /** Read the same actual state through the native theme toggle and two viewport widths. */
-export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string, preview = true) {
+export async function captureRecordVariants(page: Page, info: TestInfo, area: RecordArea, state: string, preview = true, review: { lightDesktop?: boolean; lightNarrow?: boolean } = {}) {
   const original = page.viewportSize()
   const previous = await page.locator("html").getAttribute("data-color-scheme")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await theme(page, "dark")
   await captureRecord(page, info, area, state + "-dark-desktop", preview)
   await theme(page, "light")
-  await captureRecord(page, info, area, state + "-light-desktop")
+  await captureRecord(page, info, area, state + "-light-desktop", review.lightDesktop)
   await page.setViewportSize({ width: 320, height: 900 })
-  await captureRecord(page, info, area, state + "-light-narrow")
+  await captureRecord(page, info, area, state + "-light-narrow", review.lightNarrow)
   if (original) await page.setViewportSize(original)
   await theme(page, previous === "light" ? "light" : "dark")
 }
