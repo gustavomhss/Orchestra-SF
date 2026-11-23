@@ -704,7 +704,19 @@
     "branchParity": "Routine context, choices, case and resident callers pass defined DTOs. The non-undefined codec path, metadata, schema and transport remain unchanged.",
     "verification": "Gate16 validates the client change on the later composition. R18 was not rerun or represented as a browser run on that later SHA.",
     "reportIntegrationHead": "6c7d51e3288ca40141fd6042e24e70d42aff547c",
-    "reportIntegrationDelta": "Documentation and central gallery only after cb924."
+    "reportIntegrationDelta": "Documentation and central gallery only after cb924.",
+    "upstream715": {
+      "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "changedPaths": 24,
+      "assessment": "Read all changed paths and CSS patches. The four routine leaves have no SfRecordDetail/SfTable import, sf-s01 class, or affected Home/hot-topics/admin/projects/settings/reports selector. Their local styles and frame/states/labels/workflows, palette and global tokens are unchanged by this delta.",
+      "browserScope": "No new browser execution is claimed after PR715; original R18 evidence is retained for the unchanged routine rendering/behavior dependency closure.",
+      "routineLeafBlobs": {
+        "catalog": "4960bc661837cbd0b7b84ec773a1b30f02421ad0",
+        "runs": "1f150288847844b55d1c16b8a95ef01cb1bff1a3",
+        "schedules": "5446f4a7082ededa609c0ed41dc73a06d55b354b",
+        "residents": "3aca0b8c5d067bcfcef9897e6ca21100f73b8d61"
+      }
+    }
   },
   "gatePolicy": {
     "UI64": {
@@ -721,7 +733,15 @@
       "returns": [
         "same-owner decisions",
         "same-owner context"
-      ]
+      ],
+      "observedRouteKinds": [
+        "entry"
+      ],
+      "sourceReviewedRouteKinds": [
+        "entry",
+        "recipe"
+      ],
+      "recipeCoverage": "The helper permits the recipe kind under the same original unavailable contract; R18 has no independent recipe navigation or capture."
     },
     "UI66": {
       "surfaceRendered": false,
@@ -1301,7 +1321,7 @@
     }
   ],
   "limits": [
-    "UI64 entry/recipe: unavailable F01 boundary only, with zero rendered leaves and zero catalog requests; no planning, recipe publication, preparation or execution claim.",
+    "UI64 entry: unavailable F01 boundary is observed, with zero rendered leaves and zero catalog requests. The recipe kind is covered by source review of the helper, not a separate browser journey. No planning, recipe publication, preparation or execution claim.",
     "UI64 admission: the contextual catalog explanation intentionally does not apply; historical admission requires its original route-specific authority and was not exercised.",
     "UI65: no selected governed run; selection guidance and real return are proven, not a positive C07 result, verified C08 output or cancellation.",
     "UI66: original native Schedule port is absent; no mounted list/editor or C15 execution.",

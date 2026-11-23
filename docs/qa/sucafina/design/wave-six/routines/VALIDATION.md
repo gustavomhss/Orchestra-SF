@@ -8,12 +8,12 @@ This report covers UI64, UI65, UI66 and UI70 in the final-fourteen composition. 
 
 | Area | Final qualified behavior | Operational limit |
 | --- | --- | --- |
-| UI64 — Rotinas | Contextual unavailable boundary for catalog entry/recipe; same-owner returns to Decisions and Context; zero leaf and zero catalog requests | No global planning-readiness observer is available; no published recipe, preparation or execution is claimed |
+| UI64 — Rotinas | Observed catalog-entry unavailable boundary; same-owner returns to Decisions and Context; zero leaf and zero catalog requests | No global planning-readiness observer is available; no published recipe, preparation or execution is claimed |
 | UI65 — Execuções | Honest instruction when no run is selected, plus a real keyboard-accessible return to the unavailable catalog boundary | No governed C07 run, verified C08 output or cancel capability is supplied by this fixture |
 | UI66 — Recorrência | Contextual Schedule explanation, original denied admission and real catalog return; zero leaf | No original native Schedule port is installed; list/editor/CRUD and C15 completion are unqualified |
 | UI70 — Contribuições | Actual installed inventory, filter/reset, exact selected profile, original case choices and human-case projection | Analysis history is not admitted; no model contribution, attributed execution or load receipt is invented |
 
-The UI64 explanation applies only to routes whose parsed kind is `entry` or `recipe`. It deliberately excludes historical `admission` routes: a different denial must retain the original fallback, rather than be explained as a catalog-planning failure. Historical admission remains independently subject to its original source and authority and was not exercised by these browser journeys.
+R18 navigates and captures the UI64 entry route. It does not exercise a separate recipe URL. Source review establishes that the UI64 explanation applies only to routes whose parsed kind is `entry` or `recipe`. It deliberately excludes historical `admission` routes: a different denial must retain the original fallback, rather than be explained as a catalog-planning failure. Historical admission remains independently subject to its original source and authority and was not exercised by these browser journeys.
 
 ## Design and interaction
 
@@ -102,6 +102,8 @@ The eleven focused resident tests have separate provenance: [run 45098223206](ht
 The later composition `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e` retains the R18 app-shell production, CLI, Core and schema source. Confirmed tree identities include app-shell source `a528dc314d367bbfa6ac414c90c683567fd81d66`, Core `2fa2ba3b0cb0346c2b934ca0cdf3081db86fc176` and schema `65ad5f67d9a5f35054f77e78bd475f8c584167ae`.
 
 Its later changes are three E2E files in other groups, a two-line client correction and six new client tests. The client correction preserves top-level `undefined` only after the original source schema has already admitted it, repairing the original no-input Memory catalog. Routine context, choices, case and resident calls pass defined DTOs; their codec branch is unchanged. Nested `undefined`, required inputs, closed outputs and mutation receipts retain strict JSON/schema checks. Metadata and transport were not changed. Gate16 validates that client delta; R18 is not represented as a browser run on the later SHA. The subsequent `6c7d51e3288ca40141fd6042e24e70d42aff547c` adds only documentation and central gallery material.
+
+PR #715 was then reviewed separately at upstream `5b48dab52621037168ad4e3a6243c79a4fe5ad6e` (24 changed paths). Its shared detail/table changes are scoped to `SfRecordDetail`, `SfTable` and `sf-s01` selectors. None of the four routine leaves imports those components or uses those classes. The remaining changed styles are scoped to Home, hot topics, local administration, projects, procurement settings and report summaries; the routine leaves use none of those selectors. Routine-local styles, shared frame/states, review labels, `workflows.css`, palette and global tokens are outside that delta. This source/dependency review found no change to the four routine frames qualified by R18. It is a scope/parity assessment, not a new browser execution after the upstream merge.
 
 ## Visual matrix and review
 
