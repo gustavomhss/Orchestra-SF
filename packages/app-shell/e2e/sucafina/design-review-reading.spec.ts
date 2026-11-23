@@ -172,6 +172,12 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
       expect(row.period?.trim()).not.toBe("")
       expect(row.fullyPaired).toBe(true)
       expect(row.minimumFontPx).toBeGreaterThanOrEqual(12)
+      const originalSeries = sourceArray(sourceObject(data.presentation).series).map(sourceObject)
+        .find((series) => sourceArray(series.valueIds).includes(row.id))
+      expect(originalSeries).toBeDefined()
+      const originalCurrency = sourceObject(sourceObject(data.projection).context).currency
+      expect(row.unit).toBe(originalSeries?.unit === "unspecified" && originalCurrency === "unspecified"
+        ? "Currency not provided" : originalSeries?.unit)
       if (original && typeof original.value === "number" && original.evidenceState !== "absent")
         expect(row.value).toBe(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(original.value))
     }
