@@ -12,6 +12,7 @@ import type { SfSurfaceProps } from "../context/contracts"
 import { encodeSfRouteRef } from "../navigation-state"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
+import { procurementStatusLabel } from "../procurement/presentation"
 import { SfDataTable, type SfColumn, type SfSort, type SfUiState, type SfCopyKey as SfTableCopyKey } from "../shared/table"
 import "./work.css"
 import "../reviews/workflows.css"
@@ -137,6 +138,24 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   const key = (copy: Copy): Key => copy as Key
   const tableKey = (copy: Copy): SfTableCopyKey => copy as unknown as SfTableCopyKey
   const t = (copy: Copy) => language.t(copy as Parameters<typeof language.t>[0])
+  const kindLabels: Readonly<Record<WorkItem["kind"], keyof typeof SF_U41_COPY>> = {
+    clarification: "sf.u41.kind.clarification",
+    handoff: "sf.u41.kind.handoff",
+    procurement: "sf.u41.kind.procurement",
+    confirmation: "sf.u41.kind.confirmation",
+    signal: "sf.u41.kind.signal",
+  }
+  // Presentation only: filters, sorting, authorization and source identity keep the wire values.
+  const workStateLabel = (item: Pick<WorkItem, "kind" | "state">) => {
+    if (item.kind === "procurement") return procurementStatusLabel(item.state, (label) => language.t(label))
+    switch (item.state) {
+      case "open": return t("sf.u41.state.open")
+      case "clarification-open": return t("sf.u41.state.clarificationOpen")
+      case "answer-stale": return t("sf.u41.state.answerStale")
+      case "confirmation-stale": return t("sf.u41.state.confirmationStale")
+      default: return item.state
+    }
+  }
   const [start, setStart] = createSignal("")
   const [end, setEnd] = createSignal("")
   const [filter, setFilter] = createSignal("")
@@ -371,11 +390,11 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         data-sf-work-row-source-version={row.sourceVersion ?? ""}
         data-sf-work-row-observed-version={row.observedVersion ?? ""}>{row.title ?? t("sf.common.unavailable")}</span> },
     { id: "kind", labelKey: tableKey("sf.u41.kind"), align: "start",
-      widthPolicy: { kind: "content", minPx: 100, maxPx: 170 },
-      render: (row) => <span>{row.kind}</span> },
+      widthPolicy: { kind: "fixed", px: 145 },
+      render: (row) => <span class="sf-work-kind" data-sf-work-kind={row.kind}>{t(kindLabels[row.kind])}</span> },
     { id: "state", labelKey: tableKey("sf.u41.state"), align: "start",
-      widthPolicy: { kind: "content", minPx: 90, maxPx: 165 }, sortKey: "state",
-      render: (row) => <span class="sf-work-state">{row.state}</span> },
+      widthPolicy: { kind: "fixed", px: 180 }, sortKey: "state",
+      render: (row) => <span class="sf-work-state" data-sf-work-state={row.state}>{workStateLabel(row)}</span> },
     { id: "owner", labelKey: tableKey("sf.u41.owner"), align: "start",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 },
       render: (row) => <div>{row.ownerLabel ?? t("sf.common.unavailable")}
@@ -456,11 +475,11 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                             <>
                               <h2>{view().item.title ?? t("sf.common.unavailable")}</h2>
                               <dl>
-                                <div><dt>{t("sf.u41.actionRef")}</dt><dd data-sf-work-action-ref>{view().item.actionRef}</dd></div>
                                  <div><dt>{t("sf.u41.owner")}</dt><dd data-sf-work-owner-ref={view().item.ownerRef}>{view().item.ownerLabel ?? t("sf.common.unavailable")}
                                     <details class="sf-technical-details"><summary>{t("sf.u41.ownerReference")}</summary><bdi>{view().item.ownerRef}</bdi></details>
                                   </dd></div>
-                                <div><dt>{t("sf.u41.state")}</dt><dd>{view().item.state}</dd></div>
+                                <div><dt>{t("sf.u41.kind")}</dt><dd data-sf-work-kind={view().item.kind}>{t(kindLabels[view().item.kind])}</dd></div>
+                                <div><dt>{t("sf.u41.state")}</dt><dd data-sf-work-state={view().item.state}>{workStateLabel(view().item)}</dd></div>
                                 <Show when={view().item.sourceVersion !== undefined}>
                                   <div><dt>{t("sf.u41.sourceVersion")}</dt><dd data-sf-work-source-version>{view().item.sourceVersion}</dd></div>
                                 </Show>
@@ -474,9 +493,6 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                    <button class="mx-btn primary" type="button" disabled={destinationState() === "loading"}
                                      onClick={() => void readDestination(true)}>{t("sf.u41.openDestination")}</button>
                                  </Show>
-                                 {/* Producer-provided link labels are display-only. Their URLs do not
-                                     authorize opening another origin or a private desktop window. */}
-                                 <For each={view().links}>{(link) => <span class="sf-work-source-label">{link.label}</span>}</For>
                                  <button class="mx-btn" type="button" disabled={destinationState() === "loading"}
                                    onClick={() => void readDestination()}>{t("sf.u41.checkDestination")}</button>
                                  <Show when={destination()}>
@@ -487,6 +503,21 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                    <p role="status" data-sf-work-source-state={destinationState()}>{t(stateKey(destinationState()))}</p>
                                  </Show>
                                </div>
+                              <details class="sf-technical-details sf-work-provenance">
+                                <summary>{t("sf.u41.sourceDetails")}</summary>
+                                <dl>
+                                  <div><dt>{t("sf.u41.actionRef")}</dt><dd data-sf-work-action-ref><bdi>{view().item.actionRef}</bdi></dd></div>
+                                  <div><dt>{t("sf.u41.kindCode")}</dt><dd><bdi>{view().item.kind}</bdi></dd></div>
+                                  <div><dt>{t("sf.u41.stateCode")}</dt><dd><bdi>{view().item.state}</bdi></dd></div>
+                                </dl>
+                                {/* Source labels remain literal provenance. Their URLs do not
+                                    authorize opening another origin or a private desktop window. */}
+                                <Show when={view().links.length > 0}>
+                                  <ul class="sf-work-source-labels">
+                                    <For each={view().links}>{(link) => <li><bdi>{link.label}</bdi></li>}</For>
+                                  </ul>
+                                </Show>
+                              </details>
                             </>
                           )}
                         </Show>
