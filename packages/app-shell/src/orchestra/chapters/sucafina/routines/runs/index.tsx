@@ -15,6 +15,7 @@ import {
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
+import "../presentation.css"
 import "./runs.css"
 
 type Routine = (typeof SfRoutineResult)["Type"]
@@ -207,8 +208,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         onInvoke: () => { void owner.reload() },
       }]}
     >
-      <section class="sf-n29-run" data-sf-surface={props.surfaceId} data-state={view.state}>
-        <Show when={!runRef()}><p>{t("sf.u27.noRun")}</p></Show>
+      <section class="sf-n29-run sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={view.state}>
+        <Show when={!runRef()}><p class="sf-routine-guidance">{t("sf.u27.noRun")}</p></Show>
         <Show when={canFallback() && runRef()}>
           <div class="mx-card">
             <label class="sf-n29-field">
@@ -238,7 +239,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                   <p><bdi>{source().documentId}</bdi></p>
                   <p>{t("sf.u27.version")}: <bdi>{source().publishedVersion}</bdi></p>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.status")}>
+                <section class="mx-card sf-routine-run-status" aria-label={t("sf.u27.status")}>
                   <h2>{t("sf.u27.status")}</h2>
                   <Show when={identity()} fallback={
                     <SfRunState identity={{ kind: "unadmitted", task: runTask() }}
@@ -257,7 +258,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                     <p>{t("sf.u27.runningUnverified")}</p>
                   </Show>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.execution")} data-sf-native-execution data-verifier={view.proof?.verifier ?? "unavailable"}>
+                <section class="mx-card sf-routine-run-execution" aria-label={t("sf.u27.execution")} data-sf-native-execution data-verifier={view.proof?.verifier ?? "unavailable"}>
                   <h2>{t("sf.u27.execution")}</h2>
                   <Show when={view.mode === "projection" && view.proof}
                     fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
@@ -274,8 +275,10 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                         {(output) => <>
                           <p><strong>{t("sf.u27.outputDigest")}:</strong> <code><bdi>{output().outputDigest}</bdi></code></p>
                           <p><strong>{t("sf.u27.resultRef")}:</strong> <bdi>{output().resultRef}</bdi></p>
-                          <p><strong>{t("sf.u27.output")}:</strong></p>
-                          <pre class="sf-n29-run-output">{JSON.stringify(output().content, null, 2)}</pre>
+                          <details class="sf-routine-source" open>
+                            <summary>{t("sf.u27.output")}</summary>
+                            <pre class="sf-n29-run-output">{JSON.stringify(output().content, null, 2)}</pre>
+                          </details>
                         </>}
                       </Show>
                     </>}
@@ -295,7 +298,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                     <p>{t("sf.u27.runningUnverified")}</p>
                   </Show>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.evidence")}>
+                <section class="mx-card sf-routine-run-evidence" aria-label={t("sf.u27.evidence")}>
                   <h2>{t("sf.u27.evidence")}</h2>
                   <ul>
                     <For each={source().sourceRefs}>

@@ -11,6 +11,7 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import type { SfUiState } from "../../shared/frame"
 import { n29ContextState, n29Key, n29Permitted, n29ResponseState, n29SameAuthority, n29StateKey, useN29Copy } from "../catalog/ui"
 import { operationGranted, StatusText, WhenText } from "../../reviews/labels"
+import "../presentation.css"
 import "./residents.css"
 
 type Profile = (typeof SfResidentCatalog)["Type"]["profiles"][number]
@@ -290,14 +291,22 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
-      <section class="sf-n29-residents" data-sf-surface={props.surfaceId} data-state={pageState()}>
+      <section class="sf-n29-residents sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={pageState()}>
         <Show when={view.state === "ready" || view.state === "empty"}>
           <div class="sf-n29-summary" aria-label={t("sf.u35.coverage")}>
-            <p><strong>{t("sf.u35.profiles")}:</strong> {t("sf.u35.count", { count: view.profiles.length })}</p>
-            <p><strong>{t("sf.u35.skills")}:</strong> {t("sf.u35.count", { count: installedCount() })}</p>
-            <p><strong>{t("sf.u35.packs")}:</strong> {t("sf.u35.noPackProof")}</p>
-            <p><strong>{t("sf.u35.execution")}:</strong> {t("sf.u35.caseScopedProof")}</p>
+            <dl class="sf-routine-metrics">
+              <div><dt>{t("sf.u35.profiles")}</dt><dd>{t("sf.u35.count", { count: view.profiles.length })}</dd></div>
+              <div><dt>{t("sf.u35.skills")}</dt><dd>{t("sf.u35.count", { count: installedCount() })}</dd></div>
+            </dl>
+            <div class="sf-routine-guidance">
+              <p>{t("sf.u35.caseScopedProof")}</p>
+              <details class="sf-routine-source">
+                <summary>{t("sf.u35.packs")}</summary>
+                <p>{t("sf.u35.noPackProof")}</p>
+              </details>
+            </div>
           </div>
+          <div class="sf-routine-filters">
           <label class="sf-n29-field">
             <span>{t("sf.u35.filter")}</span>
             <input type="search" value={view.search}
@@ -316,6 +325,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
               <small role="status">{t(n29StateKey(view.caseState))}</small>
             </Show>
           </label>
+          </div>
         </Show>
         <SfStatePanel state={pageState()} messageKey={n29StateKey(pageState())}
           onRetryRead={() => { void owner.reload() }}>
@@ -324,7 +334,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
               <div class="sf-n29-resident-list" aria-label={t("sf.u35.profiles")}>
                 <For each={visible()}>
                   {(profile) => (
-                    <article class="mx-card">
+                    <article class="mx-card" data-selected={view.selected === profile.id}>
                       <h2><bdi>{profile.id}</bdi></h2>
                       <p><bdi>{profile.mission}</bdi></p>
                       <p>{t("sf.u35.version")}: <bdi>{profile.version}</bdi></p>
@@ -339,7 +349,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
               </div>
               <Show when={selected()}>
                 {(profile) => (
-                  <article class="mx-card sf-n29-resident-detail">
+                  <article class="mx-card sf-n29-resident-detail sf-section">
                     <h2>{t("sf.u35.profile")}: <bdi>{profile().id}</bdi></h2>
                     <section aria-label={t("sf.u35.contribution")} data-sf-contribution-proof data-state={view.outputState}>
                       <h3>{t("sf.u35.contribution")}</h3>
@@ -384,11 +394,11 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
                         </For>
                       </div>
                     </section>
-                    <section aria-label={t("sf.u35.source")}>
-                      <h3>{t("sf.u35.source")}</h3>
+                    <details class="sf-routine-source">
+                      <summary>{t("sf.u35.source")}</summary>
                       <p>{t("sf.u35.installation")}: <bdi>{currentStamp()?.installationId}</bdi></p>
                       <p>{t("sf.u35.current")}</p>
-                    </section>
+                    </details>
                     <section aria-label={t("sf.u35.execution")} data-sf-resident-run data-state={view.runState}>
                       <h3>{t("sf.u35.latestRun")}</h3>
                       <Show when={view.runState === "ready" && view.run}

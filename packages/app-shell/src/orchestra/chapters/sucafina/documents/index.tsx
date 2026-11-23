@@ -13,6 +13,7 @@ import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import "./documents.css"
+import "./records.css"
 
 type FileSurface = "dashboard" | "planner" | "procurement"
 type Requests = Extract<SfFilesOperationOutput<"files.document-requests">, { status: "ok" }>["value"]
@@ -558,9 +559,11 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const preview = () => state.preview
   const canSelect = (item: Evidence) => item.ref.target.documentId === state.documentRef && !state.busy
   return (
-    <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
+    <SfPageFrame titleKey={key(title())}
+      subtitleKey={key(evidence() ? "sf.u24.evidenceSubtitle" : scenarioView() ? "sf.u24.scenarioSubtitle" : "sf.u24.documentsSubtitle")}
+      context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
-      <section class="sf-files" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
+      <section class="sf-files sf-records-documents" data-sf-records="six" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
           <Show when={!catalog() || props.route.kind === "detail"}>
@@ -568,7 +571,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <label>{t("sf.u24.source")}
                 <select value={state.surface} disabled={state.busy}
                   onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
-                  <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
+                  <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
                 </select>
               </label>
               <button type="button" class="mx-btn" disabled={state.busy}
@@ -576,6 +579,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
             </div>
           </Show>
           <Show when={catalog() && props.route.kind !== "detail"}>
+            <details class="sf-records-register" open={props.route.kind === "new"}>
+              <summary>{t("sf.ui58.primary")}</summary>
             <form class="sf-files-fields" data-sf-document-upload="authorized-asset"
               onSubmit={(event) => { event.preventDefault(); void upload() }}>
               <h2>{t("sf.u24.uploadTitle")}</h2>
@@ -615,12 +620,17 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 !permitted("files.asset.upload")}>{t("sf.u24.uploadSubmit")}</button>
               <Show when={state.uploadNotice}><p role="status" data-sf-upload-outcome>{t(state.uploadNotice)}</p></Show>
             </form>
-            <div class="sf-files-fields">
+            </details>
+            <div class="sf-files-fields sf-records-source-picker">
+              <header class="sf-records-heading">
+                <h2>{t("sf.u24.browseDocuments")}</h2>
+                <p>{t("sf.u24.browseHelp")}</p>
+              </header>
               <label>{t("sf.u24.source")}
                 <select value={state.surface} disabled={state.busy}
                   onChange={(e) => { clearOnSourceChange(); uploadFile = undefined; setState({ surface: e.currentTarget.value as FileSurface,
                   uploadKind: e.currentTarget.value === "dashboard" ? "contract" : "quote", uploadName: "" }); void loadCatalog() }}>
-                  <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
+                  <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
                 </select>
               </label>
               <label>{t("sf.u24.request")}
@@ -646,7 +656,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 {t("sf.u24.openDocument")}
               </button>
             </div>
-            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void search() }}>
+            <form class="sf-files-fields sf-records-search" onSubmit={(e) => { e.preventDefault(); void search() }}>
               <h2>{t("sf.u24.search")}</h2>
               <label>{t("sf.u24.query")}
                 <input type="search" maxlength="256" value={state.search}
@@ -658,10 +668,13 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <Show when={state.matches}>
                 {(matches) => <section class="sf-files-section">
                   <For each={matches().matches}>{(match) =>
-                    <article class="mx-card">
-                      <p>{match.text}</p>
-                      <p>{t("sf.u24.score")}: {match.lexicalScore}</p>
-                      <p>{match.documentRef.refId}</p>
+                    <article class="mx-card sf-records-match">
+                      <blockquote>{match.text}</blockquote>
+                      <details class="sf-records-technical">
+                        <summary>{t("sf.u24.sourceDetails")}</summary>
+                        <p>{t("sf.u24.score")}: {match.lexicalScore}</p>
+                        <p><code>{match.documentRef.refId}</code></p>
+                      </details>
                       <button type="button" class="mx-btn" disabled={state.busy}
                         onClick={() => { void openSearchSource(match.documentRef) }}>
                         {t("sf.u24.openOriginal")}
@@ -690,13 +703,19 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <Show when={!state.candidates.length}><p>{t("sf.u24.noCandidates")}</p></Show>
               <ul class="sf-files-candidates">
                 <For each={state.candidates}>{(candidate) =>
-                  <li class="mx-card" data-sf-evidence-state={candidate.status} data-sf-evidence-id={candidate.id}>
-                    <button type="button" class="mx-btn"
+                  <li class="mx-card" data-sf-evidence-state={candidate.status} data-sf-evidence-id={candidate.id}
+                    data-sf-evidence-selected={state.selectedCandidateId === candidate.id}>
+                    <button type="button" class="mx-btn sf-records-candidate"
                       aria-pressed={state.selectedCandidateId === candidate.id}
                       disabled={!canSelect(candidate)}
                       onClick={() => { void openEvidence(candidate) }}>
-                      {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
-                      {" "}{candidate.unit ?? ""} · {candidate.status} · {candidate.version}
+                      <span class="sf-records-candidate-value">
+                        {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
+                        {" "}{candidate.unit ?? ""}
+                      </span>
+                      <span class="sf-records-candidate-meta">
+                        {t("sf.u24.state." + candidate.status)} · {t("sf.u24.documentVersion")} {candidate.version}
+                      </span>
                     </button>
                     <Show when={candidate.status === "rejected" && candidate.rejection}>
                       <p role="status" data-sf-rejection="persisted">
@@ -757,16 +776,21 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
             </form>
             <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
-              <section class="sf-files-section" data-sf-confirmation="review">
+              <section class="sf-files-section sf-records-evidence-review" data-sf-confirmation="review">
                 <h2>{t("sf.ui59.title")}</h2>
                 <p>{selected()!.fieldCandidate}: {selected()!.value === null ? "null" : String(selected()!.value)}
                   {" "}{selected()!.unit ?? ""}</p>
                 <p>{t("sf.u24.documentVersion")}: {selected()!.ref.target.revision} · {selected()!.location}</p>
                 <Show when={state.opened}><blockquote>{state.opened!.excerpt}</blockquote></Show>
+                <div class="sf-files-actions">
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
                 <button type="button" class="mx-btn primary" disabled={state.busy || !permitted("files.document-confirm")}
                   onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
+                </div>
+                <details class="sf-records-reject">
+                  <summary>{t("sf.u24.rejectCandidate")}</summary>
+                  <div class="sf-records-reject-fields">
                 <label>{t("sf.u24.rejectReason")}
                   <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
                     onInput={(event) => setState("rejectionReason", event.currentTarget.value)} />
@@ -780,12 +804,17 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   state.rejectionReason.trim().length < 5 || state.rejectionReason.trim().length > 500 ||
                   !/^[1-9]\d*$/.test(state.rejectionPage) || Number(state.rejectionPage) > 500}
                   onClick={() => { void reject() }}>{t("sf.u24.rejectSubmit")}</button>
+                  </div>
+                </details>
               </section>
             </Show>
           </Show>
           <Show when={scenarioView()}>
-            <section class="sf-files-section">
-              <p>{t("sf.u24.scenarioInfo")}</p>
+            <section class="sf-files-section sf-records-scenario">
+              <header class="sf-records-heading">
+                <h2>{t("sf.u24.scenarioDestination")}</h2>
+                <p>{t("sf.u24.scenarioInfo")}</p>
+              </header>
               <Show when={selected() && validCurrency(selected()!)}>
                 <p>{selected()!.fieldCandidate}: {selected()!.value} · {selected()!.unit} ·
                   {selected()!.ref.refId}</p>
@@ -814,9 +843,9 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   {value().evidence.value === null ? "null" : String(value().evidence.value)}
                   {" "}{value().evidence.unit ?? ""}</p>
                 <dl>
-                  <dt>currency</dt><dd>{showScenarioValue(value().scenario, "currency") ?? t("sf.common.unknown")}</dd>
-                  <dt>knownSubtotal</dt><dd>{showScenarioValue(value().scenario, "knownSubtotal") ?? t("sf.common.unknown")}</dd>
-                  <dt>total</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.currency")}</dt><dd>{showScenarioValue(value().scenario, "currency") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.knownSubtotal")}</dt><dd>{showScenarioValue(value().scenario, "knownSubtotal") ?? t("sf.common.unknown")}</dd>
+                  <dt>{t("sf.u24.label.total")}</dt><dd>{showScenarioValue(value().scenario, "total") ?? t("sf.common.unknown")}</dd>
                 </dl>
                 <p role="status">{t("sf.u24.scenarioReady")}</p>
                 <p>{t("sf.u24.scenarioLinkHelp")}</p>

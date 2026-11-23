@@ -12,6 +12,7 @@ import {
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
+import "../presentation.css"
 import "./schedules.css"
 
 type ListBody = (typeof SfRoutines.operations["schedules.list"]["output"])["Type"]
@@ -310,7 +311,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
         busy: view.state === "loading", onInvoke: () => { setView("refresh", (value) => value + 1) },
       }]}
     >
-      <section class="sf-n29-schedules" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
+      <section class="sf-n29-schedules sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
         <Show when={view.phase === "outcome-unknown"}>
           <p class="mx-error" role="alert">{t("sf.u34.unknown")}</p>
           <button type="button" class="mx-btn" onClick={() => {
@@ -333,10 +334,11 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                 <div class="sf-n29-schedule-items">
                   <For each={visible()}>
                     {(row) => (
-                      <article class="mx-card">
+                      <article class="mx-card" data-selected={view.selected === row.scheduleRef}>
                         <h3><bdi>{row.scheduleRef}</bdi></h3>
                         <p>{t("sf.u34.state")}: <StatusText value={row.state} /></p>
                         <p>{t("sf.u34.version")}: {row.version}</p>
+                        <div class="sf-routine-actions">
                         <button type="button" class="mx-btn" aria-pressed={view.selected === row.scheduleRef}
                           onClick={() => choose(row.scheduleRef)}>{t("sf.ui66.primary")}</button>
                         <Show when={permitted("schedules.pause") && row.state !== "paused"}>
@@ -345,6 +347,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                             setView("mode", "pause")
                           }}>{t("sf.u34.pauseReview")}</button>
                         </Show>
+                        </div>
                       </article>
                     )}
                   </For>
@@ -353,7 +356,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
             </SfStatePanel>
           </div>
 
-          <div class="sf-n29-schedule-detail">
+          <div class="sf-n29-schedule-detail sf-section">
             <Show when={view.mode === "create" || view.mode === "update"}>
               <section class="mx-card" aria-label={t(view.mode === "create" ? "sf.u34.create" : "sf.u34.edit")}>
                 <h2>{t(view.mode === "create" ? "sf.u34.create" : "sf.u34.edit")}</h2>
@@ -361,7 +364,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                   <p role="status">{t("sf.u34.noDetail")}</p>
                 </Show>
                 <Show when={view.phase === "reviewing"} fallback={
-                  <div class="sf-n29-fields">
+                  <div class="sf-n29-fields sf-fields">
                     <For each={[
                       ["conditionRef", "sf.u34.condition"],
                       ["recipeRef", "sf.u34.recipe"],
@@ -384,7 +387,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                     </button>
                   </div>
                 }>
-                  <div class="sf-n29-review" role="group" aria-label={t("sf.u34.submitReview")}>
+                  <div class="sf-n29-review sf-section" role="group" aria-label={t("sf.u34.submitReview")}>
                     <p>{t("sf.u34.reviewWarning")}</p>
                     <Show when={view.mode === "create"}>
                       <dl>
@@ -404,9 +407,11 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                         <div><dt>{t("sf.u34.timezone")}</dt><dd><bdi>{view.change.timezone}</bdi></dd></div>
                       </dl>}
                     </Show>
+                    <div class="sf-routine-actions">
                     <button type="button" class="mx-btn primary" disabled={!reviewValid() || busy()}
                       onClick={() => { void command() }}>{t("sf.u34.confirm")}</button>
                     <button type="button" class="mx-btn" onClick={revise}>{t("sf.u34.cancelReview")}</button>
+                    </div>
                   </div>
                 </Show>
               </section>
@@ -447,10 +452,12 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                           </dl>
                         )}
                       </Show>
+                      <div class="sf-routine-actions">
                       <button type="button" class="mx-btn" disabled={!liveDetail() || !permitted("schedules.update")}
                         onClick={() => begin("update")}>{t("sf.u34.edit")}</button>
                       <button type="button" class="mx-btn" disabled={!permitted("schedules.pause") || row().state === "paused"}
                         onClick={() => begin("pause")}>{t("sf.u34.pauseReview")}</button>
+                      </div>
                     </>
                   )}
                 </Show>
