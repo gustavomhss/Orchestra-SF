@@ -27,9 +27,16 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
   if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
   if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
   if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
-  const resolveScenarios = () => input.observeScenarios
-    ? input.observeScenarios(request.scenarioRefs, binding, () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding))
-    : resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
+  const resolveScenarios = () => {
+    const observe = input.observeScenarios
+    // Preserve the canonical detached-pair boundary after every host observation.
+    // A partial or refused observation must never fall back to a different reader.
+    return resolvePlannerScenarioBatch(observe ? {
+      ...input.scenarios,
+      resolveMany: (references, context) => observe(references, context,
+        () => resolvePlannerScenarioBatch(input.scenarios, references, context)),
+    } : input.scenarios, request.scenarioRefs, binding)
+  }
   const resolved = await resolveScenarios()
   const failed = resolved.find((result) => result.status !== "ok")
   if (failed) return failed
