@@ -156,6 +156,20 @@ describe("captured review field and record identity", () => {
     expect(preservedValuePresentation(malformed, [malformed])).toEqual({ recordRef: malformed.id })
   })
 
+  test("prototype property names remain unknown literal source identities", () => {
+    const source = projection().values[0]!
+    for (const id of [
+      "projects[id:project].constructor", "projects[id:project].toString",
+      "projects[id:project].hasOwnProperty", "constructor[id:project].name",
+      "toString[id:project].budget", "hasOwnProperty[id:project].year",
+      "projects[id:project].__proto__",
+    ]) {
+      const value = { ...source, id, value: 2026, unit: undefined, currency: undefined }
+      expect(preservedValuePresentation(value, [value])).toEqual({ recordRef: id })
+      expect(preservedValueGroups([value])[0]!.values[0]).toBe(value)
+    }
+  })
+
   test("ambiguous captured names are not silently chosen", () => {
     const source = projection().values[0]!
     const value = { ...source, id: "projects[id:project].budget" }

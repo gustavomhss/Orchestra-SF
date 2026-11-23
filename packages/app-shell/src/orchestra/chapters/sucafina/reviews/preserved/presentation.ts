@@ -99,7 +99,7 @@ export function preservedValuePresentation(value: PreservedValue, values: readon
   const milestone = /^(milestone):([^:]+):([^:]+):(date|name|status)$/.exec(value.id)
   const collection = record?.[1] ?? scalar?.[1] ?? monthly?.[1] ?? milestone?.[1]
   const field = record?.[3] ?? scalar?.[3] ?? monthly?.[3] ?? milestone?.[4]
-  if (!collection || !field || !records[collection] || !fields[field])
+  if (!collection || !field || !Object.hasOwn(records, collection) || !Object.hasOwn(fields, field))
     return { recordRef: value.id }
   const separator = milestone || monthly ? ":" : "."
   const recordRef = milestone ? value.id.slice(0, value.id.lastIndexOf(":"))
