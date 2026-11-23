@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Inspect the original Importfault diagnostic receipt and complete the read-only optimization proof review. Preserve original authority, callbacks, SQL, snapshot semantics and deadlines. Any product correction requires all six complete original campaigns before acceptance or merge."
+    "nextAction": "Inspect original value-types and transport-phases diagnostic receipts. Continue read-only proof review of any concrete minimal correction, preserving fresh authority/source boundaries and all original gates. No performance proposal is approved for product promotion."
   },
-  "updatedAt": "2026-11-23T18:57:10Z",
+  "updatedAt": "2026-11-23T19:35:10Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3486,6 +3486,43 @@
         "volatileStateLossReportedAt": "2026-11-23T18:46:35Z",
         "remoteBlobsAndRefsPreserved": true
       },
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "devUnchanged": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T19:35:10Z",
+      "status": "IMPORTFAULT_RESULT_VALUE_TYPES_RUN_AND_TRANSPORT_PHASES_REVIEW_PERSISTED",
+      "by": "/root/audit_checkpoint",
+      "importFault": {
+        "run": 45243361002,
+        "conclusion": "failure",
+        "browserTests": "1failed/1passed",
+        "originalFailure": "UI56 original10s expectation",
+        "denial403Reproduced": false,
+        "causeEstablished": false
+      },
+      "valueTypes": {
+        "overlay": "d535e2b588a06bc83dce51f2ef2684a9e83fb80f",
+        "snapshot": "1b4d5f5ac5e958c9344f95b612933f399585aa86",
+        "run": 45249464790,
+        "testJob": 137954938906,
+        "status": "IN_PROGRESS",
+        "review": "PASS_STATIC_DIAGNOSTIC_ONLY"
+      },
+      "transportPhases": {
+        "overlay": "7b6ab920f4873508133618e15f0e91c4def48821",
+        "tree": "f63a04f54bad71344ab851224637f2957907f082",
+        "transportBlob": "41cb2313d37394a08c1c2062158fab7f9f43c2b2",
+        "review": "PASS_STATIC_DIAGNOSTIC_ONLY",
+        "ciReceiptPending": true
+      },
+      "scenarioRequestProjectionApproved": false,
+      "aclJsonPlanImplemented": false,
+      "freshAclTransferApproved": false,
+      "sourcePathCorrection": "state-provider profile site is product/host-binding, not product/integration;237samples unchanged.",
+      "volatileCacheObservation": "Older in-memory stores were unavailable while newer ones survived; eviction/expiration is possible. Durable GitHub refs and blobs remained intact; no GitHub data loss is asserted.",
+      "priorRecordsCommit": "1f342facc14c8f9d8cd4ed1dc4f5bdf5f2af55d0",
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "devUnchanged": "e115b667d845822a1df5f523bbfd828ab57ca978",
       "qualification": false
@@ -6395,7 +6432,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T18:57:10Z",
+    "observedAt": "2026-11-23T19:35:10Z",
     "qualification": false,
     "experiments": [
       {
@@ -9060,7 +9097,7 @@
                 },
                 {
                   "leaf": "structuredClone",
-                  "nearest": "modules/sucafina/Sucafinav1/product/integration/state-provider.ts:424",
+                  "nearest": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts:424",
                   "samples": 237
                 },
                 {
@@ -9108,7 +9145,14 @@
             "Complete log byte count/hash and a visual review receipt for this run were not supplied; this checkpoint claims no pixel inspection of this run.",
             "The preferences-only projection proposal lacks a private proof preserving full-state clone exceptions/hooks and was not approved or applied.",
             "All diagnostic code remains excluded from product qualification."
-          ]
+          ],
+          "sourcePathCorrection": {
+            "recordedAt": "2026-11-23T19:35:10Z",
+            "from": "modules/sucafina/Sucafinav1/product/integration/state-provider.ts:424",
+            "to": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts:424",
+            "verifiedSourceBlob": "d20a3ec330a4ee6fa65e258ff6d9de7c793769c9",
+            "samplesUnchanged": 237
+          }
         },
         "resultRecordedAt": "2026-11-23T18:57:10Z",
         "testJob": 137912392307,
@@ -9127,7 +9171,7 @@
         "snapshotTree": "1d1ace0639d3452ca7b3c7b70c967c01491325e6",
         "run": 45243361002,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45243361002",
-        "status": "IN_PROGRESS",
+        "status": "COMPLETED_FAILURE_DIAGNOSTIC_ONLY",
         "testJob": 137933601636,
         "originalRequest": {
           "path": ".ci-run.json",
@@ -9180,22 +9224,30 @@
           ]
         },
         "workflowObservation": {
-          "observedAt": "2026-11-23T18:57:10Z",
+          "observedAt": "2026-11-23T19:35:10Z",
           "by": "/root/audit_checkpoint",
-          "status": "in_progress",
-          "conclusion": null,
+          "status": "completed",
+          "conclusion": "failure",
           "headSha": "281b18aad374a48cab3a16233fb1bdaae628eb55",
           "createdAt": "2026-11-23T18:54:48Z",
-          "updatedAt": "2026-11-23T18:54:52Z"
+          "updatedAt": "2026-11-23T19:08:51Z"
         },
         "jobObservation": [
           {
             "id": 137933601636,
             "name": "test (ubuntu-24.04)",
-            "status": "in_progress",
-            "conclusion": null,
+            "status": "completed",
+            "conclusion": "failure",
             "startedAt": "2026-11-23T18:54:51Z",
-            "completedAt": null
+            "completedAt": "2026-11-23T19:08:46Z"
+          },
+          {
+            "id": 137942168549,
+            "name": "cleanup",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-23T19:08:47Z",
+            "completedAt": "2026-11-23T19:08:50Z"
           }
         ],
         "independentReview": {
@@ -9246,7 +9298,371 @@
           "reasonInterpretationCaveat": "The mark reason is the first negative observation and is not an exclusive causal conclusion; caught(error) replaces it with the original exception class."
         },
         "purpose": "Observe the original terminal GET import-reference denial and the phase of the exact original LocalStore exception, without changing scheduling, promises, SQL, request callbacks, authority branches or deadlines.",
-        "interpretationLimit": "Only the new backend fault logger is fault-only; the four existing frontend lifecycle diagnostics remain. Local operation IDs do not identify an external SQLite lock owner. Results are pending and cannot qualify C3."
+        "interpretationLimit": "Only the new backend fault logger is fault-only; the four existing frontend lifecycle diagnostics remain. Local operation IDs do not identify an external SQLite lock owner. Results are pending and cannot qualify C3.",
+        "resultRecordedAt": "2026-11-23T19:35:10Z",
+        "cleanupJob": 137942168549,
+        "result": {
+          "status": "FAILED_ORIGINAL_UI56_REFRESH_HEADING_EXPECTATION_INDEPENDENT_REFERENCE_PASSED",
+          "qualification": false,
+          "causeEstablished": false,
+          "browserTests": {
+            "passed": 1,
+            "failed": 1,
+            "reportedDuration": "7.0m"
+          },
+          "failure": {
+            "stage": "UI56 Refresh original heading visibility expectation",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "originalExpectationTimeoutMs": 10000,
+            "sameExpectationCatchAt": "2026-11-23T19:05:38.661Z",
+            "sameExpectationCatchRunnerAt": "2026-11-23T19:05:38.6748159Z",
+            "elapsedFromExpectBeforeMarkerMs": 10002,
+            "assertionOrTimeoutModified": false
+          },
+          "chronology": [
+            {
+              "event": "original UI55 independent GET returned200",
+              "at": "2026-11-23T19:04:49.185Z",
+              "elapsedMs": 9283
+            },
+            {
+              "event": "UI56 refresh-click-before",
+              "at": "2026-11-23T19:05:28.634Z"
+            },
+            {
+              "event": "UI56 load-reference begin and action fence",
+              "at": "2026-11-23T19:05:28.654Z"
+            },
+            {
+              "event": "UI56 refresh-click-after and refresh-expect-before",
+              "at": "2026-11-23T19:05:28.659Z"
+            },
+            {
+              "event": "context-health",
+              "runnerAt": "2026-11-23T19:05:36.9031568Z"
+            },
+            {
+              "event": "native GET ERR_ABORTED browser network event",
+              "runnerAt": "2026-11-23T19:05:37.4326623Z"
+            },
+            {
+              "event": "same original expectation catch marker",
+              "at": "2026-11-23T19:05:38.661Z",
+              "runnerAt": "2026-11-23T19:05:38.6748159Z"
+            },
+            {
+              "event": "failure hook",
+              "runnerAt": "2026-11-23T19:05:38.854Z"
+            },
+            {
+              "event": "page close",
+              "runnerAt": "2026-11-23T19:05:39.3308563Z"
+            }
+          ],
+          "networkInterpretation": {
+            "observedAbortBeforeCatchApproximatelyMs": 1230,
+            "actualFetchPromiseRejectionEstablished": false,
+            "actualAssertionRejectionInstantEstablishedSeparately": false,
+            "counterObservation": {
+              "request": "POST import-admit",
+              "http200RunnerAt": "2026-11-23T19:04:28.3608836Z",
+              "errAbortedRunnerAt": "2026-11-23T19:04:28.3643206Z",
+              "flowContinuedToPreview200": true
+            },
+            "limit": "A browser ERR_ABORTED event is not by itself proof that the JavaScript fetch promise rejected, nor proof of the causal await. The same run showed a successful admission followed by ERR_ABORTED while preview continued. The expectation catch is an observed boundary, not an independent timestamp of the underlying rejection."
+          },
+          "diagnostics": {
+            "backendFaultLines": 0,
+            "frontendLifecycleEvents": 30,
+            "ui56Reached": true,
+            "ui56Succeeded": false,
+            "portugueseImportReached": false,
+            "fenceAfterLoadReference": 0,
+            "transportReaderCancel": 0,
+            "transportReaderError": 0,
+            "loadReferenceResultMarkers": 0,
+            "loadReferenceCatchMarkers": 0,
+            "interpretation": "Zero terminal authorization-denial lines does not close the earlier403 variation; frontend phase of the pending await remains unresolved."
+          },
+          "log": {
+            "bytes": 4131806,
+            "characters": 4125110,
+            "lines": 1740,
+            "encoding": "UTF-8 including BOM",
+            "sha256": "376f583672e0a518b5178d80f29a9a8908b0cf08c2f8a5bd92f95562044d81e5",
+            "reportedBy": "/root/import_lifecycle",
+            "ownFullLogInspection": false
+          },
+          "artifact": {
+            "id": 14853766755,
+            "name": "playwright-ubuntu-24.04-1",
+            "bytes": 43531591,
+            "digest": "afc2530031e679ec4675dd95d6ff8b920766e6aff5a04f8edb568ec2c4937bb0",
+            "expiresAt": "2026-11-30T19:08:38Z",
+            "reportedBy": "/root/import_lifecycle",
+            "archiveOnlyImagesOrJsonInspectedByAudit": false
+          },
+          "visualEvidence": {
+            "completeJPEGCount": 38,
+            "manifestReportedBy": "/root/import_lifecycle",
+            "captureGroups": {
+              "UI55": 13,
+              "failedUI56": 1,
+              "UI51ToUI53IncludingPortuguese": 24
+            },
+            "visuallyReviewedUniqueCount": 2,
+            "allFramesVisuallyReviewed": false,
+            "reviews": [
+              {
+                "by": "/root/import_lifecycle",
+                "frames": [
+                  "FAILED UI56",
+                  "UI55-field-change"
+                ],
+                "exactNamesBeyondSuppliedLabelsNotAsserted": true,
+                "findings": [
+                  "FAILED UI56 shows Loading... at Review preview.",
+                  "UI55-field-change shows4added/47changed, before9800/proposed11200."
+                ]
+              }
+            ],
+            "unreviewedByReportedReviewer": 36,
+            "limits": [
+              "No pixel inspection attributed to /root/audit_checkpoint.",
+              "No UI56 successful outcome or Portuguese import coverage.",
+              "No archive-only PNG/JSON inspection claimed."
+            ]
+          },
+          "cleanup": {
+            "ciBranch": "ci-run-linux-sf613-importfault",
+            "ciBranchReported404By": "/root/import_lifecycle",
+            "overlayBranch": "sf613-importfault",
+            "overlayCommit": "b7d1ab39996c290983b4453d9840197b17ed408b",
+            "overlayIntactReportedBy": "/root/import_lifecycle"
+          },
+          "receiptAttribution": "Full log/artifact/capture findings supplied by /root/import_lifecycle; workflow and job statuses/timestamps independently verified through GitHub API by /root/audit_checkpoint."
+        }
+      },
+      {
+        "name": "ISOLATED_PORTFOLIO_CANONICAL_VALUE_TYPES",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "baseSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "diagnosticOnly": true,
+        "reportedAt": "2026-11-23T19:35:10Z",
+        "branch": "ci-run-linux-sf613-valuetypes",
+        "snapshot": "1b4d5f5ac5e958c9344f95b612933f399585aa86",
+        "snapshotTree": "7afaf0a01fbaeab00a3ed8ca4c39a4271b9c8201",
+        "run": 45249464790,
+        "testJob": 137954938906,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45249464790",
+        "status": "IN_PROGRESS",
+        "sourceOverlay": {
+          "branch": "sf613-valuetypes",
+          "commit": "d535e2b588a06bc83dce51f2ef2684a9e83fb80f",
+          "tree": "6776c123b1eea700ac8ba7fd6fb18d23977e86f3",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "paths": [
+            {
+              "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+              "blob": "c9cdee31168ff9f2269212c431c882ae5014c0bb"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "blob": "d5f8fb29bd96fa4bb8a1dce210572a3e15c4bf5b"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/contracts/portfolio-value-types-diagnostic.ts",
+              "blob": "66b3f652bc38d2c2f5f5eaf2256fc96119d6c39e"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+              "blob": "c94bf1da59d91b2235634c12d88051c182bf4ab9"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+              "blob": "ad3c4737aabbd1740f8b6f742bbc14916a8852e1"
+            }
+          ]
+        },
+        "originalRequest": {
+          "path": ".ci-run.json",
+          "blob": "a11922821a47594d76397582be38f9b7940177ca",
+          "campaign": "analytics",
+          "testCount": 2
+        },
+        "independentReview": {
+          "status": "PASS_STATIC_DIAGNOSTIC_ONLY",
+          "reviewedBy": "/root/audit_checkpoint",
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "helper": "66b3f652bc38d2c2f5f5eaf2256fc96119d6c39e",
+          "blobs": {
+            "canonical": "d5f8fb29bd96fa4bb8a1dce210572a3e15c4bf5b",
+            "port": "c94bf1da59d91b2235634c12d88051c182bf4ab9",
+            "nativeFixture": "c9cdee31168ff9f2269212c431c882ae5014c0bb",
+            "installation": "ad3c4737aabbd1740f8b6f742bbc14916a8852e1"
+          },
+          "exactReversal": {
+            "canonical": true,
+            "nativeFixture": true,
+            "installation": true,
+            "port": true
+          },
+          "originalAwaits": {
+            "canonical": 0,
+            "port": 11,
+            "nativeFixture": 13,
+            "installation": 16
+          },
+          "helperHasImports": false,
+          "helperHasAwaits": false,
+          "objectsInspected": false,
+          "originalCanonicalBodyPreserved": true,
+          "originalHashesSkipped": 0,
+          "originalProductCallsGuardsAssertionsAndDeadlinesPreserved": true,
+          "firstEvaluateOnly": true,
+          "windowMs": 45000,
+          "pulseEvery": 16384,
+          "mapEntries": 1024,
+          "eligibleStringUnits": 512,
+          "maximumRetainedStringUnits": 524288,
+          "maximumLines": 4,
+          "maximumAsciiBytesIncludingPrefixAndNewline": 1024,
+          "loggerAndObserverErrorsContained": true,
+          "diagnosticQualification": false,
+          "ciExecutedByReviewer": false,
+          "limits": [
+            "Counts are whole-isolate canonical entries, not completed hashes or per-call-site attribution.",
+            "Timer/pulse stop is cooperative; use reported elapsedMs and reason.",
+            "Membership hits simulate a bounded memo; original canonical/hash work always executes.",
+            "No string keys, values, domain payloads or original error messages are logged."
+          ]
+        },
+        "workflowObservation": {
+          "observedAt": "2026-11-23T19:30:18Z",
+          "by": "/root/audit_checkpoint",
+          "status": "in_progress",
+          "conclusion": null,
+          "headSha": "1b4d5f5ac5e958c9344f95b612933f399585aa86",
+          "createdAt": "2026-11-23T19:29:25Z",
+          "updatedAt": "2026-11-23T19:29:28Z"
+        },
+        "jobObservation": [
+          {
+            "id": 137954938906,
+            "name": "test (ubuntu-24.04)",
+            "status": "in_progress",
+            "conclusion": null,
+            "startedAt": "2026-11-23T19:29:28Z",
+            "completedAt": null
+          }
+        ],
+        "interpretationLimit": "Whole-isolate canonical entries, not completed hashes or per-site attribution. Membership hits simulate a bounded primitive-string memo while every original hash still executes. Cooperative timer/pulse duration and errors must be read from the final receipt. No string values or keys are emitted."
+      },
+      {
+        "name": "ISOLATED_IMPORT_REFERENCE_TRANSPORT_PHASES",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "baseSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "diagnosticOnly": true,
+        "reportedAt": "2026-11-23T19:35:10Z",
+        "status": "STATIC_REVIEWED_OVERLAY_PUBLISHED_CI_RECEIPT_PENDING",
+        "branch": "ci-run-linux-sf613-filephases",
+        "snapshot": null,
+        "snapshotTree": null,
+        "run": null,
+        "testJob": null,
+        "sourceOverlay": {
+          "branch": "sf613-filephases",
+          "commit": "7b6ab920f4873508133618e15f0e91c4def48821",
+          "tree": "f63a04f54bad71344ab851224637f2957907f082",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "paths": [
+            {
+              "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+              "blob": "40efbaa055cca1f4bd9aedb93639c26d90f3abbf"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "blob": "cd7263d802fd26e559749c9c2d9acb53aa6e3482"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/import-fault-profile.ts",
+              "blob": "c7d34984d40299730a4c22724b388ca3d2173338"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+              "blob": "597ec4b6446395981a2c3ee206eb95ba90d8af9c"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+              "blob": "38bfa60b41a6e19a013be9cc3091525502c3acd0"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+              "blob": "9ca65dc2829ddfbca43afeed921448715c090727"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+              "blob": "fe5914829532c7162dcff8897d07c56aed3eaac1"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+              "blob": "af9e18147095b489169435dba8b20cc0cb695f53"
+            },
+            {
+              "path": "packages/client/src/sucafina/transport.ts",
+              "blob": "41cb2313d37394a08c1c2062158fab7f9f43c2b2"
+            }
+          ]
+        },
+        "originalRequest": {
+          "path": ".ci-run.json",
+          "blob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+          "campaign": "collaboration",
+          "testCount": 2
+        },
+        "independentReview": {
+          "status": "PASS_STATIC_DIAGNOSTIC_ONLY",
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "baseOverlay": "b7d1ab39996c290983b4453d9840197b17ed408b",
+          "changedPath": "packages/client/src/sucafina/transport.ts",
+          "baseBlob": "04123dd4c9e5da2c445494dd8fd86fa9eb84fb8d",
+          "finalBlob": "41cb2313d37394a08c1c2062158fab7f9f43c2b2",
+          "previousDraft": "8dc6b37af600d6b86bc890638e577c294d4d2359",
+          "requiredRevision": "Removed extra result.status reads from fetch-resolved marker; fixed marker only.",
+          "exactRevisionVerified": true,
+          "originalCounts": {
+            "await": 35,
+            "currentFileOwner": 4,
+            "refreshSfFileAuthorityIncludingDefinition": 2,
+            "isCurrent": 10,
+            "optionsFetch": 3,
+            "readJsonBoundedIncludingDefinition": 3,
+            "cancel": 6,
+            "failure": 63,
+            "responseStatusReads": 20
+          },
+          "originalPredicatesAwaitsDeadlinesRequestsCatchAndCleanupPreserved": true,
+          "logger": "Existing no-throw importJsonLifecycle",
+          "maximumLinesPerPage": 128,
+          "maximumAsciiLineBytesIncludingPrefixAndNewline": 1024,
+          "forwarderUnchanged": true,
+          "sourceDataLogged": false,
+          "newListenersRequestsRetriesOrAssertions": false,
+          "qualification": false
+        },
+        "retainedPriorFaultAndFrontendOverlay": true,
+        "revisedDraft": {
+          "supersededBlob": "8dc6b37af600d6b86bc890638e577c294d4d2359",
+          "finalBlob": "41cb2313d37394a08c1c2062158fab7f9f43c2b2",
+          "reason": "Removed additional result.status observations; fetch-resolved is a fixed phase marker."
+        },
+        "purpose": "Locate the pending original files.import-reference await using pre-context, fetch, bounded body, post-context, catch and existing finally boundaries; no new listener, request, retry, timeout, predicate, await or assertion.",
+        "interpretationLimit": "Missing phase markers do not alone establish cause. Existing bounded lifecycle logging and all original scopes/authorization callbacks remain. The original403 variation remains unresolved."
       }
     ]
   },
@@ -10612,6 +11028,123 @@
       ],
       "gap": "No examined original test isolates closed source frame with open LocalStore at these two probes or full-read exception versus skipped-copy work invocation.",
       "persistedAt": "2026-11-23T18:57:10Z"
+    },
+    "scenarioRequestSelectorReview": {
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "status": "NOT_APPROVED_WITH_EXISTING_ADMISSION_ONLY",
+      "reviewedBy": "/root/audit_checkpoint",
+      "readOnly": true,
+      "patchCreated": false,
+      "ciRun": false,
+      "sites": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+        "blob": "5734adfa72d56fe8c687cf2a1d104ce2bb7d5a68",
+        "lines": [
+          37,
+          48,
+          63
+        ],
+        "jointFenceLine": 65
+      },
+      "provider": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "d20a3ec330a4ee6fa65e258ff6d9de7c793769c9",
+        "authorizeBeforeClone": 391,
+        "fullClone": 424,
+        "reauthorize": 427,
+        "shallowValidation": [
+          676,
+          685
+        ],
+        "registration": [
+          619,
+          633
+        ]
+      },
+      "finding": "The native read root protects private durable graphs but callbacks receive fresh mutable copies. isSfProductStateReader pins read/provider, not authorize or post-await deep cloneability. Existing selected-map descriptors do not attest unselected namespaces.",
+      "counterexample": {
+        "kind": "STATIC_REASONING_NOT_EXECUTED",
+        "description": "A generic authorizer inserts a function/accessor in transactions on the first preferences copy. Original full clone throws/observes it before producers; preferences-only cloning can advance, alter callback counts and potentially finish on later fresh copies."
+      },
+      "actualFactory": {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blob": "2c44f063c0a9f2bfcb0aec313bd5d57f07056414",
+        "positive": "The actual principal passes new scalar role rows to authenticate, not product state.",
+        "missing": "No existing private proof ties that exact authorizer, actual callback-copy provenance and post-await hook integrity together."
+      },
+      "requirements": [
+        "Keep all3reads, original authority/hash timing and final joint fence.",
+        "Private actual-copy provenance plus a closed factory authorizer; no generic callback blessing.",
+        "Unknown/wrapped/replaced/changed runtime paths retain full clone.",
+        "Simple prototype/descriptor tests do not prove ordinary native birth; reparented exotics remain a counterexample."
+      ],
+      "coverage": [
+        "coverage-case-selection.test.ts covers selected containers, contexts, live reads, revocation and copies.",
+        "current-choice-readonly.test.ts and local-store.test.ts cover root/driver lifecycle, not post-authorize full product-state cloneability.",
+        "Original C17 producer/reopen/ancestry/cycle/revocation remains required."
+      ],
+      "missingRegression": "Mutation after an awaited authorization in an unselected namespace, with equivalent exception/effect/callback order.",
+      "gain": "Unmeasured;237 native-nearest samples at state-provider:424 include all full-state readers, not just these3sites."
+    },
+    "aclJsonCopyPlanReview": {
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "status": "READ_ONLY_VIABLE_CONDITIONAL_PROPOSAL_DEFERRED",
+      "reviewedBy": "/root/audit_checkpoint",
+      "patchCreated": false,
+      "ciRun": false,
+      "localStoreBlob": "116974b0c5a6d4c4be8d9dc9ac37f4ed6bfdad8e",
+      "sqlReaderBlob": "c608ada089fc087cf14f909eb53343cd031a3c44",
+      "plan": [
+        "Keep original ACL envelope, original encode errors and fallback.",
+        "Derive optional private JSON/missing strings from immutable ACL envelope under existing readonlyAuthorityAclCodec; retain no parsed graph or authorization result.",
+        "Each admitted call parses afresh, repairs own undefined paths with defineProperty and preserves -0 literal, absence, property order and dense arrays.",
+        "Keep copyAcl warm-byte-match-only and complete=prior.copy!==undefined; no new eligibility for failed full copy plans.",
+        "Preserve caller copyValue, scopes, callbacks, authorizations and fresh SQL observations."
+      ],
+      "primitiveLimit": "Strong guard does not pin push/pop/join/Object.is. New work must avoid extra observable calls through them; use guarded primitives, numeric loops, concatenation and primitive negative-zero detection.",
+      "bounds": {
+        "maximumRetainedStringUnits": 8388608,
+        "unit": "UTF-16 code units; original comment describes16MiB of strings, not an8MiB physical heap cap.",
+        "maximumDepth": 128,
+        "maximumNodes": 200000,
+        "maximumMissingPaths": 4096
+      },
+      "budgetCaveat": "Additional charged strings can change decoder-plan retention and existing SQL native-binding eligibility under pressure. One fresh SELECT and SQL code remain; identical statement selection for every budget state is not claimed.",
+      "existingTests": {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "blob": "956a94d2e938163d1fce56d427c6e70c020cdec5",
+        "lines": [
+          1356,
+          1434,
+          1492
+        ],
+        "coverage": "Cold/warm absence and fresh copies; late decoder hooks; full-validation error identity/count beyond plan depth."
+      },
+      "suppliedCostSeconds": {
+        "source": "/root",
+        "aclNormal": 1.65,
+        "aclRelease": 1.61,
+        "allDecodeNormal": 2.9,
+        "allDecodeRelease": 3.5
+      },
+      "materiality": "ACL totals are a gross upper target before parse/preparation overhead; overlapping buckets must not be added. No Preview-specific improvement or product fix is established.",
+      "parentDecision": "Analysis/receipt only; no implementation."
+    },
+    "freshAclTransferProposal": {
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "status": "READ_ONLY_UNDER_REVIEW_NO_APPROVAL",
+      "proposedBy": "/root",
+      "assignedForIndependentReviewTo": "/root/preview_cpu",
+      "patchCreated": false,
+      "ciRun": false,
+      "target": "local-store.ts readonlyAuthorityReaders.set: first admitted read(true) already returns a fresh decoded ACL; second copyValue may be redundant only with a complete provenance and primitive proof.",
+      "precedent": "observeAuthority already transfers copiedAcl descriptor values when its original copiedAcl path succeeds.",
+      "constraints": [
+        "Keep existing strong readonly ACL guard and complete/full-plan eligibility.",
+        "Any additional copyValue primitive guard must cover getOwnPropertySymbols/Descriptors, Array.from, Set.has/add/delete and their original bindings.",
+        "Do not assume surfaces is an ordinary literal: custom map/proxy/species can expose and mutate intermediate entries before materialization.",
+        "Prove the entire synchronous processing path or preserve original copyValue; no product approval has been given."
+      ]
     }
   },
   "portfolioHistoryAbortInvestigation": {
