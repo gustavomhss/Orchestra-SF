@@ -205,13 +205,24 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
     .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const supplierPage = account.baseURL + "/api/ui/pages/CAP27?" + new URLSearchParams({ supplier })
   const reconciled = await observe(page, supplierPage)
-  const uploaded = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
-  }).then(async (response) => ({ response, result: await response.json() as { ok?: boolean; errors?: unknown } }))
-  const [{ response: uploadResponse, result: uploadResult }] = await Promise.all([
-    uploaded, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
+  // Chromium may lose its cached response body after the native request finishes.
+  // Observe one original POST before delivery; forwardOnce preserves its complete
+  // response and forbids redirects/retries. A body-tool failure was not a verdict.
+  const uploaded = await observe(page, (url) =>
+    url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+  const [{ response: uploadResponse, request: uploadRequest }] = await Promise.all([
+    uploaded.completed, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
   ])
+  expect(uploadRequest.method()).toBe("POST")
+  await observation(info, "operations-document-original-upload-response", {
+    stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
+    contentType: uploadResponse.headers()["content-type"] ?? null,
+    scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+    source: "one forwarded original POST", responseSubstituted: false, automaticRetries: 0,
+    priorBodyToolFailureQualifiedProducer: false,
+  })
+  const uploadResult = await uploadResponse.json() as { ok?: boolean; errors?: unknown }
   if (uploadResponse.status() !== 200) {
     const knownErrors = new Set([
       "Attachment limit is not configured.",
