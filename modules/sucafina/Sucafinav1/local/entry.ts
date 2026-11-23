@@ -107,6 +107,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
         const before = driver.currentSnapshotScope?.()
         if (!before || before.poisoned) return false
         await read()
+        if (!current()) return false
         const after = driver.currentSnapshotScope?.()
         return current() && !!after && !after.poisoned && after.identity === before.identity &&
           after.bytesIdentity === before.bytesIdentity && after.readOnly === before.readOnly
