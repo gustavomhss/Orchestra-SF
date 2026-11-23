@@ -16,7 +16,7 @@ import { withNativeInstallation } from "./fixture/sucafina-native-installation"
 const it = testEffect(LayerNode.compile(AppProcess.node))
 
 it.live.skipIf(process.platform === "win32")(
-  "installed routine read health and resident inventory keep native execution and Schedule unavailable",
+  "installed historical routine read health and residents keep planning, execution and Schedule unavailable",
   () => Effect.scoped(Effect.gen(function* () {
     expectSpawn(import.meta.path)
     const serverPassword = randomUUID()
@@ -94,12 +94,12 @@ it.live.skipIf(process.platform === "win32")(
         if (context.status !== "ok") throw new Error("Original installed context was not admitted")
         expect(context.value.stamp.principalRef).toBe(installation.actorId)
         const operations = context.value.availability.flatMap((entry) => entry.operations)
-        for (const id of ["projection.residents", "projection.routine", "routines.catalog", "routines.read-admission", "routines.read-run"]) {
+        for (const id of ["projection.residents", "projection.routine", "routines.read-admission", "routines.read-run"]) {
           const entries = operations.filter((entry) => entry.operationId === id)
           expect(entries.length).toBeGreaterThan(0)
           expect(entries.every((entry) => entry.state === "ready" && entry.operational === true && entry.reason === null)).toBe(true)
         }
-        for (const id of ["routines.prepare-admission", "routines.run", "schedules.create", "schedules.list",
+        for (const id of ["routines.catalog", "routines.prepare-admission", "routines.run", "schedules.create", "schedules.list",
           "schedules.read", "schedules.update", "schedules.pause", "schedules.read-run"]) {
           const entries = operations.filter((entry) => entry.operationId === id)
           expect(entries.length).toBeGreaterThan(0)
@@ -122,7 +122,7 @@ it.live.skipIf(process.platform === "win32")(
         expect(crossSite.status).toBe(400)
         await unchanged()
         console.info("SF_FINAL_ROUTINES_NATIVE " + JSON.stringify({
-          source: "original-native-installation", readOperations: 5, residents: inventory.value.profiles.length,
+          source: "original-native-installation", readOperations: 4, catalogOperational: false, residents: inventory.value.profiles.length,
           caseStateChangedByReads: false, approvalRequestsSubmitted: 0, schedulePortInstalled: false,
         }))
       } finally { await store.dispose() }

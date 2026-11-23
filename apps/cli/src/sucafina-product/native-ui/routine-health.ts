@@ -9,7 +9,7 @@ import type { RoutinePublicationHost } from "../../../../../modules/sucafina/Suc
 import type { SfRoutineNativeRuntimeResources } from "../routine-native-runtime.ts"
 import { sfHasOperationalResource } from "./live-context.ts"
 
-type Operation = "routines.catalog" | "routines.read-admission" | "routines.read-run" | "projection.routine"
+type Operation = "routines.read-admission" | "routines.read-run" | "projection.routine"
 type Source = Readonly<{
   producer: object
   dependencies: readonly object[]
@@ -17,10 +17,13 @@ type Source = Readonly<{
   resources: () => SfRoutineNativeRuntimeResources | undefined
 }>
 
-/** A live original publication, native Location and C08 reader prove read
- * infrastructure. Catalog is never invoked here: it may continue Maestro
- * planning. No preparation, run, approval, Task, Schedule or receipt is issued.
- * Per-case plans and historical references still pass their original producer.
+/** A live original publication, native Location and C08 reader prove historical
+ * read infrastructure. Catalog is deliberately absent: a fresh case can activate
+ * Maestro planning before reading publications, and no original side-effect-free
+ * observer proves its runner fence, engine and scope prerequisites. Publication
+ * metadata must not advertise routines.catalog as operational.
+ * No preparation, run, approval, Task, Schedule or receipt is issued. Historical
+ * references still pass their original producer and source-specific admission.
  */
 export async function observeSfRoutineReadingHealth(input: {
   ui: SfHostServices["ui"]
@@ -34,7 +37,6 @@ export async function observeSfRoutineReadingHealth(input: {
   if (!bindingFor || request.signal.aborted || !isSfProductStateReader(state, persistence)) return []
   const expected = Object.freeze({ ...stamp }), stampDigest = digestSfValue(expected)
   const candidates = [
-    { id: "routines.catalog", operation: "sf_routine_catalog", path: "routines/catalog", method: "POST" },
     { id: "routines.read-admission", operation: "sf_routine_status", path: "routines/read-admission", method: "POST" },
     { id: "routines.read-run", operation: "sf_routine_status", path: "routines/read-run", method: "POST" },
     { id: "projection.routine", operation: "sf_routine_status", path: "projections/routine", method: "GET" },
