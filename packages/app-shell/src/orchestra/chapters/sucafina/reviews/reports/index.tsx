@@ -253,7 +253,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                   )
                 }}</For>
               </fieldset>
-              <button type="submit" disabled={reportBlocked()}>Generate Report</button>
+              <button type="submit" class="mx-btn" disabled={reportBlocked()}>Generate Report</button>
             </form>
             <div class="sf-n28-form sf-form sf-fields">
               <label class="sf-n28-field" for={uid + "-format"}>{t("sf.u33.format")}
