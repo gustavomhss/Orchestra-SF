@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Continue evidence-based diagnosis of original Preview, C17, Import authority and unexplained request aborts. Preserve all original guards, requests, assertions and deadlines; qualify complete campaigns on any product correction before acceptance or merge."
+    "nextAction": "Inspect the original Import lifecycle and Preview CPU diagnostic receipts. Preserve original product authority, callbacks, SQL, guards and deadlines. Any product correction requires all six complete original campaigns before acceptance or merge."
   },
-  "updatedAt": "2026-11-23T18:00:46Z",
+  "updatedAt": "2026-11-23T18:21:31Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3427,6 +3427,27 @@
       "c17CpuRun": 45231692009,
       "ui42InputDependencyIdentified": false,
       "oneOriginalUi42FrameViewedBy": "/root/here_github_activity",
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T18:21:31Z",
+      "status": "INDEPENDENT_DIAGNOSTIC_OVERLAYS_REVIEWED_AND_LAUNCHED_SOURCE_UNCHANGED",
+      "by": "/root/audit_checkpoint",
+      "importLifecycle": {
+        "overlay": "cd69b406c3762d4c3081d29199e8672576864ae3",
+        "snapshot": "c82888d03f5160e9469cd11de3931eac8c1fb5a6",
+        "run": 45237239917,
+        "status": "IN_PROGRESS"
+      },
+      "previewCpu": {
+        "overlay": "c9e38dc3058622f410e1fbe4ca560b1776984f79",
+        "snapshot": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
+        "run": 45237328267,
+        "status": "IN_PROGRESS"
+      },
+      "import2ChronologyCorrected": true,
+      "import2SpecPathCorrected": true,
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false
     }
@@ -6335,7 +6356,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T18:00:46Z",
+    "observedAt": "2026-11-23T18:21:31Z",
     "qualification": false,
     "experiments": [
       {
@@ -8399,7 +8420,7 @@
             "countsAreNotBenchmark": true
           },
           "originalFailure": {
-            "spec": "packages/app-shell/e2e/sucafina/design-wave-five-collaboration.spec.ts",
+            "spec": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
             "lineReported": 195,
             "step": "After original Refresh receipt",
             "expectedHeading": "Simulation · no domain changes applied",
@@ -8422,7 +8443,24 @@
           },
           "causeEstablished": false,
           "interpretation": "Producer success does not prove original browser body acquisition, decoding or UI acceptance. No authority timeout demonstrated in this run. Browser cancellation follows producer success but its initiator is not identified; UI cleanup is under separate read-only investigation.",
-          "evidenceAttribution": "Job completion confirmed directly by here_github_activity. Complete log hash, trace counts and original-request chronology reported by /root/sf613_candidate. No visual review of this run's captures is claimed."
+          "evidenceAttribution": "Job completion confirmed directly by here_github_activity. Complete log hash, trace counts and original-request chronology reported by /root/sf613_candidate. No visual review of this run's captures is claimed.",
+          "specPathCorrection": {
+            "recordedAt": "2026-11-23T18:21:31Z",
+            "by": "/root/audit_checkpoint",
+            "priorValue": "packages/app-shell/e2e/sucafina/design-wave-five-collaboration.spec.ts",
+            "verifiedPath": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "originalSpecBlob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+            "originalCiRequestBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+            "reason": "The earlier checkpoint expanded collab to collaboration incorrectly; original request and file readback use collab."
+          },
+          "chronologyCorrection": {
+            "recordedAt": "2026-11-23T18:21:31Z",
+            "by": "/root/audit_checkpoint",
+            "assertionThrowTimeRecorded": false,
+            "failureDiagnosticsStage": "afterEach, after the original expect rejected",
+            "limit": "The browser ERR_ABORTED at 17:53:38.050Z precedes the afterEach failure diagnostics at 17:53:39.373Z. This does not establish that cancellation preceded the actual assertion expiry, assertion rejection or teardown. The initiator and causal ordering remain unresolved.",
+            "nextObservation": "The separate Import lifecycle snapshot records a marker in the catch of the same original heading assertion and rethrows the same error."
+          }
         }
       },
       {
@@ -8551,6 +8589,181 @@
             "representation": "Complete decoded job log reencoded as UTF-8; not a compressed/raw artifact hash.",
             "reportedBy": "/root/session_diagnostic_limits"
           }
+        }
+      },
+      {
+        "name": "ISOLATED_IMPORT_FRONTEND_LIFECYCLE",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "baseSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "diagnosticOnly": true,
+        "reportedAt": "2026-11-23T18:21:31Z",
+        "branch": "ci-run-linux-sf613-importlife",
+        "snapshot": "c82888d03f5160e9469cd11de3931eac8c1fb5a6",
+        "snapshotTree": "3dcff4cb0c413e03d8cd439cb5dd6a2f13f6a8ed",
+        "run": 45237239917,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45237239917",
+        "status": "IN_PROGRESS",
+        "testJob": 137912093763,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T18:21:31Z",
+          "by": "/root/audit_checkpoint",
+          "status": "in_progress",
+          "conclusion": null,
+          "headSha": "c82888d03f5160e9469cd11de3931eac8c1fb5a6",
+          "createdAt": "2026-11-23T18:19:58Z",
+          "updatedAt": "2026-11-23T18:20:01Z"
+        },
+        "originalRequest": {
+          "path": ".ci-run.json",
+          "blob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+          "campaign": "collaboration",
+          "testCount": 2
+        },
+        "sourceOverlay": {
+          "branch": "sf613-importlife",
+          "commit": "cd69b406c3762d4c3081d29199e8672576864ae3",
+          "tree": "77c9e1388ca77987750c0b6ce5673246e2b6652d",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "paths": [
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+              "blob": "9ca65dc2829ddfbca43afeed921448715c090727"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+              "blob": "fe5914829532c7162dcff8897d07c56aed3eaac1"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+              "blob": "af9e18147095b489169435dba8b20cc0cb695f53"
+            },
+            {
+              "path": "packages/client/src/sucafina/transport.ts",
+              "blob": "04123dd4c9e5da2c445494dd8fd86fa9eb84fb8d"
+            }
+          ]
+        },
+        "independentReview": {
+          "by": "/root/audit_checkpoint",
+          "status": "PASS_STATIC_DIAGNOSTIC_ONLY",
+          "mode": "GitHub MCP source and full-diff review; no local execution",
+          "newReactiveReadsUntracked": true,
+          "originalCurrentTokenCalls": 20,
+          "originalControllerAbortCalls": 1,
+          "originalReaderCancelCalls": 4,
+          "originalAssertionsAndRequestsPreserved": true,
+          "originalHeadingExpectationTimeoutMs": 10000,
+          "sameAssertionFailureRethrown": true,
+          "loggerFailuresContained": true,
+          "forwardedMaximumLinesPerPage": 128,
+          "maximumAsciiLineBytesIncludingPrefixAndNewline": 1024,
+          "noDomainPayloadOrAuthorityIdentityLogging": true,
+          "originalEffectsAndAwaitsPreserved": true,
+          "readbackVerifiedCommitAndSnapshotPaths": true
+        },
+        "purpose": "Distinguish original import fence/scope changes and bounded-body cancellation from assertion rejection and teardown; do not infer cause from afterEach chronology alone.",
+        "interpretationLimit": "A spec catch marker timestamps the original rejected await as observed by the spec; it is not an instrument inside Playwright's deadline implementation. This snapshot is diagnostic and cannot qualify the product."
+      },
+      {
+        "name": "ISOLATED_PORTFOLIO_PREVIEW_JSC_SAMPLING",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "baseSourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+        "qualification": false,
+        "promoteDiagnosticCode": false,
+        "diagnosticOnly": true,
+        "reportedAt": "2026-11-23T18:21:31Z",
+        "branch": "ci-run-linux-sf613-previewcpu",
+        "snapshot": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
+        "snapshotTree": "5c7cdfd41ca091aad913c7a2f57a00a0656a0eee",
+        "run": 45237328267,
+        "status": "IN_PROGRESS",
+        "launchReportedBy": "/root",
+        "launchReportAt": "2026-11-23T18:21:31Z",
+        "originalRequest": {
+          "path": ".ci-run.json",
+          "blob": "a11922821a47594d76397582be38f9b7940177ca",
+          "campaign": "analytics",
+          "testCount": 2
+        },
+        "sourceOverlay": {
+          "branch": "sf613-previewcpu",
+          "commit": "c9e38dc3058622f410e1fbe4ca560b1776984f79",
+          "tree": "ec71d0d80f91d23496305efe3f0675b1bfbcd9b9",
+          "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "paths": [
+            {
+              "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+              "blob": "3e234ccc1e62b0b1ab86eca0c57d063196ca3202"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "blob": "4f075c483ba183b512d82a812b26e5d4cbb49014"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/contracts/portfolio-jsc-diagnostic.ts",
+              "blob": "ae7b24fe669829a5f862b14219fbeb772de7e7ed"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/contracts/portfolio-jsc-pulse.ts",
+              "blob": "717976bdfb6d50e66bced8b3cf74d363f0b5112b"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+              "blob": "ddd481596ac9086f684572c8af57267da7f366cc"
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+              "blob": "244b8eb620d7d56939fd84aa69f804579ff3be93"
+            }
+          ]
+        },
+        "independentReview": {
+          "by": "/root/audit_checkpoint",
+          "status": "PASS_STATIC_DIAGNOSTIC_ONLY",
+          "mode": "GitHub MCP source/full-diff review and deterministic string checks; no local execution",
+          "fourOriginalFilesReverseByteExactlyToC3": true,
+          "originalEvaluateAwaits": 11,
+          "originalEffectsCallsAndGuardsPreserved": true,
+          "originalPreviewTimeoutMs": 60000,
+          "originalSensitivityTimeoutMs": 120000,
+          "diagnosticRequestedWindowMs": 45000,
+          "samplingIntervalUs": 10000,
+          "inactivePulseReadsClock": false,
+          "pulseEveryActiveDigestCalls": 1024,
+          "canonicalImportsOnlyIsomorphicPulseBridge": true,
+          "pulseBridgeHasNoRuntimeImports": true,
+          "loggerPulseAndFinishFailuresContained": true,
+          "maximumTraces": 16384,
+          "maximumSources": 4096,
+          "maximumFrames": 128,
+          "maximumSitesPerView": 4096,
+          "maximumCriticalPaths": 2048,
+          "maximumCriticalDepth": 12,
+          "topSelf": 60,
+          "topInclusive": 60,
+          "topNativeNearest": 60,
+          "topCritical": 20,
+          "nominalMaximumLines": 61,
+          "hardMaximumLines": 64,
+          "maximumAsciiLineBytesIncludingPrefixAndNewline": 4096,
+          "worstCriticalLineBytes": 3595,
+          "worstNativeNearestLineBytes": 3150,
+          "actualExportedCountsReported": true,
+          "readbackVerifiedCommitAndSnapshotPaths": true
+        },
+        "purpose": "Observe the first real Portfolio evaluate on the original Analytics journey; obtain native leaf to nearest repository attribution independent of critical-path map overflow.",
+        "interpretationLimit": "Whole-isolate observed stacks, not CPU or wall-time fractions. Native report allocation and effective native-stop time are not bounded or inferred. Source URLs and function names are filtered; no original request/assertion/deadline was replaced.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45237328267",
+        "workflowObservation": {
+          "observedAt": "2026-11-23T18:21:31Z",
+          "by": "/root/audit_checkpoint",
+          "status": "in_progress",
+          "conclusion": null,
+          "headSha": "0642397d1e218c4ea10eb1d9e43374b84f4f2a1b",
+          "createdAt": "2026-11-23T18:20:26Z",
+          "updatedAt": "2026-11-23T18:20:30Z"
         }
       }
     ]
