@@ -22,7 +22,7 @@ export type DesignInstallation = {
 }
 
 /** Node owns the Bun adapter's scope; the existing fixture owns the real CLI. */
-export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" = "one", options: { scanner?: { host: "127.0.0.1"; port: number } } = {}) {
+export async function withDesignInstallation<T>(use: (installation: DesignInstallation) => Promise<T>, wave: "one" | "two" | "three" | "four" | "four-decisions" | "four-memory" = "one", options: { scanner?: { host: "127.0.0.1"; port: number } } = {}) {
   const scanner = options.scanner
   if (scanner && (scanner.host !== "127.0.0.1" || !Number.isInteger(scanner.port) || scanner.port < 1 || scanner.port > 65535))
     throw new Error("The native capture scanner must be the qualified loopback ClamD")
