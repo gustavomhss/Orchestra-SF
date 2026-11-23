@@ -387,7 +387,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
         {(data) => <>
           <section class="mx-card sf-u18-section sf-decision-change-ledger" hidden={!!view.review}>
             <h2>{t("sf.u18.changes.title")}</h2>
-            <Show when={data().preparedChanges.length > 0} fallback={<p>{language.t("sf.common.empty")}</p>}>
+            <Show when={data().preparedChanges.length > 0} fallback={<Show when={active() !== "empty"}><p>{language.t("sf.common.empty")}</p></Show>}>
               <ul class="sf-u18-change-list">
                 <For each={data().preparedChanges}>
                   {(change) => <li>

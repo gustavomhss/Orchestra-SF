@@ -1,6 +1,7 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
+import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
 import { waveFourTest, enter, observePage } from "./design-support/wave-four"
 import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import { workflowPolishCoverage } from "./design-support/workflow-polish-coverage"
@@ -133,6 +134,7 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   expect(sourceArray(sourceObject(data.projection).values).length).toBeGreaterThan(0)
   await expect(detail.locator('[data-sf-bi-view="BI01"]')).toBeVisible()
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
+  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type > figcaption')
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("portfolio-qualification-limit", { contentType: "text/plain",
     body: "UI42/UI44 input capture is conditional on the original resource prerequisite. A partial resource records the actual leaf refusal instead. UI43 may be refused by original F01 or show a missing-result negative control. None of these states qualifies portfolio/sensitivity evaluation." })
@@ -141,6 +143,7 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
 waveFourTest("workflow polish: original agenda, preserved review, comparison and report selection", async ({ page, installation, owner }, info) => {
   waveFourTest.setTimeout(720_000)
   const diagnostics = observePage(page)
+  const sourceReviews = new Map<string, Schema.Schema.Type<typeof SfReviewPreserved>>()
   const agendaPath = "/orchestra/sf-reviews/agenda?year=" + installation.year
   const agenda = await open(page, owner, agendaPath, "Meeting agenda", "UI47")
   await expect(agenda.getByLabel("Source dashboard page", { exact: true })).toHaveValue("")
@@ -175,7 +178,22 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
     expect(original.status()).toBe(200)
     const body = sourceObject(await original.json())
     expect(body.status).toBe("ok")
-    expect(sourceArray(sourceObject(body.value).sections)).toHaveLength(1)
+    await info.attach("preserved-original-source-" + (sourceReviews.size + 1), {
+      contentType: "application/json", body: JSON.stringify(body, null, 2),
+    })
+    const originalReview = Schema.decodeUnknownSync(SfReviewPreserved)(body.value)
+    expect(originalReview.id).toBe(reference)
+    expect(originalReview.sections).toHaveLength(1)
+    for (const section of originalReview.sections) {
+      const projection = Schema.decodeUnknownSync(SfReviewDomainProjection)(section.content)
+      expect(projection.context).toMatchObject({
+        installationId: owner.installationId, projectId: owner.projectId, surface: "dashboard",
+        period: section.period,
+      })
+      expect(section.period).toEqual({ start: installation.year + "-01-01", end: installation.year + "-12-31" })
+      expect(projection.values.length).toBeGreaterThan(0)
+    }
+    sourceReviews.set(reference, originalReview)
     return reference
   }
   await prepare()
@@ -190,7 +208,11 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const review = await open(page, owner, "/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(previous), "Preserved review", "UI48")
   await expect(review.getByRole("region", { name: "Preserved section sequence", exact: true })).toBeVisible()
   await expect(review).toContainText(previous)
-  await record(page, info, "UI48", "original-preserved-review", "Original review re-read after its producer confirmed preservation; no client snapshot substituted.")
+  const originalValues = sourceReviews.get(previous)!.sections.flatMap((section) =>
+    Schema.decodeUnknownSync(SfReviewDomainProjection)(section.content).values)
+  await expect(review.locator(".sf-n28-values > div")).toHaveCount(originalValues.length)
+  await expect(review.getByText("This preserved section cannot be displayed as an authorized domain projection.", { exact: true })).toHaveCount(0)
+  await record(page, info, "UI48", "original-preserved-review", "Original review re-read after its producer confirmed preservation; every original projection value is rendered after the unchanged closed schema validates the source.")
   await page.getByRole("button", { name: "Present review", exact: true }).click()
   await expect(review).toHaveAttribute("data-sf-presentation", "true")
   await record(page, info, "UI48", "presentation", "Presentation mode of the same authorized preserved review, with original source provenance.", '[aria-label="Preserved review meeting"]')
@@ -325,10 +347,10 @@ waveFourTest("workflow polish: original memory inputs and explicit missing obser
     const similar = await open(page, owner, "/orchestra/sf-memory/cases", "Similar cases", "UI62")
     const selector = similar.locator(".sf-memory-similarity-form").getByRole("combobox")
     await expect(selector).toHaveCount(1)
-    const option = selector.getByRole("option").filter({ hasText: sourceText(selected.selected.objective) })
+    const option = selector.getByRole("option", { name: selected.title + " — " + selected.version, exact: true })
     await expect(option).toHaveCount(1)
-    const optionRef = sourceText(await option.getAttribute("value"))
-    await selector.selectOption(optionRef)
+    await expect(option).toHaveAttribute("value", selected.ref)
+    await selector.selectOption(selected.ref)
     await expect(similar.locator(".sf-memory-candidates")).toBeVisible({ timeout: 40_000 })
     await record(page, info, "UI62", "authorized-source-and-candidates", "Original authorized case and candidate choices; no similarity search result is inferred from another screen.")
   }

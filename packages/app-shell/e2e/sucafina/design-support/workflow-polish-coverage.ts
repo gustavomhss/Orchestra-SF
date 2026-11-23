@@ -38,13 +38,12 @@ export const workflowPolishCoverage = {
     },
     {
       "surface": "UI33",
-      "spec": "design-wave-four-decisions.spec.ts",
+      "spec": "design-wave-one.spec.ts",
       "states": [
         "original authorized case list",
-        "filtered empty",
-        "new-case prerequisites"
+        "original case editor and inline review"
       ],
-      "limits": "No creation command in the new visual checkpoints."
+      "limits": "Native first-wave evidence is recorded in the business receipt; UI33 is not counted as a Decisions4/5 capture."
     },
     {
       "surface": "UI34",
@@ -121,7 +120,7 @@ export const workflowPolishCoverage = {
         "missing prerequisite state",
         "prepared input only if the original model and operation exist"
       ],
-      "limits": "No invented model or run; absent selectors are asserted against the original catalog."
+      "limits": "No invented model or run; empty catalogs keep the original fields mounted and preparation disabled."
     },
     {
       "surface": "UI42",
@@ -163,7 +162,8 @@ export const workflowPolishCoverage = {
       "spec": "design-workflows.spec.ts",
       "states": [
         "original BI01 selection",
-        "original contextual financial values"
+        "original contextual financial values",
+        "first financial series label and units"
       ],
       "limits": "Exact source selection, period and nonempty producer values verified."
     },
@@ -374,9 +374,12 @@ export const workflowPolishCoverage = {
       "surface": "UI69",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original authorized local administration"
+        "original authorized summary settings",
+        "summary editor actions",
+        "unsent summary selection review and cancel",
+        "private profile/backups reader unavailable with its exact original reason"
       ],
-      "limits": "Read-only capture; no maintenance, restore or permission changes."
+      "limits": "Summary settings return200 with original owner/version/catalog. The separate projection returns503 local-operator-reader-not-bound; Profile/backups are not qualified. No configuration, maintenance, restore or Teams write is submitted."
     },
     {
       "surface": "UI70",
