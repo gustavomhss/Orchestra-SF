@@ -124,7 +124,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
       return
     }
     if (store.ownerKey !== state.ownerKey) {
-      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
+      // The owner is resolved, but no source read has been requested yet.
+      setStore({ ownerKey: state.ownerKey, sourcePage: "", selected: [], available: [], preview: undefined, preserved: undefined,
+        phase: "selecting", status: "empty", message: "sf.u25.sourceNeeded" })
       return
     }
     const source = untrack(() => store.sourcePage)
