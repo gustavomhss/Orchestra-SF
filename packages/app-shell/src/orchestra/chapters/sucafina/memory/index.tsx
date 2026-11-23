@@ -28,6 +28,7 @@ type MemoryViewState = {
   conditions: Conditions
   choices: readonly RecordedChoice[]
   signals: Signals
+  signalsState: ReadState | "cancelled"
   selectedCondition: string
   selectedChoice: string
   material: Material | null
@@ -52,8 +53,8 @@ const stateFrom = (result: MemoryOperationResult): SfUiState => {
   }
 }
 
-const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "outcomeIssue" | "listState" | "detailState" | "catalogState" | "message"> = {
-  active: null, catalog: [], conditions: [], choices: [], signals: [], selectedCondition: "", selectedChoice: "",
+const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "signalsState" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "outcomeIssue" | "listState" | "detailState" | "catalogState" | "message"> = {
+  active: null, catalog: [], conditions: [], choices: [], signals: [], signalsState: "idle", selectedCondition: "", selectedChoice: "",
   material: null, outcome: null, outcomeIssue: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
 }
 
@@ -83,6 +84,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     caseId: "", incarnation: "", versionText: "", ...EMPTY,
   })
   let listAbort: AbortController | undefined
+  let signalsAbort: AbortController | undefined
   let detailAbort: AbortController | undefined
   let catalogAbort: AbortController | undefined
   let requestEpoch = 0
@@ -100,6 +102,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   const clear = () => {
     requestEpoch += 1
     listAbort?.abort()
+    signalsAbort?.abort()
     detailAbort?.abort()
     catalogAbort?.abort()
     setView(EMPTY)
@@ -129,13 +132,14 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
         if (!signal.aborted && generation === owner.generation() && owner.ready()) setView("catalogState", "unavailable")
       })
   })
-  onCleanup(() => { requestEpoch += 1; listAbort?.abort(); detailAbort?.abort(); catalogAbort?.abort() })
+  onCleanup(() => { requestEpoch += 1; listAbort?.abort(); signalsAbort?.abort(); detailAbort?.abort(); catalogAbort?.abort() })
 
   const changeCase = (field: "caseId" | "incarnation" | "versionText", value: string) => {
     requestEpoch += 1
     listAbort?.abort()
+    signalsAbort?.abort()
     detailAbort?.abort()
-    setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
+    setView({ active: null, conditions: [], choices: [], signals: [], signalsState: "idle", material: null, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "idle", detailState: "idle", message: null })
     setView(field, value)
   }
@@ -157,6 +161,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const caseRef: CaseQuery = { caseId: selected.caseId, incarnation: selected.incarnation, version: selected.version }
     requestEpoch += 1
     listAbort?.abort()
+    signalsAbort?.abort()
     detailAbort?.abort()
     listAbort = new AbortController()
     const signal = listAbort.signal
@@ -165,7 +170,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const client = createSfMemoryClient(ready.transport)
     setView({
       active: { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version },
-      conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
+      conditions: [], choices: [], signals: [], signalsState: "idle", material: null, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "loading", detailState: "idle", message: null,
     })
     if (props.surfaceId === "UI63") {
@@ -206,27 +211,56 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
       setView({ choices, listState: choices.length ? "ready" : "empty" })
       return
     }
-    // Both are current ACL reads, not a cached similarity or re-evaluation.
-    const [conditions, signals] = await Promise.allSettled([
-      client["intelligence.memory-conditions"]({ caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version }, { signal }),
-      client["intelligence.memory-signals"]({ caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version }, { signal }),
-    ])
-    if (!current(epoch, generation, signal)) return
-    const c = conditions.status === "fulfilled" ? conditions.value : undefined
-    const s = signals.status === "fulfilled" ? signals.value : undefined
-    const cOk = c?.kind === "response" && c.body.status === "ok"
-    const sOk = s?.kind === "response" && s.body.status === "ok"
-    if (c?.kind === "response" && c.body.status === "denied" || s?.kind === "response" && s.body.status === "denied") {
-      setView({ conditions: [], signals: [], active: null, listState: "denied" })
+    // Recorded conditions are useful independently of the source's costly signal re-evaluation.
+    const result = await client["intelligence.memory-conditions"](
+      { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version }, { signal },
+    ).catch(() => undefined)
+    if (!current(epoch, generation, signal) || owner.ready() !== ready) return
+    if (result?.kind === "response" && result.body.status === "ok") {
+      setView({ conditions: result.body.value, listState: result.body.value.length ? "ready" : "empty" })
       return
     }
-    setView("conditions", cOk ? c.body.value : [])
-    setView("signals", sOk ? s.body.signals : [])
-    const state = cOk && sOk
-      ? c.body.value.length || s.body.signals.length ? "ready" : "empty"
-      : cOk || sOk ? "partial"
-      : c ? stateFrom(c) : s ? stateFrom(s) : "unavailable"
-    setView("listState", state)
+    setView({ conditions: [], listState: result ? stateFrom(result) : "unavailable" })
+    if (result?.kind === "response" && result.body.status === "denied") setView("active", null)
+  }
+  const readSignals = async () => {
+    const ready = owner.ready()
+    const selected = view.active
+    if (!ready || !selected || view.signalsState === "loading") return
+    const caseRef: CaseQuery = { caseId: selected.caseId, incarnation: selected.incarnation, version: selected.version }
+    signalsAbort?.abort()
+    const controller = new AbortController()
+    signalsAbort = controller
+    const epoch = requestEpoch
+    const generation = owner.generation()
+    setView({ signals: [], signalsState: "loading" })
+    const result = await createSfMemoryClient(ready.transport)["intelligence.memory-signals"](
+      caseRef, { signal: controller.signal },
+    ).catch(() => undefined)
+    if (!current(epoch, generation, controller.signal) || signalsAbort !== controller || owner.ready() !== ready ||
+        view.active?.caseId !== caseRef.caseId || view.active.incarnation !== caseRef.incarnation ||
+        view.active.version !== caseRef.version) return
+    if (result?.kind === "response" && result.body.status === "denied") {
+      // A denied source still erases the whole case view, including another in-flight detail.
+      requestEpoch += 1
+      listAbort?.abort()
+      signalsAbort?.abort()
+      detailAbort?.abort()
+      setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
+        selectedCondition: "", selectedChoice: "", listState: "denied", signalsState: "denied", detailState: "idle" })
+      return
+    }
+    if (result?.kind === "response" && result.body.status === "ok") {
+      setView({ signals: result.body.signals, signalsState: result.body.signals.length ? "ready" : "empty" })
+      return
+    }
+    setView({ signals: [], signalsState: result ? stateFrom(result) : "unavailable" })
+  }
+  const cancelSignals = () => {
+    if (view.signalsState !== "loading") return
+    signalsAbort?.abort()
+    signalsAbort = undefined
+    setView({ signals: [], signalsState: "cancelled" })
   }
   const readMateriality = async (conditionId: string) => {
     const ready = owner.ready()
@@ -328,6 +362,11 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     view.detailState === "stale" ? "sf.common.stale" :
     view.detailState === "invalid" ? "sf.common.invalidLink" :
     view.outcomeIssue === "coverage-incomplete" ? "sf.u26.incompleteOutcome" : "sf.common.unavailable"
+  const signalsMessage = (): keyof typeof SF_U26_COPY | "sf.common.noAccess" | "sf.common.stale" | "sf.common.unavailable" =>
+    view.signalsState === "loading" ? "sf.u26.signalsLoading" :
+    view.signalsState === "empty" ? "sf.u26.noSignals" :
+    view.signalsState === "denied" ? "sf.common.noAccess" :
+    view.signalsState === "stale" ? "sf.common.stale" : "sf.common.unavailable"
   const pageState = (): SfUiState =>
     privacy() !== "ready" ? privacy() :
     view.listState === "idle" ? "ready" :
@@ -416,18 +455,32 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
                   </ul>
                 </Show>
               </section>
-              <section class="sf-memory-section sf-section">
+              <section class="sf-memory-section sf-section" data-sf-memory-signals-state={view.signalsState}>
                 <h2>{t("sf.u26.signals")}</h2>
-                <Show when={view.signals.length} fallback={<p>{t("sf.u26.noSignals")}</p>}>
-                  <ul class="sf-memory-list">
-                    <For each={view.signals}>{(signal) => <li>
-                      <div><strong>{signal.label}</strong>
-                        <small>{t("sf.u26.materiality")}: {closed("sf.u26.impactState", signal.impact.state)} · {t("sf.u26.action")}: {t(signal.action === "open" ? "sf.u26.actionOpen" : signal.action === "update" ? "sf.u26.actionUpdate" : "sf.u26.actionNone")}</small>
-                        <p>{signal.impact.reason}</p>
-                        <small>{t("sf.u26.evidence")}: {signal.impact.current.length}</small>
-                      </div>
-                    </li>}</For>
-                  </ul>
+                <div class="sf-memory-actions">
+                  <button type="button" class="mx-btn" disabled={view.signalsState === "loading"}
+                    onClick={() => void readSignals()}>{t("sf.u26.readSignals")}</button>
+                  <Show when={view.signalsState === "loading"}>
+                    <button type="button" class="mx-btn" onClick={cancelSignals}>{t("sf.u26.cancelSignals")}</button>
+                  </Show>
+                </div>
+                <Show when={view.signalsState === "idle" || view.signalsState === "cancelled"} fallback={
+                  <SfStatePanel state={view.signalsState === "idle" || view.signalsState === "cancelled" ? "ready" : view.signalsState}
+                    messageKey={k(signalsMessage())}>
+                    <Show when={view.signals.length}>
+                      <ul class="sf-memory-list">
+                        <For each={view.signals}>{(signal) => <li>
+                          <div><strong>{signal.label}</strong>
+                            <small>{t("sf.u26.materiality")}: {closed("sf.u26.impactState", signal.impact.state)} · {t("sf.u26.action")}: {t(signal.action === "open" ? "sf.u26.actionOpen" : signal.action === "update" ? "sf.u26.actionUpdate" : "sf.u26.actionNone")}</small>
+                            <p>{signal.impact.reason}</p>
+                            <small>{t("sf.u26.evidence")}: {signal.impact.current.length}</small>
+                          </div>
+                        </li>}</For>
+                      </ul>
+                    </Show>
+                  </SfStatePanel>
+                }>
+                  <p role="status" class="sf-memory-help">{t(view.signalsState === "cancelled" ? "sf.u26.signalsCancelled" : "sf.u26.signalsIdle")}</p>
                 </Show>
               </section>
             </Show>
