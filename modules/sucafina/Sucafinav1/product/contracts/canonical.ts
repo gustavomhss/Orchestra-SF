@@ -126,7 +126,8 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
         predicates[index] = { key, expected, test: (value: unknown) => test(value) === true }
       }
       if (version && revision && captureOwn(version, "value") && captureOwn(revision, "value") &&
-        version.value === "1.3.14" && revision.value === "0d9b296af33f2b851fcbf4df3e9ec89751734ba4" &&
+        ((version.value === "1.3.14" && revision.value === "0d9b296af33f2b851fcbf4df3e9ec89751734ba4") ||
+          (version.value === "1.4.1" && revision.value === "4661e494f052c83c80dade1318e5710238340be6")) &&
         predicates.length === names.length) {
         originalProjectionRuntime = captureFreeze({
           reject: (value: unknown) => {
