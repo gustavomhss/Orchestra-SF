@@ -134,8 +134,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
   const evidence: { current?: BusinessContextService } = {}
   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
-  const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
-    ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
+  const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => {
+    console.info(recall.current ? "SF_DESIGN_STAGE recall-service-ready" : "SF_DESIGN_STAGE recall-service-unavailable")
+    return recall.current
+      ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
+  }
   const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
   const readDecisionEvidence = createSfProcurementEvidenceReadScope({ host, state: input.authority.state, contextFor,
     selection: selectedPeriod, readerIdentity: () => decisionEvidence.current?.resolveEvidence, lockedSourceFences,
@@ -536,13 +539,25 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     const originalMemory: { current?: ReturnType<typeof createSfAtlasBusiness>["memory"] } = {}
     const dashboardIssue = createDashboardSourceIssuer({ host, scopedSources: input.persistence })
     const featuresForCase = async (value: AuthorizedCaseProjection, call: TrustedDomainContext) => {
-      if (!await host.revalidate(call)) return undefined
+      console.info("SF_DESIGN_STAGE recall-features-start")
+      if (!await host.revalidate(call)) {
+        console.info("SF_DESIGN_STAGE recall-features-authority-refused")
+        return undefined
+      }
       const refreshed = await cases.read({ caseRef: encodeCaseRef(value.case) }, call)
+      console.info(refreshed.status === "ok" ? "SF_DESIGN_STAGE recall-features-source-ok" : "SF_DESIGN_STAGE recall-features-source-unavailable")
       if (refreshed.status !== "ok" || digestSfValue(refreshed.value.case) !== digestSfValue(value.case) ||
-        digestSfValue(refreshed.value.evidenceRefs) !== digestSfValue(value.evidenceRefs) || !await host.revalidate(call)) return undefined
+        digestSfValue(refreshed.value.evidenceRefs) !== digestSfValue(value.evidenceRefs) || !await host.revalidate(call)) {
+        console.info("SF_DESIGN_STAGE recall-features-source-refused")
+        return undefined
+      }
       const types = [...refreshed.value.evidenceRefs.flatMap((ref) => ref.kind === "record" ? [`${ref.target.surface}:${ref.target.recordType}`] : []),
         ...refreshed.value.case.preparedChanges.map((change) => `${change.target.surface}:${change.target.type}`)]
-      if (!types.length) return undefined
+      if (!types.length) {
+        console.info("SF_DESIGN_STAGE recall-features-type-unavailable")
+        return undefined
+      }
+      console.info("SF_DESIGN_STAGE recall-features-ok")
       return { decisionType: [...new Set(types)].sort().join("|"), horizon: digestSfValue(value.case.horizon),
         components: [...new Set(value.case.alternatives.flatMap((alternative) => alternative.result.components.map((component) => component.id)))].sort(),
         restrictions: [...new Set(value.case.criteria.filter((criterion) => criterion.required).map((criterion) => criterion.description))].sort(),
@@ -619,6 +634,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       featuresForCase, runtimeVersions: versions,
       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,
       selectCandidates: async (_source, call, scope) => {
+        console.info("SF_DESIGN_STAGE recall-candidates-start")
         const request = host.requestFor(call)
         if (!request || !await host.revalidate(call)) return undefined
         const selected = await input.authority.state.read(request, "cases", (stored, actor) => {
@@ -628,6 +644,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
           if (candidates.length > 500 || scope && candidates.length !== scope.recallScope.cases.length) return undefined
           return candidates.map((value) => ({ id: value.id, incarnation: value.incarnation })).sort((a, b) => a.id.localeCompare(b.id) || a.incarnation.localeCompare(b.incarnation))
         })
+        console.info(selected.status === "ok" && selected.value ? "SF_DESIGN_STAGE recall-candidates-source-ok" : "SF_DESIGN_STAGE recall-candidates-source-unavailable")
         return selected.status === "ok" && await host.revalidate(call) ? selected.value : undefined
       },
     })

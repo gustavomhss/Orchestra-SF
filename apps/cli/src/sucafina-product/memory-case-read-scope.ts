@@ -262,7 +262,9 @@ export function createSfMemoryCaseReadScope(input: {
     const key = caseKey(ref), readDigest = digestSfValue(incoming)
     // Never share a pending Promise or replace canonical recursion/cycle guards.
     if (scope.busy.has(key)) return input.read(incoming, call)
+    console.info("SF_DESIGN_STAGE recall-scope-case-fence-start")
     const before = await snapshot(scope, [ref])
+    console.info(before?.kind === "unsupported" ? "SF_DESIGN_STAGE recall-scope-case-fence-unsupported" : before?.kind === "sf-memory-case-fence" ? "SF_DESIGN_STAGE recall-scope-case-fence-ok" : "SF_DESIGN_STAGE recall-scope-case-fence-unavailable")
     if (before?.kind === "unsupported" && !scope.proofs.has(key)) return input.read(incoming, call)
     if (before?.kind !== "sf-memory-case-fence" || !current(scope)) { scope.invalid = true; return unavailable() }
     const proof = scope.proofs.get(key)
@@ -308,7 +310,9 @@ export function createSfMemoryCaseReadScope(input: {
     const ref = { id: incoming.id, incarnation: incoming.incarnation }, key = caseKey(ref)
     const inputDigest = digestSfValue(ref), argumentDigest = digestSfValue(incoming)
     if (scope.memoryBusy.has(key)) return work()
+    console.info("SF_DESIGN_STAGE recall-scope-memory-fence-start")
     const before = await snapshot(scope, [ref])
+    console.info(before?.kind === "unsupported" ? "SF_DESIGN_STAGE recall-scope-memory-fence-unsupported" : before?.kind === "sf-memory-case-fence" ? "SF_DESIGN_STAGE recall-scope-memory-fence-ok" : "SF_DESIGN_STAGE recall-scope-memory-fence-unavailable")
     if (before?.kind === "unsupported" && !scope.memories.has(key)) return work()
     if (before?.kind !== "sf-memory-case-fence" || !current(scope)) { scope.invalid = true; return { status: "unavailable" } }
     const proof = scope.memories.get(key)
@@ -341,37 +345,57 @@ export function createSfMemoryCaseReadScope(input: {
   }
   const observation = async <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,
     work: (scope?: Scope) => Promise<Value | undefined>): Promise<Value | undefined> => {
+    console.info("SF_DESIGN_STAGE recall-scope-start")
     if (call.kind !== "ui") return work()
     const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
-    if (!request || request.signal.aborted || active.has(call)) return undefined
-    if (!selection || !reader) return work()
+    if (!request || request.signal.aborted || active.has(call)) {
+      console.info("SF_DESIGN_STAGE recall-scope-request-refused")
+      return undefined
+    }
+    if (!selection || !reader) {
+      console.info("SF_DESIGN_STAGE recall-scope-canonical-fallback")
+      return work()
+    }
     const scope: Scope = { call, request, requestDigest: requestIdentity(request), selection, selectionDigest: digestSfValue(selection), reader,
       binding: digestSfValue([call.kind, call.binding]), bindingIdentity: call.binding, lease: call.lease, incoming, inputDigest: digestSfValue(incoming),
       open: true, invalid: false, busy: new Set(), proofs: new Map(), memoryBusy: new Set(), memories: new Map() }
     active.set(call, scope)
     try {
       return await local.run(scope, () => withSfAtlasRecallObservation(call, () => current(scope), async () => {
-        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return undefined
+        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) {
+          console.info("SF_DESIGN_STAGE recall-scope-admission-refused")
+          return undefined
+        }
+        console.info("SF_DESIGN_STAGE recall-scope-work-start")
         const result = await work(scope)
+        console.info(result === undefined ? "SF_DESIGN_STAGE recall-scope-work-unavailable" : "SF_DESIGN_STAGE recall-scope-work-ok")
         if (result === undefined || !current(scope)) return undefined
         const proofs = [...scope.proofs.values()]
         const memories = [...scope.memories.values()]
         if (proofs.length || memories.length) {
           const refs = [...new Map([...proofs, ...memories].map((proof) => [caseKey(proof.ref), proof.ref])).values()]
+          console.info("SF_DESIGN_STAGE recall-scope-final-fence-start")
           const final = await snapshot(scope, refs)
+          console.info(final?.kind === "sf-memory-case-fence" ? "SF_DESIGN_STAGE recall-scope-final-fence-ok" : "SF_DESIGN_STAGE recall-scope-final-fence-unavailable")
           if (final?.kind !== "sf-memory-case-fence" || [...proofs, ...memories].some((proof) => proof.fence !== final.digest) ||
             proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return undefined
         } else if (!await input.host.revalidate(call) || !current(scope)) return undefined
+        console.info("SF_DESIGN_STAGE recall-scope-ok")
         return structuredClone(result)
       }))
-    } catch { return undefined }
+    } catch {
+      console.info("SF_DESIGN_STAGE recall-scope-caught")
+      return undefined
+    }
     finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); if (active.get(call) === scope) active.delete(call) }
   }
   const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext, work: () => ReturnType<Recall>): ReturnType<Recall> => {
     const result = await observation(incoming, call, async () => {
       const result = await work()
+      console.info(result.status === "ok" ? "SF_DESIGN_STAGE recall-scope-canonical-ok" : "SF_DESIGN_STAGE recall-scope-canonical-unavailable")
       return result.status === "ok" ? result : undefined
     })
+    console.info(result ? "SF_DESIGN_STAGE recall-scope-result-ok" : "SF_DESIGN_STAGE recall-scope-result-unavailable")
     return result ?? { status: "unavailable" }
   }
   // Each producer/verifier pass creates a new scope; its two independent Atlas

@@ -606,6 +606,7 @@ export async function rankSfAtlasRecall(input: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
 }) {
   try {
+    console.info("SF_DESIGN_STAGE recall-rank-start")
     const call = input.call, lease = call.lease
     const selection = () => digestSfValue({ caseRefs: input.caseRefs, features: input.features,
       runtimeVersions: input.runtimeVersions, kind: call.kind, binding: call.binding })
@@ -618,14 +619,18 @@ export async function rankSfAtlasRecall(input: {
     const sourceVersions: Record<string, number> = {}
     const sourceIncarnations: Record<string, string> = {}
     for (const caseRef of input.caseRefs) {
+      console.info("SF_DESIGN_STAGE recall-rank-memory-start")
       const read = await input.memory.recall(caseRef, input.call)
+      console.info(read.status === "ok" ? "SF_DESIGN_STAGE recall-rank-memory-ok" : "SF_DESIGN_STAGE recall-rank-memory-unavailable")
       if (read.status !== "ok") return { status: "unavailable" as const }
       const key = JSON.stringify([caseRef.id, caseRef.incarnation])
       if (observations.has(key)) return { status: "unavailable" as const }
       observations.set(key, { records: read.records, fingerprint: digestSfValue(read.records.map(recallRecordFingerprint)) })
       completionGroups.set(key, read.records)
       for (const record of read.records) {
+        console.info("SF_DESIGN_STAGE recall-rank-features-start")
         const features = await input.featuresForCase(record.case, input.call)
+        console.info(features ? "SF_DESIGN_STAGE recall-rank-features-ok" : "SF_DESIGN_STAGE recall-rank-features-unavailable")
         if (!features) return { status: "unavailable" as const }
         for (const resolution of record.resolutions) {
           if (!resolution.currentRef) return { status: "unavailable" as const }
@@ -644,6 +649,7 @@ export async function rankSfAtlasRecall(input: {
       }
     }
     const scope: RecallScope = { installationId: input.call.binding.installationId, projectId: input.call.binding.projectId, principalRef: input.call.binding.principalRef, accessRevision: input.call.binding.accessRevision, policyVersion: input.call.binding.policyVersion, ...input.runtimeVersions, sourceVersions, sourceIncarnations }
+    console.info("SF_DESIGN_STAGE recall-rank-authorized-start")
     const ranked = await rankSfRecalledCasesAuthorized({
       scope, features: input.features, candidates, call: input.call, proveContinuity: input.proveContinuity, revalidate: input.revalidate,
       authorizeAtlas: async (candidate, call, phase) => {
@@ -664,6 +670,7 @@ export async function rankSfAtlasRecall(input: {
         return true
       },
     })
+    console.info(ranked.status === "ok" ? "SF_DESIGN_STAGE recall-rank-authorized-ok" : "SF_DESIGN_STAGE recall-rank-authorized-unavailable")
     if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate)) || !stable()) return { status: "unavailable" as const }
     const records: AtlasRecallRecord[] = []
     for (const candidate of candidates) {
@@ -678,9 +685,14 @@ export async function rankSfAtlasRecall(input: {
     const resultDigest = digestSfValue(result)
     // Ranking performs continuity/authority awaits after its last per-candidate
     // read. Reopen the complete private observations once, after all of them.
+    console.info("SF_DESIGN_STAGE recall-rank-egress-start")
     if (completionGroups.size ? !await revalidateSfAtlasRecall([...completionGroups.values()], input.call) :
       input.caseRefs.length !== 0 || !await input.revalidate(input.call)) return { status: "unavailable" as const }
     if (!stable() || resultDigest !== digestSfValue(result)) return { status: "unavailable" as const }
+    console.info("SF_DESIGN_STAGE recall-rank-ok")
     return result
-  } catch { return { status: "unavailable" as const } }
+  } catch {
+    console.info("SF_DESIGN_STAGE recall-rank-caught")
+    return { status: "unavailable" as const }
+  }
 }

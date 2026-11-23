@@ -35,6 +35,7 @@ export function createSfCaseRecall(input: {
 }) {
   const recall = async (request: RecallRequest, call: TrustedDomainContext): Promise<RecallResult> => {
     try {
+      console.info("SF_DESIGN_STAGE recall-canonical-start")
       const wanted = structuredClone(request)
       const requestDigest = digestSfValue(wanted)
       const source = input.host.requestFor(call)
@@ -54,41 +55,66 @@ export function createSfCaseRecall(input: {
         return result
       }
       const read = async () => {
+        console.info("SF_DESIGN_STAGE recall-canonical-source-start")
         const current = await input.cases.read({ caseRef: encodeCaseRef(wanted.caseRef) }, call)
-        if (current.status !== "ok" || !sameAuthority(current.value, call) || current.value.case.id !== wanted.caseRef.id || current.value.case.incarnation !== wanted.caseRef.incarnation || (wanted.caseRef.version !== undefined && current.value.case.version !== wanted.caseRef.version)) return undefined
-        if (wanted.scope && (!wanted.scope.query.trim() || digestSfValue(wanted.scope.recallScope.period) !== digestSfValue(current.value.case.horizon))) return undefined
+        console.info(current.status === "ok" ? "SF_DESIGN_STAGE recall-canonical-source-ok" : "SF_DESIGN_STAGE recall-canonical-source-unavailable")
+        if (current.status !== "ok" || !sameAuthority(current.value, call) || current.value.case.id !== wanted.caseRef.id || current.value.case.incarnation !== wanted.caseRef.incarnation || (wanted.caseRef.version !== undefined && current.value.case.version !== wanted.caseRef.version)) {
+          console.info("SF_DESIGN_STAGE recall-canonical-source-refused")
+          if (current.status === "ok" && !sameAuthority(current.value, call)) console.info("SF_DESIGN_STAGE recall-canonical-authority-mismatch")
+          return undefined
+        }
+        if (wanted.scope && (!wanted.scope.query.trim() || digestSfValue(wanted.scope.recallScope.period) !== digestSfValue(current.value.case.horizon))) {
+          console.info("SF_DESIGN_STAGE recall-canonical-period-refused")
+          return undefined
+        }
+        console.info("SF_DESIGN_STAGE recall-canonical-features-start")
         const features = await input.featuresForCase(current.value, call)
+        console.info(features ? "SF_DESIGN_STAGE recall-canonical-features-ok" : "SF_DESIGN_STAGE recall-canonical-features-unavailable")
+        console.info("SF_DESIGN_STAGE recall-canonical-candidates-start")
         const refs = await input.selectCandidates(current.value, call, wanted.scope)
+        console.info(refs ? "SF_DESIGN_STAGE recall-canonical-candidates-ok" : "SF_DESIGN_STAGE recall-canonical-candidates-unavailable")
         if (!features || !refs || refs.some((ref) => !ref.id || !ref.incarnation) || new Set(refs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== refs.length) return undefined
         if (nativeBinding && refs.some((ref) => ref.id !== nativeBinding.caseId || ref.incarnation !== nativeBinding.caseIncarnation)) return undefined
         for (const ref of refs) {
+          console.info("SF_DESIGN_STAGE recall-canonical-candidate-start")
           const candidate = await input.cases.read({ caseRef: encodeCaseRef(ref) }, call)
+          console.info(candidate.status === "ok" ? "SF_DESIGN_STAGE recall-canonical-candidate-ok" : "SF_DESIGN_STAGE recall-canonical-candidate-unavailable")
           if (candidate.status !== "ok" || candidate.value.case.id !== ref.id || candidate.value.case.incarnation !== ref.incarnation || !sameAuthority(candidate.value, call)) return undefined
           if (wanted.scope && !wanted.scope.recallScope.cases.some((allowed) => allowed.id === ref.id && allowed.incarnation === ref.incarnation && allowed.version === candidate.value.case.version)) return undefined
         }
         return { case: current.value.case, context: current.value.context, evidenceRefs: current.value.evidenceRefs, events: current.value.events, features, refs }
       }
       const selected = await read()
+      console.info(selected ? "SF_DESIGN_STAGE recall-canonical-selection-ok" : "SF_DESIGN_STAGE recall-canonical-selection-unavailable")
       if (!selected || source.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" as const }
       const rankInput: RankInput = { memory: input.memory, caseRefs: selected.refs, features: selected.features, featuresForCase: input.featuresForCase, runtimeVersions: input.runtimeVersions, call, proveContinuity: input.proveContinuity, revalidate: input.host.revalidate }
+      console.info("SF_DESIGN_STAGE recall-canonical-rank-start")
       const ranked = await input.rank(rankInput)
+      console.info(ranked.status === "ok" ? "SF_DESIGN_STAGE recall-canonical-rank-ok" : "SF_DESIGN_STAGE recall-canonical-rank-unavailable")
       if (ranked.status !== "ok") return { status: "unavailable" as const }
       const eligible = ranked.cases.filter((item) => wanted.scope?.recallScope.includeHistorical !== false || !item.sourceStates.includes("historical"))
       if (wanted.scope && eligible.length > wanted.limit) return { status: "unavailable" as const }
       const matches = []
       for (const match of eligible.slice(0, wanted.limit)) {
         if (!selected.refs.some((ref) => ref.id === match.candidateCaseRef.id && ref.incarnation === match.candidateCaseRef.incarnation)) return { status: "unavailable" as const }
+        console.info("SF_DESIGN_STAGE recall-canonical-memory-start")
         const recalled = await input.memory.recall(match.candidateCaseRef, call)
+        console.info(recalled.status === "ok" ? "SF_DESIGN_STAGE recall-canonical-memory-ok" : "SF_DESIGN_STAGE recall-canonical-memory-unavailable")
         if (recalled.status !== "ok") return { status: "unavailable" as const }
         const records = recalled.records.filter((record) => record.recordDigest === match.atlasTrace.recordDigest)
         if (records.length !== 1) return { status: "unavailable" as const }
         matches.push({ caseRef: match.candidateCaseRef, memoryRecordRef: records[0]!.envelope.eventId, explanation: { candidateCaseRef: match.candidateCaseRef, matchedCriteria: match.matchedCriteria, currentDifferences: match.currentDifferences, sourceStates: match.sourceStates, limitations: match.limitations }, evidenceRefs: records[0]!.envelope.evidenceRefs })
       }
+      console.info("SF_DESIGN_STAGE recall-canonical-rerank-start")
       const checked = await input.rank(rankInput)
+      console.info(checked.status === "ok" ? "SF_DESIGN_STAGE recall-canonical-rerank-ok" : "SF_DESIGN_STAGE recall-canonical-rerank-unavailable")
       const again = await read()
+      console.info(again ? "SF_DESIGN_STAGE recall-canonical-reselection-ok" : "SF_DESIGN_STAGE recall-canonical-reselection-unavailable")
       if (!await input.host.revalidate(call) || checked.status !== "ok" || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || !again || digestSfValue(again) !== digestSfValue(selected) || source.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || digestSfValue(wanted) !== requestDigest || digestSfValue(request) !== requestDigest) return { status: "unavailable" as const }
+      console.info("SF_DESIGN_STAGE recall-canonical-ok")
       return { status: "ok" as const, matches, limitations: [...new Set(matches.flatMap((item) => item.explanation.limitations))], accessRevision: call.binding.accessRevision }
     } catch {
+      console.info("SF_DESIGN_STAGE recall-canonical-caught")
       return { status: "unavailable" as const }
     }
   }

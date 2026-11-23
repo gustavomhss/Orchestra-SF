@@ -59,6 +59,7 @@ function allowedSource(source: Awaited<ReturnType<BusinessContextService["resolv
  */
 export function createSfSimilarCases217(deps: Dependencies) {
   return async (input: SfSimilarity217Request, call: TrustedDomainContext) => {
+    console.info("SF_DESIGN_STAGE recall-similarity-start")
     if (call.kind !== "ui") return { status: "denied" as const, reason: "similarity-current-ui-authority-required" }
     const ref = { id: input.caseId, incarnation: input.incarnation, version: input.version }
     const candidates = input.candidates
@@ -76,7 +77,9 @@ export function createSfSimilarCases217(deps: Dependencies) {
     const current = () => !request.signal.aborted && deps.host.requestFor(call) === request &&
       captured === digestSfValue(input) && binding === digestSfValue([call.kind, call.binding])
     try {
+      console.info("SF_DESIGN_STAGE recall-similarity-source-start")
       const original = await deps.cases.read({ caseRef: encodeCaseRef(ref) }, call)
+      console.info(original.status === "ok" ? "SF_DESIGN_STAGE recall-similarity-source-ok" : "SF_DESIGN_STAGE recall-similarity-source-unavailable")
       if (original.status !== "ok" || original.value.case.version !== ref.version ||
         !same(original.value.case.horizon, input.period) || !current())
         return { status: "denied" as const, reason: "similarity-current-case-unavailable" }
@@ -86,17 +89,23 @@ export function createSfSimilarCases217(deps: Dependencies) {
         scope: { query: input.query, recallScope: { cases: candidates, period: input.period, includeHistorical: input.includeHistorical } },
       }
       // Original C09 case read + real Atlas memory rank/retrace. No local rank.
+      console.info("SF_DESIGN_STAGE recall-similarity-first-start")
       const first = await deps.caseRecall(recallInput, call)
-      if (first.status !== "ok" || first.accessRevision !== call.binding.accessRevision || !current())
+      console.info(first.status === "ok" ? "SF_DESIGN_STAGE recall-similarity-first-ok" : "SF_DESIGN_STAGE recall-similarity-first-unavailable")
+      if (first.status !== "ok" || first.accessRevision !== call.binding.accessRevision || !current()) {
+        console.info("SF_DESIGN_STAGE recall-similarity-first-refused")
         return { status: "unavailable" as const, reason: "similarity-source-unavailable" }
+      }
       const dedup = new Map<string, (typeof first.matches)[number]>()
       for (const match of first.matches) {
         if (!candidates.some((item) => same(item, match.caseRef)) ||
           !same(match.caseRef, match.explanation.candidateCaseRef) ||
           !match.memoryRecordRef || !match.evidenceRefs.length ||
           !match.explanation.matchedCriteria.includes("decision-type") ||
-          !input.includeHistorical && match.explanation.sourceStates.includes("historical"))
+          !input.includeHistorical && match.explanation.sourceStates.includes("historical")) {
+          console.info("SF_DESIGN_STAGE recall-similarity-match-refused")
           return { status: "unavailable" as const, reason: "similarity-source-unavailable" }
+        }
         const key = JSON.stringify([identity(match.caseRef), match.memoryRecordRef])
         const previous = dedup.get(key)
         if (previous && !same(previous, match))
@@ -106,11 +115,15 @@ export function createSfSimilarCases217(deps: Dependencies) {
       const matches = [...dedup.values()]
       const refs = [...new Map(matches.flatMap((m) => m.evidenceRefs).map((e) => [e.refDigest, e])).values()]
       // All matches have the same original current-access scope; no public Atlas dump.
+      console.info("SF_DESIGN_STAGE recall-similarity-evidence-start")
       const sources = await deps.context.context({ refs }, call)
+      console.info("SF_DESIGN_STAGE recall-similarity-evidence-end")
       if (sources.length !== refs.length || sources.some((source, index) =>
         !allowedSource(source, refs[index]!, call, input.includeHistorical)))
         return { status: "denied" as const, reason: "similarity-source-revoked" }
+      console.info("SF_DESIGN_STAGE recall-similarity-second-start")
       const second = await deps.caseRecall(recallInput, call)
+      console.info(second.status === "ok" ? "SF_DESIGN_STAGE recall-similarity-second-ok" : "SF_DESIGN_STAGE recall-similarity-second-unavailable")
       const again = await deps.cases.read({ caseRef: encodeCaseRef(ref) }, call)
       if (second.status !== "ok" || second.accessRevision !== first.accessRevision ||
         !same(second.matches, first.matches) || !same(second.limitations, first.limitations) ||
@@ -118,12 +131,14 @@ export function createSfSimilarCases217(deps: Dependencies) {
         !same(again.value.evidenceRefs, original.value.evidenceRefs) ||
         !current() || !await deps.host.revalidate(call) || !current())
         return { status: "unavailable" as const, reason: "similarity-scope-changed" }
+      console.info("SF_DESIGN_STAGE recall-similarity-ok")
       return {
         status: "ok" as const, matches,
         limitations: first.limitations, accessRevision: first.accessRevision,
         cutoff: { caseRef: ref, period: input.period, includeHistorical: input.includeHistorical },
       }
     } catch {
+      console.info("SF_DESIGN_STAGE recall-similarity-caught")
       return { status: "unavailable" as const, reason: "similarity-source-unavailable" }
     }
   }
