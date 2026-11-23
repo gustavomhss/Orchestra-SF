@@ -11,7 +11,7 @@ import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav
 import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ForecastCompareRequest, WorkListRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
-import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DecisionCasePort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase, DocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -51,6 +51,7 @@ import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfFinancePairObservation } from "./finance-pair-observation.ts"
 import { createSfPlannerRecordProofScope, pinSfPlannerRecordReaders } from "./planner-record-proof-scope.ts"
+import { createSfPlannerRecallObservation } from "./planner-recall-observation.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
@@ -136,6 +137,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
   const evidence: { current?: BusinessContextService } = {}
   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
+  const plannerRecall: { current?: ReturnType<typeof createSfPlannerRecallObservation> } = {}
   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
     ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
   const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
@@ -186,7 +188,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
     readMemoryCanonical: (records, call, work) => memoryRecordRead(records, call, work),
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
-  const cases = { ...canonicalCases, read: memoryCaseScope.read }
+  const readCase: DecisionCasePort["read"] = (request, call) => {
+    const observer = plannerRecall.current
+    return observer ? observer.read(request, call, () => memoryCaseScope.read(request, call)) : memoryCaseScope.read(request, call)
+  }
+  const cases = { ...canonicalCases, read: readCase }
   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
     const canonical = recall.current
     return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
@@ -472,6 +478,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   let canonicalPlannerAtlas: { value: BusinessContextService; current: () => boolean } | undefined
   const plannerRecordProof = createSfPlannerRecordProofScope({ host, readersCurrent: () => canonicalPlannerReaders() &&
     !!canonicalPlannerAtlas && evidence.current === canonicalPlannerAtlas.value && canonicalPlannerAtlas.current() })
+  const plannerReaderIdentities = () => [forecastCoverage.current,
+    ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
+      decisionDomain.current?.proposalCoverage, baselineCoverage, projectPlannerEvidence].flatMap((reader) =>
+      reader ? [reader, ...Object.entries(reader).flat()] : [reader])]
+  plannerRecall.current = createSfPlannerRecallObservation({ host, state: input.authority.state,
+    recordProof: plannerRecordProof, lockedSourceFences,
+    readerIdentities: () => [...plannerReaderIdentities(), recall.current, memoryCaseScope.read, plannerRecall.current] })
   const withPlannerObservation = createSfFinancePairObservation({
     host, state: input.authority.state, lockedSourceFences, recordProof: plannerRecordProof,
     selectedScope: (call) => {
@@ -483,10 +496,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         scope.request === request && scope.bindingDigest === binding &&
         currentCaseAuthority(call, request, binding) && digestSfValue(scope.selected) === selectedDigest }
     },
-    readerIdentities: () => [forecastCoverage.current,
-      ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
-        decisionDomain.current?.proposalCoverage, baselineCoverage, projectPlannerEvidence].flatMap((reader) =>
-        reader ? [reader, ...Object.entries(reader).flat()] : [reader])],
+    readerIdentities: plannerReaderIdentities,
   })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
@@ -628,7 +638,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
     canonicalPlannerAtlas = { value: atlas.context, current: pinSfPlannerRecordReaders([atlas.context]) }
-    recall.current = createSfCaseRecall({ host, cases,
+    const canonicalRecall = createSfCaseRecall({ host, cases,
       ...(input.reviewerRecall ? { candidateAccess: input.reviewerRecall.candidateAccess } : {}),
       memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },
       featuresForCase, runtimeVersions: versions,
@@ -646,6 +656,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         return selected.status === "ok" && await host.revalidate(call) ? selected.value : undefined
       },
     })
+    recall.current = (request, call) => {
+      const observer = plannerRecall.current
+      return observer ? observer.recall(request, call, () => canonicalRecall(request, call)) : canonicalRecall(request, call)
+    }
     atlasState.current = { memory: atlas.memory, proveContinuity: atlas.proveContinuity, featuresForCase, runtimeVersions: structuredClone(versions) }
     clearAtlasDescriptors()
     for (const descriptor of atlas.capabilities) { descriptors.push(descriptor); atlasDescriptors.add(descriptor) }
@@ -796,5 +810,5 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     caseRecallSource: () => recall.current && evidence.current && atlasState.current
       ? { recall: recall.current, evidence: evidence.current, atlas: atlasState.current } : undefined,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; plannerRecall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }
