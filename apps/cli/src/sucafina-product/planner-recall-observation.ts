@@ -9,6 +9,7 @@ import type { SfProductStatePort } from "../../../../modules/sucafina/Sucafinav1
 import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
 import { deriveSfMemoryOwner } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { plannerRecordMaterialized } from "./finance-pair-observation.ts"
@@ -17,12 +18,13 @@ import { plannerRequestIdentity } from "./planner-calculation-read-scope.ts"
 import { pinSfPlannerRecordReaders, type createSfPlannerRecordProofScope } from "./planner-record-proof-scope.ts"
 
 type Recall = ReturnType<typeof createSfCaseRecall>
-type CaseRef = { id: string; incarnation: string; version?: number }
+type CaseRef = { id: string; incarnation: string; version: number }
+type CaseSelection = { ref: CaseRef; current: () => boolean }
 type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Plan = { cases: readonly CaseRef[]; memory: readonly CaseRef[]; period?: Period }
 type Witness = { kind: "current"; digest: string; environment: string; refs: readonly PlannerRecord[];
   principalDigest: string; plannerRoleMap: ReturnType<typeof roleMap> } | { kind: "unsupported" }
-type Frame = { call: TrustedDomainContext; cases: ReadonlySet<string>; open: boolean; invalid: boolean; pending: number; current: () => boolean }
+type Frame = { call: TrustedDomainContext; cases: ReadonlyMap<string, number>; open: boolean; invalid: boolean; pending: number; current: () => boolean }
 
 /** Own each eligible case read or explicit Recall, retaining every canonical case and Atlas pass. */
 export function createSfPlannerRecallObservation(input: {
@@ -31,10 +33,11 @@ export function createSfPlannerRecallObservation(input: {
   recordProof: ReturnType<typeof createSfPlannerRecordProofScope>
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   readerIdentities: () => readonly unknown[]
+  selectedScope?: (call: TrustedDomainContext) => CaseSelection | undefined
 }) {
   const host = input.host, state = input.state, recordProof = input.recordProof
   const readState = state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
-  const observeRecords = recordProof.run
+  const observeRecords = recordProof.run, selectedScope = input.selectedScope
   const pinned = pinSfPlannerRecordReaders([input, host, host.persistence, state, recordProof])
   const root = createSfPlannerCalculationRoot({ host })
   const frames = new AsyncLocalStorage<Frame>()
@@ -43,7 +46,7 @@ export function createSfPlannerRecallObservation(input: {
   const unavailable = () => ({ status: "unavailable", reason: "planner-recall-observation-changed" } as const)
 
   const observe = async <Value>(plan: Plan, incoming: unknown, call: TrustedDomainContext,
-    work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    work: () => Promise<PortResult<Value>>, selection?: CaseSelection): Promise<PortResult<Value>> => {
     try {
       if (!root.allows(call) || active.has(call)) return unavailable()
       if (call.kind !== "ui" || call.binding.principalRef.startsWith("local:") || !pinned()) return work()
@@ -58,9 +61,11 @@ export function createSfPlannerRecallObservation(input: {
       const bindingDigest = digestSfValue([call.kind, binding]), requestDigest = plannerRequestIdentity(request)
       const selected = structuredClone(plan), planDigest = digestSfValue(plan), inputDigest = digestSfValue(incoming)
       const identities = [...readers()]
+      const selectionCurrent = selection?.current, selectionRef = selection?.ref
       const current = () => pinned() && input.host === host && input.state === state && input.recordProof === recordProof &&
         state.read === readState && recordProof.run === observeRecords && input.lockedSourceFences === lockedFences &&
-        input.readerIdentities === readers && host.persistence === persistence && sameReaders(readers(), identities) &&
+        input.readerIdentities === readers && input.selectedScope === selectedScope && host.persistence === persistence && sameReaders(readers(), identities) &&
+        (!selection || selection.current === selectionCurrent && selection.ref === selectionRef && selectionCurrent?.() === true) &&
         host.requestFor(call) === request && !request.signal.aborted && call.binding === binding && call.lease === lease &&
         digestSfValue([call.kind, call.binding]) === bindingDigest && plannerRequestIdentity(request) === requestDigest &&
         digestSfValue(plan) === planDigest && digestSfValue(selected) === planDigest && digestSfValue(incoming) === inputDigest
@@ -72,14 +77,14 @@ export function createSfPlannerRecallObservation(input: {
       const sameActor = (actor: { principalRef: string; accessRevision: string; policyVersion: string }) =>
         actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
         actor.policyVersion === call.binding.policyVersion
-      const witness = async (): Promise<Witness | undefined> => {
+      const witness = async (beforeAdmission = false): Promise<Witness | undefined> => {
         const observed = await readState(request, "cases", async (stored, actor) => {
           if (!current() || !sameActor(actor)) return undefined
           const cases: DecisionCase[] = [], refs = new Map<string, PlannerRecord>()
           for (const ref of selected.cases) {
             const value = stored.cases[ref.id]
-            if (!value || value.id !== ref.id || value.incarnation !== ref.incarnation ||
-              ref.version !== undefined && value.version !== ref.version || !value.participants.includes(actor.principalRef)) return undefined
+            if (!value || value.id !== ref.id || value.incarnation !== ref.incarnation || !value.participants.includes(actor.principalRef)) return undefined
+            if (value.version !== ref.version) return beforeAdmission ? unsupported : undefined
             if (selected.period && digestSfValue(value.horizon) !== digestSfValue(selected.period) || !plannerCase(value, call, refs))
               return unsupported
             cases.push(value)
@@ -151,14 +156,14 @@ export function createSfPlannerRecallObservation(input: {
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
-        const before = await witness()
+        const before = await witness(true)
         if (!before) return unavailable()
         if (before.kind === "unsupported") return { status: "ok", value: unsupported }
         const token = root.proof(call)
         if (!token) return { status: "ok", value: unsupported }
         const owner = readSfPlannerCalculationRootProof(token, host, call)
         if (!owner || !owner.current()) return unavailable()
-        const frame: Frame = { call, cases: new Set(selected.cases.map(caseKey)), open: true, invalid: false, pending: 0,
+        const frame: Frame = { call, cases: new Map(selected.cases.map((ref) => [caseKey(ref), ref.version])), open: true, invalid: false, pending: 0,
           current: () => {
             if (frame.invalid) return false
             try {
@@ -178,7 +183,11 @@ export function createSfPlannerRecallObservation(input: {
         active.set(call, frame)
         let result: PortResult<Value>
         try {
-          result = await frames.run(frame, () => observeRecords(before.refs, call, token, authorize, () => frame.current(), work))
+          result = await frames.run(frame, () => observeRecords(before.refs, call, token, authorize, () => frame.current(), async () => {
+            const detached = structuredClone(await work())
+            if (selection && !caseResultMatches(detached, selected.cases[0]!)) { frame.invalid = true; return unavailable() }
+            return detached
+          }))
           if (frame.invalid || frame.pending || !current() || !owner.current()) return unavailable()
         } finally {
           frame.open = false
@@ -201,41 +210,71 @@ export function createSfPlannerRecallObservation(input: {
   }
 
   const read = async (incoming: Parameters<DecisionCasePort["read"]>[0], call: TrustedDomainContext,
-    work: () => ReturnType<DecisionCasePort["read"]>): ReturnType<DecisionCasePort["read"]> => {
-    const ref = parseCaseRef(incoming.caseRef), frame = frames.getStore()
+    work: () => ReturnType<DecisionCasePort["read"]>, selection?: CaseSelection): ReturnType<DecisionCasePort["read"]> => {
+    const frame = frames.getStore()
+    let ref: ReturnType<typeof parseCaseRef>, selected: CaseSelection | undefined
+    // Classification alone may fall back. Once an owner runs work, a refusal
+    // never replays that producer under a different path.
+    try {
+      const parsed = decodeSfOperationInput("sf_case_read", incoming)
+      ref = parsed.ok ? parseCaseRef(parsed.value.caseRef) : undefined
+      selected = selection ?? (frame ? undefined : selectedScope?.(call))
+      if (selected && (!versionedCaseRef(selected.ref) || typeof selected.current !== "function")) selected = undefined
+    } catch { ref = undefined }
     if (frame) {
-      if (frame.call !== call || !ref || !frame.cases.has(caseKey(ref)) || !frame.current()) {
-        frame.invalid = true
-        return unavailable()
-      }
-      const digest = digestSfValue(incoming)
       frame.pending++
       try {
-        const result = await work()
-        if (!frame.current() || digestSfValue(incoming) !== digest) { frame.invalid = true; return unavailable() }
+        const version = ref && frame.cases.get(caseKey(ref))
+        if (frame.call !== call || !ref || version === undefined || !frame.current() ||
+          selection && (!selected || caseKey(selected.ref) !== caseKey(ref) || selected.ref.version !== version || !selected.current())) {
+          frame.invalid = true
+          return unavailable()
+        }
+        const digest = digestSfValue(incoming), hint = selected?.ref, hintCurrent = selected?.current
+        const hintDigest = hint && digestSfValue(hint)
+        const result = structuredClone(await work())
+        if (!frame.current() || digestSfValue(incoming) !== digest ||
+          selected && (selected.ref !== hint || selected.current !== hintCurrent || digestSfValue(selected.ref) !== hintDigest || !hintCurrent?.()) ||
+          !caseResultMatches(result, { ...ref, version })) { frame.invalid = true; return unavailable() }
         return result
       } catch { frame.invalid = true; return unavailable()
       } finally { frame.pending-- }
     }
-    if (!ref) return work()
-    return observe({ cases: [ref], memory: [] }, incoming, call, work)
+    if (!ref || !selected) return work()
+    if (caseKey(selected.ref) !== caseKey(ref)) return selection ? unavailable() : work()
+    return observe({ cases: [selected.ref], memory: [] }, incoming, call, work, selected)
   }
   const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext,
     work: () => ReturnType<Recall>): ReturnType<Recall> => {
     const frame = frames.getStore()
     if (frame) { frame.invalid = true; return { status: "unavailable" } }
-    const scope = incoming.scope?.recallScope
-    if (!scope || scope.includeHistorical !== false || !Number.isSafeInteger(incoming.caseRef.version) ||
-      !Array.isArray(scope.cases) || scope.cases.length > 50 || scope.cases.some((ref) =>
-        !ref.id || !ref.incarnation || !Number.isSafeInteger(ref.version) || ref.version < 1)) return work()
-    const selected = [incoming.caseRef, ...scope.cases]
-    const cases = [...new Map(selected.map((ref) => [caseKey(ref), ref])).values()]
-    if (cases.length !== selected.length) return work()
-    const result = await observe({ cases, memory: scope.cases, period: scope.period }, incoming, call,
-      async () => ({ status: "ok" as const, value: await work() }))
+    let plan: Plan | undefined
+    try {
+      const scope = incoming?.scope?.recallScope
+      if (scope && scope.includeHistorical === false && versionedCaseRef(incoming.caseRef) &&
+        Array.isArray(scope.cases) && scope.cases.length <= 50 && scope.cases.every(versionedCaseRef)) {
+        const selected = [incoming.caseRef, ...scope.cases]
+        const cases = [...new Map(selected.map((ref) => [caseKey(ref), ref])).values()]
+        if (cases.length === selected.length) plan = { cases, memory: scope.cases, period: scope.period }
+      }
+    } catch { /* The original reader owns malformed-input admission. */ }
+    if (!plan) return work()
+    const result = await observe(plan, incoming, call, async () => ({ status: "ok" as const, value: await work() }))
     return result.status === "ok" ? result.value : { status: "unavailable" }
   }
   return { read, recall }
+}
+
+function versionedCaseRef(value: unknown): value is CaseRef {
+  return plainRecord(value) && typeof value.id === "string" && !!value.id && typeof value.incarnation === "string" &&
+    !!value.incarnation && Number.isSafeInteger(value.version) && Number(value.version) > 0
+}
+function caseResultMatches(result: unknown, ref: CaseRef) {
+  if (!plainRecord(result)) return false
+  if (result.status !== "ok") return true
+  if (!plainRecord(result.value) || !plainRecord(result.value.case)) return false
+  const value = result.value.case
+  return value.id === ref.id && value.incarnation === ref.incarnation && value.version === ref.version
 }
 
 function sameReaders(current: readonly unknown[], pinned: readonly unknown[]) {

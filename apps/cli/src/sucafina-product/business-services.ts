@@ -306,7 +306,12 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     if (observed !== undefined && observed < captured.version) return { status: "denied", reason: "case-selection-unavailable" }
     const historical = observed !== undefined && observed > captured.version
     if (!historical) {
-      const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+      const requestCase = { caseRef: encodeCaseRef(captured) }
+      const read = () => cases.read(requestCase, call)
+      const observer = plannerRecall.current
+      const current = observer ? await observer.read(requestCase, call, read, { ref: captured,
+        current: () => currentCaseAuthority(call, request, binding) && !caseBindings.has(call) &&
+          digestSfValue(selected) === digestSfValue(captured) }) : await read()
       // Report this failure only for the exact authorized case, without installing a selection scope.
       if (options.reportUnavailableEvidence && current.status === "unavailable" && current.reason === "case-evidence-unavailable" &&
         await host.revalidate(call) && await boundCaseVersion(request, call, captured) === captured.version &&
@@ -482,20 +487,21 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
       decisionDomain.current?.proposalCoverage, baselineCoverage, projectPlannerEvidence].flatMap((reader) =>
       reader ? [reader, ...Object.entries(reader).flat()] : [reader])]
+  const selectedPlannerCaseScope = (call: TrustedDomainContext) => {
+    const scope = caseBindings.get(call)
+    if (!scope || scope.historical) return undefined
+    const request = scope.request, binding = scope.bindingDigest
+    const ref = structuredClone(scope.selected), selectedDigest = digestSfValue(ref)
+    return { ref, current: () => caseBindings.get(call) === scope && !scope.historical &&
+      scope.request === request && scope.bindingDigest === binding &&
+      currentCaseAuthority(call, request, binding) && digestSfValue(scope.selected) === selectedDigest }
+  }
   plannerRecall.current = createSfPlannerRecallObservation({ host, state: input.authority.state,
-    recordProof: plannerRecordProof, lockedSourceFences,
+    recordProof: plannerRecordProof, lockedSourceFences, selectedScope: selectedPlannerCaseScope,
     readerIdentities: () => [...plannerReaderIdentities(), recall.current, memoryCaseScope.read, plannerRecall.current] })
   const withPlannerObservation = createSfFinancePairObservation({
     host, state: input.authority.state, lockedSourceFences, recordProof: plannerRecordProof,
-    selectedScope: (call) => {
-      const scope = caseBindings.get(call)
-      if (!scope || scope.historical) return undefined
-      const request = scope.request, binding = scope.bindingDigest
-      const ref = structuredClone(scope.selected), selectedDigest = digestSfValue(ref)
-      return { ref, current: () => caseBindings.get(call) === scope && !scope.historical &&
-        scope.request === request && scope.bindingDigest === binding &&
-        currentCaseAuthority(call, request, binding) && digestSfValue(scope.selected) === selectedDigest }
-    },
+    selectedScope: selectedPlannerCaseScope,
     readerIdentities: plannerReaderIdentities,
   })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
