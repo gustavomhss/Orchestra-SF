@@ -10,6 +10,7 @@ import { SfProjectionResidents } from "@orchestra/schema/sucafina/analyses"
 import { prepareSfLocalWorkspace } from "../../../modules/sucafina/Sucafinav1/local/workspace.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
 import { digestSfValue } from "../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { enumerateSfSources } from "../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
 import { withNativeInstallation } from "./fixture/sucafina-native-installation"
 
 const it = testEffect(LayerNode.compile(AppProcess.node))
@@ -19,12 +20,13 @@ it.live.skipIf(process.platform === "win32")(
   () => Effect.scoped(Effect.gen(function* () {
     expectSpawn(import.meta.path)
     const serverPassword = randomUUID()
+    const serverAuthorization = "Basic " + Buffer.from("orchestra:" + serverPassword).toString("base64")
     const installation = yield* withNativeInstallation({ serverPassword, seed: async () => {} })
     yield* Effect.promise(async () => {
       const workspace = await prepareSfLocalWorkspace(installation.root)
       const discovery = await fetch(installation.origin + "/api/sucafina/installations?" +
         new URLSearchParams({ select: "location", "location[directory]": workspace }),
-        { headers: { authorization: "Basic " + Buffer.from("orchestra:" + serverPassword).toString("base64") },
+        { headers: { authorization: serverAuthorization },
           signal: AbortSignal.timeout(20_000) })
       expect(discovery.status).toBe(200)
       const catalog = Schema.decodeUnknownSync(SfInstallationList, { onExcessProperty: "error" })(await discovery.json())
@@ -48,12 +50,40 @@ it.live.skipIf(process.platform === "win32")(
         const before = await snapshot()
         const unchanged = async () => {
           const after = await snapshot()
-          if (digestSfValue(before) !== digestSfValue(after)) console.info("SF_FINAL_ROUTINES_SNAPSHOT_CHANGE " + JSON.stringify({
-            fields: Object.keys({ ...before, ...after }).filter((key) => digestSfValue(Reflect.get(before, key)) !== digestSfValue(Reflect.get(after, key))),
-            data: Object.keys({ ...before.data, ...after.data }).filter((key) => digestSfValue(before.data[key]) !== digestSfValue(after.data[key])),
-            product: digestSfValue(before.data.__sfProductV1) === digestSfValue(after.data.__sfProductV1),
+          // The native maintenance job updates localJobState concurrently. The
+          // original source inventory conservatively includes that field in its
+          // Dashboard aggregate fingerprints. C08 and every business field,
+          // audit entry, version, notice and existing scoped source must stay put.
+          const stable = (value: typeof before) => digestSfValue({
+            ...value,
+            data: Object.fromEntries(Object.entries(value.data).filter(([key]) => key !== "localJobState")),
+            sfSources: { ...value.sfSources, records: {} },
+          })
+          expect(digestSfValue(after.data.__sfProductV1)).toBe(digestSfValue(before.data.__sfProductV1))
+          expect(stable(after)).toBe(stable(before))
+          if (!before.sfSources || !after.sfSources) throw new Error("Original source identities are absent")
+          expect(Object.keys(after.sfSources.records).sort()).toEqual(Object.keys(before.sfSources.records).sort())
+          const first = new Map(enumerateSfSources("dashboard", before).map((entry) =>
+            [JSON.stringify([entry.recordType, entry.recordId]), entry.inputDigest]))
+          const latest = new Map(enumerateSfSources("dashboard", after).map((entry) =>
+            [JSON.stringify([entry.recordType, entry.recordId]), entry.inputDigest]))
+          const bookkeeping = new Set<string>()
+          for (const [key, prior] of Object.entries(before.sfSources.records)) {
+            const current = after.sfSources.records[key]!
+            if (digestSfValue(current) === digestSfValue(prior)) continue
+            const family: unknown = JSON.parse(key)[0]
+            if (family !== "dashboard-dataset" && family !== "dashboard-page")
+              throw new Error("A business source identity changed during native reads")
+            expect(digestSfValue({ ...current, version: prior.version, inputDigest: prior.inputDigest })).toBe(digestSfValue(prior))
+            expect(prior.inputDigest).toBe(first.get(key))
+            expect(current.inputDigest).toBe(latest.get(key))
+            expect(Number.isSafeInteger(current.version)).toBe(true)
+            expect(current.version).toBeGreaterThan(prior.version)
+            bookkeeping.add(family)
+          }
+          console.info("SF_FINAL_ROUTINES_READ_SNAPSHOT " + JSON.stringify({
+            c08Unchanged: true, businessSnapshotUnchanged: true, derivedSourceBookkeeping: [...bookkeeping].sort(),
           }))
-          expect(digestSfValue(after)).toBe(digestSfValue(before))
         }
         const result = await installation.request("/api/ui/context?" + query)
         expect(result.status).toBe(200)
@@ -80,7 +110,7 @@ it.live.skipIf(process.platform === "win32")(
         expect(inventory.value.profiles.map((entry) => entry.id).sort()).toEqual(["sf_finance", "sf_maestro", "sf_portfolio", "sf_procurement", "sf_reviewer"])
         await unchanged()
         const denied = await fetch(installation.origin + installation.mount + "/api/ui/projections/residents",
-          { signal: AbortSignal.timeout(20_000) })
+          { headers: { authorization: serverAuthorization }, signal: AbortSignal.timeout(20_000) })
         expect(denied.status).toBe(401)
         expect((await denied.json()).status).toBe("unauthenticated")
         const crossSite = await installation.request("/api/ui/projections/residents", {
