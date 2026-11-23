@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedAt": "2026-11-23T16:24:55Z",
-  "checkpointStatus": "RESUMED_PRODUCT_FIX_REQUIRED",
+  "checkpointStatus": "C3_FIVE_ORIGINAL_CAMPAIGNS_FAILED_REVIEWS_PENDING",
   "qualification": false,
   "source": {
     "branch": "sf613-resume",
@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Await all six original full campaigns on 97c921ab, review their actual native visual evidence and exact-source results, then apply the prepared documentation closure plan in two phases: qualified but unmerged at55/70, followed by merge-confirmed70/70."
+    "nextAction": "Resolve original C17, Portfolio Preview and import-reference failures without changing their oracles, deadlines or authority guards; finish reviewing C3 evidence and pending original campaigns before any qualification or merge claims."
   },
-  "updatedAt": "2026-11-23T17:06:22Z",
+  "updatedAt": "2026-11-23T17:12:57Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3308,6 +3308,25 @@
       "copyRegressionPassed": true,
       "currentCandidate": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:12:20Z",
+      "status": "C3_COLLABORATION_FAILED_INDEPENDENT_IMPORT_REFERENCE_403",
+      "failedRun": 45222251639,
+      "imagesReviewed": 31,
+      "previewDiagnosticRun": 45224152680,
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:12:57Z",
+      "status": "C3_ANALYTICS_AND_ANALYTICS_RELEASE_FAILED",
+      "runs": [
+        45222244398,
+        45222246055
+      ],
+      "rootInspectedRA5JPEGs": 3,
+      "independentVisualReviewPending": true,
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -3367,13 +3386,21 @@
       "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/catalog.css",
       "blob": "d6dc36be2fd7b943d7627baeb8b649310923016b",
       "staticReview": "here_github_activity ACK: scoped value/unit td descendants override inherited bdi/sf-unit wrapping; existing automatic table layout and horizontal region preserved.",
-      "visualQualification": false
+      "visualQualification": false,
+      "partialPixelEvidence": {
+        "campaign": "RA5",
+        "run": 45222246055,
+        "reviewedBy": "/root",
+        "count": 3,
+        "scope": "Only the three named narrow JPEGs in RA5.rootVisualInspection",
+        "qualification": false
+      }
     },
     "qualification": false,
     "fullCampaignQualification": false,
     "fullCampaigns": {
       "round": "C3",
-      "status": "FAILED_TECHNICAL_AND_RELEASE_WITH_FOUR_PENDING",
+      "status": "FIVE_FAILED_WITH_REVIEWS_PENDING",
       "qualification": false,
       "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
@@ -3671,16 +3698,42 @@
           "branch": "ci-run-linux-sf613-a8",
           "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
           "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
-          "status": "PENDING",
+          "status": "FAILED",
           "qualification": false,
           "workflowObservation": {
-            "observedAt": "2026-11-23T17:01:43Z",
-            "status": "in_progress",
-            "conclusion": null,
-            "createdAt": "2026-11-23T16:57:13Z",
-            "updatedAt": "2026-11-23T16:57:16Z"
+            "observedAt": "2026-11-23T17:12:57Z",
+            "status": "completed",
+            "conclusion": "failure",
+            "source": "Approved GitHub jobs API"
           },
-          "result": null
+          "result": {
+            "outcome": "FAILED_ORIGINAL_BROWSER_CAMPAIGN",
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "testJob": {
+              "id": 137859301867,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:09:52Z"
+            },
+            "cleanupJob": {
+              "id": 137867590596,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:09:56Z"
+            },
+            "browserTests": {
+              "passed": 0,
+              "failed": 2,
+              "evidenceAttribution": "/root log inspection; exact log diagnostics and image manifest pending sf613_candidate review"
+            },
+            "reportedFailures": [
+              "Original Portfolio Preview 60000ms response timeout",
+              "BI06 Portuguese journey net::ERR_ABORTED"
+            ],
+            "previewJPEGCountReportedByRoot": 44,
+            "visualEvidenceStatus": "INDEPENDENT_REVIEW_AND_MANIFEST_PENDING",
+            "qualification": false,
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222244398/job/137859301867"
+          }
         },
         {
           "name": "analytics_release",
@@ -3691,16 +3744,56 @@
           "branch": "ci-run-linux-sf613-ra5",
           "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
           "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
-          "status": "PENDING",
+          "status": "FAILED",
           "qualification": false,
           "workflowObservation": {
-            "observedAt": "2026-11-23T17:01:43Z",
-            "status": "in_progress",
-            "conclusion": null,
-            "createdAt": "2026-11-23T16:57:13Z",
-            "updatedAt": "2026-11-23T16:57:17Z"
+            "observedAt": "2026-11-23T17:12:57Z",
+            "status": "completed",
+            "conclusion": "failure",
+            "source": "Approved GitHub jobs API"
           },
-          "result": null
+          "result": {
+            "outcome": "FAILED_ORIGINAL_BROWSER_CAMPAIGN",
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "testJob": {
+              "id": 137859305595,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:10:02Z"
+            },
+            "cleanupJob": {
+              "id": 137867703822,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:10:10Z"
+            },
+            "browserTests": {
+              "passed": 1,
+              "failed": 1,
+              "evidenceAttribution": "/root log inspection; exact log diagnostics and image manifest pending sf613_candidate review"
+            },
+            "reportedFailures": [
+              "Original Portfolio Preview 60000ms response timeout"
+            ],
+            "previewJPEGCountReportedByRoot": 47,
+            "visualEvidenceStatus": "INDEPENDENT_REVIEW_AND_MANIFEST_PENDING",
+            "qualification": false,
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222246055/job/137859305595",
+            "rootVisualInspection": {
+              "reviewedBy": "/root",
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "run": 45222246055,
+              "job": 137859305595,
+              "format": "Original SF_DESIGN_PREVIEW JPEGs",
+              "count": 3,
+              "names": [
+                "UI46-financial-original-values-light-320-scrolled-values-test-data",
+                "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+                "UI46-pt-BR-dark-320-operations-scrolled-units-test-data"
+              ],
+              "findings": "In these three narrow crops, original numerals including 0,00213906 and the original days unit remain whole; the internal horizontal scroll focus is visible. Scoped CSS improvement observed in these crops.",
+              "limits": "No root claim of all-frame review, PNG/JSON ZIP inspection, UI43/UI44, UI56 or global qualification."
+            }
+          }
         },
         {
           "name": "collaboration",
@@ -3711,16 +3804,480 @@
           "branch": "ci-run-linux-sf613-c8",
           "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
           "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
-          "status": "PENDING",
+          "status": "FAILED",
           "qualification": false,
           "workflowObservation": {
-            "observedAt": "2026-11-23T17:01:43Z",
-            "status": "in_progress",
-            "conclusion": null,
+            "observedAt": "2026-11-23T17:12:20Z",
+            "status": "completed",
+            "conclusion": "failure",
             "createdAt": "2026-11-23T16:57:15Z",
-            "updatedAt": "2026-11-23T16:57:19Z"
+            "updatedAt": "2026-11-23T17:07:30Z"
           },
-          "result": null
+          "result": {
+            "outcome": "FAILED_ORIGINAL_INDEPENDENT_IMPORT_REFERENCE_HTTP_ASSERTION",
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "testJob": {
+              "id": 137859325382,
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:07:21Z"
+            },
+            "cleanupJob": {
+              "id": 137865940446,
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:07:29Z"
+            },
+            "browserTests": {
+              "passed": 1,
+              "failed": 1
+            },
+            "success": "Original UI51/UI52/UI53 relationships, unsent discussion and material confirmation test passed, including original receipt/revalidation and three PT desktop captures.",
+            "failure": {
+              "test": "UI55 UI56 · original scanned import preview, cancellation and provenance",
+              "step": "UI55 admits actual scanned XLSX bytes and previews an original Planner line without applying",
+              "originalAssertion": "expect(fresh.status()).toBe(200)",
+              "expectedHTTPStatus": 200,
+              "receivedHTTPStatus": 403,
+              "producerStatus": "denied",
+              "helper": "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts:107",
+              "calledFrom": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts:130",
+              "independentReferenceRead": {
+                "observedAt": "2026-11-23T17:02:55.4771045Z",
+                "elapsedMs": 12263,
+                "httpStatus": 403,
+                "producerStatus": "denied",
+                "loggedActivity": "previewing",
+                "loggedPhase": "selecting",
+                "loggedState": "ready",
+                "reasonStringLogged": false
+              },
+              "priorOriginalPreview": {
+                "observedAt": "2026-11-23T17:02:43.1321657Z",
+                "httpStatus": 200,
+                "producerStatus": "ok",
+                "codecStatus": "ok",
+                "typed": "Some",
+                "previewReceiptAt": "2026-11-23T17:02:43.1477672Z",
+                "state": "preview",
+                "domainApplied": false,
+                "deliveredAt": "2026-11-23T17:02:43.3393821Z"
+              },
+              "formattedErrorAt": "2026-11-23T17:02:59.3345781Z",
+              "nativeViewAt": "2026-11-23T17:02:55.7561933Z",
+              "nativeView": {
+                "discovery": "ready",
+                "provider": "ready",
+                "view": "ready",
+                "text": "Preparing the original source preview…"
+              },
+              "screenshotAt": "2026-11-23T17:02:56.6107155Z",
+              "screenshotText": "Reading the original preview and source details…",
+              "screenshotStage": 2,
+              "consoleErrors": [],
+              "pageErrors": [],
+              "UI56Reached": false,
+              "PortugueseImportReached": false,
+              "interpretation": "Concrete HTTP 403 from the original independent reference read, before UI56. This differs from C7's original heading timeout. The log does not expose a reason string or establish the source of denial; no retry, deadline, authority or cancellation change is inferred."
+            },
+            "qualification": false,
+            "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222251639/job/137859325382",
+            "visualEvidence": {
+              "logBytes": 3359381,
+              "logSHA256": "1a30f96d4ffbe32f338694627f1efd891e90428b19eca247e40b04752e59e490",
+              "totalJPEGBytes": 2411614,
+              "completeJPEGCount": 31,
+              "duplicates": [],
+              "images": [
+                {
+                  "index": 0,
+                  "name": "UI55-setup-dark-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:01:29.3740047Z",
+                  "bytes": 99257,
+                  "sha256": "64a2d95bdbd44a9df97d5b7c466626cc3fced04ee5e24b5de4a81bd05794cdfc",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 1,
+                  "name": "UI55-setup-light-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:01:30.3398241Z",
+                  "bytes": 103290,
+                  "sha256": "efc3a689b1258cee6da9961746d09d70b4e0e447021632f14de15442920d4a23",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 2,
+                  "name": "UI55-setup-light-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:01:30.6493733Z",
+                  "bytes": 40478,
+                  "sha256": "94f55f9101736a131320f27e1a4d0a9963b019186a22d16147db1be72b6b89cb",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 3,
+                  "name": "UI55-setup-dark-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:01:31.0039495Z",
+                  "bytes": 39607,
+                  "sha256": "f6e1ea98d487c36f4a590210f6514a31ad6081627ba8be4aa1aeb849b55002bc",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 4,
+                  "name": "UI55-dark-desktop-selected-file-options",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:02:18.1530279Z",
+                  "bytes": 102408,
+                  "sha256": "cacbc5dfed962b52bac7715366618a430fe4125a6b0587a9db27fcf052f0afdc",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 5,
+                  "name": "UI55-dark-390-selected-file-options",
+                  "parts": 2,
+                  "timestamp": "2026-11-23T17:02:18.5237750Z",
+                  "bytes": 35978,
+                  "sha256": "d9964b71e4020894c62542e67e5efc3497f49a2553f459e891a1052b990b9c8e",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 6,
+                  "name": "FAILED-native-wave-three-test-data",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:02:56.6107155Z",
+                  "bytes": 104455,
+                  "sha256": "fcfb30152358f4ca541a39eae1f6397fb4f61d3d008337320bda4626d3985a46",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 7,
+                  "name": "UI51-relationship-dark-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:04:46.2201441Z",
+                  "bytes": 97063,
+                  "sha256": "66e01381aadd03b400b1f5bf0aac6b968ff0d761b95c45ef08eb86910d860a3c",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 8,
+                  "name": "UI51-relationship-light-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:04:47.2401789Z",
+                  "bytes": 101281,
+                  "sha256": "a11c4f5bd689fb39f68381f525622b0fd1c48ff2540f27745c19db1a6be10462",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 9,
+                  "name": "UI51-relationship-light-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:04:47.5656929Z",
+                  "bytes": 44524,
+                  "sha256": "15d3837a8a4e3e94734ef5bd42af0f998d980efbb953f20e5272e3d55b4ca100",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 10,
+                  "name": "UI51-relationship-dark-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:04:47.9025199Z",
+                  "bytes": 44027,
+                  "sha256": "91a58686c078c52bfcb7eb14a217eefb4be0060254697238049b676db14b96a5",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 11,
+                  "name": "UI51-dark-desktop-removal-review",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:04:48.6494009Z",
+                  "bytes": 80342,
+                  "sha256": "2ef63a53b49db1c45781e45ab4df7932a521f1ab51be7aaf24b6bcb48f3cc17f",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 12,
+                  "name": "UI51-dark-desktop-explicit-editor",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:05:07.1227293Z",
+                  "bytes": 102915,
+                  "sha256": "d1d0961c5c55db06f89f6789de093e5d9e69bb617d6412a5d9d4b9cb6febcf3a",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 13,
+                  "name": "UI51-dark-desktop-create-review",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:05:07.7486435Z",
+                  "bytes": 87813,
+                  "sha256": "22b2e14f746788fbd5e6b03d01a4d5b8fb537479e8aea692fedc310497870fa3",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 14,
+                  "name": "UI51-dark-desktop-case-alias-empty",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:05:25.1919440Z",
+                  "bytes": 93389,
+                  "sha256": "6ec51fc5161eac065894c9188bd29a7ffd54483a75d9942bd3e65f4b1a3fbcab",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 15,
+                  "name": "UI52-discussion-dark-desktop",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:05:41.9894209Z",
+                  "bytes": 89923,
+                  "sha256": "f4214263762254ff1c987ae927bf7cc7fe003604db134955d65430c1095d8cd9",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 16,
+                  "name": "UI52-discussion-light-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:05:42.7344469Z",
+                  "bytes": 94487,
+                  "sha256": "7334193feeb16be86ababe152a49d8579d11628d26afc9dbc763a4b65e40a348",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 17,
+                  "name": "UI52-discussion-light-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:05:42.9999073Z",
+                  "bytes": 38563,
+                  "sha256": "1f9af892ee8301f701e48303e7ddf553a6385a47af9c7f924fa8cf266b5d13c3",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 18,
+                  "name": "UI52-discussion-dark-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:05:43.3388831Z",
+                  "bytes": 38002,
+                  "sha256": "16cafc217d99e6f98dc90da5d6990b5256b4a8b93892d3f10fa91942ac702811",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 19,
+                  "name": "UI52-dark-desktop-origin-unsent-draft",
+                  "parts": 7,
+                  "timestamp": "2026-11-23T17:05:44.1937103Z",
+                  "bytes": 109746,
+                  "sha256": "f15e1647f6eaba73cec6806156fe4787d939e52ba8e9b28fcb4a6048d8d1a31c",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 20,
+                  "name": "UI52-dark-390-unsent-draft",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:05:44.5513176Z",
+                  "bytes": 42478,
+                  "sha256": "91707a3019ebaecdbbdfe181b1c2bea0e4f48beec34384f6cb63f620496945f6",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 21,
+                  "name": "UI53-material-dark-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:06:01.6550839Z",
+                  "bytes": 100568,
+                  "sha256": "cfb078f21f1e69e43ec660176a1b6e7f076b19b15751a4d486a82f018219ce3d",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 22,
+                  "name": "UI53-material-light-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:06:02.4064410Z",
+                  "bytes": 104245,
+                  "sha256": "64efa134bfb9bcd2746dda871de4791e4b90e038088ed8a07931e838b5da91ae",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 23,
+                  "name": "UI53-material-light-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:06:02.6729326Z",
+                  "bytes": 42104,
+                  "sha256": "4b2f3eb81e759753e78041fbb601879da0cc800dd9f917174da91e58ae550770",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 24,
+                  "name": "UI53-material-dark-390",
+                  "parts": 3,
+                  "timestamp": "2026-11-23T17:06:02.9810820Z",
+                  "bytes": 41820,
+                  "sha256": "56250d7f7957b7b44e8c431edac9d083a278408e83d80c510c1031a3c5e9421b",
+                  "width": 390,
+                  "height": 1100
+                },
+                {
+                  "index": 25,
+                  "name": "UI53-dark-desktop-confirmation-review",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:06:03.7881457Z",
+                  "bytes": 86623,
+                  "sha256": "f20e35012b1f061a959af827136d6c1c5b3956fc67f659d3bc6b0ad85cd1dca1",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 26,
+                  "name": "UI53-dark-desktop-original-receipt",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:06:05.2033710Z",
+                  "bytes": 82781,
+                  "sha256": "254d3ac9eef3a44a86c8f6b6fdd982b732712bac2f79b4f866761574b4294788",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 27,
+                  "name": "UI53-dark-desktop-recorded-validity",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:06:22.0426037Z",
+                  "bytes": 83003,
+                  "sha256": "8df04fd19c03f81499d05f62704bdab5e0d5cb59171f5ba4d955f26c17855071",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 28,
+                  "name": "UI51-pt-BR-dark-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:06:39.6642544Z",
+                  "bytes": 102140,
+                  "sha256": "501006bd4b22bd063f8ecd29f67139b8e125803c2c6a0be23496922edc494e78",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 29,
+                  "name": "UI52-pt-BR-dark-desktop",
+                  "parts": 6,
+                  "timestamp": "2026-11-23T17:06:56.5080516Z",
+                  "bytes": 92086,
+                  "sha256": "aa5e512f70f3f8251b5d2a382b9cd2e59f29eedeef7086fe28d45922fafb932d",
+                  "width": 1440,
+                  "height": 1100
+                },
+                {
+                  "index": 30,
+                  "name": "UI53-pt-BR-dark-desktop",
+                  "parts": 5,
+                  "timestamp": "2026-11-23T17:07:13.5107378Z",
+                  "bytes": 86218,
+                  "sha256": "f12c82b35a1cb8adac84dcfaf9015c2c3650f543e38caca69ee4c2ba0c9dd87e",
+                  "width": 1440,
+                  "height": 1100
+                }
+              ],
+              "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+              "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+              "snapshot": "3e6163b8f8be024cc1eac033e80be9ef00304859",
+              "run": 45222251639,
+              "job": 137859325382,
+              "format": "Original JPEGs emitted in SF_DESIGN_PREVIEW chunks",
+              "inspectedBy": "/root/here_github_activity",
+              "visuallyReviewed": true,
+              "inspectedIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30
+              ],
+              "originalBytesUnchanged": true,
+              "dimensions": [
+                {
+                  "width": 1440,
+                  "height": 1100,
+                  "count": 21
+                },
+                {
+                  "width": 390,
+                  "height": 1100,
+                  "count": 10
+                }
+              ],
+              "localeCoverage": {
+                "english": 28,
+                "portuguese": 3,
+                "portugueseIndices": [
+                  28,
+                  29,
+                  30
+                ],
+                "portugueseScope": "UI51/UI52/UI53 desktop dark only; no import Portuguese capture reached."
+              },
+              "findings": [
+                "UI55 desktop/light/dark and narrow setup/options are legible; selected narrow filename is ellipsized by the native input. The FAILED image remains at step 2 with a source-read progress message, so it is not UI56 simulation evidence.",
+                "UI51 existing-link, removal review, explicit editor, creation review and case-alias empty states are legible in the captured regions. The empty case repeats No records yet three times, a cosmetic repetition also seen in C7.",
+                "UI52 message/source context and unsent draft are legible in desktop/light/dark and narrow captures; PT product labels and dates are localized while original seeded message text stays unchanged.",
+                "UI53 desktop scope, original confirmation receipt and revalidated current validity are visible and legible. The narrow captures end at Observed values, before the actual values and review action; they do not prove complete narrow coverage.",
+                "No additional concrete blocking layout defect was observed in the 31 captured frames."
+              ],
+              "limits": [
+                "No UI56 simulation, import cancellation/provenance outcome or Portuguese import visual evidence was reached in C8.",
+                "No PNG or JSON exclusive to the binary ZIP artifact was directly inspected.",
+                "These observations belong to this agent and do not claim personal review by root or the user.",
+                "Captured viewport reflow is not a zoom/accessibility audit; offscreen fields and actions are not claimed as visually reviewed."
+              ]
+            }
+          }
         },
         {
           "name": "reviews",
@@ -3945,6 +4502,29 @@
           "qualification": false,
           "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45220898500/job/137854537221"
         }
+      },
+      {
+        "name": "ISOLATED_PORTFOLIO_PREVIEW_PHASE_PROFILE",
+        "reportedBy": "/root",
+        "reportedAt": "2026-11-23T17:07:00Z",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "run": 45224152680,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45224152680",
+        "snapshot": "79fac0e8a2d8b240dabb438110b2f5a50f4d827d",
+        "snapshotTree": "271055bc7f3930f505c9a5caa6b23102e29b7e18",
+        "branch": "ci-run-linux-sf613-profile",
+        "testJob": 137866026401,
+        "status": "PENDING",
+        "lastParentObservation": {
+          "observedAt": "2026-11-23T17:09:19Z",
+          "testStep": "Run tests",
+          "runningSince": "2026-11-23T17:08:29Z"
+        },
+        "overlayCount": 5,
+        "overlaySummary": "Original Analytics .ci-run plus phase/time log instrumentation in product/portfolio/port.ts and analysis.ts, and diagnostic-prefix forwarding in two original fixtures.",
+        "scope": "Both original Analytics tests with original assertions and deadlines; instrumentation-only measurement to identify the Preview stage consuming 60 seconds.",
+        "qualification": false,
+        "promoteDiagnosticCode": false
       }
     ]
   },
