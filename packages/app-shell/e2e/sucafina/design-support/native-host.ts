@@ -218,8 +218,7 @@ const program = Effect.scoped(Effect.gen(function* () {
       process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
-  // Revalidate the private physical workspace before publishing discovery metadata.
-  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
+  yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
@@ -247,6 +246,8 @@ const program = Effect.scoped(Effect.gen(function* () {
   if (destination.origin !== installed.origin || destination.pathname !== installed.mount + "/auth/local" ||
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
+  // Revalidate the private physical workspace before publishing discovery metadata.
+  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   const metadata = {
     root: installed.root, workspace, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
