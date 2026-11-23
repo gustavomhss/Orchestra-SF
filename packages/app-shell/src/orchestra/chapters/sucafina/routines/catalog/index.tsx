@@ -14,6 +14,7 @@ import {
   n29StateKey, useN29Copy,
 } from "./ui"
 import { StatusText } from "../../reviews/labels"
+import "../../reviews/workflows.css"
 import "../presentation.css"
 import "./catalog.css"
 
