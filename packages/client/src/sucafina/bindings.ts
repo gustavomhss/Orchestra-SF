@@ -37,6 +37,8 @@ function decode(schema: Schema.Top, value: unknown): SfWireDecodeResult {
   // can be admitted. No JSON passthrough, guessed response or relaxed parsing.
   const parsed = Schema.decodeUnknownOption(Schema.toType(schema), { onExcessProperty: "error" })(value)
   if (Option.isNone(parsed)) return invalid()
+  // An absent wire value is allowed only when the original source schema admits it.
+  if (parsed.value === undefined) return { status: "ok", value: undefined }
   const json = Schema.decodeUnknownOption(Schema.Json)(parsed.value)
   if (Option.isNone(json)) return invalid()
   return { status: "ok", value: json.value }
