@@ -22,14 +22,13 @@ export function isOperation(request: Request, operation: string) {
   return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === operation
 }
 /**
- * Observe the native BI response before delivery. A new GET would advance BI06's
- * observation clock, so it cannot supply the oracle for the rendered response.
+ * Observe the original native BI GET without intercepting its request or response.
+ * A new GET would advance BI06's observation clock and cannot supply its oracle.
  */
 export async function captureOriginalBiData(
   page: Page, owner: AnalyticsOwner, viewId: string,
   acquire: (observe: (response: Response) => Promise<void>) => Promise<Response>,
 ) {
-  const endpoint = owner.publicOrigin + owner.mount + "/dashboard"
   const matches = (method: string, href: string) => {
     const url = new URL(href)
     return method === "GET" && url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
@@ -45,12 +44,14 @@ export async function captureOriginalBiData(
   const failures: string[] = []
   const completedRequests: Request[] = []
   let primaryFailure: { error: unknown } | undefined
-  let responses = 0
+  let responses = 0, networkRequests = 0, networkCompletions = 0
+  let networkRequest: { id: string; url: string } | undefined
+  let networkResponse: { id: string; url: string; status: number } | undefined
   type TeardownPhase = "observing" | "detaching" | "detached"
   let teardownPhase: TeardownPhase = "observing"
   const fail = (phase: string, error: unknown, requestFailure?: {
     sameNativeRequest: boolean; bodyObserved: boolean; http: number | null; teardownPhase: TeardownPhase; errorText: string
-  }) => {
+  } | { networkLoadingFailed: true; errorText: string; canceled: boolean }) => {
     failures.push(phase)
     primaryFailure ??= { error }
     console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
@@ -80,43 +81,65 @@ export async function captureOriginalBiData(
   }
   const onPageClose = () => fail("page-closed", new Error("Page closed during original BI acquisition"))
   const onSessionClose = () => fail("session-closed", new Error("CDP session closed during original BI acquisition"))
-  page.on("request", onRequest)
-  page.on("requestfinished", onRequestFinished)
-  page.on("requestfailed", onRequestFailed)
-  page.on("close", onPageClose)
-  session.on("close", onSessionClose)
-  session.on("Fetch.requestPaused", async (event) => {
-    let phase = "continue-unrelated-response"
+  const onNetworkRequest = (event: {
+    requestId: string; request: { method: string; url: string }; redirectResponse?: unknown
+  }) => {
+    if (!matches(event.request.method, event.request.url)) return
     try {
-      if (!matches(event.request.method, event.request.url)) {
-        await session.send("Fetch.continueRequest", { requestId: event.requestId })
-        return
-      }
-      phase = "original-response-identity"
+      expect(++networkRequests, "one original BI network request").toBe(1)
+      expect(event.redirectResponse, "no redirected original BI network request").toBeUndefined()
+      networkRequest = { id: event.requestId, url: event.request.url }
+    } catch (error) { fail("network-request-identity", error) }
+  }
+  const onNetworkResponse = (event: { requestId: string; response: { url: string; status: number } }) => {
+    const original = networkRequest
+    if (!original || event.requestId !== original.id) return
+    try {
       expect(++responses, "one original BI response").toBe(1)
-      if (event.responseStatusCode === undefined) throw new Error("Original BI request failed before HTTP response")
+      expect(event.response.url).toBe(original.url)
+      networkResponse = { id: event.requestId, url: event.response.url, status: event.response.status }
+    } catch (error) { fail("network-response-identity", error) }
+  }
+  const onNetworkFinished = async (event: { requestId: string }) => {
+    const request = networkRequest
+    if (!request || event.requestId !== request.id) return
+    let phase = "network-request-completion"
+    try {
+      expect(++networkCompletions, "one completed original BI network request").toBe(1)
+      const original = networkResponse
+      if (!original || original.id !== event.requestId) throw new Error("Original BI network response missing")
       phase = "original-response-body"
-      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId })
+      // Read only the retained bytes of this completed network request. No Fetch
+      // interception, loadNetworkResource, browser fetch, readback or replay.
+      const raw = await session.send("Network.getResponseBody", { requestId: event.requestId })
       phase = "original-response-json"
       const text = raw.base64Encoded
         ? new TextDecoder("utf-8", { fatal: true }).decode(Buffer.from(raw.body, "base64"))
         : raw.body
       const body: unknown = JSON.parse(text)
-      phase = "original-response-delivery"
-      // No URL, method, body, status, header or authentication overrides.
-      await session.send("Fetch.continueResponse", { requestId: event.requestId })
-      producer.resolve({ url: event.request.url, status: event.responseStatusCode, body })
-    } catch (error) {
-      fail(phase, error)
-      // Acquisition has failed; this only attempts to release a paused native request.
-      await session.send("Fetch.continueRequest", { requestId: event.requestId }).catch(() => undefined)
-    }
-  })
+      producer.resolve({ url: original.url, status: original.status, body })
+    } catch (error) { fail(phase, error) }
+  }
+  const onNetworkFailed = (event: { requestId: string; errorText: string; canceled?: boolean }) => {
+    if (event.requestId !== networkRequest?.id) return
+    const errorText = /^net::ERR_[A-Z0-9_]{1,80}$/.test(event.errorText) ? event.errorText : "unclassified"
+    fail("network-loading-failed", new Error("Original BI request failed"),
+      { networkLoadingFailed: true, errorText, canceled: event.canceled === true })
+  }
+  page.on("request", onRequest)
+  page.on("requestfinished", onRequestFinished)
+  page.on("requestfailed", onRequestFailed)
+  page.on("close", onPageClose)
+  session.on("close", onSessionClose)
+  session.on("Network.requestWillBeSent", onNetworkRequest)
+  session.on("Network.responseReceived", onNetworkResponse)
+  session.on("Network.loadingFinished", onNetworkFinished)
+  session.on("Network.loadingFailed", onNetworkFailed)
   const acquired = await (async () => {
     try {
-      await session.send("Fetch.enable", { patterns: [{
-        urlPattern: endpoint.replace(/[\\*?]/g, "\\$&") + "\\?*sf=bi-data*", requestStage: "Response",
-      }] })
+      // The native JSON transport admits at most 32 MiB of UTF-8. Chromium
+      // also charges decoded UTF-16 storage; reserve twice that resource budget.
+      await session.send("Network.enable", { maxTotalBufferSize: 128 * 1024 * 1024, maxResourceBufferSize: 64 * 1024 * 1024 })
       const response = await acquire(async (response) => {
         expect(matches(response.request().method(), response.url()), "exact original BI owner and operation").toBe(true)
         const original = await producer.promise
@@ -128,7 +151,7 @@ export async function captureOriginalBiData(
         observed.push({ response, body: original.body })
         console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
           view: viewId, acquisition: "native-response-cdp", phase: "original-request-completed",
-          http: response.status(), sameNativeRequest: true, nativeRequestFinished: true }))
+          http: response.status(), sameNativeRequest: true, nativeRequestFinished: true, observer: "Network" }))
       })
       if (primaryFailure) throw primaryFailure.error
       expect(observed.length, "capture completed within the original response wait").toBe(1)
@@ -157,12 +180,18 @@ export async function captureOriginalBiData(
         page.off("requestfinished", onRequestFinished)
         page.off("requestfailed", onRequestFailed)
         page.off("close", onPageClose)
+        session.off("Network.requestWillBeSent", onNetworkRequest)
+        session.off("Network.responseReceived", onNetworkResponse)
+        session.off("Network.loadingFinished", onNetworkFinished)
+        session.off("Network.loadingFailed", onNetworkFailed)
       }
       if (primaryFailure) throw primaryFailure.error
     }
   })()
   expect(failures, "original BI response acquisition must succeed").toEqual([])
   expect(responses, "one original BI response").toBe(1)
+  expect(networkRequests, "one original BI network request").toBe(1)
+  expect(networkCompletions, "one completed original BI network request").toBe(1)
   expect(requests.length, "one native BI request; no readback or retry").toBe(1)
   expect(completedRequests.length, "one finished native BI request").toBe(1)
   expect(acquired.response.request() === requests[0], "same native Request identity").toBe(true)
