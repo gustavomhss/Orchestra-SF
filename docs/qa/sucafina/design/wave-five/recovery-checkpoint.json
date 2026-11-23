@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23 05:12:21 UTC",
-  "status": "C14_FOCALS_AND_BUDGET_PASS_PREVIEW_STILL_FAILS_CPU_JOINT_PREFLIGHT",
+  "updatedAt": "2026-11-23 05:23:45 UTC",
+  "status": "C14_PREVIEW_PROFILE_COMPLETE_PRODUCT_FIX_PENDING",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
   "task": {
@@ -87,28 +87,7 @@
       "sha256": "c4ba22a2e8f449b9bd947bd579c6f55cf3f27f441926c91943d7020befc8fa2e"
     }
   ],
-  "pending": [
-    {
-      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
-      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "sha": "96cb1ee0abc4c84674fa27e1a3ab7a0d9ca87cd0",
-      "tree": "5039840e1153a593b1266474e4183f813ef0fc50",
-      "branch": "ci-run-sf613cpu14",
-      "overlayPaths": [
-        "apps/cli/src/sucafina-product/preview-jsc-diagnostic.ts",
-        "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
-        "apps/cli/src/sucafina-product/portfolio-http.ts",
-        "apps/cli/test/fixture/sucafina-native-installation.ts",
-        "packages/app-shell/e2e/sucafina/design-support/installation.ts",
-        ".ci-run.json"
-      ],
-      "status": "DISPATCHED",
-      "qualification": false,
-      "peerAck": "sf613_ui",
-      "dispatchedAt": "2026-11-23 05:09:00 UTC",
-      "run": 45115960623
-    }
-  ],
+  "pending": [],
   "previousFullCampaign": {
     "source": "e68c2f720b5aa0fdbf0d865377ca886ef6f998ec",
     "allCleanupsSuccessAndRefs404": true,
@@ -233,9 +212,10 @@
     "interpretation": "SQL conditional path admitted with space available;no causal speed claim;historicalnegativesremain"
   },
   "next": {
-    "cpuJoint": "First Preview30s/10ms joint leaf+first allowed caller;6 snapshot-only overlays; original Analytics entire spec",
-    "product": "No Preview fix accepted yet; no BI lifecycle correction based on a passing trace",
-    "docs": "Rebuilding JSON/Markdown renderers; do not publish qualification while Preview remains negative"
+    "product": "Choose pure data/canonical optimization from observed caller+leaf counts; do not pursue sameStore without evidence",
+    "bi": "PT ERR_ABORTED recurred in CPU run; original native completion gate remains required",
+    "qualification": "All6cleanreceipts stillpending on final corrected product",
+    "docs": "4 renderers and sourcepack preserved; do not qualify before clean success"
   },
   "closure": {
     "beforeAreas": 41,
@@ -272,7 +252,8 @@
     "atApproxUtc": "2026-11-23T04:40:00Z",
     "lost": "Volatile functions stores/log caches/renderers",
     "preserved": "Git commits/refs and tool/conversation receipts",
-    "noProjectExecutionRepeated": true
+    "noProjectExecutionRepeated": true,
+    "secondAtApproxUtc": "2026-11-23T05:22:00Z"
   },
   "aclReceipts": {
     "normal": {
@@ -294,6 +275,8 @@
   "renderers": {
     "json": "recovery-renderers/closure-json.js",
     "markdown": "recovery-renderers/closure-markdown.js",
-    "templates": "recovery-renderers/closure-templates.js"
-  }
+    "templates": "recovery-renderers/closure-templates.js",
+    "technical": "recovery-renderers/closure-technical.js"
+  },
+  "cpuReceipt": "recovery-receipts/c14-cpu-joint.json"
 }
