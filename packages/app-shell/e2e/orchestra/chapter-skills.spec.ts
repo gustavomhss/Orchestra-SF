@@ -480,6 +480,18 @@ test(`audit: submitting skill draft freezes, failure retains it for retry`, asyn
   await expect(dialog.getByRole("alert")).toBeVisible()
   await expect(dialog.getByLabel("Instructions", { exact: true })).toBeEditable()
   await expect(dialog.getByLabel("Instructions", { exact: true })).toHaveValue("Retry this exact draft")
+  const focus = await dialog.evaluate((element) => ({
+    inside: element.contains(element.ownerDocument.activeElement),
+    tag: element.ownerDocument.activeElement?.tagName,
+    name: element.ownerDocument.activeElement?.getAttribute("name"),
+    text: element.ownerDocument.activeElement?.textContent?.slice(0,100),
+  }))
+  await test.info().attach("skill-failed-save-focus", {
+    body: JSON.stringify(focus, null, 2),
+    contentType: "application/json",
+  })
+  await page.screenshot({ path: test.info().outputPath("skill-failed-save-focus.png") })
+  expect.soft(focus.inside, "A failed save keeps keyboard focus in its still-open dialog").toBe(true)
   fault.fail = false
   await dialog.getByRole("button", { name: "Save", exact: true }).click()
   await expect(dialog).toHaveCount(0)
