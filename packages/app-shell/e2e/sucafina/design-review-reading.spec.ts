@@ -363,6 +363,21 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
     "The first comparison rows retain original source-only differences; narrow rows pair Previous and Current under the same identity.",
     '[data-sf-comparison-diff="authorized"] > [data-section-id] > .sf-n28-scroll > table > tbody > tr:first-child')
 
+  const originalComponents = [previous, current].map((reference) => sourceReviews.get(reference)!.sections.flatMap((section) =>
+    Schema.decodeUnknownSync(SfReviewDomainProjection)(section.content).components))
+  for (const row of await compare.locator("[data-sf-component-id]").all()) {
+    const id = await row.getAttribute("data-sf-component-id")
+    const cells = row.locator("td .sf-n28-compare-value")
+    for (const [column, components] of originalComponents.entries()) {
+      const component = components.find((entry) => entry.id === id)
+      expect(component).toBeDefined()
+      if (component?.currency === "unspecified") {
+        await expect(cells.nth(column).getByText("Currency not provided", { exact: true })).toBeVisible()
+        if (component.amount !== null) await expect(cells.nth(column).locator("strong")).toHaveText(
+          new Intl.NumberFormat("en-US", { maximumSignificantDigits: 21 }).format(component.amount))
+      }
+    }
+  }
   for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 800 })
     const rows = compare.locator('[data-sf-comparison-diff="authorized"] [data-section-id] tbody > tr')
@@ -373,10 +388,12 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
       return { labels: [...cells].map((cell) => cell.getAttribute("data-label")),
         paired: cells.length === 2 && [...cells].every((cell) => {
           const rect = cell.getBoundingClientRect()
-          return rect.left >= bounds.left && rect.right <= bounds.right + 1
-        }) }
+          return rect.left >= bounds.left && rect.right <= bounds.right + 1 &&
+            rect.width >= bounds.width - 2
+        }) && cells[1]!.getBoundingClientRect().top >= cells[0]!.getBoundingClientRect().bottom - 1 }
     }))
     expect(geometry.every((row) => row.paired && row.labels[0] === "Previous" && row.labels[1] === "Current")).toBe(true)
+    await rows.first().scrollIntoViewIfNeeded()
     await capture(page, info, "UI49-paired-comparison-" + width)
   }
   await page.setViewportSize({ width: 1440, height: 1100 })

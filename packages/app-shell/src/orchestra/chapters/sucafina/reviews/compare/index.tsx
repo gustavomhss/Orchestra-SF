@@ -100,8 +100,8 @@ function ValueCell(props: { entry: PreservedValue | undefined; projection: Revie
 function ComponentCell(props: { entry: PreservedComponent | undefined; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().amount === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().amount} currency={entry().currency} />}</strong>
-      <span>{props.t("sf.u32.currency")}: {entry().currency}</span>
+      <strong>{entry().amount === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().amount} currency={entry().currency === "unspecified" ? undefined : entry().currency} />}</strong>
+      <span>{entry().currency === "unspecified" ? props.t("sf.u32.currencyNotProvided") : <>{props.t("sf.u32.currency")}: {entry().currency}</>}</span>
       <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.sources")}:</span>
       <SourceRefList sources={entry().sourceRefs} t={props.t} />
