@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { sfRecallCost, sfRecallAsyncCost, sfRecallCostOwner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -49,37 +50,37 @@ export function createSfPlannerRecallObservation(input: {
     work: () => Promise<PortResult<Value>>, selection?: CaseSelection): Promise<PortResult<Value>> => {
     try {
       if (!root.allows(call) || active.has(call)) return unavailable()
-      if (call.kind !== "ui" || call.binding.principalRef.startsWith("local:") || !pinned()) return work()
+      if (call.kind !== "ui" || call.binding.principalRef.startsWith("local:") || !pinned()) return sfRecallAsyncCost("owner-work", () => work())
       const persistence = host.persistence
       const present = hasSfLocalSnapshotScope(persistence)
       // A foreign C08 owner keeps its original producer and cannot lend this
       // observer its physical root or its terminal proof map.
-      if (present === true || present === undefined && persistence.currentSnapshots?.()) return work()
+      if (present === true || present === undefined && persistence.currentSnapshots?.()) return sfRecallAsyncCost("owner-work", () => work())
       const request = host.requestFor(call)
       if (!request || request.signal.aborted) return unavailable()
       const binding = call.binding, lease = call.lease
-      const bindingDigest = digestSfValue([call.kind, binding]), requestDigest = plannerRequestIdentity(request)
-      const selected = structuredClone(plan), planDigest = digestSfValue(plan), inputDigest = digestSfValue(incoming)
+      const bindingDigest = sfRecallCost("owner-digest", () => digestSfValue([call.kind, binding])), requestDigest = plannerRequestIdentity(request)
+      const selected = sfRecallCost("owner-clone", () => structuredClone(plan)), planDigest = sfRecallCost("owner-digest", () => digestSfValue(plan)), inputDigest = sfRecallCost("owner-digest", () => digestSfValue(incoming))
       const identities = [...readers()]
       const selectionCurrent = selection?.current, selectionRef = selection?.ref
       const current = () => pinned() && input.host === host && input.state === state && input.recordProof === recordProof &&
         state.read === readState && recordProof.run === observeRecords && input.lockedSourceFences === lockedFences &&
-        input.readerIdentities === readers && input.selectedScope === selectedScope && host.persistence === persistence && sameReaders(readers(), identities) &&
+        input.readerIdentities === readers && input.selectedScope === selectedScope && host.persistence === persistence && sameReaders(sfRecallCost("owner-readers", () => readers()), identities) &&
         (!selection || selection.current === selectionCurrent && selection.ref === selectionRef && selectionCurrent?.() === true) &&
         host.requestFor(call) === request && !request.signal.aborted && call.binding === binding && call.lease === lease &&
-        digestSfValue([call.kind, call.binding]) === bindingDigest && plannerRequestIdentity(request) === requestDigest &&
-        digestSfValue(plan) === planDigest && digestSfValue(selected) === planDigest && digestSfValue(incoming) === inputDigest
+        sfRecallCost("owner-digest", () => digestSfValue([call.kind, call.binding])) === bindingDigest && plannerRequestIdentity(request) === requestDigest &&
+        sfRecallCost("owner-digest", () => digestSfValue(plan)) === planDigest && sfRecallCost("owner-digest", () => digestSfValue(selected)) === planDigest && sfRecallCost("owner-digest", () => digestSfValue(incoming)) === inputDigest
       const environment = async () => {
         const value = await host.environment(request), at = Date.parse(value.at)
-        return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
-          directory: value.directory, bankKey: value.bankKey ? Array.from(value.bankKey) : undefined }) : undefined
+        return Number.isFinite(at) ? sfRecallCost("owner-digest", () => digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
+          directory: value.directory, bankKey: value.bankKey ? Array.from(value.bankKey) : undefined })) : undefined
       }
       const sameActor = (actor: { principalRef: string; accessRevision: string; policyVersion: string }) =>
         actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
         actor.policyVersion === call.binding.policyVersion
       const witness = async (beforeAdmission = false): Promise<Witness | undefined> => {
-        const observed = await readState(request, "cases", async (stored, actor) => {
-          if (!current() || !sameActor(actor)) return undefined
+        const observed = await sfRecallAsyncCost("owner-state-cases", () => readState(request, "cases", async (stored, actor) => {
+          if (!sfRecallCost("owner-current", () => current()) || !sameActor(actor)) return undefined
           const cases: DecisionCase[] = [], refs = new Map<string, PlannerRecord>()
           for (const ref of selected.cases) {
             const value = stored.cases[ref.id]
@@ -87,36 +88,36 @@ export function createSfPlannerRecallObservation(input: {
             if (value.version !== ref.version) return beforeAdmission ? unsupported : undefined
             // The query period belongs to the current case. The canonical ranker
             // compares each candidate with its own original horizon and evidence.
-            if (selected.period && ref === selected.cases[0] && digestSfValue(value.horizon) !== digestSfValue(selected.period) || !plannerCase(value, call, refs))
+            if (selected.period && ref === selected.cases[0] && sfRecallCost("owner-digest", () => digestSfValue(value.horizon)) !== sfRecallCost("owner-digest", () => digestSfValue(selected.period)) || !plannerCase(value, call, refs))
               return unsupported
             cases.push(value)
           }
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources || !refs.size) return unsupported
-          const snapshotDigest = digestSfValue({ state: stored, snapshots, sources })
-          const before = await environment()
-          const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
-          if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
+          const snapshotDigest = sfRecallCost("owner-digest", () => digestSfValue({ state: stored, snapshots, sources }))
+          const before = await sfRecallAsyncCost("owner-environment", () => environment())
+          const principal = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))))
+          if (!before || !principal || principal.id !== actor.principalRef || !sfRecallCost("owner-current", () => current())) return undefined
           if (principal.id.startsWith("local:") || ![...refs.values()].every((ref) =>
-            plannerRecordMaterialized(ref, call, snapshots.planner, principal))) return unsupported
-          if (!await host.revalidate(call) || !current()) return undefined
-          const after = await environment()
-          const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
-          if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
-          return { kind: "current" as const, cases: structuredClone(cases), refs: structuredClone([...refs.values()]),
-            snapshotDigest, environment: after, principal, plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
-        })
-        if (!current() || observed.status !== "ok" || !observed.value) return undefined
+            sfRecallCost("owner-materialized", () => plannerRecordMaterialized(ref, call, snapshots.planner, principal)))) return unsupported
+          if (!await sfRecallAsyncCost("owner-revalidate", () => host.revalidate(call)) || !sfRecallCost("owner-current", () => current())) return undefined
+          const after = await sfRecallAsyncCost("owner-environment", () => environment())
+          const again = await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
+          if (!after || before !== after || sfRecallCost("owner-digest", () => digestSfValue(principal)) !== sfRecallCost("owner-digest", () => digestSfValue(again)) || !sfRecallCost("owner-current", () => current()) ||
+            snapshotDigest !== sfRecallCost("owner-digest", () => digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }))) return undefined
+          return { kind: "current" as const, cases: sfRecallCost("owner-clone", () => structuredClone(cases)), refs: sfRecallCost("owner-clone", () => structuredClone([...refs.values()])),
+            snapshotDigest, environment: after, principal, plannerRoleMap: sfRecallCost("owner-clone", () => structuredClone(roleMap(snapshots.planner, "planner"))) }
+        }))
+        if (!sfRecallCost("owner-current", () => current()) || observed.status !== "ok" || !observed.value) return undefined
         if (observed.value.kind === "unsupported") return unsupported
         const before = observed.value
-        const refs = new Map(before.refs.map((ref) => [digestSfValue(ref), ref]))
+        const refs = new Map(before.refs.map((ref) => [sfRecallCost("owner-digest", () => digestSfValue(ref)), ref]))
         if (selected.memory.length) {
           // A cases grant identifies a candidate; only the original Atlas
           // namespace admission may inspect its partition for a closed leaf set.
-          const atlas = await readState(request, "atlas", async (stored, actor) => {
-            if (!current() || !sameActor(actor) || before.snapshotDigest !==
-              digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+          const atlas = await sfRecallAsyncCost("owner-state-atlas", () => readState(request, "atlas", async (stored, actor) => {
+            if (!sfRecallCost("owner-current", () => current()) || !sameActor(actor) || before.snapshotDigest !==
+              sfRecallCost("owner-digest", () => digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }))) return undefined
             for (const selectedCase of selected.memory) {
               const value = before.cases.find((item) => caseKey(item) === caseKey(selectedCase))
               if (!value) return undefined
@@ -138,27 +139,27 @@ export function createSfPlannerRecallObservation(input: {
             }
             const snapshots = persistence.currentSnapshots?.()
             if (!snapshots || ![...refs.values()].every((ref) =>
-              plannerRecordMaterialized(ref, call, snapshots.planner, before.principal))) return unsupported
-            return current() && await host.revalidate(call) && current() ? true : undefined
-          })
-          if (!current() || atlas.status !== "ok" || atlas.value === undefined) return undefined
+              sfRecallCost("owner-materialized", () => plannerRecordMaterialized(ref, call, snapshots.planner, before.principal)))) return unsupported
+            return sfRecallCost("owner-current", () => current()) && await sfRecallAsyncCost("owner-revalidate", () => host.revalidate(call)) && sfRecallCost("owner-current", () => current()) ? true : undefined
+          }))
+          if (!sfRecallCost("owner-current", () => current()) || atlas.status !== "ok" || atlas.value === undefined) return undefined
           if (atlas.value !== true) return unsupported
         }
         // Close the environment after C08's namespace egress, not just inside
         // its callback. Native scope and terminal authorization remain live.
-        const closed = await environment()
-        if (!current() || closed !== before.environment || !await host.revalidate(call) || !current()) return undefined
-        return { kind: "current", digest: digestSfValue({ snapshot: before.snapshotDigest, refs: [...refs.values()],
-          principal: before.principal, environment: closed, plan: selected }),
-          environment: closed, refs: structuredClone([...refs.values()]), principalDigest: digestSfValue(before.principal),
+        const closed = await sfRecallAsyncCost("owner-environment", () => environment())
+        if (!sfRecallCost("owner-current", () => current()) || closed !== before.environment || !await sfRecallAsyncCost("owner-revalidate", () => host.revalidate(call)) || !sfRecallCost("owner-current", () => current())) return undefined
+        return { kind: "current", digest: sfRecallCost("owner-digest", () => digestSfValue({ snapshot: before.snapshotDigest, refs: [...refs.values()],
+          principal: before.principal, environment: closed, plan: selected })),
+          environment: closed, refs: sfRecallCost("owner-clone", () => structuredClone([...refs.values()])), principalDigest: sfRecallCost("owner-digest", () => digestSfValue(before.principal)),
           plannerRoleMap: before.plannerRoleMap }
       }
-      const prepared = await root.prepare(call, async () => true, current)
+      const prepared = await sfRecallAsyncCost("root-prepare", () => root.prepare(call, async () => true, current))
       if (!prepared) return unavailable()
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
-        const before = await witness(true)
+        const before = await sfRecallAsyncCost("witness-before", () => witness(true))
         if (!before) return unavailable()
         if (before.kind === "unsupported") return { status: "ok", value: unsupported }
         const token = root.proof(call)
@@ -169,50 +170,51 @@ export function createSfPlannerRecallObservation(input: {
           current: () => {
             if (frame.invalid) return false
             try {
-              const valid = frame.open && frames.getStore() === frame && active.get(call) === frame && current() && owner.current()
+              const valid = frame.open && frames.getStore() === frame && active.get(call) === frame && sfRecallCost("owner-current", () => current()) && owner.current()
               if (!valid) frame.invalid = true
               return valid
             } catch { frame.invalid = true; return false }
           } }
         const authorize = async () => {
-          if (!frame.current() || !await host.revalidate(call) || !frame.current()) return false
-          const at = await environment()
-          if (!frame.current() || at !== before.environment) return false
-          const principal = await host.authenticate(request, { surface: "planner", roleMap: structuredClone(before.plannerRoleMap) })
-          return frame.current() && digestSfValue(principal) === before.principalDigest &&
-            await host.revalidate(call) && frame.current()
+          if (!sfRecallCost("owner-frame-current", () => frame.current()) || !await sfRecallAsyncCost("owner-revalidate", () => host.revalidate(call)) || !sfRecallCost("owner-frame-current", () => frame.current())) return false
+          const at = await sfRecallAsyncCost("owner-environment", () => environment())
+          if (!sfRecallCost("owner-frame-current", () => frame.current()) || at !== before.environment) return false
+          const principal = await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: sfRecallCost("owner-clone", () => structuredClone(before.plannerRoleMap)) }))
+          return sfRecallCost("owner-frame-current", () => frame.current()) && sfRecallCost("owner-digest", () => digestSfValue(principal)) === before.principalDigest &&
+            await sfRecallAsyncCost("owner-revalidate", () => host.revalidate(call)) && sfRecallCost("owner-frame-current", () => frame.current())
         }
-        active.set(call, frame)
+        sfRecallCost("owner-frame-admitted", () => active.set(call, frame))
         let result: PortResult<Value>
         try {
-          result = await frames.run(frame, () => observeRecords(before.refs, call, token, authorize, () => frame.current(), async () => {
-            const detached = structuredClone(await work())
+          result = await frames.run(frame, () => sfRecallAsyncCost("record-scope", () => observeRecords(before.refs, call, token, authorize, () => sfRecallCost("owner-frame-current", () => frame.current()), async () => {
+            const detached = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-work", () => work())))
             if (selection && !caseResultMatches(detached, selected.cases[0]!)) { frame.invalid = true; return unavailable() }
             return detached
-          }))
-          if (frame.invalid || frame.pending || !current() || !owner.current()) return unavailable()
+          })))
+          if (frame.invalid || frame.pending || !sfRecallCost("owner-current", () => current()) || !owner.current()) return unavailable()
         } finally {
           frame.open = false
           if (active.get(call) === frame) active.delete(call)
         }
-        const after = await witness()
+        const after = await sfRecallAsyncCost("witness-after", () => witness())
         return after?.kind === "current" && after.digest === before.digest
           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } } : unavailable()
       })
       if (grouped.status !== "ok") return grouped
-      if (grouped.value.kind === "unsupported") return current() ? work() : unavailable()
-      const egress = await root.prepare(call, async () => true, current)
+      if (grouped.value.kind === "unsupported") return sfRecallCost("owner-current", () => current()) ? sfRecallAsyncCost("owner-work", () => work()) : unavailable()
+      const egress = await sfRecallAsyncCost("root-prepare", () => root.prepare(call, async () => true, current))
       if (!egress) return unavailable()
-      const fresh = await egress.run(async () => ({ status: "ok" as const, value: await witness() }))
-      if (fresh.status !== "ok" || fresh.value?.kind !== "current" || fresh.value.digest !== grouped.value.witness || !current())
+      const fresh = await egress.run(async () => ({ status: "ok" as const, value: await sfRecallAsyncCost("witness-egress", () => witness()) }))
+      if (fresh.status !== "ok" || fresh.value?.kind !== "current" || fresh.value.digest !== grouped.value.witness || !sfRecallCost("owner-current", () => current()))
         return unavailable()
-      const closed = await environment()
-      return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
+      const closed = await sfRecallAsyncCost("owner-environment", () => environment())
+      return closed === fresh.value.environment && sfRecallCost("owner-current", () => current()) ? grouped.value.result : unavailable()
     } catch { return unavailable() }
   }
 
   const read = async (incoming: Parameters<DecisionCasePort["read"]>[0], call: TrustedDomainContext,
     work: () => ReturnType<DecisionCasePort["read"]>, selection?: CaseSelection): ReturnType<DecisionCasePort["read"]> => {
+    return sfRecallCostOwner(1, async () => {
     const frame = frames.getStore()
     let ref: ReturnType<typeof parseCaseRef>, selected: CaseSelection | undefined
     // Classification alone may fall back. Once an owner runs work, a refusal
@@ -227,27 +229,29 @@ export function createSfPlannerRecallObservation(input: {
       frame.pending++
       try {
         const version = ref && frame.cases.get(caseKey(ref))
-        if (frame.call !== call || !ref || version === undefined || !frame.current() ||
+        if (frame.call !== call || !ref || version === undefined || !sfRecallCost("owner-frame-current", () => frame.current()) ||
           selection && (!selected || caseKey(selected.ref) !== caseKey(ref) || selected.ref.version !== version || !selected.current())) {
           frame.invalid = true
           return unavailable()
         }
-        const digest = digestSfValue(incoming), hint = selected?.ref, hintCurrent = selected?.current
-        const hintDigest = hint && digestSfValue(hint)
-        const result = structuredClone(await work())
-        if (!frame.current() || digestSfValue(incoming) !== digest ||
-          selected && (selected.ref !== hint || selected.current !== hintCurrent || digestSfValue(selected.ref) !== hintDigest || !hintCurrent?.()) ||
+        const digest = sfRecallCost("owner-digest", () => digestSfValue(incoming)), hint = selected?.ref, hintCurrent = selected?.current
+        const hintDigest = hint && sfRecallCost("owner-digest", () => digestSfValue(hint))
+        const result = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-work", () => work())))
+        if (!sfRecallCost("owner-frame-current", () => frame.current()) || sfRecallCost("owner-digest", () => digestSfValue(incoming)) !== digest ||
+          selected && (selected.ref !== hint || selected.current !== hintCurrent || sfRecallCost("owner-digest", () => digestSfValue(selected.ref)) !== hintDigest || !hintCurrent?.()) ||
           !caseResultMatches(result, { ...ref, version })) { frame.invalid = true; return unavailable() }
         return result
       } catch { frame.invalid = true; return unavailable()
       } finally { frame.pending-- }
     }
-    if (!ref || !selected) return work()
-    if (caseKey(selected.ref) !== caseKey(ref)) return selection ? unavailable() : work()
+    if (!ref || !selected) return sfRecallAsyncCost("owner-work", () => work())
+    if (caseKey(selected.ref) !== caseKey(ref)) return selection ? unavailable() : sfRecallAsyncCost("owner-work", () => work())
     return observe({ cases: [selected.ref], memory: [] }, incoming, call, work, selected)
+    })
   }
   const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext,
     work: () => ReturnType<Recall>): ReturnType<Recall> => {
+    return sfRecallCostOwner(2, async () => {
     const frame = frames.getStore()
     if (frame) { frame.invalid = true; return { status: "unavailable" } }
     let plan: Plan | undefined
@@ -260,9 +264,10 @@ export function createSfPlannerRecallObservation(input: {
         if (cases.length === selected.length) plan = { cases, memory: scope.cases, period: scope.period }
       }
     } catch { /* The original reader owns malformed-input admission. */ }
-    if (!plan) return work()
-    const result = await observe(plan, incoming, call, async () => ({ status: "ok" as const, value: await work() }))
+    if (!plan) return sfRecallAsyncCost("owner-work", () => work())
+    const result = await observe(plan, incoming, call, async () => ({ status: "ok" as const, value: await sfRecallAsyncCost("owner-work", () => work()) }))
     return result.status === "ok" ? result.value : { status: "unavailable" }
+    })
   }
   return { read, recall }
 }
@@ -312,12 +317,12 @@ function plannerReferences(value: unknown, selected: DecisionCase, call: Trusted
         ref.refDigest !== digestSfEvidenceRef(ref)) return false
       if (ref.kind === "record") {
         if (ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period) return false
-        refs.set(digestSfValue(ref), ref)
+        refs.set(sfRecallCost("owner-digest", () => digestSfValue(ref)), ref)
       } else if (ref.kind === "case-event") {
         const events = selected.ledger.filter((event) => event.id === ref.target.eventId)
         if (ref.target.caseId !== selected.id || ref.target.caseIncarnation !== selected.incarnation || events.length !== 1 ||
           ref.target.caseVersion !== events[0]!.caseRef.version || ref.target.outputDigest !== events[0]!.outputDigest ||
-          digestSfValue(ref.target.evidenceRefs) !== digestSfValue(events[0]!.evidenceRefs)) return false
+          sfRecallCost("owner-digest", () => digestSfValue(ref.target.evidenceRefs)) !== sfRecallCost("owner-digest", () => digestSfValue(events[0]!.evidenceRefs))) return false
       } else return false
     }
     return Object.values(item).every(visit)

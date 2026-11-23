@@ -1,4 +1,5 @@
 import { types } from "node:util"
+import { sfRecallCost, sfRecallAsyncCost, sfRecallReadCost } from "./recall-observation-cost.ts"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import { sfReviewArtifactBlobKey } from "../../runtime/artifact.ts"
@@ -384,24 +385,24 @@ export function createSfProductState(input: {
     hasSfDashboardSourceFence(input.persistence) ? input.persistence.dashboardSourceFence : undefined
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
-      input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
+      sfRecallAsyncCost("c08-transaction", () => input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
         const candidate = readinessReads.get(read)
         const readiness = candidate?.namespace === namespace ? candidate : undefined
         const mode = readiness?.mode ?? "read"
-        const authority = await input.authorize(request, snapshot, namespace, mode)
+        const authority = await sfRecallAsyncCost("c08-authorize", () => input.authorize(request, snapshot, namespace, mode))
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
-        const state = readSfState(snapshot)
+        const state = sfRecallCost("c08-read-state", () => readSfState(snapshot))
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
         const selection = namespace === "cases" ? caseReads.get(read) : undefined
         const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
         const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
           ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
-        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const selectedResults = resultSelection ? sfRecallCost("c08-selection", () => projectResultRead(state, resultSelection)) : undefined
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
-        const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
+        const scenarioResults = scenarioSelection ? sfRecallCost("c08-selection", () => scenarioResultMap(state)) : undefined
         const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
-        const identityCases = identitySelection ? caseIdentityMap(state) : undefined
+        const identityCases = identitySelection ? sfRecallCost("c08-selection", () => caseIdentityMap(state)) : undefined
         const persistence = input.persistence
         const authorityOnly = namespace === "reviews" ? reviewAuthorityReads.get(read) : undefined
         const fence = namespace === "reviews" && (authorityOnly || reviewReceiptReads.has(read)) && hasSfDashboardSourceFence(persistence)
@@ -410,27 +411,27 @@ export function createSfProductState(input: {
         const sealCurrent = () => !!seal && seal.current() && input.persistence === persistence &&
           persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence)
         const sealed = sealCurrent()
-        const receipts = sealed && !authorityOnly ? structuredClone({ reviews: state.reviews, transactions: state.transactions }) as SfProductState : undefined
+        const receipts = sealed && !authorityOnly ? sfRecallCost("c08-clone", () => structuredClone({ reviews: state.reviews, transactions: state.transactions })) as SfProductState : undefined
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
-          ? structuredClone(readiness.select(state, authority)) as T
+          ? sfRecallCost("c08-clone", () => structuredClone(sfRecallCost("c08-callback", () => readiness.select(state, authority)))) as T
           : selection && selected?.enumerable && "value" in selected && selected.value &&
           typeof selected.value === "object" && !Array.isArray(selected.value)
-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
-          : selectedResults ? await read(selectedResults, authority)
-          : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
-          : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
-          : sealed && authorityOnly ? await authorityOnly(authority) as T
-          : await read(receipts ?? structuredClone(state), authority)
+          ? await sfRecallReadCost("c08-callback", () => selection.project({ [selection.id]: sfRecallCost("c08-clone", () => structuredClone(selected.value)) }, authority)) as T
+          : selectedResults ? await sfRecallReadCost("c08-callback", () => read(selectedResults, authority))
+          : scenarioSelection && scenarioResults ? await sfRecallReadCost("c08-callback", () => scenarioSelection.project(sfRecallCost("c08-clone", () => structuredClone(scenarioResults)), authority)) as T
+          : identitySelection && identityCases ? await sfRecallReadCost("c08-callback", () => identitySelection.project(sfRecallCost("c08-clone", () => structuredClone(identityCases)), authority)) as T
+          : sealed && authorityOnly ? await sfRecallReadCost("c08-callback", () => authorityOnly(authority)) as T
+          : await sfRecallReadCost("c08-callback", () => read(receipts ?? sfRecallCost("c08-clone", () => structuredClone(state)), authority))
         if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
-        const current = await input.authorize(request, snapshot, namespace, mode)
+        const current = await sfRecallAsyncCost("c08-authorize", () => input.authorize(request, snapshot, namespace, mode))
         if (!sameAuthority(authority, current) || sealed && !sealCurrent())
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
       }, { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
-        ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) }),
+        ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) })),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
       if (command.idempotencyKey.startsWith(abortJournalPrefix) && !abortJournalWrites.has(work))
         return Promise.resolve({ status: "denied", reason: "transaction-abort-writer-required" })
