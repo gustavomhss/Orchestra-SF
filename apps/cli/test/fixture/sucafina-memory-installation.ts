@@ -49,7 +49,11 @@ export default async function memoryInstallation(context: Parameters<typeof inst
     if (!input || !runtime?.identity() || !authority || input.authMode !== "local-operator")
       throw new Error("The original native owner is unavailable for memory preparation")
     const request = new Request(input.origin + input.mount + "/dashboard", {
-      method: "POST", headers: { cookie: command.cookie, origin: input.origin },
+      method: "POST", headers: {
+        cookie: command.cookie, origin: input.origin,
+        // Bind this explicit setup command to the exact existing case revision.
+        "Idempotency-Key": "memory-precedent:" + digestSfValue(command.caseRef),
+      },
       signal: AbortSignal.any([stop.signal, AbortSignal.timeout(40_000)]),
     })
     progress.stage = "scanner"
@@ -71,11 +75,17 @@ export default async function memoryInstallation(context: Parameters<typeof inst
       const payload = { caseRef: encodeCaseRef(command.caseRef) }
       const digest = digestSfValue(payload)
       const admitted = await authority.ui.admit(request, "sf_case_read", digest)
-      if (admitted.status !== "ok") throw new Error("The operator did not admit memory preparation")
+      if (admitted.status !== "ok") {
+        const reasons = ["invalid-ui-operation", "ui-authority-unavailable", "ui-identity-unavailable", "ui-authority-changed"]
+        progress.reason = reasons.includes(admitted.reason) ? admitted.reason : "unavailable"
+        throw new Error("The operator did not admit memory preparation")
+      }
       const call = admitted.value
       try {
-        if (!await authority.ui.validate(call, "sf_case_read", digest))
+        if (!await authority.ui.validate(call, "sf_case_read", digest)) {
+          progress.reason = "ui-intent-changed"
           throw new Error("The operator memory preparation intent changed")
+        }
         progress.stage = "case"
         const current = await business.cases.read(payload, call)
         if (current.status !== "ok" || current.value.case.id !== command.caseRef.id ||
