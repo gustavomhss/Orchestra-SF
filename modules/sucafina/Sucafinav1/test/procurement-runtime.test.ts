@@ -414,10 +414,14 @@ test("request ownership, self-approval flag and independent record versions are 
   if (!result.ok) throw new Error("creation failed")
   const id = String((result.value as Record<string, unknown>).number)
   const before = structuredClone(state)
+  const reader = { ...owner, id: "other", roles: ["requester", "viewer"] }
+  expect(domain.view(state, reader, env).data.requests).toContainEqual(
+    expect.objectContaining({ number: id, createdBy: owner.id }),
+  )
   expect(
     domain.execute(
       state,
-      { ...owner, id: "other" },
+      reader,
       {
         page: "Requests",
         action: "save",
@@ -428,6 +432,23 @@ test("request ownership, self-approval flag and independent record versions are 
       env,
     ),
   ).toMatchObject({ ok: false, status: 403 })
+  expect(state).toEqual(before)
+  const hidden = { ...owner, id: "hidden" }
+  expect(domain.view(state, hidden, env).data.requests).toEqual([])
+  expect(
+    domain.execute(
+      state,
+      hidden,
+      {
+        page: "Requests",
+        action: "save",
+        id,
+        version: 1,
+        values: { pr: { title: "Attack" } },
+      },
+      env,
+    ),
+  ).toMatchObject({ ok: false, status: 404 })
   expect(state).toEqual(before)
   expect(
     domain.execute(state, owner, { page: "Requests", action: "submit_pr", id, version: 1, values: { pr } }, env).ok,
