@@ -245,6 +245,7 @@ export function createSfAtlasMemory(input: {
   async function readRecords(incomingCaseRef: { id: string; incarnation: string }, call: TrustedDomainContext,
     selection?: { digest?: string; eventId?: string }) {
       try {
+      console.info("SF_DESIGN_STAGE recall-atlas-read-start")
       const caseRef = structuredClone(incomingCaseRef)
       const request = input.host.requestFor(call)
       const lease = call.lease
@@ -257,55 +258,79 @@ export function createSfAtlasMemory(input: {
         binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
         digestSfValue(incomingCaseRef) === digestSfValue(caseRef) && observations.every((item) => digestSfValue(item.value) === item.identity)
       const authorized = async () => stable() && await input.host.revalidate(call) && stable()
-      if (!request || !await authorized()) return { status: "unavailable" as const }
+      console.info("SF_DESIGN_STAGE recall-atlas-admission-start")
+      if (!request || !await authorized()) return (console.info("SF_DESIGN_STAGE recall-atlas-admission-refused"), { status: "unavailable" as const })
+      console.info("SF_DESIGN_STAGE recall-atlas-admission-ok")
+      console.info("SF_DESIGN_STAGE recall-atlas-case-state-start")
       const caseBefore = await input.state.read(request, "cases", (state) => state.cases[caseRef.id]).catch(() => undefined)
-      if (!caseBefore || caseBefore.status !== "ok" || !caseBefore.value || !stable()) return { status: "unavailable" as const }
+      console.info(!caseBefore ? "SF_DESIGN_STAGE recall-atlas-case-state-missing" : caseBefore.status !== "ok" ? "SF_DESIGN_STAGE recall-atlas-case-state-refused" : !caseBefore.value ? "SF_DESIGN_STAGE recall-atlas-case-state-absent" : "SF_DESIGN_STAGE recall-atlas-case-state-ready")
+      if (caseBefore && "reason" in caseBefore) console.info(caseBefore.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-state-product-access-unavailable" : caseBefore.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-case-state-product-state-uninitialized" : caseBefore.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-case-state-invalid-product-state" : caseBefore.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-case-state-product-authority-changed" : caseBefore.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-case-state-cancelled" : "SF_DESIGN_STAGE recall-atlas-case-state-other-refusal")
+      if (!caseBefore || caseBefore.status !== "ok" || !caseBefore.value || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-case-state-refused"), { status: "unavailable" as const })
       pin(caseBefore.value)
+      console.info("SF_DESIGN_STAGE recall-atlas-case-canonical-start")
       const found = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (found.status !== "ok" || !stable()) return { status: "unavailable" as const }
+      console.info(found.status === "ok" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-ready" : "SF_DESIGN_STAGE recall-atlas-case-canonical-refused")
+      if (found && "reason" in found) console.info(found.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-product-access-unavailable" : found.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-product-state-uninitialized" : found.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-invalid-product-state" : found.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-product-authority-changed" : found.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-cancelled" : found.reason === "invalid-case-reference" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-invalid-case-reference" : found.reason === "invalid-authority" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-invalid-authority" : found.reason === "product-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-product-state-unavailable" : found.reason === "unexpected-state-preview" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-unexpected-state-preview" : found.reason === "case-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-case-access-unavailable" : found.reason === "case-evidence-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-case-evidence-unavailable" : found.reason === "case-changed" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-case-changed" : found.reason === "case-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-case-state-unavailable" : found.reason === "memory-case-proof-changed" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-memory-case-proof-changed" : found.reason === "procurement-case-read-changed" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-procurement-case-read-changed" : found.reason === "unexpected-state-result" ? "SF_DESIGN_STAGE recall-atlas-case-canonical-unexpected-state-result" : "SF_DESIGN_STAGE recall-atlas-case-canonical-other-refusal")
+      if (found.status !== "ok" || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-case-canonical-refused"), { status: "unavailable" as const })
       pin(found.value)
       const owner = deriveSfMemoryOwner(found.value.context, found.value.case)
-      if (!owner) return { status: "unavailable" as const }
+      console.info(owner ? "SF_DESIGN_STAGE recall-atlas-owner-ready" : "SF_DESIGN_STAGE recall-atlas-owner-unavailable")
+      if (!owner) return (console.info("SF_DESIGN_STAGE recall-atlas-owner-refused"), { status: "unavailable" as const })
+      console.info("SF_DESIGN_STAGE recall-atlas-outbox-start")
       const outbox = await input.state.read(request, "outbox", (state) => ({ items: state.outbox, version: state.versions.outbox, pending: !selection && Object.values(state.outbox).some((item) => item.state === "pending" && item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation) })).catch(() => undefined)
-      if (!outbox || outbox.status !== "ok" || outbox.value.pending || !stable()) return { status: "unavailable" as const }
+      console.info(!outbox ? "SF_DESIGN_STAGE recall-atlas-outbox-missing" : outbox.status !== "ok" ? "SF_DESIGN_STAGE recall-atlas-outbox-refused" : outbox.value.pending ? "SF_DESIGN_STAGE recall-atlas-outbox-pending" : "SF_DESIGN_STAGE recall-atlas-outbox-ready")
+      if (outbox && "reason" in outbox) console.info(outbox.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-outbox-product-access-unavailable" : outbox.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-outbox-product-state-uninitialized" : outbox.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-outbox-invalid-product-state" : outbox.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-outbox-product-authority-changed" : outbox.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-outbox-cancelled" : "SF_DESIGN_STAGE recall-atlas-outbox-other-refusal")
+      if (!outbox || outbox.status !== "ok" || outbox.value.pending || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-outbox-refused"), { status: "unavailable" as const })
       pin(outbox.value)
+      console.info("SF_DESIGN_STAGE recall-atlas-partition-start")
       const snapshot = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
-      if (!snapshot || snapshot.status !== "ok" || !stable()) return { status: "unavailable" as const }
+      console.info(!snapshot ? "SF_DESIGN_STAGE recall-atlas-partition-missing" : snapshot.status !== "ok" ? "SF_DESIGN_STAGE recall-atlas-partition-refused" : snapshot.value === undefined ? "SF_DESIGN_STAGE recall-atlas-partition-absent" : "SF_DESIGN_STAGE recall-atlas-partition-present")
+      if (snapshot && "reason" in snapshot) console.info(snapshot.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-partition-product-access-unavailable" : snapshot.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-partition-product-state-uninitialized" : snapshot.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-partition-invalid-product-state" : snapshot.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-partition-product-authority-changed" : snapshot.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-partition-cancelled" : "SF_DESIGN_STAGE recall-atlas-partition-other-refusal")
+      if (!snapshot || snapshot.status !== "ok" || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-partition-refused"), { status: "unavailable" as const })
       pin(snapshot.value)
       if (snapshot.value === undefined) {
-        if (selection) return { status: "unavailable" as const }
+        console.info("SF_DESIGN_STAGE recall-atlas-empty-start")
+        if (selection) return (console.info("SF_DESIGN_STAGE recall-atlas-empty-selection-refused"), { status: "unavailable" as const })
         const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-        if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !stable()) return { status: "unavailable" as const }
+        if (current && "reason" in current) console.info(current.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-case-product-access-unavailable" : current.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-empty-case-product-state-uninitialized" : current.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-empty-case-invalid-product-state" : current.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-empty-case-product-authority-changed" : current.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-empty-case-cancelled" : current.reason === "invalid-case-reference" ? "SF_DESIGN_STAGE recall-atlas-empty-case-invalid-case-reference" : current.reason === "invalid-authority" ? "SF_DESIGN_STAGE recall-atlas-empty-case-invalid-authority" : current.reason === "product-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-case-product-state-unavailable" : current.reason === "unexpected-state-preview" ? "SF_DESIGN_STAGE recall-atlas-empty-case-unexpected-state-preview" : current.reason === "case-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-case-case-access-unavailable" : current.reason === "case-evidence-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-case-case-evidence-unavailable" : current.reason === "case-changed" ? "SF_DESIGN_STAGE recall-atlas-empty-case-case-changed" : current.reason === "case-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-case-case-state-unavailable" : current.reason === "memory-case-proof-changed" ? "SF_DESIGN_STAGE recall-atlas-empty-case-memory-case-proof-changed" : current.reason === "procurement-case-read-changed" ? "SF_DESIGN_STAGE recall-atlas-empty-case-procurement-case-read-changed" : current.reason === "unexpected-state-result" ? "SF_DESIGN_STAGE recall-atlas-empty-case-unexpected-state-result" : "SF_DESIGN_STAGE recall-atlas-empty-case-other-refusal")
+        if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-empty-case-refused"), { status: "unavailable" as const })
         const latest = await input.state.read(request, "atlas", async (state) => {
           if (!await authorized()) return undefined
           return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
             sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
         }).catch(() => undefined)
+        if (latest && "reason" in latest) console.info(latest.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-empty-egress-product-access-unavailable" : latest.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-empty-egress-product-state-uninitialized" : latest.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-empty-egress-invalid-product-state" : latest.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-empty-egress-product-authority-changed" : latest.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-empty-egress-cancelled" : "SF_DESIGN_STAGE recall-atlas-empty-egress-other-refusal")
         if (!latest || latest.status !== "ok" || !latest.value?.sourceFence || latest.value.partition !== undefined ||
           latest.value.outboxVersion !== outbox.value.version || digestSfValue(latest.value.case) !== digestSfValue(caseBefore.value) || !stable())
-          return { status: "unavailable" as const }
+          return (console.info("SF_DESIGN_STAGE recall-atlas-empty-egress-refused"), { status: "unavailable" as const })
         const records: never[] = []
         rememberRecallObservation(records, { owner: ownerScope, call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
           sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })
+        console.info("SF_DESIGN_STAGE recall-atlas-empty-ok")
         return { status: "ok" as const, records }
       }
       const partition = snapshot.value as AtlasPartition
-      if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests) return { status: "unavailable" as const }
+      if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests) return (console.info("SF_DESIGN_STAGE recall-atlas-partition-shape-refused"), { status: "unavailable" as const })
+      console.info("SF_DESIGN_STAGE recall-atlas-journal-start")
       const loaded = createSfAtlasDurableMemory(partition).read()
-      if (loaded.rejected) return { status: "unavailable" as const }
+      console.info(loaded.rejected ? "SF_DESIGN_STAGE recall-atlas-journal-refused" : "SF_DESIGN_STAGE recall-atlas-journal-ready")
+      if (loaded.rejected) return (console.info("SF_DESIGN_STAGE recall-atlas-journal-refused"), { status: "unavailable" as const })
       const approved = []
       for (const [id, event] of loaded.log) {
+        console.info("SF_DESIGN_STAGE recall-atlas-entry-start")
         const record = event.payload as MemoryRecord
         const envelope = partition.envelopes[id]
         const boundCase = envelope?.caseRef
-        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
+        if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return (console.info("SF_DESIGN_STAGE recall-atlas-envelope-binding-refused"), { status: "unavailable" as const })
         if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs }) ||
-          !sfAtlasPublicationMatches(envelope, record, outbox.value.items)) return { status: "unavailable" as const }
+          !sfAtlasPublicationMatches(envelope, record, outbox.value.items)) return (console.info("SF_DESIGN_STAGE recall-atlas-publication-refused"), { status: "unavailable" as const })
+        console.info("SF_DESIGN_STAGE recall-atlas-envelope-ready")
         const bundleRef = envelope.evidenceRefs.find((ref) => ref.kind === "case-event" && ref.target.eventId === envelope.sourceEventId)
         const mapped = bundleRef && mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: envelope.sourceEventId, bundleRef })
         if (!mapped || mapped.status !== "mapped" || mapped.projection.kind !== "task" ||
           mapped.projection.owner !== owner || mapped.projection.projectionDigest !== envelope.projectionDigest ||
-          digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return { status: "unavailable" as const }
+          digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return (console.info("SF_DESIGN_STAGE recall-atlas-projection-refused"), { status: "unavailable" as const })
+        console.info("SF_DESIGN_STAGE recall-atlas-projection-ready")
         // A settled event/original remains readable while a later projection is
         // pending. Public recall keeps its existing whole-outbox readiness gate.
         if (selection && (selection.eventId ? id !== selection.eventId :
@@ -313,28 +338,34 @@ export function createSfAtlasMemory(input: {
         const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
         try {
           const maps = sfEvidenceSourceMaps(originals)
-          if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return { status: "unavailable" as const }
-        } catch { return { status: "unavailable" as const } }
+          if (digestSfValue(maps.sourceVersions) !== digestSfValue(envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(envelope.sourceIncarnations)) return (console.info("SF_DESIGN_STAGE recall-atlas-source-map-refused"), { status: "unavailable" as const })
+        } catch { return (console.info("SF_DESIGN_STAGE recall-atlas-source-map-caught"), { status: "unavailable" as const }) }
         const refs = [...new Map(originals.flatMap(expandEvidence).map((ref) => [ref.refDigest, ref])).values()]
+        console.info("SF_DESIGN_STAGE recall-atlas-evidence-start")
         const resolutions = await mapSfEvidenceInOrder(refs, (ref) => input.evidence.resolve(ref, call))
-        if (!stable()) return { status: "unavailable" as const }
+        console.info("SF_DESIGN_STAGE recall-atlas-evidence-end")
+        if (!stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-evidence-stability-refused"), { status: "unavailable" as const })
         pin(resolutions)
         for (const [index, resolution] of resolutions.entries()) {
           const ref = refs[index]!
           const capture = partition.originals[ref.refDigest]
-          if ((resolution.state !== "fresh" && resolution.state !== "historical") || resolution.accessRevision !== call.binding.accessRevision || digestSfValue(resolution.ref) !== digestSfValue(ref) || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call) || !stable()) return { status: "unavailable" as const }
+          if ((resolution.state !== "fresh" && resolution.state !== "historical") || resolution.accessRevision !== call.binding.accessRevision || digestSfValue(resolution.ref) !== digestSfValue(ref) || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call) || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-evidence-continuity-refused"), { status: "unavailable" as const })
         }
-        if (!("taskId" in record.entry) || typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return { status: "unavailable" as const }
+        if (!("taskId" in record.entry) || typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return (console.info("SF_DESIGN_STAGE recall-atlas-entry-shape-refused"), { status: "unavailable" as const })
+        console.info("SF_DESIGN_STAGE recall-atlas-entry-ready")
         approved.push({ id, event, envelope, resolutions, entry: { ...record.entry, ref: record.entry.ref } })
       }
-      if (selection && !approved.length || !await authorized()) return { status: "unavailable" as const }
+      if (selection && !approved.length || !await authorized()) return (console.info("SF_DESIGN_STAGE recall-atlas-selection-egress-refused"), { status: "unavailable" as const })
       // Persisted physical journal has already passed strict owner verification.
       // Renumber only this ephemeral authorized read subset; C08 stays untouched.
       const filtered = createSfAtlasDurableMemory({ events: approved.map((item, index) => [item.id, { ...item.event, seq: index + 1 }]) })
       const recalled = createMemoryRead({ store: filtered, actor: owner }).recall({ kind: "task", owner })
       const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
+      console.info("SF_DESIGN_STAGE recall-atlas-case-final-start")
       const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !await authorized()) return { status: "unavailable" as const }
+      console.info(current.status === "ok" ? "SF_DESIGN_STAGE recall-atlas-case-final-ready" : "SF_DESIGN_STAGE recall-atlas-case-final-refused")
+      if (current && "reason" in current) console.info(current.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-final-product-access-unavailable" : current.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-case-final-product-state-uninitialized" : current.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-case-final-invalid-product-state" : current.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-case-final-product-authority-changed" : current.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-case-final-cancelled" : current.reason === "invalid-case-reference" ? "SF_DESIGN_STAGE recall-atlas-case-final-invalid-case-reference" : current.reason === "invalid-authority" ? "SF_DESIGN_STAGE recall-atlas-case-final-invalid-authority" : current.reason === "product-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-final-product-state-unavailable" : current.reason === "unexpected-state-preview" ? "SF_DESIGN_STAGE recall-atlas-case-final-unexpected-state-preview" : current.reason === "case-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-final-case-access-unavailable" : current.reason === "case-evidence-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-final-case-evidence-unavailable" : current.reason === "case-changed" ? "SF_DESIGN_STAGE recall-atlas-case-final-case-changed" : current.reason === "case-state-unavailable" ? "SF_DESIGN_STAGE recall-atlas-case-final-case-state-unavailable" : current.reason === "memory-case-proof-changed" ? "SF_DESIGN_STAGE recall-atlas-case-final-memory-case-proof-changed" : current.reason === "procurement-case-read-changed" ? "SF_DESIGN_STAGE recall-atlas-case-final-procurement-case-read-changed" : current.reason === "unexpected-state-result" ? "SF_DESIGN_STAGE recall-atlas-case-final-unexpected-state-result" : "SF_DESIGN_STAGE recall-atlas-case-final-other-refusal")
+      if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !await authorized()) return (console.info("SF_DESIGN_STAGE recall-atlas-case-final-refused"), { status: "unavailable" as const })
       pin(records)
       // Source readers may issue metadata. Fence their completed observations,
       // then check the final source round and case against the same C08 state.
@@ -342,29 +373,35 @@ export function createSfAtlasMemory(input: {
         partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
         sourceState: digestSfValue(state), sourceFence: lockedSourceFence(),
       })).catch(() => undefined)
+      if (before && "reason" in before) console.info(before.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-final-state-product-access-unavailable" : before.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-final-state-product-state-uninitialized" : before.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-final-state-invalid-product-state" : before.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-final-state-product-authority-changed" : before.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-final-state-cancelled" : "SF_DESIGN_STAGE recall-atlas-final-state-other-refusal")
       if (!before || before.status !== "ok" || !before.value.sourceFence || !stable() ||
         before.value.outboxVersion !== outbox.value.version || digestSfValue(before.value.partition) !== digestSfValue(snapshot.value) ||
-        digestSfValue(before.value.case) !== digestSfValue(caseBefore.value)) return { status: "unavailable" as const }
+        digestSfValue(before.value.case) !== digestSfValue(caseBefore.value)) return (console.info("SF_DESIGN_STAGE recall-atlas-final-state-refused"), { status: "unavailable" as const })
+      console.info("SF_DESIGN_STAGE recall-atlas-final-state-ready")
       pin(before.value)
       for (const record of records) {
         for (const resolution of record.resolutions) {
           const again = await input.evidence.resolve(resolution.ref, call)
           pin(again)
-          if (!stable() || again.accessRevision !== resolution.accessRevision || digestSfValue(again.ref) !== digestSfValue(resolution.ref) || again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call) || !stable()) return { status: "unavailable" as const }
+          if (!stable() || again.accessRevision !== resolution.accessRevision || digestSfValue(again.ref) !== digestSfValue(resolution.ref) || again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call) || !stable()) return (console.info("SF_DESIGN_STAGE recall-atlas-evidence-final-refused"), { status: "unavailable" as const })
         }
       }
+      console.info("SF_DESIGN_STAGE recall-atlas-egress-start")
       const latest = await input.state.read(request, "atlas", async (state) => {
         // No authority await may reopen a race after this protected read.
         if (!await authorized()) return undefined
         return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
           sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
       }).catch(() => undefined)
+      if (latest && "reason" in latest) console.info(latest.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-atlas-egress-product-access-unavailable" : latest.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-atlas-egress-product-state-uninitialized" : latest.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-atlas-egress-invalid-product-state" : latest.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-atlas-egress-product-authority-changed" : latest.reason === "cancelled" ? "SF_DESIGN_STAGE recall-atlas-egress-cancelled" : "SF_DESIGN_STAGE recall-atlas-egress-other-refusal")
       if (!latest || latest.status !== "ok" || !latest.value || !stable() ||
-        digestSfValue(latest.value) !== digestSfValue(before.value)) return { status: "unavailable" as const }
+        digestSfValue(latest.value) !== digestSfValue(before.value)) return (console.info("SF_DESIGN_STAGE recall-atlas-egress-refused"), { status: "unavailable" as const })
+      console.info("SF_DESIGN_STAGE recall-atlas-egress-ready")
       rememberRecallObservation(records, { owner: ownerScope, call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
         sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })
+      console.info("SF_DESIGN_STAGE recall-atlas-read-ok")
       return { status: "ok" as const, records }
-      } catch { return { status: "unavailable" as const } }
+      } catch { return (console.info("SF_DESIGN_STAGE recall-atlas-read-caught"), { status: "unavailable" as const }) }
   }
 
   return {
