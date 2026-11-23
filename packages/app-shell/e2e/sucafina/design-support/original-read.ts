@@ -39,6 +39,8 @@ export async function armOriginalRead(page: Page, owner: Owner, selection: Origi
       })
     return { response, request, body }
   })
+  // Mark rejection as observed while the user action is still running. The original
+  // rejecting promise is returned unchanged and every caller must await completed.
   void completed.catch(() => undefined)
   return { completed, close: read.close }
 }

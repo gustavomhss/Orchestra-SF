@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test"
-import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, reviewActions } from "./design-support/wave-four"
+import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, reviewActions, originalRead, armOriginalRead } from "./design-support/wave-four"
+import { forwardOnce } from "./operations-support/runtime"
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
@@ -60,9 +61,13 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
     })
   })
   const go = (screen: typeof screens[number], target = page, portuguese = false) =>
-    enter(target, owner, new URL(screen.path, installation.origin).href, portuguese ? screen.br : screen.title)
-  const record = (path: string, title = "Requests") =>
-    enter(page, owner, new URL(path, installation.origin).href, title)
+    enter(target, owner, new URL(screen.path, installation.origin).href, portuguese ? screen.br : screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
+  const record = (path: string, title: "Requests" | "My approvals" = "Requests", request?: string) =>
+    enter(page, owner, new URL(path, installation.origin).href, title, undefined, {
+      path: "/api/ui/pages/" + (title === "My approvals" ? "CAP26" : "CAP25"),
+      ...(request ? { query: { request } } : {}),
+    })
   const desktop = async () => { await page.setViewportSize({ width: 1440, height: 1100 }); await reflow(page) }
   const narrow = async () => { await page.setViewportSize({ width: 320, height: 900 }); await reflow(page) }
   const review = page.locator('[data-component="sf-change-review"]')
@@ -78,57 +83,44 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
     if (!ref) throw new Error("Rendered producer request reference missing: " + name)
     return ref
   }
-  const confirm = async (label: string) => {
+  const confirm = async (label: string, capability: "CAP25" | "CAP26" | "CAP27" | "CAP28", query?: Record<string, string>) => {
     const before = posts.length
-    // Capture bytes as soon as CDP exposes the response, before confirmation
-    // can unmount the review or trigger the producer readback navigation.
-    const responsePending = page.waitForResponse((response) =>
-      response.request().method() === "POST" &&
-      new URL(response.url()).pathname === installation.mount + "/procurement").then(async (response) => {
-        const status = response.status()
-        const contentType = response.headers()["content-type"] ?? ""
-        let body: unknown = null
-        let bodyRead: "read" | "unavailable" | "invalid-json" = "unavailable"
-        let bodyError: string | undefined
-        try {
-          const text = await response.text()
-          bodyRead = "invalid-json"
-          body = JSON.parse(text)
-          bodyRead = "read"
-        } catch (error) {
-          bodyError = error instanceof Error && /^[A-Za-z]*Error$/.test(error.name) ? error.name : "unknown"
-        }
-        return { status, contentType, body, bodyRead, bodyError }
-      }).catch(() => null)
-    await review.getByRole("button", { name: label, exact: true }).click()
-    await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
-    const response = await responsePending
-    if (!response) throw new Error("The original producer did not return a command response.")
-    const result = response.body && typeof response.body === "object"
-      ? response.body as Record<string, unknown> : null
-    // Only bounded status/error enums are logged: never request values, headers,
-    // source records, actor identity or opaque owner/intent credentials.
-    const codes = result && Array.isArray(result.errors) ? result.errors.filter((value): value is string =>
-      typeof value === "string" && /^[a-z][a-z0-9_-]{0,63}$/.test(value)).slice(0,8) : []
-    console.info("SF_DESIGN_COMMAND " + JSON.stringify({
-      group: journey.id, ordinal: before + 1, status: response.status,
-      bodyRead: response.bodyRead, bodyError: response.bodyError,
-      confirmed: response.bodyRead === "read" ? result?.ok === true : null, codes,
-    }))
-    expect(response.status, "the original producer explicitly accepted this confirmation").toBe(200)
-    expect(response.contentType, "the original producer returns a JSON command response").toMatch(/^application\/json(?:\s*;|$)/i)
-    expect(response.bodyRead, "a readable malformed body is not an acknowledgement").not.toBe("invalid-json")
-    if (response.bodyRead === "read")
-      expect(result?.ok === true, "a readable original acknowledgement must explicitly accept the command").toBe(true)
-    // An unavailable browser response body is reported, never converted into ok.
-    // The application must close its review and complete its own original-response
-    // checks; every caller then performs a fresh, exact canonical source readback.
-    await expect(review).toHaveCount(0)
-    const host = page.locator('[data-sf-host="owner-runtime231"]')
-    await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
-    await expect(host).toHaveAttribute("data-sf-view-state", "ready")
-    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
-    await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
+    let readback: Awaited<ReturnType<typeof armOriginalRead>> | undefined
+    // The producer validates some source versions before POST. Arm the readback
+    // only after the original acknowledgement, before delivering it to the UI.
+    const saved = await forwardOnce(page, (url) => url.origin === installation.origin &&
+      url.pathname === installation.mount + "/procurement", "POST", async (response) => {
+      expect(response.status(), "the original producer explicitly accepted this confirmation").toBe(200)
+      expect(await response.json(), "the original command body explicitly accepts the command").toMatchObject({ ok: true })
+      readback = await armOriginalRead(page, owner, { path: "/api/ui/pages/" + capability, query })
+    })
+    try {
+      const [{ response }] = await Promise.all([
+        saved.completed, review.getByRole("button", { name: label, exact: true }).click(),
+      ])
+      await expect.poll(() => posts.length, { message: "one explicit confirmation sends one original producer command" }).toBe(before + 1)
+      expect(response.headers()["content-type"], "the original producer returns a JSON command response").toMatch(/^application\/json(?:\s*;|$)/i)
+      expect(readback).toBeDefined()
+      await readback!.completed
+      console.info("SF_DESIGN_COMMAND " + JSON.stringify({
+        group: journey.id, ordinal: before + 1, status: response.status(),
+        bodyRead: "read", confirmed: true, readback: capability,
+      }))
+      await expect(review).toHaveCount(0)
+      const host = page.locator('[data-sf-host="owner-runtime231"]')
+      await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
+      await expect(host).toHaveAttribute("data-sf-view-state", "ready")
+      await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
+      await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
+    } finally {
+      await saved.close()
+      await readback?.close()
+    }
+  }
+  const selectSupplier = async (row: Locator) => {
+    const supplier = await rowReference(row)
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP27", query: { supplier } }, () =>
+      row.locator('[data-sf-action="select"]').click())
   }
   const assertRowStatus = async (name: string, status: string) => {
     await go(screens[1])
@@ -191,7 +183,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await capture(page, info, "CAP25-dark-desktop-requisition-review-overview-test-data")
       await reviewActions(page)
       await capture(page, info, "CAP25-dark-desktop-requisition-review-actions-test-data")
-      await confirm("Save requisition draft")
+      await confirm("Save requisition draft", "CAP25", { request: requestRef(data.requests.draft) })
       await detail.getByRole("button", { name: "Back to requests", exact: true }).click()
       await requestRow(page, data.requests.draft).locator('[data-sf-action="select"]').click()
       await expect(detail.locator('input[name="pr.estAmount"]')).toHaveValue("16500")
@@ -226,7 +218,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(fields.locator('input[name="pr.title"]')).toHaveValue(data.requests.created)
       await desktop()
       await detail.getByRole("button", { name: "Create request", exact: true }).click()
-      await confirm("Create request")
+      await confirm("Create request", "CAP25")
       // The create acknowledgement is not a canonical record reference. Read the
       // refreshed source list and select the producer-issued row before continuing.
       await detail.getByRole("button", { name: "Back to requests", exact: true }).click()
@@ -236,7 +228,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await created.locator('[data-sf-action="select"]').click()
       await expect(detail.locator('textarea[name="pr.description"]')).toHaveValue(data.description)
       await detail.getByRole("button", { name: "Submit requisition", exact: true }).click()
-      await confirm("Submit requisition")
+      await confirm("Submit requisition", "CAP25", { request: requestRef(data.requests.created) })
       await expect(detail.locator(".sf-u11-detail-head")).toContainText("Requisition approval")
       await assertRowStatus(data.requests.created, "Requisition approval")
     })
@@ -249,7 +241,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(requestDetail.getByRole("button", { name: "Submit purchase order", exact: true })).toHaveCount(0)
       const comparisonLink = page.locator(".sf-u11-tabs").getByRole("link", { name: "Open sourcing comparison", exact: true })
       await expect(comparisonLink).toHaveAttribute("href", /\/sourcing\/compare(?:\?|$)/)
-      await comparisonLink.click()
+      await originalRead(page, owner, { path: "/api/ui/pages/CAP25", query: { request: requestRef(data.requests.sourcing) } }, () => comparisonLink.click())
       await ready(page, "Requests")
       await expect(page).toHaveURL((url) => url.pathname.endsWith("/sourcing/compare") &&
         url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
@@ -302,9 +294,9 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await capture(page, info, "CAP25-dark-desktop-sourcing-review-overview-test-data")
       await reviewActions(page)
       await capture(page, info, "CAP25-dark-desktop-sourcing-review-actions-test-data")
-      await confirm("Save sourcing")
+      await confirm("Save sourcing", "CAP25", { request: requestRef(data.requests.sourcing) })
       await expect(surface).toHaveAttribute("data-confirmation-phase", "producer-confirmed")
-      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(requestRef(data.requests.sourcing)) + "/sourcing")
+      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(requestRef(data.requests.sourcing)) + "/sourcing", "Requests", requestRef(data.requests.sourcing))
       await expect(editor.getByLabel("Evaluator", { exact: true })).toHaveValue(evaluator)
       await expect(editor.locator(".sf-u12-quote").first().getByLabel("Description", { exact: true })).toHaveValue(data.description)
       await expect(editor.locator(".sf-u12-quote").first().getByLabel("Notes", { exact: true }))
@@ -337,7 +329,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await reviewActions(page)
       await capture(page, info, "CAP26-dark-320-pr-review-actions-test-data")
       await desktop()
-      await confirm("Approve PR")
+      await confirm("Approve PR", "CAP26")
       await assertRowStatus(data.requests.created, "Sourcing")
     })
 
@@ -353,9 +345,9 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await detail.getByRole("textbox", { name: "Approval comment", exact: true }).fill("Design test data · Recorded quotation reviewed.")
       await detail.getByRole("button", { name: "Approve current step", exact: true }).click()
       await expect(review).toContainText(sourceRef)
-      await confirm("Approve current step")
+      await confirm("Approve current step", "CAP26")
       await assertRowStatus(data.requests.sourceApproval, "Purchase order draft")
-      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(sourceRef) + "/po")
+      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(sourceRef) + "/po", "Requests", sourceRef)
       await expect(page.locator(".sf-u11-detail")
         .getByRole("button", { name: "Submit purchase order", exact: true })).toBeEnabled()
 
@@ -370,15 +362,15 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await capture(page, info, "CAP26-dark-desktop-po-decision-review-overview-test-data")
       await reviewActions(page)
       await capture(page, info, "CAP26-dark-desktop-po-decision-review-actions-test-data")
-      await confirm("Reject current step")
+      await confirm("Reject current step", "CAP26")
       await assertRowStatus(data.requests.poApproval, "Purchase order rejected")
-      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po")
+      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po", "Requests", poRef)
       const po = page.locator("[data-sf-po-fields]")
       await expect(po.locator(".sf-u11-line").first().getByLabel("Unit price", { exact: true })).toHaveValue("22400")
       await po.getByLabel("Delivery conditions", { exact: true }).fill("Design test data · Regional service owner accepts delivery after review.")
       await page.locator(".sf-u11-detail").getByRole("button", { name: "Save purchase order draft", exact: true }).click()
-      await confirm("Save purchase order draft")
-      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po")
+      await confirm("Save purchase order draft", "CAP25", { request: poRef })
+      await record("/orchestra/sf-procurement/requests/" + encodeSfRouteRef(poRef) + "/po", "Requests", poRef)
       await expect(po.getByLabel("Delivery conditions", { exact: true })).toHaveValue("Design test data · Regional service owner accepts delivery after review.")
       await expect(po.locator(".sf-u11-line").first().getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Recorded line detail.")
       await scrollPageTop(page)
@@ -434,11 +426,11 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await reviewActions(page)
       await capture(page, info, "CAP27-dark-320-supplier-review-actions-test-data")
       await desktop()
-      await confirm("Create supplier")
+      await confirm("Create supplier", "CAP27")
       await expect(list).toBeVisible()
       const created = list.locator("tr[data-sf-row]").filter({ hasText: data.suppliers.created })
       await expect(created).toContainText("Pending")
-      await created.locator('[data-sf-action="select"]').click()
+      await selectSupplier(created)
       const detail = surface.locator(".sf-u14-detail")
       await expect(detail).toContainText(data.supplierNote)
       await scrollPageTop(page)
@@ -470,17 +462,16 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await page.keyboard.press("Enter")
       await expect(list).toBeVisible()
       await desktop()
-      await created.locator('[data-sf-action="select"]').click()
+      await selectSupplier(created)
       await expect(detail).toContainText(data.supplierNote)
       await detail.getByRole("button", { name: "Edit supplier", exact: true }).click()
       const revised = "Design test data · Regional support terms and contacts confirmed."
       await editor.locator('[name="notes"]').fill(revised)
       await editor.getByRole("button", { name: "Save supplier", exact: true }).click()
-      await confirm("Save supplier")
+      await confirm("Save supplier", "CAP27")
       // Reopen from the fresh list rather than mistaking the still-mounted input for readback.
       await surface.getByRole("button", { name: "Back to suppliers", exact: true }).click()
-      await list.locator("tr[data-sf-row]").filter({ hasText: data.suppliers.created })
-        .locator('[data-sf-action="select"]').click()
+      await selectSupplier(list.locator("tr[data-sf-row]").filter({ hasText: data.suppliers.created }))
       await expect(detail).toContainText(revised)
     })
   }
@@ -537,7 +528,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await reviewActions(page)
       await capture(page, info, "CAP28-dark-320-settings-review-actions-test-data")
       await desktop()
-      await confirm("Save settings")
+      await confirm("Save settings", "CAP28")
       await go(screens[4])
       await expect(form.locator("#sf-u36-field-reminderDays")).toHaveValue("9")
       await expect(form.locator("#sf-u36-field-minQuotes")).toHaveValue("3")
