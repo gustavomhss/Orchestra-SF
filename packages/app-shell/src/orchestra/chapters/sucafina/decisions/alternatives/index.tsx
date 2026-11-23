@@ -244,8 +244,8 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                         <dl>
                           <dt>{t(result.comparisonStatus === "complete" ? "sf.ui35.total" : "sf.ui35.knownSubtotal")}</dt>
                           <dd class="sf-decision-amount"><bdi>{amount(result.comparisonStatus === "complete" ? result.total : result.knownSubtotal)} <span>{result.currency}</span></bdi></dd>
-                          <dt>{t("sf.ui35.status")}</dt><dd><bdi>{result.comparisonStatus}</bdi></dd>
-                          <dt>{t("sf.ui35.coverage")}</dt><dd><bdi>{result.costCoverage.coverageState}</bdi></dd>
+                          <dt>{t("sf.ui35.status")}</dt><dd><bdi>{result.comparisonStatus === "conditioned" ? t("sf.u18.choice.statusConditioned") : result.comparisonStatus}</bdi></dd>
+                          <dt>{t("sf.ui35.coverage")}</dt><dd><bdi>{result.costCoverage.coverageState === "pending" ? t("sf.u18.choice.coveragePending") : result.costCoverage.coverageState}</bdi></dd>
                           <dt>{t("sf.ui35.horizon")}</dt><dd>{result.horizon.start} – {result.horizon.end}</dd>
                         </dl>
                       </section>
@@ -316,7 +316,7 @@ export function SfAlternativesView(props: SfSurfaceProps): JSX.Element {
                   <dl>
                     <dt>{t("sf.ui35.choice")}</dt><dd><bdi>{review().promotion.choiceId}</bdi></dd>
                     <dt>{t("sf.ui35.basis")}</dt><dd><bdi>{review().promotion.coverageRef}</bdi></dd>
-                    <dt>{t("sf.ui35.status")}</dt><dd><bdi>{review().current.comparisonStatus}</bdi></dd>
+                    <dt>{t("sf.ui35.status")}</dt><dd><bdi>{review().current.comparisonStatus === "conditioned" ? t("sf.u18.choice.statusConditioned") : review().current.comparisonStatus}</bdi></dd>
                     <dt>{t("sf.ui35.knownSubtotal")}</dt><dd>{amount(review().current.knownSubtotal)} <bdi>{review().current.currency}</bdi></dd>
                   </dl>
                 </section>}
