@@ -478,10 +478,117 @@ test("v2: Disconnect removes stored credentials, confirms removing several, expl
   expect(legacyAuth).toEqual([])
 })
 
-async function setup(page: Page, state: ReturnType<typeof fixture>) {
+
+for (const sample of [
+  { width: 320, scheme: "dark", locale: "en", lang: "en" },
+  { width: 390, scheme: "light", locale: "br", lang: "pt-BR" },
+] as const) {
+  test(`narrow Settings keeps sections, permissions and model controls usable at ${sample.width}px in ${sample.locale}`, async ({
+    page,
+  }, testInfo) => {
+    const state = fixture()
+    await page.setViewportSize({ width: sample.width, height: 900 })
+    await page.emulateMedia({ colorScheme: sample.scheme })
+    await setup(page, state, sample.locale)
+    await page.goto("/orchestra/settings?section=general", { waitUntil: "domcontentloaded" })
+    await expect(page.locator("html")).toHaveAttribute("lang", sample.lang)
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", sample.scheme)
+    const view = page.locator('[data-mx-page="settings"]')
+    const nav = view.locator(".settings-nav")
+    await expect(nav.getByRole("button")).toHaveCount(9)
+    await expect(view.locator('[data-slot="orchestra-palette-row"]').getByRole("radio")).toHaveCount(8)
+    await expect(view.locator('[data-action="settings-language"]')).toBeVisible()
+    const capture = async (section: string) => {
+      const name = `Settings-${section}-${sample.scheme}-${sample.width}-${sample.locale}-test-data`
+      const path = testInfo.outputPath(`${name}.png`)
+      await page.screenshot({ path })
+      await testInfo.attach(name, { path, contentType: "image/png" })
+    }
+    const measurements: { section: string; rows: Awaited<ReturnType<typeof narrowRows>> }[] = []
+    const inspect = async (section: string, selector: string) => {
+      const rows = await narrowRows(page, selector)
+      measurements.push({ section, rows })
+      expect.soft(rows.length, `${section} has rendered rows`).toBeGreaterThan(0)
+      for (const row of rows) {
+        expect.soft(row.left, `${section}: ${row.name} stays inside the viewport`).toBeGreaterThanOrEqual(-1)
+        expect.soft(row.right, `${section}: ${row.name} stays inside the viewport`).toBeLessThanOrEqual(sample.width + 1)
+        expect.soft(row.overflow, `${section}: ${row.name} does not clip its content`).toBeLessThanOrEqual(1)
+        for (const child of row.children) {
+          expect.soft(child.left, `${section}: ${row.name} keeps ${child.name} inside its row`).toBeGreaterThanOrEqual(row.left - 1)
+          expect.soft(child.right, `${section}: ${row.name} keeps ${child.name} inside its row`).toBeLessThanOrEqual(row.right + 1)
+        }
+      }
+    }
+    await capture("general")
+    await inspect("general", '.orchestra-settings .settings-inherited [data-component="settings-v2-row"]')
+
+    await nav.locator('[data-sec="permissions"]').click()
+    await expect(nav.locator('[data-sec="permissions"]')).toHaveAttribute("aria-current", "page")
+    await expect(view.locator(".perm-tool")).toHaveCount(14)
+    const read = view.locator('[data-tool="read"]')
+    const allow = read.locator('[role="radio"][data-v="allow"]')
+    const ask = read.locator('[role="radio"][data-v="ask"]')
+    await expect(allow).toHaveAttribute("aria-checked", "true")
+    await expect(view.locator('[data-tool="glob"] [data-v="deny"]')).toBeDisabled()
+    await expect(view.locator('[data-tool="edit"] [data-v="ask"]')).toBeDisabled()
+    await capture("permissions")
+    await inspect("permissions", ".orchestra-settings .perm-tool")
+    await page.keyboard.press("Tab")
+    await allow.focus()
+    await expect(allow).toBeFocused()
+    await allow.press("ArrowRight")
+    await expect(ask).toHaveAttribute("aria-checked", "true")
+    await expect(ask).toBeFocused()
+    await expect.poll(() => state.patches.length).toBe(1)
+    expect(state.patches[0]).toEqual({
+      permissions: [
+        { action: "glob", resource: "*", effect: "deny" },
+        { action: "*", resource: "*", effect: "allow" },
+        { action: "bash", resource: "*", effect: "ask" },
+        { action: "read", resource: "*", effect: "ask" },
+        { action: "read", resource: "*.env", effect: "deny" },
+        { action: "edit", resource: "*.md", effect: "deny" },
+      ],
+    })
+    await capture("permission-focus")
+
+    await nav.locator('[data-sec="models"]').click()
+    await expect(nav.locator('[data-sec="models"]')).toHaveAttribute("aria-current", "page")
+    await expect(view.locator("[data-model]")).toHaveCount(3)
+    await expect(view.locator('[data-model="openrouter/gpt-5"] strong')).toHaveText("GPT-5 via OpenRouter")
+    await expect(view.locator('[data-model="openai/gpt-5"] .mx-badge')).toBeVisible()
+    await capture("models")
+    await inspect("models", ".orchestra-settings .mx-row[data-model]")
+    await testInfo.attach("settings-narrow-layout", {
+      body: JSON.stringify({ sample, measurements }, null, 2),
+      contentType: "application/json",
+    })
+  })
+}
+
+async function narrowRows(page: Page, selector: string) {
+  return page.locator(selector).evaluateAll((elements) =>
+    elements.map((element) => {
+      const box = element.getBoundingClientRect()
+      return {
+        name: element.getAttribute("data-tool") ?? element.getAttribute("data-model") ?? element.textContent?.trim().slice(0, 80),
+        left: box.left,
+        right: box.right,
+        overflow: element.scrollWidth - element.clientWidth,
+        children: Array.from(element.children).flatMap((child) => {
+          const rect = child.getBoundingClientRect()
+          if (!rect.width || !rect.height) return []
+          return [{ name: child.getAttribute("role") ?? child.tagName, left: rect.left, right: rect.right }]
+        }),
+      }
+    }),
+  )
+}
+
+async function setup(page: Page, state: ReturnType<typeof fixture>, locale: "en" | "br" = "en") {
   await page.addInitScript(
-    ({ server, directory }) => {
-      localStorage.setItem("language.v1", JSON.stringify({ locale: "en" }))
+    ({ server, directory, locale }) => {
+      localStorage.setItem("language.v1", JSON.stringify({ locale }))
       localStorage.setItem("settings.v3", JSON.stringify({ general: { shouldDisplayTabsToast: false } }))
       localStorage.setItem(
         "orchestra.global.dat:server",
@@ -489,7 +596,7 @@ async function setup(page: Page, state: ReturnType<typeof fixture>) {
       )
       localStorage.setItem("orchestra.global.dat:layout", JSON.stringify({ home: { selection: { server, directory } } }))
     },
-    { server, directory },
+    { server, directory, locale },
   )
   // The provider catalog is served below in the V2 shape, with the integrations the list needs.
   await mockOrchestraServer(page, {
