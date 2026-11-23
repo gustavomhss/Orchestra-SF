@@ -14,7 +14,7 @@
     "branch": "sf-fix-product",
     "sha": "bb136b96579a8430dcbd265ddb36e9a3941304d8",
     "tree": "0658dd90f07266b07e39a89ee90b73cb9461c435",
-    "integrationKnown": "d522399b7542bb3fc2a12c516213be7f76098678",
+    "integrationKnown": "b1b77d5c2d393601af377f22454178fba5f44aec",
     "commits": [
       {
         "sha": "0d9d4e9a5f20115f9ba3e66bbaa16047b655da5a",
@@ -129,7 +129,9 @@
       "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/contracts.ts",
       "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx"
     ],
-    "mergePerformedByThisAgent": false
+    "mergePerformedByThisAgent": false,
+    "testedCode": "d522399b7542bb3fc2a12c516213be7f76098678",
+    "postTestChanges": "Documentation only, as confirmed by root"
   },
   "method": {
     "source": "GitHub MCP reads/writes",
@@ -909,7 +911,16 @@
     },
     {
       "name": "Gates10",
-      "status": "Later diagnostic-redaction gate in progress at closure; root owns final composed qualification"
+      "status": "success",
+      "run": 45261780999,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261780999",
+      "source": "d522399b7542bb3fc2a12c516213be7f76098678",
+      "reportedBy": "root",
+      "semanticTests": 28,
+      "browserTests": 132,
+      "gates": 6,
+      "guards": 78,
+      "palettes": 7
     }
   ],
   "testSeparation": {
