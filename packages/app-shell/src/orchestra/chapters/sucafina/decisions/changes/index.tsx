@@ -373,7 +373,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
   return <SfPageFrame
     titleKey={u18Key("sf.ui39.title")}
     context={view.caseData ? [{
-      id: "case", label: u18Message("sf.common.chooseCase"),
+      id: "case", label: u18Message("sf.u18.choice.currentCase"),
       value: { kind: "data", text: view.caseData.objective },
     }] : []}
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="work"

@@ -186,6 +186,24 @@ async function openScreen(page: Page, owner: Owner, screen: Screen, localized = 
       expect(await root.locator('select[aria-labelledby="sf-analysis-case-label"] option:not([value=""])').count()).toBeGreaterThan(0)
     const bounds = await root.boundingBox()
     expect(bounds?.width).toBeLessThanOrEqual(1160)
+    if (["UI35", "UI36", "UI37"].includes(screen.id)) {
+      const back = root.getByRole("link", { name: localized ? "Voltar ao caso" : "Back to case", exact: true })
+      await expect(back).toBeVisible()
+      const backBounds = await back.boundingBox()
+      expect(backBounds).not.toBeNull()
+      expect(backBounds!.height).toBeGreaterThanOrEqual(44)
+      expect(backBounds!.width).toBeLessThan(bounds!.width)
+      expect(Math.abs(backBounds!.x - bounds!.x)).toBeLessThanOrEqual(1)
+    }
+    if (screen.id === "UI36") {
+      const filter = root.getByRole("combobox", { name: localized ? "Estado" : "State", exact: true })
+      await expect(filter.locator('option[value="all"]')).toHaveText(localized ? "Todos" : "All")
+    }
+    if (screen.id === "UI39" || screen.id === "UI40") {
+      const context = page.locator('[data-sf-context="case"]')
+      await expect(context.locator("dt")).toHaveText(localized ? "Caso atual" : "Current case")
+      await expect(context.locator("dd")).toHaveText(waveFourDecisionsData.objective)
+    }
     await reflow(page)
   } catch (error) {
     await diagnoseDecisionSources(page, owner, screen)
@@ -368,6 +386,12 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await expect(assumptions.getByRole("listitem")).toHaveCount(2)
     await assumptions.getByRole("combobox", { name: "State", exact: true }).selectOption("confirmed")
     await expect(assumptions.locator('[data-sf-state="filtered-empty"]')).toBeVisible()
+    await expect(assumptions.getByRole("status")).toHaveText("No results for these filters.")
+    await expect(assumptions.getByText("No assumptions are recorded for this case.", { exact: true })).toHaveCount(0)
+    await expect(assumptions.getByRole("listitem")).toHaveCount(0)
+    await capture(page, info, "UI36-dark-desktop-filtered-empty-test-data")
+    await assumptions.getByRole("combobox", { name: "State", exact: true }).selectOption("all")
+    await expect(assumptions.getByRole("listitem")).toHaveCount(2)
     await assumptions.getByRole("combobox", { name: "State", exact: true }).selectOption("open")
     await assumptions.getByRole("listitem").filter({ hasText: waveFourDecisionsData.assumption })
       .getByRole("button", { name: "Review assumption", exact: true }).click()
