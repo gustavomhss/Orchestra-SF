@@ -1,5 +1,7 @@
 import { expect } from "@playwright/test"
 import type { Page, Request } from "@playwright/test"
+import { Schema } from "effect"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import type { DesignInstallation } from "./design-support/installation"
 import { waveFourTest, ready, scheme, reflow, reviewActions, scrollPageTop, observePage } from "./design-support/wave-four"
 import { captureFinalSurface } from "./design-support/final-capture"
@@ -180,8 +182,8 @@ waveFourTest("UI61 · original conditions, independent materiality and explicit 
     await expect(condition.getByRole("button", { name: "Review condition", exact: true })).toHaveAttribute("aria-expanded", "true")
     await scrollPageTop(page)
     await captureFinalSurface(page, info, "UI61", "dark-desktop-materiality", { preview: true })
-    await page.setViewportSize({ width: 320, height: 900 })
     await scheme(page, "light")
+    await page.setViewportSize({ width: 320, height: 900 })
     await reflow(page)
     await materiality.scrollIntoViewIfNeeded()
     await captureFinalSurface(page, info, "UI61", "light-320-materiality")
@@ -214,9 +216,10 @@ waveFourTest("UI61 · original conditions, independent materiality and explicit 
   await independently("UI61 explicitly starts the original signal read and cancels only this view's wait", async () => {
     // This costly original read is last; canceling the browser wait does not stop source reconciliation.
     // Reopen only before it starts. No subsequent assertion depends on another server response.
-    // This step is independent of earlier capture stages, including their viewport and theme.
-    await page.setViewportSize({ width: 320, height: 900 })
+    // Set the theme while the original desktop toggle is visible, then enter the narrow viewport.
+    await page.setViewportSize({ width: 1440, height: 1100 })
     await scheme(page, "light")
+    await page.setViewportSize({ width: 320, height: 900 })
     await selectMemory(page, installation, seeded, "UI61")
     const surface = page.locator('[data-sf-surface="UI61"]')
     const signals = surface.locator("[data-sf-memory-signals-state]")
@@ -456,7 +459,7 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   const diagnostics = observePage(page)
   const writes: unknown[] = []
   page.on("request", (request) => { if (summaryMutation(request)) writes.push(request.postDataJSON()) })
-  await enterFinalMemorySurface(page, owner, installation, installation.origin + "/orchestra/sf-home/administration", "Local administration", "UI69")
+  const context = await enterFinalMemorySurface(page, owner, installation, installation.origin + "/orchestra/sf-home/administration", "Local administration", "UI69")
   const surface = page.locator('[data-sf-surface="UI69"]')
   await expect(surface).toHaveAttribute("data-sf-owner", "local-operator")
   await expect(surface.locator("[data-sf-admin-access]")).toContainText("You are signed in as the local operator.")
@@ -470,6 +473,8 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   const projects = settings.locator('input[name="pages"][value="All Projects"]')
   const proposed = !await projects.isChecked()
   await projects.setChecked(proposed)
+  const proposedPages = await settings.locator('input[name="pages"]:checked').evaluateAll((inputs) =>
+    inputs.map((input) => (input as HTMLInputElement).value))
   await captureFinalSurface(page, info, "UI69", "dark-desktop-summary-settings", { preview: true })
   await settings.getByRole("button", { name: "Review changes", exact: true }).click()
   const review = settings.locator('[data-component="sf-change-review"]')
@@ -490,9 +495,26 @@ waveFourTest("UI69 · one reviewed summaries save, retained draft and persisted 
   await expect(projects).toBeChecked({ checked: proposed })
   expect(writes).toEqual([])
   await settings.getByRole("button", { name: "Review changes", exact: true }).click()
-  const saved = page.waitForResponse((response) => summaryMutation(response.request())).then((response) => response.status())
-  await review.getByRole("button", { name: "Save summaries", exact: true }).click()
-  expect(await saved).toBe(200)
+  // The command's 200 precedes the original persisted readback; observe that GET
+  // before the single save, then retain the original 10s DOM assertions.
+  const readback = await observeFinalGet(page, installation.origin,
+    installation.mount + "/api/ui/local-admin/summary-settings")
+  try {
+    const saved = page.waitForResponse((response) => summaryMutation(response.request())).then((response) => response.status())
+    await review.getByRole("button", { name: "Save summaries", exact: true }).click()
+    expect(await saved).toBe(200)
+    const original = await readback.next()
+    expect(original.status).toBe(200)
+    const result = Schema.decodeUnknownSync(Schema.toType(SfDomain.operations["local-admin.summary-read"].output), {
+      onExcessProperty: "error",
+    })(original.body)
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("Original summary readback did not return saved settings")
+    expect(result.context).toEqual(context.stamp)
+    expect(result.value.version).toBe(before + 1)
+    expect(result.value.pages).toEqual(proposedPages)
+    expect(writes[0]).toMatchObject({ context: context.stamp, version: before, pages: proposedPages })
+  } finally { await readback.close() }
   await expect(review).toBeHidden()
   await expect(version).toHaveText(String(before + 1))
   await expect(projects).toBeChecked({ checked: proposed })
