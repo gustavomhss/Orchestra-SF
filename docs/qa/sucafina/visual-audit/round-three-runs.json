@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 716,
   "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
-  "productSource": "0fd5f29298b654bf281a98dbe9f6707bfb798b6c",
+  "productSource": "866469858a9cdf735f8b7155776dd6fc50890f42",
   "distinctIssues": [
     {
       "id": "R3-01",
@@ -21,7 +21,7 @@
       "id": "R3-03",
       "area": "Settings / keyboard focus",
       "problem": "The permission segment clips the external focus outline, leaving mostly vertical traces.",
-      "resolution": "Use an inset native focus outline on the radios; preserve keyboard order and locked states."
+      "resolution": "Use an inset native focus outline on the radios and regenerate the corresponding palette overrides; preserve keyboard order and locked states."
     },
     {
       "id": "R3-04",
@@ -186,13 +186,33 @@
   },
   "sourceBoundary": {
     "browserSource": "4dd9e41604a4e49fe1e05396fd88fcb8f33ebb44",
-    "productSource": "0fd5f29298b654bf281a98dbe9f6707bfb798b6c",
-    "changedPathsAfterInitialBrowserSource": [
-      "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
-      "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
-      "packages/app-shell/src/context/global-sync/bootstrap.ts"
-    ],
-    "explanation": "The later product delta classifies only the superseded provider-bootstrap cancellation. Providers was rerun at the final product source. Settings, Planner and Decisions presentation and spec files remain byte-identical. The final structural gate covers the composed candidate plus evidence."
+    "providerRepairSource": "0fd5f29298b654bf281a98dbe9f6707bfb798b6c",
+    "productSource": "866469858a9cdf735f8b7155776dd6fc50890f42",
+    "initialToProviderRepair": {
+      "changedPaths": [
+        "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+        "packages/app-shell/src/context/global-sync/bootstrap.ts"
+      ],
+      "explanation": "Only the provider cancellation guard, its unit controls and the Providers readiness assertions changed. Providers was rerun at 0fd5f292. Settings, Planner and Decisions presentation/spec files and all styles are byte-identical across this boundary."
+    },
+    "providerRepairToProduct": {
+      "changedProductAndTestPaths": [
+        "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "packages/app-shell/src/orchestra/palette/generated/palette-amoled.css",
+        "packages/app-shell/src/orchestra/palette/generated/palette-github.css",
+        "packages/app-shell/src/orchestra/palette/generated/palette-graphite.css",
+        "packages/app-shell/src/orchestra/palette/generated/palette-gruvbox.css",
+        "packages/app-shell/src/orchestra/palette/generated/palette-nord.css"
+      ],
+      "documentationPaths": [
+        "docs/qa/sucafina/visual-audit/ROUND-THREE.md",
+        "docs/qa/sucafina/visual-audit/round-three-runs.json",
+        "packages/app-shell/src/orchestra/DESIGN.md"
+      ],
+      "explanation": "Five exact writer outputs update only the generated permission-radio outline to the existing focus-width token; native navigation remains 1px. Default System/Dark/Light skins do not load these named-palette files. The Providers metadata correction removes an overwritten title literal, retaining JSON keys/values with possible property-order change; it changes no assertion, locator, action or capture."
+    },
+    "finalCandidate": "The final structural gate covers the composed source plus evidence. The exact final documentation candidate and merge receipt will be indexed in PR #716 after completion."
   },
   "diagnosticEvidence": [
     {
@@ -235,6 +255,42 @@
       },
       "classification": "expected negative control; excluded from final green qualification",
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123430979"
+    },
+    {
+      "kind": "first composed structural gate",
+      "source": "4c60db5820f1b6f571620a1f98fefd4eee78f0fb",
+      "snapshot": "37283e2f549e28beaca57333850d3ac781be3336",
+      "tree": "8188626a781f0c0cafbf7b2ca41652049d920644",
+      "branch": "ci-run-r3gate",
+      "request": {
+        "package": "cli",
+        "packageSelector": "@orchestra/cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [
+          "./test/sucafina-polish-verification.test.ts",
+          "--timeout",
+          "300000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "run": 45124752222,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45124752222",
+      "result": "failure; 6 wrapper checks passed and 2 failed",
+      "nestedRegressionCases": {
+        "comparison": 13,
+        "browserCommandsAndTeams": 100,
+        "providerBootstrap": 16,
+        "failed": 0
+      },
+      "failures": [
+        "Generated palette byte parity: five committed palette stylesheets still contain the old Settings focus rule",
+        "App-shell E2E typecheck TS2783: title field in provider-native-frame metadata is overwritten by measurement.title"
+      ],
+      "correctedBy": "866469858a9cdf735f8b7155776dd6fc50890f42",
+      "classification": "Genuine pre-merge gate failure; excluded from final green qualification."
     }
   ],
   "visualReview": {
@@ -946,6 +1002,121 @@
     "Settings/Providers retain the original HTTP fixtures; native Planner/Decisions retain their existing producers and deterministic test data.",
     "CSS viewport reflow is not browser zoom, and reviewer inspection is not owner visual acceptance.",
     "No domain producer, financial value, source identity, credential flow, English dictionary entry, CAS or recovery rule is changed.",
-    "Active foreign branches and their owned feature paths were excluded from mutation. No production deployment is part of this pass."
-  ]
+    "Active foreign branches and their owned feature paths were excluded from mutation. No production deployment is part of this pass.",
+    "The palette regeneration is verified by exact writer-output Git blob identity and the final byte-parity gate; the retained visual captures are default skins, not new named-palette focus captures."
+  ],
+  "paletteRegeneration": {
+    "source": "4c60db5820f1b6f571620a1f98fefd4eee78f0fb",
+    "snapshot": "20e3cedbdb78e24366034455778292a0cbbc00f7",
+    "tree": "adcb4be256206473cd0f5ad6654288deb066d38e",
+    "branch": "ci-run-r3palette",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-palette-regeneration.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    },
+    "run": 45125538581,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45125538581",
+    "result": "success",
+    "wrapper": {
+      "passed": 1,
+      "failed": 0
+    },
+    "omni": {
+      "declared": 1,
+      "spawns": 2,
+      "delegated": 0,
+      "verdict": "pass"
+    },
+    "receipt": {
+      "candidate": "20e3cedbdb78e24366034455778292a0cbbc00f7",
+      "run": "45125538581",
+      "files": 7,
+      "changed": [
+        "palette-amoled.css",
+        "palette-github.css",
+        "palette-graphite.css",
+        "palette-gruvbox.css",
+        "palette-nord.css"
+      ],
+      "idempotent": true,
+      "blobs": [
+        {
+          "name": "first-paint.css",
+          "sha": "3bd6236d718f42d198acdaa44933e2408868aa2c"
+        },
+        {
+          "name": "palette-amoled.css",
+          "sha": "2511fb18f524e0759a3be4748c4bda0f2ca6b472"
+        },
+        {
+          "name": "palette-github.css",
+          "sha": "cb9859c424a2cb7a9387522a30c7d801f15168fe"
+        },
+        {
+          "name": "palette-graphite.css",
+          "sha": "4f988690e750f9eea8cec829b35440ba0038da33"
+        },
+        {
+          "name": "palette-gruvbox.css",
+          "sha": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6"
+        },
+        {
+          "name": "palette-nord.css",
+          "sha": "4415c05c92279e52e73b7637e89dfb0b59ab281e"
+        },
+        {
+          "name": "swatches.css",
+          "sha": "fc1ea96cdc9e428aef8f45af44df4a8fbaa81a6b"
+        }
+      ]
+    },
+    "integratedAt": "866469858a9cdf735f8b7155776dd6fc50890f42",
+    "gitBlobVerification": [
+      {
+        "name": "palette-amoled.css",
+        "sha": "2511fb18f524e0759a3be4748c4bda0f2ca6b472",
+        "expected": "2511fb18f524e0759a3be4748c4bda0f2ca6b472",
+        "match": true,
+        "chars": 123698
+      },
+      {
+        "name": "palette-github.css",
+        "sha": "cb9859c424a2cb7a9387522a30c7d801f15168fe",
+        "expected": "cb9859c424a2cb7a9387522a30c7d801f15168fe",
+        "match": true,
+        "chars": 124868
+      },
+      {
+        "name": "palette-graphite.css",
+        "sha": "4f988690e750f9eea8cec829b35440ba0038da33",
+        "expected": "4f988690e750f9eea8cec829b35440ba0038da33",
+        "match": true,
+        "chars": 125070
+      },
+      {
+        "name": "palette-gruvbox.css",
+        "sha": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6",
+        "expected": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6",
+        "match": true,
+        "chars": 124520
+      },
+      {
+        "name": "palette-nord.css",
+        "sha": "4415c05c92279e52e73b7637e89dfb0b59ab281e",
+        "expected": "4415c05c92279e52e73b7637e89dfb0b59ab281e",
+        "match": true,
+        "chars": 122318
+      }
+    ]
+  }
 }

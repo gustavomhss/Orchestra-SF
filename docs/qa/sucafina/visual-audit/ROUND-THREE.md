@@ -1,11 +1,12 @@
 # Third interface refinement pass
 
-This pass resolves **ten distinct issues** in the existing interface. It follows [PR #715](https://github.com/gustavomhss/Orchestra-SF/pull/715) and is integrated through [PR #716](https://github.com/gustavomhss/Orchestra-SF/pull/716).
+This pass resolves **ten distinct issues** in the existing interface. It follows [PR #715](https://github.com/gustavomhss/Orchestra-SF/pull/715) and is being integrated through [PR #716](https://github.com/gustavomhss/Orchestra-SF/pull/716).
 
 - Base: `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`.
-- Product source: `0fd5f29298b654bf281a98dbe9f6707bfb798b6c`.
+- Product source after the structural-gate corrections: `866469858a9cdf735f8b7155776dd6fc50890f42`.
+- Provider cancellation browser source: `0fd5f29298b654bf281a98dbe9f6707bfb798b6c`.
 - Original browser matrix source: `4dd9e41604a4e49fe1e05396fd88fcb8f33ebb44`.
-- The exact final documentation candidate, structural-gate result and merge receipt are indexed in PR #716. That receipt is written after this evidence commit to avoid a self-referential commit.
+- The exact final documentation candidate, structural-gate result and merge receipt will be indexed in PR #716 after completion. That receipt is written after this evidence commit to avoid a self-referential commit.
 - Machine-readable runs, boundaries and all 63 qualified visual checkpoints: [round-three-runs.json](./round-three-runs.json).
 
 ## Issue ledger
@@ -14,7 +15,7 @@ This pass resolves **ten distinct issues** in the existing interface. It follows
 | --- | --- | --- | --- |
 | R3-01 | Settings / Permissions | At 320px permission options are clipped and labels collapse to a narrow column. | Stack full-width copy above three equal 44px permission options within a narrow settings panel. |
 | R3-02 | Settings / Models | Model names and metadata overlap Set as default in English and Brazilian Portuguese. | Keep logo and complete identity on the first grid row, with default/action and visibility toggle below. |
-| R3-03 | Settings / keyboard focus | The permission segment clips the external focus outline, leaving mostly vertical traces. | Use an inset native focus outline on the radios; preserve keyboard order and locked states. |
+| R3-03 | Settings / keyboard focus | The permission segment clips the external focus outline, leaving mostly vertical traces. | Use an inset native focus outline on the radios and regenerate the corresponding palette overrides; preserve keyboard order and locked states. |
 | R3-04 | Providers / connection dialog | Connection dialog frame, title and header targets differ from the native dialog scale. | Scope native 16px radius, 20px title, 28px header actions and visible focus to this dialog; preserve existing glass. |
 | R3-05 | Planner / native selects | Selected source/target version text paints under the native select arrow at 320px. | Reserve 32px of logical end padding for the native arrow; retain full option values. |
 | R3-06 | Decisions / Assumptions filter | The all-state option is labeled Assumption under State. | Reuse the existing All/Todos key for value=all. |
@@ -31,9 +32,9 @@ The new baseline cases exposed a real defect before the CSS change. [Run 4512004
 
 The same originals showed a separate model-layout defect in English and Brazilian Portuguese: model names and metadata painted over the default-model action. Measuring only the direct child boxes did not detect that collision. The regression now measures rendered text fragments with `Range.getClientRects()`, checks them against action/badge bounds and requires actual text fragments to exist.
 
-The view and panel now expose local size containers. Navigation changes to one column based on the available view width; narrow gutters retain useful space. Permission copy sits above three equal choices, and model identity occupies its own row above the actions. The visibility toggle keeps its native proportions. Wide panels retain the existing layout.
+The view and panel now expose local size containers. The Settings layout becomes a single column, with wrapping horizontal section navigation above the body; narrow gutters retain useful space. Permission copy sits above three equal choices, and model identity occupies its own row above the actions. The visibility toggle keeps its native proportions. Wide panels retain the existing layout.
 
-The permission focus outline is drawn inside the clipped segment. Both themes now show all four sides of the selected radio's focus ring. Arrow-key movement, checked state, locked tools and the exact ordered configuration patch remain verified. No permission controller was changed.
+The permission focus outline is drawn inside the clipped segment. Both themes now show all four sides of the selected radio's focus ring. Arrow-key movement, checked state, locked tools and the exact ordered configuration patch remain verified. No permission controller was changed. The five generated palette overrides now reuse the same 2px focus-width token for these radios; the navigation outline remains 1px and the inward offset continues to come from the base stylesheet.
 
 The final Settings cases use 320px dark/en, 390px light/pt-BR and 800px dark/en. Portuguese capture waits for the rendered “Idioma” label, in addition to the locale attribute. Every measured row has zero overflow; each of the three models has two rendered text fragments and zero intersections with controls in all three samples. At 800px the external sidebar is collapsed. The wide General and Permissions originals separately show the expanded sidebar and vertical section navigation.
 
@@ -47,7 +48,7 @@ The repair checks the actual TanStack `CancelledError` class only in that provid
 
 The existing bootstrap harness now has two additional controls. A real QueryClient and the production refresher cancel a held query, load a fresh catalog and avoid a failure notice. A plain `Error("CancelledError")` still requests exactly one notice. The [negative-control run](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123430979), using new tests with the old production code, produced **15 passes and one expected failure** at the spurious-notice assertion. The plain-error control passed. This diagnostic failure is excluded from final green qualification.
 
-[Providers run 45123433733](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123433733) passed all seven original cases at the final product source. The first case registers a GET waiter before Escape, matches the origin/path/directory, waits for HTTP 200 and transfer completion, then checks the ready list and absence of the false toast. The original genuine-failure-after-Disconnect case is unchanged and passed.
+[Providers run 45123433733](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123433733) passed all seven original cases at the provider cancellation source (`0fd5f292`). The first case registers a GET waiter before Escape, matches the origin/path/directory, waits for HTTP 200 and transfer completion, then checks the ready list and absence of the false toast. The original genuine-failure-after-Disconnect case is unchanged and passed.
 
 The updated confirmation original is clean. The picker contains the expected key-saved notice. Seven other reviewed provider checkpoints are byte-identical SHA-256 aliases of originals already opened from the initial shell run. Both narrow themes retain the native frame, complete error text and visible Back focus. Close focus is a browser assertion; the focus PNGs show Back.
 
@@ -69,7 +70,9 @@ No English dictionary entry was rewritten. Producers, source availability, IDs, 
 
 This is **20 distinct qualified browser cases**, with zero failures, skips, flaky results or retries. The first shell run contained 17 cases; its seven Providers cases are superseded by the final seven-case run and are not counted twice.
 
-The browser matrix ran on `4dd9e416`. The subsequent source delta contains only the provider cancellation guard, its two unit controls and the additional readiness assertions in the Providers spec. Settings, Planner and Decisions presentation/spec files and all styles remain byte-identical. Providers was rerun on `0fd5f29298b654bf281a98dbe9f6707bfb798b6c`.
+The browser matrix ran on `4dd9e416`. The delta to `0fd5f292` contains only the provider cancellation guard, its two unit controls and the additional readiness assertions in the Providers spec. Settings, Planner and Decisions presentation/spec files and all styles remain byte-identical across that boundary. Providers was rerun on `0fd5f29298b654bf281a98dbe9f6707bfb798b6c`.
+
+After the first structural gate, `86646985` updates only five generated palette stylesheets and removes the overwritten `title: titleText` metadata property in the Providers spec, in addition to the separate evidence documents. The metadata retains the same keys and values; only JSON property order can differ. No browser assertion, locator or action changed in that correction. Each palette changes only the permission-radio outline width to the existing token, while retaining the navigation outline and all colors. Default System/Dark/Light skins do not load those palette stylesheets, so the existing default-skin captures remain representative. Palette-specific focus captures are not claimed by this pass.
 
 ## Visual evidence and limits
 
@@ -80,6 +83,10 @@ The 1440px automatic checkpoint from the model/composer flow ends in Chat; it is
 Settings and Providers use their existing HTTP fixtures with the production bundle. Native Planner and Decisions retain their original registered producers and deterministic test data. This evidence does not establish live OAuth, Claude or Microsoft account behavior. The recorded narrow widths are CSS reflow, not browser zoom or owner visual acceptance.
 
 ## Final structural gate
+
+The first composed gate, [45124752222](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45124752222), passed six checks and failed two: generated palette byte parity and E2E typechecking. The latter found a duplicate metadata key, not a failed browser assertion. All 129 nested regression cases passed in that attempt. This failed gate is retained as diagnostic evidence and does not qualify the merge.
+
+The native palette writer ran in [45125538581](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45125538581). Its seven outputs were idempotent across two executions. The exact five changed outputs were integrated through GitHub MCP, and each resulting Git blob SHA matched the writer's receipt. The writer, palette definitions, first-paint stylesheet and swatches were not changed. The final gate must establish byte parity again from the corrected, committed candidate.
 
 Before merge, the composed documentation candidate must pass the existing `test-ci` workflow under strict Omni:
 
@@ -92,4 +99,4 @@ Before merge, the composed documentation candidate must pass the existing `test-
 7. Core package typecheck.
 8. All 16 provider-bootstrap cases, including the cancellation and ordinary-error controls.
 
-The wrapper and CI request exist only on disposable CI snapshots. Product source was read and written through GitHub MCP; no local product checkout, build, typecheck, test or server execution was used. Local operations only inspected CI evidence. The final gate and merge receipt are linked from PR #716.
+The wrapper and CI request exist only on disposable CI snapshots. Product source was read and written through GitHub MCP; no local product checkout, build, typecheck, test or server execution was used. Local operations only inspected CI evidence. The final gate and merge receipt will be linked from PR #716 after completion.
