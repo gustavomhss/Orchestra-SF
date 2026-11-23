@@ -2,7 +2,7 @@
 .sf-page-frame:has([data-sf-records="six"]) .mx-page .mx-inner { max-inline-size: 1160px; }
 .sf-files[data-sf-records="six"] {
   gap: 24px;
-  font-size: var(--orchestra-font-size-sm);
+  font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
 }
 .sf-files[data-sf-records="six"] > .sf-state-panel > .sf-state-content {
@@ -18,8 +18,8 @@
   box-shadow: 0 1px 0 color-mix(in srgb, var(--mx-strong) 4%, transparent);
 }
 .sf-files[data-sf-records="six"] :is(h2, h3, h4, p) { margin: 0; }
-.sf-files[data-sf-records="six"] h2 { font-size: var(--orchestra-font-size-lg); line-height: 1.35; letter-spacing: -.015em; }
-.sf-files[data-sf-records="six"] h3 { font-size: var(--orchestra-font-size-md); line-height: 1.45; }
+.sf-files[data-sf-records="six"] h2 { font-size: var(--orchestra-font-size-xl); line-height: 1.35; letter-spacing: -.015em; }
+.sf-files[data-sf-records="six"] h3 { font-size: var(--orchestra-font-size-lg); line-height: 1.45; }
 .sf-files[data-sf-records="six"] :is(p, dd, code, summary, label) { overflow-wrap: anywhere; }
 .sf-files[data-sf-records="six"] code { font-size: .9em; }
 .sf-files[data-sf-records="six"] :is(button, a.mx-btn) { width: fit-content; max-inline-size: 100%; }

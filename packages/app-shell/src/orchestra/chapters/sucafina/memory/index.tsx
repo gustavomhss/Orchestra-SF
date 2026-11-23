@@ -54,14 +54,13 @@ const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "signal
 }
 
 /**
- * U26 / UI61–UI63. UI61/UI63 retain the seven A14 source operations.
- * UI62 delegates to the separately typed CaseRecall consumer. Its additional
- * operation requires the 211/I00 operational catalog delta; no new authority
- * or server admission is derived from this UI component.
+ * U26 / UI61–UI63. UI61/UI63 retain the seven A14 memory operations and use
+ * the admitted C09 case catalogue for selection. UI62 delegates to the typed
+ * CaseRecall consumer. No new authority or server admission is derived here.
  */
 export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Element {
   // UI62 has a real C09/C17 producer and its own owner-fenced typed consumer.
-  // UI61/UI63 retain the original seven A14 operations unchanged.
+  // UI61/UI63 retain the original memory reads; the picker uses C09's case catalogue.
   if (props.surfaceId === "UI62") return <SfSimilarCasesView {...(props as SfSurfaceProps<"UI62">)} />
   const owner = useSfContext()
   const language = useLanguage()

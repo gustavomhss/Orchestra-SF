@@ -563,7 +563,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       subtitleKey={key(evidence() ? "sf.u24.evidenceSubtitle" : scenarioView() ? "sf.u24.scenarioSubtitle" : "sf.u24.documentsSubtitle")}
       context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
-      <section class="sf-files sf-records-documents" data-sf-records="six" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
+      <section class="sf-files sf-records-documents" data-sf-records="six" data-sf-wave="six" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
           <Show when={!catalog() || props.route.kind === "detail"}>

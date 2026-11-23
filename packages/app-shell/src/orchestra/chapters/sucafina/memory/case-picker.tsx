@@ -25,9 +25,14 @@ export function SfMemoryCasePicker(props: {
     const generation = owner.generation()
     const ready = owner.ready()
     void view.revision
-    const abort = new AbortController()
     setView({ state: "loading", options: [] })
     if (!ready) return
+    if (!ready.context.availability.some((entry) => entry.operations.some((operation) =>
+      operation.operationId === "projection.cases" && operation.state === "ready" && operation.operational))) {
+      setView("state", "unavailable")
+      return
+    }
+    const abort = new AbortController()
     void createSfDecisionsClient(ready.transport)["projection.cases"]({}, { signal: abort.signal })
       .then((result) => {
         if (abort.signal.aborted || owner.generation() !== generation || owner.ready() !== ready) return

@@ -488,6 +488,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
+      <div data-sf-wave="six">
       <SfStatePanel
         state={state()}
         messageKey={key(message())}
@@ -511,6 +512,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
           </section>
         )}
       </SfStatePanel>
+      </div>
     </SfPageFrame>
     </div>
   )

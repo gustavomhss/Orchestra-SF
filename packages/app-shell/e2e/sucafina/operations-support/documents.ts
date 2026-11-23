@@ -9,6 +9,7 @@ import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
+import { captureRecord, captureRecordVariants, capturePortugueseRecord } from "./final-records"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -348,6 +349,16 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(selected[0]!.surface).toBe("procurement")
   const document = root.getByRole("combobox", { name: "Document", exact: true })
   await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selected[0]!.selectionRef)
+  const register = root.locator("details.sf-records-register")
+  await register.locator("summary").click()
+  await expect(register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })).toBeVisible()
+  await expect(register.getByRole("button", { name: "Scan and attach to record", exact: true })).toBeDisabled()
+  await captureRecord(page, info, "UI58", "register-awaits-source")
+  await register.locator("summary").click()
+  await captureRecordVariants(page, info, "UI58", "authorized-catalog")
+  await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
+    await expect(localized.getByRole("option", { name: filename, exact: true })).toHaveCount(1)
+  })
   await document.selectOption({ value: selected[0]!.selectionRef })
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([
@@ -402,6 +413,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
+  await captureRecord(page, info, "UI58", "extracted-candidate")
   const continueToEvidence = root.getByRole("link", { name: /^(Document evidence|Evidência do documento)$/ })
   await expect(continueToEvidence).toHaveAttribute("href", evidenceURL.pathname + evidenceURL.search)
   const routedCandidates = await observeCandidates()
@@ -432,6 +444,20 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(confirmationReview).toContainText("Price: 42 USD")
   await expect(confirmationReview.locator("blockquote")).toHaveText("42")
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract"])
+  const rejection = confirmationReview.locator("details.sf-records-reject")
+  await rejection.locator("summary").click()
+  await expect(rejection.getByLabel("Reason for rejection (required)", { exact: true })).toBeVisible()
+  await expect(rejection.getByRole("button", { name: "Reject candidate; save reason and page", exact: true })).toBeDisabled()
+  await captureRecord(page, info, "UI59", "rejection-requires-reason")
+  await rejection.locator("summary").click()
+  await captureRecordVariants(page, info, "UI59", "review-original-source")
+  await capturePortugueseRecord(page, info, "UI59", "review-original-source", async (localized) => {
+    const card = localized.locator(`[data-sf-evidence-id=${JSON.stringify(candidate.id)}]`)
+    await card.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
+    await expect(localized.locator('[data-sf-surface="UI59"] blockquote')).toHaveText("42")
+    await card.getByRole("button", { name: /^(Confirm selection|Confirmar seleção)$/ }).click()
+    await expect(localized.locator('[data-sf-confirmation="review"] blockquote')).toHaveText("42")
+  })
   const [confirmResponse, confirmedCandidates] = await Promise.all([
     observe(page, endpoint("document-confirm"), "POST"), observeCandidates(),
   ])
@@ -450,6 +476,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioLink).toHaveAttribute("href", scenarioURL.pathname + scenarioURL.search)
   expect(await readSchemas()).toEqual([schema])
   expect(await readCandidates()).toEqual([confirmed])
+  await captureRecord(page, info, "UI59", "confirmed-source-reference")
   const scenarioCandidates = await observeCandidates()
   await scenarioLink.click()
   await expect(page).toHaveURL(scenarioURL.href)
@@ -467,6 +494,11 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
+  await captureRecordVariants(page, info, "UI60", "confirmed-evidence")
+  await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
+    await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
+    await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
+  })
 
   // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
   const reader = await page.context().newPage()
@@ -539,6 +571,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioAction).toHaveCount(0)
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
 
+  await captureRecord(page, info, "UI60", "revoked-source-unavailable")
   const refreshed = await observe(reader, endpoint("document-sources"))
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
   expect((await valueOf<Source[]>((await refreshed.completed).response)).filter((source) => source.label === filename)).toEqual([])

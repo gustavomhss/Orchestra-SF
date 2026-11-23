@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { createSfRoutinesClient } from "@orchestra/client/sucafina/routines"
@@ -45,6 +46,15 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
   const { t } = useN29Copy()
   const [view, setView] = createStore<View>(initial())
   const runRef = () => props.route.kind === "entry" ? props.route.params.runRef : null
+  // This is only an owner-preserving entry request. F01 admits the destination.
+  const catalogHref = () => {
+    const selection = props.route.ownerSelection
+    if (!owner.ready() || !selection.serverKey || !selection.projectId || !selection.installationId) return
+    const query = new URLSearchParams({
+      server: selection.serverKey, project: selection.projectId, installation: selection.installationId,
+    })
+    return "/orchestra/sf-routines?" + query.toString()
+  }
   const caseChoice = () => view.caseIndex === null ? null : view.caseChoices[view.caseIndex]
   const permitted = (id: "projection.routine" | "routines.read-run") => {
     const active = owner.ready()
@@ -209,7 +219,12 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
       }]}
     >
       <section class="sf-n29-run sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={view.state}>
-        <Show when={!runRef()}><p class="sf-routine-guidance">{t("sf.u27.noRun")}</p></Show>
+        <div class="sf-routine-run-navigation">
+          <Show when={!runRef()}><p>{t("sf.u27.noRun")}</p></Show>
+          <Show when={catalogHref()}>
+            {(href) => <A href={href()} class="mx-btn" data-sf-routine-catalog-link>{t("sf.ui64.title")}</A>}
+          </Show>
+        </div>
         <Show when={canFallback() && runRef()}>
           <div class="mx-card">
             <label class="sf-n29-field">

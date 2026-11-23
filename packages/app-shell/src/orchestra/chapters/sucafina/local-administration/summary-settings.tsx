@@ -189,7 +189,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
   }
   const copy = () => state.page === "loading" ? "sf.common.loading" : state.page === "denied" ? "sf.common.noAccess"
     : state.page === "session-expired" ? "sf.common.loginAgain" : state.page === "stale" ? "sf.common.stale" : "sf.common.unavailable"
-  return <section class="sf-u28-summaries" aria-labelledby="sf-u28-summaries-title" data-sf-summary-settings>
+  return <section class="sf-u28-summaries" data-sf-wave="six" aria-labelledby="sf-u28-summaries-title" data-sf-summary-settings>
     <h2 id="sf-u28-summaries-title">{text("sf.u28.summaries")}</h2>
     <SfStatePanel state={state.page} messageKey={key(copy())} onRetryRead={refresh}>
       <Show when={visible()}>
