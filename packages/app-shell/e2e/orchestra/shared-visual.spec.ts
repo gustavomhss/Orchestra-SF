@@ -266,9 +266,66 @@ for (const variant of sharedVisualVariants) {
     await expect(detail.getByRole("heading", { name: sharedBoardTitle, exact: true })).toBeVisible()
     await expect(detail.getByText("GitHub not synced", { exact: true })).toBeVisible()
     await expect(detail.getByRole("button", { name: "Open full page", exact: true })).toBeEnabled()
+    const note = detail.getByRole("textbox", { name: "Tell Maestro something about this issue", exact: true })
+    const addNote = detail.getByRole("button", { name: "Add note", exact: true })
+    const close = detail.getByRole("button", { name: "Close", exact: true })
+    await expect(note).toBeEditable()
+    await expect(note).toHaveValue("")
+    await expect(addNote).toBeDisabled()
+    await page.evaluate(() => document.fonts.ready.then(() => undefined))
+
+    const assertPeekLayout = async (checkpoint: string) => {
+      const geometry = await detail.evaluate((element) => {
+        const frame = element.getBoundingClientRect()
+        const style = getComputedStyle(element)
+        return {
+          panel: {
+            left: frame.left, right: frame.right,
+            contentLeft: frame.left + parseFloat(style.paddingLeft),
+            contentRight: frame.right - parseFloat(style.paddingRight),
+            clientWidth: element.clientWidth, scrollWidth: element.scrollWidth,
+          },
+          targets: [...element.querySelectorAll<HTMLElement>(
+            ".board-detail, .board-detail-main, .board-detail-top, #board-detail-title, .board-sec, .board-composer, .board-input, .board-controls, .board-add, .board-detail-top > button",
+          )].map((target) => {
+            const rect = target.getBoundingClientRect()
+            return {
+              tag: target.tagName, className: target.className, id: target.id,
+              left: rect.left, right: rect.right, width: rect.width, height: rect.height,
+              clientWidth: target.clientWidth, scrollWidth: target.scrollWidth,
+            }
+          }),
+        }
+      })
+      await info.attach("project-board-peek-" + checkpoint + "-" + variant.name, {
+        contentType: "application/json", body: JSON.stringify(geometry, null, 2),
+      })
+      expect(geometry.panel.scrollWidth).toBeLessThanOrEqual(geometry.panel.clientWidth + 1)
+      expect(geometry.targets.length).toBeGreaterThan(10)
+      for (const target of geometry.targets) {
+        expect(target.left, target.className + " starts inside the padded peek").toBeGreaterThanOrEqual(geometry.panel.contentLeft - 1)
+        expect(target.right, target.className + " ends inside the padded peek").toBeLessThanOrEqual(geometry.panel.contentRight + 1)
+        expect(target.scrollWidth, target.className + " keeps its content inside its own width").toBeLessThanOrEqual(target.clientWidth + 1)
+      }
+      if (variant.width <= 640) {
+        const bounds = await close.boundingBox()
+        expect(bounds).not.toBeNull()
+        expect(bounds!.width).toBeGreaterThanOrEqual(44)
+        expect(bounds!.height).toBeGreaterThanOrEqual(44)
+      }
+    }
+
+    await assertPeekLayout("opened")
     await captureSharedState(page, info, variant, state, "project-board", "issue-detail-panel",
       "Original issue peek for the exact LCH-1 fixture card, with signed-out git provenance. No note, secret, attachment, pause or hold write.")
-    await detail.getByRole("button", { name: "Close", exact: true }).click()
+    await note.fill("Keep this note in the original issue composer.")
+    await expect(note).toBeFocused()
+    await expect(addNote).toBeEnabled()
+    await assertPeekLayout("note-draft")
+    await captureSharedState(page, info, variant, state, "project-board", "issue-note-draft",
+      "Original note composer focused after native panel scrolling; its unsent draft and Add note action stay within the padded peek. No note is submitted.")
+    await expect(note).toHaveValue("Keep this note in the original issue composer.")
+    await close.click()
     await expect(detail).toHaveCount(0)
 
     state.board = "empty"

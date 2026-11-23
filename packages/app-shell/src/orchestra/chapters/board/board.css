@@ -757,6 +757,49 @@
   box-shadow: inset 0 0 0 1px var(--mx-rim), var(--mx-shadow);
 }
 
+/* Keep the peek's nested grids inside its padded reading width. */
+.board-peek :is(.board-detail, .board-detail-main, .board-sec, .board-composer, .board-secret) {
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
+}
+
+.board-peek :is(.board-detail-main, .board-sec) > * {
+  min-inline-size: 0;
+}
+
+.board-peek :is(.board-detail h2, .board-body, .board-note p) {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .board-peek .board-detail-top {
+    --board-peek-control-size: 44px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .board-peek .board-detail-top > .board-spacer {
+    display: none;
+  }
+
+  .board-peek .board-detail-top > .board-chip {
+    justify-self: end;
+  }
+
+  .board-peek .board-detail-top > .mx-btn {
+    justify-self: start;
+    max-inline-size: 100%;
+    white-space: normal;
+    text-align: start;
+  }
+
+  .board-peek .board-detail-top > .board-icon-button {
+    justify-self: end;
+    inline-size: var(--board-peek-control-size);
+    block-size: var(--board-peek-control-size);
+  }
+}
+
 .board-full {
   min-inline-size: 0;
 }
