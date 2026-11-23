@@ -476,12 +476,11 @@
   color: var(--v2-text-text-base);
 }
 
-/* DialogV2 puts the server class on Content, inside the floating container. */
-[data-component="dialog-v2"] [data-slot="dialog-container"]:has(> .settings-v2-server-dialog) {
+/* DialogV2 keeps the server frame on its explicit container class. */
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] [data-slot="dialog-container"].settings-v2-server-dialog {
   --server-dialog-width: 480px;
   --server-dialog-inset: 16px;
   --server-dialog-padding: 24px;
-  --server-dialog-gap: 8px;
   --server-dialog-touch: 44px;
   --server-dialog-leading: 1.4;
   --server-dialog-tracking: -0.025em;
@@ -491,65 +490,90 @@
   height: auto;
   border-radius: var(--orchestra-radius-xl);
   align-items: stretch;
+}
 
-  [data-slot="dialog-content"] {
-    align-items: stretch;
-    width: 100%;
-    min-inline-size: 0;
-    min-block-size: 0;
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-content"] {
+  align-items: stretch;
+  width: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
 
-    [data-slot="dialog-header"] {
-      align-items: center;
-      padding: var(--server-dialog-padding) var(--server-dialog-padding) var(--server-dialog-inset);
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-header"] {
+  align-items: center;
+  padding: var(--server-dialog-padding) var(--server-dialog-padding) var(--server-dialog-inset);
+}
 
-      [data-slot="dialog-header-title"] {
-        font-family: var(--mx-emphasis, var(--orchestra-font-family-sans));
-        font-size: var(--orchestra-font-size-2xl);
-        font-weight: 600;
-        line-height: var(--server-dialog-leading);
-        letter-spacing: var(--server-dialog-tracking);
-        overflow-wrap: anywhere;
-      }
-    }
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-body"] {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  padding: var(--server-dialog-padding);
+  overflow-y: auto;
+}
 
-    [data-slot="dialog-body"] {
-      display: flex;
-      width: 100%;
-      min-width: 0;
-      flex-direction: column;
-      align-items: stretch;
-      padding: var(--server-dialog-inset) var(--server-dialog-padding) var(--server-dialog-gap);
-    }
-
-    [data-slot="dialog-footer"] {
-      flex-wrap: wrap;
-      align-items: center;
-      padding: var(--server-dialog-inset) var(--server-dialog-padding);
-    }
-  }
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-footer"] {
+  flex-wrap: wrap;
+  align-items: center;
+  padding: var(--server-dialog-padding);
 }
 
 .settings-v2-server-dialog-label {
   font-size: var(--orchestra-font-size-md);
-  font-weight: 530;
-  line-height: 1.4;
+  font-weight: 600;
+  line-height: 1.5;
   color: var(--v2-text-text-base);
 }
 
 .settings-v2-server-dialog-error {
-  font-size: var(--orchestra-font-size-xs);
+  font-size: var(--orchestra-font-size-sm);
   font-weight: 440;
   line-height: 1.5;
   color: var(--v2-state-fg-danger);
   overflow-wrap: anywhere;
 }
 
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-header-title"] {
+  font-family: var(--mx-emphasis, var(--orchestra-font-family-sans));
+  font-size: var(--orchestra-font-size-2xl);
+  font-weight: 600;
+  line-height: var(--server-dialog-leading);
+  letter-spacing: var(--server-dialog-tracking);
+  overflow-wrap: anywhere;
+}
+
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"] {
+  min-block-size: var(--server-dialog-touch);
+  padding-inline: var(--server-dialog-inset);
+  font-size: var(--orchestra-font-size-md);
+  border-radius: var(--orchestra-radius-md);
+}
+
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"][data-variant="contrast"] {
+  background: var(--mx-primary);
+  color: var(--mx-primary-text);
+}
+
+html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"]:focus-visible {
+  outline: 2px solid var(--mx-blue);
+  outline-offset: 2px;
+}
+
 @media (max-width: 640px) {
-  .settings-v2-server-dialog [data-slot="dialog-body"] > div > .grid {
+  .settings-v2-server-dialog .settings-v2-server-credentials {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .settings-v2-server-dialog :is([data-component="text-input-v2"], [data-component="button-v2"]) {
     min-block-size: var(--server-dialog-touch);
+  }
+}
+
+@media (max-width: 479px) {
+  html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-footer"] {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 }

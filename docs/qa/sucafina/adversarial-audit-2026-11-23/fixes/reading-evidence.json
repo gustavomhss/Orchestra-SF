@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "implementationBase": "e115b667d845822a1df5f523bbfd828ab57ca978",
+  "findings": [
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "ROOT-01",
+    "ROOT-02",
+    "ROOT-03"
+  ],
+  "supplements": [
+    "UI46 localized missing currency",
+    "UI49 full-width mobile comparison cells",
+    "UI50 review-access copy",
+    "Own-property lookup for captured semantic fields"
+  ],
+  "runtime": {
+    "preserved": {
+      "run": 45233056529,
+      "job": 137897432470,
+      "source": "0bbe4b694b666db77420aabe9b271a330ecaba22",
+      "snapshot": "18ce38f9c2f08eb69426a00fc0011b2bf4e4c128",
+      "artifact": 14848153650,
+      "artifactBytes": 41305343,
+      "artifactSha256": "c952a3e5e729d78406decbec59aaf33c4ec84ea50171d201bd1657a2d7d90626",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "retry": 0,
+      "testDurationMs": 186772,
+      "suiteDurationMs": 344316.137,
+      "originalNamedPngPaths": 41,
+      "distinctPngHashes": 38
+    },
+    "biAndNativeGuard": {
+      "run": 45230262835,
+      "source": "7d319bd5bba639e79adb2e1c396f02072c641d42",
+      "snapshot": "6aa20c5f61638682b35732c0d5e908f0976b22c3",
+      "artifact": 14846674647,
+      "artifactSha256": "402ca3f1d4e59c8e0ce0d6649845e010669c32d7ded19cf77cb7ca6a5b92d931",
+      "qualifiedCases": 1,
+      "otherCaseFailed": true,
+      "qualification": "Only the BI/native-guard case is qualified here. The preserved case failed on an incorrect recovery-action locator and is superseded by Reading8."
+    },
+    "gates": {
+      "run": 45233064600,
+      "source": "0bbe4b694b666db77420aabe9b271a330ecaba22",
+      "snapshot": "1114c1fb10fdc356935819e85c7366c064f45bca",
+      "wrapperPassed": 6,
+      "semanticCases": 28,
+      "semanticAssertions": 122,
+      "browserDomCases": 130,
+      "browserDomAssertions": 1801,
+      "guardRules": 78,
+      "guardErrors": [],
+      "approvedOverrides": [],
+      "generatedPaletteFiles": 7,
+      "generatedPaletteChanges": []
+    }
+  },
+  "originalSourceOpening": {
+    "negativeControl": "One explicit original source-read abort; visible unavailable state and zero retained links.",
+    "observedOriginalResponse": {
+      "status": 409,
+      "body": {
+        "status": "stale",
+        "reason": "review-read-changed"
+      }
+    },
+    "recovery": "Current source fetches the same original preserved review with HTTP200, removes the old source panel, and enables a later explicit Open source action.",
+    "positiveSourceOpeningQualified": false,
+    "reason": "The actual protected producer rejected the changed read. Its authorization/integrity fence is preserved; a synthetic 200 is not substituted.",
+    "automaticWriteOrRetryAdded": false
+  },
+  "reportLimit": "Original review identity, section selection, notes, one Office format control and generation enabled/disabled states were exercised. DOCX/PPTX generation/download was not exercised in this UI journey.",
+  "sourceParity": {
+    "snapshotChanges": [
+      ".ci-run.json"
+    ],
+    "integrationChecked": "a4fb57789f438385cadcb978d1f00754e63002af",
+    "onlyChangesAfterTestedSource": [
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-four-procurement-requests.spec.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "packages/app-shell/e2e/sucafina/wp04/host.ts"
+    ],
+    "productSourceUnchanged": true
+  },
+  "independentVisualReview": [
+    {
+      "name": "UI49-paired-comparison-320.png",
+      "sha256": "5f57bb5757e63ace0aad6a95739260bbdb32bf983bb726ee1059c266d86d835d",
+      "result": "Full-width Previous/Current cells; period/value/currency absence remain related without intraword breaks."
+    },
+    {
+      "name": "UI49-paired-comparison-390.png",
+      "sha256": "2dd9e700d0a15614307f7f71a4b57aacf142b4e8812fe436d8fb94ce02798168",
+      "result": "Paired values and provenance disclosures remain legible; original numeric values unchanged."
+    },
+    {
+      "name": "UI50-authorized-report-selection-dark-320.png",
+      "sha256": "24f76c6919a9136ee1e78c449b5b4921ac2b736e2d100a6ab58988051ebabd2b",
+      "result": "One generation action and Office format; access copy clear, labels and selection fit the content width."
+    },
+    {
+      "name": "UI48-source-stale-review-reread-light-desktop.png",
+      "sha256": "069901a31b01d2c3b347b07a4dafc4a3c20d76f8c5b53e45bedde74a88f5064b",
+      "result": "Original review is readable after reauthorization; grouped business labels and native surfaces preserved."
+    },
+    {
+      "name": "UI48-source-original-stale-refusal-dark-320.png",
+      "result": "Localized explanation and full-width Current source action fit the native warning panel."
+    },
+    {
+      "name": "Reading6 UI46 paired mobile currency absence",
+      "result": "Original period, value, signed mark and localized currency absence remain associated at320px."
+    }
+  ],
+  "historicalDiagnosticRuns": [
+    {
+      "run": 45221235841,
+      "result": "1PASS/1FAIL; source200 assumption contradicted by original409."
+    },
+    {
+      "run": 45222840337,
+      "result": "1PASS/1FAIL; same original protected409."
+    },
+    {
+      "run": 45225940305,
+      "artifact": 14844923079,
+      "sha256": "6afdc7d3e870029599176830a729562ea2bd262b05495824ce2dec1d4f895884",
+      "result": "Diagnostic only: soft source200 expectation allowed inspection of subsequent original comparison/report states; not a green qualification."
+    },
+    {
+      "run": 45230262835,
+      "result": "BI/native case passed; preserved case used wrong Try again locator in the stale state."
+    },
+    {
+      "run": 45230855532,
+      "result": "Failed intermediate preserved-journey execution; not counted as qualification."
+    }
+  ],
+  "testSelection": {
+    "mapping": "reading-test-map.json",
+    "totalCasesBefore": 2,
+    "totalCasesAfter": 2,
+    "assertStatementsRetained": 67,
+    "originalCaseBudgetsMs": [
+      660000,
+      720000
+    ],
+    "retries": 0,
+    "selection": "Two supported named specs; no grep, timeout increase, soft assertion or retry in the final qualification."
+  },
+  "limits": [
+    "Chromium production build in Linux Actions with the original isolated installed producer; not live Microsoft.",
+    "41 image paths/38 unique image hashes are captured, not a claim that every image received an independent root review.",
+    "The original inventory includes partial/guard-only surfaces; these flows do not establish complete success of all70areas or165route patterns."
+  ]
+}

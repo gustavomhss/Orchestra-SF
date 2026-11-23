@@ -1,0 +1,2125 @@
+{
+  "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "priorityCounts": {
+    "P2": 23,
+    "P3": 10,
+    "P1": 1
+  },
+  "findings": [
+    {
+      "id": "SYS-01",
+      "severity": "P2",
+      "type": "rendered + source-confirmed",
+      "title": "A superfície de Teams termina no meio da administração expandida em desktop",
+      "effect": "Em chat desktop com administração expandida, a borda arredondada, o fundo e a sombra terminam antes do fim do conteúdo. As equipes restantes, histórico e chat passam a ser pintados sobre o fundo externo. A continuidade material e a hierarquia do painel se rompem durante a rolagem.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/pages/team-profile.css",
+          "lines": "62–66, 148–159",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/pages/team-profile.css#L64"
+        },
+        {
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "lines": "445–448, 498–520",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/pages/team-profile.tsx#L445"
+        }
+      ],
+      "evidence": [
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-8b463-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-expanded-dark-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-8b463-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-tail-dark-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-aa118-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-expanded-light-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-aa118-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-administration-tail-light-1440.png"
+      ],
+      "observed": "Em1440×1000, o painel fecha a borda inferior perto de y976, entre Procurement e Coffee sourcing. As capturas tail mostram o restante da interface no material externo. Confirmado visualmente em claro e escuro.",
+      "mechanism": "O mesmo main recebe sf-team-surface e sf-team-main-chat. A regra .sf-team-shell[data-sf-team-layout=\"chat\"] .sf-team-surface (especificidade0,3,0) declara flex:1 e vence .sf-team-main-chat:has(.sf-team-administration) (0,2,0), cuja intenção é flex:none. A regra responsiva de mesma especificidade corrige o comportamento apenas até980px ou altura720px.",
+      "reproduce": "Usar Teams chat em1440×1000, tema claro/escuro, administrador com8 equipes; expandir Team administration e rolar até o fim da lista.",
+      "recommendation": "Fazer o estado expandido governar o flex do próprio main com especificidade suficiente, mantendo rolagem do shell e superfície expandida até o último conteúdo. Preservar material, sombra e raios existentes.",
+      "acceptance": "Em1440×1000 e1280×800, o rect inferior do main deve conter os descendentes e padding inferior; nenhuma linha, ação ou região de chat pode aparecer abaixo da borda arredondada. Revalidar320/390 para não regredir a correção responsiva.",
+      "overlap": "Arquivos Teams/UI67 da rodada#713. Não está entre os quatro assuntos informados para#716.",
+      "limits": "Nenhum build local ou reprodução interativa novo; screenshot real de Actions e análise de cascata do SHA auditado.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "SYS-02",
+      "severity": "P2",
+      "type": "measured rendered contrast + source",
+      "title": "Campo Microsoft Team ID ativo e vazio tem contorno essencial abaixo de3:1",
+      "effect": "Um usuário com baixa visão pode não distinguir a área de entrada vazia do fundo do formulário. O campo não possui placeholder, ícone interno ou outro indicador visual alternativo.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/pages/team-profile.css",
+          "lines": "72–85",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/pages/team-profile.css#L72"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/kit.css",
+          "lines": "8–10,34–36",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/kit.css#L8"
+        },
+        {
+          "path": "packages/app-shell/src/components/team-profile-administration.tsx",
+          "lines": "170–176",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/team-profile-administration.tsx#L170"
+        }
+      ],
+      "evidence": [
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-30015-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-light-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-726ab-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-dark-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-38bae-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-light-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-3a3e4-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-administration-expanded-dark-320.png"
+      ],
+      "measurements": [
+        {
+          "theme": "light",
+          "outerRGB": [
+            243,
+            245,
+            247
+          ],
+          "borderRGB": [
+            211,
+            216,
+            222
+          ],
+          "fillRGB": [
+            235,
+            238,
+            241
+          ],
+          "borderOuter": 1.3118795756371242,
+          "fillOuter": 1.065579539297919
+        },
+        {
+          "theme": "dark",
+          "outerRGB": [
+            13,
+            20,
+            28
+          ],
+          "borderRGB": [
+            40,
+            52,
+            62
+          ],
+          "fillRGB": [
+            21,
+            29,
+            38
+          ],
+          "borderOuter": 1.4559631100339698,
+          "fillOuter": 1.0896662086461453
+        }
+      ],
+      "method": "PNG original1×:1440 screenshots sample outer(500,570), top border(500,579), fill(500,600);320 screenshots outer(150,730),border(150,737),fill(150,760). RGB lidos por Pillow, luminância sRGB linearizada e razão(Lmax+.05)/(Lmin+.05). A linha reta inteira, sem borda arredondada/antialias, foi escolhida. CSS usa mx-line14% e mx-soft4.5%/5.5%; a composição explica os valores renderizados.",
+      "criterion": "WCAG2.2 SC1.4.11 exige3:1 para a informação visual necessária à identificação do controle; campo vazio depende desse limite/fundo. Não aplicar este achado às bordas decorativas de cards, botões com texto identificável ou controles desativados.",
+      "standardsURL": "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html",
+      "reproduce": "Teams access > Team administration, sem configuração aberta e sem operação pendente. Deixar Microsoft Team ID vazio e desfocado; avaliar claro/escuro em1440/320.",
+      "recommendation": "Criar ou aplicar token específico de contorno de controles que alcance3:1 no material adjacente. Evitar alterar mx-line global e engrossar toda a decoração. Manter foco próprio e distinção do estado disabled.",
+      "acceptance": "Calcular cores computadas/composição do campo ativo vazio em ambos os temas e nos fundos suportados; indicador essencial >=3:1. Verificar visualmente default/hover/focus/error/disabled sem transformar sombras ou divisórias em alarmes.",
+      "overlap": "Área Teams/UI67#713 e token compartilhado. Não é um item informado de#716.",
+      "limits": "Medição de quatro checkpoints de palette padrão; não representa todas as paletas, wallpapers ou todos os campos. Screenshot estabelece o estado observado; certificação geral exige auditoria mais ampla.",
+      "observed": "Quatro screenshots originais mostram o campo Microsoft Team ID ativo, vazio e desfocado. A borda mede 1,31:1 no tema claro e 1,46:1 no escuro contra o fundo externo; o preenchimento mede, respectivamente, 1,07:1 e 1,09:1. Os valores RGB e os pontos de amostragem estão na tabela e no método abaixo.",
+      "mechanism": "O campo usa borda var(--mx-line) e preenchimento var(--mx-soft), tokens de baixa opacidade destinados também a superfícies sutis. Na composição renderizada, nem a borda nem o preenchimento fornecem a diferença de 3:1 para localizar a área vazia. O markup não fornece placeholder, ícone interno ou outro indicador alternativo da área editável.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "SYS-03",
+      "severity": "P2",
+      "type": "rendered observation; lifecycle cause partly inferred",
+      "title": "Fechar configuração de provider deixa alerta técnico CancelledError",
+      "effect": "Um fluxo normal de navegação mostra Failed to reload providers / CancelledError enquanto a confirmação de desconexão está aberta, embora nenhuma desconexão ainda tenha ocorrido. O usuário recebe uma falha sem ação útil nem explicação compreensível.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/providers-list.tsx",
+          "lines": "134–147,152–162",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/providers-list.tsx#L134"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/providers-data.ts",
+          "lines": "148–159",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/providers-data.ts#L148"
+        },
+        {
+          "path": "packages/app-shell/src/context/server-queries.ts",
+          "lines": "107–122",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/context/server-queries.ts#L107"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+          "lines": "72–107",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/e2e/orchestra/chapter-providers.spec.ts#L98"
+        }
+      ],
+      "evidence": [
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-3d887-tial-removal-key-and-picker-chromium/provider-disconnect-confirmation-light.png"
+      ],
+      "observed": "provider-disconnect-confirmation-light.png contém toast com título Failed to reload providers e corpo CancelledError, simultâneo ao modal Disconnect OpenAI?.",
+      "mechanism": "O close callback do diálogo chama reload sempre; reload transforma qualquer rejeição em toast e errorMessage expõe Error.message. createProviderRefresher cancela explicitamente a consulta anterior. A emissão da mensagem está confirmada; a combinação exata de solicitações concorrentes que produziu a rejeição não foi reexecutada.",
+      "reproduce": "Seguir teste existente v2: error and retry, server route, confirmed credential removal, key and picker: recuperar a lista, abrir Configure em OpenAI(work), Escape e abrir Disconnect em OpenAI; observar toast antes de confirmar.",
+      "recommendation": "Distinguir cancelamento/supersessão de falha real e coordenar refreshes por escopo. Evitar erro técnico por simples fechamento. Preservar a notificação de falha real de reload.",
+      "acceptance": "Repetir close/reopen rápido e refresh concorrente com mesma/diferente conexão; não exibir CancelledError/erro falso. A prova existente de falha real após disconnect deve continuar exibindo erro acionável.",
+      "overlap": "Provider dialog está sendo alterado em#716; este achado é sobre feedback assíncrono, além da mudança de enquadramento. Coordenar no mesmo arquivo/superfície.",
+      "limits": "Não há alegação de perda de dados. A frequência/flakiness não foi medida; há uma ocorrência capturada no artefato real.",
+      "sourceReport": "reviewers/system.json",
+      "postBaselineResolution": {
+        "status": "observed-occurrence-addressed-in-integrated-source",
+        "devCommit": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+        "pr": 716,
+        "detail": "The observed Failed to reload providers title originates from bootstrap toast.project.reloadFailed with directory basename providers. The integrated guard ignores actual TanStack CancelledError there; ProviderList genuine-error handling remains unchanged.",
+        "qualification": "Source delta inspected; upstream run outcomes verified, no new independent screenshot review or runtime run in this closeout.",
+        "reference": "DELTA.md"
+      }
+    },
+    {
+      "id": "SYS-04",
+      "severity": "P2",
+      "type": "source-inferred, not visually re-rendered",
+      "title": "Token de warning inexistente remove a semântica visual de três superfícies",
+      "effect": "Security Moderate herda cor em vez da cor de alerta; o border-inline-start de warnings no Planner Overview fica inválido; o status warning compartilhado usa explicitamente a cor neutra de fallback. Alertas perdem a consistência com os tons success/danger.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/security.css",
+          "lines": "51–54",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/security/security.css#L53"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+          "lines": "781",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx#L781"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/overview.css",
+          "lines": "43",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/planner/overview/overview.css#L43"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+          "lines": "126–129",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css#L128"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/theme.css",
+          "lines": "52,301",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/theme.css#L52"
+        }
+      ],
+      "evidence": [],
+      "mechanism": "--orchestra-warning tem3 referências e zero declarações em138 CSS não gerados de app-shell e7 CSS gerados de paleta; tampouco aparece nas duas folhas de tema UI ou nas definições/contexto de paleta examinados. O token nativo declarado é --orchestra-warm, #cfbd95 escuro/#4d390f claro.",
+      "reproduce": "No estado Security com statusModerate, Planner Overview com warnings e qualquer SfDetail status tone=warning, inspecionar os estilos computados no SHA auditado.",
+      "recommendation": "Substituir as referências pelo token semântico nativo existente ou definir um alias canônico único. Validar o significado e os contrastes nos temas; não trocar por uma cor amarela literal.",
+      "acceptance": "getComputedStyle(...).getPropertyValue('--orchestra-warning') deve ser definido se o nome continuar. Moderate/warning deve usar tom semântico consistente; Planner warning deve ter border-inline-start-style solid e espessura pretendida. Texto do alerta continua explícito.",
+      "overlap": "Planner Overview pode ter conflito de arquivo com#716 (setas/selects); o defeito de token é distinto. Shared detail/Security fora dos assuntos informados para#716.",
+      "limits": "Não medido em execução para os3 consumidores. Busca de código default branch retornou vazio e não foi usada como prova; conclusão delimitada às folhas e contexto de temas auditados.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "REF-01",
+      "severity": "P3 / design judgment",
+      "title": "Estados terminais de ausência gastam altura de gráfico vazio no Home móvel",
+      "source": [
+        "packages/app-shell/src/orchestra/chapters/kpis.tsx:505–537",
+        "packages/app-shell/src/orchestra/chapters/kpis.css:89–98,125–132,152–170,183–188,469–472"
+      ],
+      "evidence": [
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-absence-br-light-320.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-states-br-light-320.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-absence-en-light-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-states-en-light-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-absence-en-dark-320.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-states-en-dark-320.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-absence-br-dark-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-states-br-dark-390.png"
+      ],
+      "detail": "Tiles ausentes têm~166px de altura e continuam renderizando foot e home-bars vazios; oito tiles ocupam cerca de1.400px. Avaliar compactar somente estados terminais sem dados, mantendo estabilidade de loading→valor. Este é julgamento de densidade, não overflow ou inacessibilidade demonstrada.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "REF-02",
+      "severity": "P3 / design judgment",
+      "title": "A hierarquia de Teams repete instruções e dedica pouco espaço inicial à conversa",
+      "source": [
+        "packages/app-shell/src/pages/team-profile.tsx:445–470",
+        "packages/app-shell/src/pages/team-session.tsx:117–171",
+        "packages/app-shell/src/pages/team-profile.css:156–173"
+      ],
+      "evidence": [
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-30015-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-selection-required-light-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-38bae-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-selection-required-light-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-38bae-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-signed-out-light-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-3a3e4-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-selection-required-dark-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-3a3e4-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-signed-out-dark-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-45990-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-empty-stream-connecting-dark-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-45990-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-history-expanded-dark-320.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-726ab-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-selection-required-dark-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-789c9-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-signed-out-dark-390.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-7b7be-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-composer-reachable-dark-390.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-7b7be-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-history-expanded-dark-390.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-8b463-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-composer-reachable-dark-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-aa118-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-composer-reachable-light-1440.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-bc115-tration-and-stopped-updates-chromium/COMPONENT-VISUAL-Teams-chat-history-expanded-light-390.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-dc952-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-selection-required-light-390.png",
+        "artifact-extract/teams/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-dc952-istration-and-configuration-chromium/COMPONENT-VISUAL-Teams-signed-out-light-390.png"
+      ],
+      "detail": "Select a Team aparece como título, bloco de status e placeholder; signed-out ainda usa esse título antes do sign-in. No chat de administrador320, o composer começa perto dey780 em900px; abrir histórico exibe o botão New chat, a aba New chat e o título New chat antes da conversa. A aba tem função de navegação e o botão tem função de iniciar, portanto não são tratados como bug duplicado. Refinar a densidade/objetivo por estado e compactar contexto administrativo sem remover acesso.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "SUP-01",
+      "severity": "P2",
+      "category": "layout defect",
+      "title": "Add server perde largura, margem e padding próprios porque o seletor procura a classe no nó errado",
+      "type": "rendered historical observation + pinned-current source mechanism",
+      "observed": "No checkpoint de 390 px, o modal Add server ocupa x=0 até x=390, sem a margem lateral de 16 px pretendida. Inputs e botões preservam o formato compacto da implementação v2; o modal de Integrations no mesmo tamanho tem inset de 16 px. Não foi observado clipping de texto nesse checkpoint.",
+      "effect": "A superfície de configuração perde o respiro lateral previsto e aparenta pertencer a outro sistema de diálogo. O mesmo seletor inválido impede os ajustes de raio, alinhamento e padding do servidor.",
+      "mechanism": "DialogServerV2 passa class=\"settings-v2-server-dialog\". DialogV2 coloca props.class em Kobalte.Content/data-slot=\"dialog-content\", mas as regras CSS esperam essa classe junto de data-component=\"dialog-v2\" no ancestral. Essas regras não podem casar com a árvore gerada. A caixa usa a receita v2 padrão e encolhe até a largura do viewport.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx",
+          "lines": "57–62",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx#L57"
+        },
+        {
+          "path": "packages/ui/src/v2/components/dialog-v2.tsx",
+          "lines": "84–111",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/ui/src/v2/components/dialog-v2.tsx#L84"
+        },
+        {
+          "path": "packages/app-shell/src/components/settings-v2/settings-v2.css",
+          "lines": "479–507",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/settings-v2.css#L479"
+        },
+        {
+          "path": "packages/ui/src/v2/components/dialog-v2.css",
+          "lines": "10–29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/ui/src/v2/components/dialog-v2.css#L10"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 58,
+          "name": "error-recovery-server-connection-form-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+          "sha256": "9b5bfca80dc45c0a04bd9008ce940c30878e0f9a48427ef25cc52610048cc9f5"
+        },
+        {
+          "index": 65,
+          "name": "error-recovery-server-connection-form-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+          "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2"
+        },
+        {
+          "index": 66,
+          "name": "error-recovery-server-health-failure-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+          "sha256": "b9b1c2213263f55b94e025423043ca540b41b46bb79132b625287e679dfb405a"
+        },
+        {
+          "index": 67,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+          "sha256": "50ca601899826c4e17b81859bd0c3b709fe90b831d0c3c3d100a089cd5c8296c"
+        },
+        {
+          "index": 111,
+          "name": "error-recovery-server-connection-form-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+          "sha256": "813f08e82a48d6ca1bb68c134b4997003c57cb44bcf98fd923ea5e5aed0c6d67"
+        },
+        {
+          "index": 112,
+          "name": "error-recovery-server-health-failure-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+          "sha256": "daeb948f9839b1e144f71c781f49d9229925d6015bef8fa4305ce9078b581e26"
+        },
+        {
+          "index": 113,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/test-finished-1.png",
+          "sha256": "7073975a2e77a74d96033810c2356a51dd65c76842a8e40a81263e7a4afec722"
+        },
+        {
+          "index": 74,
+          "name": "integrations-connect-account-dialog-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-narrow.png",
+          "sha256": "a8bed31bab41d12126b0d5017f48b353fd6522914ae9687244c20e4863bb9d87"
+        }
+      ],
+      "reproduce": "Settings > Servers > Add server, viewport 390×844, claro/escuro. Inspecionar o DOM e as regras específicas do servidor. Não é necessário enviar uma conexão.",
+      "recommendation": "Alinhar o escopo CSS com o nó que recebe a classe, ou fornecer um wrapper/prop de escopo explícito; aplicar a largura máxima pretendida e a receita nativa de diálogo. Rever raio, padding e tamanhos de controle como conjunto, sem trocar a identidade de material.",
+      "acceptance": "Em 320 e 390 px, o modal mantém inset lateral de 16 px, nenhum overflow horizontal e foco visível. No desktop, preserva a largura pretendida de 480 px. As regras específicas devem casar no DOM real. Conferir campos normais/erro, teclado e conteúdo longo. Não declarar conformidade WCAG só porque um alvo foi aumentado.",
+      "overlap": "Configuração/Settings; possível encontro com #716, mas não se deve presumir que o polimento de provider dialog/Settings resolva este seletor. Root verifica o head atual.",
+      "parity": "Arquivos próprios de servidor, DialogV2 e settings-v2.css não aparecem na comparação completa b8f76cc→dev.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "SUP-02",
+      "severity": "P2",
+      "category": "error recovery UX",
+      "title": "RAG Studio repete mensagens de indisponibilidade e não oferece nova tentativa local",
+      "type": "rendered historical observation + pinned-current source",
+      "observed": "Nos checkpoints de erro de fontes e pipeline, a página exibe dois painéis 'Could not load Rag Studio.', um 'Request failed' junto de Question e um toast 'Request failed'. Nenhum botão de Retry/Refresh da leitura aparece. O fixture força duas leituras HTTP 503: não são quatro mensagens para uma única requisição.",
+      "effect": "Um erro transitório deixa uma interface ruidosa, pouco específica e sem caminho local explícito para recuperar as leituras. Adicionar um arquivo ou tentar uma pergunta não substitui uma ação de recuperação da carga inicial.",
+      "mechanism": "Files.load coloca roster.status='error' e limpa sources; o estado de erro só renderiza texto. Maintain replica o erro da lista e reportPipeline emite toast; Question também mostra pipelineFailed. As releituras observadas no código são efeitos de contexto/revision e ações, sem botão de reconsulta das duas cargas.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx",
+          "lines": "38–62",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx#L38"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx",
+          "lines": "125–129",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/files.tsx#L125"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "71–75",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L71"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "142–155",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L142"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx",
+          "lines": "177–195",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/maintain.tsx#L177"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/rag-studio/question.tsx",
+          "lines": "59–80",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/rag-studio/question.tsx#L59"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/shared-visual.spec.ts",
+          "lines": "200–206",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/e2e/orchestra/shared-visual.spec.ts#L200"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 91,
+          "name": "rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ba5f8-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-wide.png",
+          "sha256": "b581125818fee1a3d09f78af7d78c281827addfdc1aaf36c5ce722959ae08c6a"
+        },
+        {
+          "index": 109,
+          "name": "rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+          "sha256": "a785f7e15984f009d1a1052033964bc59da3df37613e43588ee1881c03464825"
+        },
+        {
+          "index": 129,
+          "name": "rag-studio-source-and-pipeline-unavailable-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b17ef-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-wide.png",
+          "sha256": "239030e20c65acd9b383191f84b1d651c0f062222012304fe344f41816421bbf"
+        }
+      ],
+      "reproduce": "Fazer sources e pipeline responderem 503 na entrada em RAG Studio; depois permitir sucesso e tentar recuperar pela própria página, sem reload de browser.",
+      "recommendation": "Mostrar um estado de indisponibilidade com causas agrupadas e ação 'Tentar novamente' que refaça só as leituras necessárias. Manter os painéis dependentes em estado desconhecido explícito. Evitar toast duplicando uma mensagem persistente já visível.",
+      "acceptance": "Depois de 503→sucesso, o usuário recupera lista e pipeline com uma ação local; nenhum erro é convertido em embedding off; foco volta a um ponto previsível e o anúncio de erro é único por evento/escopo relevante. Medir a sequência real, sem alegar frequência de flakiness com screenshots.",
+      "overlap": "RAG/shared; sem correção informada no escopo original de #716. Revisão de #713/#613 pertence ao root.",
+      "parity": "RAG files/maintain/question/studio/kit não aparecem no diff b8f76cc→dev; o checkpoint histórico é compatível com o mecanismo atual. SDK/network recovery geral não foi executado nesta auditoria.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "SUP-03",
+      "severity": "P2",
+      "category": "task UX friction",
+      "title": "Registro de documento exige que o usuário descubra e digite ID interno e versão CAS",
+      "type": "rendered historical observation + pinned-current source; usability judgment about business workflow",
+      "observed": "UI58 apresenta 'Existing record ID' e 'Current record version (CAS)' como campos obrigatórios vazios. Em 320 px, esse formulário domina o primeiro viewport antes dos seletores de documentos já existentes. O texto pede conhecimento de versão e scanning do servidor.",
+      "effect": "Para anexar um documento, o usuário precisa obter um identificador e uma versão técnica fora do próprio fluxo. A versão exige precisão e pode ficar obsoleta; a interface transfere o controle de concorrência para uma tarefa manual sem descoberta contextual.",
+      "mechanism": "uploadRecord e uploadVersion são inputs livres; upload() valida o ID e o inteiro e os envia diretamente como record/recordVersion. O botão permanece desabilitado sem os dois. O catálogo de registros/documentos exibido abaixo não preenche esses campos. A proteção CAS é legítima; a fricção é como a UI exige seus valores.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "237–269",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L237"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "579–617",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L579"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+          "lines": "619–648",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx#L619"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+          "lines": "67–77",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts#L67"
+        },
+        {
+          "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+          "lines": "159–169",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts#L159"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 36,
+          "name": "UI58-admitted-empty-evidence-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-320.png",
+          "sha256": "e3246f15884cc55360a9425f86ef98e4acdb5ff3fa1f90282409898b48b5b924"
+        },
+        {
+          "index": 37,
+          "name": "UI58-admitted-empty-evidence-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-dark-desktop.png",
+          "sha256": "8faae30f55bf4c741fee4ed8ced61d3a9cb7b62e6d4af6f33be5541520c9b643"
+        },
+        {
+          "index": 38,
+          "name": "UI58-authorized-extraction-fields-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-320.png",
+          "sha256": "9fc6ca2a981614e50bdb22bde677233257f2fd00de580259b1f1b34ad4eaf3ac"
+        },
+        {
+          "index": 39,
+          "name": "UI58-admitted-empty-evidence-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-admitted-empty-evidence-light-desktop.png",
+          "sha256": "e1cfe37bc095db071447f8836a917afc5c65d310b3f8c193acb04b7fcac4aeee"
+        },
+        {
+          "index": 40,
+          "name": "UI58-authorized-extraction-fields-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-dark-desktop.png",
+          "sha256": "93eb9608031ff861f6ee16fe6f8d122392ff163b19a9270dda7dddffb62dedcd"
+        },
+        {
+          "index": 41,
+          "name": "UI58-authorized-extraction-fields-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-authorized-extraction-fields-light-desktop.png",
+          "sha256": "e88ad2ddad9652681b24bb71ec9d2a92baf6fb02603d0f62071007cd444ca323"
+        },
+        {
+          "index": 42,
+          "name": "UI58-original-extracted-candidate-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-320.png",
+          "sha256": "1622ea46f5ddb36abaab0e1499214dc437e6a369c669b8ac5324b8891ecd3292"
+        },
+        {
+          "index": 43,
+          "name": "UI58-original-extracted-candidate-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-dark-desktop.png",
+          "sha256": "3cc36cee7fd2ec6ba7cdcd30c68896140613b3d9ed77874baeea94a9db50fe02"
+        },
+        {
+          "index": 44,
+          "name": "UI58-original-extracted-candidate-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/UI58-original-extracted-candidate-light-desktop.png",
+          "sha256": "9640b772513cdd00d529784bfb1659e57cee1be91a0cf414e29c9352b6587950"
+        }
+      ],
+      "reproduce": "Documents/UI58 > Register and upload document. Escolher uma classificação e um arquivo válido sem conhecer o ID/versão do registro. Avaliar a descoberta e o preenchimento em 320 px e desktop.",
+      "recommendation": "Iniciar o upload a partir de um registro autorizado ou oferecer escolha por nome/referência de negócio, transportando ID e versão obtidos por leitura autorizada. Manter o CAS e tratar conflito como atualização/revisão do registro. Se o contrato atual não oferece descoberta, registrar explicitamente a lacuna de produto/API e a dependência, sem inventar um destino nem remover proteção.",
+      "acceptance": "Uma pessoa com acesso ao registro consegue anexar o arquivo sem copiar UUID/versão interna; conflitos reais mostram o registro e a ação para revisar/atualizar. Em 320 px, selecionar documento existente e iniciar upload têm hierarquia explícita, com controles contidos. Nunca validar isso removendo autorização, versão ou scanner.",
+      "overlap": "UI58 está em #713 (UI57–70): coordenar com essa branch. É débito de tarefa, não demonstra bug de backend ou autorização.",
+      "parity": "documents/index.tsx, documents.css, sf-u24.ts e dependências visuais frame/states não mudaram no diff faddf701→dev. Não se afirma equivalência de todo o host de teste.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "B1",
+      "severity": "P2",
+      "title": "CAP03: a revisão oculta o valor anterior conhecido",
+      "kind": "Defeito de informação",
+      "confidence": "Alta: visto em capturas originais e confirmado no código",
+      "surfaces": [
+        "CAP03"
+      ],
+      "screenshots": [
+        62,
+        65,
+        70,
+        72,
+        86
+      ],
+      "observed": "Ao alterar o mês atual de 6 para 7, a revisão mostra julho de 2026 como proposta, mas Original e Fonte atual aparecem como 'Not supplied in this version' / 'Não informado nessa versão'. O valor anterior está disponível na tela e é passado ao editor.",
+      "cause": "Budget passa value e version, mas não recordId. SfU02Edit exige recordId para construir qualquer base persistida; sem ele descarta os campos da base, apesar de current().sourceValue continuar conhecido. A mesma condição afeta o editor da receita anual.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx",
+          "start": 130,
+          "end": 159,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/budget/index.tsx#L130-L159"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx",
+          "start": 211,
+          "end": 244,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx#L211-L244"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx",
+          "start": 321,
+          "end": 327,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/executive/edit.tsx#L321-L327"
+        }
+      ],
+      "repro": "Na visão de orçamento com mês atual 6, abrir Edit current month, informar 7 e revisar. Repetir com uma receita anual já existente.",
+      "impact": "A confirmação não permite comparar antes e depois justamente em uma edição financeira. O texto declara ausência de algo que a aplicação conhece; isso reduz a confiabilidade da revisão, sem evidência de corrupção dos números gravados.",
+      "fix": "Representar valores de configuração/coleção conhecidos no contrato de revisão, com a versão real. Não fabricar um recordId para satisfazer o componente.",
+      "acceptance": [
+        "Revisão de 6 → 7 mostra junho de 2026 → julho de 2026 em EN e PT.",
+        "Receita conhecida aparece antes e depois com a situação real da moeda.",
+        "Ausência real permanece explícita; mudança concorrente da fonte não é confundida com o valor original."
+      ],
+      "overlap": "Não identificado como correção existente em #613/#713/#716. O componente compartilhado deve ser coordenado com o responsável pelo sistema de revisão.",
+      "limits": "Capturas provam o problema no mês; extensão à receita é inferência direta da mesma chamada e condição.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B2",
+      "severity": "P2",
+      "title": "UI48: valores preservados perdem identidade semântica e associação ao registro",
+      "kind": "Defeito de hierarquia e interpretação",
+      "confidence": "Alta no código; evidência visual observada pelo agente raiz",
+      "surfaces": [
+        "UI48"
+      ],
+      "screenshots": [],
+      "observed": "O agente raiz inspecionou UI48-original-preserved-review em desktop dark/light. Cada cartão se chama 'Recorded value'; UUIDs, 180,000.00, 2,026 e outros números aparecem sem rótulo de campo ou associação visível ao registro. O identificador fica em uma disclosure. O modo de apresentação também renderiza valores soltos.",
+      "cause": "O renderer usa o mesmo dt traduzido para todo valor, exibe apenas value.id na disclosure e passa qualquer número para AmountText. O schema ProjectionValue não contém label nem tipo semântico. AmountText aplica separadores de milhar a qualquer número sem moeda, inclusive anos.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 185,
+          "end": 200,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L185-L200"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 299,
+          "end": 311,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L299-L311"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/labels.tsx",
+          "start": 76,
+          "end": 90,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/labels.tsx#L76-L90"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "start": 56,
+          "end": 62,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/schema/src/sucafina/reviews.ts#L56-L62"
+        }
+      ],
+      "repro": "Preservar uma seção com vários registros e campos, abrir a revisão e seu modo de apresentação. Tentar identificar o significado de cada número sem abrir as referências técnicas.",
+      "impact": "A revisão preserva dados, mas não permite entendê-los com segurança. Um ano vira '2,026'; um valor financeiro pode ser indistinguível de outro campo. Não há alegação de mudança do valor armazenado.",
+      "fix": "Transportar rótulos e tipos semânticos reais do produtor; agrupar por registro e campo; usar ano, contagem, porcentagem ou moeda conforme o contrato autorizado. Manter IDs e proveniência acessíveis em segundo plano.",
+      "acceptance": [
+        "Cada valor mostra identidade humana de campo e registro sem exigir disclosures técnicas.",
+        "Ano é apresentado como ano; valores monetários usam somente moeda efetivamente fornecida.",
+        "Ausências continuam explícitas e a exportação/apresentação conserva a mesma semântica."
+      ],
+      "overlap": "#613 toca UI48, mas a versão sf-design-next inspecionada conserva esse renderer. Coordenar no mesmo proprietário; não considerar corrigido pela existência do PR.",
+      "limits": "Visual do workflow foi observado pelo agente raiz, não contado nos 103 screenshots business vistos por este agente. Não inferir moeda ou nome de campo a partir de UUID opaco.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B3",
+      "severity": "P2",
+      "title": "UI50: dois formulários de formato, duas ações de gerar e um título sem efeito",
+      "kind": "Defeito de interface e promessa de controle",
+      "confidence": "Alta: código e capturas inspecionadas pelo agente raiz",
+      "surfaces": [
+        "UI50"
+      ],
+      "screenshots": [],
+      "observed": "UI50 mostra dois seletores Format, dois controles Generate report, um campo Title e uma lista estática de páginas acima das seções efetivamente autorizadas. Title não participa do payload de geração.",
+      "cause": "O formulário legado em 231–262 coexiste com o seletor localizado de 263–275 e com a primaryAction da página. requestReport envia reviewRef, sectionRefs e format; title não é incluído.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "start": 175,
+          "end": 176,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx#L175-L176"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "start": 204,
+          "end": 209,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx#L204-L209"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "start": 231,
+          "end": 275,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx#L231-L275"
+        }
+      ],
+      "repro": "Abrir uma revisão autorizada na rota de relatório; preencher Title, alternar Format e comparar os dois blocos antes de gerar.",
+      "impact": "O usuário precisa decidir qual formulário é válido e acredita configurar um título que a operação ignora. Há duplicação visual, texto sem i18n e excesso de camadas de cartão.",
+      "fix": "Integrar a remoção do bloco legado já preparada no proprietário #613. Manter uma seleção de formato e uma ação principal, ligadas ao conteúdo autorizado.",
+      "acceptance": [
+        "Uma única escolha de formato e uma única ação principal por estado, em desktop e 320px.",
+        "Nenhum campo editável sem efeito real no pedido.",
+        "Seções exibidas e selecionadas correspondem exatamente às seções autorizadas e preservadas."
+      ],
+      "overlap": "Já tratado no patch #613 inspecionado; não abrir correção paralela. Ainda presente no SHA dev auditado. Precisa integração e nova evidência.",
+      "limits": "Capturas UI50 foram vistas pelo agente raiz. Ausência de title no payload é fato de código; não foi executada uma exportação local.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B4",
+      "severity": "P2",
+      "title": "UI47–50: preservar termina em referência crua e as rotas de entrada não ajudam a continuar",
+      "kind": "Quebra de continuidade da jornada",
+      "confidence": "Alta no código; estado confirmado observado pelo agente raiz",
+      "surfaces": [
+        "UI47",
+        "UI48",
+        "UI50"
+      ],
+      "screenshots": [],
+      "observed": "Após preservar, o sucesso exibe apenas id e versão, sem Abrir revisão ou próximo passo. Nas rotas raiz de revisões/relatórios, não existe reviewRef; o estado fica unavailable e Retry repete a mesma ausência.",
+      "cause": "A confirmação UI47 de 338–345 é somente um dl; a prévia fica desabilitada na fase confirmed. UI48 lê ref apenas das rotas entry/present e marca unavailable quando ausente. Retry incrementa uma contagem sem resolver o pré-requisito.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "start": 255,
+          "end": 268,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx#L255-L268"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+          "start": 338,
+          "end": 345,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx#L338-L345"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 39,
+          "end": 40,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L39-L40"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 85,
+          "end": 88,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L85-L88"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 162,
+          "end": 165,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L162-L165"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+          "start": 216,
+          "end": 219,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx#L216-L219"
+        }
+      ],
+      "repro": "Concluir preservação; procurar como abrir a revisão recém-criada. Abrir /orchestra/sf-reviews/reviews ou /orchestra/sf-reviews/reports sem referência e usar Retry.",
+      "impact": "O resultado técnico existe, mas a navegação exige descobrir uma URL/referência. Uma recuperação genérica sugere falha transitória para uma ausência estrutural.",
+      "fix": "Integrar o openPreserved e o SfOpenReviewReference do #613. Na descoberta inicial da agenda, substituir conhecimento implícito do nome da página por orientação ou seleção autorizada quando o produtor puder fornecê-la.",
+      "acceptance": [
+        "Sucesso oferece Abrir revisão com a referência real e corretamente codificada.",
+        "Entradas raiz explicam o pré-requisito e oferecem ação útil autorizada.",
+        "Retry representa uma nova tentativa que pode de fato alterar o resultado.",
+        "Nenhuma lista de fontes é inventada para melhorar a aparência."
+      ],
+      "overlap": "#613 já adiciona continuidade e entrada por referência. A descoberta inicial continua sendo um campo livre na versão inspecionada; isso permanece uma decisão de UX a revisar.",
+      "limits": "A necessidade de descoberta inicial é julgamento de UX; a ausência de ação no sucesso e o Retry sem ref são fatos de código.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B5",
+      "severity": "P2",
+      "title": "UI48: Open source pode falhar em silêncio e conservar links de outra seleção",
+      "kind": "Defeito de feedback e atribuição",
+      "confidence": "Alta quanto à lógica; reprodução com transporte controlado ainda necessária",
+      "surfaces": [
+        "UI48"
+      ],
+      "screenshots": [],
+      "observed": "openSource retorna sem feedback quando a releitura é inválida/não-ok, e só atualiza sourceLinks em um resultado com links. Não limpa os links anteriores ao iniciar outra seleção, não associa o resultado à referência selecionada e não expõe estado de carregamento/erro.",
+      "cause": "O método 101–120 usa geração/owner como validação, mas não a identidade da tentativa ou referência. A UI 228–231 mostra qualquer sourceLinks residual. Uma exceção também não tem catch local nesse método.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 101,
+          "end": 120,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L101-L120"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+          "start": 220,
+          "end": 231,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx#L220-L231"
+        }
+      ],
+      "repro": "Em Actions, abrir fonte A com sucesso; abrir fonte B com resposta denied/unavailable ou falha de transporte; depois repetir com A/B atrasadas em ordem invertida.",
+      "impact": "A ação parece inerte ou a interface mantém links de A após a solicitação de B, sem explicar a atribuição. A condição é derivada do código; não foi afirmado incidente de produção.",
+      "fix": "Modelar estado por seleção/tentativa, abortar ou invalidar a anterior e apresentar loading, erro e recuperação. Limpar links antigos ou mantê-los explicitamente atribuídos à seleção anterior.",
+      "acceptance": [
+        "Falha e recusa exibem mensagem útil, sem links apresentados como se fossem resultado da nova seleção.",
+        "Respostas antigas não substituem a seleção atual.",
+        "A revisão permanece legível durante a tentativa; retry reaplica apenas a ação de leitura apropriada."
+      ],
+      "overlap": "#613 conserva o método na versão inspecionada. Coordenar dentro do mesmo proprietário de UI48.",
+      "limits": "Sem execução local. Uma prova Actions de erro/atraso é necessária para fechar a reprodução comportamental; a omissão de estados e limpeza está confirmada na fonte.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B6",
+      "severity": "P2",
+      "title": "CAP10: Budget e Spent não informam moeda nem sua ausência",
+      "kind": "Defeito de contexto financeiro",
+      "confidence": "Alta: capturas originais e código",
+      "surfaces": [
+        "CAP10",
+        "CAP14"
+      ],
+      "screenshots": [
+        38,
+        42,
+        46,
+        54,
+        60,
+        44
+      ],
+      "observed": "Tabela e detalhe exibem 240,000 / 92,000 e outros valores de Budget/Spent sem moeda ou declaração de moeda desconhecida. CAP03/04, no mesmo conjunto, explicam 'Source currency not specified'.",
+      "cause": "As células e o detalhe usam Intl.NumberFormat puro. O modelo de projeto consumido contém budget/spent, mas nenhuma moeda ou unidade. O componente não sinaliza essa limitação.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+          "start": 192,
+          "end": 199,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx#L192-L199"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+          "start": 292,
+          "end": 296,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx#L292-L296"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/model.ts",
+          "start": 16,
+          "end": 41,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/model.ts#L16-L41"
+        }
+      ],
+      "repro": "Abrir a lista de projetos e o detalhe do mesmo projeto com orçamento/gasto preenchidos. Comparar o contexto informado ao disponível em OPEX.",
+      "impact": "A apresentação financeira omite a unidade necessária para interpretar o valor. A interface parece mais certa do que o contrato permite. Não se afirma que o número esteja incorreto.",
+      "fix": "Exibir a moeda real se o contrato autorizado a fornece. Se a fonte não a fornece, declarar a ausência junto aos valores. Não presumir USD/BRL ou derivar moeda do idioma.",
+      "acceptance": [
+        "Lista, detalhe, edição e revisão comunicam a mesma situação de unidade.",
+        "Valores preservam precisão e ausência; nenhum fallback transforma vazio em zero.",
+        "Dados com diferentes moedas, quando admitidos pelo contrato, não são comparados como uma só unidade."
+      ],
+      "overlap": "Não identificado como coberto pelas correções #613/#713/#716.",
+      "limits": "O modelo analisado não traz moeda; corrigir sem inventar dado pode exigir apenas indicação de ausência ou evolução real do contrato.",
+      "sourceReport": "reviewers/product.json",
+      "amendments": [
+        {
+          "id": "B6-S1",
+          "amends": "B6",
+          "severity": "P2",
+          "title": "CAP14 amplia B6: moeda opcional recebida só aparece no editor, e sua ausência não é comunicada",
+          "kind": "Extensão do contexto financeiro",
+          "confidence": "Alta: captura original de Amount sem unidade + fonte dev",
+          "surfaces": [
+            "CAP14"
+          ],
+          "screenshots": [
+            93,
+            94,
+            95,
+            91
+          ],
+          "observed": "O detalhe de contrato mostra Amount 144,000 / Amount type Annual; as revisões mostram montantes 36,000 ou 144,000 sem moeda. Não há mensagem de moeda desconhecida. A existência de currency em uma linha real não foi fotografada; sua omissão do detalhe/revisão é comprovada pelo código.",
+          "cause": "A projeção SfDomainContract admite currency opcional. EDIT_SECTIONS não inclui currency; detalhe e editFields usam esse conjunto. A única apresentação de currency é um hint no formulário, condicionado a selectedRow().currency !== undefined. Assim, o detalhe e a revisão não exibem a moeda nem declaram sua ausência.",
+          "refs": [
+            {
+              "path": "packages/schema/src/sucafina/domain/fields.ts",
+              "start": 148,
+              "end": 160,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/schema/src/sucafina/domain/fields.ts#L148-L160"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+              "start": 37,
+              "end": 63,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L37-L63"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+              "start": 549,
+              "end": 561,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L549-L561"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+              "start": 574,
+              "end": 585,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L574-L585"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts",
+              "start": 65,
+              "end": 75,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/model.ts#L65-L75"
+            }
+          ],
+          "repro": "Abrir Vendor contracts > contrato com valor > detalhe > edição > revisão. Verificar o mesmo contexto de unidade nesses estados. Em cenário controlado adicional, fornecer currency na projeção autorizada para verificar que detalhe/revisão também a mostram após a correção.",
+          "impact": "O valor comercial fica sem a unidade necessária para interpretá-lo. Um contrato com moeda disponível perde essa informação no detalhe/revisão; um contrato sem moeda parece completo. Não se alega que o montante esteja corrompido.",
+          "fix": "Mostrar a moeda original, em modo de leitura, junto ao valor e em toda a revisão; se ausente, informar explicitamente a limitação. Não transformar currency em campo gravável, pois o comando não o admite, nem deduzir moeda de idioma, localização ou fornecedor.",
+          "acceptance": [
+            "Com currency real, detalhe/edição/revisão comunicam a mesma unidade.",
+            "Sem currency, os mesmos estados explicitam ausência, mantendo vazio/null/zero e precisão do montante.",
+            "Nenhuma moeda padrão é inventada e o payload nativo mantém seus campos autorizados."
+          ],
+          "overlap": "Agrupar com B6, não contar como segundo defeito independente; sem cobertura atribuída a #613/#713/#716.",
+          "limits": "Captura finance-final 10a7aaa7; módulos contracts/index.tsx e model.ts não mudaram até dev. Cenário currency presente é inferência estática, ainda requer captura controlada.",
+          "sourceReport": "reviewers/product-supplement.json"
+        }
+      ]
+    },
+    {
+      "id": "B7",
+      "severity": "P2",
+      "title": "CAP10: revisão de milestone promete comparação, mas mostra só a proposta",
+      "kind": "Defeito de revisão e microcopy",
+      "confidence": "Alta: captura original e código",
+      "surfaces": [
+        "CAP10"
+      ],
+      "screenshots": [
+        39,
+        55,
+        56
+      ],
+      "observed": "A tela diz para revisar mudanças contra fonte e versão atuais, porém apresenta apenas Project, Milestone, Date, Status e Notes propostos. Não há valor anterior nem marcação de alteração.",
+      "cause": "O bloco de save-milestone usa exclusivamente command.draft; a seleção original contém milestones, mas ela não participa dessa comparação.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+          "start": 442,
+          "end": 469,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx#L442-L469"
+        }
+      ],
+      "repro": "Editar data/status/notas de um milestone existente, avançar para a revisão e tentar reconhecer o que mudou sem voltar ao editor.",
+      "impact": "A etapa de confirmação adiciona fricção sem oferecer a comparação prometida. Erros de alteração são mais difíceis de detectar.",
+      "fix": "Mostrar antes/depois dos campos alterados usando o milestone de origem real e sua versão; distinguir criação de edição. Nomear o primeiro avanço como Revisar alterações quando ele ainda não salva.",
+      "acceptance": [
+        "Edição mostra original e proposta com diferenças identificáveis.",
+        "Criação deixa explícito que não há registro anterior.",
+        "A confirmação informa a versão real usada, sem versão sintética.",
+        "Botão que abre a revisão não promete que já salvará o milestone."
+      ],
+      "overlap": "Não identificado como coberto pelas correções #613/#713/#716.",
+      "limits": "O rótulo inicial Save milestone é observado; a comparação ausente está confirmada. Não foi executada persistência local.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B8",
+      "severity": "P2",
+      "title": "CAP08: Edit review abre um cadastro completo e enterra a avaliação",
+      "kind": "Problema de foco de tarefa",
+      "confidence": "Alta no layout observado; severidade é julgamento de UX",
+      "surfaces": [
+        "CAP08"
+      ],
+      "screenshots": [
+        12,
+        22,
+        10,
+        31
+      ],
+      "observed": "A ação Edit review abre Save member. Na captura desktop 1440×1100 aparecem Identity e Employment; os campos próprios da avaliação ficam abaixo da primeira área visível. Leader é um UUID editável como texto.",
+      "cause": "talentFields ordena nome, cargo, vínculo, leaderId, localização, datas e status antes de classificação, outlook e notas. SfPeopleEditor recebe todo o conjunto. Comentário da fonte explica que o catálogo de líderes não está na projeção.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "start": 24,
+          "end": 62,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx#L24-L62"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "start": 323,
+          "end": 330,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx#L323-L330"
+        }
+      ],
+      "repro": "Em Talent Review, escolher um membro e Edit review. Localizar classificação/outlook/notas antes de rolar e avaliar quais campos parecem fazer parte da tarefa.",
+      "impact": "A tarefa sugerida pelo comando e a hierarquia da tela divergem. A edição de dados cadastrais e IDs técnicos compete com a avaliação de talento.",
+      "fix": "Tornar classificação, outlook e notas o centro imediato da tarefa; resumir identidade em contexto legível e separar a edição cadastral quando necessário. Para líderes, usar apenas catálogo autorizado real ou manter a referência protegida/explicada conforme o contrato.",
+      "acceptance": [
+        "O primeiro campo relevante à avaliação aparece imediatamente em desktop e numa sequência clara em 320px.",
+        "Título e botão descrevem a tarefa real.",
+        "Não inventar nomes de líderes nem alterar payload/autorizações para maquiar a interface.",
+        "A revisão final preserva o escopo exato do que será escrito."
+      ],
+      "overlap": "Não identificado como coberto pelas correções #613/#713/#716.",
+      "limits": "Layout e ordem de campos são fatos observados; a proposta de separar cadastro e avaliação requer decisão de produto, não é alegação de falha de dados.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B9",
+      "severity": "P2",
+      "title": "CAP07/08: Voltar para equipe/talentos depende de histórico arbitrário",
+      "kind": "Defeito potencial de navegação em deep link",
+      "confidence": "Alta no código; comportamento ainda a reproduzir em Actions",
+      "surfaces": [
+        "CAP07",
+        "CAP08"
+      ],
+      "screenshots": [
+        14,
+        15,
+        24,
+        27,
+        9,
+        30
+      ],
+      "observed": "Controles com destino semântico como Back to team / Back to talent review usam navigate(-1). Isso não garante a rota nomeada quando a página é aberta diretamente ou vem de outro lugar.",
+      "cause": "close de estrutura e dismiss de talento limpam a seleção e navegam uma entrada no histórico. Import/export do talento usa navigate(-1) diretamente.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx",
+          "start": 114,
+          "end": 117,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx#L114-L117"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "start": 124,
+          "end": 127,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx#L124-L127"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx",
+          "start": 349,
+          "end": 351,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/talent/index.tsx#L349-L351"
+        }
+      ],
+      "repro": "Abrir um detalhe/editor/import/export por URL em uma nova aba e acionar o botão rotulado Voltar para a lista. Repetir chegando de uma página externa ou outro capítulo.",
+      "impact": "O botão pode não sair do detalhe ou levar a um lugar diferente do destino anunciado. Prejudica abertura por links compartilhados e recuperação de estados indisponíveis.",
+      "fix": "Navegar para a rota de coleção semântica preservando owner/filtros apropriados, ou usar um retorno validado interno com fallback explícito. Não trocar silenciosamente o rótulo por uma promessa inexistente.",
+      "acceptance": [
+        "Nova aba sem histórico retorna à coleção correta.",
+        "Histórico externo não redefine o destino de Voltar para equipe/talentos.",
+        "Retorno preserva contexto autorizado e filtros quando disponíveis."
+      ],
+      "overlap": "Não identificado como coberto pelas correções #613/#713/#716.",
+      "limits": "Não é afirmação de incidente observado: é inferência da escolha de navigate(-1). O controle visível e sua rotulagem foram vistos nas capturas.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B10",
+      "severity": "P3",
+      "title": "CAP04: mês por extenso em PT perde o último dígito do ano",
+      "kind": "Defeito visual de conteúdo localizado",
+      "confidence": "Alta: duas capturas originais e causa CSS exata",
+      "surfaces": [
+        "CAP04"
+      ],
+      "screenshots": [
+        80,
+        101
+      ],
+      "observed": "O campo somente leitura exibe 'janeiro de 202' em vez de 'janeiro de 2026'. A captura PT do editor e o test-finished PT mostram o mesmo corte.",
+      "cause": "O campo de mês usa o limite de largura do seletor de ano: --sf-opex-year-width:112px. Dentro dele há padding horizontal e uma string localizada de mês longo + ano. Em <=767px a regra muda, portanto é problema específico do estágio desktop atual.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css",
+          "start": 13,
+          "end": 16,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css#L13-L16"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css",
+          "start": 307,
+          "end": 314,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css#L307-L314"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "start": 892,
+          "end": 907,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx#L892-L907"
+        }
+      ],
+      "repro": "Trocar para PT-BR, editar um mês de OPEX em desktop e observar o campo Mês sem foco ou scroll interno.",
+      "impact": "Uma informação temporal essencial fica truncada em um controle que nem é editável. É um microdefeito diretamente incompatível com acabamento refinado.",
+      "fix": "Dar ao valor somente leitura largura suficiente ou apresentá-lo como texto de contexto com quebra adequada. Separar as necessidades do seletor de ano e do período completo.",
+      "acceptance": [
+        "Janeiro, setembro e dezembro de 2026 ficam completos em PT; os equivalentes EN também.",
+        "Desktop e 320px sem corte, rolagem interna ou crescimento indevido do seletor de ano.",
+        "Zoom e aumento de fonte não ocultam o ano."
+      ],
+      "overlap": "Não identificado como coberto pelas correções #613/#713/#716.",
+      "limits": "Os pixels do corte foram observados; não foram medidos layout/zoom no navegador local.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B11",
+      "severity": "P3",
+      "title": "Formulários equivalentes usam eixos de composição divergentes",
+      "kind": "Inconsistência visual entre famílias",
+      "confidence": "Alta no layout e nas regras; recomendação é julgamento de design",
+      "surfaces": [
+        "CAP02",
+        "CAP04",
+        "CAP07",
+        "CAP10"
+      ],
+      "screenshots": [
+        98,
+        94,
+        5,
+        61
+      ],
+      "observed": "Em 1440px, os editores CAP02/CAP04 começam alinhados ao título da página, aproximadamente x=288; CAP07/CAP10 deslocam o formulário de 760px para o centro, aproximadamente x=458, enquanto o título continua no eixo original.",
+      "cause": "CAP04 define 760px sem centralização. People centraliza os estágios com margin-inline:auto; Projects faz o mesmo. O resultado não segue um contrato único de título, largura e estágio.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css",
+          "start": 301,
+          "end": 303,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/opex.css#L301-L303"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/people.css",
+          "start": 174,
+          "end": 178,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/people/structure/people.css#L174-L178"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+          "start": 101,
+          "end": 104,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css#L101-L104"
+        }
+      ],
+      "repro": "Alternar entre editar OPEX, membro e projeto no mesmo viewport desktop, comparando o eixo do título, do formulário e do botão de retorno.",
+      "impact": "As tarefas parecem pertencer a sistemas de composição diferentes; o deslocamento lateral é grande e sem justificativa semântica visível. É acabamento, não bloqueio funcional.",
+      "fix": "Definir um contrato de formulário de tarefa para eixo, largura máxima, cabeçalho, distância e ações. Adotar exceções somente quando a tarefa pedir explicitamente outro estágio.",
+      "acceptance": [
+        "Amostra lado a lado CAP02/04/07/10 em 1440px apresenta regra coerente documentada.",
+        "320px mantém ordem, espaçamento e ações completas.",
+        "Mudança respeita os tokens e o vidro existentes; não cria outra família de sombras/cartões."
+      ],
+      "overlap": "Coordenar com a auditoria do design system do agente raiz; não é pedido de redesenho isolado de cada família.",
+      "limits": "Coordenadas são leitura aproximada de captura, não medição DOM. Os valores 760px e margin-inline:auto foram confirmados na fonte.",
+      "sourceReport": "reviewers/product.json"
+    },
+    {
+      "id": "B12",
+      "severity": "P2",
+      "title": "CAP16: confirmação de excesso de pesos aparece sem uma exceção identificada",
+      "kind": "Problema de decisão e confirmação",
+      "confidence": "Alta para a apresentação incondicional: captura original + fonte dev; impacto de uma escolha indevida não executado",
+      "surfaces": [
+        "CAP16"
+      ],
+      "screenshots": [
+        48,
+        47,
+        78
+      ],
+      "observed": "A revisão de subitem mostra no topo a caixa 'Confirm weights exceeding total allocation' antes do título da revisão. A captura informa apenas um campo alterado. A caixa não identifica peso, limite, excesso ou regra que exige a exceção. É apresentada em toda revisão de contrato/item/subitem.",
+      "cause": "O ramo review-edit renderiza a caixa sem condição; o estado confirmedWeights é enviado como confirmed nos comandos nativos. A UI não apresenta uma justificativa específica de excesso junto à decisão. Avisos do produtor entram no estado apenas na resposta de sucesso; a revisão não os usa para decidir quando mostrar a caixa.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 795,
+          "end": 829,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L795-L829"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 448,
+          "end": 489,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L448-L489"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 74,
+          "end": 110,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L74-L110"
+        }
+      ],
+      "repro": "Abrir um subitem autorizado, alterar somente uma nota e ir para Review changes. Examinar o topo da revisão e o contexto da caixa de confirmação. Repetir com edição do nome do contrato, cujo formulário tem apenas nome e ano.",
+      "impact": "A interface pede consentimento para uma exceção sem explicar sua necessidade. Isso pode induzir marcação por hábito e torna uma revisão normal ambígua. Não foi demonstrada alteração matemática errada, bypass de autorização ou dano no produtor.",
+      "fix": "Vincular a confirmação a uma condição real, reconhecida pelo produtor, e explicar a regra e os valores que a justificam. Apresentar ao lado os dados de peso/limite realmente fornecidos. Uma revisão comum não deve parecer conter erro de alocação. Preservar o significado e as validações do campo confirmed; não criar cálculo financeiro ou validação de domínio paralela para inventar um excesso.",
+      "acceptance": [
+        "Editar apenas texto, com alocação válida, oferece revisão clara sem sugerir uma exceção inexistente.",
+        "Quando o produtor exige consentimento, a revisão identifica o escopo e o motivo real; o usuário consegue revisar os pesos antes de autorizar.",
+        "Cancelar/revisar/retomar não reaproveita um consentimento de outro contexto ou alteração.",
+        "O comando conserva versão, idempotência, validação e permissões originais; não basta mudar a etiqueta ou marcar a caixa automaticamente."
+      ],
+      "overlap": "Nenhuma das correções atribuídas a #613/#713/#716 cobre CAP16; não foi aberto ticket nem feita mudança.",
+      "limits": "Capture source 45c47f11; módulo operations/performance/index.tsx não consta nas mudanças até a dev pinada. Shared/detail e shared/table mudaram depois; este achado é sobre a decisão e o conteúdo, não equivalência de pixels.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "B13",
+      "severity": "P3",
+      "title": "Revisões operacionais repetem o payload inteiro em Effects depois do antes/depois",
+      "kind": "Refinamento de densidade e hierarquia",
+      "confidence": "Alta para a repetição: capturas originais + fonte dev; gravidade é julgamento de UX",
+      "surfaces": [
+        "CAP11",
+        "CAP12",
+        "CAP13",
+        "CAP14",
+        "CAP15",
+        "CAP16"
+      ],
+      "screenshots": [
+        23,
+        29,
+        37,
+        47,
+        48,
+        53,
+        63,
+        68,
+        73,
+        78,
+        91,
+        94,
+        95
+      ],
+      "observed": "Depois da comparação Original / Current source / Proposed values, a seção Effects lista outra vez todos os campos da proposta. CAP16 define22 campos de subitem; a captura tem um campo alterado e ainda assim apresenta o conjunto inteiro. Em390 px, o bloco final repete valores longos e entradas vazias antes das ações. CAP14 também repete os15 campos.",
+      "cause": "Os callers passam os mesmos fields/reviewFields/proposedFields para proposed e effects.details. SfEffectList renderiza todos os detalhes, aberto, como lista; SfChangeReview põe essa seção após todas as linhas da comparação.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx",
+          "start": 911,
+          "end": 920,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/service/index.tsx#L911-L920"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx",
+          "start": 1058,
+          "end": 1065,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/security/index.tsx#L1058-L1065"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx",
+          "start": 598,
+          "end": 607,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/risks/collection.tsx#L598-L607"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx",
+          "start": 808,
+          "end": 823,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/operations/performance/index.tsx#L808-L823"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx",
+          "start": 450,
+          "end": 459,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/procurement/contracts/index.tsx#L450-L459"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "start": 121,
+          "end": 140,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx#L121-L140"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "start": 266,
+          "end": 309,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx#L266-L309"
+        }
+      ],
+      "repro": "Editar apenas uma observação de um registro operacional ou contrato; abrir a revisão; percorrer a comparação e depois Effects até os botões. Comparar o conteúdo repetido ao bloco de valores propostos.",
+      "impact": "O espaço de decisão fica dominado por cópias do payload, não pelo que mudou ou pelo efeito. Em telas estreitas, o usuário atravessa uma revisão extensa para uma alteração pequena; isso aumenta esforço e dificulta localizar a diferença relevante. Não é prova de erro funcional ou inacessibilidade.",
+      "fix": "Manter uma comparação completa e verificável, destacando primeiro as mudanças. Reservar Effects para consequências de domínio efetivamente conhecidas e apresentar o payload completo como detalhe acessível quando necessário. Evitar a cópia aberta de todos os campos e representar vazio/ausência com texto honesto, conservando a distinção entre eles.",
+      "acceptance": [
+        "Uma alteração de um campo é identificável no primeiro bloco da revisão, com acesso por teclado ao contexto completo.",
+        "A proposta continua inspecionável com suas fontes, versões, ausências e mudanças remotas; não remover o contrato de revisão para encurtar a página.",
+        "Effects acrescenta significado ou funciona como detalhe recolhível claramente rotulado, sem repetir uma longa lista aberta por padrão.",
+        "Em320/390 px, o usuário encontra confirmação/cancelamento sem ter de percorrer uma segunda cópia do mesmo formulário."
+      ],
+      "overlap": "Componente transversal de revisão; coordenar com owners dos módulos e evitar refazer #613/#713. Não foi feita mudança.",
+      "limits": "As capturas são históricas dos SHAs listados; callers relevantes e renderer de revisão permanecem na dev analisada. Não se afirma altura exata da página atual.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "BA-01",
+      "severity": "P1",
+      "status": "Reproduced in production-browser CI with existing HTTP fixture",
+      "title": "Teams apaga um rascunho nunca enviado após interrupção do stream",
+      "surfaces": [
+        "Teams/new chat"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/context/team-sessions.ts",
+          "lines": "167–195; 259–299; 323–332",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/team-profile-visual.fixture.ts",
+          "lines": "153–165; 200–218",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/team-profile-visual.spec.ts",
+          "lines": "412–460",
+          "commit": "e82d41143cc8041a970e9a5081ebb88df2349b4e"
+        }
+      ],
+      "evidence": [
+        "behavior-probe/audit-unsent-draft-recovery.json",
+        "behavior-probe/test-ci-evidence/playwright-runtime.json"
+      ],
+      "steps": [
+        "Abrir novo chat da mesma Team com autoridade válida.",
+        "Digitar texto sem enviar.",
+        "Encerrar somente a conexão de eventos.",
+        "Acionar Try again, mantendo Team/principal/contexto/authorityGeneration.",
+        "Observar editor editável em READY/CONNECTING com texto vazio."
+      ],
+      "result": "12 casos originais passaram; único caso novo falhou na asserção final. Esperado texto exato; recebido vazio. 14 observações do editor em 10s. Writes=[]; somente leituras; nenhuma submissão.",
+      "cause": "retire(stream) salva no mapa transitório, mas quarentena é criada somente para reason=refresh. Em seguida o mapa e prompt são zerados; refresh posterior não pode recuperar texto.",
+      "fix": "Quarentena apenas em memória para interrupção de transporte, restituída somente após revalidação do mesmo owner/F02 stamp/authorityGeneration. Manter purge para logout/revoked/principal-change e não repetir POST.",
+      "qualification": "Não é Microsoft live; estado validado READY/CONNECTING com GET /event pendente, não um stream SSE live aberto. Uma reprodução dirigida; não é estimativa de frequência nem diagnóstico de flake.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-03",
+      "severity": "P2",
+      "status": "Observed in original planning screenshot and source",
+      "title": "Editar uma alocação existente mostra Add allocation",
+      "surfaces": [
+        "CAP21"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "lines": "475–480; 551–557; 621–624",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+          "lines": "229–248",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        89
+      ],
+      "observation": "O caso abre Edit do registro existente; o formulário conserva dados desse registro, mas o h2 usa a chave create-allocation incondicionalmente.",
+      "fix": "Distinguir criação e edição por intenção/id, exibir Edit allocation + nome humano. Revisão deve identificar o registro, não apenas allocations.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-04",
+      "severity": "P2",
+      "status": "Observed at horizontal endpoint in original screenshot",
+      "title": "Ações de versões perdem toda a identificação da linha em 320px",
+      "surfaces": [
+        "CAP23"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+          "lines": "375–414; 547–565",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "lines": "138–145; 229–247",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        22,
+        32,
+        33
+      ],
+      "observation": "Na captura do endpoint Actions existem duas linhas visualmente idênticas de Copy version / Lock version / Make official / Delete version; os nomes e estados estão fora do viewport.",
+      "fix": "Preservar identidade junto às ações (coluna fixa, menu ancorado no nome, ou apresentação por cartões em largura estreita). Manter etapa de revisão com a identidade exata.",
+      "qualification": "Não foi observada mutação no registro errado. Fonte usa recordRef correto e revisão traz nome. É perda de contexto/risco de seleção, não bypass da confirmação.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-05",
+      "severity": "P2",
+      "status": "Observed across multiple planning originals and source",
+      "title": "Revisões elevam UUIDs e chaves técnicas à identidade principal",
+      "surfaces": [
+        "CAP20",
+        "CAP21",
+        "CAP22",
+        "CAP25"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "lines": "691–692",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+          "lines": "579–582",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "lines": "621–624",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "238–242; 323–327",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        11,
+        68,
+        80,
+        83,
+        89,
+        90
+      ],
+      "observation": "CAP20 e CAP22 usam UUID da versão como subtítulo/rodapé; CAP21 usa allocations; referências extensas aparecem três vezes na comparação, consumindo várias linhas em 320px.",
+      "fix": "Usar nome humano + ano/versão na primeira hierarquia. Manter referência técnica exata em divulgação Record reference com copiar, quando necessária para rastreabilidade. Não remover proveniência nem trocar por identificador inventado.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-06",
+      "severity": "P3",
+      "status": "Observed in original screenshot and exact source path",
+      "title": "Aviso bloqueante duplica a mesma razão",
+      "surfaces": [
+        "CAP20",
+        "Shared change review"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "312–318",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "lines": "704–713",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        83
+      ],
+      "observation": "A revisão Sync roster indisponível mostra Action not admitted by the original producer duas vezes seguidas. A lista concatena blockingReasons e confirmation.reasons sem eliminar duplicatas.",
+      "fix": "Deduplicar razões por chave/parâmetros ou atribuir cada razão a um único componente. Preservar bloqueio de sincronização sem preview.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-07",
+      "severity": "P3",
+      "status": "Observed after keyboard horizontal scrolling in original screenshot",
+      "title": "Comparação mensal rola título e cabeçalho Month para fora do recorte",
+      "surfaces": [
+        "CAP23 compare"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+          "lines": "271–305",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/compare.css",
+          "lines": "9–22; 36–43",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        21
+      ],
+      "observation": "No recorte nomeado keyboard-monthly-scroll, Budget vira dget e Month vira onth; somente os th de tbody ficam sticky, caption e cabeçalho da primeira coluna acompanham o scroll.",
+      "fix": "Manter título fora da região que rola e fixar o cabeçalho de identidade junto aos rótulos de mês. Revisar ambos endpoints sem reduzir os valores nem esconder colunas.",
+      "qualification": "Rótulos de mês no corpo permanecem presentes. A evidência mostra um checkpoint de teclado; não comprova wheel/trackpad, browser zoom ou todos os endpoints.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-08",
+      "severity": "P3",
+      "status": "Observed in original localized desktop screenshot; source supports layout mechanism",
+      "title": "KPIs perdem alinhamento vertical quando o rótulo PT-BR ocupa duas linhas",
+      "surfaces": [
+        "CAP24 Procurement dashboard"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/overview.css",
+          "lines": "7–19; 42–46",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "lines": "139–145; 197–209",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        38,
+        59
+      ],
+      "observation": "Em 1440×1100 PT-BR, Pedidos abertos neste filtro de status quebra em duas linhas e o valor 7 fica abaixo da linha visual dos quatro valores financeiros. O conjunto EN desktop mostra os cinco valores alinhados. A banda perde a simetria entre métricas na tradução.",
+      "mechanism": "Cada métrica flui de modo independente: dt com altura natural, seguido de dd com margin-top:12px. O grid externo alinha somente as caixas, não a linha dos valores.",
+      "fix": "Reservar uma linha compartilhada de rótulos com altura correspondente ao maior rótulo e uma linha compartilhada de valores, ou usar subgrid equivalente. Manter o layout mobile de rótulo/valor lado a lado e testar textos longos sem truncar informação.",
+      "qualification": "Desalinhamento de apresentação, sem erro de cálculo ou ausência de valor. Não foi medido zoom real.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BA-09",
+      "severity": "P3",
+      "status": "Observed in EN light and PT-BR dark desktop originals; source width policy verified",
+      "title": "Fila de aprovações comprime a identidade em desktop apesar do espaço livre no assunto",
+      "surfaces": [
+        "CAP26 PR approval queue"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "lines": "624–628",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "lines": "20–28",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "lines": "90–96; 125–130; 219–230",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        42,
+        77
+      ],
+      "observation": "Em 1440×1100, PR-2026-0003 divide-se após PR-2026- e Open record/Abrir registro ocupa duas linhas na primeira coluna. Ao mesmo tempo, a coluna Subject/Assunto mantém grande área vazia. O código de referência fica mais lento de escanear e as linhas ficam desnecessariamente altas.",
+      "mechanism": "A referência recebe widthPolicy content com minPx92, enquanto a coluna de assunto é flex weight1. O helper atribui width100% à única coluna flex e apenas min/max à coluna content; o resultado observado estreita a referência.",
+      "fix": "Proteger a largura legível da identidade e do comando de abertura, reservar o restante ao assunto e manter quebra normal para títulos. Revalidar a mesma fila EN/PT-BR no desktop e o scroller 320px.",
+      "qualification": "A identidade permanece completa e a navegação não foi demonstrada incorreta. É problema de proporção/legibilidade; não se afirma corrupção de alvo.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "BF-01",
+      "severity": "P3",
+      "status": "Observed in original production PNGs; presentation path unchanged in pinned dev",
+      "title": "Revisão financeira regride para números crus e código de mês",
+      "surfaces": [
+        "CAP18 OPEX",
+        "CAP19 CAPEX review"
+      ],
+      "observation": "O seletor Closed through usa nome de mês, mas a revisão exibe somente 0→2. O detalhe OPEX mostra Annual budget 120,000, enquanto a revisão mobile apresenta 120000→126000 e a criação 36000 sem agrupamento; CAP19 spread mostra 240000. O usuário perde pistas de leitura justamente antes de confirmar.",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "lines": "597–629; 762–764; 968–978",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "44–73",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts",
+          "lines": "379–413; 508–511",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        5,
+        7,
+        8,
+        12,
+        21
+      ],
+      "mechanism": "fields() retorna textual(String(value)) para annual e period, com exceções apenas para split, approvalState e proj. SfReviewValue sabe formatar DTOs numéricos, mas recebe texto. O seletor period mapeia0 para todos os meses abertos e1..12 para nomes; esse significado não chega à revisão.",
+      "fix": "Preservar a forma canônica do codec, do payload e da confirmação. Acrescentar somente apresentação semântica: moeda/unidade conhecida e agrupamento de valores validados; nome localizado do mês para period e todos os meses abertos para0. Conservar o valor original em disclosure quando necessário. Não inferir moeda ausente nem recalcular valores.",
+      "qualification": "É legibilidade/consistência, não erro aritmético nem prova de comando no período errado. Os PNGs são do source10a7aa; fonte específica e shared/change-review não mudaram até dev, porém não houve novo rerender de dev neste suplemento.",
+      "sourceReport": "reviewers/behavior-finance.json"
+    },
+    {
+      "id": "ROOT-01",
+      "severity": "P2",
+      "category": "UX responsiva; observado em PNG e confirmado na fonte",
+      "title": "UI46: o gráfico móvel separa o período da barra e do valor",
+      "surfaces": [
+        "UI46"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI46-original-financial-chart-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-320.png",
+          "sha256": "590a48933883b6c159e0c4bead251d2e055dc3a9c34c6b8ba104ff92052da8c3",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI46-original-financial-chart-values-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-values-dark-320.png",
+          "sha256": "f39df0ec498be0a40699876957e197462c5483aca279170f31811256df1ff604",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "No início do scroll horizontal há uma coluna longa de períodos; no extremo dos valores aparecem as barras e o número58000 sem o período correspondente no mesmo recorte. O mecanismo de scroll existe, mas comparar exige memorizar a associação.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+          "lines": "1–9",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css#L1-L9"
+        }
+      ],
+      "cause": "SVG mantém min-inline-size700px para preservar letras12px. A estratégia protege tamanho de texto, mas não protege o par período/medida a320px.",
+      "acceptance": [
+        "Em320/390px, uma medida deve permanecer associada ao período sem depender da memória entre dois extremos do scroll.",
+        "Preservar unidade, precisão e série original. Avaliar gráfico móvel próprio ou tabela/lista acessível adjacente com pares íntegros.",
+        "Validar teclado e ambos extremos da rolagem; não diminuir tipografia para encaixar tudo."
+      ],
+      "limits": "Não alego cálculo errado, perda de dados ou scroll inacessível. É crítica de eficácia da comparação. Apenas Chromium/viewport capturado.",
+      "overlap": "#613 cobre famíliaUI42–56; novo requisito de UX deve ser coordenado ali.",
+      "sourceReport": "reviewers/root.json"
+    },
+    {
+      "id": "ROOT-02",
+      "severity": "P2",
+      "category": "UX responsiva; observado em PNG e confirmado na fonte",
+      "title": "UI49: comparação móvel deixa antes/depois fora da primeira leitura",
+      "surfaces": [
+        "UI49"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI49-original-comparison-detail-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-320.png",
+          "sha256": "67c7c64cb58bb3422ce9081f8e853906644ec67e5137a55939811f78799d625b",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI49-original-comparison-detail-dark-desktop.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-desktop.png",
+          "sha256": "0c932348d05f06642e7eb8f00b0cc196961f6cbdde32868919bd86e2ee7748ff",
+          "dimensions": [
+            1440,
+            1100
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "A primeira coluna de identidade/proveniência domina a largura móvel; antes e depois ficam fora do recorte. UUIDs e avisos repetidos antecedem a diferença que a pessoa veio avaliar.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "lines": "263–342",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L263-L342"
+        }
+      ],
+      "cause": "Tabela min-width48rem, primeira coluna min-width16rem e células de valor min-width12rem. Região tem tabIndex0, mas a composição não mantém identidade e valores juntos.",
+      "acceptance": [
+        "Cada campo deve mostrar identidade humana e antes/depois associados no mobile, com proveniência em disclosure secundário.",
+        "Manter comparabilidade autorizada, ausência explícita, versões e qualificações da fonte.",
+        "Testar começo/fim do scroll, 320/390px e rótulos PT-BR extensos."
+      ],
+      "limits": "Não alego divergência calculada errada. O scroll é intencional e focável; a falha é de leitura/comparação.",
+      "overlap": "#613 mantém a família; largura já foi alterada em rodadas anteriores e merece nova composição móvel.",
+      "sourceReport": "reviewers/root.json"
+    },
+    {
+      "id": "ROOT-03",
+      "severity": "P2",
+      "category": "Feedback e localização; observado em PNG e confirmado na fonte",
+      "title": "Guard nativo entrega uma linha técnica em inglês sem orientação útil de recuperação",
+      "surfaces": [
+        "UI43",
+        "UI51",
+        "UI52",
+        "UI53",
+        "UI61",
+        "UI63",
+        "UI64",
+        "UI65",
+        "UI66",
+        "UI70"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI70-native-host-refusal-dark-desktop.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI70-native-host-refusal-dark-desktop.png",
+          "sha256": "4b557353632342c5d06108a66a4d36fc73a79c80d9f8d9098dea2b62fb4eb674",
+          "dimensions": [
+            1440,
+            1100
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI61-native-host-refusal-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--2af1a-plicit-missing-observations-chromium/UI61-native-host-refusal-dark-320.png",
+          "sha256": "dce2f9a9f3cec4af6e5e6ff03ef7c85458e21784a15bca187636e02f304f189f",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "O fallback visível é 'Sucafina route not admitted' no alto de um painel quase vazio. Não explica em linguagem de tarefa o que falta nem oferece um destino de retorno contextual. Refresh access e Sign out não esclarecem a condição.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+          "lines": "265–308",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx#L265-L308"
+        }
+      ],
+      "cause": "Switch fallback literal em inglês, fora do catálogo i18n. O host trataCAP01–28/UI29–41 como polishedSurface e mantém toolbar diferente nas demais rotas.",
+      "acceptance": [
+        "Usar estado nativo coerente com material, tipografia e i18n, distinguindo indisponibilidade, ausência de autorização e pré-requisito sem expor dados privados.",
+        "Oferecer retorno a uma área admitida e retry contextual quando aplicável.",
+        "Manter todos os guards e exigências do produtor. Só afirmar qualidade da folha após renderização autorizada."
+      ],
+      "limits": "As dez folhas NÃO renderizaram nessas evidências. Não é autorização para admitir rotas artificialmente; este achado avalia apenas o fallback real.",
+      "overlap": "UI42–56#613 eUI57–70#713; componente host compartilhado.",
+      "sourceReport": "reviewers/root.json"
+    }
+  ],
+  "observations": [
+    {
+      "id": "OVERLAP-716",
+      "severity": "already in active work",
+      "title": "Diálogos ProviderV2 quebram o vocabulário dos diálogos nativos",
+      "source": [
+        "packages/ui/src/v2/components/dialog-v2.css",
+        "packages/app-shell/src/components/dialog-connect-provider.tsx"
+      ],
+      "evidence": [
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-3d887-tial-removal-key-and-picker-chromium/provider-disconnect-confirmation-light.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-3d887-tial-removal-key-and-picker-chromium/test-finished-1.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-3d887-tial-removal-key-and-picker-chromium/v2-light.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-5e790-ve-dialog-at-390px-in-light-chromium/provider-error-light-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-bff20-mpted-and-unsafe-link-flows-chromium/test-finished-1.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-provider-f4e7d-ive-dialog-at-390px-in-dark-chromium/provider-error-dark-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-skills-a-d295c-ailure-retains-it-for-retry-chromium/skill-failed-save-focus.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-skills-r-d1c12-t-reflows-at-390px-in-light-chromium/skill-reader-light-390.png",
+        "artifact-extract/foundation/packages/app-shell/e2e/test-results/orchestra-chapter-skills-r-f60bb-nt-reflows-at-390px-in-dark-chromium/skill-reader-dark-390.png"
+      ],
+      "detail": "Capturas mostram picker/erro de provider com título pequeno, raio e framing diferentes do diálogo nativo de confirmação e Skills. Já informado como escopo de#716; não contar novamente como defeito novo nem afirmar resolvido sem screenshot da branch.",
+      "sourceReport": "reviewers/system.json"
+    },
+    {
+      "id": "SUP-R01",
+      "priority": "P3",
+      "title": "Import preview e receipt precisam traduzir payload técnico em hierarquia de revisão",
+      "type": "rendered + current source + design judgment",
+      "observed": "UI55/56 mostra caminhos /versions/@id=.../lines/@id=.../desc:before e o motivo bruto missing na lista de lacunas do resultado. UI57 repete o hash completo de recibo em duas linhas, timestamp ISO e números sem rótulo. A apresentação desloca o foco de impacto para identificadores. Seis buckets fechados ocupam grande altura, inclusive quatro vazios no fixture.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "lines": "715–732",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L715"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "lines": "735–768",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L735"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+          "lines": "90–95",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css#L90"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 19,
+          "name": "UI55-original-preview-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-320.png",
+          "sha256": "60be760f5a94443a9ab0070c37ae96307acc0fd5986ab5016738c3c56a98fbc5"
+        },
+        {
+          "index": 20,
+          "name": "UI55-original-preview-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-dark-desktop.png",
+          "sha256": "9709ea4d556e101c90a389bb7982d86384f7e2051d97d8c0407e2821ddc453ab"
+        },
+        {
+          "index": 21,
+          "name": "UI55-original-preview-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI55-original-preview-light-desktop.png",
+          "sha256": "08d6acab765f8a100507b8875a608dbafeb21f5bd38fcdd3b418e079119712ee"
+        },
+        {
+          "index": 25,
+          "name": "UI56-original-manifest-preview-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-320.png",
+          "sha256": "4667051261394d6ecb223f9b1509a3080da256bb6c799ba6a7e72a7849021765"
+        },
+        {
+          "index": 26,
+          "name": "UI56-original-manifest-preview-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-dark-desktop.png",
+          "sha256": "8813e27ca69ed5d16a1ea35f94eb5651002ae9a30aa7f7c6857f7547563c0ed9"
+        },
+        {
+          "index": 27,
+          "name": "UI56-original-manifest-preview-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI56-original-manifest-preview-light-desktop.png",
+          "sha256": "4f493020bbffae2c4e498beb7d96b36dd6500941e36c05645006cfb0a96f5b91"
+        },
+        {
+          "index": 28,
+          "name": "UI57-original-confirmed-receipt-dark-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-desktop.png",
+          "sha256": "50da1607e0c346d61e1af3c5be8b844aae0d9b70c1982875212488a56181a7c4"
+        },
+        {
+          "index": 29,
+          "name": "UI57-original-confirmed-receipt-dark-320.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-dark-320.png",
+          "sha256": "5f56c5e94bf909d438866085546645b97b6550a9163987f38687443da6296304"
+        },
+        {
+          "index": 30,
+          "name": "UI57-original-confirmed-receipt-light-desktop.png",
+          "path": "artifact-extract/additional/files-native/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/UI57-original-confirmed-receipt-light-desktop.png",
+          "sha256": "ceb4c6c6ccd3d794d7c886d4004072287d27208c381894eab6605490b2b0b434"
+        }
+      ],
+      "recommendation": "Nomear os campos e itens por referências de negócio quando admitidas pelo contrato; manter paths e hashes completos num detalhe técnico copiável. Dar rótulos a quantidade alterada e versão; formatar timestamp para a localidade. Agrupar buckets vazios num resumo compacto preservando acesso. entry.path já está em details: não promover a hipótese errada de que todo diff cru está aberto.",
+      "acceptance": "Um revisor distingue impacto, lacunas e resultado sem decodificar paths/UUIDs; detalhe técnico continua íntegro e acessível; datas/contagens não perdem precisão; buckets vazios não tomam a maior parte do viewport.",
+      "overlap": "UI55/56 em #613; UI57 em #713. Fonte sf-u23.ts:1–2 preserva copy legada intencionalmente: textos demandam revisão do contrato/copy, não tradução improvisada.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "SUP-R02",
+      "priority": "P3",
+      "title": "Unificar material e escala dos diálogos preservando sua função",
+      "type": "rendered observation + current source + aesthetic judgment",
+      "observed": "Inbox Preferences usa o shared DialogV2 com mx-dialog e fundo desfocado; Integrations usa overlay próprio somente escurecido; Add server usa controles e títulos compactos e primário cinza/contraste, enquanto os outros usam azul. O tamanho e a função podem variar, mas raio, respiro e profundidade hoje não parecem parentes em todos os estados.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/inbox/controls.tsx",
+          "lines": "22–29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/inbox/controls.tsx#L22"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx",
+          "lines": "125–135",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/integrations-dialogs.tsx#L125"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/integrations.css",
+          "lines": "131–150",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/integrations.css#L131"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/kit.css",
+          "lines": "464–476",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/kit.css#L464"
+        },
+        {
+          "path": "packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx",
+          "lines": "141–149",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/components/settings-v2/dialog-server-v2.tsx#L141"
+        }
+      ],
+      "evidence": [
+        {
+          "index": 65,
+          "name": "error-recovery-server-connection-form-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+          "sha256": "74f81c131fb08fb4d60b08432d6dc55831e314ddacafc7202f9412df497b36a2"
+        },
+        {
+          "index": 69,
+          "name": "inbox-preferences-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-39374-ences-empty-and-failed-read-chromium/inbox-preferences-dark-narrow.png",
+          "sha256": "a0cd0b01f24685ecd2fba8292dffede36272f8713524a3fba001fdcb259b991f"
+        },
+        {
+          "index": 74,
+          "name": "integrations-connect-account-dialog-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-5af28-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-narrow.png",
+          "sha256": "a8bed31bab41d12126b0d5017f48b353fd6522914ae9687244c20e4863bb9d87"
+        },
+        {
+          "index": 84,
+          "name": "inbox-preferences-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-preferences-dark-wide.png",
+          "sha256": "18765688e919c323fa029916128ed67a0058c4a8aae22db60c96b699b6c3ea7a"
+        },
+        {
+          "index": 98,
+          "name": "integrations-connect-account-dialog-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ca6ca-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-dark-wide.png",
+          "sha256": "42eae2e2a2aefbedb62ebaed29d699e25c8ee5e742b306cb5a4db2077dfaada5"
+        },
+        {
+          "index": 111,
+          "name": "error-recovery-server-connection-form-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+          "sha256": "813f08e82a48d6ca1bb68c134b4997003c57cb44bcf98fd923ea5e5aed0c6d67"
+        },
+        {
+          "index": 118,
+          "name": "inbox-preferences-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-preferences-light-wide.png",
+          "sha256": "d599b676b87a4e10a6a3e5bd4758da4a27025e172b51f92e4cb447d8d4d6c81a"
+        },
+        {
+          "index": 122,
+          "name": "integrations-connect-account-dialog-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-a2df3-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-wide.png",
+          "sha256": "90d75898c9dd5370d93debd370dca8306e3a54dc8935f9d72c2b3f84aeae621c"
+        }
+      ],
+      "recommendation": "Após SUP-01, definir receitas explícitas para diálogo compacto, formulário e painel lateral com tokens compartilhados de borda/raio/sombra/scrim e alinhamentos. O desfoque pode variar por contexto, mas deve ter uma razão funcional. Não aplicar brilho ou sombra mais pesada em todos os cards.",
+      "limits": "Juízo estético; não houve medição física de blur/shadow nem prova de falha de contraste em todos esses modais. Botão de 30 px não é automaticamente falha WCAG.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "SUP-R03",
+      "priority": "P3",
+      "title": "Estados vazios devem oferecer a próxima ação disponível no contexto",
+      "type": "rendered observation and aesthetic/task judgment; current source parity only",
+      "observed": "Inbox vazio/indisponível mantém a instrução na coluna direita para selecionar um item inexistente. Flight Engineer explica a limitação web/desktop mas não fornece ação de continuação naquela tela. Nenhum deles foi classificado como bloqueio funcional pelos screenshots.",
+      "evidence": [
+        {
+          "index": 64,
+          "name": "flight-engineer-web-unavailable-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2dc76-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-wide.png",
+          "sha256": "439ddae8638415204fef454c49d80a3b11fef35bda082ce13fa4718e3e19439f"
+        },
+        {
+          "index": 82,
+          "name": "flight-engineer-web-unavailable-dark-narrow.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-acb38-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-dark-narrow.png",
+          "sha256": "98dbf203d39325aae580a7c805c6c38282f0cfbe5254800933f9c5af987bb305"
+        },
+        {
+          "index": 83,
+          "name": "inbox-empty-dark-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/inbox-empty-dark-wide.png",
+          "sha256": "09c65f217aefcecb8a76b19d54240f1cd955a1673e53a55a86cc3f57b72d3683"
+        },
+        {
+          "index": 85,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-b9ec3-ences-empty-and-failed-read-chromium/test-finished-1.png",
+          "sha256": "be58fcc8700f0cfd46790288e5f423f4b503412d1b181de85b06406a8d9643f6"
+        },
+        {
+          "index": 117,
+          "name": "inbox-empty-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-empty-light-wide.png",
+          "sha256": "1578b682414930e8329fe8e30bc1c9fcfec78f12d45309f4f0d036dbef7d7019"
+        },
+        {
+          "index": 119,
+          "name": "inbox-read-unavailable-light-wide.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-wide.png",
+          "sha256": "647821a023c834507c8c311eab7329321000fa6cb2bc6d374bf28de5e7b90b02"
+        },
+        {
+          "index": 130,
+          "name": "test-finished-1.png",
+          "path": "artifact-extract/additional/shared-components/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-b8f18-the-real-web-platform-limit-chromium/test-finished-1.png",
+          "sha256": "173cb7cd4c89da81af0c89a5031cb0cc52591330ebe988198ce446fb78b7a180"
+        }
+      ],
+      "recommendation": "No Inbox, adaptar a coluna de leitura ao estado do feed; no Flight Engineer, quando houver destino suportado, oferecer instrução/ação concreta para continuar no desktop. Evitar dupla ilustração vazia para um único estado.",
+      "limits": "Não foram exercitados deep links ou instalador; não inventar ação se plataforma/contrato não oferecer.",
+      "sourceReport": "reviewers/system-supplement.json"
+    },
+    {
+      "id": "SO1",
+      "status": "not-promoted",
+      "surfaces": [
+        "CAP05"
+      ],
+      "screenshots": [
+        82,
+        85,
+        87
+      ],
+      "title": "A revisão Annual Entry ÷12 carece de explicação do efeito, mas não é prova de base anual perdida",
+      "detail": "A captura mostra annual=252,000, field=Budget, Original/Current 'Not available'. O orçamento 240,000 da lista pertence a owner.budget. formFor inicializa annual:'', e draftFields revisa parâmetros do comando annual-entry, não o campo owner.budget. Sem ler o handler original, não se pode equiparar as duas coisas ou afirmar substituição de 12 meses. O spec abre/revisa/cancela esse comando; não valida seu efeito.",
+      "refs": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "start": 334,
+          "end": 345,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx#L334-L345"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx",
+          "start": 515,
+          "end": 542,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/surface.tsx#L515-L542"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts",
+          "start": 196,
+          "end": 200,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/dashboard/opex/model.ts#L196-L200"
+        }
+      ],
+      "next": "Ler a semântica do produtor e capturar uma revisão que torne claro escopo e efeitos reais. Não adicionar cálculo anual paralelo nem preencher o base com owner.budget por suposição.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "SO2",
+      "status": "historical-only",
+      "surfaces": [
+        "CAP13",
+        "CAP15",
+        "CAP16"
+      ],
+      "title": "Cabeçalhos de detalhe e alvos de tabela antigos não certificam a dev",
+      "detail": "Os compares mostram mudanças posteriores em shared/detail/detail.css e index.tsx: botão Back com 44 px, linha de título/estado/ações reorganizada e quebra flex. shared/table/table.css adiciona min-height 44 px ao sort button e padding ao cabeçalho confortável. Não converter desalinhamentos ou alvos desses screenshots antigos em defeitos atuais sem nova captura.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "SO3",
+      "status": "not-promoted",
+      "surfaces": [
+        "CAP11",
+        "CAP12",
+        "CAP16"
+      ],
+      "title": "Separadores numéricos e unidades pedem contrato semântico",
+      "detail": "Há valores literais 98.4/0.6 em PT e KPI Training 94, mas não foi provado que o tipo de fonte fornece unidade ou formato numérico uniforme. CAP16 explica expressamente que 1 representa 100%. Não corrigir com percentuais inventados nem reinterpretar valores de origem.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "SO4",
+      "status": "counterevidence",
+      "surfaces": [
+        "CAP01",
+        "CAP05"
+      ],
+      "screenshots": [
+        1,
+        80,
+        84
+      ],
+      "title": "A falta de antes/depois não é universal",
+      "detail": "CAP01 inline review mostra 128→129. CAP05 revisão mensal mostra 19,100→19,500 e desvio mostra texto original/proposto. Esses exemplos impedem generalizar B1 para toda revisão financeira.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "SO5",
+      "status": "not-defect",
+      "surfaces": [
+        "CAP13"
+      ],
+      "screenshots": [
+        31,
+        32,
+        35,
+        64,
+        65,
+        67
+      ],
+      "title": "Responsible person e Owner não devem ser fundidos por conveniência",
+      "detail": "O campo da lista Responsible person aparece Unavailable, enquanto detalhe traz Owner conhecido. Os campos da fonte são distintos; não substituir ausência por outro campo nem tratar isso como falha de localização.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "SO6",
+      "status": "evidence-limit",
+      "title": "Estados capturados não provam ausência de flakiness",
+      "detail": "Não houve execução local nem medição de interação ao vivo. Screenshots não demonstram teclado, leitor de tela, hover, animação, race de rede, cancelamento pendente ou todas as alturas/idiomas. Passing test e screenshot bem composto não são um selo de UX impecável.",
+      "sourceReport": "reviewers/product-supplement.json"
+    },
+    {
+      "id": "BA-02",
+      "severity": "unrated",
+      "status": "Observed ambiguous reconnect feedback in READY/CONNECTING; stale warning after open stream is not runtime-proven",
+      "title": "Aviso de updates interrompidos permanece durante a nova conexão pendente",
+      "surfaces": [
+        "Teams/new chat"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "lines": "105–110; 132–139; 182–209; 515",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-sessions.ts",
+          "lines": "259–299",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "evidence": [
+        "behavior-probe/COMPONENT-VISUAL-Teams-audit-unsent-after-same-authority-refresh-dark-390-evidence.json"
+      ],
+      "observation": "O refresh da mesma autoridade retorna o editor e Recent chats em READY/CONNECTING, mas o banner ainda instrui Chat updates stopped. Refresh access before continuing. O caso não recebeu evento no novo stream; portanto updates stopped ainda pode descrever corretamente o transporte.",
+      "cause": "begin(refresh) preserva chat.notice; chatNotice só oculta o notice quando ele é idêntico ao erro local unavailable, fazendo-o reaparecer quando local status vira ready.",
+      "fix": "Distinguir feedback de revalidação de autoridade, conexão em andamento e stream aberto. Antes de classificar stale warning como defeito independente, enviar um evento válido na nova conexão do fixture original e verificar UI, sem alterar state diretamente.",
+      "qualification": "Não contado como P2 confirmado. O único runtime novo prova aviso durante CONNECTING, não aviso incorreto depois de updates recuperados. A indisponibilidade no error-context posterior vem de finally/dispose após a asserção.",
+      "countAsConfirmedDefect": false,
+      "mechanism": "pages/team-profile.tsx:105–110 oculta notice somente quando duplica erro local unavailable; begin(refresh):139 o preserva. team-sessions.ts:264–266 muda stream para open ao receber evento, sem limpar notice. Isso sugere persistência posterior no caminho de fonte, mas o caso não a exercitou.",
+      "sourceReport": "reviewers/behavior.json"
+    },
+    {
+      "id": "ROOT-N1",
+      "title": "Estados vazios e mensagens do produtor",
+      "observed": "UI39 conserva um card só com título após declarar ausência; UI35/UI38 mostram reason do produtor em PT dentro de chromeEN; UI36 imprime códigos de divergência, prefixoscoverage e refs longas no corpo principal.",
+      "classification": "Refinamento de hierarquia/contrato semântico. Não traduzir silenciosamente texto autoral nem inventar nomes; códigos próprios devem ter labels localizados e provenance preservada.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx#L301-L307",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx#L124-L127"
+      ],
+      "sourceReport": "reviewers/root.json"
+    },
+    {
+      "id": "ROOT-N2",
+      "title": "Transição após pergunta preparada",
+      "observed": "UI37 orienta a continuar no fluxo de colaboração, mas o checkpoint exibe só texto; destino autorizado não foi demonstrado.",
+      "classification": "Lacuna de jornada e de qualificação; não assumo disponibilidade do produtor e não proponho replay automático da preparação.",
+      "sourceReport": "reviewers/root.json"
+    }
+  ]
+}

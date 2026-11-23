@@ -1,6 +1,7 @@
 import { For, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
+import { sfPeopleCollectionHref } from "../paths"
 import { SfPeople } from "@orchestra/schema/sucafina/people"
 import { createSfPeopleClient } from "@orchestra/client/sucafina/people"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
@@ -123,7 +124,10 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
   const version = (id: string) => ready()?.value.versions["members:" + id] ?? 0
   const dismiss = () => {
     setLocal("selection", undefined)
-    if (props.route.kind !== "entry") navigate(-1)
+    if (props.route.kind !== "entry") {
+      const href = sfPeopleCollectionHref(props.route, filter())
+      if (href) navigate(href)
+    }
   }
   async function save(
     id: string | undefined, values: PeopleFormValues, expectedVersion: number,
@@ -325,7 +329,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                     <SfPeopleEditor surfaceId="CAP08" scopeKey={"people:talent:" + String(props.route.query.year ?? "current")}
                       entity="talent" recordRef={selectionId() ? ref(selectionId()!) : undefined}
                       version={selectionId() ? version(selectionId()!) : 0} original={original() ? toTalentValues(original()!) : null}
-                      fields={talentFields} action={{ id: "save", operationId: "domain.command.CAP08.save", labelKey: key("sf.u47.save") }}
+                      fields={talentFields} action={{ id: "save", operationId: "domain.command.CAP08.save", labelKey: key(selectionId() ? "sf.u47.design.saveReview" : "sf.u47.save") }}
                       admitted={session.can("save")} drafts={session.ready()!.drafts} onClose={dismiss}
                       onCommit={(values, expected, keyId, signal) => save(selectionId(), values, expected, keyId, signal)} />
                   </section>
@@ -347,7 +351,7 @@ export function SfPeopleTalentView(props: SfSurfaceProps<"CAP08">): JSX.Element 
                 </section>}
               </Show>
               <Show when={importView() || exportView()}>
-                <div class="sf-people-stage-nav"><button type="button" class="mx-btn" onClick={() => navigate(-1)}>{t(key("sf.u47.design.back"))}</button></div>
+                <div class="sf-people-stage-nav"><button type="button" class="mx-btn" onClick={dismiss}>{t(key("sf.u47.design.back"))}</button></div>
                 <section class="sf-people-section sf-people-workbook-stage" data-sf-section={importView() ? "import" : "export"}>
                   <p class="sf-people-eyebrow">{t(key("sf.u47.design.workbook"))}</p>
                   <h2>{t(key(importView() ? "sf.u47.importTitle" : "sf.u47.export"))}</h2>

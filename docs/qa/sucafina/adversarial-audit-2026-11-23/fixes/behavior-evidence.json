@@ -1,0 +1,2166 @@
+{
+  "date": "2026-11-23",
+  "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+  "teamsCommit": "824ad6efa248e9130c00eb76830fc40106e91c04",
+  "baseline": {
+    "snapshot": "452695d76384787bd3045222d6fe67a85c5932dc",
+    "run": 45205412569,
+    "job": 137799665874,
+    "tests": {
+      "passed": 12,
+      "failed": 1
+    },
+    "metrics": {
+      "readyMs": 1093.0383359999978,
+      "inputMs": 22.7417390000046,
+      "recoveryReadyMs": 161.79233099999692
+    }
+  },
+  "after": {
+    "snapshot": "3a992a495773f62c4655cdd1b3d64a16fa127561",
+    "run": 45206772464,
+    "job": 137804510604,
+    "tests": {
+      "passed": 13,
+      "failed": 0
+    },
+    "metrics": {
+      "readyMs": 1009.631475999995,
+      "inputMs": 19.38814600000478,
+      "recoveryReadyMs": 150.16141800000332
+    }
+  },
+  "unitSelectionError": {
+    "snapshot": "fc7e9f3b536512011180c4ad4d3dafbba35c53b7",
+    "run": 45206814417,
+    "testsExecuted": 0,
+    "reason": "Bun interpreted the selection as a filter; reissued with explicit ./ path."
+  },
+  "unitSnapshot": "b201c7aef7f4d951d977b2e076a26e6f90e04de9",
+  "unit": {
+    "snapshot": "b201c7aef7f4d951d977b2e076a26e6f90e04de9",
+    "run": 45207802862,
+    "job": 137808151689,
+    "conclusion": "success",
+    "tests": {
+      "passed": 24,
+      "failed": 0,
+      "assertions": 231
+    }
+  },
+  "nativeCombinedFirstAttempt": {
+    "snapshot": "3cb587ec1b1437b56d2ed4a90c7d9721fe8005a0",
+    "run": 45209857978,
+    "job": 137815409729,
+    "tests": {
+      "passed": 0,
+      "failed": 8
+    },
+    "coverage": "Failed during first native admission/page loading before finding-specific assertions; no qualification claimed",
+    "consoleErrors": 0,
+    "pageErrors": 0
+  },
+  "filesFirstComposedAttempt": {
+    "snapshot": "49fa3ffeb4e98675ce0b3a3934645004e40909e5",
+    "run": 45212950301,
+    "job": 137826333550,
+    "tests": {
+      "passed": 3,
+      "failed": 1
+    },
+    "passed": [
+      "OP-IMPORT",
+      "OP-EXPORT",
+      "OP-SCENARIO"
+    ],
+    "failed": [
+      "OP-DOC"
+    ],
+    "artifact": {
+      "id": 14836848732,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 15877933,
+      "sha256": "330dbe36cabd28a4726fb2b19ec517afc12d414f157180992e059094ffdede02"
+    },
+    "import": {
+      "sourceGaps": 4,
+      "applyRequests": 1,
+      "receiptChangedFields": 3,
+      "ui55Assertions": true,
+      "ui56Assertions": false,
+      "ui55Ui56Pngs": false
+    },
+    "overallGreen": false
+  },
+  "readSynchronization": {
+    "helperCommits": [
+      "4f61f409de342f4a00396c9ea985c4f5036d1960",
+      "33cf939f9fdbe095b2f87f0b6e3d98381f69c217",
+      "e92a3232dcea5e90da2e5b6b1fc6627dc3b3bbf2",
+      "76ca34069345c8a1e1620a69f72a2340b54d85ad"
+    ],
+    "ui55Ui56PermanentCoverageCommit": "168d51a351c203e5c0635dd44398726205c7a100",
+    "newNumericTimeouts": 0,
+    "retries": 0,
+    "producerChanges": 0,
+    "qualification": "Behavior4 completed both native Planner journeys, including concurrent comparison CAP17 reads. Finance5 and Requests5 complete the remaining original finance/procurement journeys.",
+    "finishedSignal": {
+      "diagnosticRun": 45216596111,
+      "state": "UI34 rendered ready; matching HTTP replies delivered; Response.finished remained pending",
+      "removedWaits": 2,
+      "requestReplays": 0,
+      "readyAssertionsPreserved": true
+    },
+    "concurrentForwarding": {
+      "diagnosticRun": 45221845895,
+      "artifactId": 14840418421,
+      "productState": "UI35 complete; original no-history and no-alternatives state visible",
+      "observerFailure": "Route is already handled!",
+      "playwrightVersion": "1.59.1",
+      "sourceMechanism": "times:1 removes handlers before async completion; faster handler empties registry and disables interception while slower route is in flight",
+      "change": "Claim one request while retaining handler through delivery; await active callback before explicit removal",
+      "requestReplaysAdded": 0,
+      "fetchRetries": 0,
+      "maxRedirects": 0,
+      "errorToSuccessConversions": 0,
+      "qualification": "Complete CAP22/CAP23 journey passed in Behavior4; final CAP23 focused read also uses both original CAP17 responses.",
+      "primarySources": [
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/client/page.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/dispatchers/pageDispatcher.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/page.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/network.ts"
+      ]
+    }
+  },
+  "composedTeams": {
+    "source": "77f3104662e5ce4a7181403761a3b7e51c138704",
+    "snapshot": "2758bf0651eb6765383795030c656d7bbe4fc25b",
+    "run": 45218615206,
+    "job": 137846435256,
+    "tests": {
+      "passed": 13,
+      "failed": 0,
+      "retries": 0
+    },
+    "metrics": {
+      "readyMs": 1016.8945160000003,
+      "inputMs": 17.533564999997907,
+      "recoveryReadyMs": 156.50970399999642
+    },
+    "state": "ready/connecting",
+    "exactDraft": true,
+    "writes": [],
+    "samples": 1,
+    "liveMicrosoft": false,
+    "persistentStream": false
+  },
+  "composedGate": {
+    "snapshot": "05c7ba8efddb0fdba093d39613f263be5290a228",
+    "run": 45217689162,
+    "job": 137843173801,
+    "conclusion": "success",
+    "appTypecheck": true,
+    "e2eTypecheck": true,
+    "semantic": {
+      "passed": 25,
+      "failed": 0,
+      "assertions": 118
+    },
+    "browser": {
+      "passed": 127,
+      "failed": 0,
+      "assertions": 1776
+    },
+    "nativeInstalledJourneyQualification": false
+  },
+  "filesSecondComposedAttempt": {
+    "snapshot": "f5b1de9e9f20672a8e78552e08603561eb73f31b",
+    "run": 45216741705,
+    "job": 137839790882,
+    "tests": {
+      "passed": 3,
+      "failed": 1
+    },
+    "passed": [
+      "OP-IMPORT",
+      "OP-EXPORT",
+      "OP-SCENARIO"
+    ],
+    "failed": [
+      "OP-DOC"
+    ],
+    "failure": "Document capture attempted desktop theme toggle at 320px; import journey passed",
+    "artifact": {
+      "id": 14839089214,
+      "bytes": 27530529,
+      "sha256": "6244bbc292655c2cce15174606da29ffff5c897dc9dc93a55e9c2a68883e36f5"
+    },
+    "import": {
+      "durationMs": 120621,
+      "sourceGaps": 4,
+      "reasons": [
+        "missing"
+      ],
+      "changeCounts": {
+        "added": 4,
+        "changed": 5,
+        "removed": 0,
+        "unchanged": 0,
+        "ignored": 0,
+        "rejected": 0
+      },
+      "emptySummaryCount": 1,
+      "rawReferencesInitiallyHidden": true,
+      "exactReferenceDisclosureOpenedAndClosed": true,
+      "ui55Assertions": true,
+      "ui56Assertions": true,
+      "presentationSameManifest": true,
+      "applyRequests": 1,
+      "receiptChangedFields": 3,
+      "changedRecordTokens": [
+        1,
+        2
+      ],
+      "unrelatedRecordTokens": [
+        1,
+        1
+      ],
+      "pngs": 12,
+      "pngsReviewed": 12,
+      "variants": [
+        "dark-1440",
+        "light-1440",
+        "dark-320"
+      ],
+      "review": "Contained and aligned at the four captured checkpoints; narrow action rows stack without overflow",
+      "touchZoomPortugueseQualification": false
+    },
+    "overallGreen": false
+  },
+  "ba02OpenControl": {
+    "testCommit": "64091e2afbea0f853aa201e10aea0a2c03034f2b",
+    "source": "98129411128b01cb52278739d781039efd839b6c",
+    "snapshot": "52ec529d4bf72e400a02dd5a54067b0927c88128",
+    "run": 45221722913,
+    "status": "completed",
+    "scope": "Schema-valid event and original event-triggered recent-list GET barrier; then finite EOF",
+    "productFixConfirmed": true,
+    "conclusion": "failure",
+    "tests": {
+      "passed": 12,
+      "failed": 1,
+      "retries": 0
+    },
+    "job": 137857455453,
+    "observed": {
+      "state": "ready",
+      "stream": "open",
+      "stoppedNoticeCount": 1,
+      "exactDraft": true,
+      "writes": [],
+      "eofReturnsUnavailable": true
+    },
+    "metrics": {
+      "readyMs": 985.0227779999987,
+      "inputMs": 17.02843600000051,
+      "recoveryReadyMs": 154.39167799999996
+    },
+    "artifact": {
+      "id": 14842575691,
+      "bytes": 23791456,
+      "sha256": "2b3ca6381eea967e78e444f08dee0ac38e835741d3e609befd17d79198c2b6b2"
+    },
+    "defectConfirmed": true
+  },
+  "importCategoryCopy": {
+    "enumSource": "packages/schema/src/sucafina/files/structures.ts",
+    "kinds": [
+      "added",
+      "changed",
+      "removed",
+      "unchanged",
+      "ignored",
+      "rejected"
+    ],
+    "labels": {
+      "en": [
+        "Added",
+        "Changed",
+        "Removed",
+        "Unchanged",
+        "Ignored",
+        "Rejected"
+      ],
+      "ptBR": [
+        "Adicionados",
+        "Alterados",
+        "Removidos",
+        "Sem alterações",
+        "Ignorados",
+        "Rejeitados"
+      ]
+    },
+    "dataValuesChanged": false,
+    "beforeImageRun": 45216741705,
+    "qualification": "Files6 OP-IMPORT passed with all twelve UI55/UI56 checkpoint paths independently reviewed; Files8 final suite passed all five maintained cases."
+  },
+  "ba02Fix": {
+    "commit": "fefbeed00d88e16b5256b848076afb4fccfbc144",
+    "composedProduct": "2e06c200326882a56ffa8e8c064915cdc47fad95",
+    "qualification": {
+      "browser": {
+        "source": "50bff9ffc4127ea3591e248b815da4c1ddc668bf",
+        "snapshot": "534353b33a4aff338fda4f1da696c9768b9ed3cb",
+        "run": 45223658325,
+        "status": "completed",
+        "sourceCommits": [
+          "50bff9ffc4127ea3591e248b815da4c1ddc668bf",
+          "64091e2afbea0f853aa201e10aea0a2c03034f2b",
+          "fefbeed00d88e16b5256b848076afb4fccfbc144"
+        ],
+        "equivalentProduct": "2e06c200326882a56ffa8e8c064915cdc47fad95",
+        "job": 137864295741,
+        "conclusion": "success",
+        "tests": {
+          "passed": 13,
+          "failed": 0,
+          "retries": 0
+        },
+        "observed": {
+          "state": "ready",
+          "stream": "open",
+          "stoppedNoticeCount": 0,
+          "exactDraft": true,
+          "writes": [],
+          "eofReturnsUnavailable": true,
+          "eofNoticePresent": true
+        },
+        "metrics": {
+          "readyMs": 989.3393369999976,
+          "inputMs": 19.230781999998726,
+          "recoveryReadyMs": 147.5054139999993
+        },
+        "artifact": {
+          "id": 14840793201,
+          "bytes": 17880976,
+          "sha256": "36163bf3250c5d012e7c8b3592dd6acccd11535d9740fc8995205e7326cbe5c5"
+        },
+        "visualReview": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "reviewers": [
+            "behavior",
+            "system"
+          ],
+          "result": "Recovered OPEN notice absent; exact draft, composer and Submit remain contained"
+        }
+      },
+      "unit": {
+        "snapshot": "374d73fb91f57fc2f35ab47c6c4050bd60c16665",
+        "run": 45223698792,
+        "status": "completed",
+        "job": 137864437204,
+        "conclusion": "success",
+        "tests": {
+          "passed": 33,
+          "failed": 0,
+          "assertions": 300
+        },
+        "groups": {
+          "controller": 24,
+          "page": 9
+        },
+        "newCases": [
+          "transport recovery restores never-submitted draft and clears stopped notice",
+          "open stream with unavailable transcript retains stopped notice until explicit recovery"
+        ]
+      }
+    },
+    "limits": {
+      "samplesPerState": 1,
+      "statisticalPerformanceEquivalence": false,
+      "liveMicrosoft": false,
+      "persistentStream": false,
+      "zoomOrTouchQualification": false,
+      "flakeRateMeasured": false
+    }
+  },
+  "nativeCombinedThirdAttempt": {
+    "source": "98129411128b01cb52278739d781039efd839b6c",
+    "snapshot": "4d69a969f20f7d49011f1e68e22c39e0f0257ca7",
+    "run": 45221243928,
+    "job": 137855760787,
+    "status": "completed",
+    "includesConcurrentForwardingFix": false,
+    "conclusion": "failure",
+    "passed": 5,
+    "failed": 3,
+    "retry": 0,
+    "artifact": 14842353818,
+    "artifactBytes": 102387386,
+    "artifactSha256": "a2fccfd64cd05453f067c4dcf562872cb73d87ab30babfdf203ed198d53af096",
+    "cases": [
+      {
+        "title": "installed native finance wave · CAP05 and CAP14 original financial commands",
+        "status": "passed",
+        "durationMs": 225921,
+        "retry": 0
+      },
+      {
+        "title": "installed native finance wave · CAP17 CAP18 CAP19 original planner commands",
+        "status": "timedOut",
+        "durationMs": 300248,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · requests, sourcing and approval decisions",
+        "status": "failed",
+        "durationMs": 80117,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · supplier drafts and confirmed changes",
+        "status": "passed",
+        "durationMs": 111403,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · policy draft and confirmed change",
+        "status": "passed",
+        "durationMs": 67083,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · all five areas in Portuguese",
+        "status": "passed",
+        "durationMs": 137645,
+        "retry": 0
+      },
+      {
+        "title": "native Planner wave four · CAP20 headcount and CAP21 shared allocations",
+        "status": "passed",
+        "durationMs": 173327,
+        "retry": 0
+      },
+      {
+        "title": "native Planner wave four · CAP22 exchange rates and CAP23 versions/comparison",
+        "status": "failed",
+        "durationMs": 281827,
+        "retry": 0
+      }
+    ],
+    "diagnoses": [
+      "CAP22/CAP23: concurrent original-response observer rejected Route is already handled; fixed in 76ca340 and qualified by the complete Behavior4 journey.",
+      "CAP17/CAP18/CAP19: accepted original CAP19 save was followed by a readback whose actual query had no version selector; test matcher required a version. Fixed in bd536912; Finance5 passed.",
+      "Requests: original authenticated fixture context GET exceeded its existing 20000 ms deadline. No confirmed product cause, replay, or larger deadline. Behavior4 subsequently completed admission; Requests5 qualified the whole journey."
+    ],
+    "independentVisualReview": [
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+        "sha256": "6c2947edec3f368e3826ac7079120717cfef7140bbc26b648b475bf2697a0179",
+        "width": 320,
+        "height": 900,
+        "observation": "Exact version identity is visible next to the narrow action group; controls remain contained.",
+        "coverage": "partial journey: comparison later failed in observer"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-320-distribution-editor-test-data.png",
+        "sha256": "eb3ca2751117c727aa8950edd10a6bd9ba86bd1416b67cd19f11af3d47310a95",
+        "width": 320,
+        "height": 900,
+        "observation": "Edit allocation heading is accurate; fields, spacing and text remain contained.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-320-position-review-test-data.png",
+        "sha256": "4fa6c7271cb3c987b7464771b82afbf415d383f2b85d964e2998cad7f4eeef73",
+        "width": 320,
+        "height": 900,
+        "observation": "Review action scope shows the source version name and year; actions fit inside 320px.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-dark-320-provenance-review-test-data.png",
+        "sha256": "bb1b06556fdf1aad19f7ee9f7acab74f53303e3b4fd82c141b767d699ce97191",
+        "width": 320,
+        "height": 900,
+        "observation": "Review action scope shows the source version name and year; provenance and actions wrap without overlap.",
+        "coverage": "partial journey: comparison later failed in observer"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-desktop-unavailable-roster-impact-test-data.png",
+        "sha256": "d1cb8bca09d0feabd577d483634f1c158ceb7b3dc85e76035146b5d24e6d592f",
+        "width": 1440,
+        "height": 1100,
+        "observation": "One blocking reason is shown and Sync roster remains disabled.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+        "sha256": "3b4d9cdb56e9cd0e28f68c205ad93062ef209ae6944d7f286dd68d7f9c8b0ad6",
+        "width": 1440,
+        "height": 1100,
+        "observation": "All five metric values share a baseline, including the multiline count label.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+        "sha256": "e4fa4d4b1cda3cfcade8d4ba151975acbdd4de6bee81a13ad65d08fbae7fbb3a",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Reference and Open record text fit on one line in the reserved identity column.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-closed-month-review-test-data.png",
+        "sha256": "76f62c19979e62a14373596857cb9511cb57a62d811399f40be2f89260a79a75",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Source zero is rendered as All months open and proposed month 2 as February.",
+        "coverage": "partial journey: CAP19 later stalled on incorrect test selector"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-create-review-test-data.png",
+        "sha256": "8dca2920b2bfe4335607a75fc0af8f48442d09d1d653ad0746eee54f53fb286c",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Proposed annual amount displays 36,000 USD; review values and actions remain contained.",
+        "coverage": "partial journey: CAP19 later stalled on incorrect test selector"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-320-record-review-actions-test-data.png",
+        "sha256": "2f2a9c5444a7b6633562cab644b30831c26b610949d618c82bbf8c5f04ac5b12",
+        "width": 320,
+        "height": 900,
+        "observation": "Narrow review actions stack without overlap and the source record scope remains readable.",
+        "coverage": "partial journey: CAP19 later stalled on incorrect test selector"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-light-desktop-test-data.png",
+        "sha256": "a901be62e1c0a837a2f31fc6a6ec7a20005cb7fb52e51288fb8b7a28a216935d",
+        "width": 1440,
+        "height": 1100,
+        "observation": "The light desktop catalogs preserve aligned columns and contained entity/allocation actions.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-list-light-desktop-test-data.png",
+        "sha256": "5d8bf2cebe687cc99ad35dea73d763502ba42165a7dff23829e7353c899e90c1",
+        "width": 1440,
+        "height": 1100,
+        "observation": "The light desktop roster preserves aligned source values and controls with readable long position names.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+        "sha256": "3d1c85c156ba182c41cb4551ae9390fb7ab847d649d8cd6cf586ea33630a0351",
+        "width": 320,
+        "height": 900,
+        "observation": "Portuguese narrow metric labels and their original values remain in paired rows without overlap.",
+        "coverage": "passed journey"
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+        "sha256": "e23e627d8b974d9c303811a333931ccaa36c9f50cb9d63b5939453212c66f643",
+        "width": 320,
+        "height": 900,
+        "observation": "Portuguese narrow reference and open action remain readable in the scrollable table identity column.",
+        "coverage": "passed journey"
+      }
+    ]
+  },
+  "schemaVersion": 2,
+  "closureSource": "d522399b7542bb3fc2a12c516213be7f76098678",
+  "closureStatus": "Assigned behavioral, financial presentation and import preview findings have passing focused evidence; final CAP23 and integration gates passed. Root owns overall integration and merge.",
+  "nativeCombinedFourthAttempt": {
+    "run": 45226990144,
+    "job": 137876039568,
+    "source": "fe287f72c14a143940133e4fed7ec1e7253e9b9f",
+    "snapshot": "152ce7c6deeed4f3230fd3f06a8a4e64c1c47eeb",
+    "artifact": 14847653309,
+    "artifactBytes": 123633920,
+    "artifactSha256": "5407eae56ef068c31406fb116b3d0bb235d930fabb5d018d9301267660e11f8c",
+    "passed": 6,
+    "failed": 2,
+    "retry": 0,
+    "flaky": 0,
+    "overallGreen": false,
+    "cases": [
+      {
+        "title": "installed native finance wave · CAP05 and CAP14 original financial commands",
+        "status": "passed",
+        "durationMs": 217813,
+        "retry": 0
+      },
+      {
+        "title": "installed native finance wave · CAP17 CAP18 CAP19 original planner commands",
+        "status": "timedOut",
+        "durationMs": 300255,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · requests, sourcing and approval decisions",
+        "status": "failed",
+        "durationMs": 83455,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · supplier drafts and confirmed changes",
+        "status": "passed",
+        "durationMs": 121352,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · policy draft and confirmed change",
+        "status": "passed",
+        "durationMs": 71385,
+        "retry": 0
+      },
+      {
+        "title": "installed procurement wave · all five areas in Portuguese",
+        "status": "passed",
+        "durationMs": 143942,
+        "retry": 0
+      },
+      {
+        "title": "native Planner wave four · CAP20 headcount and CAP21 shared allocations",
+        "status": "passed",
+        "durationMs": 179668,
+        "retry": 0
+      },
+      {
+        "title": "native Planner wave four · CAP22 exchange rates and CAP23 versions/comparison",
+        "status": "passed",
+        "durationMs": 414863,
+        "retry": 0
+      }
+    ],
+    "remainingFailureDiagnoses": {
+      "finance": "Old CAP19 query matcher; Finance5 supersedes the failed planner-finance case.",
+      "requests": "Selected quotation was correctly in 14 unchanged fields; only evaluator changed. The test had not opened that disclosure. Requests5 opens it and checks all three exact values against the original CAP25 DTO."
+    },
+    "independentVisualReview": [
+      {
+        "name": "CAP24-pt-BR-dark-desktop-test-data",
+        "reportPath": "data/c4bf8d6b0591a7dd8cc1b66684388c0bdca63050.png",
+        "sha256": "7fe67dcbdb16fcd78588c6a827f49702a3875d0a4d066ea63f704278fc44027c",
+        "width": 1440,
+        "height": 1100,
+        "observation": "All five Portuguese KPI values share the measured row despite the first label wrapping to two lines."
+      },
+      {
+        "name": "CAP26-pt-BR-dark-desktop-test-data",
+        "reportPath": "data/d2cf42f035bf473e7bf6a4a828154143a8e215bb.png",
+        "sha256": "23811489cbea664ca6d715373ec599292e0bc6b6656db394130a0212a681e573",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Portuguese request references and localized open actions each fit one line inside the identity column."
+      },
+      {
+        "name": "CAP23-dark-320-version-actions-test-data",
+        "reportPath": "data/0030ee4b6fd2a5ae1c985a833fde2538c07541b9.png",
+        "sha256": "34b398d7589a6b7bfce748d3ce603476b974913fc56482d67a7c9fc1047bcd16",
+        "width": 320,
+        "height": 900,
+        "observation": "Exact version name, year and status are visible beside the contained 320px action group."
+      },
+      {
+        "name": "CAP23-dark-320-keyboard-monthly-scroll-test-data",
+        "reportPath": "data/883856cd3a7073164bb0f223189fa903b15f9662.png",
+        "sha256": "94f21a87b00f3ad9f8bbe55d98b87bebeede324b7a73e3438644f446009a39ff",
+        "width": 320,
+        "height": 900,
+        "observation": "Diagnostic before f314: the keyboard-scrolled monthly table has source text visible through its translucent fixed Month column."
+      },
+      {
+        "name": "CAP23-dark-320-monthly-scroll-end-identity-test-data",
+        "reportPath": "data/a3e86de6a8685f28219812a0e2550947bf9e0f28.png",
+        "sha256": "c2edf07e82b6d4190001caee43b5e96901ebf23f7fda807cea23cd5e6251097f",
+        "width": 320,
+        "height": 900,
+        "observation": "Diagnostic before f314: Actual and moving values remain visible through the fixed Month column at the final horizontal endpoint."
+      }
+    ]
+  },
+  "financeFinal": {
+    "run": 45228241086,
+    "job": 137880471132,
+    "snapshot": "15d97db59579ff01eae3ede391c1c99412967761",
+    "sourceEquivalent": "ce678c810f13edc957b7ea9ed061f9313a39fe1f",
+    "sourceParity": "Whole tree was checked against ce678c; only the disposable .ci-run.json differs.",
+    "artifact": 14845742210,
+    "artifactBytes": 54361004,
+    "artifactSha256": "012879f0d46620b01de58a606fd0a2da5261d0c0cc26ac82eeb622fc90f02cbc",
+    "passed": 2,
+    "failed": 0,
+    "retry": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "title": "installed native finance wave · CAP05 and CAP14 original financial commands",
+        "status": "passed",
+        "durationMs": 243375,
+        "retry": 0
+      },
+      {
+        "title": "installed native finance wave · CAP17 CAP18 CAP19 original planner commands",
+        "status": "passed",
+        "durationMs": 203491,
+        "retry": 0
+      }
+    ],
+    "attachments": [
+      {
+        "name": "finance-dashboard-pt-BR-diagnostics",
+        "value": {
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "native-finance-dashboard-wave-three-evidence",
+        "value": {
+          "source": "isolated original producers; no mocked requests, grants, projections or receipts",
+          "areas": [
+            "CAP05",
+            "CAP14"
+          ],
+          "widths": [
+            1440,
+            320
+          ],
+          "schemes": [
+            "dark",
+            "light"
+          ],
+          "locales": [
+            "en-US",
+            "pt-BR"
+          ],
+          "actualBrowserZoom": "not measured",
+          "confirmedCommands": [
+            "CAP05.save-entry",
+            "CAP14.save"
+          ],
+          "sourcePostPaths": [
+            "/sucafina/dashboard",
+            "/sucafina/dashboard"
+          ],
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "finance-planner-pt-BR-diagnostics",
+        "value": {
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "native-finance-planner-wave-three-evidence",
+        "value": {
+          "source": "isolated original producers; no mocked requests, grants, projections or receipts",
+          "areas": [
+            "CAP17",
+            "CAP18",
+            "CAP19"
+          ],
+          "widths": [
+            1440,
+            320
+          ],
+          "schemes": [
+            "dark",
+            "light"
+          ],
+          "locales": [
+            "en-US",
+            "pt-BR"
+          ],
+          "actualBrowserZoom": "not measured",
+          "confirmedCommands": [
+            "CAP19.save"
+          ],
+          "sourcePostPaths": [
+            "/sucafina/planner",
+            "/sucafina/planner"
+          ],
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ],
+    "financialMutationLimit": "CAP19 has one save POST and the original paste-preview POST; the two POST paths are not two saves.",
+    "readbackMatcherFix": {
+      "commit": "bd536912284d37b9e21220115616a2b797a1d793",
+      "cause": "The original default-version route does not include a version query parameter in its CAP19 readback.",
+      "preserved": "Actual year/page query, original selected version ID, exact project ID and saved description are checked; original payload and CAS remain checked.",
+      "newRequests": 0,
+      "newTimeouts": 0,
+      "removedAssertions": 0
+    },
+    "independentVisualReview": [
+      {
+        "name": "CAP14-dark-desktop-contract-detail-test-data",
+        "reportPath": "data/4191ca44f0a10037e11f01bf570579ad08acf21d.png",
+        "sha256": "79f2f312f24b422ca1024be4d98f9e818f08c48239910b8d7b757e4637ced724",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Contract detail shows the original USD currency as read-only source context."
+      },
+      {
+        "name": "CAP14-dark-320-editor-test-data",
+        "reportPath": "data/c05d055a4b57c2c17e0fe1713ea3d71de0037b61.png",
+        "sha256": "6d54fff4a2649791fe0b8dad27361115ed214656be73dcffbe912d2c04fb2004",
+        "width": 320,
+        "height": 900,
+        "observation": "Contract editor fields are contained at 320px."
+      },
+      {
+        "name": "CAP14-dark-320-review-actions-test-data",
+        "reportPath": "data/2f6fb55f35161738b810542df955920b99b0d944.png",
+        "sha256": "b1b999050f2501c3cfc38c5639a1240f1f5792993f44f0c0d32cb7179b8328fc",
+        "width": 320,
+        "height": 900,
+        "observation": "Contract review keeps unchanged fields collapsible and all three actions fully contained at 320px."
+      },
+      {
+        "name": "CAP18-dark-desktop-create-review-test-data",
+        "reportPath": "data/90ac6b0188b8c0e7b83ca2962faf2b4e5e284f2d.png",
+        "sha256": "5899aa5e3b423e4ebe4c170622e3335e24e6a6e838ac3ca357a34335d1d3a063",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Create review displays exact 36,000 USD with contained original/current/proposed columns."
+      },
+      {
+        "name": "CAP18-dark-desktop-closed-month-review-test-data",
+        "reportPath": "data/f60139d6d47b1579a2855044035cdd96de199673.png",
+        "sha256": "e1f0e120a6909278927785ea74c60310528b9f25cd7529b0eb7d504da7822937",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Closed period uses All months open and February instead of numeric codes."
+      },
+      {
+        "name": "CAP19-dark-desktop-confirmed-project-test-data",
+        "reportPath": "data/4654ccd764a46771997dea8a07348e013b684d22.png",
+        "sha256": "e16e9cef667e0efe4c02ef4b9e3e8c4acbeb7c559910c3fcce4a382cd601e807",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Confirmed original CAPEX project description and source identity remain readable."
+      },
+      {
+        "name": "CAP19-dark-desktop-spread-review-test-data",
+        "reportPath": "data/100aaac82f75897749c8f90c0c08146863550ec7.png",
+        "sha256": "3ca56e88edd45d694152ac0514571d5e524f3b38e87a1714db28f59f6439f165",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Spread review retains exact 240,000 USD in the unchanged annual field."
+      },
+      {
+        "name": "CAP18-pt-BR-dark-desktop-test-data",
+        "reportPath": "data/dda9615c5bb63958750b32424fd48837cc13a5f3.png",
+        "sha256": "e59ba3f26795cc4827dd6b5983024bddbc286fcb49d48a60800ce79d79981bea",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Portuguese Planner labels, grouped amounts and source currency remain associated."
+      },
+      {
+        "name": "CAP18-pt-BR-dark-320-annual-review-test-data",
+        "reportPath": "data/ce0291fc50dfa2422c780df5f55f3523721f0c9f.png",
+        "sha256": "db4ca3bd1ff7d649a0793a3be629a28447ee2c2e1847dfc3ea3393c92dcbb86c",
+        "width": 320,
+        "height": 900,
+        "observation": "At 320px, Portuguese annual review shows 120.000 USD and 126.000 USD without clipping."
+      },
+      {
+        "name": "CAP18-pt-BR-dark-320-closed-month-review-test-data",
+        "reportPath": "data/5ee10c61ba0ac14cd56023131d92ee147806307c.png",
+        "sha256": "02e598da25981c9928ddcb7b3cadd211c0ed51c2244bc04673e0bbc717608253",
+        "width": 320,
+        "height": 900,
+        "observation": "At 320px, Todos os meses abertos and Fevereiro remain readable."
+      }
+    ],
+    "capturedPngPaths": 49,
+    "reviewLimit": "Ten selected PNGs reviewed independently; captured paths do not imply every PNG was independently reviewed."
+  },
+  "requestsFinal": {
+    "run": 45234374202,
+    "job": 137902063093,
+    "cleanupJob": 137910498462,
+    "snapshot": "3d60ecb0f9adda231aedaace378db99e7b48e0e0",
+    "source": "0bbe4b694b666db77420aabe9b271a330ecaba22 plus dffcbf1 three-path test delta",
+    "sourceEquivalent": "0fee95b84e9b3311c721a489d076eda1e64746b0",
+    "artifact": 14849027318,
+    "artifactBytes": 26285756,
+    "artifactSha256": "76d6f9ac3b0a09f945bd9f9d71edcdd48e12b66ada07ec309f9eaf9e54e7c6ad",
+    "passed": 1,
+    "failed": 0,
+    "retry": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "title": "installed procurement wave · requests, sourcing and approval decisions",
+        "status": "passed",
+        "durationMs": 322080,
+        "retry": 0
+      }
+    ],
+    "attachments": {
+      "native-sourcing-unchanged-selection": {
+        "source": "the original CAP25 response delivered during comparison navigation",
+        "number": "PR-2026-0004",
+        "selectedId": "fb154d8d-8c0b-4372-adcf-270113a424c1",
+        "supplier": "Design test data · Regional technology and field services",
+        "displayed": [
+          "Design test data · Regional technology and field services · fb154d8d-8c0b-4372-adcf-270113a424c1",
+          "Design test data · Regional technology and field services · fb154d8d-8c0b-4372-adcf-270113a424c1",
+          "Design test data · Regional technology and field services · fb154d8d-8c0b-4372-adcf-270113a424c1"
+        ],
+        "changedField": "sourcing.evaluator",
+        "unchangedDisclosureOpened": true
+      },
+      "native-procurement-wave-four-evidence": {
+        "source": "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
+        "group": "requests-approvals",
+        "areas": [
+          "CAP24",
+          "CAP25",
+          "CAP26"
+        ],
+        "widths": [
+          1440,
+          320
+        ],
+        "schemes": [
+          "dark",
+          "light"
+        ],
+        "locales": [
+          "en-US"
+        ],
+        "actualBrowserZoom": "not measured",
+        "confirmedCommands": [
+          "CAP25.save PR",
+          "CAP25.create",
+          "CAP25.submit_pr",
+          "CAP25.save sourcing",
+          "CAP26.approve PR",
+          "CAP26.approve sourcing",
+          "CAP26.reject PO",
+          "CAP25.save PO"
+        ],
+        "sourcePostPaths": [
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement",
+          "/sucafina/procurement"
+        ],
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    "registrationMapping": {
+      "commit": "dffcbf1b8cd959b69a0ec6ac4540e6de85f16355",
+      "sharedRegistration": "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement.ts",
+      "originalSpec": [
+        "suppliers",
+        "settings",
+        "localized"
+      ],
+      "requestsSpec": [
+        "requests-approvals"
+      ],
+      "originalCases": 4,
+      "finalCases": 4,
+      "duplicateCases": 0,
+      "originalAssertionStatementsRetained": 126,
+      "finalAssertionStatements": 135,
+      "caseTimeoutMs": 420000,
+      "actionTimeoutMs": 15000,
+      "newNumericTimeouts": 0
+    },
+    "selectedQuotationOracle": "Original CAP25 request number, selectedId and matching supplier are checked before opening Unchanged fields; original/current/proposed exact labels must all equal the original selected quotation. Only evaluator changes.",
+    "independentVisualReview": [
+      {
+        "name": "CAP24-dark-desktop-source-overview-test-data",
+        "reportPath": "data/b247bf0b6041ad904fa4c8963b9705b43fdf723d.png",
+        "sha256": "12139da0791c530dfb4c73d734d2157861f96735c04bfacd3a905295bb5020fc",
+        "width": 1440,
+        "height": 1100,
+        "observation": "The five English procurement metrics share a value row with intact source amounts and units."
+      },
+      {
+        "name": "CAP25-light-320-recorded-quote-comparison-test-data",
+        "reportPath": "data/457b1fd289b93b22ffa796dcde1b7f1e57f1f571.png",
+        "sha256": "2334e3ca8cbc6890be3c6437503a36d27a2dbbe138083c5c7c1390802116dea8",
+        "width": 320,
+        "height": 900,
+        "observation": "The light 320px quotation list wraps source supplier identities within the row."
+      },
+      {
+        "name": "CAP25-dark-desktop-sourcing-review-overview-test-data",
+        "reportPath": "data/f73d5eed649cdabe9e7ef9e1eed5cd23f2e53463.png",
+        "sha256": "427885119ca36413d21558a7214b3a7a312d003d1990c63b55e55908762204fc",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Sourcing review identifies one changed field, Evaluator; fourteen unchanged fields remain available in disclosure."
+      },
+      {
+        "name": "CAP26-dark-desktop-pr-approval-list-test-data",
+        "reportPath": "data/7b9646ff9e5d0879e68e2b0c8792cae7f1fa8459.png",
+        "sha256": "b8d8e1e241d74a2a33d66e520938e8aeec569274e87a95a6438b3b0e776b1946",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Dark approval list preserves one-line references and Open record actions, with room for the subject."
+      },
+      {
+        "name": "CAP26-light-desktop-pr-approval-list-test-data",
+        "reportPath": "data/f825237a54ed0bbb92e88349a3d59e081a468a4e.png",
+        "sha256": "7319c1453134b95bba5c6a1f4c571d6c2bc16f0b234464c5da25ee8977b5165b",
+        "width": 1440,
+        "height": 1100,
+        "observation": "The same approval identities and subject alignment remain legible in the light theme."
+      },
+      {
+        "name": "CAP26-dark-320-pr-review-actions-test-data",
+        "reportPath": "data/fc0e77d726ee6238c4dbc6f19eb86d7a59d06781.png",
+        "sha256": "c1c9606650eb4d12576e608e554fe5e75b19193f786a62ddffe4d2e4c4c023a9",
+        "width": 320,
+        "height": 900,
+        "observation": "At 320px the PR approval review retains the source request number and all three actions within the viewport."
+      },
+      {
+        "name": "CAP26-dark-desktop-po-decision-review-actions-test-data",
+        "reportPath": "data/be5f0d8f584230c15689e1bff54506c13e558068.png",
+        "sha256": "c003df59e5fc756119a1e87003434f222421db063e4392942ffcf631190f588b",
+        "width": 1440,
+        "height": 1100,
+        "observation": "PO rejection review preserves source amount/currency and the proposed rejection reason; actions stay aligned."
+      }
+    ],
+    "capturedPngPaths": 21,
+    "reviewLimit": "Seven selected original PNGs reviewed independently."
+  },
+  "filesSixthComposedAttempt": {
+    "run": 45227729177,
+    "job": 137878631995,
+    "snapshot": "c30aec3fc256a7662bd99f3f79db32f03765ff04",
+    "sourceEquivalent": "fb6e4fd6260aa47822d51680e695ca22cf88b4b2",
+    "artifact": 14844969385,
+    "artifactBytes": 45422898,
+    "artifactSha256": "f36faaea3394ba4384501b3e38831f6789e76abbea179a231d05b7c5335e50bf",
+    "passed": 3,
+    "failed": 1,
+    "retry": 0,
+    "overallGreen": false,
+    "qualifiedImport": {
+      "status": "passed",
+      "durationMs": 153797
+    },
+    "documentFailure": "The separate DOC journey reached its original 180-second deadline near deletion confirmation; this run does not qualify that case.",
+    "importSourceOracle": {
+      "sourceMissingGaps": 4,
+      "reason": "missing",
+      "fields": [
+        "desc",
+        "proj"
+      ],
+      "ambiguousIdentityPresentation": "Source value / Before import / Not provided by the source",
+      "fullPathsAndReasonAvailable": true,
+      "categories": {
+        "added": 4,
+        "changed": 5,
+        "removed": 0,
+        "unchanged": 0,
+        "ignored": 0,
+        "rejected": 0
+      },
+      "populatedDisclosureCount": 2,
+      "emptyCategoryCount": 4,
+      "emptyCategorySummaryCount": 1,
+      "applyBeforeExplicitConfirmation": 0,
+      "applyRequests": 1,
+      "changedFields": 3,
+      "changedRecordTokens": [
+        1,
+        2
+      ],
+      "unrelatedRecordTokens": [
+        1,
+        1
+      ],
+      "receiptRecovery": "Lost Apply delivery followed by explicit Refresh receipt and the independent original receipt route.",
+      "authorityControls": "Cross-tab logout blocks the original context preflight; exact receipt read is denied. Separate viewer can export committed data but cannot read the owner receipt."
+    },
+    "independentVisualReview": [
+      {
+        "name": "UI55-source-gap-context-dark-desktop",
+        "reportPath": "data/1f846e8475dde7630fab6777fd6c6d9b714dbc7d.png",
+        "sha256": "c84159cc231c7488301a52779635b7f06b10b382b91f539477ff1ebc87096584",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI55-source-gap-context-light-desktop",
+        "reportPath": "data/dd0129ef700a443709add772f337823581caee91.png",
+        "sha256": "e92c24cd3167cd580740f714320340976a7f0440ac4538fec24a81a880c01602",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI55-source-gap-context-dark-320",
+        "reportPath": "data/3a8fd6c941641a3899ddf862d61849dfa2743c57.png",
+        "sha256": "50a2ba917e52d6a95d4d0c041a1c98af38120c3579f68255ad05a9758eddc2af",
+        "width": 320,
+        "height": 800,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI55-original-preview-dark-desktop",
+        "reportPath": "data/2845ef0e999e5a0b3894945b8c11f60127b695e5.png",
+        "sha256": "875a2bf90f717d178c620bc7c9c06b7db0ac3eeb927ae9b36b3e6bb3e580060e",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI55-original-preview-light-desktop",
+        "reportPath": "data/9237040138cfd2bf5c1ef7eec8bbb8b8f7dd961a.png",
+        "sha256": "f6964751a45f2ac7e4aa287d4fdeac7a957d9b3c075e02615c8bdcb3d470ef0e",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI55-original-preview-dark-320",
+        "reportPath": "data/37e50734f58a14081a5723d5c9f5ce2f330d7ed3.png",
+        "sha256": "9f07ac41443327f9d5768e4e0c9a73e1bc0a9ae3db5b2f8c2696e9c75d4f7765",
+        "width": 320,
+        "height": 800,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-source-gap-context-dark-desktop",
+        "reportPath": "data/4e19a3d4401763bf84cedd5f7f0484244ab5c625.png",
+        "sha256": "4198b09cb048578111eea90ade70644323ee2043f7ba044f301b0047a6722696",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-source-gap-context-light-desktop",
+        "reportPath": "data/37c8efc6ad2bbdc24aefad72f6b6c468c550c0ae.png",
+        "sha256": "7d6d5b752666ba3a3172d5c21a04e048acf5c50f23da80017f66ec58582e06be",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-source-gap-context-dark-320",
+        "reportPath": "data/3a8fd6c941641a3899ddf862d61849dfa2743c57.png",
+        "sha256": "50a2ba917e52d6a95d4d0c041a1c98af38120c3579f68255ad05a9758eddc2af",
+        "width": 320,
+        "height": 800,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-original-manifest-preview-dark-desktop",
+        "reportPath": "data/ee92cb828b1351684894696e95fef1f5e1327af4.png",
+        "sha256": "ca1f341e2e0c67981e91767d6bdd24faa7ac889b132eb0ab28d72f21e85f9795",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-original-manifest-preview-light-desktop",
+        "reportPath": "data/53b341a26b48610e2ea4eb2c03a9506d03d2f0a4.png",
+        "sha256": "c48aa029e9d720ddc0fdff266a786efcd1e99e985a5346b7b26eb311c9f65bf7",
+        "width": 1440,
+        "height": 1100,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      },
+      {
+        "name": "UI56-original-manifest-preview-dark-320",
+        "reportPath": "data/f286fbd9318a14c38f13b396422aa7b206192f49.png",
+        "sha256": "4094494fc0b2e75148b8f6affe2ce64a4deb71f20ea1011370269c839e16f37f",
+        "width": 320,
+        "height": 800,
+        "observation": "Original gaps/categories and localized disclosure labels are contained; complete paths remain available, with actions stacked at 320px."
+      }
+    ],
+    "reviewedPngPaths": 12,
+    "distinctReviewedPngHashes": 11,
+    "reviewLimit": "All twelve UI55/UI56 checkpoint paths reviewed (eleven unique hashes): source gaps and original change categories, English dark/light 1440px and dark 320px. No Portuguese preview, zoom, touch or entire Files run claim."
+  },
+  "findingEvidence": {
+    "BA-03": {
+      "run": 45226990144,
+      "case": "CAP20/CAP21",
+      "oracle": "Native allocation edit heading says Edit; existing record and shared catalog identity preserved."
+    },
+    "BA-04": {
+      "run": 45226990144,
+      "case": "CAP22/CAP23",
+      "oracle": "At 320px, exact authorized version name/year/status accompanies actions; Delete review targets that source reference and Cancel produces no mutation."
+    },
+    "BA-05": {
+      "run": 45226990144,
+      "cases": [
+        "CAP20/CAP21",
+        "CAP22/CAP23"
+      ],
+      "oracle": "Review scope uses exact source version or record name and year; technical source references remain available."
+    },
+    "BA-06": {
+      "run": 45226990144,
+      "case": "CAP20/CAP21",
+      "oracle": "Unavailable roster impact has exactly one blocking reason and disabled Sync roster. Shared normalized key/parameters dedup implementation is owned by product branch."
+    },
+    "BA-07": {
+      "behaviorRun": 45226990144,
+      "focalRun": 45261772401,
+      "oracle": "Original keyboard/endpoints and sticky identity; supplemental opaque surface qualification covers both native tables and both themes."
+    },
+    "BA-08": {
+      "englishRun": 45234374202,
+      "portugueseRun": 45226990144,
+      "portugueseCase": "installed procurement wave · all five areas in Portuguese",
+      "portugueseDurationMs": 143942,
+      "testedSpecBlob": "f4d91f38b6548dff8c4164d1709df393f63ebae8",
+      "geometryOracle": "alignedMetricValues requires exactly five .sf-n21-metric dd elements and max(rect.top)-min(rect.top) <= 1 CSS pixel at desktop, including the explicit CAP24 pt-BR branch.",
+      "rawCoordinatesAttached": false,
+      "evidenceLimit": "The passed geometry assertion establishes the <=1px bound; no precise unpublished coordinates are claimed."
+    },
+    "BA-09": {
+      "englishRun": 45234374202,
+      "portugueseRun": 45226990144,
+      "geometryOracle": "For every rendered reference and localized Open action, Range.getClientRects has one text line and its bounds are contained by that exact identity cell.",
+      "nativeCommandsConfirmed": 8,
+      "referenceColumnCssPx": 180
+    },
+    "BF-01": {
+      "run": 45228241086,
+      "case": "CAP17/CAP18/CAP19",
+      "exactEnglish": [
+        "120,000 USD",
+        "126,000 USD",
+        "36,000 USD",
+        "240,000 USD",
+        "All months open",
+        "February"
+      ],
+      "exactPortuguese": [
+        "120.000 USD",
+        "126.000 USD",
+        "Todos os meses abertos",
+        "Fevereiro"
+      ],
+      "oracle": "Original and proposed values checked separately; native form draft preserved through Revise/Cancel. Currency comes from source/draft and no financial calculation changes."
+    }
+  },
+  "diagnosticSanitization": {
+    "commit": "1bffc2bc204e59e4976fe1d9603697f1f037a43e",
+    "trigger": "An original route.fetch cancellation in WaveTwo5 included a closed isolated fixture cookie in its error call log. No raw value is copied into this ledger.",
+    "change": "Construct a fresh rejected Error with the original category, method, pathname and useful assertion text. Remove private header lines, credential values, URL credentials/query and original stack/cause. No transport, authority, deadlines or retry change.",
+    "unitFile": "packages/app-shell/test-browser/forward-error.test.ts",
+    "cases": 2,
+    "gateRun": 45261780999,
+    "snapshot": "240e9eb4fe9a5e4ae13d70848c5b3be9079d3740",
+    "status": "passed",
+    "assertions": 21
+  },
+  "comparisonOpacity": {
+    "productCommit": "f31439e556bb1aa32b1c76efed1b3b9590c4238b",
+    "cleanComposedSource": "0765dc6f15ca0196061ce45a2ae291911f0a66e5",
+    "change": "Only sticky comparison identity cells use opaque --surface-base instead of translucent --orchestra-surface. Theme palette semantics, source values and all other material surfaces are preserved.",
+    "diagnosticRun": {
+      "run": 45236795001,
+      "job": 137910527824,
+      "snapshot": "bcb7bb87cb5ca165bd5dec99cdd7958f640785ea",
+      "artifact": 14850273199,
+      "artifactBytes": 424929,
+      "artifactSha256": "1f213252beb1baaa9d3c12451c747dd8a3ae9765613f7f2d76555022ea934be7",
+      "passed": 0,
+      "failed": 1,
+      "retry": 0,
+      "testDurationMs": 70485,
+      "failure": "The first tbody comparison stored innerText but toHaveText used its default textContent, losing cell separators. The original values were identical; six sticky opacity checks had passed at the first summary endpoint.",
+      "testCorrection": "Root d522399 adds only {useInnerText:true}; original exact text, source identity, row counts, all endpoints, opacity and no-POST assertions remain.",
+      "timeoutOrRetryChange": false
+    },
+    "finalRun": {
+      "run": 45261772401,
+      "job": 137998112991,
+      "source": "d522399b7542bb3fc2a12c516213be7f76098678",
+      "snapshot": "853f785464118b539d1c274d4c2cc2926afa39d9",
+      "status": "completed",
+      "conclusion": "success",
+      "artifact": 14860638005,
+      "artifactBytes": 1316235,
+      "artifactSha256": "d20260c33ee1de84324a5c8f708e0dfee2a94a22db5f410b42a1f453a8f764ff",
+      "passed": 1,
+      "failed": 0,
+      "retry": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "title": "native Planner comparison · fixed labels cover scrolled source values in both themes",
+          "status": "passed",
+          "durationMs": 57609,
+          "retry": 0,
+          "errors": []
+        }
+      ],
+      "originalAttachment": {
+        "source": "original CAP23 and two independent original CAP17 responses",
+        "selected": [
+          "fa4316f5-c715-4521-80b7-08816a0c9929",
+          "24e5f116-e74b-46ca-9ea2-63826170c7f4"
+        ],
+        "sourceNames": [
+          "Design test data · Operating plan",
+          "Design test data · Working forecast"
+        ],
+        "widths": [
+          320
+        ],
+        "schemes": [
+          "dark",
+          "light"
+        ],
+        "measurements": [
+          {
+            "colorScheme": "dark",
+            "kind": "summary",
+            "endpoint": "start",
+            "covers": [
+              {
+                "label": "Comparison",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Budget",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Actual YTD",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Full-year outlook",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "HR Staff",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "FTE December",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "dark",
+            "kind": "summary",
+            "endpoint": "end",
+            "covers": [
+              {
+                "label": "Comparison",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Budget",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Actual YTD",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Full-year outlook",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "HR Staff",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "FTE December",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "dark",
+            "kind": "monthly",
+            "endpoint": "start",
+            "covers": [
+              {
+                "label": "Month",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jan",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Feb",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Mar",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Apr",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "May",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jun",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jul",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Aug",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Sep",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Oct",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Nov",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Dec",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "dark",
+            "kind": "monthly",
+            "endpoint": "end",
+            "covers": [
+              {
+                "label": "Month",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jan",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Feb",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Mar",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Apr",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "May",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jun",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jul",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Aug",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Sep",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Oct",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Nov",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Dec",
+                "background": "rgb(14, 20, 27)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "light",
+            "kind": "summary",
+            "endpoint": "start",
+            "covers": [
+              {
+                "label": "Comparison",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Budget",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Actual YTD",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Full-year outlook",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "HR Staff",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "FTE December",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "light",
+            "kind": "summary",
+            "endpoint": "end",
+            "covers": [
+              {
+                "label": "Comparison",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Budget",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Actual YTD",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Full-year outlook",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "HR Staff",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "FTE December",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "light",
+            "kind": "monthly",
+            "endpoint": "start",
+            "covers": [
+              {
+                "label": "Month",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jan",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Feb",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Mar",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Apr",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "May",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jun",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jul",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Aug",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Sep",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Oct",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Nov",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Dec",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          },
+          {
+            "colorScheme": "light",
+            "kind": "monthly",
+            "endpoint": "end",
+            "covers": [
+              {
+                "label": "Month",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jan",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Feb",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Mar",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Apr",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "May",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jun",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Jul",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Aug",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Sep",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Oct",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Nov",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              },
+              {
+                "label": "Dec",
+                "background": "rgb(233, 236, 240)",
+                "alpha": 255,
+                "opacity": "1",
+                "position": "sticky",
+                "left": 42
+              }
+            ]
+          }
+        ],
+        "writes": [],
+        "consoleErrors": [],
+        "pageErrors": []
+      },
+      "measurementCount": 8,
+      "checkedStickyCells": 76,
+      "independentVisualReview": [
+        {
+          "name": "CAP23-fixed-summary-dark-320-start-test-data",
+          "reportPath": "data/c71dc56d9bf4fa48ba41034b795be7b83b560584.png",
+          "sha256": "2e8a818b3a8869c87f8634cfd0eca58063342b981750de52313d23f2f4e4dde4",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-summary-dark-320-end-test-data",
+          "reportPath": "data/8a53db56b103967514ba747cd1e06e576c01ef2d.png",
+          "sha256": "c74f3d5755f65334fe307bcc74935824bebe15c64689fd93d613833f7b256d1e",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-monthly-dark-320-start-test-data",
+          "reportPath": "data/4aa88d12d9d4aa8fed96183f3e61cf45d37cd85d.png",
+          "sha256": "032c42d199b59ccb84e83c7e7483629e6c5589b3af6b7c3b07c369b17f76f0e7",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-monthly-dark-320-end-test-data",
+          "reportPath": "data/4b9edce58bbea9c47ae83b954c7f9575f009787d.png",
+          "sha256": "b99b4bdff0307ad268dded3d4324af99db5f34ecda9a96d5e6ed8c479ee8aaec",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-summary-light-320-start-test-data",
+          "reportPath": "data/0acaaa25ad328f44a2a4bf367befec5bb95c3144.png",
+          "sha256": "c07b1c058ddee0c9e5492c2d3b62919125e0d1872bfda82b16007c20c87e5533",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-summary-light-320-end-test-data",
+          "reportPath": "data/eb7abfdb617537558cd7e9f078548b3d611732c4.png",
+          "sha256": "45699080d567ec9938da4d0bb2477ce791602f278adfa508adac21be1f252984",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-monthly-light-320-start-test-data",
+          "reportPath": "data/2f3066bc4f7eaf110ebbd95c6df06b44e4b4aa3d.png",
+          "sha256": "27a3762191f70caaf14d417027ca5a357b7a518474d92102a26546369033a0a7",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        },
+        {
+          "name": "CAP23-fixed-monthly-light-320-end-test-data",
+          "reportPath": "data/7d92e3f9caf849f6b8b8dbdc9594b8320c35c6e7.png",
+          "sha256": "3fb6901e04fff8c6df49ffa66378d38fffe00620ed448f92a000c53d412d0993",
+          "width": 320,
+          "height": 900,
+          "observation": "Original fixed identity remains opaque and readable at this horizontal endpoint; no moving source text bleeds through. Source values and native scroll behavior are preserved."
+        }
+      ]
+    }
+  },
+  "uniqueOriginalNativeCases": [
+    {
+      "case": "CAP05/CAP14",
+      "qualifiedRun": 45228241086
+    },
+    {
+      "case": "CAP17/CAP18/CAP19",
+      "qualifiedRun": 45228241086
+    },
+    {
+      "case": "Requests/sourcing/approvals",
+      "qualifiedRun": 45234374202
+    },
+    {
+      "case": "Suppliers",
+      "qualifiedRun": 45226990144
+    },
+    {
+      "case": "Procurement settings",
+      "qualifiedRun": 45226990144
+    },
+    {
+      "case": "All five procurement areas in Portuguese",
+      "qualifiedRun": 45226990144
+    },
+    {
+      "case": "CAP20/CAP21",
+      "qualifiedRun": 45226990144
+    },
+    {
+      "case": "CAP22/CAP23",
+      "qualifiedRun": 45226990144
+    }
+  ],
+  "limits": [
+    "Eight original native cases are covered across focused passing results; overlapping full and focused runs must not be summed.",
+    "Behavior3, Behavior4 and Files6 remain mixed historical runs; only their explicitly passing cases are qualified.",
+    "Native journeys use production assets in Chromium/Linux and the original isolated installed producer; Teams uses its existing finite synthetic HTTP authority fixture.",
+    "Teams measurements have one sample per state. No statistical performance equivalence, flake rate, persistent live SSE or live Microsoft/OIDC claim.",
+    "Measured widths/themes/locales are specified per attachment; no actual browser zoom, touch/wheel or all-browser/device qualification.",
+    "Independent visual review is limited to explicitly listed images; captured paths do not imply independent review or complete application coverage.",
+    "No grants, guards, command payloads, CAS or confirmation conditions were relaxed. No production writes, request replays, mutation retries, new numerical timeouts or CI allowlist changes."
+  ],
+  "filesFinal": {
+    "run": 45236527715,
+    "snapshot": "43cd2ac8684d97ea776fa8150be08f1d14d16fa2",
+    "source": "a4fb57789f438385cadcb978d1f00754e63002af",
+    "sourceTree": "a01b789995bec65a5669ecdc6d56377dd551c41c",
+    "artifact": 14851385585,
+    "artifactBytes": 33268762,
+    "artifactSha256": "ee520812652c5bdf7fc3e19853857b0064bfb29a1687089421c96f3811a415ab",
+    "passed": 5,
+    "failed": 0,
+    "retry": 0,
+    "caseDurationsMs": {
+      "OP-IMPORT": 150905,
+      "DOC": 138265,
+      "UPLOAD": 126039,
+      "EXPORT": 30355,
+      "SCENARIO": 288227
+    },
+    "evidenceOwner": "System reviewer downloaded the original archive and supplied its complete report/metadata; behavior independently reviewed the listed Files6 UI55/UI56 originals, not a second set of Files8 images."
+  },
+  "finalGate": {
+    "run": 45261780999,
+    "job": 137998141479,
+    "source": "d522399b7542bb3fc2a12c516213be7f76098678",
+    "snapshot": "240e9eb4fe9a5e4ae13d70848c5b3be9079d3740",
+    "conclusion": "success",
+    "gates": 6,
+    "semanticTests": 28,
+    "semanticAssertions": 122,
+    "browserDomTests": 132,
+    "browserDomAssertions": 1822,
+    "guardRules": 78,
+    "guardErrors": [],
+    "guardApprovedOverrides": [],
+    "paletteFiles": 7,
+    "paletteChanges": [],
+    "diagnosticTestsPassed": 2,
+    "limit": "This is the complete final integration gate; do not sum overlapping earlier test counts."
+  }
+}

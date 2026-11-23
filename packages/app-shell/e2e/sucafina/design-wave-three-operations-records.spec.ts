@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, type TestInfo } from "@playwright/test"
-import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter, originalRead } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -30,7 +30,8 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[2]]
@@ -52,13 +53,15 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     const surface = page.locator('[data-sf-surface="CAP13"]')
     await surface.getByLabel("Status", { exact: true }).selectOption("closed")
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator("tr[data-sf-row]")).toHaveCount(0)
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("0")
     await scrollPageTop(page)
     await capture(page, info, "CAP13-filtered-empty-dark-desktop-test-data")
     await surface.getByLabel("Status", { exact: true }).selectOption("")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     const row = surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.risk })
     await row.getByRole("button", { name: "Open record", exact: true }).click()
     const detail = surface.locator("[data-sf-record-detail]")
@@ -91,7 +94,8 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     await expect(editor.getByLabel("Impact", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(riskNotes)
     await visit(screens[2])
@@ -125,7 +129,8 @@ waveThreeTest("installed native operations · relationships source values and a 
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[3]]
@@ -147,11 +152,13 @@ waveThreeTest("installed native operations · relationships source values and a 
     const surface = page.locator('[data-sf-surface="CAP15"]')
     await surface.getByLabel("Search", { exact: true }).fill("  REGIONAL OPERATIONS COUNCIL  ")
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("1")
     await expect(surface.locator("tr[data-sf-row]")).toHaveCount(1)
     await surface.getByLabel("Search", { exact: true }).fill("")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
     await surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.stakeholder })
       .getByRole("button", { name: "Open record", exact: true }).click()
@@ -178,7 +185,8 @@ waveThreeTest("installed native operations · relationships source values and a 
     await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue(relationshipNotes)
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(relationshipNotes)
     await visit(screens[3])
@@ -212,7 +220,8 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[4]]
@@ -261,7 +270,10 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText(performanceNotes)
-    await expect(surface.getByLabel("Confirm weights exceeding total allocation", { exact: true })).not.toBeChecked()
+    await expect(review.getByRole("heading", { level: 4 }).first()).toHaveText("Notes")
+    await expect(review.locator(".sf-s03-effect-details")).not.toHaveAttribute("open", "")
+    await expect(review.locator(".sf-s03-unchanged")).not.toHaveAttribute("open", "")
+    await expect(surface.getByLabel("Confirm weights exceeding total allocation", { exact: true })).toHaveCount(0)
     await scrollPageTop(page)
     await capture(page, info, "CAP16-subitem-review-top-dark-desktop-test-data")
     await reviewActions(page)
@@ -271,7 +283,8 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     await expect(editor.getByLabel("Score", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP16" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-performance-detail]")).toContainText(performanceNotes)
     await visit(screens[4])

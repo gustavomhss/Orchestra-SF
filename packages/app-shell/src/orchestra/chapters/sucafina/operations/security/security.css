@@ -50,7 +50,7 @@
 .sf-security-metric > span:first-child { color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
 .sf-security-status { display: inline-flex; align-items: center; border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-sm); padding: 2px 8px; color: var(--mx-dim); background: var(--mx-soft); font-size: var(--orchestra-font-size-sm); }
 .sf-security-status[data-status="Good"] { color: var(--orchestra-success); }
-.sf-security-status[data-status="Moderate"] { color: var(--orchestra-warning); }
+.sf-security-status[data-status="Moderate"] { color: var(--orchestra-warm); }
 .sf-security-status[data-status="High risk"] { color: var(--orchestra-danger); }
 .sf-security-record { min-inline-size: 0; display: grid; gap: 16px; border-block-start: 1px solid var(--mx-line); padding-block-start: 20px; }
 .sf-security-rates { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; min-inline-size: 0; padding-block: 8px; }

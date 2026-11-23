@@ -2,8 +2,9 @@ import { expect, type Page, type Request, type TestInfo } from "@playwright/test
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import {
-  waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
+  waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, originalRead, type OriginalRead,
 } from "./design-support/wave-four"
+import { forwardOnce } from "./operations-support/runtime"
 
 // Public producer fields only; projection-only change/receipt collections are counted, not interpreted.
 type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" | "criteria" | "sourceRefs" |
@@ -16,7 +17,9 @@ waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
 waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
-type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
+type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string; recipientsAvailable?: boolean }
+type ForwardedRead = Awaited<ReturnType<typeof forwardOnce>>
+const originalAnalysisChoices = new WeakMap<Page, { status: number; request: Request; body: Record<string, unknown> }>()
 
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected original response object")
@@ -160,54 +163,47 @@ async function readCase(page: Page, origin: string, mount: string, caseRef: stri
   return object(object(body.value).projection).case as SfCase
 }
 async function openScreen(page: Page, owner: Owner, screen: Screen, localized = false) {
+  const projection: OriginalRead = { path: "/api/ui/projections/case", query: { caseRef: screen.caseRef! } }
+  const choice: OriginalRead = { path: "/dashboard", query: { sf: "current-choice", format: "json", case: screen.caseRef! } }
+  const reads = screen.id === "UI41" ? undefined : screen.id === "UI38" ? [choice]
+    : screen.id === "UI35" ? [projection, choice] : [projection]
+  let postRead: ForwardedRead | undefined
+  let historyRead: ForwardedRead | undefined
+  const mode = screen.id === "UI41" ? "workbench-analysis"
+    : screen.id === "UI37" && screen.recipientsAvailable ? "collaboration-recipients" : undefined
+  const postEndpoint = (url: URL) => url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
+    url.searchParams.getAll("sf").length === 1 && url.searchParams.get("sf") === mode
   try {
-    // Current-choice options revalidate every authorized case before the selected choice.
+    if (mode) postRead = await forwardOnce(page, postEndpoint, "POST", screen.id === "UI41" ? async () => {
+      // loadHistory starts only after this original choices body reaches the page.
+      historyRead = await forwardOnce(page, postEndpoint, "POST")
+    } : undefined)
+    const completedPostReads = async () => {
+      if (!postRead) return
+      const original = await postRead.completed
+      const body = object(await original.response.json())
+      expect(original.response.status(), "the original POST read HTTP status").toBe(200)
+      expect(body.status, "the original POST read body status").toBe("ok")
+      if (screen.id === "UI41") {
+        expect(original.request.postDataJSON()).toEqual({ action: "choices" })
+        originalAnalysisChoices.set(page, { status: original.response.status(), request: original.request, body })
+        expect(historyRead, "the next original history read is armed before choices delivery").toBeDefined()
+        const history = await historyRead!.completed
+        expect(history.request.postDataJSON()).toMatchObject({ action: "list" })
+        expect(history.response.status(), "the original analysis history HTTP status").toBe(200)
+        expect(object(await history.response.json()).status, "the original analysis history body status").toBe("ok")
+      }
+    }
+    // Read receipts precede the DOM oracle; source latency does not redefine readiness.
     await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
-      screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
-    const root = page.locator('[data-sf-decision="' + screen.id + '"]')
-    await expect(root).toHaveAttribute("data-sf-wave", "four")
-    await expect(root).toBeVisible()
-    await expect(root.locator('[aria-busy="true"]')).toHaveCount(0)
-    if (readMonitors.get(page)?.failures.length) throw new Error("An original decision source refused the current read")
-    // A mounted frame/title also exists for unavailable states. Require the
-    // actual source-backed content before every positive visual capture.
-    const content: Record<string, string> = {
-      UI34: ".sf-decision-brief",
-      UI35: "section.sf-n24-section",
-      UI36: ".sf-decision-assumptions-layout",
-      UI37: "[data-sf-question-composer]",
-      UI38: "[data-choice-id]",
-      UI39: ".sf-decision-change-ledger",
-      UI40: ".sf-decision-receipt-ledger",
-      UI41: ".sf-decision-analysis-history",
-    }
-    await expect(root.locator(content[screen.id]!)).toBeVisible()
-    if (screen.id === "UI41")
-      expect(await root.locator('select[aria-labelledby="sf-analysis-case-label"] option:not([value=""])').count()).toBeGreaterThan(0)
-    const bounds = await root.boundingBox()
-    expect(bounds?.width).toBeLessThanOrEqual(1160)
-    if (["UI35", "UI36", "UI37"].includes(screen.id)) {
-      const back = root.getByRole("link", { name: localized ? "Voltar ao caso" : "Back to case", exact: true })
-      await expect(back).toBeVisible()
-      const backBounds = await back.boundingBox()
-      expect(backBounds).not.toBeNull()
-      expect(backBounds!.height).toBeGreaterThanOrEqual(44)
-      expect(backBounds!.width).toBeLessThan(bounds!.width)
-      expect(Math.abs(backBounds!.x - bounds!.x)).toBeLessThanOrEqual(1)
-    }
-    if (screen.id === "UI36") {
-      const filter = root.getByRole("combobox", { name: localized ? "Estado" : "State", exact: true })
-      await expect(filter.locator('option[value="all"]')).toHaveText(localized ? "Todos" : "All")
-    }
-    if (screen.id === "UI39" || screen.id === "UI40") {
-      const context = page.locator('[data-sf-context="case"]')
-      await expect(context.locator("dt")).toHaveText(localized ? "Caso atual" : "Current case")
-      await expect(context.locator("dd")).toHaveText(waveFourDecisionsData.objective)
-    }
-    await reflow(page)
+      screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000, reads, completedPostReads)
+    await assertScreen(page, screen, localized)
   } catch (error) {
     await diagnoseDecisionSources(page, owner, screen)
     throw error
+  } finally {
+    await postRead?.close()
+    await historyRead?.close()
   }
 }
 async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Page["locator"]>, name: string) {
@@ -222,7 +218,56 @@ async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Pag
   await capture(page, info, name)
 }
 
-waveFourTest("wave four decisions: real sources, retained drafts, uncertainty and native review", async ({ page, browser, installation, owner }, info) => {
+
+async function assertScreen(page: Page, screen: Screen, localized = false) {
+  const root = page.locator('[data-sf-decision="' + screen.id + '"]')
+  await expect(root).toHaveAttribute("data-sf-wave", "four")
+  await expect(root).toBeVisible()
+  await expect(root.locator('[aria-busy="true"]')).toHaveCount(0)
+  if (readMonitors.get(page)?.failures.length) throw new Error("An original decision source refused the current read")
+  // A mounted frame/title also exists for unavailable states. Require the
+  // actual source-backed content before every positive visual capture.
+  const content: Record<string, string> = {
+    UI34: ".sf-decision-brief",
+    UI35: "section.sf-n24-section",
+    UI36: ".sf-decision-assumptions-layout",
+    UI37: "[data-sf-question-composer]",
+    UI38: "[data-choice-id]",
+    UI39: '.sf-decision-change-ledger, [data-sf-state="empty"]',
+    UI40: ".sf-decision-receipt-ledger",
+    UI41: ".sf-decision-analysis-history",
+  }
+  await expect(root.locator(content[screen.id]!)).toBeVisible()
+  if (screen.id === "UI41")
+    expect(await root.locator('select[aria-labelledby="sf-analysis-case-label"] option:not([value=""])').count()).toBeGreaterThan(0)
+  const bounds = await root.boundingBox()
+  expect(bounds?.width).toBeLessThanOrEqual(1160)
+  if (["UI35", "UI36", "UI37"].includes(screen.id)) {
+    const back = root.getByRole("link", { name: localized ? "Voltar ao caso" : "Back to case", exact: true })
+    await expect(back).toBeVisible()
+    const backBounds = await back.boundingBox()
+    expect(backBounds).not.toBeNull()
+    expect(backBounds!.height).toBeGreaterThanOrEqual(44)
+    expect(backBounds!.width).toBeLessThan(bounds!.width)
+    expect(Math.abs(backBounds!.x - bounds!.x)).toBeLessThanOrEqual(1)
+  }
+  if (screen.id === "UI36") {
+    const filter = root.getByRole("combobox", { name: localized ? "Estado" : "State", exact: true })
+    await expect(filter.locator('option[value="all"]')).toHaveText(localized ? "Todos" : "All")
+  }
+  if (screen.id === "UI39" || screen.id === "UI40") {
+    const context = page.locator('[data-sf-context="case"]')
+    await expect(context.locator("dt")).toHaveText(localized ? "Caso atual" : "Current case")
+    await expect(context.locator("dd")).toHaveText(waveFourDecisionsData.objective)
+  }
+  await reflow(page)
+}
+
+type DecisionInstallation = { origin: string; mount: string; serverPassword: string }
+
+/** Each isolated journey keeps the original 780s case ceiling, without retries.
+ * Theme and viewport captures reuse an admitted leaf and retain its DOM oracles. */
+function beginDecisionCheck(page: Page, info: TestInfo) {
   waveFourTest.setTimeout(780_000)
   page.setDefaultTimeout(15_000)
   expect(info.project.metadata.bundle).toBe("production")
@@ -230,16 +275,13 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const diagnostic = observePage(page)
   const testEnteredAt = Date.now()
   const readTimes = observeDecisionReads(page, testEnteredAt)
-  const writes: Request[] = []
-  const analysisRequests: Request[] = []
-  page.on("request", (request) => {
-    if (action(request, "workbench-analysis")) analysisRequests.push(request)
-    if (action(request, "decision-edit") || action(request, "workbench-command", "sf_question_prepare") ||
-        action(request, "current-choice-promote") || action(request, "decision-apply"))
-      writes.push(request)
-  })
+  return { diagnostic, testEnteredAt, readTimes }
+}
 
-  await enter(page, owner, installation.origin + "/orchestra/sf-decisions", "Decisions")
+async function originalDecisionFixture(page: Page, owner: Owner, installation: DecisionInstallation,
+  onMain?: () => Promise<void>) {
+  await enter(page, owner, installation.origin + "/orchestra/sf-decisions", "Decisions",
+    undefined, { path: "/api/ui/projections/cases" })
   const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
   const findCase = async (objective: string) => {
     const link = list.getByRole("listitem").filter({ hasText: objective }).getByRole("link", { name: "Open decision", exact: true })
@@ -251,9 +293,10 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const main = await findCase(waveFourDecisionsData.objective)
   const editable = await findCase(waveFourDecisionsData.editableObjective)
   // The original UI33 href is admitted and decoded by the native route, not a test codec.
-  await enter(page, owner, main.href, "Case summary")
+  await enter(page, owner, main.href, "Case summary", undefined, { path: "/api/ui/projections/case" })
+  await onMain?.()
   const caseRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
-  await enter(page, owner, editable.href, "Case summary")
+  await enter(page, owner, editable.href, "Case summary", undefined, { path: "/api/ui/projections/case" })
   const editableRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
   if (!caseRef || !editableRef) throw new Error("The native case route omitted its source reference")
   expect(caseRef).toMatch(/^case:[^:]+:[^:]+$/)
@@ -280,12 +323,59 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     { id: "UI34", caseRef: editableRef, href: editable.href, title: "Case summary", titleBr: "Resumo do caso" },
     { id: "UI35", caseRef: caseRef, href: href("/alternatives"), title: "Alternatives", titleBr: "Alternativas" },
     { id: "UI36", caseRef: caseRef, href: href("/assumptions"), title: "Assumptions", titleBr: "Premissas" },
-    { id: "UI37", caseRef: caseRef, href: href("/questions"), title: "Questions", titleBr: "Perguntas" },
+    { id: "UI37", caseRef: caseRef, href: href("/questions"), title: "Questions", titleBr: "Perguntas",
+      recipientsAvailable: availability.some((entry) => entry.operation === "collaboration.recipients" &&
+        entry.state === "ready" && entry.operational === true) },
     { id: "UI38", caseRef: caseRef, href: href("/choice"), title: "Current choice", titleBr: "Escolha atual" },
     { id: "UI39", caseRef: caseRef, href: href("/changes"), title: "Prepared changes", titleBr: "Mudanças preparadas" },
     { id: "UI40", caseRef: caseRef, href: href("/history"), title: "Application result", titleBr: "Resultado da aplicação" },
     { id: "UI41", caseRef: caseRef, href: href("/analyses"), title: "Analysis", titleBr: "Análise" },
   ]
+
+  return { main, editable, caseRef, editableRef, source, editableSource, availability, screens }
+}
+
+async function readableConstraints(page: Page, info: TestInfo) {
+  const constraints = page.getByRole("complementary", { name: "Constraints", exact: true })
+  await expect(constraints.getByText("Cost coverage is unresolved or does not match the source.", { exact: true })).toBeVisible()
+  const constraintSummary = constraints.locator("[data-sf-gap-summary]")
+  await expect(constraintSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toHaveCount(1)
+  await expect(constraintSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toBeVisible()
+  await expect(constraintSummary.getByText("Service", { exact: true })).toBeVisible()
+  await expect(constraintSummary.getByText("Migration", { exact: true })).toBeVisible()
+  const rawConstraint = constraints.getByText("cost-coverage-unresolved-or-source-mismatch", { exact: true })
+  await expect(rawConstraint).toBeHidden()
+  const constraintSource = constraints.locator("details.sf-decision-source-scope")
+  await constraintSource.locator("summary").click()
+  await expect(rawConstraint).toBeVisible()
+  await expect(constraintSource.getByText("coverage:service:" + waveFourDecisionsData.pending, { exact: true })).toBeVisible()
+  await constraintSource.locator("summary").click()
+  await scrollPageTop(page)
+  await capture(page, info, "UI34-dark-desktop-readable-constraints-test-data")
+  await page.setViewportSize({ width: 320, height: 900 })
+  await reflow(page)
+  await constraints.scrollIntoViewIfNeeded()
+  await capture(page, info, "UI34-dark-320-readable-constraints-test-data")
+  await page.setViewportSize({ width: 1440, height: 1100 })
+}
+
+function observeDecisionCommands(page: Page) {
+  const writes: Request[] = []
+  const analyses: Request[] = []
+  page.on("request", (request) => {
+    if (action(request, "workbench-analysis")) analyses.push(request)
+    if (action(request, "decision-edit") || action(request, "workbench-command", "sf_question_prepare") ||
+        action(request, "current-choice-promote") || action(request, "decision-apply"))
+      writes.push(request)
+  })
+  return { writes, analyses }
+}
+
+waveFourTest("wave four decisions: original interactions, retained drafts and native review", async ({ page, installation, owner }, info) => {
+  const { diagnostic, readTimes } = beginDecisionCheck(page, info)
+  const { writes, analyses: analysisRequests } = observeDecisionCommands(page)
+  const { editable, caseRef, editableRef, source, editableSource, availability, screens } =
+    await originalDecisionFixture(page, owner, installation, () => readableConstraints(page, info))
 
   await waveFourTest.step("UI34 reads and edits the exact case with retained review fields and CAS", async () => {
     await openScreen(page, owner, screens[0]!)
@@ -318,7 +408,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await page.setViewportSize({ width: 390, height: 844 })
     await reviewViewport(page, info, review, "UI34-dark-390-review-actions-test-data")
     const saved = page.waitForResponse((response) => action(response.request(), "decision-edit"), { timeout: 40_000 })
-    await review.getByRole("button", { name: "Save decision", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/projections/case", query: { caseRef: editableRef } }, () =>
+      review.getByRole("button", { name: "Save decision", exact: true }).click())
     expect((await saved).status()).toBe(200)
     await expect(editor).toHaveCount(0)
     await ready(page, "Case summary")
@@ -397,14 +488,31 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       .getByRole("button", { name: "Review assumption", exact: true }).click()
     const detail = page.locator("#sf-n24-assumption-detail")
     await expect(detail).toContainText(waveFourDecisionsData.assumption)
-    await expect(detail).toContainText(source.assumptions[0]!.evidenceRefs[0]!.refId)
+    const evidence = detail.locator("details.sf-decision-source-scope")
+    await expect(evidence).not.toHaveAttribute("open", "")
+    await expect(evidence.getByText(source.assumptions[0]!.evidenceRefs[0]!.refId, { exact: true })).toBeHidden()
+    await evidence.locator("summary").focus()
+    await page.keyboard.press("Enter")
+    await expect(evidence.getByText(source.assumptions[0]!.evidenceRefs[0]!.refId, { exact: true })).toBeVisible()
+    await evidence.locator("summary").click()
     const missing = [...new Set(source.alternatives.flatMap((entry) => entry.result.costCoverage.derivedMissingCategoryIds))]
     expect(missing).toEqual([])
     await expect(page.getByRole("region", { name: "Missing cost categories", exact: true })
       .getByText("No missing categories are reported in the current results.", { exact: true })).toBeVisible()
     const divergences = page.getByRole("region", { name: "Divergences", exact: true })
-    await expect(divergences).toContainText("cost-coverage-unresolved-or-source-mismatch")
-    await expect(divergences).toContainText("coverage:migration:")
+    await expect(divergences.getByText("Cost coverage is unresolved or does not match the source.", { exact: true })).toBeVisible()
+    const divergenceSummary = divergences.locator("[data-sf-gap-summary]")
+    await expect(divergenceSummary.getByText("Migration", { exact: true })).toBeVisible()
+    await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toHaveCount(1)
+    await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toBeVisible()
+    const originalGaps = divergences.locator("details.sf-decision-source-scope")
+    await expect(originalGaps).not.toHaveAttribute("open", "")
+    await expect(originalGaps.getByText("cost-coverage-unresolved-or-source-mismatch", { exact: true })).toBeHidden()
+    await originalGaps.locator("summary").focus()
+    await page.keyboard.press("Enter")
+    await expect(originalGaps.getByText("cost-coverage-unresolved-or-source-mismatch", { exact: true })).toBeVisible()
+    await expect(originalGaps).toContainText("coverage:migration:")
+    await originalGaps.locator("summary").click()
     await capture(page, info, "UI36-dark-desktop-assumption-detail-test-data")
   })
 
@@ -418,6 +526,11 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     }
     const composer = page.locator("[data-sf-question-composer]")
     await composer.locator("summary").first().click()
+    if (!screens[3]!.recipientsAvailable) {
+      const recipient = composer.getByRole("combobox", { name: "Recipient", exact: true })
+      await expect(recipient).toBeDisabled()
+      await expect(recipient.locator("option")).toHaveText("No recipient")
+    }
     const question = composer.getByLabel("Question text", { exact: true })
     await question.fill(waveFourDecisionsData.question)
     await composer.getByRole("combobox", { name: "Related criterion", exact: true }).selectOption(source.criteria[0]!.id)
@@ -439,8 +552,18 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await capture(page, info, "UI37-dark-desktop-question-review-test-data")
     const prepared = page.waitForResponse((response) => action(response.request(), "workbench-command", "sf_question_prepare"), { timeout: 40_000 })
     await composer.getByRole("button", { name: "Confirm preparation", exact: true }).click()
-    expect((await prepared).status()).toBe(200)
+    const preparedResponse = await prepared
+    expect(preparedResponse.status()).toBe(200)
+    const preparedBody = object(await preparedResponse.json())
     await expect(composer.getByText("Preparing a question is not the same as recording or sending it.", { exact: true })).toBeVisible()
+    const unavailable = composer.getByText("The source did not return a confirmation reference. This prepared question cannot be recorded here.", { exact: true })
+    if (typeof preparedBody.outputRef === "string" && preparedBody.outputRef.length) {
+      await expect(composer.getByRole("region", { name: "Question confirmation", exact: true })).toBeVisible()
+      await expect(unavailable).toHaveCount(0)
+    } else {
+      await expect(unavailable).toBeVisible()
+      await expect(composer.getByRole("button", { name: "Record question", exact: true })).toHaveCount(0)
+    }
     expect(writes.filter((request) => action(request, "workbench-command", "sf_question_prepare"))).toHaveLength(1)
     const after = await readCase(page, installation.origin, installation.mount, caseRef)
     expect(after.version).toBe(source.version)
@@ -455,7 +578,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await expect(page.getByRole("button", { name: "Review current sources", exact: true })).toBeDisabled()
     await expect(page.getByText("The producer has not admitted a preparation for this choice.", { exact: true })).toBeVisible()
     await openScreen(page, owner, screens[5]!)
-    await expect(page.locator(".sf-decision-change-ledger")).toBeVisible()
+    await expect(page.getByText("No prepared changes are available for this case.", { exact: true })).toBeVisible()
+    await expect(page.locator(".sf-decision-change-ledger")).toHaveCount(0)
     await expect(page.locator(".sf-decision-change-select")).toHaveCount(0)
     await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
     await openScreen(page, owner, screens[6]!)
@@ -466,25 +590,14 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   })
 
   await waveFourTest.step("UI41 makes real POST reads and exposes exactly the producer's admitted selections", async () => {
-    const choicesResponse = page.waitForResponse((response) => {
-      const request = response.request()
-      return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-analysis" &&
-        object(request.postDataJSON()).action === "choices"
-    }, { timeout: 40_000 }).then((response) => ({ status: response.status(), request: response.request() }))
-    const [nativeRead] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
+    await openScreen(page, owner, screens[7]!)
+    const nativeRead = originalAnalysisChoices.get(page)
+    if (!nativeRead) throw new Error("The original analysis choices receipt was not observed")
     expect(nativeRead.status).toBe(200)
     expect(new URL(nativeRead.request.url()).origin).toBe(installation.origin)
     expect(nativeRead.request.postDataJSON()).toEqual({ action: "choices" })
-    // This original POST is a read. APIRequestContext retains its body independently
-    // of Chromium's response-handle lifetime; no CDP body or simulated response is used.
-    const response = await page.request.post(nativeRead.request.url(), {
-      headers: { origin: installation.origin, "content-type": "application/json", "idempotency-key": crypto.randomUUID() },
-      data: nativeRead.request.postDataJSON(),
-    })
-    expect(response.status()).toBe(200)
-    const body = object(await response.json())
-    expect(body.status).toBe("ok")
-    const choices = object(body.value)
+    // The forwarded original body is retained independently of Chromium's response cache.
+    const choices = object(nativeRead.body.value)
     const cases = choices.cases as { caseRef: { id: string; incarnation: string; version: number }; label: string }[]
     const analyses = choices.analyses as { skillId: string; label: string }[]
     const models = choices.models as { id: string; providerID: string }[]
@@ -529,21 +642,56 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       body: JSON.stringify({ cases: cases.length, analyses: analyses.length, models: models.length, preparationAvailable, selectionsAvailable, preparedInputExercised: published >= 0 && selectionsAvailable && preparationAvailable }) })
   })
 
-  for (const color of ["dark", "light"] as const) {
-    for (const screen of screens) {
-      await openScreen(page, owner, screen)
+  expect(diagnostic.pageErrors).toEqual([])
+  expect(diagnostic.consoleErrors).toEqual([])
+  await info.attach("decisions-scope", { contentType: "application/json", body: JSON.stringify({
+    surfaces: screens.map((screen) => screen.id),
+    realCommands: ["decision-edit", "sf_question_prepare"],
+    sourceState: { alternatives: 2, assumptions: 2, choices: 1, preparedChanges: 0, applicationReceipts: 0 },
+    preservedLimits: ["Current-choice preparation requires producer provenance", "No application was prepared or applied", "No analysis model or result was invented"],
+    consoleErrors: diagnostic.consoleErrors,
+    sourceReadTimes: readTimes,
+    operationAvailability: availability,
+  }) })
+})
+
+waveFourTest("wave four decisions: original English dark, light and narrow views", async ({ page, installation, owner }, info) => {
+  const { diagnostic, readTimes } = beginDecisionCheck(page, info)
+  const commands = observeDecisionCommands(page)
+  const { screens, availability } = await originalDecisionFixture(page, owner, installation)
+  for (const screen of screens) {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await openScreen(page, owner, screen)
+    for (const color of ["dark", "light"] as const) {
       await scheme(page, color)
+      await reflow(page)
+      await assertScreen(page, screen)
       await scrollPageTop(page)
       await capture(page, info, screen.id + "-" + color + "-desktop-test-data")
     }
-  }
-  await scheme(page, "dark")
-  await page.setViewportSize({ width: 390, height: 844 })
-  for (const screen of screens) {
-    await openScreen(page, owner, screen)
+    await scheme(page, "dark")
+    await page.setViewportSize({ width: 390, height: 844 })
+    await reflow(page)
+    await assertScreen(page, screen)
+    await scrollPageTop(page)
     await capture(page, info, screen.id + "-dark-390-test-data")
   }
+  expect(commands.writes).toEqual([])
+  expect(commands.analyses.map((request) => object(request.postDataJSON()).action)
+    .filter((selected) => selected !== "choices" && selected !== "list")).toEqual([])
+  expect(diagnostic.pageErrors).toEqual([])
+  expect(diagnostic.consoleErrors).toEqual([])
+  await info.attach("decisions-English-visual-scope", { contentType: "application/json", body: JSON.stringify({
+    surfaces: screens.map((screen) => screen.id), fixture: "fresh original four-decisions producer",
+    states: ["dark desktop", "light desktop", "dark 390"], originalAdmissionPerLeaf: true,
+    sourceReadTimes: readTimes, operationAvailability: availability, commandsWritten: 0,
+  }) })
+})
 
+waveFourTest("wave four decisions: original Portuguese views and retained question review", async ({ page, browser, installation, owner }, info) => {
+  const { diagnostic, testEnteredAt, readTimes } = beginDecisionCheck(page, info)
+  const commands = observeDecisionCommands(page)
+  const { screens, availability } = await originalDecisionFixture(page, owner, installation)
   const cookies = await page.context().cookies(installation.origin + installation.mount)
   expect(cookies.filter((cookie) => /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name))).toHaveLength(1)
   const portuguese = await browser.newContext({
@@ -556,15 +704,34 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const localized = await portuguese.newPage()
   localized.setDefaultTimeout(15_000)
   const localizedDiagnostic = observePage(localized)
+  const localizedCommands = observeDecisionCommands(localized)
   const localizedReadTimes = observeDecisionReads(localized, testEnteredAt)
   try {
     for (const screen of screens) {
       await openScreen(localized, owner, screen, true)
+      if (screen.id === "UI36") {
+        const divergences = localized.getByRole("region", { name: "Divergências", exact: true })
+        await expect(divergences.getByText("A cobertura de custos está pendente ou não corresponde à fonte.", { exact: true })).toBeVisible()
+        const divergenceSummary = divergences.locator("[data-sf-gap-summary]")
+        await expect(divergenceSummary.getByText("Migração", { exact: true })).toBeVisible()
+        await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toHaveCount(1)
+        await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toBeVisible()
+        await expect(divergences.locator("details.sf-decision-source-scope")).not.toHaveAttribute("open", "")
+      }
+      if (screen.id === "UI39") {
+        await expect(localized.getByText("Nenhuma mudança preparada está disponível para este caso.", { exact: true })).toBeVisible()
+        await expect(localized.locator(".sf-decision-change-ledger")).toHaveCount(0)
+      }
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
     await openScreen(localized, owner, screens[3]!, true)
     const composer = localized.locator("[data-sf-question-composer]")
     await composer.locator("summary").first().click()
+    if (!screens[3]!.recipientsAvailable) {
+      const recipient = composer.getByRole("combobox", { name: "Destinatário", exact: true })
+      await expect(recipient).toBeDisabled()
+      await expect(recipient.locator("option")).toHaveText("Sem destinatário")
+    }
     await composer.getByLabel("Texto da pergunta", { exact: true }).fill(waveFourDecisionsData.question)
     await composer.getByRole("button", { name: "Preparar pergunta", exact: true }).click()
     await expect(composer.getByRole("group", { name: "Confirmar preparação", exact: true })).toBeVisible()
@@ -574,19 +741,19 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await capture(localized, info, "UI37-pt-BR-dark-320-review-test-data")
     await composer.getByRole("button", { name: "Cancelar", exact: true }).click()
     await expect(composer.getByLabel("Texto da pergunta", { exact: true })).toHaveValue(waveFourDecisionsData.question)
+    expect(localizedCommands.writes).toEqual([])
+    expect(localizedCommands.analyses.map((request) => object(request.postDataJSON()).action)
+      .filter((selected) => selected !== "choices" && selected !== "list")).toEqual([])
     expect(localizedDiagnostic.pageErrors).toEqual([])
     expect(localizedDiagnostic.consoleErrors).toEqual([])
   } finally { await portuguese.close() }
 
+  expect(commands.writes).toEqual([])
   expect(diagnostic.pageErrors).toEqual([])
   expect(diagnostic.consoleErrors).toEqual([])
-  await info.attach("decisions-scope", { contentType: "application/json", body: JSON.stringify({
-    surfaces: screens.map((screen) => screen.id),
-    realCommands: ["decision-edit", "sf_question_prepare"],
-    sourceState: { alternatives: 2, assumptions: 2, choices: 1, preparedChanges: 0, applicationReceipts: 0 },
-    preservedLimits: ["Current-choice preparation requires producer provenance", "No application was prepared or applied", "No analysis model or result was invented"],
-    consoleErrors: diagnostic.consoleErrors,
-    sourceReadTimes: [...readTimes, ...localizedReadTimes],
-    operationAvailability: availability,
+  await info.attach("decisions-Portuguese-visual-scope", { contentType: "application/json", body: JSON.stringify({
+    surfaces: screens.map((screen) => screen.id), fixture: "fresh original four-decisions producer",
+    states: ["pt-BR dark desktop", "pt-BR question review 320"],
+    sourceReadTimes: [...readTimes, ...localizedReadTimes], operationAvailability: availability, commandsWritten: 0,
   }) })
 })

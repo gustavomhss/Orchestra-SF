@@ -65,7 +65,7 @@ export function SfProjectEditor(props: Readonly<{
     if ((field === "start" || field === "end") && typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)))
       return new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value + "T00:00:00Z"))
     if ((field === "budget" || field === "spent" || field === "pct") && Number.isFinite(Number(value)))
-      return new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 2 }).format(Number(value)) + (field === "pct" ? "%" : "")
+      return new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(Number(value)) + (field === "pct" ? "%" : " · " + t("sf.u05.projects.noCurrency"))
     return String(value)
   }
   return (
@@ -113,6 +113,7 @@ export function SfProjectEditor(props: Readonly<{
           </fieldset>
           <fieldset disabled={unavailable()}>
             <legend>{t("sf.u05.projects.financial")}</legend>
+            <p class="sf-u05-currency sf-u05-currency-hint">{t("sf.u05.projects.noCurrency")}</p>
             <div class="sf-u05-editor-grid">
               <For each={editFields.slice(6, 9)}>{(field) => (
                 <label class="sf-u05-field">{t(field.label)}
@@ -229,7 +230,7 @@ export function SfMilestoneEditor(props: Readonly<{
       </fieldset>
       <div class="sf-u05-form-actions">
         <button type="submit" class="mx-btn" disabled={!usable() || !draft.name.trim()}>
-          {t(draft.milestoneId ? "sf.u05.projects.milestoneSave" : "sf.u05.projects.milestoneAdd")}
+          {t("sf.u05.design.reviewChanges")}
         </button>
         <Show when={draft.milestoneId}>
           <button type="button" class="mx-btn" disabled={!usable()} onClick={() => props.onDelete(draft.milestoneId)}>

@@ -38,6 +38,11 @@
 .sf-n21-coverage { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 16px 0; }
 .sf-n21-coverage section { display: grid; gap: 8px; }
 .sf-n21-coverage h2 { font-size: var(--orchestra-font-size-md); color: var(--mx-strong); }
+/* Share intrinsic label/value rows so translated labels do not move the figures. */
+@media (min-width: 980px) {
+  .sf-n21-metrics { grid-template-rows: auto auto auto; }
+  .sf-n21-metric { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; }
+}
 @media (max-width: 979px) {
   .sf-n21-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .sf-n21-metric { padding: 0; border: 0; }

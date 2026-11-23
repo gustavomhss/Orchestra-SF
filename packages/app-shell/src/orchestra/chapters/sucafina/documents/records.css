@@ -95,3 +95,32 @@
 
 .sf-files[data-sf-records="six"] .sf-records-engine-details[open] { display: grid; gap: 16px; }
 .sf-files[data-sf-records="six"] .sf-records-engine-details .mx-card { padding: 16px; }
+
+.sf-records-upload-targets {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-inline-size: 0;
+}
+.sf-records-upload-targets > label {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+.sf-records-upload-targets > p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+@container (min-width: 621px) {
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+  }
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] > .sf-records-upload-targets {
+    grid-column: 2 / -1;
+  }
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] > label:has(input[type="file"]) {
+    grid-column: 1 / span 2;
+  }
+}

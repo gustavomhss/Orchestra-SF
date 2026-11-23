@@ -1,0 +1,1789 @@
+{
+  "schemaVersion": 1,
+  "agent": "behavior_audit",
+  "date": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "productEdited": false,
+  "probe": {
+    "branch": "sf-audit-behavior",
+    "candidate": "e82d41143cc8041a970e9a5081ebb88df2349b4e",
+    "snapshot": "682df318a52466621eccd1cf9db7f187963f1c30",
+    "run": 45122542709,
+    "job": 137519394227,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122542709",
+    "artifact": {
+      "id": 14795020078,
+      "bytes": 24067714,
+      "sha256": "081796dbfbedb8a62c8726623ae85e3b50d7a69719409b3a60fb0de6f46e7f68"
+    },
+    "request": {
+      "package": "app",
+      "packageSelector": "@orchestra/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/orchestra/team-profile-visual.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "runtime": {
+      "bundle": "production",
+      "engine": "chromium",
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "passed": 12,
+      "failed": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "caseDurationMs": 11933
+    },
+    "localEvidence": [
+      "behavior-probe/test-ci-evidence/request.json",
+      "behavior-probe/test-ci-evidence/playwright-runtime.json",
+      "behavior-probe/audit-unsent-draft-recovery.json",
+      "behavior-probe/COMPONENT-VISUAL-Teams-provenance.json",
+      "behavior-probe/report-33e96bb103731c522a57.json"
+    ],
+    "qualification": "Single deliberately targeted reproduction. HTTP fixture authenticates a synthetic principal; original production assets and real controller/UI. No submitted prompt or mutation. Reconnect is fresh READY/CONNECTING with pending HTTP event request, not live Microsoft or open SSE stream."
+  },
+  "findings": [
+    {
+      "id": "BA-01",
+      "severity": "P1",
+      "status": "Reproduced in production-browser CI with existing HTTP fixture",
+      "title": "Teams apaga um rascunho nunca enviado após interrupção do stream",
+      "surfaces": [
+        "Teams/new chat"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/context/team-sessions.ts",
+          "lines": "167–195; 259–299; 323–332",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/team-profile-visual.fixture.ts",
+          "lines": "153–165; 200–218",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/orchestra/team-profile-visual.spec.ts",
+          "lines": "412–460",
+          "commit": "e82d41143cc8041a970e9a5081ebb88df2349b4e"
+        }
+      ],
+      "evidence": [
+        "behavior-probe/audit-unsent-draft-recovery.json",
+        "behavior-probe/test-ci-evidence/playwright-runtime.json"
+      ],
+      "steps": [
+        "Abrir novo chat da mesma Team com autoridade válida.",
+        "Digitar texto sem enviar.",
+        "Encerrar somente a conexão de eventos.",
+        "Acionar Try again, mantendo Team/principal/contexto/authorityGeneration.",
+        "Observar editor editável em READY/CONNECTING com texto vazio."
+      ],
+      "result": "12 casos originais passaram; único caso novo falhou na asserção final. Esperado texto exato; recebido vazio. 14 observações do editor em 10s. Writes=[]; somente leituras; nenhuma submissão.",
+      "cause": "retire(stream) salva no mapa transitório, mas quarentena é criada somente para reason=refresh. Em seguida o mapa e prompt são zerados; refresh posterior não pode recuperar texto.",
+      "fix": "Quarentena apenas em memória para interrupção de transporte, restituída somente após revalidação do mesmo owner/F02 stamp/authorityGeneration. Manter purge para logout/revoked/principal-change e não repetir POST.",
+      "qualification": "Não é Microsoft live; estado validado READY/CONNECTING com GET /event pendente, não um stream SSE live aberto. Uma reprodução dirigida; não é estimativa de frequência nem diagnóstico de flake."
+    },
+    {
+      "id": "BA-02",
+      "severity": "unrated",
+      "status": "Observed ambiguous reconnect feedback in READY/CONNECTING; stale warning after open stream is not runtime-proven",
+      "title": "Aviso de updates interrompidos permanece durante a nova conexão pendente",
+      "surfaces": [
+        "Teams/new chat"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/pages/team-profile.tsx",
+          "lines": "105–110; 132–139; 182–209; 515",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/context/team-sessions.ts",
+          "lines": "259–299",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "evidence": [
+        "behavior-probe/COMPONENT-VISUAL-Teams-audit-unsent-after-same-authority-refresh-dark-390-evidence.json"
+      ],
+      "observation": "O refresh da mesma autoridade retorna o editor e Recent chats em READY/CONNECTING, mas o banner ainda instrui Chat updates stopped. Refresh access before continuing. O caso não recebeu evento no novo stream; portanto updates stopped ainda pode descrever corretamente o transporte.",
+      "cause": "begin(refresh) preserva chat.notice; chatNotice só oculta o notice quando ele é idêntico ao erro local unavailable, fazendo-o reaparecer quando local status vira ready.",
+      "fix": "Distinguir feedback de revalidação de autoridade, conexão em andamento e stream aberto. Antes de classificar stale warning como defeito independente, enviar um evento válido na nova conexão do fixture original e verificar UI, sem alterar state diretamente.",
+      "qualification": "Não contado como P2 confirmado. O único runtime novo prova aviso durante CONNECTING, não aviso incorreto depois de updates recuperados. A indisponibilidade no error-context posterior vem de finally/dispose após a asserção.",
+      "countAsConfirmedDefect": false,
+      "mechanism": "pages/team-profile.tsx:105–110 oculta notice somente quando duplica erro local unavailable; begin(refresh):139 o preserva. team-sessions.ts:264–266 muda stream para open ao receber evento, sem limpar notice. Isso sugere persistência posterior no caminho de fonte, mas o caso não a exercitou."
+    },
+    {
+      "id": "BA-03",
+      "severity": "P2",
+      "status": "Observed in original planning screenshot and source",
+      "title": "Editar uma alocação existente mostra Add allocation",
+      "surfaces": [
+        "CAP21"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "lines": "475–480; 551–557; 621–624",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+          "lines": "229–248",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        89
+      ],
+      "observation": "O caso abre Edit do registro existente; o formulário conserva dados desse registro, mas o h2 usa a chave create-allocation incondicionalmente.",
+      "fix": "Distinguir criação e edição por intenção/id, exibir Edit allocation + nome humano. Revisão deve identificar o registro, não apenas allocations."
+    },
+    {
+      "id": "BA-04",
+      "severity": "P2",
+      "status": "Observed at horizontal endpoint in original screenshot",
+      "title": "Ações de versões perdem toda a identificação da linha em 320px",
+      "surfaces": [
+        "CAP23"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/index.tsx",
+          "lines": "375–414; 547–565",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "lines": "138–145; 229–247",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        22,
+        32,
+        33
+      ],
+      "observation": "Na captura do endpoint Actions existem duas linhas visualmente idênticas de Copy version / Lock version / Make official / Delete version; os nomes e estados estão fora do viewport.",
+      "fix": "Preservar identidade junto às ações (coluna fixa, menu ancorado no nome, ou apresentação por cartões em largura estreita). Manter etapa de revisão com a identidade exata.",
+      "qualification": "Não foi observada mutação no registro errado. Fonte usa recordRef correto e revisão traz nome. É perda de contexto/risco de seleção, não bypass da confirmação."
+    },
+    {
+      "id": "BA-05",
+      "severity": "P2",
+      "status": "Observed across multiple planning originals and source",
+      "title": "Revisões elevam UUIDs e chaves técnicas à identidade principal",
+      "surfaces": [
+        "CAP20",
+        "CAP21",
+        "CAP22",
+        "CAP25"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "lines": "691–692",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/fx/index.tsx",
+          "lines": "579–582",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/allocations/index.tsx",
+          "lines": "621–624",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "238–242; 323–327",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        11,
+        68,
+        80,
+        83,
+        89,
+        90
+      ],
+      "observation": "CAP20 e CAP22 usam UUID da versão como subtítulo/rodapé; CAP21 usa allocations; referências extensas aparecem três vezes na comparação, consumindo várias linhas em 320px.",
+      "fix": "Usar nome humano + ano/versão na primeira hierarquia. Manter referência técnica exata em divulgação Record reference com copiar, quando necessária para rastreabilidade. Não remover proveniência nem trocar por identificador inventado."
+    },
+    {
+      "id": "BA-06",
+      "severity": "P3",
+      "status": "Observed in original screenshot and exact source path",
+      "title": "Aviso bloqueante duplica a mesma razão",
+      "surfaces": [
+        "CAP20",
+        "Shared change review"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "312–318",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/headcount/index.tsx",
+          "lines": "704–713",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        83
+      ],
+      "observation": "A revisão Sync roster indisponível mostra Action not admitted by the original producer duas vezes seguidas. A lista concatena blockingReasons e confirmation.reasons sem eliminar duplicatas.",
+      "fix": "Deduplicar razões por chave/parâmetros ou atribuir cada razão a um único componente. Preservar bloqueio de sincronização sem preview."
+    },
+    {
+      "id": "BA-07",
+      "severity": "P3",
+      "status": "Observed after keyboard horizontal scrolling in original screenshot",
+      "title": "Comparação mensal rola título e cabeçalho Month para fora do recorte",
+      "surfaces": [
+        "CAP23 compare"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/index.tsx",
+          "lines": "271–305",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/compare/compare.css",
+          "lines": "9–22; 36–43",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        21
+      ],
+      "observation": "No recorte nomeado keyboard-monthly-scroll, Budget vira dget e Month vira onth; somente os th de tbody ficam sticky, caption e cabeçalho da primeira coluna acompanham o scroll.",
+      "fix": "Manter título fora da região que rola e fixar o cabeçalho de identidade junto aos rótulos de mês. Revisar ambos endpoints sem reduzir os valores nem esconder colunas.",
+      "qualification": "Rótulos de mês no corpo permanecem presentes. A evidência mostra um checkpoint de teclado; não comprova wheel/trackpad, browser zoom ou todos os endpoints."
+    },
+    {
+      "id": "BA-08",
+      "severity": "P3",
+      "status": "Observed in original localized desktop screenshot; source supports layout mechanism",
+      "title": "KPIs perdem alinhamento vertical quando o rótulo PT-BR ocupa duas linhas",
+      "surfaces": [
+        "CAP24 Procurement dashboard"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/overview.css",
+          "lines": "7–19; 42–46",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+          "lines": "139–145; 197–209",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        38,
+        59
+      ],
+      "observation": "Em 1440×1100 PT-BR, Pedidos abertos neste filtro de status quebra em duas linhas e o valor 7 fica abaixo da linha visual dos quatro valores financeiros. O conjunto EN desktop mostra os cinco valores alinhados. A banda perde a simetria entre métricas na tradução.",
+      "mechanism": "Cada métrica flui de modo independente: dt com altura natural, seguido de dd com margin-top:12px. O grid externo alinha somente as caixas, não a linha dos valores.",
+      "fix": "Reservar uma linha compartilhada de rótulos com altura correspondente ao maior rótulo e uma linha compartilhada de valores, ou usar subgrid equivalente. Manter o layout mobile de rótulo/valor lado a lado e testar textos longos sem truncar informação.",
+      "qualification": "Desalinhamento de apresentação, sem erro de cálculo ou ausência de valor. Não foi medido zoom real."
+    },
+    {
+      "id": "BA-09",
+      "severity": "P3",
+      "status": "Observed in EN light and PT-BR dark desktop originals; source width policy verified",
+      "title": "Fila de aprovações comprime a identidade em desktop apesar do espaço livre no assunto",
+      "surfaces": [
+        "CAP26 PR approval queue"
+      ],
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx",
+          "lines": "624–628",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "lines": "20–28",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+          "lines": "90–96; 125–130; 219–230",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        42,
+        77
+      ],
+      "observation": "Em 1440×1100, PR-2026-0003 divide-se após PR-2026- e Open record/Abrir registro ocupa duas linhas na primeira coluna. Ao mesmo tempo, a coluna Subject/Assunto mantém grande área vazia. O código de referência fica mais lento de escanear e as linhas ficam desnecessariamente altas.",
+      "mechanism": "A referência recebe widthPolicy content com minPx92, enquanto a coluna de assunto é flex weight1. O helper atribui width100% à única coluna flex e apenas min/max à coluna content; o resultado observado estreita a referência.",
+      "fix": "Proteger a largura legível da identidade e do comando de abertura, reservar o restante ao assunto e manter quebra normal para títulos. Revalidar a mesma fila EN/PT-BR no desktop e o scroller 320px.",
+      "qualification": "A identidade permanece completa e a navegação não foi demonstrada incorreta. É problema de proporção/legibilidade; não se afirma corrupção de alvo."
+    }
+  ],
+  "coverage": [
+    {
+      "dimension": "Produção/runner",
+      "measured": "Probe novo: bundle production, Chromium, Linux x64, 1 worker, retries0, repeatEach1; 13 casos,12pass+1falha final.",
+      "missing": "Não mede Firefox/WebKit, GPU/OS/dispositivo real nem taxa de intermitência."
+    },
+    {
+      "dimension": "Autoridade e rascunhos Teams",
+      "measured": "Probe mesmo owner/Team/namespace termina um stream; revalida; editor read-only->editable observado e texto perdido. Tests fonte cobrem refresh, geração alterada, trocaTeam cancelada, logout/revoked e operações pendentes.",
+      "missing": "Não é Microsoft/OAuth live, conexão SSE persistente ou teste de latência/reconexão real prolongada; testes fonte não são nova execução dessa suíte."
+    },
+    {
+      "dimension": "Navegação",
+      "measured": "Testes fonte existentes verificam Team A→B→A com diálogo, voltar/avançar e reads por sessão; CAP21 list/detail/return e cancel/revise com leituras produtoras constam do percurso planning.",
+      "missing": "Não existe nova matriz navegador×rota×dirty×history×hash/query; foco e scroll após popstate em todas as telas não qualificados."
+    },
+    {
+      "dimension": "Races/resultado desconhecido",
+      "measured": "Fonte usa AbortController/generation, valida namespace e não faz replay automático; testes explícitos de late HTTP/stream, unknown create/prompt e contexto alterado.",
+      "missing": "Sem prova universal em cada superfície, nem campanhas randomized de ordem de resposta. Bloqueios produtor/autoridade mantidos."
+    },
+    {
+      "dimension": "Foco/teclado",
+      "measured": "Capturas planning de sortFocus, monthlyScroll e CAP28 último anchor/destino; UI de review cancel/revise; teste Teams nativo de diálogo nas12cases anteriores.",
+      "missing": "Zoom200/400%, visual keyboard móvel, IME, screenreader e todas as ordensTab não medidos. Captura de focus não comprova todos controles."
+    },
+    {
+      "dimension": "Overflow",
+      "measured": "Region local horizontal visível; probe Teams captura pageOverflow=0 e shellOverflow=0 em390. Planning primeiros/alguns endpoints observados.",
+      "missing": "Wheel/trackpad/touch scrolling e toda combinação de endpoint/coluna não inferidos de screenshot nem scroll programático."
+    },
+    {
+      "dimension": "Imagem/idioma",
+      "measured": "97 hashes originais Planning abertos diretamente: 57 desktop1440×1100 e40 mobile320×900; EN/PT-BR, light/dark, todos os originais únicos do artefato. Mais3 PNGs Teams390×844. 100pathsPlanning incluem3aliases não recontados.",
+      "missing": "100 imagens únicas vistas contando Teams não equivalem a100cenários independentes. O artefato finito não contém cada combinação de locale/tema/viewport/estado; editor/revisão PT-BR completos, zoom real e endpoints não capturados continuam sem prova."
+    },
+    {
+      "dimension": "Baseline #715",
+      "measured": "51casos de navegador finais=37foundation+3business+6planning+5workflows, retries0.59checkpoints focais registrados=17+7+14+21.",
+      "missing": "Não é51telas ou59problemas corrigidos. Somente7foundationoriginais reabertos+10aliasesSHA dos abertos antes; restantecapturasfocais."
+    },
+    {
+      "dimension": "Limites nativos",
+      "measured": "Manifest registra UI42/UI44 denied; UI43/51/52/53/61/63/64/65/66/70 não renderizados.",
+      "missing": "Não qualificar UI de folhas cujo produtor não foi executado/admitido. Revisões de PRs ativas podem ampliar cobertura depois."
+    },
+    {
+      "dimension": "Material/contraste",
+      "measured": "Probe anexa cores computadas camadas sólidas e fontes; fotos mostram os materiais reais. Não observado corte de alvos de revisão em320 nas amostras.",
+      "missing": "Sem conformanceWCAG global, medições pixel-a-pixel sob imagens/glass/blur, orçamento deGPU ou transições temporalmente verificadas."
+    }
+  ],
+  "baseline": {
+    "pullRequest": 715,
+    "finalHead": "57577652a5ffd12b3f12c6750bc2d0ea857cce41",
+    "manifest": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+    "cases": 51,
+    "registeredFocalOriginals": 59,
+    "cohorts": [
+      {
+        "id": "foundation",
+        "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+        "snapshot": "b46ae0b4681e370b4863cd7eb95c2f538b810335",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114820142",
+        "passed": 37,
+        "failed": 0,
+        "retries": 0,
+        "visualCheckpoints": 17
+      },
+      {
+        "id": "business",
+        "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+        "snapshot": "f7e7f8b6beea99ae3ff2744ff0810164bd46a354",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114141134",
+        "passed": 3,
+        "failed": 0,
+        "retries": 0,
+        "visualCheckpoints": 7
+      },
+      {
+        "id": "planning",
+        "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+        "snapshot": "3678ea8717bca8e37c566973e42e03eab02128e3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114138448",
+        "passed": 6,
+        "failed": 0,
+        "retries": 0,
+        "visualCheckpoints": 14
+      },
+      {
+        "id": "workflows",
+        "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+        "snapshot": "246851763f7633616d11740425d21c0b2fe88524",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114143066",
+        "passed": 5,
+        "failed": 0,
+        "retries": 0,
+        "visualCheckpoints": 21
+      }
+    ],
+    "productBoundary": {
+      "nativeSource": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+      "finalProductSource": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+      "changedPaths": [
+        "packages/app-shell/src/orchestra/chapters/kpis.css"
+      ],
+      "docsAddedAfterProductQualification": [
+        "packages/app-shell/src/orchestra/DESIGN.md",
+        "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+        "docs/qa/sucafina/visual-audit/round-two-runs.json"
+      ]
+    },
+    "visualCounting": {
+      "registeredCheckpoints": 59,
+      "foundationFinalOriginalsOpened": 7,
+      "foundationExactHashAliasesOfPreviouslyViewedOriginals": 10,
+      "businessOriginalsOpened": 7,
+      "planningOriginalsOpened": 14,
+      "workflowOriginalsOpened": 21,
+      "duplicateAttachmentsCounted": false
+    },
+    "nativeLimits": {
+      "deniedInputSurfaces": [
+        {
+          "surface": "UI42",
+          "state": "denied",
+          "inputsOrResultsQualified": false
+        },
+        {
+          "surface": "UI44",
+          "state": "denied",
+          "inputsOrResultsQualified": false
+        }
+      ],
+      "unrenderedLeaves": [
+        {
+          "surface": "UI43",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI51",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI52",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI53",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI61",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI63",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI64",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI65",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI66",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        },
+        {
+          "surface": "UI70",
+          "leafRendered": false,
+          "leafVisualApprovalClaimed": false
+        }
+      ]
+    }
+  },
+  "withdrawn": [
+    {
+      "hypothesis": "Same-key row replacement fails focus restoration because joined IDs are equal",
+      "reason": "Solid on(...) responds to tracked source invalidation and does not memoize/equality-compare accessor result. No proof of defect; withdrawn, no new probe."
+    },
+    {
+      "hypothesis": "Any historic red CI run is flaky",
+      "reason": "No. #715 diagnostic failures include real product defects and a locale fixture bug. Single failure, timeout or expectation polling entries do not establish flakiness."
+    }
+  ],
+  "overlaps": [
+    {
+      "pr": 716,
+      "scope": "Settings/providers/Decisions/Planner - coordinate before applying CAP21/CAP23 revisions."
+    },
+    {
+      "pr": 713,
+      "scope": "UI57–70 - active overlapping product work; no changes from this agent."
+    },
+    {
+      "pr": 613,
+      "scope": "UI42–56 - active overlapping product work; no changes from this agent."
+    }
+  ],
+  "images": {
+    "countPlanning": 97,
+    "countProbe": 3,
+    "countDuplicates": 0,
+    "planning": [
+      {
+        "index": 0,
+        "file": "CAP27-dark-320-confirmed-supplier-detail-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-320-confirmed-supplier-detail-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "b2890e3efaa844cffda5c33866b2820ebc48d18e8dac150e58cbd49492b5ab03",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 1,
+        "file": "CAP27-dark-320-supplier-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-320-supplier-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "f8b5961cfbac1422675c670d68811447fcd8a09a32a3a9df22f9939460b04d06",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 2,
+        "file": "CAP27-dark-desktop-confirmed-supplier-detail-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-desktop-confirmed-supplier-detail-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "aa378bd3821d36e40fec581307cf6d8164a5e22ef27e93c60988060ff48f28ac",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 3,
+        "file": "CAP27-dark-desktop-create-supplier-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-desktop-create-supplier-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "436248255d19e5a8fef6116af7c49191f35703604036945043d42f8a3254ad15",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 4,
+        "file": "CAP27-dark-desktop-supplier-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-desktop-supplier-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "fdd284852765b8ac53d29a6612fa449bcceb6b0bcbceadacc8e4aa67464d121c",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 5,
+        "file": "CAP27-dark-desktop-supplier-review-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-desktop-supplier-review-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "13e1c0bdea5fa74b07627ef85a25faf3911fcca8d7d4e359f76dd19bd3ca5b0f",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 6,
+        "file": "CAP27-light-320-confirmed-supplier-detail-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-320-confirmed-supplier-detail-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "d0be5a81b6b8c037ed655c31e6e868576c03b31e6bdde78e314e41d00d294830",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 7,
+        "file": "CAP27-light-320-supplier-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-320-supplier-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "7c20813e337828f4e1dfc0cde79f25b2919c55578475726ba5c293b84f00fd70",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 8,
+        "file": "CAP27-light-desktop-confirmed-supplier-detail-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-desktop-confirmed-supplier-detail-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "6c6b6d4487fa933581798e0d484a86abab7f39674fd563ac165e71c52f56930f",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 9,
+        "file": "CAP27-light-desktop-supplier-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-desktop-supplier-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "de6a3a2aa9534e6216730c5c214b4f4c4b99462785fd92411bcf5ef142e01b87",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 10,
+        "file": "test-finished-1.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/test-finished-1.png",
+        "method": "view_image original PNG",
+        "sha256": "e1aea2d5519636e146a9aac31e3637f35e5c61695406f4b338e87f28f6f7a6fa",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 11,
+        "file": "CAP22-dark-320-provenance-review-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-dark-320-provenance-review-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "3abe77dd63609441ed7e82b6bef3c6141c5e2a673ba9d27ce84d3acc26627b8e",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 12,
+        "file": "CAP22-dark-320-rate-editor-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-dark-320-rate-editor-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "803f36208bfe0a5ce4426c3213dc56ad0df95f28c9bdf0f102593c8b8220235a",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 13,
+        "file": "CAP22-dark-desktop-confirmed-provenance-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-dark-desktop-confirmed-provenance-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "02176630a4a8b0f0196a04be99c7af5d41822ac37ce1e1e1724da4adf7d839de",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 14,
+        "file": "CAP22-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "452c19fe0ed56ff7e7fa6d135e00325f75431785a9a2194f1b5ac7594fe37483",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 15,
+        "file": "CAP22-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "104fbb97159b98cb91eb846f3c6e3def7b8daf4524f9c9a9490c2b450987048b",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 16,
+        "file": "CAP22-rates-and-provenance-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-rates-and-provenance-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "fab958f7bc7d6cce012f56a5ddd4b8e53eb40cf0b356daad688b08825264b8f3",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 17,
+        "file": "CAP22-rates-and-provenance-light-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-rates-and-provenance-light-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "ec5c2d853070eda90dd3feb56c11d474380aead562027c8947f60359cce121fa",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 18,
+        "file": "CAP22-rates-and-provenance-light-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP22-rates-and-provenance-light-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "a8b9cf94be1bcd54f7b123be8df80b56fe9cf504d8dbe1bcaf500cdb63c33f15",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 19,
+        "file": "CAP23-compare-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-compare-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e67b99d08cd443b530f48c2308f3ff3bfa9dd35601304451edc18229a9ae246f",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 20,
+        "file": "CAP23-compare-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-compare-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "a32146654805feef8fd9fa08564e9984dbf5f5b5c3d3f02a3457ea0ab443996e",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 21,
+        "file": "CAP23-dark-320-keyboard-monthly-scroll-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-keyboard-monthly-scroll-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "f3b172a598bd99b6f36d338ebe6bd81c8f879aa4b7ea4877b7d73ace2b5695b1",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 22,
+        "file": "CAP23-dark-320-version-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "5ee0d0e6acb2d78ef1952f4c5f68e8d6dffcaa3765035cf7e3e0ba3ad8cb8975",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 23,
+        "file": "CAP23-dark-320-version-editor-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-editor-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "b6239e90e1806cb44f298e6b1b7fc7207bcc0d46ae38fa29acf1a91aec70c705",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 24,
+        "file": "CAP23-dark-320-version-review-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-review-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "267f3ad46999e6f8f22868ffdbc968fd9a399971386c2b841a82ad1630836456",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 25,
+        "file": "CAP23-dark-desktop-confirmed-copy-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-desktop-confirmed-copy-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "9d0a19586f8f5f72a4ed62a7104827b8eeab915220b97345040369d777e88388",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 26,
+        "file": "CAP23-dark-desktop-copy-review-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-desktop-copy-review-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "348126be4f263618b7a473145587dbc4f21332551891dfc3bea88515c72b4280",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 27,
+        "file": "CAP23-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "a670a17c091dc123ce33d9034ba1f7ec7f4af0f61297305ea47c868225f998c0",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 28,
+        "file": "CAP23-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "2ed5917a22d782f5d3b04891495b546503c0a62344c0ae9eead4cc355f5cf01a",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 29,
+        "file": "CAP23-source-comparison-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-source-comparison-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "606eee11356f57a8bcc9e19f0657f9ab0a6c37aaa8645a3ecb4d6f6f71f9b482",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 30,
+        "file": "CAP23-source-comparison-light-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-source-comparison-light-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "831e93d4690fcc4d42515988e9d89eb5fda4f492ad81f10107dc1934dc049e0a",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 31,
+        "file": "CAP23-source-comparison-light-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-source-comparison-light-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "d4222c7247c39264f6acc43f0598bd3c91a6ef39ae87162bb3dcf8dfdddc89cd",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 32,
+        "file": "CAP23-version-ledger-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e28afd8183b4493fd4061ad989594b18e5751f2312428a9ee4ca70fda5bc2dd2",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 33,
+        "file": "CAP23-version-ledger-light-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "03d09ae90db7d52d4b6bbd5c4d56e7601c71a2ba3c56bd026e9f0ad79526cbe3",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 34,
+        "file": "CAP23-version-ledger-light-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e6646aa611d50db9f503ce887ab6ef021962d5270422701698baeb7a8c13c78a",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 35,
+        "file": "test-finished-1.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/test-finished-1.png",
+        "method": "view_image original PNG",
+        "sha256": "6d6df5f40ee127c5f9b416d9a39b99136d4cd055ce9c0cfd98671605498c63bd",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 37,
+        "file": "CAP24-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "23a695cc7993d05e7f7a657cac9d894a2faf46a5bb211743ed41b35862e77685",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 38,
+        "file": "CAP24-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "de14db07021b36d99ef20e616f64b427697cb80d99220f997094f2b24901001a",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 39,
+        "file": "CAP25-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP25-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "b1ec9f93dc61dd4446096796cb52b646d26dcf9ced2013c4d1501782a753fab5",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 40,
+        "file": "CAP25-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP25-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "c0dc57b28f29738a523dd8ebc88cbbd2c242143c2b333f61b869f011012a6688",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 41,
+        "file": "CAP26-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "73a7f29a56a10218f4840526dbf5afdfe8787dae0e12dda118b809b268423ef6",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 42,
+        "file": "CAP26-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "dc7c56db62419df920bcc34f6768abcc539e7c3a68e45955c9d12804dcb1ead1",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 43,
+        "file": "CAP27-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP27-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "051071d3826536e77630b7d4645381ec3992da7bb87e933b481ba5d520d93f23",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 44,
+        "file": "CAP27-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP27-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "101ff6a5e3c8989f53bb171c8ef90efa67e02ec705b122b1aaaf9038b3768680",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 45,
+        "file": "CAP28-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP28-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "de0a69b81adf4ac63c89faffc684556bcead1cd7027b388243acd1ab96017155",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 46,
+        "file": "CAP28-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP28-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "6fbc2d2e767fb6a214643346517bc9aa5f1b1016518c14d74b12cba52e560f17",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 47,
+        "file": "test-finished-1.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/test-finished-1.png",
+        "method": "view_image original PNG",
+        "sha256": "40ec87083451a456dba89720cc7608d07b2cb697670b05a1bd9dc2f7642f7f67",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 48,
+        "file": "test-finished-2.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/test-finished-2.png",
+        "method": "view_image original PNG",
+        "sha256": "55400ad045cdd89eaf077d6579debf47aa535863486f48dcad0c5c36e88b984a",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 49,
+        "file": "CAP28-dark-320-settings-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-dark-320-settings-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "560ad1f44167228c4fb563a9f35812810ebb4125a226b9dfb8712fe214fea14b",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 50,
+        "file": "CAP28-dark-desktop-settings-review-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-dark-desktop-settings-review-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "81267a8f29302ff9d9c55cb795748f205ce0e305f508a647d9b63ce0d68ef288",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 51,
+        "file": "CAP28-dark-desktop-settings-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-dark-desktop-settings-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "c2116aed7ab6b0c3bec7ca2261780213870a119abc7b6a6aadd3d4b9ca523862",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 52,
+        "file": "CAP28-light-320-last-section-focus-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-last-section-focus-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "a058bfdc27c4385be1821633963e58b2bfbbdf1e7e3d88b84c0cd23581e54ee0",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 53,
+        "file": "CAP28-light-320-section-destination-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-section-destination-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e7583355959cfd4c5bae522990958ffb20209de5525d3f63014beed7255cb89a",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 54,
+        "file": "CAP28-light-320-settings-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-settings-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "8777c6d6b937b86fb1b06a5aa56056345a381200457a8014763a67206bc75aa3",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 55,
+        "file": "CAP28-light-desktop-settings-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-desktop-settings-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "8f9b8ab97346e55bb0ee75c2736075c5f4e17a5aa5fcb2728bed974b7e2160e2",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 56,
+        "file": "test-finished-1.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/test-finished-1.png",
+        "method": "view_image original PNG",
+        "sha256": "0f21fb42ae396574d297def0cbc07065b93d5d2bf2325a01a42acc118cad1606",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 57,
+        "file": "CAP24-dark-desktop-source-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "318ec4ea97a70c6382bbc6c3b3291be27255acc0ec601cdf70863877654ce2b0",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 58,
+        "file": "CAP24-light-320-source-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "db729e46315042f5771491d76cac5c2aff6e8be79f6120ad8d34a301f5643c84",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 59,
+        "file": "CAP24-light-desktop-source-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "9df25696bcd0d6ebd2076162df8bdb0989f8fb5cdc6048836c0e16e3f9e101f7",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 60,
+        "file": "CAP25-dark-320-create-request-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-320-create-request-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "30bb381832de612ad77fa93e6b0dc1c09e7f4200630f5a4f7bacf4d783a3329f",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 61,
+        "file": "CAP25-dark-320-create-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-320-create-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "a9da4809e462fdf7d987fc671896f5b644712d5388f399969804864896c9b36a",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 62,
+        "file": "CAP25-dark-desktop-confirmed-order-draft-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-confirmed-order-draft-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "3dc7fe855ab5d37f7edfe99a22c5718e93cb394f98c6a117d305b7a0e783825d",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 63,
+        "file": "CAP25-dark-desktop-create-request-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-create-request-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e9cddf0f010d99dce277dfd38ff94dd9be2d3668029f2421197045fab7e6b527",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 64,
+        "file": "CAP25-dark-desktop-recorded-quote-comparison-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-recorded-quote-comparison-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "14d6825748d7d38308e2983d3c98f9a3a577fb34fe458601e1d865cf73dff246",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 65,
+        "file": "CAP25-dark-desktop-request-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-request-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "c8697335954fa703fb701aff4b168fdfeb9558c30fa0adeb1cc53ac4001686a7",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 66,
+        "file": "CAP25-dark-desktop-requisition-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-requisition-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "98a12197d836e9eade15de20be2c21054427a90ecb8aa4bc2940b3431fb61548",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 67,
+        "file": "CAP25-dark-desktop-requisition-review-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-requisition-review-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "bd1f2948eec1156b5da7db93e188657fc68a4d434889ba1981bd398176da6fa8",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 68,
+        "file": "CAP25-dark-desktop-sourcing-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-sourcing-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "6b51168c1a4436891164ba8424c43687b53bc6c59c29e7baeb767c07a1a21801",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 69,
+        "file": "CAP25-dark-desktop-sourcing-review-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-sourcing-review-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "2d43631f8c8360bcfc6345ee6ff73b7c3b27650ee55e4507cf3ad8fbbab36d3f",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 70,
+        "file": "CAP25-light-320-recorded-quote-comparison-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-light-320-recorded-quote-comparison-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "2334e3ca8cbc6890be3c6437503a36d27a2dbbe138083c5c7c1390802116dea8",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 71,
+        "file": "CAP25-light-desktop-recorded-quote-comparison-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-light-desktop-recorded-quote-comparison-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "90c0c8be2bfe400495906413f11001de330dc4d39ff34a70df9b7896322b64f2",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 72,
+        "file": "CAP26-dark-320-pr-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-320-pr-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "8183210a2a1aec27028a89f50474575a0168d4afd61ea52be066566a6a17fce1",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 73,
+        "file": "CAP26-dark-desktop-po-decision-review-actions-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-po-decision-review-actions-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "d22b9554fd21bdaddbc882a88b5e218014c533fca26d6c45a5af30a5795379e9",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 74,
+        "file": "CAP26-dark-desktop-po-decision-review-overview-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-po-decision-review-overview-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "8fbdcd056a3e9f3796061a3935b2ccd9aaf2fb357bd28fcb23ab9c1213d3d112",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 75,
+        "file": "CAP26-dark-desktop-pr-approval-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "70b5254c0f15563de3d37c0964032919ea1579c1a8560ae5264eb161f34387b2",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 76,
+        "file": "CAP26-dark-desktop-sourcing-approval-detail-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-sourcing-approval-detail-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "4998e9a5f82c78fab6ac9e3471c9f7daaaad0b84837945cd769077335a29b706",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 77,
+        "file": "CAP26-light-desktop-pr-approval-list-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "fedbf1cd2ae30dbbec9628ac6eb33bbca63e7d2e990e56272de9dab1ebbd6435",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 79,
+        "file": "CAP20-dark-320-position-editor-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-320-position-editor-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "1253666015c3fe7a7523d9b9eeead92e0be45536fd9b553f38e994b185adffbd",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 80,
+        "file": "CAP20-dark-320-position-review-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-320-position-review-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "952d6b4293a4580be975a7e64af33e91a552486d5ad8daee05559a44a6d3786b",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 81,
+        "file": "CAP20-dark-320-rate-card-label-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-320-rate-card-label-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "3ed6b523921dfbbef320806c72f94e295c4fa3ff9df2863722681aadbf42e30b",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 82,
+        "file": "CAP20-dark-desktop-confirmed-source-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-desktop-confirmed-source-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "d500155611de6bfcb02c701c6b1743ca0511c5859815ea09608182b1a22c80e2",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 83,
+        "file": "CAP20-dark-desktop-unavailable-roster-impact-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-dark-desktop-unavailable-roster-impact-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "85fbd81ad62c27ca02ebacc98f407accfdc70520cad5f1d7bfd9faa255ea2276",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 84,
+        "file": "CAP20-list-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-list-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "d7dd9bc00b8e420fd7d3f241a262c9e342cc025e9d6f59291a6028526e3e7920",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 85,
+        "file": "CAP20-list-light-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-list-light-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "3fd05fad50fc3a0543ed7c0785df6639883a6aba03924182a941ed11efd54f49",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 86,
+        "file": "CAP20-list-light-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-list-light-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "49aed7b2e664419b456fa70fbb657f520471777c0449e36519f700300ffee8fc",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 87,
+        "file": "CAP20-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "25b50edb6459aa37d77358d3eff8ca30ea9395cb93c38047def6457f4cf381a6",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 88,
+        "file": "CAP20-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP20-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "874869914dd400f4dc220de0d83b113762327cbeb99f231bf2ce1203110f852d",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 89,
+        "file": "CAP21-dark-320-distribution-editor-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-320-distribution-editor-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "7f8648c0542888559b5bcaecb7e51bdc4d37377d69e07f8f99137ccdf8c0cdfe",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 90,
+        "file": "CAP21-dark-320-distribution-review-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-320-distribution-review-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "b40ebadfe45927801651e95bb050810cff7fbca764c2b2ddc27ab2deb65ab05a",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 91,
+        "file": "CAP21-dark-320-sort-focus-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-320-sort-focus-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "eece0babd4c8cf2b7a7b6bb23a0e96937eff8b18d8ed009716647f5c1fd41d26",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 92,
+        "file": "CAP21-dark-desktop-confirmed-distribution-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-desktop-confirmed-distribution-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "0c2d17e68b299a153d7a17a90acc5d0414ffa5c31c3c158612e32ac64ba4f12f",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 93,
+        "file": "CAP21-pt-BR-dark-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-pt-BR-dark-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "e05d838d1d8df53c2014a2b7f7ca6d4bae8e2d9ad650c20425397a1fd51d245f",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "index": 94,
+        "file": "CAP21-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-pt-BR-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "ef07d058e9fea5921aa65df9d0397cee1270e934b659fa218dfb4f35d2b0cfc1",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 95,
+        "file": "CAP21-shared-catalogs-dark-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-dark-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "07f6990e7470452a9ff353ef499339a9396a20fca4a77925508ed935d74915f1",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 96,
+        "file": "CAP21-shared-catalogs-light-320-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-light-320-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "559fbe669beeb80e70382a90eccb64d581f4ec7352242e6ea11d61d44ea6e327",
+        "dimensions": [
+          320,
+          900
+        ],
+        "inspectionPass": "remaining44"
+      },
+      {
+        "index": 97,
+        "file": "CAP21-shared-catalogs-light-desktop-test-data.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-light-desktop-test-data.png",
+        "method": "view_image original PNG",
+        "sha256": "7ac60320de479ba9e2b2052c9f65eaf995877aca781e7172d7779e477fc3ec1b",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "index": 98,
+        "file": "test-finished-1.png",
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/test-finished-1.png",
+        "method": "view_image original PNG",
+        "sha256": "316754bff5f2254c32c7008563957f18388c4744daa8e34898daf5f701a2fc66",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "inspectionPass": "remaining44"
+      }
+    ],
+    "probe": [
+      {
+        "file": "COMPONENT-VISUAL-Teams-audit-unsent-before-stream-close-dark-390.png",
+        "path": "artifact-extract/behavior-probe/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-6e3a8-ins-a-never-submitted-draft-chromium/COMPONENT-VISUAL-Teams-audit-unsent-before-stream-close-dark-390.png",
+        "method": "view_image original PNG",
+        "sha256": "a50f32e04fa8d89bb34c98e24dd02db4699ac104d0178a2a7002f8e33093cbe4",
+        "dimensions": [
+          390,
+          844
+        ]
+      },
+      {
+        "file": "COMPONENT-VISUAL-Teams-audit-unsent-stream-stopped-dark-390.png",
+        "path": "artifact-extract/behavior-probe/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-6e3a8-ins-a-never-submitted-draft-chromium/COMPONENT-VISUAL-Teams-audit-unsent-stream-stopped-dark-390.png",
+        "method": "view_image original PNG",
+        "sha256": "e0271521cd48de8bbccf82078cad91e2d464647b8e828d1064285f7d80393810",
+        "dimensions": [
+          390,
+          844
+        ]
+      },
+      {
+        "file": "COMPONENT-VISUAL-Teams-audit-unsent-after-same-authority-refresh-dark-390.png",
+        "path": "artifact-extract/behavior-probe/packages/app-shell/e2e/test-results/orchestra-team-profile-vis-6e3a8-ins-a-never-submitted-draft-chromium/COMPONENT-VISUAL-Teams-audit-unsent-after-same-authority-refresh-dark-390.png",
+        "method": "view_image original PNG",
+        "sha256": "9c1134b808a75131b3d741ffa185c92d033266d40ed439dd958337f65263be8c",
+        "dimensions": [
+          390,
+          844
+        ]
+      }
+    ],
+    "planningAliases": [
+      {
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/test-finished-2.png",
+        "sha256": "e67b99d08cd443b530f48c2308f3ff3bfa9dd35601304451edc18229a9ae246f",
+        "sameBytesAsViewedPath": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-compare-pt-BR-dark-320-test-data.png",
+        "directlyOpenedByThisAgent": false,
+        "additionalObservation": false
+      },
+      {
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/test-finished-1.png",
+        "sha256": "3dc7fe855ab5d37f7edfe99a22c5718e93cb394f98c6a117d305b7a0e783825d",
+        "sameBytesAsViewedPath": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP25-dark-desktop-confirmed-order-draft-test-data.png",
+        "directlyOpenedByThisAgent": false,
+        "additionalObservation": false
+      },
+      {
+        "path": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/test-finished-2.png",
+        "sha256": "e05d838d1d8df53c2014a2b7f7ca6d4bae8e2d9ad650c20425397a1fd51d245f",
+        "sameBytesAsViewedPath": "artifact-extract/planning/packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-pt-BR-dark-320-test-data.png",
+        "directlyOpenedByThisAgent": false,
+        "additionalObservation": false
+      }
+    ],
+    "countTotalDirectlyViewed": 100,
+    "countPlanningOriginalPaths": 100,
+    "countPlanningPathAliasesNotReopened": 3,
+    "planningDimensions": [
+      {
+        "width": 320,
+        "height": 900,
+        "uniqueDirectlyViewed": 40
+      },
+      {
+        "width": 1440,
+        "height": 1100,
+        "uniqueDirectlyViewed": 57
+      }
+    ],
+    "interpretation": "97 distinct Planning image hashes were opened by this agent (53 initial + 44 completion), plus 3 Teams probe image hashes. 3 additional Planning paths are byte-identical aliases, not additional observations or scenarios. This is the complete finite Planning artifact, not all product states. Automatic test-finished originals are explicitly included when unique and do not represent independent trials."
+  },
+  "guidanceRead": [
+    "https://playwright.dev/docs/best-practices",
+    "https://playwright.dev/docs/actionability",
+    "https://playwright.dev/docs/test-assertions",
+    "https://playwright.dev/docs/locators",
+    "https://playwright.dev/docs/network",
+    "https://playwright.dev/docs/browser-contexts"
+  ],
+  "evidenceDigests": [
+    {
+      "path": "artifact-extract/behavior-probe/test-ci-evidence/request.json",
+      "sha256": "2af2cbd56f43a9e01861162f6d0022b57318f73b5a17569aaa8262cd4ad8c234"
+    },
+    {
+      "path": "artifact-extract/behavior-probe/test-ci-evidence/playwright-runtime.json",
+      "sha256": "bf26892954f7a9b1c40000f951368bb831378431c5d6981e57cd2419fd5224c8"
+    },
+    {
+      "path": "artifact-extract/behavior-probe/audit-unsent-draft-recovery.json",
+      "sha256": "a3c9e860f8d86108d38c8c0e2891a276320dc4809ad541d5cfe26eec13988b49"
+    }
+  ],
+  "completionPass": {
+    "originalsOpened": 44,
+    "newUniquePlanningTotal": 97,
+    "sourceIndex": "image-index.json",
+    "selectionManifest": "planning-remaining-behavior.json",
+    "newFindings": [
+      "BA-08",
+      "BA-09"
+    ],
+    "notes": [
+      "No additional functional failure inferred from static screenshots.",
+      "CAP24 localized metric baseline and CAP26 narrow identity verified against pinned source.",
+      "No builds/tests added or rerun during completion; original isolated Teams regression preserved."
+    ],
+    "coldReviewCorrection": "BA-02 moved out of confirmed defect count: runtime only reached READY/CONNECTING; stale notice after event/open remains source-supported risk, not demonstrated transport recovery."
+  },
+  "confirmedFindingCounts": {
+    "P1": 1,
+    "P2": 3,
+    "P3": 4,
+    "unratedObservations": 1
+  }
+}

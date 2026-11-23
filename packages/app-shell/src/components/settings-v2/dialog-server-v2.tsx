@@ -54,7 +54,7 @@ export const DialogServerV2: Component<{
   }
 
   return (
-    <Dialog fit class="settings-v2-server-dialog">
+    <Dialog fit containerClass="settings-v2-server-dialog">
       <DialogHeader hideClose={true}>
         <DialogTitle>{title()}</DialogTitle>
       </DialogHeader>
@@ -102,7 +102,7 @@ export const DialogServerV2: Component<{
               onKeyDown={keyDown}
             />
           </div>
-          <div class="grid w-full min-w-0 grid-cols-2 gap-4">
+          <div class="settings-v2-server-credentials grid w-full min-w-0 grid-cols-2 gap-4">
             <div class="flex min-w-0 flex-col gap-2">
               <label for={`${id}-username`} class="settings-v2-server-dialog-label">
                 {language.t("dialog.server.add.username")}

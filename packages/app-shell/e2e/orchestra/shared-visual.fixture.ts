@@ -11,6 +11,7 @@ export const sharedVisualVariants = [
   { name: "dark-wide", scheme: "dark", width: 1440, height: 1000 },
   { name: "light-wide", scheme: "light", width: 1440, height: 1000 },
   { name: "dark-narrow", scheme: "dark", width: 390, height: 844 },
+  { name: "light-small", scheme: "light", width: 320, height: 900 },
 ] as const
 export type SharedVisualVariant = {
   name: string
@@ -66,6 +67,10 @@ const boardPage = Schema.decodeUnknownSync(Board.IssuePage)({
   dependencies: { dependsOn: [], blocks: [] },
   trail: { state: "signed_out", message: "Sign in to GitHub to see this trail" },
 })
+export const sharedRagSources = Schema.decodeUnknownSync(Schema.Array(RagStudio.Source))([
+  { id: "visual-cut-a", locationId: "compact-location", path: "/documents/first.txt", contentHash: "source-a", status: "read" },
+  { id: "visual-cut-b", locationId: "compact-location", path: "/documents/second.txt", contentHash: "source-b", status: "read" },
+])
 const pipeline = Schema.decodeUnknownSync(RagStudio.Pipeline)({
   parser: "plain", boundary: "document", tokenizer: "utf16", lexical: true,
   embedding: false, embeddingModel: "", queryModel: "", dimension: 0,
@@ -82,10 +87,12 @@ export async function setupSharedVisual(page: Page, variant: SharedVisualVariant
     inbox: "ready" | "empty" | "error"
     connections: "ready" | "denied"
     rag: "ready" | "error"
+    ragSources: readonly RagStudio.Source[]
+    ragReadWait?: (path: string) => Promise<void>
     board: "ready" | "empty" | "error"
     reads: string[]
     writes: string[]
-  } = { inbox: "ready", connections: "ready", rag: "ready", board: "ready", reads: [], writes: [] }
+  } = { inbox: "ready", connections: "ready", rag: "ready", ragSources: [], board: "ready", reads: [], writes: [] }
   const headers = {
     "access-control-allow-origin": "*",
     "access-control-allow-methods": "GET, OPTIONS",
@@ -110,10 +117,20 @@ export async function setupSharedVisual(page: Page, variant: SharedVisualVariant
     if (path === "/api/capability/connections")
       return route.fulfill({ status: state.connections === "denied" ? 403 : 200, headers,
         json: state.connections === "denied" ? { _tag: "ForbiddenError", message: "Host authorization denied." } : connections })
-    if (path === "/api/rag-studio/sources" || path === "/api/rag-studio/pipeline")
-      return route.fulfill({ status: state.rag === "error" ? 503 : 200, headers,
-        json: state.rag === "error" ? { message: "Rag Studio read unavailable in this visual case." }
-          : { location, data: path.endsWith("/sources") ? [] : pipeline } })
+    if (path === "/api/rag-studio/sources" || path === "/api/rag-studio/pipeline") {
+      const failed = state.rag === "error", sources = state.ragSources
+      await state.ragReadWait?.(path)
+      return route.fulfill({ status: failed ? 503 : 200, headers,
+        json: failed ? { message: "Rag Studio read unavailable in this visual case." }
+          : { location, data: path.endsWith("/sources") ? sources : pipeline } })
+    }
+    const source = state.ragSources.find((item) => path === "/api/rag-studio/sources/" + item.id)
+    if (source) {
+      await state.ragReadWait?.(path)
+      return route.fulfill({ headers, json: { location, data: Schema.decodeUnknownSync(RagStudio.SourceDetail)({
+        source, text: source.id === "visual-cut-a" ? "First source original text." : "Second source original text.", chunks: [],
+      }) } })
+    }
     if (path === "/api/board")
       return route.fulfill({ status: state.board === "error" ? 503 : 200, headers,
         json: state.board === "error" ? { message: "Board read unavailable in this visual case." }

@@ -10,7 +10,10 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
-import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { SfOpenReviewReference } from "../open-reference"
+import { PeriodText, StatusText, WhenText } from "../labels"
+import { preservedValueGroups } from "./presentation"
+import { SfPreservedFieldLabel, SfPreservedRecordLabel, SfPreservedValuePeriod, SfPreservedValueText } from "./value"
 import "./preserved.css"
 import "../workflows.css"
 
@@ -28,6 +31,8 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     retry: 0,
     topic: 0,
     sourceLinks: [] as readonly { label: string; url: string }[],
+    sourceRef: "",
+    sourceStatus: "ready" as SfUiState,
     updateStatus: "ready" as SfUiState,
     successor: undefined as Readonly<{
       available: boolean
@@ -39,6 +44,12 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   const ref = () => props.route.kind === "entry" || props.route.kind === "present"
     ? props.route.params.reviewRef : undefined
   let successorAbort: AbortController | undefined
+  let sourceAbort: AbortController | undefined
+  const clearSource = () => {
+    sourceAbort?.abort()
+    sourceAbort = undefined
+    setStore({ sourceLinks: [], sourceRef: "", sourceStatus: "ready" })
+  }
   const current = (generation: number, ownerKey: string) => {
     const state = owner.state()
     return owner.generation() === generation && state.status === "ready" && state.ownerKey === ownerKey
@@ -49,6 +60,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     const state = owner.state()
     const reviewRef = ref()
     store.retry
+    clearSource()
     setStore({
       review: undefined, successor: undefined, topic: 0, sourceLinks: [], updateStatus: "ready",
       presenting: props.route.kind === "present",
@@ -85,7 +97,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
     } else if (state.status === "ready" && !reviewRef) {
       setStore("status", "unavailable")
     }
-    onCleanup(() => { controller.abort(); successorAbort?.abort() })
+    onCleanup(() => { controller.abort(); successorAbort?.abort(); sourceAbort?.abort() })
   })
   const successorMessage = (status: string) => {
     if (status === "denied") return "sf.common.noAccess"
@@ -100,23 +112,58 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
   }
   const openSource = async (referenceId: string) => {
     const active = owner.ready(), state = owner.state(), review = store.review
-    if (!active || state.status !== "ready" || !review) return
-    const generation = owner.generation()
+    if (!active || state.status !== "ready" || !review || !referenceId) return
+    sourceAbort?.abort()
+    const generation = owner.generation(), stamp = JSON.stringify(active.context.stamp)
     const controller = new AbortController()
-    successorAbort = controller
-    const client = createSfReviewsClient(active.transport)
-    const read = await client["dashboard.dashboard-review"]({ id: review.id }, { signal: controller.signal })
-    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
-    if (read.kind !== "response" || read.body.status !== "ok" || read.body.value.id !== review.id) return
-    const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
-    if (controller.signal.aborted || !current(generation, state.ownerKey)) return
-    if (resolved.kind === "response" && "links" in resolved.body && typeof location !== "undefined")
-      setStore("sourceLinks", resolved.body.links.filter((link) => {
+    sourceAbort = controller
+    setStore({ sourceLinks: [], sourceRef: referenceId, sourceStatus: "loading" })
+    const currentSource = () => !controller.signal.aborted && sourceAbort === controller &&
+      current(generation, state.ownerKey) && owner.ready()?.transport === active.transport &&
+      JSON.stringify(owner.ready()?.context.stamp) === stamp && ref() === review.id &&
+      store.review?.id === review.id && store.review.version === review.version && store.sourceRef === referenceId
+    const failed = (status: SfUiState) => {
+      setStore({ sourceLinks: [], sourceStatus: status })
+      if (status === "denied" || status === "session-expired") {
+        successorAbort?.abort()
+        setStore({ status, review: undefined, successor: undefined })
+        clearSource()
+      }
+    }
+    try {
+      const client = createSfReviewsClient(active.transport)
+      const read = await client["dashboard.dashboard-review"]({ id: review.id }, { signal: controller.signal })
+      if (!currentSource()) return
+      if (read.kind !== "response" || read.body.status !== "ok") {
+        failed(reviewReadState(read))
+        return
+      }
+      if (read.body.value.id !== review.id || read.body.value.version !== review.version) {
+        failed("stale")
+        return
+      }
+      const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
+      if (!currentSource()) return
+      if (resolved.kind !== "response") {
+        failed(reviewReadState(resolved))
+        return
+      }
+      if (!("links" in resolved.body)) {
+        failed(reviewReadState({ kind: "response", status: resolved.status, body: resolved.body }))
+        return
+      }
+      const links = resolved.body.links.filter((link) => {
         try {
           const destination = new URL(link.url, location.href)
-          return destination.origin === location.origin
+          return destination.origin === location.origin && (destination.protocol === "https:" || destination.protocol === "http:")
         } catch { return false }
-      }))
+      })
+      setStore({ sourceLinks: links, sourceStatus: links.length ? "ready" : "empty" })
+    } catch (error) {
+      if (!currentSource()) return
+      console.error("Sucafina preserved source read failed", error instanceof Error ? error.name : "unknown")
+      failed("unavailable")
+    }
   }
   const update = async () => {
     const active = owner.ready(), state = owner.state(), review = store.review
@@ -136,7 +183,10 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
         setStore({ updateStatus: "ready", successor: result.body.value })
       } else {
         const status = reviewReadState(result)
-        if (status === "denied") setStore({ status: "denied", review: undefined })
+        if (status === "denied" || status === "session-expired") {
+          clearSource()
+          setStore({ status, review: undefined })
+        }
         setStore("updateStatus", status)
       }
     } catch (error) {
@@ -145,7 +195,7 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       setStore("updateStatus", "unavailable")
     }
   }
-  onCleanup(() => successorAbort?.abort())
+  onCleanup(() => { successorAbort?.abort(); sourceAbort?.abort() })
   return (
     <SfPageFrame
       titleKey={key("sf.ui48.title")} context={[]} tabs={[]} activeTab={null}
@@ -159,10 +209,11 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       } : undefined}
     >
       <div data-sf-wave="polish" class="sf-n28 sf-n28-preserved sf-workflow" data-sf-surface="UI48" data-sf-presentation={store.presenting}>
+        <Show when={!ref() && owner.ready()}><SfOpenReviewReference route={props.route} destination="reviews" /></Show>
         <SfStatePanel
           state={store.status}
           messageKey={key(!ref() ? "sf.u32.listUnavailable" : "sf.u32.reviewUnavailable")}
-          onRetryRead={() => setStore("retry", (value) => value + 1)}
+          onRetryRead={ref() ? () => setStore("retry", (value) => value + 1) : undefined}
         >
           <Show when={store.review}>
             {(review) => <article data-review-ref={review().id} data-review-version={review().version}>
@@ -185,20 +236,23 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                         fallback={<p role="status">{t("sf.u32.materialUnavailable")}</p>}>
                         {(projection) => <section aria-label={t("sf.u32.values")} class="sf-n28-section sf-section">
                           <h4>{t("sf.u32.values")}</h4>
-                          <dl class="sf-n28-values">
-                            <For each={projection().values}>
-                              {(value) => <div>
-                                <dt>{t("sf.u32.value")}
-                                  <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
-                                </dt>
-                                <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} unit={value.unit} />}</span>
-                                                                    <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
-                                  <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
-                                </dd>
-                              </div>}
-                            </For>
-                          </dl>
+                          <For each={preservedValueGroups(projection().values)}>{(group) =>
+                            <section class="sf-preserved-record" data-sf-preserved-record={group.presentation.recordRef}>
+                              <h5><SfPreservedRecordLabel presentation={group.presentation} /></h5>
+                              <dl class="sf-n28-values">
+                                <For each={group.values}>{(value) => <div data-sf-preserved-value={value.id}>
+                                  <dt><SfPreservedFieldLabel value={value} values={projection().values} />
+                                    <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
+                                  </dt>
+                                  <dd>
+                                    <SfPreservedValueText value={value} />
+                                    <SfPreservedValuePeriod value={value} />
+                                    <small>{t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
+                                  </dd>
+                                </div>}</For>
+                              </dl>
+                            </section>
+                          }</For>
                         </section>}
                       </Show>
                       <Show when={section.sourceRefs.length}>
@@ -220,15 +274,24 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
               <SfPreservedMeeting
                 review={review()}
                 topic={store.topic}
-                onTopic={(topic) => setStore("topic", topic)}
+                onTopic={(topic) => { clearSource(); setStore("topic", topic) }}
                 onSource={(referenceId) => { void openSource(referenceId) }}
                 onUpdate={() => { void update() }}
                 updateBusy={store.updateStatus === "loading"}
               />
-              <Show when={store.sourceLinks.length}>
-                <nav aria-label={t("sf.u32.authorizedSources")}>
-                  <For each={store.sourceLinks}>{(link) => <a href={link.url}>{link.label}</a>}</For>
-                </nav>
+              <Show when={store.sourceRef}>
+                <section class="sf-n28-source-result mx-card" aria-label={t("sf.u32.authorizedSources")}
+                  aria-busy={store.sourceStatus === "loading"} data-sf-source-state={store.sourceStatus}>
+                  <SfStatePanel state={store.sourceStatus}
+                    messageKey={key(store.sourceStatus === "loading" ? "sf.common.loading" : store.sourceStatus === "empty" ? "sf.u32.sourceEmpty" : store.sourceStatus === "stale" ? "sf.u32.stale" : "sf.u32.sourceUnavailable")}
+                    onRetryRead={store.sourceStatus === "stale"
+                      ? () => { clearSource(); setStore("retry", (value) => value + 1) }
+                      : store.sourceStatus !== "loading" ? () => { void openSource(store.sourceRef) } : undefined}>
+                    <nav aria-label={t("sf.u32.authorizedSources")}>
+                      <For each={store.sourceLinks}>{(link) => <a class="mx-btn" href={link.url}>{link.label}</a>}</For>
+                    </nav>
+                  </SfStatePanel>
+                </section>
               </Show>
               <SfPreservedAnswer review={review()} />
               <section class="sf-n28-section sf-section" aria-label={t("sf.u32.comments")}>
@@ -296,20 +359,27 @@ function SfPreservedMeeting(props: {
           <h2>{current().title}</h2>
           <p><PeriodText start={current().period.start} end={current().period.end} /> · {t("sf.u32.records")}: {current().count}</p>
           <Show when={projection()} fallback={<p>{t("sf.u32.materialUnavailable")}</p>}>
-            {(shown) => <ul>
-              <For each={shown().values}>{(value) => <li>
-                <strong><AmountText value={value.value} currency={value.currency} unit={value.unit} /></strong>
-                <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
-                                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
-                <details class="sf-technical-details">
-                  <summary>{t("sf.u32.inspectSource")}</summary>
-                  <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>
-                  <Show when={value.sourceRefs.length} fallback={<p>{t("sf.u32.notRecorded")}</p>}>
-                    <ul><For each={value.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
-                  </Show>
-                </details>
-              </li>}</For>
-            </ul>}
+            {(shown) => <div class="sf-preserved-meeting-values">
+              <For each={preservedValueGroups(shown().values)}>{(group) =>
+                <section class="sf-preserved-record">
+                  <h3><SfPreservedRecordLabel presentation={group.presentation} /></h3>
+                  <ul class="sf-preserved-meeting-fields">
+                    <For each={group.values}>{(value) => <li>
+                      <strong><SfPreservedFieldLabel value={value} values={shown().values} /></strong>
+                      <SfPreservedValueText value={value} />
+                      <SfPreservedValuePeriod value={value} />
+                      <details class="sf-technical-details">
+                        <summary>{t("sf.u32.inspectSource")}</summary>
+                        <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>
+                        <Show when={value.sourceRefs.length} fallback={<p>{t("sf.u32.notRecorded")}</p>}>
+                          <ul><For each={value.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
+                        </Show>
+                      </details>
+                    </li>}</For>
+                  </ul>
+                </section>
+              }</For>
+            </div>}
           </Show>
           <Show when={sources().length}>
             <ul class="sf-n28-items" aria-label={t("sf.u32.sourceNav")}>

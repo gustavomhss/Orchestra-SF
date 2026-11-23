@@ -133,7 +133,7 @@ export function SfQuestionConsume(props: Readonly<{
     }
   }
   return (
-    <section class="sf-n24-review" aria-label={t("sf.ui37.proposalScope")}>
+    <section class="sf-n24-review" aria-label={t("sf.ui37.confirmation")}>
       <Show when={ui.consumed} fallback={
         <Show when={ui.state === "ready" && ui.contribution} fallback={
           <SfStatePanel
@@ -156,7 +156,7 @@ export function SfQuestionConsume(props: Readonly<{
               </select>
             </label>
             <button type="button" class="mx-btn primary" disabled={!canConsume()}
-              onClick={() => void confirm()}>{t("sf.ui37.answerConfirm")}</button>
+              onClick={() => void confirm()}>{t("sf.ui37.recordQuestion")}</button>
           </>}
         </Show>
       }>

@@ -1,4 +1,4 @@
-import { createEffect, For, onCleanup, Show } from "solid-js"
+import { createEffect, createUniqueId, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
 import type { Schema } from "effect"
@@ -28,6 +28,8 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
   const model = useSfPlannerVersions(props)
   const navigate = useNavigate()
   const copy = useSfPresentation()
+  const comparisonTitle = createUniqueId()
+  const monthlyTitle = createUniqueId()
   const [comparison, setComparison] = createStore<{
     selectionKey: string
     left: string
@@ -247,62 +249,66 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                 <Show when={left() && right()}>
                   <div class="sf-u46-compare-content">
                     <p class="sf-u46-compare-note" role="note">{copy.t(key("sf.u02.noCurrency"))}</p>
-                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u46.compare"))} tabIndex={0}>
-                      <table>
-                        <caption>{copy.t(key("sf.u46.compare"))}</caption>
-                        <thead>
-                          <tr>
-                            <th scope="col">{copy.t(key("sf.u46.difference"))}</th>
-                            <th scope="col">{comparison.leftPage?.data.selectedVersion?.name}</th>
-                            <th scope="col">{comparison.rightPage?.data.selectedVersion?.name}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <For each={metricRows()}>
-                            {(row) => <tr>
-                              <th scope="row">{copy.t(key(row.label))}</th>
-                              <td>{showNumber(row.left)}</td>
-                              <td>{showNumber(row.right)}</td>
-                            </tr>}
-                          </For>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u06.monthly"))} tabIndex={0}>
-                      <table class="sf-u46-monthly">
-                        <caption>{copy.t(key("sf.u06.budget"))}</caption>
-                        <thead>
-                          <tr>
-                            <th rowSpan={2} scope="col">{copy.t(key("sf.u06.month"))}</th>
-                            <th scope="colgroup" colSpan={3}>{comparison.leftPage?.data.selectedVersion?.name}</th>
-                            <th scope="colgroup" colSpan={3}>{comparison.rightPage?.data.selectedVersion?.name}</th>
-                          </tr>
-                          <tr>
-                            <For each={[comparison.left, comparison.right]}>
-                              {() => <>
-                                <th scope="col">{copy.t(key("sf.u06.budget"))}</th>
-                                <th scope="col">{copy.t(key("sf.u06.actual"))}</th>
-                                <th scope="col">{copy.t(key("sf.u06.outlookShort"))}</th>
-                              </>}
+                    <section class="sf-u46-compare-panel">
+                      <h3 id={comparisonTitle}>{copy.t(key("sf.u46.compare"))}</h3>
+                      <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u46.compare"))} tabIndex={0}>
+                        <table aria-labelledby={comparisonTitle}>
+                          <thead>
+                            <tr>
+                              <th scope="col">{copy.t(key("sf.u46.difference"))}</th>
+                              <th scope="col">{comparison.leftPage?.data.selectedVersion?.name}</th>
+                              <th scope="col">{comparison.rightPage?.data.selectedVersion?.name}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <For each={metricRows()}>
+                              {(row) => <tr>
+                                <th scope="row">{copy.t(key(row.label))}</th>
+                                <td>{showNumber(row.left)}</td>
+                                <td>{showNumber(row.right)}</td>
+                              </tr>}
                             </For>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <For each={months}>
-                            {(month, index) => <tr>
-                              <th scope="row" title={month}>{new Intl.DateTimeFormat(copy.locale(), { month: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2000, index(), 1)))}</th>
-                              <For each={[left(), right()]}>
-                                {(item) => <>
-                                  <td>{showNumber(item?.budget[index()] ?? null)}</td>
-                                  <td>{showNumber(item?.actual[index()] ?? null)}</td>
-                                  <td>{showNumber(item?.outlook[index()] ?? null)}</td>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                    <section class="sf-u46-compare-panel">
+                      <h3 id={monthlyTitle}>{copy.t(key("sf.u06.budget"))}</h3>
+                      <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u06.monthly"))} tabIndex={0}>
+                        <table class="sf-u46-monthly" aria-labelledby={monthlyTitle}>
+                          <thead>
+                            <tr>
+                              <th rowSpan={2} scope="col">{copy.t(key("sf.u06.month"))}</th>
+                              <th scope="colgroup" colSpan={3}>{comparison.leftPage?.data.selectedVersion?.name}</th>
+                              <th scope="colgroup" colSpan={3}>{comparison.rightPage?.data.selectedVersion?.name}</th>
+                            </tr>
+                            <tr>
+                              <For each={[comparison.left, comparison.right]}>
+                                {() => <>
+                                  <th scope="col">{copy.t(key("sf.u06.budget"))}</th>
+                                  <th scope="col">{copy.t(key("sf.u06.actual"))}</th>
+                                  <th scope="col">{copy.t(key("sf.u06.outlookShort"))}</th>
                                 </>}
                               </For>
-                            </tr>}
-                          </For>
-                        </tbody>
-                      </table>
-                    </div>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <For each={months}>
+                              {(month, index) => <tr>
+                                <th scope="row" title={month}>{new Intl.DateTimeFormat(copy.locale(), { month: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2000, index(), 1)))}</th>
+                                <For each={[left(), right()]}>
+                                  {(item) => <>
+                                    <td>{showNumber(item?.budget[index()] ?? null)}</td>
+                                    <td>{showNumber(item?.actual[index()] ?? null)}</td>
+                                    <td>{showNumber(item?.outlook[index()] ?? null)}</td>
+                                  </>}
+                                </For>
+                              </tr>}
+                            </For>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
                     <For each={[
                       { id: comparison.left, source: left() },
                       { id: comparison.right, source: right() },

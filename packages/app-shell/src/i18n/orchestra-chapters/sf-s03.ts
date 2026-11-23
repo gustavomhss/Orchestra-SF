@@ -2,6 +2,9 @@
 // this leaf does not duplicate them. I00 registers these two symbols atomically.
 export const SF_S03_COPY = {
   "sf.s03.effects": "Effects",
+  "sf.s03.effectDetails": "Effect details",
+  "sf.s03.unchangedFields.one": "{{count}} unchanged field",
+  "sf.s03.unchangedFields.other": "{{count}} unchanged fields",
   "sf.s03.receipts": "Producer receipts",
   "sf.s03.base": "Original",
   "sf.s03.noOriginal": "No original record exists for this request.",
@@ -35,6 +38,9 @@ export const SF_S03_COPY = {
 
 export const SF_S03_COPY_BR: Record<keyof typeof SF_S03_COPY, string> = {
   "sf.s03.effects": "Efeitos",
+  "sf.s03.effectDetails": "Detalhes do efeito",
+  "sf.s03.unchangedFields.one": "{{count}} campo sem alterações",
+  "sf.s03.unchangedFields.other": "{{count}} campos sem alterações",
   "sf.s03.receipts": "Recibos do produtor",
   "sf.s03.base": "Original",
   "sf.s03.noOriginal": "Não existe registro original para esta solicitação.",

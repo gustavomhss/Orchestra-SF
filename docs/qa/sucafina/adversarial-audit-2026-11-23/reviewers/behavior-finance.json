@@ -1,0 +1,675 @@
+{
+  "schemaVersion": 1,
+  "agent": "behavior_audit",
+  "date": "2026-11-23",
+  "kind": "supplemental-read-only-visual-audit",
+  "scope": [
+    "CAP17",
+    "CAP18",
+    "CAP19"
+  ],
+  "pinnedDev": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+  "newBuildsOrTests": false,
+  "productEdited": false,
+  "provenance": {
+    "id": "finance-final",
+    "run": 45101169602,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45101169602",
+    "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+    "snapshot": "edbc27f05879de702ba30161e97561bd740ec923",
+    "result": "2/2 original cases;zero failures/skips/retries/flaky;original15s response observation bound, one additional POST and native readback. Replaces Finance2 inside Core6; not two additional distinct journeys.",
+    "artifact": 14785164854,
+    "artifactSha256": "0fca628c31339500603bf915112fd5910447f71072b992ec12bf06c46bd10421",
+    "receipt": "verification/finance-final-runtime.json"
+  },
+  "runtime": {
+    "receiptPath": "behavior-finance-runtime-receipt.json",
+    "run": 45101169602,
+    "job": 137452102840,
+    "bundle": "production",
+    "browser": "chromium",
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "allSpecCases": 2,
+    "allSpecPassed": 2,
+    "plannerCases": 1,
+    "plannerDurationMs": 60144,
+    "plannerConfirmedCommand": "CAP19.save",
+    "notNewTrials": true
+  },
+  "sourceParity": {
+    "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/10a7aaa7b69b6f80d8dfbac454007e7742f89bc2...5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "filesCompared": 68,
+    "commitsAhead": 22,
+    "plannerSpecificFilesChanged": [],
+    "relevantSharedChanges": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css"
+    ],
+    "boundary": "CAP18/19 use custom sf-u07-detail and sf-u07 table; imports are SfMonthlyGrid and SfChangeReview, not SfRecordDetail/SfDataTable. CAP17 uses SfChartFrame. Their source paths and shared monthly-grid/change-review/chart/frame plus theme were unchanged in the complete 68-file compare. Changed SfRecordDetail/SfDataTable implementation is not itself re-qualified by these older screenshots. No claim of a new full dev render."
+  },
+  "images": {
+    "uniqueDirectlyViewed": 27,
+    "namedCaptureCount": 26,
+    "automaticEndStateCount": 1,
+    "availablePaths": 28,
+    "aliasesNotReopened": [
+      {
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/test-finished-2.png",
+        "sha256": "20578e345b7071a40aaee8d9b2814c4cf23b4533aa774eb6e4022e9c8a5b0b69",
+        "sameBytesAsViewedPath": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-pt-BR-dark-320-project-editor-test-data.png",
+        "directlyOpened": false,
+        "additionalObservation": false
+      }
+    ],
+    "dimensions": [
+      {
+        "width": 1440,
+        "height": 1100,
+        "count": 19
+      },
+      {
+        "width": 320,
+        "height": 900,
+        "count": 8
+      }
+    ],
+    "originals": [
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP17-dark-desktop-summary-and-series-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP17-dark-desktop-summary-and-series-test-data.png",
+        "sha256": "4b47e05c2b3bac262e73e25a3212dce48914083a9c25d4c3e970bca4e7ee7f32",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 0,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "4b47e05c2b3bac262e73e25a3212dce48914083a9c25d4c3e970bca4e7ee7f32"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP17-light-320-summary-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP17-light-320-summary-test-data.png",
+        "sha256": "274ad4c083f8cda316d9cc434bd7e53ee825972bf2403486a3ebfa99d345c831",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 1,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "274ad4c083f8cda316d9cc434bd7e53ee825972bf2403486a3ebfa99d345c831"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP17-light-320-version-comparison-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP17-light-320-version-comparison-test-data.png",
+        "sha256": "b60489b7ce9f10ae6083b8f72a376e4ef924b9b589474ed63965b442d1356dd8",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 2,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "b60489b7ce9f10ae6083b8f72a376e4ef924b9b589474ed63965b442d1356dd8"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP17-light-desktop-summary-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP17-light-desktop-summary-test-data.png",
+        "sha256": "670057c3d577add7750be90cd0560ff0246c4f2e49f9d27553b96719ccf80c91",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 3,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "670057c3d577add7750be90cd0560ff0246c4f2e49f9d27553b96719ccf80c91"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP17-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP17-pt-BR-dark-desktop-test-data.png",
+        "sha256": "4e7d7e1df038b8d621f45ef43c23454e2d54603ef9c0f31a623f3347d66eeb0d",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 4,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "4e7d7e1df038b8d621f45ef43c23454e2d54603ef9c0f31a623f3347d66eeb0d"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-320-record-review-actions-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-320-record-review-actions-test-data.png",
+        "sha256": "f5c54518b6e2b9d28c1e495099f7887179fcc295299a07819305d6afb003c33c",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 5,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "f5c54518b6e2b9d28c1e495099f7887179fcc295299a07819305d6afb003c33c"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-320-source-months-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-320-source-months-test-data.png",
+        "sha256": "f32e0e63e1375c581afa86d98a11a312b0ee1c4267620a7e044217f30fe3712d",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 6,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "f32e0e63e1375c581afa86d98a11a312b0ee1c4267620a7e044217f30fe3712d"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-closed-month-review-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-closed-month-review-test-data.png",
+        "sha256": "fcfa47b9c98af14b740e6aed61548386c1dfccd369677df545630a5014817b41",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 7,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "fcfa47b9c98af14b740e6aed61548386c1dfccd369677df545630a5014817b41"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-create-review-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-create-review-test-data.png",
+        "sha256": "cba429bfc0bd044c272668751f71779282c505aa5e1a8d50a863130aab935de2",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 8,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "cba429bfc0bd044c272668751f71779282c505aa5e1a8d50a863130aab935de2"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-monthly-grid-december-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-monthly-grid-december-test-data.png",
+        "sha256": "a0f09ff86cc4e729fcb9129989271e9b0bc2187f89ebba4e87193074d586b860",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 9,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "a0f09ff86cc4e729fcb9129989271e9b0bc2187f89ebba4e87193074d586b860"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-monthly-grid-start-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-monthly-grid-start-test-data.png",
+        "sha256": "450a6a3ccb6ef3da0cfde786be9e4486175c3eb53aa47d720ef33a781e2c1189",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 10,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "450a6a3ccb6ef3da0cfde786be9e4486175c3eb53aa47d720ef33a781e2c1189"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-original-producer-paste-preview-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-original-producer-paste-preview-test-data.png",
+        "sha256": "e8cbd0550d8e3977380e222451310bf16411ad5cc27a0a21797fa2385e2e672c",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 11,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "e8cbd0550d8e3977380e222451310bf16411ad5cc27a0a21797fa2385e2e672c"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-record-editor-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-record-editor-test-data.png",
+        "sha256": "7420751ec59de87b445626e51edfe11cc8f513752faaabc230ceb027b33be0ca",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 12,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "7420751ec59de87b445626e51edfe11cc8f513752faaabc230ceb027b33be0ca"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-dark-desktop-split-review-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-dark-desktop-split-review-test-data.png",
+        "sha256": "0bd988c1eab9555d367d05fa410e9e17593892e1bd53fef735ea3e9a72177463",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 13,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "0bd988c1eab9555d367d05fa410e9e17593892e1bd53fef735ea3e9a72177463"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-light-desktop-grid-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-light-desktop-grid-test-data.png",
+        "sha256": "33443c34de7917c5ebe9d802e032f653042fbb01a95f9652f0fc18773a2d9406",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 14,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "33443c34de7917c5ebe9d802e032f653042fbb01a95f9652f0fc18773a2d9406"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP18-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP18-pt-BR-dark-desktop-test-data.png",
+        "sha256": "ebdd84ae279905b2cebac47b29864df68cbeaf2fcaefd9ce7fd1419f40bd27c6",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 15,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "ebdd84ae279905b2cebac47b29864df68cbeaf2fcaefd9ce7fd1419f40bd27c6"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-320-project-editor-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-320-project-editor-test-data.png",
+        "sha256": "4795fb75ee84fbef0c03e96e7ca070372716c2f4e666480f8499f6b8c08b3129",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 16,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "4795fb75ee84fbef0c03e96e7ca070372716c2f4e666480f8499f6b8c08b3129"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-320-project-review-actions-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-320-project-review-actions-test-data.png",
+        "sha256": "cfbcb0a15e9d57b07ca8a1017e7fd9c2031b515a449dc807830517bcded97d5a",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 17,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "cfbcb0a15e9d57b07ca8a1017e7fd9c2031b515a449dc807830517bcded97d5a"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-320-projects-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-320-projects-test-data.png",
+        "sha256": "d77e4e3f33b5f42302cbe0428d705bba85a398ec7fa22dd571396b0b18db0246",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 18,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "d77e4e3f33b5f42302cbe0428d705bba85a398ec7fa22dd571396b0b18db0246"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-desktop-confirmed-project-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-desktop-confirmed-project-test-data.png",
+        "sha256": "429f3364b32c8a324cc9f7d6c3af82d8446ffd36caeb5f2827fa555d84705ea6",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 19,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "429f3364b32c8a324cc9f7d6c3af82d8446ffd36caeb5f2827fa555d84705ea6"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-desktop-monthly-grid-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-desktop-monthly-grid-test-data.png",
+        "sha256": "28d54f10639f4593f8e93ca03bc86d3f459485c61bff37bbbd738dd02a02330c",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 20,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "28d54f10639f4593f8e93ca03bc86d3f459485c61bff37bbbd738dd02a02330c"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-desktop-spread-review-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-desktop-spread-review-test-data.png",
+        "sha256": "6047042ceb7b1c199c4695807fd694ae553e92c4c9f87242b130712640fee884",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 21,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "6047042ceb7b1c199c4695807fd694ae553e92c4c9f87242b130712640fee884"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-dark-desktop-projects-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-dark-desktop-projects-test-data.png",
+        "sha256": "2d792ba4e752f1689092bcd72e6619ddc6a90832cd3754b6fef099cd4abadaca",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 22,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "2d792ba4e752f1689092bcd72e6619ddc6a90832cd3754b6fef099cd4abadaca"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-light-desktop-monthly-grid-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-light-desktop-monthly-grid-test-data.png",
+        "sha256": "a6fbb44df2220c8427d4c5e4ef2969d1cb3346dabc2bf12d08329070911bc2d3",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 23,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "a6fbb44df2220c8427d4c5e4ef2969d1cb3346dabc2bf12d08329070911bc2d3"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-pt-BR-dark-320-project-editor-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-pt-BR-dark-320-project-editor-test-data.png",
+        "sha256": "20578e345b7071a40aaee8d9b2814c4cf23b4533aa774eb6e4022e9c8a5b0b69",
+        "dimensions": [
+          320,
+          900
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 24,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "20578e345b7071a40aaee8d9b2814c4cf23b4533aa774eb6e4022e9c8a5b0b69"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "CAP19-pt-BR-dark-desktop-test-data.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/CAP19-pt-BR-dark-desktop-test-data.png",
+        "sha256": "f2323e97f4b004815dddbd3941d7816dcac8c3bd039054053c3f071a6f1691ba",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 25,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "f2323e97f4b004815dddbd3941d7816dcac8c3bd039054053c3f071a6f1691ba"
+      },
+      {
+        "group": "finance-final",
+        "run": 45101169602,
+        "artifact": 14785164854,
+        "source": "10a7aaa7b69b6f80d8dfbac454007e7742f89bc2",
+        "name": "test-finished-1.png",
+        "path": "artifact-extract/additional/finance-final/packages/app-shell/e2e/test-results/sucafina-design-wave-three-c1cdf-9-original-planner-commands-chromium/test-finished-1.png",
+        "sha256": "2ef1f3c1848f0e5ee1c25c37301afdefe37cadff8de2b72529044c1fa5f34cca",
+        "dimensions": [
+          1440,
+          1100
+        ],
+        "uniqueInGroup": true,
+        "inspectionIndex": 26,
+        "method": "view_image original PNG",
+        "directlyOpenedBy": "behavior_audit",
+        "actualSha256": "2ef1f3c1848f0e5ee1c25c37301afdefe37cadff8de2b72529044c1fa5f34cca"
+      }
+    ],
+    "notIndependentScenarios": true
+  },
+  "findings": [
+    {
+      "id": "BF-01",
+      "severity": "P3",
+      "status": "Observed in original production PNGs; presentation path unchanged in pinned dev",
+      "title": "Revisão financeira regride para números crus e código de mês",
+      "surfaces": [
+        "CAP18 OPEX",
+        "CAP19 CAPEX review"
+      ],
+      "observation": "O seletor Closed through usa nome de mês, mas a revisão exibe somente 0→2. O detalhe OPEX mostra Annual budget 120,000, enquanto a revisão mobile apresenta 120000→126000 e a criação 36000 sem agrupamento; CAP19 spread mostra 240000. O usuário perde pistas de leitura justamente antes de confirmar.",
+      "sources": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+          "lines": "597–629; 762–764; 968–978",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "lines": "44–73",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-wave-three-finance.spec.ts",
+          "lines": "379–413; 508–511",
+          "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+        }
+      ],
+      "imageIndices": [
+        5,
+        7,
+        8,
+        12,
+        21
+      ],
+      "mechanism": "fields() retorna textual(String(value)) para annual e period, com exceções apenas para split, approvalState e proj. SfReviewValue sabe formatar DTOs numéricos, mas recebe texto. O seletor period mapeia0 para todos os meses abertos e1..12 para nomes; esse significado não chega à revisão.",
+      "fix": "Preservar a forma canônica do codec, do payload e da confirmação. Acrescentar somente apresentação semântica: moeda/unidade conhecida e agrupamento de valores validados; nome localizado do mês para period e todos os meses abertos para0. Conservar o valor original em disclosure quando necessário. Não inferir moeda ausente nem recalcular valores.",
+      "qualification": "É legibilidade/consistência, não erro aritmético nem prova de comando no período errado. Os PNGs são do source10a7aa; fonte específica e shared/change-review não mudaram até dev, porém não houve novo rerender de dev neste suplemento."
+    }
+  ],
+  "coverage": [
+    {
+      "surface": "CAP17",
+      "observed": "Resumo desktop dark/light e PT-BR; série mensal desktop; resumo e comparação de versões EN/light/320. Rótulos, valores e zeros visíveis.",
+      "notProven": "Gráfico mobile completo; PT-BR/320; tooltip, teclado e screen reader; zoom real."
+    },
+    {
+      "surface": "CAP18",
+      "observed": "Grid desktop no início e em dezembro com identidade fixa; light/dark e PT-BR desktop; paste preview do produtor; detalhe/anual; revisões criar, editar, fechar mês e split; início de cartão mensal mobile e footer da revisão mobile.",
+      "notProven": "Todos os 12 meses mobile pintados: apenas a contagem DOM foi assegurada. Alterações de orçamento, fechamento e split foram revisadas/canceladas, não confirmadas neste percurso. Não há revisão PT-BR capturada."
+    },
+    {
+      "surface": "CAP19",
+      "observed": "Grid desktop dark/light e PT-BR; cartões de projeto desktop/mobile; editor EN/PT-BR/320; footer de revisão mobile; um save original confirmado, seguido de reentrada e leitura da descrição persistida; revisão spread cancelada.",
+      "notProven": "Endpoint dezembro CAP19; grid mobile inteiro; spread/delete/reset confirmados; rejeição por versão stale; todas as combinações PT-BR/light."
+    },
+    {
+      "surface": "Teclado e rolamento",
+      "observed": "Teste CAP18 usa End/Home e asserções de aria-activedescendant, viewport, foco e separação de headers sticky. verifyNativeScroller usa scrollTo vertical programático.",
+      "notProven": "Wheel/trackpad/touch, seleção completa, IME, teclado virtual e zoom real. Screenshots não substituem interação."
+    },
+    {
+      "surface": "Estabilidade",
+      "observed": "Run histórico 2/2 casos, retries 0 e repeatEach 1. Nosso escopo é o único caso Planner de 60.144 ms. Prazo de 15.000 ms vinculado à resposta original CAP19; timeout externo de 300.000 ms.",
+      "notProven": "Nenhuma campanha de flakiness; nenhum disparo forçado do timer ou prova de cancelamento; nenhuma execução nova."
+    }
+  ],
+  "relatedExistingFinding": {
+    "id": "BA-05",
+    "additionalImages": [
+      12,
+      18,
+      21,
+      22,
+      26
+    ],
+    "observation": "Na revisão CAP19, o projeto concatena nome + UUID nas três colunas; Owner usa identificador técnico no cartão/editor. São exemplos adicionais da mesma família de hierarquia de identidade, sem novo achado independente.",
+    "sources": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/opex/budget-view.tsx",
+        "lines": "579–582; 606–607; 954–955; 1000–1004",
+        "commit": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+      }
+    ]
+  },
+  "noFindingsClaimedFor": [
+    "A tabela larga possuir overflow local.",
+    "Valores ausentes honestos ou zeros entregues pelo produtor.",
+    "Summary Actual YTD0 vs série mensal com valores: a fonte usa campos distintos do DTO; não foi constatado cálculo errado pelo cliente.",
+    "Input nativo com valor longo horizontalmente recortado: sozinho não prova perda de valor ou inacessibilidade."
+  ],
+  "evidenceDigests": [
+    {
+      "path": "artifact-extract/finance-image-index.json",
+      "sha256": "3f3046334895576261ad5a3e929388b181a75d3cb56cfe1da8026f11cff9e722"
+    },
+    {
+      "path": "artifact-extract/finance-extra.json",
+      "sha256": "015c1baae1010a4c7ff80303172f9be16596b76da0b170b5cc54a9b44072d4e7"
+    },
+    {
+      "path": "artifact-extract/behavior-finance-runtime-receipt.json",
+      "sha256": "4497625843484ed49cf3f95e6dcad0456f98fb721d180ced835d828427181dac"
+    }
+  ]
+}

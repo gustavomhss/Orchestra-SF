@@ -168,7 +168,7 @@ export function SfTeamSessionWorkspace(props: Props): JSX.Element {
                 onClick={() => { void props.act(() => props.runtime.closeSession(info.id)) }}>×</button>
             </div>}</For>
           </nav>
-          <header class="sf-team-session-heading"><h1>{title()}</h1></header>
+          <Show when={active()}><header class="sf-team-session-heading"><h1>{title()}</h1></header></Show>
           <Show when={state.pending.length}>
             <div role="alert" class="sf-team-session-pending">
               <p>{language.t("sf.teams.pending")}</p>

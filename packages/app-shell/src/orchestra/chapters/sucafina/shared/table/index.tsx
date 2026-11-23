@@ -145,7 +145,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
             setView("scrollLeft", event.currentTarget.scrollLeft)
           }}
         >
-          <table ref={table} aria-describedby={captionID} aria-busy={props.state === "loading"}>
+          <table ref={table} aria-describedby={[captionID, props.descriptionId].filter(Boolean).join(" ")} aria-busy={props.state === "loading"}>
             <caption id={captionID} tabindex="-1" data-sf-table-fallback>
               {copy.t(props.captionKey)}
             </caption>
@@ -227,8 +227,8 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                       </For>
                       <Show when={hasActions()}>
                         <td class="sf-s01-actions-cell">
+                          {props.rowActionContext?.(row)}
                           <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
-                            {props.rowActionContext?.(row)}
                             <For each={actions(row)}>
                               {(action) => (
                                 <>
