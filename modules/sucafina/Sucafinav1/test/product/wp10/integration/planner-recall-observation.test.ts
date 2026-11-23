@@ -42,14 +42,14 @@ function ok<Value>(result: PortResult<Value> | SfStateResult<Value>): Value {
   return result.value
 }
 
-async function fixture(deadline: Deadline, withScanner = false, withOpenAssumptions = false) {
+async function fixture(deadline: Deadline, withScanner = false, withOpenAssumptions = false, mixedHorizons = false) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-planner-recall-proof-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const store = await openLocalStore(path.join(directory, "store"))
   deadline.own(() => store.dispose())
   const originalRoot = store.readSnapshotRoot
   if (!originalRoot) throw new Error("The native LocalStore root is required")
-  const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
+  const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: mixedHorizons ? "2027-01-31" : "2027-12-31" }
   const control: { active: boolean; measuring: boolean; roots: RootObservation[];
     afterRoot?: (count: number) => Promise<void>; onEnvironment?: () => Promise<void> } =
     { active: true, measuring: false, roots: [] }
@@ -144,20 +144,21 @@ async function fixture(deadline: Deadline, withScanner = false, withOpenAssumpti
     } finally { authority.ui.finish(call) }
   }
   const source = await ui("sf_forecast_compare", {}, async (call) => ok(await business.plannerProduct.issueSource("v0", call)).evidence)
-  const draft = async (objective: string) => {
-    const input = { objective, horizon: period, currency: "USD", criteria: ["Review the observed service cost"], sourceRefs: [source] }
+  const draft = async (objective: string, horizon = period) => {
+    const input = { objective, horizon, currency: "USD", criteria: ["Review the observed service cost"], sourceRefs: [source] }
     const value = await ui("sf_case_draft", input, async (call) => ok(await business.cases.draft(input, call)))
     return { id: value.id, incarnation: value.incarnation, version: value.version }
   }
-  const current = await draft("Current authorized review"), previous = await draft("Previous authorized review")
-  const editAssumptions = async (ref: CaseRef, assumptions: DecisionCase["assumptions"]) => {
+  const current = await draft("Current authorized review"), previous = await draft("Previous authorized review",
+    mixedHorizons ? { start: "2027-01-01", end: "2027-12-31" } : period)
+  const editAssumptions = async (ref: CaseRef, assumptions: DecisionCase["assumptions"], horizon?: DecisionCase["horizon"]) => {
     if (!domain) throw new Error("The original human case editor is required")
     const payload = { caseRef: encodeCaseRef(ref) }
     const observed = await ui("sf_case_read", payload, async (call) => ok(await business.cases.read(payload, call)))
     expect({ id: observed.case.id, incarnation: observed.case.incarnation, version: observed.case.version }).toEqual(ref)
     const edit = { caseRef: structuredClone(ref), objective: observed.case.objective,
       criteria: structuredClone(observed.case.criteria), sourceRefs: structuredClone(observed.case.sourceRefs),
-      horizon: structuredClone(observed.case.horizon), currency: observed.case.currency, assumptions: structuredClone(assumptions) }
+      horizon: structuredClone(horizon ?? observed.case.horizon), currency: observed.case.currency, assumptions: structuredClone(assumptions) }
     const call = ok(await authority.human.admit(request(), "decisions.edit", edit))
     try {
       return await business.withCase(call, ref, { allowHistoricalRetry: true }, () => domain.management.edit(edit, call))
@@ -391,8 +392,8 @@ function gate() {
 }
 
 /** Each case opens a new native store, authority and real Atlas publication. */
-async function publishedRecallFixture(deadline: Deadline, withOpenAssumptions = false) {
-  const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true, withOpenAssumptions))
+async function publishedRecallFixture(deadline: Deadline, withOpenAssumptions = false, mixedHorizons = false) {
+  const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true, withOpenAssumptions, mixedHorizons))
   const scanner = f.scanner, memory = f.business.atlasRecall()?.memory
   if (!scanner || !memory) throw new Error("The canonical scanner and Atlas reader are required")
   const staged = await deadline.phase("stage-real-precedent", () => f.stage(f.previous))
@@ -856,6 +857,128 @@ test("Planner Recall admits open Planner assumptions without confirming uncertai
       expect(after.atlas).toEqual(publishedState.atlas)
       expect(after.outbox).toEqual(publishedState.outbox)
       expect(after.cases[f.previous.id]).toEqual(publishedState.cases[f.previous.id])
+    })
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("Planner Recall preserves different candidate horizons and refuses a changed current query or precedent", async () => {
+  const deadline = compositionTestDeadline("planner-recall-mixed-horizons")
+  try {
+    const { f, incoming, canonical, baseline, publishedState } = await publishedRecallFixture(deadline, true, true)
+    const current = publishedState.cases[f.current.id], previous = publishedState.cases[f.previous.id]
+    if (!current || !previous) throw new Error("The real source and published precedent are required")
+    expect(current.horizon).toEqual({ start: "2027-01-01", end: "2027-01-31" })
+    expect(previous.horizon).toEqual({ start: "2027-01-01", end: "2027-12-31" })
+    expect(incoming().scope.recallScope.period).toEqual(current.horizon)
+    for (const value of [current, previous]) {
+      expect(value.assumptions).toHaveLength(2)
+      expect(value.assumptions.every((item) => item.state === "open")).toBe(true)
+      expect(value.assumptions.map((item) => item.evidenceRefs)).toEqual([[f.source], [f.source]])
+    }
+    expect(baseline.matches).toHaveLength(1)
+    expect(baseline.matches[0]!.explanation.currentDifferences).toContain("horizon")
+    expect(baseline.matches[0]!.explanation.matchedCriteria).not.toContain("horizon")
+
+    await deadline.phase("each-installed-recall-keeps-the-original-candidate-horizon", async () => {
+      const roots: RootObservation[] = []
+      for (let phase = 0; phase < 2; phase++) {
+        const input = incoming()
+        await f.ui("sf_decision_recall", input, async (call) => {
+          const measured = await f.measure(() => f.business.withCase(call, f.current, {}, async () => {
+            expectIndependentRoots(f.control.roots)
+            f.control.roots = []
+            return { status: "ok", value: await f.business.caseRecall(input, call) }
+          }))
+          const result = recallOk(ok(measured.value))
+          expect(result).toEqual(baseline)
+          expect(result.matches[0]!.explanation.currentDifferences).toContain("horizon")
+          expectIndependentRoots(measured.roots)
+          roots.push(...measured.roots)
+        })
+      }
+      expect(new Set(roots.map((root) => root.identity)).size).toBe(4)
+      expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("a-query-period-outside-the-current-case-keeps-the-canonical-refusal", async () => {
+      const input = incoming()
+      input.scope.recallScope.period = { start: "2027-02-01", end: "2027-02-28" }
+      let produced: RecallResult | undefined
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, canonicalSources = 0
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+          const read = async () => {
+            canonicalSources++
+            return f.business.context.resolve(structuredClone(f.source), call)
+          }
+          // The invalid query has no terminal proof frame. Both invocations
+          // still execute their complete canonical evidence reader.
+          expect((await f.recordProof.observe(structuredClone(f.source), call, read)).state).toBe("fresh")
+          expect((await f.recordProof.observe(structuredClone(f.source), call, read)).state).toBe("fresh")
+          produced = await canonical(input, call)
+          return produced
+        }))
+        if (!produced) throw new Error("The invalid period did not reach the original Recall")
+        expect(measured.value).toEqual(produced)
+        expect(produced.status).toBe("unavailable")
+        expect(reads).toBe(1)
+        expect(canonicalSources).toBe(2)
+        // Each observer checks one unsupported witness; neither admits work.
+        expectIndependentRoots(measured.roots)
+      })
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("a-human-change-to-the-candidate-horizon-refuses-at-fresh-egress", async () => {
+      const input = incoming(), changedHorizon = { start: "2027-01-01", end: "2027-03-31" }
+      let changedRef: CaseRef | undefined
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0
+        let produced: RecallResult | undefined
+        let editRoots: RootObservation[] = []
+        f.control.afterRoot = async (count) => {
+          expect(count).toBe(1)
+          expect(reads).toBe(1)
+          if (!produced) throw new Error("The complete Recall must precede the human horizon change")
+          expect(recallOk(produced)).toEqual(baseline)
+          expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+          changedRef = ok(await f.editAssumptions(f.previous, previous.assumptions, changedHorizon)).caseRef
+          expect(changedRef).toEqual({ ...f.previous, version: f.previous.version + 1 })
+          // The original editor owns a separate preflight. Account for those
+          // roots explicitly instead of hiding them from the measurement.
+          editRoots = f.control.roots.slice(count)
+          expectIndependentRoots(editRoots)
+        }
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          produced = await canonical(input, call)
+          return produced
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        if (!produced || !changedRef) throw new Error("The canonical result or human horizon change did not complete")
+        expect(recallOk(produced)).toEqual(baseline)
+        expect(reads).toBe(1)
+        expect(measured.roots).toHaveLength(4)
+        const editIdentities = new Set(editRoots.map((root) => root.identity))
+        const outer = measured.roots.filter((root) => !editIdentities.has(root.identity))
+        expect(outer).toHaveLength(2)
+        expect(outer[0]!.identity).not.toBe(outer[1]!.identity)
+      })
+      const changed = await f.snapshot()
+      expect(changed.cases[f.previous.id]).toEqual({ ...previous, version: f.previous.version + 1, horizon: changedHorizon })
+      expect(changed.cases[f.current.id]).toEqual(current)
+      expect(changed.versions.cases).toBe(publishedState.versions.cases + 1)
+      expect(changed.atlas).toEqual(publishedState.atlas)
+      expect(changed.outbox).toEqual(publishedState.outbox)
+      // The old explicit selection is now historical. The complete reader also
+      // refuses it and never repairs or republishes the earlier Atlas receipt.
+      await f.ui("sf_decision_recall", input, async (call) => {
+        expect((await canonical(input, call)).status).toBe("unavailable")
+      })
+      expect(await f.snapshot()).toEqual(changed)
     })
   } finally { await deadline.close() }
 }, 120_000)
