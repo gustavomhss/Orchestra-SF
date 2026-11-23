@@ -360,8 +360,17 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await document.selectOption({ value: selected[0]!.selectionRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
   await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
-    await expect(localized.getByRole("option", { name: filename, exact: true })).toHaveCount(1)
-    await localized.getByRole("combobox", { name: "Documento", exact: true }).selectOption({ value: selected[0]!.selectionRef })
+    const choice = localized.getByRole("combobox", { name: "Documento", exact: true })
+    const option = choice.locator("option").filter({ hasText: filename })
+    await expect(option).toHaveCount(1)
+    await expect(option).toHaveText(filename)
+    // An opaque selection reference belongs to this newly authorized catalog read.
+    // Match the unique original attachment name and use this context's current option.
+    await choice.selectOption({ label: filename })
+    const currentRef = await option.getAttribute("value")
+    expect(currentRef).toBeTruthy()
+    await expect(choice).toHaveValue(currentRef!)
+    await expect(localized.getByRole("button", { name: "Abrir documento", exact: true })).toBeEnabled()
   })
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([

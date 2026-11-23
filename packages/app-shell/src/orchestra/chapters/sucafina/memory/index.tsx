@@ -32,6 +32,7 @@ type MemoryViewState = {
   selectedChoice: string
   material: Material | null
   outcome: Outcome | null
+  outcomeIssue: "coverage-incomplete" | null
   listState: ReadState
   detailState: ReadState
   catalogState: ReadState
@@ -51,9 +52,9 @@ const stateFrom = (result: MemoryOperationResult): SfUiState => {
   }
 }
 
-const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "listState" | "detailState" | "catalogState" | "message"> = {
+const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "outcomeIssue" | "listState" | "detailState" | "catalogState" | "message"> = {
   active: null, catalog: [], conditions: [], choices: [], signals: [], selectedCondition: "", selectedChoice: "",
-  material: null, outcome: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
+  material: null, outcome: null, outcomeIssue: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
 }
 
 /**
@@ -134,7 +135,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     requestEpoch += 1
     listAbort?.abort()
     detailAbort?.abort()
-    setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null,
+    setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "idle", detailState: "idle", message: null })
     setView(field, value)
   }
@@ -161,7 +162,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const epoch = requestEpoch
     const client = createSfMemoryClient(ready.transport)
     setView({
-      active: caseRef, conditions: [], choices: [], signals: [], material: null, outcome: null,
+      active: caseRef, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "loading", detailState: "idle", message: null,
     })
     if (props.surfaceId === "UI63") {
@@ -233,7 +234,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const signal = detailAbort.signal
     const epoch = requestEpoch
     const generation = owner.generation()
-    setView({ selectedCondition: conditionId, selectedChoice: "", material: null, outcome: null, detailState: "loading" })
+    setView({ selectedCondition: conditionId, selectedChoice: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-materiality"](
       { ...caseRef, conditionId }, { signal },
     ).catch(() => undefined)
@@ -257,7 +258,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const signal = detailAbort.signal
     const epoch = requestEpoch
     const generation = owner.generation()
-    setView({ selectedChoice: choiceId, selectedCondition: "", material: null, outcome: null, detailState: "loading" })
+    setView({ selectedChoice: choiceId, selectedCondition: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-outcome"](
       { ...caseRef, choiceId }, { signal },
     ).catch(() => undefined)
@@ -271,7 +272,9 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
       setView({ outcome: result.body, detailState: "ready" })
       return
     }
-    setView("detailState", result ? stateFrom(result) : "unavailable")
+    setView({ detailState: result ? stateFrom(result) : "unavailable",
+      outcomeIssue: result?.kind === "response" && result.body.status === "unavailable" &&
+        "reason" in result.body && result.body.reason === "coverage-incomplete" ? "coverage-incomplete" : null })
   }
   const referenceRoute = () => props.surfaceId === "UI63" && props.route.kind === "entry"
     ? props.route.params.selectionRef : undefined
@@ -283,7 +286,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     detailAbort = controller
     const epoch = ++requestEpoch
     const generation = owner.generation()
-    setView({ selectedChoice: "", material: null, outcome: null, detailState: "loading" })
+    setView({ selectedChoice: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
     if (!/^[a-f0-9]{64}$/.test(selectionRef)) {
       setView("detailState", "invalid")
       return
@@ -296,7 +299,9 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
       setView({ outcome: result.body, detailState: "ready" })
       return
     }
-    setView("detailState", result ? stateFrom(result) : "unavailable")
+    setView({ detailState: result ? stateFrom(result) : "unavailable",
+      outcomeIssue: result?.kind === "response" && result.body.status === "unavailable" &&
+        "reason" in result.body && result.body.reason === "coverage-incomplete" ? "coverage-incomplete" : null })
   }
   createEffect(() => {
     const selectionRef = referenceRoute()
@@ -318,7 +323,8 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     view.detailState === "loading" ? "sf.common.loading" :
     view.detailState === "denied" ? "sf.common.noAccess" :
     view.detailState === "stale" ? "sf.common.stale" :
-    view.detailState === "invalid" ? "sf.common.invalidLink" : "sf.common.unavailable"
+    view.detailState === "invalid" ? "sf.common.invalidLink" :
+    view.outcomeIssue === "coverage-incomplete" ? "sf.u26.incompleteOutcome" : "sf.common.unavailable"
   const pageState = (): SfUiState =>
     privacy() !== "ready" ? privacy() :
     view.listState === "idle" ? "ready" :
@@ -454,6 +460,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
           </SfStatePanel>
         </Show>
         <Show when={privacy() === "ready" && props.surfaceId === "UI63" && (view.selectedChoice || referenceRoute())}>
+          <div data-sf-memory-outcome-status={view.detailState} data-sf-memory-reason={view.outcomeIssue ?? undefined}>
           <SfStatePanel state={view.detailState === "idle" ? "loading" : view.detailState}
             messageKey={k(detailMessage())}
             onRetryRead={() => { const selectionRef = referenceRoute(); if (selectionRef) void readReference(selectionRef); else void readOutcome(view.selectedChoice) }}>
@@ -481,6 +488,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
               </section>
             )}</Show>
           </SfStatePanel>
+          </div>
         </Show>
       </section>
     </SfPageFrame>

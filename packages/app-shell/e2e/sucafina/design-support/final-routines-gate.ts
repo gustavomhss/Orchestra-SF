@@ -11,10 +11,17 @@ export async function captureFinalRoutineGate(page: Page, info: TestInfo, state:
   await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
   await expect(host).toHaveAttribute("data-sf-view-state", "denied")
   await expect(page.locator('[data-sf-surface="UI66"]')).toHaveCount(0)
+  await expect(page.locator('[data-sf-route-unavailable="UI66"]')).toBeVisible()
+  await expect(page.locator('[data-sf-frame="page"] .mx-page')).toHaveCount(1)
   await page.evaluate(async () => { await document.fonts.ready })
-  const dimensions = await page.evaluate(() => ({ width: window.innerWidth, height: window.innerHeight,
-    documentWidth: document.documentElement.scrollWidth }))
+  const dimensions = await page.evaluate(() => {
+    const scroller = document.querySelector('[data-sf-frame="page"] .mx-page')
+    if (!(scroller instanceof HTMLElement)) throw new Error("The contextual Schedule page scroller is absent")
+    return { width: window.innerWidth, height: window.innerHeight,
+      documentWidth: document.documentElement.scrollWidth, pageWidth: scroller.scrollWidth, pageViewport: scroller.clientWidth }
+  })
   expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.width + 1)
+  expect(dimensions.pageWidth).toBeLessThanOrEqual(dimensions.pageViewport + 1)
   await info.attach("UI66-" + state + "-f01-gate", {
     body: await page.screenshot({ type: "png", fullPage: true, animations: "disabled" }), contentType: "image/png",
   })

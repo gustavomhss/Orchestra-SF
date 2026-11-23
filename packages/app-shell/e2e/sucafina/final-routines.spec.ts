@@ -150,7 +150,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     const surface = page.locator('[data-sf-surface="UI70"]')
     await expect(surface).toHaveAttribute("data-state", "ready")
     const profiles = surface.locator(".sf-n29-resident-list > article")
-    const maestro = profiles.filter({ has: surface.getByRole("heading", { level: 2, name: "sf_maestro", exact: true }) })
+    const maestro = profiles.filter({ has: page.getByRole("heading", { level: 2, name: "sf_maestro", exact: true }) })
     await expect(maestro).toHaveCount(1)
     await expect(maestro).toBeVisible()
     await captureFinalSurface(page, info, "UI70", "en-dark-desktop-resident-inventory", { preview: true })

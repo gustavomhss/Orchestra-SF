@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup } from "solid-js"
+import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -16,6 +16,7 @@ export function SfMemoryCasePicker(props: {
 }) {
   const owner = useSfContext()
   const language = useLanguage()
+  const sourceLabelId = createUniqueId()
   const [view, setView] = createStore({
     state: "loading" as SfUiState,
     options: [] as CaseOption[],
@@ -71,8 +72,8 @@ export function SfMemoryCasePicker(props: {
       onRetryRead={() => setView("revision", (value) => value + 1)}>
       <Show when={view.options.length}>
         <label>
-          <span>{language.t("sf.u26.authorizedCase")}</span>
-          <select value={selected()} data-sf-memory-case onChange={(event) =>
+          <span id={sourceLabelId}>{language.t("sf.u26.authorizedCase")}</span>
+          <select aria-labelledby={sourceLabelId} value={selected()} data-sf-memory-case onChange={(event) =>
             props.onSelect(view.options.find((option) => option.ref === event.currentTarget.value) ?? null)}>
             <option value="">{language.t("sf.u26.chooseCase")}</option>
             <For each={view.options}>{(option) => <option value={option.ref}>{option.title}</option>}</For>

@@ -1,5 +1,6 @@
 // N30 / U26. Localized leaf keys; registration into orchestra.ts is owned by 125.
 export const SF_U26_COPY = {
+  "sf.u26.incompleteOutcome": "Expected and observed values cannot be compared while the recorded cost coverage is incomplete. Review the pending costs in the original decision.",
   "sf.u26.recordedChoices": "Recorded choices",
   "sf.u26.noChoices": "No choices are recorded for this authorized case.",
   "sf.u26.recordedAt": "Recorded at",
@@ -91,6 +92,7 @@ export const SF_U26_COPY = {
 } as const
 
 export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> = {
+  "sf.u26.incompleteOutcome": "Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta. Revise os custos pendentes na decisão original.",
   "sf.u26.recordedChoices": "Escolhas registradas",
   "sf.u26.noChoices": "Nenhuma escolha registrada para este caso autorizado.",
   "sf.u26.recordedAt": "Registrado em",
