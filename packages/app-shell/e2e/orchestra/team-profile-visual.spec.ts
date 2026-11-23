@@ -408,3 +408,53 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
     })
   })
 }
+
+test("adversarial audit: reconnecting the same Team retains a never-submitted draft", { tag: "@component-visual" }, async ({ page, baseURL }, info) => {
+  expect(info.config.metadata.bundle, "Requires the original production integration build").toBe("production")
+  if (!baseURL) throw new Error("Production baseURL is required")
+  await page.setViewportSize({ width: 390, height: 844 })
+  const fixture = await installTeamsVisual(page, { baseURL, scheme: "dark", signedIn: true })
+  const draft = "Adversarial audit: preserve this never-submitted Team draft after transport interruption."
+  try {
+    await page.goto(fixture.chatURL(teamsVisualTeams[0].id), { waitUntil: "domcontentloaded" })
+    const shell = page.locator("[data-sf-teams-shell]")
+    const workspace = shell.locator("[data-sf-session-workspace]")
+    const editor = workspace.locator('[data-component="prompt-input-v2"] [data-component="prompt-input"]')
+    await expect(shell).toHaveAttribute("data-sf-team-selected", teamsVisualTeams[0].id)
+    await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
+    await expect(workspace).toHaveAttribute("data-sf-session-stream", "connecting")
+    await expect(editor).toBeEditable()
+    await editor.fill(draft)
+    await expect(editor).toHaveText(draft)
+    await expect(workspace.locator('[data-action="prompt-submit"]')).toBeEnabled()
+    await capture(page, info, "audit-unsent-before-stream-close", "dark")
+    const before = fixture.requests.length
+
+    // End only the event transport. The existing fixture keeps the same signed-in
+    // principal, Team, effective revision and authority generation on refresh.
+    await fixture.finishEventStreams()
+    await expect(workspace).toHaveAttribute("data-sf-session-state", "unavailable")
+    await expect(workspace.getByRole("alert")).toContainText("Chat updates stopped. Refresh access before continuing.")
+    await capture(page, info, "audit-unsent-stream-stopped", "dark")
+    await workspace.getByRole("button", { name: "Try again", exact: true }).click()
+    await expect(shell).toHaveAttribute("data-sf-team-selected", teamsVisualTeams[0].id)
+    await expect(workspace).toHaveAttribute("data-sf-session-state", "ready")
+    await expect(editor).toBeEditable()
+    await capture(page, info, "audit-unsent-after-same-authority-refresh", "dark")
+    const observed = await editor.textContent()
+    const writes = fixture.requests.filter((request) => request.method !== "GET")
+    await info.attach("audit-unsent-draft-recovery", {
+      contentType: "application/json",
+      body: JSON.stringify({
+        classification: "Original production UI with existing HTTP fixture, not Microsoft live",
+        expectedDraft: draft, observedDraft: observed,
+        selectedTeam: await shell.getAttribute("data-sf-team-selected"),
+        sameFixtureAuthority: true, noPromptSubmitted: writes.length === 0,
+        refreshRequests: fixture.requests.slice(before), writes,
+      }, null, 2),
+    })
+    expect(writes, "Transport recovery must not submit or retry a user operation").toEqual([])
+    await attachFixtureEvidence(info, fixture)
+    await expect(editor, "A never-submitted draft must return after the same full authority is revalidated").toHaveText(draft)
+  } finally { await fixture.dispose() }
+})
