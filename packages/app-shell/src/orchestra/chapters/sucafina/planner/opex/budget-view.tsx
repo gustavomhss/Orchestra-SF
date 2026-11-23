@@ -577,6 +577,10 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     setState("review",{kind,id,revision,operationRef:crypto.randomUUID() as SfOperationRef,...extras})
   }
   const projectName = (id: string) => projectRows().find((project) => project.id === id)?.name ?? id
+  const projectReference = (id: string) => {
+    const project = projectRows().find((item) => item.id === id)
+    return project?.name ? project.name + " · " + id : id
+  }
   const reviewLabel = (kind: ReviewKind) => {
     switch (kind) {
       case "project-save": return "sf.u07.saveProject"
@@ -600,7 +604,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         : path === "split" && typeof value === "boolean"
           ? { kind: "boolean", value, trueLabel: msg("sf.u07.splitEnabled"), falseLabel: msg("sf.u07.splitDisabled") }
           : textual(path === "approvalState" && typeof value === "string" ? approvalLabel(value) :
-            path === "proj" && typeof value === "string" ? projectName(value) : String(value)),
+            path === "proj" && typeof value === "string" ? projectReference(value) : String(value)),
     }))
   const reviewFields = () => {
     const r=state.review

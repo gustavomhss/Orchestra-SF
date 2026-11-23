@@ -1,4 +1,4 @@
-// Existing English entries remain frozen. Brazilian Portuguese follows the native Sucafina campaign terminology.
+// Native vendor contract copy in English and Brazilian Portuguese.
 // This leaf owns its catalog only; the shared dictionary composition is unchanged.
 export const SF_U15_COPY = {
   "sf.cap14.title": "Vendor Contracts",
@@ -22,7 +22,7 @@ export const SF_U15_COPY = {
   "sf.u15.discard": "Discard changes",
   "sf.u15.reviewSave": "Review contract change",
   "sf.u15.reviewDelete": "Review contract deletion",
-  "sf.u15.reviewScope": "Vendor contract and source CAS version",
+  "sf.u15.reviewScope": "Vendor contract and current record version",
   "sf.u15.reviewSummary": "Only the fields shown in this authorized record are included.",
   "sf.u15.notAvailable": "The authorized source is unavailable. Refresh to read it again.",
   "sf.u15.invalid": "The contract projection does not match the source contract.",
@@ -97,7 +97,7 @@ export const SF_U15_COPY_BR: Readonly<Record<keyof typeof SF_U15_COPY, string>> 
   "sf.u15.discard": "Descartar alterações",
   "sf.u15.reviewSave": "Revisar alteração contratual",
   "sf.u15.reviewDelete": "Revisar exclusão do contrato",
-  "sf.u15.reviewScope": "Contrato e versão CAS da fonte",
+  "sf.u15.reviewScope": "Contrato e versão atual do registro",
   "sf.u15.reviewSummary": "Apenas os campos exibidos neste registro autorizado serão enviados.",
   "sf.u15.notAvailable": "A fonte autorizada está indisponível. Atualize para ler novamente.",
   "sf.u15.invalid": "A projeção do contrato não corresponde ao contrato da fonte.",

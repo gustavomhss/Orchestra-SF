@@ -343,7 +343,11 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
   }
   const actionLabel = (action: SourcingAction): SfU12CopyKey =>
     action === "select_quote" ? "sf.u12.select" : action === "save" ? "sf.u12.save" : "sf.u12.submit"
-  const quoteNumber = (value: unknown) => typeof value === "number" ? new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 2 }).format(value) : asString(value)
+  const quoteNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value)
+    ? new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(value) : asString(value)
+  // Suppliers may submit more than one quote with the same name and total.
+  const quoteReference = (quote: QuoteEdit | undefined, id: string | null | undefined) =>
+    id ? (quote?.supplier ? quote.supplier + " · " + id : id) : quote?.supplier ?? id
   const quoteAmount = (quote: QuoteEdit) => {
     const amount = quote.total == null ? "" : quoteNumber(quote.total)
     const currency = typeof quote.currency === "string" ? quote.currency.trim() : ""
@@ -354,7 +358,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(intent.action==="select_quote"){
       const quote=intent.sourcing.quotes?.find((item)=>item.id===intent.quoteId)
       return [
-        {path:"quoteId",label:m("sf.u12.selectId"),value:toView(quote?.supplier??intent.quoteId)},
+        {path:"quoteId",label:m("sf.u12.selectId"),value:toView(quoteReference(quote,intent.quoteId))},
         {path:"sourcing.quote.total",label:m("sf.u12.quoteTotal"),value:toView(quote?quoteAmount(quote):null)},
       ]
     }
@@ -369,7 +373,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         {path:"sourcing.quotes." + index + ".currency",label:m("sf.u12.quoteCurrency"),value:toView(quote.currency)},
         {path:"sourcing.quotes." + index + ".total",label:m("sf.u12.quoteTotal"),value:toView(quoteAmount(quote))},
       ]),
-      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(intent.sourcing.quotes?.find((quote) => quote.id === intent.sourcing.selectedId)?.supplier ?? intent.sourcing.selectedId)},
+      {path:"sourcing.selectedId",label:m("sf.u12.selectId"),value:toView(quoteReference(intent.sourcing.quotes?.find((quote) => quote.id === intent.sourcing.selectedId),intent.sourcing.selectedId))},
     ]
   }
   const reviewSnapshot=(intent:Intent):SfReviewSnapshot=>({
@@ -709,6 +713,15 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     const row=request()
     if(!row)return <SfStatePanel state="not-found" messageKey={k("sf.u12.notFound")}/>
     const recorded=row.sourcing?.quotes??[]
+    const supplierCounts = new Map<string, number>()
+    for (const quote of recorded) {
+      const label = quote.supplier ?? quote.id ?? ""
+      supplierCounts.set(label, (supplierCounts.get(label) ?? 0) + 1)
+    }
+    const supplierLabel = (quote: QuoteEdit) => {
+      const label = quote.supplier ?? quote.id ?? ""
+      return (supplierCounts.get(label) ?? 0) > 1 && quote.id ? quoteReference(quote, quote.id) ?? label : label
+    }
     const fx=recordedFx(row)
     const facts=row.sourcing?.comparison??null
     const limited=!!facts&&facts.eligibleCount<2
@@ -741,7 +754,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         rows={quotes()}
         getRowKey={(quote)=>(quote.id??"") as SfRef}
         columns={[
-          {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:220,weight:2},render:(quote)=><>{quote.supplier??""}</>},
+          {id:"supplier",labelKey:k("sf.u12.quoteSupplier"),align:"start",widthPolicy:{kind:"flex",minPx:220,weight:2},render:(quote)=><>{supplierLabel(quote)}</>},
           {id:"eligibility",labelKey:k("sf.u12.eligibility"),align:"start",widthPolicy:{kind:"content",minPx:120,maxPx:240},render:(quote)=><>{fxRow(quote)?.eligibility??""}</>},
           {id:"currency",labelKey:k("sf.u12.quoteCurrency"),align:"start",widthPolicy:{kind:"content",minPx:60,maxPx:120},render:(quote)=><>{quote.currency??""}</>},
           {id:"total",labelKey:k("sf.u12.quoteTotal"),align:"end",widthPolicy:{kind:"content",minPx:100,maxPx:170},render:(quote)=><>{quoteNumber(quote.total)||t("sf.u12.missing")}</>},
@@ -781,14 +794,14 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
       </Show>
       <Show when={!!facts&&!limited&&!facts.rankLine}><p role="status">{t("sf.u12.rankUnavailable")}</p></Show>
       <Show when={fx}><dl>{Object.entries(fx??{}).map(([currency,rate])=>
-        <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):asString(rate)}</dd></div>)}</dl></Show>
+        <div><dt>{currency}</dt><dd>{rate===null?t("sf.u12.missing"):quoteNumber(rate)}</dd></div>)}</dl></Show>
       <p>{t("sf.u12.selectedSaved")}</p>
       <p>{t("sf.u12.noManualApproval")}</p>
       <label>{t("sf.u12.selectId")}
         <select value={ui.quoteChoice} onChange={(event)=>setUi("quoteChoice",event.currentTarget.value)}>
           <option value="">{t("sf.u12.noSelection")}</option>
           <For each={recorded.filter((quote)=>quote.id)}>{(quote)=>
-            <option value={quote.id}>{quote.supplier??quote.id} · {quote.currency??""} {asString(quote.total)}</option>
+            <option value={quote.id}>{supplierLabel(quote)} · {quoteAmount(quote)??t("sf.u12.missing")}</option>
           }</For>
         </select>
       </label>

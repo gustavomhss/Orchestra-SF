@@ -47,7 +47,7 @@ const EDIT_SECTIONS: readonly { id: string; title: Key; fields: readonly Field[]
   { id: "notes", title: "sf.u15.notes", fields: ["notes"] },
 ]
 function fieldKey(field: Field): Key { return ("sf.u15.field." + field) as Key }
-function editFields(values: SfVendorEdit): readonly SfReviewField[] {
+function editFields(values: SfVendorEdit, locale: string): readonly SfReviewField[] {
   return FIELDS.map((field) => {
     const value = values[field]
     const option = field === "amtType" && ["total", "monthly", "annual"].includes(String(value)) ||
@@ -59,7 +59,8 @@ function editFields(values: SfVendorEdit): readonly SfReviewField[] {
         : { kind: "text" as const, text: value === ""
           ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
           : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
-            : dataText(String(value)) },
+            : dataText(field === "amount" && typeof value === "number" && Number.isFinite(value)
+              ? new Intl.NumberFormat(locale, { maximumSignificantDigits: 21 }).format(value) : String(value)) },
     }
   })
 }
@@ -444,10 +445,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const base = selectedRow()
     const original: SfReviewSnapshot | null = base && ref
       ? { kind: "persisted", ref, version: review.version,
-        fields: editFields(vendorEditFromRecord(base)) } : null
+        fields: editFields(vendorEditFromRecord(base), language.intl()) } : null
     const actionKey = review.action === "save" ? "sf.u15.save" : "sf.u15.delete"
     const fields = review.action === "delete"
-      ? editFields(vendorEditFromRecord(base)) : editFields(review.values)
+      ? editFields(vendorEditFromRecord(base), language.intl()) : editFields(review.values, language.intl())
     return <fieldset class="sf-u15-review-controls" disabled={view.sending || view.outcomeUnknown}
       aria-label={t("sf.u15.reviewScope")}><SfChangeReview
       operation={{ ref: review.operationRef, label: message(actionKey), scope: dataText(t("sf.u15.reviewScope")) }}

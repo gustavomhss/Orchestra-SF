@@ -58,7 +58,9 @@ const mount = (transport: SfTransport) => {
 }
 const selected = (scope: string) => ({ surfaceId: "CAP25" as const, identity: { kind: "record" as const, recordRef: "PR-1" as SfRef }, editScopeKey: scope as SfEditScopeKey })
 
-test("confirming a quote shows progress, sends one CAS command, and reads the recorded selection", async () => {
+for (const duplicateSupplier of [false, true]) test("confirming a quote shows progress, sends one CAS command, and reads the recorded selection" +
+  (duplicateSupplier ? " when supplier labels and totals are equal" : ""), async () => {
+  const chosenId = duplicateSupplier ? "B" : "A"
   const preflight = Promise.withResolvers<void>(), commit = Promise.withResolvers<void>()
   const verification = Promise.withResolvers<void>()
   const writes: { input: unknown; idempotencyKey?: string }[] = []
@@ -76,8 +78,11 @@ test("confirming a quote shows progress, sends one CAS command, and reads the re
     if (reads === 4) await verification.promise
     const source = page(recorded ? 2 : 1)
     const item = { ...source.value.data.requests[0]!, sourcing: {
-      selectedId: recorded ? "A" : null,
-      quotes: [{ id: "A", supplier: "Fornecedor A", currency: "USD", total: 32400, techPass: true }],
+      selectedId: recorded ? chosenId : duplicateSupplier ? "A" : null,
+      quotes: [
+        { id: "A", supplier: "Fornecedor A", currency: "USD", total: 32400, techPass: true },
+        ...(duplicateSupplier ? [{ id: "B", supplier: "Fornecedor A", currency: "USD", total: 32400, techPass: true }] : []),
+      ],
     } }
     return { kind: "response", status: 200, headers: {}, body: { ...source, value: {
       ...source.value, allowedActionIds: ["save", "select_quote"], data: { ...source.value.data, requests: [item] },
@@ -90,14 +95,22 @@ test("confirming a quote shows progress, sends one CAS command, and reads the re
     const quote = [...view.node.querySelectorAll<HTMLSelectElement>(".sf-u12-comparison select")]
       .find((select) => [...select.options].some((option) => option.value === "A"))
     expect(quote).toBeDefined()
-    quote!.value = "A"
+    expect([...quote!.options].filter((option) => option.value === "A" || option.value === "B").map((option) => option.textContent))
+      .toEqual(duplicateSupplier ? ["Fornecedor A · A · 32,400 USD", "Fornecedor A · B · 32,400 USD"] : ["Fornecedor A · 32,400 USD"])
+    quote!.value = chosenId
     quote!.dispatchEvent(new Event("change", { bubbles: true }))
     button(view.node, "Select winning quote")!.click()
     const review = view.node.querySelector('[data-component="sf-change-review"]')!
     const confirm = review.querySelector<HTMLButtonElement>("button.primary")!
     const alert = () => view.node.querySelector('[role="alert"]')
     expect(review.textContent).toContain("Fornecedor A")
-    expect(review.textContent).toContain(new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(32400) + " USD")
+    const selection = [...review.querySelectorAll(".sf-s03-comparison-field")]
+      .find((field) => field.querySelector("h4")?.textContent === "Selected quotation")
+    expect(selection).toBeDefined()
+    expect(selection?.getAttribute("data-difference")).toBe("changed")
+    if (duplicateSupplier) expect(selection?.querySelector('[data-version="base"] .sf-s03-field-value')?.textContent).toBe("Fornecedor A · A")
+    expect(selection?.querySelector('[data-version="proposed"] .sf-s03-field-value')?.textContent).toBe("Fornecedor A · " + chosenId)
+    expect(review.textContent).toContain(new Intl.NumberFormat("en", { maximumSignificantDigits: 21 }).format(32400) + " USD")
     expect(confirm.textContent?.trim()).toBe("Select winning quote")
     confirm.click()
     await waitFor(() => alert() && !confirm.disabled)
@@ -114,7 +127,7 @@ test("confirming a quote shows progress, sends one CAS command, and reads the re
     expect(view.node.textContent).not.toContain("Command outcome unknown")
     expect(alert()).toBeNull()
     expect(writes).toEqual([{
-      input: { page: "Requests", action: "select_quote", id: "PR-1", version: 1, values: { quoteId: "A" } },
+      input: { page: "Requests", action: "select_quote", id: "PR-1", version: 1, values: { quoteId: chosenId } },
       idempotencyKey: expect.any(String),
     }])
     confirm.click()
@@ -125,7 +138,7 @@ test("confirming a quote shows progress, sends one CAS command, and reads the re
     expect(alert()).toBeNull()
     verification.resolve()
     await waitFor(() => view.node.querySelector('[data-confirmation-phase="producer-confirmed"]'))
-    expect(view.captured.handle?.ready()?.drafts.peek(selected("CAP25:sourcing"))?.snapshot()).toMatchObject({ baseVersion: 2, value: { selectedId: "A" }, pendingOperation: null })
+    expect(view.captured.handle?.ready()?.drafts.peek(selected("CAP25:sourcing"))?.snapshot()).toMatchObject({ baseVersion: 2, value: { selectedId: chosenId }, pendingOperation: null })
     expect(writes).toHaveLength(1)
   } finally { preflight.resolve(); commit.resolve(); verification.resolve(); view.close() }
 })

@@ -178,7 +178,9 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await detail.locator('input[name="pr.estAmount"]').fill("16500")
       await detail.locator('textarea[name="pr.description"]').fill(data.revisedDescription)
       await detail.getByRole("button", { name: "Save requisition draft", exact: true }).click()
-      await expect(review).toContainText("16500")
+      await expect(review.getByRole("region", { name: "Estimated amount", exact: true })
+        .locator('[data-version="proposed"] .sf-s03-field-value'))
+        .toHaveText(new Intl.NumberFormat("en", { maximumSignificantDigits: 21 }).format(16500))
       const beforeCancel = posts.length
       await review.getByRole("button", { name: "Cancel review", exact: true }).click()
       expect(posts).toHaveLength(beforeCancel)
@@ -288,7 +290,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(editor).toHaveCount(0)
       await expect(review).toContainText(evaluator)
       await expect(review.getByRole("region", { name: "Selected quotation", exact: true })
-        .locator('[data-version="proposed"] .sf-s03-field-value')).toHaveText(selectedSupplier)
+        .locator('[data-version="proposed"] .sf-s03-field-value')).toHaveText(selectedSupplier + " · " + selectedQuote)
       const beforeCancel = posts.length
       await review.getByRole("button", { name: "Cancel review", exact: true }).click()
       expect(posts).toHaveLength(beforeCancel)
