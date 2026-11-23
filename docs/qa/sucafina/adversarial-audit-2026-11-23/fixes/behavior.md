@@ -27,14 +27,15 @@ The existing `team-profile-visual.spec.ts` production HTTP harness was measured 
 | --- | --- | --- | ---: | ---: | ---: |
 | [Baseline](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45205412569) | Product `e115b667`; snapshot `452695d76384787bd3045222d6fe67a85c5932dc` | 12 passed, original regression failed: expected draft, received empty | 1093.04ms | 22.74ms | 161.79ms |
 | [After](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45206772464) | Product `824ad6efa248e9130c00eb76830fc40106e91c04`; snapshot `3a992a495773f62c4655cdd1b3d64a16fa127561` | 13 passed, exact draft restored, writes empty | 1009.63ms | 19.39ms | 150.16ms |
+| [Composed](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45218615206) | Product `77f3104662e5ce4a7181403761a3b7e51c138704`; snapshot `2758bf0651eb6765383795030c656d7bbe4fc25b` | 13 passed, exact draft restored, writes empty | 1016.89ms | 17.53ms | 156.51ms |
 
-These are one sample per state in Chromium/Linux, original production assets with the existing synthetic HTTP authority fixture. They prove this recovery scenario, not statistical performance equivalence, live Microsoft/OIDC, a persistent live SSE reconnect, or a flake rate. Both browser runs use one worker and zero retries. The recorded recovery state is ready/connecting, as in the original reproduction.
+These are one sample per state in Chromium/Linux, original production assets with the existing synthetic HTTP authority fixture. They prove this recovery scenario, not statistical performance equivalence, live Microsoft/OIDC, a persistent live SSE reconnect, or a flake rate. All three browser runs use one worker and zero retries. The recorded recovery state is ready/connecting, as in the original reproduction.
 
 The first focused Bun request ([45206814417](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45206814417)) selected no tests because Bun interpreted the path as a filter. The corrected disposable request uses the explicit `./test-browser/team-sessions.test.ts` path; the test code and timeouts are unchanged. [Run 45207802862](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45207802862), snapshot `b201c7aef7f4d951d977b2e076a26e6f90e04de9`, passed all 24 tests with 231 assertions. It includes all seven new cases and the existing unknown-POST, namespace/protocol, and principal-purge regressions.
 
 ## Remaining qualification
 
-Combined production native runs and screenshot review must finish before merge. Existing fixtures exercise original installed producers; no replacement test application, fabricated permission, automatic mutation retry, or production write was added. The horizontal endpoint assertions measure actual browser layout and programmatic endpoints in addition to the existing keyboard gesture; they do not claim touch/wheel or browser-zoom qualification.
+Combined production native runs must finish before merge. The twelve UI55/UI56 screenshots from Files2 have been inspected, with the focused result below. Existing fixtures exercise original installed producers; no replacement test application, fabricated permission, automatic mutation retry, or production write was added. The horizontal endpoint assertions measure actual browser layout and programmatic endpoints in addition to the existing keyboard gesture; they do not claim touch/wheel or browser-zoom qualification.
 
 ## Supplemental SUP-R01: import preview hierarchy
 
@@ -63,3 +64,32 @@ A read-only source comparison found no producer/runtime changes between the pinn
 The real import proved four original missing-source gaps, exact hidden/opened/closed technical references, compact empty categories, one Apply and a recovered receipt with three changed fields. UI55 assertions ran. The original optional capture argument was absent, so this run did **not** execute UI56's optional block or produce UI55/UI56 PNGs.
 
 Commit `168d51a351c203e5c0635dd44398726205c7a100` makes UI56's same-manifest reread permanent coverage. Both UI55 and UI56 now capture source-gap and change-category checkpoints through the existing native capture helper in dark/light desktop and dark 320px presentation. A small dedicated attachment records the exact source gap paths/reasons, displayed headings and category counts. The Apply observer starts before those checkpoints and requires zero Apply calls before the original single explicit mutation. No workflow environment flag or allowlist was changed. A composed rerun and review of its original PNGs remain required.
+
+
+### Composed gate and recovery scope
+
+[Run 45217689162](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45217689162), snapshot `05c7ba8efddb0fdba093d39613f263be5290a228`, passed app-shell and E2E typechecking, the 25-test / 118-assertion pure presentation group (including both import location cases), and the 127-test / 1776-assertion browser group (including the 24 Teams controller cases). This gate is distinct from native installed-producer journeys.
+
+The composed Teams attachment `audit-unsent-draft-recovery` confirms the exact draft, unchanged fixture authority and zero writes. Its post-refresh screenshot is READY/CONNECTING. A red notice in that frame alone does not establish that the notice persists after the recovered stream opens. Test-only commit `64091e2afbea0f853aa201e10aea0a2c03034f2b` extends the original probe with a schema-checked event on the new connection and a barrier on the original list GET triggered by that event. The OPEN control is being qualified separately before a product change. Releasing the barrier must still let the finite fixture reach EOF and retire the workspace; no persistent/live SSE claim is made.
+
+### Files2 import result and original image review
+
+[Run 45216741705](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45216741705), snapshot `f5b1de9e9f20672a8e78552e08603561eb73f31b`, again finished **3 passed / 1 failed**. OP-IMPORT passed in 120621ms, with OP-EXPORT and OP-SCENARIO also passing. The document journey timed out while its capture helper attempted to reach the desktop theme control from a 320px viewport. This is not an overall green run.
+
+The original artifact `14839089214` contains 27,530,529 bytes, SHA-256 `6244bbc292655c2cce15174606da29ffff5c897dc9dc93a55e9c2a68883e36f5`. All twelve import PNGs were inspected individually: UI55 and UI56, gap and category checkpoints, dark/light 1440px and dark 320px. At these checkpoints the headings, Before import labels, disclosures and action rows remain contained and aligned; the narrow actions stack within the page. This review does not claim unmeasured zoom, touch, Portuguese rendering or an entire application visual approval.
+
+`operations-import-preview-presentation.json` records four original `missing` gaps (`desc` and `proj`, in both the source line and summary line). Their exact original paths remain in closed Source details, with open/close behavior checked. The source did not provide an unambiguous cell association for these four gaps, so each heading deliberately remains Source value, followed by Before import and Not provided by the source. The UI does not invent a record name or spreadsheet location.
+
+The same attachment records added=4, changed=5 and removed=unchanged=ignored=rejected=0. The two populated categories remain distinct; the four empty categories share one collapsed summary. UI56 rereads the same original manifest and must produce the identical presentation record.
+
+The original receipt attachment records **one Apply**, three changed fields, the changed record's version token advancing 1→2 and the unrelated record remaining 1. Preview plus independent review observe zero Apply requests before that explicit mutation. Lost-delivery reconciliation, the separate receipt route, cross-tab revocation and the independent viewer's denial still pass.
+
+Canonical PNG name prefixes are `UI55-source-gap-context`, `UI55-original-preview`, `UI56-source-gap-context` and `UI56-original-manifest-preview`; each has `-dark-desktop`, `-light-desktop` and `-dark-320` variants in the Playwright artifact.
+
+### Admission completion-signal correction
+
+Decisions2 run `45216596111` completed UI33 and rendered UI34's original Case summary with the host discovery/provider/view all ready and no console/page errors, but the helper remained inside `Response.finished()` until the unchanged total test deadline. Both matching admission replies and the original case response had already arrived. Commit `e92a3232dcea5e90da2e5b6b1fc6627dc3b3bbf2` removes only the two redundant admission `finished()` waits, retaining exact request matching, both HTTP 200 assertions, operation receipts and all original DOM readiness checks. No request is repeated and no timeout is extended. Native composed reruns must qualify this correction.
+
+### Final import category copy
+
+The image review also exposed raw lowercase English category labels. The six values are a closed producer enum in `schema/sucafina/files/structures.ts`. Their existing UI catalog entries now read Added, Changed, Removed, Unchanged, Ignored and Rejected. The already localized Portuguese entries remain Adicionados, Alterados, Removidos, Sem alterações, Ignorados and Rejeitados. Data attributes, source enum values, counts and references do not change. The original Files2 PNGs remain the before record. The maintained journey asserts the populated and empty English labels and all six Portuguese receipt labels against counts from the original detail. UI57's layout, totals, six disclosures and persistence oracles remain intact; only its English Changed locator follows the visible catalog label. A subsequent composed Files run must capture this copy update.

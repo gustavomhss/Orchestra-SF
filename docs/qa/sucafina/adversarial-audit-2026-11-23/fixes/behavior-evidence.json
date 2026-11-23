@@ -95,12 +95,166 @@
   "readSynchronization": {
     "helperCommits": [
       "4f61f409de342f4a00396c9ea985c4f5036d1960",
-      "33cf939f9fdbe095b2f87f0b6e3d98381f69c217"
+      "33cf939f9fdbe095b2f87f0b6e3d98381f69c217",
+      "e92a3232dcea5e90da2e5b6b1fc6627dc3b3bbf2"
     ],
     "ui55Ui56PermanentCoverageCommit": "168d51a351c203e5c0635dd44398726205c7a100",
     "newNumericTimeouts": 0,
     "retries": 0,
     "producerChanges": 0,
-    "qualification": "Composed rerun pending"
+    "qualification": "Composed rerun pending",
+    "finishedSignal": {
+      "diagnosticRun": 45216596111,
+      "state": "UI34 rendered ready; matching HTTP replies delivered; Response.finished remained pending",
+      "removedWaits": 2,
+      "requestReplays": 0,
+      "readyAssertionsPreserved": true
+    }
+  },
+  "composedTeams": {
+    "source": "77f3104662e5ce4a7181403761a3b7e51c138704",
+    "snapshot": "2758bf0651eb6765383795030c656d7bbe4fc25b",
+    "run": 45218615206,
+    "job": 137846435256,
+    "tests": {
+      "passed": 13,
+      "failed": 0,
+      "retries": 0
+    },
+    "metrics": {
+      "readyMs": 1016.8945160000003,
+      "inputMs": 17.533564999997907,
+      "recoveryReadyMs": 156.50970399999642
+    },
+    "state": "ready/connecting",
+    "exactDraft": true,
+    "writes": [],
+    "samples": 1,
+    "liveMicrosoft": false,
+    "persistentStream": false
+  },
+  "composedGate": {
+    "snapshot": "05c7ba8efddb0fdba093d39613f263be5290a228",
+    "run": 45217689162,
+    "job": 137843173801,
+    "conclusion": "success",
+    "appTypecheck": true,
+    "e2eTypecheck": true,
+    "semantic": {
+      "passed": 25,
+      "failed": 0,
+      "assertions": 118
+    },
+    "browser": {
+      "passed": 127,
+      "failed": 0,
+      "assertions": 1776
+    },
+    "nativeInstalledJourneyQualification": false
+  },
+  "filesSecondComposedAttempt": {
+    "snapshot": "f5b1de9e9f20672a8e78552e08603561eb73f31b",
+    "run": 45216741705,
+    "job": 137839790882,
+    "tests": {
+      "passed": 3,
+      "failed": 1
+    },
+    "passed": [
+      "OP-IMPORT",
+      "OP-EXPORT",
+      "OP-SCENARIO"
+    ],
+    "failed": [
+      "OP-DOC"
+    ],
+    "failure": "Document capture attempted desktop theme toggle at 320px; import journey passed",
+    "artifact": {
+      "id": 14839089214,
+      "bytes": 27530529,
+      "sha256": "6244bbc292655c2cce15174606da29ffff5c897dc9dc93a55e9c2a68883e36f5"
+    },
+    "import": {
+      "durationMs": 120621,
+      "sourceGaps": 4,
+      "reasons": [
+        "missing"
+      ],
+      "changeCounts": {
+        "added": 4,
+        "changed": 5,
+        "removed": 0,
+        "unchanged": 0,
+        "ignored": 0,
+        "rejected": 0
+      },
+      "emptySummaryCount": 1,
+      "rawReferencesInitiallyHidden": true,
+      "exactReferenceDisclosureOpenedAndClosed": true,
+      "ui55Assertions": true,
+      "ui56Assertions": true,
+      "presentationSameManifest": true,
+      "applyRequests": 1,
+      "receiptChangedFields": 3,
+      "changedRecordTokens": [
+        1,
+        2
+      ],
+      "unrelatedRecordTokens": [
+        1,
+        1
+      ],
+      "pngs": 12,
+      "pngsReviewed": 12,
+      "variants": [
+        "dark-1440",
+        "light-1440",
+        "dark-320"
+      ],
+      "review": "Contained and aligned at the four captured checkpoints; narrow action rows stack without overflow",
+      "touchZoomPortugueseQualification": false
+    },
+    "overallGreen": false
+  },
+  "ba02OpenControl": {
+    "testCommit": "64091e2afbea0f853aa201e10aea0a2c03034f2b",
+    "source": "98129411128b01cb52278739d781039efd839b6c",
+    "snapshot": "52ec529d4bf72e400a02dd5a54067b0927c88128",
+    "run": 45221722913,
+    "status": "in_progress",
+    "scope": "Schema-valid event and original event-triggered recent-list GET barrier; then finite EOF",
+    "productFixConfirmed": false
+  },
+  "importCategoryCopy": {
+    "enumSource": "packages/schema/src/sucafina/files/structures.ts",
+    "kinds": [
+      "added",
+      "changed",
+      "removed",
+      "unchanged",
+      "ignored",
+      "rejected"
+    ],
+    "labels": {
+      "en": [
+        "Added",
+        "Changed",
+        "Removed",
+        "Unchanged",
+        "Ignored",
+        "Rejected"
+      ],
+      "ptBR": [
+        "Adicionados",
+        "Alterados",
+        "Removidos",
+        "Sem alterações",
+        "Ignorados",
+        "Rejeitados"
+      ]
+    },
+    "dataValuesChanged": false,
+    "beforeImageRun": 45216741705,
+    "qualification": "Awaiting composed Files capture"
   }
 }
