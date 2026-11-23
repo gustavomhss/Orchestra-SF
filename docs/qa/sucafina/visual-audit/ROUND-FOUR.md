@@ -25,6 +25,7 @@ The issue ledger counts distinct observed defects. Files, commits, viewport vari
 | R4-15 | MCP / Tools | A long endpoint expanded scroll width to 1234px and hid controls. | Shrink the text block and wrap the full redacted endpoint inside the dialog. |
 | R4-16 | Native page reads | Unchanged dev returned valid page data after the original 10-second ready bound. | Use the original installation observations for exact internal page GETs while retaining all authority and source comparisons. CAP23 alone omits operational-health probes unused by its original handler; other pages retain them. |
 | R4-17 | Memory / Planner comparisons | Repeated canonical scenario and criterion reads exceeded the original materiality deadline. | Give each scenario-pair resolution its own existing observation scope, preserving criteria outside the scope and fresh initial, second and final reads. |
+| R4-18 | Planner / calculation ancestry | The original ancestry regression exceeded its unchanged 105-second cooperative deadline after amplifying canonical request/result reads. | Return the canonical request and its already fenced result together within each observation, while retaining both result reads, the final C08 fence, independent replay phases and source/authority checks. |
 
 ## Teams: surface containment and readable field boundaries
 
@@ -84,9 +85,25 @@ Each scenario-pair resolution now uses the existing Planner observation owner. T
 
 The new original-fixture regression compares the complete result with and without the callback, requires all three pair phases to run again on a second call, and keeps criteria outside those roots. It also covers revocation, reader replacement and a real source change after a root closes. Existing Finance-pair, subtotal, ancestry, sensitivity and case-scope regressions accompany it. Their original assertions and time bounds remain.
 
+The first repair is active: a later diagnostic observed all 40 scenario-pair owners admitted and completed, with no fallback or unsupported scope. The two full materiality observations still took 36.010 and 35.689 seconds; the internal producer returned after 72.005 seconds, beyond the original 40-second HTTP bound. No successful late HTTP response was observed. This narrows the remaining work to repeated work inside the canonical readers; it does not qualify the original positive materiality journey.
+
+## Calculation ancestry without redundant result reads
+
+The original ancestry regression also failed at its unchanged 105-second cooperative bound. A parent-source diagnostic reproduced its 1,952 canonical result reads before the materiality change. A later diagnostic found 97.5% of the instrumented reads already inside a sealed physical observation root. The repeated logical validation remained expensive despite physical batching.
+
+The request store now returns the detached request and the canonical result it has already fenced together. Both original result reads and the final C08 fence remain. Calculation evidence consumes that pair independently in the initial and final phases, preserves both canonical replays, and retains source closure, cycle, authority and final consistency checks. The optional callback's absence retains the original reader sequence; a present refusal remains closed.
+
+[Run 45234793351](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45234793351) passed the complete original ancestry test in 71.533 seconds and the new control in 2.183 seconds. The outer producer made 1,078 canonical result reads, eliminating 874 repeated calls (44.77%). Runtime duration varies across runners; the call-count change is the direct evidence of reduced work. Reopen, full ancestry resolution, absent totals, foreign-case refusal, persisted cycles, recovery and revocation all remain exercised. The new control compares full output with the original fallback, proves fresh independent observations and detached values, and rejects changed canonical reads, revocation and a real Planner source mutation. A subsequent test-only change expresses the same detached-array mutation with `Reflect.set` to satisfy its readonly TypeScript type; the final composed type/control gates cover that exact blob.
+
 ## Atlas publication precondition
 
-The original UI62 recall returned 503 because its selected precedent still had a pending outbox event. The third isolated diagnostic reached canonical case-read and owner readiness, then recorded `recall-atlas-outbox-pending` before opening the Atlas partition. The reader intentionally refuses that incomplete publication state. The fixture had recorded the original decision choice but had not completed the original Atlas publication. Its preparation is being repaired through the existing writer and scanner, with an explicit pending-state negative control; the reader's refusal remains required. This is scenario maintenance, not an additional visual or product fix.
+The original UI62 recall returned 503 because its selected precedent still had a pending outbox event. The isolated diagnostic reached canonical case-read and owner readiness, then recorded `recall-atlas-outbox-pending` before opening the Atlas partition. The reader intentionally refuses that incomplete publication state. The fixture had recorded the original decision choice but had not completed the original Atlas publication.
+
+The isolated Memory fixture now publishes that actual event through the existing authority, persistence, pinned gitleaks scanner and canonical writer. A one-use private setup pipe carries the admitted case and session into the same native host process. The before/after checks preserve cases and unrelated outbox state, require the canonical matching receipt, and revalidate authority. No public route or production recall rule changed. The original native reviewer regression passed in [run 45230578999](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45230578999), including a new pending-state negative, detached map and namespace-revision equality, then its complete original publication and positive recall flow.
+
+The first browser attempt stopped before publication because the isolated child lacked the host-tool PATH. The original pinned tar.gz acquisition requires `tar` before download; the scanner diagnostic reported `extractor-missing` in the original boot and its cached refusal during preparation. The fixture now explicitly passes PATH and the two requested runtime-mode values while preserving isolated credentials and writable stores. Original scanner policy, pin, acquisition, deadlines and refusal remain. Browser verification of that repaired preparation is running, and the complete original Memory spec remains required.
+
+This is scenario maintenance, recorded separately from product-fix counts.
 
 ## Verification integrity and fixture maintenance
 
@@ -105,11 +122,14 @@ These are test-setup corrections, not additional product fixes. The failed run i
 | Agents | [45209024988](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209024988) | 27 | PASS |
 | MCP | [45209554231](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45209554231) | 15 | PASS |
 | Documents | [45210521937](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45210521937) | 4 | PASS |
-| Memory consultation | [45214839965](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214839965) | 2 | PASS · requalification pending after producer change |
+| Planner / Procurement | [45225004108](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45225004108) | 6 | PASS |
+| Memory consultation | [45227929041](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45227929041) | 2 | PASS |
 
-These runs establish 88 distinct passed browser cases. Full composed-source business and Memory qualification remains in progress. Consultation's earlier pass qualifies its CSS and local cancellation behavior; it will be repeated after the shared producer change. Failed and diagnostic attempts remain in the ledger and are not counted as final green coverage.
+These runs establish 94 distinct passed browser cases and 64 reviewed original images. Planner / Procurement includes the complete original six-case cohort, including CAP23 rename, Back, fresh read, copy/comparison and Portuguese. Memory consultation has been repeated on the composed producer source; its four current images replace the earlier four. It qualifies the original CSS and local cancellation behavior. The complete original five-case Memory spec remains pending. Failed and diagnostic attempts stay separate in the ledger.
 
-The composed [gate 45224951271](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45224951271) passed all ten checks on product source `4b03e4f3fbeb19d578e2c8442bd2d744cee14d12`: app-shell/CLI/Sucafina types, E2E types, 78 guardrails against the exact pinned base, generation and byte parity of seven palette outputs, and 265 nested regression cases (13 comparison/layout, 103 browser-command/Teams, 145 page/domain/asset and four installed-context/Procurement cases). Strict Omni declared ten wrapper tests, observed twelve spawns and zero delegated executions, and passed its positive control. The seven-file producer gate is still running; original business and Memory suites and the final documentation candidate remain required before merge.
+The [structural gate 45231648647](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231648647) passed all ten checks on source `0a06f132c53e1a9374c26ab60fb5cd3808395cfc`: app-shell/CLI/Sucafina and E2E types, 78 guardrails against the exact pinned base, generation and byte parity of seven palette outputs, and 265 nested regressions (13 comparison/layout, 103 browser-command/Teams, 145 page/domain/asset and four installed-context/Procurement cases). Strict Omni observed ten declared wrapper tests, twelve spawns and zero delegated executions, with a passing positive control. A fresh structural gate is running after the ancestry and scanner-environment integration.
+
+The first producer gate passed 11 of 12 internal tests. Its original ancestry failure is retained; the separate ancestry correction then passed the complete unchanged case and new controls. Final producer qualification, the original Memory cohort and the final documentation gate remain required before merge.
 
 This is an intermediate evidence checkpoint, not a merge receipt.
 

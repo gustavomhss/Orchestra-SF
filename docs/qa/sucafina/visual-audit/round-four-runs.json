@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
-  "productSource": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+  "productSource": "42abce1949cc1a533f62baab6597896d359f3129",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -124,10 +124,17 @@
       "problem": "Repeated canonical scenario and criterion reads exceeded the original materiality deadline.",
       "resolution": "Give each scenario-pair resolution its own existing observation scope, preserving criteria outside the scope and fresh initial, second and final reads.",
       "kind": "loading"
+    },
+    {
+      "id": "R4-18",
+      "area": "Planner / calculation ancestry",
+      "problem": "The original ancestry regression exceeded its unchanged 105-second cooperative deadline after amplifying canonical request/result reads.",
+      "resolution": "Return the canonical request and its already fenced result together within each observation, while retaining both result reads, the final C08 fence, independent replay phases and source/authority checks.",
+      "kind": "loading"
     }
   ],
   "qualification": {
-    "uniqueBrowserCases": 88,
+    "uniqueBrowserCases": 94,
     "scopes": [
       {
         "scope": "Teams / shared visual",
@@ -194,6 +201,49 @@
         "retries": 0
       },
       {
+        "scope": "Planner / Procurement",
+        "run": 45225004108,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "snapshot": "2b8029a8949b0d1e24296334ec6a8928bbed087c",
+        "tree": "ed77faf48b63dc747f8a747533fbd176204b17c3",
+        "artifact": 14845427713,
+        "artifactBytes": 89707649,
+        "sha256": "d3c67ae4605801ebce9372399ddf533189a09542c4bd71bff71d90ac26e7e3f7",
+        "retainedCases": 6,
+        "fullRunCases": 6,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45225004108",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0
+      },
+      {
+        "scope": "Memory consultation",
+        "run": 45227929041,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "snapshot": "73f9e474e81ad65da2a2d2637495d97070b2c054",
+        "artifact": 14846327045,
+        "artifactBytes": 8881415,
+        "sha256": "f5bb22ccfab24ee2452c584a89361a90568f303c8c1ea784811f0c76ca72bf3f",
+        "retainedCases": 2,
+        "fullRunCases": 2,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45227929041",
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0,
+        "boundary": "Original consultation/cancellation suite and four visual cuts passed. Positive materiality response remains unqualified by this suite."
+      }
+    ],
+    "pending": [
+      "Original five-case Memory spec after the materiality repair and canonical Atlas fixture preparation",
+      "Producer regressions on the final composed runtime",
+      "Final documentation and structural qualification"
+    ],
+    "supersededScopes": [
+      {
         "scope": "Memory consultation",
         "run": 45214839965,
         "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
@@ -210,12 +260,6 @@
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214839965",
         "boundary": "Original consultation and cancellation journeys; not positive materiality qualification."
       }
-    ],
-    "pending": [
-      "Original Planner / Procurement six-case cohort on composed source",
-      "Original Memory five-case cohort after causal repair",
-      "Memory consultation two-case requalification after shared producer change",
-      "Producer regression gates and final composed documentation gate"
     ]
   },
   "visualReview": {
@@ -903,48 +947,307 @@
         "method": "opened original CI JPEG preview with view_image"
       },
       {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-dark-desktop-test-data.png",
+        "sha256": "4114721127fa1bb4cfc26b2a5b7847bdc650a398e3dd657300b67a6b8728fda8",
+        "bytes": 454724,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-desktop-test-data.png",
+        "sha256": "bcb3d05334c567688456f6018ebc2222d0a1c2e4ae9f5ee1cf389347d2a455cc",
+        "bytes": 496243,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-version-ledger-light-320-test-data.png",
+        "sha256": "7820a67f37ac435744016f61c11293d27e0e4b612bc4107efc2f7f2e60820a5c",
+        "bytes": 50585,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-dark-320-version-actions-test-data.png",
+        "sha256": "6f229afd9aada66f3459ba480d3a774e07954a630d6acc4b7dc371d20bde33a0",
+        "bytes": 59475,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-desktop-test-data.png",
+        "sha256": "9dfb856734065bb633cf41eb3db6451c8fd16872f6edb91c712cdf9076f85af2",
+        "bytes": 463529,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-320-test-data.png",
+        "sha256": "56cfedd9b82373235ea9fdbf76960c8336f5b81272b5064e80db1b5c1ff3f15e",
+        "bytes": 54262,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--4c658-d-CAP23-versions-comparison-chromium/CAP23-pt-BR-dark-320-version-actions-test-data.png",
+        "sha256": "c1c19415021f9400b819dd8b9dbdc587d2c12577295c1ad0c433979eae707dbf",
+        "bytes": 62215,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-dark-desktop-source-overview-test-data.png",
+        "sha256": "371e478e55dbc64aeaa09304d328132159e8b8b085c38caa0e951e0101a0ca42",
+        "bytes": 460551,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-desktop-source-overview-test-data.png",
+        "sha256": "adcd7dda6aa175c350246e1cd3208013aa9f35472956e50c19c5f4aae7984311",
+        "bytes": 490529,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP24-light-320-source-overview-test-data.png",
+        "sha256": "cc403fd4b0ead41d2228353f29e26b4c0c827936d46beb5cb8343ec1fc19c9c0",
+        "bytes": 46643,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-desktop-test-data.png",
+        "sha256": "ff21bd13201cc71a5da0debf107e3e48f6917aa944633c9b80fe6ca8b519b9bd",
+        "bytes": 476472,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP24-pt-BR-dark-320-test-data.png",
+        "sha256": "67ce53e4e06ee4189a8048a9dd4e3afcce7d17bdadf98ed319259b9265f2acf1",
+        "bytes": 47649,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-dark-desktop-pr-approval-list-test-data.png",
+        "sha256": "62ae2cebf041a4052586a35eec9e2f447133f505bdfa56977ef6e24bef486e42",
+        "bytes": 423054,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-desktop-pr-approval-list-test-data.png",
+        "sha256": "199bb60647283ce99c1a9bb3f9e037f22f9369f11dfe20b25fef66bcaa4bdcb3",
+        "bytes": 465167,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--e1d4f-cing-and-approval-decisions-chromium/CAP26-light-320-pr-approval-list-test-data.png",
+        "sha256": "5d2ea9aa49756bf9c743b7f7d8c8b6988a0c0ffff2ddf2478337b066cd28f049",
+        "bytes": 50626,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-desktop-test-data.png",
+        "sha256": "45e35ca04a8638d674c9eea1388d873b90ce360ab57ce8c6f8b00f783b67d4a3",
+        "bytes": 446875,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          1440,
+          1100
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP26-pt-BR-dark-320-test-data.png",
+        "sha256": "806a91aac865abf788ddb977f115eaded8f8485725868e2d27b4d4c8b4686f76",
+        "bytes": 46129,
+        "run": 45225004108,
+        "artifact": 14845427713,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+        "suite": "Planner / Procurement",
+        "reviewer": "round_four_business",
+        "method": "opened original CI PNG with view_image",
+        "dimensions": [
+          320,
+          900
+        ]
+      },
+      {
         "path": "ui61-en-light-320-materiality-conditions-before-consultation.jpg",
-        "sha256": "60a916c7018321ca467122773a9b99babe23bf5269376505cd185403f5e80153",
-        "bytes": 26416,
-        "run": 45214839965,
-        "artifact": 14839177705,
-        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "sha256": "957963b10db8e61b94bbb38a7eea36400d684c2794c6dc0d71f2d0faccedda60",
+        "bytes": 26480,
+        "run": 45227929041,
+        "artifact": 14846327045,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
         "suite": "Memory consultation",
         "reviewer": "round_four_final_areas",
-        "method": "opened original CI JPEG preview with view_image"
+        "method": "opened original CI JPEG preview with view_image",
+        "review": "Native select text ends before the arrow; aligned field and full-width actions; document width remains 320."
       },
       {
         "path": "ui61-en-light-320-signals-conditions-before-consultation.jpg",
-        "sha256": "e7a7b676bf14ac5c55635a4978a83c2c19052b83fd9634cf663e7e2a5dfce30a",
-        "bytes": 26360,
-        "run": 45214839965,
-        "artifact": 14839177705,
-        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "sha256": "66654a1983fa65539a670841563b3abdd32d67cd3191cfdba2af9427d4e203f5",
+        "bytes": 26397,
+        "run": 45227929041,
+        "artifact": 14846327045,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
         "suite": "Memory consultation",
         "reviewer": "round_four_final_areas",
-        "method": "opened original CI JPEG preview with view_image"
+        "method": "opened original CI JPEG preview with view_image",
+        "review": "Native select text ends before the arrow; aligned field and full-width actions; document width remains 320."
       },
       {
         "path": "ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg",
-        "sha256": "1817232b9720cd1b7f4e61c61f1764300983351a8b65e30a298e8661845e1316",
-        "bytes": 77497,
-        "run": 45214839965,
-        "artifact": 14839177705,
-        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "sha256": "b5237d0274018bcf42a4b8744e46f20c297065720d2c9c346345cec0840428b9",
+        "bytes": 77592,
+        "run": 45227929041,
+        "artifact": 14846327045,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
         "suite": "Memory consultation",
         "reviewer": "round_four_final_areas",
-        "method": "opened original CI JPEG preview with view_image"
+        "method": "opened original CI JPEG preview with view_image",
+        "review": "Portuguese desktop hierarchy, field alignment, action spacing and panel boundaries remain consistent."
       },
       {
         "path": "ui61-en-light-320-materiality-local-cancel.jpg",
-        "sha256": "cd86e13bb6cb0344f402306833418d0f1952d53bedca0e1d12a4dcdd8fffd3cd",
-        "bytes": 26137,
-        "run": 45214839965,
-        "artifact": 14839177705,
-        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "sha256": "9e957cf5bc6e730e56ca55a6a75bcffc9a3d43813866ae86274fd1116ab3f4cd",
+        "bytes": 26183,
+        "run": 45227929041,
+        "artifact": 14846327045,
+        "source": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
         "suite": "Memory consultation",
         "reviewer": "round_four_final_areas",
-        "method": "opened original CI JPEG preview with view_image"
+        "method": "opened original CI JPEG preview with view_image",
+        "review": "Cancellation states explicitly that no current result was received; condition card and materiality action/panel remain aligned at 320."
       }
     ],
     "beforeOriginals": [
@@ -1723,7 +2026,53 @@
         "No trace, HAR or video exists in this artifact because the original authenticated suite disables them.",
         "Screenshot review does not measure physical browser zoom or claim live financial data."
       ]
-    }
+    },
+    "supersededOriginals": [
+      {
+        "path": "ui61-en-light-320-materiality-conditions-before-consultation.jpg",
+        "sha256": "60a916c7018321ca467122773a9b99babe23bf5269376505cd185403f5e80153",
+        "bytes": 26416,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-en-light-320-signals-conditions-before-consultation.jpg",
+        "sha256": "e7a7b676bf14ac5c55635a4978a83c2c19052b83fd9634cf663e7e2a5dfce30a",
+        "bytes": 26360,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg",
+        "sha256": "1817232b9720cd1b7f4e61c61f1764300983351a8b65e30a298e8661845e1316",
+        "bytes": 77497,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      },
+      {
+        "path": "ui61-en-light-320-materiality-local-cancel.jpg",
+        "sha256": "cd86e13bb6cb0344f402306833418d0f1952d53bedca0e1d12a4dcdd8fffd3cd",
+        "bytes": 26137,
+        "run": 45214839965,
+        "artifact": 14839177705,
+        "source": "f67662eb698140378bfe536e184ba11d721e4d5e",
+        "suite": "Memory consultation",
+        "reviewer": "round_four_final_areas",
+        "method": "opened original CI JPEG preview with view_image"
+      }
+    ]
   },
   "diagnosis": {
     "pageReadBaseline": {
@@ -2107,7 +2456,974 @@
       "branch": "ci-run-r4material3",
       "status": "in_progress",
       "qualification": false,
-      "changes": "Snapshot-only exact UI61 prefix/helpers/journey from original final-memory.spec.ts; no source, fixture or new marker changes; original40s/300s/retry0."
+      "changes": "Snapshot-only exact UI61 prefix/helpers/journey from original final-memory.spec.ts; no source, fixture or new marker changes; original40s/300s/retry0.",
+      "result": "failure",
+      "artifact": 14846681949,
+      "artifactBytes": 11837569,
+      "sha256": "eac8542146e71329d489b2a10e5f5817787dd4eceb459d569a48c2379a7eafdf",
+      "ledgerSha256": "20fe7b3f697d0b50b42a799780317b9c4a19c8c88b9e6be642438657e9d4b202",
+      "qualifies": false
+    },
+    "materialityScopes": {
+      "run": 45231146373,
+      "job": 137890689851,
+      "snapshot": "ff6cecc1fd85c2b91b7d191bffed223b576a8e41",
+      "parent": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+      "product": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+      "originalRequestOnly": true,
+      "counts": {
+        "materiality-http-admission-start": 1,
+        "materiality-http-admission-ok": 1,
+        "materiality-http-case-scope-start": 1,
+        "materiality-access-first-start": 1,
+        "materiality-registry-before-start": 2,
+        "materiality-scope-entry": 40,
+        "materiality-scope-owner-allowed": 40,
+        "materiality-scope-admitted": 40,
+        "materiality-scope-selection-present": 40,
+        "materiality-scope-prepared-present": 40,
+        "materiality-scope-witness-current": 40,
+        "materiality-scope-work-start": 40,
+        "materiality-scope-work-end": 40,
+        "materiality-scope-grouped-ok": 40,
+        "materiality-scope-lane-observed": 40,
+        "materiality-scope-egress-start": 40,
+        "materiality-scope-egress-prepared-present": 40,
+        "materiality-scope-egress-return-current": 40,
+        "materiality-registry-before-ok": 2,
+        "materiality-case-before-start": 2,
+        "materiality-case-before-ok": 2,
+        "materiality-produce-start": 2,
+        "materiality-domain-binding-start": 2,
+        "materiality-domain-binding-ok": 2,
+        "materiality-domain-scenarios-first-start": 2,
+        "materiality-domain-scenarios-first-end": 2,
+        "materiality-domain-compare-first-start": 2,
+        "materiality-compare-scenarios-first-start": 12,
+        "materiality-compare-scenarios-first-end": 12,
+        "materiality-compare-sources-start": 28,
+        "materiality-compare-sources-ok": 28,
+        "materiality-compare-scenarios-second-start": 12,
+        "materiality-compare-scenarios-second-end": 12,
+        "materiality-compare-criteria-first-start": 4,
+        "materiality-compare-criteria-first-end": 4,
+        "materiality-compare-criteria-second-start": 4,
+        "materiality-compare-criteria-second-end": 4,
+        "materiality-compare-scenarios-final-start": 4,
+        "materiality-compare-scenarios-final-end": 4,
+        "materiality-domain-compare-first-ok": 2,
+        "materiality-domain-scenarios-second-start": 2,
+        "materiality-domain-scenarios-second-end": 2,
+        "materiality-domain-compare-second-start": 2,
+        "materiality-domain-compare-second-ok": 2,
+        "materiality-produce-ok": 2,
+        "materiality-registry-after-start": 2,
+        "materiality-registry-after-ok": 2,
+        "materiality-case-after-start": 2,
+        "materiality-case-after-ok": 2,
+        "materiality-access-first-ok": 1,
+        "materiality-access-second-start": 1,
+        "materiality-access-second-ok": 1,
+        "materiality-access-return-ok": 1,
+        "materiality-http-case-scope-ok": 1,
+        "materiality-http-producer-returned": 1
+      },
+      "phaseStats": [
+        {
+          "phase": "access-first",
+          "count": 1,
+          "totalMs": 36010,
+          "minMs": 36010,
+          "maxMs": 36010
+        },
+        {
+          "phase": "access-second",
+          "count": 1,
+          "totalMs": 35689,
+          "minMs": 35689,
+          "maxMs": 35689
+        },
+        {
+          "phase": "registry-before",
+          "count": 2,
+          "totalMs": 6133,
+          "minMs": 3033,
+          "maxMs": 3100
+        },
+        {
+          "phase": "registry-after",
+          "count": 2,
+          "totalMs": 6031,
+          "minMs": 2999,
+          "maxMs": 3032
+        },
+        {
+          "phase": "produce",
+          "count": 2,
+          "totalMs": 58459,
+          "minMs": 29092,
+          "maxMs": 29367
+        },
+        {
+          "phase": "domain-binding",
+          "count": 2,
+          "totalMs": 505,
+          "minMs": 252,
+          "maxMs": 253
+        },
+        {
+          "phase": "domain-scenarios-first",
+          "count": 2,
+          "totalMs": 2429,
+          "minMs": 1171,
+          "maxMs": 1258
+        },
+        {
+          "phase": "domain-scenarios-second",
+          "count": 2,
+          "totalMs": 2317,
+          "minMs": 1155,
+          "maxMs": 1162
+        },
+        {
+          "phase": "domain-compare-first",
+          "count": 2,
+          "totalMs": 26517,
+          "minMs": 13078,
+          "maxMs": 13439
+        },
+        {
+          "phase": "domain-compare-second",
+          "count": 2,
+          "totalMs": 26181,
+          "minMs": 13087,
+          "maxMs": 13094
+        },
+        {
+          "phase": "compare-scenarios-first",
+          "count": 12,
+          "totalMs": 13810,
+          "minMs": 1119,
+          "maxMs": 1195
+        },
+        {
+          "phase": "compare-scenarios-second",
+          "count": 12,
+          "totalMs": 13728,
+          "minMs": 1119,
+          "maxMs": 1163
+        },
+        {
+          "phase": "compare-scenarios-final",
+          "count": 4,
+          "totalMs": 4659,
+          "minMs": 1147,
+          "maxMs": 1215
+        },
+        {
+          "phase": "compare-criteria-first",
+          "count": 4,
+          "totalMs": 16542,
+          "minMs": 4059,
+          "maxMs": 4270
+        },
+        {
+          "phase": "compare-criteria-second",
+          "count": 4,
+          "totalMs": 16577,
+          "minMs": 4110,
+          "maxMs": 4187
+        },
+        {
+          "phase": "compare-sources",
+          "count": 28,
+          "totalMs": 13639,
+          "minMs": 448,
+          "maxMs": 557
+        },
+        {
+          "phase": "scope-entry",
+          "count": 40,
+          "totalMs": 43566,
+          "minMs": 1043,
+          "maxMs": 1197
+        },
+        {
+          "phase": "scope-work",
+          "count": 40,
+          "totalMs": 38391,
+          "minMs": 923,
+          "maxMs": 1054
+        },
+        {
+          "phase": "scope-egress",
+          "count": 40,
+          "totalMs": 2600,
+          "minMs": 58,
+          "maxMs": 82
+        }
+      ],
+      "interpretation": "40 scopes current/observed; 2 complete independent observations 36.010 + 35.689 s; producer returned internally at 72.005 s. Trace has no completed materiality response; not HTTP 200.",
+      "ledgerSha256": "8261f97ecc9a66f7389e480934108c6004022d9c445d12a39862ff0673509456",
+      "networkSha256": "ad1407df8a82fb4eb03631a5925923cd6e38eb9bf21677a1b43df2206b688db0",
+      "result": "failure",
+      "qualifies": false,
+      "artifact": 14846824838,
+      "artifactSha256": "a676eb6aafcac1b1ed09401fed8c69b60ddce766bed71574e51bd863478ecedd",
+      "artifactBytes": 12052222,
+      "observationsMs": [
+        36010,
+        35689
+      ],
+      "producerMs": 72005,
+      "admittedOwners": 40,
+      "fallbacks": 0,
+      "requestResponseObserved": false
+    },
+    "ancestryBaseline": {
+      "run": 45229442865,
+      "job": 137884661456,
+      "snapshot": "ad73f0f24838bd3a36273d8400c2ac1b2635bb78",
+      "source": "52110b1ce4a44fec21210e1f66c6e501e72c1e8b",
+      "tree": "abfb37b0f00ead7d6cab461a141156f272175bad",
+      "originalTestBlob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "originalTestRestoredByRemovingElevenLogLines": true,
+      "productionFilesChanged": 0,
+      "deadline": {
+        "cooperativeMs": 105000,
+        "bunMs": 120000,
+        "childMs": 240000,
+        "outerMs": 300000
+      },
+      "conclusion": "failure",
+      "summary": {
+        "internalPassed": 0,
+        "internalFailed": 1
+      },
+      "stages": [
+        {
+          "phase": "produce-inner",
+          "stage": "simulate",
+          "state": "started",
+          "elapsedMs": 22,
+          "canonicalResultReads": 0,
+          "canonicalResultReadsCompleted": 0,
+          "aborted": false
+        },
+        {
+          "phase": "produce-inner",
+          "stage": "simulate",
+          "state": "returned",
+          "elapsedMs": 70,
+          "canonicalResultReads": 0,
+          "canonicalResultReadsCompleted": 0,
+          "aborted": false
+        },
+        {
+          "phase": "produce-inner",
+          "stage": "persist",
+          "state": "started",
+          "elapsedMs": 70,
+          "canonicalResultReads": 0,
+          "canonicalResultReadsCompleted": 0,
+          "aborted": false
+        },
+        {
+          "phase": "produce-inner",
+          "stage": "persist",
+          "state": "returned",
+          "elapsedMs": 808,
+          "canonicalResultReads": 8,
+          "canonicalResultReadsCompleted": 8,
+          "aborted": false
+        },
+        {
+          "phase": "produce-inner",
+          "stage": "issue",
+          "state": "started",
+          "elapsedMs": 808,
+          "canonicalResultReads": 8,
+          "canonicalResultReadsCompleted": 8,
+          "aborted": false
+        },
+        {
+          "phase": "produce-inner",
+          "stage": "issue",
+          "state": "returned",
+          "elapsedMs": 1185,
+          "canonicalResultReads": 14,
+          "canonicalResultReadsCompleted": 14,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "simulate",
+          "state": "started",
+          "elapsedMs": 827,
+          "canonicalResultReads": 12,
+          "canonicalResultReadsCompleted": 12,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "simulate",
+          "state": "returned",
+          "elapsedMs": 2575,
+          "canonicalResultReads": 48,
+          "canonicalResultReadsCompleted": 48,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "persist",
+          "state": "started",
+          "elapsedMs": 2575,
+          "canonicalResultReads": 48,
+          "canonicalResultReadsCompleted": 48,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "persist",
+          "state": "returned",
+          "elapsedMs": 53019,
+          "canonicalResultReads": 1226,
+          "canonicalResultReadsCompleted": 1226,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "issue",
+          "state": "started",
+          "elapsedMs": 53019,
+          "canonicalResultReads": 1226,
+          "canonicalResultReadsCompleted": 1226,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "stage": "issue",
+          "state": "returned",
+          "elapsedMs": 82948,
+          "canonicalResultReads": 1952,
+          "canonicalResultReadsCompleted": 1952,
+          "aborted": false
+        }
+      ],
+      "phases": [
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "started",
+          "elapsedMs": 2
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "returned",
+          "phaseMs": 33,
+          "elapsedMs": 35,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "started",
+          "elapsedMs": 35
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "returned",
+          "phaseMs": 1186,
+          "elapsedMs": 1221,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "started",
+          "elapsedMs": 1224
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "returned",
+          "phaseMs": 82948,
+          "elapsedMs": 84173,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "reopen",
+          "state": "started",
+          "elapsedMs": 84174
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "reopen",
+          "state": "returned",
+          "phaseMs": 7,
+          "elapsedMs": 84181,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "resolve-reopened-ancestry",
+          "state": "started",
+          "elapsedMs": 84181
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "resolve-reopened-ancestry",
+          "state": "returned",
+          "phaseMs": 20822,
+          "elapsedMs": 105003,
+          "aborted": true
+        }
+      ],
+      "totals": [
+        {
+          "phase": "produce-inner",
+          "elapsedMs": 1186,
+          "canonicalResultReads": 14,
+          "canonicalResultReadsCompleted": 14,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "elapsedMs": 82948,
+          "canonicalResultReads": 1952,
+          "canonicalResultReadsCompleted": 1952,
+          "aborted": false
+        }
+      ],
+      "conclusions": [
+        "The same 1952 completed canonical result reads occur before the scenario callback composition.",
+        "The prior source also reaches its unchanged cooperative deadline during resolve-reopened-ancestry.",
+        "This baseline is diagnostic; the failed original regression remains required."
+      ],
+      "logSha256": "289c902b8b1ffeb2f0ef3c9bf63e878b2224144c87950339d20d763ed9bfd06e",
+      "ledgerSha256": "93c25ef942132cea3f92e9ab0b9d540208de399d1be496741d223c8cae19c162",
+      "qualifies": false
+    },
+    "preparedAtlas": {
+      "purpose": "diagnostic only; original full Memory5 qualification required",
+      "source": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc",
+      "snapshot": "0788ff0e254c3430d1314949d1b2df138fc3223a",
+      "tree": "6c1caa1e0355ece2e76fa576f8e1f0745a905125",
+      "branch": "ci-run-r4recall4",
+      "runId": 45231962091,
+      "jobId": 137893575377,
+      "sourceSpec": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+      "sourceSpecBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+      "selectionSpec": "packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts",
+      "bodyChars": 7512,
+      "helpersChars": 4500,
+      "bodyByteEqual": true,
+      "helpersByteEqual": true,
+      "limitsByteEqual": true,
+      "designWave": "four-memory",
+      "runtimeInstrumentation": false,
+      "retries": 0,
+      "workers": 1,
+      "artifactId": 14846769701,
+      "artifactBytes": 669856,
+      "artifactSha256": "5193aef91268921f5ba8aa5e34f86f3760c90e9595e3b774499d29e365017545",
+      "result": "failed during fixture scanner preparation before UI62",
+      "stats": {
+        "startTime": "2026-11-23T17:51:22.826Z",
+        "duration": 142034.291,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "stageEvents": [
+        {
+          "at": "2026-11-23T17:52:11.7903253Z",
+          "stage": "build"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5178012Z",
+          "stage": "installation"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5359125Z",
+          "stage": "configuration"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5361460Z",
+          "stage": "dashboard-seed"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5495392Z",
+          "stage": "planner-seed"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5532429Z",
+          "stage": "procurement-seed"
+        },
+        {
+          "at": "2026-11-23T17:52:54.5899151Z",
+          "stage": "seed-complete"
+        },
+        {
+          "at": "2026-11-23T17:52:56.6664689Z",
+          "stage": "native-ready"
+        },
+        {
+          "at": "2026-11-23T17:52:56.6670305Z",
+          "stage": "decisions-seed"
+        },
+        {
+          "at": "2026-11-23T17:52:56.6671157Z",
+          "stage": "decisions-request-bi-options"
+        },
+        {
+          "at": "2026-11-23T17:52:56.7915176Z",
+          "stage": "decisions-response-bi-options"
+        },
+        {
+          "at": "2026-11-23T17:52:56.7916926Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T17:52:57.1172799Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T17:52:57.1192197Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T17:52:57.3465583Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T17:52:57.3468552Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T17:52:57.4013638Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T17:52:57.4015273Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:52:59.5704412Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:52:59.5711198Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T17:52:59.7862318Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T17:52:59.7863109Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T17:52:59.8176094Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T17:52:59.8176530Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:02.0200238Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:02.0218791Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T17:53:02.2522067Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T17:53:02.2522674Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T17:53:02.6444888Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T17:53:02.6445449Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T17:53:04.6389067Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T17:53:04.6390357Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T17:53:05.1025011Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T17:53:05.1025572Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T17:53:07.5412904Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T17:53:07.5413387Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:11.0880820Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:11.0897718Z",
+          "stage": "decisions-request-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T17:53:11.5792979Z",
+          "stage": "decisions-response-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T17:53:11.5794114Z",
+          "stage": "decisions-request-decision-compare"
+        },
+        {
+          "at": "2026-11-23T17:53:23.9240202Z",
+          "stage": "decisions-response-decision-compare"
+        },
+        {
+          "at": "2026-11-23T17:53:23.9240596Z",
+          "stage": "decisions-request-decision-choose"
+        },
+        {
+          "at": "2026-11-23T17:53:40.0145574Z",
+          "stage": "decisions-response-decision-choose"
+        },
+        {
+          "at": "2026-11-23T17:53:40.0146466Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:44.3103063Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T17:53:44.3124898Z",
+          "stage": "decisions-ready"
+        },
+        {
+          "at": "2026-11-23T17:53:44.3125588Z",
+          "stage": "memory-publication"
+        }
+      ],
+      "failure": "Canonical memory precedent preparation failed: scanner (unavailable)",
+      "browserReached": false,
+      "publicationInvoked": false,
+      "ledgerSha256": "ffcfe1191cd888a254843de06a85a1780c9f1b27bcbbdda7eb43e393dcb099db",
+      "qualifies": false
+    },
+    "scannerEnvironment": {
+      "purpose": "diagnostic only; scanner cause, not qualification",
+      "source": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc",
+      "snapshot": "ec3cd50ced470c93882e02c613b526b4e90f9c5c",
+      "tree": "3661f2b91f9d571f2f7106e11564e6dbbb5a02f1",
+      "branch": "ci-run-r4scanner",
+      "runId": 45233529439,
+      "jobId": 137899115681,
+      "artifactId": 14847968646,
+      "bodyByteEqual": true,
+      "helpersByteEqual": true,
+      "retries": 0,
+      "result": "failed before browser; canonical toolkit reports extractor-missing",
+      "stageEvents": [
+        {
+          "at": "2026-11-23T18:01:30.2138206Z",
+          "stage": "build"
+        },
+        {
+          "at": "2026-11-23T18:02:28.2103475Z",
+          "stage": "installation"
+        },
+        {
+          "at": "2026-11-23T18:02:28.2357782Z",
+          "stage": "configuration"
+        },
+        {
+          "at": "2026-11-23T18:02:28.2360554Z",
+          "stage": "dashboard-seed"
+        },
+        {
+          "at": "2026-11-23T18:02:28.2589118Z",
+          "stage": "planner-seed"
+        },
+        {
+          "at": "2026-11-23T18:02:28.2649434Z",
+          "stage": "procurement-seed"
+        },
+        {
+          "at": "2026-11-23T18:02:28.3251419Z",
+          "stage": "seed-complete"
+        },
+        {
+          "at": "2026-11-23T18:02:31.0609486Z",
+          "stage": "recall-scanner-probe-start"
+        },
+        {
+          "at": "2026-11-23T18:02:31.0654206Z",
+          "stage": "recall-scanner-status-absent"
+        },
+        {
+          "at": "2026-11-23T18:02:31.0654960Z",
+          "stage": "recall-scanner-known-ready"
+        },
+        {
+          "at": "2026-11-23T18:02:31.0655648Z",
+          "stage": "recall-scanner-ensure-start"
+        },
+        {
+          "at": "2026-11-23T18:02:31.1056385Z",
+          "stage": "recall-scanner-ensure-cause-extractor-missing"
+        },
+        {
+          "at": "2026-11-23T18:02:31.1057503Z",
+          "stage": "recall-scanner-ensure-unavailable"
+        },
+        {
+          "at": "2026-11-23T18:02:31.1058354Z",
+          "stage": "recall-scanner-path-unavailable"
+        },
+        {
+          "at": "2026-11-23T18:02:31.4675268Z",
+          "stage": "native-ready"
+        },
+        {
+          "at": "2026-11-23T18:02:31.4676517Z",
+          "stage": "decisions-seed"
+        },
+        {
+          "at": "2026-11-23T18:02:31.4684264Z",
+          "stage": "decisions-request-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:02:31.6352425Z",
+          "stage": "decisions-response-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:02:31.6353974Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:02:32.0667624Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:02:32.0685991Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:02:32.3955894Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:02:32.3964478Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:02:32.4694676Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:02:32.4696041Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:35.8008351Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:35.8022447Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:02:36.1178640Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:02:36.1181748Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:02:36.1759862Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:02:36.1762471Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:39.4498828Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:39.4525289Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:02:39.7852333Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:02:39.7854088Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:02:40.4144684Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:02:40.4148529Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:02:43.5843399Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:02:43.5844431Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:02:44.2440640Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:02:44.2442167Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:02:47.8697506Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:02:47.8698545Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:53.0032273Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:02:53.0062391Z",
+          "stage": "decisions-request-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:02:53.8011929Z",
+          "stage": "decisions-response-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:02:53.8013467Z",
+          "stage": "decisions-request-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:03:12.5201851Z",
+          "stage": "decisions-response-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:03:12.5203548Z",
+          "stage": "decisions-request-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:03:36.1007477Z",
+          "stage": "decisions-response-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:03:36.1009128Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1700583Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1727902Z",
+          "stage": "decisions-ready"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1730788Z",
+          "stage": "memory-publication"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1821474Z",
+          "stage": "recall-scanner-process-start"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1838482Z",
+          "stage": "recall-scanner-process-ready"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1839498Z",
+          "stage": "recall-scanner-probe-start"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1857775Z",
+          "stage": "recall-scanner-status-failed"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1859429Z",
+          "stage": "recall-scanner-status-cause-extractor-missing"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1860804Z",
+          "stage": "recall-scanner-known-ready"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1862074Z",
+          "stage": "recall-scanner-ensure-start"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1890234Z",
+          "stage": "recall-scanner-ensure-cause-extractor-missing"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1892758Z",
+          "stage": "recall-scanner-ensure-unavailable"
+        },
+        {
+          "at": "2026-11-23T18:03:42.1893320Z",
+          "stage": "recall-scanner-path-unavailable"
+        }
+      ],
+      "cause": {
+        "boot": "absent -> ensure -> extractor-missing",
+        "preparation": "failed/extractor-missing -> ensure -> extractor-missing",
+        "sourceInference": "Linux gitleaks pack is tar.gz; PinnedArtifact.command selects tar, which is checked before download. Native fixture explicit env omitted PATH.",
+        "emissionInvoked": false
+      },
+      "artifactBytes": 670734,
+      "artifactSha256": "b3e2c3d13a8317df380a3d343e11330c2bbb322ad4c4a316f8be8907e5d90a3c",
+      "stats": {
+        "startTime": "2026-11-23T18:00:27.088Z",
+        "duration": 195542.682,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "ledgerSha256": "896021fb34209b6d1ccfbf8c2a4fb13179f7a5261be9df60a30920a52fa8951f",
+      "qualifies": false
     }
   },
   "sourceBoundaries": {
@@ -2268,6 +3584,23 @@
       "failure": "The original 403 expectation used an actor who could not see the foreign request; the original runtime correctly returned 404.",
       "repair": "Give the original visible-but-not-editable attack actor requester and viewer roles, prove record visibility and retain the original 403 and unchanged-state assertions. Add a separate requester-only invisible-record attack with 404 and unchanged state.",
       "productFixCount": 0
+    },
+    {
+      "paths": [
+        "apps/cli/test/fixture/sucafina-memory-installation.ts",
+        "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts",
+        "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "packages/app-shell/e2e/sucafina/final-memory.spec.ts"
+      ],
+      "failure": "The chosen real precedent was unpublished; the original recall correctly refused pending publication. The isolated child also lacked PATH for the pinned tar.gz extractor.",
+      "repair": "Publish the actual one pending event using the original authority, persistence, pinned scanner and canonical writer over a one-use private setup pipe. Explicitly pass only PATH and the two requested runtime-mode values; credentials and writable stores remain isolated. Retain the original positive browser body, deadlines and pending-state negative.",
+      "productFixCount": 0,
+      "integratedSource": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc",
+      "envCommit": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
+      "status": "original UI62 diagnosis running; full Memory spec pending"
     }
   ],
   "limits": [
@@ -2373,6 +3706,45 @@
         "approved": [],
         "touchesGuards": false
       }
+    },
+    {
+      "source": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc",
+      "snapshot": "d9dd742de97714078859921e8c142406b347932f",
+      "tree": "809fb2a95383931c3d6007a7558604d05fd69dd4",
+      "branch": "ci-run-r4gates5",
+      "run": 45231648647,
+      "job": 137892471677,
+      "result": "success",
+      "outer": {
+        "passed": 10,
+        "failed": 0
+      },
+      "nested": {
+        "comparisonLayout": 13,
+        "browserCommandsTeams": 103,
+        "pageDomainAssets": 145,
+        "installedContextProcurement": 4,
+        "total": 265
+      },
+      "omni": {
+        "declared": 10,
+        "spawns": 12,
+        "delegated": 0,
+        "verdict": "pass"
+      },
+      "palettes": {
+        "files": 7,
+        "changed": []
+      },
+      "guardrails": {
+        "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+        "bootstrap": false,
+        "rules": 78,
+        "files": 52,
+        "findings": [],
+        "errors": [],
+        "approved": []
+      }
     }
   ],
   "producerGates": [
@@ -2383,7 +3755,7 @@
       "branch": "ci-run-r4producers",
       "run": 45225786561,
       "job": 137871759430,
-      "status": "in_progress",
+      "status": "completed",
       "files": [
         "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
         "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
@@ -2393,7 +3765,26 @@
         "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-classification.test.ts",
         "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-publication.test.ts"
       ],
-      "newWrapperBounds": "The new snapshot-only wrapper permits each original file's existing deadlines plus shutdown. Five files use child240s/outer300s, classification uses750s/780s for its original300+300+120s cases, publication330s/360s for its original300s case. No original test bound or assertion changes."
+      "newWrapperBounds": "The new snapshot-only wrapper permits each original file's existing deadlines plus shutdown. Five files use child240s/outer300s, classification uses750s/780s for its original300+300+120s cases, publication330s/360s for its original300s case. No original test bound or assertion changes.",
+      "result": "failure",
+      "outer": {
+        "passed": 6,
+        "failed": 1
+      },
+      "nested": {
+        "passed": 11,
+        "failed": 1
+      },
+      "ledgerSha256": "606c7e1c6f86837dc34409ff8719f4971fdd3d717a69d39a1b7d0d4a4a6ffcf7",
+      "logSha256": "3320eefcdcbf1089b1c3c473a7a235410f9d94977dc43623393092499b0ed640",
+      "failure": {
+        "test": "calculation-ancestry-composition",
+        "deadline": "original cooperative105000ms",
+        "phase": "resolve-reopened-ancestry",
+        "wrapperDeadlineReached": false,
+        "assertionsWeakened": false,
+        "baselineEstablished": false
+      }
     }
   ],
   "consultationRequalification": {
@@ -2402,9 +3793,357 @@
     "tree": "924de2af9980c2e16c0700b3e3868dfb91d5a74c",
     "run": 45227929041,
     "branch": "ci-run-r4consult2",
-    "status": "in_progress",
+    "status": "completed",
     "spec": "e2e/sucafina/final-memory-consultation.spec.ts",
     "specBlob": "77716502118d6133f2153784d22b018ea6b323c8",
-    "cases": 2
+    "cases": 2,
+    "result": "success",
+    "artifact": 14846327045,
+    "sha256": "f5bb22ccfab24ee2452c584a89361a90568f303c8c1ea784811f0c76ca72bf3f",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "retries": 0,
+    "reviewedOriginals": 4,
+    "ledgerSha256": "8cf5c3fecd8fa53f0b8eed5c087d721086493cebe90214927ef3c2d7534205d3"
+  },
+  "businessQualification": {
+    "ledgerSha256": "efecce7ddb90788a593d1976d73df332b4a8e9af27302813f751901d5d09fe71",
+    "runManifestSha256": "93d8c259b2d5409c47afd9f92e9e1cd44f6797c7914e8e453790201a09c32f04",
+    "summarySha256": "2f153815a56d8e6cc50aa9949db77b3b5d1cb45cfaf1bbb051b971f0195893a3",
+    "reviewedOriginals": 17,
+    "totalOriginalPngs": 93,
+    "findings": [
+      {
+        "area": "CAP23",
+        "result": "passed",
+        "observed": "At the action-side scroller edge in 320px, every tested source version name remains visible immediately above its own four actions. The Portuguese revised name wraps naturally across two lines. Desktop preserves the original first-column identity without visible repetition. The left narrow edge preserves the original name and Open record/Abrir registro.",
+        "assertions": "Both complete original Planner journeys passed, including Back after rename, exact fresh canonical readback, copy/comparison, and Portuguese. Action context equals its actual row source name, remains aria-hidden as visual repetition, stays inside the action viewport (<=1px excess) and the first name is fully visible. Original row-height limit remains intact."
+      },
+      {
+        "area": "CAP24",
+        "result": "passed",
+        "observed": "All five metric values share a common baseline on desktop, including the count beside a Portuguese two-line label. Currency remains on its own lower line. Narrow cards preserve the original label/value alignment, with long labels wrapping and values remaining readable.",
+        "assertions": "English and Portuguese original tests require exactly five values with max(top)-min(top)<=1px and both pass. Source zero and unavailable states remain distinct in the original source journey."
+      },
+      {
+        "area": "CAP26",
+        "result": "passed",
+        "observed": "PR identity and Open record/Abrir registro each stay on a single line in English and Portuguese, desktop and 320px. Subjects retain available desktop space and the existing horizontal table scroll at narrow widths; identity and action stay readable at the left edge.",
+        "assertions": "Text-range single-line assertions pass for EN/PT desktop and 320px. The complete request, approval, sourcing and purchase-order source readbacks pass without changing semantic assertions."
+      }
+    ],
+    "limitations": [
+      "Historical before captures are from run 45114138448; relevant visual leaf blobs were checked identical to e115. They are not fresh e115 captures.",
+      "CAP23 Portuguese action-edge and CAP26 English light 320 list are new coverage without an exact historical before image.",
+      "Viewport sizes were 1440x1100 and 320x900; physical browser zoom was not measured.",
+      "Trace/video remain disabled in these original authenticated specs; no diagnostic observers were added to this qualification."
+    ]
+  },
+  "atlasPublicationRegression": {
+    "source": "229d7645e0b69bee0b10f64be6cd883f0b12b561",
+    "run": 45230578999,
+    "job": 137888697804,
+    "snapshot": "25931e709c2486e3038e47f461ac03307d579e40",
+    "tree": "0cc498815a168380cb7ef5e1648567342b7f82f7",
+    "branch": "ci-run-r4atlas",
+    "result": "success",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 386765.08,
+    "omni": {
+      "declared": 1,
+      "spawns": 3,
+      "delegated": 0,
+      "verdict": "pass"
+    },
+    "control": "Real readable case with pending outbox remains unavailable; detached maps and namespace revisions remain equal. Original scanner, committed canonical emit and native reviewer positive then pass."
+  },
+  "ancestryQualification": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "run": 45234793351,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45234793351",
+    "jobs": {
+      "test": 137903509776,
+      "cleanup": 137905080665
+    },
+    "conclusion": "success",
+    "createdAt": "2026-11-23T18:06:23Z",
+    "completedAt": "2026-11-23T18:09:04Z",
+    "source": "55446e855d6839bdafef8ee5bd83d6b906b14d3f",
+    "sourceTree": "5423dfc3651f5a33207ffad7aafe3542e1eb357b",
+    "snapshot": "0caeaa180519ffabc4845ff0bd3ad13cae57a330",
+    "snapshotTree": "9418e2b8b062dd6fb468fd4dce8af8133b50ec21",
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-ancestry-verification.test.ts"
+    ],
+    "finalHead": "20b449f4b9a063c15e27ebb7ac592294ace2f7db",
+    "finalTree": "eb3cbca5760b6d34f1671848a7d8dda1f7a1ec93",
+    "finalBlobs": {
+      "apps/cli/src/sucafina-product/planner-calculation-services.ts": "12f1e5faa892e15e07dd5584889c5212aa075357",
+      "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts": "2acb8130196a7444b06cb3a5fe1f178459151d96",
+      "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts": "430d5cfe87ad67f002fa8fd3eff225712801544a",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-observation.test.ts": "1be54cd96d84f233bc199c91cccc2cb69b361477"
+    },
+    "rootIntegration": {
+      "head": "42abce1949cc1a533f62baab6597896d359f3129",
+      "tree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+      "source": "reported by root"
+    },
+    "qualificationBoundary": "This run tested 55446e8. All 3 production blobs match final20b449f4. Only the new test changes afterwards: mutating the same detached readonly-typed array through Reflect.set plus expect(true), requested by root to satisfy typecheck. Final composed type/control gates remain root-owned; no rerun was performed for this equivalent mutation.",
+    "originalTest": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+      "unchangedFromBase": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+      "cooperativeDeadlineMs": 105000,
+      "bunDeadlineMs": 120000
+    },
+    "testedControlBlob": "49643683fe5a25e9e01ba7b2323af983dd928560",
+    "execution": {
+      "workflow": "test-ci",
+      "platform": "Linux x64 / ubuntu-24.04",
+      "omni": "strict",
+      "positiveControl": "pass",
+      "omniSpawns": 1,
+      "delegated": 0,
+      "requestBlob": "aea25a7708af8595d953787af5ace1a3dc2e26a8",
+      "childDeadlineMs": 240000,
+      "wrapperDeadlineMs": 300000,
+      "localProductExecution": false,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    "results": {
+      "domainTestsPassed": 2,
+      "domainTestsFailed": 0,
+      "expectCalls": 45,
+      "originalAncestryMs": 71533.46,
+      "controlMs": 2182.84,
+      "childProcessWallMs": 74120,
+      "wrapperMs": 74151.68
+    },
+    "observations": {
+      "canonicalReads": [
+        {
+          "phase": "produce-inner",
+          "elapsedMs": 945,
+          "canonicalResultReads": 10,
+          "canonicalResultReadsCompleted": 10,
+          "aborted": false
+        },
+        {
+          "phase": "produce-outer",
+          "elapsedMs": 51590,
+          "canonicalResultReads": 1078,
+          "canonicalResultReadsCompleted": 1078,
+          "aborted": false
+        }
+      ],
+      "phaseTimings": [
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "returned",
+          "phaseMs": 34,
+          "elapsedMs": 35,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "returned",
+          "phaseMs": 945,
+          "elapsedMs": 980,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "returned",
+          "phaseMs": 51590,
+          "elapsedMs": 52576,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "reopen",
+          "state": "returned",
+          "phaseMs": 6,
+          "elapsedMs": 52584,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "resolve-reopened-ancestry",
+          "state": "returned",
+          "phaseMs": 18582,
+          "elapsedMs": 71165,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "reject-persisted-cycle",
+          "state": "returned",
+          "phaseMs": 14,
+          "elapsedMs": 71183,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "recovery-and-revocation",
+          "state": "returned",
+          "phaseMs": 343,
+          "elapsedMs": 71529,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "canonical-producer",
+          "state": "returned",
+          "phaseMs": 588,
+          "elapsedMs": 598,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "fallback-parity-and-fresh-observations",
+          "state": "returned",
+          "phaseMs": 856,
+          "elapsedMs": 1454,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "typed-refusal-has-no-fallback",
+          "state": "returned",
+          "phaseMs": 3,
+          "elapsedMs": 1457,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "changed-second-read-is-refused",
+          "state": "returned",
+          "phaseMs": 362,
+          "elapsedMs": 1819,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "revocation-in-final-observation",
+          "state": "returned",
+          "phaseMs": 175,
+          "elapsedMs": 1994,
+          "aborted": false
+        },
+        {
+          "fixture": "calculation-observation",
+          "phase": "source-change-in-final-observation",
+          "state": "returned",
+          "phaseMs": 186,
+          "elapsedMs": 2180,
+          "aborted": false
+        }
+      ]
+    },
+    "comparison": {
+      "baselineRun": 45229442865,
+      "baselineSnapshot": "ad73f0f24838bd3a36273d8400c2ac1b2635bb78",
+      "baselineSource": "52110b1ce4a44fec21210e1f66c6e501e72c1e8b",
+      "baselineOuterMs": 82948,
+      "baselineOuterCanonicalReads": 1952,
+      "diagnosticRun": 45231359202,
+      "diagnosticOuterMs": 64662,
+      "diagnosticOuterCanonicalReads": 1952,
+      "candidateOuterMs": 51590,
+      "candidateOuterCanonicalReads": 1078,
+      "readsAvoided": 874,
+      "readReductionPercent": 44.77459016393443,
+      "caveat": "Wall times differ across runners. Causal evidence is the reduction in actual canonical producer calls with the complete unchanged original case and independent phase controls; no fixed speedup claim."
+    },
+    "controls": [
+      "Complete value equality with old optional-callback-absent fallback: 6 reads.",
+      "Two separate fresh composed issuances: 4 reads each, unchanged output after mutation of the previous detached returned source array.",
+      "Typed denied/unavailable/stale optional-observation refusal does not invoke fallback request/result readers or replay.",
+      "Mutation of the second canonical result read is refused exactly as stale scenario-request-changed; next clean call recovers full original output.",
+      "Authority revoked after canonical read3 in final observation: denied and no value.",
+      "Real Planner transaction after read3 changes the source: refusal and no value."
+    ],
+    "originalCoverage": [
+      "inner and outer production with ledger/calculation ancestry",
+      "real store close and reopen",
+      "fresh full ancestry resolution and absent total preserved",
+      "foreign case scope refusal",
+      "persisted cycle refusal",
+      "recovery",
+      "authority revocation"
+    ],
+    "artifacts": [],
+    "artifactNote": "The Bun workflow did not upload a separate artifact; the complete canonical job log is preserved alongside this ledger.",
+    "evidenceFiles": {
+      "jobLog": "job.log",
+      "sanitizedLog": "sanitized-job.log",
+      "request": "request.json"
+    },
+    "evidenceHashes": {
+      "job.log": {
+        "sha256": "8df2fabe3ac2ed21ce5ebcbc924a5659af10657a8d68702911130eb209bfeb3b",
+        "bytes": 69689
+      },
+      "sanitized-job.log": {
+        "sha256": "9dec5a16958a54e009117dcbdd317851490d0dae682c9c905dadb190aa032342",
+        "bytes": 6587
+      },
+      "request.json": {
+        "sha256": "10cafbd5be0e97afb126c913107cf4d180574f36ead67813784611457ba2eaa5",
+        "bytes": 276
+      }
+    },
+    "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
+  },
+  "currentCandidate": {
+    "source": "42abce1949cc1a533f62baab6597896d359f3129",
+    "tree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+    "integrations": [
+      {
+        "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
+        "tree": "f2ae22014d20b46b293b13ff5b8bccc519f45bb4",
+        "parent": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc"
+      },
+      {
+        "sha": "42abce1949cc1a533f62baab6597896d359f3129",
+        "tree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+        "parent": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
+        "candidate": "20b449f4b9a063c15e27ebb7ac592294ace2f7db"
+      }
+    ],
+    "structural": {
+      "source": "42abce1949cc1a533f62baab6597896d359f3129",
+      "sourceTree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+      "snapshot": "a4441555b415c6df7e0654cbf0710d9b92469fe4",
+      "tree": "58ca514e50cc84cca86c1664c8dbb69f7e97271b",
+      "branch": "ci-run-r4gates6",
+      "run": 45236453824,
+      "status": "in_progress",
+      "result": null
+    },
+    "atlasBrowser": {
+      "run": 45236553987,
+      "source": "42abce1949cc1a533f62baab6597896d359f3129",
+      "snapshot": "19f8cef635498bb1e172a745b1ae3380bc302564",
+      "tree": "1a6ba8ae3bbbf94edfe2c678f23ef3a17bf0146c",
+      "branch": "ci-run-r4recall5",
+      "status": "in_progress",
+      "qualifies": false
+    }
+  },
+  "checkpoint": {
+    "productSource": "42abce1949cc1a533f62baab6597896d359f3129",
+    "productTree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+    "status": "qualification-in-progress",
+    "browserCases": 94,
+    "reviewedOriginals": 64
   }
 }
