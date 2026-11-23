@@ -90,10 +90,13 @@ describe("Catalog available model metadata", () => {
     }),
   )
 
-  it.effect("preserves projection getter failures even when the provider is unavailable", () =>
+  it.effect("omits hidden projection getters and observes them immediately after credential activation", () =>
     Effect.gen(function* () {
       const catalog = yield* Catalog.Service
+      const credentials = yield* Credential.Service
+      const integrations = yield* Integration.Service
       const providerID = ProviderV2.ID.make("getter-projection")
+      const integrationID = Integration.ID.make("getter-projection")
       const modelID = ModelV2.ID.make("observed")
       const fault = { site: "" }
       const observed: string[] = []
@@ -102,23 +105,19 @@ describe("Catalog available model metadata", () => {
         if (fault.site === site) throw new Error("projection-getter-" + site)
         return value
       }
+      yield* integrations.transform((draft) => draft.update(integrationID, () => {}))
       yield* catalog.transform((draft) => {
         draft.provider.update(providerID, (provider) => {
-          provider.disabled = true
+          provider.integrationID = integrationID
           provider.api = { type: "aisdk", package: "@ai-sdk/openai-compatible", settings: {} }
-          const api = provider.api, request = provider.request
-          Object.defineProperty(api.settings, "observed-provider-setting", {
+          Object.defineProperty(provider.api.settings, "observed-provider-setting", {
             enumerable: true, get: () => read("provider-setting", "provider"),
           })
-          Object.defineProperty(request.headers, "observed-provider-header", {
+          Object.defineProperty(provider.request.headers, "observed-provider-header", {
             enumerable: true, get: () => read("provider-header", "provider"),
           })
-          Object.defineProperty(request.body, "observed-provider-body", {
+          Object.defineProperty(provider.request.body, "observed-provider-body", {
             enumerable: true, get: () => read("provider-body", true),
-          })
-          Object.defineProperties(provider, {
-            api: { enumerable: true, configurable: true, get: () => read("provider-api", api) },
-            request: { enumerable: true, configurable: true, get: () => read("provider-request", request) },
           })
         })
         draft.model.update(providerID, modelID, (model) => {
@@ -141,13 +140,38 @@ describe("Catalog available model metadata", () => {
         })
       })
 
+      // Provider discovery still reads its own authentication metadata. These
+      // nine sites are projection-only fields, outside that discovery decision.
+      const sites = [
+        "model-api", "model-request", "model-property", "provider-setting", "model-setting",
+        "provider-header", "model-header", "provider-body", "model-body",
+      ]
       observed.length = 0
       expect(yield* catalog.model.available()).toEqual([])
-      const sites = [
-        "provider-api", "provider-request", "model-api", "model-request", "model-property",
-        "provider-setting", "model-setting", "provider-header", "model-header", "provider-body", "model-body",
-      ]
-      for (const site of sites) expect(observed).toContain(site)
+      expect(observed).toEqual([])
+      for (const site of sites) {
+        fault.site = site
+        observed.length = 0
+        expect(yield* catalog.model.available()).toEqual([])
+        expect(observed).toEqual([])
+        for (const effect of [
+          catalog.model.all().pipe(Effect.asVoid),
+          catalog.model.get(providerID, modelID).pipe(Effect.asVoid),
+        ]) {
+          const result = yield* Effect.exit(effect)
+          expect(Exit.isFailure(result)).toBe(true)
+          if (Exit.isFailure(result))
+            expect(Cause.prettyErrors(result.cause).map((error) => error.message)).toContain("projection-getter-" + site)
+        }
+      }
+
+      fault.site = ""
+      const credential = yield* credentials.create({
+        integrationID,
+        label: "default",
+        value: Credential.Key.make({ type: "key", key: "synthetic-projection-key" }),
+      })
+      // No catalog reload: current credentials select the same metadata now.
       for (const site of sites) {
         fault.site = site
         observed.length = 0
@@ -158,7 +182,174 @@ describe("Catalog available model metadata", () => {
           expect(Cause.prettyErrors(result.cause).map((error) => error.message)).toContain("projection-getter-" + site)
       }
       fault.site = ""
+      const selected = yield* catalog.model.available()
+      expect(selected.map((model) => model.id)).toEqual([modelID])
+      yield* credentials.remove(credential.id)
+      fault.site = "model-api"
+      observed.length = 0
       expect(yield* catalog.model.available()).toEqual([])
+      expect(observed).toEqual([])
+    }),
+  )
+
+  it.effect("requires identity before hidden metadata while all and get retain original error precedence", () =>
+    Effect.gen(function* () {
+      const catalog = yield* Catalog.Service
+      const providerID = ProviderV2.ID.make("identity-first")
+      const modelID = ModelV2.ID.make("identity-error")
+      yield* catalog.transform((draft) => {
+        draft.provider.update(providerID, (provider) => { provider.disabled = true })
+        draft.model.update(providerID, modelID, () => {})
+        const model = required(draft.model.get(providerID, modelID))
+        // Install after update, which assigns the ordinary identity itself.
+        Object.defineProperties(model, {
+          providerID: {
+            enumerable: true, configurable: true,
+            get() { throw new Error("eligibility-identity") },
+          },
+          api: {
+            enumerable: true, configurable: true,
+            get() { throw new Error("projection-metadata") },
+          },
+        })
+      })
+
+      const available = yield* Effect.exit(catalog.model.available())
+      expect(Exit.isFailure(available)).toBe(true)
+      if (Exit.isFailure(available))
+        expect(Cause.prettyErrors(available.cause).map((error) => error.message)).toContain("eligibility-identity")
+      for (const effect of [
+        catalog.model.all().pipe(Effect.asVoid),
+        catalog.model.get(providerID, modelID).pipe(Effect.asVoid),
+      ]) {
+        const result = yield* Effect.exit(effect)
+        expect(Exit.isFailure(result)).toBe(true)
+        if (Exit.isFailure(result))
+          expect(Cause.prettyErrors(result.cause).map((error) => error.message)).toContain("projection-metadata")
+      }
+    }),
+  )
+
+  it.effect("selects each base model by its effective provider rather than its parent record", () =>
+    Effect.gen(function* () {
+      const catalog = yield* Catalog.Service
+      const hidden = ProviderV2.ID.make("hidden-parent")
+      const visible = ProviderV2.ID.make("visible-parent")
+      const selectedID = ModelV2.ID.make("selected-from-hidden-parent")
+      const omittedID = ModelV2.ID.make("omitted-from-visible-parent")
+      let omittedReads = 0
+      yield* catalog.transform((draft) => {
+        draft.provider.update(hidden, (provider) => {
+          provider.disabled = true
+          provider.api = {
+            type: "aisdk", package: "@ai-sdk/openai-compatible",
+            url: "https://hidden-parent.example.com", settings: { owner: "hidden-parent" },
+          }
+        })
+        draft.provider.update(visible, () => {})
+        draft.model.update(hidden, selectedID, () => {})
+        draft.model.update(visible, omittedID, () => {})
+        // The draft exposes mutable records. Later transform work can change
+        // identity after model.update assigned its parent ID.
+        const selected = required(required(draft.provider.get(hidden)).models.get(selectedID))
+        const omitted = required(required(draft.provider.get(visible)).models.get(omittedID))
+        selected.providerID = visible
+        omitted.providerID = hidden
+        Object.defineProperty(omitted, "name", {
+          enumerable: true, configurable: true,
+          get() { omittedReads++; throw new Error("unavailable-effective-provider") },
+        })
+      })
+
+      const models = yield* catalog.model.available()
+      expect(models.map((model) => model.id)).toEqual([selectedID])
+      const selected = required(models[0])
+      expect(selected.providerID).toBe(visible)
+      expect(selected.api.url).toBe("https://hidden-parent.example.com")
+      expect(selected.api.settings.owner).toBe("hidden-parent")
+      expect(omittedReads).toBe(0)
+      expect(Exit.isFailure(yield* Effect.exit(catalog.model.get(visible, omittedID)))).toBe(true)
+      expect(omittedReads).toBeGreaterThan(0)
+    }),
+  )
+
+  it.effect("filters the actual projected identity after metadata changes an eligibility ID", () =>
+    Effect.gen(function* () {
+      const catalog = yield* Catalog.Service
+      const visible = ProviderV2.ID.make("changing-visible")
+      const hidden = ProviderV2.ID.make("changing-hidden")
+      const modelID = ModelV2.ID.make("changing-identity")
+      const state = { current: visible, next: hidden, projections: 0 }
+      yield* catalog.transform((draft) => {
+        draft.provider.update(visible, () => {})
+        draft.provider.update(hidden, (provider) => { provider.disabled = true })
+        draft.model.update(visible, modelID, () => {})
+        const model = required(draft.model.get(visible, modelID)), api = model.api
+        Object.defineProperties(model, {
+          providerID: { enumerable: true, configurable: true, get: () => state.current },
+          api: {
+            enumerable: true, configurable: true,
+            get() {
+              state.projections++
+              state.current = state.next
+              return api
+            },
+          },
+        })
+      })
+
+      // Eligibility sees visible; the original projection later produces hidden.
+      expect(yield* catalog.model.available()).toEqual([])
+      expect(state.projections).toBeGreaterThan(0)
+      expect(state.current).toBe(hidden)
+      state.current = visible
+      expect(required(yield* catalog.model.get(visible, modelID)).providerID).toBe(hidden)
+
+      // Hidden metadata cannot make itself eligible as a side effect of a read
+      // that available() no longer performs.
+      state.current = hidden
+      state.next = visible
+      state.projections = 0
+      expect(yield* catalog.model.available()).toEqual([])
+      expect(state.projections).toBe(0)
+      expect(required(yield* catalog.model.get(visible, modelID)).providerID).toBe(visible)
+    }),
+  )
+
+  it.effect("uses the current virtual credential identity instead of the base model identity", () =>
+    Effect.gen(function* () {
+      const catalog = yield* Catalog.Service
+      const credentials = yield* Credential.Service
+      const integrations = yield* Integration.Service
+      const providerID = ProviderV2.ID.make("virtual-parent")
+      const integrationID = Integration.ID.make("virtual-parent")
+      const hiddenID = ProviderV2.ID.make("hidden-model-identity")
+      const modelID = ModelV2.ID.make("virtual-override")
+      yield* integrations.transform((draft) => draft.update(integrationID, () => {}))
+      yield* catalog.transform((draft) => {
+        draft.provider.update(providerID, (provider) => { provider.integrationID = integrationID })
+        draft.provider.update(hiddenID, (provider) => { provider.disabled = true })
+        draft.model.update(providerID, modelID, () => {})
+        required(required(draft.provider.get(providerID)).models.get(modelID)).providerID = hiddenID
+      })
+      expect(yield* catalog.model.available()).toEqual([])
+
+      const credential = yield* credentials.create({
+        integrationID,
+        label: "Work",
+        value: Credential.Key.make({ type: "key", key: "synthetic-virtual-override-key" }),
+      })
+      const virtualID = ProviderV2.ID.make(providerID + "#" + credential.id)
+      expect((yield* catalog.provider.available()).map((provider) => provider.id)).toEqual([providerID, virtualID])
+      const models = yield* catalog.model.available()
+      expect(models.map((model) => model.providerID)).toEqual([virtualID])
+      expect(models.map((model) => model.id)).toEqual([modelID])
+      expect(required(yield* catalog.model.get(providerID, modelID)).providerID).toBe(hiddenID)
+      expect(required(yield* catalog.model.get(virtualID, modelID)).providerID).toBe(virtualID)
+
+      yield* credentials.remove(credential.id)
+      expect(yield* catalog.model.available()).toEqual([])
+      expect(yield* catalog.model.get(virtualID, modelID)).toBeUndefined()
     }),
   )
 

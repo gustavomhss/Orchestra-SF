@@ -115,32 +115,6 @@ const make = Effect.gen(function* () {
       })
     }
 
-    // The available projection reads the same top-level metadata, but validates
-    // only providers selected by the current credential and availability read.
-    const projectModelInput = (model: ModelV2.Info, provider: ProviderV2.Info) => {
-      // A model without its own package takes the provider's, and its own URL when it has one.
-      const api =
-        model.api.type === "native" && Object.keys(model.api.settings).length === 0 && provider.api.type === "aisdk"
-          ? { ...provider.api, id: model.api.id, url: model.api.url ?? provider.api.url }
-          : model.api.type === "native" && !model.api.url && Object.keys(model.api.settings).length === 0
-          ? { ...provider.api, id: model.api.id }
-          : model.api.type === "aisdk" && provider.api.type === "aisdk" && !model.api.url
-            ? { ...model.api, url: provider.api.url, settings: { ...provider.api.settings, ...model.api.settings } }
-            : model.api.type === "aisdk" && provider.api.type === "aisdk"
-              ? { ...model.api, settings: { ...provider.api.settings, ...model.api.settings } }
-              : model.api
-      const request = {
-        headers: { ...provider.request.headers, ...model.request.headers },
-        body: { ...provider.request.body, ...model.request.body },
-        variant: model.request.variant,
-      }
-      return {
-        ...model,
-        api,
-        request,
-      }
-    }
-
     const normalizeApi = (item: ProviderV2.MutableInfo | ModelV2.MutableInfo) => {
       if (typeof item.request.body.baseURL !== "string") return
       item.api.url = item.request.body.baseURL
@@ -270,10 +244,12 @@ const make = Effect.gen(function* () {
             projectModel(parsed ? { ...model, providerID: record.provider.id } : model, record.provider),
           )
           return models.flatMap((model) => {
-            // Nested metadata of an unavailable provider is outside this result.
-            // all() and get() retain their complete projection and validation.
-            const input = projectModelInput(parsed ? { ...model, providerID: record.provider.id } : model, record.provider)
-            return providers.has(input.providerID) ? [ModelV2.Info.make(input)] : []
+            // Availability observes identity before API/request projection, so
+            // identity errors precede projection errors. Hidden metadata is not
+            // projected; selected results still pass the final provider filter.
+            const providerID = parsed ? record.provider.id : model.providerID
+            if (!providers.has(providerID)) return []
+            return [projectModel(parsed ? { ...model, providerID: record.provider.id } : model, record.provider)]
           })
         }),
         Array.sortWith((item) => item.time.released, Order.flip(Order.Number)),
