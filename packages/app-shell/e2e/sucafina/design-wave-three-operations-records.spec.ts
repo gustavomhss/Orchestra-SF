@@ -324,7 +324,7 @@ waveThreeTest("installed native operations · weight exceptions require fresh pr
   await editor.getByLabel("Notes", { exact: true }).fill("Design test data · First allocation exception review.")
   await editor.getByRole("button", { name: "Review changes", exact: true }).click()
   const review = surface.locator('[data-component="sf-change-review"]')
-  const consent = review.getByLabel("Confirm weights exceeding total allocation", { exact: true })
+  const consent = review.getByRole("checkbox", { name: "Confirm weights exceeding total allocation", exact: true })
   await expect(consent).toHaveCount(0)
   const firstResponse = page.waitForResponse((response) =>
     response.request().method() === "POST" &&

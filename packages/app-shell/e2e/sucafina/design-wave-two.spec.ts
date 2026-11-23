@@ -1,6 +1,8 @@
-import { expect, type Page, type TestInfo } from "@playwright/test"
+import { expect, type Browser, type Page, type TestInfo } from "@playwright/test"
+import type { SfContext, SfInstallationDescriptor } from "@orchestra/schema/sucafina/context"
+import type { DesignInstallation } from "./design-support/installation"
 import { ServerConnection } from "../../src/context/server-connection"
-import { originalRead } from "./design-support/original-read"
+import { originalRead, originalReads, type OriginalRead } from "./design-support/original-read"
 import { waveTwoTest, observePage, ready, scheme, scrollPageTop, reflow, reviewActions, capture } from "./design-support/wave-two"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -15,69 +17,11 @@ const screens = [
 const newTopic = "Dados de teste · Consolidar a previsão de despesas regionais"
 const topicNotes = "Conferir os registros de origem e registrar a decisão antes de concluir a revisão."
 
-waveTwoTest("installed native second-wave design · topics, budget and OPEX with real source writes", async ({ page, browser, installation, owner }, info) => {
-  waveTwoTest.setTimeout(240_000)
-  page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
-  const messages = observePage(page)
-  const mutations: string[] = []
-  const sourceOrigins = new Set<string>()
-  page.on("request", (request) => {
-    const url = new URL(request.url())
-    if (url.pathname.startsWith(installation.mount + "/")) sourceOrigins.add(url.origin)
-    if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/"))
-      mutations.push(url.pathname)
-  })
-  const href = (pathname: string) => {
-    const url = new URL(pathname, installation.origin)
-    url.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: installation.origin } }))
-    url.searchParams.set("project", owner.projectId)
-    url.searchParams.set("installation", owner.installationId)
-    return url.href
-  }
-  const enter = async (screen: typeof screens[number], target = page, portuguese = false, topics = 3) => {
-    await originalRead(target, owner, { path: "/api/ui/pages/" + screen.id }, () => target.goto(href(screen.path)))
-    await ready(target, portuguese ? screen.br : screen.title)
-    await expect(target).toHaveURL((url) => url.origin === installation.origin && url.pathname === screen.path &&
-      url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
-    if (screen.id === "CAP02") {
-      await expect(target.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(topics)
-      await expect(target.locator("[data-sf-topic-list]")).toContainText(installation.topicName)
-    }
-    if (screen.id === "CAP03") {
-      await expect(target.locator('[data-sf-surface="CAP03"] [data-sf-metric="budget"]')).toHaveAttribute("data-sf-value", "number")
-      await expect(target.locator('[data-sf-surface="CAP03"] [data-sf-metric="forecast"]')).toHaveAttribute("data-sf-value", "number")
-    }
-    if (screen.id === "CAP04") {
-      await expect(target.locator('[data-sf-budget="CAP04"] tr[data-sf-row]')).toHaveCount(3)
-      await expect(target.locator('[data-sf-budget="CAP04"] tr[data-sf-row]').filter({ hasText: installation.opexName })).toHaveCount(1)
-    }
-    await reflow(target)
-    await scrollPageTop(target)
-  }
-
-  await waveTwoTest.step("real desktop, light and narrow starting views", async () => {
-    for (const screen of screens) {
-      await page.setViewportSize({ width: 1440, height: 1100 })
-      await enter(screen)
-      await scheme(page, "dark")
-      await capture(page, info, screen.id + "-dark-desktop-test-data")
-      await page.setViewportSize({ width: 1440, height: 800 })
-      await reflow(page)
-      await capture(page, info, screen.id + "-dark-1440x800-test-data")
-      await page.setViewportSize({ width: 1440, height: 1100 })
-      await scheme(page, "light")
-      await capture(page, info, screen.id + "-light-desktop-test-data")
-      await page.setViewportSize({ width: 320, height: 900 })
-      await reflow(page)
-      await expect(page.locator('[data-sf-source-navigation="sf-dashboard"] a[aria-current="page"]')).toBeInViewport({ ratio: 1 })
-      await scrollPageTop(page)
-      await capture(page, info, screen.id + "-light-320-test-data")
-    }
-  })
-
+waveTwoTest("installed native second-wave design · topic collections, keyboard and source filters", async ({ page, installation, owner }, info) => {
+  const check = beginWaveTwoCheck(page, installation, owner, info)
+  await check.enter(screens[0])
+  await captureCollection(page, info, screens[0])
   await page.setViewportSize({ width: 1440, height: 1100 })
-  await enter(screens[0])
   await scheme(page, "dark")
   const access = page.getByRole("button", { name: "Context and access", exact: true })
   await access.focus()
@@ -88,7 +32,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
   await expect(accessMenu).toBeHidden()
   await expect(access).toBeFocused()
 
-  await waveTwoTest.step("topic filter, create and update confirmation, cancellation and fresh edit", async () => {
+  await waveTwoTest.step("original topic filters retain the empty and blocked states", async () => {
     const filter = page.getByLabel("Filter by status", { exact: true })
     await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "done" } }, () => filter.selectOption("done"))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(0)
@@ -102,6 +46,17 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(page.locator("[data-sf-topic-list]")).toContainText("Dados de teste · Validar plano de continuidade do fornecedor")
     await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "" } }, () => filter.selectOption(""))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(3)
+  })
+  await finishWaveTwoCheck(info, check, installation, ["CAP02"], 0, ["en-US"])
+})
+
+waveTwoTest("installed native second-wave design · topic creation, revision and two genuine writes", async ({ page, installation, owner }, info) => {
+  const check = beginWaveTwoCheck(page, installation, owner, info)
+  const mutations = check.mutations
+  const context = await check.enter(screens[0])
+  const references = topicReferenceReads(context)
+  await scheme(page, "dark")
+  await waveTwoTest.step("topic create and update confirmation, cancellation and fresh edit", async () => {
     await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
       page.getByRole("button", { name: "New topic", exact: true }).click())
     const editor = page.locator("[data-sf-topic-editor]")
@@ -139,7 +94,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
       saved.getByRole("button", { name: "Back to topics", exact: true }).click())
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
     const created = page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
-    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+    await originalReads(page, owner, [{ path: "/api/ui/pages/CAP02" }, ...references], () =>
       created.getByRole("button", { name: "View details", exact: true }).click())
     const detail = page.locator("[data-sf-topic-detail]")
     await expect(detail.getByRole("heading", { name: newTopic, exact: true })).toBeVisible()
@@ -150,6 +105,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await reflow(page)
     const related = detail.locator(".sf-topics-related select")
     await expect(related).toBeEnabled()
+    await expect(related).toContainText(installation.riskName)
     await related.focus()
     await expect(related).toBeFocused()
     await expect(related).toBeInViewport({ ratio: 1 })
@@ -187,7 +143,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
       saved.getByRole("button", { name: "Back to topics", exact: true }).click())
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
-    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+    await originalReads(page, owner, [{ path: "/api/ui/pages/CAP02" }, ...references], () =>
       page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
         .getByRole("button", { name: "View details", exact: true }).click())
     await expect(detail).toContainText(updatedNotes)
@@ -196,11 +152,51 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(existing.getByLabel("Notes", { exact: true })).toHaveValue(updatedNotes)
     await expect(existing.getByRole("button", { name: "Review save", exact: true })).toBeEnabled()
   })
+  await finishWaveTwoCheck(info, check, installation, ["CAP02"], 2, ["en-US"])
+})
 
+waveTwoTest("installed native second-wave design · Portuguese topic source detail and retained draft", async ({ page, browser, installation, owner }, info) => {
+  const check = beginWaveTwoCheck(page, installation, owner, info)
+  await withPortuguese(page, browser, installation, info, check, async (localized) => {
+    const context = await check.enter(screens[0], localized, true)
+    const references = topicReferenceReads(context)
+    await scheme(localized, "dark")
+    await capture(localized, info, "CAP02-pt-BR-dark-desktop-test-data")
+    await originalReads(localized, owner, [{ path: "/api/ui/pages/CAP02" }, ...references], () =>
+      localized.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: installation.topicName })
+        .getByRole("button", { name: "Ver detalhes", exact: true }).click())
+    await expect(localized.locator("[data-sf-topic-detail]")).toBeVisible()
+    await expect(localized.locator("[data-sf-topic-detail]").getByRole("heading", { name: installation.topicName, exact: true })).toBeVisible()
+    await scrollPageTop(localized)
+    await capture(localized, info, "CAP02-pt-BR-dark-desktop-detail-test-data")
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      localized.getByRole("button", { name: "Voltar aos tópicos", exact: true }).click())
+    await expect(localized.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(3)
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      localized.getByRole("button", { name: "Novo tópico", exact: true }).click())
+    await fillTopic(localized, installation.year, true)
+    await scrollPageTop(localized)
+    await capture(localized, info, "CAP02-pt-BR-dark-desktop-editor-test-data")
+    await localized.getByRole("button", { name: "Revisar salvamento", exact: true }).click()
+    await reviewActions(localized)
+    await capture(localized, info, "CAP02-pt-BR-dark-desktop-review-test-data")
+    await localized.getByRole("button", { name: "Cancelar revisão", exact: true }).click()
+    await localized.getByRole("button", { name: "Descartar rascunho", exact: true }).click()
+    await expect(localized.getByLabel("Ação", { exact: true })).toHaveValue("")
+  })
+  await finishWaveTwoCheck(info, check, installation, ["CAP02"], 0, ["pt-BR"])
+})
+
+waveTwoTest("installed native second-wave design · budget source scope and localized before-after review", async ({ page, browser, installation, owner }, info) => {
+  const check = beginWaveTwoCheck(page, installation, owner, info)
+  const mutations = check.mutations
+  await check.enter(screens[1])
+  await captureCollection(page, info, screens[1])
+  await page.setViewportSize({ width: 1440, height: 1100 })
   await waveTwoTest.step("budget source scope and annual editor review preserve the source", async () => {
-    await enter(screens[1], page, false, 4)
     await scheme(page, "dark")
-    await page.getByLabel("Year", { exact: true }).selectOption(String(installation.year))
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP03", query: { year: String(installation.year) } }, () =>
+      page.getByLabel("Year", { exact: true }).selectOption(String(installation.year)))
     await expect(page.locator('[data-sf-metric="budget"]')).toHaveAttribute("data-sf-scope", "unscoped")
     await expect(page.locator('[data-sf-metric="revenue"]')).toContainText("2,400,000")
     await scrollPageTop(page)
@@ -252,15 +248,47 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(revenue.getByLabel("Annual revenue", { exact: true })).toHaveValue("2600000")
     await revenue.getByRole("button", { name: "Discard draft", exact: true }).click()
     await expect(revenue.getByLabel("Annual revenue", { exact: true })).toHaveValue("2400000")
-    await page.getByLabel("Year", { exact: true }).selectOption("")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP03" }, () =>
+      page.getByLabel("Year", { exact: true }).selectOption(""))
     await expect(page.locator('[data-sf-metric="budget"]')).toHaveAttribute("data-sf-value", "number")
     await expect(page.getByLabel("Year", { exact: true })).toHaveValue("")
     await expect(page).toHaveURL((url) => !url.searchParams.has("year") && url.searchParams.get("installation") === owner.installationId)
-    expect(mutations).toHaveLength(2)
+    expect(mutations).toHaveLength(0)
   })
 
+  await withPortuguese(page, browser, installation, info, check, async (localized) => {
+    await check.enter(screens[1], localized, true)
+    await scheme(localized, "dark")
+    await capture(localized, info, "CAP03-pt-BR-dark-desktop-test-data")
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP03", query: { year: String(installation.year) } }, () =>
+      localized.getByLabel("Ano", { exact: true }).selectOption(String(installation.year)))
+    await expect(localized.locator('[data-sf-metric="revenue"]')).toContainText("2.400.000")
+    await localized.locator("summary").filter({ hasText: "Editar mês corrente" }).click()
+    const month = localized.locator('[data-sf-u02-edit="save-month"]')
+    await month.getByLabel("Mês atual", { exact: true }).fill("7")
+    await scrollPageTop(localized)
+    await capture(localized, info, "CAP03-pt-BR-dark-desktop-editor-test-data")
+    await month.getByRole("button", { name: "Revisar alteração da fonte", exact: true }).click()
+    const localizedMonth = month.getByRole("region", { name: "Mês atual", exact: true })
+    await expect(localizedMonth.locator('[data-version="base"] .sf-s03-field-value')).toHaveText("junho de " + installation.year)
+    await expect(localizedMonth.locator('[data-version="current"] .sf-s03-field-value')).toHaveText("junho de " + installation.year)
+    await expect(localizedMonth.locator('[data-version="proposed"] .sf-s03-field-value')).toHaveText("julho de " + installation.year)
+    await reviewActions(localized)
+    await capture(localized, info, "CAP03-pt-BR-dark-desktop-review-test-data")
+    await month.getByRole("button", { name: "Cancelar revisão", exact: true }).click()
+    await month.getByRole("button", { name: "Descartar rascunho", exact: true }).click()
+    await expect(month.getByLabel("Mês atual", { exact: true })).toHaveValue("6")
+  })
+  await finishWaveTwoCheck(info, check, installation, ["CAP03"], 0, ["en-US","pt-BR"])
+})
+
+waveTwoTest("installed native second-wave design · OPEX source write and localized complete periods", async ({ page, browser, installation, owner }, info) => {
+  const check = beginWaveTwoCheck(page, installation, owner, info)
+  const mutations = check.mutations
+  await check.enter(screens[2])
+  await captureCollection(page, info, screens[2])
+  await page.setViewportSize({ width: 1440, height: 1100 })
   await waveTwoTest.step("OPEX detail, preserved monthly draft and one genuine confirmed write", async () => {
-    await enter(screens[2], page, false, 4)
     await scheme(page, "dark")
     const filter = page.getByLabel("Name", { exact: true })
     await filter.fill("no matching test record")
@@ -325,72 +353,18 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await reviewActions(page)
     await capture(page, info, "CAP04-dark-320-review-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
-    expect(mutations).toHaveLength(2)
+    expect(mutations).toHaveLength(0)
     await originalRead(page, owner, { path: "/api/ui/pages/CAP04" }, () =>
       review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(editor).toHaveCount(0)
     await expect(january).toContainText("14,600")
-    expect(mutations).toHaveLength(3)
+    expect(mutations).toHaveLength(1)
   })
 
-  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
-  expect(localizedCookies.filter((cookie) => /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name)).length).toBe(1)
-  const portuguese = await browser.newContext({
-    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
-    reducedMotion: "reduce", colorScheme: "dark",
-    httpCredentials: { username: "orchestra", password: installation.serverPassword },
-    storageState: { cookies: localizedCookies, origins: [{ origin: installation.origin,
-      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
-  })
-  try {
-    const localized = await portuguese.newPage()
-    localized.setDefaultTimeout(15_000)
-    const localizedMessages = observePage(localized)
-    for (const screen of screens) {
-      await enter(screen, localized, true, 4)
-      await scheme(localized, "dark")
-      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
-    }
-    await enter(screens[0], localized, true, 4)
-    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
-      localized.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
-        .getByRole("button", { name: "Ver detalhes", exact: true }).click())
-    await expect(localized.locator("[data-sf-topic-detail]")).toBeVisible()
-    await scrollPageTop(localized)
-    await capture(localized, info, "CAP02-pt-BR-dark-desktop-detail-test-data")
-    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
-      localized.getByRole("button", { name: "Voltar aos tópicos", exact: true }).click())
-    await expect(localized.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
-    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
-      localized.getByRole("button", { name: "Novo tópico", exact: true }).click())
-    await fillTopic(localized, installation.year, true)
-    await scrollPageTop(localized)
-    await capture(localized, info, "CAP02-pt-BR-dark-desktop-editor-test-data")
-    await localized.getByRole("button", { name: "Revisar salvamento", exact: true }).click()
-    await reviewActions(localized)
-    await capture(localized, info, "CAP02-pt-BR-dark-desktop-review-test-data")
-    await localized.getByRole("button", { name: "Cancelar revisão", exact: true }).click()
-    await localized.getByRole("button", { name: "Descartar rascunho", exact: true }).click()
-    await expect(localized.getByLabel("Ação", { exact: true })).toHaveValue("")
-    await enter(screens[1], localized, true, 4)
-    await localized.getByLabel("Ano", { exact: true }).selectOption(String(installation.year))
-    await expect(localized.locator('[data-sf-metric="revenue"]')).toContainText("2.400.000")
-    await localized.locator("summary").filter({ hasText: "Editar mês corrente" }).click()
-    const month = localized.locator('[data-sf-u02-edit="save-month"]')
-    await month.getByLabel("Mês atual", { exact: true }).fill("7")
-    await scrollPageTop(localized)
-    await capture(localized, info, "CAP03-pt-BR-dark-desktop-editor-test-data")
-    await month.getByRole("button", { name: "Revisar alteração da fonte", exact: true }).click()
-    const localizedMonth = month.getByRole("region", { name: "Mês atual", exact: true })
-    await expect(localizedMonth.locator('[data-version="base"] .sf-s03-field-value')).toHaveText("junho de " + installation.year)
-    await expect(localizedMonth.locator('[data-version="current"] .sf-s03-field-value')).toHaveText("junho de " + installation.year)
-    await expect(localizedMonth.locator('[data-version="proposed"] .sf-s03-field-value')).toHaveText("julho de " + installation.year)
-    await reviewActions(localized)
-    await capture(localized, info, "CAP03-pt-BR-dark-desktop-review-test-data")
-    await month.getByRole("button", { name: "Cancelar revisão", exact: true }).click()
-    await month.getByRole("button", { name: "Descartar rascunho", exact: true }).click()
-    await expect(month.getByLabel("Mês atual", { exact: true })).toHaveValue("6")
-    await enter(screens[2], localized, true, 4)
+  await withPortuguese(page, browser, installation, info, check, async (localized) => {
+    await check.enter(screens[2], localized, true)
+    await scheme(localized, "dark")
+    await capture(localized, info, "CAP04-pt-BR-dark-desktop-test-data")
     await localized.locator('tr[data-sf-row]').filter({ hasText: installation.opexName })
       .getByRole("button", { name: "Abrir registro", exact: true }).click()
     await expect(localized.locator('[data-sf-opex-detail] tr[data-sf-month="1"]')).toContainText("14.600")
@@ -411,23 +385,130 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await capture(localized, info, "CAP04-pt-BR-dark-desktop-review-test-data")
     await opex.getByRole("button", { name: "Revisar", exact: true }).click()
     await expect(opex.getByLabel("Previsão", { exact: true })).toHaveValue("14800")
+  })
+  await finishWaveTwoCheck(info, check, installation, ["CAP04"], 1, ["en-US","pt-BR"])
+})
+
+function beginWaveTwoCheck(page: Page, installation: DesignInstallation, owner: SfInstallationDescriptor, info: TestInfo) {
+  // Each independent source journey keeps the original deadline and fixture.
+  waveTwoTest.setTimeout(240_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle, "use the existing production runner").toBe("production")
+  const messages = observePage(page)
+  const mutations: string[] = []
+  const sourceOrigins = new Set<string>()
+  const watch = (target: Page) => target.on("request", (request) => {
+    const url = new URL(request.url())
+    if (url.pathname.startsWith(installation.mount + "/")) sourceOrigins.add(url.origin)
+    if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/"))
+      mutations.push(url.pathname)
+  })
+  watch(page)
+  const href = (pathname: string) => {
+    const url = new URL(pathname, installation.origin)
+    url.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: installation.origin } }))
+    url.searchParams.set("project", owner.projectId)
+    url.searchParams.set("installation", owner.installationId)
+    return url.href
+  }
+  const enter = async (screen: typeof screens[number], target = page, portuguese = false, topics = 3) => {
+    const admitted = await originalReads(target, owner, [
+      { path: "/api/ui/context" }, { path: "/api/ui/pages/" + screen.id },
+    ], () => target.goto(href(screen.path)))
+    const context = (admitted.receipts[0]!.body as { value: SfContext }).value
+    expect(context.stamp).toMatchObject({
+      installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId,
+    })
+    await ready(target, portuguese ? screen.br : screen.title)
+    await expect(target).toHaveURL((url) => url.origin === installation.origin && url.pathname === screen.path &&
+      url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
+    if (screen.id === "CAP02") {
+      await expect(target.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(topics)
+      await expect(target.locator("[data-sf-topic-list]")).toContainText(installation.topicName)
+    }
+    if (screen.id === "CAP03") {
+      await expect(target.locator('[data-sf-surface="CAP03"] [data-sf-metric="budget"]')).toHaveAttribute("data-sf-value", "number")
+      await expect(target.locator('[data-sf-surface="CAP03"] [data-sf-metric="forecast"]')).toHaveAttribute("data-sf-value", "number")
+    }
+    if (screen.id === "CAP04") {
+      await expect(target.locator('[data-sf-budget="CAP04"] tr[data-sf-row]')).toHaveCount(3)
+      await expect(target.locator('[data-sf-budget="CAP04"] tr[data-sf-row]').filter({ hasText: installation.opexName })).toHaveCount(1)
+    }
+    await reflow(target)
+    await scrollPageTop(target)
+    return context
+  }
+  return { messages, mutations, sourceOrigins, watch, enter }
+}
+
+function topicReferenceReads(context: SfContext): readonly OriginalRead[] {
+  // The actual F01 response decides which original catalogues the detail will read.
+  const capabilities = ["CAP13", "CAP15"].filter((capability) =>
+    context.destinations.some((destination) => destination.capabilityId === capability && destination.canRead) &&
+    context.availability.some((resource) => resource.operations.some((operation) =>
+      operation.operationId === "domain.page." + capability && operation.state === "ready" && operation.operational)))
+  expect(capabilities, "the canonical fixture's seeded risk is admitted by its original owner").toContain("CAP13")
+  return capabilities.map((capability) => ({ path: "/api/ui/pages/" + capability }))
+}
+
+async function captureCollection(page: Page, info: TestInfo, screen: typeof screens[number]) {
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await scheme(page, "dark")
+  await capture(page, info, screen.id + "-dark-desktop-test-data")
+  await page.setViewportSize({ width: 1440, height: 800 })
+  await reflow(page)
+  await capture(page, info, screen.id + "-dark-1440x800-test-data")
+  await page.setViewportSize({ width: 1440, height: 1100 })
+  await scheme(page, "light")
+  await capture(page, info, screen.id + "-light-desktop-test-data")
+  await page.setViewportSize({ width: 320, height: 900 })
+  await reflow(page)
+  await expect(page.locator('[data-sf-source-navigation="sf-dashboard"] a[aria-current="page"]')).toBeInViewport({ ratio: 1 })
+  await scrollPageTop(page)
+  await capture(page, info, screen.id + "-light-320-test-data")
+}
+
+async function withPortuguese(
+  page: Page, browser: Browser, installation: DesignInstallation, info: TestInfo,
+  check: ReturnType<typeof beginWaveTwoCheck>, action: (localized: Page) => Promise<void>,
+) {
+  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
+  expect(localizedCookies.filter((cookie) => /^sucafina_operator_[a-f0-9]{24}$/.test(cookie.name)).length).toBe(1)
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+    reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: { cookies: localizedCookies, origins: [{ origin: installation.origin,
+      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    localized.setDefaultTimeout(15_000)
+    const localizedMessages = observePage(localized)
+    check.watch(localized)
+    await action(localized)
     expect(localizedMessages.pageErrors).toEqual([])
     await info.attach("native-wave-two-localized-diagnostics", { body: JSON.stringify(localizedMessages, null, 2), contentType: "application/json" })
   } finally {
     await portuguese.close()
   }
-  expect([...sourceOrigins]).toEqual([installation.origin])
-  expect(mutations).toHaveLength(3)
-  expect(messages.pageErrors).toEqual([])
+}
+
+async function finishWaveTwoCheck(
+  info: TestInfo, check: ReturnType<typeof beginWaveTwoCheck>, installation: DesignInstallation,
+  views: readonly string[], writes: number, locales: readonly string[],
+) {
+  expect([...check.sourceOrigins]).toEqual([installation.origin])
+  expect(check.mutations).toHaveLength(writes)
+  expect(check.messages.pageErrors).toEqual([])
   await info.attach("native-wave-two-evidence", {
-    body: JSON.stringify({ source: "isolated canonical producer data and three real browser-confirmed commands",
-      views: ["CAP02", "CAP03", "CAP04"], widths: [1440, 320], heights: [1100, 800, 900],
-      schemes: ["dark", "light"], locales: ["en-US", "pt-BR"], actualBrowserZoom: "not measured",
-      writes: mutations.length, ...messages }, null, 2),
+    body: JSON.stringify({ source: "isolated canonical producer data and original browser-confirmed commands",
+      views, widths: [1440, 320], heights: [1100, 800, 900],
+      schemes: ["dark", "light"], locales, actualBrowserZoom: "not measured",
+      writes: check.mutations.length, ...check.messages }, null, 2),
     contentType: "application/json",
   })
-})
-
+}
 
 async function readablePeriods(page: Page, info: TestInfo, year: number, br: boolean) {
   const months = [

@@ -1,6 +1,7 @@
-import { expect } from "@playwright/test"
+import { expect, type Page, type TestInfo } from "@playwright/test"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter, originalRead } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
+import type { DesignInstallation } from "./design-support/installation"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
 waveThreeTest.use({ trace: "off", video: "off" })
@@ -16,20 +17,8 @@ const portfolioScreens = [
   { id: "CAP10", path: "/orchestra/sf-portfolio/projects", title: "All Projects", br: "Projetos" },
 ] as const
 
-waveThreeTest("native people design · reported headcount, structure, talent and honest workbooks", async ({ page, browser, installation, owner }, info) => {
-  waveThreeTest.setTimeout(300_000)
-  page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle).toBe("production")
-  const messages = observePage(page)
-  const mutations: string[] = []
-  const origins = new Set<string>()
-  page.on("request", (request) => {
-    const url = new URL(request.url())
-    if (!url.pathname.startsWith(installation.mount + "/")) return
-    origins.add(url.origin)
-    if (request.method() === "POST") mutations.push(url.pathname)
-  })
-
+waveThreeTest("native people design · original collections and Portuguese assessment views", async ({ page, browser, installation, owner }, info) => {
+  const check = beginPeopleCheck(page, installation, info)
   await waveThreeTest.step("three native collections in both schemes and at narrow width", async () => {
     for (const screen of peopleScreens) {
       await page.setViewportSize({ width: 1440, height: 1100 })
@@ -70,6 +59,52 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     }
   })
 
+  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+    reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: { cookies: localizedCookies, origins: [{ origin: installation.origin,
+      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    localized.setDefaultTimeout(15_000)
+    const diagnostics = observePage(localized)
+    for (const screen of peopleScreens) {
+      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
+        undefined, { path: "/api/ui/pages/" + screen.id })
+      await scheme(localized, "dark")
+      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
+    }
+    await localized.locator('[data-sf-surface="CAP08"]').getByRole("button", { name: waveThreeData.people.member, exact: true }).click()
+    await localized.getByRole("button", { name: "Editar avaliação", exact: true }).click()
+    await scrollPageTop(localized)
+    await capture(localized, info, "CAP08-pt-BR-dark-desktop-assessment-editor-test-data")
+    await localized.locator('[data-sf-editor="talent"]').getByRole("button", { name: "Revisar alterações", exact: true }).click()
+    await reviewActions(localized)
+    await capture(localized, info, "CAP08-pt-BR-dark-desktop-assessment-review-test-data")
+    await localized.locator('[data-sf-editor="talent"]').getByRole("button", { name: "Revisar", exact: true }).click()
+    await localized.getByRole("button", { name: "Voltar à avaliação de talentos", exact: true }).click()
+    for (const kind of ["import", "export"] as const) {
+      await enter(localized, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].br,
+        undefined, { path: "/api/ui/pages/CAP08" })
+      await expect(localized.locator('[data-sf-section="' + kind + '"]')).toContainText("está indisponível")
+      await capture(localized, info, "CAP08-pt-BR-dark-desktop-" + kind + "-unavailable-test-data")
+    }
+    expect(diagnostics.pageErrors).toEqual([])
+  } finally {
+    await portuguese.close()
+  }
+  await finishPeopleCheck(info, check, installation, {
+    attachment: "native-wave-three-people-views-evidence", areas: ["CAP06","CAP07","CAP08"], writes: 0,
+    locales: ["en-US","pt-BR"], schemes: ["dark","light"],
+  })
+})
+
+waveThreeTest("native people design · source-bound structure, talent and honest workbooks", async ({ page, installation, owner }, info) => {
+  const check = beginPeopleCheck(page, installation, info)
+  const mutations = check.mutations
   await waveThreeTest.step("CIO, leader, member and change review remain source bound", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, new URL(peopleScreens[1].path, installation.origin).href, peopleScreens[1].title,
@@ -207,7 +242,14 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     }
     expect(mutations).toHaveLength(1)
   })
+  await finishPeopleCheck(info, check, installation, {
+    attachment: "native-wave-three-people-evidence", areas: ["CAP07","CAP08"], writes: 1,
+    locales: ["en-US"], schemes: ["dark"],
+  })
+})
 
+waveThreeTest("native people design · semantic returns preserve owner and filters", async ({ page, installation, owner }, info) => {
+  const check = beginPeopleCheck(page, installation, info)
   await waveThreeTest.step("semantic returns from direct people links preserve owner and filters", async () => {
     for (const route of [
       { id: "CAP07", path: "/orchestra/sf-people/structure/cio", title: "Team Structure", back: "Back to team",
@@ -218,6 +260,7 @@ waveThreeTest("native people design · reported headcount, structure, talent and
         collection: "/orchestra/sf-people/talent" },
     ]) {
       const direct = await page.context().newPage()
+      const directMessages = observePage(direct)
       try {
         const url = new URL(route.path, installation.origin)
         url.searchParams.set("year", String(installation.year))
@@ -236,71 +279,21 @@ waveThreeTest("native people design · reported headcount, structure, talent and
           await expect(direct.getByLabel("Filter by status", { exact: true })).toHaveValue("Terminated")
           await expect(direct.locator('tbody')).toContainText(waveThreeData.people.departed)
         } else await expect(direct.locator('.sf-people-table-region[aria-label="Members"]')).toContainText(waveThreeData.people.member)
+        expect(directMessages.pageErrors).toEqual([])
       } finally {
         await direct.close()
       }
     }
   })
-
-  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
-  const portuguese = await browser.newContext({
-    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
-    reducedMotion: "reduce", colorScheme: "dark",
-    httpCredentials: { username: "orchestra", password: installation.serverPassword },
-    storageState: { cookies: localizedCookies, origins: [{ origin: installation.origin,
-      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
-  })
-  try {
-    const localized = await portuguese.newPage()
-    localized.setDefaultTimeout(15_000)
-    const diagnostics = observePage(localized)
-    for (const screen of peopleScreens) {
-      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
-        undefined, { path: "/api/ui/pages/" + screen.id })
-      await scheme(localized, "dark")
-      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
-    }
-    await localized.locator('[data-sf-surface="CAP08"]').getByRole("button", { name: waveThreeData.people.member, exact: true }).click()
-    await localized.getByRole("button", { name: "Editar avaliação", exact: true }).click()
-    await scrollPageTop(localized)
-    await capture(localized, info, "CAP08-pt-BR-dark-desktop-assessment-editor-test-data")
-    await localized.locator('[data-sf-editor="talent"]').getByRole("button", { name: "Revisar alterações", exact: true }).click()
-    await reviewActions(localized)
-    await capture(localized, info, "CAP08-pt-BR-dark-desktop-assessment-review-test-data")
-    await localized.locator('[data-sf-editor="talent"]').getByRole("button", { name: "Revisar", exact: true }).click()
-    await localized.getByRole("button", { name: "Voltar à avaliação de talentos", exact: true }).click()
-    for (const kind of ["import", "export"] as const) {
-      await enter(localized, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].br,
-        undefined, { path: "/api/ui/pages/CAP08" })
-      await expect(localized.locator('[data-sf-section="' + kind + '"]')).toContainText("está indisponível")
-      await capture(localized, info, "CAP08-pt-BR-dark-desktop-" + kind + "-unavailable-test-data")
-    }
-    expect(diagnostics.pageErrors).toEqual([])
-  } finally {
-    await portuguese.close()
-  }
-  expect([...origins]).toEqual([installation.origin])
-  expect(mutations).toHaveLength(1)
-  expect(messages.pageErrors).toEqual([])
-  await info.attach("native-wave-three-people-evidence", {
-    body: JSON.stringify({ source: "isolated canonical producer data; one real browser-confirmed member update",
-      areas: ["CAP06", "CAP07", "CAP08"], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
-      widths: [1440, 320], writes: mutations.length, actualBrowserZoom: "not measured",
-      workbookBindings: "unavailable; no preview or download manufactured", ...messages }, null, 2),
-    contentType: "application/json",
+  await finishPeopleCheck(info, check, installation, {
+    attachment: "native-wave-three-people-navigation-evidence", areas: ["CAP07","CAP08"], writes: 0,
+    locales: ["en-US"], schemes: ["dark"],
   })
 })
 
-waveThreeTest("native portfolio design · overview, projects, milestones and exact change reviews", async ({ page, browser, installation, owner }, info) => {
-  waveThreeTest.setTimeout(300_000)
-  page.setDefaultTimeout(15_000)
-  expect(info.project.metadata.bundle).toBe("production")
-  const messages = observePage(page)
-  const mutations: string[] = []
-  page.on("request", (request) => {
-    const url = new URL(request.url())
-    if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
-  })
+waveThreeTest("native portfolio design · original collections and new project draft", async ({ page, browser, installation, owner }, info) => {
+  const check = beginPeopleCheck(page, installation, info)
+  const mutations = check.mutations
   await waveThreeTest.step("portfolio and project collection across both schemes and narrow reflow", async () => {
     for (const screen of portfolioScreens) {
       await page.setViewportSize({ width: 1440, height: 1100 })
@@ -327,6 +320,62 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     }
   })
 
+  await waveThreeTest.step("new project draft and review have their own stage", async () => {
+    await page.setViewportSize({ width: 1440, height: 1100 })
+    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP10" })
+    await scheme(page, "dark")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      page.getByRole("button", { name: "New project", exact: true }).click())
+    await ready(page, portfolioScreens[1].title)
+    const editor = page.locator("[data-sf-project-editor]")
+    await editor.getByLabel("Project name", { exact: true }).fill("Design test data · New project draft")
+    await editor.getByLabel("Budget", { exact: true }).fill("50000")
+    await editor.getByLabel("Spent", { exact: true }).fill("0")
+    await editor.getByLabel("Progress (%)", { exact: true }).fill("0")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP10-dark-desktop-new-project-test-data")
+    await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+    await expect(editor.locator(".sf-u05-review-values")).toContainText("New project draft")
+    await scrollPageTop(page)
+    await capture(page, info, "CAP10-dark-desktop-new-project-review-test-data")
+    await editor.getByRole("button", { name: "Continue editing", exact: true }).click()
+    await editor.getByRole("button", { name: "Discard changes", exact: true }).click()
+    await expect(editor.getByLabel("Project name", { exact: true })).toHaveValue("")
+    expect(mutations).toHaveLength(0)
+  })
+
+  const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
+  const portuguese = await browser.newContext({
+    locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
+    reducedMotion: "reduce", colorScheme: "dark",
+    httpCredentials: { username: "orchestra", password: installation.serverPassword },
+    storageState: { cookies: localizedCookies, origins: [{ origin: installation.origin,
+      localStorage: [{ name: "orchestra.global.dat:language", value: JSON.stringify({ locale: "br" }) }] }] },
+  })
+  try {
+    const localized = await portuguese.newPage()
+    localized.setDefaultTimeout(15_000)
+    const diagnostics = observePage(localized)
+    for (const screen of [portfolioScreens[0]]) {
+      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
+        undefined, { path: "/api/ui/pages/" + screen.id })
+      await scheme(localized, "dark")
+      await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
+    }
+    expect(diagnostics.pageErrors).toEqual([])
+  } finally {
+    await portuguese.close()
+  }
+  await finishPeopleCheck(info, check, installation, {
+    attachment: "native-wave-three-portfolio-views-evidence", areas: ["CAP09","CAP10"], writes: 0,
+    locales: ["en-US","pt-BR"], schemes: ["dark","light"],
+  })
+})
+
+waveThreeTest("native portfolio design · exact project and milestone writes with Portuguese readback", async ({ page, browser, installation, owner }, info) => {
+  const check = beginPeopleCheck(page, installation, info)
+  const mutations = check.mutations
   await waveThreeTest.step("filters, detail, edit, exact proposal and real project write", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
@@ -429,29 +478,6 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     expect(mutations).toHaveLength(2)
   })
 
-  await waveThreeTest.step("new project draft and review have their own stage", async () => {
-    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
-      undefined, { path: "/api/ui/pages/CAP10" })
-    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
-      page.getByRole("button", { name: "New project", exact: true }).click())
-    await ready(page, portfolioScreens[1].title)
-    const editor = page.locator("[data-sf-project-editor]")
-    await editor.getByLabel("Project name", { exact: true }).fill("Design test data · New project draft")
-    await editor.getByLabel("Budget", { exact: true }).fill("50000")
-    await editor.getByLabel("Spent", { exact: true }).fill("0")
-    await editor.getByLabel("Progress (%)", { exact: true }).fill("0")
-    await scrollPageTop(page)
-    await capture(page, info, "CAP10-dark-desktop-new-project-test-data")
-    await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await expect(editor.locator(".sf-u05-review-values")).toContainText("New project draft")
-    await scrollPageTop(page)
-    await capture(page, info, "CAP10-dark-desktop-new-project-review-test-data")
-    await editor.getByRole("button", { name: "Continue editing", exact: true }).click()
-    await editor.getByRole("button", { name: "Discard changes", exact: true }).click()
-    await expect(editor.getByLabel("Project name", { exact: true })).toHaveValue("")
-    expect(mutations).toHaveLength(2)
-  })
-
   const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
   const portuguese = await browser.newContext({
     locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
@@ -464,7 +490,7 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     const localized = await portuguese.newPage()
     localized.setDefaultTimeout(15_000)
     const diagnostics = observePage(localized)
-    for (const screen of portfolioScreens) {
+    for (const screen of [portfolioScreens[1]]) {
       await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
         undefined, { path: "/api/ui/pages/" + screen.id })
       await scheme(localized, "dark")
@@ -491,12 +517,40 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
   } finally {
     await portuguese.close()
   }
-  expect(mutations).toHaveLength(2)
-  expect(messages.pageErrors).toEqual([])
-  await info.attach("native-wave-three-portfolio-evidence", {
-    body: JSON.stringify({ source: "isolated canonical producer data; two real browser-confirmed project/milestone writes",
-      areas: ["CAP09", "CAP10"], schemes: ["dark", "light"], locales: ["en-US", "pt-BR"],
-      widths: [1440, 320], writes: mutations.length, actualBrowserZoom: "not measured", ...messages }, null, 2),
-    contentType: "application/json",
+  await finishPeopleCheck(info, check, installation, {
+    attachment: "native-wave-three-portfolio-evidence", areas: ["CAP10"], writes: 2,
+    locales: ["en-US","pt-BR"], schemes: ["dark"],
   })
 })
+
+function beginPeopleCheck(page: Page, installation: DesignInstallation, info: TestInfo) {
+  // Every independent journey keeps the original case deadline and fixture.
+  waveThreeTest.setTimeout(300_000)
+  page.setDefaultTimeout(15_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  const messages = observePage(page)
+  const mutations: string[] = []
+  const origins = new Set<string>()
+  page.context().on("request", (request) => {
+    const url = new URL(request.url())
+    if (!url.pathname.startsWith(installation.mount + "/")) return
+    origins.add(url.origin)
+    if (request.method() === "POST") mutations.push(url.pathname)
+  })
+  return { messages, mutations, origins }
+}
+
+async function finishPeopleCheck(
+  info: TestInfo, check: ReturnType<typeof beginPeopleCheck>, installation: DesignInstallation,
+  evidence: { attachment: string; areas: readonly string[]; writes: number; locales: readonly string[]; schemes: readonly string[] },
+) {
+  expect([...check.origins]).toEqual([installation.origin])
+  expect(check.mutations).toHaveLength(evidence.writes)
+  expect(check.messages.pageErrors).toEqual([])
+  await info.attach(evidence.attachment, {
+    body: JSON.stringify({ source: "isolated canonical producer data and original browser-confirmed commands",
+      ...evidence, widths: [1440, 320], writes: check.mutations.length, actualBrowserZoom: "not measured",
+      workbookBindings: "unavailable; no preview or download manufactured", ...check.messages }, null, 2),
+    contentType: "application/json",
+  })
+}
