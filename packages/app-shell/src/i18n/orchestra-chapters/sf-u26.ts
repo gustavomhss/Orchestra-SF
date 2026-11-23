@@ -1,5 +1,14 @@
 // N30 / U26. Localized leaf keys; registration into orchestra.ts is owned by 125.
 export const SF_U26_COPY = {
+  "sf.u26.signalsDescription": "Review recorded conditions and the evidence behind changes that may need attention.",
+  "sf.u26.outcomesDescription": "Compare the expected result with observations from the authorized source.",
+  "sf.u26.authorizedCase": "Authorized case",
+  "sf.u26.chooseCase": "Choose a case",
+  "sf.u26.caseReference": "Exact case reference",
+  "sf.u26.noAuthorizedCases": "No authorized cases are available.",
+  "sf.u26.actionOpen": "Open",
+  "sf.u26.actionUpdate": "Update",
+  "sf.u26.actionNone": "No action",
   "sf.ui61.title": "Signals",
   "sf.ui61.primary": "Review signal",
   "sf.ui62.title": "Similar cases",
@@ -79,6 +88,15 @@ export const SF_U26_COPY = {
 } as const
 
 export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> = {
+  "sf.u26.signalsDescription": "Revise as condições registradas e as evidências de mudanças que podem precisar de atenção.",
+  "sf.u26.outcomesDescription": "Compare o resultado previsto com as observações da fonte autorizada.",
+  "sf.u26.authorizedCase": "Caso autorizado",
+  "sf.u26.chooseCase": "Escolha um caso",
+  "sf.u26.caseReference": "Referência exata do caso",
+  "sf.u26.noAuthorizedCases": "Nenhum caso autorizado está disponível.",
+  "sf.u26.actionOpen": "Abrir",
+  "sf.u26.actionUpdate": "Atualizar",
+  "sf.u26.actionNone": "Nenhuma ação",
   "sf.ui61.title": "Sinais",
   "sf.ui61.primary": "Revisar sinal",
   "sf.ui62.title": "Casos semelhantes",

@@ -10,6 +10,7 @@ import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { SfSimilarCasesView } from "./similar-cases"
+import { SfMemoryCasePicker } from "./case-picker"
 import "./memory.css"
 
 type Conditions = Extract<typeof SfMemory.operations["intelligence.memory-conditions"]["output"]["Type"], { status: "ok" }>["value"]
@@ -283,38 +284,53 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     view.listState === "invalid" ? "sf.u26.invalidCase" :
     view.listState === "stale" ? "sf.common.stale" : "sf.common.unavailable"
   return (
-    <SfPageFrame titleKey={k(title())} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
+    <SfPageFrame titleKey={k(title())} subtitleKey={k(props.surfaceId === "UI63" ? "sf.u26.outcomesDescription" : "sf.u26.signalsDescription")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory" data-sf-surface={props.surfaceId}>
+      <section class="sf-memory sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId}>
         <Show when={privacy() === "ready" && !referenceRoute()}>
-          <form class="sf-memory-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
-            <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
-            <label>{t("sf.u26.caseId")}<input autocomplete="off" required value={view.caseId}
-              onInput={(event) => changeCase("caseId", event.currentTarget.value)} /></label>
-            <label>{t("sf.u26.incarnation")}<input autocomplete="off" required value={view.incarnation}
-              onInput={(event) => changeCase("incarnation", event.currentTarget.value)} /></label>
-            <label>{t("sf.u26.version")}<input type="number" min="1" step="1" required value={view.versionText}
-              onInput={(event) => changeCase("versionText", event.currentTarget.value)} /></label>
-            <button class="mx-btn primary" type="submit" disabled={!parsedCase() || view.listState === "loading"}>
-              {t("sf.u26.openCase")}
-            </button>
-            <Show when={view.active}><button class="mx-btn" type="button" onClick={() => void loadCase(view.active!)}>
-              {t("sf.u26.refresh")}</button></Show>
+          <form class="sf-memory-form sf-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
+            <header class="sf-memory-section-heading">
+              <h2>{t("sf.u26.authorizedCase")}</h2>
+              <p class="sf-memory-help">{t("sf.u26.noCase")}</p>
+            </header>
+            <SfMemoryCasePicker current={parsedCase()} onSelect={(choice) => {
+              changeCase("caseId", choice?.caseId ?? "")
+              setView({ incarnation: choice?.incarnation ?? "", versionText: choice ? String(choice.version) : "" })
+            }} />
+            <details class="sf-memory-reference">
+              <summary>{t("sf.u26.caseReference")}</summary>
+              <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
+              <div class="sf-memory-reference-fields">
+                <label>{t("sf.u26.caseId")}<input autocomplete="off" value={view.caseId}
+                  onInput={(event) => changeCase("caseId", event.currentTarget.value)} /></label>
+                <label>{t("sf.u26.incarnation")}<input autocomplete="off" value={view.incarnation}
+                  onInput={(event) => changeCase("incarnation", event.currentTarget.value)} /></label>
+                <label>{t("sf.u26.version")}<input type="number" min="1" step="1" value={view.versionText}
+                  onInput={(event) => changeCase("versionText", event.currentTarget.value)} /></label>
+              </div>
+            </details>
+            <div class="sf-memory-actions">
+              <button class="mx-btn primary" type="submit" disabled={!parsedCase() || view.listState === "loading"}>
+                {t("sf.u26.openCase")}
+              </button>
+              <Show when={view.active}><button class="mx-btn" type="button" disabled={view.listState === "loading"}
+                onClick={() => void loadCase(view.active!)}>{t("sf.u26.refresh")}</button></Show>
+            </div>
           </form>
         </Show>
         <SfStatePanel state={pageState()} messageKey={k(pageMessage())}
           onRetryRead={view.active && privacy() === "ready" ? () => void loadCase(view.active!) : undefined}>
           <Show when={view.active}>
-            <section class="sf-memory-section">
+            <section class="sf-memory-section sf-section">
               <h2>{t("sf.u26.conditions")}</h2>
               <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>
                 <ul class="sf-memory-list">
                   <For each={view.conditions}>{(condition) => (
-                    <li data-sf-condition-id={condition.conditionId} data-sf-choice-id={condition.choiceId}>
+                    <li data-selected={props.surfaceId === "UI63" ? view.selectedChoice === condition.choiceId : view.selectedCondition === condition.conditionId} data-sf-condition-id={condition.conditionId} data-sf-choice-id={condition.choiceId}>
                       <div><strong>{condition.label}</strong>
                         <small>{t("sf.u26.criterion")}: {condition.criterionId} · {t("sf.u26.period")}: {condition.period.start} – {condition.period.end}</small>
                       </div>
-                      <button type="button" class="mx-btn" onClick={() => void (
+                      <button type="button" class="mx-btn" aria-expanded={props.surfaceId === "UI63" ? view.selectedChoice === condition.choiceId : view.selectedCondition === condition.conditionId} onClick={() => void (
                         props.surfaceId === "UI63" ? readOutcome(condition.choiceId) : readMateriality(condition.conditionId)
                       )}>{props.surfaceId === "UI63" ? t("sf.u26.outcomeDetail") : t("sf.u26.conditionDetail")}</button>
                     </li>
@@ -323,13 +339,13 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
               </Show>
             </section>
             <Show when={props.surfaceId === "UI61"}>
-              <section class="sf-memory-section">
+              <section class="sf-memory-section sf-section">
                 <h2>{t("sf.u26.signals")}</h2>
                 <Show when={view.signals.length} fallback={<p>{t("sf.u26.noSignals")}</p>}>
                   <ul class="sf-memory-list">
                     <For each={view.signals}>{(signal) => <li>
                       <div><strong>{signal.label}</strong>
-                        <small>{t("sf.u26.materiality")}: {closed("sf.u26.impactState", signal.impact.state)} · {t("sf.u26.action")}: {signal.action}</small>
+                        <small>{t("sf.u26.materiality")}: {closed("sf.u26.impactState", signal.impact.state)} · {t("sf.u26.action")}: {t(signal.action === "open" ? "sf.u26.actionOpen" : signal.action === "update" ? "sf.u26.actionUpdate" : "sf.u26.actionNone")}</small>
                         <p>{signal.impact.reason}</p>
                         <small>{t("sf.u26.evidence")}: {signal.impact.current.length}</small>
                       </div>
@@ -345,7 +361,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
             messageKey={k(detailMessage())}
             onRetryRead={() => void readMateriality(view.selectedCondition)}>
             <Show when={view.material}>{(data) => (
-              <section class="sf-memory-section" data-sf-memory-materiality>
+              <section class="sf-memory-section sf-section" data-sf-memory-materiality>
                 <h2>{t("sf.u26.materiality")}</h2>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.condition")}</dt><dd>{data().snapshot.condition.id}</dd>
@@ -374,13 +390,15 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
             messageKey={k(detailMessage())}
             onRetryRead={() => { const selectionRef = referenceRoute(); if (selectionRef) void readReference(selectionRef); else void readOutcome(view.selectedChoice) }}>
             <Show when={view.outcome}>{(data) => (
-              <section class="sf-memory-section" data-sf-memory-outcome>
+              <section class="sf-memory-section sf-section" data-sf-memory-outcome>
                 <h2>{t("sf.ui63.title")}</h2>
+                <div class="sf-memory-comparison" aria-label={t("sf.ui63.title")}>
+                  <div><span>{t("sf.u26.expected")}</span><strong data-sf-memory-expected>{data().expected} <small>{data().currency || data().unit}</small></strong></div>
+                  <div><span>{t("sf.u26.observed")}</span><strong data-sf-memory-observed>{data().observed} <small>{data().currency || data().unit}</small></strong></div>
+                  <div><span>{t("sf.u26.delta")}</span><strong data-sf-memory-delta>{data().delta}</strong></div>
+                </div>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.choice")}</dt><dd>{data().choiceId}</dd>
-                  <dt>{t("sf.u26.expected")}</dt><dd>{data().expected} {data().currency || data().unit}</dd>
-                  <dt>{t("sf.u26.observed")}</dt><dd>{data().observed} {data().currency || data().unit}</dd>
-                  <dt>{t("sf.u26.delta")}</dt><dd>{data().delta}</dd>
                   <dt>{t("sf.u26.cutoff")}</dt><dd>{data().cutoff}</dd>
                   <dt>{t("sf.u26.period")}</dt><dd>{data().period.start} – {data().period.end}</dd>
                   <dt>{t("sf.u26.coverage")}</dt><dd>{closed("sf.u26.coverage", data().compatibility.coverage)}</dd>

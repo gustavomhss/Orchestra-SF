@@ -353,9 +353,9 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   return (
     <SfPageFrame titleKey={k("sf.ui62.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory sf-memory-similarity" data-sf-surface="UI62">
+      <section class="sf-memory sf-memory-similarity sf-workflow" data-sf-wave="six" data-sf-surface="UI62">
         <Show when={privacy() === "ready" && (view.catalogState === "ready" || view.catalogState === "empty")}>
-          <form class="sf-memory-similarity-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
+          <form class="sf-memory-similarity-form sf-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
             <p class="sf-memory-help">{t("sf.u26.similarQueryHelp")}</p>
             <label>{t("sf.u26.similarSource")}
               <select value={view.selected} onChange={(event) => { void changeSelected(event.currentTarget.value) }}>
@@ -416,7 +416,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
             view.resultState !== "idle" && view.source ? void submit() : void loadCatalog(owner.generation()) : undefined}>
           <Show when={view.sourceState === "ready" && view.result}>
             {(data) =>
-              <section class="sf-memory-section" data-sf-similar-matches>
+              <section class="sf-memory-section sf-section" data-sf-similar-matches>
                 <h2>{t("sf.u26.similarMatches")}</h2>
                 <label>{t("sf.u26.similarFilter")}
                   <input type="search" value={view.resultFilter}
@@ -427,17 +427,19 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
                   <For each={filtered()}>{(match) =>
                     <li data-sf-similar-case={match.caseRef.id} data-sf-memory-record={match.memoryRecordRef}>
                       <div>
-                        <strong>{match.caseRef.id}</strong>
+                        <strong>{view.cases.find((candidate) => equivalent(candidate, match.caseRef))?.title ?? match.caseRef.id}</strong>
                         <small>{t("sf.u26.version")}: {match.caseRef.version}</small>
                         <h3>{t("sf.u26.similarWhy")}</h3>
                         <dl class="sf-memory-facts">
                           <dt>{t("sf.u26.similarMatched")}</dt><dd>{match.explanation.matchedCriteria.join(", ")}</dd>
                           <dt>{t("sf.u26.similarDifferences")}</dt><dd>{match.explanation.currentDifferences.join(", ") || "—"}</dd>
                           <dt>{t("sf.u26.similarStates")}</dt><dd>{match.explanation.sourceStates.map(sourceStateLabel).join(", ")}</dd>
-                          <dt>{t("sf.u26.similarMemoryRecord")}</dt><dd>{match.memoryRecordRef}</dd>
                         </dl>
-                        <h3>{t("sf.u26.similarSourceEvidence")}</h3>
-                        <ul><For each={match.evidenceRefs}>{(ref) => <li>{ref.refId}</li>}</For></ul>
+                        <details class="sf-memory-reference">
+                          <summary>{t("sf.u26.similarSourceEvidence")}</summary>
+                          <dl class="sf-memory-facts"><dt>{t("sf.u26.similarMemoryRecord")}</dt><dd>{match.memoryRecordRef}</dd></dl>
+                          <ul><For each={match.evidenceRefs}>{(ref) => <li>{ref.refId}</li>}</For></ul>
+                        </details>
                         <Show when={match.explanation.limitations.length}>
                           <p>{t("sf.u26.limitations")}: {match.explanation.limitations.join("; ")}</p>
                         </Show>
@@ -464,7 +466,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
               view.detailState === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
             onRetryRead={view.selectedDetail ? () => void openOriginal(view.selectedDetail!) : undefined}>
             <Show when={view.detail}>{(detail) =>
-              <section class="sf-memory-section" data-sf-similar-detail>
+              <section class="sf-memory-section sf-section" data-sf-similar-detail>
                 <h2>{t("sf.u26.similarDetail")}</h2>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.similarObjective")}</dt><dd>{detail().objective}</dd>

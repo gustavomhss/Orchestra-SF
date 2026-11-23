@@ -1,5 +1,8 @@
 // New context copy is frozen in native-ui surface-manifest.json UI67.
 export const SF_CONTEXT_COPY = {
+  "sf.ui67.description": "Review the installation and identity currently authorized for this workspace.",
+  "sf.ui67.activeContext": "Current context",
+  "sf.ui67.contextDetails": "These identifiers describe the current connection and access scope.",
   "sf.ui67.title": "Context and access",
   "sf.ui67.primary": "Select context",
   "sf.ui67.server": "Server",
@@ -87,6 +90,9 @@ export const SF_CONTEXT_COPY = {
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
+  "sf.ui67.description": "Confira a instalação e a identidade autorizadas para este ambiente.",
+  "sf.ui67.activeContext": "Contexto atual",
+  "sf.ui67.contextDetails": "Estes identificadores descrevem a conexão e o escopo de acesso atuais.",
   "sf.ui67.title": "Contexto e acesso",
   "sf.ui67.primary": "Selecionar contexto",
   "sf.ui67.server": "Servidor",
