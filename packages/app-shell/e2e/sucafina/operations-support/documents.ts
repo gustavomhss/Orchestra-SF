@@ -467,7 +467,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await expect(attachDocument).toBeDisabled()
   await captureRecord(page, info, "UI58", "register-authorized-target")
   const catalogFilename = "catalog-" + filename
-  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: bytes })
+  const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
+  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
   await expect(attachDocument).toBeEnabled()
   // Observe exactly one original scanned upload. Record identity and CAS come
   // from the authorized catalog, not a manually entered ID or asset revision.
@@ -486,6 +487,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await attachDocument.click()
   const { response: catalogUploadResponse, request: catalogUploadRequest } = await catalogUpload.completed
   expect(catalogUploadRequest.method()).toBe("POST")
+  expect(catalogUploadRequest.postDataBuffer()).toEqual(catalogBytes)
   expect(catalogUploadResponse.status()).toBe(200)
   const catalogUploadQuery = new URL(catalogUploadRequest.url()).searchParams
   expect(catalogUploadQuery.get("record")).toBe(supplier)
