@@ -59,6 +59,7 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
     const installed = yield* Effect.gen(function* () {
       const ready = yield* Deferred.make<void, Error>()
       const diagnostic = { tail: "" }
+      let valueTypesLines = 0
       const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
         cwd: repository,
         env: isolatedEnvironment(root),
@@ -72,6 +73,12 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+        try {
+          if (valueTypesLines < 4 && line.length + 1 <= 1024 && line.startsWith("SF_PORTFOLIO_VALUE_TYPES ") && !/[^\x20-\x7e]/.test(line)) {
+            valueTypesLines++
+            console.info(line)
+          }
+        } catch { /* Diagnostic forwarding cannot alter readiness. */ }
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
