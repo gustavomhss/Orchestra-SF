@@ -270,5 +270,78 @@
     ],
     "captureCount": 19,
     "previewCount": 7
+  },
+  {
+    "attempt": 15,
+    "run": 45121980778,
+    "job": 137517602373,
+    "cleanupJob": 137520897264,
+    "snapshot": "f312587515353b15f59c5c362678d3090e167677",
+    "source": "d5f620aeee7a9db0e83d195ffada03c703f3a59d",
+    "snapshotTree": "2b9b5e4567c838e552b77cf2e0b8454c98e1965a",
+    "branch": "ci-run-linux-sf6records15",
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778",
+    "createdAt": "2026-11-23T06:07:00Z",
+    "artifactId": 14794332605,
+    "artifactBytes": 21216198,
+    "artifactDigest": "sha256:8ebe1b0dfe9de0b573aecdc49a2b706939df2c723f4cd98934825efbb13c86ed",
+    "counts": {
+      "passed": 4,
+      "failed": 0
+    },
+    "reportedDuration": "7.7m",
+    "captureCount": 30,
+    "previewCount": 10,
+    "findings": [
+      "All four original journeys passed: import/recovery/history/authority, document confirmation/final source revocation, exact XLSX, and native positive scenario.",
+      "Original ClamD qualification succeeded. The unchanged production Operations request adds only .ci-run.json to the exact composed source.",
+      "The observation-only patch c5af35/cc165 waits for the original Files outgoing authority reads before DOM assertions. Multipart CDP, lost Apply, aborted receipt, preflight 401, foreign 403, bytes, independent API sources, CAS, retries and deadlines are preserved.",
+      "All ten JPEGs were visually inspected. An independent peer reviewed UI59 light 320 and the focused positive UI60 desktop; their approval is limited to those frames, with no submitted link."
+    ],
+    "originalFileFences": {
+      "files.import-targets": 1,
+      "files.import-admit": 1,
+      "files.import-preview": 1,
+      "files.import-reference": 6,
+      "files.import-detail": 1,
+      "files.document-sources": 4,
+      "files.document-admit": 1,
+      "files.document-candidates": 8,
+      "files.document-schema": 1,
+      "files.document-extract": 1,
+      "files.document-open": 2,
+      "files.document-confirm": 1,
+      "files.document-scenario-targets": 1,
+      "files.document-scenario-preview": 1
+    },
+    "technicalGate": {
+      "run": 45122426354,
+      "job": 137519017208,
+      "snapshot": "f76d89f2b6b4791034da108c5a6f80840da2e11e",
+      "source": "d62c4b500695d248240a48944461a0d2262a589f",
+      "checks": 9,
+      "guards": {
+        "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+        "rules": 78,
+        "files": 105,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 13,
+        "touchesGuards": false
+      },
+      "palettesUnchanged": 7,
+      "originalRegressions": {
+        "passed": 11,
+        "skipped": 1,
+        "assertions": 37
+      },
+      "codecTests": {
+        "passed": 12,
+        "assertions": 243
+      },
+      "recordSourceParity": "d5f620→d62c4b changes only the memory consultation spec and three UI61 files; all record sources are identical."
+    },
+    "updatedAt": "2026-11-23T06:16:46Z"
   }
 ]
