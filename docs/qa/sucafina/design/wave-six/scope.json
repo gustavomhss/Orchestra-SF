@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "status": "IN_PROGRESS",
+  "base": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+  "branch": "sf-final-fourteen",
+  "target": "dev",
+  "areas": [
+    {
+      "id": "UI57",
+      "label": "Histórico, recibo e revisão de importação",
+      "routes": [
+        {
+          "kind": "history",
+          "pattern": "/orchestra/sf-imports"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/:manifestId/receipt"
+        },
+        {
+          "kind": "review",
+          "pattern": "/orchestra/sf-imports/:manifestId/review"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ]
+    },
+    {
+      "id": "UI58",
+      "label": "Documentos",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-documents"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-documents/new"
+        },
+        {
+          "kind": "detail",
+          "pattern": "/orchestra/sf-documents/:documentRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx"
+      ]
+    },
+    {
+      "id": "UI59",
+      "label": "Evidências de documentos",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-documents/:documentRef/evidence"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx"
+      ]
+    },
+    {
+      "id": "UI60",
+      "label": "Cenários de documentos",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-documents/:documentRef/scenario"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx"
+      ]
+    },
+    {
+      "id": "UI61",
+      "label": "Sinais de memória",
+      "routes": [
+        {
+          "kind": "chapter-root",
+          "pattern": "/orchestra/sf-memory"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-memory/signals"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx"
+      ]
+    },
+    {
+      "id": "UI62",
+      "label": "Casos semelhantes",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-memory/cases"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx"
+      ]
+    },
+    {
+      "id": "UI63",
+      "label": "Resultados / Outcomes",
+      "routes": [
+        {
+          "kind": "selection",
+          "pattern": "/orchestra/sf-memory/outcomes"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-memory/outcomes/:selectionRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx"
+      ]
+    },
+    {
+      "id": "UI64",
+      "label": "Catálogo de rotinas",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-routines"
+        },
+        {
+          "kind": "admission",
+          "pattern": "/orchestra/sf-routines/admissions/:admissionRef"
+        },
+        {
+          "kind": "recipe",
+          "pattern": "/orchestra/sf-routines/recipes/:recipeRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx"
+      ]
+    },
+    {
+      "id": "UI65",
+      "label": "Execuções de rotinas",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-routines/runs"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-routines/runs/:runRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx"
+      ]
+    },
+    {
+      "id": "UI66",
+      "label": "Agendamentos",
+      "routes": [
+        {
+          "kind": "list",
+          "pattern": "/orchestra/sf-routines/schedules"
+        },
+        {
+          "kind": "new",
+          "pattern": "/orchestra/sf-routines/schedules/new"
+        },
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-routines/schedules/:scheduleRef"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx"
+      ]
+    },
+    {
+      "id": "UI67",
+      "label": "Contexto da instalação",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-home/context"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+      ]
+    },
+    {
+      "id": "UI68",
+      "label": "Exportações e arquivos",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-imports/exports"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx"
+      ]
+    },
+    {
+      "id": "UI69",
+      "label": "Administração local",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-home/administration"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx"
+      ]
+    },
+    {
+      "id": "UI70",
+      "label": "Residentes",
+      "routes": [
+        {
+          "kind": "entry",
+          "pattern": "/orchestra/sf-routines/residents"
+        }
+      ],
+      "components": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "owner": "final_records",
+      "branch": "sf-final-records",
+      "areas": [
+        "UI57",
+        "UI58",
+        "UI59",
+        "UI60",
+        "UI68"
+      ]
+    },
+    {
+      "owner": "final_memory",
+      "branch": "sf-final-memory",
+      "areas": [
+        "UI61",
+        "UI62",
+        "UI63",
+        "UI67",
+        "UI69"
+      ]
+    },
+    {
+      "owner": "final_routines",
+      "branch": "sf-final-routines",
+      "areas": [
+        "UI64",
+        "UI65",
+        "UI66",
+        "UI70"
+      ]
+    }
+  ],
+  "counts": {
+    "areas": 14,
+    "routePatterns": 25
+  },
+  "authorization": {
+    "implementation": true,
+    "reviewedMergeToDev": true,
+    "userInstruction": "Mesmo trabalho das sessões anteriores, com atenção ao design e UX. O trabalho acaba no merge.",
+    "productionCutover": false
+  },
+  "coordination": {
+    "priorMerged": [
+      583,
+      587,
+      588
+    ],
+    "parallelDesignPR": 613,
+    "parallelVisualPR": 710,
+    "overlapPolicy": "Preserve both branches' reviewed changes during composition; no whole-branch intake or writes to their branches.",
+    "sharedImportsAreasToPreserve": [
+      "UI55",
+      "UI56"
+    ]
+  }
+}
