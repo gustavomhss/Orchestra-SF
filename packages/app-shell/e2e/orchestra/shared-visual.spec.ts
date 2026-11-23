@@ -156,7 +156,10 @@ for (const variant of sharedVisualVariants) {
       "Original pipeline starts at the viewport edge so its parser, boundary, tokenizer and word controls can be reviewed. No field change or mutation.")
 
     const model = studio.getByRole("textbox", { name: "OpenRouter model", exact: true })
-    const modelRow = maintain.locator(".rag-stage").filter({ has: model })
+    // has is evaluated inside each row; do not include the studio ancestor again.
+    const modelRow = maintain.locator(".rag-stage").filter({
+      has: page.getByRole("textbox", { name: "OpenRouter model", exact: true }),
+    })
     await expect(modelRow).toHaveCount(1)
     await expect(model).toHaveValue("")
     await expect(studio.getByRole("textbox", { name: "Pieces in the block", exact: true })).toHaveValue("4")
@@ -165,6 +168,16 @@ for (const variant of sharedVisualVariants) {
     await expect(model).toBeInViewport()
     await captureSharedState(page, info, variant, state, "rag-studio", "pipeline-model-and-metric-controls",
       "Original empty model inputs, zero dimension, number type and metric controls. No model is selected and no pipeline update is sent.")
+
+    const numeric = studio.getByRole("group", { name: "Number type", exact: true })
+    const metric = studio.getByRole("group", { name: "Metric", exact: true })
+    await expect(numeric.getByRole("button", { name: "Float", exact: true })).toHaveAttribute("aria-pressed", "true")
+    await expect(metric.getByRole("button", { name: "Cosine", exact: true })).toHaveAttribute("aria-pressed", "true")
+    await numeric.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }))
+    await expect(metric).toBeInViewport()
+    await expect(studio.getByText("Off until a model is named", { exact: true })).toBeInViewport()
+    await captureSharedState(page, info, variant, state, "rag-studio", "pipeline-numeric-metric-and-fusion",
+      "Original Float and Cosine selections and explicit fusion-off condition are visible together. No number type, metric or model is changed.")
 
     const passes = studio.getByRole("heading", { name: "Passes", exact: true })
     await expect(studio.getByRole("button", { name: "Read again", exact: true })).toBeDisabled()
@@ -175,6 +188,14 @@ for (const variant of sharedVisualVariants) {
     await expect(passes).toBeInViewport()
     await captureSharedState(page, info, variant, state, "rag-studio", "maintenance-passes-and-comparison",
       "Original maintenance and comparison controls with an empty corpus; file-dependent passes and comparison remain disabled. No pass or revision command is invoked.")
+
+    const comparison = studio.getByRole("heading", { name: "Compare", exact: true })
+    await comparison.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }))
+    await expect(studio.getByRole("button", { name: "Remember this revision", exact: true })).toBeInViewport()
+    await expect(studio.getByRole("button", { name: "Compare saved questions", exact: true })).toBeInViewport()
+    await expect(studio.getByRole("button", { name: "Compare saved questions", exact: true })).toBeDisabled()
+    await captureSharedState(page, info, variant, state, "rag-studio", "revision-comparison-controls",
+      "Original comparison instructions and both revision controls are visible. No revision is remembered or compared and no source result is invented.")
 
     state.rag = "error"
     await page.reload()
