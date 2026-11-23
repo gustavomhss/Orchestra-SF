@@ -7,7 +7,7 @@ const realm = globalThis
 const native = {
   Object, Array, Number, JSON, Reflect, WeakMap, WeakSet,
   objectPrototype: Object.prototype, arrayPrototype: Array.prototype,
-  property: Object.getOwnPropertyDescriptor, own: Object.hasOwn,
+  property: Object.getOwnPropertyDescriptor, descriptors: Object.getOwnPropertyDescriptors, own: Object.hasOwn,
   prototype: Object.getPrototypeOf, keys: Object.keys, same: Object.is,
   define: Object.defineProperty, ownKeys: Reflect.ownKeys, apply: Reflect.apply,
   isArray: Array.isArray, map: Array.prototype.map, sort: Array.prototype.sort,
@@ -28,12 +28,15 @@ const bun = bunDescriptor && native.own(bunDescriptor, "value") && bunDescriptor
 const ordinary = new native.WeakSet<object>()
 const maximumNodes = 4096, maximumProperties = 32768, maximumDepth = 64
 const maximumExpansion = 65536, maximumUnits = 4 * 1024 * 1024
+// DIAGNOSTIC ONLY: selected outside timed batches; never adopted by product source.
+let bulkDescriptorDiagnostic = false
 const pins: readonly (readonly [object, PropertyKey, unknown])[] = [
   [realm, "Object", native.Object], [realm, "Array", native.Array],
   [realm, "Number", native.Number], [realm, "JSON", native.JSON],
   [realm, "Reflect", native.Reflect], [realm, "structuredClone", clone],
   [native.Object, "prototype", native.objectPrototype],
   [native.Object, "getOwnPropertyDescriptor", native.property],
+  [native.Object, "getOwnPropertyDescriptors", native.descriptors],
   [native.Object, "getPrototypeOf", native.prototype], [native.Object, "keys", native.keys],
   [native.Object, "hasOwn", native.own], [native.Object, "is", native.same],
   [native.Object, "defineProperty", native.define],
@@ -126,8 +129,9 @@ function rememberClone(value: unknown) {
     const keys = native.ownKeys(current)
     if (properties + keys.length > maximumProperties) return
     properties += keys.length
+    const fields: PropertyDescriptorMap | undefined = bulkDescriptorDiagnostic ? native.descriptors(current) : undefined
     for (let index = 0; index < keys.length; index++) {
-      const property = native.property(current, keys[index]!)
+      const property = fields ? fields[keys[index]!] : native.property(current, keys[index]!)
       if (property && native.own(property, "value"))
         pending = { value: property.value, next: pending }
     }
@@ -174,7 +178,8 @@ export function sfCanonicalCloneTree(value: unknown): unknown[] | undefined {
       const key = keys[index]!
       if (typeof key !== "string" || key === "map" || key === "constructor" || key === "species") return undefined
     }
-    const length = array ? native.property(input, "length") : undefined
+    const fields: PropertyDescriptorMap | undefined = bulkDescriptorDiagnostic ? native.descriptors(input) : undefined
+    const length = array ? fields ? fields.length : native.property(input, "length") : undefined
     if (array && (!length || !native.own(length, "value") ||
       typeof length.value !== "number" || keys.length !== length.value + 1)) return undefined
     if (!array) native.apply(native.sort, keys, [])
@@ -186,7 +191,7 @@ export function sfCanonicalCloneTree(value: unknown): unknown[] | undefined {
     add(visiting, input)
     const children = native.apply(native.map, keys, [(_key: PropertyKey, index: number) => {
       const key = array ? index : _key
-      const property = native.property(input, key)
+      const property = fields ? fields[key] : native.property(input, key)
       if (!property || !native.own(property, "value") || !property.enumerable) throw refusal
       const child = visit(property.value, depth + 1)
       if (!child) throw refusal
@@ -294,4 +299,9 @@ export function sfCanonicalCloneBytes(value: unknown): string | undefined {
     return encoded
   }
   try { return visit(value, 0)?.bytes } catch { return undefined }
+}
+
+/** Fixture-only selector. Both diagnostic lanes share the original bootstrap and registry. */
+export function setSfCloneDescriptorDiagnosticBulk(enabled: boolean) {
+  bulkDescriptorDiagnostic = enabled
 }
