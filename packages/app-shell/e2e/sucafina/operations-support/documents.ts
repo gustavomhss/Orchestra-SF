@@ -9,8 +9,7 @@ import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
-import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
-import { captureRecord, captureRecordVariants, captureRecordDetail, capturePortugueseRecord, describeRecordPage } from "./final-records"
+import { captureRecord, captureRecordVariants, capturePortugueseRecord, describeRecordPage } from "./final-records"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -169,7 +168,6 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
 export async function documentJourney(page: Page, info: TestInfo) {
   const account = await login(page, "first", "suppliers")
-  const scenarioFixture = await prepareRecordScenario(page, account)
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
   const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")
@@ -507,9 +505,20 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
-  await previewRecordScenario(page, info, account, confirmed, scenarioFixture)
-  await captureRecordVariants(page, info, "UI60", "authorized-scenario-preview", false)
-  await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence", scenario.locator('[data-sf-scenario="preview"]'))
+  // This original fixture intentionally excludes scenario simulation grants.
+  // Preserve that policy: the UI explains the unavailable action and the original
+  // producer independently rejects discovery for the same confirmed reference.
+  await expect(scenarioAction).toBeDisabled()
+  await expect(scenario.getByRole("button", { name: "Refresh destinations", exact: true })).toBeDisabled()
+  await expect(scenario.getByRole("status").filter({ hasText: "Scenario preview is unavailable for your current access." })).toBeVisible()
+  const deniedTargets = await page.request.get(endpoint("document-scenario-targets", { ref: JSON.stringify(confirmed.ref) }), { maxRetries: 0 })
+  expect(deniedTargets.status()).toBe(403)
+  expect(await deniedTargets.json()).toMatchObject({ status: "denied" })
+  await observation(info, "final-records-restricted-scenario", {
+    targetsStatus: deniedTargets.status(), confirmedSource: confirmed.ref,
+    simulationGrantsAdded: false, sourceRemainsReadable: true,
+  })
+  await captureRecordVariants(page, info, "UI60", "confirmed-source-restricted-simulation")
   await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
     await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
     await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
