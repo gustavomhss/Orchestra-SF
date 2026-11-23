@@ -1,11 +1,10 @@
-import { expect, type Response as PlaywrightResponse } from "@playwright/test"
+import { expect, type Page, type Response as PlaywrightResponse } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
-import { SfRoutines } from "@orchestra/schema/sucafina/routines"
-import { waveFourTest, enter, ready, scheme, reflow, scrollPageTop, observePage } from "./design-support/wave-four"
+import { waveFourTest, enter, scheme, reflow, observePage } from "./design-support/wave-four"
 import { captureFinalSurface } from "./design-support/final-capture"
-import { captureFinalRoutineGate } from "./design-support/final-routines-gate"
+import { captureFinalRoutineGate, expectFinalRoutineGate } from "./design-support/final-routines-gate"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 
 waveFourTest.use({ designWave: "four-decisions" })
@@ -24,7 +23,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   const diagnostics = observePage(page)
   const writes: string[] = []
   const reads: { path: string; status: number; action?: string }[] = []
-  const catalogResponses: { status: number; body: unknown }[] = []
+  const catalogRequests: string[] = []
   const analysisLists: { status: number; body: unknown }[] = []
   let authorizedCase: { id: string; incarnation: string; version: number } | undefined
   const analysisAction = (response: PlaywrightResponse): string | undefined => {
@@ -35,21 +34,25 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     return body && typeof body === "object" && "action" in body && typeof body.action === "string" ? body.action : undefined
   }
   const limits: string[] = []
-  page.on("request", (request) => {
-    const url = new URL(request.url())
-    if (url.origin !== installation.origin || request.method() !== "POST") return
-    if (/\/api\/ui\/(routines\/(prepare-admission|run)|schedules\/(create|update|pause))$/.test(url.pathname))
-      writes.push(url.pathname)
-  })
-  page.on("response", (response) => {
-    const url = new URL(response.url())
-    const action = analysisAction(response)
-    if (url.origin === installation.origin && (/\/api\/ui\/(routines|schedules|projections\/(residents|case|routine))/.test(url.pathname) || action)) {
-      const observed = { path: url.pathname, status: response.status(), ...(action ? { action } : {}) }
-      reads.push(observed)
-      console.info("SF_FINAL_ROUTINES_HTTP " + JSON.stringify(observed))
-    }
-  })
+  const observeNetwork = (target: Page) => {
+    target.on("request", (request) => {
+      const url = new URL(request.url())
+      if (url.origin !== installation.origin || request.method() !== "POST") return
+      if (url.pathname === installation.mount + "/api/ui/routines/catalog") catalogRequests.push(url.pathname)
+      if (/\/api\/ui\/(routines\/(prepare-admission|run)|schedules\/(create|update|pause))$/.test(url.pathname))
+        writes.push(url.pathname)
+    })
+    target.on("response", (response) => {
+      const url = new URL(response.url())
+      const action = analysisAction(response)
+      if (url.origin === installation.origin && (/\/api\/ui\/(routines|schedules|projections\/(residents|case|routine))/.test(url.pathname) || action)) {
+        const observed = { path: url.pathname, status: response.status(), ...(action ? { action } : {}) }
+        reads.push(observed)
+        console.info("SF_FINAL_ROUTINES_HTTP " + JSON.stringify(observed))
+      }
+    })
+  }
+  observeNetwork(page)
   const query = new URLSearchParams({ installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId })
   const response = await page.context().request.get(installation.origin + installation.mount + "/api/ui/context?" + query)
   expect(response.status()).toBe(200)
@@ -60,59 +63,61 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     ["routine-admission", "routine-runs", "schedules", "residents"].includes(entry.resource))
   console.info("SF_FINAL_ROUTINES_AVAILABILITY " + JSON.stringify(availability))
 
-  await waveFourTest.step("UI64 keeps case authority and unpublished admission visibly separate", async () => {
-    await enter(page, owner, new URL(screens[0].path, installation.origin).href, screens[0].en)
-    // Read the same original source through this context's authenticated session.
-    // The UI effect can release its response after consuming it; its CDP body is not a durable oracle.
-    const choicesResponse = await page.context().request.post(installation.origin + installation.mount + "/dashboard?sf=workbench-analysis", {
-      headers: { Origin: installation.origin, "Idempotency-Key": crypto.randomUUID() },
-      data: { action: "choices" },
-    })
-    expect(choicesResponse.status()).toBe(200)
-    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await choicesResponse.json())
-    expect(choiceBody.status).toBe("ok")
-    if (choiceBody.status !== "ok") throw new Error("The original authorized case source is unavailable")
-    const sourceCases = choiceBody.value.cases.filter((entry) => entry.label === waveFourDecisionsData.objective)
-    expect(sourceCases).toHaveLength(1)
-    const sourceCase = sourceCases[0]?.caseRef
-    if (!sourceCase) throw new Error("The original decision case is missing")
-    authorizedCase = { id: sourceCase.id, incarnation: sourceCase.incarnation, version: sourceCase.version }
-    const surface = page.locator('[data-sf-surface="UI64"]')
-    await expect(surface).toHaveAttribute("data-sf-wave", "six")
-    await expect(surface.getByText("No published recipes were returned for this authorized case.", { exact: true })).toHaveCount(0)
-    await expect(surface.locator(".sf-routine-inputs, .sf-routine-admission")).toHaveCount(0)
-    await captureFinalSurface(page, info, "UI64", "en-dark-desktop-before-query", { preview: true })
-    const cases = surface.getByLabel("Choose an existing authorized case", { exact: true })
-    await expect(cases).toBeVisible()
-    const chosenCase = cases.locator("option").filter({ hasText: waveFourDecisionsData.objective })
-    await expect(chosenCase).toHaveCount(1)
-    const caseValue = await chosenCase.getAttribute("value")
-    if (!caseValue) throw new Error("The original decision case has no selector value")
-    await cases.selectOption(caseValue)
-    await expect(cases).toHaveValue(caseValue)
-    await surface.getByRole("textbox", { name: "Task / purpose", exact: true }).fill("Design test data · Review the current authorized case")
-    const recipes = surface.getByRole("button", { name: "Find published recipes", exact: true })
-    await expect(recipes).toBeEnabled()
-    const catalogResponse = page.waitForResponse((reply) => new URL(reply.url()).origin === installation.origin &&
-      new URL(reply.url()).pathname === installation.mount + "/api/ui/routines/catalog" && reply.request().method() === "POST")
-    await recipes.click()
-    const original = await catalogResponse
-    const sent = Schema.decodeUnknownSync(SfRoutines.operations["routines.catalog"].input, { onExcessProperty: "error" })(original.request().postDataJSON())
-    expect(sent).toEqual({ caseRef: authorizedCase, input: { purpose: "Design test data · Review the current authorized case" } })
-    const catalogBody = Schema.decodeUnknownSync(SfRoutines.operations["routines.catalog"].output, { onExcessProperty: "error" })(await original.json())
-    catalogResponses.push({ status: original.status(), body: catalogBody })
-    await expect(surface.locator('[aria-busy="true"]')).toHaveCount(0)
-    await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
-    limits.push(catalogBody.status === "ok"
-      ? "UI64: original catalog HTTP " + original.status() + " returned " + catalogBody.value.length + " recipes; no preparation or execution was submitted."
-      : "UI64: original catalog HTTP " + original.status() + " returned " + catalogBody.status + " (" + catalogBody.reason + "); no preparation or execution was submitted.")
-    await captureFinalSurface(page, info, "UI64", "en-dark-desktop-authorized-case", { preview: true })
+  await waveFourTest.step("UI64 preserves unavailable planning and returns to decisions and context through F01", async () => {
+    const catalog = context.value.availability.flatMap((entry) => entry.operations)
+      .filter((entry) => entry.operationId === "routines.catalog")
+    expect(catalog.length).toBeGreaterThan(0)
+    expect(catalog.every((entry) => entry.state === "unavailable" && !entry.operational)).toBe(true)
+    // Establish the real owner through an admitted historical reader first.
+    await enter(page, owner, new URL(screens[1].path, installation.origin).href, screens[1].en)
+    const destination = new URL(screens[0].path, installation.origin)
+    const selection = new URL(page.url()).searchParams
+    for (const key of ["server", "project", "installation"]) {
+      const value = selection.get(key)
+      if (!value) throw new Error("The current owner selection is missing " + key)
+      destination.searchParams.set(key, value)
+    }
+    await page.goto(destination.href)
+    await expectFinalRoutineGate(page, "UI64")
+    const explanation = page.locator('[data-sf-route-unavailable="UI64"]')
+    await expect(explanation.getByRole("heading", { name: "Routine catalog is unavailable", exact: true })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Find published recipes", exact: true })).toHaveCount(0)
+    await scheme(page, "dark")
+    await captureFinalRoutineGate(page, info, "en-dark-desktop", "UI64")
     await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI64", "en-light-desktop-authorized-case", { preview: true })
+    await captureFinalRoutineGate(page, info, "en-light-desktop", "UI64")
     await page.setViewportSize({ width: 360, height: 900 })
     await reflow(page)
-    await scrollPageTop(page)
-    await captureFinalSurface(page, info, "UI64", "en-light-360-authorized-case")
+    await captureFinalRoutineGate(page, info, "en-light-360", "UI64")
+
+    const returnLink = explanation.getByRole("link", { name: "Back to decisions", exact: true })
+    const contextLink = explanation.getByRole("link", { name: "Review context", exact: true })
+    for (const [link, path] of [[returnLink, "/orchestra/sf-decisions"], [contextLink, "/orchestra/sf-home/context"]] as const) {
+      const href = await link.getAttribute("href")
+      if (!href) throw new Error("The unavailable routine catalog has no return request")
+      const target = new URL(href, installation.origin)
+      expect(target.pathname).toBe(path)
+      for (const key of ["server", "project", "installation"])
+        expect(target.searchParams.get(key)).toBe(destination.searchParams.get(key))
+    }
+    await returnLink.focus()
+    await expect(returnLink).toBeFocused()
+    await returnLink.press("Enter")
+    await expect(page.locator('[data-sf-surface="UI33"]')).toBeVisible()
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
+    await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions" &&
+      ["server", "project", "installation"].every((key) => url.searchParams.get(key) === destination.searchParams.get(key)))
+    await page.goto(destination.href)
+    await expectFinalRoutineGate(page, "UI64")
+    await contextLink.focus()
+    await expect(contextLink).toBeFocused()
+    await contextLink.press("Enter")
+    await expect(page.locator('[data-sf-surface="UI67"]')).toBeVisible()
+    await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
+    await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-home/context" &&
+      ["server", "project", "installation"].every((key) => url.searchParams.get(key) === destination.searchParams.get(key)))
+    limits.push("UI64: F01 leaves routines.catalog unavailable because no original observer proves global planning readiness. The contextual gate is qualified, with no UI64 leaf or catalog POST; no preparation or execution was submitted.")
+    expect(catalogRequests).toEqual([])
     expect(writes).toEqual([])
   })
 
@@ -139,7 +144,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await scheme(page, "light")
     await captureFinalSurface(page, info, "UI65", "en-light-desktop-no-run-return", { preview: true })
     await link.press("Enter")
-    await ready(page, screens[0].en)
+    await expectFinalRoutineGate(page, "UI64")
     await expect(page).toHaveURL((url) => url.pathname === screens[0].path &&
       url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
     limits.push("UI65: this original fixture has no governed C07 routine run or verified C08 output. Only the honest no-run state and real return navigation are qualified.")
@@ -175,7 +180,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await returnLink.focus()
     await expect(returnLink).toBeFocused()
     await returnLink.press("Enter")
-    await ready(page, screens[0].en)
+    await expectFinalRoutineGate(page, "UI64")
     await expect(page).toHaveURL((url) => url.pathname === screens[0].path &&
       url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
     limits.push("UI66: the real F01 gate refuses this route because no original native Schedule port is installed. These are gate captures; the leaf/editor and create/update/pause/occurrence flows are not qualified.")
@@ -185,6 +190,21 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   await waveFourTest.step("UI70 reads actual resident inventory, filters it and rechecks a real decision case", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, new URL(screens[3].path, installation.origin).href, screens[3].en)
+    // Read the same original source through this context's authenticated session.
+    // The UI effect can release its response after consuming it; its CDP body is not a durable oracle.
+    const choicesResponse = await page.context().request.post(installation.origin + installation.mount + "/dashboard?sf=workbench-analysis", {
+      headers: { Origin: installation.origin, "Idempotency-Key": crypto.randomUUID() },
+      data: { action: "choices" },
+    })
+    expect(choicesResponse.status()).toBe(200)
+    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await choicesResponse.json())
+    expect(choiceBody.status).toBe("ok")
+    if (choiceBody.status !== "ok") throw new Error("The original authorized case source is unavailable")
+    const sourceCases = choiceBody.value.cases.filter((entry) => entry.label === waveFourDecisionsData.objective)
+    expect(sourceCases).toHaveLength(1)
+    const sourceCase = sourceCases[0]?.caseRef
+    if (!sourceCase) throw new Error("The original decision case is missing")
+    authorizedCase = { id: sourceCase.id, incarnation: sourceCase.incarnation, version: sourceCase.version }
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="UI70"]')
     await expect(surface).toHaveAttribute("data-state", "ready")
@@ -252,9 +272,12 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     const localized = await portuguese.newPage()
     localized.setDefaultTimeout(15_000)
     const localizedDiagnostics = observePage(localized)
+    observeNetwork(localized)
+    await localized.setViewportSize({ width: 1440, height: 1100 })
+    await enter(localized, owner, new URL(screens[1].path, installation.origin).href, screens[1].br)
     for (const screen of screens) {
       await localized.setViewportSize({ width: 1440, height: 1100 })
-      if (screen.id === "UI66") {
+      if (screen.id === "UI64" || screen.id === "UI66") {
         const destination = new URL(screen.path, installation.origin)
         const selection = new URL(localized.url()).searchParams
         for (const key of ["server", "project", "installation"]) {
@@ -266,10 +289,11 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
         await scheme(localized, "dark")
         await localized.setViewportSize({ width: 360, height: 900 })
         await reflow(localized)
-        await captureFinalRoutineGate(localized, info, "pt-br-dark-360")
+        await captureFinalRoutineGate(localized, info, "pt-br-dark-360", screen.id)
+        await expect(localized.getByRole("heading", { name: screen.id === "UI64" ? "Catálogo de rotinas indisponível" : "Agendamentos indisponíveis", exact: true })).toBeVisible()
         await localized.setViewportSize({ width: 1440, height: 1100 })
         await scheme(localized, "light")
-        await captureFinalRoutineGate(localized, info, "pt-br-light-desktop")
+        await captureFinalRoutineGate(localized, info, "pt-br-light-desktop", screen.id)
         await localized.setViewportSize({ width: 360, height: 900 })
         continue
       }
@@ -292,11 +316,12 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await portuguese.close()
   }
   expect(diagnostics.pageErrors).toEqual([])
+  expect(catalogRequests).toEqual([])
   expect(writes).toEqual([])
   for (const description of limits) info.annotations.push({ type: "producer-boundary", description })
-  console.info("SF_FINAL_ROUTINES_EVIDENCE " + JSON.stringify({ reads, catalogResponses, analysisLists, writes, limits, ...diagnostics }))
+  console.info("SF_FINAL_ROUTINES_EVIDENCE " + JSON.stringify({ reads, catalogRequests, analysisLists, writes, limits, ...diagnostics }))
   await info.attach("final-routines-installed-evidence", {
     contentType: "application/json",
-    body: JSON.stringify({ availability, reads, catalogResponses, analysisLists, writes, limits, ...diagnostics }, null, 2),
+    body: JSON.stringify({ availability, reads, catalogRequests, analysisLists, writes, limits, ...diagnostics }, null, 2),
   })
 })

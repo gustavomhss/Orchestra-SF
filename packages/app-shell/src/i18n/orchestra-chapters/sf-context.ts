@@ -1,5 +1,18 @@
 // New context copy is frozen in native-ui surface-manifest.json UI67.
 export const SF_CONTEXT_COPY = {
+  "sf.ui64.unavailableDescription": "Check routine availability for this installation.",
+  "sf.ui64.unavailableTitle": "Routine catalog is unavailable",
+  "sf.ui64.unavailableMessage": "Routine planning is unavailable in this context. You can return to decisions or review the current context. No routine has been prepared or run.",
+  "sf.ui64.returnToDecisions": "Back to decisions",
+  "sf.ui64.reviewContext": "Review context",
+  "sf.ui66.unavailableDescription": "Check the availability of schedules for this installation.",
+  "sf.ui66.unavailableTitle": "Scheduling is unavailable",
+  "sf.ui66.unavailableMessage": "This installation does not currently provide scheduling. You can return to the routine catalog; no schedule has been created or changed.",
+  "sf.ui66.returnToRoutines": "Back to routines",
+  "sf.ui67.description": "Review the installation and identity currently authorized for this workspace.",
+  "sf.ui67.activeContext": "Current context",
+  "sf.ui67.contextDetails": "These identifiers describe the current connection and access scope.",
+  "sf.teams.discardConfirm": "Discard draft and continue",
   "sf.ui67.title": "Context and access",
   "sf.ui67.primary": "Select context",
   "sf.ui67.server": "Server",
@@ -87,6 +100,19 @@ export const SF_CONTEXT_COPY = {
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
+  "sf.ui64.unavailableDescription": "Confira a disponibilidade das rotinas nesta instalação.",
+  "sf.ui64.unavailableTitle": "Catálogo de rotinas indisponível",
+  "sf.ui64.unavailableMessage": "O planejamento de rotinas está indisponível neste contexto. Você pode voltar às decisões ou revisar o contexto atual. Nenhuma rotina foi preparada ou executada.",
+  "sf.ui64.returnToDecisions": "Voltar às decisões",
+  "sf.ui64.reviewContext": "Revisar contexto",
+  "sf.ui66.unavailableDescription": "Confira a disponibilidade dos agendamentos nesta instalação.",
+  "sf.ui66.unavailableTitle": "Agendamentos indisponíveis",
+  "sf.ui66.unavailableMessage": "Esta instalação ainda não disponibiliza agendamentos. Você pode voltar ao catálogo de rotinas; nenhuma programação foi criada ou alterada.",
+  "sf.ui66.returnToRoutines": "Voltar para rotinas",
+  "sf.ui67.description": "Confira a instalação e a identidade autorizadas para este ambiente.",
+  "sf.ui67.activeContext": "Contexto atual",
+  "sf.ui67.contextDetails": "Estes identificadores descrevem a conexão e o escopo de acesso atuais.",
+  "sf.teams.discardConfirm": "Descartar rascunho e continuar",
   "sf.ui67.title": "Contexto e acesso",
   "sf.ui67.primary": "Selecionar contexto",
   "sf.ui67.server": "Servidor",
