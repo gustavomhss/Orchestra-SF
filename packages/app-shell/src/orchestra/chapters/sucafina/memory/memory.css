@@ -45,7 +45,8 @@
   color: var(--mx-strong);
   font: var(--orchestra-font-size-md)/1.5 var(--mx-sans);
 }
-.sf-memory[data-sf-wave="six"] select { padding-inline-end: var(--sf-memory-select-padding-end); }
+/* Keep the native arrow reserve above the shared form input-selector specificity. */
+.sf-page-frame .sf-memory[data-sf-wave="six"] form.sf-form select { padding-inline-end: var(--sf-memory-select-padding-end); }
 .sf-memory textarea { resize: vertical; }
 .sf-memory :is(input, select, textarea, button, summary):focus-visible {
   outline: var(--sf-memory-focus) solid var(--mx-blue);
