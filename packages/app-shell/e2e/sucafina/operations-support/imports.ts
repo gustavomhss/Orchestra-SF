@@ -664,7 +664,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
     await history.getByLabel("Import preview reference", { exact: true }).fill(preview.id)
     // History serially reconciles reference and detail before publishing. Arm
     // both original reads before the one submit; do not query a second time.
-    const detailURL = modeURL(account, "planner", "import-detail", { manifestId: preview.id, version: String(preview.version) }).href
+    const detailURL = modeURL(account, "planner", "import-detail", { manifestId: recovered.manifest.id, version: String(recovered.manifest.version) }).href
     const historyDetail = await observeRecordFileOperation(resultPage, account, stamp,
       "files.import-detail", detailURL, "GET")
     let historyFailed = false
