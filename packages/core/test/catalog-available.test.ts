@@ -266,7 +266,7 @@ describe("Catalog available model metadata", () => {
       const selected = required(models[0])
       expect(selected.providerID).toBe(visible)
       expect(selected.api.url).toBe("https://hidden-parent.example.com")
-      expect(selected.api.settings.owner).toBe("hidden-parent")
+      expect(required(selected.api.settings).owner).toBe("hidden-parent")
       expect(omittedReads).toBe(0)
       expect(Exit.isFailure(yield* Effect.exit(catalog.model.get(visible, omittedID)))).toBe(true)
       expect(omittedReads).toBeGreaterThan(0)
