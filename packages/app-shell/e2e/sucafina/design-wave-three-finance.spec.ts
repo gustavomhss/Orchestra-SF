@@ -475,6 +475,8 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await surface.getByRole("tab", { name: "Projects", exact: true }).click()
     await expect(surface.locator("[data-sf-project]")).toHaveCount(2)
     const project = surface.locator("[data-sf-project]").filter({ hasText: waveThreeData.planner.project })
+    const projectRef = await project.getAttribute("data-sf-project")
+    if (!projectRef) throw new Error("The original project requires its source identity")
     await expect(project.locator(".sf-u07-approval")).toHaveText("Not specified")
     await expect(project.locator('[data-sf-value="missing"]')).toHaveCount(2)
     await scrollPageTop(page)
@@ -510,8 +512,10 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
       url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST", async (response) => {
       expect(response.status()).toBe(200)
       expect(await response.json()).toMatchObject({ ok: true })
+      // A producer-selected default is omitted from the reload query. Its
+      // original response below must still identify the exact selected version.
       readback = await armOriginalRead(page, owner, { path: "/api/ui/pages/CAP19",
-        query: { year: String(installation.year), version: savedVersion } })
+        query: { year: String(installation.year) } })
     })
     // This is the original response failure deadline, not a readiness delay.
     const deadline = Promise.withResolvers<never>()
@@ -524,11 +528,19 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
         review.getByRole("button", { name: "Save project", exact: true }).click(),
       ])
       expect(request.method()).toBe("POST")
-      expect(request.postDataJSON()).toMatchObject({ page: "CAPEX", action: "save", values: { collection: "projects" } })
+      expect(request.postDataJSON()).toMatchObject({ page: "CAPEX", action: "save", id: projectRef,
+        values: { versionId: savedVersion, collection: "projects" } })
       expect(response.ok()).toBe(true)
       expect(await response.json()).toMatchObject({ ok: true })
       expect(readback).toBeDefined()
-      await readback!.completed
+      const reloaded = await readback!.completed
+      expect(reloaded.body, "the original readback preserves the selected version and saved project").toMatchObject({
+        value: { selection: { year: installation.year }, data: {
+          selectedVersion: { id: savedVersion },
+          projects: expect.arrayContaining([expect.objectContaining({ id: projectRef,
+            desc: "Design test data · Revised infrastructure resilience investment and source review." })]),
+        } },
+      })
     } finally {
       clearTimeout(deadlineTimer)
       await saved.close()
