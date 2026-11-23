@@ -9,6 +9,7 @@ export const INTEGRATIONS_COPY = {
   "orchestra.integrations.label": "Account label",
   "orchestra.integrations.key": "Access token",
   "orchestra.integrations.keyHint": "The key is checked with the provider before this account is saved.",
+  "orchestra.integrations.availableProviders": "Available providers",
   "orchestra.integrations.supported":
     "Key setup is available for Slack, Discord, Cloudflare, Supabase, Neon, Linear, Stripe, OpenAI, Runway and Globalping. Providers that need browser sign-in are not available yet.",
   "orchestra.integrations.provider.slack": "Slack",
@@ -117,6 +118,7 @@ export const INTEGRATIONS_COPY_BR: Record<keyof typeof INTEGRATIONS_COPY, string
   "orchestra.integrations.label": "Rótulo da conta",
   "orchestra.integrations.key": "Token de acesso",
   "orchestra.integrations.keyHint": "A chave é verificada com o provedor antes de a conta ser salva.",
+  "orchestra.integrations.availableProviders": "Provedores disponíveis",
   "orchestra.integrations.supported":
     "A configuração por chave está disponível para Slack, Discord, Cloudflare, Supabase, Neon, Linear, Stripe, OpenAI, Runway e Globalping. Provedores que exigem login pelo navegador ainda não estão disponíveis.",
   "orchestra.integrations.provider.slack": "Slack",

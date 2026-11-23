@@ -205,25 +205,27 @@ export function IntegrationsDialog(props: {
                       </optgroup>
                     </select>
                   </label>
-                  <label class="mx-field">
-                    <span>{language.t("orchestra.integrations.key")}</span>
-                    <input
-                      name="key"
-                      type="password"
-                      dir="ltr"
-                      required
-                      maxlength={4096}
-                      autocomplete="off"
-                      aria-describedby="integrations-key-hint"
-                    />
-                  </label>
-                  <Show when={keyHint()}>
-                    {(hint) => (
-                      <p id="integrations-key-hint" class="mx-note">
-                        {language.t(hint())}
-                      </p>
-                    )}
-                  </Show>
+                  <div class="integrations-field-group">
+                    <label class="mx-field">
+                      <span>{language.t("orchestra.integrations.key")}</span>
+                      <input
+                        name="key"
+                        type="password"
+                        dir="ltr"
+                        required
+                        maxlength={4096}
+                        autocomplete="off"
+                        aria-describedby="integrations-key-hint"
+                      />
+                    </label>
+                    <Show when={keyHint()}>
+                      {(hint) => (
+                        <p id="integrations-key-hint" class="mx-note">
+                          {language.t(hint())}
+                        </p>
+                      )}
+                    </Show>
+                  </div>
                   <label class="mx-field">
                     <span>{language.t("orchestra.integrations.label")}</span>
                     <input name="label" dir="auto" maxlength={128} />
@@ -307,26 +309,28 @@ export function IntegrationsDialog(props: {
                       {language.t("orchestra.integrations.sessionMissing")}
                     </p>
                   </Show>
-                  <label class="mx-field">
-                    <span>{language.t("orchestra.integrations.actions")}</span>
-                    <textarea
-                      name="actions"
-                      dir="ltr"
-                      required
-                      spellcheck={false}
-                      aria-describedby="integrations-actions-hint integrations-actions-example"
-                    />
-                  </label>
-                  <p id="integrations-actions-hint" class="mx-note">
-                    {language.t("orchestra.integrations.actionsHint")}
-                  </p>
-                  <Show when={actionsExample()}>
-                    {(example) => (
-                      <p id="integrations-actions-example" class="mx-note">
-                        {language.t(example())}
-                      </p>
-                    )}
-                  </Show>
+                  <div class="integrations-field-group">
+                    <label class="mx-field">
+                      <span>{language.t("orchestra.integrations.actions")}</span>
+                      <textarea
+                        name="actions"
+                        dir="ltr"
+                        required
+                        spellcheck={false}
+                        aria-describedby="integrations-actions-hint integrations-actions-example"
+                      />
+                    </label>
+                    <p id="integrations-actions-hint" class="mx-note">
+                      {language.t("orchestra.integrations.actionsHint")}
+                    </p>
+                    <Show when={actionsExample()}>
+                      {(example) => (
+                        <p id="integrations-actions-example" class="mx-note">
+                          {language.t(example())}
+                        </p>
+                      )}
+                    </Show>
+                  </div>
                 </Show>
                 <Show when={props.kind === "unbind"}>
                   <bdi dir="ltr">

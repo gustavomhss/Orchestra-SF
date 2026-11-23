@@ -85,7 +85,7 @@ for (const variant of sharedVisualVariants) {
 
     await connect.click()
     const dialog = page.getByRole("dialog", { name: "Connect account", exact: true })
-    await expect(dialog.getByLabel("Provider", { exact: true })).toBeEnabled()
+    await expect(dialog.getByRole("combobox", { name: "Provider", exact: true })).toBeEnabled()
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveValue("")
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveAttribute("type", "password")
     await expect(dialog.getByLabel("Account label", { exact: true })).toHaveValue("")
@@ -108,7 +108,12 @@ for (const variant of sharedVisualVariants) {
     await page.goto("/orchestra/rag-studio")
     const studio = page.locator('[data-mx-page="rag-studio"]')
     await expect(studio.getByRole("heading", { name: "Rag Studio", exact: true })).toBeVisible()
-    await expect(studio.getByText("No admitted files.", { exact: true })).toBeVisible()
+    const files = studio.locator("section").filter({ has: page.getByRole("heading", { name: "Files", exact: true }) })
+    const maintain = studio.locator("section").filter({ has: page.getByRole("heading", { name: "Maintain", exact: true }) })
+    await expect(files).toHaveCount(1)
+    await expect(maintain).toHaveCount(1)
+    await expect(files.getByText("No admitted files.", { exact: true })).toBeVisible()
+    await expect(maintain.getByText("No admitted files.", { exact: true })).toBeVisible()
     await expect(studio.getByRole("heading", { name: "Pipeline", exact: true })).toBeVisible()
     await expect(studio.getByRole("button", { name: "Whole document", exact: true })).toHaveAttribute("aria-pressed", "true")
     await expect(studio.getByRole("button", { name: "Admit", exact: true })).toBeDisabled()
@@ -142,9 +147,13 @@ for (const variant of sharedVisualVariants) {
 
     await project.locator("button.board-overview-title").click()
     await expect(board.getByRole("heading", { name: "Launch", exact: true })).toBeVisible()
-    const card = board.locator('button.board-card[data-ref="LCH-1"]')
+    const columns = board.getByRole("group", { name: "Board columns", exact: true })
+    const card = columns.getByRole("region", { name: "Backlog", exact: true }).locator('button[data-ref="LCH-1"]')
+    await expect(card).toHaveCount(1)
+    await expect(card).toHaveAttribute("data-stage", "backlog")
     await expect(card).toContainText(sharedBoardTitle)
-    await expect(board.locator('button.board-card[data-ref="LCH-3"]')).toContainText("wiring the routes")
+    await expect(columns.getByRole("region", { name: "Building", exact: true }).locator('button[data-ref="LCH-3"]')).toContainText("wiring the routes")
+    await columns.scrollIntoViewIfNeeded()
     await captureSharedState(page, info, variant, state, "project-board", "synthetic-stage-board",
       "Original production board with existing synthetic cards. Spend and proof reads are explicitly unavailable, never replaced with invented dollars or CI evidence.")
 
