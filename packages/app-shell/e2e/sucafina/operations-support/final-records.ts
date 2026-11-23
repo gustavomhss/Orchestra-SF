@@ -62,6 +62,7 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
     locale: "pt-BR", viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1,
     colorScheme: "dark", reducedMotion: "reduce", storageState: storage,
   })
+  let failed = false
   try {
     const localized = await context.newPage()
     expect((await localized.goto(page.url()))?.status()).toBe(200)
@@ -74,9 +75,13 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
     await expect(localized.getByRole("heading", { level: 1, name: titles[area], exact: true })).toBeVisible()
     await theme(localized, "dark")
     await captureRecord(localized, info, area, state + "-pt-br-desktop", true)
+  } catch (error) {
+    failed = true
+    throw error
   } finally {
-    // Cleanup after an already-ended test must not replace the original action/assertion failure.
-    await context.close().catch(() => undefined)
+    // Preserve an existing action/assertion failure if cleanup also cannot close.
+    // A successful capture still requires successful cleanup.
+    await (failed ? context.close().catch(() => undefined) : context.close())
   }
 }
 
