@@ -289,6 +289,15 @@ waveFourTest("UI62 · private authorized case recall in an isolated installation
         result: await reply.json() as unknown }))
     await surface.getByRole("button", { name: "Find similar cases", exact: true }).click()
     const original = await response
+    const source = original.result && typeof original.result === "object" ? original.result : undefined
+    const reason = source && "reason" in source && typeof source.reason === "string" ? source.reason : null
+    console.info("SF_FINAL_MEMORY_RECALL_ORIGINAL " + JSON.stringify({
+      httpStatus: original.status,
+      status: source && "status" in source && typeof source.status === "string" ? source.status : null,
+      reason: reason?.slice(0, 200) ?? null,
+      reasonTruncated: reason !== null && reason.length > 200,
+      matchingCases: source && "matches" in source && Array.isArray(source.matches) ? source.matches.length : null,
+    }))
     expect(original.status).toBe(200)
     expect(new URL(original.url).searchParams.has("query")).toBe(false)
     expect(page.url()).not.toContain(encodeURIComponent(query))
