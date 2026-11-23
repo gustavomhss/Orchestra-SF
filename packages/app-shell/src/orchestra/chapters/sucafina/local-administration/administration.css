@@ -60,6 +60,7 @@
 .sf-u28-definition[data-sf-backup-review] { margin-block-start: var(--sf-admin-padding); padding-block-start: var(--sf-admin-padding); border-block-start: var(--sf-admin-hairline) solid var(--mx-line); }
 .sf-u28-summaries { display: grid; gap: var(--sf-admin-row-gap); margin-block-end: var(--sf-admin-gap); }
 .sf-u28-summaries > h2 { margin: 0; }
+.sf-u28-summaries > .sf-state-panel > .sf-state-content { display: grid; gap: var(--sf-admin-row-gap); min-inline-size: 0; }
 .sf-u28-summaries form { display: grid; gap: var(--sf-admin-padding); }
 .sf-u28-summaries [hidden] { display: none; }
 .sf-u28-summaries fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sf-admin-small-gap) var(--sf-admin-padding); padding: 0; margin: 0; border: 0; }

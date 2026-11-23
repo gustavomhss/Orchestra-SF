@@ -272,6 +272,17 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   await expect(selectedSections).toHaveCount(1)
   await expect(selectedSections).toBeChecked()
   await expect(report.getByRole("combobox", { name: "Office format", exact: true })).toBeVisible()
+  const preservedSource = report.getByText(previous, { exact: true })
+  await expect(preservedSource).toHaveCount(1)
+  await expect(preservedSource).toBeHidden()
+  await report.getByText("Preserved review", { exact: true }).click()
+  await expect(preservedSource).toBeVisible()
+  await expect(preservedSource).toHaveText(previous)
+  await record(page, info, "UI50", "authorized-report-source-reference",
+    "The original preserved-review identifier remains complete and accessible in the native disclosure. No source identity or report content is replaced.",
+    "details.sf-technical-details")
+  await report.getByText("Preserved review", { exact: true }).click()
+  await expect(preservedSource).toBeHidden()
   await record(page, info, "UI50", "authorized-report-selection", "Original preserved content and one selected section; no DOCX/PPTX artifact or download is claimed.")
   await record(page, info, "UI50", "authorized-report-content-and-notes",
     "The original authorized section and preserved notes remain available below the original report controls. No Office generation or download is claimed.",

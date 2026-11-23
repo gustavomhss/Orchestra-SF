@@ -376,3 +376,18 @@ The fourth wave covers CAP20–CAP28, UI30–UI32 and UI34–UI41: twenty invent
 All CAP01–CAP28 and UI29–UI41 destinations now share the established compact Context and access presentation. The source navigation strip admits only the original 28 capability destinations and their existing owner-bound links. Its explicit polished marker activates the same 1160px axis, gutters, 44px targets, underline selection and keyboard focus roles; resize/navigation reveals the active item. The presentation change does not alter route admission or source availability.
 
 Fourth-wave page roots opt into the existing frame using `data-sf-wave="four"`. Native fonts, role colors and quiet materials remain authoritative. Lists, details, editors and reviews use deliberate work stages; drafts stay mounted where existing controllers require them. Preserve absent source values, authorization, CAS, idempotency, recovery and confirmation semantics. Evidence, outstanding limitations and acceptance will be recorded after the grouped real installed journeys.
+
+
+## 14. Second interface refinement pass
+
+The second pass after PR #710 refines the existing visual system. It preserves the native palettes, quiet glass, blur architecture, type scale, source identities, labels and command owners. The issue ledger and original-capture evidence are recorded in `docs/qa/sucafina/visual-audit/ROUND-TWO.md`; PR #715 records the final verification and merge receipt.
+
+- Home: KPI tiles become one column at viewport widths up to 479px so absence states and numeric values keep their reading space. Footer provenance and actions also stack at phone widths, so long localized labels keep their full width. The existing two-column 700px layout remains. "No repository" and "Not connected" keep their original copy and source meaning.
+- Record details: Back has a start-aligned 44px target on its own line. The record heading, identity/status and action group share a wrapping summary row, with 16px spacing. CAP10 retains its local spacing and stacks this summary in the existing narrow container mode.
+- Comfortable data tables: sort controls use the same 44px minimum block size as row actions. The header adds 4px vertical padding for the existing focus ring. Compact density, row identities, sorting cycles, selection and scroll ownership are unchanged.
+- Procurement settings: below 620px, the seven section links form one horizontally scrollable, keyboard-focusable strip. Labels stay complete, controls retain a 44px minimum and the original fragment destinations remain authoritative.
+- Reviews and reports: comparison sections use the existing section rhythm. Report coverage and selection use labeled metadata; the complete preserved-review identifier remains in a native, keyboard-operable disclosure with a 44px summary target.
+- Proposal and administration sections: UI54 uses native line, raised and soft roles instead of legacy fallback colors, with the established section spacing. UI69 separates its form and current-source action inside the existing state content.
+- Failure and destructive states: after a failed Skills save, the prior control is restored only while it remains inside the open dialog and the document body is active; other active controls remain untouched. Provider Disconnect uses the existing danger role while retaining its confirmation and credential-removal flow.
+
+These are presentation and focus refinements. No producer, admission rule, public schema, financial value, currency, CAS, recovery policy or Microsoft integration is introduced by this pass. Evidence for CSS reflow remains distinct from actual browser zoom and from owner visual acceptance.
