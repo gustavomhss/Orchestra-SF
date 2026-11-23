@@ -52,6 +52,7 @@
 .sf-memory :is(button, summary) { min-block-size: var(--sf-memory-control); }
 .sf-memory .mx-btn { white-space: normal; text-align: center; }
 .sf-memory-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.sf-memory-materiality-read { display: grid; gap: 12px; min-inline-size: 0; }
 .sf-memory-reference { min-inline-size: 0; border-block-start: var(--sf-memory-line) solid var(--mx-line); padding-block-start: 8px; }
 .sf-memory-reference > summary { display: list-item; align-content: center; cursor: pointer; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
 .sf-memory-reference[open] > summary { color: var(--mx-strong); margin-block-end: 12px; }

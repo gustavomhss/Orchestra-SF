@@ -32,6 +32,7 @@ type MemoryViewState = {
   selectedCondition: string
   selectedChoice: string
   material: Material | null
+  materialityCancelled: boolean
   outcome: Outcome | null
   outcomeIssue: "coverage-incomplete" | null
   listState: ReadState
@@ -53,9 +54,9 @@ const stateFrom = (result: MemoryOperationResult): SfUiState => {
   }
 }
 
-const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "signalsState" | "selectedCondition" | "selectedChoice" | "material" | "outcome" | "outcomeIssue" | "listState" | "detailState" | "catalogState" | "message"> = {
+const EMPTY: Pick<MemoryViewState, "active" | "catalog" | "conditions" | "choices" | "signals" | "signalsState" | "selectedCondition" | "selectedChoice" | "material" | "materialityCancelled" | "outcome" | "outcomeIssue" | "listState" | "detailState" | "catalogState" | "message"> = {
   active: null, catalog: [], conditions: [], choices: [], signals: [], signalsState: "idle", selectedCondition: "", selectedChoice: "",
-  material: null, outcome: null, outcomeIssue: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
+  material: null, materialityCancelled: false, outcome: null, outcomeIssue: null, listState: "idle", detailState: "idle", catalogState: "idle", message: null,
 }
 
 /**
@@ -139,7 +140,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     listAbort?.abort()
     signalsAbort?.abort()
     detailAbort?.abort()
-    setView({ active: null, conditions: [], choices: [], signals: [], signalsState: "idle", material: null, outcome: null, outcomeIssue: null,
+    setView({ active: null, conditions: [], choices: [], signals: [], signalsState: "idle", material: null, materialityCancelled: false, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "idle", detailState: "idle", message: null })
     setView(field, value)
   }
@@ -170,7 +171,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const client = createSfMemoryClient(ready.transport)
     setView({
       active: { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version },
-      conditions: [], choices: [], signals: [], signalsState: "idle", material: null, outcome: null, outcomeIssue: null,
+      conditions: [], choices: [], signals: [], signalsState: "idle", material: null, materialityCancelled: false, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "loading", detailState: "idle", message: null,
     })
     if (props.surfaceId === "UI63") {
@@ -246,7 +247,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
       listAbort?.abort()
       signalsAbort?.abort()
       detailAbort?.abort()
-      setView({ active: null, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
+      setView({ active: null, conditions: [], choices: [], signals: [], material: null, materialityCancelled: false, outcome: null, outcomeIssue: null,
         selectedCondition: "", selectedChoice: "", listState: "denied", signalsState: "denied", detailState: "idle" })
       return
     }
@@ -264,20 +265,33 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   }
   const readMateriality = async (conditionId: string) => {
     const ready = owner.ready()
-    const caseRef = view.active
-    if (!ready || !caseRef || !view.conditions.some((item) => item.conditionId === conditionId)) return
+    const selected = view.active
+    const condition = view.conditions.find((item) => item.conditionId === conditionId)
+    if (!ready || !selected || !condition ||
+        (view.selectedCondition === conditionId && view.detailState === "loading")) return
+    const caseRef: CaseQuery = { caseId: selected.caseId, incarnation: selected.incarnation, version: selected.version }
+    const choiceId = condition.choiceId
     detailAbort?.abort()
-    detailAbort = new AbortController()
-    const signal = detailAbort.signal
+    const controller = new AbortController()
+    detailAbort = controller
+    const signal = controller.signal
     const epoch = requestEpoch
     const generation = owner.generation()
-    setView({ selectedCondition: conditionId, selectedChoice: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
+    setView({ selectedCondition: conditionId, selectedChoice: "", material: null, materialityCancelled: false,
+      outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-materiality"](
       { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version, conditionId }, { signal },
-    ).catch(() => undefined)
-    if (!current(epoch, generation, signal)) return
+    ).catch((error: unknown) => {
+      // Leaving or cancelling this view needs no failure message; the active read still reports a failure.
+      if (!signal.aborted && current(epoch, generation, signal)) console.error("Authorized materiality read failed", error)
+      return undefined
+    })
+    if (!current(epoch, generation, signal) || detailAbort !== controller || owner.ready() !== ready ||
+        view.active?.caseId !== caseRef.caseId || view.active.incarnation !== caseRef.incarnation ||
+        view.active.version !== caseRef.version || view.selectedCondition !== conditionId ||
+        !view.conditions.some((item) => item.conditionId === conditionId && item.choiceId === choiceId)) return
     if (result?.kind === "response" && result.body.status === "ok") {
-      if (result.body.snapshot.condition.id !== conditionId || result.body.scope.choiceId !== view.conditions.find((item) => item.conditionId === conditionId)?.choiceId) {
+      if (result.body.snapshot.condition.id !== conditionId || result.body.scope.choiceId !== choiceId) {
         setView("detailState", "stale")
         return
       }
@@ -285,6 +299,12 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
       return
     }
     setView("detailState", result ? stateFrom(result) : "unavailable")
+  }
+  const cancelMateriality = () => {
+    if (!view.selectedCondition || view.detailState !== "loading" || !detailAbort) return
+    detailAbort.abort()
+    detailAbort = undefined
+    setView({ material: null, materialityCancelled: true, detailState: "idle" })
   }
   const readOutcome = async (choiceId: string) => {
     const ready = owner.ready()
@@ -295,7 +315,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const signal = detailAbort.signal
     const epoch = requestEpoch
     const generation = owner.generation()
-    setView({ selectedChoice: choiceId, selectedCondition: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
+    setView({ selectedChoice: choiceId, selectedCondition: "", material: null, materialityCancelled: false, outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-outcome"](
       { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version, choiceId }, { signal },
     ).catch(() => undefined)
@@ -323,7 +343,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     detailAbort = controller
     const epoch = ++requestEpoch
     const generation = owner.generation()
-    setView({ selectedChoice: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
+    setView({ selectedChoice: "", material: null, materialityCancelled: false, outcome: null, outcomeIssue: null, detailState: "loading" })
     if (!/^[a-f0-9]{64}$/.test(selectionRef)) {
       setView("detailState", "invalid")
       return
@@ -449,6 +469,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
                           <small>{t("sf.u26.criterion")}: {condition.criterionId} · {t("sf.u26.period")}: {condition.period.start} – {condition.period.end}</small>
                         </div>
                         <button type="button" class="mx-btn" aria-expanded={view.selectedCondition === condition.conditionId}
+                          disabled={view.selectedCondition === condition.conditionId && view.detailState === "loading"}
                           onClick={() => void readMateriality(condition.conditionId)}>{t("sf.u26.conditionDetail")}</button>
                       </li>
                     )}</For>
@@ -487,33 +508,50 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
           </Show>
         </SfStatePanel>
         <Show when={privacy() === "ready" && props.surfaceId === "UI61" && view.selectedCondition}>
-          <SfStatePanel state={view.detailState === "idle" ? "loading" : view.detailState}
-            messageKey={k(detailMessage())}
-            onRetryRead={() => void readMateriality(view.selectedCondition)}>
-            <Show when={view.material}>{(data) => (
-              <section class="sf-memory-section sf-section" data-sf-memory-materiality>
-                <h2>{t("sf.u26.materiality")}</h2>
-                <dl class="sf-memory-facts">
-                  <dt>{t("sf.u26.condition")}</dt><dd>{data().snapshot.condition.id}</dd>
-                  <dt>{t("sf.u26.impact")}</dt><dd>{closed("sf.u26.impactState", data().impact.state)}</dd>
-                  <dt>{t("sf.u26.reason")}</dt><dd>{data().impact.reason}</dd>
-                  <dt>{t("sf.u26.source")}</dt><dd>{data().scope.source.type}: {data().scope.source.id}</dd>
-                  <dt>{t("sf.u26.version")}</dt><dd>{data().scope.source.version}</dd>
-                  <dt>{t("sf.u26.period")}</dt><dd>{data().scope.period.start} – {data().scope.period.end}</dd>
-                  <dt>{t("sf.u26.fields")}</dt><dd>{data().scope.fields.join(", ")}</dd>
-                  <dt>{t("sf.u26.observedAt")}</dt><dd>{data().scope.source.observedAt}</dd>
-                  <dt>{t("sf.u26.changed")}</dt><dd>{closed("sf.u26.availability", data().snapshot.change.availability)}</dd>
-                  <dt>{t("sf.u26.before")}</dt><dd>{data().snapshot.change.before.length}</dd>
-                  <dt>{t("sf.u26.after")}</dt><dd>{data().snapshot.change.after.length}</dd>
-                </dl>
-                <Show when={data().signal}>{(signal) => (
-                  <p role="status">{t("sf.u26.severity")}: {closed("sf.u26.severityValue", signal().severity)} · {signal().reason}</p>
+          <div class="sf-memory-materiality-read" data-sf-memory-materiality-state={view.materialityCancelled ? "cancelled" : view.detailState}>
+            <Show when={view.detailState === "loading" || view.materialityCancelled}>
+              <div class="sf-memory-actions">
+                <button type="button" class="mx-btn"
+                  onClick={() => { if (view.detailState === "loading") cancelMateriality(); else void readMateriality(view.selectedCondition) }}>
+                  {t(view.detailState === "loading" ? "sf.u26.cancelMateriality" : "sf.u26.readMateriality")}
+                </button>
+              </div>
+            </Show>
+            <Show when={view.materialityCancelled} fallback={
+              <SfStatePanel state={view.detailState === "idle" ? "loading" : view.detailState}
+                messageKey={k(detailMessage())}
+                onRetryRead={() => void readMateriality(view.selectedCondition)}>
+                <Show when={view.material}>{(data) => (
+                  <section class="sf-memory-section sf-section" data-sf-memory-materiality>
+                    <h2>{t("sf.u26.materiality")}</h2>
+                    <dl class="sf-memory-facts">
+                      <dt>{t("sf.u26.condition")}</dt><dd>{data().snapshot.condition.id}</dd>
+                      <dt>{t("sf.u26.impact")}</dt><dd>{closed("sf.u26.impactState", data().impact.state)}</dd>
+                      <dt>{t("sf.u26.reason")}</dt><dd>{data().impact.reason}</dd>
+                      <dt>{t("sf.u26.source")}</dt><dd>{data().scope.source.type}: {data().scope.source.id}</dd>
+                      <dt>{t("sf.u26.version")}</dt><dd>{data().scope.source.version}</dd>
+                      <dt>{t("sf.u26.period")}</dt><dd>{data().scope.period.start} – {data().scope.period.end}</dd>
+                      <dt>{t("sf.u26.fields")}</dt><dd>{data().scope.fields.join(", ")}</dd>
+                      <dt>{t("sf.u26.observedAt")}</dt><dd>{data().scope.source.observedAt}</dd>
+                      <dt>{t("sf.u26.changed")}</dt><dd>{closed("sf.u26.availability", data().snapshot.change.availability)}</dd>
+                      <dt>{t("sf.u26.before")}</dt><dd>{data().snapshot.change.before.length}</dd>
+                      <dt>{t("sf.u26.after")}</dt><dd>{data().snapshot.change.after.length}</dd>
+                    </dl>
+                    <Show when={data().signal}>{(signal) => (
+                      <p role="status">{t("sf.u26.severity")}: {closed("sf.u26.severityValue", signal().severity)} · {signal().reason}</p>
+                    )}</Show>
+                    <p>{t("sf.u26.causality")}</p>
+                    <p class="sf-memory-help">{t("sf.u26.selectionRequired")}</p>
+                  </section>
                 )}</Show>
-                <p>{t("sf.u26.causality")}</p>
-                <p class="sf-memory-help">{t("sf.u26.selectionRequired")}</p>
+              </SfStatePanel>
+            }>
+              <section class="sf-memory-section sf-section">
+                <h2>{t("sf.u26.materiality")}</h2>
+                <p role="status" class="sf-memory-help">{t("sf.u26.materialityCancelled")}</p>
               </section>
-            )}</Show>
-          </SfStatePanel>
+            </Show>
+          </div>
         </Show>
         <Show when={privacy() === "ready" && props.surfaceId === "UI63" && (view.selectedChoice || referenceRoute())}>
           <div data-sf-memory-outcome-status={view.detailState} data-sf-memory-reason={view.outcomeIssue ?? undefined}>
