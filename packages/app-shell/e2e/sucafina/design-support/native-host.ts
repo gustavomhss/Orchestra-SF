@@ -26,7 +26,7 @@ if (!privateRoot || !path.isAbsolute(privateRoot)) throw new Error("Private capt
 if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
-const scanner = (() => {
+const requestedScanner = (() => {
   const raw = process.argv[4]
   if (raw === undefined) return undefined
   const value: unknown = JSON.parse(raw)
@@ -75,11 +75,11 @@ const program = Effect.scoped(Effect.gen(function* () {
     throw new Error("Native Web build failed (" + bundle.exitCode + "): " + bundle.stderr.toString("utf8").slice(-4000))
   // The parent owns the real ClamD service. The original INSTREAM adapter
   // must admit an actual clean probe before this isolated installation uses it.
-  const scanner = filesWave ? { host: "127.0.0.1" as const, port: 3310 } : undefined
-  if (scanner) {
+  const effectiveScanner = requestedScanner ?? (filesWave ? { host: "127.0.0.1" as const, port: 3310 } : undefined)
+  if (effectiveScanner) {
     process.stdout.write("SF_DESIGN_STAGE scanner-probe\n")
     const clean = yield* Effect.promise(() => scanLocalFile(
-      new TextEncoder().encode("SF_DESIGN_FILES_CLEAN_PROBE\n"), scanner,
+      new TextEncoder().encode("SF_DESIGN_FILES_CLEAN_PROBE\n"), effectiveScanner,
     ))
     if (!clean) throw new Error("Files design fixture requires a ready real ClamD scanner")
   }
@@ -87,10 +87,9 @@ const program = Effect.scoped(Effect.gen(function* () {
   let configuration: string | undefined
   process.stdout.write("SF_DESIGN_STAGE installation\n")
   const installed = yield* withNativeInstallation({
-    ...(scanner ? { scanner } : {}),
+    ...(effectiveScanner ? { scanner: effectiveScanner } : {}),
     webRoot,
     serverPassword,
-    ...(scanner ? { scanner } : {}),
     seed: async ({ config, store, actorId }) => {
       configuration = config
       process.stdout.write("SF_DESIGN_STAGE configuration\n")
