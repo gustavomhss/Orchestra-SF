@@ -922,6 +922,12 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
       if (chunk.done) break
       size += chunk.value.byteLength
       if (size > MAX_JSON_BYTES) {
+        try {
+          console.info("SF_BI_ABORT_PROFILE " + JSON.stringify({
+            schema: "sf-bi-abort-v1", qualification: false, label: "reader-cancel",
+            reason: "json-size-limit", timeMs: Date.now(), size, limit: MAX_JSON_BYTES,
+          }))
+        } catch { /* Diagnostic output must never prevent the original cancellation. */ }
         await reader.cancel().catch(() => undefined)
         return undefined
       }

@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useSfContext } from "../../context"
 import { safeBiDestination } from "../safe-destination"
@@ -89,14 +89,36 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
   let activeController: AbortController | undefined
   let ticket = 0
 
-  const revokeReads = () => {
+  type FenceChanges = {
+    generationChanged: boolean
+    statusChanged: boolean
+    accessRevisionChanged: boolean
+    principalChanged: boolean
+  }
+  let profileLines = 0
+  const profileAbort = (label: string, changes?: FenceChanges) => {
+    if (profileLines++ >= 128) return
+    try {
+      // Diagnostic reads must not subscribe the original route/fence effects.
+      untrack(() => console.info("SF_BI_ABORT_PROFILE " + JSON.stringify({
+        schema: "sf-bi-abort-v1", qualification: false, label, timeMs: Date.now(),
+        ticket, generation: context.generation(), status: context.state().status,
+        controllerPresent: activeController !== undefined,
+        aborted: activeController?.signal.aborted ?? false,
+        busy: store.busy, ...changes,
+      })))
+    } catch { /* Diagnostic output must never prevent the original cancellation. */ }
+  }
+
+  const revokeReads = (label: string, changes?: FenceChanges) => {
+    profileAbort(label, changes)
     activeController?.abort()
     activeController = undefined
     ticket++
     setStore({ options: undefined, data: undefined, links: undefined, detail: undefined,
       selectedSource: null, selectedValueSource: null, sourceState: "empty", readState: "ready", busy: false, choice: "" })
   }
-  onCleanup(revokeReads)
+  onCleanup(() => revokeReads("cleanup"))
 
   // A changed UI46 path is a new selector under the same F01 owner; clear old projections.
   let lastRouteView: string | undefined
@@ -104,21 +126,29 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     const view = props.surfaceId === "UI46" ? props.route.params.viewId : undefined
     if (view === lastRouteView) return
     lastRouteView = view
-    revokeReads()
+    revokeReads("route-view")
     setStore("viewId", view && BI_CATALOG.some((item) => item.id === view) ? view as ViewId : "")
   })
 
   // Owner generation/accessRevision is the read fence; old projections never
   // survive a context switch or arrive late after a re-authenticated owner.
   let lastFence: string | undefined
+  let lastFenceParts: readonly [number, string, string, string] | undefined
   createEffect(() => {
     const state = context.state()
     const current = context.ready()
-    const fence = String(context.generation()) + ":" + state.status +
-      ":" + (current?.context.stamp.accessRevision ?? "") +
-      ":" + (current?.context.stamp.principalRef ?? "")
-    if (lastFence !== undefined && lastFence !== fence) revokeReads()
+    const parts = [context.generation(), state.status,
+      current?.context.stamp.accessRevision ?? "",
+      current?.context.stamp.principalRef ?? ""] as const
+    const fence = String(parts[0]) + ":" + parts[1] + ":" + parts[2] + ":" + parts[3]
+    if (lastFence !== undefined && lastFence !== fence) revokeReads("owner-fence", {
+      generationChanged: lastFenceParts?.[0] !== parts[0],
+      statusChanged: lastFenceParts?.[1] !== parts[1],
+      accessRevisionChanged: lastFenceParts?.[2] !== parts[2],
+      principalChanged: lastFenceParts?.[3] !== parts[3],
+    })
     lastFence = fence
+    lastFenceParts = parts
   })
 
   const ownerState = (): SfUiState => {
@@ -141,23 +171,25 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       entry.operations.some((op) => op.operationId === "bi.bi-data" && op.state === "ready"))
   }
   const pending = () => store.busy
-  const changed = () => {
-    revokeReads()
+  const changed = (label: string) => {
+    revokeReads(label)
   }
   const selectionValid = () => store.viewId !== "" &&
     /^\d{4}-\d{2}-\d{2}$/.test(store.start) &&
     /^\d{4}-\d{2}-\d{2}$/.test(store.end) && store.start <= store.end
 
   // Each explicit read gets its own AbortSignal and authority-generation fence.
-  const prepareRead = () => {
+  const prepareRead = (label: string) => {
     const ready = context.ready()
     if (ownerState() !== "ready" || !ready) return undefined
+    profileAbort(label)
     activeController?.abort()
     const controller = new AbortController()
     activeController = controller
     const requestId = ++ticket
     const generation = context.generation()
     const stamp = ready.context.stamp
+    profileAbort("read-prepared")
     return { client: createSfBiClient(ready.transport), controller,
       current: () => !controller.signal.aborted && ticket === requestId &&
         context.generation() === generation &&
@@ -169,8 +201,8 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
 
   const chooseContext = async () => {
     if (!selectionValid()) { setStore("readState", "invalid"); return }
-    revokeReads()
-    const request = prepareRead()
+    revokeReads("choose-context")
+    const request = prepareRead("prepare-options")
     if (!request) return
     const viewId = store.viewId as ViewId
     const start = store.start, end = store.end
@@ -198,7 +230,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
     if (!selectionValid() || !allowedData() || !store.options || !store.viewId) return
     // A choice is an exact producer-issued selectionRef; no derivation from labels.
     if (store.choice && !store.options.choices.some((choice) => choice.selectionRef === store.choice)) return
-    const request = prepareRead()
+    const request = prepareRead("prepare-data")
     if (!request) return
     const viewId = store.viewId
     const start = store.start, end = store.end, selectionRef = store.choice
@@ -234,7 +266,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       setStore({ selectedSource: reference, selectedValueSource: null, links: undefined, sourceState: "invalid" })
       return
     }
-    const request = prepareRead()
+    const request = prepareRead("prepare-source")
     if (!request) return
     // The producer echoes viewId as an open string; the closed BI catalog is the
     // only legal viewId space, and an off-catalog echo means this data is not
@@ -277,7 +309,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       setStore({ detail: undefined, sourceState: "unavailable" })
       return
     }
-    const request = prepareRead()
+    const request = prepareRead("prepare-decision")
     if (!request) return
     setStore({ selectedSource: target, links: undefined, detail: undefined, sourceState: "loading", busy: true })
     try {
@@ -329,7 +361,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                     <h3>{t(sfBiKey("sf.u21.family." + family))}</h3>
                     <ul><For each={BI_CATALOG.filter((entry) => entry.family === family)}>
                       {(entry) => <li><button class="mx-btn sf-bi-catalog-entry" type="button"
-                        onClick={() => { changed(); setStore("viewId", entry.id) }}>
+                        onClick={() => { changed("catalog-entry"); setStore("viewId", entry.id) }}>
                         <span class="sf-bi-view-code">{entry.id}</span><strong>{t(sfBiKey(entry.question))}</strong>
                       </button></li>}
                     </For></ul>
@@ -344,7 +376,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                 <h2>{t(sfBiKey(entry().question))}</h2></div>
               <Show when={props.surfaceId === "UI45"}>
                 <button class="mx-btn" type="button" disabled={pending()}
-                  onClick={() => { changed(); setStore("viewId", "") }}>{t(sfBiKey("sf.u21.chooseView"))}</button>
+                  onClick={() => { changed("catalog-back"); setStore("viewId", "") }}>{t(sfBiKey("sf.u21.chooseView"))}</button>
               </Show>
             </header>}
           </Show>
@@ -354,7 +386,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
               {t(sfBiKey("sf.u21.view"))}
               <select value={store.viewId} required disabled={pending() || props.surfaceId === "UI46"} data-sf-field="view"
                 onChange={(event) => {
-                  changed()
+                  changed("view-input")
                   setStore("viewId", event.currentTarget.value as ViewId)
                 }}>
                 <option value="">{t(sfBiKey("sf.u21.chooseView"))}</option>
@@ -366,12 +398,12 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
             <label>
               {t(sfBiKey("sf.u21.start"))}
               <input type="date" required value={store.start} disabled={pending()}
-                data-sf-field="start" onInput={(event) => { changed(); setStore("start", event.currentTarget.value) }} />
+                data-sf-field="start" onInput={(event) => { changed("start-input"); setStore("start", event.currentTarget.value) }} />
             </label>
             <label>
               {t(sfBiKey("sf.u21.end"))}
               <input type="date" required value={store.end} disabled={pending()}
-                data-sf-field="end" onInput={(event) => { changed(); setStore("end", event.currentTarget.value) }} />
+                data-sf-field="end" onInput={(event) => { changed("end-input"); setStore("end", event.currentTarget.value) }} />
             </label>
             <button class="mx-btn" classList={{ primary: !store.options }} type="submit" disabled={!selectionValid() || pending()}>
               {t(sfBiKey("sf.ui45.primary"))}
@@ -388,6 +420,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                     <label>{t(sfBiKey("sf.u21.selection"))}
                       <select value={store.choice} disabled={pending()} data-sf-field="selection"
                         onChange={(event) => {
+                          profileAbort("selection-input")
                           activeController?.abort(); ticket++
                           setStore({ choice: event.currentTarget.value, data: undefined,
                             links: undefined, detail: undefined, selectedSource: null, selectedValueSource: null, sourceState: "empty" })

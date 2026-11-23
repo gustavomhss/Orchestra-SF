@@ -33,6 +33,30 @@ export function observePage(page: Page) {
   }
   page.on("pageerror", (error) => record(messages.pageErrors, error.stack ?? error.message))
   page.on("console", (entry) => { if (entry.type() === "error") record(messages.consoleErrors, entry.text()) })
+  let biProfileLines = 0
+  page.on("console", (entry) => {
+    if (entry.type() !== "info" || biProfileLines >= 128) return
+    const message = entry.text()
+    const prefix = "SF_BI_ABORT_PROFILE "
+    if (!message.startsWith(prefix) || message.length + 1 > 1024 || !/^[\x20-\x7e]+$/.test(message)) return
+    try {
+      const value: unknown = JSON.parse(message.slice(prefix.length))
+      if (!value || typeof value !== "object" || Array.isArray(value) ||
+          !("schema" in value) || value.schema !== "sf-bi-abort-v1" ||
+          !("qualification" in value) || value.qualification !== false) return
+      const valid = Object.entries(value).every(([key, item]) => {
+        if (key === "schema" || key === "qualification") return true
+        if (["label", "status", "reason"].includes(key)) return typeof item === "string" && /^[a-z-]{1,40}$/.test(item)
+        if (["timeMs", "ticket", "generation", "size", "limit"].includes(key)) return typeof item === "number" && Number.isFinite(item)
+        if (["controllerPresent", "aborted", "busy", "generationChanged", "statusChanged",
+          "accessRevisionChanged", "principalChanged"].includes(key)) return typeof item === "boolean"
+        return false
+      })
+      if (!valid) return
+      biProfileLines++
+      console.info(message)
+    } catch { /* Invalid diagnostic lines must not affect the original test. */ }
+  })
   page.once("close", () => {
     console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-three-page-closed", ...messages }))
   })
