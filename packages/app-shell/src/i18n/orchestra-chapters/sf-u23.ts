@@ -123,7 +123,7 @@ export const SF_U23_COPY = {
 } as const
 
 export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
-  "sf.u23.planner": "Planner",
+  "sf.u23.planner": "Planejador",
   "sf.u23.dashboard": "Painel",
   "sf.u23.importPreviewRef": "Referência da prévia de importação",
   "sf.u23.exportPo": "Pedido de compra individual / aprovações (HTML)",
