@@ -13,7 +13,12 @@ export const sharedVisualVariants = [
   { name: "dark-narrow", scheme: "dark", width: 390, height: 844 },
   { name: "light-small", scheme: "light", width: 320, height: 900 },
 ] as const
-export type SharedVisualVariant = (typeof sharedVisualVariants)[number]
+export type SharedVisualVariant = {
+  name: string
+  scheme: "dark" | "light"
+  width: number
+  height: number
+}
 
 const directory = "/work/compact-navigation"
 const location = { directory, project: { id: "compact-project", directory } }

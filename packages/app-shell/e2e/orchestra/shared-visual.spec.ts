@@ -311,17 +311,68 @@ for (const variant of sharedVisualVariants) {
       "Original empty-search live region and combobox state. No command was executed.")
   })
 
+}
+
+for (const variant of [
+  ...sharedVisualVariants,
+  { name: "light-narrow", scheme: "light", width: 390, height: 844 },
+  { name: "dark-small", scheme: "dark", width: 320, height: 844 },
+  { name: "light-small-short", scheme: "light", width: 320, height: 844 },
+] as const) {
   test(variant.name + ": Server connection form preserves a linked recovery error", async ({ page }, info) => {
     const state = await setupSharedVisual(page, variant)
     await page.route("https://unreachable.test/**", (route) =>
       route.fulfill({ json: { healthy: false }, headers: { "access-control-allow-origin": "*" } }))
     await page.goto("/orchestra/settings?section=servers")
-    await page.getByRole("button", { name: "Add server", exact: true }).click()
+    const opener = page.getByRole("button", { name: "Add server", exact: true })
+    await opener.click()
     const dialog = page.getByRole("dialog", { name: "Add server", exact: true })
     const address = dialog.getByLabel("Server address", { exact: true })
     await expect(address).toBeEditable()
+    await expect(address).toBeFocused()
     await expect(dialog.getByLabel("Username (optional)", { exact: true })).toBeEditable()
     await expect(dialog.getByLabel("Password (optional)", { exact: true })).toBeEditable()
+
+    const assertFrame = async (checkpoint: string) => {
+      const geometry = await dialog.evaluate((element) => {
+        const container = element.closest<HTMLElement>('[data-slot="dialog-container"]')!
+        const box = container.getBoundingClientRect()
+        const heading = element.querySelector<HTMLElement>('[data-slot="dialog-header-title"]')!
+        return {
+          frame: { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width },
+          radius: getComputedStyle(container).borderTopLeftRadius,
+          warning: getComputedStyle(document.body).getPropertyValue("--orchestra-warning").trim(),
+          warm: getComputedStyle(document.body).getPropertyValue("--orchestra-warm").trim(),
+          headingSize: getComputedStyle(heading).fontSize,
+          clientWidth: element.clientWidth, scrollWidth: element.scrollWidth,
+          controls: [...element.querySelectorAll<HTMLElement>("input, button")].map((control) => {
+            const rect = control.getBoundingClientRect()
+            return { tag: control.tagName, name: control.getAttribute("id") ?? control.textContent,
+              left: rect.left, right: rect.right, height: rect.height }
+          }),
+        }
+      })
+      await info.attach("server-" + checkpoint + "-" + variant.name + "-geometry", {
+        contentType: "application/json", body: JSON.stringify({ variant, geometry }, null, 2),
+      })
+      expect(Math.abs(geometry.frame.width - Math.min(480, variant.width - 32))).toBeLessThanOrEqual(1)
+      expect(geometry.frame.left).toBeGreaterThanOrEqual(15)
+      expect(geometry.frame.right).toBeLessThanOrEqual(variant.width - 15)
+      expect(geometry.frame.top).toBeGreaterThanOrEqual(15)
+      expect(geometry.frame.bottom).toBeLessThanOrEqual(variant.height - 15)
+      expect(geometry.radius).toBe("16px")
+      expect(geometry.headingSize).toBe("20px")
+      expect(geometry.warning).not.toBe("")
+      expect(geometry.warning).toBe(geometry.warm)
+      expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth + 1)
+      expect(geometry.controls).toHaveLength(6)
+      for (const control of geometry.controls) {
+        expect(control.left).toBeGreaterThanOrEqual(geometry.frame.left)
+        expect(control.right).toBeLessThanOrEqual(geometry.frame.right)
+        if (variant.width < 640) expect(control.height).toBeGreaterThanOrEqual(44)
+      }
+    }
+
     await expect(address).toBeFocused()
     const geometry = await dialog.evaluate((element) => {
       const frame = element.closest<HTMLElement>('[data-slot="dialog-container"]')!
@@ -347,7 +398,7 @@ for (const variant of sharedVisualVariants) {
     await info.attach("server-dialog-native-geometry", { body: JSON.stringify(geometry, null, 2), contentType: "application/json" })
     await captureSharedState(page, info, variant, state, "error-recovery", "server-connection-form",
       "Original Settings server dialog from desktop-connection-recovery.spec.ts. The global fatal ErrorPage and desktop restart/export-logs remain uncaptured.")
-
+    await assertFrame("ready")
     await address.fill("https://unreachable.test")
     await dialog.getByLabel("Server name (optional)", { exact: true }).fill("Unreachable")
     await dialog.getByRole("button", { name: "Add server", exact: true }).click()
@@ -356,6 +407,10 @@ for (const variant of sharedVisualVariants) {
     await expect(address).toHaveAccessibleDescription("Could not connect to server")
     await captureSharedState(page, info, variant, state, "error-recovery", "server-health-failure",
       "Explicit unreachable health reply, original validation and recovery dialog. No authenticated server was added and no global fatal-boundary coverage is claimed.")
+    await assertFrame("error")
+    await dialog.getByRole("button", { name: "Cancel", exact: true }).click()
+    await expect(dialog).toHaveCount(0)
+    await expect(opener).toBeFocused()
   })
 }
 

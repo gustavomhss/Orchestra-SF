@@ -476,10 +476,17 @@
   color: var(--v2-text-text-base);
 }
 
+/* DialogV2 keeps the server frame on its explicit container class. */
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] [data-slot="dialog-container"].settings-v2-server-dialog {
-  width: 480px;
-  max-width: calc(100vw - 32px);
-  max-height: calc(100dvh - 32px);
+  --server-dialog-width: 480px;
+  --server-dialog-inset: 16px;
+  --server-dialog-padding: 24px;
+  --server-dialog-touch: 44px;
+  --server-dialog-leading: 1.4;
+  --server-dialog-tracking: -0.025em;
+  width: var(--server-dialog-width);
+  max-width: calc(100vw - var(--server-dialog-inset) * 2);
+  max-block-size: calc(100dvh - var(--server-dialog-inset) * 2);
   height: auto;
   border-radius: var(--orchestra-radius-xl);
   align-items: stretch;
@@ -488,11 +495,13 @@ html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] [data
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-content"] {
   align-items: stretch;
   width: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
 }
 
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-header"] {
   align-items: center;
-  padding: 24px 24px 16px;
+  padding: var(--server-dialog-padding) var(--server-dialog-padding) var(--server-dialog-inset);
 }
 
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-body"] {
@@ -501,12 +510,14 @@ html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .sett
   min-width: 0;
   flex-direction: column;
   align-items: stretch;
-  padding: 24px;
+  padding: var(--server-dialog-padding);
   overflow-y: auto;
 }
 
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-footer"] {
-  padding: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: var(--server-dialog-padding);
 }
 
 .settings-v2-server-dialog-label {
@@ -521,33 +532,46 @@ html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .sett
   font-weight: 440;
   line-height: 1.5;
   color: var(--v2-state-fg-danger);
+  overflow-wrap: anywhere;
 }
 
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-header-title"] {
   font-family: var(--mx-emphasis, var(--orchestra-font-family-sans));
   font-size: var(--orchestra-font-size-2xl);
   font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -.025em;
+  line-height: var(--server-dialog-leading);
+  letter-spacing: var(--server-dialog-tracking);
+  overflow-wrap: anywhere;
 }
+
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"] {
-  min-block-size: 44px;
-  padding-inline: 16px;
+  min-block-size: var(--server-dialog-touch);
+  padding-inline: var(--server-dialog-inset);
   font-size: var(--orchestra-font-size-md);
   border-radius: var(--orchestra-radius-md);
 }
+
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"][data-variant="contrast"] {
   background: var(--mx-primary);
   color: var(--mx-primary-text);
 }
+
 html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-component="button-v2"]:focus-visible {
   outline: 2px solid var(--mx-blue);
   outline-offset: 2px;
 }
-@media (max-width: 479px) {
-  .settings-v2-server-credentials {
+
+@media (max-width: 640px) {
+  .settings-v2-server-dialog .settings-v2-server-credentials {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .settings-v2-server-dialog :is([data-component="text-input-v2"], [data-component="button-v2"]) {
+    min-block-size: var(--server-dialog-touch);
+  }
+}
+
+@media (max-width: 479px) {
   html[data-color-scheme] body[data-new-layout] [data-component="dialog-v2"] .settings-v2-server-dialog [data-slot="dialog-footer"] {
     flex-direction: column-reverse;
     align-items: stretch;
