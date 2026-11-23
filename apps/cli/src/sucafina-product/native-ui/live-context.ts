@@ -8,6 +8,7 @@
  * This module is inert until 162 installs it in the original host's services.
  */
 import { Schema } from "effect"
+import { types } from "node:util"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
@@ -49,6 +50,8 @@ export type SfLiveContextSources = Readonly<{
    * evidence leaves each operation unavailable, rather than optimistic ready.
    */
   operational?: (request: Request, stamp: SfContextStamp) => Promise<readonly SfLiveOperationalObservation[]>
+  /** Optional installation-private native owner; never an authority or a replacement payload. */
+  contextObservation?: (request: Request, read: () => Promise<void>) => Promise<boolean>
   /** Original domain/asset observations for canonical internal page reads; falls back to operational when absent. */
   pageOperational?: (request: Request, stamp: SfContextStamp) => Promise<readonly SfLiveOperationalObservation[]>
 }>
@@ -277,10 +280,13 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
 
     const readOperations = async (): Promise<ReadonlyMap<string, SfOperationAvailability> | undefined> => {
       if (procurementRequestPage) return operational([])
-      const actual = pageRequest && source.pageOperational
+      const read = async () => pageRequest && source.pageOperational
         ? await source.pageOperational(request, admittedStamp)
         : source.operational ? await source.operational(request, admittedStamp) : []
-      if (request.signal.aborted || !stillCurrent()) return undefined
+      // External F01 was already validated, including its canonical binding query.
+      // Each pass owns a fresh scope; all three admissions remain outside it.
+      const actual = internal ? await read() : await observeContextOperations(source, request, read)
+      if (!actual || request.signal.aborted || !stillCurrent()) return undefined
       // These two settings operations are local-operator UI69 producers. Mode
       // comes from the current original admission, never request metadata.
       return operational(actual.filter((item) => admittedMode === "local-operator" ||
@@ -325,4 +331,40 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     readContext: (request: Request, expected: Binding) => read(request, expected, false),
     readRequestContext: (request: Request, expected: Binding) => read(request, expected, true),
   })
+}
+
+/** The owner brackets the original read; only this boundary can retain its result. */
+async function observeContextOperations(
+  source: SfLiveContextSources,
+  request: Request,
+  read: () => Promise<readonly SfLiveOperationalObservation[]>,
+): Promise<readonly SfLiveOperationalObservation[] | undefined> {
+  if (types.isProxy(source) || Object.getPrototypeOf(source) !== Object.prototype) return read()
+  const descriptor = Object.getOwnPropertyDescriptor(source, "contextObservation")
+  const operation = Object.getOwnPropertyDescriptor(source, "operational")
+  if (!descriptor || !Object.hasOwn(descriptor, "value") || typeof descriptor.value !== "function" ||
+    !operation || !Object.hasOwn(operation, "value") || typeof operation.value !== "function") return read()
+  const observer: NonNullable<SfLiveContextSources["contextObservation"]> = descriptor.value
+  const current = () => Object.getPrototypeOf(source) === Object.prototype &&
+    Object.getOwnPropertyDescriptor(source, "contextObservation")?.value === observer &&
+    Object.getOwnPropertyDescriptor(source, "operational")?.value === operation.value
+  let open = true
+  let calls = 0
+  let completed = false
+  let failed = false
+  let captured: readonly SfLiveOperationalObservation[] | undefined
+  try {
+    const accepted = await observer(request, async () => {
+      calls++
+      if (!open || calls !== 1 || failed || request.signal.aborted || !current()) { failed = true; return }
+      try {
+        const value = await read()
+        if (!open || calls !== 1 || failed || request.signal.aborted || !current()) { failed = true; return }
+        captured = structuredClone(value)
+        completed = true
+      } catch { failed = true }
+    })
+    return accepted === true && calls === 1 && completed && !failed && !request.signal.aborted && current()
+      ? captured : undefined
+  } finally { open = false }
 }

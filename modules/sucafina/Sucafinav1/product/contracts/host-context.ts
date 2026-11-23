@@ -110,6 +110,8 @@ export type SfHostRuntime = {
   services?: () => SfHostServices | undefined
 }
 export type CreateSfHostRuntime = (input: {
+  /** Private native scope for one external F01 observation. The host owns the work and its payload. */
+  contextObservation?: (request: Request, read: () => Promise<void>) => Promise<boolean>
   /** Host-private observation from the installation which actually mounts the producers. */
   operational?: (request: Request, stamp: import("@orchestra/schema/sucafina/context").SfContextStamp) => Promise<readonly import("@orchestra/schema/sucafina/context").SfOperationAvailability[]>
   /** Exact installed binding identity; not an authorization or a serialized readiness claim. */
