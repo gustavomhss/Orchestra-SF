@@ -381,7 +381,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   ])
   expect(afterPreview).toEqual(before)
   expect(previewTokens).toEqual(beforeTokens)
-  await capture?.(page, info, { surface: "UI55", state: "original-preview", evidence: "Original scanned import preview; independent export and version tokens prove no domain changes.", attributes: { "data-sf-phase": "reviewing" }, focus: ".sf-files-preview" })
+  await capture?.(page, info, { surface: "UI55", state: "original-preview", evidence: "Original scanned import preview; independent export and version tokens prove no domain changes.", attributes: { "data-sf-phase": "reviewing" }, focus: '.sf-files-section[aria-label="Item and field changes"]' })
   if (capture) {
     const previewPage = await page.context().newPage()
     try {
@@ -392,8 +392,8 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
       const reread = await readReference(previewPage, () => previewRoot.locator(".sf-files-fields")
         .getByRole("button", { name: "Refresh receipt", exact: true }).click())
       expect(reread).toEqual(detail)
-      await expect(previewRoot.locator(".sf-files-preview")).toBeVisible()
-      await capture(previewPage, info, { surface: "UI56", state: "original-manifest-preview", evidence: "Independent native preview route re-read the exact original manifest; no Apply was invoked.", focus: ".sf-files-preview" })
+      await expect(previewRoot.getByRole("region", { name: "Item and field changes", exact: true })).toBeVisible()
+      await capture(previewPage, info, { surface: "UI56", state: "original-manifest-preview", evidence: "Independent native preview route re-read the exact original manifest; no Apply was invoked.", focus: '.sf-files-section[aria-label="Item and field changes"]' })
     } finally { await previewPage.close() }
   }
   const applies: Request[] = []
