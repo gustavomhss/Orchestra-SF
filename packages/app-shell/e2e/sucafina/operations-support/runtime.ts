@@ -4,6 +4,7 @@ import { expect } from "@playwright/test"
 import type { APIResponse, Page, Request, Route, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/context"
+import { forwardError } from "./forward-error"
 
 export type Account = { baseURL: string; principal: string; origin: string; projectId: string; installationId: string }
 type EnrolledAccount = Omit<Account, "origin"> & { enrollments: Record<string, string> }
@@ -145,7 +146,7 @@ export async function forwardOnce(page: Page, endpoint: string | ((url: URL) => 
       }
       producer.resolve({ response, request })
     } catch (error) {
-      producer.reject(error)
+      producer.reject(forwardError(error, method, request.url()))
       await route.abort("failed").catch(() => undefined)
     } finally { finished.resolve() }
   }
