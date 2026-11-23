@@ -4,15 +4,15 @@
 
 **RUNBOOK, BACKUP/CLONE E CHECKPOINT LÓGICO MICROSOFT INTEGRADOS; CONTROLES DE COMPONENTE VERIFICADOS; ENSAIO INSTALADO NÃO EXECUTADO.** A sessão Astra desta frente coordena G10 e, pelo mandato ampliado de Gustavo, a integração, Release e obtenção das reservas. O operador do backup/host, o observador independente dos efeitos e o responsável pelo corte ainda precisam ser confirmados para o ambiente reservado. Esta preparação não registra aprovação de janela nem autoriza virada de produção.
 
-O [handoff](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md) permite a qualificação em ambientes isolados autorizados. Depois do tar G07 verificado, G08 e G10 podem avançar em paralelo com processos, dados, sessões e escritores separados. O candidato final deve ser o mesmo SHA/árvore e o tar deve ter o mesmo SHA-256 nos dois ambientes.
+O [handoff](https://github.com/gustavomhss/Orchestra-SF/blob/c02f329d48d37e2f6296154978cd8a7cf80bcb64/docs/qa/sucafina/astra-go-live-handoff.md) permite a qualificação em ambientes isolados autorizados. A [orientação vigente do usuário](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087839884) autoriza usar a VM Orchestra-SF existente (`orchsf-vm`), mantendo a VM Claw separada e fora das alterações. Nesta rota, G10 começa no mesmo host depois de concluir e agregar G08 e preservar suas evidências. Candidato SHA/árvore e tar SHA-256 continuam os mesmos. Não solicitar ou provisionar VMs/cotas adicionais por padrão, nem reaplicar a IaC de QA ao RG/rede compartilhados. Antes de parar ou substituir o piloto Compras, preservar seus dados, configuração, instalação e evidências.
 
 Referência de leitura: `dev@79912446753af5bb291fc2581543732eb4c83057`, árvore `5c32cd72537799632e7d2583c1775df1d88b8780`. Não é o pin final da Release.
 
 ## Pendência operacional desta edição
 
-Dono da coordenação e execução do ensaio: Astra go-live. Não há recibo instalado novo de backup/corte/retomada/rollback. O [inventário Azure 45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414) passou login e as 12 observações; o bloqueio anterior de configuração está resolvido. A reserva, os acessos ao host/clone, o release R retido, a chave utilizável e o observador externo ainda precisam ser materializados com os responsáveis pelos recursos.
+Dono da coordenação e execução do ensaio: Astra go-live. Não há recibo instalado novo de backup/corte/retomada/rollback. O [inventário Azure 45061014414](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45061014414) passou login e as 12 observações; o bloqueio anterior de configuração está resolvido. A autorização de uso da `orchsf-vm` está registrada. Antes das invocações, materializar a reserva com VM/janela/autorização, confirmar o release R retido, a chave utilizável e o observador externo. A recuperação independente ainda precisa de destino e canal privado executáveis; a rota Actions atual só restaura fixtures de componente. Essa pendência específica não impede a preparação dos demais gates ou o uso já autorizado do host.
 
-O tar G07 deve ser o mesmo usado em G08; a execução paralela começa apenas depois da verificação e em reservas separadas. O observador de restart #697 pertence à cadeia AZ02/G08; ele não substitui o ensaio de recuperação nem comanda reinício. G10 continua exigindo backup real, prova de leitura da chave, efeito posterior ao checkpoint, registro monotônico independente, corte, restore/restart/retry sem duplicação e rollback R com recibos próprios. Os negativos e as medições RPO/RTO deste runbook permanecem obrigatórios.
+O tar G07 deve ser o mesmo usado em G08. Após encerrar G08 no host existente, revalidar o estado, a reserva e os vínculos de G10 antes do checkpoint. O observador de restart #697 pertence à cadeia AZ02/G08; ele não substitui o ensaio de recuperação nem comanda reinício. G10 continua exigindo backup real, prova de leitura da chave, efeito posterior ao checkpoint, registro monotônico independente, corte, restore/restart/retry sem duplicação e rollback R com recibos próprios. Os negativos e as medições RPO/RTO deste runbook permanecem obrigatórios.
 
 ## Adaptador implementado nesta frente
 
@@ -24,7 +24,7 @@ O artefato [14755630213](https://github.com/gustavomhss/Orchestra-SF/actions/run
 
 A origem instalada **R** é verificada por `current_source()`, `check_rollback_release(R)` e `.a7-source.json`, separadamente do destino **C/T/tar** fornecido por G07. Assim o backup anterior ao corte não exige instalar C antes. Se a origem já for C, tar e manifesto precisam coincidir exatamente com G07. O registro externo permanece fora das duas raízes restauradas.
 
-O CLI real exige Linux x64/root, lock/preflight do instalador, serviço parado, Caddy em manutenção, volume de dados e Azure IMDS compatíveis com a reserva privada. A drenagem dos demais escritores é uma atestação do operador vinculada por hash; inatividade do serviço e bytes da instalação são observações. A presença/leitura da chave no inventário **não prova decriptação**.
+O CLI real exige Linux x64/root, lock/preflight do instalador, serviço parado, Caddy em manutenção, volume de dados e Azure IMDS compatíveis com a reserva privada. O checkpoint aceita `disposable:false` para representar honestamente a origem existente autorizada; `disposable:true` continua admitido. A ação `verify-clone` exige `disposable:true` e VM distinta. Valores ausentes ou de outro tipo são recusados; essa seleção não dispensa autorização, expiração ou qualquer preflight. A drenagem dos demais escritores é uma atestação do operador vinculada por hash; inatividade do serviço e bytes da instalação são observações. A presença/leitura da chave no inventário **não prova decriptação**.
 
 Os recibos operacionais `orchestra-sf.teams-checkpoint.v2` e `orchestra-sf.teams-clone-integrity.v3` conservam `releaseQualified:false`, `businessRecovery:NOT_RUN` e `keyDecryption:NOT_RUN`. O censo cobre as raízes observadas, não uma lista predefinida de todos os bancos possíveis; o operador deve conciliar esse inventário com todas as classes e destinos de dados da instalação.
 
@@ -84,7 +84,7 @@ Os componentes de recuperação e o novo adaptador backup/clone estão em dev. O
 | Entrada verificável | Responsável a confirmar | Bloqueio quando ausente |
 | --- | --- | --- |
 | Candidato C, árvore T, tar H e recibos G05/G06/G07; ACKs de Migração e Release | Migração + Release | Não iniciar o ensaio final |
-| Reserva do host Linux x64 descartável, janela do ensaio, operador, limites de acesso e isolamento de G08 | Dono QA/host | Não instalar, parar serviço ou modificar dados |
+| Reserva da origem Linux x64 existente autorizada (`disposable:false` no checkpoint), janela do ensaio, operador, limites de acesso e encerramento de G08 com evidências preservadas | Astra go-live + dono QA/host | Materializar e conferir a reserva antes da invocação; não pedir novamente autorização de uso do host |
 | Candidato anterior R já instalado e retido em `/opt/orchestra-sf/releases/<R>`, com `.a7-source.json`, manifesto, roster, hashes e permissões verificados; tar original preservado | Release | O rollback não instala R a partir do tar: verificar a presença do release retido antes de selecionar C |
 | Compatibilidade de R com o estado produzido por C, revisada independentemente | Revisor + operador | Rollback de código bloqueado |
 | Inventário dos dados, donos por Team, mapeamentos, colisões e quarentena | Migração + dono dos dados | Não atribuir dados ao primeiro Team/default |
@@ -142,7 +142,7 @@ O efeito de Decisions já exercitado em #574 é um candidato concreto para a eta
 
 ### Backup e clone de integridade
 
-Executar apenas no host e clone reservados, com os arquivos privados observados. A reserva de checkpoint vincula `sourceRelease` R e `candidate` C/T; a reserva do clone conserva a mesma origem e aponta outra VM. Não publicar reservas, inventários, backup, chave ou configuração em artefatos públicos.
+Executar apenas no host e clone reservados, com os arquivos privados observados. A reserva de checkpoint da origem existente declara `disposable:false` e vincula `sourceRelease` R e `candidate` C/T; a rota atual de clone conserva a mesma origem, exige `disposable:true` e aponta outra VM. Essa exigência Azure pertence ao executor atual: a obrigação funcional é provar recuperação independente, sem implicar compra de outra VM. Ainda não há transferência operacional do backup original para Actions. Não publicar reservas, inventários, backup, chave ou configuração em artefatos públicos.
 
 ~~~sh
 python3 -B sf/azure/recovery/teams-checkpoint.py checkpoint \

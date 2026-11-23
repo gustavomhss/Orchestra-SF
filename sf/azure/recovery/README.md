@@ -48,7 +48,10 @@ creating the file does not grant authority. Its schema is
 `orchestra-sf.g10-reservation.v1` and its common fields are:
 
 - `action`: exactly `checkpoint` or `verify-clone`.
-- `environment`: `isolated-qa`; `disposable`: true; `productionCutover`: false.
+- `environment`: `isolated-qa`; `productionCutover`: false.
+- `disposable`: an explicit JSON boolean. For `checkpoint`, use `false` for an
+  existing authorized source or `true` for a disposable source. For `verify-clone`,
+  only `true` is admitted. Missing values, null, numbers and strings are refused.
 - `authorizationRef`, `authorizedBy`, `expiresAtUtc`: the actual authorization and
   expiry of this reserved operation, not values supplied by a synthetic test.
 - `vmResourceId`: exact Azure resource ID of the host executing this action.
@@ -59,6 +62,12 @@ creating the file does not grant authority. Its schema is
   verifies this current source. A clone reservation must preserve the same source
   binding from the checkpoint receipt. After cutover, source R may equal C only
   with the exact G07 tar and manifest. No prior code selection is needed to back up R.
+
+An existing source marked `disposable: false` follows the same authorization,
+expiry, actual VM identity, install lock and maintenance preflight. This field
+neither proves writer quiescence nor authorizes deletion of existing data.
+Preserve its data, configuration, installation and prior qualification evidence
+before any authorized service replacement.
 
 For `checkpoint`, also provide `externalRegisterPath`, `keyFile`, `writesBlocked`,
 `taskRelayDrained` and `writerFenceEvidenceSha256`. The independent monotonic
@@ -107,8 +116,20 @@ nonempty clone destinations. Limits bound member count, manifest size and expand
 bytes. A failed restore removes only its own staging directory and does not change
 the source. A service remains stopped throughout the operational path.
 
-The `go-live-recovery-controls` workflow runs the exact source SHA on hosted Linux.
+The `go-live-recovery-controls` workflow runs the exact source SHA on hosted Linux
+x64 as root for the private-file admission controls. Only the receipt provenance
+fields are preserved through sudo; the component receipt remains `0600` and its
+ownership is returned to the job runner for upload, including after a failed test.
 It creates real temporary SQLite databases, attachments and private directories;
 tests restore bytes and real filesystem fault cases; and runs the canonical guards.
-This proves the adapter's file mechanism. It does not claim Azure IMDS, real host
-preflight, key decryption, installed Teams or final G10 acceptance.
+Admission controls read real private reservation files, with Azure IMDS explicitly
+replaced by a component fixture. They check both actions, exact boolean types,
+authorization, expiry, VM and release bindings. A refusing installer-preflight
+fixture verifies that an existing source still reaches the lock and mandatory
+preflight before backup writes. This proves component behavior. It does not claim
+Azure IMDS, real host preflight, key decryption, installed Teams or final G10 acceptance.
+
+The component workflow has no operational channel for receiving and restoring a
+host's original private backup. Independent restoration remains an operational
+obligation; allowing an existing checkpoint source does not implement that channel
+or turn a fixture restore into its evidence.

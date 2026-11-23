@@ -387,7 +387,9 @@ def admission(file, command):
             refuse("reservation exceeds the bounded format")
         reservation = json.loads(reservation_bytes)
     if reservation.get("schema") != "orchestra-sf.g10-reservation.v1" or \
-       reservation.get("environment") != "isolated-qa" or reservation.get("disposable") is not True or \
+       reservation.get("environment") != "isolated-qa" or \
+       not (reservation.get("disposable") is True or \
+            (command == "checkpoint" and reservation.get("disposable") is False)) or \
        reservation.get("action") != command or not reservation.get("authorizationRef") or \
        not reservation.get("authorizedBy") or reservation.get("productionCutover") is not False:
         refuse("action-bound isolated QA reservation required")
