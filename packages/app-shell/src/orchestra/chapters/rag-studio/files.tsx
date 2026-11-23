@@ -1,4 +1,4 @@
-import { createEffect, For, Show } from "solid-js"
+import { createEffect, For, on, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
@@ -35,35 +35,40 @@ export function Files(props: ChapterPageProps) {
       })
       .catch(() => setState({ openError: true }))
 
+  let sourceRead = 0
   const load = (quiet: boolean) => {
+    const directory = props.directory
+    const started = ++sourceRead
     if (!quiet) setRoster("status", "loading")
     return sdk()
-      .orchestra.ragStudio.sources({ location: location() })
+      .orchestra.ragStudio.sources({ location: { directory } })
       .then((result) => {
+        if (started !== sourceRead || props.directory !== directory) return
         setRoster({
           status: "ready",
           sources: result.data.map((row) => ({ id: row.id, path: row.path, status: row.status })),
         })
         if (quiet && roster.openId) void openSource(roster.openId)
       })
-      .catch(() => setRoster({ status: "error", sources: [] }))
+      .catch((error: unknown) => {
+        if (started !== sourceRead || props.directory !== directory) return
+        console.error(error)
+        setRoster({ status: "error", sources: [] })
+      })
   }
 
-  createEffect(() => {
-    props.directory
+  createEffect(on(() => props.directory, () => {
     setState({ path: "", refusal: "", openError: false, openPath: "", text: "", cuts: [] })
     setRoster("openId", "")
     void load(false)
-  })
+  }))
 
-  createEffect(() => {
-    if (roster.revision === 0) return
-    void load(true)
-  })
+  createEffect(on(() => roster.sourceRetry, () => void load(false), { defer: true }))
+  createEffect(on(() => roster.revision, () => void load(true), { defer: true }))
 
   return (
     <section>
-      <h3 class="mx-section">{language.t("orchestra.ragStudio.files")}</h3>
+      <h3 class="mx-section" data-rag-files-heading tabindex="-1">{language.t("orchestra.ragStudio.files")}</h3>
       <form
         class="rag-form"
         onSubmit={(event) => {
@@ -120,11 +125,6 @@ export function Files(props: ChapterPageProps) {
       <Show when={roster.status === "loading"}>
         <div class="mx-empty" role="status">
           {language.t("orchestra.ragStudio.loading")}
-        </div>
-      </Show>
-      <Show when={roster.status === "error"}>
-        <div class="mx-empty" role="alert">
-          {language.t("orchestra.ragStudio.error")}
         </div>
       </Show>
       <Show when={roster.status === "ready" && roster.sources.length === 0}>

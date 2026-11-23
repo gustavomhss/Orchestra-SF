@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-23",
+  "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+  "teamsCommit": "824ad6efa248e9130c00eb76830fc40106e91c04",
+  "baseline": {
+    "snapshot": "452695d76384787bd3045222d6fe67a85c5932dc",
+    "run": 45205412569,
+    "job": 137799665874,
+    "tests": {
+      "passed": 12,
+      "failed": 1
+    },
+    "metrics": {
+      "readyMs": 1093.0383359999978,
+      "inputMs": 22.7417390000046,
+      "recoveryReadyMs": 161.79233099999692
+    }
+  },
+  "after": {
+    "snapshot": "3a992a495773f62c4655cdd1b3d64a16fa127561",
+    "run": 45206772464,
+    "job": 137804510604,
+    "tests": {
+      "passed": 13,
+      "failed": 0
+    },
+    "metrics": {
+      "readyMs": 1009.631475999995,
+      "inputMs": 19.38814600000478,
+      "recoveryReadyMs": 150.16141800000332
+    }
+  },
+  "unitSelectionError": {
+    "snapshot": "fc7e9f3b536512011180c4ad4d3dafbba35c53b7",
+    "run": 45206814417,
+    "testsExecuted": 0,
+    "reason": "Bun interpreted the selection as a filter; reissued with explicit ./ path."
+  },
+  "unitSnapshot": "b201c7aef7f4d951d977b2e076a26e6f90e04de9",
+  "unit": {
+    "snapshot": "b201c7aef7f4d951d977b2e076a26e6f90e04de9",
+    "run": 45207802862,
+    "job": 137808151689,
+    "conclusion": "success",
+    "tests": {
+      "passed": 24,
+      "failed": 0,
+      "assertions": 231
+    }
+  }
+}

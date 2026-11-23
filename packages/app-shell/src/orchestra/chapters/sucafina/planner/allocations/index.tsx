@@ -434,6 +434,11 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
       fields: value ? reviewFields(value) : [],
     }
   }
+  const reviewScope = (intent: Intent): string =>
+    intent.kind === "common" ? language.t("sf.cap21.common-scope")
+      : rows(intent.collection).find((row) => row.id === intent.id)?.name
+        || selectedDraft()?.name
+        || language.t(intent.collection === "entities" ? "sf.cap21.entity" : "sf.cap21.allocation")
   const reviewTitle = (): Copy =>
     screen.intent?.kind === "common" ? "sf.cap21.review-common"
       : screen.intent?.kind === "delete" ? "sf.cap21.review-delete" : "sf.cap21.review-save"
@@ -554,7 +559,9 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                 event.preventDefault()
                 prepare("save", value().collection, value().id)
               }}>
-                <h2>{language.t(value().collection === "entities" ? "sf.cap21.action.create-entity" : "sf.cap21.action.create-allocation")}</h2>
+                <h2>{language.t(value().collection === "entities"
+                  ? value().id ? "sf.cap21.action.edit-entity" : "sf.cap21.action.create-entity"
+                  : value().id ? "sf.cap21.action.edit-allocation" : "sf.cap21.action.create-allocation")}</h2>
                 <label>
                   <span>{language.t("sf.cap21.field.name.label")}</span>
                   <input class="mx-input" required value={value().name}
@@ -621,7 +628,7 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                   operation={{
                     ref: intent.ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
                     label: { key: key(reviewTitle()) },
-                    scope: { kind: "data", text: intent.collection },
+                    scope: { kind: "data", text: reviewScope(intent) },
                   }}
                   base={revisionSnapshot()} current={revisionSnapshot()} proposed={proposedSnapshot(intent)}
                   effects={[]}

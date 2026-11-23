@@ -8,6 +8,7 @@
   --sf-team-gap: 24px;
   --sf-team-gutter: 32px;
   --sf-team-control: 44px;
+  --sf-team-control-border: color-mix(in srgb, var(--mx-dim) 64%, transparent);
   --sf-team-hairline: 1px;
   --sf-team-focus: 2px;
   --sf-team-access-width: 840px;
@@ -74,13 +75,13 @@ html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { di
   min-inline-size: 0;
   min-block-size: var(--sf-team-control);
   padding: var(--sf-team-sm) var(--sf-team-md);
-  border: var(--sf-team-hairline) solid var(--mx-line);
+  border: var(--sf-team-hairline) solid var(--sf-team-control-border);
   border-radius: var(--orchestra-radius-md);
   color: var(--mx-strong);
   background: var(--mx-soft);
   font: var(--orchestra-font-size-md)/1.5 var(--mx-sans);
 }
-.sf-team-input:hover { border-color: var(--mx-rim); }
+.sf-team-input:hover:not(:disabled) { border-color: var(--mx-dim); }
 .sf-team-input:focus-visible { outline: var(--sf-team-focus) solid var(--mx-blue); outline-offset: var(--sf-team-focus); }
 .sf-team-input[aria-invalid="true"] { border-color: var(--mx-bad); }
 .sf-team-input:disabled { opacity: .6; cursor: not-allowed; }
@@ -94,7 +95,8 @@ html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { di
   overflow-wrap: anywhere;
 }
 .sf-team-shell p[role="alert"] { color: var(--mx-bad); border-color: color-mix(in srgb, var(--mx-bad) 28%, var(--mx-line)); }
-.sf-team-administration-wrap { display: grid; gap: var(--sf-team-lg); flex: none; }
+.sf-team-administration-wrap { display: grid; gap: var(--sf-team-lg); flex: 1 0 100%; }
+.sf-team-administration-wrap:not(:has(.sf-team-administration)):not(:has([data-sf-admin-notice])) { display: contents; }
 .sf-team-administration-wrap > .mx-btn { justify-self: start; }
 .sf-team-administration, .sf-team-configuration { display: grid; gap: var(--sf-team-xl); min-inline-size: 0; }
 .sf-team-administration { padding-block-start: var(--sf-team-gap); border-block-start: var(--sf-team-hairline) solid var(--mx-line); }
@@ -147,7 +149,7 @@ html[data-color-scheme="light"] .sf-team-logo [data-sf-logo-scheme="light"] { di
 
 /* Expanded administration remains reachable even when it exceeds the chat viewport. */
 .sf-team-shell[data-sf-team-layout="chat"]:has(.sf-team-administration) { overflow-y: auto; }
-.sf-team-main-chat:has(.sf-team-administration) { overflow: visible; flex: none; }
+.sf-team-shell[data-sf-team-layout="chat"] .sf-team-main-chat:has(.sf-team-administration) { overflow: visible; flex: none; }
 .sf-team-main-chat:has(.sf-team-administration) > .sf-team-session { block-size: max(420px, 65dvh); flex: none; }
 .sf-team-dialog .mx-dialog-head { min-block-size: 0; overflow-y: auto; }
 .sf-team-dialog .mx-dialog-foot { flex: none; }

@@ -169,7 +169,8 @@ export function createTeamSessionsWorkspace(input: Readonly<{
     const purge = reason === "logout" || reason === "revoked" || reason === "principal-change"
     if (previous) {
       if (!purge) { saveDraft(); persist(previous) }
-      if (reason === "refresh" && previous.namespace) quarantine = {
+      // Keep never-submitted text in memory until the same authority is revalidated.
+      if ((reason === "refresh" || reason === "stream") && previous.namespace) quarantine = {
         context: previous.context, namespace: previous.namespace, drafts,
       }
       else quarantine = undefined

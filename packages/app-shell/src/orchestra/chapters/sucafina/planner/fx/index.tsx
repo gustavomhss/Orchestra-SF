@@ -579,7 +579,9 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   operation={{
                     ref: intent.ref as Parameters<typeof SfChangeReview>[0]["operation"]["ref"],
                     label: { key: key(intent.kind === "save" ? "sf.cap22.review-save" : "sf.cap22.review-delete") },
-                    scope: { kind: "data", text: activeVersionId() ?? "" },
+                    scope: { kind: "data", text: selectedVersion()
+                      ? selectedVersion()!.name + " · " + selectedVersion()!.year
+                      : language.t("sf.cap22.version") },
                   }}
                   base={oldSnapshot()} current={oldSnapshot()} proposed={proposed(intent)}
                   effects={[]}

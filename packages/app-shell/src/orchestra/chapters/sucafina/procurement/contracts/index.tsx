@@ -59,14 +59,14 @@ function editFields(values: SfVendorEdit, locale: string, currency: SfVendorCont
         : { kind: "text" as const, text: value === ""
           ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
           : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
-            : dataText(field === "amount" ? vendorAmountText(value, locale) + (currency ? " · " + currency : "") : String(value)) },
+            : dataText(field === "amount" ? vendorAmountText(value, locale) + (currency !== undefined && currency !== null && currency !== "" ? " · " + String(currency) : "") : String(value)) },
     }
   }).concat([{
     path: "currency", label: message("sf.u15.field.currency"),
     value: currency === undefined || currency === null
       ? { kind: "missing", reason: message("sf.u15.noCurrency") }
       : { kind: "text", text: currency === ""
-        ? { kind: "message", message: message("sf.u15.emptyValue") } : dataText(currency) },
+        ? { kind: "message", message: message("sf.u15.emptyValue") } : dataText(String(currency)) },
   }])
 }
 function safeField(row: SfVendorContract, field: keyof SfVendorContract): string {
@@ -128,7 +128,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   )
   const sourceCurrency = () => {
     const value = selectedRow()?.currency
-    return value === undefined || value === null ? t("sf.u15.noCurrency") : value === "" ? t("sf.u15.emptyValue") : value
+    return value === undefined || value === null ? t("sf.u15.noCurrency") : value === "" ? t("sf.u15.emptyValue") : String(value)
   }
   const currentVersion = () => {
     const ref = selectedRef()

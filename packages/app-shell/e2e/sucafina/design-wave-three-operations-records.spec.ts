@@ -261,7 +261,10 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText(performanceNotes)
-    await expect(surface.getByLabel("Confirm weights exceeding total allocation", { exact: true })).not.toBeChecked()
+    await expect(review.getByRole("heading", { level: 4 }).first()).toHaveText("Notes")
+    await expect(review.locator(".sf-s03-effect-details")).not.toHaveAttribute("open", "")
+    await expect(review.locator(".sf-s03-unchanged")).not.toHaveAttribute("open", "")
+    await expect(surface.getByLabel("Confirm weights exceeding total allocation", { exact: true })).toHaveCount(0)
     await scrollPageTop(page)
     await capture(page, info, "CAP16-subitem-review-top-dark-desktop-test-data")
     await reviewActions(page)
@@ -289,6 +292,96 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
       checks: ["item/sub-item hierarchy","cancel/revise retains draft","one reviewed browser command","updated same-view projection","fresh source readback","bounded internal scroll"], ...messages }, null, 2),
     contentType: "application/json",
   })
+})
+
+waveThreeTest("installed native operations · weight exceptions require fresh producer-backed consent", async ({ page, installation, owner }, info) => {
+  waveThreeTest.setTimeout(300_000)
+  expect(info.project.metadata.bundle).toBe("production")
+  const messages = observePage(page)
+  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title)
+  await loaded(page, "CAP16")
+  const surface = page.locator('[data-sf-surface="CAP16"]')
+  await surface.locator(".sf-u31-open").filter({ hasText: waveThreeData.operations.subitem }).click()
+  const detail = surface.locator("[data-sf-performance-detail]")
+  await detail.getByRole("button", { name: "Edit sub-item", exact: true }).click()
+  const editor = surface.locator("[data-sf-performance-editor]")
+  await expect(editor.getByLabel("Owner weight", { exact: true })).toHaveValue("0.4")
+  await editor.getByLabel("Owner weight", { exact: true }).fill("0.8")
+  await editor.getByLabel("Notes", { exact: true }).fill("Design test data · First allocation exception review.")
+  await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+  const review = surface.locator('[data-component="sf-change-review"]')
+  const consent = review.getByLabel("Confirm weights exceeding total allocation", { exact: true })
+  await expect(consent).toHaveCount(0)
+  const firstResponse = page.waitForResponse((response) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).pathname === installation.mount + "/dashboard" &&
+    response.request().postDataJSON()?.action === "save-sub")
+  await review.getByRole("button", { name: "Save", exact: true }).click()
+  const first = await firstResponse
+  expect(first.status()).toBe(422)
+  expect(await first.json()).toMatchObject({ ok: false, errors: ["Confirm owner and co-owner weights exceeding the total before saving."] })
+  expect(first.request().postDataJSON()).toMatchObject({ page: "IT Performance Contract", action: "save-sub",
+    confirmed: false, values: { ownerWeight: 0.8 } })
+  await expect(consent).not.toBeChecked()
+  await expect(review.getByRole("button", { name: "Save", exact: true })).toBeDisabled()
+  await expect(review.locator(".sf-u31-weight-context")).toContainText("The source rejected this change")
+  await review.getByText("Current source allocations", { exact: true }).click()
+  const source = review.locator(".sf-u31-weight-context").getByRole("region", { name: waveThreeData.operations.subitem, exact: true })
+  await expect(source).toContainText("Owner weight")
+  await expect(source.getByText("0.4", { exact: true })).toBeVisible()
+  await expect(source.getByText("0.6", { exact: true })).toBeVisible()
+  await consent.check()
+  await expect(review.getByRole("button", { name: "Save", exact: true })).toBeEnabled()
+  await page.setViewportSize({ width: 320, height: 900 })
+  await reflow(page)
+  await reviewActions(page)
+  await capture(page, info, "CAP16-weight-exception-consent-dark-320-test-data")
+
+  // Revising the proposal invalidates consent; the next command must reach the producer unconfirmed.
+  await review.getByRole("button", { name: "Revise", exact: true }).click()
+  await expect(editor.getByLabel("Owner weight", { exact: true })).toHaveValue("0.8")
+  await editor.getByLabel("Notes", { exact: true }).fill("Design test data · Revised allocation exception explicitly accepted.")
+  await editor.getByRole("button", { name: "Review changes", exact: true }).click()
+  await expect(consent).toHaveCount(0)
+  const secondResponse = page.waitForResponse((response) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).pathname === installation.mount + "/dashboard" &&
+    response.request().postDataJSON()?.action === "save-sub")
+  await review.getByRole("button", { name: "Save", exact: true }).click()
+  const second = await secondResponse
+  expect(second.status()).toBe(422)
+  expect(second.request().postDataJSON().confirmed).toBe(false)
+  await expect(consent).not.toBeChecked()
+  await consent.check()
+  const acceptedResponse = page.waitForResponse((response) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).pathname === installation.mount + "/dashboard" &&
+    response.request().postDataJSON()?.action === "save-sub")
+  await review.getByRole("button", { name: "Save", exact: true }).click()
+  const accepted = await acceptedResponse
+  expect(accepted.status()).toBe(200)
+  expect(await accepted.json()).toMatchObject({ ok: true })
+  const payload = accepted.request().postDataJSON()
+  expect(payload).toMatchObject({ confirmed: true, version: first.request().postDataJSON().version,
+    values: { ownerWeight: 0.8, notes: "Design test data · Revised allocation exception explicitly accepted." } })
+  const keys = await Promise.all([first, second, accepted].map((response) => response.request().headerValue("Idempotency-Key")))
+  expect(keys.every((value) => !!value)).toBe(true)
+  expect(new Set(keys).size).toBe(3)
+  await expect(review).toHaveCount(0)
+  await expect(detail).toContainText("Revised allocation exception explicitly accepted")
+  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title)
+  await loaded(page, "CAP16")
+  await surface.locator(".sf-u31-open").filter({ hasText: waveThreeData.operations.subitem }).click()
+  await detail.getByRole("button", { name: "Edit sub-item", exact: true }).click()
+  await expect(editor.getByLabel("Owner weight", { exact: true })).toHaveValue("0.8")
+  await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Revised allocation exception explicitly accepted.")
+  expect(messages.pageErrors).toEqual([])
+  expect(messages.consoleErrors.filter((value) =>
+    !/^Failed to load resource: the server responded with a status of 422 \(Unprocessable (Entity|Content)\)$/.test(value))).toEqual([])
+  await info.attach("native-weight-consent-evidence", { contentType: "application/json",
+    body: JSON.stringify({ source: "canonical IT Performance Contract producer", rejected: [first.status(), second.status()],
+      accepted: accepted.status(), freshIdempotencyKeys: new Set(keys).size, confirmed: [false, false, true],
+      unchangedVersionAfterRejection: payload.version === first.request().postDataJSON().version, ...messages }, null, 2) })
 })
 
 function periodURL(screen: typeof screens[number], origin: string, year: number, month: number) {

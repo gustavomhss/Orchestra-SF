@@ -86,7 +86,11 @@ export default function Inbox(props: ChapterPageProps) {
       }
       const result = await api().list({ location: location() }, { signal: controller.signal })
       if (!controller.signal.aborted) setStore({ items: result.data, loading: false })
-    })().catch(() => !controller.signal.aborted && setStore({ loading: false, failed: true }))
+    })().catch((error: unknown) => {
+      if (controller.signal.aborted) return
+      console.error(error)
+      setStore({ loading: false, failed: true })
+    })
   })
 
   const act = async (run: () => Promise<unknown>, feedback: "saved" | "sent" | "triaged") => {
@@ -269,7 +273,8 @@ export default function Inbox(props: ChapterPageProps) {
           </Show>
           <div
             class="inbox-workspace"
-            data-selected={Boolean(store.selected)}
+            data-selected={Boolean(store.selected) && visible().length > 0 && !store.failed}
+            data-has-items={visible().length > 0 && !store.failed}
             data-compact={preferences.compact}
             aria-busy={store.loading}
           >
@@ -402,17 +407,7 @@ export default function Inbox(props: ChapterPageProps) {
                 {t(preview ? "orchestra.inbox.previewLocal" : "orchestra.inbox.local")}
               </div>
             </div>
-            <Show
-              when={selected()}
-              keyed
-              fallback={
-                <div class="inbox-empty inbox-idle">
-                  <InboxMark />
-                  <h2>{t("orchestra.inbox.select")}</h2>
-                  <p>{t("orchestra.inbox.selectBody")}</p>
-                </div>
-              }
-            >
+            <Show when={!store.failed && selected()} keyed>
               {(item) => (
                 <InboxDetail
                   item={item}

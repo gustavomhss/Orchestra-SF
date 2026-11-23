@@ -1,3 +1,4 @@
+import { batch } from "solid-js"
 import { createStore } from "solid-js/store"
 
 export type SourceStatus = "not_yet_read" | "read" | "failed"
@@ -8,6 +9,8 @@ export const [roster, setRoster] = createStore({
   sources: [] as Array<{ id: string; path: string; status: SourceStatus }>,
   openId: "",
   revision: 0,
+  sourceRetry: 0,
+  pipelineRetry: 0,
   embeddingModel: "",
   pipelineKnown: false,
   pipelineFailed: false,
@@ -27,4 +30,16 @@ export function statusTone(status: SourceStatus) {
 
 export function touchRoster() {
   setRoster("revision", (value) => value + 1)
+}
+
+// Retry only the reads that failed; successful pipeline edits and unsent form input stay local.
+export function retryReads() {
+  batch(() => {
+    if (roster.status === "error") {
+      setRoster({ status: "loading", sourceRetry: roster.sourceRetry + 1 })
+    }
+    if (roster.pipelineFailed) {
+      setRoster({ pipelineKnown: false, pipelineFailed: false, pipelineRetry: roster.pipelineRetry + 1 })
+    }
+  })
 }

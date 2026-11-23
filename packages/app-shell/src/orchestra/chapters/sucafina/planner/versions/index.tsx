@@ -394,6 +394,12 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         const selected = records().find((item) => item.id === ref)
         if (selected) go("detail", { versionRef: selected.id, year: selected.year })
       }}
+      rowActionContext={(item) => (
+        <div class="sf-u46-action-context">
+          <bdi>{item.name}</bdi>
+          <span>{item.year} · {copy.t(key(item.official ? "sf.u46.officialState" : item.locked ? "sf.u46.locked" : "sf.u46.draft"))}</span>
+        </div>
+      )}
       rowActions={(item) => ([
         { id: "copy", labelKey: key("sf.u46.copy"), tone: "secondary" as const, disabled: !allowed(item, "copy"), busy: screen.busy },
         { id: item.locked ? "unlock" : "lock", labelKey: key(item.locked ? "sf.u46.unlock" : "sf.u46.lock"),

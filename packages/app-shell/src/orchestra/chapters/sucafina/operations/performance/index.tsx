@@ -578,10 +578,10 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         <details class="sf-u31-source">
           <summary>{t("sf.u31.sourceAllocations")}</summary>
           <p class="sf-u31-caption">{t("sf.u31.design.weightHint")}</p>
-          <For each={items()}>{(item) => <section class="sf-u31-weight-record">
+          <For each={items()}>{(item) => <section class="sf-u31-weight-record" aria-label={text(item.name) || t("sf.common.unavailable")}>
             <h4><bdi>{text(item.name) || t("sf.common.unavailable")}</bdi></h4>
             <SfReviewFieldList fields={weightFields(editItem(item))} />
-            <For each={item.subs || []}>{(sub) => <section class="sf-u31-weight-record">
+            <For each={item.subs || []}>{(sub) => <section class="sf-u31-weight-record" aria-label={text(sub.label) || t("sf.common.unavailable")}>
               <h5><bdi>{text(sub.label) || t("sf.common.unavailable")}</bdi></h5>
               <SfReviewFieldList fields={weightFields(editSub(reference(item.id) || "", sub))} />
             </section>}</For>
@@ -883,7 +883,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                         binding: { kind: "catalog-command", operationId: opId[editing.command],
                           version: { kind: "record", expectedVersion: store.cas! },
                           confirmation: weightsRequired() && store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
-                      : { kind: "blocked", labelKey: key("sf.common.unavailable"),
+                      : { kind: "blocked", labelKey: key(weightsRequired() ? "sf.common.save" : "sf.common.unavailable"),
                         reasons: [labelMessage(weightsRequired() ? "sf.u31.confirmWeights" : "sf.common.unavailable")] }}
                     state={store.uncertain ? "outcome-unknown" : "ready"}
                     busy={store.busy} confirmationContext={<WeightConfirmation />}
@@ -917,7 +917,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                       binding: { kind: "catalog-command", operationId: opId[target().kind],
                         version: { kind: "record", expectedVersion: store.cas! },
                         confirmation: weightsRequired() && store.confirmedWeights ? "producer-confirmed-field" : "presentation-only" } }
-                    : { kind: "blocked", labelKey: key("sf.common.unavailable"),
+                    : { kind: "blocked", labelKey: key(weightsRequired() ? target().kind === "delete-item" ? "sf.u31.deleteItem" : "sf.u31.deleteSub" : "sf.common.unavailable"),
                       reasons: [labelMessage(weightsRequired() ? "sf.u31.confirmWeights" : "sf.common.unavailable")] }}
                   state={store.uncertain ? "outcome-unknown" : "ready"}
                   busy={store.busy} confirmationContext={<WeightConfirmation />}
