@@ -13,17 +13,17 @@ export async function enterFinalMemorySurface(
   page: Page, owner: Owner, installation: DesignInstallation, href: string, title: string, area: Area,
   beforeReady?: () => Promise<void>,
 ) {
-  const readers: { label: string; observed: ReturnType<typeof observeFinalGet> }[] = []
-  if (area === "UI61" || area === "UI62" || area === "UI63")
-    readers.push({ label: "projection.cases", observed: observeFinalGet(page, installation.origin,
-      installation.mount + "/api/ui/projections/cases") })
-  if (area === "UI61" || area === "UI63" || area === "UI63-reference")
-    readers.push({ label: "memory-catalog", observed: observeFinalGet(page, installation.origin,
-      installation.mount + "/dashboard", 1, (url) => url.searchParams.get("sf") === "memory-catalog") })
-  if (area === "UI69")
-    readers.push({ label: "summary-settings", observed: observeFinalGet(page, installation.origin,
-      installation.mount + "/api/ui/local-admin/summary-settings") })
+  const readers: { label: string; observed: Awaited<ReturnType<typeof observeFinalGet>> }[] = []
   try {
+    if (area === "UI61" || area === "UI62" || area === "UI63")
+      readers.push({ label: "projection.cases", observed: await observeFinalGet(page, installation.origin,
+        installation.mount + "/api/ui/projections/cases") })
+    if (area === "UI61" || area === "UI63" || area === "UI63-reference")
+      readers.push({ label: "memory-catalog", observed: await observeFinalGet(page, installation.origin,
+        installation.mount + "/dashboard", 1, (url) => url.searchParams.get("sf") === "memory-catalog") })
+    if (area === "UI69")
+      readers.push({ label: "summary-settings", observed: await observeFinalGet(page, installation.origin,
+        installation.mount + "/api/ui/local-admin/summary-settings") })
     return await navigateFinalSurface({
       page, owner, installation, href, title,
       beforeReady: async (context) => {
@@ -37,7 +37,9 @@ export async function enterFinalMemorySurface(
       },
     })
   } finally {
-    for (const { observed } of readers) observed.close()
+    const closed = await Promise.allSettled(readers.map(({ observed }) => observed.close()))
+    const failures = closed.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
+    if (failures.length) throw new AggregateError(failures, "Original memory navigation observers did not close")
   }
 }
 
@@ -53,7 +55,7 @@ export function observeFinalMemoryOutcomeFailures(page: Page, installation: Pick
   })
   return {
     expectUnavailable: async (action: (waitForOriginal: () => Promise<void>) => Promise<unknown>) => {
-      const observed = observeFinalGet(page, installation.origin, installation.mount + "/dashboard", 1,
+      const observed = await observeFinalGet(page, installation.origin, installation.mount + "/dashboard", 1,
         (url) => url.searchParams.get("sf") === "memory-outcome")
       let checked: Promise<void> | undefined
       const waitForOriginal = () => checked ??= (async () => {
@@ -67,7 +69,7 @@ export function observeFinalMemoryOutcomeFailures(page: Page, installation: Pick
         // and before ready(). A click simply awaits it after the single action.
         await action(waitForOriginal)
         await waitForOriginal()
-      } finally { observed.close() }
+      } finally { await observed.close() }
     },
     assertOnlyExpectedErrors: (recorded: readonly string[]) => {
       const unexpected = consoleErrors.filter((entry) => !expected.has(entry.url) ||
