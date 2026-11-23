@@ -158,11 +158,29 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await capture(page, info, "CAP08-dark-desktop-member-detail-test-data")
     await page.getByRole("button", { name: "Edit review", exact: true }).click()
     const editor = surface.locator('[data-sf-editor="talent"]')
+    await expect(editor.getByRole("heading", { name: "Edit review", exact: true })).toBeVisible()
+    await expect(editor.getByLabel("Classification", { exact: true })).toBeVisible()
+    await expect(editor.getByLabel("Leader reference", { exact: true })).toBeHidden()
     await editor.getByLabel("Notes", { exact: true }).fill("Design test data · Discuss regional responsibilities and next development steps.")
     await scrollPageTop(page)
+    await expect(editor.getByLabel("Classification", { exact: true })).toBeInViewport({ ratio: 1 })
     await capture(page, info, "CAP08-dark-desktop-assessment-editor-test-data")
+    await page.setViewportSize({ width: 320, height: 900 })
+    await reflow(page)
+    await scrollPageTop(page)
+    await expect(editor.getByLabel("Classification", { exact: true })).toBeInViewport({ ratio: 1 })
+    await capture(page, info, "CAP08-dark-320-focused-assessment-editor-test-data")
+    await page.setViewportSize({ width: 1440, height: 1100 })
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await expect(editor.locator('[data-component="sf-change-review"]')).toContainText("next development steps")
+    const talentReview = editor.locator('[data-component="sf-change-review"]')
+    await expect(talentReview).toContainText("next development steps")
+    await expect(talentReview.getByRole("heading", { level: 4 }).first()).toHaveText("Notes")
+    await expect(talentReview.getByRole("button", { name: "Save review", exact: true })).toBeEnabled()
+    const context = talentReview.locator(".sf-s03-unchanged > summary")
+    await context.focus()
+    await page.keyboard.press("Enter")
+    await expect(talentReview.getByRole("region", { name: "Name", exact: true })).toContainText(waveThreeData.people.member)
+    await page.keyboard.press("Enter")
     await scrollPageTop(page)
     await capture(page, info, "CAP08-dark-desktop-assessment-review-test-data")
     await page.setViewportSize({ width: 320, height: 900 })
@@ -183,6 +201,37 @@ waveThreeTest("native people design · reported headcount, structure, talent and
       await capture(page, info, "CAP08-dark-desktop-" + kind + "-unavailable-test-data")
     }
     expect(mutations).toHaveLength(1)
+  })
+
+  await waveThreeTest.step("semantic returns from direct people links preserve owner and filters", async () => {
+    for (const route of [
+      { path: "/orchestra/sf-people/structure/cio", title: "Team Structure", back: "Back to team",
+        collection: "/orchestra/sf-people/structure" },
+      { path: "/orchestra/sf-people/talent/import", title: "Talent Review", back: "Back to talent review",
+        collection: "/orchestra/sf-people/talent" },
+      { path: "/orchestra/sf-people/talent/export", title: "Talent Review", back: "Back to talent review",
+        collection: "/orchestra/sf-people/talent" },
+    ]) {
+      const direct = await page.context().newPage()
+      try {
+        const url = new URL(route.path, installation.origin)
+        url.searchParams.set("year", String(installation.year))
+        url.searchParams.set("month", String(installation.month))
+        if (route.collection.endsWith("/talent")) url.searchParams.set("status", "Terminated")
+        await enter(direct, owner, url.href, route.title)
+        await direct.getByRole("button", { name: route.back, exact: true }).click()
+        await expect(direct).toHaveURL((url) => url.pathname === route.collection &&
+          url.searchParams.get("installation") === owner.installationId &&
+          url.searchParams.get("year") === String(installation.year) &&
+          url.searchParams.get("month") === String(installation.month))
+        if (route.collection.endsWith("/talent")) {
+          await expect(direct.getByLabel("Filter by status", { exact: true })).toHaveValue("Terminated")
+          await expect(direct.locator('tbody')).toContainText(waveThreeData.people.departed)
+        } else await expect(direct.locator('.sf-people-table-region[aria-label="Members"]')).toContainText(waveThreeData.people.member)
+      } finally {
+        await direct.close()
+      }
+    }
   })
 
   const localizedCookies = await page.context().cookies(installation.origin + installation.mount)
@@ -280,14 +329,17 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await expect(surface.locator("tr[data-sf-row]")).toContainText(waveThreeData.projects.long)
     await surface.getByRole("button", { name: "Reset filters", exact: true }).click()
     const row = surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary })
+    await expect(row).toContainText("Source currency not specified")
     await row.locator('[data-sf-action="select"]').click()
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(waveThreeData.projects.primary)
+    await expect(surface.locator('[data-sf-section="budget-spent"]')).toContainText("Source currency not specified")
     await expect(surface.getByLabel("Search", { exact: true })).toBeHidden()
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-project-detail-test-data")
     await surface.getByRole("button", { name: "Edit project", exact: true }).click()
     await ready(page, portfolioScreens[1].title)
     const editor = surface.locator("[data-sf-project-editor]")
+    await expect(editor.locator(".sf-u05-currency-hint")).toHaveText("Source currency not specified")
     await editor.getByLabel("Budget", { exact: true }).fill("190000")
     await editor.getByLabel("Description", { exact: true }).fill("Design test data · Align regional delivery and retain the source record for review.")
     await scrollPageTop(page)
@@ -295,6 +347,7 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(editor.getByLabel("Budget", { exact: true })).toBeHidden()
     await expect(editor.locator(".sf-u05-review-values")).toContainText("190,000")
+    await expect(editor.locator(".sf-u05-review-values").getByRole("row").filter({ hasText: "190,000" })).toContainText("Source currency not specified")
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-project-review-test-data")
     await editor.getByRole("button", { name: "Continue editing", exact: true }).click()
@@ -326,17 +379,21 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-milestones-test-data")
     await milestone.locator("summary").click()
+    const originalNotes = await milestone.getByLabel("Notes", { exact: true }).inputValue()
     await milestone.getByLabel("Notes", { exact: true }).fill("Design test data · Regional discovery reviewed with the delivery owner.")
     await milestone.scrollIntoViewIfNeeded()
     await capture(page, info, "CAP10-dark-desktop-milestone-editor-test-data")
-    await milestone.getByRole("button", { name: "Save milestone", exact: true }).click()
+    await milestone.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator(".sf-u05-command-review")
     await expect(review).toContainText("Regional discovery reviewed")
+    const notesComparison = review.getByRole("region", { name: "Notes", exact: true })
+    await expect(notesComparison.locator('[data-version="base"] .sf-s03-field-value')).toHaveText(originalNotes)
+    await expect(notesComparison.locator('[data-version="proposed"] .sf-s03-field-value')).toHaveText("Design test data · Regional discovery reviewed with the delivery owner.")
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-milestone-review-test-data")
-    await review.getByRole("button", { name: "Continue editing", exact: true }).click()
+    await review.getByRole("button", { name: "Revise", exact: true }).click()
     await expect(milestone.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Regional discovery reviewed with the delivery owner.")
-    await milestone.getByRole("button", { name: "Save milestone", exact: true }).click()
+    await milestone.getByRole("button", { name: "Review changes", exact: true }).click()
     const milestoneHref = page.url()
     await review.getByRole("button", { name: "Save milestone", exact: true }).click()
     await expect(surface.locator(".sf-u05-notice")).toContainText("Changes were accepted")

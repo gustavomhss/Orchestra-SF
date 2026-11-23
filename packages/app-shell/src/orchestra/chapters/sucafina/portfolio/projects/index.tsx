@@ -1,6 +1,6 @@
 import { useNavigate } from "@solidjs/router"
 import { createEffect, createMemo, createSignal, createUniqueId, For, onCleanup, Show, type JSX } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createStore, unwrap } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U05_COPY } from "@/i18n/orchestra-chapters/sf-u05"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
@@ -216,7 +216,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     const record = selected()
     const version = record && view.page ? sfProjectVersion(view.page, record.id) : null
     if (!record || version === null) return
-    setView("review", { ...action, source: structuredClone(record), version,
+    setView("review", { ...action, source: structuredClone(unwrap(record)), version,
       operationRef: crypto.randomUUID() as SfOperationRef, intentRef: crypto.randomUUID() as SfIntentRef })
   }
   const submit = async (action: "save" | "delete" | "save-milestone" | "delete-milestone",
