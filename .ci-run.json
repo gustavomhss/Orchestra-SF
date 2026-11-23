@@ -1,0 +1,15 @@
+{
+  "package": "cli",
+  "packageSelector": "@orchestra/cli",
+  "directory": "apps/cli",
+  "runner": "bun",
+  "args": [
+    "./test/sucafina-source-verification.test.ts",
+    "--timeout",
+    "420000"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}
