@@ -363,7 +363,7 @@ async function expectNativeProviderFrame(page: Page, titleText: string) {
   }
   await test.info().attach("provider-native-frame", {
     contentType: "application/json",
-    body: JSON.stringify({ title: titleText, viewport: page.viewportSize(), ...measurement }, null, 2),
+    body: JSON.stringify({ viewport: page.viewportSize(), ...measurement }, null, 2),
   })
 }
 
