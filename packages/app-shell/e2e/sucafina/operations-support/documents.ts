@@ -473,7 +473,14 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   // from the authorized catalog, not a manually entered ID or asset revision.
   const catalogUpload = await observe(page, (url) =>
     url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
-      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST", async () => {
+    await expect(register.locator("form")).toHaveAttribute("aria-busy", "true")
+    await expect(documentInput).toBeVisible()
+    await expect(documentInput).toBeDisabled()
+    expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+    await expect(register.getByRole("status")).toHaveText("Uploading document…")
+    await expect(attachDocument).toBeDisabled()
+  })
   const refreshedTargets = await observe(page, targetCatalogURL)
   const refreshedSources = await observeFile(page, "files.document-sources", endpoint("document-sources"))
   await attachDocument.click()
@@ -500,6 +507,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   expect(originalSource).toHaveLength(1)
   const selectedSourceRef = originalSource[0]!.selectionRef
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(root.locator("[data-sf-upload-outcome]")).toBeVisible()
   await expect(root.locator("[data-sf-upload-outcome]")).toHaveText(
     "File accepted by the server scanner and attached to the authorized record. Refresh and choose the newly admitted source for extraction.",
   )

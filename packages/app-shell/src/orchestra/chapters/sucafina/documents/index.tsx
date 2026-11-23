@@ -77,6 +77,8 @@ type LeafState = {
   uploadReadState: SfUiState
   uploadReadRevision: number
   uploadOpened: boolean
+  uploadExpanded: boolean
+  uploadConflictRecord: string
   uploadName: string
   uploadNotice: string
   rejectionReason: string
@@ -113,7 +115,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     fieldId: "", fieldType: "number", fieldUnit: "", search: "", matches: undefined,
     targets: [], selectedTarget: "", preview: undefined,
     uploadKind: "quote", uploadRecord: "", uploadTargets: [], uploadReadState: "loading", uploadReadRevision: 0,
-    uploadOpened: props.route.kind === "new",
+    uploadOpened: props.route.kind === "new", uploadExpanded: props.route.kind === "new", uploadConflictRecord: "",
     uploadName: "", uploadNotice: "",
     rejectionReason: "", rejectionPage: "1", linkedRef: "", error: undefined,
   })
@@ -148,7 +150,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   }
   const fail = (reason: SfUiState, mutation = false) => {
     if (reason === "denied" || reason === "session-expired") {
-      setState({ uploadRecord: "", uploadTargets: [], uploadReadState: reason })
+      uploadFile = undefined
+      setState({ uploadRecord: "", uploadTargets: [], uploadReadState: reason, uploadName: "", uploadConflictRecord: "" })
       setState({ candidates: [], sources: [], requests: [], matches: undefined, opened: undefined,
         targets: [], preview: undefined, documentRef: "", selectedCandidateId: "" })
     }
@@ -157,7 +160,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       setState({ selectedCandidateId: "", opened: undefined, targets: [], preview: undefined, phase: "catalog" })
     }
     mutationUnknown = mutation && (reason === "outcome-unknown" || reason === "unavailable")
-    setState({ status: mutationUnknown ? "outcome-unknown" : reason, error: reason, busy: false,
+    setState({ status: mutationUnknown ? "outcome-unknown" : reason, error: reason, busy: false, uploadNotice: "",
       phase: mutationUnknown ? "unknown" : state.phase })
   }
   const accept = <Value,>(token: ReturnType<typeof fence>, result: Result<Value>): Value | undefined => {
@@ -269,7 +272,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       return
     }
     const token = fence()
-    setState({ busy: true, status: "loading", uploadNotice: "" })
+    setState({ busy: true, status: "ready", uploadNotice: "sf.u24.uploadWorking", uploadConflictRecord: "" })
     let bytes: Uint8Array
     try { bytes = new Uint8Array(await file.arrayBuffer()) }
     catch { if (current(token)) fail("unavailable"); return }
@@ -290,14 +293,18 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     if (reply.status === 401) { fail("session-expired", true); return }
     if (reply.status === 403) { fail("denied", true); return }
     if (reply.status === 404) { fail("not-found", true); return }
-    if (reply.status === 409) { fail("stale", true); return }
+    if (reply.status === 409) {
+      setState("uploadConflictRecord", target.label)
+      fail("stale", true)
+      return
+    }
     if (reply.status < 200 || reply.status >= 300 || reply.body.ok !== true) {
       fail("unavailable", true)
       return
     }
     uploadFile = undefined
     mutationUnknown = false
-    setState({ uploadName: "", uploadRecord: "", uploadNotice: "sf.u24.uploadAccepted",
+    setState({ uploadName: "", uploadRecord: "", uploadConflictRecord: "", uploadNotice: "sf.u24.uploadAccepted",
       uploadReadRevision: state.uploadReadRevision + 1 })
     await loadCatalog()
   }
@@ -535,6 +542,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       setState({
         uploadName: "", uploadNotice: "", uploadKind: state.surface === "dashboard" ? "contract" : "quote",
         uploadRecord: "", uploadTargets: [], uploadReadState: "loading", uploadOpened: routeKind === "new",
+        uploadExpanded: routeKind === "new", uploadConflictRecord: "",
         rejectionReason: "", rejectionPage: "1", linkedRef: "",
         status: ready ? "ready" : authStatus === "resolving" ? "loading" :
           authStatus === "unauthenticated" ? "session-expired" :
@@ -626,18 +634,24 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
         </Show>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
           <Show when={catalog() && props.route.kind !== "detail"}>
-            <details class="sf-records-register" open={props.route.kind === "new"}
-              onToggle={(event) => { if (event.currentTarget.open) setState("uploadOpened", true) }}>
+            <details class="sf-records-register" open={state.uploadExpanded}
+              onToggle={(event) => {
+                setState("uploadExpanded", event.currentTarget.open)
+                if (event.currentTarget.open) setState("uploadOpened", true)
+              }}>
               <summary>{t("sf.ui58.primary")}</summary>
-            <form class="sf-files-fields" data-sf-document-upload="authorized-asset"
+            <form class="sf-files-fields" data-sf-document-upload="authorized-asset" aria-busy={state.busy}
               onSubmit={(event) => { event.preventDefault(); void upload() }}>
               <h2>{t("sf.u24.uploadTitle")}</h2>
               <p>{t("sf.u24.uploadHelp")}</p>
+              <Show when={state.uploadConflictRecord}>
+                <p role="alert">{language.t("sf.u24.uploadConflict", { record: state.uploadConflictRecord })}</p>
+              </Show>
               <label>{t("sf.u24.uploadKind")}
                 <select value={state.uploadKind} disabled={state.busy}
-                  onChange={(event) => setState("uploadKind", event.currentTarget.value === "contract" ? "contract" :
+                  onChange={(event) => setState({ uploadKind: event.currentTarget.value === "contract" ? "contract" :
                     event.currentTarget.value === "supplier" ? "supplier" :
-                    event.currentTarget.value === "signed-po" ? "signed-po" : "quote")}>
+                    event.currentTarget.value === "signed-po" ? "signed-po" : "quote", uploadConflictRecord: "", uploadNotice: "" })}>
                   <Show when={state.surface === "dashboard"}>
                     <option value="contract">{t("sf.u24.uploadContract")}</option>
                   </Show>
@@ -652,8 +666,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <label>{t("sf.u24.uploadTarget")}
                   <select value={state.uploadRecord} required disabled={state.busy || state.uploadReadState !== "ready" || !state.uploadTargets.length}
                     aria-describedby={state.uploadReadState !== "ready" || !state.uploadTargets.length ? uploadHelpId : undefined}
-                    onChange={(event) => setState("uploadRecord", state.uploadTargets.some((target) => target.record === event.currentTarget.value)
-                      ? event.currentTarget.value : "")}>
+                    onChange={(event) => setState({ uploadRecord: state.uploadTargets.some((target) => target.record === event.currentTarget.value)
+                      ? event.currentTarget.value : "", uploadConflictRecord: "", uploadNotice: "" })}>
                     <option value="">{t("sf.u24.uploadChoose")}</option>
                     <For each={state.uploadTargets}>{(target) => <option value={target.record}>{target.label}</option>}</For>
                   </select>
@@ -675,7 +689,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <input type="file" accept=".pdf,.txt,.docx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   required disabled={state.busy} onChange={(event) => {
                     uploadFile = event.currentTarget.files?.[0]
-                    setState("uploadName", uploadFile?.name ?? "")
+                    setState({ uploadName: uploadFile?.name ?? "", uploadNotice: "" })
                   }} />
               </label>
               <button type="submit" class="mx-btn primary" disabled={state.busy ||
@@ -692,7 +706,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <label>{t("sf.u24.source")}
                 <select value={state.surface} disabled={state.busy}
                   onChange={(e) => { clearOnSourceChange(); uploadFile = undefined; setState({ surface: e.currentTarget.value as FileSurface,
-                  uploadKind: e.currentTarget.value === "dashboard" ? "contract" : "quote", uploadName: "" }); void loadCatalog() }}>
+                  uploadKind: e.currentTarget.value === "dashboard" ? "contract" : "quote", uploadName: "",
+                  uploadConflictRecord: "", uploadNotice: "" }); void loadCatalog() }}>
                   <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
                 </select>
               </label>
