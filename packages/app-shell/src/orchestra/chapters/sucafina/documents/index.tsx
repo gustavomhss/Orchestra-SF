@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { For, Show, createEffect, onCleanup, untrack, type JSX } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { A } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
@@ -13,7 +13,7 @@ import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import "./documents.css"
-import "../reviews/workflows.css"
+import "./records.css"
 
 type FileSurface = "dashboard" | "planner" | "procurement"
 type Requests = Extract<SfFilesOperationOutput<"files.document-requests">, { status: "ok" }>["value"]
@@ -114,6 +114,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   let controller = new AbortController()
   let mutationUnknown = false
   let uploadFile: File | undefined
+  let installedScope: string | undefined
   const ownerStamp = () => {
     const context = auth.state()
     return context.status === "ready"
@@ -509,22 +510,30 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const selectedOwner = ownerStamp()
     const routeKind = props.route.kind
     const section = props.surfaceId
-    fence()
-    mutationUnknown = false
-    uploadFile = undefined
-    setState({
-      uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
-      rejectionReason: "", rejectionPage: "1", linkedRef: "",
-      status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
-        auth.state().status === "unauthenticated" ? "session-expired" :
-        auth.state().status === "denied" ? "denied" : "unavailable",
-      requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
-      opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
-      requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+    const authStatus = auth.state().status
+    const scope = JSON.stringify([routeKind, section, props.route.href, selectedOwner, authStatus, !!ready])
+    // A same-owner context publication must not erase a document read or confirmation.
+    // Actual route, authority and session transitions still abort and clear all private state.
+    if (scope === installedScope) return
+    installedScope = scope
+    untrack(() => {
+      fence()
+      mutationUnknown = false
+      uploadFile = undefined
+      setState({
+        uploadName: "", uploadNotice: "", uploadKind: "quote", uploadRecord: "", uploadVersion: "",
+        rejectionReason: "", rejectionPage: "1", linkedRef: "",
+        status: ready ? "ready" : authStatus === "resolving" ? "loading" :
+          authStatus === "unauthenticated" ? "session-expired" :
+          authStatus === "denied" ? "denied" : "unavailable",
+        requests: [], sources: [], documentRef: "", candidates: [], selectedCandidateId: "",
+        opened: undefined, targets: [], selectedTarget: "", preview: undefined, matches: undefined,
+        requestSelectionRef: "", sourceSelectionRef: "", phase: "catalog", busy: false,
+      })
+      if (!ready || !selectedOwner) return
+      if (section === "UI58" && routeKind !== "detail") void loadCatalog()
+      else void loadRouteCandidates()
     })
-    if (!ready || !selectedOwner) return
-    if (section === "UI58" && routeKind !== "detail") void loadCatalog()
-    else void loadRouteCandidates()
   })
   onCleanup(() => { fence(); clearSelection() })
 
@@ -559,24 +568,28 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const preview = () => state.preview
   const canSelect = (item: Evidence) => item.ref.target.documentId === state.documentRef && !state.busy
   return (
-    <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
+    <SfPageFrame titleKey={key(title())}
+      subtitleKey={key(evidence() ? "sf.u24.evidenceSubtitle" : scenarioView() ? "sf.u24.scenarioSubtitle" : "sf.u24.documentsSubtitle")}
+      context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
-      <section data-sf-wave="polish" class="sf-files sf-workflow" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
+      <section class="sf-files sf-records-documents" data-sf-records="six" data-sf-wave="six" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
+        <Show when={auth.ready() && (!catalog() || props.route.kind === "detail")}>
+          <div class="sf-files-fields">
+            <label>{t("sf.u24.source")}
+              <select value={state.surface} disabled={state.busy || state.phase === "unknown"}
+                onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
+                <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
+              </select>
+            </label>
+            <button type="button" class="mx-btn" disabled={state.busy}
+              onClick={refresh}>{t("sf.u24.reconcile")}</button>
+          </div>
+        </Show>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
-          <Show when={!catalog() || props.route.kind === "detail"}>
-            <div class="sf-files-fields">
-              <label>{t("sf.u24.source")}
-                <select value={state.surface} disabled={state.busy}
-                  onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
-                  <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
-                </select>
-              </label>
-              <button type="button" class="mx-btn" disabled={state.busy}
-                onClick={refresh}>{t("sf.u24.reconcile")}</button>
-            </div>
-          </Show>
           <Show when={catalog() && props.route.kind !== "detail"}>
+            <details class="sf-records-register" open={props.route.kind === "new"}>
+              <summary>{t("sf.ui58.primary")}</summary>
             <form class="sf-files-fields" data-sf-document-upload="authorized-asset"
               onSubmit={(event) => { event.preventDefault(); void upload() }}>
               <h2>{t("sf.u24.uploadTitle")}</h2>
@@ -616,12 +629,17 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 !permitted("files.asset.upload")}>{t("sf.u24.uploadSubmit")}</button>
               <Show when={state.uploadNotice}><p role="status" data-sf-upload-outcome>{t(state.uploadNotice)}</p></Show>
             </form>
-            <div class="sf-files-fields">
+            </details>
+            <div class="sf-files-fields sf-records-source-picker">
+              <header class="sf-records-heading">
+                <h2>{t("sf.u24.browseDocuments")}</h2>
+                <p>{t("sf.u24.browseHelp")}</p>
+              </header>
               <label>{t("sf.u24.source")}
                 <select value={state.surface} disabled={state.busy}
                   onChange={(e) => { clearOnSourceChange(); uploadFile = undefined; setState({ surface: e.currentTarget.value as FileSurface,
                   uploadKind: e.currentTarget.value === "dashboard" ? "contract" : "quote", uploadName: "" }); void loadCatalog() }}>
-                  <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
+                  <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
                 </select>
               </label>
               <label>{t("sf.u24.request")}
@@ -634,7 +652,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               </label>
               <button type="button" class="mx-btn" disabled={state.busy}
                 onClick={() => { void loadSources() }}>{t("sf.u24.refresh")}</button>
-              <label>{t("sf.u24.document")}
+              <label class="sf-records-document-choice">{t("sf.u24.document")}
                 <select value={state.sourceSelectionRef} disabled={state.busy || !state.sources.length}
                   onChange={(e) => { clearOnSourceChange(); setState("sourceSelectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u24.chooseDocument")}</option>
@@ -647,7 +665,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 {t("sf.u24.openDocument")}
               </button>
             </div>
-            <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void search() }}>
+            <form class="sf-files-fields sf-records-search" onSubmit={(e) => { e.preventDefault(); void search() }}>
               <h2>{t("sf.u24.search")}</h2>
               <label>{t("sf.u24.query")}
                 <input type="search" maxlength="256" value={state.search}
@@ -659,10 +677,13 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <Show when={state.matches}>
                 {(matches) => <section class="sf-files-section">
                   <For each={matches().matches}>{(match) =>
-                    <article class="mx-card">
-                      <p>{match.text}</p>
-                      <p>{t("sf.u24.score")}: {match.lexicalScore}</p>
-                      <p>{match.documentRef.refId}</p>
+                    <article class="mx-card sf-records-match">
+                      <blockquote>{match.text}</blockquote>
+                      <details class="sf-records-technical">
+                        <summary>{t("sf.u24.sourceDetails")}</summary>
+                        <p>{t("sf.u24.score")}: {match.lexicalScore}</p>
+                        <p><code>{match.documentRef.refId}</code></p>
+                      </details>
                       <button type="button" class="mx-btn" disabled={state.busy}
                         onClick={() => { void openSearchSource(match.documentRef) }}>
                         {t("sf.u24.openOriginal")}
@@ -691,13 +712,19 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <Show when={!state.candidates.length}><p>{t("sf.u24.noCandidates")}</p></Show>
               <ul class="sf-files-candidates">
                 <For each={state.candidates}>{(candidate) =>
-                  <li class="mx-card" data-sf-evidence-state={candidate.status} data-sf-evidence-id={candidate.id}>
-                    <button type="button" class="mx-btn"
+                  <li class="mx-card" data-sf-evidence-state={candidate.status} data-sf-evidence-id={candidate.id}
+                    data-sf-evidence-selected={state.selectedCandidateId === candidate.id}>
+                    <button type="button" class="mx-btn sf-records-candidate"
                       aria-pressed={state.selectedCandidateId === candidate.id}
                       disabled={!canSelect(candidate)}
                       onClick={() => { void openEvidence(candidate) }}>
-                      {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
-                      {" "}{candidate.unit ?? ""} · {t("sf.u24.state." + candidate.status)} · {candidate.version}
+                      <span class="sf-records-candidate-value">
+                        {candidate.fieldCandidate}: {candidate.value === null ? "null" : String(candidate.value)}
+                        {" "}{candidate.unit ?? ""}
+                      </span>
+                      <span class="sf-records-candidate-meta">
+                        {t("sf.u24.state." + candidate.status)} · {t("sf.u24.documentVersion")} {candidate.version}
+                      </span>
                     </button>
                     <Show when={candidate.status === "rejected" && candidate.rejection}>
                       <p role="status" data-sf-rejection="persisted">
@@ -711,7 +738,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                         }}>{t("sf.ui59.primary")}</button>
                     </Show>
                     <Show when={scenarioView() && validCurrency(candidate)}>
-                      <button type="button" class="mx-btn" disabled={state.busy}
+                      <button type="button" class="mx-btn"
+                        disabled={state.busy || !permitted("files.document-scenario-targets")}
                         onClick={() => { void readScenarioTargets(candidate) }}>{t("sf.u24.useScenario")}</button>
                     </Show>
                     <Show when={evidence() && validCurrency(candidate) ? documentHref("scenario") : undefined}>
@@ -732,8 +760,42 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
             </Show>
           </Show>
           <Show when={evidence() || (catalog() && state.documentRef)}>
+            <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
+              <section class="sf-files-section sf-records-evidence-review" data-sf-confirmation="review">
+                <h2>{t("sf.ui59.title")}</h2>
+                <p>{selected()!.fieldCandidate}: {selected()!.value === null ? "null" : String(selected()!.value)}
+                  {" "}{selected()!.unit ?? ""}</p>
+                <p>{t("sf.u24.documentVersion")}: {selected()!.ref.target.revision} · {selected()!.location}</p>
+                <Show when={state.opened}><blockquote>{state.opened!.excerpt}</blockquote></Show>
+                <div class="sf-files-actions">
+                <button type="button" class="mx-btn" disabled={state.busy}
+                  onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
+                <button type="button" class="mx-btn primary" disabled={state.busy || !permitted("files.document-confirm")}
+                  onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
+                </div>
+                <details class="sf-records-reject">
+                  <summary>{t("sf.u24.rejectCandidate")}</summary>
+                  <div class="sf-records-reject-fields">
+                <label>{t("sf.u24.rejectReason")}
+                  <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
+                    onInput={(event) => setState("rejectionReason", event.currentTarget.value)} />
+                </label>
+                <label>{t("sf.u24.rejectPage")}
+                  <input type="number" min="1" max="500" step="1" value={state.rejectionPage}
+                    disabled={state.busy}
+                    onInput={(event) => setState("rejectionPage", event.currentTarget.value)} />
+                </label>
+                <button type="button" class="mx-btn" disabled={state.busy ||
+                  state.rejectionReason.trim().length < 5 || state.rejectionReason.trim().length > 500 ||
+                  !/^[1-9]\d*$/.test(state.rejectionPage) || Number(state.rejectionPage) > 500}
+                  onClick={() => { void reject() }}>{t("sf.u24.rejectSubmit")}</button>
+                  </div>
+                </details>
+              </section>
+            </Show>
+            <details class="sf-records-extraction" open={!evidence() || !state.candidates.length}>
+              <summary>{t("sf.u24.fields")}</summary>
             <form class="sf-files-fields" onSubmit={(e) => { e.preventDefault(); void extractField() }}>
-              <h2>{t("sf.u24.fields")}</h2>
               <p>{t("sf.u24.fieldHelp")}</p>
               <label>{t("sf.u24.field")}
                 <input maxlength="120" required value={state.fieldId} disabled={state.busy}
@@ -757,41 +819,20 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                   state.phase === "unknown" || !permitted("files.document-schema") ||
                   !permitted("files.document-extract")}>{t("sf.u24.extract")}</button>
             </form>
-            <Show when={evidence() && selected()?.status === "extracted" && state.phase === "confirm-review"}>
-              <section class="sf-files-section" data-sf-confirmation="review">
-                <h2>{t("sf.ui59.title")}</h2>
-                <p>{selected()!.fieldCandidate}: {selected()!.value === null ? "null" : String(selected()!.value)}
-                  {" "}{selected()!.unit ?? ""}</p>
-                <p>{t("sf.u24.documentVersion")}: {selected()!.ref.target.revision} · {selected()!.location}</p>
-                <Show when={state.opened}><blockquote>{state.opened!.excerpt}</blockquote></Show>
-                <button type="button" class="mx-btn" disabled={state.busy}
-                  onClick={() => { setState("phase", "candidates") }}>{t("sf.common.keepEditing")}</button>
-                <button type="button" class="mx-btn primary" disabled={state.busy || !permitted("files.document-confirm")}
-                  onClick={() => { void confirm() }}>{t("sf.u24.confirmField")}</button>
-                <label>{t("sf.u24.rejectReason")}
-                  <textarea maxlength="500" rows="3" value={state.rejectionReason} disabled={state.busy}
-                    onInput={(event) => setState("rejectionReason", event.currentTarget.value)} />
-                </label>
-                <label>{t("sf.u24.rejectPage")}
-                  <input type="number" min="1" max="500" step="1" value={state.rejectionPage}
-                    disabled={state.busy}
-                    onInput={(event) => setState("rejectionPage", event.currentTarget.value)} />
-                </label>
-                <button type="button" class="mx-btn" disabled={state.busy ||
-                  state.rejectionReason.trim().length < 5 || state.rejectionReason.trim().length > 500 ||
-                  !/^[1-9]\d*$/.test(state.rejectionPage) || Number(state.rejectionPage) > 500}
-                  onClick={() => { void reject() }}>{t("sf.u24.rejectSubmit")}</button>
-              </section>
-            </Show>
+            </details>
           </Show>
           <Show when={scenarioView()}>
-            <section class="sf-files-section">
-              <p>{t("sf.u24.scenarioInfo")}</p>
+            <section class="sf-files-section sf-records-scenario">
+              <header class="sf-records-heading">
+                <h2>{t("sf.u24.scenarioDestination")}</h2>
+                <p>{t("sf.u24.scenarioInfo")}</p>
+              </header>
               <Show when={selected() && validCurrency(selected()!)}>
                 <p>{selected()!.fieldCandidate}: {selected()!.value} · {selected()!.unit} ·
                   {selected()!.ref.refId}</p>
               </Show>
-              <button type="button" class="mx-btn" disabled={state.busy || !selected() || !validCurrency(selected()!)}
+              <button type="button" class="mx-btn" disabled={state.busy || !selected() || !validCurrency(selected()!) ||
+                !permitted("files.document-scenario-targets")}
                 onClick={() => { const value = selected(); if (value) void readScenarioTargets(value) }}>
                 {t("sf.u24.refreshDestinations")}
               </button>
@@ -803,7 +844,10 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                     <option value={String(index())}>{target.label}{target.linkRef ? " " + t("sf.u24.scenarioLinkLabel") : ""}</option>}</For>
                 </select>
               </label>
-              <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
+              <Show when={!permitted("files.document-scenario-targets") || !permitted("files.document-scenario-preview")}
+                fallback={<Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>}>
+                <p role="status">{t("sf.u24.scenarioUnavailable")}</p>
+              </Show>
               <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy ||
                 !permitted("files.document-scenario-preview")}
                 onClick={() => { void scenario() }}>{t("sf.u24.previewScenario")}</button>

@@ -25,6 +25,17 @@ if (!privateRoot || !path.isAbsolute(privateRoot)) throw new Error("Private capt
 if (Object.keys(process.env).some((key) => key.startsWith("VITE_")))
   throw new Error("Native capture build must not inherit Vite server overrides")
 
+const scanner = (() => {
+  const raw = process.argv[4]
+  if (raw === undefined) return undefined
+  const value: unknown = JSON.parse(raw)
+  if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).length !== 2 ||
+      !("host" in value) || value.host !== "127.0.0.1" || !("port" in value) ||
+      typeof value.port !== "number" || !Number.isInteger(value.port) || value.port < 1 || value.port > 65535)
+    throw new Error("The native capture scanner must be the qualified loopback ClamD")
+  return { host: "127.0.0.1" as const, port: value.port }
+})()
+
 const secondWave = process.argv[3] === "two"
 const decisionsWave = process.argv[3] === "four-decisions"
 const fourthWave = process.argv[3] === "four" || decisionsWave
@@ -66,6 +77,7 @@ const program = Effect.scoped(Effect.gen(function* () {
   const installed = yield* withNativeInstallation({
     webRoot,
     serverPassword,
+    ...(scanner ? { scanner } : {}),
     seed: async ({ config, store, actorId }) => {
       configuration = config
       process.stdout.write("SF_DESIGN_STAGE configuration\n")
@@ -194,6 +206,8 @@ const program = Effect.scoped(Effect.gen(function* () {
       process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
+  // Revalidate the private physical workspace before publishing discovery metadata.
+  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
@@ -221,8 +235,6 @@ const program = Effect.scoped(Effect.gen(function* () {
   if (destination.origin !== installed.origin || destination.pathname !== installed.mount + "/auth/local" ||
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
-  // Revalidate the private physical workspace before publishing discovery metadata.
-  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   const metadata = {
     root: installed.root, workspace, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,

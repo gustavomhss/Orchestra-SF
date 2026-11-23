@@ -1,5 +1,9 @@
 /** UI69 presentation copy; source operation names and contracts remain unchanged. */
 export const SF_U28_COPY = {
+  "sf.u28.localAccess": "Local access",
+  "sf.u28.localAccessReady": "You are signed in as the local operator.",
+  "sf.u28.sourceReads": "Notifications and backups",
+  "sf.u28.sourceReadsUnavailable": "Notifications and backup history are currently unavailable for this installation. Summary settings are shown separately.",
   "sf.ui69.title": "Local administration",
   "sf.ui69.primary": "Review operation",
   "sf.u28.profile": "Profile",
@@ -25,6 +29,10 @@ export const SF_U28_COPY = {
 } as const
 
 export const SF_U28_COPY_BR: Readonly<Record<keyof typeof SF_U28_COPY, string>> = {
+  "sf.u28.localAccess": "Acesso local",
+  "sf.u28.localAccessReady": "Você está conectado como operador local.",
+  "sf.u28.sourceReads": "Notificações e backups",
+  "sf.u28.sourceReadsUnavailable": "As notificações e o histórico de backups estão indisponíveis nesta instalação. As configurações de resumos são exibidas separadamente.",
   "sf.ui69.title": "Administração local",
   "sf.ui69.primary": "Revisar operação",
   "sf.u28.profile": "Perfil",

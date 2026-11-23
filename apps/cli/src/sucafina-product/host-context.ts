@@ -103,10 +103,13 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
+import { observeSfDocumentScenarioHealth } from "./native-ui/document-scenario-health.ts"
+import { observeSfMemoryReadingHealth } from "./native-ui/memory-health.ts"
 import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
 import { observeSfRecallHealth } from "./native-ui/recall-health.ts"
+import { observeSfRoutineReadingHealth } from "./native-ui/routine-health.ts"
 import { observeSfPersonalViewsHealth } from "./native-ui/personal-views-health.ts"
 import { observeSfDecisionIntentHealth } from "./native-ui/decision-intent-health.ts"
 import { observeSfDecisionReadingHealth } from "./native-ui/decision-reading-health.ts"
@@ -382,9 +385,11 @@ export const createSfHostRuntimeWithRoutineNative = async (
           if (installed.includes(business.descriptors[index]!)) business.descriptors.splice(index, 1)
       }
     } })
+  const routineGeneration = async () => await state.models?.() ? state.generation : undefined
+  const routineGenerationCurrent = (observed: number) => state.generation === observed
   const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
-    generation: async () => await state.models?.() ? state.generation : undefined })
+    generation: routineGeneration })
   // The original A09 POST remains the only human run continuation. IDs and approvals cannot stand in for it.
   const authorizeNativeHumanRun = async (context: TrustedUiContext, command: SfRoutineNativeHumanRunCommand) => {
     const request = authority.host.requestFor(context)
@@ -410,7 +415,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     governance: routineGovernance,
     requestFor: authority.host.requestFor,
     authorize: authority.authority.revalidateDomainContext,
-    generation: async () => await state.models?.() ? state.generation : undefined,
+    generation: routineGeneration,
     authorizeRun: authorizeNativeHumanRun,
     publication: routinePublication.publication,
     resolveCase: business.resolveCase,
@@ -1022,6 +1027,20 @@ export const createSfHostRuntimeWithRoutineNative = async (
           identity() && services.productHttp === productHttp && documents && input.assets
             ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
         }, request, stamp),
+        observeSfDocumentScenarioHealth({ authority, binding: input.nativeReadBinding, source: () => {
+          if (!identity() || services.productHttp !== productHttp || !documents || !business.documentScenarios ||
+              services.documents !== documents.documents || !input.assets ||
+              input.assets.persistence !== authority.host.persistence ||
+              !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
+          return { producer: productHttp, handler: documentScenarioHttp, service: business.documentScenarios,
+            dependencies: [authority, documents, documents.documents, documents.documents.reader,
+              business.documentScenarios.targets, business.documentScenarios.preview,
+              business.plannerProduct, business.plannerProduct.issueSource, business.plannerProduct.planner,
+              business.plannerProduct.planner.compareForecast, business.plannerSources,
+              business.plannerSources.resolveForecastSource, business.context, business.readSourceFences,
+              authority.human, authority.human.admit, authority.human.authorize,
+              input.persistence, input.persistence.readScopedSource, input.persistence.resolveScopedSource, input.assets] }
+        } }, request, stamp),
         observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
           binding: input.nativeReadBinding, source: () =>
             identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&
@@ -1138,6 +1157,32 @@ export const createSfHostRuntimeWithRoutineNative = async (
               operationId === "decisions.decision-review" ? portfolioHttp : procurementDecisionHttp,
               producer, operation, business.withCase, business.cases, input.persistence] }
           } }, request, stamp),
+        observeSfRoutineReadingHealth({ ui: authority.ui, state: authority.state, persistence: input.persistence,
+          binding: input.nativeReadBinding, source: () => {
+            if (!identity() || services.nativeUiProducts !== nativeUiProducts) return undefined
+            const publication = routinePublication.publication()
+            return publication ? { producer: nativeUiProducts, publication, resources: routineRuntime.resources, generation: routineGeneration,
+              generationCurrent: routineGenerationCurrent,
+              dependencies: [nativeUiProducts.routines, nativeUiProducts.withCase, business.cases, business.cases.read,
+                nativePhases.services.routines, nativePhases.services.readExecution, nativePhases.services.openResult,
+                services.routineEvidence, services.dispatch, authority, routineRuntime, routineOwners] } : undefined
+          },
+        }, request, stamp),
+        observeSfMemoryReadingHealth({ ui: authority.ui, state: authority.state, persistence: input.persistence,
+          binding: input.nativeReadBinding, source: () => {
+            if (!identity() || services.productHttp !== productHttp ||
+                !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
+            return { producer: productHttp, handler: memoryHttp, memory,
+              scenarios: business.plannerProduct.scenarios,
+              dependencies: [authority, authority.host, authority.host.requestFor, authority.host.revalidate,
+                authority.human, authority.human.authorize, business.withCase, business.cases, business.cases.read,
+                business.plannerProduct, ...(business.plannerProduct.scenarios ? [business.plannerProduct.scenarios] : []),
+                extended.portfolioServices.planner,
+                business.plannerSources, business.plannerSources.resolveForecastSource,
+                business.results, business.context, business.readSourceFences, input.persistence,
+                input.persistence.readScopedSource, input.persistence.resolveScopedSource] }
+          },
+        }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
       return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])

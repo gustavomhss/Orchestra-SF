@@ -476,7 +476,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
     }
   }
   return (
-    <div class="sf-context-page" data-sf-wave="polish" data-sf-surface="UI67">
+    <div class="sf-context-page" data-sf-wave="six" data-sf-surface="UI67">
     <SfPageFrame
       titleKey={key("sf.ui67.title")}
       subtitleKey={key("sf.ui67.description")}
@@ -488,6 +488,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
       layout="reading"
       onLayoutMode={() => undefined}
     >
+      <div data-sf-wave="six">
       <SfStatePanel
         state={state()}
         messageKey={key(message())}
@@ -495,9 +496,12 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
       >
         {ready() && (
           <section class="sf-context-card" aria-labelledby="sf-context-current">
-            <header>
+            <header class="sf-context-header">
+              <div>
               <h2 id="sf-context-current">{language.t("sf.ui67.activeContext")}</h2>
               <p>{language.t("sf.ui67.contextDetails")}</p>
+              </div>
+              <button class="mx-btn" type="button" onClick={() => { void owner.reload() }}>{language.t("sf.ui67.refreshAccess")}</button>
             </header>
             <dl data-sf-context="authorized" aria-live="polite">
               <div><dt data-sf-copy="sf.ui67.server">{language.t("sf.ui67.server")}</dt><dd><bdi>{ready()!.owner.serverKey}</bdi></dd></div>
@@ -508,6 +512,7 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
           </section>
         )}
       </SfStatePanel>
+      </div>
     </SfPageFrame>
     </div>
   )

@@ -1,0 +1,5 @@
+# Memory, context and local administration
+
+UI61, UI62, UI63, UI67 and UI69 have qualified presentation and interaction paths, with original source limits preserved. UI61 conditions and local cancellation passed in R15; UI62's exact original refusal passed in R17; UI63 and UI67 passed in R11; UI69's reviewed save and persisted readback passed again after PR715 in R13. Positive materiality, signal and recall results, numeric outcome comparison and I00 notifications/backups remain unqualified.
+
+See [VALIDATION.md](./VALIDATION.md) for behavior, design decisions, per-area proof, exact runs and preserved failures. [qualification.json](./qualification.json) records revisions and source parity; [copy-audit.json](./copy-audit.json) records all 218 existing English literals unchanged and complete EN/BR key parity. [GALLERY.md](./GALLERY.md) contains 30 unchanged JPEG previews with separate R11, R13, R15 and R17 manifests. [RECALL-PRECONDITIONS.md](./RECALL-PRECONDITIONS.md) explains the original recall boundary without assigning an unproved internal cause.

@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router"
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { createSfRoutinesClient } from "@orchestra/client/sucafina/routines"
@@ -15,8 +16,9 @@ import {
   n29SameAuthority, n29StateKey, useN29Copy,
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
-import "./runs.css"
 import "../../reviews/workflows.css"
+import "../presentation.css"
+import "./runs.css"
 
 type Routine = (typeof SfRoutineResult)["Type"]
 type Projection = Extract<(typeof SfRoutines.operations["projection.routine"]["output"])["Type"], { status: "ok" }>
@@ -45,6 +47,15 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
   const { t } = useN29Copy()
   const [view, setView] = createStore<View>(initial())
   const runRef = () => props.route.kind === "entry" ? props.route.params.runRef : null
+  // This is only an owner-preserving entry request. F01 admits the destination.
+  const catalogHref = () => {
+    const selection = props.route.ownerSelection
+    if (!owner.ready() || !selection.serverKey || !selection.projectId || !selection.installationId) return
+    const query = new URLSearchParams({
+      server: selection.serverKey, project: selection.projectId, installation: selection.installationId,
+    })
+    return "/orchestra/sf-routines?" + query.toString()
+  }
   const caseChoice = () => view.caseIndex === null ? null : view.caseChoices[view.caseIndex]
   const permitted = (id: "projection.routine" | "routines.read-run") => {
     const active = owner.ready()
@@ -148,7 +159,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         return
       }
       const response = await createSfRoutinesClient(active.transport)["routines.read-run"]({
-        caseRef: selected.caseRef, input: { runRef: reference },
+        caseRef: { id: selected.caseRef.id, incarnation: selected.caseRef.incarnation, version: selected.caseRef.version },
+        input: { runRef: reference },
       }, { signal: abort.signal })
       if (!n29SameAuthority(owner, generation, stamp) || !caseChoice()
         || caseChoice()!.caseRef.id !== selected.caseRef.id
@@ -208,8 +220,13 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         onInvoke: () => { void owner.reload() },
       }]}
     >
-      <section data-sf-wave="polish" class="sf-n29-run sf-workflow" data-sf-surface={props.surfaceId} data-state={view.state}>
-        <Show when={!runRef()}><p>{t("sf.u27.noRun")}</p></Show>
+      <section class="sf-n29-run sf-routine-workspace sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId} data-state={view.state}>
+        <div class="sf-routine-run-navigation">
+          <Show when={!runRef()}><p>{t("sf.u27.noRun")}</p></Show>
+          <Show when={catalogHref()}>
+            {(href) => <A href={href()} class="mx-btn" data-sf-routine-catalog-link>{t("sf.ui64.title")}</A>}
+          </Show>
+        </div>
         <Show when={canFallback() && runRef()}>
           <div class="mx-card">
             <label class="sf-n29-field">
@@ -229,7 +246,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
               onClick={() => { void readOriginal() }}>{t("sf.u27.refresh")}</button>
           </div>
         </Show>
-        <SfStatePanel state={view.state} messageKey={n29StateKey(view.state)}
+        <SfStatePanel state={view.state} messageKey={!runRef() && view.state === "empty"
+          ? n29Key("sf.u27.runSelectionRequired") : n29StateKey(view.state)}
           onRetryRead={() => { void owner.reload() }}>
           <Show when={view.result}>
             {(source) => (
@@ -239,7 +257,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                   <p><bdi>{source().documentId}</bdi></p>
                   <p>{t("sf.u27.version")}: <bdi>{source().publishedVersion}</bdi></p>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.status")}>
+                <section class="mx-card sf-routine-run-status" aria-label={t("sf.u27.status")}>
                   <h2>{t("sf.u27.status")}</h2>
                   <Show when={identity()} fallback={
                     <SfRunState identity={{ kind: "unadmitted", task: runTask() }}
@@ -258,7 +276,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                     <p>{t("sf.u27.runningUnverified")}</p>
                   </Show>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.execution")} data-sf-native-execution data-verifier={view.proof?.verifier ?? "unavailable"}>
+                <section class="mx-card sf-routine-run-execution" aria-label={t("sf.u27.execution")} data-sf-native-execution data-verifier={view.proof?.verifier ?? "unavailable"}>
                   <h2>{t("sf.u27.execution")}</h2>
                   <Show when={view.mode === "projection" && view.proof}
                     fallback={<p>{t("sf.u27.nativeProofUnavailable")}</p>}>
@@ -275,8 +293,10 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                         {(output) => <>
                           <p><strong>{t("sf.u27.outputDigest")}:</strong> <code><bdi>{output().outputDigest}</bdi></code></p>
                           <p><strong>{t("sf.u27.resultRef")}:</strong> <bdi>{output().resultRef}</bdi></p>
-                          <p><strong>{t("sf.u27.output")}:</strong></p>
-                          <pre class="sf-n29-run-output">{JSON.stringify(output().content, null, 2)}</pre>
+                          <details class="sf-routine-source" open>
+                            <summary>{t("sf.u27.output")}</summary>
+                            <pre class="sf-n29-run-output">{JSON.stringify(output().content, null, 2)}</pre>
+                          </details>
                         </>}
                       </Show>
                     </>}
@@ -296,7 +316,7 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
                     <p>{t("sf.u27.runningUnverified")}</p>
                   </Show>
                 </section>
-                <section class="mx-card" aria-label={t("sf.u27.evidence")}>
+                <section class="mx-card sf-routine-run-evidence" aria-label={t("sf.u27.evidence")}>
                   <h2>{t("sf.u27.evidence")}</h2>
                   <ul>
                     <For each={source().sourceRefs}>

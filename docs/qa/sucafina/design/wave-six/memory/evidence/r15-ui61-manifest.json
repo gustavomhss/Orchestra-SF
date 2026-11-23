@@ -1,0 +1,270 @@
+{
+  "source": {
+    "candidate": "d62c4b500695d248240a48944461a0d2262a589f",
+    "snapshot": "b0931669e80589776a6ce8a1e63b8957a5e2d280",
+    "run": 45122439989,
+    "job": 137519060570,
+    "artifact": 14795160692,
+    "artifactBytes": 8799295,
+    "artifactDigest": "sha256:3383ed2d70acba50d8758409be2c7a2980dd308d8b735f2bd0be4273aee2c461"
+  },
+  "journeys": {
+    "passed": 2,
+    "failed": 0,
+    "durationMinutes": 11.7,
+    "independentInstallations": 2,
+    "spec": "packages/app-shell/e2e/sucafina/final-memory-consultation.spec.ts",
+    "testDeadlineMs": 300000,
+    "httpDeadlineMs": 40000,
+    "domDeadlineMs": 10000,
+    "retries": 0
+  },
+  "nativeCancellation": [
+    {
+      "kind": "materiality",
+      "locale": "en",
+      "requestCount": 1,
+      "browserAbort": "net::ERR_ABORTED",
+      "localState": "cancelled",
+      "originalResultQualified": false,
+      "sourceReconciliationStopped": "not-claimed"
+    },
+    {
+      "kind": "signals",
+      "locale": "br",
+      "requestCount": 1,
+      "browserAbort": "net::ERR_ABORTED",
+      "localState": "cancelled",
+      "originalResultQualified": false,
+      "sourceReconciliationStopped": "not-claimed"
+    }
+  ],
+  "pageErrors": 0,
+  "consoleErrors": 0,
+  "qualification": {
+    "conditions": "original HTTP 200 before each consultation",
+    "healthyLocales": [
+      "en",
+      "br"
+    ],
+    "materialityCancellation": "one native GET and native net::ERR_ABORTED; focus retained",
+    "signalCancellation": "one native GET and native net::ERR_ABORTED; Brazilian Portuguese copy",
+    "singleFlight": true,
+    "conditionRetained": true,
+    "selectionCleared": true,
+    "noResend": true,
+    "positiveMaterialityResult": false,
+    "positiveSignalResult": false,
+    "sourceReconciliationStopped": "not claimed",
+    "lateResponseExercised": false,
+    "positiveOriginalSpecPreserved": true
+  },
+  "review": {
+    "allPreviewsInspected": true,
+    "findings": "Native hierarchy and condition remain visible; current-source actions remain distinct from recorded evidence. Cancellation wording describes only this view. Narrow cards, full-width controls and wrapped references fit 320px."
+  },
+  "captures": [
+    {
+      "area": "UI61",
+      "state": "en-dark-desktop-materiality-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-light-desktop-materiality-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-light-320-materiality-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    },
+    {
+      "area": "UI61",
+      "state": "pt-br-dark-desktop-materiality-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-dark-desktop-materiality-local-cancel",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-light-320-materiality-local-cancel",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    },
+    {
+      "area": "UI61",
+      "state": "en-dark-desktop-signals-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-light-desktop-signals-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "en-light-320-signals-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    },
+    {
+      "area": "UI61",
+      "state": "pt-br-dark-desktop-signals-conditions-before-consultation",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "br-dark-desktop-signals-local-cancel",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI61",
+      "state": "br-light-320-signals-local-cancel",
+      "pathname": "/orchestra/sf-memory/signals",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    }
+  ],
+  "images": [
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-materiality-conditions-before-consultation.jpg",
+      "sha": "3e23c5a38cc76e630965933333b6153030d6445f",
+      "area": "UI61",
+      "state": "en-dark-desktop-materiality-conditions-before-consultation",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 75912,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg",
+      "sha": "85f0cec86ed4e42d9276c8907a4a1f7115ab2bf4",
+      "area": "UI61",
+      "state": "pt-br-dark-desktop-materiality-conditions-before-consultation",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 77601,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-materiality-local-cancel.jpg",
+      "sha": "6cc63c2c3ca15696f5b4a430a5da0e930747305b",
+      "area": "UI61",
+      "state": "en-dark-desktop-materiality-local-cancel",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 77925,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-light-320-materiality-local-cancel.jpg",
+      "sha": "f34356f4159e7c61ac28130203573669a8eee2a9",
+      "area": "UI61",
+      "state": "en-light-320-materiality-local-cancel",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320,
+      "bytes": 26191,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-signals-conditions-before-consultation.jpg",
+      "sha": "e7c1730397253b2785652d3fbce5de405b6cce5a",
+      "area": "UI61",
+      "state": "en-dark-desktop-signals-conditions-before-consultation",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 75826,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-pt-br-dark-desktop-signals-conditions-before-consultation.jpg",
+      "sha": "461b008f6d29f836a667a55556a635f66de6dc3a",
+      "area": "UI61",
+      "state": "pt-br-dark-desktop-signals-conditions-before-consultation",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 77506,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-br-dark-desktop-signals-local-cancel.jpg",
+      "sha": "4382ae7cae3b9e3c40014e5f1a07d8c5ab48a47e",
+      "area": "UI61",
+      "state": "br-dark-desktop-signals-local-cancel",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 77829,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-br-light-320-signals-local-cancel.jpg",
+      "sha": "1203fe7c80d761331b30ebf4c72d6646347cca8a",
+      "area": "UI61",
+      "state": "br-light-320-signals-local-cancel",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320,
+      "bytes": 26457,
+      "sourceRun": 45122439989,
+      "sourceJob": 137519060570,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    }
+  ]
+}

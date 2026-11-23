@@ -47,3 +47,12 @@
 @media (max-width: 620px) {
   .sf-context-card dl { grid-template-columns: minmax(0, 1fr); }
 }
+
+.sf-context-header { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+.sf-context-header > div { min-inline-size: 0; }
+.sf-context-header .mx-btn { flex: none; min-block-size: 44px; }
+.sf-context-header .mx-btn:focus-visible { outline: 2px solid var(--mx-blue); outline-offset: 2px; }
+@media (max-width: 620px) {
+  .sf-context-header { flex-direction: column; }
+  .sf-context-header .mx-btn { inline-size: 100%; white-space: normal; }
+}

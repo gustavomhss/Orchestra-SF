@@ -1,0 +1,178 @@
+/* Shared only by the four native routine leaves. Material and palette remain
+   owned by Orchestra; all source values and authorization states stay visible. */
+.sf-page-frame .sf-routine-workspace {
+  display: grid;
+  align-content: start;
+  gap: 24px;
+  min-inline-size: 0;
+  max-inline-size: 1160px;
+  color: var(--mx-strong);
+  font-family: var(--mx-sans);
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.6;
+}
+.sf-page-frame .sf-routine-workspace .sf-state-content {
+  display: grid;
+  min-inline-size: 0;
+  gap: 20px;
+  align-content: start;
+}
+.sf-page-frame .sf-routine-workspace :where(h2, h3, h4, p, dl) { margin: 0; }
+.sf-page-frame .sf-routine-workspace :where(h2, h3, h4) {
+  color: var(--mx-strong);
+  font-family: var(--mx-emphasis);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.sf-page-frame .sf-routine-workspace h2 { font-size: var(--orchestra-font-size-xl); }
+.sf-page-frame .sf-routine-workspace h3 { font-size: var(--orchestra-font-size-lg); }
+.sf-page-frame .sf-routine-workspace h4 { font-size: var(--orchestra-font-size-md); }
+.sf-page-frame .sf-routine-workspace :where(bdi, code, pre, dd, li) { overflow-wrap: anywhere; }
+.sf-page-frame .sf-routine-workspace :where(dt, small, .sf-routine-guidance) {
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-routine-workspace dd { margin: 0; min-inline-size: 0; }
+.sf-page-frame .sf-routine-workspace .mx-card {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 24px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-lg);
+  background: var(--mx-raised);
+  box-shadow: var(--mx-card-shadow);
+}
+.sf-page-frame .sf-routine-workspace .mx-card[data-selected="true"] {
+  border-color: var(--orchestra-accent);
+}
+.sf-page-frame .sf-routine-workspace .sf-n29-field {
+  display: grid;
+  gap: 8px;
+  min-inline-size: 0;
+  padding: 0;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-routine-workspace :where(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--mx-soft);
+  color: var(--mx-strong);
+  font-family: var(--mx-sans);
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.5;
+}
+.sf-page-frame .sf-routine-workspace textarea { resize: vertical; }
+.sf-page-frame .sf-routine-workspace :where(button, summary) {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.sf-page-frame .sf-routine-workspace :where(button, a, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--orchestra-accent);
+  outline-offset: 3px;
+}
+.sf-page-frame .sf-routine-workspace .mx-btn { justify-self: start; }
+.sf-page-frame .sf-routine-workspace .sf-routine-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-step {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 32px;
+  block-size: 32px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--mx-soft);
+  color: var(--mx-dim);
+  font-family: var(--mx-sans);
+  font-size: var(--orchestra-font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-review-values {
+  display: grid;
+  gap: 12px;
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-review-values > div {
+  display: grid;
+  gap: 4px;
+  min-inline-size: 0;
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-source {
+  min-inline-size: 0;
+  padding-block: 8px;
+  border-block-start: 1px solid var(--mx-line);
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-source > summary {
+  display: list-item;
+  padding-block: 10px;
+  cursor: pointer;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-source[open] > summary { margin-block-end: 8px; }
+.sf-page-frame .sf-routine-workspace .sf-routine-parameters,
+.sf-page-frame .sf-routine-workspace .sf-n29-run-output,
+.sf-page-frame .sf-routine-workspace .sf-n29-contribution-output {
+  max-block-size: 28rem;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-sm);
+  background: var(--mx-soft);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  font-size: var(--orchestra-font-size-sm);
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-guidance {
+  display: grid;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px solid var(--mx-line);
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-soft);
+}
+.sf-page-frame .sf-routine-workspace :where(p[role="alert"]) {
+  padding: 16px;
+  border: 1px solid var(--orchestra-danger);
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-soft);
+  color: var(--orchestra-danger);
+}
+.sf-page-frame .sf-routine-workspace .sf-routine-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 767px) {
+  .sf-page-frame .sf-routine-workspace { gap: 20px; }
+  .sf-page-frame .sf-routine-workspace .mx-card { padding: 20px; }
+  .sf-page-frame .sf-routine-workspace .sf-routine-filters { grid-template-columns: minmax(0, 1fr); }
+  .sf-page-frame .sf-routine-workspace .sf-routine-actions > button { flex: 1 1 100%; }
+}
+
+.sf-page-frame:has(.sf-routine-workspace) .mx-inner { max-inline-size: 1160px; }
+.sf-page-frame .sf-routine-workspace a.mx-btn { min-block-size: 44px; display: inline-flex; align-items: center; }
+.sf-page-frame .sf-routine-run-navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.sf-page-frame .sf-routine-run-navigation > p { color: var(--mx-dim); }
