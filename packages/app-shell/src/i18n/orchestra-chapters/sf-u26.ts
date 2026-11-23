@@ -2,6 +2,9 @@
 export const SF_U26_COPY = {
   "sf.u26.readSignals": "Read current signals",
   "sf.u26.cancelSignals": "Cancel signal consultation",
+  "sf.u26.cancelMateriality": "Cancel materiality consultation",
+  "sf.u26.readMateriality": "Read materiality",
+  "sf.u26.materialityCancelled": "Materiality consultation stopped in this view. No current result was received. You can check again.",
   "sf.u26.signalsIdle": "Read current signals to check whether the recorded conditions need reconsideration.",
   "sf.u26.signalsLoading": "Checking current signals against the authorized source.",
   "sf.u26.signalsCancelled": "Signal consultation stopped in this view. No current result was received. You can check again.",
@@ -99,6 +102,9 @@ export const SF_U26_COPY = {
 export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> = {
   "sf.u26.readSignals": "Consultar sinais atuais",
   "sf.u26.cancelSignals": "Cancelar consulta de sinais",
+  "sf.u26.cancelMateriality": "Cancelar consulta de materialidade",
+  "sf.u26.readMateriality": "Consultar materialidade",
+  "sf.u26.materialityCancelled": "Consulta de materialidade interrompida nesta tela. Nenhum resultado atual foi recebido. Você pode consultar novamente.",
   "sf.u26.signalsIdle": "Consulte os sinais atuais para verificar se as condições registradas precisam ser reavaliadas.",
   "sf.u26.signalsLoading": "Consultando os sinais atuais na fonte autorizada.",
   "sf.u26.signalsCancelled": "Consulta interrompida nesta tela. Nenhum resultado atual foi recebido. Você pode consultar novamente.",
