@@ -297,7 +297,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     <div data-sf-wave="polish" class="sf-u38-page sf-workflow" data-sf-surface="UI54">
       <SfStatePanel state={readState()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[readState()])}
         onRetryRead={() => bump((count) => count + 1)}>
-        <section class="sf-u38-section">
+        <section class="sf-u38-section sf-section">
           <h2>{t(key("sf.u38.proposal"))}</h2>
           <dl class="sf-u38-meta">
             <div><dt>{t(key("sf.u38.proposalReference"))}</dt><dd><bdi>{reference()}</bdi></dd></div>
@@ -329,7 +329,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             </div>}
           </Show>
         </section>
-        <section class="sf-u38-section">
+        <section class="sf-u38-section sf-section">
           <h2>{t(key("sf.u38.proposalSource"))}</h2>
           <p>{t(key("sf.u38.source"))}</p>
           <Show when={store.review?.target}>
@@ -340,7 +340,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
             </dl>}
           </Show>
         </section>
-        <section class="sf-u38-section" aria-label={t(key("sf.u38.proposalReview"))}>
+        <section class="sf-u38-section sf-section" aria-label={t(key("sf.u38.proposalReview"))}>
           <h2>{t(key("sf.u38.proposalReview"))}</h2>
           <Show when={chosenChange() && store.review && store.review.state === "planned" &&
             store.workbench?.permissions.apply && isAdmitted("dashboard.dashboard-hot-topic-apply")}
@@ -371,7 +371,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
               onCancel={() => bump((count) => count + 1)} />
           </Show>
         </section>
-        <section class="sf-u38-section">
+        <section class="sf-u38-section sf-section">
           <h2>{t(key("sf.u38.proposalReceipt"))}</h2>
           <Show when={store.review?.receipt}
             fallback={<p role="status">{t(key("sf.u38.proposalNoReceipt"))}</p>}>

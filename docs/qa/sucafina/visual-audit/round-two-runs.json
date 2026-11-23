@@ -1,0 +1,1560 @@
+{
+  "schemaVersion": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 715,
+  "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+  "productSource": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+  "counting": "One ID per distinct observable issue. File, commit, theme and viewport totals are not counts of fixes.",
+  "issues": [
+    {
+      "id": "R2-R01",
+      "area": "S01 / CAP21",
+      "problem": "Comfortable table sort controls are smaller than row actions and lack focus breathing room.",
+      "change": "44px sorting targets and tokenized header padding.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-R02",
+      "area": "S01 / CAP27 / CAP10",
+      "problem": "Record Back is centered across its grid; title and actions are stacked even at desktop width.",
+      "change": "Start-aligned Back and responsive title/action wrapper; adapt CAP10 local overrides.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-B01",
+      "area": "CAP28",
+      "problem": "Seven stacked section links consume roughly 400px of a 320px-wide page before the fields.",
+      "change": "Compact horizontal section navigation, full labels, native keyboard focus and unchanged anchors.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-C01",
+      "area": "UI49",
+      "problem": "Observed differences heading abuts previous/current cards.",
+      "change": "Apply the existing section rhythm to compatibility content.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-C02",
+      "area": "UI50",
+      "problem": "Raw review ID dominates the narrow form; coverage and selection lack metadata rhythm.",
+      "change": "Structured metadata and native disclosure preserving the exact review ID.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-C03",
+      "area": "UI69",
+      "problem": "Review changes and Current source controls touch vertically.",
+      "change": "Tokenized grid spacing inside the existing summary-state content.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-C04",
+      "area": "UI54 / CAP02 shared style",
+      "problem": "Proposal sections use near-white fallback borders and transparent surfaces with cramped headings.",
+      "change": "Use native material/border tokens and existing section spacing.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-A01",
+      "area": "Home",
+      "problem": "Phone-width KPI absence labels exceed their reserved content width and extend into the card’s inner padding.",
+      "change": "Single-column phone layout preserves complete state labels and values; 700px remains two columns.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-A02",
+      "area": "Skills",
+      "problem": "Failed save leaves the still-open dialog with focus on document.body.",
+      "change": "After a failed save, restore the previously focused control only if document.body is active and the control remains inside the open dialog; leave other active controls untouched.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-A03",
+      "area": "Providers",
+      "problem": "Credential removal confirmation uses primary-action treatment instead of the existing destructive role.",
+      "change": "Use the native danger role for Disconnect confirmation, retaining the original removal flow.",
+      "status": "verified within the recorded runtime and visual scope"
+    },
+    {
+      "id": "R2-A04",
+      "area": "Home footer",
+      "problem": "At 320px in Portuguese, footer provenance and actions stay side by side; 301px of content exceeds the available 278px and clips Configure tracking.",
+      "change": "Stack footer information and actions at phone widths while preserving complete text and buttons.",
+      "status": "verified within the recorded runtime and visual scope"
+    }
+  ],
+  "runs": [
+    {
+      "id": "foundation",
+      "source": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+      "snapshot": "b46ae0b4681e370b4863cd7eb95c2f538b810335",
+      "run": 45114820142,
+      "job": 137495132971,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114820142",
+      "artifact": {
+        "id": 14790988705,
+        "name": "playwright-ubuntu-24.04-1",
+        "bytes": 28865964,
+        "sha256": "67eaf6c13bc9c6bd594957bcd094639349162e16b4d13555ed993706c59ca33e",
+        "digestVerified": true
+      },
+      "result": "success",
+      "tests": {
+        "bundle": "production",
+        "passed": 37,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "attempts": 37,
+        "retries": 0,
+        "errors": [],
+        "durationMs": 139894.67,
+        "files": [
+          {
+            "file": "orchestra/chapter-kpis.spec.ts",
+            "passed": 17,
+            "total": 17,
+            "attempts": 17
+          },
+          {
+            "file": "orchestra/chapter-providers.spec.ts",
+            "passed": 7,
+            "total": 7,
+            "attempts": 7
+          },
+          {
+            "file": "orchestra/chapter-skills.spec.ts",
+            "passed": 13,
+            "total": 13,
+            "attempts": 13
+          }
+        ]
+      },
+      "visual": {
+        "checkpoints": 17,
+        "originals": [
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-footer-br-light-320.png",
+            "sha256": "f141d11495bc5b74ed685c0f2bd2a8af3fabcdd81a00464e2577b8104263cb7a",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-absence-en-dark-320.png",
+            "sha256": "17cd6aeb5048f8b79add05b046fc5a29ae2411ef7a6dc629957c8b1de874c3df",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-absence-en-dark-320.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-states-en-dark-320.png",
+            "sha256": "174d08821ad62a4e80398ff4d5c9a072096230f928ddef98e2182a012bec8a2a",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-states-en-dark-320.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-85adc-eadable-at-320px-in-en-dark-chromium/home-footer-en-dark-320.png",
+            "sha256": "5442fdd5bb9dd0d77d13dddc9ff5d63bd761d657b26f3478719f3263064dab41",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-states-br-light-320.png",
+            "sha256": "e038d655dfdac206d9194e65d606f44232b4acd31f06cacd1fc4078724d044b8",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-states-br-light-320.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-absence-br-light-320.png",
+            "sha256": "d633cdad2c89a5131777c3badc05133ce5394c0f4692f85d1716cd91af47e76d",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-1ae14-adable-at-320px-in-br-light-chromium/home-absence-br-light-320.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-states-en-light-390.png",
+            "sha256": "9b511fa7cae5402fe8c0399e5c04e52af6268f521bf3a5d445193eaaf9bb748a",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-states-en-light-390.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-absence-en-light-390.png",
+            "sha256": "4629da0dd95fd4a88d41dffbf052748fa640e410f5ea693220af0f57084a8c93",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-absence-en-light-390.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-3eaf2-adable-at-390px-in-en-light-chromium/home-footer-en-light-390.png",
+            "sha256": "bfb9567ef310bc0e4b23f7e17fa6e63b4fc71ddc3cd4b80888eaf0a2a2a567f3",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-states-br-dark-390.png",
+            "sha256": "c989636559b16e961652f713c346607b47af71008750346a6d21e27d23e88537",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-states-br-dark-390.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-absence-br-dark-390.png",
+            "sha256": "3317935e6f1ae642f294e09581cdf72eb980d7b6211d3fc5c9d58290593a25a0",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-absence-br-dark-390.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-rou-dbeed-eadable-at-390px-in-br-dark-chromium/home-footer-br-dark-390.png",
+            "sha256": "9fd1982bab5ff3d84a93b6c829b600cf91ff56a3fa9556d9fc07eedfe0859f8f",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-a-d295c-ailure-retains-it-for-retry-chromium/skill-failed-save-focus.png",
+            "sha256": "9de0921f43ce00dd2a9c4f919237893241431371fa456c0699da3f112bdbf305",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-skills-a-d295c-ailure-retains-it-for-retry-chromium/skill-failed-save-focus.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-provider-3d887-tial-removal-key-and-picker-chromium/provider-disconnect-confirmation-light.png",
+            "sha256": "fe2a5539fa19b82435eaed9b29ee9ccb41e58a4fe903c7c62f92a547fe33d2f0",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-at--370d3-s-without-horizontal-scroll-chromium/test-finished-1.png",
+            "sha256": "c616860234e63635ff8141bd47bd5efb0afa16b25eedb8159dce1c35c19226cc",
+            "method": "exact-SHA256-alias-of-original-already-opened-full-size",
+            "previouslyViewedInRun": 45114133902,
+            "previousPath": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-at--370d3-s-without-horizontal-scroll-chromium/test-finished-1.png"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-dar-38b3c--exports-the-displayed-data-chromium/dark.png",
+            "sha256": "edd7632de97be16385268a8d4d72237ff72a85b4e060af30e6ea0798e0bab7a4",
+            "method": "opened-original-full-size-with-view_image"
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/orchestra-chapter-kpis-lig-9cfc0--exports-the-displayed-data-chromium/light.png",
+            "sha256": "c653a3e4525723f611f7edbec87ed09842d655423dc086a67e3449417b417b94",
+            "method": "opened-original-full-size-with-view_image"
+          }
+        ],
+        "limitations": [
+          "Original production browser application with HTTP fixtures; not live private provider execution, Microsoft authentication or Teams tenant qualification.",
+          "Only the listed viewport/theme/language states are visually qualified; no claim of every application screen.",
+          "Home checkpoints use programmatic scroll and explicit focus/in-viewport checks; they do not establish wheel reachability.",
+          "The two initial PT baseline failures were the diagnostic locale setup, corrected to canonical br before this run; they are not counted as product defects.",
+          "No local product tests/build or artifact code executed. CI was created and controlled by root."
+        ]
+      },
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/orchestra/chapter-kpis.spec.ts",
+          "e2e/orchestra/chapter-skills.spec.ts",
+          "e2e/orchestra/chapter-providers.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "packages/app-shell/e2e/playwright.production.config.ts"
+      ],
+      "behaviorProofs": [
+        {
+          "id": "R2-A01",
+          "commit": "1427af24e00e3ddfbdbfb1d4f8fba0bd284f08ed",
+          "verified": "All4 narrow variants have state scrollWidth=clientWidth:236px at320 and306px at390. Complete EN/PT state labels visible. Home700 remains2 columns and desktop remains4; original data/export assertions pass."
+        },
+        {
+          "id": "R2-A02",
+          "commit": "1427af24e00e3ddfbdbfb1d4f8fba0bd284f08ed",
+          "verified": "Original failed-save/retry test preserves the exact draft and reports BUTTON/Save/insideDialog=true. Active Save focus assertion passes.",
+          "precision": "The error PNG is pixel-identical to the unfocused baseline; focus is proven by DOM measurement and the active assertion, not by inferring a ring from the image."
+        },
+        {
+          "id": "R2-A03",
+          "commit": "af663d4f07e8ae6fc636cace563c0b622b2087f6",
+          "verified": "The native Disconnect confirmation has danger treatment; original7 Providers tests, including confirmed removal and OAuth/error flows, pass."
+        },
+        {
+          "id": "R2-A04",
+          "commit": "2876149437d86f0d72dbf9a522b27cdbde529935",
+          "verified": "All4 footer captures show full text and separate actions without clipping. EN/PT320 footer278/278 and document320/320; EN/PT390 footer348/348 and document390/390. Configure control remains focused/in viewport in the original active test.",
+          "comparison": "Prior PT320 footer301/278 clipped Configurar rastreamento. Only4CSS lines changed between first and final cohort sources."
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+      "snapshot": "f7e7f8b6beea99ae3ff2744ff0810164bd46a354",
+      "run": 45114141134,
+      "job": 137492973580,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114141134",
+      "artifact": {
+        "id": 14790993134,
+        "bytes": 123902836,
+        "sha256": "e4b8e35dcf811a447eac75cd6a9af7a0e47980a1ebd709eb20cf6f7d9f9da3ba",
+        "digestVerified": true
+      },
+      "result": "success",
+      "tests": {
+        "passed": 3,
+        "failed": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "retries": 0
+      },
+      "visual": {
+        "checkpoints": 7,
+        "originals": [
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-three-2c03a-es-and-exact-change-reviews-chromium/CAP10-dark-desktop-project-detail-test-data.png",
+            "sha256": "bfdd7c41f3edb5fca7f478f95d3a9b0b0b44fd3fa904a0b51d0adf2ef5c55f8c",
+            "method": "view_image original PNG",
+            "observation": "Desktop project detail: Back is left-aligned in its own row; the three admitted actions align beside the title, above the divider. No overlap or clipped label; status, metadata, numeric values and milestones remain readable."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-two-i-2f47b-PEX-with-real-source-writes-chromium/CAP02-dark-desktop-detail-test-data.png",
+            "sha256": "fdd220440c2007d1d6f6fd0bb87dd91b8b9ead169008e7f51e53b2c30f064fcd",
+            "method": "view_image original PNG",
+            "observation": "Dark desktop topic detail retains native quiet borders, consistent spacing and readable metadata/actions. The Executive references chooser is captured in Loading state, as in the previous baseline; this image does not qualify its loaded choices."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-two-i-2f47b-PEX-with-real-source-writes-chromium/CAP02-light-desktop-test-data.png",
+            "sha256": "0b95f35b723ba72c81b3b3107b95717c1653aae2c0ca1d4e97a05e1e1708b5a4",
+            "method": "view_image original PNG",
+            "observation": "Light desktop topic list: native translucent surface and subdued rules; three source records, statuses, dates and View details controls read clearly with no overlapping columns."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-two-i-2f47b-PEX-with-real-source-writes-chromium/CAP02-light-320-test-data.png",
+            "sha256": "5b648ff52af4a0347b9ae87ef5e122ef6f8474eff631a84e001b1460edaa3b6e",
+            "method": "view_image original PNG",
+            "observation": "Light320 topic list: filter/refresh and View details controls fit the content width; title and owner text wrap by words, status/date remain distinct. Only neighboring tabs and the next record continue outside their expected scrolling/fold areas."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-two-i-2f47b-PEX-with-real-source-writes-chromium/CAP02-dark-320-related-test-data.png",
+            "sha256": "a94740e1d4b587e2359f119f98a58f145a58c28dccfcb89a46451da9ae439be4",
+            "method": "view_image original PNG",
+            "observation": "Dark320 topic detail lower area: readable two-column metadata, full-width Edit/Delete controls, quiet borders and intact focused native select. Executive references has progressed to Select a record here, with its field label and ring fully visible."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-two-i-2f47b-PEX-with-real-source-writes-chromium/CAP02-pt-BR-dark-desktop-editor-test-data.png",
+            "sha256": "a19099c5df7af20ae8eb6274d1e014e85ada1341a2c2dc6da52f6b4ed5ec8712",
+            "method": "view_image original PNG",
+            "observation": "PT-BR desktop topic editor: fields retain a coherent two-column layout; labels, source values, focused Notes and both actions remain complete with native materials."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-three-2c03a-es-and-exact-change-reviews-chromium/CAP10-dark-desktop-milestones-test-data.png",
+            "sha256": "7fff5ed54f7d51a8a7e716d9908fa19873f8402c3f17eb5f136181fe6ab2ee9d",
+            "method": "view_image original PNG",
+            "observation": "Desktop milestone detail in the narrower760px panel: Back remains on its own left-aligned line; title, status and two admitted actions fit without collision; source milestone descriptions and dates remain readable."
+          }
+        ],
+        "limitations": [
+          "The existing cohort does not capture the CAP10 project detail/header at320px. Narrow CAP10 list/review captures are not substitutes for that state.",
+          "The CAP02 desktop detail captures its references chooser in Loading state; the separate dark320 related-area image shows Select a record. Loaded choices were not opened in this visual review.",
+          "Only the seven listed originals were visually qualified in this focal pass. Passing cases and generated image counts do not mean every generated image was inspected.",
+          "No product, tests or CI were changed or started during this review."
+        ]
+      },
+      "sourceAssertions": [
+        {
+          "name": "native-wave-three-people-evidence",
+          "value": {
+            "source": "isolated canonical producer data; one real browser-confirmed member update",
+            "areas": [
+              "CAP06",
+              "CAP07",
+              "CAP08"
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US",
+              "pt-BR"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "writes": 1,
+            "actualBrowserZoom": "not measured",
+            "workbookBindings": "unavailable; no preview or download manufactured",
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-wave-three-portfolio-evidence",
+          "value": {
+            "source": "isolated canonical producer data; two real browser-confirmed project/milestone writes",
+            "areas": [
+              "CAP09",
+              "CAP10"
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US",
+              "pt-BR"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "writes": 2,
+            "actualBrowserZoom": "not measured",
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-wave-two-localized-diagnostics",
+          "value": {
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-wave-two-evidence",
+          "value": {
+            "source": "isolated canonical producer data and three real browser-confirmed commands",
+            "views": [
+              "CAP02",
+              "CAP03",
+              "CAP04"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "heights": [
+              1100,
+              800,
+              900
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US",
+              "pt-BR"
+            ],
+            "actualBrowserZoom": "not measured",
+            "writes": 3,
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        }
+      ],
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/design-wave-two.spec.ts",
+          "e2e/sucafina/design-wave-three-people.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "packages/app-shell/e2e/playwright.production.config.ts"
+      ]
+    },
+    {
+      "id": "planning",
+      "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+      "snapshot": "3678ea8717bca8e37c566973e42e03eab02128e3",
+      "run": 45114138448,
+      "job": 137492964786,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114138448",
+      "artifact": {
+        "id": 14791631333,
+        "name": "playwright-ubuntu-24.04-1",
+        "bytes": 95234119,
+        "sha256": "188839af94335f65d6ded8a1d38c24379be399607c7ece386dfbbf622bd99630",
+        "digestVerified": true
+      },
+      "result": "success",
+      "tests": {
+        "passed": 6,
+        "failed": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "retries": 0,
+        "allResultsPassedRetryZero": true
+      },
+      "visual": {
+        "checkpoints": 14,
+        "originals": [
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-dark-320-sort-focus-test-data.png",
+            "sha256": "eece0babd4c8cf2b7a7b6bb23a0e96937eff8b18d8ed009716647f5c1fd41d26",
+            "method": "view_image original PNG",
+            "observation": "At 320 px, Name sort has a complete visible focus ring with clearance from the table edge; header label and sort icon remain legible. Entity cards, Add controls and explanatory copy wrap within the panel. Lower rows continue below the viewport rather than overlapping."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-dark-desktop-test-data.png",
+            "sha256": "07f6990e7470452a9ff353ef499339a9396a20fca4a77925508ed935d74915f1",
+            "method": "view_image original PNG",
+            "observation": "Dark desktop entity and allocation tables show readable labels and source names, consistent header/row rhythm, clear Name sort icon and separated Edit/Delete actions. Native borders and panels remain quiet; no column overlap or clipped labels."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--f0183-nd-CAP21-shared-allocations-chromium/CAP21-shared-catalogs-light-desktop-test-data.png",
+            "sha256": "7ac60320de479ba9e2b2052c9f65eaf995877aca781e7172d7779e477fc3ec1b",
+            "method": "view_image original PNG",
+            "observation": "Light desktop keeps the same entity/allocation table geometry, legible text and source names, quiet borders, and distinct Edit/Delete actions. Header spacing remains consistent and no content collision appears."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-desktop-confirmed-supplier-detail-test-data.png",
+            "sha256": "aa378bd3821d36e40fec581307cf6d8164a5e22ef27e93c60988060ff48f28ac",
+            "method": "view_image original PNG",
+            "observation": "Dark desktop supplier detail places Back at the leading edge on its own row with a complete keyboard-focus outline. The title/record reference/status group is left aligned; Open page sits to its right without a full-width Back gap or title collision. Supplier number, pending state, availability labels and field values remain readable."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-dark-320-confirmed-supplier-detail-test-data.png",
+            "sha256": "b2890e3efaa844cffda5c33866b2820ebc48d18e8dac150e58cbd49492b5ab03",
+            "method": "view_image original PNG",
+            "observation": "At 320 px in dark theme, Back, the two-line supplier title, Record reference, Pending and Open page form an orderly leading-aligned stack. Open page remains fully visible with adequate separation from the metadata cards. Supplier number/status and the start of General information fit the panel without horizontal text clipping."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-desktop-confirmed-supplier-detail-test-data.png",
+            "sha256": "6c6b6d4487fa933581798e0d484a86abab7f39674fd563ac165e71c52f56930f",
+            "method": "view_image original PNG",
+            "observation": "Light desktop preserves the leading Back placement and title/Open page row, with source reference and Pending below the title. Metadata and two-column body have clear boundaries and readable contrast; no over-wide centered Back or header collision remains."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--100c7-rafts-and-confirmed-changes-chromium/CAP27-light-320-confirmed-supplier-detail-test-data.png",
+            "sha256": "d0be5a81b6b8c037ed655c31e6e868576c03b31e6bdde78e314e41d00d294830",
+            "method": "view_image original PNG",
+            "observation": "Light 320 px supplier detail matches the dark narrow arrangement: full Back and Open page controls, a two-line title and complete reference/status. The metadata cards are stacked and readable; labels and values do not collide."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-settings-test-data.png",
+            "sha256": "8777c6d6b937b86fb1b06a5aa56056345a381200457a8014763a67206bc75aa3",
+            "method": "view_image original PNG",
+            "observation": "CAP28 light 320 px now shows a single horizontal section-navigation row rather than seven stacked links. General policy is readable and the adjacent Approval matrix continues within the scroller. Currency, approval mode, minimum quotations and technical weight appear within the first viewport; labels and values remain complete."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-last-section-focus-test-data.png",
+            "sha256": "a058bfdc27c4385be1821633963e58b2bfbbdf1e7e3d88b84c0cd23581e54ee0",
+            "method": "view_image original PNG",
+            "observation": "After real keyboard navigation, the last Attachments & reminders anchor is fully visible in the 320 px nav with its complete focus outline. A partial previous anchor at the leading edge visibly indicates horizontal continuation; the complete focused label has room inside the panel."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-320-section-destination-test-data.png",
+            "sha256": "e7583355959cfd4c5bae522990958ffb20209de5525d3f63014beed7255cb89a",
+            "method": "view_image original PNG",
+            "observation": "After activating the final anchor, Attachments & reminders is visibly at the top of the panel. Attachment limit (bytes) retains 26214400 with the explicit 25 MiB equivalence; reminder 7 and escalation 14 remain readable in full-width fields. The destination is present, not merely an off-screen hash change."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP28-pt-BR-dark-320-test-data.png",
+            "sha256": "de0a69b81adf4ac63c89faffc684556bcead1cd7027b388243acd1ab96017155",
+            "method": "view_image original PNG",
+            "observation": "Portuguese dark 320 px keeps the nav to one row with Política geral complete and the adjacent longer item visibly continuing horizontally. Moeda, Modo de aprovação da requisição, Número mínimo de cotações and Peso técnico remain readable; no label is ellipsized inside a form field. This is the PT initial state, not a PT end-anchor interaction proof."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-dark-desktop-settings-test-data.png",
+            "sha256": "c2116aed7ab6b0c3bec7ca2261780213870a119abc7b6a6aadd3d4b9ca523862",
+            "method": "view_image original PNG",
+            "observation": "Dark desktop retains the seven-link grid in two rows, with the longest label wrapping by words and all anchors complete. General policy fields remain in two balanced columns, original numbers/units are visible, and the attachment section stays distinct."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--67140--draft-and-confirmed-change-chromium/CAP28-light-desktop-settings-test-data.png",
+            "sha256": "8f9b8ab97346e55bb0ee75c2736075c5f4e17a5aa5fcb2728bed974b7e2160e2",
+            "method": "view_image original PNG",
+            "observation": "Light desktop shows the same complete seven-link grid and two-column form, with balanced label/control spacing, readable native colors and subtle section borders. No desktop navigation or field regression is visible."
+          },
+          {
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-wave-four--53159-ll-five-areas-in-Portuguese-chromium/CAP28-pt-BR-dark-desktop-test-data.png",
+            "sha256": "6fbc2d2e767fb6a214643346517bc9aa5f1b1016518c14d74b12cba52e560f17",
+            "method": "view_image original PNG",
+            "observation": "Portuguese dark desktop keeps all seven navigation labels complete, including the longer Condições de pagamento, categorias e incoterms label wrapping within its cell. Form labels and numbers remain aligned and readable; the original byte limit and MiB explanation are explicit."
+          }
+        ],
+        "limitations": [
+          "Visual inspection is limited to the fourteen explicitly listed original PNGs; 91 named captures were generated, not all visually re-reviewed in this focal second round.",
+          "CAP28 final-anchor and destination interaction proof is EN/light/320. Portuguese initial navigation and desktop were visually inspected; this receipt does not claim a separate PT final-anchor interaction.",
+          "Desktop and 320 px viewport screenshots are not proof of browser zoom. Attachments explicitly say actualBrowserZoom not measured.",
+          "Native journey uses isolated canonical producer test data and authorized native reads. It is not live customer-data validation.",
+          "Status/errors/outcome in the official report are authoritative. Nested recorded errors in successful expectation polling attempts are not failed tests or test retries.",
+          "No new CI, product change, local product execution or additional visual sweep was performed for this review."
+        ]
+      },
+      "sourceAssertions": [
+        {
+          "name": "planner-pt-BR-diagnostics",
+          "value": {
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-planner-headcount-allocation-evidence",
+          "value": {
+            "source": "Original domain commands and fresh authorized native reads; no request, authority or receipt mocks",
+            "areas": [
+              "CAP20",
+              "CAP21"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US",
+              "pt-BR"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [
+              "Headcount/save",
+              "Entities & allocations/save"
+            ],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "planner-pt-BR-diagnostics",
+          "value": {
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-planner-fx-versions-evidence",
+          "value": {
+            "source": "Original domain commands and fresh authorized native reads; no request, authority or receipt mocks",
+            "areas": [
+              "CAP22",
+              "CAP23",
+              "CAP23-compare"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US",
+              "pt-BR"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [
+              "FX rates/save",
+              "Versions/save",
+              "Versions/copy"
+            ],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-procurement-wave-four-evidence",
+          "value": {
+            "source": "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
+            "group": "requests-approvals",
+            "areas": [
+              "CAP24",
+              "CAP25",
+              "CAP26"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [
+              "CAP25.save PR",
+              "CAP25.create",
+              "CAP25.submit_pr",
+              "CAP25.save sourcing",
+              "CAP26.approve PR",
+              "CAP26.approve sourcing",
+              "CAP26.reject PO",
+              "CAP25.save PO"
+            ],
+            "sourcePostPaths": [
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement",
+              "/sucafina/procurement"
+            ],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-procurement-wave-four-evidence",
+          "value": {
+            "source": "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
+            "group": "suppliers",
+            "areas": [
+              "CAP27"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [
+              "CAP27.create",
+              "CAP27.save"
+            ],
+            "sourcePostPaths": [
+              "/sucafina/procurement",
+              "/sucafina/procurement"
+            ],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-procurement-wave-four-evidence",
+          "value": {
+            "source": "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
+            "group": "settings",
+            "areas": [
+              "CAP28"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark",
+              "light"
+            ],
+            "locales": [
+              "en-US"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [
+              "CAP28.save"
+            ],
+            "sourcePostPaths": [
+              "/sucafina/procurement"
+            ],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "procurement-pt-BR-diagnostics",
+          "value": {
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        },
+        {
+          "name": "native-procurement-wave-four-evidence",
+          "value": {
+            "source": "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
+            "group": "localized",
+            "areas": [
+              "CAP24",
+              "CAP25",
+              "CAP26",
+              "CAP27",
+              "CAP28"
+            ],
+            "widths": [
+              1440,
+              320
+            ],
+            "schemes": [
+              "dark"
+            ],
+            "locales": [
+              "pt-BR"
+            ],
+            "actualBrowserZoom": "not measured",
+            "confirmedCommands": [],
+            "sourcePostPaths": [],
+            "consoleErrors": [],
+            "pageErrors": []
+          }
+        }
+      ],
+      "behaviorProofs": [
+        {
+          "finding": "R2-R01",
+          "area": "CAP21",
+          "proof": "The original native journey asserts a single sort target, keyboard modality, focused target and solid outline, width and height >=44 px. Three Enter presses prove ascending, descending and original source order through aria-sort plus exact rendered names.",
+          "spec": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+          "sourceBlob": "4ec46b7cf7064cffea3d277d05d0a8c239550290"
+        },
+        {
+          "finding": "R2-R02",
+          "area": "CAP27",
+          "proof": "The original supplier create/readback journey asserts Back focus and solid outline, height >=44 px and leading x alignment to title within 1 px. Four real theme/viewport screenshots were examined. Enter on Back returns to the list; reopening the exact created supplier, edit/save and source readback remain in the passing case.",
+          "spec": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+          "sourceBlob": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9"
+        },
+        {
+          "finding": "R2-B01",
+          "area": "CAP28",
+          "proof": "The original settings journey asserts seven anchors, focused native nav and solid outline, real horizontal overflow. Seven real Tab presses reach the final anchor, which is fully in viewport, with scrollLeft >0. Enter reaches the exact attachment hash and visible reminder input without any extra POST. Cancel/resume draft, one original save and readback remain in the passing case.",
+          "spec": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+          "sourceBlob": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9"
+        }
+      ],
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/design-wave-four-planner.spec.ts",
+          "e2e/sucafina/design-wave-four-procurement.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "packages/app-shell/e2e/playwright.production.config.ts"
+      ]
+    },
+    {
+      "id": "workflows",
+      "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+      "snapshot": "246851763f7633616d11740425d21c0b2fe88524",
+      "run": 45114143066,
+      "job": 137492980287,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114143066",
+      "artifact": {
+        "id": 14790963994,
+        "bytes": 113968628,
+        "sha256": "58ba6775c3e715fe5544bc8e911ce42bcec15d574a9975d8511422df5fa7f25b",
+        "digestVerified": true
+      },
+      "result": "success",
+      "tests": {
+        "passed": 5,
+        "failed": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "retries": 0,
+        "errors": [],
+        "bundle": "production",
+        "workers": 1,
+        "cases": [
+          {
+            "title": "workflow polish: original portfolio inputs and contextual analytics",
+            "status": "expected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "passed",
+                "retry": 0,
+                "durationMs": 70389,
+                "errors": []
+              }
+            ]
+          },
+          {
+            "title": "workflow polish: original agenda, preserved review, comparison and report selection",
+            "status": "expected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "passed",
+                "retry": 0,
+                "durationMs": 111486,
+                "errors": []
+              }
+            ]
+          },
+          {
+            "title": "workflow polish: original relationships, discussion, confirmation and follow-up draft",
+            "status": "expected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "passed",
+                "retry": 0,
+                "durationMs": 84877,
+                "errors": []
+              }
+            ]
+          },
+          {
+            "title": "workflow polish: original memory inputs and explicit missing observations",
+            "status": "expected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "passed",
+                "retry": 0,
+                "durationMs": 57002,
+                "errors": []
+              }
+            ]
+          },
+          {
+            "title": "workflow polish: routines, schedules, exports and local context",
+            "status": "expected",
+            "expectedStatus": "passed",
+            "results": [
+              {
+                "status": "passed",
+                "retry": 0,
+                "durationMs": 105720,
+                "errors": []
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "package": "app",
+        "packageSelector": "@orchestra/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/design-workflows.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "packages/app-shell/e2e/playwright.production.config.ts"
+      ],
+      "visual": {
+        "checkpoints": 21,
+        "originals": [
+          {
+            "index": 35,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-compatible-original-revisions-dark-320.png",
+            "sha256": "604946364d8d51d3412de5d210e8254dabe43ffc10349568a5381706d860fd73",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI49-compatible-original-revisions-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 36,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-compatible-original-revisions-dark-desktop.png",
+            "sha256": "05aea880949e0791fa3aaf055d6039a48572916929095be038a976dc2abf2eb7",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI49-compatible-original-revisions-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 37,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-compatible-original-revisions-light-desktop.png",
+            "sha256": "9d6ed02673fca124f946dfbd4842b5506e475d0142db8fcebfea76f8c47ebc31",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI49-compatible-original-revisions-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 38,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-320.png",
+            "sha256": "67c7c64cb58bb3422ce9081f8e853906644ec67e5137a55939811f78799d625b",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI49-original-comparison-detail-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 39,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-desktop.png",
+            "sha256": "0c932348d05f06642e7eb8f00b0cc196961f6cbdde32868919bd86e2ee7748ff",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI49-original-comparison-detail-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 40,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-light-desktop.png",
+            "sha256": "aa33d26748c65e712e859758902123415203f499157052d0330b43d2dd9782ec",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI49-original-comparison-detail-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 41,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-content-and-notes-dark-320.png",
+            "sha256": "874ef0dc35965a38200bea772451074fa62d2fce4e1a1ac0eb1e4d69a680384e",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-content-and-notes-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 42,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-content-and-notes-dark-desktop.png",
+            "sha256": "076b5e3caa69049d49e39bd5c7d2375f961b603629f1e9c0a184ddc1d1be0b6c",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-content-and-notes-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 43,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-content-and-notes-light-desktop.png",
+            "sha256": "964a249bc8f0a072cf906a2092d4e7e12934ca7ec5f4c80e4b1b5679a80c566e",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-content-and-notes-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 44,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-selection-dark-320.png",
+            "sha256": "b5dc98226c0a359f928951631e28caa2f412ae7e09b0aedce9b42dc9d895c828",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-selection-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 45,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-selection-dark-desktop.png",
+            "sha256": "790b820c88fa0dceedf66a3c01bed46ffa1cd892b875f49531943b011745354a",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-selection-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 46,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-selection-light-desktop.png",
+            "sha256": "abba2e963da0bc2a8672beb116caf1e9c3d053047ab5ab54d83dbe055d7f4253",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-selection-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 47,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-source-reference-dark-320.png",
+            "sha256": "518e61d84f60a64385ce0f85ee2d773b308759554d09e3019bd02e1053826610",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-source-reference-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 48,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-source-reference-dark-desktop.png",
+            "sha256": "c0c10b784dbe933951f541c095fe7ebdd5fcc327a88fdf9ef6335972c922345b",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-source-reference-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 49,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI50-authorized-report-source-reference-light-desktop.png",
+            "sha256": "e7376dd4d37e1fb2bfdcc5a549b2a035c959da5b7fe4b73b2892b97f93ddd73d",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI50-authorized-report-source-reference-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 59,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--3ebac-rmation-and-follow-up-draft-chromium/UI54-original-follow-up-draft-dark-320.png",
+            "sha256": "de59b864f29b01579c323c7c8158a25c8b2ff49583152d3969277d934858443d",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI54-original-follow-up-draft-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 60,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--3ebac-rmation-and-follow-up-draft-chromium/UI54-original-follow-up-draft-dark-desktop.png",
+            "sha256": "d7f07bec192ec4026164ec017ca2d6a23af1bf00863a4e08eddf67a7969ae853",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI54-original-follow-up-draft-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 61,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--3ebac-rmation-and-follow-up-draft-chromium/UI54-original-follow-up-draft-light-desktop.png",
+            "sha256": "c7984a9c33a79944a0ccbf116c7b791302e04ed7bc73471e0abbdc1b20246eb6",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI54-original-follow-up-draft-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 84,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI69-original-summary-settings-actions-dark-320.png",
+            "sha256": "27b60c9e53d0cb3af908f3d7fecfc0a48055b17a632e2ed0139a6de286980262",
+            "dimensions": [
+              320,
+              800
+            ],
+            "semanticNames": [
+              "UI69-original-summary-settings-actions-dark-320"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 85,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI69-original-summary-settings-actions-dark-desktop.png",
+            "sha256": "1f7a78b659cc038ce18b660ae9318b17b2dea221180afd2a3e20ec2ba59b4e77",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI69-original-summary-settings-actions-dark-desktop"
+            ],
+            "method": "view_image original PNG"
+          },
+          {
+            "index": 86,
+            "path": "packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI69-original-summary-settings-actions-light-desktop.png",
+            "sha256": "2307c1b22dc2ab78db36708e1b900c0d6d91fe45afb27ce63f695d654d8e1148",
+            "dimensions": [
+              1440,
+              1100
+            ],
+            "semanticNames": [
+              "UI69-original-summary-settings-actions-light-desktop",
+              "UI69-original-summary-settings-and-unbound-profile-light-desktop"
+            ],
+            "method": "view_image original PNG"
+          }
+        ],
+        "findings": [
+          {
+            "id": "R2-C01",
+            "surface": "UI49",
+            "status": "closed within reviewed captures",
+            "originalIndices": [
+              35,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "observation": "The differences heading is separated from previous/current source cards and the matrix. Native table rules remain continuous and readable in dark/light desktop; mobile source controls and first-column labels reflow without a new cut."
+          },
+          {
+            "id": "R2-C02",
+            "surface": "UI50",
+            "status": "closed within reviewed captures",
+            "originalIndices": [
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49
+            ],
+            "observation": "Coverage and selected count lead the summary; the exact preserved reference opens in full and closes. Original controls, authorized section metadata and the notes area remain available in all three formats. Hairlines and text are legible."
+          },
+          {
+            "id": "R2-C03",
+            "surface": "UI69",
+            "status": "closed within reviewed captures",
+            "originalIndices": [
+              84,
+              85,
+              86
+            ],
+            "observation": "Review changes and Current source are visibly separated by the native12px gap. Current source remains content-sized and start-aligned in desktop and mobile; it does not stretch across the desktop grid. The unavailable private projection remains separate."
+          },
+          {
+            "id": "R2-C04",
+            "surface": "UI54",
+            "status": "closed within reviewed captures",
+            "originalIndices": [
+              59,
+              60,
+              61
+            ],
+            "observation": "Business agent confirmed subdued continuous outlines/dividers, native raised materials and clear section spacing in all three originals. No white-outline or transparent-card regression.",
+            "delegateReceiptSha256": "7db7f55c2f0bf45b9409df06dff9ec1fcb5ea8b995bd5d180b09e4151bc5ee9d"
+          }
+        ],
+        "limitations": [
+          "Visual approval covers21 unique originals, not all99 unique PNG hashes in the artifact. Attachment/report copies and semantic aliases are not extra originals.",
+          "Dark/light desktop1440x1100 and dark320x800 only; no new light-mobile or browser-zoom evidence is claimed.",
+          "UI49 lower mobile is at the initial horizontal position. The far-right endpoint and previous/current columns are outside that mobile capture; desktop shows them.",
+          "UI50 notes-area layout was inspected, but this preserved review has no nonempty long-note text. No generated DOCX/PPTX or download is claimed.",
+          "UI54 mobile shows upper proposal metadata; Notes and later sections are below that viewport. Desktop shows them.",
+          "C03 gap and content-width observation comes from original pixels; no new DOM bounding-box or formal numerical contrast audit was performed.",
+          "UI50 CSS sets a44px minimum for the native summary; this round does not add a DOM hit-area measurement.",
+          "Host refusals, denied portfolio input states and the private UI69 reader503 remain real limits; five passing journeys do not qualify those unavailable producers.",
+          "No product, CI or test change was made during this review."
+        ],
+        "nativeLimits": {
+          "deniedInputSurfaces": [
+            {
+              "surface": "UI42",
+              "state": "denied",
+              "inputsOrResultsQualified": false
+            },
+            {
+              "surface": "UI44",
+              "state": "denied",
+              "inputsOrResultsQualified": false
+            }
+          ],
+          "unrenderedLeaves": [
+            {
+              "surface": "UI43",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI51",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI52",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI53",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI61",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI63",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI64",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI65",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI66",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            },
+            {
+              "surface": "UI70",
+              "leafRendered": false,
+              "leafVisualApprovalClaimed": false
+            }
+          ]
+        },
+        "analysisEnlargement": {
+          "sourcePath": "packages/app-shell/e2e/test-results/sucafina-design-workflows--3ebac-rmation-and-follow-up-draft-chromium/UI54-original-follow-up-draft-dark-desktop.png",
+          "sourceSha256": "d7f07bec192ec4026164ec017ca2d6a23af1bf00863a4e08eddf67a7969ae853",
+          "sourceCropBoxXYXY": [
+            280,
+            180,
+            830,
+            550
+          ],
+          "scale": 2,
+          "resampling": "nearest-neighbor",
+          "dimensions": [
+            1100,
+            740
+          ],
+          "sha256": "52e174df6dd57da030445d4abdf692f755fa201d575326d1082853f9704f0369",
+          "notBrowserZoom": true,
+          "countedAsOriginal": false,
+          "storedInOriginalArtifact": false,
+          "observation": "At 2x, the outer rounded panel border and horizontal metadata dividers remain thin, continuous and visually subordinate to labels and values. No doubled edge, bright white frame or gap artifact is visible. Pixel enlargement is apparent in glyphs and is an analysis transform, not product rendering."
+        }
+      },
+      "sourceAssertions": {
+        "UI69": {
+          "privateProjection": {
+            "httpStatus": 503,
+            "body": {
+              "status": "unavailable",
+              "reason": "local-operator-reader-not-bound"
+            }
+          },
+          "summaryRead": {
+            "httpStatus": 200,
+            "availablePages": 16,
+            "version": 0,
+            "profileRendered": false,
+            "summarySettingsRendered": true
+          },
+          "finalAssertionsConfirmedByPassedOriginalCase": [
+            "Exact source schemas, owner identity and producer version",
+            "One changed summary field in review",
+            "Cancel review clicked; review count0; original form visible",
+            "summaryWrites equals[]; pageErrors equals[]"
+          ],
+          "zeroPostScope": "Only POST to installation.origin + installation.mount + /api/ui/local-admin/configure-summaries. This is not a claim of zero network writes anywhere.",
+          "attachmentWritesTiming": "The readers attachment records writes at read time. Final zero-POST is established by the passed final assertion in the exact tested source."
+        }
+      }
+    }
+  ],
+  "history": [
+    {
+      "run": 45113011429,
+      "source": "3578c317dc8ddbb73cb22985f778b801302d945f",
+      "snapshot": "172cf84237664f6069a98538399ab24e0ec14f9d",
+      "result": "failure",
+      "passed": 26,
+      "failed": 4,
+      "productFindings": [
+        "R2-A01",
+        "R2-A02"
+      ],
+      "qaSetupFailures": 2,
+      "reason": "The diagnostic initially persisted pt-BR instead of the native br locale key. Those two cases did not qualify Portuguese visuals.",
+      "artifact": {
+        "id": 14790985305,
+        "sha256": "05803072913510e13f5dab303348d98d3503793a5f6a1c18e82dc20418ab9221"
+      }
+    },
+    {
+      "run": 45114133902,
+      "source": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+      "snapshot": "b63f0060d88198420e0377f2455dff79c01fa345",
+      "result": "failure",
+      "passed": 36,
+      "failed": 1,
+      "productFindings": [
+        "R2-A04"
+      ],
+      "supersededBy": 45114820142,
+      "artifact": {
+        "id": 14791440276,
+        "bytes": 30684182,
+        "sha256": "5aa5cd84f7c2680e71708e703e1a2b4f0e2e659248a45947b903267ffa8795e2",
+        "digestVerified": true
+      }
+    }
+  ],
+  "finalStructuralGate": "See PR #715 for the exact final-head snapshot, test-ci run, typechecks, guardrails, palette parity and regression receipt.",
+  "sourceBoundary": {
+    "nativeSource": "cf241b8f45eb2f00539a3465b6d14d57ea9fadc0",
+    "finalProductSource": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+    "changedPaths": [
+      "packages/app-shell/src/orchestra/chapters/kpis.css"
+    ],
+    "docsAddedAfterProductQualification": [
+      "packages/app-shell/src/orchestra/DESIGN.md",
+      "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+      "docs/qa/sucafina/visual-audit/round-two-runs.json"
+    ]
+  },
+  "qualification": {
+    "uniqueBrowserCases": 51,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "productFiles": 15,
+    "existingE2EFiles": 6,
+    "documentationFiles": 3
+  },
+  "integrityReview": {
+    "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "head": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+    "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/27f04c1cc723e42d5010b8f672a640b4792787ff...9def26cfca6dfe61deb4142b5f78a8105d068a30",
+    "scope": {
+      "totalFiles": 21,
+      "productFiles": 15,
+      "existingE2EFiles": 6,
+      "allPatchesRead": true,
+      "missingPatches": 0,
+      "otherFiles": 0
+    },
+    "verdict": "No concrete pending integrity risk identified in the complete 21-file diff.",
+    "checks": [
+      {
+        "claim": "No disposable runner/capture files or substitute app added to product source",
+        "result": "PASS",
+        "evidence": "The complete path list contains only 15 files under app-shell/src and 6 original E2E specs. No .ci-run.json, Playwright config, workflow, driver or fixture file appears in this compare."
+      },
+      {
+        "claim": "No new skip/fixme/only/retry/timeout bypass",
+        "result": "PASS",
+        "evidence": "Read all 6 E2E patches and inspected added lines. No test.skip/fixme/only, retry configuration, test.setTimeout, waitForTimeout or setTimeout additions."
+      },
+      {
+        "claim": "Original assertions preserved",
+        "result": "PASS",
+        "evidence": "The only removed E2E line is locale?: en|de, replaced by en|de|br. Existing assertions, source reads, writes, payload checks and failure/retry flows remain. New assertions/captures supplement those flows; new soft assertions still fail the test, as the diagnostic runs demonstrated."
+      },
+      {
+        "claim": "No source identity, numeric value, payload, CAS, authority or command-ownership change",
+        "result": "PASS",
+        "evidence": "Product changes are local CSS, classes, tabIndex, a native disclosure and a header wrapper. Review ID remains review().id. Back/OpenPage callbacks, secondaryActions For and primaryAction Show stay intact and independent. The only new imperative product behavior restores focus after a failed skill operation, after the existing disposal/busy/error handling."
+      },
+      {
+        "claim": "New UI branches do not relax guards",
+        "result": "PASS",
+        "evidence": "No producer/schema/command/admission code changed. Existing Hot Topics admission/permission Show and report coverage decisions remain unchanged; no denied/unavailable state is promoted."
+      },
+      {
+        "claim": "No material unresolved defect found",
+        "result": "PASS-with-stated-limits",
+        "evidence": "No concrete blocker identified in the complete static scope. Runtime and capture receipts are recorded separately; this static review does not substitute for the final-head gate."
+      }
+    ],
+    "limits": [
+      "Read-only GitHub MCP review of the exact compare; no code mutation, local product execution or CI launched.",
+      "Static diff integrity is separate from runtime/pixel qualification. Cross-domain native runtime counts are not newly re-certified by this review.",
+      "The final documentation/DESIGN commit and final gate are owned by root and are outside this product compare."
+    ]
+  },
+  "visualCounting": {
+    "registeredCheckpoints": 59,
+    "foundationFinalOriginalsOpened": 7,
+    "foundationExactHashAliasesOfPreviouslyViewedOriginals": 10,
+    "businessOriginalsOpened": 7,
+    "planningOriginalsOpened": 14,
+    "workflowOriginalsOpened": 21,
+    "duplicateAttachmentsCounted": false
+  }
+}

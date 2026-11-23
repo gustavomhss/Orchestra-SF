@@ -238,7 +238,7 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
         <SfStatePanel state={store.state} messageKey={key(store.reason || "sf.u32.reviewUnavailable")}
           onRetryRead={() => { void read() }}>
           <Show when={store.previous && store.current}>
-            <section data-sf-comparison-compatibility={compatible() ? "compatible" : "incompatible"}>
+            <section class="sf-section" data-sf-comparison-compatibility={compatible() ? "compatible" : "incompatible"}>
               <h2>{t(compatible() ? "sf.u32.compatible" : "sf.u32.incompatible")}</h2>
               <dl class="sf-n28-dual">
                 <div class="mx-card">

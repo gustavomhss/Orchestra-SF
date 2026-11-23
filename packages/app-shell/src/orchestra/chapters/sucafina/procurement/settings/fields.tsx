@@ -120,7 +120,7 @@ export function SfProcurementSettingsFields(props: Props): JSX.Element {
   )
   return (
     <div class="sf-n21-settings-groups">
-      <nav class="sf-n21-settings-nav" aria-label={t(key("sf.cap28.title"))}>
+      <nav class="sf-n21-settings-nav" aria-label={t(key("sf.cap28.title"))} tabIndex={0}>
         <a href="#sf-procurement-settings-general">{t(key("sf.u36.general"))}</a>
         <a href="#sf-procurement-settings-matrix">{t(key("sf.u36.matrix"))}</a>
         <a href="#sf-procurement-settings-currencies">{t(key("sf.u36.currencies"))}</a>
