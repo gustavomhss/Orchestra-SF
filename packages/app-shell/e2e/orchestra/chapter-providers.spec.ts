@@ -98,8 +98,21 @@ test("v2: error and retry, server route, confirmed credential removal, key and p
   const connect = page.locator('[data-component="dialog-v2"]')
   await keyed.getByRole("button", { name: "Configure" }).click()
   await expect(connect.getByText("Connect OpenAI", { exact: true })).toBeVisible()
+  const closeRefresh = page.waitForRequest((request) => {
+    const url = new URL(request.url())
+    return (
+      request.method() === "GET" && url.origin === server && url.pathname === "/api/provider" &&
+      url.searchParams.get("location[directory]") === directory
+    )
+  })
   await page.keyboard.press("Escape")
+  const refreshed = await (await closeRefresh).response()
+  expect(refreshed).not.toBeNull()
+  expect(refreshed!.status()).toBe(200)
+  expect(await refreshed!.finished()).toBeNull()
   await expect(connect).toHaveCount(0)
+  await expect(cards).toHaveCount(3)
+  await expect(page.getByText("CancelledError", { exact: true })).toHaveCount(0)
 
   const dialog = page.locator(".providers-dialog")
   await signedIn.getByRole("button", { name: "Disconnect" }).click()
