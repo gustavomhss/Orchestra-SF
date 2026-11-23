@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedAt": "2026-11-23T16:24:55Z",
-  "checkpointStatus": "RESUMED_CAMPAIGNS_PENDING",
+  "checkpointStatus": "RESUMED_PRODUCT_FIX_REQUIRED",
   "qualification": false,
   "source": {
     "branch": "sf613-resume",
@@ -198,7 +198,7 @@
   "fullCampaigns": {
     "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
     "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-    "status": "PENDING",
+    "status": "FAILED_WITH_OTHER_CAMPAIGNS_PENDING",
     "qualification": false,
     "environment": {
       "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
@@ -233,16 +233,103 @@
         "branch": "ci-run-linux-sf613-release4",
         "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
         "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
         "workflowObservation": {
-          "observedAt": "2026-11-23T16:24:55Z",
-          "status": "in_progress",
-          "conclusion": null,
+          "observedAt": "2026-11-23T16:29:42Z",
+          "status": "completed",
+          "conclusion": "failure",
           "createdAt": "2026-11-23T16:22:21Z",
-          "updatedAt": "2026-11-23T16:22:24Z"
+          "updatedAt": "2026-11-23T16:26:33Z"
         },
-        "result": null
+        "result": {
+          "outcome": "FAILED_ORIGINAL_C17_DEADLINE",
+          "testJob": {
+            "id": 137836263181,
+            "conclusion": "failure",
+            "completedAt": "2026-11-23T16:26:25Z"
+          },
+          "cleanupJob": {
+            "id": 137839012337,
+            "conclusion": "success",
+            "completedAt": "2026-11-23T16:26:32Z"
+          },
+          "wrapper": {
+            "passed": 4,
+            "failed": 1
+          },
+          "successfulUnderlyingGroups": [
+            {
+              "name": "Planner projection references",
+              "passed": 12,
+              "failed": 0
+            },
+            {
+              "name": "Canonical and actual Release fallback controls",
+              "passed": 8,
+              "failed": 0
+            },
+            {
+              "name": "UI authority and context integrity",
+              "passed": 27,
+              "failed": 0
+            }
+          ],
+          "snapshotIdentity": "PASSED",
+          "storageGroup": {
+            "name": "CurrentChoice readonly storage and nested calculation composition",
+            "passed": 59,
+            "skipped": 2,
+            "failed": 1,
+            "skips": "Original inherited skips; not newly introduced",
+            "exitCode": 1,
+            "durationMs": 164064
+          },
+          "failingTest": {
+            "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+            "originalCooperativeDeadlineMs": 105000,
+            "observedTestDurationMs": 105005.15,
+            "error": "calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+            "phases": {
+              "produceOuter": {
+                "phaseMs": 93021,
+                "elapsedMs": 94271,
+                "canonicalResultReads": 1952,
+                "canonicalResultReadsCompleted": 1952,
+                "aborted": false
+              },
+              "reopen": {
+                "startedElapsedMs": 94274,
+                "phaseMs": 17,
+                "elapsedMs": 94291,
+                "aborted": false
+              },
+              "resolveReopenedAncestry": {
+                "phaseMs": 10711,
+                "elapsedMs": 105002,
+                "aborted": true
+              }
+            }
+          },
+          "runtime": {
+            "version": "1.4.1",
+            "revision": "4661e494f052c83c80dade1318e5710238340be6",
+            "cloneTreeAdmitted": false,
+            "nativeFallbackBytesMatched": true
+          },
+          "omni": {
+            "status": "PASSED",
+            "declaredTests": 5,
+            "spawns": 9,
+            "delegated": 0
+          },
+          "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+          "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+          "qualification": false,
+          "artifactReleaseQualification": false,
+          "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215740844/job/137836263181",
+          "countInterpretation": "Wrapper counts and underlying group counts are separate. No aggregate mixes wrapper tests with underlying tests."
+        }
       },
       {
         "name": "analytics",
@@ -327,6 +414,178 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Read actual results and evidence for all six final-source campaigns; fix concrete failures without relaxing original controls, then record reviewed qualification before integration."
-  }
+    "nextAction": "Fix the concrete C17 Release performance failure while retaining the original105000ms cooperative deadline, canonical/native fallback behavior, freshness checks and authority oracles. Read all other final-source campaign results before any promotion."
+  },
+  "updatedAt": "2026-11-23T16:29:42Z",
+  "promotionInspection": {
+    "observedAt": "2026-11-23T16:26:18Z",
+    "readOnly": true,
+    "operationsExecuted": [],
+    "inspectedSource": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+    "currentPullRequest": {
+      "number": 613,
+      "head": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "headRef": "sf-design-next",
+      "baseRef": "dev",
+      "draft": true,
+      "merged": false,
+      "mergeable": false,
+      "mergeableState": "dirty",
+      "updatedAt": "2026-11-23T16:09:59Z",
+      "reportedBaseSha": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+      "reportedBaseShaIsNotTheFreshDevRef": true
+    },
+    "currentDev": {
+      "sha": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "protected": false,
+      "visibleRequiredStatusChecks": {
+        "enforcementLevel": "off",
+        "contexts": [],
+        "checks": []
+      },
+      "visibleRulesetsIncludingParents": []
+    },
+    "sourceAncestry": {
+      "base": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "head": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+      "status": "ahead",
+      "aheadBy": 497,
+      "behindBy": 0,
+      "fastForwardPossible": true,
+      "source": "https://github.com/gustavomhss/Orchestra-SF/compare/0a1247db9a16f9eead04788a76d25723672c7e6a...ac4708241b7af3d742c13a5fb5d712ed7ae2557f"
+    },
+    "visibleChecks": {
+      "oldPullRequestHeadCheckRuns": 0,
+      "oldPullRequestHeadStatuses": 0,
+      "sourceCheckRuns": 0,
+      "sourceStatuses": 0,
+      "combinedStatusValue": "pending",
+      "interpretation": "No attached contexts; this is not evidence that qualification passed. The real qualification runs use separate snapshot commits."
+    },
+    "workflowInspection": {
+      "workflowFilesRead": 18,
+      "sfCi": {
+        "path": ".github/workflows/sf-ci.yml",
+        "existsAtSource": false,
+        "existsAtDev": false,
+        "existsAtOldPullRequestHead": false,
+        "sourceDirectoryListingConfirmedAbsent": true
+      },
+      "testCi": {
+        "path": ".github/workflows/test-ci.yml",
+        "trigger": "push to ci-run-* only",
+        "linuxBranchPattern": "ci-run-linux-*",
+        "selectedHost": "ubuntu-24.04",
+        "pullRequestTrigger": false,
+        "devPushTrigger": false
+      },
+      "otherRelevantTriggers": [
+        {
+          "workflow": ".github/workflows/go-live-package.yml",
+          "event": "pull_request targeting dev",
+          "restriction": "Only listed go-live workflow/producer paths",
+          "matchingCandidatePaths": []
+        },
+        {
+          "workflow": ".github/workflows/sf-cache-warm.yml",
+          "event": "push to dev",
+          "restriction": "Only listed dependency/cache inputs",
+          "matchingCandidatePaths": []
+        },
+        {
+          "workflow": ".github/workflows/azure-qualification-inventory.yml",
+          "event": "push to dev",
+          "restriction": "Only changes to its own workflow YAML",
+          "matchingCandidatePaths": []
+        }
+      ],
+      "candidatePathCoverage": {
+        "method": "All795 recovery delta paths plus25 root additions, deduplicated; conservative superset of candidate-vs-dev changes",
+        "paths": 818,
+        "workflowChanges": [],
+        "matchingExtraWorkflowTriggerPaths": []
+      },
+      "conclusion": "No configured extra CI trigger matches promotion, readiness or ordinary merge of the pinned source. No workflow edits, disabling or bypass are needed.",
+      "limitation": "Recheck actual dev, head and final candidate immediately before promotion; this inspection is pinned to the listed refs."
+    },
+    "usualSequenceAfterQualification": [
+      {
+        "operation": "github_update_ref",
+        "branch": "sf-design-next",
+        "expectedSha": "the freshly observed PR head",
+        "sha": "the finally qualified candidate",
+        "force": false,
+        "condition": "All required qualification and current dev composition reviewed; ancestry permits fast-forward."
+      },
+      {
+        "operation": "read PR, dev and checks again",
+        "condition": "Reject stale head/base assumptions; resolve any new divergence or required restriction normally."
+      },
+      {
+        "operation": "github_mark_pull_request_ready_for_review",
+        "prNumber": 613,
+        "condition": "Final source is ready for normal review/merge."
+      },
+      {
+        "operation": "github_merge_pull_request",
+        "prNumber": 613,
+        "mergeMethod": "merge",
+        "expectedHeadSha": "the exact reviewed final PR head",
+        "condition": "Normal GitHub restrictions satisfied; no bypass."
+      }
+    ],
+    "repositoryMergeMethods": {
+      "merge": true,
+      "squash": true,
+      "rebase": true,
+      "autoMerge": false
+    },
+    "otherFrontsObservedOnce": [
+      {
+        "pr": 717,
+        "head": "f01d709c4fd7db41feb428f78b6cb3fb5cd7f9cd",
+        "branch": "sf-adversarial-audit",
+        "state": "open",
+        "draft": true,
+        "merged": false,
+        "updatedAt": "2026-11-23T16:25:13Z",
+        "included": false
+      },
+      {
+        "pr": 718,
+        "head": "cf18f92ec7470525d870d0c020e684e7006c7d48",
+        "branch": "ui-polish-four",
+        "state": "open",
+        "draft": true,
+        "merged": false,
+        "updatedAt": "2026-11-23T16:22:53Z",
+        "included": false
+      }
+    ],
+    "apiLimits": {
+      "activeBranchRulesEndpoint": "Not supported by the connector; request rejected, not retried.",
+      "workflowMetadataCollection": "Not supported by the connector; request rejected, not retried.",
+      "branchAdministrationEndpoints": "Not requested; visible branch metadata and allowed rulesets collection were sufficient for the reported observations."
+    },
+    "sources": [
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls/613",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/dev",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/rulesets?includes_parents=true&per_page=100",
+      "https://github.com/gustavomhss/Orchestra-SF/tree/ac4708241b7af3d742c13a5fb5d712ed7ae2557f/.github/workflows"
+    ]
+  },
+  "history": [
+    {
+      "recordedAt": "2026-11-23T16:24:55Z",
+      "status": "RESUMED_CAMPAIGNS_PENDING",
+      "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f"
+    },
+    {
+      "recordedAt": "2026-11-23T16:29:42Z",
+      "status": "RESUMED_PRODUCT_FIX_REQUIRED",
+      "failedRun": 45215740844,
+      "otherCampaignsPending": 5,
+      "qualification": false
+    }
+  ]
 }
