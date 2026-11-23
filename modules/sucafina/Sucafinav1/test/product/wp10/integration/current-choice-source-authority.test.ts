@@ -399,3 +399,131 @@ test("CurrentChoice prepared sources preserve canonical values and close owner, 
     })
   } finally { await deadline.close() }
 }, 120_000)
+
+test("Planner readonly proofs pin source factory inputs without changing canonical source reads", async () => {
+  const deadline = compositionTestDeadline("planner-source-factory-pins")
+  try {
+    const f = await deadline.phase("native-source-fixture", () => fixture(deadline))
+    const expected = await f.withCall((context) => f.fence.run(context, () => f.read(context)))
+    if (!expected) throw new Error("The original Planner projection is required")
+    const before = await f.snapshot(), originalProjector = f.sourceInput.projectScope
+    if (!originalProjector) throw new Error("The original source projector is required")
+    const directInput = { ...f.sourceInput, persistence: f.store }
+    const directSources = createSfSourcePersistence(directInput)
+    const direct = { ...f.store, ...directSources }
+    const compositions = [
+      { input: f.sourceInput, owner: f.persistence, sources: f.sources, generic: false },
+      { input: directInput, owner: direct, sources: directSources, generic: true },
+    ]
+    const genericCurrent = (entry: (typeof compositions)[number]) => {
+      const acl = currentSfReadonlyAuthorityData(entry.owner, ["planner"])
+      const scope = currentSfReadonlySnapshotScope(entry.owner)
+      if (entry.generic) {
+        expect(acl?.current()).toBe(true)
+        expect(scope?.current()).toBe(true)
+      } else {
+        expect(acl).toBeUndefined()
+        expect(scope).toBeUndefined()
+      }
+      return { acl, scope }
+    }
+    const fields = ["projectScope", "enumerate", "createId", "purpose", "bootstrapOnWrite", "observeAuthority",
+      "hasSnapshotRoot", "holdTargetPreimage", "installedDashboardProjector"] as const
+    await deadline.phase("declared-input-drift-is-planner-only-and-monotonic", async () => {
+      for (const entry of compositions) for (const field of fields) {
+        const retained = await f.withCall((context) => f.readRoot(async () => {
+          const admitted = currentSfPlannerReadonlySnapshotScope(entry.owner)
+          if (!admitted) throw new Error("The original Planner factory was not admitted")
+          expect(admitted.current()).toBe(true)
+          const generic = genericCurrent(entry)
+          const original = Object.getOwnPropertyDescriptor(entry.input, field)
+          let invoked = 0
+          const replacement = field === "purpose" ? "business-restore" : field === "bootstrapOnWrite" ? true :
+            (...args: unknown[]) => {
+              invoked++
+              return typeof original?.value === "function" ? Reflect.apply(original.value, undefined, args) : undefined
+            }
+          Object.defineProperty(entry.input, field, { configurable: true, enumerable: true, writable: true, value: replacement })
+          try {
+            expect(currentSfPlannerReadonlySnapshotScope(entry.owner)).toBeUndefined()
+            expect(admitted.current()).toBe(false)
+            genericCurrent(entry)
+            if (entry.generic) {
+              expect(generic.acl?.current()).toBe(true)
+              expect(generic.scope?.current()).toBe(true)
+            }
+            expect(invoked).toBe(0)
+            if (field === "projectScope") {
+              // No proof is admitted. The actual original source route still
+              // invokes the substituted callback and returns the complete value.
+              expect(await f.fence.run(context, () => f.read(context, {}, true, entry.sources))).toEqual(expected)
+              expect(invoked).toBeGreaterThan(0)
+            }
+          } finally {
+            if (original) Object.defineProperty(entry.input, field, original)
+            else expect(Reflect.deleteProperty(entry.input, field)).toBe(true)
+          }
+          expect(admitted.current()).toBe(false)
+          expect(currentSfPlannerReadonlySnapshotScope(entry.owner)?.current()).toBe(true)
+          return admitted
+        }, { signal: deadline.signal }))
+        // Native closure checks still precede even a previously failed pin.
+        expect(() => retained.current()).toThrow("Local transaction scope has ended")
+      }
+    })
+    await deadline.phase("projector-accessor-drift-does-not-run-the-getter", async () => {
+      for (const entry of compositions) await f.withCall((context) => f.readRoot(async () => {
+        const original = descriptor(entry.input, "projectScope")
+        const admitted = currentSfPlannerReadonlySnapshotScope(entry.owner)
+        if (!admitted) throw new Error("The original Planner factory was not admitted")
+        let gets = 0
+        Object.defineProperty(entry.input, "projectScope", { configurable: true, enumerable: true,
+          get: () => { gets++; return original.value } })
+        try {
+          expect(currentSfPlannerReadonlySnapshotScope(entry.owner)).toBeUndefined()
+          expect(admitted.current()).toBe(false)
+          genericCurrent(entry)
+          expect(gets).toBe(0)
+          expect(await f.fence.run(context, () => f.read(context, {}, true, entry.sources))).toEqual(expected)
+          expect(gets).toBeGreaterThan(0)
+        } finally { Object.defineProperty(entry.input, "projectScope", original) }
+        expect(admitted.current()).toBe(false)
+        expect(currentSfPlannerReadonlySnapshotScope(entry.owner)?.current()).toBe(true)
+      }, { signal: deadline.signal }))
+    })
+    await deadline.phase("opaque-birth-keeps-only-the-original-producer", async () => {
+      for (const kind of ["accessor", "projector-proxy", "input-proxy"] as const) {
+        let calls = 0
+        const original: Parameters<typeof createSfSourcePersistence>[0] = { ...f.sourceInput, persistence: f.store }
+        if (kind === "accessor") Object.defineProperty(original, "projectScope", { configurable: true, enumerable: true,
+          get: () => { calls++; return originalProjector } })
+        if (kind === "projector-proxy") original.projectScope = new Proxy(originalProjector, {
+          apply: (target, receiver, args) => { calls++; return Reflect.apply(target, receiver, args) },
+        })
+        const opaque = kind === "input-proxy" ? new Proxy(original, {
+          get: (target, key, receiver) => { calls++; return Reflect.get(target, key, receiver) },
+          getPrototypeOf: (target) => { calls++; return Reflect.getPrototypeOf(target) },
+          getOwnPropertyDescriptor: (target, key) => { calls++; return Reflect.getOwnPropertyDescriptor(target, key) },
+        }) : original
+        const source = createSfSourcePersistence(opaque), owner = { ...f.store, ...source }
+        const beforeProbe = calls
+        await f.withCall((context) => f.readRoot(async () => {
+          expect(currentSfPlannerReadonlySnapshotScope(owner)).toBeUndefined()
+          if (kind === "input-proxy") {
+            expect(currentSfReadonlyAuthorityData(owner, ["planner"])).toBeUndefined()
+            expect(currentSfReadonlySnapshotScope(owner)).toBeUndefined()
+          } else {
+            expect(currentSfReadonlyAuthorityData(owner, ["planner"])?.current()).toBe(true)
+            expect(currentSfReadonlySnapshotScope(owner)?.current()).toBe(true)
+          }
+          expect(calls).toBe(beforeProbe)
+          expect(await f.fence.run(context, () => f.read(context, {}, true, source))).toEqual(expected)
+          expect(calls).toBeGreaterThan(beforeProbe)
+        }, { signal: deadline.signal }))
+      }
+    })
+    expect(f.sourceInput.projectScope).toBe(originalProjector)
+    expect(await f.observe()).toEqual(expected)
+    expect(await f.snapshot()).toEqual(before)
+  } finally { await deadline.close() }
+}, 120_000)
