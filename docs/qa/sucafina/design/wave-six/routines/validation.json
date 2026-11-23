@@ -1,0 +1,414 @@
+{
+  "schema": "sf-final-routines-validation/v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "areas": [
+    "UI64",
+    "UI65",
+    "UI66",
+    "UI70"
+  ],
+  "browser": {
+    "source": "b4aa09ca71f1bd64d1ca3e0d105613fe0011d502",
+    "testCommit": "84eca2de2aef4d82395c91400ada0cce7d5dec4e",
+    "snapshot": "fdf6f8d61a9b412e6fa3251d08c20863920ad41a",
+    "run": 45103228274,
+    "job": 137458598345,
+    "result": "passed",
+    "durationMinutes": 4.7,
+    "artifact": {
+      "id": 14786049451,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 15056202,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14786049451",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14786049451/zip",
+      "expired": false,
+      "created_at": "2026-11-23T03:04:39Z",
+      "expires_at": "2026-11-30T03:04:38Z",
+      "updated_at": "2026-11-23T03:04:39Z",
+      "digest": "sha256:7abd1cf46176eab2bbf3408506788494bd538433cbd5fb4b32a0722b98e96682",
+      "workflow_run": {
+        "id": 45103228274,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-final-routines-r12",
+        "head_sha": "fdf6f8d61a9b412e6fa3251d08c20863920ad41a"
+      }
+    },
+    "pngCaptures": 20,
+    "jpegPreviews": 18,
+    "evidence": {
+      "reads": [
+        {
+          "path": "/sucafina/dashboard",
+          "status": 200,
+          "action": "choices"
+        },
+        {
+          "path": "/sucafina/api/ui/routines/catalog",
+          "status": 503
+        },
+        {
+          "path": "/sucafina/dashboard",
+          "status": 200,
+          "action": "choices"
+        },
+        {
+          "path": "/sucafina/dashboard",
+          "status": 200,
+          "action": "choices"
+        },
+        {
+          "path": "/sucafina/api/ui/projections/residents",
+          "status": 200
+        },
+        {
+          "path": "/sucafina/dashboard",
+          "status": 200,
+          "action": "choices"
+        },
+        {
+          "path": "/sucafina/api/ui/projections/case",
+          "status": 200
+        }
+      ],
+      "catalogResponses": [
+        {
+          "status": 503,
+          "body": {
+            "status": "unavailable",
+            "reason": "SF_NATIVE_PHASE_UNAVAILABLE"
+          }
+        }
+      ],
+      "analysisLists": [],
+      "writes": [],
+      "limits": [
+        "UI64: original catalog HTTP 503 returned unavailable (SF_NATIVE_PHASE_UNAVAILABLE); no preparation or execution was submitted.",
+        "UI65: this original fixture has no governed C07 routine run or verified C08 output. Only the honest no-run state and real return navigation are qualified.",
+        "UI66: the real F01 gate refuses this route because no original native Schedule port is installed. These are gate captures; the leaf/editor and create/update/pause/occurrence flows are not qualified.",
+        "UI70: the original context does not admit analysis history; no history read is claimed.",
+        "UI70: actual installed inventory and case-scoped reads are qualified; no attributed model execution or verified contribution is invented."
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+      ],
+      "pageErrors": []
+    }
+  },
+  "nativeLatest": {
+    "source": "dc0698ec878427d5a8e6b78955b6b0ba31eadcbf",
+    "snapshot": "744090c19ed6d07f2a7f6732c2c9dd663d0cde78",
+    "run": 45102243868,
+    "job": 137455506028,
+    "result": "passed",
+    "tests": 53,
+    "assertions": 647,
+    "composition": "52 memory tests and one original native-installation test",
+    "readOperations": 5,
+    "residents": 5,
+    "c08Unchanged": true,
+    "businessSnapshotUnchanged": true,
+    "derivedSourceBookkeeping": [
+      "dashboard-dataset",
+      "dashboard-page"
+    ],
+    "approvalRequestsSubmitted": 0,
+    "schedulePortInstalled": false,
+    "strictOmni": {
+      "spawns": 1,
+      "delegated": 0
+    }
+  },
+  "nativeResidentProvenance": {
+    "source": "82ce78c3a064eb0af4af48d9d69b2948e66abadc",
+    "snapshot": "b9ae0bd87d132130a934239d840c7a7493a549f4",
+    "run": 45098223206,
+    "job": 137442746035,
+    "result": "passed",
+    "tests": 12,
+    "assertions": 417,
+    "composition": "11 resident-reader tests and one original native-installation test"
+  },
+  "gallery": "../evidence/README.md",
+  "previews": [
+    {
+      "area": "UI64",
+      "state": "en-dark-desktop-before-query",
+      "pathname": "/orchestra/sf-routines",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 59296
+    },
+    {
+      "area": "UI64",
+      "state": "en-dark-desktop-authorized-case",
+      "pathname": "/orchestra/sf-routines",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 65454
+    },
+    {
+      "area": "UI64",
+      "state": "en-light-desktop-authorized-case",
+      "pathname": "/orchestra/sf-routines",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 68967
+    },
+    {
+      "area": "UI65",
+      "state": "en-dark-desktop-no-run-return",
+      "pathname": "/orchestra/sf-routines/runs",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 52526
+    },
+    {
+      "area": "UI65",
+      "state": "en-light-desktop-no-run-return",
+      "pathname": "/orchestra/sf-routines/runs",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 55628
+    },
+    {
+      "area": "UI66",
+      "state": "en-dark-desktop",
+      "pathname": "/orchestra/sf-routines/schedules",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "pageWidth": 1164,
+      "pageViewport": 1164,
+      "surfaceRendered": false,
+      "boundary": "F01-native-schedule-port-unavailable",
+      "mimeType": "image/jpeg",
+      "bytes": 54420
+    },
+    {
+      "area": "UI66",
+      "state": "en-light-360",
+      "pathname": "/orchestra/sf-routines/schedules",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360,
+      "pageWidth": 342,
+      "pageViewport": 342,
+      "surfaceRendered": false,
+      "boundary": "F01-native-schedule-port-unavailable",
+      "mimeType": "image/jpeg",
+      "bytes": 16849
+    },
+    {
+      "area": "UI70",
+      "state": "en-dark-desktop-resident-inventory",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 85598
+    },
+    {
+      "area": "UI70",
+      "state": "en-dark-desktop-resident-case-detail",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 90538
+    },
+    {
+      "area": "UI70",
+      "state": "en-light-desktop-resident-case-detail",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 94355
+    },
+    {
+      "area": "UI64",
+      "state": "pt-br-dark-360-installed-state",
+      "pathname": "/orchestra/sf-routines",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360,
+      "mimeType": "image/jpeg",
+      "bytes": 21331
+    },
+    {
+      "area": "UI64",
+      "state": "pt-br-light-desktop-installed-state",
+      "pathname": "/orchestra/sf-routines",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 65618
+    },
+    {
+      "area": "UI65",
+      "state": "pt-br-dark-360-installed-state",
+      "pathname": "/orchestra/sf-routines/runs",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360,
+      "mimeType": "image/jpeg",
+      "bytes": 15036
+    },
+    {
+      "area": "UI65",
+      "state": "pt-br-light-desktop-installed-state",
+      "pathname": "/orchestra/sf-routines/runs",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 58607
+    },
+    {
+      "area": "UI66",
+      "state": "pt-br-dark-360",
+      "pathname": "/orchestra/sf-routines/schedules",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360,
+      "pageWidth": 342,
+      "pageViewport": 342,
+      "surfaceRendered": false,
+      "boundary": "F01-native-schedule-port-unavailable",
+      "mimeType": "image/jpeg",
+      "bytes": 17487
+    },
+    {
+      "area": "UI66",
+      "state": "pt-br-light-desktop",
+      "pathname": "/orchestra/sf-routines/schedules",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "pageWidth": 1164,
+      "pageViewport": 1164,
+      "surfaceRendered": false,
+      "boundary": "F01-native-schedule-port-unavailable",
+      "mimeType": "image/jpeg",
+      "bytes": 60823
+    },
+    {
+      "area": "UI70",
+      "state": "pt-br-dark-360-installed-state",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360,
+      "mimeType": "image/jpeg",
+      "bytes": 21413
+    },
+    {
+      "area": "UI70",
+      "state": "pt-br-light-desktop-installed-state",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "mimeType": "image/jpeg",
+      "bytes": 91350
+    }
+  ],
+  "pngOnly": [
+    {
+      "area": "UI64",
+      "state": "en-light-360-authorized-case",
+      "pathname": "/orchestra/sf-routines",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360
+    },
+    {
+      "area": "UI70",
+      "state": "en-light-360-resident-case-detail",
+      "pathname": "/orchestra/sf-routines/residents",
+      "width": 360,
+      "height": 900,
+      "documentWidth": 360
+    }
+  ],
+  "gatePolicy": {
+    "surfaceRendered": false,
+    "boundary": "F01-native-schedule-port-unavailable",
+    "viewState": "denied",
+    "leafCount": 0,
+    "captures": 4
+  },
+  "reviews": [
+    {
+      "reviewer": "final_records",
+      "sourceRun": 45098220751,
+      "sourceJob": 137442738472,
+      "state": "en-dark-desktop-before-query",
+      "verdict": "No blocking visual issue at 1440×1100; initial stages, alignment, contrast and disabled discovery action match the actual initial state. Later stages and narrow view not reviewed in this run."
+    },
+    {
+      "reviewer": "/root/final_records",
+      "run": 45098840134,
+      "job": 137444707951,
+      "states": [
+        {
+          "area": "UI70",
+          "state": "en-dark-desktop-resident-inventory",
+          "result": "pass",
+          "notes": "Five profiles and 25 skills, consistent cards and hierarchy, original IDs legible. Case chooser is still loading in this inventory capture; no case completion inferred."
+        },
+        {
+          "area": "UI70",
+          "state": "en-light-desktop-resident-case-detail",
+          "result": "pass",
+          "notes": "Selected profile and honest unavailable contribution state, skills disclosures, readable contrast and columns."
+        },
+        {
+          "area": "UI66",
+          "state": "en-light-360",
+          "result": "pass",
+          "notes": "Contextual title/subtitle, explanation and catalog return remain legible without overflow, targets at least 44px. F01 boundary only; surfaceRendered false."
+        }
+      ]
+    },
+    {
+      "reviewer": "/root/final_records",
+      "run": 45100582315,
+      "job": 137450272889,
+      "states": [
+        "en-dark-desktop-no-run-return",
+        "pt-br-dark-360-installed-state"
+      ],
+      "result": "pass",
+      "notes": "Selection guidance is consistent with no selected run. Hierarchy, message and controls remain legible; refresh adapts to 360px and no overlap or overflow was observed. No executed result is claimed."
+    },
+    {
+      "reviewer": "/root/final_routines",
+      "run": 45103228274,
+      "job": 137458598345,
+      "result": "pass",
+      "states": [
+        "UI64/en-dark-desktop-authorized-case",
+        "UI64/en-light-desktop-authorized-case",
+        "UI64/pt-br-dark-360-installed-state",
+        "UI70/en-light-desktop-resident-case-detail"
+      ],
+      "scope": "Visual state qualification; original endpoint refusal and unavailable history are retained."
+    }
+  ]
+}
