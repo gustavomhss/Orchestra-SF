@@ -3,6 +3,7 @@ import { createRenderEffect, createRoot } from "solid-js"
 import { createStore, unwrap } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { SfReviewDomainProjection } from "@orchestra/schema/sucafina/reviews"
+import { preservedValueGroups, preservedValuePresentation } from "../src/orchestra/chapters/sucafina/reviews/preserved/presentation"
 import { comparableReviewSections, preservedSectionHasChanges, preservedValueRows, readPreservedProjection,
   type PreservedReview, type ReviewProjection } from "../src/orchestra/chapters/sucafina/reviews/preserved/model"
 
@@ -124,5 +125,46 @@ describe("Preserved review JSON retains its closed schema after reactive storage
     expect(Option.isNone(Schema.decodeUnknownOption(SfReviewDomainProjection)(content))).toBe(true)
     expect(readPreservedProjection(content)).toBeUndefined()
     expect(Reflect.ownKeys(content.context.period)).toEqual(["start", "end", "unexpected"])
+  })
+})
+
+describe("captured review field and record identity", () => {
+  test("groups exact canonical record fields and uses only captured names", () => {
+    const source = projection().values[0]!
+    const values = [
+      { ...source, id: "opexOwners[id:finance].name", value: "Finance", currency: undefined },
+      { ...source, id: "opexOwners[id:finance].year", value: 2026, currency: undefined },
+      { ...source, id: "opexOwners[id:finance].budget", value: 180000, currency: "unspecified" },
+      { ...source, id: "opexEntries[id:june].ownerId", value: "finance", currency: undefined },
+      { ...source, id: "opexEntries[id:june].actual", value: 0, currency: "USD" },
+    ]
+    const original = structuredClone(values)
+    const groups = preservedValueGroups(values)
+    expect(groups).toHaveLength(2)
+    expect(groups[0]!.presentation).toMatchObject({ recordRef: "opexOwners[id:finance]", recordName: "Finance" })
+    expect(groups[1]!.presentation).toMatchObject({ recordRef: "opexEntries[id:june]", recordName: "Finance" })
+    expect(preservedValuePresentation(values[1]!, values).fieldKey).toBe("sf.u32.field.year")
+    expect(preservedValuePresentation(values[2]!, values).fieldKey).toBe("sf.u32.field.budget")
+    expect(groups.flatMap((group) => group.values)).toEqual(original)
+  })
+
+  test("never derives financial semantics or names from an opaque identity", () => {
+    const value = { ...projection().values[0]!, id: "opaque-year-budget-2026", value: 2026, unit: undefined, currency: undefined }
+    expect(preservedValuePresentation(value, [value])).toEqual({ recordRef: value.id })
+    expect(preservedValueGroups([value])[0]!.values[0]).toBe(value)
+    const malformed = { ...value, id: "unpublished[id:private].budget" }
+    expect(preservedValuePresentation(malformed, [malformed])).toEqual({ recordRef: malformed.id })
+  })
+
+  test("ambiguous captured names are not silently chosen", () => {
+    const source = projection().values[0]!
+    const value = { ...source, id: "projects[id:project].budget" }
+    const names = [
+      { ...source, id: "projects[id:project].name", value: "First" },
+      { ...source, id: "projects[id:project].name", value: "Second" },
+    ]
+    expect(preservedValuePresentation(value, [value, ...names])).toEqual({
+      recordRef: "projects[id:project]", fieldKey: "sf.u32.field.budget", recordKey: "sf.u32.record.projects",
+    })
   })
 })

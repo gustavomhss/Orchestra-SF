@@ -11,7 +11,9 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { readPreservedProjection, reviewReadState, type PreservedReview } from "./model"
 import { SfPreservedAnswer } from "./answer"
 import { SfOpenReviewReference } from "../open-reference"
-import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { PeriodText, StatusText, WhenText } from "../labels"
+import { preservedValueGroups } from "./presentation"
+import { SfPreservedFieldLabel, SfPreservedRecordLabel, SfPreservedValuePeriod, SfPreservedValueText } from "./value"
 import "./preserved.css"
 import "../workflows.css"
 
@@ -142,8 +144,12 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
       }
       const resolved = await client["reviews.review-source"]({ reviewRef: review.id, referenceId }, { signal: controller.signal })
       if (!currentSource()) return
-      if (resolved.kind !== "response" || !("links" in resolved.body)) {
+      if (resolved.kind !== "response") {
         failed(reviewReadState(resolved))
+        return
+      }
+      if (!("links" in resolved.body)) {
+        failed(reviewReadState({ kind: "response", status: resolved.status, body: resolved.body }))
         return
       }
       const links = resolved.body.links.filter((link) => {
@@ -230,20 +236,23 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                         fallback={<p role="status">{t("sf.u32.materialUnavailable")}</p>}>
                         {(projection) => <section aria-label={t("sf.u32.values")} class="sf-n28-section sf-section">
                           <h4>{t("sf.u32.values")}</h4>
-                          <dl class="sf-n28-values">
-                            <For each={projection().values}>
-                              {(value) => <div>
-                                <dt>{t("sf.u32.value")}
-                                  <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
-                                </dt>
-                                <dd>
-                                  <span>{value.value === null ? t("sf.u32.missing") : <AmountText value={value.value} currency={value.currency} unit={value.unit} />}</span>
-                                                                    <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
-                                  <small> {t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
-                                </dd>
-                              </div>}
-                            </For>
-                          </dl>
+                          <For each={preservedValueGroups(projection().values)}>{(group) =>
+                            <section class="sf-preserved-record" data-sf-preserved-record={group.presentation.recordRef}>
+                              <h5><SfPreservedRecordLabel presentation={group.presentation} /></h5>
+                              <dl class="sf-n28-values">
+                                <For each={group.values}>{(value) => <div data-sf-preserved-value={value.id}>
+                                  <dt><SfPreservedFieldLabel value={value} values={projection().values} />
+                                    <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi>{value.id}</bdi></details>
+                                  </dt>
+                                  <dd>
+                                    <SfPreservedValueText value={value} />
+                                    <SfPreservedValuePeriod value={value} />
+                                    <small>{t("sf.u32.evidence")}: <StatusText value={value.evidenceState} /></small>
+                                  </dd>
+                                </div>}</For>
+                              </dl>
+                            </section>
+                          }</For>
                         </section>}
                       </Show>
                       <Show when={section.sourceRefs.length}>
@@ -275,7 +284,9 @@ export function SfPreservedReviewView(props: SfSurfaceProps<"UI48">) {
                   aria-busy={store.sourceStatus === "loading"} data-sf-source-state={store.sourceStatus}>
                   <SfStatePanel state={store.sourceStatus}
                     messageKey={key(store.sourceStatus === "loading" ? "sf.common.loading" : store.sourceStatus === "empty" ? "sf.u32.sourceEmpty" : store.sourceStatus === "stale" ? "sf.u32.stale" : "sf.u32.sourceUnavailable")}
-                    onRetryRead={store.sourceStatus !== "loading" ? () => { void openSource(store.sourceRef) } : undefined}>
+                    onRetryRead={store.sourceStatus === "stale"
+                      ? () => { clearSource(); setStore("retry", (value) => value + 1) }
+                      : store.sourceStatus !== "loading" ? () => { void openSource(store.sourceRef) } : undefined}>
                     <nav aria-label={t("sf.u32.authorizedSources")}>
                       <For each={store.sourceLinks}>{(link) => <a class="mx-btn" href={link.url}>{link.label}</a>}</For>
                     </nav>
@@ -348,20 +359,27 @@ function SfPreservedMeeting(props: {
           <h2>{current().title}</h2>
           <p><PeriodText start={current().period.start} end={current().period.end} /> · {t("sf.u32.records")}: {current().count}</p>
           <Show when={projection()} fallback={<p>{t("sf.u32.materialUnavailable")}</p>}>
-            {(shown) => <ul>
-              <For each={shown().values}>{(value) => <li>
-                <strong><AmountText value={value.value} currency={value.currency} unit={value.unit} /></strong>
-                <Show when={value.currency && typeof value.value !== "number"}><span> {value.currency}</span></Show>
-                                <p class="sf-workflow-note"><PeriodText start={value.period.start} end={value.period.end} /></p>
-                <details class="sf-technical-details">
-                  <summary>{t("sf.u32.inspectSource")}</summary>
-                  <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>
-                  <Show when={value.sourceRefs.length} fallback={<p>{t("sf.u32.notRecorded")}</p>}>
-                    <ul><For each={value.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
-                  </Show>
-                </details>
-              </li>}</For>
-            </ul>}
+            {(shown) => <div class="sf-preserved-meeting-values">
+              <For each={preservedValueGroups(shown().values)}>{(group) =>
+                <section class="sf-preserved-record">
+                  <h3><SfPreservedRecordLabel presentation={group.presentation} /></h3>
+                  <ul class="sf-preserved-meeting-fields">
+                    <For each={group.values}>{(value) => <li>
+                      <strong><SfPreservedFieldLabel value={value} values={shown().values} /></strong>
+                      <SfPreservedValueText value={value} />
+                      <SfPreservedValuePeriod value={value} />
+                      <details class="sf-technical-details">
+                        <summary>{t("sf.u32.inspectSource")}</summary>
+                        <p>{t("sf.u32.valueReference")}: <bdi>{value.id}</bdi></p>
+                        <Show when={value.sourceRefs.length} fallback={<p>{t("sf.u32.notRecorded")}</p>}>
+                          <ul><For each={value.sourceRefs}>{(source) => <li><bdi>{source.refId}</bdi></li>}</For></ul>
+                        </Show>
+                      </details>
+                    </li>}</For>
+                  </ul>
+                </section>
+              }</For>
+            </div>}
           </Show>
           <Show when={sources().length}>
             <ul class="sf-n28-items" aria-label={t("sf.u32.sourceNav")}>

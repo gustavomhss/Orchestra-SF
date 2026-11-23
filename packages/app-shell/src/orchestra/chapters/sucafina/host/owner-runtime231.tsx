@@ -33,7 +33,7 @@ import { SfTodayView } from "../home"
 import { SfCasesView } from "../decisions/cases"
 import { SfIntentView } from "../decisions/intent"
 import { SfTodayBoundOwnerProvider } from "./today-resume-binding"
-import { bindSfNativeChapterNavigation, confirmSfOwnerExit, transitionSfNativeChapter } from "./native-chapter-entry"
+import { bindSfNativeChapterNavigation, confirmSfOwnerExit, sfNativeOwnerChapterRequest, sfReadyOwnerSelection, transitionSfNativeChapter } from "./native-chapter-entry"
 import { extendedRouteAvailable, isExtendedSurface, parseExtendedRouteQuery, SfExtendedPages } from "./extended-routes"
 import { revalidateSfNativeDraft } from "./draft-revalidation"
 import { SfSourceNavigation } from "./source-navigation"
@@ -274,6 +274,13 @@ function MountedSurface(props: Readonly<{
   const unavailableSchedule = () => props.gate() && props.view().status === "denied"
     ? sfUnavailableScheduleOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
     : undefined
+  const returnHome = () => {
+    const state = handle.state()
+    if (state.status !== "ready") return
+    const selection = sfReadyOwnerSelection(state)
+    const href = selection && sfNativeOwnerChapterRequest("sf-home", selection)
+    if (href) void props.navigation.requestNativeTransition(href, "sidebar", { expectedOwnerKey: state.ownerKey })
+  }
   const polishedSurface = () => {
     const surface = current()?.surfaceId
     return !!unavailableRoutineCatalog() || !!unavailableSchedule() || surface !== undefined &&
@@ -321,8 +328,11 @@ function MountedSurface(props: Readonly<{
           <Show when={unavailableSchedule()} fallback={<div data-sf-f01="not-admitted">
             <SfPageFrame titleKey={"sf.common.unavailable" as SfCopyKey} context={[]} tabs={[]} activeTab={null}
               secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-              <SfStatePanel state="unavailable" messageKey={"sf.common.noAuthorizedDestination" as SfCopyKey}
+              <SfStatePanel state="unavailable" messageKey={"sf.common.routeUnavailable" as SfCopyKey}
                 onRetryRead={() => { void handle.reload() }} />
+              <Show when={handle.state().status === "ready"}>
+                <button class="mx-btn" type="button" onClick={returnHome}>{language.t("sf.common.returnHome")}</button>
+              </Show>
             </SfPageFrame>
           </div>}>
             {(snapshot) => <SfUnavailableScheduleView owner={snapshot()} />}

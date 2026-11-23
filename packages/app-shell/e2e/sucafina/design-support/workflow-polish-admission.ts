@@ -61,9 +61,18 @@ export async function captureWorkflowRefusal(
     await expect(host).toHaveAttribute("data-sf-discovery-state", "ready")
     await expect(host).toHaveAttribute("data-sf-provider-state", "ready")
     await expect(host).toHaveAttribute("data-sf-view-state", "denied")
-    await expect(host.locator('[data-sf-f01="not-admitted"]')).toHaveText("Sucafina route not admitted")
+    const refusal = host.locator('[data-sf-f01="not-admitted"]')
+    await expect(refusal).toHaveCount(1)
+    if (surface === "UI64" || surface === "UI66") {
+      await expect(refusal).toHaveAttribute("data-sf-route-unavailable", surface)
+      await expect(refusal.getByRole("status")).toBeVisible()
+    } else {
+      await expect(refusal.getByRole("alert").locator(".sf-state-title")).toHaveText("This page is unavailable in the current context. Refresh access or return to Today.")
+      await expect(refusal.getByRole("button", { name: "Try again", exact: true })).toBeVisible()
+      await expect(refusal.getByRole("button", { name: "Return to Today", exact: true })).toBeVisible()
+    }
     await expect(host.locator("[data-sf-surface]")).toHaveCount(0)
-    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(0)
+    await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
     await expect(host.locator('[aria-busy="true"]')).toHaveCount(0)
     await expect(page).toHaveURL(target.href)
   }

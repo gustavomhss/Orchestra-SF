@@ -9,6 +9,8 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { comparableReviewSections, preservedComponentRows, preservedSectionHasChanges, preservedValueRows, readPreservedProjection, reviewReadState, sameSourceMaterial, type PreservedComponent, type PreservedReview, type PreservedSourceRef, type PreservedValue, type ReviewProjection } from "../preserved/model"
 import { AmountText, PeriodText, StatusText, WhenText } from "../labels"
+import { preservedValuePresentation } from "../preserved/presentation"
+import { SfPreservedFieldLabel, SfPreservedRecordLabel, SfPreservedValueText } from "../preserved/value"
 import "../preserved/preserved.css"
 import "../workflows.css"
 
@@ -78,7 +80,7 @@ function ChangeKinds(props: {
 function ValueCell(props: { entry: PreservedValue | undefined; projection: ReviewProjection; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <AmountText value={entry().value} currency={entry().currency} />}</strong>
+      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <SfPreservedValueText value={entry()} />}</strong>
       <span>{props.t("sf.u32.currency")}: {entry().currency ?? props.t("sf.u32.notProvided")}</span>
       <span>{props.t("sf.u32.unit")}: {entry().unit ?? props.t("sf.u32.notProvided")}</span>
       <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
@@ -285,7 +287,12 @@ export function SfReviewCompareView(props: SfSurfaceProps<"UI49">) {
                                   data-change-value={String(row.valueChanged)}
                                   data-change-attributes={String(row.attributesChanged)}
                                   data-change-source={String(row.provenanceChanged)}>
-                                  <th scope="row"><span data-sf-diff-id>{row.id}</span><ChangeKinds numeric={row.numericChanged}
+                                  <th scope="row">
+                                    <SfPreservedFieldLabel value={row.after ?? row.before!} values={row.after ? right()!.values : left()!.values} />
+                                    <small class="sf-preserved-period"><SfPreservedRecordLabel
+                                      presentation={preservedValuePresentation(row.after ?? row.before!, row.after ? right()!.values : left()!.values)} /></small>
+                                    <details class="sf-technical-details"><summary>{t("sf.u32.valueReference")}</summary><bdi data-sf-diff-id>{row.id}</bdi></details>
+                                    <ChangeKinds numeric={row.numericChanged}
                                     value={row.valueChanged} attributes={row.attributesChanged}
                                     source={row.provenanceChanged} t={t} /></th>
                                   <td data-label={t("sf.u32.before")}><ValueCell entry={row.before} projection={left()!} t={t} /></td>

@@ -134,43 +134,49 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   expect(sourceArray(sourceObject(data.projection).values).length).toBeGreaterThan(0)
   await expect(detail.locator('[data-sf-bi-view="BI01"]')).toBeVisible()
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
-  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-chart-scroll')
+  await record(page, info, "UI46", "original-financial-chart", "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.", '[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type')
 
   const chartViewport = page.viewportSize()
   const chartScheme = await page.locator("html").getAttribute("data-color-scheme")
   await page.setViewportSize({ width: 1440, height: 1100 })
   await scheme(page, "dark")
-  await page.setViewportSize({ width: 320, height: 800 })
-  await reflow(page)
-  const chartScroll = detail.locator('[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type .sf-bi-chart-scroll')
-  await expect(chartScroll).toHaveCount(1)
-  await expect(chartScroll).toHaveAttribute("tabindex", "0")
-  await chartScroll.evaluate((element) => element.scrollIntoView({ block: "center", inline: "nearest", behavior: "instant" }))
-  await expect(chartScroll).toHaveJSProperty("scrollLeft", 0)
-  const chartText = await chartScroll.locator(".sf-bi-svg").evaluate((element) => {
-    const labels = [...element.querySelectorAll("text")].filter((text) => text.textContent?.trim())
-    const sizes = labels.map((text) => {
-      const matrix = text.getScreenCTM()
-      if (!matrix) throw new Error("An original chart label is not rendered")
-      return Number.parseFloat(getComputedStyle(text).fontSize) * Math.hypot(matrix.a, matrix.b)
-    })
-    return { labelCount: labels.length, minimumFontPx: Math.min(...sizes) }
-  })
-  expect(chartText.labelCount).toBeGreaterThan(0)
-  expect(chartText.minimumFontPx).toBeGreaterThanOrEqual(11)
-  await chartScroll.hover()
-  await page.mouse.wheel(10_000, 0)
-  await expect.poll(() => chartScroll.evaluate((element) =>
-    Math.abs(element.scrollWidth - element.clientWidth - element.scrollLeft))).toBeLessThanOrEqual(1)
-  const chartPosition = await chartScroll.evaluate((element) => ({
-    viewportWidth: element.clientWidth, contentWidth: element.scrollWidth, scrollLeft: element.scrollLeft,
-  }))
-  expect(chartPosition.scrollLeft).toBeGreaterThan(0)
-  await info.attach("UI46-mobile-chart-original-value-proof", { contentType: "application/json",
-    body: JSON.stringify({ source: "original contextual BI01 response", selectionRef: choice.selectionRef,
-      period: sourceObject(data.request).period, viewport: { width: 320, height: 800 },
-      text: chartText, horizontalScroll: chartPosition, input: "native horizontal wheel", recomputedValues: false }) })
-  await capture(page, info, "UI46-original-financial-chart-values-dark-320")
+  const originalChartValues = new Map(sourceArray(sourceObject(data.projection).values).map(sourceObject).map((value) => [value.id, value]))
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 800 })
+    await reflow(page)
+    const series = detail.locator('[data-sf-bi-view="BI01"] > .sf-bi-series:first-of-type')
+    const paired = series.locator(".sf-bi-mobile-values")
+    await expect(paired).toBeVisible()
+    await paired.scrollIntoViewIfNeeded()
+    await expect(series.locator(".sf-bi-chart-scroll")).toBeHidden()
+    const rows = await paired.locator("[data-sf-mobile-value-id]").evaluateAll((elements) => elements.map((element) => {
+      const period = element.querySelector("dt")
+      const value = element.querySelector("dd")
+      if (!period || !value) throw new Error("A mobile source pair is missing")
+      const bounds = element.getBoundingClientRect()
+      const left = period.getBoundingClientRect(), right = value.getBoundingClientRect()
+      return { id: element.getAttribute("data-sf-mobile-value-id"), period: period.textContent,
+        value: value.querySelector("strong")?.textContent, unit: value.querySelector("span")?.textContent,
+        fullyPaired: left.left >= bounds.left && right.right <= bounds.right + 1,
+        minimumFontPx: Math.min(Number.parseFloat(getComputedStyle(period).fontSize), Number.parseFloat(getComputedStyle(value).fontSize)),
+      }
+    }))
+    expect(rows.length).toBeGreaterThan(0)
+    for (const row of rows) {
+      const original = originalChartValues.get(row.id)
+      expect(original, row.id ?? "source identity").toBeDefined()
+      expect(row.period?.trim()).not.toBe("")
+      expect(row.fullyPaired).toBe(true)
+      expect(row.minimumFontPx).toBeGreaterThanOrEqual(12)
+      if (original && typeof original.value === "number" && original.evidenceState !== "absent")
+        expect(row.value).toBe(new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(original.value))
+    }
+    await expect.poll(() => paired.evaluate((element) => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1)
+    await info.attach("UI46-mobile-chart-original-value-proof-" + width, { contentType: "application/json",
+      body: JSON.stringify({ source: "original contextual BI01 response", selectionRef: choice.selectionRef,
+        period: sourceObject(data.request).period, viewport: { width, height: 800 }, rows, recomputedValues: false }) })
+    await capture(page, info, "UI46-original-financial-chart-pairs-dark-" + width)
+  }
   await page.setViewportSize({ width: 1440, height: 1100 })
   if (chartScheme === "dark" || chartScheme === "light") await scheme(page, chartScheme)
   if (chartViewport) await page.setViewportSize(chartViewport)
@@ -241,21 +247,56 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const previous = await preserve()
   await expect(page.locator("[data-sf-preserved-confirmed]")).toContainText(previous)
   await record(page, info, "UI47", "original-preservation-confirmed", "The original preserve response was confirmed by a separate authenticated review read.", "[data-sf-preserved-confirmed]")
+  await page.locator("[data-sf-preserved-confirmed]").getByRole("button", { name: "Open preserved review", exact: true }).click()
+  await expect(page.locator('[data-review-ref=' + JSON.stringify(previous) + ']')).toBeVisible({ timeout: 40_000 })
+  expect(new URL(page.url()).searchParams.get("project")).toBe(owner.projectId)
+  expect(new URL(page.url()).searchParams.get("installation")).toBe(owner.installationId)
   await prepare()
   const current = await preserve()
   expect(current).not.toBe(previous)
 
-  const review = await open(page, owner, "/orchestra/sf-reviews/reviews/" + encodeSfRouteRef(previous), "Preserved review", "UI48")
+  const reviewEntry = await open(page, owner, "/orchestra/sf-reviews/reviews", "Preserved review", "UI48")
+  await reviewEntry.getByLabel("Review reference", { exact: true }).fill(previous)
+  await reviewEntry.getByRole("button", { name: "Open preserved review", exact: true }).click()
+  const review = await settledSurface(page, "UI48")
+  await expect(review.locator("[data-review-ref]")).toHaveAttribute("data-review-ref", previous, { timeout: 40_000 })
   await expect(review.getByRole("region", { name: "Preserved section sequence", exact: true })).toBeVisible()
   await expect(review).toContainText(previous)
   const originalValues = sourceReviews.get(previous)!.sections.flatMap((section) =>
     Schema.decodeUnknownSync(SfReviewDomainProjection)(section.content).values)
   await expect(review.locator(".sf-n28-values > div")).toHaveCount(originalValues.length)
+  for (const value of originalValues.filter((item) => /\.year$/.test(item.id))) {
+    const row = review.locator('[data-sf-preserved-value=' + JSON.stringify(value.id) + ']')
+    await expect(row.locator("dt")).toContainText("Year")
+    await expect(row.locator(".sf-preserved-value")).toHaveText(String(value.value))
+  }
+  await expect(review.locator(".sf-preserved-record > h5")).not.toHaveCount(0)
   await expect(review.getByText("This preserved section cannot be displayed as an authorized domain projection.", { exact: true })).toHaveCount(0)
   await record(page, info, "UI48", "original-preserved-review", "Original review re-read after its producer confirmed preservation; every original projection value is rendered after the unchanged closed schema validates the source.")
   await page.getByRole("button", { name: "Present review", exact: true }).click()
   await expect(review).toHaveAttribute("data-sf-presentation", "true")
   await record(page, info, "UI48", "presentation", "Presentation mode of the same authorized preserved review, with original source provenance.", '[aria-label="Preserved review meeting"]')
+
+  // Negative transport control only: the retry and links still use the original producer.
+  const sourceButton = review.getByRole("button", { name: "Open source", exact: true })
+  await expect(sourceButton).toHaveCount(1)
+  let failedRead = false
+  const sourceRead = (url: URL) => url.pathname === owner.mount + "/dashboard" &&
+    url.searchParams.get("sf") === "dashboard-review" && url.searchParams.get("id") === previous
+  await page.route(sourceRead, async (route) => {
+    if (!failedRead) { failedRead = true; await route.abort("failed"); return }
+    await route.continue()
+  })
+  await sourceButton.click()
+  const sourceResult = review.locator("[data-sf-source-state]")
+  await expect(sourceResult).toHaveAttribute("data-sf-source-state", "unavailable")
+  await expect(sourceResult.getByRole("link")).toHaveCount(0)
+  await sourceResult.getByRole("button", { name: "Try again", exact: true }).click()
+  await expect(sourceResult).toHaveAttribute("data-sf-source-state", "ready", { timeout: 40_000 })
+  await expect(sourceResult.getByRole("link")).not.toHaveCount(0)
+  await page.unroute(sourceRead)
+  await record(page, info, "UI48", "source-retry-recovered",
+    "One original review read was aborted as a negative transport control; explicit read retry recovered original authorized links, without a write.", "[data-sf-source-state]")
 
   const compare = await open(page, owner, "/orchestra/sf-reviews/compare?" +
     new URLSearchParams({ previousReview: previous, currentReview: current }), "Compare reviews", "UI49")
@@ -264,14 +305,38 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   await expect(compare.locator('[data-change-numeric="true"]')).toHaveCount(0)
   await record(page, info, "UI49", "compatible-original-revisions", "Two separately preserved original reviews of the same material; compatibility is verified and no numeric change is invented.")
   await record(page, info, "UI49", "original-comparison-detail",
-    "The first comparison rows of the original budget section are visible; source-only differences remain nonnumeric and the wide table keeps its own horizontal scroll.",
+    "The first comparison rows retain original source-only differences; narrow rows pair Previous and Current under the same identity.",
     '[data-sf-comparison-diff="authorized"] > [data-section-id] > .sf-n28-scroll > table > tbody > tr:first-child')
 
-  const report = await open(page, owner, "/orchestra/sf-reviews/reports/" + encodeSfRouteRef(previous), "Report", "UI50")
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 800 })
+    const rows = compare.locator('[data-sf-comparison-diff="authorized"] [data-section-id] tbody > tr')
+    await expect(rows).not.toHaveCount(0)
+    const geometry = await rows.evaluateAll((elements) => elements.map((element) => {
+      const cells = element.querySelectorAll("td")
+      const bounds = element.getBoundingClientRect()
+      return { labels: [...cells].map((cell) => cell.getAttribute("data-label")),
+        paired: cells.length === 2 && [...cells].every((cell) => {
+          const rect = cell.getBoundingClientRect()
+          return rect.left >= bounds.left && rect.right <= bounds.right + 1
+        }) }
+    }))
+    expect(geometry.every((row) => row.paired && row.labels[0] === "Previous" && row.labels[1] === "Current")).toBe(true)
+    await capture(page, info, "UI49-paired-comparison-" + width)
+  }
+  await page.setViewportSize({ width: 1440, height: 1100 })
+
+  const reportEntry = await open(page, owner, "/orchestra/sf-reviews/reports", "Report", "UI50")
+  await reportEntry.getByLabel("Review reference", { exact: true }).fill(previous)
+  await reportEntry.getByRole("button", { name: "Open review for export", exact: true }).click()
+  const report = await settledSurface(page, "UI50")
   const selectedSections = report.locator("[data-section-id] input[type=checkbox]")
   await expect(selectedSections).toHaveCount(1)
   await expect(selectedSections).toBeChecked()
   await expect(report.getByRole("combobox", { name: "Office format", exact: true })).toBeVisible()
+  await expect(report.getByRole("combobox")).toHaveCount(1)
+  await expect(report.getByRole("textbox", { name: "Title", exact: true })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Generate report", exact: true })).toHaveCount(1)
   const preservedSource = report.getByText(previous, { exact: true })
   await expect(preservedSource).toHaveCount(1)
   await expect(preservedSource).toBeHidden()
