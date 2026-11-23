@@ -142,7 +142,8 @@ async function tokens(page: Page, account: Account, year: string, version: strin
   return result
 }
 
-async function confirmVersion(page: Page, account: Account, opener: Locator, expected: { id?: string; version: number; values: { name?: string } }) {
+async function confirmVersion(page: Page, account: Account, opener: Locator, expected: { id?: string; version: number; values: { name?: string } },
+  beforeConfirmation?: () => Promise<void>) {
   await expect(opener).toBeEnabled()
   await opener.click()
   const review = page.locator('[data-component="sf-change-review"]')
@@ -173,6 +174,7 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
   }
   await page.route(match, forward)
   try {
+    await beforeConfirmation?.()
     const [response] = await Promise.all([producer.promise, confirm.click()])
     expect(response.status()).toBe(200)
     expect(await response.json()).toMatchObject({ ok: true })
@@ -183,11 +185,12 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
 }
 
 /** One read-only recovery, only after an observed CAP23 read failure, inside the original 10s budget. */
-async function reconcileCreatedVersion(page: Page, account: Account, createdRow: Locator, info: TestInfo) {
+async function reconcileCreatedVersion(page: Page, account: Account, createdRow: Locator, info: TestInfo,
+  observedFailures: readonly { kind: "transport" | "http"; detail: string | number }[] = []) {
   const source = account.baseURL + "/api/ui/pages/CAP23"
   const matches = (request: Request) => request.method() === "GET" &&
     new URL(request.url()).origin === account.origin && new URL(request.url()).pathname === new URL(source).pathname
-  const failures: { kind: "transport" | "http"; detail: string | number }[] = []
+  const failures: { kind: "transport" | "http"; detail: string | number }[] = [...observedFailures]
   const failed = (request: Request) => {
     if (matches(request) && failures.length < 8)
       failures.push({ kind: "transport", detail: (request.failure()?.errorText ?? "failed").slice(0, 160) })
@@ -312,13 +315,53 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   page.on("response", responded)
   page.on("requestfailed", failed)
   const createdRow = surface.locator("tr[data-sf-row]")
+  const readObserver: { current?: Awaited<ReturnType<typeof forwardOnce>> } = {}
   try {
-    await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
-    // The native row must still appear. Only an observed original read failure can
-    // trigger one read-only recovery within the unchanged 10-second visibility budget.
-    await reconcileCreatedVersion(page, account, createdRow, info)
+    await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }),
+      { version: 0, values: {} }, async () => {
+        // The review is ready now; this cannot capture the page's initial empty read.
+        readObserver.current = await forwardOnce(page, (url) => url.origin === account.origin &&
+          url.pathname === new URL(account.baseURL).pathname + "/api/ui/pages/CAP23", "GET")
+      })
+    const originalRead = readObserver.current
+    if (!originalRead) throw new Error("The acknowledged save has no original CAP23 observer")
+    // Observe the one automatic read after the acknowledged save before starting
+    // the DOM budget. An original connection failure still permits the same
+    // bounded read-only recovery; the save is never repeated.
+    const observed = await originalRead.completed.then(
+      (value) => ({ kind: "response" as const, value }),
+      (error: unknown) => {
+        // Only the original producer socket closing can authorize recovery.
+        // A helper/deadline, assertion, codec or browser-delivery error must fail.
+        const socket = error instanceof Error
+          ? /^route\.fetch: (?:socket hang up|(?:read |write )?(?:ECONNRESET|EPIPE)\b)/.exec(error.message) : null
+        if (!socket) throw error
+        const detail = socket[0]
+        console.info("SF_FINAL_RECORDS_CAP23_READ " + JSON.stringify({ event: "original-socket-failure", detail }))
+        return { kind: "transport" as const, detail }
+      },
+    )
+    const readFailures: { kind: "transport" | "http"; detail: string | number }[] = []
+    let readVersion: string | undefined
+    if (observed.kind === "transport") readFailures.push(observed)
+    else if (observed.value.response.status() >= 400)
+      readFailures.push({ kind: "http", detail: observed.value.response.status() })
+    else {
+      expect(observed.value.request.method()).toBe("GET")
+      expect(observed.value.response.status()).toBe(200)
+      const body = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP23"].output)(await observed.value.response.json())
+      if (body.status !== "ok") throw new Error("The acknowledged version's original readback is unavailable")
+      expect(body.context.principalRef).toBe(account.principal)
+      expect(body.value.data.versions).toHaveLength(1)
+      readVersion = body.value.data.versions[0]!.id
+      expect(body.value.versions["versions:" + readVersion]?.version).toBe(1)
+    }
+    await originalRead.close()
+    await reconcileCreatedVersion(page, account, createdRow, info, readFailures)
     await expect(createdRow).toHaveCount(1)
+    if (readVersion) await expect(createdRow).toHaveAttribute("data-sf-row", readVersion)
   } finally {
+    await readObserver.current?.close()
     page.off("request", requested)
     page.off("response", responded)
     page.off("requestfailed", failed)
