@@ -1,0 +1,1918 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-23T16:24:55Z",
+  "recordScope": "The nested manifest records the complete183-path recovery/dev composition. The root source additionally includes the separately reviewed P17 candidate and22 literal ledger documents.",
+  "rootSource": {
+    "branch": "sf613-resume",
+    "commit": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+    "tree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac4708241b7af3d742c13a5fb5d712ed7ae2557f"
+  },
+  "qualification": false,
+  "composition": {
+    "schemaVersion": 1,
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "sf613-compose",
+    "commit": "2081301af5b7337fa4cc88fe36fc445b45418e1f",
+    "tree": "7b7114237ddb1ffa2142679cdceb2d721777feb9",
+    "createdAt": "2026-11-23T16:21:06Z",
+    "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "ours": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "theirs": "e115b667d845822a1df5f523bbfd828ab57ca978",
+    "parents": [
+      "503ea3bb738fc206a146fd359cf74e4bc60b8dad"
+    ],
+    "counts": {
+      "upstreamPaths": 183,
+      "exactUpstreamBlobs": 172,
+      "threeWayResolutions": 11,
+      "unchangedRecoveryOnlyPaths": 784
+    },
+    "validation": {
+      "type": "read-only source and Git object verification",
+      "changedPathCount": 183,
+      "unexpectedPaths": [],
+      "missingPaths": [],
+      "blobMismatches": [],
+      "runtimeTests": "NOT_EXECUTED",
+      "acceptance613": "PENDING",
+      "P17": "EXCLUDED",
+      "openPR717": "EXCLUDED",
+      "openPR718": "EXCLUDED"
+    },
+    "applications": [
+      {
+        "path": "docs/guides/sucafina-native-dashboard.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": "9d7421bdf5f6fbad61b9d903aa388dd97d5fec2f",
+        "ours": "9d7421bdf5f6fbad61b9d903aa388dd97d5fec2f",
+        "theirs": "486b903980bd3fb45b96e54657ee20421a4bc040",
+        "resolved": "486b903980bd3fb45b96e54657ee20421a4bc040",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-final-memory-health.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "17bf5e6194809dee13e3ea638ba307f3eddf316a",
+        "resolved": "17bf5e6194809dee13e3ea638ba307f3eddf316a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-native-final-routines.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "04537121360d88c5bd21dbc587adb58a0555e9c8",
+        "resolved": "04537121360d88c5bd21dbc587adb58a0555e9c8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/test/sucafina-resident-reading.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4883d559c8285c9fa3b1cab34758695101e32c82",
+        "resolved": "4883d559c8285c9fa3b1cab34758695101e32c82",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "cb3a26cfce9ba8359bc1afe37190c09a2d2c7cf3",
+        "ours": "f7c34b0ee1e178f6870c3d02be541f8f05ea5183",
+        "theirs": "513373c7b1ceef4c9018467fc9512bde68467968",
+        "resolved": "81a6d274e054bc1b97dbbd603ad49752eeb03f48",
+        "decision": "three-way-union",
+        "reason": "Keep every recovery operational observer and the audited read phase, with arbitrary extensions outside. Insert upstream document-scenario/routine/memory observers inside the native internal phase; keep their full freshness, authority, producer identity and dependencies. Share upstream routineGeneration/routineGenerationCurrent."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-phase-origin.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "a046bc883784777b10a22a67872f58782efff2d1",
+        "ours": "a046bc883784777b10a22a67872f58782efff2d1",
+        "theirs": "f53067032b77918946c779f26f127b6a257473ef",
+        "resolved": "f53067032b77918946c779f26f127b6a257473ef",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": "ed4778196ad5ee9bbeb5d7a52cd1682462dad762",
+        "ours": "e129fa75fdf51e9412cd38b492120a01c6969cf1",
+        "theirs": "2e5a980831a3462607df3afc132db8de2dc1cb0e",
+        "resolved": "8a7ba6ba993a83c28941f3a91ee4f91e72633eec",
+        "decision": "three-way-union",
+        "reason": "Retain wave-five progress and original Analytics/C17 failures; add the entire upstream UI57–UI70 section and record observed PR713 merge. Accepted/merged count55/70; wave-five still pending."
+      },
+      {
+        "path": "docs/qa/sucafina/design/inventory.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": "d6ba36f0ebab69bed9e9057dfdfb9350bf90dd80",
+        "ours": "361282476dff01823f1f50898075e61d885a4d3a",
+        "theirs": "309424b52d373effd0f1b1de6e0f45dc8b6dc0bd",
+        "resolved": "b9031c29a9b01b067a63e5eec3271b95eaad2897",
+        "decision": "three-way-union",
+        "reason": "Structural three-way union of all fields/surfaces; no primitive conflicts. Reconcile upstream pre-merge PR713 metadata with actual merged commit/time; accepted merged55, active wave-five15unmerged; do not promote qualification or acceptance."
+      },
+      {
+        "path": "docs/qa/sucafina/design/WAVE-SIX.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0b7de5c7589f9814825db40088dec16beb04b796",
+        "resolved": "0b7de5c7589f9814825db40088dec16beb04b796",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/ROUND-THREE.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "159aef1670431c8acfd27dbd6abc0e28a6f35e22",
+        "resolved": "159aef1670431c8acfd27dbd6abc0e28a6f35e22",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/round-three-runs.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3d7ad7cc9c6f831870580a6ef2ee378595c15b4a",
+        "resolved": "3d7ad7cc9c6f831870580a6ef2ee378595c15b4a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "329a500051ff1ef3ad576e21a6dde4e76339f489",
+        "ours": "9b64c783203da369cb37dc84bbd0a0e6483f529d",
+        "theirs": "54a93987cf40f1317f29eff1525aacd6efa0d6a1",
+        "resolved": "bd7782347593ae1c3f9f64d1fff8795ad55c2381",
+        "decision": "three-way-union",
+        "reason": "Apply six disjoint upstream hunks for export/resident health, resident handlers and routine nativeReadBinding routing. Preserve recovery operational read scope and all original observers."
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+        "ours": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+        "theirs": "9093a97a0a4afcdc8d3af849507bbf2e74f27dbc",
+        "resolved": "9093a97a0a4afcdc8d3af849507bbf2e74f27dbc",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-settings.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "d9bd4a3b0e4348df380ab3f86d023ebc258dc8ce",
+        "ours": "d9bd4a3b0e4348df380ab3f86d023ebc258dc8ce",
+        "theirs": "f8ac5b8181bde56ec21301334dad95374676f038",
+        "resolved": "f8ac5b8181bde56ec21301334dad95374676f038",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-decisions.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "88d8b5553e14f692f34dc9b57e5fefde8b932e53",
+        "ours": "88d8b5553e14f692f34dc9b57e5fefde8b932e53",
+        "theirs": "d8356c5afb3d68dd120100084105f1186f4c8d6a",
+        "resolved": "d8356c5afb3d68dd120100084105f1186f4c8d6a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "957f70a56e5fa32a10c1cfeface9573af5abe5b3",
+        "ours": "957f70a56e5fa32a10c1cfeface9573af5abe5b3",
+        "theirs": "99a22087a3272d2f5d69595ca5e6a7fddae278e2",
+        "resolved": "99a22087a3272d2f5d69595ca5e6a7fddae278e2",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-memory-consultation.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "f70affa847e9d8a08de8ac6f0c49cd392e4502af",
+        "resolved": "f70affa847e9d8a08de8ac6f0c49cd392e4502af",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-memory-recall-unavailable.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0e4923bed38807fc370304f3e32efeff6849f56e",
+        "resolved": "0e4923bed38807fc370304f3e32efeff6849f56e",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "719e7416e91fb4276236ff6324c8ff3e6e02e57a",
+        "resolved": "719e7416e91fb4276236ff6324c8ff3e6e02e57a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-routines.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "45b4e2a0c6c91dcee814b0662dcce7c33f6023a8",
+        "resolved": "45b4e2a0c6c91dcee814b0662dcce7c33f6023a8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/components/dialog-connect-provider.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "ea1a57499a4c536833cfbf7f4d86908f1359fb07",
+        "ours": "ea1a57499a4c536833cfbf7f4d86908f1359fb07",
+        "theirs": "f26cd20c9b74d1a82a883bbac6bda1597ea97cea",
+        "resolved": "f26cd20c9b74d1a82a883bbac6bda1597ea97cea",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/components/dialog-connect-provider.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "a40ef1abc1495293af6275b30b831212d45ccd8f",
+        "resolved": "a40ef1abc1495293af6275b30b831212d45ccd8f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/DESIGN.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": "f9a8f7527b3f6249abb49d07587d51e509de86f7",
+        "ours": "a17bb3a4c99a9b5b9ca52f132b2e2f4981af8d8e",
+        "theirs": "8b08c1fb20d7075b3afb21c60ce2ef48eb0d430e",
+        "resolved": "171a377e1fa3d20938977cf9dd7474e95e1e7468",
+        "decision": "three-way-union",
+        "reason": "Union disjoint wave-five documentation and upstream third shared-refinement documentation; retain all source history."
+      },
+      {
+        "path": "packages/client/src/sucafina/bindings.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "dcf4229af5745da305906a2c1f7ce42427fd62bd",
+        "ours": "dcf4229af5745da305906a2c1f7ce42427fd62bd",
+        "theirs": "f2b656c06e667912ae32450eed4ba35d0246a621",
+        "resolved": "f2b656c06e667912ae32450eed4ba35d0246a621",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/client/test/sucafina/native-bindings.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "1017908a0b770d6bb8c38e2f082f805a5732e4d3",
+        "resolved": "1017908a0b770d6bb8c38e2f082f805a5732e4d3",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/document-scenario-health.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "f9d8f52e41c402cd6a65cc749e4f434184a81dca",
+        "resolved": "f9d8f52e41c402cd6a65cc749e4f434184a81dca",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/export-health.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "a794969fc06618fdc3ef6f46b4ee01c8dc5448e2",
+        "resolved": "a794969fc06618fdc3ef6f46b4ee01c8dc5448e2",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/memory-health.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "7febd167cae16a343efedd85145458d9ffb3cce0",
+        "resolved": "7febd167cae16a343efedd85145458d9ffb3cce0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/residents.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "7df06c60ef42738249915d8e945e2fc3d4d5eab1",
+        "resolved": "7df06c60ef42738249915d8e945e2fc3d4d5eab1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "08dca65bce0033054842eba114526c8dc4618d4a",
+        "resolved": "08dca65bce0033054842eba114526c8dc4618d4a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/DEV-COMPOSITION.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "59fde197c4c7bc362cc4f0e6bb369fa3efd9efce",
+        "resolved": "59fde197c4c7bc362cc4f0e6bb369fa3efd9efce",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/DEV-COMPOSITION.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "bf1ec8daaa7c73f728322ea1bcc28a102264d4c5",
+        "resolved": "bf1ec8daaa7c73f728322ea1bcc28a102264d4c5",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/VALIDATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "b48dd01b97247dbc2de128ae1a2e92d39d104a3c",
+        "resolved": "b48dd01b97247dbc2de128ae1a2e92d39d104a3c",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/scope.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "7bf534343a0b5db7f554d9c923622b9ce9f32c0f",
+        "resolved": "7bf534343a0b5db7f554d9c923622b9ce9f32c0f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/technical.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "c74d8bbc56b28d88c58a9766c39dc11b2de3696a",
+        "resolved": "c74d8bbc56b28d88c58a9766c39dc11b2de3696a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "91e7af8d343d32e9ad3ca7de6cdb320e6667a1b2",
+        "ours": "73ddffb7cc4a870d1cc1f678db0e7dcfa7cf7ae8",
+        "theirs": "fa427583207874aa04e2e9ff0bcfef4005aa6142",
+        "resolved": "74a6bced0063c1b93c4ebbef53e47bfbc21790b5",
+        "decision": "three-way-union",
+        "reason": "Union all operationId additions: recovery collaboration/portfolio readings plus upstream document-scenario, routine and memory bindings. No existing contract removal."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "96168ab4f2c1dfd600aeed165a6fda910aa5f8a4",
+        "ours": "f64a871384449a898ad79705b0ccbe61ea1f760a",
+        "theirs": "3dbe87dac98b39efcaccc7037127a4b18463c4dc",
+        "resolved": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "decision": "three-way-union",
+        "reason": "Union four-files wave and real Linux X64 Actions guard with optional validated loopback ClamD scanner argument. Preserve canonical process boundary and original deadlines."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "b9a3535765634f8b249bf28a4911da52721c7abc",
+        "ours": "2c820206d7cbd8b3122786d9da7fb00a5eb7aa43",
+        "theirs": "3c2be18d153391e9eec1ddceebc30c7d8fc504d6",
+        "resolved": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "decision": "three-way-union",
+        "reason": "Union recovery Files support and upstream validated scanner wiring. requestedScanner takes precedence over the real four-files3310 fallback; effectiveScanner always passes the original real clean INSTREAM probe and is sent once to the native installation. Preserve both original workspace calls: preparation before native seeding, then fresh physical-identity/permission revalidation after enrollment awaits immediately before discovery metadata."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-capture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "a981bf39217d5cd84937cb66065720926eb47280",
+        "resolved": "a981bf39217d5cd84937cb66065720926eb47280",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "c18d12201e0dfed6ce513e44a0cbe693488f8c94",
+        "resolved": "c18d12201e0dfed6ce513e44a0cbe693488f8c94",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-memory-recall.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3787289b7ad6c705678705761f57a6eaf577d372",
+        "resolved": "3787289b7ad6c705678705761f57a6eaf577d372",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-memory-seed.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "08a58dba8db17f73b2bd66b8e02c7fbc1edab5af",
+        "resolved": "08a58dba8db17f73b2bd66b8e02c7fbc1edab5af",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-navigation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "ee7d6e16046496122217359d5c61a24ba9ceaa77",
+        "resolved": "ee7d6e16046496122217359d5c61a24ba9ceaa77",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-routines-gate.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "2a4562ec5952ea4e6ba211e2ee0df82cb1f2bb73",
+        "resolved": "2a4562ec5952ea4e6ba211e2ee0df82cb1f2bb73",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "05ac7e82cf064fa5085de881af30d7248519947b",
+        "ours": "05ac7e82cf064fa5085de881af30d7248519947b",
+        "theirs": "34a6077a364f094cdc61a5027e20df23d5950e38",
+        "resolved": "34a6077a364f094cdc61a5027e20df23d5950e38",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "f10f8ead85b8c0a778708eefb84cce1e259ea621",
+        "ours": "f10f8ead85b8c0a778708eefb84cce1e259ea621",
+        "theirs": "442fb4ab5795b6f0d4feb1a49c8f07f782a42441",
+        "resolved": "442fb4ab5795b6f0d4feb1a49c8f07f782a42441",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "48d080f69bc23c4a3f02bd3ff345e725686ac070",
+        "ours": "48d080f69bc23c4a3f02bd3ff345e725686ac070",
+        "theirs": "4cfec81c00175147f648489b3d8a5ccd12c671e9",
+        "resolved": "4cfec81c00175147f648489b3d8a5ccd12c671e9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/final-records-export.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "d9482ecc20c75e631b60c73eae0ddc2f8ebf8a75",
+        "resolved": "d9482ecc20c75e631b60c73eae0ddc2f8ebf8a75",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/final-records-file-fence.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "2c74d23480bae154fcaf9dcbb99cf266836aad89",
+        "resolved": "2c74d23480bae154fcaf9dcbb99cf266836aad89",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/final-records-native-scenario.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "5298f214f1adacf84cc93e5b160dc101b5d40731",
+        "resolved": "5298f214f1adacf84cc93e5b160dc101b5d40731",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/final-records-scenario.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "880a8a6bd61deb18b3e93bd0e1f4c9edb6ecd4d4",
+        "resolved": "880a8a6bd61deb18b3e93bd0e1f4c9edb6ecd4d4",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/final-records.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "61729f35b410929c9a6377edbbddf1ec280651c7",
+        "resolved": "61729f35b410929c9a6377edbbddf1ec280651c7",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/context/global-sync/bootstrap.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "83e3238a34a69ed66b227dc066a07f92c1934a6d",
+        "ours": "83e3238a34a69ed66b227dc066a07f92c1934a6d",
+        "theirs": "a96c1e62d8b70014917cd99dfccdb4c65c689160",
+        "resolved": "a96c1e62d8b70014917cd99dfccdb4c65c689160",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/context/global-sync/bootstrap.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "aefa45daa1296df417ddba040c6412895140521a",
+        "ours": "aefa45daa1296df417ddba040c6412895140521a",
+        "theirs": "614e23524ef597ecffeac3111b997bd7a66189f1",
+        "resolved": "614e23524ef597ecffeac3111b997bd7a66189f1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "e838701579f75a4c4511ac6d8ed36c6d3301c9a2",
+        "ours": "e838701579f75a4c4511ac6d8ed36c6d3301c9a2",
+        "theirs": "256d6dfecbdae00bbe2f9837bdd06d2d70ed5ee3",
+        "resolved": "256d6dfecbdae00bbe2f9837bdd06d2d70ed5ee3",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "e22f2b6354d82b452c8f128590daf17923e08103",
+        "ours": "60885587e4c8d91e961f3909b36e1cd2555f36b8",
+        "theirs": "85a191fc4ff38df131ef5b998e921a4889871da5",
+        "resolved": "0b5feea1b54e922521b80ad8c7345cc09db68ffa",
+        "decision": "three-way-union",
+        "reason": "Union all keys. Preserve every existing English value; retain recovery-only Portuguese translations. Choose integrated dev translations for16 divergent shared pt-BR values, including capitalization, domain-impact and no-impact copy."
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "e7001ed3414a90b34dd28b7c86204b266ed751e2",
+        "ours": "e7001ed3414a90b34dd28b7c86204b266ed751e2",
+        "theirs": "eb81b70c91559ef4a8315e172c59e85be1085980",
+        "resolved": "eb81b70c91559ef4a8315e172c59e85be1085980",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u26.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "80e48308d4b5097997d5a77109510b5dc27594ec",
+        "ours": "80e48308d4b5097997d5a77109510b5dc27594ec",
+        "theirs": "ee4b421dd3ccf4046c76ba7fbc06fc3be4abc518",
+        "resolved": "ee4b421dd3ccf4046c76ba7fbc06fc3be4abc518",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u27.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "19c8bbff316f7884d449ae9fe707376598825f34",
+        "ours": "19c8bbff316f7884d449ae9fe707376598825f34",
+        "theirs": "d6e682d50435fde5cad93c8f2a5ea2338e736768",
+        "resolved": "d6e682d50435fde5cad93c8f2a5ea2338e736768",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u28.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "da5c904e97f6ffa4fedac7787ec9a684ab3c1766",
+        "ours": "da5c904e97f6ffa4fedac7787ec9a684ab3c1766",
+        "theirs": "3ed1c51902ea2bf29720d1667a34a94002476342",
+        "resolved": "3ed1c51902ea2bf29720d1667a34a94002476342",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "94bb2ad82a45fc75330e1dc3d6c9f4e1904a57e1",
+        "resolved": "94bb2ad82a45fc75330e1dc3d6c9f4e1904a57e1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "a330d1585d1196323959be2a9f8420c9b1e79e86",
+        "resolved": "a330d1585d1196323959be2a9f8420c9b1e79e86",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui57-changed-fields-original-values.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "bea9ff93bb12fb3afe7ed25e67a638e1fc7555ad",
+        "resolved": "bea9ff93bb12fb3afe7ed25e67a638e1fc7555ad",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui57-recovered-receipt-pt-br-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "5d576e4005a87e5a267de79d6eacf30153d64ea3",
+        "resolved": "5d576e4005a87e5a267de79d6eacf30153d64ea3",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui58-authorized-catalog-dark-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "84794d86c10f5e8aa4c5180d63eef9917a7da143",
+        "resolved": "84794d86c10f5e8aa4c5180d63eef9917a7da143",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui59-review-original-source-dark-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4cac816315094bc7d837b908ff6fd8c1ef8da9cc",
+        "resolved": "4cac816315094bc7d837b908ff6fd8c1ef8da9cc",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui59-review-original-source-light-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0e517eb5f7e69ec0782c839f2c96150411801b55",
+        "resolved": "0e517eb5f7e69ec0782c839f2c96150411801b55",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui59-review-original-source-light-narrow.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "b03e46cf1773648b2fcc8f9775efc64337b70765",
+        "resolved": "b03e46cf1773648b2fcc8f9775efc64337b70765",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui59-review-original-source-pt-br-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "34bb193956e193c8add2f1ee948c1003b5631e17",
+        "resolved": "34bb193956e193c8add2f1ee948c1003b5631e17",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui60-confirmed-source-restricted-simulation-dark-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "5459594f76804bc31d85c0a405f16b36d028f966",
+        "resolved": "5459594f76804bc31d85c0a405f16b36d028f966",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui60-preview-from-confirmed-evidence.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "29e0a709aa7aa18f0ccbb9f64c59d820933bb6be",
+        "resolved": "29e0a709aa7aa18f0ccbb9f64c59d820933bb6be",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-br-dark-desktop-signals-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4382ae7cae3b9e3c40014e5f1a07d8c5ab48a47e",
+        "resolved": "4382ae7cae3b9e3c40014e5f1a07d8c5ab48a47e",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-br-light-320-signals-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "1203fe7c80d761331b30ebf4c72d6646347cca8a",
+        "resolved": "1203fe7c80d761331b30ebf4c72d6646347cca8a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-dark-desktop-recorded-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "744a01849a481e83ca2f5602ce9d6ce144847e21",
+        "resolved": "744a01849a481e83ca2f5602ce9d6ce144847e21",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-en-dark-desktop-materiality-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6cc63c2c3ca15696f5b4a430a5da0e930747305b",
+        "resolved": "6cc63c2c3ca15696f5b4a430a5da0e930747305b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-en-light-320-materiality-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "f34356f4159e7c61ac28130203573669a8eee2a9",
+        "resolved": "f34356f4159e7c61ac28130203573669a8eee2a9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui61-light-320-recorded-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "2ab8f598ddb747c74a6f853d384018d4a69fc4e8",
+        "resolved": "2ab8f598ddb747c74a6f853d384018d4a69fc4e8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-br-dark-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "e78b907ab6ba609e0b9c48cb68bfa6e31a07d7dc",
+        "resolved": "e78b907ab6ba609e0b9c48cb68bfa6e31a07d7dc",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-br-light-320-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "96aa6d7fdc699c759c37c3333b152cee6181ec24",
+        "resolved": "96aa6d7fdc699c759c37c3333b152cee6181ec24",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-en-dark-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "723268f94925d1397a30618fb1272d20080589db",
+        "resolved": "723268f94925d1397a30618fb1272d20080589db",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-en-light-320-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3dee1c3dca776597f31523d3618abd67483a8051",
+        "resolved": "3dee1c3dca776597f31523d3618abd67483a8051",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-en-light-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "28019cc2543bedabc7c8429c69b8722a5c494541",
+        "resolved": "28019cc2543bedabc7c8429c69b8722a5c494541",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui62-pt-br-dark-desktop-authorized-candidates.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0b500af2b653d12baa43b0517901c37263333b22",
+        "resolved": "0b500af2b653d12baa43b0517901c37263333b22",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui63-light-desktop-incomplete-coverage.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8bc7a9303ff174e992fc020d9544536e39d4dd98",
+        "resolved": "8bc7a9303ff174e992fc020d9544536e39d4dd98",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui63-pt-br-dark-desktop-incomplete-coverage.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "af30cbdf005744752a3fd74e379b23f6fb423437",
+        "resolved": "af30cbdf005744752a3fd74e379b23f6fb423437",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui64-pt-br-dark-360.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "07e47d9b59f7f9596d7cf16721355f82406a8ac0",
+        "resolved": "07e47d9b59f7f9596d7cf16721355f82406a8ac0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui65-en-light-desktop-no-run-return.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "572102c142711981348cdb0eda82a27911b931a0",
+        "resolved": "572102c142711981348cdb0eda82a27911b931a0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui66-pt-br-light-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "d24874764876dadc1bbe5907175faadc146708d4",
+        "resolved": "d24874764876dadc1bbe5907175faadc146708d4",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui67-light-desktop-refreshed-context.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8bba48e4e65d5fc099a384eb925a1ac2fbd80e32",
+        "resolved": "8bba48e4e65d5fc099a384eb925a1ac2fbd80e32",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui67-pt-br-dark-desktop-current-context.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "11da73fdef361c3ca70787cfe6d1f5c69c034df2",
+        "resolved": "11da73fdef361c3ca70787cfe6d1f5c69c034df2",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui68-authorized-format-dark-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "678cff7973e6744c00b560200e3e65ed5d98958b",
+        "resolved": "678cff7973e6744c00b560200e3e65ed5d98958b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui68-authorized-format-pt-br-desktop.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "80846c8b4dc3a760e90eb3f2f3935aa9d054ede7",
+        "resolved": "80846c8b4dc3a760e90eb3f2f3935aa9d054ede7",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui69-dark-desktop-summary-settings.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4f1c14ad69b9e4723c7ade5e3c788fe05ce8fdc9",
+        "resolved": "4f1c14ad69b9e4723c7ade5e3c788fe05ce8fdc9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui69-light-320-summary-review-actions.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "resolved": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui69-pt-br-dark-desktop-administration.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "08739e9b391ce4892518bd861f4ee9b16d5e6f80",
+        "resolved": "08739e9b391ce4892518bd861f4ee9b16d5e6f80",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui70-en-light-360-resident-case-detail.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6569044b09b3ba7112c65ffb5ca788929bbe0519",
+        "resolved": "6569044b09b3ba7112c65ffb5ca788929bbe0519",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui70-en-light-desktop-resident-case-detail.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0a4b6abea4bcd2d6382cd3db937dc67a2f1025cb",
+        "resolved": "0a4b6abea4bcd2d6382cd3db937dc67a2f1025cb",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/evidence/ui70-pt-br-dark-360-installed-state.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8061b59a78fa7d82d6491db2ab0cf5478bbc681f",
+        "resolved": "8061b59a78fa7d82d6491db2ab0cf5478bbc681f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/GALLERY.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "29ee4970caa28dacbeccd14745728df9bfd1d500",
+        "resolved": "29ee4970caa28dacbeccd14745728df9bfd1d500",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/README.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "52c089d088ad7f3b7ca9efec3c23a29f92611977",
+        "resolved": "52c089d088ad7f3b7ca9efec3c23a29f92611977",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/RECALL-PRECONDITIONS.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8bc88c2f4d3943260fc7ef7dc25bfb3bdec2f9cd",
+        "resolved": "8bc88c2f4d3943260fc7ef7dc25bfb3bdec2f9cd",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/VALIDATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6db772a49402af804c5bb18038e9be6a69ba10c9",
+        "resolved": "6db772a49402af804c5bb18038e9be6a69ba10c9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/copy-audit.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4bd009c244f53c98559811be4791d1ca5d3ed7b8",
+        "resolved": "4bd009c244f53c98559811be4791d1ca5d3ed7b8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/qualification.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3ec454df31167ba4239f5a89b1463b712555908f",
+        "resolved": "3ec454df31167ba4239f5a89b1463b712555908f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/records/VALIDATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "bd1d9d9e32d77b987eafffe7bc7ac78e27fdff51",
+        "resolved": "bd1d9d9e32d77b987eafffe7bc7ac78e27fdff51",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/records/attempts.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6535fd13a11e3f8ab3dc1cb6d1060f37c48c148b",
+        "resolved": "6535fd13a11e3f8ab3dc1cb6d1060f37c48c148b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/records/copy-audit.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "1a63600ab3d3dec06f6b107646e122598ba38407",
+        "resolved": "1a63600ab3d3dec06f6b107646e122598ba38407",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/routines/UI61-MATERIALITY-DIAGNOSIS.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "b86dfb22bbef3726fea94f74786062e1cfffb48f",
+        "resolved": "b86dfb22bbef3726fea94f74786062e1cfffb48f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/routines/VALIDATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "336c6cad5c424b55b8542fb3aea0d7b7ec50a8b9",
+        "resolved": "336c6cad5c424b55b8542fb3aea0d7b7ec50a8b9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/routines/validation.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3e9e2007a0449e395a083edbbf69a7a80257f6f0",
+        "resolved": "3e9e2007a0449e395a083edbbf69a7a80257f6f0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/components/settings-v2/view/settings-view.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "be01cae476df5e90e2b2474b733b2cac05ce9eef",
+        "ours": "be01cae476df5e90e2b2474b733b2cac05ce9eef",
+        "theirs": "3ee64477fb6151d9ae83db3f15814a21ebda28b1",
+        "resolved": "3ee64477fb6151d9ae83db3f15814a21ebda28b1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-amoled.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "80fa4db0dfe7fe9e1c5a5d3c51fb4b7d10fed2b8",
+        "ours": "80fa4db0dfe7fe9e1c5a5d3c51fb4b7d10fed2b8",
+        "theirs": "2511fb18f524e0759a3be4748c4bda0f2ca6b472",
+        "resolved": "2511fb18f524e0759a3be4748c4bda0f2ca6b472",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-github.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "947018e4ec3517ba965176a1261860a401dfd9c6",
+        "ours": "947018e4ec3517ba965176a1261860a401dfd9c6",
+        "theirs": "cb9859c424a2cb7a9387522a30c7d801f15168fe",
+        "resolved": "cb9859c424a2cb7a9387522a30c7d801f15168fe",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-graphite.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "1decca939945174f598656f7299f7b4e473f4bbf",
+        "ours": "1decca939945174f598656f7299f7b4e473f4bbf",
+        "theirs": "4f988690e750f9eea8cec829b35440ba0038da33",
+        "resolved": "4f988690e750f9eea8cec829b35440ba0038da33",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-gruvbox.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "26246d36e187480fb97657a5f91041ea0a3e13ff",
+        "ours": "26246d36e187480fb97657a5f91041ea0a3e13ff",
+        "theirs": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6",
+        "resolved": "eb38b9d19f556c05d5f32b9d4f4d41ead35587c6",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/palette/generated/palette-nord.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "3ce1f51bf2aab236d5c85340ee0c8f76633963a0",
+        "ours": "3ce1f51bf2aab236d5c85340ee0c8f76633963a0",
+        "theirs": "4415c05c92279e52e73b7637e89dfb0b59ab281e",
+        "resolved": "4415c05c92279e52e73b7637e89dfb0b59ab281e",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6931cba8e2edcbf7a4615b131562ae8fb5444954",
+        "resolved": "6931cba8e2edcbf7a4615b131562ae8fb5444954",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui61-dark-desktop-recorded-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "744a01849a481e83ca2f5602ce9d6ce144847e21",
+        "resolved": "744a01849a481e83ca2f5602ce9d6ce144847e21",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui61-light-320-recorded-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "2ab8f598ddb747c74a6f853d384018d4a69fc4e8",
+        "resolved": "2ab8f598ddb747c74a6f853d384018d4a69fc4e8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui61-light-desktop-recorded-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "eec71a23f32366e965de26def0479e3fb8dcee09",
+        "resolved": "eec71a23f32366e965de26def0479e3fb8dcee09",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui62-pt-br-dark-desktop-authorized-candidates.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0b500af2b653d12baa43b0517901c37263333b22",
+        "resolved": "0b500af2b653d12baa43b0517901c37263333b22",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui63-dark-desktop-recorded-choice-no-condition.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "78fe9e8b5ec69910245316b9e86f9d3daeb62718",
+        "resolved": "78fe9e8b5ec69910245316b9e86f9d3daeb62718",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui63-light-320-incomplete-coverage.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "e71e26a70aac36ef5b6b67f6c77abe96f0b0a4e1",
+        "resolved": "e71e26a70aac36ef5b6b67f6c77abe96f0b0a4e1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui63-light-desktop-incomplete-coverage.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8bc7a9303ff174e992fc020d9544536e39d4dd98",
+        "resolved": "8bc7a9303ff174e992fc020d9544536e39d4dd98",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui63-pt-br-dark-desktop-incomplete-coverage.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "af30cbdf005744752a3fd74e379b23f6fb423437",
+        "resolved": "af30cbdf005744752a3fd74e379b23f6fb423437",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui67-dark-desktop-current-context.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "e736c85b86863d60c0d99a2c05c2d7bd2836147d",
+        "resolved": "e736c85b86863d60c0d99a2c05c2d7bd2836147d",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui67-light-desktop-refreshed-context.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "ca63ae24ecc48ac877a41fdd3f92dcd2f95e4fd7",
+        "resolved": "ca63ae24ecc48ac877a41fdd3f92dcd2f95e4fd7",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui67-pt-br-dark-desktop-current-context.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "11da73fdef361c3ca70787cfe6d1f5c69c034df2",
+        "resolved": "11da73fdef361c3ca70787cfe6d1f5c69c034df2",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui69-dark-desktop-summary-settings.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "1f050d7534b234e66d17c8b8b8b13417f564c914",
+        "resolved": "1f050d7534b234e66d17c8b8b8b13417f564c914",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui69-light-320-summary-review-actions.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "resolved": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r11-ui69-pt-br-dark-desktop-administration.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "8963645fe300fed3a13051a0066448616a811fb5",
+        "resolved": "8963645fe300fed3a13051a0066448616a811fb5",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-dark-desktop-summary-settings.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4f1c14ad69b9e4723c7ade5e3c788fe05ce8fdc9",
+        "resolved": "4f1c14ad69b9e4723c7ade5e3c788fe05ce8fdc9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-light-320-summary-review-actions.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "resolved": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "9e99da3a17ef65e388af860c040a8b5e8ddd4f8b",
+        "resolved": "9e99da3a17ef65e388af860c040a8b5e8ddd4f8b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-pt-br-dark-desktop-administration.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "08739e9b391ce4892518bd861f4ee9b16d5e6f80",
+        "resolved": "08739e9b391ce4892518bd861f4ee9b16d5e6f80",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-br-dark-desktop-signals-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "4382ae7cae3b9e3c40014e5f1a07d8c5ab48a47e",
+        "resolved": "4382ae7cae3b9e3c40014e5f1a07d8c5ab48a47e",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-br-light-320-signals-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "1203fe7c80d761331b30ebf4c72d6646347cca8a",
+        "resolved": "1203fe7c80d761331b30ebf4c72d6646347cca8a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-materiality-conditions-before-consultation.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3e23c5a38cc76e630965933333b6153030d6445f",
+        "resolved": "3e23c5a38cc76e630965933333b6153030d6445f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-materiality-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "6cc63c2c3ca15696f5b4a430a5da0e930747305b",
+        "resolved": "6cc63c2c3ca15696f5b4a430a5da0e930747305b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-dark-desktop-signals-conditions-before-consultation.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "e7c1730397253b2785652d3fbce5de405b6cce5a",
+        "resolved": "e7c1730397253b2785652d3fbce5de405b6cce5a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-en-light-320-materiality-local-cancel.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "f34356f4159e7c61ac28130203573669a8eee2a9",
+        "resolved": "f34356f4159e7c61ac28130203573669a8eee2a9",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "32352a5364ab3bf96e7c9f8b6ff387ee9db91134",
+        "resolved": "32352a5364ab3bf96e7c9f8b6ff387ee9db91134",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-pt-br-dark-desktop-materiality-conditions-before-consultation.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "85f0cec86ed4e42d9276c8907a4a1f7115ab2bf4",
+        "resolved": "85f0cec86ed4e42d9276c8907a4a1f7115ab2bf4",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r15-ui61-pt-br-dark-desktop-signals-conditions-before-consultation.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "461b008f6d29f836a667a55556a635f66de6dc3a",
+        "resolved": "461b008f6d29f836a667a55556a635f66de6dc3a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-br-dark-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "e78b907ab6ba609e0b9c48cb68bfa6e31a07d7dc",
+        "resolved": "e78b907ab6ba609e0b9c48cb68bfa6e31a07d7dc",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-br-light-320-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "96aa6d7fdc699c759c37c3333b152cee6181ec24",
+        "resolved": "96aa6d7fdc699c759c37c3333b152cee6181ec24",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-en-dark-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "723268f94925d1397a30618fb1272d20080589db",
+        "resolved": "723268f94925d1397a30618fb1272d20080589db",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-en-light-320-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "3dee1c3dca776597f31523d3618abd67483a8051",
+        "resolved": "3dee1c3dca776597f31523d3618abd67483a8051",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-en-light-desktop-original-source-unavailable.jpg",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "28019cc2543bedabc7c8429c69b8722a5c494541",
+        "resolved": "28019cc2543bedabc7c8429c69b8722a5c494541",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r17-ui62-manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "0b129a4c2bd4fa5d776d56a7964885a6e578eae1",
+        "resolved": "0b129a4c2bd4fa5d776d56a7964885a6e578eae1",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/context.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "f619513b251cf089e0d08ff2c43a6bca3601efe4",
+        "ours": "f619513b251cf089e0d08ff2c43a6bca3601efe4",
+        "theirs": "c8e3707e360a037352515b57190af26f66df6e3f",
+        "resolved": "c8e3707e360a037352515b57190af26f66df6e3f",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "7d5184d512257ecc50efce3938669e25ea93ebd7",
+        "ours": "7d5184d512257ecc50efce3938669e25ea93ebd7",
+        "theirs": "76d1df3a5acec67f85db553e9b5c7ce933022759",
+        "resolved": "76d1df3a5acec67f85db553e9b5c7ce933022759",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "76db74391bba30f69bf1c3ac239a1402314fefcf",
+        "ours": "76db74391bba30f69bf1c3ac239a1402314fefcf",
+        "theirs": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
+        "resolved": "1ff05c061f996ba55977d10743d2c09bf3e78a3b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/records.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "fc48f0a2d15304d4237431105b90e5a589e37740",
+        "resolved": "fc48f0a2d15304d4237431105b90e5a589e37740",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "7b6fd9f836ced76391866398fa556de1cee5808f",
+        "ours": "7f261bc6a4351560bc9e1218669de2172eb7ba5a",
+        "theirs": "d0efcc60a8102a4262b646d9947dce52638484ab",
+        "resolved": "8766492ddf11ae6a3193b6c91f454d323916f0e4",
+        "decision": "three-way-union",
+        "reason": "Union polished coverage into CAP01–CAP28 and UI29–UI70, retain upstream unavailableRoutineCatalog/unavailableSchedule contextual presentation. No readiness admission changes."
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/routine-catalog-unavailable.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "69ffead7a86be353e81bd5d388614be2c9644e5a",
+        "resolved": "69ffead7a86be353e81bd5d388614be2c9644e5a",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/routine-catalog-unavailable.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "d8a51e16cb108b69d2b4d0bcb62da9ced1553a05",
+        "resolved": "d8a51e16cb108b69d2b4d0bcb62da9ced1553a05",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/schedule-unavailable.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "d44111a9cb777ae7514de115b0d2b78eea59dc04",
+        "resolved": "d44111a9cb777ae7514de115b0d2b78eea59dc04",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/schedule-unavailable.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "f0b7cad5d6094b00143ea7412f87c1cae85c6178",
+        "resolved": "f0b7cad5d6094b00143ea7412f87c1cae85c6178",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "80ff21f4849fc98acf6a403e84388513abf87804",
+        "ours": "08391ae6335d54dc9d3805f80c7152ee286414af",
+        "theirs": "326921a11e1ad8da2ac008546d934988bd3edc9b",
+        "resolved": "7d836a07e68b1ea2799a29cedead5ccfaa5dc093",
+        "decision": "three-way-union",
+        "reason": "Preserve UI55/UI56 stages, progress, retained FileList, full original impact and activity; add upstream UI57 receipt-first result/details, shared records styling and export presentation. Distinct five/six markers; UI57 receipt rendered once; original permissions, actions and deadlines unchanged."
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "6321522fbfa5d0179df6c34393e980073c453ffd",
+        "ours": "6321522fbfa5d0179df6c34393e980073c453ffd",
+        "theirs": "b00ed9b538ba716f1bbdc823eda0d2e009542bc7",
+        "resolved": "b00ed9b538ba716f1bbdc823eda0d2e009542bc7",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "c91d79afef9efdf44914891e7972f6a6e2109cff",
+        "ours": "c91d79afef9efdf44914891e7972f6a6e2109cff",
+        "theirs": "22289f3c9e7240cef62b6aab0e484b311087abc6",
+        "resolved": "22289f3c9e7240cef62b6aab0e484b311087abc6",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/summary-settings.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "f12f8277be7117a6344b14b2dab7ed3b3b8cbe3f",
+        "ours": "f12f8277be7117a6344b14b2dab7ed3b3b8cbe3f",
+        "theirs": "64f675bc05188bda9f7b6a5d362099a7ae94dd20",
+        "resolved": "64f675bc05188bda9f7b6a5d362099a7ae94dd20",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "deb747dbbaf43ee739a9ad67d35e78d483810631",
+        "ours": "deb747dbbaf43ee739a9ad67d35e78d483810631",
+        "theirs": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
+        "resolved": "6c31242e356e7026a31faf7d1d35fba37caa94aa",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "809fa80d48b8c1d513cb870f7953925755b9398d",
+        "ours": "809fa80d48b8c1d513cb870f7953925755b9398d",
+        "theirs": "bc6bff74f8b07b06f918865a545243536758f623",
+        "resolved": "bc6bff74f8b07b06f918865a545243536758f623",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similar-cases.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "8384b9d05587e4597fd37f8dd360591b5c400fed",
+        "ours": "8384b9d05587e4597fd37f8dd360591b5c400fed",
+        "theirs": "33695689832e97eb3d1f9c613ce44e6e786f27e7",
+        "resolved": "33695689832e97eb3d1f9c613ce44e6e786f27e7",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/similarity-copy.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base": "bcb9d13c0f5c2583e7955cb2f804a107f3f91b61",
+        "ours": "bcb9d13c0f5c2583e7955cb2f804a107f3f91b61",
+        "theirs": "7b8fd316a56b58d01b52a4532f2babf1ceeac640",
+        "resolved": "7b8fd316a56b58d01b52a4532f2babf1ceeac640",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/memory/case-picker.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "ab0b4166e007924dcb824f40babda2e84d053058",
+        "resolved": "ab0b4166e007924dcb824f40babda2e84d053058",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/presentation.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": null,
+        "ours": null,
+        "theirs": "729aa52f995db741dcac97e934eaa89bd52288d5",
+        "resolved": "729aa52f995db741dcac97e934eaa89bd52288d5",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "749e1b070ae780afe4b4d5867a3b101922539ada",
+        "ours": "749e1b070ae780afe4b4d5867a3b101922539ada",
+        "theirs": "501ebc57404e2e3d5f7755c7066ff7c5225ceec6",
+        "resolved": "501ebc57404e2e3d5f7755c7066ff7c5225ceec6",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "a8aea19da3a4c88d7d49df878d6878d72bdf2ca7",
+        "ours": "a8aea19da3a4c88d7d49df878d6878d72bdf2ca7",
+        "theirs": "4eb7154628357f5dc6ef570acd72f09f21564ce5",
+        "resolved": "4eb7154628357f5dc6ef570acd72f09f21564ce5",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "0030413232e80ce1e76688b5fc864cfaf3753cdc",
+        "ours": "0030413232e80ce1e76688b5fc864cfaf3753cdc",
+        "theirs": "d028b56c1e83105b7b15e123a9c9450d9875b3be",
+        "resolved": "d028b56c1e83105b7b15e123a9c9450d9875b3be",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/questions/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "4a3f569e921e5a512f1e14df2798e406099041d1",
+        "ours": "4a3f569e921e5a512f1e14df2798e406099041d1",
+        "theirs": "724ea731528e8d0744d40e158a4d3b77b37c49e0",
+        "resolved": "724ea731528e8d0744d40e158a4d3b77b37c49e0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/receipts/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "622c7bb17cf1794403155ecb2dd15198c15c0473",
+        "ours": "622c7bb17cf1794403155ecb2dd15198c15c0473",
+        "theirs": "19041b50a842bace6b25f5ddb4058252a903db50",
+        "resolved": "19041b50a842bace6b25f5ddb4058252a903db50",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/planner/versions/planning.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "90fdb2a349c764dcf427b58449414292ab1c8afc",
+        "ours": "90fdb2a349c764dcf427b58449414292ab1c8afc",
+        "theirs": "c850d5cdc98b32d8f6d463041d27d375a194bb72",
+        "resolved": "c850d5cdc98b32d8f6d463041d27d375a194bb72",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/catalog.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "24673e7b0ec3d06d475f1761afaa7b3cd681d4bc",
+        "ours": "24673e7b0ec3d06d475f1761afaa7b3cd681d4bc",
+        "theirs": "dde40b17fd2cc9b87b338134c2ab865e732cbb68",
+        "resolved": "dde40b17fd2cc9b87b338134c2ab865e732cbb68",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/catalog/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "a85ee39babc32eeba63e1dcaebf8cdc7b66b4727",
+        "ours": "a85ee39babc32eeba63e1dcaebf8cdc7b66b4727",
+        "theirs": "4960bc661837cbd0b7b84ec773a1b30f02421ad0",
+        "resolved": "4960bc661837cbd0b7b84ec773a1b30f02421ad0",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "4349cb64216550dd2d47e315205f1cfe79d246d3",
+        "ours": "4349cb64216550dd2d47e315205f1cfe79d246d3",
+        "theirs": "3aca0b8c5d067bcfcef9897e6ca21100f73b8d61",
+        "resolved": "3aca0b8c5d067bcfcef9897e6ca21100f73b8d61",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/residents/residents.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "6a57272b92014c92874a553657cfb4c5ae2d83b1",
+        "ours": "6a57272b92014c92874a553657cfb4c5ae2d83b1",
+        "theirs": "31dd1e7b54c8e67460fbb47269dcfdb11812c0f8",
+        "resolved": "31dd1e7b54c8e67460fbb47269dcfdb11812c0f8",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "8f01516d5993ab1239d8fd809791e2fce7e36a94",
+        "ours": "8f01516d5993ab1239d8fd809791e2fce7e36a94",
+        "theirs": "1f150288847844b55d1c16b8a95ef01cb1bff1a3",
+        "resolved": "1f150288847844b55d1c16b8a95ef01cb1bff1a3",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/runs/runs.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "af44e511c4d08885343d9dd5d10b58e687f7bad1",
+        "ours": "af44e511c4d08885343d9dd5d10b58e687f7bad1",
+        "theirs": "d577bf7ff32d46fe2f0dd49651e14855bdb30632",
+        "resolved": "d577bf7ff32d46fe2f0dd49651e14855bdb30632",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/index.tsx",
+        "mode": "100644",
+        "type": "blob",
+        "base": "83afce2a016696d815b41dc609c81ec1c48e2a25",
+        "ours": "83afce2a016696d815b41dc609c81ec1c48e2a25",
+        "theirs": "5446f4a7082ededa609c0ed41dc73a06d55b354b",
+        "resolved": "5446f4a7082ededa609c0ed41dc73a06d55b354b",
+        "decision": "exact-upstream-blob"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/routines/schedules/schedules.css",
+        "mode": "100644",
+        "type": "blob",
+        "base": "f8458e8e6f7cfb5b4c5fb871273ecdc0636b603f",
+        "ours": "f8458e8e6f7cfb5b4c5fb871273ecdc0636b603f",
+        "theirs": "fc14cb4095aa75e5e6dbe58ae5417aa39ce52f42",
+        "resolved": "fc14cb4095aa75e5e6dbe58ae5417aa39ce52f42",
+        "decision": "exact-upstream-blob"
+      }
+    ],
+    "integrationCommit": "6c803a5803f956964839c4d5e54e118e3cdc1a14",
+    "integrationParents": [
+      "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "e115b667d845822a1df5f523bbfd828ab57ca978"
+    ],
+    "ledgerCompatibility": {
+      "source": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "paths": 22,
+      "collisions": [],
+      "includedHere": false
+    },
+    "reviewCorrections": [
+      {
+        "commit": "503ea3bb738fc206a146fd359cf74e4bc60b8dad",
+        "reviewer": "session_diagnostic_limits",
+        "finding": "Shadowed requested scanner in the initial non-overlapping hunk union",
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "previousBlob": "c4cfad38ebcc25195960031bf600acc3b0582e25",
+        "resolvedBlob": "df0c5a0e5e452bd1153fb2f0dca9c74fd09fb2f6",
+        "validation": "Remote source and tree readback only; runtime campaigns pending"
+      },
+      {
+        "commit": "2081301af5b7337fa4cc88fe36fc445b45418e1f",
+        "reviewer": "session_diagnostic_limits",
+        "finding": "The first union deduplicated the late physical-workspace revalidation after enrollment awaits",
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "previousBlob": "df0c5a0e5e452bd1153fb2f0dca9c74fd09fb2f6",
+        "resolvedBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "validation": "Both original workspace checks restored. Remote source/tree readback only; runtime campaigns pending"
+      }
+    ]
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-23T16:24:55Z",
+  "checkpointStatus": "RESUMED_CAMPAIGNS_PENDING",
+  "qualification": false,
+  "source": {
+    "branch": "sf613-resume",
+    "commit": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+    "tree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/commit/ac4708241b7af3d742c13a5fb5d712ed7ae2557f"
+  },
+  "recordBranch": "sf613-records",
+  "recovery": {
+    "conversation": {
+      "title": "$$$here",
+      "id": "6b033e10-8f70-83e9-8e4b-609b4a7ed284",
+      "url": "https://chatgpt.com/c/6b033e10-8f70-83e9-8e4b-609b4a7ed284"
+    },
+    "authorization": {
+      "statement": "Ok assume essa sessao e continua de onde ela parou",
+      "kind": "EXPLICIT_USER_RESUMPTION",
+      "goal": "Continue the interrupted PR613 work through verified integration into dev.",
+      "messageTimestamp": null,
+      "timestampClaimed": false
+    },
+    "priorSource": {
+      "branch": "sf613-finish",
+      "commit": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "tree": "f05b34174897a3cc1ff9096a27da65d97910c0b5"
+    },
+    "ledger": {
+      "branch": "sf613-ledger",
+      "commit": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "checkpoint": "docs/qa/sucafina/design/wave-five/recovery-checkpoint.json",
+      "addedPaths": 22,
+      "application": "EXACT_LITERAL_BLOBS",
+      "collisions": [],
+      "includedInRootSource": true
+    },
+    "continuationBranch": "sf613-resume"
+  },
+  "scope": {
+    "pullRequest": 613,
+    "targetBranch": "dev",
+    "areas": [
+      "UI42",
+      "UI43",
+      "UI44",
+      "UI45",
+      "UI46",
+      "UI47",
+      "UI48",
+      "UI49",
+      "UI50",
+      "UI51",
+      "UI52",
+      "UI53",
+      "UI54",
+      "UI55",
+      "UI56"
+    ],
+    "areaCount": 15,
+    "routePatternCount": 22,
+    "scopeAuthority": "docs/qa/sucafina/design/wave-five/scope.json",
+    "activeWaveMerged": false,
+    "userVisualApprovalClaimed": false,
+    "exclusions": [
+      "Open PR717",
+      "Open PR718",
+      "Runtime admission broadening",
+      "Timeout extensions",
+      "Acceptance or merge based solely on focal controls"
+    ]
+  },
+  "acceptedBaseline": {
+    "acceptedMergedAreas": 55,
+    "totalAreas": 70,
+    "priorMergedAreas": 41,
+    "additionalMergedAreas": 14,
+    "additionalAreas": [
+      "UI57",
+      "UI58",
+      "UI59",
+      "UI60",
+      "UI61",
+      "UI62",
+      "UI63",
+      "UI64",
+      "UI65",
+      "UI66",
+      "UI67",
+      "UI68",
+      "UI69",
+      "UI70"
+    ],
+    "pullRequest": 713,
+    "mergeCommit": "e115b667d845822a1df5f523bbfd828ab57ca978",
+    "mergedAt": "2026-11-23T07:05:53Z",
+    "source": "https://github.com/gustavomhss/Orchestra-SF/pull/713",
+    "waveFiveIncludedInAcceptedCount": false,
+    "qualificationLimits": "UI64/UI66 contextual unavailable presentations do not imply operational catalog or Schedule."
+  },
+  "composition": {
+    "branch": "sf613-compose",
+    "commit": "2081301af5b7337fa4cc88fe36fc445b45418e1f",
+    "tree": "7b7114237ddb1ffa2142679cdceb2d721777feb9",
+    "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "recovery": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "dev": "e115b667d845822a1df5f523bbfd828ab57ca978",
+    "manifest": "docs/qa/sucafina/design/wave-five/composition-manifest-2026-11-23.json",
+    "upstreamPaths": 183,
+    "exactUpstreamBlobs": 172,
+    "resolvedPaths": 11,
+    "unchangedRecoveryOnlyPaths": 784,
+    "readback": {
+      "changedPaths": 183,
+      "unexpectedPaths": [],
+      "missingPaths": [],
+      "blobMismatches": []
+    },
+    "independentReview": {
+      "reviewer": "session_diagnostic_limits",
+      "status": "STATIC_ACK",
+      "reviewedCommit": "2081301af5b7337fa4cc88fe36fc445b45418e1f",
+      "reviewedTree": "7b7114237ddb1ffa2142679cdceb2d721777feb9",
+      "findingCount": 2,
+      "unresolvedConcreteBlockers": [],
+      "runtimeQualification": false,
+      "findings": [
+        {
+          "commit": "503ea3bb738fc206a146fd359cf74e4bc60b8dad",
+          "reviewer": "session_diagnostic_limits",
+          "finding": "Shadowed requested scanner in the initial non-overlapping hunk union",
+          "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+          "previousBlob": "c4cfad38ebcc25195960031bf600acc3b0582e25",
+          "resolvedBlob": "df0c5a0e5e452bd1153fb2f0dca9c74fd09fb2f6",
+          "validation": "Remote source and tree readback only; runtime campaigns pending"
+        },
+        {
+          "commit": "2081301af5b7337fa4cc88fe36fc445b45418e1f",
+          "reviewer": "session_diagnostic_limits",
+          "finding": "The first union deduplicated the late physical-workspace revalidation after enrollment awaits",
+          "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+          "previousBlob": "df0c5a0e5e452bd1153fb2f0dca9c74fd09fb2f6",
+          "resolvedBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+          "validation": "Both original workspace checks restored. Remote source/tree readback only; runtime campaigns pending"
+        }
+      ]
+    },
+    "finalNativeHostBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+    "manifestBlob": "ab1fa3f6e5ade6259ccae3a2c69e3ba603c63f74"
+  },
+  "p17": {
+    "source": "53fb99f88cf1f7f9eff22bfbb5b2841c49ee9461",
+    "sourceTree": "7111c521587dca32c49c7e896df8e38a12257dd2",
+    "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/53fb99f88cf1f7f9eff22bfbb5b2841c49ee9461",
+    "includedInRootSource": true,
+    "scope": "Direct canonical bytes only for already admitted native clones; original fallback retained.",
+    "admissionBroadened": false,
+    "fullQualification": false,
+    "focalControls": [
+      {
+        "runtime": "bun@1.3.14",
+        "revisionPrefix": "0d9b296af",
+        "run": 45214321028,
+        "job": 137831240902,
+        "snapshot": "57b31263299a37b29ade800e93725d389aa5bc4c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214321028",
+        "status": "COMPLETED",
+        "conclusion": "success",
+        "underlyingTestsPassed": 44,
+        "underlyingTestsFailed": 0,
+        "wrapperTestsPassed": 2,
+        "cleanup": "success",
+        "qualification": false,
+        "scope": "Focused P17 controls on the P17 source, before final dev composition."
+      },
+      {
+        "runtime": "bun@1.4.1",
+        "revision": "4661e494f052c83c80dade1318e5710238340be6",
+        "run": 45214329155,
+        "job": 137831269216,
+        "snapshot": "2093f8994a48bd36146e0fc76442ac2efa8d99ba",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45214329155",
+        "status": "COMPLETED",
+        "conclusion": "success",
+        "underlyingTestsPassed": 8,
+        "underlyingTestsFailed": 0,
+        "wrapperTestsPassed": 2,
+        "cleanup": "success",
+        "cloneTreeAdmitted": false,
+        "nativeFallbackBytesMatched": true,
+        "qualification": false,
+        "scope": "Focused actual Bun1.4.1 source-runtime fallback controls; no Release artifact qualification."
+      }
+    ]
+  },
+  "fullCampaigns": {
+    "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+    "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+    "status": "PENDING",
+    "qualification": false,
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "originalDeadlinesPreserved": true,
+    "campaigns": [
+      {
+        "name": "technical",
+        "run": 45215734271,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215734271",
+        "snapshot": "671304447506ca9de5f7eb55be8a87176823026d",
+        "branch": "ci-run-linux-sf613-t8",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:19Z",
+          "updatedAt": "2026-11-23T16:22:22Z"
+        },
+        "result": null
+      },
+      {
+        "name": "release",
+        "run": 45215740844,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215740844",
+        "snapshot": "f738b829cf0a7461727afadce006183454cb7b2a",
+        "branch": "ci-run-linux-sf613-release4",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:21Z",
+          "updatedAt": "2026-11-23T16:22:24Z"
+        },
+        "result": null
+      },
+      {
+        "name": "analytics",
+        "run": 45215749054,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215749054",
+        "snapshot": "172f1e7de990a899e8bd3e6d72b4cf551b2f1df8",
+        "branch": "ci-run-linux-sf613-a7",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:23Z",
+          "updatedAt": "2026-11-23T16:22:27Z"
+        },
+        "result": null
+      },
+      {
+        "name": "analytics_release",
+        "run": 45215757218,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215757218",
+        "snapshot": "4078c927cb156c770574d7410329c0fab2d266dc",
+        "branch": "ci-run-linux-sf613-ra3",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:26Z",
+          "updatedAt": "2026-11-23T16:22:29Z"
+        },
+        "result": null
+      },
+      {
+        "name": "collaboration",
+        "run": 45215764349,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215764349",
+        "snapshot": "d93fc5a70a2e8ad378958613ed29054b125778cf",
+        "branch": "ci-run-linux-sf613-c7",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:28Z",
+          "updatedAt": "2026-11-23T16:22:31Z"
+        },
+        "result": null
+      },
+      {
+        "name": "reviews",
+        "run": 45215769910,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215769910",
+        "snapshot": "98e6d5700e1b7b90f344d74644a8e3e64d3cc520",
+        "branch": "ci-run-linux-sf613-r7",
+        "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+        "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+        "status": "PENDING",
+        "qualification": false,
+        "workflowObservation": {
+          "observedAt": "2026-11-23T16:24:55Z",
+          "status": "in_progress",
+          "conclusion": null,
+          "createdAt": "2026-11-23T16:22:29Z",
+          "updatedAt": "2026-11-23T16:22:34Z"
+        },
+        "result": null
+      }
+    ]
+  },
+  "completion": {
+    "allCampaignsQualified": false,
+    "acceptancePromoted": false,
+    "merged": false,
+    "mergeCommit": null,
+    "nextAction": "Read actual results and evidence for all six final-source campaigns; fix concrete failures without relaxing original controls, then record reviewed qualification before integration."
+  }
+}
