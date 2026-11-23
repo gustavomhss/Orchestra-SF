@@ -103,6 +103,7 @@ import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
+import { observeSfDocumentScenarioHealth } from "./native-ui/document-scenario-health.ts"
 import { observeSfSearchHealth } from "./native-ui/work-health.ts"
 import { observeSfReviewAgendaHealth } from "./native-ui/review-agenda-health.ts"
 import { observeSfDashboardDraftHealth } from "./native-ui/dashboard-draft-health.ts"
@@ -1023,6 +1024,20 @@ export const createSfHostRuntimeWithRoutineNative = async (
           identity() && services.productHttp === productHttp && documents && input.assets
             ? { producer: productHttp, handler: documentHttp, service: documents, assets: input.assets } : undefined,
         }, request, stamp),
+        observeSfDocumentScenarioHealth({ authority, binding: input.nativeReadBinding, source: () => {
+          if (!identity() || services.productHttp !== productHttp || !documents || !business.documentScenarios ||
+              services.documents !== documents.documents || !input.assets ||
+              input.assets.persistence !== authority.host.persistence ||
+              !input.persistence.readScopedSource || !input.persistence.resolveScopedSource) return undefined
+          return { producer: productHttp, handler: documentScenarioHttp, service: business.documentScenarios,
+            dependencies: [authority, documents, documents.documents, documents.documents.reader,
+              business.documentScenarios.targets, business.documentScenarios.preview,
+              business.plannerProduct, business.plannerProduct.issueSource, business.plannerProduct.planner,
+              business.plannerProduct.planner.compareForecast, business.plannerSources,
+              business.plannerSources.resolveForecastSource, business.context, business.readSourceFences,
+              authority.human, authority.human.admit, authority.human.authorize,
+              input.persistence, input.persistence.readScopedSource, input.persistence.resolveScopedSource, input.assets] }
+        } }, request, stamp),
         observeSfSearchHealth({ ui: authority.ui, state: authority.state, persistence: authority.host.persistence,
           binding: input.nativeReadBinding, source: () =>
             identity() && services.productHttp === productHttp && services.dispatch === nativeSearchDispatch &&

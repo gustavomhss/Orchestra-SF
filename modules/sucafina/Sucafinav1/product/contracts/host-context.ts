@@ -115,6 +115,7 @@ export type CreateSfHostRuntime = (input: {
   /** Exact installed binding identity; not an authorization or a serialized readiness claim. */
   nativeReadBinding?: (operationId:
     | "projection.review" | "dashboard.dashboard-review" | "files.document-sources"
+    | "files.document-scenario-targets" | "files.document-scenario-preview"
     | "views.list" | "views.open" | "views.save" | "views.remove"
     | "routines.catalog" | "routines.read-admission" | "routines.read-run" | "projection.routine"
     | "dashboard.dashboard-workbench" | "dashboard.dashboard-hot-topic-source" | "dashboard.dashboard-draft-read"
