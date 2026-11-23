@@ -1,7 +1,7 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-22T21:04:08Z",
+  "observedAtUtc": "2026-11-23T00:31:28Z",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "readiness-status",
   "base": {
@@ -37,6 +37,29 @@
       "coordinationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7080753498",
       "isCandidateAcknowledgement": false,
       "isReservation": false,
+      "isProductionApproval": false
+    },
+    "existingHostExecution": {
+      "host": "orchsf-vm",
+      "authorized": true,
+      "references": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087839884",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702"
+      ],
+      "route": [
+        "G05/G06/G07 in GitHub Actions",
+        "G08 on the existing host with real Microsoft sessions",
+        "G10 on the same host after G08 evidence is preserved"
+      ],
+      "preservation": [
+        "Existing pilot data, configuration, installation and evidence before replacement",
+        "Claw and the other VM remain outside these changes",
+        "Do not apply #709 optional profiles to the shared resource group or network"
+      ],
+      "additionalVirtualMachinesAuthorized": false,
+      "networkMutationAuthorized": false,
+      "isReservation": false,
+      "isCandidateAcknowledgement": false,
       "isProductionApproval": false
     }
   },
@@ -225,7 +248,40 @@
         "triggeringActor": "gustavomhss",
         "githubSettingsBrowserCheckedThisAttempt": false
       }
-    ]
+    ],
+    "currentExecutionRoute": {
+      "kind": "EXISTING_HOST_AUTHORIZATION_NOT_RESERVATION_OR_INSTALLED_QUALIFICATION",
+      "observedAtUtc": "2026-11-23T00:31:28Z",
+      "host": "orchsf-vm",
+      "authorizationConfirmed": true,
+      "ownerGuestObservationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087005340",
+      "ownerAccessSupplementRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087524921",
+      "directionRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087839884",
+      "reaffirmationRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702",
+      "sequence": [
+        "G08",
+        "G10 after preservation of G08 evidence"
+      ],
+      "reservationConfirmed": false,
+      "installedQualification": false,
+      "productionCutover": false,
+      "independentRestore": {
+        "state": "ORIGINAL_BACKUP_PRIVATE_CHANNEL_AND_DESTINATION_CAPACITY_PENDING_INVENTORY",
+        "inventoryRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088112697",
+        "channel": null,
+        "destination": null,
+        "originalBackupRestored": false,
+        "fixturesAreOperationalProof": false
+      },
+      "latestRecordedBrowserAccess": {
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7088172949",
+        "state": "TWO_RECONNECTION_ATTEMPTS_RETURNED_NO_DOCUMENTATION_OR_STATE_AND_WERE_STOPPED",
+        "revokesPriorLoginOrAuthorization": false,
+        "newGuestObservation": false,
+        "scope": "This is the recorded checkpoint only; no later browser attempt or outcome is included."
+      },
+      "runnerInstallationConfirmed": false
+    }
   },
   "coordination": {
     "currentReleaseOwner": "Astra go-live — coordenação e execução autorizada da rota G07",
@@ -396,22 +452,42 @@
         "commentId": 7085665366,
         "url": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
         "status": "SINGLE_WRITER_SEQUENCE_RECONCILED_NO_HEAD_PROMOTION"
+      },
+      {
+        "target": "Authorized existing host; sequential installed G08 then G10; independent original-backup route",
+        "pr": 657,
+        "commentId": 7088154702,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702",
+        "status": "HOST_USE_AUTHORIZED_RESERVATIONS_AND_ORIGINAL_RESTORE_PENDING",
+        "inventoryRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088112697"
+      },
+      {
+        "target": "Sequential product, visual and final Migration integration",
+        "pr": 613,
+        "commentId": 7088139499,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088139499",
+        "status": "DESIGN_THEN_VISUAL_THEN_MIGRATION_NO_FINAL_ACK",
+        "relatedRefs": [
+          "https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7088132472",
+          "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7088139755"
+        ]
       }
     ],
     "latestRead": {
-      "observedAtUtc": "2026-11-22T21:04:08Z",
+      "observedAtUtc": "2026-11-23T00:31:28Z",
       "channels": [
         628,
         613,
-        673,
         657,
-        704,
-        705
+        673,
+        709,
+        710,
+        711
       ],
       "apiAvailable": true,
       "newFinalCandidateAcknowledgementsFound": false,
       "operationalReservationsConfirmed": false,
-      "meaning": "Azure login and 12 ARM observations succeeded; #705 is merged. Design44 technical14/14 but installed4/6; UI42 timeout and BI scalar oracle failed. Migration b2f is frozen with three pending baselines. Sequence: #613 Design first, #673 final composition afterward. No final C/T, ACKs, tar or confirmed reservations."
+      "meaning": "#709/#711 are merged as component preparation. Existing orchsf-vm is authorized, with pilot preservation and sequential G08 then G10; private original-backup recovery route remains pending. Integration is #613 -> #710 -> #673. BI e1c4 is accepted statically, runtime pending; T4 and UI42 negatives remain. P5/P6 are diagnostic snapshots, not qualification. No final C/T, ACKs, tar or confirmed reservations."
     },
     "integrationCoordinator": "Astra go-live",
     "migrationWriter": {
@@ -487,6 +563,21 @@
         "newFinalCandidateAcknowledgementsFound": false,
         "operationalReservationsConfirmed": false,
         "meaning": "#702 is the preserved documentation base; #703 aggregate admission is merged. #613 a7 is blocked after a 7/8 selective focal and integrity review. Migration's diagnostic has no result received in this observation. No final C/T, ACKs, tar or confirmed reservations."
+      },
+      {
+        "observedAtUtc": "2026-11-22T21:04:08Z",
+        "channels": [
+          628,
+          613,
+          673,
+          657,
+          704,
+          705
+        ],
+        "apiAvailable": true,
+        "newFinalCandidateAcknowledgementsFound": false,
+        "operationalReservationsConfirmed": false,
+        "meaning": "Azure login and 12 ARM observations succeeded; #705 is merged. Design44 technical14/14 but installed4/6; UI42 timeout and BI scalar oracle failed. Migration b2f is frozen with three pending baselines. Sequence: #613 Design first, #673 final composition afterward. No final C/T, ACKs, tar or confirmed reservations."
       }
     ]
   },
@@ -512,7 +603,7 @@
         "http-current-2026-11-22",
         "cap03-reader-client-2026-11-22"
       ],
-      "firstBlocker": "Concluir a composição de produto sob o writer da Migração, confirmar C/T com Migração+Release e reexecutar o inventário completo HTTP/coverage/auth/effect/isolamento no candidato final.",
+      "firstBlocker": "Concluir #613 -> #710 -> #673, confirmar o mesmo C/T com Migração+Release e reexecutar o inventário completo HTTP/coverage/auth/effect/isolamento no candidato final.",
       "remaining": [
         "Fronteiras Web/JSON e CAP03 readonly estão integradas por #665/#688/#693. Reexecutar o inventário HTTP/isolamento completo no C/T confirmado, sem herdar recibo de componente.",
         "Conservar recibos completos, hashes, veredito Omni real, cleanup e aceite explicitamente vinculado ao candidato efetivo."
@@ -898,7 +989,7 @@
       "firstBlocker": "Pin conjunto C/T e reexecução completa da seleção v3 sobre o candidato integrado; prova da instalação Microsoft não herdada de componente.",
       "coverageGap": null,
       "remaining": [
-        "Concluir a composição/pin final com Migração+Release. Política corrente e Imports privados já estão integrados; o verde ClamD do B4 permanece específico daquela fonte.",
+        "Concluir #613 -> #710 -> #673 e o pin final com Migração+Release. Política corrente e Imports privados já estão integrados; o verde ClamD do B4 permanece específico daquela fonte.",
         "Executar teams-profile-scanner-v3 / controls-with-imports completo: oito legados, três Microsoft/Team, caso G05 com 11 controles e quatro Imports, em seis arquivos.",
         "Conferir scanner real, payload inválido após staging, autoridade/isolamento, armazenamento, limite de intake, indisponibilidade e cleanup; conferir artefato/recibos originais.",
         "Conservar a distinção entre local-operator, Microsoft/Graph controlados e instalação real; nenhum resultado atual aprova o gate final."
@@ -1253,7 +1344,8 @@
         "Confirmar C/T e os dois papéis de ACK; vincular o operador GitHub efetivo em B e a attestation sf-g07-pin-attestation-v1 quando a fonte for textual. O mandato de execução já é desta frente.",
         "Criar B imutável distinto de C e release-build-<B> exatamente em C; admitir antes de build e revalidar imediatamente antes do tar original.",
         "Após o artefato, criar Q e g07-qualify-<Q> em C, ou dispatch admitido; verificar ZIP/tar/proveniência pelo instalador original de C.",
-        "Vincular os mesmos bytes, manifesto/roster/factory e observações instaladas a G08/G10; sem reconstrução entre gates."
+        "Vincular os mesmos bytes, manifesto/roster/factory e observações instaladas a G08/G10; sem reconstrução entre gates.",
+        "Conferir a admissão e os controles no runtime real de Release Bun 1.4.1 / 4661e494f052c83c80dade1318e5710238340be6; o Bun 1.3.14 dos focais Design não prova compatibilidade. Nenhum pin é ampliado por inspeção de fonte."
       ],
       "closure": "Tar verificável vinculado ao mesmo SHA/árvore, hashes e instalação comprovados; nenhuma reconstrução entre gates.",
       "workProof": {
@@ -1379,10 +1471,10 @@
         "azure-inventory-complete-2026-11-22",
         "g08-strict-process-controls-2026-11-22"
       ],
-      "firstBlocker": "Executor e processo estrito integrados. Faltam composição final, ACKs, tar G07, reserva exclusiva com acesso guest/runner verificável e contextos Microsoft/grants para11 invocações originais.",
+      "firstBlocker": "Executor e processo estrito integrados; orchsf-vm existente autorizado. Faltam composição final, ACKs, tar G07, reserva/IMDS/janela, runner/environment/private_root e contextos Microsoft/grants para as 11 invocações originais.",
       "remaining": [
         "Usar os executores originais já integrados: CAP03 #691/#693,50 jornadas/F04 #694, restart #697, correção de lifecycle #699, registro #700, proveniência #701 e coordenador #698. Controles de preparação não fecham G08. O #703 vincula o próprio agregador ao checkout e job atuais; a leitura continua retrospectiva. #705 mantém o streaming de bytes e as observações de Git sob AppProcess/Omni estrito; verificar runtime/loader efetivos no host final.",
-        "Confirmar reserva exclusiva, operador, quatro contextos Microsoft originais e autorização de logout, disable/restore e fixtures Session descartáveis.",
+        "Materializar a reserva e janela no host existente, operador, quatro contextos Microsoft originais e autorização de logout, disable/restore e fixtures Session descartáveis. Preservar o piloto antes de substituí-lo; não aplicar #709 à rede compartilhada.",
         "Instalar os mesmos bytes do tar G07 e executar as nove obrigações Teams, U15(6), U39(22), U40(22), F04(3) e a prova operacional AZ02 atual de37 casos em seis fases(16/14/2/2/2/1).",
         "Conservar os32 IDs históricos AZ02 e os dois remapeamentos explícitos; o ledger#692 exige as cinco adições e a recusa#695 não aceita ausência de prova.",
         "Conservar recovery como papel de G10; nove casos/cinco grupos não fecham o agregado G01–G10.",
@@ -2638,16 +2730,18 @@
         "checkpoint-decoder-integration-2026-11-22",
         "policy-checkpoint-current-2026-11-22",
         "operational-inventory-recheck-2026-11-22",
-        "azure-inventory-complete-2026-11-22"
+        "azure-inventory-complete-2026-11-22",
+        "existing-source-checkpoint-component-711"
       ],
-      "firstBlocker": "Checkpoint/recovery, decoder e política corrente estão em dev; faltam C/T final, tar e reservas/atores/chave/observador para o ensaio.",
+      "firstBlocker": "Checkpoint/recovery, decoder, política corrente e #711 estão em dev; o host existente está autorizado. Faltam C/T final, tar, R instalado/retido e compatibilidade, reserva/atores/chave/observador e canal privado com destino independente para restaurar o backup original.",
       "remaining": [
-        "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
+        "Executar G10 no mesmo orchsf-vm após concluir e preservar a evidência de G08, com donos de backup/chave/corte e observador externo; preservar dados, configuração, instalação e evidências do piloto. Claw e a outra VM ficam fora das alterações.",
         "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
         "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
         "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
         "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team.",
-        "Confirmar no C instalado checkpoint-observe/checkpoint com grant explícito, versão/snapshot/fronteira reais e recover pela política persistente corrente integrada em #677; nenhuma fixture aprova o registro externo."
+        "Confirmar no C instalado checkpoint-observe/checkpoint com grant explícito, versão/snapshot/fronteira reais e recover pela política persistente corrente integrada em #677; nenhuma fixture aprova o registro externo.",
+        "Concluir o inventário autorizado de volumes/capacidade e canal privado existente para restauração independente do backup original. Não presumir ausência de SSH/SFTP/Blob, criar nova VM, alterar a rede ou apresentar fixtures de #711 como restore operacional."
       ],
       "closure": "Ensaio isolado comprovado no tar final: backup, corte, retomada e rollback, incluindo efeitos e recibos posteriores ao checkpoint.",
       "workProof": {
@@ -2954,6 +3048,54 @@
             "conclusion": "failure",
             "reason": "All 17 native/context cases passed; snapshot expected12 and stopped before two Application cases. Driver inventory corrected to17 without changing product or assertions."
           }
+        },
+        {
+          "id": "existing-source-checkpoint-component-711",
+          "kind": "FILESYSTEM_COMPONENT_CONTROLS",
+          "pullRequest": 711,
+          "sourceSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+          "sourceTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+          "mergeCommit": "9d322c5d461942eba5948325ec8a73185ec8a432",
+          "mergeTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+          "sameTreeAfterMerge": true,
+          "runId": 45086670468,
+          "runAttempt": 1,
+          "jobId": 137406777372,
+          "status": "success",
+          "driverSha": "7872a6db0d4f3708dbee800bc85a5ccb5d5c8dfd",
+          "actualCheckoutSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+          "counts": {
+            "passed": 23,
+            "original": 17,
+            "additional": 6,
+            "fail": 0,
+            "skip": 0
+          },
+          "guards": {
+            "rules": 78,
+            "paths": 5,
+            "gateFindings": 0,
+            "warnings": 0,
+            "errors": 0,
+            "base": "08c96c5d74dce601ae60cd6db53bac8c0f370959"
+          },
+          "artifact": {
+            "id": 14779960265,
+            "zipBytes": 19170,
+            "zipSha256": "b4057c691cfbbefa0b726852bc120cc698d84d869b641b4107b8be986760259f",
+            "crcMembers": 16,
+            "internalHashesVerified": 15,
+            "sourceInputsVerified": 13
+          },
+          "receiptSha256": "69e96112239341fd7ac13fc7a6b652b44255d8977b1d289ec76e3ec953725803",
+          "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/711#issuecomment-7088167078",
+          "directionRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702",
+          "scope": "Existing checkpoint source may explicitly declare disposable:false. Clone controls remain unchanged. Real filesystem controls on the runner; IMDS/preflight refusals remain declared fixtures.",
+          "installedTeamsProof": false,
+          "releaseQualified": false,
+          "originalHostBackupRestored": false,
+          "g10Closed": false,
+          "productionCutover": false
         }
       ]
     }
@@ -3723,6 +3865,423 @@
       "observationCutUtc": "2026-11-22T19:18:45Z",
       "productQualification": false,
       "productionCutover": false
+    },
+    {
+      "id": "qa-network-profiles-component-709",
+      "kind": "COMPONENT_READINESS_NOT_AZURE_APPLICATION",
+      "pullRequest": 709,
+      "sourceSha": "cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb",
+      "sourceTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+      "mergeCommit": "08c96c5d74dce601ae60cd6db53bac8c0f370959",
+      "mergeTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+      "runId": 45081044372,
+      "runAttempt": 1,
+      "jobId": 137389056855,
+      "status": "success",
+      "driverSha": "76ad3ee51b8d65792c00385ec4f00ce5311fe476",
+      "driverTree": "f7750dcd34e9f572696b829f8f1f9f784b115785",
+      "actualCheckoutSha": "cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb",
+      "counts": {
+        "passed": 61,
+        "original": 14,
+        "additional": 47,
+        "fail": 0,
+        "skip": 0
+      },
+      "guards": {
+        "rules": 78,
+        "paths": 5,
+        "gateFindings": 0,
+        "errors": 0,
+        "warnings": 4,
+        "warningKind": "test-timeout-raised",
+        "waivers": 0,
+        "scope": "New outer Bicep harness declarations only; original deadlines unchanged."
+      },
+      "artifact": {
+        "id": 14777790055,
+        "zipBytes": 90933,
+        "zipSha256": "cb3582ae1e60466429a95414495feed4c3f00f2f65936377ec19392cf1c741fc",
+        "crcMembers": 63,
+        "internalHashesVerified": 62
+      },
+      "receiptSha256": "5853224f8b1f6fbfb41897f0940eaa788f2a893a97764cbc1988999cce0bec29",
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/709#pullrequestreview-6015029109",
+      "azureMutation": false,
+      "reservationConfirmed": false,
+      "installedQualification": false,
+      "productionCutover": false,
+      "currentUseLimit": "Optional profiles are not authorized for application to the existing shared network; existing-host direction supersedes additional-VM proposals."
+    },
+    {
+      "id": "existing-source-checkpoint-component-711",
+      "kind": "FILESYSTEM_COMPONENT_CONTROLS",
+      "pullRequest": 711,
+      "sourceSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+      "sourceTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+      "mergeCommit": "9d322c5d461942eba5948325ec8a73185ec8a432",
+      "mergeTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+      "sameTreeAfterMerge": true,
+      "runId": 45086670468,
+      "runAttempt": 1,
+      "jobId": 137406777372,
+      "status": "success",
+      "driverSha": "7872a6db0d4f3708dbee800bc85a5ccb5d5c8dfd",
+      "actualCheckoutSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+      "counts": {
+        "passed": 23,
+        "original": 17,
+        "additional": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      "guards": {
+        "rules": 78,
+        "paths": 5,
+        "gateFindings": 0,
+        "warnings": 0,
+        "errors": 0,
+        "base": "08c96c5d74dce601ae60cd6db53bac8c0f370959"
+      },
+      "artifact": {
+        "id": 14779960265,
+        "zipBytes": 19170,
+        "zipSha256": "b4057c691cfbbefa0b726852bc120cc698d84d869b641b4107b8be986760259f",
+        "crcMembers": 16,
+        "internalHashesVerified": 15,
+        "sourceInputsVerified": 13
+      },
+      "receiptSha256": "69e96112239341fd7ac13fc7a6b652b44255d8977b1d289ec76e3ec953725803",
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/711#issuecomment-7088167078",
+      "directionRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702",
+      "scope": "Existing checkpoint source may explicitly declare disposable:false. Clone controls remain unchanged. Real filesystem controls on the runner; IMDS/preflight refusals remain declared fixtures.",
+      "installedTeamsProof": false,
+      "releaseQualified": false,
+      "originalHostBackupRestored": false,
+      "g10Closed": false,
+      "productionCutover": false
+    },
+    {
+      "id": "design-a4-installed-source-757",
+      "kind": "SOURCE_BOUND_INSTALLED_JOURNEYS_NOT_FINAL_QUALIFICATION",
+      "pullRequest": 613,
+      "sourceSha": "75767512824ceb2436efe96c13862c54b1cdbbbc",
+      "sourceTree": "530b60576e4e1eb7881e4aefc0fddf0c6e77f330",
+      "executedCheckout": "Each S is a direct child of C adding only .ci-run.json; S is the actual checkout.",
+      "passed": 5,
+      "total": 6,
+      "worker": 1,
+      "retries": 0,
+      "repeat": 1,
+      "runtime": "Bun 1.3.14+0d9b296af",
+      "runs": [
+        {
+          "selection": "Analytics",
+          "runId": 45081787600,
+          "snapshotSha": "598f698d7023d6830d3af97cd77dc27081ba964d",
+          "snapshotTree": "f5d83c92af5671461ffda3e67ac2fb31fd64cd3e",
+          "mainJob": 137391351807,
+          "main": "failure",
+          "cleanupJob": 137394647928,
+          "cleanup": "success",
+          "passed": 1,
+          "total": 2,
+          "artifact": {
+            "id": 14778142127,
+            "zipBytes": 44979002,
+            "zipSha256": "36dd93255ed114ece809cb5efdec8f00046b6988eeefd45fc2ab56c013a4eb39",
+            "crcMembers": 147
+          }
+        },
+        {
+          "selection": "Collaboration",
+          "runId": 45081788980,
+          "snapshotSha": "6e1e41b71285dab960d8d40274f45b1ed44ed492",
+          "snapshotTree": "1435095b4b637bc53df24e444d54a96441ff8cf1",
+          "mainJob": 137391356092,
+          "main": "success",
+          "cleanupJob": 137393269792,
+          "cleanup": "success",
+          "passed": 2,
+          "total": 2,
+          "artifact": {
+            "id": 14778181198,
+            "zipBytes": 54018725,
+            "zipSha256": "2604869a1ba5c27430a9b17fb5042ebfca7189edc04267293302c041ed419a50",
+            "crcMembers": 140
+          }
+        },
+        {
+          "selection": "Reviews",
+          "runId": 45081789903,
+          "snapshotSha": "68b8703b2a052ed925a613df0e4b123ab62783c7",
+          "snapshotTree": "da70ee87c9cd8b8e614150423afef88a2a2fe2ac",
+          "mainJob": 137391359040,
+          "main": "success",
+          "cleanupJob": 137393477365,
+          "cleanup": "success",
+          "passed": 2,
+          "total": 2,
+          "artifact": {
+            "id": 14777911183,
+            "zipBytes": 62588068,
+            "zipSha256": "093a19e673eeab3ba7ceb3f82461cfb6310c6fe261bdef697c70b308e1cc0659",
+            "crcMembers": 145
+          }
+        }
+      ],
+      "ui42": "TIMEOUT_AT_FIRST_PREVIEW_ORIGINAL_60000MS",
+      "ui43": "NOT_REACHED",
+      "ui44": "NOT_REACHED",
+      "bi06": "PASS_WITH_NO_NATIVE_FAILURE_MARKER; DISPUTED_FAILURE_BRANCH_NOT_EXERCISED",
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087702050",
+      "qualificationOfCurrentProductSource": false,
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "design-t4-technical-negative-6e",
+      "kind": "SOURCE_BOUND_NEGATIVE_TECHNICAL_INTAKE",
+      "pullRequest": 613,
+      "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+      "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+      "snapshotSha": "a5b87a42d9452cd83f4d7adcad77c4304887126b",
+      "snapshotTree": "9e3ade2da9d404bdf6773d9abcbf3b66fb75e76a",
+      "snapshotOnlyChanges": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-finish-verification.test.ts"
+      ],
+      "actualCheckout": "S_NOT_LITERAL_C",
+      "runId": 45082464794,
+      "runAttempt": 1,
+      "mainJob": 137393469375,
+      "main": "failure",
+      "cleanupJob": 137395780730,
+      "cleanup": "success",
+      "passed": 14,
+      "total": 15,
+      "externalAssertions": 512,
+      "runtime": "Bun 1.3.14+0d9b296af",
+      "c17": {
+        "status": "FAIL",
+        "durationMs": 105008.85,
+        "cooperativeDeadlineMs": 105000,
+        "bunDeadlineMs": 120000,
+        "originalTestBlob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+        "notReached": [
+          "persisted cycle",
+          "recovery",
+          "revocation"
+        ]
+      },
+      "guards": {
+        "rules": 78,
+        "paths": 798,
+        "warnings": 38,
+        "errors": 0,
+        "waivers": 0
+      },
+      "omni": {
+        "declarations": 15,
+        "spawns": 26,
+        "delegated": 0
+      },
+      "artifacts": [],
+      "logs": {
+        "main": {
+          "bytes": 153248,
+          "sha256": "906c7aac25da9a1ca284409e5d89aafd259c8a6b02bb46e7e29bd3db52e8bb8f"
+        },
+        "cleanup": {
+          "bytes": 2282,
+          "sha256": "59fb1f7ee033d84cb4417f2bcfa32432a983887318e12393024500da68548516"
+        }
+      },
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087939493",
+      "qualificationOfCurrentProductSource": false,
+      "finalCandidateApproval": false
+    },
+    {
+      "id": "design-p5-planner-diagnostics",
+      "kind": "DIAGNOSTIC_SNAPSHOTS_NOT_QUALIFICATION",
+      "pullRequest": 613,
+      "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+      "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+      "runtime": "Bun 1.3.14+0d9b296af",
+      "runs": [
+        {
+          "selection": "Analytics",
+          "runId": 45084762110,
+          "runAttempt": 1,
+          "snapshotSha": "8c8b67f4075be2c1a43425c204e2a033065b7848",
+          "snapshotTree": "d5acd31dee0f6c43ae27be448d790279fdcdaff4",
+          "mainJob": 137400743084,
+          "main": "failure",
+          "cleanupJob": 137403803478,
+          "cleanup": "success",
+          "passed": 1,
+          "total": 2,
+          "qualification": false,
+          "ui42": "ORIGINAL_PREVIEW_60000MS_TIMEOUT",
+          "ui43": "NOT_REACHED",
+          "ui44": "NOT_REACHED",
+          "bi06": "PASS; e1c4 REPAIR NOT EXECUTED",
+          "markers": {
+            "cost": 6,
+            "lastElapsedMs": 50000,
+            "windowOrFinalReceived": false
+          },
+          "artifact": {
+            "id": 14779460628,
+            "zipBytes": 45014286,
+            "zipSha256": "fa24cd8dd44183f4e85f3de3c85769b3c300a59d6b5a3facae7fda5ad9828006",
+            "crcMembers": 147
+          }
+        },
+        {
+          "selection": "Original C17 group",
+          "runId": 45084763055,
+          "runAttempt": 1,
+          "snapshotSha": "60d756f9286e73ca9742005ac5d70e842adb5e2d",
+          "snapshotTree": "697689021e82158ee528c15cb06937861f2b074e",
+          "mainJob": 137400746541,
+          "main": "success",
+          "cleanupJob": 137401710581,
+          "cleanup": "success",
+          "passed": 2,
+          "total": 2,
+          "qualification": false,
+          "originalGroup": {
+            "passed": 54,
+            "skipped": 2,
+            "failed": 0,
+            "assertions": 990
+          },
+          "c17Ms": 92456.97,
+          "omni": {
+            "declarations": 2,
+            "spawns": 4,
+            "delegated": 0
+          },
+          "artifacts": []
+        }
+      ],
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088008968",
+      "qualification": false,
+      "limits": [
+        "Planner admission was observed; no causal performance gain or final candidate qualification is inferred.",
+        "Inclusive timing cannot be summed; no types/guards or complete technical matrix were executed by these diagnostics.",
+        "The T4 negative remains unchanged; diagnostic PASS does not transfer to C, e1c4, Bun 1.4.1 or a tar."
+      ]
+    },
+    {
+      "id": "design-p6-residual-diagnostics",
+      "kind": "DIAGNOSTIC_SNAPSHOTS_NOT_QUALIFICATION",
+      "pullRequest": 613,
+      "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+      "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+      "runtime": "Bun 1.3.14+0d9b296af",
+      "helperBlob": "1d5c5ac8832661830c5542634befb7abf8f7a4bf",
+      "runs": [
+        {
+          "selection": "Analytics",
+          "runId": 45086341473,
+          "runAttempt": 1,
+          "snapshotSha": "17b3b3a511f14f7f52d46c0a504399aa778cee3f",
+          "snapshotTree": "dc24f348653eaf750004bd4eca6c0e2ad1efa6d6",
+          "mainJob": 137405716058,
+          "main": "failure",
+          "cleanupJob": 137409215020,
+          "cleanup": "success",
+          "passed": 1,
+          "total": 2,
+          "qualification": false,
+          "ui42": "ORIGINAL_PREVIEW_60000MS_TIMEOUT",
+          "ui43": "NOT_REACHED",
+          "ui44": "NOT_REACHED",
+          "bi06": "PASS; e1c4 REPAIR NOT EXECUTED",
+          "markers": {
+            "cost": 6,
+            "caller": 4,
+            "lastElapsedMs": 50002,
+            "windowOrFinalReceived": false
+          },
+          "sampler": {
+            "attempts": 132,
+            "accepted": 116,
+            "overflow": 16,
+            "tuples": 32
+          },
+          "artifact": {
+            "id": 14780056147,
+            "zipBytes": 44946170,
+            "zipSha256": "dba84b1239cd9e171bc089d7b2b041c29e69d935d8abb4e24fcf5cc970b5bd23",
+            "crcMembers": 147
+          }
+        },
+        {
+          "selection": "Original C17 group",
+          "runId": 45086342916,
+          "runAttempt": 1,
+          "snapshotSha": "43ccb1b6101b8eef52f3d974d1bf07f56e482c54",
+          "snapshotTree": "291f87d31214d04151357fd66dd0491340b7611a",
+          "mainJob": 137405720436,
+          "main": "success",
+          "cleanupJob": 137406748937,
+          "cleanup": "success",
+          "passed": 2,
+          "total": 2,
+          "qualification": false,
+          "originalGroup": {
+            "passed": 54,
+            "skipped": 2,
+            "failed": 0,
+            "assertions": 990
+          },
+          "c17Ms": 97252.47,
+          "omni": {
+            "declarations": 2,
+            "spawns": 4,
+            "delegated": 0
+          },
+          "markers": {
+            "cost": 7,
+            "caller": 4,
+            "windowEmittedMs": 97252,
+            "settledWindowLimitMs": 60000
+          },
+          "sampler": {
+            "attempts": 398,
+            "accepted": 248,
+            "overflow": 150,
+            "tuples": 32
+          },
+          "artifacts": []
+        }
+      ],
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867",
+      "qualification": false,
+      "limits": [
+        "Systematic sampling every 4096 calls, capped at 32 retained tuples, is not CPU, exact caller frequency or time attribution; overflow prevents extrapolation.",
+        "Terminal emission may be later than the 60-second measurement window. Analytics has no terminal aggregate.",
+        "Source identity, ordinals, arithmetic and hashes were independently received; the T4 and UI42 negatives remain and no PASS transfers to the parent or later sources."
+      ]
+    },
+    {
+      "id": "design-bi-e1c4-static-recheck",
+      "kind": "INDEPENDENT_STATIC_REVIEW_RUNTIME_PENDING",
+      "pullRequest": 613,
+      "sourceSha": "e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805",
+      "sourceTree": "e0c1c280005dba33fed5aac85f78f069de625188",
+      "parentSha": "e6720504fcdc92c0c01d4b245a770769d8106fe9",
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "blob": "757dde586df81bc639814c4b50e4c9fa82f2cf9c",
+      "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088302107",
+      "findingsRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087445772",
+      "status": "TWO_SOURCE_FINDINGS_ADDRESSED_NO_NEW_STATIC_BLOCKER_IN_SCOPE",
+      "scope": "Same native Request completion/failure is mandatory; requestfailed remains fatal and primary acquisition errors survive detach. No new GET/body acquisition/retry; original waiter and scalar tolerance unchanged.",
+      "runtimeQualification": "PENDING_ORIGINAL_REQUEST_COMPLETED_AND_ORACLES_ON_EFFECTIVE_SOURCE",
+      "qualification": false,
+      "finalCandidateApproval": false
     }
   ],
   "migrationObservations": [
@@ -4354,8 +4913,8 @@
     ],
     "documentReview": {
       "kind": "ORIGINAL_PR_METADATA_REQUIRED",
-      "status": "REVIEW_AND_ACTIONS_NOT_ANTICIPATED_IN_THIS_SNAPSHOT",
-      "scope": "Exactly three existing documents on merged #704/#705; preserve all prior evidence and negative intakes. No product, permanent workflow or final gate changes."
+      "status": "INDEPENDENT_REVIEW_AND_ACTIONS_PENDING",
+      "scope": "Exactly three existing documents on dev9d322c5d after #709/#711. Preserve all historical evidence and negatives; correct current host/sequence guidance and record source-bound Design intakes. No product, permanent workflow or final gate changes."
     },
     "previousDocumentReview": "Independent review of the current follow-up completed. Evidence catalog, publication metadata, complete G05 receipt obligations, cleanup scope, G10 count and Playwright-only invocation wording corrected; no material finding remaining.",
     "documentReviewHistory": [
@@ -4373,6 +4932,11 @@
         "kind": "ORIGINAL_PR_METADATA_REQUIRED",
         "status": "REVIEW_AND_ACTIONS_NOT_ANTICIPATED_IN_THIS_SNAPSHOT",
         "scope": "Exactly three existing documents, reconciled on merged #702. Preserve the other five #702 files and every existing source-bound record."
+      },
+      {
+        "kind": "ORIGINAL_PR_METADATA_REQUIRED",
+        "status": "REVIEW_AND_ACTIONS_NOT_ANTICIPATED_IN_THIS_SNAPSHOT",
+        "scope": "Exactly three existing documents on merged #704/#705; preserve all prior evidence and negative intakes. No product, permanent workflow or final gate changes."
       }
     ]
   },
@@ -4481,7 +5045,9 @@
       699,
       698,
       703,
-      705
+      705,
+      709,
+      711
     ],
     "executionEnvironmentScope": "GitHub-hosted ephemeral component jobs; no reserved installed QA/recovery host was mutated.",
     "buildsStartedScope": "Production/release artifact builds; test setup and component fixtures are recorded with their runs.",
@@ -4518,7 +5084,77 @@
       45067348416,
       45067349269,
       45067350677,
-      45067351696
+      45067351696,
+      {
+        "evidenceRef": "design-a4-installed-source-757",
+        "sourceSha": "75767512824ceb2436efe96c13862c54b1cdbbbc",
+        "sourceTree": "530b60576e4e1eb7881e4aefc0fddf0c6e77f330",
+        "runIds": [
+          45081787600,
+          45081788980,
+          45081789903
+        ],
+        "kind": "SOURCE_BOUND_INSTALLED_JOURNEYS_NOT_FINAL_QUALIFICATION",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087702050",
+        "finalCandidateApproval": false
+      },
+      {
+        "evidenceRef": "design-t4-technical-negative-6e",
+        "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+        "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+        "runIds": [
+          45082464794
+        ],
+        "kind": "SOURCE_BOUND_NEGATIVE_TECHNICAL_INTAKE",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087939493",
+        "finalCandidateApproval": false
+      },
+      {
+        "evidenceRef": "design-p5-planner-diagnostics",
+        "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+        "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+        "runIds": [
+          45084762110,
+          45084763055
+        ],
+        "kind": "DIAGNOSTIC_SNAPSHOTS_NOT_QUALIFICATION",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088008968",
+        "finalCandidateApproval": false
+      },
+      {
+        "evidenceRef": "design-p6-residual-diagnostics",
+        "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+        "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+        "runIds": [
+          45086341473,
+          45086342916
+        ],
+        "kind": "DIAGNOSTIC_SNAPSHOTS_NOT_QUALIFICATION",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867",
+        "finalCandidateApproval": false
+      },
+      {
+        "evidenceRef": "qa-network-profiles-component-709",
+        "sourceSha": "cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb",
+        "sourceTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+        "runIds": [
+          45081044372
+        ],
+        "kind": "COMPONENT_READINESS_NOT_AZURE_APPLICATION",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/709#pullrequestreview-6015029109",
+        "finalCandidateApproval": false
+      },
+      {
+        "evidenceRef": "existing-source-checkpoint-component-711",
+        "sourceSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+        "sourceTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+        "runIds": [
+          45086670468
+        ],
+        "kind": "FILESYSTEM_COMPONENT_CONTROLS",
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/711#issuecomment-7088167078",
+        "finalCandidateApproval": false
+      }
     ],
     "branchIntegratedComponents": [
       {
@@ -4621,7 +5257,7 @@
     ]
   },
   "overall": {
-    "preparation": "FRONT_COMPONENTS_MERGED_AZURE_DISCOVERY_COMPLETE_DESIGN_MIGRATION_FINAL_PIN_TAR_AND_ISOLATED_EXECUTIONS_PENDING",
+    "preparation": "FRONT_COMPONENTS_MERGED_EXISTING_HOST_AUTHORIZED_DESIGN_VISUAL_MIGRATION_FINAL_PIN_TAR_AND_INSTALLED_EXECUTIONS_PENDING",
     "qualifiedFinalGates": 0,
     "requiredFinalGates": 5,
     "goNoGoReadiness": "NOT_READY",
@@ -4629,25 +5265,25 @@
   },
   "publication": {
     "branch": "readiness-status",
-    "pullRequest": 707,
-    "recordKind": "PR_PUBLICATION_REFERENCE",
-    "scope": "Three existing go-live documents; new factual observation after #704/#705 and Azure inventory. All historical evidence preserved.",
-    "baseSha": "08e05d917a56505eb371889c92db8eb2d862a986",
-    "baseTree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
-    "sourceIdentitySource": "Exact source/tree, independent technical review, Actions and merge are read from the original #707 metadata; no self-referential SHA.",
-    "stateSource": "No future review, CI or merge is anticipated.",
-    "leaseRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7085707588",
-    "observationCutUtc": "2026-11-22T21:04:08Z"
+    "pullRequest": null,
+    "recordKind": "BRANCH_PREPARATION_REFERENCE",
+    "scope": "Exactly three existing go-live documents; current observation after #709/#711, existing-host direction and Design P5/P6/BI static recheck. Historical prefixes preserved.",
+    "baseSha": "9d322c5d461942eba5948325ec8a73185ec8a432",
+    "baseTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+    "sourceIdentitySource": "Read the exact source/tree, draft PR number, independent review, Actions and any merge from the original GitHub metadata of readiness-status; no self-referential source SHA.",
+    "stateSource": "This observation does not anticipate the draft PR number, review, Actions or merge.",
+    "leaseRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7088391280",
+    "observationCutUtc": "2026-11-23T00:31:28Z"
   },
   "latestDevObserved": {
-    "sha": "08e05d917a56505eb371889c92db8eb2d862a986",
-    "tree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
-    "observedAtUtc": "2026-11-22T21:04:08Z",
+    "sha": "9d322c5d461942eba5948325ec8a73185ec8a432",
+    "tree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+    "observedAtUtc": "2026-11-23T00:31:28Z",
     "notFinalCandidate": true
   },
   "integrationObservation": {
     "state": "COMPONENTS_MERGED_FINAL_QUALIFICATION_PENDING",
-    "observedAtUtc": "2026-11-22T21:04:08Z",
+    "observedAtUtc": "2026-11-23T00:31:28Z",
     "merges": [
       {
         "pullRequest": 665,
@@ -4809,6 +5445,34 @@
         "qualifiedSourceTree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
         "mergeCommit": "08e05d917a56505eb371889c92db8eb2d862a986",
         "mergeTree": "991f7bbc1649c840e34438b0815b7ca244fb6261"
+      },
+      {
+        "pullRequest": 707,
+        "sourceSha": "1cfd2056e9fbd421aaacbd987f025e9eed2f2520",
+        "sourceTree": "967e82078018331b1214c69579c33c7189095c01",
+        "mergeCommit": "afeee5cf2cb2d07d3265b16a622d2993bd28df90",
+        "mergeTree": "967e82078018331b1214c69579c33c7189095c01",
+        "scope": "Documentation only"
+      },
+      {
+        "pullRequest": 709,
+        "sourceSha": "cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb",
+        "sourceTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+        "qualifiedSourceSha": "cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb",
+        "qualifiedSourceTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+        "mergeCommit": "08c96c5d74dce601ae60cd6db53bac8c0f370959",
+        "mergeTree": "c5ee09b9407ecce59eb5b024e555b90e400542c9",
+        "scope": "COMPONENT_READINESS_NOT_AZURE_APPLICATION"
+      },
+      {
+        "pullRequest": 711,
+        "sourceSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+        "sourceTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+        "qualifiedSourceSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e",
+        "qualifiedSourceTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+        "mergeCommit": "9d322c5d461942eba5948325ec8a73185ec8a432",
+        "mergeTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8",
+        "scope": "FILESYSTEM_COMPONENT_CONTROLS"
       }
     ],
     "resolvedReviewFindings": [
@@ -4873,30 +5537,33 @@
         "sourceTree": "1b8155081dbfd2c94649f701c275d32b70bd15f6",
         "state": "OPEN_DRAFT_HISTORICAL_12_OF_15",
         "currentSource": {
-          "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
-          "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11"
+          "sha": "e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805",
+          "tree": "e0c1c280005dba33fed5aac85f78f069de625188",
+          "state": "BI_STATIC_RECHECK_ACCEPTED_RUNTIME_PENDING",
+          "sourceRole": "STATIC_REVIEW_SOURCE_RECEIVED_AT_OBSERVATION_CUT_NOT_CURRENT_BRANCH_HEAD",
+          "representsCurrentBranchHead": false
         },
-        "technical": {
-          "runId": 45067348416,
-          "passed": 14,
-          "total": 14
-        },
-        "installed": {
-          "runs": [
-            45067349269,
-            45067350677,
-            45067351696
-          ],
-          "passed": 4,
-          "total": 6,
-          "ui42": "TIMEOUT_60000MS",
-          "ui43": "NOT_REACHED",
-          "ui44": "NOT_REACHED",
-          "bi06": "ORIGINAL_SCALAR_COMPARISON_FAILED_AFTER_NEW_AUTHENTICATED_GET"
-        },
-        "owner": "Existing sf613-finish writer; close_pr613 is read-only reviewer",
-        "next": "Conclude Design with effective dev/#705, independent review and green CI on the approved head, then merge existing #613.",
-        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085610705"
+        "technicalEvidenceRef": "design-t4-technical-negative-6e",
+        "installedEvidenceRef": "design-a4-installed-source-757",
+        "diagnosticEvidenceRefs": [
+          "design-p5-planner-diagnostics",
+          "design-p6-residual-diagnostics"
+        ],
+        "owner": "Existing sf613-finish writer; close_pr613 is reviewer",
+        "next": "Compose effective dev including #709/#711, complete UI42–UI44 and the original technical matrix on the approved source, prove Release Bun 1.4.1, obtain independent review and merge existing #613.",
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088302107",
+        "sourceRole": "SHARED_PR_HEAD_OBSERVED_FOR_THIS_CUT_NOT_CURRENT_SF613_FINISH_BRANCH"
+      },
+      {
+        "pullRequest": 710,
+        "sourceSha": "744d24f26086481aa567a999b919dbe220a13306",
+        "sourceTree": "6df7cfdb867c4ef7737a4f8398b06669dfb19c47",
+        "state": "VISUAL_RECONCILIATION_AFTER_613_STATIC_UI41_FINDING_OPEN",
+        "owner": "Existing #710 writer",
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7088132472",
+        "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/710#pullrequestreview-6015334664",
+        "next": "After #613, reconcile visual changes on the approved Design source, preserve original UI41 empty-state controls/oracles and prepared Migration hunks, then qualify the effective composition. The opt-in 420s visual campaign is not the canonical 210/180s gate.",
+        "sourceRole": "LAST_REVIEWED_SOURCE_NOT_PROMISE_OF_LATEST_BRANCH_HEAD"
       },
       {
         "pullRequest": 673,
@@ -4909,8 +5576,8 @@
           "DECISIONS": "PENDING_REAL_COMPLETE_RUN",
           "APP_SRC": "PENDING_REAL_COMPLETE_RUN"
         },
-        "next": "After #613 merge, incorporate effective dev in #673, revalidate six prepared unions and run all 20 canonical A2 jobs plus the four-invocation supplemental job. Baseline updates require authentic complete evidence and qualification of the resulting candidate.",
-        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7085598301"
+        "next": "After #613 and #710 merge, incorporate effective dev in #673, revalidate six prepared unions and run all 20 canonical A2 jobs plus the four-invocation supplemental job. Baseline updates require authentic complete evidence and qualification of the resulting candidate.",
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7088139755"
       }
     ],
     "finalCandidateAcknowledgement": null,
@@ -4926,9 +5593,18 @@
       "qualification": "STATIC_READBACK_NOT_NEW_EXECUTION"
     },
     "sequence": {
-      "state": "DESIGN_THEN_MIGRATION_FINAL_COMPOSITION",
-      "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
-      "supersedes": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084824492",
+      "state": "DESIGN_THEN_VISUAL_THEN_MIGRATION_FINAL_COMPOSITION",
+      "pullRequests": [
+        613,
+        710,
+        673
+      ],
+      "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088139499",
+      "relatedReferences": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7088132472",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7088139755"
+      ],
+      "supersedes": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
       "preparedUnionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085359019",
       "sameFinalShaAndTreeAcknowledgementsRequired": true
     }
@@ -5781,6 +6457,360 @@
       },
       "sourcePullRequest": 704,
       "sourceSha": "c644c6ea20dbb6c323078acbfe1ff41fac825cdf"
+    },
+    {
+      "observedAtUtc": "2026-11-22T21:04:08Z",
+      "latestDevObserved": {
+        "sha": "08e05d917a56505eb371889c92db8eb2d862a986",
+        "tree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
+        "observedAtUtc": "2026-11-22T21:04:08Z",
+        "notFinalCandidate": true
+      },
+      "integrationObservation": {
+        "state": "COMPONENTS_MERGED_FINAL_QUALIFICATION_PENDING",
+        "observedAtUtc": "2026-11-22T21:04:08Z",
+        "merges": [
+          {
+            "pullRequest": 665,
+            "sourceSha": "f8981f8051edfc3647a368af44cbc41563680c2e",
+            "sourceTree": "cf39e663858f92d39a5649bb2f3e6c05e3bafbef",
+            "mergeCommit": "5ba96127750f15fe221daebfc0635466997b69d6",
+            "mergeTree": "38034fa8c000a93072846cfb91617161ccdbb47f",
+            "includes": [
+              672,
+              675,
+              678,
+              680,
+              681,
+              683,
+              686,
+              687
+            ]
+          },
+          {
+            "pullRequest": 677,
+            "sourceSha": "edadc608f10fd52c79197028f2b47de65fdfa7eb",
+            "sourceTree": "94241727e5eb88aaf4d985d2acf7f38105bdd566",
+            "mergeCommit": "5d0d3973a21b02df954e0e5cf31afe103960c23d",
+            "mergeTree": "94241727e5eb88aaf4d985d2acf7f38105bdd566"
+          },
+          {
+            "pullRequest": 689,
+            "sourceSha": "0f0373159f04528ed74bf500b55dd311ae0c23d9",
+            "sourceTree": "427647475aef83d71be1ec2487bd2ee94e79cb74",
+            "mergeCommit": "428cb9f93c59288d299f57dc70ed93566eda6ec1"
+          },
+          {
+            "pullRequest": 690,
+            "sourceSha": "482367ec13c073f73bec859a676e05d14e8f319b",
+            "sourceTree": "1aea8ae8f5538b16d6a973b693d1d161e9a99936",
+            "mergeCommit": "d9194fc04428da9a6c0ebf348e84633968f77b51",
+            "mergeTree": "1aea8ae8f5538b16d6a973b693d1d161e9a99936"
+          },
+          {
+            "pullRequest": 688,
+            "sourceSha": "33ba3d151bf523b17767e7030e7e6c0670d4b361",
+            "sourceTree": "271bce30b5694c96eac4b9d96a888a23104ba64c",
+            "mergeCommit": "2fdc76d8b40cd62c2da4967a5b9533411af308df"
+          },
+          {
+            "pullRequest": 692,
+            "sourceSha": "aff2fead9c9df28b725282a2d2e0665a67be7590",
+            "sourceTree": "5322d9b052745f5fb8ce377cd2a1b03f3ed1e65b",
+            "mergeCommit": "51d1879122f39bf894b3fc7d25c361ef2336753a"
+          },
+          {
+            "pullRequest": 695,
+            "sourceSha": "9f5198e176eeac817bd0f3fa153a26c5f2a42743",
+            "sourceTree": "5e8d2d8341803ace203bf8a12426777a56298538",
+            "mergeCommit": "9db779820a54d251890b399c7f97ed99b333e228",
+            "mergeTree": "b0e17cdcc1a88348399e1d1254bd306ac8235504"
+          },
+          {
+            "pullRequest": 685,
+            "sourceSha": "ba521f92c5464dc9bee50223e8d3b4ea1b235c0a",
+            "mergeCommit": "0fa4778b559963e0f3e7c60051060844d362e796",
+            "repairPullRequest": 695
+          },
+          {
+            "pullRequest": 693,
+            "sourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+            "sourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+            "qualifiedSourceSha": "821b7eb010a5010c0e642b08f03096cefd4c1b4d",
+            "qualifiedSourceTree": "442cd93456a74daf16e36264a6d17387aaa839ff",
+            "mergeCommit": "70e3228cf2dbbe2ba1723ea4044ed855864dd516",
+            "mergeTree": "31b574107792dcac752ef8d633f7f683abc1ae98"
+          },
+          {
+            "pullRequest": 691,
+            "sourceSha": "894c291bf6ddd47b49eaa886682f58d6b0fa9e68",
+            "sourceTree": "26a9596704f116d404638c2231ba75289e0c1486",
+            "qualifiedSourceSha": "ba91c39e5cd2f9fdbe3851007f7e3b4915477bbe",
+            "qualifiedSourceTree": "8025be39e4893eebafd6586e08de3dc1a052b386",
+            "mergeCommit": "7e3e5e2bfd24f2efe8f424a298e31e071763061f",
+            "mergeTree": "31b99aaa0d9aef1957968ff039f83be31a2e7055"
+          },
+          {
+            "pullRequest": 694,
+            "sourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+            "sourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+            "qualifiedSourceSha": "4c717ad9cda1af474802728248e3b9a2129ad134",
+            "qualifiedSourceTree": "029b696c9d68d59abebc86564818a6d9b895e778",
+            "mergeCommit": "9804ee30848580787cc7e556d4a26269b3960656",
+            "mergeTree": "43028ea5b24246ca3b864b1e42c4a66b892b8814"
+          },
+          {
+            "pullRequest": 697,
+            "sourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+            "sourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+            "qualifiedSourceSha": "5b9e1734130792e3ad33b43689c69785596344ad",
+            "qualifiedSourceTree": "55b151e7176bdbc807e01c4f34130761e374caf7",
+            "mergeCommit": "19fbe6542cdcc27139082c28acbc01bf070d60bd",
+            "mergeTree": "3cc2f840609b729742842f6ac4ac71603f4d2ea4"
+          },
+          {
+            "pullRequest": 700,
+            "sourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+            "sourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+            "qualifiedSourceSha": "9991d8bb4df736f6d4abcab195a4f4138d7c339c",
+            "qualifiedSourceTree": "fe76ef383c9bc379a8fd75372cf190a8259252f9",
+            "mergeCommit": "327e95d552fa6edc742f8b87bc19efb0ca6a1dd6",
+            "mergeTree": "b3da19c2ffcaaf60a0958c1d0840dd638ef71088"
+          },
+          {
+            "pullRequest": 701,
+            "sourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+            "sourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+            "qualifiedSourceSha": "7800bec785c859580aec8e043ae5f18ab33ec8f3",
+            "qualifiedSourceTree": "e410878956c9dbee907bb624d21b7578e70e225c",
+            "mergeCommit": "5cf8419032b544b3252b00bdee39afdbb366ffa6",
+            "mergeTree": "70e7a7097d531b7fa28badc9a1cc4f4fa2643b8d"
+          },
+          {
+            "pullRequest": 699,
+            "sourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+            "sourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+            "qualifiedSourceSha": "217e9806f08491b6f286a8a5a3c36891bb17ae6a",
+            "qualifiedSourceTree": "88a02263d9d2cfceb299b92f00664d46e44438c0",
+            "mergeCommit": "47fa6b594ce91058671d55a7104e1ed0264975c2",
+            "mergeTree": "21fdcc30251b6de524ecd3786760d82f2c823ea4"
+          },
+          {
+            "pullRequest": 698,
+            "sourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+            "sourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+            "qualifiedSourceSha": "03a8c8ab88d3dddff6524a4c3ccd39ac1250140e",
+            "qualifiedSourceTree": "4e425fa9278be05e0018bc64d25c06f5417363b2",
+            "mergeCommit": "b7776698e61934ed2cb820658408ff8a8207ec62",
+            "mergeTree": "364344c376a4feb35245d8089bde1941d025ebf9"
+          },
+          {
+            "pullRequest": 703,
+            "sourceSha": "b6c643546c57fca820a8e4db935815a64f2af58c",
+            "sourceTree": "4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4",
+            "qualifiedSourceSha": "b6c643546c57fca820a8e4db935815a64f2af58c",
+            "qualifiedSourceTree": "4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4",
+            "mergeCommit": "f5132fabfa265ba6bef17b0e0aa2ebe2c2beafdc",
+            "mergeTree": "4462e8f53b3fca019d9c5f5fbbf71cb4c04f56b4"
+          },
+          {
+            "pullRequest": 704,
+            "sourceSha": "c644c6ea20dbb6c323078acbfe1ff41fac825cdf",
+            "sourceTree": "bf3aa87d40aa9590ccc66faca90fd0ba8a3d3096",
+            "qualifiedSourceSha": "c644c6ea20dbb6c323078acbfe1ff41fac825cdf",
+            "qualifiedSourceTree": "bf3aa87d40aa9590ccc66faca90fd0ba8a3d3096",
+            "mergeCommit": "bd12a386ae0ea3d0a949df791861b1482075f556",
+            "mergeTree": "bf3aa87d40aa9590ccc66faca90fd0ba8a3d3096"
+          },
+          {
+            "pullRequest": 705,
+            "sourceSha": "af4c65927a236a4228245a8c4d1929ad6247dfb1",
+            "sourceTree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
+            "qualifiedSourceSha": "af4c65927a236a4228245a8c4d1929ad6247dfb1",
+            "qualifiedSourceTree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
+            "mergeCommit": "08e05d917a56505eb371889c92db8eb2d862a986",
+            "mergeTree": "991f7bbc1649c840e34438b0815b7ca244fb6261"
+          }
+        ],
+        "resolvedReviewFindings": [
+          {
+            "ids": [
+              "web-real-byte-cap",
+              "empty-json-handler-defect"
+            ],
+            "integratedBy": 665,
+            "sourceSha": "e83b9edc8a9dd58b1baac6d56da05fe22110988c",
+            "runId": 45046979320,
+            "counts": {
+              "server": 31,
+              "cliFactory": 1
+            },
+            "laterRegressionProof": 688
+          },
+          {
+            "ids": [
+              "typed-web-stream-overflow",
+              "handler-defect-with-unread-body"
+            ],
+            "integratedBy": 688,
+            "proofId": "web-boundaries-final-component"
+          },
+          {
+            "ids": [
+              "az02-refusal-invalid-json",
+              "az02-missing-selector-json-media"
+            ],
+            "integratedBy": 695,
+            "proofId": "az02-refusal-repair"
+          },
+          {
+            "ids": [
+              "g08-current-aggregate-admission"
+            ],
+            "integratedBy": 703,
+            "proofId": "retrospective-aggregate-admission-2026-11-22",
+            "reviewIds": [
+              6013881242,
+              6013911106
+            ],
+            "scope": "Component implementation and controls only; installed G08 remains NOT_RUN."
+          },
+          {
+            "ids": [
+              "g08-raw-child-process-admission",
+              "g08-primary-cleanup-error-precedence",
+              "g08-production-module-resolution",
+              "g08-original-signal-cause-oracle"
+            ],
+            "integratedBy": 705,
+            "proofId": "g08-strict-process-controls-2026-11-22",
+            "scope": "Component controls only; no installed execution or final candidate qualification."
+          }
+        ],
+        "remainingProductIntegration": [
+          {
+            "pullRequest": 613,
+            "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+            "sourceTree": "1b8155081dbfd2c94649f701c275d32b70bd15f6",
+            "state": "OPEN_DRAFT_HISTORICAL_12_OF_15",
+            "currentSource": {
+              "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
+              "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11"
+            },
+            "technical": {
+              "runId": 45067348416,
+              "passed": 14,
+              "total": 14
+            },
+            "installed": {
+              "runs": [
+                45067349269,
+                45067350677,
+                45067351696
+              ],
+              "passed": 4,
+              "total": 6,
+              "ui42": "TIMEOUT_60000MS",
+              "ui43": "NOT_REACHED",
+              "ui44": "NOT_REACHED",
+              "bi06": "ORIGINAL_SCALAR_COMPARISON_FAILED_AFTER_NEW_AUTHENTICATED_GET"
+            },
+            "owner": "Existing sf613-finish writer; close_pr613 is read-only reviewer",
+            "next": "Conclude Design with effective dev/#705, independent review and green CI on the approved head, then merge existing #613.",
+            "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085610705"
+          },
+          {
+            "pullRequest": 673,
+            "sourceSha": "b2f97817a82dc55a66298428107c30d5e3d97354",
+            "sourceTree": "289fd8ac1792a103bfea3e57ce9c8c4283cc6b92",
+            "state": "FROZEN_REVIEWED_PARENT_NO_ISOLATED_CI",
+            "reviewId": 6014465542,
+            "baselineStates": {
+              "SF": "PENDING_REAL_COMPLETE_RUN",
+              "DECISIONS": "PENDING_REAL_COMPLETE_RUN",
+              "APP_SRC": "PENDING_REAL_COMPLETE_RUN"
+            },
+            "next": "After #613 merge, incorporate effective dev in #673, revalidate six prepared unions and run all 20 canonical A2 jobs plus the four-invocation supplemental job. Baseline updates require authentic complete evidence and qualification of the resulting candidate.",
+            "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7085598301"
+          }
+        ],
+        "finalCandidateAcknowledgement": null,
+        "scopeLimit": "All component receipts remain bound to their tested source/tree. No replay of the final candidate, installed Microsoft qualification, final tar or production decision is implied.",
+        "compositionReadback": {
+          "mergeCommit": "47fa6b594ce91058671d55a7104e1ed0264975c2",
+          "nativeFaultBlob": "cd2d599b6ee3d14fda83bb7986cca5f72ea16fa2",
+          "producerBlob": "0ceceb218a6b88d27bc4304f1c7b863a012b40a6",
+          "historicalV2Blob": "122a31917565d2de51ba63e646cc20000c239670",
+          "preserved700Blobs": 24,
+          "total700Blobs": 25,
+          "sharedResolution": "The whole #699 response-faults file plus only the reviewed Pick<NativeManifest,target> type of #700; no runtime dropped.",
+          "qualification": "STATIC_READBACK_NOT_NEW_EXECUTION"
+        },
+        "sequence": {
+          "state": "DESIGN_THEN_MIGRATION_FINAL_COMPOSITION",
+          "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
+          "supersedes": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084824492",
+          "preparedUnionReference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085359019",
+          "sameFinalShaAndTreeAcknowledgementsRequired": true
+        }
+      },
+      "gateBlockers": [
+        {
+          "gate": "G05",
+          "firstBlocker": "Concluir a composição de produto sob o writer da Migração, confirmar C/T com Migração+Release e reexecutar o inventário completo HTTP/coverage/auth/effect/isolamento no candidato final.",
+          "remaining": [
+            "Fronteiras Web/JSON e CAP03 readonly estão integradas por #665/#688/#693. Reexecutar o inventário HTTP/isolamento completo no C/T confirmado, sem herdar recibo de componente.",
+            "Conservar recibos completos, hashes, veredito Omni real, cleanup e aceite explicitamente vinculado ao candidato efetivo."
+          ]
+        },
+        {
+          "gate": "G06",
+          "firstBlocker": "Pin conjunto C/T e reexecução completa da seleção v3 sobre o candidato integrado; prova da instalação Microsoft não herdada de componente.",
+          "remaining": [
+            "Concluir a composição/pin final com Migração+Release. Política corrente e Imports privados já estão integrados; o verde ClamD do B4 permanece específico daquela fonte.",
+            "Executar teams-profile-scanner-v3 / controls-with-imports completo: oito legados, três Microsoft/Team, caso G05 com 11 controles e quatro Imports, em seis arquivos.",
+            "Conferir scanner real, payload inválido após staging, autoridade/isolamento, armazenamento, limite de intake, indisponibilidade e cleanup; conferir artefato/recibos originais.",
+            "Conservar a distinção entre local-operator, Microsoft/Graph controlados e instalação real; nenhum resultado atual aprova o gate final."
+          ]
+        },
+        {
+          "gate": "G07",
+          "firstBlocker": "Rota admitida e coordenação/execução atribuídas a Astra. Faltam C/T final e dois ACKs originais anteriores ao produtor; B vinculará o operador GitHub efetivo.",
+          "remaining": [
+            "Confirmar C/T e os dois papéis de ACK; vincular o operador GitHub efetivo em B e a attestation sf-g07-pin-attestation-v1 quando a fonte for textual. O mandato de execução já é desta frente.",
+            "Criar B imutável distinto de C e release-build-<B> exatamente em C; admitir antes de build e revalidar imediatamente antes do tar original.",
+            "Após o artefato, criar Q e g07-qualify-<Q> em C, ou dispatch admitido; verificar ZIP/tar/proveniência pelo instalador original de C.",
+            "Vincular os mesmos bytes, manifesto/roster/factory e observações instaladas a G08/G10; sem reconstrução entre gates."
+          ]
+        },
+        {
+          "gate": "G08",
+          "firstBlocker": "Executor e processo estrito integrados. Faltam composição final, ACKs, tar G07, reserva exclusiva com acesso guest/runner verificável e contextos Microsoft/grants para11 invocações originais.",
+          "remaining": [
+            "Usar os executores originais já integrados: CAP03 #691/#693,50 jornadas/F04 #694, restart #697, correção de lifecycle #699, registro #700, proveniência #701 e coordenador #698. Controles de preparação não fecham G08. O #703 vincula o próprio agregador ao checkout e job atuais; a leitura continua retrospectiva. #705 mantém o streaming de bytes e as observações de Git sob AppProcess/Omni estrito; verificar runtime/loader efetivos no host final.",
+            "Confirmar reserva exclusiva, operador, quatro contextos Microsoft originais e autorização de logout, disable/restore e fixtures Session descartáveis.",
+            "Instalar os mesmos bytes do tar G07 e executar as nove obrigações Teams, U15(6), U39(22), U40(22), F04(3) e a prova operacional AZ02 atual de37 casos em seis fases(16/14/2/2/2/1).",
+            "Conservar os32 IDs históricos AZ02 e os dois remapeamentos explícitos; o ledger#692 exige as cinco adições e a recusa#695 não aceita ausência de prova.",
+            "Conservar recovery como papel de G10; nove casos/cinco grupos não fecham o agregado G01–G10.",
+            "Preservar aceite222(2) no QA original, sem promoção para outro tar; recuperar o backlink.",
+            "Executar o workflow canônico g08-installed-complete:99 obrigações em11 produtores completos, depois agregação separada com arquivos privados originais, ZIPs do GitHub e atestação posterior de cleanup vinculada."
+          ]
+        },
+        {
+          "gate": "G10",
+          "firstBlocker": "Checkpoint/recovery, decoder e política corrente estão em dev; faltam C/T final, tar e reservas/atores/chave/observador para o ensaio.",
+          "remaining": [
+            "Reservar host e VM clone separados de G08, donos de backup/chave/corte e observador externo.",
+            "Verificar R instalado/retido antes do corte, tar G07 C e compatibilidade independente para rollback.",
+            "Executar backup real, censo completo, clone e uso da chave; manter registro monotônico fora da área restaurada.",
+            "Executar migração admitida, corte, efeito posterior ao checkpoint, restore, restart real, retry sem duplicação e rollback com dados/recibos preservados.",
+            "Medir RPO/RTO, validar negativas e limpeza; a rota /recover cobre apenas dashboard Team.",
+            "Confirmar no C instalado checkpoint-observe/checkpoint com grant explícito, versão/snapshot/fronteira reais e recover pela política persistente corrente integrada em #677; nenhuma fixture aprova o registro externo."
+          ]
+        }
+      ],
+      "sourcePullRequest": 707,
+      "sourceSha": "1cfd2056e9fbd421aaacbd987f025e9eed2f2520"
     }
   ],
   "publicationHistory": [
@@ -5911,6 +6941,18 @@
         "overlapResolutionRef": "https://github.com/gustavomhss/Orchestra-SF/pull/704#issuecomment-7084239845"
       },
       "leaseRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7084241639"
+    },
+    {
+      "branch": "readiness-status",
+      "pullRequest": 707,
+      "recordKind": "PR_PUBLICATION_REFERENCE",
+      "scope": "Three existing go-live documents; new factual observation after #704/#705 and Azure inventory. All historical evidence preserved.",
+      "baseSha": "08e05d917a56505eb371889c92db8eb2d862a986",
+      "baseTree": "991f7bbc1649c840e34438b0815b7ca244fb6261",
+      "sourceIdentitySource": "Exact source/tree, independent technical review, Actions and merge are read from the original #707 metadata; no self-referential SHA.",
+      "stateSource": "No future review, CI or merge is anticipated.",
+      "leaseRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7085707588",
+      "observationCutUtc": "2026-11-22T21:04:08Z"
     }
   ],
   "designObservation": {
@@ -5920,7 +6962,7 @@
     "sourceTree": "1b8155081dbfd2c94649f701c275d32b70bd15f6",
     "qualifiedAreas": 12,
     "totalAreas": 15,
-    "qualifiedAreasBasis": "Existing PR evidence, preserved; not acceptance of later source44 or its failing BI rerun",
+    "qualifiedAreasBasis": "Twelve historical area acceptances from the existing PR are preserved; no acceptance of later product sources or diagnostic snapshots is inferred.",
     "pendingAreas": [
       "UI42",
       "UI43",
@@ -5928,133 +6970,77 @@
     ],
     "existingEvidencePreserved": true,
     "currentProductSource": {
-      "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
-      "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11",
-      "state": "SEPARATE_SOURCE_TECHNICAL_PASS_INSTALLED_FAILURE_NOT_PROMOTED"
+      "sha": "e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805",
+      "tree": "e0c1c280005dba33fed5aac85f78f069de625188",
+      "state": "BI_SOURCE_REPAIR_STATICALLY_ACCEPTED_RUNTIME_AND_FINAL_COMPOSITION_PENDING",
+      "sourceRole": "STATIC_REVIEW_SOURCE_RECEIVED_AT_OBSERVATION_CUT_NOT_CURRENT_BRANCH_HEAD",
+      "observedAtUtc": "2026-11-23T00:31:28Z",
+      "representsCurrentBranchHead": false
     },
     "latestTechnical": {
-      "runId": 45067348416,
-      "runAttempt": 1,
-      "jobId": 137346349961,
-      "cleanupJobId": 137348386668,
-      "cleanupStatus": "success",
-      "snapshotSha": "440a7c2051ae71babb9ea541b2d8225c11979175",
-      "status": "success",
-      "passedGates": 14,
-      "totalGates": 14,
-      "artifacts": [],
-      "originalLogSha256": "ecb12a67a2d0ff7a1e09fb7c57bff6917fbd44e8634c0dc5109aa64f8f6a04ea",
+      "evidenceRef": "design-t4-technical-negative-6e",
+      "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+      "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+      "snapshotSha": "a5b87a42d9452cd83f4d7adcad77c4304887126b",
+      "snapshotTree": "9e3ade2da9d404bdf6773d9abcbf3b66fb75e76a",
+      "runId": 45082464794,
+      "passed": 14,
+      "total": 15,
+      "main": "failure",
+      "cleanup": "success",
       "c17": {
-        "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
-        "assertions": 19,
-        "testDurationMs": 104187.5,
-        "originalDeadlineMs": 105000,
-        "marginMs": 812.5,
-        "scope": "Original variant, complete; no stable or causal performance gain claimed"
+        "status": "FAIL",
+        "durationMs": 105008.85,
+        "cooperativeDeadlineMs": 105000,
+        "bunDeadlineMs": 120000,
+        "originalTestBlob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+        "notReached": [
+          "persisted cycle",
+          "recovery",
+          "revocation"
+        ]
       },
-      "guards": {
-        "rules": 78,
-        "paths": 795,
-        "warnings": 38,
-        "errors": 0,
-        "waivers": 0,
-        "actualDev": "08e05d917a56505eb371889c92db8eb2d862a986",
-        "mergeBase": "bd12a386ae0ea3d0a949df791861b1482075f556"
-      },
-      "snapshotTree": "8c32b7d99a09ff8bab95fef8af6aaf5df0680e57"
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087939493",
+      "qualificationOfCurrentProductSource": false
     },
     "latestInstalled": {
-      "source": {
-        "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
-        "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11"
-      },
-      "passed": 4,
-      "total": 6,
+      "evidenceRef": "design-a4-installed-source-757",
+      "sourceSha": "75767512824ceb2436efe96c13862c54b1cdbbbc",
+      "sourceTree": "530b60576e4e1eb7881e4aefc0fddf0c6e77f330",
       "runs": [
         {
-          "name": "Analytics",
-          "runId": 45067349269,
-          "snapshotSha": "50e7643bf19dca724ef1e952ea7ca072b7bfad2a",
-          "jobId": 137346352564,
-          "cleanupJobId": 137349609411,
-          "status": "failure",
-          "passed": 0,
-          "total": 2,
-          "artifact": {
-            "id": 14772212377,
-            "zipBytes": 29892739,
-            "zipSha256": "8ca05b7a9083d565e239997c6ae8ab2e617524262f59d823ee489c1d8792b73f",
-            "crcMembers": 91,
-            "runtimeSha256": "370a121e3d8d259b33727fc9e073f0d543a1234637f31793113c4eae24acb753"
-          },
-          "snapshotTree": "5765bbc59fc5b111d445f39e60d3de9e6afb9fae"
+          "selection": "Analytics",
+          "runId": 45081787600,
+          "snapshotSha": "598f698d7023d6830d3af97cd77dc27081ba964d",
+          "snapshotTree": "f5d83c92af5671461ffda3e67ac2fb31fd64cd3e",
+          "passed": 1,
+          "total": 2
         },
         {
-          "name": "Collab",
-          "runId": 45067350677,
-          "snapshotSha": "1474987f22006f0f6f6cc1996fe57fd1f4f1ceb5",
-          "jobId": 137346356860,
-          "cleanupJobId": 137348165539,
-          "status": "success",
+          "selection": "Collaboration",
+          "runId": 45081788980,
+          "snapshotSha": "6e1e41b71285dab960d8d40274f45b1ed44ed492",
+          "snapshotTree": "1435095b4b637bc53df24e444d54a96441ff8cf1",
           "passed": 2,
-          "total": 2,
-          "artifact": {
-            "id": 14772485406,
-            "zipBytes": 54046455,
-            "zipSha256": "456183e87d9d0b97cbcbc524a15532c7358b2a2f503890f34b37a2436eff82ea",
-            "crcMembers": 140,
-            "runtimeSha256": "0e94f8b172c7f8516704443d563b4a9da518753cc92f9cb6127434c895be2119"
-          },
-          "snapshotTree": "c4bb9f28724b04a43a0ab76c3c9c24be7849634f"
+          "total": 2
         },
         {
-          "name": "Reviews",
-          "runId": 45067351696,
-          "snapshotSha": "0c081f0586af7d87b405d0b670586bfa690b2e89",
-          "jobId": 137346360481,
-          "cleanupJobId": 137348555892,
-          "status": "success",
+          "selection": "Reviews",
+          "runId": 45081789903,
+          "snapshotSha": "68b8703b2a052ed925a613df0e4b123ab62783c7",
+          "snapshotTree": "da70ee87c9cd8b8e614150423afef88a2a2fe2ac",
           "passed": 2,
-          "total": 2,
-          "artifact": {
-            "id": 14772241594,
-            "zipBytes": 62763145,
-            "zipSha256": "17677c857ad9fe392ed78f9a94c92ac3213955410ce95fd88b6dc55dfd423846",
-            "crcMembers": 145,
-            "runtimeSha256": "235bc800f6cc93a64dd9a61950458310a3985f1f0ddefffe06877bcc5055095c"
-          },
-          "snapshotTree": "2b78de10f6a0ad7f59ec3781fe16b632df59074d"
+          "total": 2
         }
       ],
-      "allCleanupSuccess": true,
-      "selectionMatchesRuntime": true,
-      "workers": 1,
-      "retries": 0,
-      "repeatEach": 1,
-      "skips": 0,
-      "flaky": 0,
-      "originalZipsIndependentlyDownloadedHashAndCrcVerified": true,
-      "identityLimit": "Each installed run executed its own direct-child snapshot S with .ci-run.json; this is not execution of literal parent C.",
-      "failures": [
-        {
-          "area": "UI42",
-          "specLine": 72,
-          "operation": "decision-portfolio-preview",
-          "deadlineMs": 60000,
-          "result": "Original native request observed; no response before timeout. UI43/UI44 not reached.",
-          "backendPhase": "NOT_LOCALIZED_BY_EXISTING_BROWSER_ONLY_OBSERVATION"
-        },
-        {
-          "area": "BI06 / UI46",
-          "specLine": 374,
-          "result": "Original scalar comparison failed",
-          "relativeError": 0.0026798674546290556,
-          "tolerance": 0.00001,
-          "acquisition": "authenticated-original-readback",
-          "limit": "A second GET creates a separate observation of time-dependent ageDays. Original response payload and producer observedAt are not preserved; no clone regression or rounding cause is established.",
-          "independentFindingRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085742679"
-        }
-      ]
+      "passed": 5,
+      "total": 6,
+      "ui42": "TIMEOUT_AT_FIRST_PREVIEW_ORIGINAL_60000MS",
+      "ui43": "NOT_REACHED",
+      "ui44": "NOT_REACHED",
+      "bi06": "PASS_WITH_NO_NATIVE_FAILURE_MARKER; DISPUTED_FAILURE_BRANCH_NOT_EXERCISED",
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087702050",
+      "qualificationOfCurrentProductSource": false
     },
     "priorGeneration321": {
       "sourceSha": "32155fd2b4149a4142dfdc50aa2cc4a917a5dc92",
@@ -6089,15 +7075,83 @@
       "qualificationLimit": "Source-bound selective proof only; not transferred to later sources"
     },
     "currentReviewBlocker": {
-      "status": "INSTALLED_ANALYTICS_FAILURES_OPEN",
-      "sourceSha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
-      "priorIntegrityFinding": "Preserved in designObservationHistory; source9b isolated load modes and source44 clone controls received without a new static finding",
-      "sourcePromotionAllowed": false
+      "status": "UI42_AND_FINAL_TECHNICAL_RUNTIME_QUALIFICATION_PENDING",
+      "sourceSha": "e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805",
+      "ui42": "FIRST_PREVIEW_ORIGINAL_60000MS_TIMEOUT_IN_LATEST_RECEIVED_DIAGNOSTIC",
+      "ui43": "NOT_REACHED",
+      "ui44": "NOT_REACHED",
+      "biSourceFindings": "STATICALLY_ADDRESSED_IN_E1C4_RUNTIME_PENDING",
+      "releaseRuntime": {
+        "tested": "Bun 1.3.14+0d9b296af",
+        "required": "Bun 1.4.1",
+        "requiredRevision": "4661e494f052c83c80dade1318e5710238340be6",
+        "status": "ACTUAL_ACTIONS_RUNTIME_EVIDENCE_PENDING",
+        "pinBroadened": false,
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088011155"
+      },
+      "sourcePromotionAllowed": false,
+      "lastObservedUi42SourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e"
     },
-    "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085610705",
-    "sequenceRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
+    "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867",
+    "sequenceRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088139499",
     "finalApproval": null,
-    "independentIntakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085714579"
+    "independentIntakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867",
+    "diagnosticObservations": [
+      {
+        "evidenceRef": "design-p5-planner-diagnostics",
+        "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+        "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+        "runs": [
+          {
+            "runId": 45084762110,
+            "snapshotSha": "8c8b67f4075be2c1a43425c204e2a033065b7848",
+            "snapshotTree": "d5acd31dee0f6c43ae27be448d790279fdcdaff4",
+            "main": "failure",
+            "cleanup": "success"
+          },
+          {
+            "runId": 45084763055,
+            "snapshotSha": "60d756f9286e73ca9742005ac5d70e842adb5e2d",
+            "snapshotTree": "697689021e82158ee528c15cb06937861f2b074e",
+            "main": "success",
+            "cleanup": "success"
+          }
+        ],
+        "qualification": false,
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088008968"
+      },
+      {
+        "evidenceRef": "design-p6-residual-diagnostics",
+        "sourceSha": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+        "sourceTree": "89d48f214fa4c8eaec214e01d4359591413da395",
+        "runs": [
+          {
+            "runId": 45086341473,
+            "snapshotSha": "17b3b3a511f14f7f52d46c0a504399aa778cee3f",
+            "snapshotTree": "dc24f348653eaf750004bd4eca6c0e2ad1efa6d6",
+            "main": "failure",
+            "cleanup": "success"
+          },
+          {
+            "runId": 45086342916,
+            "snapshotSha": "43ccb1b6101b8eef52f3d974d1bf07f56e482c54",
+            "snapshotTree": "291f87d31214d04151357fd66dd0491340b7611a",
+            "main": "success",
+            "cleanup": "success"
+          }
+        ],
+        "qualification": false,
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867"
+      }
+    ],
+    "biStaticRecheck": {
+      "evidenceRef": "design-bi-e1c4-static-recheck",
+      "sourceSha": "e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805",
+      "sourceTree": "e0c1c280005dba33fed5aac85f78f069de625188",
+      "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088302107",
+      "status": "TWO_SOURCE_FINDINGS_ADDRESSED_NO_NEW_STATIC_BLOCKER_IN_SCOPE",
+      "runtimeQualification": "PENDING"
+    }
   },
   "evidenceInterpretation": "Historical proof fields and prior integration states are immutable observations of their source/time. Current merge state is recorded separately in integrationObservation and latestDevObserved; a source receipt is never promoted to a later candidate.",
   "designObservationHistory": [
@@ -6500,6 +7554,192 @@
         "scope": "Additional coordination acquisition of the prior diagnostic, distinct from the #702 metadata-only observation. Original C17 failed at 105 seconds; sampling is not a call count or a causal performance comparison.",
         "qualification": false
       }
+    },
+    {
+      "pullRequest": 613,
+      "state": "OPEN_DRAFT_HISTORICAL_12_OF_15_QUALIFIED",
+      "sourceSha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sourceTree": "1b8155081dbfd2c94649f701c275d32b70bd15f6",
+      "qualifiedAreas": 12,
+      "totalAreas": 15,
+      "qualifiedAreasBasis": "Existing PR evidence, preserved; not acceptance of later source44 or its failing BI rerun",
+      "pendingAreas": [
+        "UI42",
+        "UI43",
+        "UI44"
+      ],
+      "existingEvidencePreserved": true,
+      "currentProductSource": {
+        "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
+        "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11",
+        "state": "SEPARATE_SOURCE_TECHNICAL_PASS_INSTALLED_FAILURE_NOT_PROMOTED"
+      },
+      "latestTechnical": {
+        "runId": 45067348416,
+        "runAttempt": 1,
+        "jobId": 137346349961,
+        "cleanupJobId": 137348386668,
+        "cleanupStatus": "success",
+        "snapshotSha": "440a7c2051ae71babb9ea541b2d8225c11979175",
+        "status": "success",
+        "passedGates": 14,
+        "totalGates": 14,
+        "artifacts": [],
+        "originalLogSha256": "ecb12a67a2d0ff7a1e09fb7c57bff6917fbd44e8634c0dc5109aa64f8f6a04ea",
+        "c17": {
+          "blob": "0d9094ae67866a919573c9c172176ca2bc88d4dc",
+          "assertions": 19,
+          "testDurationMs": 104187.5,
+          "originalDeadlineMs": 105000,
+          "marginMs": 812.5,
+          "scope": "Original variant, complete; no stable or causal performance gain claimed"
+        },
+        "guards": {
+          "rules": 78,
+          "paths": 795,
+          "warnings": 38,
+          "errors": 0,
+          "waivers": 0,
+          "actualDev": "08e05d917a56505eb371889c92db8eb2d862a986",
+          "mergeBase": "bd12a386ae0ea3d0a949df791861b1482075f556"
+        },
+        "snapshotTree": "8c32b7d99a09ff8bab95fef8af6aaf5df0680e57"
+      },
+      "latestInstalled": {
+        "source": {
+          "sha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
+          "tree": "3b93fd1c11151a6428dc9c1f7bc3749e5f4ece11"
+        },
+        "passed": 4,
+        "total": 6,
+        "runs": [
+          {
+            "name": "Analytics",
+            "runId": 45067349269,
+            "snapshotSha": "50e7643bf19dca724ef1e952ea7ca072b7bfad2a",
+            "jobId": 137346352564,
+            "cleanupJobId": 137349609411,
+            "status": "failure",
+            "passed": 0,
+            "total": 2,
+            "artifact": {
+              "id": 14772212377,
+              "zipBytes": 29892739,
+              "zipSha256": "8ca05b7a9083d565e239997c6ae8ab2e617524262f59d823ee489c1d8792b73f",
+              "crcMembers": 91,
+              "runtimeSha256": "370a121e3d8d259b33727fc9e073f0d543a1234637f31793113c4eae24acb753"
+            },
+            "snapshotTree": "5765bbc59fc5b111d445f39e60d3de9e6afb9fae"
+          },
+          {
+            "name": "Collab",
+            "runId": 45067350677,
+            "snapshotSha": "1474987f22006f0f6f6cc1996fe57fd1f4f1ceb5",
+            "jobId": 137346356860,
+            "cleanupJobId": 137348165539,
+            "status": "success",
+            "passed": 2,
+            "total": 2,
+            "artifact": {
+              "id": 14772485406,
+              "zipBytes": 54046455,
+              "zipSha256": "456183e87d9d0b97cbcbc524a15532c7358b2a2f503890f34b37a2436eff82ea",
+              "crcMembers": 140,
+              "runtimeSha256": "0e94f8b172c7f8516704443d563b4a9da518753cc92f9cb6127434c895be2119"
+            },
+            "snapshotTree": "c4bb9f28724b04a43a0ab76c3c9c24be7849634f"
+          },
+          {
+            "name": "Reviews",
+            "runId": 45067351696,
+            "snapshotSha": "0c081f0586af7d87b405d0b670586bfa690b2e89",
+            "jobId": 137346360481,
+            "cleanupJobId": 137348555892,
+            "status": "success",
+            "passed": 2,
+            "total": 2,
+            "artifact": {
+              "id": 14772241594,
+              "zipBytes": 62763145,
+              "zipSha256": "17677c857ad9fe392ed78f9a94c92ac3213955410ce95fd88b6dc55dfd423846",
+              "crcMembers": 145,
+              "runtimeSha256": "235bc800f6cc93a64dd9a61950458310a3985f1f0ddefffe06877bcc5055095c"
+            },
+            "snapshotTree": "2b78de10f6a0ad7f59ec3781fe16b632df59074d"
+          }
+        ],
+        "allCleanupSuccess": true,
+        "selectionMatchesRuntime": true,
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "skips": 0,
+        "flaky": 0,
+        "originalZipsIndependentlyDownloadedHashAndCrcVerified": true,
+        "identityLimit": "Each installed run executed its own direct-child snapshot S with .ci-run.json; this is not execution of literal parent C.",
+        "failures": [
+          {
+            "area": "UI42",
+            "specLine": 72,
+            "operation": "decision-portfolio-preview",
+            "deadlineMs": 60000,
+            "result": "Original native request observed; no response before timeout. UI43/UI44 not reached.",
+            "backendPhase": "NOT_LOCALIZED_BY_EXISTING_BROWSER_ONLY_OBSERVATION"
+          },
+          {
+            "area": "BI06 / UI46",
+            "specLine": 374,
+            "result": "Original scalar comparison failed",
+            "relativeError": 0.0026798674546290556,
+            "tolerance": 0.00001,
+            "acquisition": "authenticated-original-readback",
+            "limit": "A second GET creates a separate observation of time-dependent ageDays. Original response payload and producer observedAt are not preserved; no clone regression or rounding cause is established.",
+            "independentFindingRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085742679"
+          }
+        ]
+      },
+      "priorGeneration321": {
+        "sourceSha": "32155fd2b4149a4142dfdc50aa2cc4a917a5dc92",
+        "sourceTree": "2cbc5a9c4caf3cc4313bf0eb6c0a9f3c0e43d5ae",
+        "technical": {
+          "runId": 45065472836,
+          "passed": 13,
+          "total": 14,
+          "failure": "Original C17 deadline; remaining cycle/recovery/revocation not reached"
+        },
+        "installed": {
+          "runs": [
+            45065320426,
+            45065322543,
+            45065324399
+          ],
+          "passed": 5,
+          "total": 6,
+          "failure": "First UI42 preview timeout; UI43/UI44 not reached"
+        },
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085592713"
+      },
+      "earlierPositiveSelective": {
+        "sourceSha": "9b6c4f2d6d8594d47e0e13715080fc28786170f1",
+        "sourceTree": "178b746f45ebbf9c68a14b0de4522bed44852e55",
+        "runId": 45062470131,
+        "passed": 8,
+        "total": 8,
+        "c17Ms": 99081.21,
+        "originalC17Assertions": 19,
+        "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7084729365",
+        "qualificationLimit": "Source-bound selective proof only; not transferred to later sources"
+      },
+      "currentReviewBlocker": {
+        "status": "INSTALLED_ANALYTICS_FAILURES_OPEN",
+        "sourceSha": "44e3efafb6e6f291dabfa7de6690191208a7b978",
+        "priorIntegrityFinding": "Preserved in designObservationHistory; source9b isolated load modes and source44 clone controls received without a new static finding",
+        "sourcePromotionAllowed": false
+      },
+      "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085610705",
+      "sequenceRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366",
+      "finalApproval": null,
+      "independentIntakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085714579"
     }
   ]
 }
