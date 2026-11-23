@@ -69,11 +69,11 @@ export async function prepareRecordScenario(page: Page, account: Account) {
 }
 
 export async function previewRecordScenario(page: Page, info: TestInfo, account: Account,
-  confirmed: DocumentEvidence, fixture: Awaited<ReturnType<typeof prepareRecordScenario>>) {
+  confirmed: DocumentEvidence, fixture: Awaited<ReturnType<typeof prepareRecordScenario>>, source: "procurement" | "dashboard" = "procurement") {
   const surface = page.locator('[data-sf-surface="UI60"]')
   const mode = (url: string, kind: string) => {
     const parsed = new URL(url)
-    return parsed.origin === account.origin && parsed.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+    return parsed.origin === account.origin && parsed.pathname === new URL(account.baseURL).pathname + "/" + source &&
       parsed.searchParams.get("sf") === kind
   }
   const discovered = page.waitForResponse((response) => mode(response.url(), "document-scenario-targets") &&

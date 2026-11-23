@@ -205,13 +205,15 @@ export async function documentJourney(page: Page, info: TestInfo) {
     .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const supplierPage = account.baseURL + "/api/ui/pages/CAP27?" + new URLSearchParams({ supplier })
   const reconciled = await observe(page, supplierPage)
-  const uploaded = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
-  }).then(async (response) => ({ response, result: await response.json() as { ok?: boolean; errors?: unknown } }))
-  const [{ response: uploadResponse, result: uploadResult }] = await Promise.all([
-    uploaded, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
+  // Observe the same single producer POST outside Chromium's response cache.
+  // forwardOnce delivers the untouched response; it neither retries nor fabricates upload bytes.
+  const uploaded = await observe(page, (url) => url.origin === account.origin &&
+    url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+    url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+  const [{ response: uploadResponse }] = await Promise.all([
+    uploaded.completed, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
   ])
+  const uploadResult = await uploadResponse.json() as { ok?: boolean; errors?: unknown }
   if (uploadResponse.status() !== 200) {
     const knownErrors = new Set([
       "Attachment limit is not configured.",
