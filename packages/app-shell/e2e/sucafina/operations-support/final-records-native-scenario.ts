@@ -7,6 +7,7 @@ import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import { SfDocumentEvidence } from "@orchestra/schema/sucafina/files/structures"
 import { authenticateDesignInstallation, withDesignInstallation } from "../design-support/installation"
+import { navigateFinalSurface } from "../design-support/final-navigation"
 import { ServerConnection } from "../../../src/context/server-connection"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime"
@@ -49,17 +50,12 @@ function observeNativeScenario(page: Page) {
   return diagnostics
 }
 
-async function enterNativeScenario(page: Page, account: Account, documentRef: string) {
+function nativeScenarioURL(account: Account, documentRef: string) {
   const target = new URL("/orchestra/sf-documents/" + encodeSfRouteRef(documentRef) + "/scenario", account.origin)
   target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: account.origin } }))
   target.searchParams.set("project", account.projectId)
   target.searchParams.set("installation", account.installationId)
-  expect((await page.goto(target.href))?.status()).toBe(200)
-  const host = page.locator('[data-sf-host="owner-runtime231"]')
-  for (const attribute of ["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"])
-    await expect(host).toHaveAttribute(attribute, "ready")
-  await expect(host.getByRole("heading", { level: 1, name: "Evidence in scenario", exact: true })).toBeVisible()
-  await expect(page).toHaveURL(target.href)
+  return target
 }
 
 async function readContracts(page: Page, account: Account) {
@@ -208,18 +204,28 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       }
       const initial = await observeRecordFileOperation(page, account, current.value.stamp, "files.document-candidates",
         modeURL(account, "procurement", "document-candidates", { documentRef: confirmed.fileRef }).href, "GET")
+      const destination = nativeScenarioURL(account, confirmed.fileRef)
+      const navigated = page.waitForResponse((response) => response.request().isNavigationRequest() &&
+        response.request().frame() === page.mainFrame() && response.url() === destination.href)
       try {
-        await enterNativeScenario(page, account, confirmed.fileRef)
-        const { response } = await initial.completed
-        const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await response.json())
-        expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
-        await initial.finish()
+        await navigateFinalSurface({
+          page, installation: installed, owner, href: destination.href,
+          title: "Evidence in scenario", stamp: current.value.stamp,
+          beforeReady: async () => {
+            expect((await navigated).status()).toBe(200)
+            const { response } = await initial.completed
+            const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await response.json())
+            expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
+            await initial.finish()
+          },
+        })
+        await expect(page).toHaveURL(destination.href)
       } finally {
         await initial.close()
       }
       const surface = page.locator('[data-sf-surface="UI60"]')
-      // Select the original Dashboard source with its native control, including
-      // if the default source is unavailable. The server reauthorizes the read.
+      // Select the original Dashboard source with its native control.
+      // The server independently authorizes this source read.
       const source = surface.getByRole("combobox", { name: "Source", exact: true })
       await expect(source).toBeEnabled()
       const candidatesURL = modeURL(account, "dashboard", "document-candidates", { documentRef: confirmed.fileRef })

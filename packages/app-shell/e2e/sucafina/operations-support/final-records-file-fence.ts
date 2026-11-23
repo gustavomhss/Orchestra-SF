@@ -36,7 +36,7 @@ export async function observeRecordFileOperation(page: Page, account: Account, e
       const fence = await egress.completed
       expect(fence.request.method()).toBe("GET")
       expect(fence.response.status()).toBe(200)
-      const context = Schema.decodeUnknownSync(SfContextResult)(await fence.response.json())
+      const context = Schema.decodeUnknownSync(SfContextResult, { onExcessProperty: "error" })(await fence.response.json())
       if (context.status !== "ok") throw new Error("The original Files authority fence is unavailable")
       expect(context.value.stamp).toEqual(expected)
       const resources = operation === "files.document-candidates" ? ["documents", "evidence"] : ["document-scenario"]
@@ -50,8 +50,8 @@ export async function observeRecordFileOperation(page: Page, account: Account, e
       return captured
     },
     async close() {
-      await original.close()
-      await egress?.close()
+      try { await original.close() }
+      finally { await egress?.close() }
     },
   }
 }
