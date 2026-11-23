@@ -26,6 +26,7 @@ async function fixture(deadline: Deadline) {
   const counts = { pairCalls: 0, pairWork: 0, sourceCalls: 0, sourceWork: 0, source: 0, coverage: 0, criteria: 0 }
   const owners = { pairs: [] as object[], sources: [] as object[] }
   const pairResults: Awaited<ReturnType<PlannerScenarioObservation>>[] = []
+  const comparisonResults: Awaited<ReturnType<typeof compareScenarios>>[] = []
   const hooks: { beforeSource?: () => Promise<void> } = {}
   const outside = () => {
     expect(currentSfPlannerReadonlySnapshotScope(original.persistence)).toBeUndefined()
@@ -86,18 +87,22 @@ async function fixture(deadline: Deadline) {
     const call = sensitivityOk(await original.authority.ui.admit(original.transport, "sf_scenario_compare", digest))
     try {
       expect(await original.authority.ui.validate(call, "sf_scenario_compare", digest)).toBe(true)
-      return await original.business.withCase(call, original.caseRef, {}, () => compareScenarios({
-        host: original.authority.host, sources, scenarios, observeScenarios: pair,
-        ...(observeSources ? { observeSources: async (...args: Parameters<PlannerSourceObservation>) => {
-          counts.sourceCalls++
-          return observeSources(...args)
-        } } : {}),
-        criteria: { evaluate: (request, context) => {
-          outside()
-          counts.criteria++
-          return original.portfolio.rules.evaluate({ ...request, caseRef: original.caseRef }, context)
-        } },
-      }, input, call))
+      return await original.business.withCase(call, original.caseRef, {}, async () => {
+        const result = await compareScenarios({
+          host: original.authority.host, sources, scenarios, observeScenarios: pair,
+          ...(observeSources ? { observeSources: async (...args: Parameters<PlannerSourceObservation>) => {
+            counts.sourceCalls++
+            return observeSources(...args)
+          } } : {}),
+          criteria: { evaluate: (request, context) => {
+            outside()
+            counts.criteria++
+            return original.portfolio.rules.evaluate({ ...request, caseRef: original.caseRef }, context)
+          } },
+        }, input, call)
+        comparisonResults.push(structuredClone(result))
+        return result
+      })
     } finally { original.authority.ui.finish(call) }
   }
   const reset = () => {
@@ -105,11 +110,12 @@ async function fixture(deadline: Deadline) {
     owners.pairs.length = 0
     owners.sources.length = 0
     pairResults.length = 0
+    comparisonResults.length = 0
     hooks.beforeSource = undefined
   }
   const state = async () => sensitivityOk(await original.authority.state.read(original.transport, "cases", (value) =>
     structuredClone({ cases: value.cases, versions: value.versions })))
-  return { original, input, counts, owners, pairResults, hooks, outside, observe, run, reset, state }
+  return { original, input, counts, owners, pairResults, comparisonResults, hooks, outside, observe, run, reset, state }
 }
 
 function expectCompletePhases(f: Awaited<ReturnType<typeof fixture>>, observed: boolean) {
@@ -271,8 +277,9 @@ test("Planner source observations reject incomplete shapes and forged source dec
           return [true, true]
         } finally { f.original.control.active = true }
       }))
-    expect(replaced).toEqual(staleFor(1))
-    expect(f.counts).toMatchObject({ sourceCalls: 1, sourceWork: 0, source: 2, coverage: 2 })
+    expect(f.comparisonResults).toEqual([staleFor(1)])
+    expect(replaced).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
+    expect(f.counts).toMatchObject({ pairCalls: 1, pairWork: 1, sourceCalls: 1, sourceWork: 0, source: 2, coverage: 2 })
     expect(await f.state()).toEqual(state)
 
     f.reset()
