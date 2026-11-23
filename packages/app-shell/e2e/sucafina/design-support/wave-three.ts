@@ -33,6 +33,38 @@ export function observePage(page: Page) {
   }
   page.on("pageerror", (error) => record(messages.pageErrors, error.stack ?? error.message))
   page.on("console", (entry) => { if (entry.type() === "error") record(messages.consoleErrors, entry.text()) })
+  // Each observed native page (including pt-BR) gets at most 128 ASCII lines, 1024 bytes each including newline.
+  let importLifecycleLines = 0
+  page.on("console", (entry) => {
+    try {
+      if (entry.type() !== "info" || importLifecycleLines >= 128) return
+      const message = entry.text()
+      const prefix = "SF_IMPORT_LIFECYCLE "
+      if (!message.startsWith(prefix) || message.length + 1 > 1024 || !/^[\x20-\x7e]+$/.test(message)) return
+      const value: unknown = JSON.parse(message.slice(prefix.length))
+      if (!value || typeof value !== "object" || Array.isArray(value) ||
+          !("schema" in value) || value.schema !== "sf-import-lifecycle-v1" ||
+          !("qualification" in value) || value.qualification !== false ||
+          !("source" in value) || !["imports", "transport"].includes(String(value.source)) ||
+          !("label" in value) || typeof value.label !== "string" ||
+          !("timeMs" in value) || typeof value.timeMs !== "number") return
+      const valid = Object.entries(value).every(([key, item]) => {
+        if (key === "schema" || key === "qualification" || key === "source") return true
+        if (key === "chapter") return typeof item === "string" && ["UI55", "UI56", "UI57", "UI68"].includes(item)
+        if (["label", "caller", "status", "phase", "reason", "check"].includes(key))
+          return typeof item === "string" && /^[a-z-]{1,40}$/.test(item)
+        if (["timeMs", "ticket", "generation", "size", "limit"].includes(key))
+          return typeof item === "number" && Number.isFinite(item)
+        if (["controllerPresent", "aborted", "busy", "tokenAborted", "resultPresent", "live",
+          "initialScope", "routeKindChanged", "chapterChanged", "hrefChanged", "ownerStampChanged",
+          "authStatusChanged"].includes(key)) return typeof item === "boolean"
+        return false
+      })
+      if (!valid) return
+      importLifecycleLines++
+      console.info(message)
+    } catch { /* Invalid diagnostics and logger failures must not affect the original test. */ }
+  })
   page.once("close", () => {
     console.info("SF_DESIGN_DIAGNOSTICS " + JSON.stringify({ kind: "wave-three-page-closed", ...messages }))
   })

@@ -908,6 +908,20 @@ function publicHeaders(source: Headers | SfPublicHeaders): SfPublicHeaders {
  * Bounded JSON ingestion: content-length is only a hint, so enforce the limit
  * on actual streamed bytes. Never render or log invalid producer JSON/HTML.
  */
+let importJsonLifecycleLines = 0
+function importJsonLifecycle(label: string, fields: () => Readonly<Record<string, string | number | boolean>>) {
+  try {
+    if (importJsonLifecycleLines >= 128) return
+    const message = "SF_IMPORT_LIFECYCLE " + JSON.stringify({
+      schema: "sf-import-lifecycle-v1", qualification: false, source: "transport", label,
+      timeMs: Date.now(), ...fields(),
+    })
+    if (message.length + 1 > 1024 || !/^[\x20-\x7e]+$/.test(message)) return
+    importJsonLifecycleLines++
+    console.info(message)
+  } catch { /* Diagnostic failure cannot change the original bounded read. */ }
+}
+
 async function readJsonBounded(response: Response): Promise<unknown | undefined> {
   const MAX_JSON_BYTES = 32 * 1024 * 1024
   const declared = response.headers.get("content-length")
@@ -922,6 +936,7 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
       if (chunk.done) break
       size += chunk.value.byteLength
       if (size > MAX_JSON_BYTES) {
+        importJsonLifecycle("reader-cancel", () => ({ reason: "json-size-limit", size, limit: MAX_JSON_BYTES }))
         await reader.cancel().catch(() => undefined)
         return undefined
       }
@@ -932,7 +947,15 @@ async function readJsonBounded(response: Response): Promise<unknown | undefined>
     let offset = 0
     for (const chunk of chunks) { all.set(chunk, offset); offset += chunk.byteLength }
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(all))
-  } catch { return undefined }
+  } catch (error) {
+    importJsonLifecycle("reader-error", () => ({
+      reason: error instanceof Error && error.name === "AbortError" ? "abort-error" :
+        error instanceof SyntaxError ? "syntax-error" : error instanceof TypeError ? "type-error" :
+        error instanceof Error ? "other-error" : "non-error",
+      size, limit: MAX_JSON_BYTES,
+    }))
+    return undefined
+  }
   finally { reader.releaseLock() }
 }
 

@@ -8,6 +8,7 @@ import { ChildProcess } from "effect/unstable/process"
 import { prepareLocalConfiguration, loadLocalConfiguration } from "../../../../modules/sucafina/Sucafinav1/runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../../../../modules/sucafina/Sucafinav1/local/enroll.ts"
 import { openLocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { createSfImportFaultForwarder } from "../../../../modules/sucafina/Sucafinav1/runtime/import-fault-profile.ts"
 
 const entry = fileURLToPath(new URL("../../src/index.ts", import.meta.url))
 const factory = fileURLToPath(new URL("../../../../modules/sucafina/Sucafinav1/local/entry.ts", import.meta.url))
@@ -83,9 +84,11 @@ export function withNativeInstallation(input: {
     }))
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    const forwardImportFault = createSfImportFaultForwarder()
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      forwardImportFault(line)
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
