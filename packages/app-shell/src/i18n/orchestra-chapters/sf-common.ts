@@ -4,7 +4,8 @@
 export const SF_COMMON_COPY = {
   "sf.common.loading": "Loading…",
   "sf.common.returnHome": "Return to Today",
-  "sf.common.routeUnavailable": "This page is unavailable in the current context. Refresh access or return to Today.",
+  "sf.common.routeUnavailable": "This page is unavailable in the current context. Refresh access to check again.",
+  "sf.common.returnHomeFailed": "Today could not be opened. Refresh access and try again.",
   "sf.common.empty": "No records yet.",
   "sf.common.filterEmpty": "No results for these filters.",
   "sf.common.retry": "Try again",
@@ -81,7 +82,8 @@ export const SF_COMMON_COPY = {
 export const SF_COMMON_COPY_BR: Readonly<Record<keyof typeof SF_COMMON_COPY, string>> = {
   "sf.common.loading": "Carregando…",
   "sf.common.returnHome": "Voltar para Hoje",
-  "sf.common.routeUnavailable": "Esta página está indisponível no contexto atual. Atualize o acesso ou volte para Hoje.",
+  "sf.common.routeUnavailable": "Esta página está indisponível no contexto atual. Atualize o acesso para consultar novamente.",
+  "sf.common.returnHomeFailed": "Não foi possível abrir Hoje. Atualize o acesso e tente novamente.",
   "sf.common.empty": "Ainda não há registros.",
   "sf.common.filterEmpty": "Nenhum resultado para estes filtros.",
   "sf.common.retry": "Tentar novamente",

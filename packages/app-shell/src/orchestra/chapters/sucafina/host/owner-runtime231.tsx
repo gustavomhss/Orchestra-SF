@@ -9,7 +9,7 @@
  * Requires the exact 227 context/navigation leaves and 228 adapter postimages.
  */
 import { useLocation, useNavigate } from "@solidjs/router"
-import { createEffect, createSignal, onCleanup, Show, Switch, Match, untrack, type JSX } from "solid-js"
+import { createEffect, createSignal, onCleanup, on, Show, Switch, Match, untrack, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Option, Schema } from "effect"
 import { DropdownMenu } from "@orchestra/ui/dropdown-menu"
@@ -274,12 +274,49 @@ function MountedSurface(props: Readonly<{
   const unavailableSchedule = () => props.gate() && props.view().status === "denied"
     ? sfUnavailableScheduleOwner(handle.state(), matchSfNativeRoutePath(location.pathname), new URLSearchParams(location.search))
     : undefined
-  const returnHome = () => {
+  const [homeReturn, setHomeReturn] = createStore({ pending: false, failed: false })
+  let homeRequest: AbortController | undefined
+  const resetHomeReturn = () => {
+    homeRequest?.abort()
+    homeRequest = undefined
+    setHomeReturn({ pending: false, failed: false })
+  }
+  createEffect(on(() => [handle.generation(), props.view().status, location.pathname, location.search],
+    resetHomeReturn))
+  onCleanup(resetHomeReturn)
+  const homeTarget = () => {
     const state = handle.state()
-    if (state.status !== "ready") return
+    if (state.status !== "ready" || props.view().status === "resolving" ||
+      !state.context.availability.some((resource) => resource.operations.some((operation) =>
+        operation.operationId === "projection.home" && operation.state === "ready" && operation.operational))) return
     const selection = sfReadyOwnerSelection(state)
     const href = selection && sfNativeOwnerChapterRequest("sf-home", selection)
-    if (href) void props.navigation.requestNativeTransition(href, "sidebar", { expectedOwnerKey: state.ownerKey })
+    return href ? { href, ownerKey: state.ownerKey } : undefined
+  }
+  const returnHome = async () => {
+    const target = homeTarget()
+    if (!target || homeReturn.pending) return
+    const request = new AbortController()
+    homeRequest = request
+    setHomeReturn({ pending: true, failed: false })
+    try {
+      const result = await props.navigation.requestNativeTransition(target.href, "sidebar", {
+        expectedOwnerKey: target.ownerKey, signal: request.signal,
+      })
+      if (homeRequest !== request || request.signal.aborted) return
+      const failed = result.status === "denied" || result.status === "unavailable" || result.status === "invalid-link"
+      if (failed) console.error("Sucafina return to Today refused", result.status)
+      setHomeReturn("failed", failed)
+    } catch {
+      if (homeRequest !== request || request.signal.aborted) return
+      console.error("Sucafina return to Today failed")
+      setHomeReturn("failed", true)
+    } finally {
+      if (homeRequest === request) {
+        homeRequest = undefined
+        setHomeReturn("pending", false)
+      }
+    }
   }
   const polishedSurface = () => {
     const surface = current()?.surfaceId
@@ -325,13 +362,16 @@ function MountedSurface(props: Readonly<{
       <SfSourceNavigation route={current} navigation={props.navigation} />
       <Switch fallback={
         <Show when={unavailableRoutineCatalog()} fallback={
-          <Show when={unavailableSchedule()} fallback={<div data-sf-f01="not-admitted">
-            <SfPageFrame titleKey={"sf.common.unavailable" as SfCopyKey} context={[]} tabs={[]} activeTab={null}
-              secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-              <SfStatePanel state="unavailable" messageKey={"sf.common.routeUnavailable" as SfCopyKey}
+          <Show when={unavailableSchedule()} fallback={<div data-sf-f01={props.view().status === "resolving" ? "loading" : "not-admitted"}>
+            <SfPageFrame titleKey={(props.view().status === "resolving" ? "sf.common.loading" : "sf.common.unavailable") as SfCopyKey}
+              context={[]} tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
+              <SfStatePanel state={props.view().status === "resolving" ? "loading" : "unavailable"}
+                messageKey={(props.view().status === "resolving" ? "sf.common.loading" :
+                  homeReturn.failed ? "sf.common.returnHomeFailed" : "sf.common.routeUnavailable") as SfCopyKey}
                 onRetryRead={() => { void handle.reload() }} />
-              <Show when={handle.state().status === "ready"}>
-                <button class="mx-btn" type="button" onClick={returnHome}>{language.t("sf.common.returnHome")}</button>
+              <Show when={homeTarget()}>
+                <button class="mx-btn" type="button" disabled={homeReturn.pending} aria-busy={homeReturn.pending}
+                  onClick={() => { void returnHome() }}>{language.t("sf.common.returnHome")}</button>
               </Show>
             </SfPageFrame>
           </div>}>
