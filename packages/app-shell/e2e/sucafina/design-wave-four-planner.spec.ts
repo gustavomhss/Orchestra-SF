@@ -44,6 +44,24 @@ async function views(page: Page, info: TestInfo, id: string) {
   await scheme(page, "dark")
   await width(page, 320)
 }
+async function versionActionContext(ledger: Locator) {
+  const rows = ledger.locator("tr[data-sf-row]")
+  await expect(rows.first()).toBeVisible()
+  await rows.first().locator('[data-sf-action="delete"]').scrollIntoViewIfNeeded()
+  const scroller = ledger.locator(".sf-s01-table-scroll")
+  await scroller.evaluate((element) => element.scrollTo({ left: element.scrollWidth, behavior: "instant" }))
+  for (const row of await rows.all()) {
+    const context = row.locator(".sf-u46-action-context")
+    await expect(context).toHaveText(await row.locator(".sf-s01-cell-value").innerText())
+    await expect(context).toHaveAttribute("aria-hidden", "true")
+    await expect.poll(() => context.evaluate((element) => {
+      const viewport = element.closest(".sf-s01-table-scroll")!.getBoundingClientRect()
+      const bounds = element.getBoundingClientRect()
+      return Math.max(viewport.left - bounds.left, bounds.right - viewport.right, 0)
+    }), { message: "the source version name stays fully inside the action-side viewport" }).toBeLessThanOrEqual(1)
+  }
+  await expect(rows.first().locator(".sf-u46-action-context")).toBeInViewport({ ratio: 1 })
+}
 async function confirm(page: Page, installation: DesignInstallation, sourcePage: string, action: string, label: string, collection?: string) {
   const saved = page.waitForResponse((response) => {
     const request = response.request()
@@ -101,6 +119,10 @@ async function portuguese(browser: Browser, page: Page, owner: Owner, installati
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
       await width(localized, 320)
       await capture(localized, info, screen.id + "-pt-BR-dark-320-test-data")
+      if (screen.id === "CAP23") {
+        await versionActionContext(localized.locator(".sf-u46-ledger"))
+        await capture(localized, info, "CAP23-pt-BR-dark-320-version-actions-test-data")
+      }
     }
     expect(messages.pageErrors).toEqual([])
     expect(messages.consoleErrors).toEqual([])
@@ -369,6 +391,7 @@ waveFourTest("native Planner wave four · CAP22 exchange rates and CAP23 version
     await expect.poll(async () => (await primary.boundingBox())?.height ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(200)
     // Scroll the real table to its existing actions without invoking a command.
     await primary.getByRole("button", { name: "Delete version", exact: true }).scrollIntoViewIfNeeded()
+    await versionActionContext(list)
     await capture(page, info, "CAP23-dark-320-version-actions-test-data")
     await primary.getByRole("button", { name: "Open record", exact: true }).click()
     await ready(page, "Versions")

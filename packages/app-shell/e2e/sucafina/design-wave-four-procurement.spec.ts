@@ -26,6 +26,30 @@ const journeys = [
   { id: "localized", title: "all five areas in Portuguese", areas: screens.map((screen) => screen.id), commands: [] },
 ] as const
 
+async function alignedSourceMetrics(surface: Locator) {
+  const values = surface.locator(".sf-n21-metric dd")
+  await expect(values).toHaveCount(5)
+  await expect.poll(() => values.evaluateAll((elements) => {
+    const tops = elements.map((element) => element.getBoundingClientRect().top)
+    return Math.max(...tops) - Math.min(...tops)
+  }), { message: "all source values share a baseline even when their labels wrap" }).toBeLessThanOrEqual(1)
+}
+
+async function readableApprovalIdentity(surface: Locator) {
+  const rows = surface.locator("tr[data-sf-row]")
+  await expect(rows.first()).toBeVisible()
+  const identity = rows.locator("td:first-child .sf-s01-cell-value, td:first-child [data-sf-action='select']")
+  const count = await rows.count()
+  await expect(identity).toHaveCount(count * 2)
+  await expect.poll(() => identity.evaluateAll((elements) => elements.map((element) => {
+    const range = document.createRange()
+    range.selectNodeContents(element)
+    return new Set(Array.from(range.getClientRects()).filter((rect) => rect.width > 0 && rect.height > 0)
+      .map((rect) => Math.round(rect.top))).size
+  })), { message: "request numbers and their open-record labels each remain on one readable line" })
+    .toEqual(Array(count * 2).fill(1))
+}
+
 for (const journey of journeys) waveFourTest("installed procurement wave · " + journey.title, async ({
   page, browser, installation, owner,
 }, info) => {
@@ -142,6 +166,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       const surface = page.locator('[data-sf-surface="CAP24"]')
       await expect(surface.locator("tr[data-sf-request]").first()).toBeVisible()
       await expect(surface.locator(".sf-n21-metrics")).toContainText("14,800.00")
+      await alignedSourceMetrics(surface)
       await capture(page, info, "CAP24-dark-desktop-source-overview-test-data")
       await scheme(page, "light")
       await capture(page, info, "CAP24-light-desktop-source-overview-test-data")
@@ -316,10 +341,16 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await go(screens[2])
       const surface = page.locator('[data-sf-cap26="submitted-pr"]')
       await expect(surface.locator("tr[data-sf-row]").filter({ hasText: data.requests.created })).toBeVisible()
+      await readableApprovalIdentity(surface)
       await scrollPageTop(page)
       await capture(page, info, "CAP26-dark-desktop-pr-approval-list-test-data")
       await scheme(page, "light")
       await capture(page, info, "CAP26-light-desktop-pr-approval-list-test-data")
+      await narrow()
+      await readableApprovalIdentity(surface)
+      await scrollPageTop(page)
+      await capture(page, info, "CAP26-light-320-pr-approval-list-test-data")
+      await desktop()
       await scheme(page, "dark")
       await surface.locator("tr[data-sf-row]").filter({ hasText: data.requests.created })
         .locator('[data-sf-action="select"]').click()
@@ -578,10 +609,13 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
             await expect(localized.locator(sourceRows[screen.id]).first()).toBeVisible()
           }
           await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.(?:u1[1234]|u36|n21)\./)
+          if (screen.id === "CAP24") await alignedSourceMetrics(localized.locator('[data-sf-surface="CAP24"]'))
+          if (screen.id === "CAP26") await readableApprovalIdentity(localized.locator('[data-sf-cap26="submitted-pr"]'))
           await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
           await localized.setViewportSize({ width: 320, height: 900 })
           await reflow(localized)
           await scrollPageTop(localized)
+          if (screen.id === "CAP26") await readableApprovalIdentity(localized.locator('[data-sf-cap26="submitted-pr"]'))
           await capture(localized, info, screen.id + "-pt-BR-dark-320-test-data")
           await localized.setViewportSize({ width: 1440, height: 1100 })
         }
