@@ -14,17 +14,22 @@ export type PlannerScenarioHost = {
   /** One fresh observation of siblings; callers must start a new batch for every later phase. */
   resolveMany?: (references: readonly string[], context: TrustedDomainContext) => Promise<readonly PortResult<ResolvedScenario>[]>
 }
+/** Own one fresh pair resolution only; criteria and later phases stay outside this observation. */
+export type PlannerScenarioObservation = (references: readonly string[], context: TrustedDomainContext,
+  read: () => Promise<PortResult<ResolvedScenario>[]>) => Promise<PortResult<ResolvedScenario>[]>
 export type PlannerCriteriaHost = { evaluate: (request: { scenarioRef: string; baselineRef: string; criterionId: string }, context: TrustedDomainContext) => Promise<PortResult<{ criterionId: string; state: "satisfied" | "failed" | "unknown"; reason: string; ruleRef?: string; evidenceRefs: readonly BusinessEvidenceRef[] }>> }
 
 /** Resolve current, authorized case results and recheck their sources before returning. */
-export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
+export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
   const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
   if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
   const request = parsed.value
   if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
   if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
   if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
-  const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
+  const resolveScenarios = () => input.observeScenarios
+    ? input.observeScenarios(request.scenarioRefs, binding, () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding))
+    : resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
   const resolved = await resolveScenarios()
   const failed = resolved.find((result) => result.status !== "ok")
   if (failed) return failed
