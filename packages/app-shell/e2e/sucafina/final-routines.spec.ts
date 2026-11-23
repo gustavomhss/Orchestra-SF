@@ -103,7 +103,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await returnLink.focus()
     await expect(returnLink).toBeFocused()
     await returnLink.press("Enter")
-    await expect(page.locator('[data-sf-surface="UI33"]')).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: "Decision cases", exact: true })).toBeVisible()
     await expect(page.locator('[data-sf-host="owner-runtime231"]')).toHaveAttribute("data-sf-view-state", "ready")
     await expect(page).toHaveURL((url) => url.pathname === "/orchestra/sf-decisions" &&
       ["server", "project", "installation"].every((key) => url.searchParams.get(key) === destination.searchParams.get(key)))
