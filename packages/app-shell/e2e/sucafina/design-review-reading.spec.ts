@@ -315,19 +315,40 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
     originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
       () => sourceResult.getByRole("button", { name: "Try again", exact: true }).click()),
   ]).finally(sourceReceipt.close)
-  expect(sourceResponse.status()).toBe(200)
-  const originalLinks = Schema.decodeUnknownSync(SfReviewsReviewSource.output)(await sourceResponse.json())
-  expect("links" in originalLinks).toBe(true)
-  await expect(sourceResult).toHaveAttribute("data-sf-source-state", "ready")
-  await expect(sourceResult.getByRole("link")).not.toHaveCount(0)
+  const sourceBody = await sourceResponse.json()
+  await info.attach("UI48-original-source-retry-response", {
+    contentType: "application/json",
+    body: JSON.stringify({ status: sourceResponse.status(), body: sourceBody }, null, 2),
+  })
+  const originalLinks = Schema.decodeUnknownSync(SfReviewsReviewSource.output)(sourceBody)
+  await page.unroute(sourceRead)
   if ("links" in originalLinks) {
+    expect(sourceResponse.status()).toBe(200)
+    await expect(sourceResult).toHaveAttribute("data-sf-source-state", "ready")
+    await expect(sourceResult.getByRole("link")).not.toHaveCount(0)
     await expect(sourceResult.getByRole("link")).toHaveCount(originalLinks.links.length)
     for (const link of originalLinks.links)
       await expect(sourceResult.getByRole("link", { name: link.label, exact: true })).toHaveAttribute("href", link.url)
+    await record(page, info, "UI48", "source-retry-recovered",
+      "The explicit retry recovered original authorized links after one negative transport control; no write was sent.", "[data-sf-source-state]")
+  } else {
+    // The protected producer can refuse a source association whose read fence changed.
+    // Preserve that exact original refusal; it is not a successful source opening.
+    expect(sourceResponse.status()).toBe(409)
+    expect(originalLinks).toEqual({ status: "stale", reason: "review-read-changed" })
+    await expect(sourceResult).toHaveAttribute("data-sf-source-state", "stale")
+    await expect(sourceResult.getByRole("link")).toHaveCount(0)
+    await expect(sourceResult.getByRole("button", { name: "Try again", exact: true })).toBeEnabled()
+    await record(page, info, "UI48", "source-original-stale-refusal",
+      "The original source producer returned HTTP 409 / stale / review-read-changed. The UI exposes that refusal and offers a fresh review read without displaying a link.", "[data-sf-source-state]")
+    await originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+      () => sourceResult.getByRole("button", { name: "Try again", exact: true }).click())
+    await expect(sourceResult).toHaveCount(0)
+    await expect(review.locator("[data-review-ref]")).toHaveAttribute("data-review-ref", previous)
+    await expect(review.getByRole("button", { name: "Open source", exact: true })).toBeEnabled()
+    await record(page, info, "UI48", "source-stale-review-reread",
+      "Explicit recovery reread the same original preserved review and cleared the refused source panel. Successful source-link opening remains unqualified in this outcome.")
   }
-  await page.unroute(sourceRead)
-  await record(page, info, "UI48", "source-retry-recovered",
-    "One original review read was aborted as a negative transport control; explicit read retry recovered original authorized links, without a write.", "[data-sf-source-state]")
 
   const compare = await open(page, owner, "/orchestra/sf-reviews/compare?" +
     new URLSearchParams({ previousReview: previous, currentReview: current }), "Compare reviews", "UI49")
