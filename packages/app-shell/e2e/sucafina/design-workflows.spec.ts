@@ -1,4 +1,6 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
+import { Schema } from "effect"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { waveFourTest, enter, observePage } from "./design-support/wave-four"
 import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import { workflowPolishCoverage } from "./design-support/workflow-polish-coverage"
@@ -404,9 +406,75 @@ waveFourTest("workflow polish: routines, schedules, exports and local context", 
   await expect(identity).toContainText(owner.installationId)
   await expect(identity).toContainText(installation.actorId)
   await record(page, info, "UI67", "original-local-operator-context", "Real local-operator enrollment; project, installation and principal match the original bound owner. No live Microsoft identity is simulated.")
-  const administration = await open(page, owner, "/orchestra/sf-home/administration", "Local administration", "UI69")
-  await expect(administration).toHaveAttribute("data-sf-owner", "local-operator")
-  await expect(administration.getByRole("heading", { name: "Profile", exact: true })).toBeVisible()
-  await record(page, info, "UI69", "original-local-administration", "Original authenticated local administration read. No maintenance, backup restore, permission change or Teams write is invoked.")
+  const adminRead = await forwardOnce(page, (url) =>
+    url.origin === installation.origin && url.pathname === installation.mount + "/api/ui/projections/local-admin", "GET")
+  const summaryRead = await forwardOnce(page, (url) =>
+    url.origin === installation.origin && url.pathname === installation.mount + "/api/ui/local-admin/summary-settings", "GET")
+  const summaryWrites: string[] = []
+  page.on("request", (request) => {
+    const url = new URL(request.url())
+    if (request.method() === "POST" && url.origin === installation.origin &&
+      url.pathname === installation.mount + "/api/ui/local-admin/configure-summaries") summaryWrites.push(url.pathname)
+  })
+  try {
+    const [{ response: adminResponse }, { response: summaryResponse }, administration] = await Promise.all([
+      adminRead.completed,
+      summaryRead.completed,
+      open(page, owner, "/orchestra/sf-home/administration", "Local administration", "UI69"),
+    ])
+    const adminBody = Schema.decodeUnknownSync(SfDomain.operations["projection.local-admin"].output)(await adminResponse.json())
+    // The original private jobs/backups reader port is deliberately unbound.
+    // A local-operator identity is not evidence that this separate producer returned data.
+    expect(adminResponse.status()).toBe(503)
+    expect(adminBody).toEqual({ status: "unavailable", reason: "local-operator-reader-not-bound" })
+    await expect(administration).toHaveAttribute("data-sf-owner", "not-authorized")
+    await expect(administration.getByRole("heading", { name: "Profile", exact: true })).toHaveCount(0)
+    await expect(administration.getByRole("region", { name: "Currently unavailable", exact: true })).toBeVisible()
+
+    const summaryBody = Schema.decodeUnknownSync(SfDomain.operations["local-admin.summary-read"].output)(await summaryResponse.json())
+    expect(summaryResponse.status()).toBe(200)
+    if (summaryBody.status !== "ok") throw new Error("Original summary settings read required")
+    expect(summaryBody.context.projectId).toBe(owner.projectId)
+    expect(summaryBody.context.installationId).toBe(owner.installationId)
+    expect(summaryBody.context.principalRef).toBe(installation.actorId)
+    expect(summaryBody.value.canConfigure).toBe(true)
+    expect(summaryBody.value.availablePages.length).toBeGreaterThan(0)
+    const summaries = administration.locator("[data-sf-summary-settings]")
+    const form = summaries.locator("[data-sf-summary-form]")
+    await expect(form).toBeVisible()
+    await expect(form).toHaveAttribute("data-version", String(summaryBody.value.version))
+    const choices = form.locator('input[name="pages"]')
+    expect(await choices.evaluateAll((elements) => elements.map((element) => (element as HTMLInputElement).value)))
+      .toEqual(summaryBody.value.availablePages)
+    expect(await choices.evaluateAll((elements) => elements.filter((element) => (element as HTMLInputElement).checked)
+      .map((element) => (element as HTMLInputElement).value))).toEqual(summaryBody.value.availablePages.filter((value) => summaryBody.value.pages.includes(value)))
+    await info.attach("UI69-original-administration-readers", { contentType: "application/json",
+      body: JSON.stringify({ profile: { httpStatus: adminResponse.status(), body: adminBody },
+        summaries: { httpStatus: summaryResponse.status(), context: summaryBody.context, value: summaryBody.value },
+        profileRendered: false, summarySettingsRendered: true, writes: summaryWrites }) })
+    await record(page, info, "UI69", "original-summary-settings-and-unbound-profile",
+      "The original summary-settings reader returned authorized data. The separate private jobs/backups projection returned503 local-operator-reader-not-bound; no Profile or backup data is fabricated.")
+    await record(page, info, "UI69", "original-summary-settings-actions",
+      "Original configurable summary choices and review action; no configuration write is submitted.", "[data-sf-summary-form] button[type=submit]")
+    const first = summaryBody.value.availablePages[0]!
+    await expect(choices.first()).toHaveValue(first)
+    await choices.first().setChecked(!summaryBody.value.pages.includes(first))
+    await form.getByRole("button", { name: "Review changes", exact: true }).click()
+    const review = summaries.locator('[data-component="sf-change-review"]')
+    await expect(review).toBeVisible()
+    await expect(review.locator('.sf-s03-comparison-field[data-difference="changed"]')).toHaveCount(1)
+    await expect(review.locator('.sf-s03-version[data-version="proposed"] .sf-s03-value-list')).toHaveCount(1)
+    await record(page, info, "UI69", "summary-selection-review",
+      "Original summary values compared with an unsent one-choice change; typed display keys preserve identity and order. The producer version and configure command remain unchanged.")
+    await record(page, info, "UI69", "summary-selection-review-actions",
+      "Review and cancel remain reachable in the original summary editor; no configuration, maintenance, restore or Teams write is invoked.", '[data-component="sf-change-review"] .sf-s03-actions')
+    await review.getByRole("button", { name: "Cancel", exact: true }).click()
+    await expect(review).toHaveCount(0)
+    await expect(form).toBeVisible()
+    expect(summaryWrites).toEqual([])
+  } finally {
+    await adminRead.close()
+    await summaryRead.close()
+  }
   expect(diagnostics.pageErrors).toEqual([])
 })
