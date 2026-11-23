@@ -654,13 +654,18 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
       expect(localizedRead).toEqual(recovered)
       await expect(localized.locator(resultRoot)).toHaveAttribute("data-sf-phase", "receipt")
       await expect(localized.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
+      const kinds = ["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const
+      const labels = ["Adicionados", "Alterados", "Removidos", "Sem alterações", "Ignorados", "Rejeitados"]
+      await expect(localized.getByRole("region", { name: "Alterações em itens e campos", exact: true })
+        .locator(":scope > details > summary")).toHaveText(kinds.map((kind, index) =>
+          labels[index] + " (" + detail.detail.changes.filter((entry) => entry.kind === kind).length + ")"))
     }, async (localized, href) => {
       expect((await withRecordNavigation(localized, account, () => localized.goto(href)))?.status()).toBe(200)
     })
     const changes = result.getByRole("region", { name: "Item and field changes", exact: true })
     const changedCount = detail.detail.changes.filter((change) => change.kind === "changed").length
     expect(changedCount).toBeGreaterThan(0)
-    await changes.getByText("changed (" + changedCount + ")", { exact: true }).click()
+    await changes.getByText("Changed (" + changedCount + ")", { exact: true }).click()
     await expect(changes.locator(".sf-records-diff")).toHaveCount(detail.detail.changes.length)
     await captureRecordDetail(resultPage, info, "UI57", "changed-fields-original-values", changes)
     expect((await withRecordNavigation(resultPage, account, () =>
@@ -750,10 +755,16 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
 /** Assertions consume the original returned manifest/detail, not a reconstructed import. */
 async function assertPreviewPresentation(root: Locator, preview: ImportManifest, detail: ImportDetail) {
   const kinds = ["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const
+  const labels = {
+    added: "Added", changed: "Changed", removed: "Removed",
+    unchanged: "Unchanged", ignored: "Ignored", rejected: "Rejected",
+  } as const
   const populated = kinds.filter((kind) => detail.changes.some((entry) => entry.kind === kind))
   const empty = kinds.filter((kind) => !detail.changes.some((entry) => entry.kind === kind))
   const changes = root.getByRole("region", { name: "Item and field changes", exact: true })
   await expect(changes.locator(".sf-files-change-group")).toHaveCount(populated.length)
+  await expect(changes.locator(".sf-files-change-group > summary")).toHaveText(populated.map((kind) =>
+    labels[kind] + " (" + detail.changes.filter((entry) => entry.kind === kind).length + ")"))
   expect(await changes.locator(".sf-files-change-group").evaluateAll((elements) =>
     elements.map((element) => element.getAttribute("data-sf-import-kind")))).toEqual(populated)
   expect(empty.length, "the original fixture retains empty categories for compact-summary coverage").toBeGreaterThan(0)
@@ -764,7 +775,7 @@ async function assertPreviewPresentation(root: Locator, preview: ImportManifest,
   await emptyGroups.locator("summary").click()
   expect(await emptyGroups.locator("[data-sf-import-empty]").evaluateAll((elements) =>
     elements.map((element) => element.getAttribute("data-sf-import-empty")))).toEqual(empty)
-  await expect(emptyGroups.locator("li > span:first-child")).toHaveText(empty)
+  await expect(emptyGroups.locator("li > span:first-child")).toHaveText(empty.map((kind) => labels[kind]))
   await expect(emptyGroups.locator("li > span:last-child")).toHaveText(empty.map(() => "No entries · 0"))
   await emptyGroups.locator("summary").click()
 
@@ -787,6 +798,8 @@ async function assertPreviewPresentation(root: Locator, preview: ImportManifest,
   return {
     changeCounts: Object.fromEntries(kinds.map((kind) => [kind, detail.changes.filter((entry) => entry.kind === kind).length])),
     populatedKinds: populated, emptyKinds: empty, emptySummaryCount: 1,
+    categoryHeadings: await changes.locator(".sf-files-change-group > summary").allTextContents(),
+    emptyLabels: empty.map((kind) => labels[kind]),
     sourceGaps: missing.map((gap) => ({ field: gap.field, reason: gap.reason })),
     gapHeadings: await gaps.locator(".sf-files-gap-heading").allTextContents(),
     rawReferencesInitiallyHidden: true,

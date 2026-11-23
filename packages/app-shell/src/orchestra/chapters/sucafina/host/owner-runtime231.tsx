@@ -321,7 +321,7 @@ function MountedSurface(props: Readonly<{
   const polishedSurface = () => {
     const surface = current()?.surfaceId
     return !!unavailableRoutineCatalog() || !!unavailableSchedule() || surface !== undefined &&
-      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|3[0-9]|4[01]|5[7-9]|6[0-9]|70)$/.test(surface))
+      (/^CAP(?:0[1-9]|1[0-9]|2[0-8])$/.test(surface) || /^UI(?:29|[3-6][0-9]|70)$/.test(surface))
   }
   return (
     <>
