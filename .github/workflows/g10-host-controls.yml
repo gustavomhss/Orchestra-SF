@@ -1,0 +1,213 @@
+name: G10 existing source controls
+
+on:
+  push:
+    branches:
+      - qa-host-ci
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-host-ci
+  cancel-in-progress: false
+
+jobs:
+  existing-source-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout literal reviewed source
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 97e97ec7b64673c63865c734c8dc0207698a3d7e
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bind source and maintained invocation
+        id: binding
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$(git rev-parse HEAD)" = "97e97ec7b64673c63865c734c8dc0207698a3d7e"
+          test "$(git rev-parse 'HEAD^{tree}')" = "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8"
+          test "$(git rev-parse origin/dev)" = "08c96c5d74dce601ae60cd6db53bac8c0f370959"
+          test "$(git rev-list --parents -n 1 "$GITHUB_SHA")" = "$GITHUB_SHA 97e97ec7b64673c63865c734c8dc0207698a3d7e"
+          test "$(git diff --name-only 97e97ec7b64673c63865c734c8dc0207698a3d7e "$GITHUB_SHA")" = ".github/workflows/g10-host-controls.yml"
+          git diff --quiet
+          git diff --cached --quiet
+          mkdir -m 700 "$RUNNER_TEMP/g10-host-controls"
+          git show "$GITHUB_SHA:.github/workflows/g10-host-controls.yml" > "$RUNNER_TEMP/g10-host-controls/driver.yml"
+          git show "08c96c5d74dce601ae60cd6db53bac8c0f370959:.github/workflows/go-live-recovery.yml" > "$RUNNER_TEMP/g10-host-controls/base-workflow.yml"
+          git show "08c96c5d74dce601ae60cd6db53bac8c0f370959:sf/azure/recovery/test_teams_checkpoint.py" > "$RUNNER_TEMP/g10-host-controls/base-tests.py"
+          G10_DRIVER_TREE="$(git rev-parse "$GITHUB_SHA^{tree}")"
+          export G10_DRIVER_TREE
+          python3 - <<'PY'
+          import ast, hashlib, json, os
+          from pathlib import Path
+          evidence = Path(os.environ["RUNNER_TEMP"]) / "g10-host-controls"
+          source = Path(".github/workflows/go-live-recovery.yml").read_text()
+          driver = (evidence / "driver.yml").read_text()
+          base_workflow = (evidence / "base-workflow.yml").read_text()
+          start = "      - name: Real file and SQLite controls\n"
+          end = "      - name: Setup Bun for canonical guards\n"
+          def controls(text):
+              assert text.count(start) == 1 and text.count(end) == 1
+              return start + text.split(start, 1)[1].split(end, 1)[0]
+          assert controls(source) == controls(driver), "driver must execute the maintained step literally"
+          assert source.replace(controls(source), "<controls>\n") == base_workflow.replace(controls(base_workflow), "<controls>\n")
+          (evidence / "maintained-controls-step.txt").write_text(controls(source))
+          paths = [".github/actions/setup-bun/action.yml",".github/workflows/go-live-recovery.yml","bun.lock","docs/qa/sucafina/go-live/g10-cutover-rollback.md","package.json","script/check-spawn-imports.ts","script/ci-cache-inputs.ts","script/guards/run.ts","script/spawn-allowlist.json","sf/azure/recovery/README.md","sf/azure/recovery/teams-checkpoint.py","sf/azure/recovery/test_teams_checkpoint.py","sf/azure/vm/install-factory-distribution.py"]
+          inventory = []
+          for path in paths:
+              data = Path(path).read_bytes()
+              inventory.append({"path": path, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest(),
+                                "gitBlob": hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()})
+          (evidence / "source-before.json").write_text(json.dumps(inventory, indent=2) + "\n")
+          current = Path("sf/azure/recovery/test_teams_checkpoint.py").read_text()
+          original = (evidence / "base-tests.py").read_text()
+          def tests(text):
+              module = ast.parse(text)
+              cls = next(node for node in module.body if isinstance(node, ast.ClassDef) and node.name == "CheckpointTests")
+              return {node.name: ast.dump(node, include_attributes=False) for node in cls.body
+                      if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")}
+          old_tests, new_tests = tests(original), tests(current)
+          assert len(old_tests) == 17 and len(new_tests) == 23
+          assert all(new_tests.get(name) == body for name, body in old_tests.items()), "original controls changed"
+          for path in ("sf/azure/recovery/teams-checkpoint.py", "sf/azure/recovery/test_teams_checkpoint.py"):
+              compile(Path(path).read_text(), path, "exec")
+          expected = ["__main__.CheckpointTests." + name for name in sorted(new_tests)]
+          (evidence / "test-inventory.json").write_text(json.dumps({
+              "expectedCases": expected, "preservedOriginalCases": sorted(old_tests),
+              "addedCases": sorted(set(new_tests) - set(old_tests)),
+          }, indent=2) + "\n")
+          (evidence / "source.json").write_text(json.dumps({
+              "candidateSha": "97e97ec7b64673c63865c734c8dc0207698a3d7e", "candidateTree": "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8", "baseSha": "08c96c5d74dce601ae60cd6db53bac8c0f370959",
+              "workflowSha": os.environ["GITHUB_SHA"], "workflowTree": os.environ["G10_DRIVER_TREE"],
+              "runId": os.environ["GITHUB_RUN_ID"], "runAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "originalWorkflowBlob": "c2e7460296b353f5dfe28366ef8c39c472ad1813",
+              "sourceInputCount": len(inventory), "expectedCases": len(expected),
+              "installedTeamsProof": False, "releaseQualified": False,
+          }, indent=2) + "\n")
+          print("SOURCE_AND_MAINTAINED_STEP_PASS: 17 original + 6 admission controls; no Azure calls")
+          PY
+      - name: Real file and SQLite controls
+        id: controls
+        env:
+          G10_COMPONENT_RECEIPT: ${{ runner.temp }}/g10-component/receipt.json
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -m 700 "$RUNNER_TEMP/g10-component"
+          G10_COMPONENT_SOURCE_SHA="$(git rev-parse HEAD)"
+          G10_COMPONENT_SOURCE_TREE="$(git rev-parse 'HEAD^{tree}')"
+          export G10_COMPONENT_SOURCE_SHA G10_COMPONENT_SOURCE_TREE
+          printf '%s\n' "$G10_COMPONENT_SOURCE_SHA" > "$RUNNER_TEMP/g10-component/source-sha.txt"
+          printf '%s\n' "$G10_COMPONENT_SOURCE_TREE" > "$RUNNER_TEMP/g10-component/source-tree.txt"
+          set +e
+          sudo --preserve-env=G10_COMPONENT_RECEIPT,G10_COMPONENT_SOURCE_SHA,G10_COMPONENT_SOURCE_TREE,GITHUB_SHA,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT \
+            python3 -B sf/azure/recovery/test_teams_checkpoint.py 2>&1 | tee "$RUNNER_TEMP/g10-component/tests.log"
+          controls_status=("${PIPESTATUS[@]}")
+          set -e
+          ownership_status=0
+          if [ -f "$G10_COMPONENT_RECEIPT" ]; then
+            sudo chown --no-dereference "$(id -u):$(id -g)" "$G10_COMPONENT_RECEIPT" || ownership_status=$?
+          fi
+          if [ "${controls_status[0]}" -ne 0 ]; then
+            exit "${controls_status[0]}"
+          fi
+          if [ "${controls_status[1]}" -ne 0 ]; then
+            exit "${controls_status[1]}"
+          fi
+          exit "$ownership_status"
+      - name: Setup Bun for canonical guards
+        if: always()
+        uses: ./.github/actions/setup-bun
+      - name: Canonical spawn imports
+        id: spawn
+        if: always()
+        run: |
+          set -euo pipefail
+          bun run check:spawn-imports 2>&1 | tee "$RUNNER_TEMP/g10-host-controls/spawn-imports.log"
+      - name: Canonical guards
+        id: guards
+        if: always()
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/g10-host-controls/guards.log"
+      - name: Verify original component receipt and unchanged source
+        id: intake
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "97e97ec7b64673c63865c734c8dc0207698a3d7e"
+          test "$(git rev-parse 'HEAD^{tree}')" = "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8"
+          git diff --quiet
+          git diff --cached --quiet
+          python3 - <<'PY'
+          import hashlib, json, os, re, stat
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          evidence, component = root / "g10-host-controls", root / "g10-component"
+          before = json.loads((evidence / "source-before.json").read_text())
+          after = []
+          for entry in before:
+              data = Path(entry["path"]).read_bytes()
+              after.append({"path": entry["path"], "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest(),
+                            "gitBlob": hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()})
+          assert before == after, "source inputs changed during execution"
+          (evidence / "source-after.json").write_text(json.dumps(after, indent=2) + "\n")
+          file = component / "receipt.json"
+          info = file.lstat()
+          assert stat.S_ISREG(info.st_mode) and info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o600
+          raw = file.read_bytes()
+          receipt = json.loads(raw)
+          expected = json.loads((evidence / "test-inventory.json").read_text())["expectedCases"]
+          assert receipt["schema"] == "orchestra-sf.g10-component-tests.v1"
+          assert receipt["proofClass"] == "FILESYSTEM_COMPONENT_CONTROLS"
+          assert receipt["candidateSha"] == "97e97ec7b64673c63865c734c8dc0207698a3d7e" and receipt["candidateTree"] == "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8"
+          assert receipt["workflowSha"] == os.environ["GITHUB_SHA"]
+          assert receipt["runId"] == os.environ["GITHUB_RUN_ID"] and receipt["runAttempt"] == os.environ["GITHUB_RUN_ATTEMPT"]
+          assert receipt["expectedCases"] == expected and receipt["executed"] == len(expected) == 23
+          assert receipt["failures"] == receipt["errors"] == receipt["skipped"] == 0 and receipt["result"] == "PASS"
+          assert receipt["installedTeamsProof"] is False and receipt["releaseQualified"] is False
+          encoded = (json.dumps(expected, sort_keys=True, separators=(",", ":")) + "\n").encode()
+          assert receipt["caseInventorySha256"] == hashlib.sha256(encoded).hexdigest()
+          assert (component / "source-sha.txt").read_text().strip() == "97e97ec7b64673c63865c734c8dc0207698a3d7e"
+          assert (component / "source-tree.txt").read_text().strip() == "2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8"
+          log = (component / "tests.log").read_text()
+          assert len(re.findall(r"(?m)^test_\S+.* \.\.\. ok$", log)) == 23
+          assert re.search(r"(?m)^Ran 23 tests in ", log) and re.search(r"(?m)^OK$", log)
+          (evidence / "receipt-check.json").write_text(json.dumps({
+              "originalReceiptSha256": hashlib.sha256(raw).hexdigest(), "originalReceiptBytes": len(raw),
+              "ownerUid": info.st_uid, "mode": "0600", "verifiedCases": 23,
+              "failures": 0, "errors": 0, "skipped": 0, "sourceInputsUnchanged": len(after),
+              "installedTeamsProof": False, "releaseQualified": False,
+          }, indent=2) + "\n")
+          print("ORIGINAL_COMPONENT_RECEIPT_PASS: 23/23; root private-file admission; installed qualification remains false")
+          PY
+      - name: Hash retained original evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          evidence = root / "g10-host-controls"
+          evidence.mkdir(mode=0o700, exist_ok=True)
+          files = sorted(path for folder in (root / "g10-component", evidence)
+                         for path in folder.rglob("*") if path.is_file() and path.name != "manifest.json")
+          manifest = [{"path": path.relative_to(root).as_posix(), "bytes": path.stat().st_size,
+                       "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in files]
+          (evidence / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+          print("RETAINED_EVIDENCE_FILES", len(manifest))
+          PY
+      - name: Publish original component evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g10-host-controls-97e97ec7b64673c63865c734c8dc0207698a3d7e-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/g10-component
+            ${{ runner.temp }}/g10-host-controls
+          if-no-files-found: error
+          retention-days: 14
