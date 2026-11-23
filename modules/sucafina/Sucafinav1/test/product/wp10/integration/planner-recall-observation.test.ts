@@ -218,6 +218,7 @@ test("Planner case preflight uses its private version and closes independent nat
         captured = structuredClone(value)
         return value
       }))
+      if (!captured) throw new Error("The canonical case read did not complete")
       expect(observed.value).toEqual(captured)
       expect(ok(observed.value).case).toMatchObject(f.current)
       expect(reads).toBe(1)
@@ -249,6 +250,7 @@ test("Planner case preflight uses its private version and closes independent nat
             return value
           })
         }))
+        if (!captured) throw new Error("The selected canonical case read did not complete")
         expect(measured.value).toEqual(captured)
         expect(ok(measured.value).case).toMatchObject(f.current)
         expect(reads).toBe(1)
@@ -379,6 +381,7 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
           return produced
         }))
         expect(measured.value.status).toBe("unavailable")
+        if (!produced) throw new Error("The malformed selection did not reach the canonical reader")
         expect(measured.value).toEqual(produced)
         expect(reads).toBe(1)
         expect(measured.roots).toEqual([])
@@ -418,6 +421,8 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
       expect(after.outbox[staged.outbox.key]).toMatchObject({ state: "settled", receipt: published })
       return published
     })
+    const publishedEventId = receipt.eventId
+    if (!publishedEventId) throw new Error("The committed publication lacks its canonical event identity")
     // The current case is still being worked on. Its unpublished event must not
     // be confused with the explicitly selected, already published precedent.
     const currentPending = await deadline.phase("stage-current-case-without-publication", () => f.stage(f.current))
@@ -446,7 +451,7 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
         const complete = recallOk(value)
         expect(complete.matches).toHaveLength(1)
         expect(complete.matches[0]!.caseRef).toEqual(f.previous)
-        expect(complete.matches[0]!.memoryRecordRef).toBe(receipt.eventId)
+        expect(complete.matches[0]!.memoryRecordRef).toBe(publishedEventId)
         return structuredClone(complete)
       })
     })
@@ -504,8 +509,9 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
             expect(Reflect.set(retainedValue.evidenceRefs, "length", 0)).toBe(true)
             expect(child).toEqual(capturedChild)
             const value = await canonical(input, call)
-            capturedRecall = structuredClone(value)
             const retainedRecall = recallOk(value)
+            const captured = structuredClone(retainedRecall)
+            capturedRecall = captured
             // Arm the original environment closure only after the complete
             // producer returns. Its next await is still inside the work root,
             // before the root's own result copy can protect this value.
@@ -517,14 +523,15 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
               expect(native?.current()).toBe(true)
               expect(native?.identity).toBe(f.control.roots[0]!.identity)
               expect(native?.bytesIdentity).toBe(f.control.roots[0]!.bytesIdentity)
-              expect(retainedRecall).toEqual(capturedRecall)
+              expect(retainedRecall).toEqual(captured)
               expect(Reflect.set(retainedRecall.matches, "length", 0)).toBe(true)
               expect(Reflect.set(retainedRecall.limitations, 0, "mutated during the witness")).toBe(true)
-              expect(retainedRecall).not.toEqual(capturedRecall)
+              expect(retainedRecall).not.toEqual(captured)
             }
             return value
           }))
           expect(recallOk(measured.value)).toEqual(baseline)
+          if (!capturedRecall) throw new Error("The complete canonical Recall was not captured")
           expect(measured.value).toEqual(capturedRecall)
           expectIndependentRoots(measured.roots)
           expect(children).toBe(1)
