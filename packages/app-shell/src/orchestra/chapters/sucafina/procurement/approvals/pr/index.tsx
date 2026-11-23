@@ -623,7 +623,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                 rows={visibleRows()}
                 getRowKey={(row) => row.number as SfRef}
                 columns={[
-                  { id: "number", labelKey: key("sf.u13.request"), align: "start", widthPolicy: { kind: "content", minPx: 92, maxPx: 180 }, render: (row) => row.number ?? t("sf.u13.unknownValue") },
+                  { id: "number", labelKey: key("sf.u13.request"), align: "start", widthPolicy: { kind: "fixed", px: 180 }, render: (row) => row.number ?? t("sf.u13.unknownValue") },
                   { id: "title", labelKey: key("sf.u13.title"), align: "start", widthPolicy: { kind: "flex", minPx: 150, weight: 1 }, render: (row) => row.pr?.title || t("sf.u13.unknownValue") },
                   { id: "status", labelKey: key("sf.u13.stage"), align: "start", widthPolicy: { kind: "content", minPx: 120, maxPx: 220 }, render: (row) => row.status === "pr_pending" ? t("sf.u13.submitted") : t("sf.u13.unknownValue") },
                 ]}

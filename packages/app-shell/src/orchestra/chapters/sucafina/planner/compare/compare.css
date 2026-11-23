@@ -6,14 +6,20 @@
 .sf-u46-compare-select label { display: grid; gap: 6px; min-inline-size: 0; }
 .sf-u46-compare-select select { inline-size: 100%; }
 .sf-u46-compare-content { display: grid; gap: 20px; min-inline-size: 0; }
+.sf-u46-compare-panel {
+  min-inline-size: 0; background: var(--mx-raised);
+  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
+}
+.sf-u46-compare-panel > h3 {
+  margin: 0; padding: 20px 20px 4px; font-size: var(--orchestra-font-size-xl);
+  font-weight: 600; color: var(--orchestra-text);
+}
 .sf-u46-compare-scroll {
   max-inline-size: 100%; min-inline-size: 0; overflow-x: auto; overscroll-behavior-inline: contain;
-  padding: 8px 20px 12px; background: var(--mx-raised);
-  border: 1px solid var(--mx-line); border-radius: var(--orchestra-radius-lg);
+  padding: 8px 20px 12px;
 }
 .sf-u46-compare-scroll table { border-collapse: collapse; inline-size: 100%; min-inline-size: 480px; font-variant-numeric: tabular-nums; }
 .sf-u46-compare-scroll table.sf-u46-monthly { min-inline-size: 860px; }
-.sf-u46-compare-scroll caption { padding: 12px 0; text-align: start; font-size: var(--orchestra-font-size-xl); font-weight: 600; color: var(--orchestra-text); }
 .sf-u46-compare-scroll :is(th, td) { padding: 14px 12px; border-block-end: 1px solid var(--mx-line); vertical-align: middle; }
 .sf-u46-compare-scroll th { text-align: start; font-weight: 500; color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
 .sf-u46-compare-scroll td { text-align: end; white-space: nowrap; color: var(--orchestra-text); }
@@ -22,7 +28,7 @@
 .sf-u46-monthly tbody th { min-inline-size: 70px; }
 .sf-u46-compare-warnings { margin: 0; padding: 12px 20px; color: var(--orchestra-warm); background: var(--mx-soft); border-inline-start: 2px solid var(--orchestra-warm); }
 @media (max-width: 619px) { .sf-u46-compare-select { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
-@media (max-width: 479px) { .sf-u46-compare-scroll { padding-inline: 16px; } }
+@media (max-width: 479px) { .sf-u46-compare-scroll, .sf-u46-compare-panel > h3 { padding-inline: 16px; } }
 
 .sf-u46-compare-note {
   margin: 0;
@@ -33,6 +39,7 @@
   color: var(--orchestra-muted);
   font-size: var(--orchestra-font-size-sm);
 }
+.sf-u46-compare-scroll thead tr:first-child > th:first-child,
 .sf-u46-compare-scroll tbody th {
   position: sticky;
   inset-inline-start: 0;
@@ -41,3 +48,4 @@
 }
 .sf-u46-compare-scroll tbody tr:last-child :is(th, td) { border-block-end: 0; }
 .sf-u46-compare-scroll thead th { vertical-align: bottom; }
+.sf-u46-compare-scroll thead tr:first-child > th:first-child { z-index: 2; }

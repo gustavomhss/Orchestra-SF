@@ -110,6 +110,7 @@ export type SfDataTableProps<Row> = Readonly<{
   onPage: (request: SfPageRequest) => void
   onSelect: (recordRef: SfRef) => void
   rowActions: (row: Readonly<Row>) => readonly SfRowAction[]
+  rowActionContext?: (row: Readonly<Row>) => JSX.Element
   onRowAction: (request: Readonly<{ recordRef: SfRef; actionId: string }>) => void
   captionKey: SfCopyKey
   density: SfDensity

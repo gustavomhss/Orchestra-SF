@@ -227,6 +227,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                       </For>
                       <Show when={hasActions()}>
                         <td class="sf-s01-actions-cell">
+                          {props.rowActionContext?.(row)}
                           <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
                             <For each={actions(row)}>
                               {(action) => (

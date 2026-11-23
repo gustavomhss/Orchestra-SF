@@ -142,6 +142,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       const surface = page.locator('[data-sf-surface="CAP24"]')
       await expect(surface.locator("tr[data-sf-request]").first()).toBeVisible()
       await expect(surface.locator(".sf-n21-metrics")).toContainText("14,800.00")
+      await alignedMetricValues(surface)
       await capture(page, info, "CAP24-dark-desktop-source-overview-test-data")
       await scheme(page, "light")
       await capture(page, info, "CAP24-light-desktop-source-overview-test-data")
@@ -316,6 +317,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await go(screens[2])
       const surface = page.locator('[data-sf-cap26="submitted-pr"]')
       await expect(surface.locator("tr[data-sf-row]").filter({ hasText: data.requests.created })).toBeVisible()
+      await readableRequestIdentity(surface.locator("tr[data-sf-row]"))
       await scrollPageTop(page)
       await capture(page, info, "CAP26-dark-desktop-pr-approval-list-test-data")
       await scheme(page, "light")
@@ -577,6 +579,8 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
             }
             await expect(localized.locator(sourceRows[screen.id]).first()).toBeVisible()
           }
+          if (screen.id === "CAP24") await alignedMetricValues(localized.locator('[data-sf-surface="CAP24"]'))
+          if (screen.id === "CAP26") await readableRequestIdentity(localized.locator('[data-sf-cap26="submitted-pr"] tr[data-sf-row]'))
           await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.(?:u1[1234]|u36|n21)\./)
           await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
           await localized.setViewportSize({ width: 320, height: 900 })
@@ -620,4 +624,30 @@ async function rowReference(row: Locator) {
   const ref = await row.getAttribute("data-sf-row")
   if (!ref) throw new Error("The source list did not render a record reference")
   return ref
+}
+
+async function alignedMetricValues(surface: Locator) {
+  const figures = surface.locator(".sf-n21-metric dd")
+  await expect(figures).toHaveCount(5)
+  await expect.poll(() => figures.evaluateAll((elements) => {
+    const tops = elements.map((element) => element.getBoundingClientRect().top)
+    return Math.max(...tops) - Math.min(...tops)
+  }), { message: "the financial band shares one value baseline even when labels wrap" }).toBeLessThanOrEqual(1)
+}
+
+async function readableRequestIdentity(rows: Locator) {
+  expect(await rows.count()).toBeGreaterThan(0)
+  const controls = rows.locator(".sf-s01-cell-value, .sf-s01-row-open")
+  const layout = await controls.evaluateAll((elements) => elements.map((element) => {
+    const range = document.createRange()
+    range.selectNodeContents(element)
+    const lines = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size
+    const text = range.getBoundingClientRect()
+    const cell = element.closest("td")!.getBoundingClientRect()
+    return { lines, contained: text.left >= cell.left && text.right <= cell.right }
+  }))
+  for (const item of layout) {
+    expect(item.lines, "request reference and localized open action fit one readable line").toBe(1)
+    expect(item.contained, "identity text remains inside its own column").toBe(true)
+  }
 }
