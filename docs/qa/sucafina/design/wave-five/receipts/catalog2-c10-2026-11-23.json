@@ -1,0 +1,745 @@
+{
+  "schemaVersion": 1,
+  "kind": "completed-original-collaboration-gate",
+  "label": "C10",
+  "recordedAt": "2026-11-23T21:15:46Z",
+  "reviewer": "/root/audit_catalog",
+  "repository": "gustavomhss/Orchestra-SF",
+  "qualification": false,
+  "promoted": false,
+  "merged": false,
+  "source": {
+    "commit": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "tree": "610bbdbaa346d6096e24effc120e9e2e2a2af025",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "coreBlob": "2e5535d7d4d35e358cd6ea6f443e5adcb7fdcee7",
+    "testBlob": "7f1692ceefb0c24e25acfb674bef1d7420087053",
+    "attribution": "This original Collab run used the initial Catalog2 source 36cc, before test-only correction e788. Production core is identical but this result is not relabeled as an exact e788 full-gate pass."
+  },
+  "snapshot": {
+    "commit": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe",
+    "tree": "471f545bb86451f1935cf78e2c3034d7110f9ff0",
+    "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "branch": "ci-run-linux-sf613-catalog2collab",
+    "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+    "independentApiIdentityVerified": true,
+    "deltaPaths": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "72fa004e7a7b082941ced37f40acc0df38a1d058"
+      }
+    ]
+  },
+  "run": {
+    "id": 45264521459,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45264521459",
+    "workflow": "test-ci",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 138007770436,
+        "name": "test (ubuntu-24.04)",
+        "headSha": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe",
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-23T20:56:32Z",
+        "startedAt": "2026-11-23T20:56:34Z",
+        "completedAt": "2026-11-23T21:03:13Z",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45264521459/job/138007770436"
+      },
+      {
+        "id": 138011775962,
+        "name": "cleanup",
+        "headSha": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe",
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-23T21:03:13Z",
+        "startedAt": "2026-11-23T21:03:16Z",
+        "completedAt": "2026-11-23T21:03:25Z",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45264521459/job/138011775962"
+      }
+    ]
+  },
+  "execution": {
+    "recipe": {
+      "package": "app",
+      "packageSelector": "@orchestra/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/design-wave-five-collab.spec.ts"
+      ],
+      "config": "e2e/playwright.production.config.ts",
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "runner": "ubuntu-24.04",
+    "strictOmni": true,
+    "channel": "prod",
+    "playwright": {
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "productionConfig": "e2e/playwright.production.config.ts",
+      "spec": "e2e/sucafina/design-wave-five-collab.spec.ts"
+    }
+  },
+  "results": {
+    "passed": 2,
+    "failed": 0,
+    "reportedElapsed": "5.1m",
+    "originalSpecPreserved": true,
+    "originalUi56HeadingExpectationMs": 10000,
+    "responseAwaitBeforeHeadingAdded": false,
+    "qualificationClaim": false
+  },
+  "cleanup": {
+    "job": 138011775962,
+    "conclusion": "success",
+    "deleteSnapshotBranchStep": "success",
+    "refVerifiedAbsent": true,
+    "refApiStatus": 404
+  },
+  "artifacts": {
+    "items": [
+      {
+        "id": 14862362137,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 51938017,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14862362137",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14862362137/zip",
+        "expired": false,
+        "created_at": "2026-11-23T21:03:11Z",
+        "expires_at": "2026-11-30T21:03:09Z",
+        "updated_at": "2026-11-23T21:03:11Z",
+        "digest": "sha256:6969f0ff6c02cdee87269bc5aed3d736d85ccde8713939fb6d5a999d886abc5e",
+        "workflow_run": {
+          "id": 45264521459,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-sf613-catalog2collab",
+          "head_sha": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe"
+        }
+      }
+    ],
+    "independentlyFetched": true,
+    "archiveInspected": false,
+    "digestScope": "GitHub-supplied ZIP SHA-256 metadata; archive not downloaded or independently hashed by reviewer."
+  },
+  "visuals": {
+    "source": "Original JPEG chunks emitted by SF_DESIGN_PREVIEW in completed main-job log. No browser visit and no reconstructed screenshots.",
+    "inventoryCount": 45,
+    "completeGroups": 45,
+    "invalidGroups": 0,
+    "reviewedByAuditCatalog": 12,
+    "reviewedByRoot": 2,
+    "unionActuallyReviewed": 14,
+    "inventoryOnly": 31,
+    "reviewed": [
+      {
+        "index": 4,
+        "name": "UI55-dark-desktop-selected-file-options",
+        "reviewer": "audit_catalog",
+        "observed": "Desktop two-column destination/file form is legible. Selected XLSX filename, source and destination, unchecked options, header-row input and Generate preview action are visible; no page-level horizontal overflow visible in this image."
+      },
+      {
+        "index": 5,
+        "name": "UI55-dark-390-selected-file-options",
+        "reviewer": "audit_catalog",
+        "observed": "390px scrolled mobile view uses one column; period, destination, file/options, header input and Generate preview remain inside the card. Native filename display elides the middle; checkbox labels wrap legibly. Top of form is outside this scrolled capture, so no claim about the unseen header."
+      },
+      {
+        "index": 19,
+        "name": "UI55-pt-BR-dark-desktop",
+        "reviewer": "audit_catalog",
+        "observed": "Portuguese page title, instructions, step labels, destination/period fields and preview-disabled setup state are legible in the desktop two-column layout. Native browser file picker text remains English; no page-level overflow visible."
+      },
+      {
+        "index": 23,
+        "name": "UI51-relationship-light-390",
+        "reviewer": "audit_catalog",
+        "observed": "Light 390px layout has source reference/read control, requested reference and existing relationship in stacked cards; long record references wrap. Open related record and Remove relationship actions stay inside the card; no visible horizontal page overflow."
+      },
+      {
+        "index": 42,
+        "name": "UI51-pt-BR-dark-desktop",
+        "reviewer": "audit_catalog",
+        "observed": "Portuguese record-relationship page, read action, existing link and link/remove actions are legible. Source-to-target relation fits desktop row and destructive action is visually distinct; no visible overlap or page overflow."
+      },
+      {
+        "index": 25,
+        "name": "UI51-dark-desktop-removal-review",
+        "reviewer": "audit_catalog",
+        "observed": "Explicit removal review shows relationship identifier and the two evidence references before the separate Keep editing and Remove relationship actions; desktop card text and controls are legible."
+      },
+      {
+        "index": 31,
+        "name": "UI52-discussion-light-390",
+        "reviewer": "audit_catalog",
+        "observed": "Mobile light discussion view stacks source, period, message and empty composer. Long identifiers/message copy wrap within cards, Open originating record fits, and Post comment is disabled for the empty input."
+      },
+      {
+        "index": 34,
+        "name": "UI52-dark-390-unsent-draft",
+        "reviewer": "audit_catalog",
+        "observed": "Mobile dark discussion view visibly retains the draft in the comment textarea while showing the originating source and existing message. Post comment is enabled; screenshot alone does not establish whether an action was sent."
+      },
+      {
+        "index": 43,
+        "name": "UI52-pt-BR-dark-desktop",
+        "reviewer": "audit_catalog",
+        "observed": "Portuguese discussion/source/period/composer labels and localized date are legible. Desktop message and composer columns fit without visible overlap. Original fixture message content remains English, separate from the localized UI."
+      },
+      {
+        "index": 37,
+        "name": "UI53-material-light-390",
+        "reviewer": "audit_catalog",
+        "observed": "Light 390px material review stacks source reference, incarnation, period, source/storage versions, selected fields and fingerprint inside the card. Long fingerprint wraps without visible horizontal overflow. Capture ends near Observed values, so lower content/actions are not assessed."
+      },
+      {
+        "index": 39,
+        "name": "UI53-dark-desktop-confirmation-review",
+        "reviewer": "audit_catalog",
+        "observed": "Desktop confirmation review presents reviewed selection fingerprint, material version and availability before Confirm no change, Check current material and Back to material actions. Long selection token wraps within its column; controls are legible."
+      },
+      {
+        "index": 44,
+        "name": "UI53-pt-BR-dark-desktop",
+        "reviewer": "audit_catalog",
+        "observed": "Portuguese confirmation validity screen shows confirmation reference, current source-valid status, observed version and Revalidar material atual action. Separate validity line states unchanged scope; text and controls fit the desktop card."
+      },
+      {
+        "index": 13,
+        "name": "UI56-preview-dark-desktop",
+        "reviewer": "/root",
+        "attribution": "Root explicitly reported actual inspection in agent message.",
+        "observed": "Ready simulation visible, desktop source controls and counts 4/47 legible; no page-level overflow visible."
+      },
+      {
+        "index": 15,
+        "name": "UI56-preview-light-390",
+        "reviewer": "/root",
+        "attribution": "Root explicitly reported actual inspection in agent message.",
+        "observed": "Ready simulation visible in an appropriate mobile single-column layout; no page-level overflow visible."
+      }
+    ],
+    "inventory": [
+      {
+        "index": 0,
+        "name": "UI55-setup-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:59:59.2340145Z",
+        "last": "2026-11-23T20:59:59.3777104Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 1,
+        "name": "UI55-setup-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:59:59.7482542Z",
+        "last": "2026-11-23T20:59:59.8823942Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 2,
+        "name": "UI55-setup-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:59:59.9048726Z",
+        "last": "2026-11-23T20:59:59.9534829Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 3,
+        "name": "UI55-setup-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:00:00.1796324Z",
+        "last": "2026-11-23T21:00:00.2202614Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 4,
+        "name": "UI55-dark-desktop-selected-file-options",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:08.1815476Z",
+        "last": "2026-11-23T21:00:08.3218190Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 5,
+        "name": "UI55-dark-390-selected-file-options",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T21:00:08.3457076Z",
+        "last": "2026-11-23T21:00:08.3727696Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 6,
+        "name": "UI55-scanned-simulation-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:29.0793749Z",
+        "last": "2026-11-23T21:00:29.2518136Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 7,
+        "name": "UI55-scanned-simulation-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:29.6206610Z",
+        "last": "2026-11-23T21:00:29.7595660Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 8,
+        "name": "UI55-scanned-simulation-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:00:29.7902502Z",
+        "last": "2026-11-23T21:00:29.8605092Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 9,
+        "name": "UI55-scanned-simulation-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:00:30.1480176Z",
+        "last": "2026-11-23T21:00:30.1926441Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 10,
+        "name": "UI55-dark-desktop-field-change",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:30.7648528Z",
+        "last": "2026-11-23T21:00:30.8773845Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 11,
+        "name": "UI55-dark-desktop-complete-source-impact",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:31.1952748Z",
+        "last": "2026-11-23T21:00:31.3174494Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 12,
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:31.6293089Z",
+        "last": "2026-11-23T21:00:31.7611496Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 13,
+        "name": "UI56-preview-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:52.0153674Z",
+        "last": "2026-11-23T21:00:52.1464164Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 14,
+        "name": "UI56-preview-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:52.4837284Z",
+        "last": "2026-11-23T21:00:52.6121871Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 15,
+        "name": "UI56-preview-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:00:52.6412851Z",
+        "last": "2026-11-23T21:00:52.6900975Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 16,
+        "name": "UI56-preview-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:00:52.9271234Z",
+        "last": "2026-11-23T21:00:52.9771296Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 17,
+        "name": "UI56-dark-desktop-field-provenance",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:53.5053335Z",
+        "last": "2026-11-23T21:00:53.6121972Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 18,
+        "name": "UI56-dark-desktop-complete-source-impact",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:00:53.9441093Z",
+        "last": "2026-11-23T21:00:54.0798872Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 19,
+        "name": "UI55-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:01:05.2807795Z",
+        "last": "2026-11-23T21:01:05.4191230Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 20,
+        "name": "UI56-pt-BR-dark-desktop",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T21:01:25.7365267Z",
+        "last": "2026-11-23T21:01:25.9003037Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 21,
+        "name": "UI51-relationship-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:32.9755938Z",
+        "last": "2026-11-23T21:02:33.1084822Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 22,
+        "name": "UI51-relationship-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:33.5916617Z",
+        "last": "2026-11-23T21:02:33.7081183Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 23,
+        "name": "UI51-relationship-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:33.7265547Z",
+        "last": "2026-11-23T21:02:33.7800754Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 24,
+        "name": "UI51-relationship-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:33.9303596Z",
+        "last": "2026-11-23T21:02:33.9825672Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 25,
+        "name": "UI51-dark-desktop-removal-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:34.3884471Z",
+        "last": "2026-11-23T21:02:34.4711510Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 26,
+        "name": "UI51-dark-desktop-explicit-editor",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:38.6265455Z",
+        "last": "2026-11-23T21:02:38.7462121Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 27,
+        "name": "UI51-dark-desktop-create-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:39.0237197Z",
+        "last": "2026-11-23T21:02:39.1179228Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 28,
+        "name": "UI51-dark-desktop-case-alias-empty",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:42.9941036Z",
+        "last": "2026-11-23T21:02:43.1411857Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 29,
+        "name": "UI52-discussion-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:46.4416456Z",
+        "last": "2026-11-23T21:02:46.5510846Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 30,
+        "name": "UI52-discussion-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:46.9422968Z",
+        "last": "2026-11-23T21:02:47.0556406Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 31,
+        "name": "UI52-discussion-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:47.0715298Z",
+        "last": "2026-11-23T21:02:47.1174549Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 32,
+        "name": "UI52-discussion-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:47.2903931Z",
+        "last": "2026-11-23T21:02:47.3273503Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 33,
+        "name": "UI52-dark-desktop-origin-unsent-draft",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T21:02:47.7568216Z",
+        "last": "2026-11-23T21:02:47.9233495Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 34,
+        "name": "UI52-dark-390-unsent-draft",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:47.9419432Z",
+        "last": "2026-11-23T21:02:47.9932726Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 35,
+        "name": "UI53-material-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:51.5904855Z",
+        "last": "2026-11-23T21:02:51.7256914Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 36,
+        "name": "UI53-material-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:02:52.0451057Z",
+        "last": "2026-11-23T21:02:52.1685470Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 37,
+        "name": "UI53-material-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:52.1954759Z",
+        "last": "2026-11-23T21:02:52.2413696Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 38,
+        "name": "UI53-material-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T21:02:52.4769085Z",
+        "last": "2026-11-23T21:02:52.5221615Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 39,
+        "name": "UI53-dark-desktop-confirmation-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:52.9708586Z",
+        "last": "2026-11-23T21:02:53.0644235Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 40,
+        "name": "UI53-dark-desktop-original-receipt",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:54.0899632Z",
+        "last": "2026-11-23T21:02:54.1969357Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 41,
+        "name": "UI53-dark-desktop-recorded-validity",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:02:57.5451788Z",
+        "last": "2026-11-23T21:02:57.6801168Z",
+        "visuallyReviewed": false
+      },
+      {
+        "index": 42,
+        "name": "UI51-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:03:01.7101850Z",
+        "last": "2026-11-23T21:03:01.8589677Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 43,
+        "name": "UI52-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T21:03:05.1405821Z",
+        "last": "2026-11-23T21:03:05.2729312Z",
+        "visuallyReviewed": true
+      },
+      {
+        "index": 44,
+        "name": "UI53-pt-BR-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T21:03:08.2726493Z",
+        "last": "2026-11-23T21:03:08.3721995Z",
+        "visuallyReviewed": true
+      }
+    ],
+    "limits": "Claims apply only to the explicitly named 14 captures. The other 31 complete groups were inventoried, not visually inspected. Screenshots support observed layouts/states, not transport, authorization or mutation correctness on their own."
+  },
+  "evidence": {
+    "logApi": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/138007770436/logs",
+    "logIndependentlyFetchedAfterCompletion": true,
+    "logIntegrity": {
+      "characters": 4966526,
+      "utf8Bytes": 4969192,
+      "sha256": "9537d29a7e12c0b29374ca64dd4eea11eeecefb6d5677dfcbca5270ef14c23fe",
+      "lineCount": 1675,
+      "utf8BomIncluded": true
+    },
+    "integrityEncoding": "SHA-256 of the complete decoded log re-encoded as UTF-8, including its leading BOM; distinct from artifact ZIP digest.",
+    "summaryLines": [
+      "2026-11-23T20:57:57.9710719Z \u001b[36;1mif (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)\u001b[0m",
+      "2026-11-23T20:57:57.9716227Z \u001b[36;1mif (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)\u001b[0m",
+      "2026-11-23T21:00:04.5720030Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-targets\",\"method\":\"GET\",\"failure\":null}",
+      "2026-11-23T21:00:09.7167582Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-admission\",\"httpStatus\":200,\"producerStatus\":\"ok\",\"instrumentation\":\"CDP response-stage observation; no replay\"}",
+      "2026-11-23T21:00:09.7205722Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfailed\",\"mode\":\"import-admit\",\"method\":\"POST\",\"failure\":\"net::ERR_ABORTED\"}",
+      "2026-11-23T21:00:13.0894006Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"preview-producer-response\",\"httpStatus\":200,\"producerStatus\":\"ok\",\"codecStatus\":\"ok\",\"typed\":\"Some\",\"activity\":\"previewing\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T21:00:13.1040476Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-preview\",\"manifestId\":\"dbd065140d19acb8c1c44722ca69c385d0c0e2dac7a314e89eb05ba84526f584\",\"state\":\"preview\",\"sourceDigest\":\"8540493dc19a53f778fe5b250849c26ee606461ecc22f1217d9dec01c4790483\",\"domainApplied\":false}",
+      "2026-11-23T21:00:13.2290743Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-preview\",\"method\":\"POST\",\"failure\":null}",
+      "2026-11-23T21:00:13.2400005Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"preview-delivered\",\"activity\":\"previewing\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T21:00:18.4428783Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-progress\",\"stage\":\"independent-reference-read\",\"elapsedMs\":5266,\"httpStatus\":200,\"producerStatus\":\"ok\",\"activity\":\"reading-source\",\"phase\":\"selecting\",\"state\":\"ready\"}",
+      "2026-11-23T21:00:23.4150065Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-reference\",\"method\":\"GET\",\"failure\":null}",
+      "2026-11-23T21:00:46.9226929Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfinished\",\"mode\":\"import-reference\",\"method\":\"GET\",\"failure\":null}",
+      "2026-11-23T21:03:09.1659720Z \u001b[1A\u001b[2K  2 passed (5.1m)"
+    ],
+    "commandAndEnvironmentLines": [
+      "2026-11-23T20:57:57.5305707Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T20:57:57.5306040Z   ORCHESTRA_CHANNEL: prod",
+      "2026-11-23T20:57:57.6657459Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T20:57:57.6657792Z   ORCHESTRA_CHANNEL: prod",
+      "2026-11-23T20:57:57.9328629Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T20:57:57.9328857Z   ORCHESTRA_CHANNEL: prod",
+      "2026-11-23T20:57:57.9429029Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T20:57:57.9429258Z   ORCHESTRA_CHANNEL: prod",
+      "2026-11-23T20:57:57.9753671Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T20:57:57.9753900Z   ORCHESTRA_CHANNEL: prod",
+      "2026-11-23T20:57:59.8937714Z $ playwright test --config \"e2e/playwright.production.config.ts\" --workers \"1\" --retries \"0\" --repeat-each \"1\" \"(^|[\\\\\\\\/])e2e[\\\\\\\\/]sucafina[\\\\\\\\/]design-wave-five-collab\\\\.spec\\\\.ts\\$\" --trace retain-on-failure \"--reporter=html,line,json,/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts\"",
+      "2026-11-23T20:58:46.9740316Z Running 2 tests using 1 worker",
+      "2026-11-23T21:03:09.1659720Z \u001b[1A\u001b[2K  2 passed (5.1m)",
+      "2026-11-23T21:03:09.2515465Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+      "2026-11-23T21:03:09.2515696Z   ORCHESTRA_CHANNEL: prod"
+    ]
+  },
+  "interpretation": {
+    "finding": "The unmodified original Collab spec passed both tests with the original UI56 heading budget on 36cc.",
+    "transportQualification": "An import-admit requestfailed/net::ERR_ABORTED observation is present at 21:00:09.7205722Z while the observed original admission response was 200/ok and the preview subsequently completed. This receipt does not erase that browser diagnostic or infer client fetch rejection from it.",
+    "performanceQualification": "A single full-run pass is not a stable speedup estimate and does not prove all remaining gates or a later recomposed source."
+  },
+  "limits": [
+    "No source promotion, merge or production action.",
+    "No harness delay, response await or timeout increase was adopted in this snapshot.",
+    "Latest dev advancement and any recomposition need separate source attribution and original gate runs."
+  ]
+}

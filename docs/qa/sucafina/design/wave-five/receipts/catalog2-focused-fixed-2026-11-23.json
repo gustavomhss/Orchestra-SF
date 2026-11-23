@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "kind": "completed-focused-catalog-verification",
+  "recordedAt": "2026-11-23T21:15:46Z",
+  "reviewer": "/root/audit_catalog",
+  "repository": "gustavomhss/Orchestra-SF",
+  "qualification": false,
+  "promoted": false,
+  "merged": false,
+  "source": {
+    "branch": "sf613-catalog2",
+    "commit": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "tree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+    "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "coreBlob": "2e5535d7d4d35e358cd6ea6f443e5adcb7fdcee7",
+    "testBlob": "fbddbf34d4c5723420ebba741604137ba5512499",
+    "changeFromParent": "Only expect(required(selected.api.settings).owner) replaces expect(selected.api.settings.owner); existing nonundefined assertion, no cast or ignore."
+  },
+  "snapshot": {
+    "commit": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+    "tree": "585f662a51924538af8ae1ae9b1faed7039f5a3c",
+    "parent": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "branch": "ci-run-linux-sf613-catalog2types",
+    "recipeBlob": "4a2394be1847f0a32851b9034897eeae2f8c53cf",
+    "wrapperBlob": "3be482acc6459e188a74823072f56ca52b6432df",
+    "independentApiIdentityVerified": true,
+    "deltaPaths": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "4a2394be1847f0a32851b9034897eeae2f8c53cf"
+      },
+      {
+        "path": "apps/cli/test/sf613-catalog-verification.test.ts",
+        "status": "added",
+        "blob": "3be482acc6459e188a74823072f56ca52b6432df"
+      }
+    ],
+    "wrapperProductSourceAndTreeAssertionsPassed": true
+  },
+  "run": {
+    "id": 45265435900,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265435900",
+    "workflow": "test-ci",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 138010973840,
+        "name": "test (ubuntu-24.04)",
+        "headSha": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-23T21:01:54Z",
+        "startedAt": "2026-11-23T21:01:56Z",
+        "completedAt": "2026-11-23T21:04:01Z",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265435900/job/138010973840"
+      },
+      {
+        "id": 138012265929,
+        "name": "cleanup",
+        "headSha": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+        "status": "completed",
+        "conclusion": "success",
+        "createdAt": "2026-11-23T21:04:01Z",
+        "startedAt": "2026-11-23T21:04:03Z",
+        "completedAt": "2026-11-23T21:04:10Z",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265435900/job/138012265929"
+      }
+    ]
+  },
+  "execution": {
+    "recipe": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sf613-catalog-verification.test.ts",
+        "--timeout",
+        "600000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "runner": "ubuntu-24.04",
+    "strictOmni": true,
+    "channel": "prod"
+  },
+  "results": {
+    "originalTests": 17,
+    "newAvailabilityTests": 9,
+    "passed": 26,
+    "failed": 0,
+    "expectCalls": 195,
+    "innerElapsedMs": 1475,
+    "commandElapsedMs": 1492,
+    "coreTypecheck": {
+      "exitCode": 0,
+      "durationMs": 19222
+    },
+    "outer": {
+      "passed": 3,
+      "failed": 0,
+      "expectCalls": 7,
+      "elapsed": "21.31s"
+    },
+    "omniPositiveControl": {
+      "declaredTests": 3,
+      "spawns": 5,
+      "delegated": 0,
+      "passed": true
+    }
+  },
+  "cleanup": {
+    "job": 138012265929,
+    "conclusion": "success",
+    "deleteSnapshotBranchStep": "success",
+    "refVerifiedAbsent": true,
+    "refApiStatus": 404
+  },
+  "artifacts": {
+    "items": [],
+    "independentlyFetched": true,
+    "uploadEvidenceStep": "skipped",
+    "archiveInspected": false
+  },
+  "evidence": {
+    "logApi": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/138010973840/logs",
+    "logIndependentlyFetchedAfterCompletion": true,
+    "logIntegrity": {
+      "characters": 73224,
+      "utf8Bytes": 73226,
+      "sha256": "284646bf086421ac45d8593094a72e9804e51ed5c27baf815529290a4360d98b",
+      "lineCount": 852,
+      "utf8BomIncluded": true
+    },
+    "integrityEncoding": "SHA-256 of the complete decoded log re-encoded as UTF-8, including its leading BOM; not the artifact ZIP digest.",
+    "summaryLines": [
+      "2026-11-23T21:03:36.8375767Z {\"gate\":\"fetch source parent\",\"source\":\"e78821194263260fd058a2a2648ef6a750ed24c5\",\"sourceTree\":\"4b9b6d465c78245960fb4d941e50da2cc9b52b69\",\"snapshot\":\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\",\"run\":\"45265435900\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":341,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T21:03:36.8405990Z {\"gate\":\"snapshot identity\",\"source\":\"e78821194263260fd058a2a2648ef6a750ed24c5\",\"sourceTree\":\"4b9b6d465c78245960fb4d941e50da2cc9b52b69\",\"snapshot\":\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\",\"run\":\"45265435900\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T21:03:36.8560921Z {\"gate\":\"source identity\",\"source\":\"e78821194263260fd058a2a2648ef6a750ed24c5\",\"sourceTree\":\"4b9b6d465c78245960fb4d941e50da2cc9b52b69\",\"snapshot\":\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\",\"run\":\"45265435900\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":15,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T21:03:38.3500118Z {\"gate\":\"original Catalog suite and nine availability contracts\",\"source\":\"e78821194263260fd058a2a2648ef6a750ed24c5\",\"sourceTree\":\"4b9b6d465c78245960fb4d941e50da2cc9b52b69\",\"snapshot\":\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\",\"run\":\"45265435900\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/catalog.test.ts\",\"./test/catalog-available.test.ts\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":1492,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T21:03:38.3529405Z  26 pass",
+      "2026-11-23T21:03:38.3529641Z  0 fail",
+      "2026-11-23T21:03:38.3529882Z  195 expect() calls",
+      "2026-11-23T21:03:38.3530172Z Ran 26 tests across 2 files. [1475.00ms]",
+      "2026-11-23T21:03:57.5738419Z {\"gate\":\"core package typecheck\",\"source\":\"e78821194263260fd058a2a2648ef6a750ed24c5\",\"sourceTree\":\"4b9b6d465c78245960fb4d941e50da2cc9b52b69\",\"snapshot\":\"f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef\",\"run\":\"45265435900\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":19222,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T21:03:57.5748336Z  3 pass",
+      "2026-11-23T21:03:57.5748571Z  0 fail",
+      "2026-11-23T21:03:57.5748793Z  7 expect() calls",
+      "2026-11-23T21:03:57.5749481Z omni positive control [7506f064c5982835a0229bf3629418bb]: pass (declared: 3 test(s) in test/sf613-catalog-verification.test.ts); 5 omni spawn(s), 0 delegated.",
+      "2026-11-23T21:03:57.5799100Z Ran 3 tests across 1 file. [21.31s]"
+    ],
+    "passedTestLines": [
+      "2026-11-23T21:03:36.8571428Z (pass) snapshot identifies the exact reviewed product source and tree [370.18ms]",
+      "2026-11-23T21:03:38.3501936Z (pass) current Catalog discovery and availability regressions pass together [1493.07ms]",
+      "2026-11-23T21:03:38.3504150Z (pass) CatalogV2 > API settings credentials use runner precedence and public never authenticates paid Zen [92.35ms]",
+      "2026-11-23T21:03:38.3505129Z (pass) CatalogV2 > Zen without a credential exposes no models, not even free ones [47.27ms]",
+      "2026-11-23T21:03:38.3505975Z (pass) CatalogV2 > configured Zen request auth respects disabled providers and policy [26.92ms]",
+      "2026-11-23T21:03:38.3506812Z (pass) CatalogV2 > publishes an updated event after catalog changes [21.58ms]",
+      "2026-11-23T21:03:38.3507691Z (pass) CatalogV2 > derives availability from active credentials without changing provider state [39.51ms]",
+      "2026-11-23T21:03:38.3508680Z (pass) CatalogV2 > shares one catalog credential read per availability request and keeps the projection [43.66ms]",
+      "2026-11-23T21:03:38.3509579Z (pass) CatalogV2 > derives availability from a provider's integration [36.93ms]",
+      "2026-11-23T21:03:38.3510364Z (pass) CatalogV2 > projects environment connections without a catalog plugin [13.85ms]",
+      "2026-11-23T21:03:38.3511565Z (pass) CatalogV2 > normalizes provider baseURL into api url [20.64ms]",
+      "2026-11-23T21:03:38.3512270Z (pass) CatalogV2 > normalizes model baseURL into api url [12.38ms]",
+      "2026-11-23T21:03:38.3512935Z (pass) CatalogV2 > resolves default model api from provider api [34.02ms]",
+      "2026-11-23T21:03:38.3513582Z (pass) CatalogV2 > resolves provider and model request merges [17.73ms]",
+      "2026-11-23T21:03:38.3514671Z (pass) CatalogV2 > falls back to newest available model when no default is configured [18.07ms]",
+      "2026-11-23T21:03:38.3515589Z (pass) CatalogV2 > uses a transform-provided default model until that transform is replaced [25.07ms]",
+      "2026-11-23T21:03:38.3516408Z (pass) CatalogV2 > ignores a configured default on a disabled provider [19.40ms]",
+      "2026-11-23T21:03:38.3517229Z (pass) CatalogV2 > small model prefers small keyword candidates before cost scoring [20.27ms]",
+      "2026-11-23T21:03:38.3518063Z (pass) CatalogV2 > removes providers denied by policy after loading [17.96ms]",
+      "2026-11-23T21:03:38.3520014Z (pass) Catalog available model metadata > validates hidden metadata immediately when a credential makes its provider available [24.27ms]",
+      "2026-11-23T21:03:38.3521244Z (pass) Catalog available model metadata > validates a disabled model before filtering it from an available provider [15.20ms]",
+      "2026-11-23T21:03:38.3522494Z (pass) Catalog available model metadata > omits hidden projection getters and observes them immediately after credential activation [45.00ms]",
+      "2026-11-23T21:03:38.3523997Z (pass) Catalog available model metadata > requires identity before hidden metadata while all and get retain original error precedence [15.51ms]",
+      "2026-11-23T21:03:38.3525126Z (pass) Catalog available model metadata > selects each base model by its effective provider rather than its parent record [22.84ms]",
+      "2026-11-23T21:03:38.3526044Z (pass) Catalog available model metadata > filters the actual projected identity after metadata changes an eligibility ID [13.98ms]",
+      "2026-11-23T21:03:38.3527168Z (pass) Catalog available model metadata > uses the current virtual credential identity instead of the base model identity [28.72ms]",
+      "2026-11-23T21:03:38.3528083Z (pass) Catalog available model metadata > omits nested hidden metadata reads only in available and restores them when visible [15.75ms]",
+      "2026-11-23T21:03:38.3528851Z (pass) Catalog available model metadata > keeps fresh virtual providers, merged metadata and release ordering [31.10ms]",
+      "2026-11-23T21:03:57.5740811Z (pass) core package preserves its original types [19223.90ms]"
+    ]
+  },
+  "limits": [
+    "Focused runtime/typecheck verification passed for e788 only. It is not completion of all original technical, release, analytics, collaboration and review gates.",
+    "Initial run 45264473681 runtime success and TS18048 typecheck failure remain preserved in the prior receipt.",
+    "No source promotion, merge or production action was performed."
+  ]
+}

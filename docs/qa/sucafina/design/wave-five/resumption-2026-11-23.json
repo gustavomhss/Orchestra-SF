@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Read the detailed fixed Catalog2 focused and original C10 success receipts with exact source attribution; keep first typecheck failure. Candidate1's six original campaigns completed with four failures/two passes. Continue fixing/qualifying normal C17 and original Analytics Preview on the final candidate without changing deadlines, source fences or original assertions. No global qualification, PR promotion or merge."
   },
-  "updatedAt": "2026-11-23T21:07:10Z",
+  "updatedAt": "2026-11-23T21:15:46Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3768,6 +3768,35 @@
       "catalog2C10Run": 45264521459,
       "metadataOnlySuccessUntilDetailedReceipts": true,
       "priorRecordsCommit": "91f5cd6e4ed691f75b1ca7d40abf116064657353",
+      "qualification": false,
+      "promoted": false,
+      "merged": false
+    },
+    {
+      "recordedAt": "2026-11-23T21:15:46Z",
+      "status": "CATALOG2_FOCUSED_AND_C10_COMPLETE_RECEIPTS_ORIGINAL_T11_A10_RUNNING_DEV_ADVANCED",
+      "by": "/root/audit_catalog",
+      "focused": {
+        "run": 45265435900,
+        "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+        "conclusion": "success",
+        "receiptBlob": "8b27dcecc910e4fef7f8507483403fc64a7e8143"
+      },
+      "collab": {
+        "run": 45264521459,
+        "source": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+        "conclusion": "success",
+        "receiptBlob": "05846983a3dce25d379fe58fca97f87c379c12fa",
+        "actualImagesReviewed": 14,
+        "inventoryOnly": 31
+      },
+      "launchedOriginalGates": {
+        "T11": 45267076107,
+        "A10": 45267085439,
+        "source": "e78821194263260fd058a2a2648ef6a750ed24c5"
+      },
+      "newDev": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "priorRecordsCommit": "c29c190fa4dd40c8070d9dfae9e557473c484615",
       "qualification": false,
       "promoted": false,
       "merged": false
@@ -13623,7 +13652,7 @@
     "attribution": "Draft inventory supplied by /root recovery summary; no execution or adoption asserted."
   },
   "catalogEarlySelectionCandidate": {
-    "status": "FOCUSED_FIXED_AND_C10_SUCCESS_METADATA_PENDING_DETAILED_RECEIPTS",
+    "status": "FOCUSED_FIXED_AND_ORIGINAL_C10_PASSED_PRE_RECOMPOSITION_OTHER_GATES_RUNNING",
     "recordedAt": "2026-11-23T21:07:10Z",
     "qualification": false,
     "productPromoted": false,
@@ -13669,7 +13698,28 @@
       "headShaVerified": true,
       "updatedAt": "2026-11-23T21:04:11Z",
       "observedAt": "2026-11-23T21:05:08Z",
-      "completedLogReviewPending": true
+      "completedLogReviewPending": false,
+      "independentCompletedLogReviewed": true,
+      "runtimePassed": 26,
+      "runtimeFailed": 0,
+      "expectCalls": 195,
+      "coreTypecheckExit": 0,
+      "coreTypecheckMs": 19222,
+      "outerPassed": 3,
+      "outerFailed": 0,
+      "outerExpectCalls": 7,
+      "omni": {
+        "declaredTests": 3,
+        "spawns": 5,
+        "delegated": 0
+      },
+      "cleanupSuccess": true,
+      "branchRef404": true,
+      "artifactCount": 0,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-focused-fixed-2026-11-23.json",
+        "blob": "8b27dcecc910e4fef7f8507483403fc64a7e8143"
+      }
     },
     "originalC10": {
       "run": 45264521459,
@@ -13682,9 +13732,71 @@
       "headShaVerified": true,
       "updatedAt": "2026-11-23T21:03:26Z",
       "observedAt": "2026-11-23T21:05:08Z",
-      "completedLogReviewPending": true,
+      "completedLogReviewPending": false,
       "original10sExpectationUnchanged": true,
-      "notRelabeledAsCurrentSourceQualification": true
+      "notRelabeledAsCurrentSourceQualification": true,
+      "independentCompletedLogReviewed": true,
+      "passed": 2,
+      "failed": 0,
+      "elapsed": "5.1m",
+      "cleanupSuccess": true,
+      "branchRef404": true,
+      "artifactId": 14862362137,
+      "completeImageGroups": 45,
+      "visuallyInspectedByAuditCatalog": 12,
+      "visuallyInspectedByRoot": 2,
+      "unionVisuallyInspected": 14,
+      "remainingInventoryOnly": 31,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-c10-2026-11-23.json",
+        "blob": "05846983a3dce25d379fe58fca97f87c379c12fa"
+      }
+    },
+    "updatedAt": "2026-11-23T21:15:46Z",
+    "originalNormalGates": {
+      "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+      "qualification": false,
+      "T11": {
+        "run": 45267076107,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45267076107",
+        "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+        "snapshotTree": "17be5817cb0d3643f20e29cfe0b7810dc40610d9",
+        "branch": "ci-run-linux-sf613-catalog2tech",
+        "wrapperBlob": "6cbecc48ce8c6573296a53c72643ca7f2ff95e9b",
+        "recipeClaimByRoot": "Exact T9 full original technical gate except source/sourceTree rebound.",
+        "createdAt": "2026-11-23T21:11:18Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "headShaVerified": true,
+        "observationAt": "2026-11-23T21:15:46Z"
+      },
+      "A10": {
+        "run": 45267085439,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45267085439",
+        "snapshot": "0ab4296cd449872047f8a76ac8ef6a60ea18a3b0",
+        "snapshotTree": "fc6723e2b1e5d73b100f90a20f2be28e9e148cde",
+        "branch": "ci-run-linux-sf613-catalog2analytics",
+        "recipeClaimByRoot": "Original a119 Analytics recipe.",
+        "createdAt": "2026-11-23T21:11:22Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "headShaVerified": true,
+        "observationAt": "2026-11-23T21:15:46Z"
+      }
+    },
+    "devAdvanceAfterLaunch": {
+      "commit": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "parents": [
+        "e115b667d845822a1df5f523bbfd828ab57ca978",
+        "a160e562f8a9c106fa2cc5cab9c6189f3ae96b49"
+      ],
+      "mergeMessage": "Merge pull request #717: refine Orchestra and Sucafina after adversarial audit\n\nClose the 34-finding adversarial frontend audit with native UI refinements, original-source regression evidence, and final composed Linux test-ci qualification. Code source d522399; later changes are documentation only.",
+      "independentlyFetchedCommit": true,
+      "rootReportedMergedPR": 717,
+      "rootReportedRecomposition": "In progress in isolated branch; original #613 deadlines/assertions retained despite #717 harness response-await changes.",
+      "qualification": false,
+      "attribution": "Existing focused/C10/T11/A10 snapshots retain their exact old source identities. No result is transferred to a new composition."
     }
   }
 }
