@@ -231,7 +231,8 @@
 .sf-s01-cell-value { line-height: 1.55; }
 .sf-s01-align-end { font-variant-numeric: tabular-nums; }
 .sf-s01-action-reason { font-size: var(--orchestra-font-size-sm); }
-.sf-s01-table[data-sf-density="comfortable"] :is(.sf-s01-row-open, .sf-s01-row-actions button) {
+.sf-s01-table[data-sf-density="comfortable"] th { padding-block: var(--sf-space-1); }
+.sf-s01-table[data-sf-density="comfortable"] :is(.sf-s01-sort, .sf-s01-row-open, .sf-s01-row-actions button) {
   min-block-size: var(--sf-control-height);
 }
 .sf-s01-list-detail .sf-s01-table-scroll { box-shadow: none; }

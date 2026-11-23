@@ -202,8 +202,23 @@
 .sf-s01-list-detail { box-shadow: var(--mx-card-shadow); }
 .sf-s01-detail-pane { padding: var(--sf-space-5); }
 .sf-s01-record-detail { font-size: var(--orchestra-font-size-md); line-height: 1.6; }
-.sf-s01-detail-header { gap: var(--sf-space-4); padding-block-end: var(--sf-space-5); }
-.sf-s01-detail-heading { gap: var(--sf-space-3); }
+.sf-s01-detail-header { gap: var(--sf-space-3); padding-block-end: var(--sf-space-5); }
+.sf-s01-detail-back {
+  align-self: flex-start;
+  min-inline-size: var(--sf-control-height);
+  min-block-size: var(--sf-control-height);
+  text-align: start;
+}
+.sf-s01-detail-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sf-space-4);
+  min-width: 0;
+}
+.sf-s01-detail-heading { flex: 1 1 var(--sf-field-width); gap: var(--sf-space-3); }
+.sf-s01-detail-summary > .sf-s01-detail-actions { flex: 0 1 auto; max-inline-size: 100%; }
 .sf-s01-detail-heading h2 { font-family: var(--mx-emphasis); }
 .sf-s01-secondary { margin-block-start: var(--sf-space-1); font-size: var(--orchestra-font-size-sm); }
 .sf-s01-secondary summary {
