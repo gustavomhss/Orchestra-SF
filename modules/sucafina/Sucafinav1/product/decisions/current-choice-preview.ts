@@ -474,12 +474,14 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     return exact ? driver : undefined
   })
   const readonlyMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
-  const readonlyOriginals = readonlyMethods.map((name) => ({
-    base: Object.getOwnPropertyDescriptor(driver, name),
-    wrapped: Object.getOwnPropertyDescriptor(persistence, name),
-  }))
+  const readonlyOriginals = types.isProxy(driver) || Object.getPrototypeOf(driver) !== Object.prototype
+    ? undefined
+    : readonlyMethods.map((name) => ({
+      base: Object.getOwnPropertyDescriptor(driver, name),
+      wrapped: Object.getOwnPropertyDescriptor(persistence, name),
+    }))
   const readonlyOwner = () => {
-    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype ||
+    if (!readonlyOriginals || types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype ||
         types.isProxy(driver) || Object.getPrototypeOf(driver) !== Object.prototype ||
         types.isProxy(persistence) || Object.getPrototypeOf(persistence) !== Object.prototype) return false
     const provider = Object.getOwnPropertyDescriptor(input, "persistence")
