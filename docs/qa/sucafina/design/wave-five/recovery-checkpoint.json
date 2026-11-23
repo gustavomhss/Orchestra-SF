@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23 05:07:56 UTC",
+  "updatedAt": "2026-11-23 05:12:21 UTC",
   "status": "C14_FOCALS_AND_BUDGET_PASS_PREVIEW_STILL_FAILS_CPU_JOINT_PREFLIGHT",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
@@ -102,8 +102,11 @@
         "packages/app-shell/e2e/sucafina/design-support/installation.ts",
         ".ci-run.json"
       ],
-      "status": "PEER_REVIEW_PENDING",
-      "qualification": false
+      "status": "DISPATCHED",
+      "qualification": false,
+      "peerAck": "sf613_ui",
+      "dispatchedAt": "2026-11-23 05:09:00 UTC",
+      "run": 45115960623
     }
   ],
   "previousFullCampaign": {
@@ -287,5 +290,10 @@
     "normal": "recovery-receipts/budget-normal.json",
     "release": "recovery-receipts/budget-release.json"
   },
-  "biTraceReceipt": "recovery-receipts/bi-trace.json"
+  "biTraceReceipt": "recovery-receipts/bi-trace.json",
+  "renderers": {
+    "json": "recovery-renderers/closure-json.js",
+    "markdown": "recovery-renderers/closure-markdown.js",
+    "templates": "recovery-renderers/closure-templates.js"
+  }
 }
