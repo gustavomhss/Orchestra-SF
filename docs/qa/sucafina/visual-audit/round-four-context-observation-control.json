@@ -1,0 +1,468 @@
+{
+  "recordedArtifactLedgerSha256": "d313a28760d51140b66412a8282e63bbf99e785b727833db1273aaffdeb88c61",
+  "schema": 1,
+  "task": "round-four-context-observation",
+  "state": "completed",
+  "qualification": true,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "ci-run-r4contextgate",
+  "run": 45290927036,
+  "job": 138099169702,
+  "created_at": "2026-11-23T23:41:05Z",
+  "source": "37008747c1e2bb76601a55e9411405f81a2118e2",
+  "source_tree": "ec72e6d98259094a65137b396622e4b55710442d",
+  "snapshot": "5c24de342d43b31811cf3cc57fc095be4eb8f8f6",
+  "snapshot_tree": "2d6d7b79fc690a095de9c69dccd4da76dd72f854",
+  "parent_composition": "a5fe3054a88106c3e9b456a6bf091aa57f78ba9e",
+  "request_blob": "b1187c0bcba616ee381ad6b1b80a951ba42b1329",
+  "wrapper_blob": "e61e7e0663b93ff33e30b8d143bd5c65964f9ec7",
+  "request": {
+    "package": "cli",
+    "packageSelector": "@orchestra/cli",
+    "directory": "apps/cli",
+    "runner": "bun",
+    "args": [
+      "./test/sucafina-context-verification.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "gates": [
+    {
+      "label": "external context observation protocol",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/native-ui-contract/context-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "pass": 7,
+      "skip": 0,
+      "fail": 0,
+      "assertions": 198,
+      "tests": 7,
+      "duration_ms": 243,
+      "outer_duration_ms": 268.31
+    },
+    {
+      "label": "installed native context observation",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/local-context-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "pass": 5,
+      "skip": 0,
+      "fail": 0,
+      "assertions": 189,
+      "tests": 5,
+      "duration_ms": 396,
+      "outer_duration_ms": 406.56
+    },
+    {
+      "label": "original request context",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/native-ui-contract/request-context.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "pass": 62,
+      "skip": 0,
+      "fail": 0,
+      "assertions": 521,
+      "tests": 62,
+      "duration_ms": 398,
+      "outer_duration_ms": 407.83
+    },
+    {
+      "label": "original local store",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/local-store.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "pass": 41,
+      "skip": 2,
+      "fail": 0,
+      "assertions": 474,
+      "tests": 43,
+      "duration_ms": 6280,
+      "outer_duration_ms": 6290.02
+    },
+    {
+      "label": "original local entry",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/local-entry.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "pass": 10,
+      "skip": 0,
+      "fail": 0,
+      "assertions": 88,
+      "tests": 10,
+      "duration_ms": 537,
+      "outer_duration_ms": 547.88
+    },
+    {
+      "label": "CLI typecheck",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "outer_duration_ms": 28356.3
+    },
+    {
+      "label": "Sucafina typecheck",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "outer_duration_ms": 29046.86
+    }
+  ],
+  "notes": [
+    "No original assertions, files or case bounds changed.",
+    "This gate does not qualify browser latency or the whole polishing round.",
+    "UI67 original browser case is monitored independently by root."
+  ],
+  "conclusion": "success",
+  "completed_at": "2026-11-23T23:43:25Z",
+  "jobs": [
+    {
+      "id": 138099169702,
+      "conclusion": "success"
+    },
+    {
+      "id": 138100185107,
+      "conclusion": "success",
+      "role": "cleanup"
+    }
+  ],
+  "totals": {
+    "pass": 125,
+    "skip": 2,
+    "fail": 0,
+    "assertions": 1470
+  },
+  "omni": {
+    "declared": 7,
+    "spawns": 7,
+    "delegated": 0,
+    "positive_control": "pass"
+  },
+  "artifacts": [],
+  "limitations": [
+    "These are complete native regressions and typechecks, not the full Memory5 browser qualification.",
+    "The two LocalStore skipIf UID tests are original and unchanged.",
+    "No ZIP artifact was published by this CLI run; the original job log is retained."
+  ],
+  "job_log": {
+    "path": "/workspace/scratch/e460075886fd/round-four-final-after/context-control-45290927036/job-138099169702.log",
+    "sha256": "16ff348550277995a0ed6a52fba1f5e6420a2be392f64277c508fa2e82a6475d",
+    "bytes": 84726
+  },
+  "routeBoundary": {
+    "recordedArtifactLedgerSha256": "53eb7c1107e4fa36055e75daf78b80a046e8a7d58bdb65dd4538175fe607672d",
+    "source": "2706f893c58e7cdbe74e7586fdbd9c7319ab98d8",
+    "tree": "121c0d607201015ed2fe8ecac5cdfd389059261c",
+    "mode": "read-only GitHub MCP",
+    "noEdits": true,
+    "noCI": true,
+    "conclusion": {
+      "materialityAndOutcomeUseLiveContext": false,
+      "originalDeadlineMs": 40000,
+      "shortPathExplanation": "Original Memory dashboard route bypasses native projection routing; this is not a newly introduced health shortcut or owner.",
+      "nativeContextPerSuccessfulRead": {
+        "hostCallbacks": 17,
+        "installationCallbacks": 11,
+        "totalObserverCallbacksPerOperationalPass": 28,
+        "operationalPasses": 2,
+        "authorityAdmissions": 3
+      },
+      "successfulCaseOrCasesProjection": {
+        "contextReads": 2,
+        "totalOperationalPasses": 4,
+        "nominalObserverCallbackInvocations": 112,
+        "contextAuthorityAdmissions": 6
+      },
+      "externalOnlyOwnerEffect": "A strictly external context owner would not affect Materiality/outcome producer latency and would leave internal case/cases context reads on the full existing path.",
+      "caveats": [
+        "Callback counts are statically composed observer invocations, not a count of completed internal probes or a duration estimate.",
+        "Unsuccessful admissions/producers may exit before later passes.",
+        "Concurrent HTTP requests may compete for resources; source analysis does not attribute that contention or the earlier1.078s timing.",
+        "No evidence here authorizes dropping availability fields, bypassing probes, or relaxing the original deadline."
+      ]
+    },
+    "sourceEvidence": [
+      {
+        "path": "packages/schema/src/sucafina/operation-registry.ts",
+        "blob": "69ddae805e20e4ed8a9724bd9613226865cd632d",
+        "lines": [
+          355,
+          362
+        ],
+        "claim": "Memory routes use the original dashboard producer; materiality/outcome are GETs.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/packages/schema/src/sucafina/operation-registry.ts"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+        "blob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+        "lines": [
+          34,
+          60
+        ],
+        "claim": "Original UI61 observer selects dashboard GET by sf mode; case reads separately select the native projection.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/packages/app-shell/e2e/sucafina/final-memory.spec.ts"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-navigation.ts",
+        "blob": "ee7d6e16046496122217359d5c61a24ba9ceaa77",
+        "lines": [
+          6,
+          13,
+          27,
+          68
+        ],
+        "claim": "The unchanged 40s bound wraps one original request forwarding and response body; maxRedirects/maxRetries are zero.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "54a93987cf40f1317f29eff1525aacd6efa0d6a1",
+        "lines": [
+          197,
+          219,
+          415,
+          424
+        ],
+        "claim": "Native routes are tried before the original module, whose product callback dispatches the same original Request.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/modules/sucafina/Sucafinav1/local/entry.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "27c21e4c1df0ee4748f762a324f52ff1a02f7105",
+        "lines": [
+          125,
+          139
+        ],
+        "claim": "Original module routes dashboard/planner/procurement to application.product before rendering/domain transactions.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/modules/sucafina/Sucafinav1/runtime/application.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "33657664c99947c7a7a54161bbf02e90be3f71e4",
+        "lines": [
+          329,
+          351,
+          1011,
+          1203,
+          1232,
+          1242
+        ],
+        "claim": "Memory uses the Portfolio planner facade; productHttp dispatch reaches memoryHttp. Operational composition has17 host observers and the original installation callback.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/host-context.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/memory-http.ts",
+        "blob": "a5cdae9c36b89bcfccf5605c5849662e1c5f827b",
+        "lines": [
+          20,
+          26,
+          83,
+          116
+        ],
+        "claim": "GET Memory performs UI admission/validation, withCase, original Materiality/outcome, final host revalidation; no native context read.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/memory-http.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "blob": "2c718174ec9554689e1879425e525f0c9fd555ba",
+        "lines": [
+          41,
+          53,
+          69,
+          102
+        ],
+        "claim": "Only exact native API paths are mounted; dashboard has no route and falls through.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/native-ui/router.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "blob": "6b4b8889f311354be5bdcc87daa6037749b7e3a6",
+        "lines": [
+          96,
+          123,
+          249,
+          327
+        ],
+        "claim": "Internal context only admits registered native API paths. Page-only shortcuts cannot select Memory dashboard. Successful context reads use2 operational passes and3 admissions.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/native-ui/live-context.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+        "blob": "68232a2c2aba2f86c2d6c45e651ad56712e33cab",
+        "lines": [
+          78,
+          101,
+          125
+        ],
+        "claim": "Native handler readContext delegates to producer.readRequestContext on the same original Request.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/native-ui/context.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+        "blob": "4077651a9813df69de0a37e1e0a106ddb122f5ce",
+        "lines": [
+          60,
+          98,
+          101,
+          159
+        ],
+        "claim": "Successful case and cases projections each read native context twice around their actual producer.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/apps/cli/src/sucafina-product/native-ui/decisions.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "blob": "048b87031d28d95b63ea753d380c23e867ffbd34",
+        "lines": [
+          36,
+          105
+        ],
+        "claim": "Memory UI admission reauthorizes the original Request through product authority, without live-context operational probes.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blob": "2c44f063c0a9f2bfcb0aec313bd5d57f07056414",
+        "lines": [
+          245,
+          266
+        ],
+        "claim": "Product UI authorization resolves authority/grants; it does not invoke native context operational composition.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts",
+        "blob": "c18d12201e0dfed6ce513e44a0cbe693488f8c94",
+        "lines": [
+          46,
+          89
+        ],
+        "claim": "Outcome is also observed as its own original dashboard GET; navigation context reads are separate HTTP observations.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2706f893c58e7cdbe74e7586fdbd9c7319ab98d8/packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts"
+      }
+    ]
+  },
+  "peerReview": {
+    "recordedArtifactLedgerSha256": "ef22d58e0b97438fd795e54eb20217c5f1849df6256aa46d07f484a45881b786",
+    "sourceReadAccess": "GitHub MCP only; no local source, product execution or CI",
+    "contextCandidate": {
+      "base": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
+      "initial": "b60243380bf9ac4bd3f5db82d7e3c081783893e4",
+      "inheritedFollowup": "e4566dd05f03ef023ff168ef4e619dd6c7126a7b",
+      "reviewedHead": "a8947febd8dadf91ebd2025cb157ad63af75d1ff",
+      "reviewedTree": "fbd9affe86a48640229736a498d18b61513f5a58",
+      "status": "static product and new-control review approved; real CI pending",
+      "productionPaths": 4,
+      "invariants": [
+        "Original external binding query gate unchanged",
+        "Two original operational passes remain independent; three authority admissions remain outside newly created roots",
+        "Host owns the single completed read result and clones it before owner awaits can retain/mutate it",
+        "No replay after admitted failure; zero/duplicate/pending/late/throw fail closed",
+        "Driver captured before factories;7 original own-data methods pinned",
+        "Native readonly bytes proof and strict unpoisoned egress retained for fresh roots",
+        "Existing live native owner follows original canonical path without a new root; same native identity/bytes/readOnly and poison checked",
+        "Internal context/page/projection routes bypass this optional external owner"
+      ],
+      "finding": {
+        "introducedIn": "e4566dd05f03ef023ff168ef4e619dd6c7126a7b",
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "description": "Inherited branch queried currentSnapshotScope after awaiting work but before revalidating method pins; a substituted getter or method could execute before rejection.",
+        "fixedIn": "a8947febd8dadf91ebd2025cb157ad63af75d1ff",
+        "fix": "Revalidate current() immediately after await and before invoking metadata reader.",
+        "testRequested": "Substitute currentSnapshotScope with getter during inherited work; require false and getterCalls0."
+      },
+      "controlRequirements": [
+        "Complete output parity",
+        "Two distinct fresh roots and three admissions outside roots on normal external path",
+        "Inherited readonly/writable/preimage parity without creating a new owner",
+        "Retained full result mutated while owner still awaits",
+        "First invocation of unused retained read after closure performs no producer work",
+        "Pending read, nested write caught by observer, poison, abort, closed root, driver/source method drift"
+      ],
+      "controls": {
+        "commit": "dc501b5a49b46af05df1fb6e4c9c1ca0d0f1d974",
+        "boundaryBlob": "9526cd46f7c2a429972e0956703b34d5cd9da3e1",
+        "nativeBlob": "d58df222eb9b45c798c89d8f6322cc8987667062",
+        "boundaryCases": 7,
+        "nativeCases": 5,
+        "nativePerCaseMs": 15000,
+        "existingFilesAltered": false,
+        "status": "independent static review approved",
+        "provenance": "Real LocalStore captured through original CurrentChoice factory; original driver methods are not wrapped; real child scopes and real persisted change between independent observations."
+      }
+    },
+    "c08Diagnostic": {
+      "base": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+      "head": "707f6e33ea8d2f682ff5d847c13dd925acf10377",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "baseBlob": "1bd80b943cb6ea5ef19fa214f853bd2d89d682a3",
+      "candidateBlob": "21b99803ac29eb40778a046266eb16c403224c46",
+      "status": "static review approved for diagnostic only",
+      "scope": "C08 read and sfRecallReadCost; other instrumented files/specs/relays reviewed by root and FinalAreas",
+      "prefixWithoutAddedImportByteIdentical": true,
+      "suffixFromTransactionIncludingAllWritesByteIdentical": true,
+      "awaitCount": {
+        "baseFile": 33,
+        "candidateFile": 33,
+        "baseRead": 8,
+        "candidateRead": 8
+      },
+      "semantics": [
+        "Original callback identity remains the WeakMap selection key",
+        "Exact sync value or original Promise returned",
+        "Native Promise settlement observed passively; non-native thenables retain original await behavior",
+        "No payload/result/request/reference retained by helper"
+      ],
+      "interpretation": [
+        "All buckets inclusive; do not add overlapping totals",
+        "c08-transaction includes authorize/read-state/selection/callback work",
+        "c08-callback includes argument cloning where original call evaluates a cloned argument",
+        "readiness c08-clone includes readiness.select invocation",
+        "Settlement and child checkpoints can be partial; output schema distinguishes them"
+      ]
+    }
+  }
+}

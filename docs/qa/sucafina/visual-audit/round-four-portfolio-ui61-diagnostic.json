@@ -1,0 +1,346 @@
+{
+  "recordedArtifactLedgerSha256": "07a802a4f734e8a8e136255166ffdf15ca541d83434268f9972b7fb78137d4ef",
+  "runId": 45286174291,
+  "jobId": 138082951639,
+  "source": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+  "snapshot": "6febd78fd7e02423cc9c6b27e297c8bd432f58be",
+  "artifact": {
+    "id": 14872567076,
+    "bytes": 11734266,
+    "sha256": "060145cf9100403b7b3f8352344372b07acd8a7e5798d8a391618a89333af789"
+  },
+  "trace": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/ui61-ports-45286174291/artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui61-U-dafaa-xplicit-signal-cancellation-chromium/trace.zip",
+    "sha256": "f608399fb8ff5f6a889c23efed448df5f7f9514dcedaac0bfb7552e066f4925c"
+  },
+  "network": [
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:14:47.032Z",
+      "status": 200,
+      "timeMs": 1293.1179999999877,
+      "timings": {
+        "send": 0.2580000000016298,
+        "wait": 1292.890000000014,
+        "receive": 0.22799999997369014,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.17699999999604188
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "POST",
+      "route": "memory-outcome-selection",
+      "startedDateTime": "2026-11-23T23:14:48.330Z",
+      "status": 200,
+      "timeMs": 4400.614999999991,
+      "timings": {
+        "send": 0.3020000000251457,
+        "wait": 4400.359999999986,
+        "receive": 0.2550000000046566,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.19800000000395812
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-outcome",
+      "startedDateTime": "2026-11-23T23:14:52.735Z",
+      "status": 503,
+      "timeMs": 27299.92299999998,
+      "timings": {
+        "send": 0.2449999999953434,
+        "wait": 27299.718000000023,
+        "receive": 0.20499999995809048,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.17599999997764826
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "POST",
+      "route": "memory-condition",
+      "startedDateTime": "2026-11-23T23:15:20.041Z",
+      "status": 200,
+      "timeMs": 3295.630999999994,
+      "timings": {
+        "send": 0.30599999998230487,
+        "wait": 3295.3919999999925,
+        "receive": 0.23900000000139698,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.22899999999208376
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:15:23.342Z",
+      "status": 200,
+      "timeMs": 3544.7110000000102,
+      "timings": {
+        "send": 0.35300000000279397,
+        "wait": 3544.517999999982,
+        "receive": 0.19300000002840534,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.26500000001396984
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-catalog",
+      "startedDateTime": "2026-11-23T23:15:48.321Z",
+      "status": 200,
+      "timeMs": 24.860000000044238,
+      "timings": {
+        "send": 0.4959999999846332,
+        "wait": 24.63800000003539,
+        "receive": 0.22200000000884756,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.3709999999846332
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-catalog",
+      "startedDateTime": "2026-11-23T23:15:48.317Z",
+      "status": 200,
+      "timeMs": 50.292,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 50.292,
+        "receive": -1
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:16:10.344Z",
+      "status": 200,
+      "timeMs": 3713.8790000000154,
+      "timings": {
+        "send": 0.46799999999348074,
+        "wait": 3713.564000000013,
+        "receive": 0.3150000000023283,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.35999999998603016
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:16:10.341Z",
+      "status": 200,
+      "timeMs": 3721.9280000000003,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 3721.494,
+        "receive": 0.434
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-materiality",
+      "startedDateTime": "2026-11-23T23:16:15.482Z",
+      "status": -1,
+      "timeMs": -1,
+      "timings": {
+        "send": -1,
+        "wait": -1,
+        "receive": -1
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:17:15.955Z",
+      "status": 200,
+      "timeMs": 14850.748000000021,
+      "timings": {
+        "send": 0.40899999998509884,
+        "wait": 14850.41399999999,
+        "receive": 0.33400000003166497,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.29999999998835847
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-conditions",
+      "startedDateTime": "2026-11-23T23:17:15.952Z",
+      "status": 200,
+      "timeMs": 14859.347,
+      "timings": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 14858.707,
+        "receive": 0.64
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-signals",
+      "startedDateTime": "2026-11-23T23:17:30.867Z",
+      "status": -1,
+      "timeMs": -1,
+      "timings": {
+        "send": -1,
+        "wait": -1,
+        "receive": -1
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    },
+    {
+      "network": "1-trace.network",
+      "method": "GET",
+      "route": "memory-materiality",
+      "startedDateTime": "2026-11-23T23:16:15.488Z",
+      "status": -1,
+      "timeMs": -1,
+      "timings": {
+        "send": -1,
+        "wait": -1,
+        "receive": -1
+      },
+      "type": "resource-snapshot",
+      "wallTime": null,
+      "failure": false
+    }
+  ],
+  "timeouts": [
+    {
+      "file": "test.trace",
+      "callId": "pw:api@219",
+      "method": "pw:api",
+      "apiName": null,
+      "wallTime": null,
+      "elapsedMs": 40007.04099999997,
+      "deadlineMs": 40000
+    },
+    {
+      "file": "test.trace",
+      "callId": "pw:api@231",
+      "method": "pw:api",
+      "apiName": null,
+      "wallTime": null,
+      "elapsedMs": 15007.781000000017,
+      "deadlineMs": 15000
+    },
+    {
+      "file": "test.trace",
+      "callId": "test.step@223",
+      "method": "test.step",
+      "apiName": null,
+      "wallTime": null,
+      "elapsedMs": 20157.63499999995,
+      "deadlineMs": 15000
+    },
+    {
+      "file": "1-trace.trace",
+      "callId": "call@300",
+      "method": "fetch",
+      "apiName": null,
+      "wallTime": null,
+      "elapsedMs": 40004.69,
+      "deadlineMs": 40000
+    },
+    {
+      "file": "0-trace.trace",
+      "callId": "call@326",
+      "method": "goto",
+      "apiName": null,
+      "wallTime": null,
+      "elapsedMs": 15006.72100000002,
+      "deadlineMs": 15000
+    }
+  ],
+  "caveats": [
+    "Uninstrumented original isolated UI61; diagnostic does not qualify full Memory.",
+    "No request headers, body, case IDs or payloads retained in this ledger."
+  ],
+  "typedResponses": [
+    {
+      "route": "memory-outcome",
+      "status": 503,
+      "elapsedMs": 27299.92299999998,
+      "typed": {
+        "status": "unavailable",
+        "reason": "coverage-incomplete"
+      }
+    }
+  ],
+  "conclusion": "Original Materiality GET still exceeded 40 seconds with no response headers; this plumbing alone is insufficient."
+}

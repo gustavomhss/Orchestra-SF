@@ -1,0 +1,290 @@
+{
+  "recordedArtifactLedgerSha256": "b66f893ef1c203a7941aef73b2271f1b5e3ce6a465f4779bb9f02af5848b1d7b",
+  "state": "completed",
+  "conclusion": "success",
+  "run": 45287368162,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45287368162",
+  "runAttempt": 1,
+  "createdAt": "2026-11-23T23:16:34Z",
+  "updatedAt": "2026-11-23T23:19:00Z",
+  "source": "31249b14cbf6f8b3e68db1878e2dc04fd7da798b",
+  "product": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+  "sourceTree": "60dba5a24c90cf736c2ec3a8a2d2f3841180574a",
+  "snapshot": "c60c9627023344f7e5d7c1715561a9dd10a9b89d",
+  "snapshotTree": "b566f0c21ed4272d749945d13d7bd8735c33f3c3",
+  "branch": "ci-run-r4portcontrol",
+  "productBlobs": {
+    "apps/cli/src/sucafina-product/business-services.ts": "f7a14def970a6d6444b522ff66e8cd69778206ba",
+    "apps/cli/src/sucafina-product/portfolio-authority.ts": "7519c8447e0fad6e727fa90a542557c51b6824c4"
+  },
+  "testPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-source-observation.test.ts",
+  "testBlob": "a5255dacbabfe23bdedc04f403971d26e833517f",
+  "requestBlob": "45260eb97e4d7335ab8f26931af1dd076f5028f6",
+  "wrapperBlob": "6a62698506110cc56b1844e511e3ea09133cc964",
+  "snapshotOnlyPaths": [
+    ".ci-run.json",
+    "apps/cli/test/sucafina-portfolio-sources-verification.test.ts"
+  ],
+  "jobs": [
+    {
+      "id": 138087057261,
+      "name": "test (ubuntu-24.04)",
+      "conclusion": "success"
+    },
+    {
+      "id": 138088221178,
+      "name": "cleanup",
+      "conclusion": "success"
+    }
+  ],
+  "native": {
+    "passed": 2,
+    "failed": 0,
+    "assertions": 530,
+    "reportedDurationSeconds": 35.43,
+    "cases": [
+      {
+        "name": "Portfolio facade wires source owners independently of its pair and criterion producers",
+        "durationMs": 22260.21
+      },
+      {
+        "name": "Portfolio readMetric keeps canonical payloads and refuses drift after an admitted source read",
+        "durationMs": 12751.48
+      }
+    ]
+  },
+  "wrapper": {
+    "passed": 1,
+    "failed": 0,
+    "assertions": 1,
+    "durationMs": 35470.53,
+    "reportedDurationSeconds": 35.71,
+    "childExitCode": 0,
+    "stdoutTruncated": false,
+    "stderrTruncated": false
+  },
+  "budgets": {
+    "cooperativePerCaseMs": 105000,
+    "bunPerCaseMs": 120000,
+    "childEnvelopeMs": 270000,
+    "outerEnvelopeMs": 300000,
+    "originalTestsAltered": false,
+    "retriesAdded": false,
+    "skipsAdded": false
+  },
+  "runner": "ubuntu-24.04",
+  "omni": {
+    "mode": "strict",
+    "positiveControlPassed": true,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "firstWrapperOutputAt": "2026-11-23T23:18:12.7413595Z",
+  "phases": [
+    {
+      "emittedAt": "2026-11-23T23:18:48.4384472Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4385284Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 7281,
+      "elapsedMs": 7281,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4386167Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "canonical-facade-and-real-criterion",
+      "state": "started",
+      "elapsedMs": 7284
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4387091Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "canonical-facade-and-real-criterion",
+      "state": "returned",
+      "phaseMs": 5470,
+      "elapsedMs": 12754,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4388236Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "installed-facade-observation-0",
+      "state": "started",
+      "elapsedMs": 12754
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4389498Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "installed-facade-observation-0",
+      "state": "returned",
+      "phaseMs": 4740,
+      "elapsedMs": 17494,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4390749Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "installed-facade-observation-1",
+      "state": "started",
+      "elapsedMs": 17494
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4392043Z",
+      "fixture": "portfolio-source-facade",
+      "phase": "installed-facade-observation-1",
+      "state": "returned",
+      "phaseMs": 4758,
+      "elapsedMs": 22252,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4392963Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "native-fixture",
+      "state": "started",
+      "elapsedMs": 2
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4395411Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "native-fixture",
+      "state": "returned",
+      "phaseMs": 7144,
+      "elapsedMs": 7146,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4396450Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "canonical-metric",
+      "state": "started",
+      "elapsedMs": 7149
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4398100Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "canonical-metric",
+      "state": "returned",
+      "phaseMs": 1564,
+      "elapsedMs": 8713,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4398837Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "installed-metric",
+      "state": "started",
+      "elapsedMs": 8713
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4399595Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "installed-metric",
+      "state": "returned",
+      "phaseMs": 1421,
+      "elapsedMs": 10134,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4400570Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "coverage-reader-changed-before-source-owner-egress",
+      "state": "started",
+      "elapsedMs": 10137
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4412393Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "coverage-reader-changed-before-source-owner-egress",
+      "state": "returned",
+      "phaseMs": 804,
+      "elapsedMs": 10941,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4413998Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "authority-revoked-after-a-closed-source-owner",
+      "state": "started",
+      "elapsedMs": 10944
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4415443Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "authority-revoked-after-a-closed-source-owner",
+      "state": "returned",
+      "phaseMs": 859,
+      "elapsedMs": 11803,
+      "aborted": false
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4416895Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "real-source-change-between-independent-metric-phases",
+      "state": "started",
+      "elapsedMs": 11806
+    },
+    {
+      "emittedAt": "2026-11-23T23:18:48.4418432Z",
+      "fixture": "portfolio-source-metric",
+      "phase": "real-source-change-between-independent-metric-phases",
+      "state": "returned",
+      "phaseMs": 939,
+      "elapsedMs": 12745,
+      "aborted": false
+    }
+  ],
+  "timingCaveat": "SF_COMPOSITION_PHASE lines are buffered child output; phaseMs/elapsedMs are the measured durations. Log emission timestamps do not mark phase execution.",
+  "coverage": {
+    "facade": {
+      "fullPayloadParity": true,
+      "observedInvocations": 2,
+      "pairOwnersPerInvocation": 7,
+      "sourceOwnersPerInvocation": 7,
+      "realSourceReadsPerInvocation": 14,
+      "realCoverageReadsPerInvocation": 14,
+      "criterionEvaluationsPerInvocation": 2,
+      "distinctWorkIdentitiesAcrossObservedInvocations": 28
+    },
+    "readMetric": {
+      "fullPayloadParity": true,
+      "pairOwners": 2,
+      "sourceOwners": 2,
+      "realSourceReads": 4,
+      "realCoverageReads": 4,
+      "criteria": 0
+    },
+    "attacks": [
+      "canonical coverage reader changed after complete [true,true] but before source-owner egress",
+      "authority revoked after a closed source owner",
+      "real Planner source changed between independent metric phases; second canonical pair refuses"
+    ],
+    "closedOwnerChecked": true,
+    "readOnlyStatePreserved": true,
+    "noReplayAfterAdmission": true
+  },
+  "artifacts": [],
+  "artifactCount": 0,
+  "evidence": {
+    "rawDecodedUtf8LogSha256": "2047554af123aecd8f3259b1327ea1e11b435311ef9b3c2c8d95b68914927c46",
+    "rawDecodedUtf8LogCharacters": 68023,
+    "rawLogPersisted": false,
+    "sanitizedLog": "portfolio-sources-job-sanitized.log",
+    "sanitizedLogSha256": "53aa42e5219df91ebf30b5f6b417cb3caa72dc2bdf04564386a9e63d346921cf"
+  },
+  "sourceAccess": "GitHub MCP only; no local product execution",
+  "reviewers": [
+    "root",
+    "round_four_shell"
+  ],
+  "launchAuthorized": true,
+  "scopeLimit": "This qualifies both actual Portfolio callers and their producer/authority fences. It does not establish UI61 end-to-end latency or a successful Materiality browser journey."
+}

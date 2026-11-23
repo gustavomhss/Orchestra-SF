@@ -1,0 +1,152 @@
+{
+  "recordedArtifactLedgerSha256": "d3c61ae9e48ce18827005f1a0aecd36f88c1c6f54121a068936df2115c0fbc0d",
+  "schema": "sf-round-four-context-ui67-v1",
+  "classification": "original-isolated-diagnostic-control",
+  "result": "success",
+  "run": 45289867989,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45289867989",
+  "job": 138095565261,
+  "cleanupJob": 138099735495,
+  "source": "a5fe3054a88106c3e9b456a6bf091aa57f78ba9e",
+  "sourceTree": "056cd5332ee279137d545c0cce4051488745a3cd",
+  "snapshot": "afe7ec04b8b0513cbe4ad650ee3900d61c607dac",
+  "snapshotTree": "42c469e0e350b9f94cd104ffafc240351224e443",
+  "branch": "ci-run-r4context",
+  "originalSpecBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+  "originalBodyCharacterRange": [
+    29926,
+    31950
+  ],
+  "bodyExact": true,
+  "onlySnapshotPaths": [
+    ".ci-run.json",
+    "packages/app-shell/e2e/sucafina/diagnostic-ui67.spec.ts"
+  ],
+  "artifact": {
+    "id": 14874391495,
+    "bytes": 3490405,
+    "sha256": "ff33a6d73268b0a3975b64af76166da67694ff883848c550f2337bab754748b2"
+  },
+  "stats": {
+    "startTime": "2026-11-23T23:39:02.779Z",
+    "duration": 188101.29499999998,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "test": {
+    "title": "UI67 · current owner details and refresh remain scoped to the installed context",
+    "durationMs": 46942,
+    "caseLimitMs": 300000,
+    "retry": 0,
+    "status": "passed"
+  },
+  "ready": {
+    "originalLimitMs": 10000,
+    "observedAssertion": {
+      "title": "Expect \"toHaveAttribute\" locator('[data-sf-host=\"owner-runtime231\"]')",
+      "duration": 5896,
+      "startTime": "2026-11-23T23:41:50.545Z",
+      "error": null,
+      "location": {
+        "file": "sucafina/design-support/wave-three.ts",
+        "line": 116,
+        "column": 24
+      }
+    },
+    "successfulRefreshHTTPStatus": 200,
+    "preciseHTTPDurationMeasured": false
+  },
+  "images": [
+    {
+      "name": "UI67-dark-desktop-current-context",
+      "sha256": "64f1742254096e65d86e36618680ed7a1a0233b2cd03069443418a5215cbb378",
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/context-ui67-45289867989/artifact/packages/app-shell/e2e/playwright-report/data/6c23c7b870a2c1f0b3bf5bf4907659c4cdda1445.png",
+      "reviewedOriginal": true
+    },
+    {
+      "name": "UI67-light-desktop-refreshed-context",
+      "sha256": "ddc2d449a09c31e6372e5b223c138780ce5fc81cb25c7ea5e3055ef5cfcf2ba7",
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/context-ui67-45289867989/artifact/packages/app-shell/e2e/playwright-report/data/a2248e76245ee6d64e2ac19fdee491fdd8ce04f8.png",
+      "reviewedOriginal": true
+    },
+    {
+      "name": "UI67-light-320-current-context",
+      "sha256": "113be237a35aace732288939b7b616fd189fbf10e4a9ea36268ab45a5326449d",
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/context-ui67-45289867989/artifact/packages/app-shell/e2e/playwright-report/data/1eb8b4d91b457b0d24305b2350cf93b29483a612.png",
+      "reviewedOriginal": true
+    },
+    {
+      "name": "UI67-pt-br-dark-desktop-current-context",
+      "sha256": "6c19400a27b22e564dbbfd6a09ad7a7ef522e9aff023eafce20a6c997cf79488",
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/context-ui67-45289867989/artifact/packages/app-shell/e2e/playwright-report/data/fa7b0a2d23e0eb85f4ab983948c2660de4ff1861.png",
+      "reviewedOriginal": true
+    }
+  ],
+  "captures": [
+    {
+      "area": "UI67",
+      "state": "dark-desktop-current-context",
+      "pathname": "/orchestra/sf-home/context",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI67",
+      "state": "light-desktop-refreshed-context",
+      "pathname": "/orchestra/sf-home/context",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI67",
+      "state": "light-320-current-context",
+      "pathname": "/orchestra/sf-home/context",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    },
+    {
+      "area": "UI67",
+      "state": "pt-br-dark-desktop-current-context",
+      "pathname": "/orchestra/sf-home/context",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    }
+  ],
+  "originalGetMarkers": [
+    {
+      "pathname": "/sucafina/api/ui/context",
+      "status": 200
+    },
+    {
+      "pathname": "/sucafina/api/ui/context",
+      "status": 200
+    },
+    {
+      "pathname": "/sucafina/api/ui/context",
+      "status": 200
+    },
+    {
+      "pathname": "/sucafina/api/ui/context",
+      "status": 200
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "visualReview": "Four original PNGs opened by root: EN dark desktop, EN refreshed light desktop, EN light320 and PT dark desktop. Hierarchy, padded card, real identity wrapping, refresh target and contained narrow layout reviewed without a new finding.",
+  "qualifiedBrowserCountChanged": false,
+  "qualifiedImageCountChanged": false,
+  "boundaries": [
+    "The complete original five-case Memory spec remains required.",
+    "This isolated original case is not the whole Memory qualification.",
+    "No retry, skip, original deadline or assertion changed.",
+    "No source instrumentation is present in this candidate.",
+    "No passing Playwright trace was retained; the report supplies the ready assertion duration, not an exact request duration."
+  ],
+  "sanitizedJobLogSha256": "d1399b11c9a8f6e92ca7cbe12903d3c8d09d207d04838fec74933416e7e3c62f"
+}

@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
+  "productSource": "37008747c1e2bb76601a55e9411405f81a2118e2",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -279,9 +279,9 @@
       }
     ],
     "pending": [
-      "Original Materiality and Recall requests still exceed the unchanged 40-second guard; aggregate cost diagnosis is in review.",
+      "Original Materiality and Recall requests still exceed the unchanged 40-second guard; reviewed numeric diagnostics preserve original bodies and deadlines.",
       "Complete original Memory5 must pass after repairs; pre-horizon run45279587191 returned one pass and four failures.",
-      "Complete final13-file/40-case producer cohort after source freeze.",
+      "Complete final14-file/42-case producer cohort after source freeze.",
       "Final structural gates against exact current dev, documentation and merge."
     ],
     "supersededScopes": [
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
-    "tree": "049ad28964355cb9f18593dc23b8f52081ad3280",
+    "source": "37008747c1e2bb76601a55e9411405f81a2118e2",
+    "tree": "ec72e6d98259094a65137b396622e4b55710442d",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13670,6 +13670,50 @@
           ]
         ],
         "scope": "Preserve each candidate's own horizon; five complete native controls pass with original 105/120-second bounds and four earlier bodies unchanged. Browser timing remains unqualified."
+      },
+      {
+        "source": "31249b14cbf6f8b3e68db1878e2dc04fd7da798b",
+        "commit": "2706f893c58e7cdbe74e7586fdbd9c7319ab98d8",
+        "tree": "121c0d607201015ed2fe8ecac5cdfd389059261c",
+        "run": 45287368162,
+        "ledger": "round-four-portfolio-source-control.json",
+        "ledgerSha256": "b66f893ef1c203a7941aef73b2271f1b5e3ce6a465f4779bb9f02af5848b1d7b",
+        "scope": "Both original Portfolio comparison callers pass the existing source-observation hook; two complete native controls pass 530 assertions. Original UI61 still fails its unchanged 40-second guard."
+      },
+      {
+        "source": "37008747c1e2bb76601a55e9411405f81a2118e2",
+        "tree": "ec72e6d98259094a65137b396622e4b55710442d",
+        "previous": "2706f893c58e7cdbe74e7586fdbd9c7319ab98d8",
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "sha": "bc1a465161c344bc336e82577d2ccde988dee51b"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+            "sha": "a818b596898923bf3fc232455cf6c5b245dfdbdf"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+            "sha": "aab3b1c40da14c1009ffba407df87ae07cd18bd2"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+            "sha": "098ff22c88abebb35931f03957572144ac3bddaa"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/context-observation.test.ts",
+            "sha": "9526cd46f7c2a429972e0956703b34d5cd9da3e1"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/local-context-observation.test.ts",
+            "sha": "d58df222eb9b45c798c89d8f6322cc8987667062"
+          }
+        ],
+        "nativeRun": 45290927036,
+        "browserRun": 45289867989,
+        "integrated": true,
+        "scope": "External Context: two complete original operational observations use independent native roots; all three admissions retained. 125 native/regression tests and original isolated UI67 pass."
       }
     ],
     "structural": {
@@ -16064,8 +16108,8 @@
     ]
   },
   "checkpoint": {
-    "productSource": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
-    "productTree": "049ad28964355cb9f18593dc23b8f52081ad3280",
+    "productSource": "37008747c1e2bb76601a55e9411405f81a2118e2",
+    "productTree": "ec72e6d98259094a65137b396622e4b55710442d",
     "status": "qualification-in-progress",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
@@ -16076,7 +16120,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-23T23:01:09Z"
+    "recordedAt": "2026-11-23 23:48:31 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -16740,8 +16784,8 @@
   ],
   "performancePending": {
     "plannerCompletedProof": {
-      "source": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
-      "tree": "049ad28964355cb9f18593dc23b8f52081ad3280",
+      "source": "37008747c1e2bb76601a55e9411405f81a2118e2",
+      "tree": "ec72e6d98259094a65137b396622e4b55710442d",
       "branch": "ui-polish-four",
       "status": "qualification-in-progress",
       "integrated": true,
@@ -23319,5 +23363,82 @@
     "retries": 0,
     "reviewedOriginals": 4,
     "ledgerSha256": "8cf5c3fecd8fa53f0b8eed5c087d721086493cebe90214927ef3c2d7534205d3"
+  },
+  "evidenceSupplements": {
+    "portfolio": {
+      "file": "round-four-portfolio-source-control.json",
+      "run": 45287368162,
+      "result": "success",
+      "passed": 2,
+      "assertions": 530,
+      "ledgerSha256": "b66f893ef1c203a7941aef73b2271f1b5e3ce6a465f4779bb9f02af5848b1d7b"
+    },
+    "ports": {
+      "file": "round-four-portfolio-ui61-diagnostic.json",
+      "run": 45286174291,
+      "result": "failure",
+      "originalRequestQualified": false,
+      "ledgerSha256": "07a802a4f734e8a8e136255166ffdf15ca541d83434268f9972b7fb78137d4ef"
+    },
+    "cost": {
+      "file": "round-four-planner-cost-diagnostic.json",
+      "run": 45282901989,
+      "result": "failure",
+      "originalRequestQualified": false,
+      "ledgerSha256": "54a3a0d7e60708a1b17a36f51559dce83cdf156129f73aa6cad51fa8f6b2fdce"
+    },
+    "memory": {
+      "file": "round-four-memory-five-prehorizon.json",
+      "run": 45279587191,
+      "result": "failure",
+      "passed": 1,
+      "failed": 4,
+      "ledgerSha256": "5c9f1ea10b6d611e4f834bbef4f0c2a34da1984f9b98c24d4832feb3f17f468b"
+    },
+    "context": {
+      "file": "round-four-context-observation-control.json",
+      "run": 45290927036,
+      "result": "success",
+      "ledgerSha256": "d313a28760d51140b66412a8282e63bbf99e785b727833db1273aaffdeb88c61"
+    },
+    "contextUI67": {
+      "file": "round-four-context-ui67-control.json",
+      "run": 45289867989,
+      "result": "success",
+      "isolatedOriginal": true,
+      "ledgerSha256": "d3c61ae9e48ce18827005f1a0aecd36f88c1c6f54121a068936df2115c0fbc0d"
+    }
+  },
+  "contextObservationCandidate": {
+    "product": "a8947febd8dadf91ebd2025cb157ad63af75d1ff",
+    "composed": "a5fe3054a88106c3e9b456a6bf091aa57f78ba9e",
+    "controls": "37008747c1e2bb76601a55e9411405f81a2118e2",
+    "integrated": true,
+    "externalOnly": true,
+    "protocolCases": 7,
+    "nativeCases": 5,
+    "browserRun": 45289867989,
+    "regressionRun": 45290927036,
+    "qualification": "native-and-original-isolated-ui67-pass",
+    "routeLedgerSha256": "53eb7c1107e4fa36055e75daf78b80a046e8a7d58bdb65dd4538175fe607672d",
+    "integratedSource": "37008747c1e2bb76601a55e9411405f81a2118e2",
+    "fullMemoryQualification": false,
+    "native": {
+      "run": 45290927036,
+      "gates": 7,
+      "tests": 125,
+      "assertions": 1470,
+      "originalUidSkips": 2,
+      "ledgerSha256": "d313a28760d51140b66412a8282e63bbf99e785b727833db1273aaffdeb88c61"
+    },
+    "browser": {
+      "run": 45289867989,
+      "cases": 1,
+      "caseMs": 46942,
+      "readyAssertionMs": 5896,
+      "originalReadyLimitMs": 10000,
+      "reviewedOriginals": 4,
+      "ledgerSha256": "d3c61ae9e48ce18827005f1a0aecd36f88c1c6f54121a068936df2115c0fbc0d"
+    }
   }
 }
