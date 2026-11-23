@@ -8,6 +8,7 @@ import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 import { sfOriginalStructuredCloneCurrent } from "../contracts/canonical-clone.ts"
+import { startC17Cost, finishC17Cost, copyC17Cost } from "../contracts/c17-cost-profile.ts"
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
@@ -251,48 +252,56 @@ export function createSfSourcePersistence(input: {
     return true
   }
   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, sourceRoot?: object, plannerAcl?: ReadonlyAuthorityData<"planner">) => {
-    const checking = scopedSourceChecks.getStore()
-    if (checking) {
-      requireSourceChecks(checking)
-      admitSourceChecks(checking)
-      requireSourceChecks(checking)
-    }
-    if (!sourceRoot) requireSourceIdentities(snapshot)
-    const scope = structuredClone(requested)
-    if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
-    if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
-    const protectedAcl = surface === "dashboard" && checking && admitSourceChecks(checking) && dashboardAclReaders.has(authorize) && authorityCurrent()
-      ? readAuthority?.(["dashboard"]) : undefined
-    if (sourceRoot && (!protectedAcl || protectedAcl.identity !== sourceRoot || !dashboardProjectorCurrent())) throw new Error("SF_DASHBOARD_SOURCE_ROOT_CHANGED")
-    if (sourceRoot) requireObservationSources(snapshot, protectedAcl?.bytesIdentity ?? sourceRoot)
-    const detachedAcl = protectedAcl ? undefined : detachedDashboardAcl(surface, snapshot, authorize)
-    const before = protectedAcl || detachedAcl || plannerAcl ? undefined : digestSfValue(snapshot)
-    const authenticate = () => {
-      if (plannerAcl) {
-        if (!plannerAcl.current()) return Promise.resolve(false)
-        return authorize({ data: structuredClone(plannerAcl.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] })
+    const observed = startC17Cost("observe")
+    try {
+      const checking = scopedSourceChecks.getStore()
+      if (checking) {
+        requireSourceChecks(checking)
+        admitSourceChecks(checking)
+        requireSourceChecks(checking)
       }
-      if (!protectedAcl && !detachedAcl) return authorize(snapshot)
-      if (protectedAcl && !protectedAcl.current() || !authorityCurrent() || detachedAcl && !dashboardProjectorCurrent()) return Promise.resolve(false)
-      // The real callback runs against a fresh ACL copy. Neither it nor the
-      // projector receives the protected source graph in this path.
-      const data = protectedAcl?.snapshots.dashboard.data ?? detachedAcl!
-      return authorize({ data: structuredClone(data), versions: {}, sequences: {}, audit: [], notices: [] })
-    }
-    if (!await authenticate()) return undefined
-    if (checking) requireSourceChecks(checking)
-    const projectorSnapshot = detachedAcl ? dashboardDomainView(snapshot) : snapshot
-    const projection = sourceRoot && protectedAcl?.current() && dashboardProjectorCurrent() && dashboardProjector
-      ? dashboardProjector(surface, projectorSnapshot, structuredClone(scope), protectedAcl.bytesIdentity ?? sourceRoot)
-      : input.projectScope(surface, structuredClone(projectorSnapshot), structuredClone(scope))
-    const source = sourceRoot ? readSourceIdentity(snapshot, scope.recordType, scope.recordId) : sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
-    if (projection === undefined || !source || !await authenticate()) return undefined
-    if (checking) requireSourceChecks(checking)
-    if (protectedAcl ? !protectedAcl.current() || !authorityCurrent() || sourceRoot && !dashboardProjectorCurrent()
-      : detachedAcl ? !authorityCurrent() || !dashboardProjectorCurrent()
-      : plannerAcl ? !plannerAcl.current() : digestSfValue(snapshot) !== before)
-      throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
-    return { scope, projection, source, inputDigest: digestSfValue(projection) }
+      if (!sourceRoot) requireSourceIdentities(snapshot)
+      const scope = copyC17Cost("observeScopeClone", structuredClone, requested)
+      if (![scope.principalRef, scope.accessRevision, scope.policyVersion, scope.recordType, scope.recordId].every((value) => typeof value === "string" && value.trim())) throw new Error("SF_SOURCE_SCOPE_INVALID")
+      if (!input.projectScope) throw new Error("SF_SOURCE_SCOPE_PROJECTOR_UNAVAILABLE")
+      const protectedAcl = surface === "dashboard" && checking && admitSourceChecks(checking) && dashboardAclReaders.has(authorize) && authorityCurrent()
+        ? readAuthority?.(["dashboard"]) : undefined
+      if (sourceRoot && (!protectedAcl || protectedAcl.identity !== sourceRoot || !dashboardProjectorCurrent())) throw new Error("SF_DASHBOARD_SOURCE_ROOT_CHANGED")
+      if (sourceRoot) requireObservationSources(snapshot, protectedAcl?.bytesIdentity ?? sourceRoot)
+      const detachedAcl = protectedAcl ? undefined : detachedDashboardAcl(surface, snapshot, authorize)
+      const before = protectedAcl || detachedAcl || plannerAcl ? undefined : digestSfValue(snapshot)
+      const authenticate = () => {
+        if (plannerAcl) {
+          if (!plannerAcl.current()) return Promise.resolve(false)
+          return authorize({ data: structuredClone(plannerAcl.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] })
+        }
+        if (!protectedAcl && !detachedAcl) return authorize(snapshot)
+        if (protectedAcl && !protectedAcl.current() || !authorityCurrent() || detachedAcl && !dashboardProjectorCurrent()) return Promise.resolve(false)
+        // The real callback runs against a fresh ACL copy. Neither it nor the
+        // projector receives the protected source graph in this path.
+        const data = protectedAcl?.snapshots.dashboard.data ?? detachedAcl!
+        return authorize({ data: structuredClone(data), versions: {}, sequences: {}, audit: [], notices: [] })
+      }
+      const firstAuthorization = startC17Cost("authorizeFirst")
+      try { if (!await authenticate()) return undefined }
+      finally { finishC17Cost("authorizeFirst", firstAuthorization) }
+      if (checking) requireSourceChecks(checking)
+      const projectorSnapshot = detachedAcl ? dashboardDomainView(snapshot) : snapshot
+      const projection = sourceRoot && protectedAcl?.current() && dashboardProjectorCurrent() && dashboardProjector
+        ? dashboardProjector(surface, projectorSnapshot, copyC17Cost("projectorScopeClone", structuredClone, scope), protectedAcl.bytesIdentity ?? sourceRoot)
+        : input.projectScope(surface, copyC17Cost("projectorSnapshotClone", structuredClone, projectorSnapshot), copyC17Cost("projectorScopeClone", structuredClone, scope))
+      const source = sourceRoot ? readSourceIdentity(snapshot, scope.recordType, scope.recordId) : sfSourceIdentity(snapshot, scope.recordType, scope.recordId)
+      if (projection === undefined || !source) return undefined
+      const secondAuthorization = startC17Cost("authorizeSecond")
+      try { if (!await authenticate()) return undefined }
+      finally { finishC17Cost("authorizeSecond", secondAuthorization) }
+      if (checking) requireSourceChecks(checking)
+      if (protectedAcl ? !protectedAcl.current() || !authorityCurrent() || sourceRoot && !dashboardProjectorCurrent()
+        : detachedAcl ? !authorityCurrent() || !dashboardProjectorCurrent()
+        : plannerAcl ? !plannerAcl.current() : digestSfValue(snapshot) !== before)
+        throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
+      return { scope, projection, source, inputDigest: digestSfValue(projection) }
+    } finally { finishC17Cost("observe", observed) }
   }
   const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, sourceRoot?: object, plannerAcl?: ReadonlyAuthorityData<"planner">) => {
     const checkScope = scopedSourceChecks.getStore()
@@ -551,8 +560,8 @@ export function createSfSourcePersistence(input: {
         // callbacks and changed copy operations retain the complete original view.
         const prepared = await prepare(owned && sfOriginalStructuredCloneCurrent() &&
           preparationApply(preparationHas, plannerAclPreparers, [prepare])
-          ? { data: structuredClone(owned.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] }
-          : structuredClone(snapshot))
+          ? { data: copyC17Cost("prepareAclClone", structuredClone, owned.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] }
+          : copyC17Cost("prepareFullClone", structuredClone, snapshot))
         if (checking) requireSourceChecks(checking)
         if (!prepared) return { commit: false, value: undefined }
         const acl = owned && plannerAclReaders.has(prepared.authorize) ? {
@@ -736,9 +745,12 @@ function synchronizeSources(snapshot: Snapshot, entries: readonly SfSourceIdenti
 }
 
 function requireSourceIdentities(snapshot: Snapshot) {
-  const state = snapshot.sfSources
-  if (!state || state.schemaVersion !== 1 || !state.records || Array.isArray(state.records) || Object.values(state.records).some((entry) => !entry || typeof entry.incarnation !== "string" || !entry.incarnation.trim() || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_IDENTITIES_UNAVAILABLE")
-  if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope) || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
+  const started = startC17Cost("sourceIdentities")
+  try {
+    const state = snapshot.sfSources
+    if (!state || state.schemaVersion !== 1 || !state.records || Array.isArray(state.records) || Object.values(state.records).some((entry) => !entry || typeof entry.incarnation !== "string" || !entry.incarnation.trim() || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest))) throw new Error("SF_SOURCE_IDENTITIES_UNAVAILABLE")
+    if (state.scopes !== undefined && (!state.scopes || typeof state.scopes !== "object" || Array.isArray(state.scopes) || Object.entries(state.scopes).some(([key, entry]) => !entry || !entry.scope || key !== digestSfValue(entry.scope) || ![entry.scope.principalRef, entry.scope.accessRevision, entry.scope.policyVersion, entry.scope.recordType, entry.scope.recordId, entry.incarnation, entry.sourceIncarnation].every((value) => typeof value === "string" && !!value.trim()) || !Number.isSafeInteger(entry.version) || entry.version < 1 || typeof entry.alive !== "boolean" || !/^[a-f0-9]{64}$/.test(entry.inputDigest)))) throw new Error("SF_SOURCE_SCOPES_UNAVAILABLE")
+  } finally { finishC17Cost("sourceIdentities", started) }
 }
 
 /** Recomputed at every durable write, including intermediate A→B→A writes without a reader. */

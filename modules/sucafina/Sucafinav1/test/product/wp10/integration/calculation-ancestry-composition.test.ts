@@ -18,11 +18,13 @@ import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { beginC17CostProfile, endC17CostProfile } from "../../../../product/contracts/c17-cost-profile.ts"
 
 // Real SQLite/C08, admitted UI calls, Planner producer, persisted request/result
 // stores and BCS. The pending coverage and accepted ledger event are explicit
 // fixtures; this does not claim native model, scanner or human acceptance proof.
 test("C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority", async () => {
+  beginC17CostProfile("calculation-ancestry-composition")
   const deadline = compositionTestDeadline("calculation-ancestry-composition")
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-calculation-ancestry-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
@@ -181,5 +183,8 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
       expect(refused.state).toBe("unavailable")
       expect(refused.authorizedProjection).toBeUndefined()
     }))
-  } finally { await deadline.close() }
+  } finally {
+    try { await deadline.close() }
+    finally { endC17CostProfile() }
+  }
 }, 120_000)

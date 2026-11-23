@@ -1,3 +1,5 @@
+import { reportC17CostPhase } from "../../../../product/contracts/c17-cost-profile.ts"
+
 /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */
 export function compositionTestDeadline(name: string, budgetMs = 105_000) {
   const started = performance.now()
@@ -23,6 +25,7 @@ export function compositionTestDeadline(name: string, budgetMs = 105_000) {
     } finally {
       console.info("SF_COMPOSITION_PHASE", JSON.stringify({ fixture: name, phase: label, state: "returned",
         phaseMs: Math.round(performance.now() - at), elapsedMs: Math.round(performance.now() - started), aborted: cancellation.signal.aborted }))
+      reportC17CostPhase(name, label)
     }
   }
   const close = () => closing.pending ??= (async () => {

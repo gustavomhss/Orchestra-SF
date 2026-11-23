@@ -1,4 +1,5 @@
 import { isSfPeriod } from "./validation.ts"
+import { copyC17Cost } from "./c17-cost-profile.ts"
 import { sfOperationInputSchemas } from "./operations.ts"
 import type { SfOperationInputMap } from "./operations.ts"
 import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas, sfEnvelopeSchemas } from "./output-schemas.ts"
@@ -57,7 +58,7 @@ export function decodeSfOperationOutput<K extends keyof SfOperationOutputMap>(op
   if (!Object.hasOwn(sfOperationOutputSchemas, operation)) return { ok: false, reason: "invalid-operation-output" }
   const schema = sfOperationOutputSchemas[operation]
   if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-operation-output" }
-  return { ok: true, value: structuredClone(value) as SfOperationOutputMap[K] }
+  return { ok: true, value: copyC17Cost("schemaOutputClone", structuredClone, value) as SfOperationOutputMap[K] }
 }
 
 function valid(schema: JsonSchema, value: unknown, definitions: Readonly<Record<string, JsonSchema>>, depth = 0): boolean {

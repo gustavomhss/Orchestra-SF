@@ -6,6 +6,7 @@ import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { startC17Cost, finishC17Cost } from "../contracts/c17-cost-profile.ts"
 import { projectPlannerSource } from "../planner/port.ts"
 import { projectDashboardScope } from "../dashboard/scope.ts"
 import type { Period } from "../contracts/context.ts"
@@ -30,25 +31,28 @@ export function createSfSourceScopeProjector(now: () => string) {
   const observations = new WeakMap<object, Map<string, ReturnType<typeof projectDashboardScope>>>()
   const primitives = { clone: structuredClone, parseDate: Date.parse, stringify: JSON.stringify }
   return (surface: Surface, snapshot: Snapshot, scope: SfSourceScope, heldSource?: object) => {
-    const observedAt = now()
-    if (surface !== "dashboard" || !heldSource || structuredClone !== primitives.clone || Date.parse !== primitives.parseDate ||
-      JSON.stringify !== primitives.stringify || Object.hasOwn(Object.prototype, "toJSON") || Object.hasOwn(Array.prototype, "toJSON"))
-      return projectSfSourceScope(surface, snapshot, scope, observedAt)
-    const views = observations.get(heldSource) ?? new Map<string, ReturnType<typeof projectDashboardScope>>()
-    observations.set(heldSource, views)
-    return projectSfSourceScope(surface, snapshot, scope, observedAt, (source, actor, selector, at) => {
-      // The project register and forecast line readers share these page views.
-      // Leave the other pages on their original dependency paths.
-      if (!dashboardPageViewsCurrent() || !["Portfolio Dashboard", "All Projects", "OPEX Detail", "CAPEX Projects"].includes(selector.page))
-        return projectDashboardScope(source, actor, selector, at)
-      const key = digestSfValue({ actor, selector, at })
-      if (views.has(key)) return structuredClone(views.get(key))
-      const projected = projectDashboardScope(source, actor, selector, at)
-      // The page can be shared by many individual record observations. Every
-      // observer gets an independent result for the same sealed domain bytes.
-      if (views.size < 64) views.set(key, structuredClone(projected))
-      return projected
-    })
+    const started = startC17Cost("projectScope")
+    try {
+      const observedAt = now()
+      if (surface !== "dashboard" || !heldSource || structuredClone !== primitives.clone || Date.parse !== primitives.parseDate ||
+        JSON.stringify !== primitives.stringify || Object.hasOwn(Object.prototype, "toJSON") || Object.hasOwn(Array.prototype, "toJSON"))
+        return projectSfSourceScope(surface, snapshot, scope, observedAt)
+      const views = observations.get(heldSource) ?? new Map<string, ReturnType<typeof projectDashboardScope>>()
+      observations.set(heldSource, views)
+      return projectSfSourceScope(surface, snapshot, scope, observedAt, (source, actor, selector, at) => {
+        // The project register and forecast line readers share these page views.
+        // Leave the other pages on their original dependency paths.
+        if (!dashboardPageViewsCurrent() || !["Portfolio Dashboard", "All Projects", "OPEX Detail", "CAPEX Projects"].includes(selector.page))
+          return projectDashboardScope(source, actor, selector, at)
+        const key = digestSfValue({ actor, selector, at })
+        if (views.has(key)) return structuredClone(views.get(key))
+        const projected = projectDashboardScope(source, actor, selector, at)
+        // The page can be shared by many individual record observations. Every
+        // observer gets an independent result for the same sealed domain bytes.
+        if (views.size < 64) views.set(key, structuredClone(projected))
+        return projected
+      })
+    } finally { finishC17Cost("projectScope", started) }
   }
 }
 
