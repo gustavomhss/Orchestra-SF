@@ -214,6 +214,7 @@ export function createSfPlannerRecallObservation(input: {
         const result = await work()
         if (!frame.current() || digestSfValue(incoming) !== digest) { frame.invalid = true; return unavailable() }
         return result
+      } catch { frame.invalid = true; return unavailable()
       } finally { frame.pending-- }
     }
     if (!ref) return work()
@@ -224,7 +225,7 @@ export function createSfPlannerRecallObservation(input: {
     const frame = frames.getStore()
     if (frame) { frame.invalid = true; return { status: "unavailable" } }
     const scope = incoming.scope?.recallScope
-    if (!scope || scope.includeHistorical || !Number.isSafeInteger(incoming.caseRef.version) ||
+    if (!scope || scope.includeHistorical !== false || !Number.isSafeInteger(incoming.caseRef.version) ||
       !Array.isArray(scope.cases) || scope.cases.length > 50 || scope.cases.some((ref) =>
         !ref.id || !ref.incarnation || !Number.isSafeInteger(ref.version) || ref.version < 1)) return work()
     const selected = [incoming.caseRef, ...scope.cases]
