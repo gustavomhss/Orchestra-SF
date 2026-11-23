@@ -2,8 +2,9 @@ import { expect, type Page, type Request, type TestInfo } from "@playwright/test
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 import {
-  waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
+  waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop, originalRead, type OriginalRead,
 } from "./design-support/wave-four"
+import { forwardOnce } from "./operations-support/runtime"
 
 // Public producer fields only; projection-only change/receipt collections are counted, not interpreted.
 type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" | "criteria" | "sourceRefs" |
@@ -17,6 +18,8 @@ waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
+type ForwardedRead = Awaited<ReturnType<typeof forwardOnce>>
+const originalAnalysisChoices = new WeakMap<Page, { status: number; request: Request; body: Record<string, unknown> }>()
 
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected original response object")
@@ -160,10 +163,39 @@ async function readCase(page: Page, origin: string, mount: string, caseRef: stri
   return object(object(body.value).projection).case as SfCase
 }
 async function openScreen(page: Page, owner: Owner, screen: Screen, localized = false) {
+  const projection: OriginalRead = { path: "/api/ui/projections/case", query: { caseRef: screen.caseRef! } }
+  const choice: OriginalRead = { path: "/dashboard", query: { sf: "current-choice", format: "json", case: screen.caseRef! } }
+  const reads = screen.id === "UI41" ? undefined : screen.id === "UI38" ? [choice]
+    : screen.id === "UI35" ? [projection, choice] : [projection]
+  let postRead: ForwardedRead | undefined
+  let historyRead: ForwardedRead | undefined
+  const mode = screen.id === "UI41" ? "workbench-analysis" : screen.id === "UI37" ? "collaboration-recipients" : undefined
+  const postEndpoint = (url: URL) => url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
+    url.searchParams.getAll("sf").length === 1 && url.searchParams.get("sf") === mode
   try {
-    // Current-choice options revalidate every authorized case before the selected choice.
+    if (mode) postRead = await forwardOnce(page, postEndpoint, "POST", screen.id === "UI41" ? async () => {
+      // loadHistory starts only after this original choices body reaches the page.
+      historyRead = await forwardOnce(page, postEndpoint, "POST")
+    } : undefined)
+    const completedPostReads = async () => {
+      if (!postRead) return
+      const original = await postRead.completed
+      const body = object(await original.response.json())
+      expect(original.response.status(), "the original POST read HTTP status").toBe(200)
+      expect(body.status, "the original POST read body status").toBe("ok")
+      if (screen.id === "UI41") {
+        expect(original.request.postDataJSON()).toEqual({ action: "choices" })
+        originalAnalysisChoices.set(page, { status: original.response.status(), request: original.request, body })
+        expect(historyRead, "the next original history read is armed before choices delivery").toBeDefined()
+        const history = await historyRead!.completed
+        expect(history.request.postDataJSON()).toMatchObject({ action: "list" })
+        expect(history.response.status(), "the original analysis history HTTP status").toBe(200)
+        expect(object(await history.response.json()).status, "the original analysis history body status").toBe("ok")
+      }
+    }
+    // Read receipts precede the DOM oracle; source latency does not redefine readiness.
     await enter(page, owner, screen.href, localized ? screen.titleBr : screen.title,
-      screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000)
+      screen.id === "UI35" || screen.id === "UI38" ? 40_000 : 10_000, reads, completedPostReads)
     const root = page.locator('[data-sf-decision="' + screen.id + '"]')
     await expect(root).toHaveAttribute("data-sf-wave", "four")
     await expect(root).toBeVisible()
@@ -208,6 +240,9 @@ async function openScreen(page: Page, owner: Owner, screen: Screen, localized = 
   } catch (error) {
     await diagnoseDecisionSources(page, owner, screen)
     throw error
+  } finally {
+    await postRead?.close()
+    await historyRead?.close()
   }
 }
 async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Page["locator"]>, name: string) {
@@ -239,7 +274,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       writes.push(request)
   })
 
-  await enter(page, owner, installation.origin + "/orchestra/sf-decisions", "Decisions")
+  await enter(page, owner, installation.origin + "/orchestra/sf-decisions", "Decisions",
+    undefined, { path: "/api/ui/projections/cases" })
   const list = page.getByRole("region", { name: "Authorized decision cases", exact: true })
   const findCase = async (objective: string) => {
     const link = list.getByRole("listitem").filter({ hasText: objective }).getByRole("link", { name: "Open decision", exact: true })
@@ -251,9 +287,9 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const main = await findCase(waveFourDecisionsData.objective)
   const editable = await findCase(waveFourDecisionsData.editableObjective)
   // The original UI33 href is admitted and decoded by the native route, not a test codec.
-  await enter(page, owner, main.href, "Case summary")
+  await enter(page, owner, main.href, "Case summary", undefined, { path: "/api/ui/projections/case" })
   const caseRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
-  await enter(page, owner, editable.href, "Case summary")
+  await enter(page, owner, editable.href, "Case summary", undefined, { path: "/api/ui/projections/case" })
   const editableRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
   if (!caseRef || !editableRef) throw new Error("The native case route omitted its source reference")
   expect(caseRef).toMatch(/^case:[^:]+:[^:]+$/)
@@ -318,7 +354,8 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await page.setViewportSize({ width: 390, height: 844 })
     await reviewViewport(page, info, review, "UI34-dark-390-review-actions-test-data")
     const saved = page.waitForResponse((response) => action(response.request(), "decision-edit"), { timeout: 40_000 })
-    await review.getByRole("button", { name: "Save decision", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/projections/case", query: { caseRef: editableRef } }, () =>
+      review.getByRole("button", { name: "Save decision", exact: true }).click())
     expect((await saved).status()).toBe(200)
     await expect(editor).toHaveCount(0)
     await ready(page, "Case summary")
@@ -491,25 +528,14 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   })
 
   await waveFourTest.step("UI41 makes real POST reads and exposes exactly the producer's admitted selections", async () => {
-    const choicesResponse = page.waitForResponse((response) => {
-      const request = response.request()
-      return request.method() === "POST" && new URL(request.url()).searchParams.get("sf") === "workbench-analysis" &&
-        object(request.postDataJSON()).action === "choices"
-    }, { timeout: 40_000 }).then((response) => ({ status: response.status(), request: response.request() }))
-    const [nativeRead] = await Promise.all([choicesResponse, openScreen(page, owner, screens[7]!)])
+    await openScreen(page, owner, screens[7]!)
+    const nativeRead = originalAnalysisChoices.get(page)
+    if (!nativeRead) throw new Error("The original analysis choices receipt was not observed")
     expect(nativeRead.status).toBe(200)
     expect(new URL(nativeRead.request.url()).origin).toBe(installation.origin)
     expect(nativeRead.request.postDataJSON()).toEqual({ action: "choices" })
-    // This original POST is a read. APIRequestContext retains its body independently
-    // of Chromium's response-handle lifetime; no CDP body or simulated response is used.
-    const response = await page.request.post(nativeRead.request.url(), {
-      headers: { origin: installation.origin, "content-type": "application/json", "idempotency-key": crypto.randomUUID() },
-      data: nativeRead.request.postDataJSON(),
-    })
-    expect(response.status()).toBe(200)
-    const body = object(await response.json())
-    expect(body.status).toBe("ok")
-    const choices = object(body.value)
+    // The forwarded original body is retained independently of Chromium's response cache.
+    const choices = object(nativeRead.body.value)
     const cases = choices.cases as { caseRef: { id: string; incarnation: string; version: number }; label: string }[]
     const analyses = choices.analyses as { skillId: string; label: string }[]
     const models = choices.models as { id: string; providerID: string }[]

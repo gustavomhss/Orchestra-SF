@@ -145,7 +145,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
             setView("scrollLeft", event.currentTarget.scrollLeft)
           }}
         >
-          <table ref={table} aria-describedby={captionID} aria-busy={props.state === "loading"}>
+          <table ref={table} aria-describedby={[captionID, props.descriptionId].filter(Boolean).join(" ")} aria-busy={props.state === "loading"}>
             <caption id={captionID} tabindex="-1" data-sf-table-fallback>
               {copy.t(props.captionKey)}
             </caption>

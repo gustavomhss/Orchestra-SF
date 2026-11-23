@@ -1622,6 +1622,9 @@ html[data-orchestra-palette="amoled"][data-color-scheme] body[data-mx-kit] {
   background: var(--inbox-content-fill);
   box-shadow: var(--inbox-frame-shadow);
 }
+[data-orchestra-palette="amoled"] .inbox-workspace[data-has-items="false"] .inbox-list-pane {
+  border-inline-end: 0;
+}
 [data-orchestra-palette="amoled"] .inbox-list-pane {
   border-inline-end: 1px solid var(--mx-line);
   background: var(--inbox-well);

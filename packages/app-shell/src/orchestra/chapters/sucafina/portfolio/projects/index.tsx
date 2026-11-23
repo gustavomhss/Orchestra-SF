@@ -194,14 +194,12 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
       render: (row) => <span class="sf-u05-status" data-risk={row.risk}>{t(sfProjectRiskKey(row.risk))}</span> },
     { id: "budget", labelKey: kt("sf.u05.projects.budget"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "budget",
-      render: (row) => <><span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.budget)}</span>
-        <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
+      render: (row) => <span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.budget)}</span> },
     { id: "spent", labelKey: kt("sf.u05.projects.spent"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "spent",
-      render: (row) => <><span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.spent)}</span>
-        <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
+      render: (row) => <span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.spent)}</span> },
     { id: "pct", labelKey: kt("sf.u05.projects.progress"), align: "end",
       widthPolicy: { kind: "fixed", px: 160 }, sortKey: "pct",
       render: (row) => <span class="sf-u05-num">{row.pct === null || row.pct === undefined ?
@@ -413,6 +411,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
                     </div>
                     <button class="mx-btn" type="button" onClick={() => filters.reset()}>{t("sf.u05.projects.reset")}</button>
                   </form>
+                  <p id="sf-cap10-currency" class="sf-u05-table-currency">{t("sf.u05.projects.tableCurrency")}</p>
                   <SfDataTable rows={rows()} getRowKey={(row) => row.id as SfRef} columns={columns}
                     selectedKey={selection() ? selection() as SfRef : undefined}
                     sort={sort()} page={{ kind: "none", total: rows().length }} onSort={setSort} onPage={() => undefined}
@@ -422,7 +421,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
                       busy: false, disabled: view.busy || view.uncertain,
                     }] : []}
                     onRowAction={({ recordRef, actionId }) => { if (actionId === "edit") go("edit", recordRef) }}
-                    captionKey={kt("sf.cap10.title")} density="comfortable"
+                    captionKey={kt("sf.cap10.title")} descriptionId="sf-cap10-currency" density="comfortable"
                     state={rows().length ? "ready" : view.page?.records.length ? "filtered-empty" : "empty"} />
                 </div>
               </section>}

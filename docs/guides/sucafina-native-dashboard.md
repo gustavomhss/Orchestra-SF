@@ -6,7 +6,7 @@ Este guia descreve as telas nativas de orçamento, pessoas, portfólio, operaç�
 
 O caminho no cabeçalho identifica o capítulo e a página atual. Nas telas de negócio, título, descrição, filtros e ação principal seguem a mesma ordem. As referências técnicas ficam junto dos detalhes da fonte; quando existe um nome autorizado, ele é a informação principal do registro.
 
-A revisão de alterações organiza os valores por campo, com rótulos para o valor atual e o proposto. Expandir um detalhe conserva a referência original. Valores ausentes, indefinidos, nulos, vazios, zero e falso permanecem distintos; formatação de datas, números e estados não altera o conteúdo enviado.
+A revisão de alterações apresenta primeiro os campos alterados, com o valor original e o proposto lado a lado. Os campos sem mudança ficam em um grupo que pode ser expandido; mudanças na própria fonte continuam visíveis. Efeitos, impactos e impedimentos aparecem junto da decisão, e os campos repetidos de cada efeito ficam em seus detalhes. Expandir um detalhe conserva a referência original. Valores ausentes, indefinidos, nulos, vazios, zero e falso permanecem distintos; formatação de datas, números e estados não altera o conteúdo enviado.
 
 Na etapa de sourcing de uma compra, a tela explica quando o envio da ordem de compra ainda não está disponível. Depois da aprovação exigida, o envio continua na etapa PO com a revisão e as permissões daquela operação.
 
@@ -56,13 +56,15 @@ Consulte o CIO, as lideranças e os membros da equipe. A busca ajuda a localizar
 
 ### Talentos
 
-A revisão de talentos reúne a classificação, a perspectiva e as notas dos membros. Abra uma pessoa para consultar ou revisar esses dados conforme seu acesso. Importação e exportação explicam a disponibilidade da instalação; quando a integração necessária está ausente, a tela informa o motivo.
+A revisão de talentos reúne a classificação, a perspectiva e as notas dos membros. **Editar avaliação** abre primeiro esses campos; os dados de cadastro permanecem em um grupo separado. Os retornos para equipe e talentos levam à lista correspondente, mesmo quando o registro foi aberto diretamente. Importação e exportação explicam a disponibilidade da instalação; quando a integração necessária está ausente, a tela informa o motivo.
 
 ## Portfólio
 
 A visão do portfólio reúne os indicadores e a distribuição dos projetos disponíveis. Na lista de projetos, use os filtros para localizar o trabalho desejado. O detalhe apresenta contexto, responsável, datas, orçamento, execução e marcos da fonte.
 
-A edição do projeto e a edição de um marco são operações separadas. Confira nome, data, situação e notas do marco antes da confirmação. A revisão apresenta a alteração proposta; voltar aos campos conserva o rascunho da operação.
+A edição do projeto e a edição de um marco são operações separadas. Confira nome, data, situação e notas do marco antes da confirmação. Ao editar um marco existente, a revisão apresenta os valores originais e propostos; na criação, informa que ainda não existe registro original. Voltar aos campos conserva o rascunho da operação.
+
+Orçamento e gasto mantêm a precisão numérica disponível e identificam quando a fonte não informa moeda. A tela não escolhe uma moeda para preencher essa ausência.
 
 ## Operações
 
@@ -82,7 +84,7 @@ Ajuste os filtros e aplique-os para localizar um registro. Abra o detalhe para c
 
 ### Desempenho
 
-O contrato de desempenho organiza objetivos e seus subitens. Consulte pesos, responsáveis, metas e resultados disponíveis. A edição de um objetivo e a de um subitem permanecem separadas, preservando as regras de peso e os avisos apresentados pela fonte.
+O contrato de desempenho organiza objetivos e seus subitens. Consulte pesos, responsáveis, metas e resultados disponíveis. A edição de um objetivo e a de um subitem permanecem separadas. Uma confirmação de excesso de peso só aparece quando a origem identifica essa exceção na proposta. Confira o aviso e autorize explicitamente; mudar os valores ou a fonte exige uma nova revisão.
 
 ## Respostas sobre requisições de Procurement
 
@@ -94,13 +96,13 @@ Nas etapas de aprovação, a idade da requisição avança continuamente. Se ess
 
 A lista reúne fornecedor, identificação e informações principais de cada contrato. Abra o detalhe para consultar vigência, valor, renovação, avaliação, notas e documentos disponíveis. A edição agrupa os campos por assunto e apresenta uma revisão antes do envio.
 
-Um campo opcional em branco permanece sem valor. A moeda e o valor exibidos dependem da informação que a fonte fornece.
+Um campo opcional em branco permanece sem valor. A moeda e o valor exibidos dependem da informação que a fonte fornece. A edição mostra a moeda original como contexto de leitura; ela não oferece uma alteração de moeda que a operação de salvamento não aceita.
 
 ## Importações e exportações
 
 Os rótulos de origem e de seleção do pedido acompanham o idioma da interface. A seleção continua usando a referência original da solicitação; mudar o idioma não escolhe outro pedido nem autoriza uma exportação.
 
-Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. Para baixar um arquivo novamente, solicite nova autorização.
+Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam estados distintos da fonte. Zero, falso e texto vazio conservam seus valores. As lacunas identificam o campo e a célula quando a origem fornece uma associação exata; o motivo acompanha o idioma da interface. O caminho técnico completo continua nos detalhes. Categorias sem itens ficam reunidas em um resumo expansível. Para baixar um arquivo novamente, solicite nova autorização.
 
 A disponibilidade de exportação de pedidos acompanha o serviço e o acesso ativos. Cada download confere novamente o pedido selecionado; uma mudança de fonte ou de permissão exige uma nova leitura antes de obter o arquivo.
 
@@ -110,13 +112,27 @@ Abra uma importação pelo histórico ou pela referência do recibo. O resumo di
 
 Consultar ou reabrir um recibo não envia a importação novamente. Se um envio ficar sem resultado confirmado, use a reconciliação da operação original antes de tentar outra ação. Uma resposta desconhecida não equivale a sucesso nem a falha confirmada.
 
+## Pautas, revisões preservadas e relatórios
+
+Monte a pauta com as seções autorizadas, revise a seleção e confirme a preservação. A confirmação oferece **Abrir revisão preservada**, que abre aquela revisão no mesmo projeto e instalação. Também é possível informar uma referência existente na entrada de revisões ou de relatórios.
+
+A revisão organiza os valores por registro e campo. Os nomes vêm do próprio material preservado; uma referência sem nome conhecido continua identificada pela referência original. Anos, zeros, valores vazios, moedas e unidades conservam seu significado. Os detalhes permitem consultar as referências completas.
+
+Na apresentação, **Abrir origem** relê o acesso e mostra os links autorizados para a seleção atual. Se a leitura falhar, use a nova tentativa apresentada na tela. Uma origem desatualizada exige reler a revisão antes de abrir novamente seus links. Trocar de tópico remove os links do tópico anterior.
+
+Para comparar revisões, informe duas referências distintas e escolha **Ler e comparar revisões autorizadas**. A tela distingue alterações de valor das mudanças na origem da evidência. Em telas menores, o valor anterior e o atual permanecem identificados junto de cada campo.
+
+Na entrada de relatórios, abra a revisão pela referência, escolha o **Formato Office** e as seções desejadas. A tela tem uma única ação **Gerar relatório**. É preciso manter pelo menos uma seção selecionada; a geração continua sujeita às condições apresentadas pela instalação.
+
 ## Documentos e evidências
 
 ### Escolher a fonte e abrir um documento
 
 Escolha uma fonte disponível para seu acesso e use a busca para localizar o documento. Uma fonte que recusa a leitura pode ser trocada por outra origem autorizada quando essa opção estiver disponível. Durante um envio ou um resultado desconhecido, a seleção fica bloqueada para manter a operação vinculada à origem correta.
 
-O formulário de novo documento é aberto separadamente da consulta. Confira o arquivo e os campos apresentados; a disponibilidade de envio depende da instalação e da verificação do arquivo. Depois de selecionar um documento, abra seu detalhe para consultar os dados e o conteúdo original.
+O formulário de novo documento é aberto separadamente da consulta. Escolha a classificação e, em **Registro de destino**, selecione o registro pelo nome e pela referência apresentados no catálogo autorizado. A versão atual vem desse catálogo; não é necessário digitar um ID ou uma versão interna. Use **Atualizar registros** para reler a lista e selecione novamente o destino antes de enviar.
+
+Durante o envio, o formulário mostra o progresso e mantém o arquivo escolhido visível. Se o registro mudar, releia a lista e confira a seleção antes de tentar novamente. O envio depende do acesso atual e da verificação do arquivo pelo servidor. Depois que o arquivo for aceito e vinculado, escolha a fonte atualizada para abrir o documento e consultar o conteúdo original.
 
 ### Revisar uma evidência extraída
 
@@ -155,6 +171,12 @@ Abra os detalhes de um caso retornado para conferir sua identidade e as diferen�
 Em **Resultados**, escolha uma decisão registrada para consultar seu acompanhamento. As escolhas disponíveis não dependem de existir uma condição de sinal para o caso. A referência da seleção permite reabrir o mesmo acompanhamento enquanto a fonte e o acesso continuarem válidos.
 
 Uma comparação só apresenta valores previstos, observados e diferenças quando a origem comprova a cobertura necessária. **Cobertura incompleta** indica que essa comparação ainda não está disponível; não representa resultado zero.
+
+### Condições e perguntas preparadas
+
+As condições de cobertura explicam os códigos conhecidos da aplicação. Motivos escritos na origem permanecem com seu texto original; códigos e referências completos ficam disponíveis em **Detalhes da fonte**. Uma coleção de mudanças vazia apresenta uma mensagem contextual, sem um segundo cartão vazio.
+
+Preparar uma pergunta produz uma proposta para revisão. Quando a origem fornecer uma referência que permita confirmar essa proposta, a ação **Registrar pergunta** fica disponível conforme seu acesso. Se essa referência estiver ausente, a tela explica que a proposta ainda não pode ser registrada ali. Preparar não equivale a registrar nem a entregar a pergunta a outra pessoa.
 
 ## Rotinas, recorrência e contribuições
 
@@ -216,4 +238,4 @@ O clique envia o material preparado que aparece nessa revisão. Se a fonte ou a 
 
 ## Leitura em telas menores
 
-As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis.
+As listas se reorganizam em registros com rótulos. Os campos e as ações de revisão ficam em uma coluna quando o espaço é menor. Uma tabela financeira pode ter rolagem horizontal dentro de sua própria área, sem deslocar a página inteira. Nas grades mensais, a navegação por teclado acompanha a célula escolhida e mantém as colunas de identificação visíveis. As ações das versões mantêm sua identificação ao lado dos controles. Nos gráficos financeiros em telas estreitas, cada período fica junto do seu valor e da sua unidade, usando os mesmos dados da fonte.

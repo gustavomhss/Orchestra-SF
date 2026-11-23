@@ -1,8 +1,8 @@
 import { expect, type Page, type TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
-import { SfReviewDomainProjection, SfReviewPreserved } from "@orchestra/schema/sucafina/reviews"
-import { waveFourTest, enter, observePage, capture, reflow, scheme, scrollPageTop } from "./design-support/wave-four"
+import { SfReviewDomainProjection, SfReviewPreserved, SfReviewsReviewSource } from "@orchestra/schema/sucafina/reviews"
+import { waveFourTest, enter, observePage, originalRead, originalReads, type OriginalRead, capture, reflow, scheme, scrollPageTop } from "./design-support/wave-four"
 import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import { workflowPolishCoverage } from "./design-support/workflow-polish-coverage"
 import { workflowCase, settledSurface, sourceObject, sourceText, sourceArray, type WorkflowOwner } from "./design-support/workflow-polish-source"
@@ -24,8 +24,9 @@ waveFourTest.beforeEach(async ({}, info) => {
     body: JSON.stringify(workflowPolishCoverage, null, 2) })
 })
 
-async function open(page: Page, owner: WorkflowOwner, path: string, title: string, surface: string) {
-  await enter(page, owner, owner.publicOrigin + path, title, 40_000)
+async function open(page: Page, owner: WorkflowOwner, path: string, title: string, surface: string,
+  operation?: OriginalRead | readonly OriginalRead[]) {
+  await enter(page, owner, owner.publicOrigin + path, title, 40_000, operation)
   return settledSurface(page, surface)
 }
 async function admitted(page: Page, owner: WorkflowOwner, info: TestInfo, path: string, surface: string, required: readonly WorkflowRequirement[]) {
@@ -51,7 +52,8 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   // Record that stricter prerequisite; this visual test must not promote a partial resource.
   const caseInputsAdmitted = caseAdmission.requirements[0]!.observations.some((operation) =>
     operation.resourceState === "ready" && operation.state === "ready" && operation.operational)
-  const scenarios = await open(page, owner, "/orchestra/sf-portfolio/scenarios/" + encoded, "Portfolio scenarios", "UI42")
+  const scenarios = await open(page, owner, "/orchestra/sf-portfolio/scenarios/" + encoded, "Portfolio scenarios", "UI42",
+    caseInputsAdmitted ? { path: "/dashboard", query: { sf: "decision-controls", format: "json", case: selected.ref } } : undefined)
   if (caseInputsAdmitted) {
     await expect(scenarios.getByRole("heading", { name: "Scenario universe", exact: true })).toBeVisible()
     const candidates = scenarios.getByRole("group", { name: "Candidate scenarios", exact: true }).getByRole("checkbox")
@@ -83,11 +85,13 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   expect(sensitivityAdmission.ready).toBe(true)
   const sensitivityInputsAdmitted = sensitivityAdmission.requirements[0]!.observations.some((operation) =>
     operation.resourceState === "ready" && operation.state === "ready" && operation.operational)
-  const sensitivity = await open(page, owner, "/orchestra/sf-portfolio/sensitivity", "Sensitivity", "UI44")
+  const sensitivity = await open(page, owner, "/orchestra/sf-portfolio/sensitivity", "Sensitivity", "UI44",
+    sensitivityInputsAdmitted ? { path: "/dashboard", query: { sf: "decision-controls", format: "json" } } : undefined)
   if (sensitivityInputsAdmitted) {
     const chooseCase = sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true })
     await expect(chooseCase.locator("option").filter({ hasText: sourceText(selected.selected.objective) })).toHaveCount(1)
-    await chooseCase.selectOption(selected.ref)
+    await originalRead(page, owner, { path: "/dashboard", query: { sf: "decision-controls", format: "json", case: selected.ref } },
+      () => chooseCase.selectOption(selected.ref))
     await expect(sensitivity.locator(".sf-u19-sensitivity-form")).toHaveCount(1)
     await record(page, info, "UI44", "original-case-parameters", "Original authorized scenario, baseline and parameter choices. No sensitivity result or admitted evaluation is fabricated.")
   } else {
@@ -201,7 +205,9 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const prepare = async () => {
     const current = await open(page, owner, agendaPath, "Meeting agenda", "UI47")
     await current.getByLabel("Source dashboard page", { exact: true }).fill("Budget Overview")
-    await current.getByRole("button", { name: "Find authorized sections", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/projections/review", query: {
+      page: "Budget Overview", start: installation.year + "-01-01", end: installation.year + "-12-31",
+    } }, () => current.getByRole("button", { name: "Find authorized sections", exact: true }).click())
     const available = current.getByRole("region", { name: "Available sections", exact: true })
     await expect(available.getByRole("listitem")).toHaveCount(1, { timeout: 40_000 })
     await available.getByRole("button", { name: "Add to agenda", exact: true }).click()
@@ -247,8 +253,9 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const previous = await preserve()
   await expect(page.locator("[data-sf-preserved-confirmed]")).toContainText(previous)
   await record(page, info, "UI47", "original-preservation-confirmed", "The original preserve response was confirmed by a separate authenticated review read.", "[data-sf-preserved-confirmed]")
-  await page.locator("[data-sf-preserved-confirmed]").getByRole("button", { name: "Open preserved review", exact: true }).click()
-  await expect(page.locator('[data-review-ref=' + JSON.stringify(previous) + ']')).toBeVisible({ timeout: 40_000 })
+  await originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+    () => page.locator("[data-sf-preserved-confirmed]").getByRole("button", { name: "Open preserved review", exact: true }).click())
+  await expect(page.locator('[data-review-ref=' + JSON.stringify(previous) + ']')).toBeVisible()
   expect(new URL(page.url()).searchParams.get("project")).toBe(owner.projectId)
   expect(new URL(page.url()).searchParams.get("installation")).toBe(owner.installationId)
   await prepare()
@@ -257,9 +264,10 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
 
   const reviewEntry = await open(page, owner, "/orchestra/sf-reviews/reviews", "Preserved review", "UI48")
   await reviewEntry.getByLabel("Review reference", { exact: true }).fill(previous)
-  await reviewEntry.getByRole("button", { name: "Open preserved review", exact: true }).click()
+  await originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+    () => reviewEntry.getByRole("button", { name: "Open preserved review", exact: true }).click())
   const review = await settledSurface(page, "UI48")
-  await expect(review.locator("[data-review-ref]")).toHaveAttribute("data-review-ref", previous, { timeout: 40_000 })
+  await expect(review.locator("[data-review-ref]")).toHaveAttribute("data-review-ref", previous)
   await expect(review.getByRole("region", { name: "Preserved section sequence", exact: true })).toBeVisible()
   await expect(review).toContainText(previous)
   const originalValues = sourceReviews.get(previous)!.sections.flatMap((section) =>
@@ -291,16 +299,36 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const sourceResult = review.locator("[data-sf-source-state]")
   await expect(sourceResult).toHaveAttribute("data-sf-source-state", "unavailable")
   await expect(sourceResult.getByRole("link")).toHaveCount(0)
-  await sourceResult.getByRole("button", { name: "Try again", exact: true }).click()
-  await expect(sourceResult).toHaveAttribute("data-sf-source-state", "ready", { timeout: 40_000 })
+  const originalSourceRefs = [...new Set(originalValues.flatMap((value) => value.sourceRefs.map((source) => source.refId)))]
+  expect(originalSourceRefs).toHaveLength(1)
+  const sourceReceipt = await forwardOnce(page, (url) => url.origin === owner.publicOrigin &&
+    url.pathname === owner.mount + "/dashboard" && url.searchParams.get("sf") === "review-source" &&
+    url.searchParams.get("reviewRef") === previous && url.searchParams.get("referenceId") === originalSourceRefs[0], "GET")
+  const [{ response: sourceResponse }] = await Promise.all([
+    sourceReceipt.completed,
+    originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+      () => sourceResult.getByRole("button", { name: "Try again", exact: true }).click()),
+  ]).finally(sourceReceipt.close)
+  expect(sourceResponse.status()).toBe(200)
+  const originalLinks = Schema.decodeUnknownSync(SfReviewsReviewSource.output)(await sourceResponse.json())
+  expect("links" in originalLinks).toBe(true)
+  await expect(sourceResult).toHaveAttribute("data-sf-source-state", "ready")
   await expect(sourceResult.getByRole("link")).not.toHaveCount(0)
+  if ("links" in originalLinks) {
+    await expect(sourceResult.getByRole("link")).toHaveCount(originalLinks.links.length)
+    for (const link of originalLinks.links)
+      await expect(sourceResult.getByRole("link", { name: link.label, exact: true })).toHaveAttribute("href", link.url)
+  }
   await page.unroute(sourceRead)
   await record(page, info, "UI48", "source-retry-recovered",
     "One original review read was aborted as a negative transport control; explicit read retry recovered original authorized links, without a write.", "[data-sf-source-state]")
 
   const compare = await open(page, owner, "/orchestra/sf-reviews/compare?" +
     new URLSearchParams({ previousReview: previous, currentReview: current }), "Compare reviews", "UI49")
-  await compare.getByRole("button", { name: "Read and compare authorized reviews", exact: true }).click()
+  await originalReads(page, owner, [
+    { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+    { path: "/dashboard", query: { sf: "dashboard-review", id: current } },
+  ], () => compare.getByRole("button", { name: "Read and compare authorized reviews", exact: true }).click())
   await expect(compare.locator("[data-sf-comparison-compatibility]")).toHaveAttribute("data-sf-comparison-compatibility", "compatible", { timeout: 40_000 })
   await expect(compare.locator('[data-change-numeric="true"]')).toHaveCount(0)
   await record(page, info, "UI49", "compatible-original-revisions", "Two separately preserved original reviews of the same material; compatibility is verified and no numeric change is invented.")
@@ -328,7 +356,8 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
 
   const reportEntry = await open(page, owner, "/orchestra/sf-reviews/reports", "Report", "UI50")
   await reportEntry.getByLabel("Review reference", { exact: true }).fill(previous)
-  await reportEntry.getByRole("button", { name: "Open review for export", exact: true }).click()
+  await originalRead(page, owner, { path: "/dashboard", query: { sf: "dashboard-review", id: previous } },
+    () => reportEntry.getByRole("button", { name: "Open review for export", exact: true }).click())
   const report = await settledSurface(page, "UI50")
   const selectedSections = report.locator("[data-section-id] input[type=checkbox]")
   await expect(selectedSections).toHaveCount(1)

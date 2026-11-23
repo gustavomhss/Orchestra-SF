@@ -465,10 +465,45 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await targetRecord.selectOption({ label: targetLabel })
   await expect(targetRecord).toHaveValue(supplier)
   await expect(attachDocument).toBeDisabled()
-  await captureRecord(page, info, "UI58", "register-authorized-target")
+  const uploadViewport = page.viewportSize()
+  const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
+  for (const scheme of ["dark", "light"] as const) {
+    if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
+      await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({ width, height: width === 1440 ? 1100 : 900 })
+      await expect(targetRecord).toBeEnabled()
+      await expect(targetRecord).toHaveValue(supplier)
+      await expect(register.getByRole("button", { name: "Refresh records", exact: true })).toBeEnabled()
+      const bounds = await targetRecord.evaluate((element) => {
+        const box = element.getBoundingClientRect()
+        const form = element.closest("form")!.getBoundingClientRect()
+        return { left: box.left, right: box.right, width: box.width, formLeft: form.left, formRight: form.right }
+      })
+      expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft - 1)
+      expect(bounds.right).toBeLessThanOrEqual(bounds.formRight + 1)
+      expect(bounds.width).toBeGreaterThan(80)
+      await captureRecord(page, info, "UI58", "register-authorized-target-" + scheme + "-" + width)
+    }
+  }
+  if (uploadViewport) await page.setViewportSize(uploadViewport)
+  if (await page.locator("html").getAttribute("data-color-scheme") !== uploadTheme)
+    await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+  await expect(page.locator("html")).toHaveAttribute("data-color-scheme", uploadTheme ?? "dark")
   const catalogFilename = "catalog-" + filename
   const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
   await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
+  await expect(attachDocument).toBeEnabled()
+  const sourcesWithDraft = await observeFile(page, "files.document-sources", endpoint("document-sources"))
+  await root.getByRole("button", { name: "Refresh sources", exact: true }).click()
+  expect((await valueOf<Source[]>((await sourcesWithDraft.completed).response))
+    .filter((source) => source.label === filename)).toHaveLength(1)
+  await sourcesWithDraft.finish()
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(documentInput).toBeVisible()
+  expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+  await expect(targetRecord).toHaveValue(supplier)
   await expect(attachDocument).toBeEnabled()
   // Observe exactly one original scanned upload. Record identity and CAS come
   // from the authorized catalog, not a manually entered ID or asset revision.
@@ -500,8 +535,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   if (refreshedTargetBody.status !== "ok") throw new Error("The uploaded catalog target could not be read back")
   expect(refreshedTargetBody.context).toEqual(fileStamp)
   expect(refreshedTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 2)
-  expect(refreshedTargetBody.value.data.suppliers.find((row) => row.id === supplier)?.attachments
-    ?.filter((item) => item.name === catalogFilename)).toHaveLength(1)
+  expect(refreshedTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
   const refreshedCatalog = await valueOf<Source[]>((await refreshedSources.completed).response)
   await refreshedSources.finish()
   expect(refreshedCatalog.filter((source) => source.label === catalogFilename)).toHaveLength(1)
@@ -519,7 +553,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
     targetLabel, record: supplier, catalogVersion: beforeVersion + 1,
     uploadedVersion: beforeVersion + 2, httpStatus: catalogUploadResponse.status(),
     scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
-    manualRecordId: false, manualVersion: false, responseSubstituted: false, automaticRetries: 0,
+    manualRecordId: false, manualVersion: false, fileSelectionPreservedAcrossRead: true,
+    responseSubstituted: false, automaticRetries: 0,
   })
   if (await register.getAttribute("open") !== null) await register.locator("summary").click()
   await document.selectOption({ value: selectedSourceRef })
@@ -769,6 +804,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const readerDetail = reader.locator("[data-sf-record-detail]")
   await expect(readerDetail).toHaveCount(1)
   await expect(reader.locator(`[data-sf-supplier-ref="${supplier}"]`)).toHaveCount(1)
+  await expect(readerDetail.getByText(filename, { exact: true })).toBeVisible()
+  await expect(readerDetail.getByText(catalogFilename, { exact: true })).toBeVisible()
   const supplierReference = readerDetail.locator("details.sf-s01-secondary")
   await expect(supplierReference).toHaveCount(1)
   await expect(supplierReference.locator("summary")).toHaveText("Record reference")

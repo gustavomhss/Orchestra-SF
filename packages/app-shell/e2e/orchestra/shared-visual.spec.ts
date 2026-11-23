@@ -412,6 +412,7 @@ test("Rag Studio ignores reads from an unmounted page instance", async ({ page }
   await expect(page.getByRole("heading", { name: "Inbox", exact: true })).toBeVisible()
   state.rag = "ready"
   state.ragReadWait = undefined
+  await expandAdvanced(page)
   await sidebar.getByRole("button", { name: "Rag Studio", exact: true }).click()
   const files = studio.locator("section").filter({ has: page.getByRole("heading", { name: "Files", exact: true }) })
   await expect(files.getByText("No admitted files.", { exact: true })).toBeVisible()
