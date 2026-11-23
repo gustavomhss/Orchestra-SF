@@ -78,32 +78,34 @@ export function SfRecordDetail(props: SfRecordDetailProps): JSX.Element {
   return (
     <article class="sf-s01-record-detail" data-sf-record-detail aria-labelledby={titleID}>
       <header class="sf-s01-detail-header">
-        <div class="sf-s01-detail-heading">
-          <button type="button" class="mx-link" onClick={() => props.onBack()}>
-            {copy.t(sfS01Key("sf.common.back"))}
-          </button>
-          <div>
-            <h2 id={titleID} tabindex="-1" data-sf-detail-heading>{copy.text(props.title)}</h2>
-            <Show when={props.secondaryId}>
-              {(value) => (
-                <details class="sf-s01-secondary">
-                  <summary>{copy.t(sfS01Key("sf.s01.recordIdentity"))}</summary>
-                  <bdi>{copy.text(value())}</bdi>
-                </details>
-              )}
-            </Show>
+        <button type="button" class="mx-link sf-s01-detail-back" onClick={() => props.onBack()}>
+          {copy.t(sfS01Key("sf.common.back"))}
+        </button>
+        <div class="sf-s01-detail-summary">
+          <div class="sf-s01-detail-heading">
+            <div>
+              <h2 id={titleID} tabindex="-1" data-sf-detail-heading>{copy.text(props.title)}</h2>
+              <Show when={props.secondaryId}>
+                {(value) => (
+                  <details class="sf-s01-secondary">
+                    <summary>{copy.t(sfS01Key("sf.s01.recordIdentity"))}</summary>
+                    <bdi>{copy.text(value())}</bdi>
+                  </details>
+                )}
+              </Show>
+            </div>
+            <div id={statusID} class="sf-s01-status" data-sf-tone={props.status.tone} data-sf-status={props.status.code}>
+              <span class="sf-s01-sr">{copy.t(sfS01Key("sf.s01.recordStatus"))}: </span>
+              {copy.text(props.status.text)}
+            </div>
           </div>
-          <div id={statusID} class="sf-s01-status" data-sf-tone={props.status.tone} data-sf-status={props.status.code}>
-            <span class="sf-s01-sr">{copy.t(sfS01Key("sf.s01.recordStatus"))}: </span>
-            {copy.text(props.status.text)}
+          <div class="sf-s01-detail-actions">
+            <button type="button" class="mx-btn" onClick={() => props.onOpenPage()}>
+              {copy.t(sfS01Key("sf.common.openPage"))}
+            </button>
+            <For each={props.secondaryActions}>{(action) => <SfActionButton action={action} />}</For>
+            <Show when={props.primaryAction}>{(action) => <SfActionButton action={action()} />}</Show>
           </div>
-        </div>
-        <div class="sf-s01-detail-actions">
-          <button type="button" class="mx-btn" onClick={() => props.onOpenPage()}>
-            {copy.t(sfS01Key("sf.common.openPage"))}
-          </button>
-          <For each={props.secondaryActions}>{(action) => <SfActionButton action={action} />}</For>
-          <Show when={props.primaryAction}>{(action) => <SfActionButton action={action()} />}</Show>
         </div>
       </header>
 

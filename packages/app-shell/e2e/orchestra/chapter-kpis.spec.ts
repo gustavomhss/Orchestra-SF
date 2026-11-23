@@ -417,6 +417,68 @@ test("at 700px Home keeps the project list and lays tiles in two columns without
   ).toEqual({ page: true, home: true })
 })
 
+
+for (const view of [
+  { width: 320, scheme: "dark", locale: "en", unavailable: "Unavailable", noRepository: "No repository", notConnected: "Not connected", configure: "Configure tracking" },
+  { width: 320, scheme: "light", locale: "br", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
+  { width: 390, scheme: "light", locale: "en", unavailable: "Unavailable", noRepository: "No repository", notConnected: "Not connected", configure: "Configure tracking" },
+  { width: 390, scheme: "dark", locale: "br", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
+] as const) {
+  test(`round two: Home keeps absence states readable at ${view.width}px in ${view.locale} ${view.scheme}`, async ({ page }, info) => {
+    expect(info.config.metadata.bundle).toBe("production")
+    await page.setViewportSize({ width: view.width, height: 900 })
+    await setup(page, {
+      scheme: view.scheme,
+      locale: view.locale,
+      activity: { mode: "missing" },
+      git: { mode: "none" },
+      pullRequests: { mode: "not_installed" },
+    })
+    await page.goto("/")
+    await expect(page.locator("html")).toHaveAttribute("lang", view.locale === "br" ? "pt-BR" : "en")
+    await expect(home(page)).toHaveAttribute("aria-busy", "false")
+    await expect(value(page, "tokens")).toHaveText(view.unavailable)
+    await expect(value(page, "commits")).toHaveText(view.noRepository)
+    await expect(value(page, "pullRequests")).toHaveText(view.notConnected)
+    await page.evaluate(async () => { await document.fonts.ready })
+    const measurements = await home(page).locator(".home-kpi-value").evaluateAll((items) => items.map((element) => ({
+      tile: element.closest("[data-tile]")?.getAttribute("data-tile"),
+      text: element.textContent,
+      state: element.getAttribute("data-state"),
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    })))
+    await info.attach("home-narrow-state-measurements", {
+      body: JSON.stringify({ view, measurements }, null, 2),
+      contentType: "application/json",
+    })
+    await page.screenshot({ path: info.outputPath(`home-states-${view.locale}-${view.scheme}-${view.width}.png`) })
+    // This scroll is a visual checkpoint, not a claim of wheel or keyboard reachability.
+    await value(page, "pullRequests").scrollIntoViewIfNeeded()
+    await page.screenshot({ path: info.outputPath(`home-absence-${view.locale}-${view.scheme}-${view.width}.png`) })
+    for (const measured of measurements) {
+      expect.soft(measured.scrollWidth, `${measured.tile}: ${measured.text}`).toBeLessThanOrEqual(measured.clientWidth)
+    }
+    const configure = home(page).getByRole("button", { name: view.configure, exact: true })
+    await configure.focus()
+    await expect(configure).toBeFocused()
+    await expect(configure).toBeInViewport()
+    const footer = await home(page).locator(".home-foot").evaluate((element) => ({
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      viewportWidth: window.innerWidth,
+    }))
+    await info.attach("home-narrow-footer-measurements", {
+      body: JSON.stringify(footer, null, 2),
+      contentType: "application/json",
+    })
+    await page.screenshot({ path: info.outputPath(`home-footer-${view.locale}-${view.scheme}-${view.width}.png`) })
+    expect.soft(footer.scrollWidth).toBeLessThanOrEqual(footer.clientWidth)
+    expect.soft(footer.documentWidth).toBeLessThanOrEqual(footer.viewportWidth)
+  })
+}
+
 test("no selected profile shows no KPIs and reads nothing", async ({ page }) => {
   const requests: URL[] = []
   const gitRequests: URL[] = []
@@ -564,7 +626,7 @@ async function setup(
   page: Page,
   input: {
     scheme?: "dark" | "light"
-    locale?: "en" | "de"
+    locale?: "en" | "de" | "br"
     gate?: Promise<void>
     finished?: () => void
     requests?: URL[]

@@ -215,11 +215,16 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             !ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
           onRetryRead={ref() ? () => setStore("retry", (count) => count + 1) : undefined}>
           <Show when={store.review}>{(review) => <section class="sf-n28-section sf-section" data-preserved-review={review().id}>
-            <dl class="sf-n28-summary mx-card">
-              <div><dt>{t("sf.u33.review")}</dt><dd>{review().id}</dd></div>
-              <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
-              <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
-            </dl>
+            <div class="sf-n28-summary mx-card sf-section">
+              <dl class="sf-metadata">
+                <div><dt>{t("sf.u33.coverage")}</dt><dd>{t(coverageOwned(review()) ? "sf.u33.available" : "sf.u33.unavailable")}</dd></div>
+                <div><dt>{t("sf.u33.selected")}</dt><dd>{store.selected.length} / {review().sections.length}</dd></div>
+              </dl>
+              <details class="sf-technical-details">
+                <summary>{t("sf.u33.review")}</summary>
+                <code>{review().id}</code>
+              </details>
+            </div>
             <div class="mx-card sf-review-report-format sf-form sf-fields">
               <label for={uid + "-format"}>{t("sf.u33.format")}</label>
                 <select id={uid + "-format"} aria-label={t("sf.u33.format")} value={store.format}

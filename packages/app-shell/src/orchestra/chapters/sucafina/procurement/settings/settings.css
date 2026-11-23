@@ -32,3 +32,30 @@
 .sf-n21-settings-nav a:is(:hover, :focus-visible) { background: var(--mx-raised); text-decoration: none; }
 .sf-n21-fieldset:target > legend { color: var(--orchestra-accent); }
 .sf-n21-field-help { color: var(--mx-dim); font-size: var(--orchestra-font-size-xs); line-height: 1.5; }
+
+@media (max-width: 619px) {
+  .sf-n21-settings-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    gap: var(--sf-space-2);
+    padding: var(--sf-space-1) var(--sf-space-1) var(--sf-space-3);
+    scroll-padding-inline: var(--sf-space-1);
+    scrollbar-width: thin;
+  }
+  .sf-n21-settings-nav a {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    min-inline-size: 0;
+    max-inline-size: min(100%, var(--sf-field-width));
+    min-block-size: var(--sf-control-height);
+    padding: var(--sf-space-2) var(--sf-space-3);
+    overflow-wrap: anywhere;
+  }
+  .sf-n21-settings-nav:focus-visible {
+    outline: var(--sf-focus-width) solid var(--orchestra-accent);
+    outline-offset: var(--sf-focus-width);
+  }
+}
