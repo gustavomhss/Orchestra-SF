@@ -1,4 +1,4 @@
-import { createEffect, For, on, Show } from "solid-js"
+import { createEffect, For, on, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
@@ -21,10 +21,17 @@ export function Files(props: ChapterPageProps) {
   })
   const location = () => ({ directory: props.directory })
 
-  const openSource = (sourceId: string) =>
-    sdk()
-      .orchestra.ragStudio.source({ location: location(), sourceId })
+  let disposed = false
+  let sourceRead = 0
+  let detailRead = 0
+  const openSource = (sourceId: string) => {
+    if (disposed) return Promise.resolve()
+    const directory = props.directory
+    const started = ++detailRead
+    return sdk()
+      .orchestra.ragStudio.source({ location: { directory }, sourceId })
       .then((result) => {
+        if (disposed || started !== detailRead || props.directory !== directory) return
         setRoster("openId", result.data.source.id)
         setState({
           openError: false,
@@ -33,17 +40,22 @@ export function Files(props: ChapterPageProps) {
           cuts: result.data.chunks.map((chunk) => ({ start: chunk.start, end: chunk.end })),
         })
       })
-      .catch(() => setState({ openError: true }))
+      .catch((error: unknown) => {
+        if (disposed || started !== detailRead || props.directory !== directory) return
+        console.error(error)
+        setState({ openError: true })
+      })
+  }
 
-  let sourceRead = 0
   const load = (quiet: boolean) => {
+    if (disposed) return Promise.resolve()
     const directory = props.directory
     const started = ++sourceRead
     if (!quiet) setRoster("status", "loading")
     return sdk()
       .orchestra.ragStudio.sources({ location: { directory } })
       .then((result) => {
-        if (started !== sourceRead || props.directory !== directory) return
+        if (disposed || started !== sourceRead || props.directory !== directory) return
         setRoster({
           status: "ready",
           sources: result.data.map((row) => ({ id: row.id, path: row.path, status: row.status })),
@@ -51,13 +63,14 @@ export function Files(props: ChapterPageProps) {
         if (quiet && roster.openId) void openSource(roster.openId)
       })
       .catch((error: unknown) => {
-        if (started !== sourceRead || props.directory !== directory) return
+        if (disposed || started !== sourceRead || props.directory !== directory) return
         console.error(error)
         setRoster({ status: "error", sources: [] })
       })
   }
 
   createEffect(on(() => props.directory, () => {
+    detailRead += 1
     setState({ path: "", refusal: "", openError: false, openPath: "", text: "", cuts: [] })
     setRoster("openId", "")
     void load(false)
@@ -65,6 +78,7 @@ export function Files(props: ChapterPageProps) {
 
   createEffect(on(() => roster.sourceRetry, () => void load(false), { defer: true }))
   createEffect(on(() => roster.revision, () => void load(true), { defer: true }))
+  onCleanup(() => { disposed = true; sourceRead += 1; detailRead += 1 })
 
   return (
     <section>
