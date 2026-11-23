@@ -8,6 +8,14 @@
   font-family: var(--mx-sans);
 }
 .sf-files .sf-state-panel, .sf-files .sf-state-content { min-inline-size: 0; }
+/* Preserve the leaf's spacing inside the shared, layout-neutral state wrapper. */
+.sf-files[data-sf-leaf="u23"] > .sf-state-panel > .sf-state-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--sf-workflow-space-lg, 20px);
+  min-inline-size: 0;
+}
 .sf-files-fields,
 .sf-files-section {
   display: grid;
