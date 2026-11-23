@@ -625,3 +625,63 @@ O catálogo admite as adições reais de Design, sem alterar seletores, polític
 A [reconciliação7085665366](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7085665366) substitui a proposta de incorporar a Migração inteira no #613. Design integra dev efetivo/#705 e fecha o PR existente com revisão/CI/instalação. Depois #673 compõe esse dev, revalida as seis uniões preparadas e executa20 jobs A2 mais um job suplementar de quatro invocações. Baselines só serão atualizadas após execução completa autêntica e revisão; o novo candidato resultante exige sua própria qualificação, incluindo a instalação impactada.
 
 C/T final, dois ACKs, tar, reservas e aceites continuam nulos. G05/G06 devem executar nesse C/T; G07 deve produzir/verificar o tar original; G08/G10 usam os mesmos bytes em ambientes isolados confirmados. Azure está desbloqueado para descoberta, mas o acesso de execução e os responsáveis/recursos não foram confirmados. **0/5 gates finais; NOT_READY; decisão de produção nula.** #349/#588 e o escopo técnico G09/#647 permanecem encerrados em seus registros. Qualquer virada requer o aval explícito de Gustavo após evidência completa e janela proposta.
+
+## Reconciliação após #709/#711 — 2026-11-23T00:31:28Z
+
+Este apêndice conserva literalmente todo o registro anterior. Base observada: **dev `9d322c5d461942eba5948325ec8a73185ec8a432` / T `2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8`**. Lease documental: [#628/7088391280](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7088391280), somente status, README e este ledger. A publicação do #707 e o corte anterior foram arquivados sem transferência de prova. Nenhuma revisão ou execução desta nova atualização é antecipada.
+
+### Host existente autorizado; direção operacional corrigida
+
+A [orientação do Owner](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087839884), reafirmada no [encerramento #711](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702), autoriza `orchsf-vm` existente. Retiradas as propostas de duas/três VMs extras, aumento de cota e orçamento de USD 300. G05/G06/G07 serão executados em Actions; G08 na VM atual com browser e sessões Microsoft reais; G10 no mesmo host depois de concluir e preservar a evidência de G08.
+
+Antes de substituir o piloto, preservar dados, configuração, instalação e evidências. Claw e a outra VM ficam fora das alterações; os perfis opcionais #709 não serão aplicados ao RG/rede compartilhada. Uso autorizado não significa reserva, runner instalado, janela, contexto Microsoft ou aceite final confirmado.
+
+O inventário ARM 45061014414 permanece integral e conserva `guestObserved:false` no seu próprio escopo. A [observação guest posterior pela rota Owner](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087005340) e o [complemento de acesso](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7087524921) são observações separadas. No [checkpoint 7088172949](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7088172949), duas reconexões do controle do browser não retornaram documentação/estado e foram interrompidas. Isso não revoga login ou autorização anteriores; nenhum resultado de tentativa posterior é incluído neste corte.
+
+G10 ainda precisa da restauração independente do **backup original**. O [inventário autorizado](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088112697) deverá resolver volumes/capacidade e um canal privado já disponível, SSH/SFTP ou Blob privado existente quando aplicável, sem listar segredos, criar recursos ou alterar a rede. Não há canal/destino operacional confirmado, mas também não se infere sua ausência. Fixtures e preflights controlados não demonstram restore real.
+
+### Componentes #709 e #711 integrados
+
+| Entrega | Fonte / árvore / merge | Execução original recebida |
+| --- | --- | --- |
+| #709 perfis opcionais | C `cc408e6fb9697ef314d46746a1c7cdc5b5ca84fb`; T `c5ee09b9407ecce59eb5b024e555b90e400542c9`; M `08c96c5d74dce601ae60cd6db53bac8c0f370959`, mesma árvore | [45081044372](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45081044372), job137389056855:61/61 PASS, 14 originais +47 adicionais. Guards78/cinco paths/zero gates/zero erros, quatro avisos de harness preservados. |
+| #711 origem existente | C `97e97ec7b64673c63865c734c8dc0207698a3d7e`; T `2ec90090b0b9cf0b7061e0029f1bc8fdc92536d8`; M `9d322c5d461942eba5948325ec8a73185ec8a432`, mesma árvore | [45086670468](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45086670468), job137406777372:23/23 PASS, 17 originais +6 adicionais. Guards78/cinco paths/zero findings, warnings ou erros. |
+
+#709 foi recebido em [review6015029109](https://github.com/gustavomhss/Orchestra-SF/pull/709#pullrequestreview-6015029109). O driver `76ad3ee51b8d65792c00385ec4f00ce5311fe476` fez checkout literal de C; não executou login/apply Azure. Artefato14777790055,90.933 bytes, SHA-256 `cb3582ae1e60466429a95414495feed4c3f00f2f65936377ec19392cf1c741fc`;63 CRC e62 hashes internos conferidos. Recibo `5853224f8b1f6fbfb41897f0940eaa788f2a893a97764cbc1988999cce0bec29`. Os quatro WARN test-timeout-raised pertencem às novas declarações do harness; nenhum timeout original foi ampliado, sem waiver ou supressão. Classe COMPONENT_READINESS.
+
+#711 foi conferido no [readback independente7088167078](https://github.com/gustavomhss/Orchestra-SF/pull/711#issuecomment-7088167078). O driver `7872a6db0d4f3708dbee800bc85a5ccb5d5c8dfd` fez checkout literal de C, preservando o step mantido de1.462 bytes/29 linhas. Artefato14779960265,19.170 bytes, SHA-256 `b4057c691cfbbefa0b726852bc120cc698d84d869b641b4107b8be986760259f`;16 CRC,15 hashes internos e13 inputs antes/depois iguais aos blobs de C. Recibo `69e96112239341fd7ac13fc7a6b652b44255d8977b1d289ec76e3ec953725803`. Classe FILESYSTEM_COMPONENT_CONTROLS, installedTeamsProof=false, releaseQualified=false. A origem pode declarar disposable:false; clone mantém os controles anteriores. IMDS/preflight de recusa são fixtures declaradas. Ambos os drivers ficaram fora dos merges.
+
+### Design: A4, T4 e diagnósticos mantêm fontes distintas
+
+[**A4**](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087702050), pai C `75767512824ceb2436efe96c13862c54b1cdbbbc` / T `530b60576e4e1eb7881e4aefc0fddf0c6e77f330`: três snapshots acrescentaram somente a request, com1worker/0retry/repeat1. Analytics45081787600/S598f698 deu1/2; Collaboration45081788980/S6e1e41 deu2/2; Reviews45081789903/S68b870 deu2/2. Total5/6, com todos os cleanups recebidos. UI42 falhou no primeiro preview/60.000ms; UI43/UI44 não foram alcançadas. BI passou sem evento de falha nativa, logo não exerceu o ramo contestado. ZIPs originais, bindings e limites das seis jornadas estão preservados no recibo e no catálogo de evidências.
+
+[**T4**](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7087939493), pai C6e `6e1795cf559a9918ab4ecab5f77eadbb7f8c635e` / T `89d48f214fa4c8eaec214e01d4359591413da395`: run45082464794 executou S `a5b87a42d9452cd83f4d7adcad77c4304887126b` / T `9e3ade2da9d404bdf6773d9abcbf3b66fb75e76a`, apenas request+wrapper. Main137393469375FAIL, cleanup137395780730PASS. **14/15 grupos; C17 original falhou em105.008,85ms contra105.000ms**, sem chegar ao ciclo/recuperação/revogação. Finance passou depois. Guards78/798 paths/38WARN/zero erros; Omni15declarações/26spawns/zero delegações. API artifacts[]; logs originais completos, sem ZIP inventado. Esse negativo permanece.
+
+[**P5**](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088008968) e [**P6**](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088329867) são diagnósticos filhos únicos de C6e, Bun1.3.14, qualification:false:
+
+| Recorte | Run / snapshot realmente executado | Resultado e limite |
+| --- | --- | --- |
+| P5 Analytics |45084762110 / S `8c8b67f4075be2c1a43425c204e2a033065b7848`, T `d5acd31dee0f6c43ae27be448d790279fdcdaff4` | MainFAIL/cleanupPASS; UI42 timeout60s, UI43/UI44 não alcançados, BI PASS. Seis COST até50s, sem window/final. |
+| P5 C17 |45084763055 / S `60d756f9286e73ca9742005ac5d70e842adb5e2d`, T `697689021e82158ee528c15cb06937861f2b074e` | Main/cleanupPASS; C17 completo92.456,97ms. Grupo54PASS/2SKIP originais/990assertions, wrapper2PASS. |
+| P6 Analytics |45086341473 / S `17b3b3a511f14f7f52d46c0a504399aa778cee3f`, T `dc24f348653eaf750004bd4eca6c0e2ad1efa6d6` | MainFAIL/cleanupPASS; mesmo negativoUI42, BI PASS49.875ms. Dez linhas:6COST+4CALLER, até50.002ms. |
+| P6 C17 |45086342916 / S `43ccb1b6101b8eef52f3d974d1bf07f56e482c54`, T `291f87d31214d04151357fd66dd0491340b7611a` | Main/cleanupPASS; C17 completo97.252,47ms. Grupo54PASS/2SKIP originais/990assertions, wrapper2PASS;11 linhas:7COST+4CALLER. |
+
+P6 Analytics: artefato14780056147,44.946.170 bytes, SHA-256 `dba84b1239cd9e171bc089d7b2b041c29e69d935d8abb4e24fcf5cc970b5bd23`,147 CRC mais dois do ZIP embutido no HTML; stdout completo igual entre runtime e HTML. P6 C17 conserva quatro recibos externos, Omni2declarações/4spawns/zero delegações e artifacts[]. Logs, sequências e seus hashes foram recebidos independentemente no comentário P6.
+
+Amostragem periódica a cada4.096 chamadas, limitada às primeiras32tuplas, não mede CPU, frequência total ou tempo por caller. Overflow foi16 em Analytics e150 em C17; não extrapolar percentuais. O window de C17 saiu aos97.252ms e só inclui spans assentados até60s; Analytics não tem agregado terminal. Esses runs não repetem a matriz técnica completa, types ou guards. Nenhum PASS é transferido para C6e, e1c4, Bun1.4.1 ou tar, nem apaga T4.
+
+### BI aceito por fonte; execução e runtime Release pendentes
+
+A [revisão estática7088302107](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088302107) recebeu C `e1c4a604a1e659fffbf20bd1c16d0f56ccc5c805` / T `e0c1c280005dba33fed5aac85f78f069de625188`, pai e672. Único delta: helper BI blob `757dde586df81bc639814c4b50e4c9fa82f2cf9c`.
+
+Os dois findings de fonte foram reparados: conclusão da mesma Request é obrigatória, requestfailed permanece fatal mesmo depois de producer resolvido e falha de detach não substitui a primária. Listeners permanecem durante cleanup. Não há novo GET/body/retry, mudança do waiter ou da tolerância escalar; a spec original continua f8a62baf. Isso é aceite estático do recorte, **não execução verde**. A próxima prova precisa observar original-request-completed e os oráculos no candidato efetivo. P5/P6 ainda usam o helper anterior.
+
+A admissão no runtime real **Bun1.4.1 /4661e494f052c83c80dade1318e5710238340be6**, pinado em Release, também continua pendente. Inspeção de predicados ou diagnósticos em1.3.14 não ampliam pin nem qualificam o produtor/tar. UI42–UI44, a composição após #711 e a matriz original ainda impedem promoção do #613;12/15 áreas históricas permanecem preservadas.
+
+### Sequência única e estado final
+
+A rota [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088139499) → [#710](https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7088132472) → [#673](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7088139755) substitui a sequência anterior de dois PRs. Writers existentes preservados. #710 deve reconciliar o visual sobre o Design aprovado, sem duplicar Core nem retirar os guards de workspace. O [finding UI41 no head744d24f2](https://github.com/gustavomhss/Orchestra-SF/pull/710#pullrequestreview-6015334664) pede conservar controles de estado vazio no produto, sem modelo fictício ou perda do oráculo; é finding estático, não resultado de CI.
+
+Depois, #673 incorpora o dev resultante, revalida as seis uniões e executa20 jobs A2 mais o suplemento de quatro invocações; SF/Decisions/APP-SRC continuam com baselines pendentes. A campanha visual opt-in420s não substitui os prazos canônicos210/180s. Reports11 e pool originais permanecem obrigatórios.
+
+**0/5 gates finais; NOT_READY.** finalCandidate, dois ACKs, tar final, reservas, janela e decisão de produção permanecem sem valores inventados. Nenhum ambiente foi mutado por esta atualização documental. #349/#588, G09/#647 e Compras222(2) ficam nos seus escopos originais. O aval explícito de produção continua necessário após os recibos finais e a janela proposta.
