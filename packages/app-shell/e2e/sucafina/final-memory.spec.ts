@@ -158,37 +158,6 @@ waveFourTest("UI61 · original conditions, independent materiality and explicit 
     await reflow(page)
     await captureFinalSurface(page, info, "UI61", "light-320-recorded-condition", { preview: true })
   })
-  await independently("UI61 explicitly starts the original signal read and cancels only this view's wait", async () => {
-    const surface = page.locator('[data-sf-surface="UI61"]')
-    const signals = surface.locator("[data-sf-memory-signals-state]")
-    const requested = page.waitForRequest((request) => isMemorySignalRequest(request, installation.origin, seeded), { timeout: 40_000 })
-    await signals.getByRole("button", { name: "Read current signals", exact: true }).click()
-    const request = await requested
-    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "loading")
-    await expect(signals.getByRole("button", { name: "Read current signals", exact: true })).toBeDisabled()
-    await expect(surface.locator('[data-sf-condition-id="' + registered.conditionId + '"]')).toContainText(finalMemoryData.condition)
-    const cancelled = page.waitForEvent("requestfailed", {
-      predicate: (failed) => failed === request, timeout: 40_000,
-    })
-    await signals.getByRole("button", { name: "Cancel signal consultation", exact: true }).click()
-    const failed = await cancelled
-    expect(failed.failure()?.errorText).toMatch(/ERR_ABORTED|NS_BINDING_ABORTED/)
-    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "cancelled")
-    await expect(signals).toContainText("Signal consultation stopped in this view. No current result was received. You can check again.")
-    await expect(signals.getByText("No materiality signals are recorded for this authorized case.", { exact: true })).toHaveCount(0)
-    await expect(signals.getByRole("button", { name: "Read current signals", exact: true })).toBeEnabled()
-    expect(signalRequests).toHaveLength(1)
-    await captureFinalSurface(page, info, "UI61", "light-320-cancelled-consultation", { preview: true })
-    // Changing the case erases local cancellation, conditions and any pending detail.
-    await surface.locator("[data-sf-memory-case]").selectOption("")
-    await expect(surface.locator("[data-sf-memory-signals-state]")).toHaveCount(0)
-    await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
-    await expect(surface.locator("[data-sf-memory-materiality]")).toHaveCount(0)
-    await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
-    await selectMemory(page, seeded, "UI61")
-    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "idle")
-    expect(signalRequests).toHaveLength(1)
-  })
   await independently("UI61 reads original materiality independently and clears detail on a new selection", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
     await scheme(page, "dark")
@@ -233,6 +202,40 @@ waveFourTest("UI61 · original conditions, independent materiality and explicit 
     })
   })
 
+  await independently("UI61 explicitly starts the original signal read and cancels only this view's wait", async () => {
+    // This costly original read is last; canceling the browser wait does not stop source reconciliation.
+    // Reopen only before it starts. No subsequent assertion depends on another server response.
+    await selectMemory(page, seeded, "UI61")
+    const surface = page.locator('[data-sf-surface="UI61"]')
+    const signals = surface.locator("[data-sf-memory-signals-state]")
+    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "idle")
+    expect(signalRequests).toEqual([])
+    const requested = page.waitForRequest((request) => isMemorySignalRequest(request, installation.origin, seeded), { timeout: 40_000 })
+    await signals.getByRole("button", { name: "Read current signals", exact: true }).click()
+    const request = await requested
+    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "loading")
+    await expect(signals.getByRole("button", { name: "Read current signals", exact: true })).toBeDisabled()
+    await expect(surface.locator('[data-sf-condition-id="' + registered.conditionId + '"]')).toContainText(finalMemoryData.condition)
+    const cancelled = page.waitForEvent("requestfailed", {
+      predicate: (failed) => failed === request, timeout: 40_000,
+    })
+    await signals.getByRole("button", { name: "Cancel signal consultation", exact: true }).click()
+    const failed = await cancelled
+    expect(failed.failure()?.errorText).toMatch(/ERR_ABORTED|NS_BINDING_ABORTED/)
+    await expect(signals).toHaveAttribute("data-sf-memory-signals-state", "cancelled")
+    await expect(signals).toContainText("Signal consultation stopped in this view. No current result was received. You can check again.")
+    await expect(signals.getByText("No materiality signals are recorded for this authorized case.", { exact: true })).toHaveCount(0)
+    await expect(signals.getByRole("button", { name: "Read current signals", exact: true })).toBeEnabled()
+    expect(signalRequests).toHaveLength(1)
+    await captureFinalSurface(page, info, "UI61", "light-320-cancelled-consultation", { preview: true })
+    // Changing the case erases local cancellation, conditions and any pending detail.
+    await surface.locator("[data-sf-memory-case]").selectOption("")
+    await expect(surface.locator("[data-sf-memory-signals-state]")).toHaveCount(0)
+    await expect(surface.locator("[data-sf-condition-id]")).toHaveCount(0)
+    await expect(surface.locator("[data-sf-memory-materiality]")).toHaveCount(0)
+    await expect(surface.getByRole("button", { name: "Read authorized case", exact: true })).toBeDisabled()
+    expect(signalRequests).toHaveLength(1)
+  })
   await independently("No memory selection command was issued by the browser", async () => { expect(memoryWrites).toEqual([]) })
   await independently("Memory pages emitted no JavaScript errors", async () => { expect(diagnostics.pageErrors).toEqual([]) })
   await independently("Memory console contains only verified original coverage refusals", async () => {
