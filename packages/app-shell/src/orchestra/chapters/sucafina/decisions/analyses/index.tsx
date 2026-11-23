@@ -391,7 +391,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
               disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.refreshChoices")}</button>
           }>
           <div class="mx-card sf-decision-analysis-editor" hidden={view.phase === "reviewing" || view.phase === "starting"}>
-          <div class="sf-decision-section-heading"><h2>{t(view.analyses.length && view.models.length ? "sf.u37.prepare" : "sf.u37.cases")}</h2></div>
+          <div class="sf-decision-section-heading"><h2>{t("sf.u37.prepare")}</h2></div>
           <div class="sf-analyses-controls">
             <label><span id="sf-analysis-case-label">{t("sf.u37.chooseCase")}</span>
               <select aria-labelledby="sf-analysis-case-label" value={view.caseKey} disabled={isBusy() || view.phase === "outcome-unknown"}
@@ -413,7 +413,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
                 )}</For>
               </select>
             </label>
-            <Show when={view.analyses.length > 0 && view.models.length > 0}>
+            {/* Keep empty admitted catalogs visible; canPrepare remains the original authority gate. */}
             <label><span id="sf-analysis-type-label">{t("sf.u37.chooseAnalysis")}</span>
               <select aria-labelledby="sf-analysis-type-label" value={view.analysisKey} disabled={isBusy() || view.phase === "outcome-unknown"}
                 onChange={(event) => { invalidatePrepared(); setView("analysisKey", event.currentTarget.value) }}>
@@ -438,7 +438,6 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
             </label>
             <button class="mx-btn primary" type="button" onClick={() => void prepare()}
               disabled={!canPrepare()}>{t("sf.u37.prepare")}</button>
-            </Show>
             <button class="mx-btn" type="button" onClick={() => void loadChoices()}
               disabled={isBusy() || view.phase === "outcome-unknown"}>{t("sf.u37.refreshChoices")}</button>
           </div>
