@@ -307,7 +307,7 @@
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-opex-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sf-opex-space-lg); margin-block: var(--sf-opex-space-lg); min-inline-size: 0; }
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-opex-field { display: grid; align-content: start; gap: var(--sf-opex-space-sm); min-inline-size: 0; }
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-opex-field-wide { grid-column: 1 / -1; }
-.sf-budget-surface[data-sf-budget="CAP04"] .sf-opex-month-field { grid-column: 1 / -1; max-inline-size: var(--sf-opex-year-width); }
+.sf-budget-surface[data-sf-budget="CAP04"] .sf-opex-month-field { grid-column: 1 / -1; inline-size: min(100%, 28ch); }
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-form label { margin: 0; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); font-weight: 500; }
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-form :is(input, select, textarea) { margin: 0; padding: var(--sf-opex-space-sm) var(--sf-opex-space-md); border: var(--sf-opex-rule) solid var(--mx-line); border-radius: var(--orchestra-radius-sm); background: var(--mx-soft); color: var(--mx-strong); font-family: var(--mx-sans); font-size: var(--orchestra-font-size-md); }
 .sf-budget-surface[data-sf-budget="CAP04"] .sf-budget-form textarea { min-block-size: var(--sf-opex-textarea-height); line-height: 1.6; resize: vertical; }

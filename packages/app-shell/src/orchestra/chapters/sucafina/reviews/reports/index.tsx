@@ -195,18 +195,18 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   return (
     <SfPageFrame titleKey={key("sf.ui50.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}
-      primaryAction={{
+      primaryAction={ref() ? {
         id: "report", labelKey: key(recovery() ? "sf.common.retry" : "sf.ui50.primary"), tone: "primary",
         disabled: reportBlocked(),
         busy: store.busy, onInvoke: () => { void requestReport() },
-      }}
+      } : undefined}
     >
       <div class="sf-n28 sf-workflow" data-sf-surface="UI50" data-sf-wave="five" data-export-state={operationState()}>
         <header class="sf-review-intro">
           <h2>{t("sf.u33.prepareHeading")}</h2>
           <p>{t(ref() ? "sf.u33.selectionHint" : "sf.u33.prepareHint")}</p>
         </header>
-        <Show when={!ref()}><SfOpenReviewReference route={props.route} destination="reports" /></Show>
+        <Show when={!ref() && owner.ready()}><SfOpenReviewReference route={props.route} destination="reports" /></Show>
         <Show when={recovery()?.reason === "outcome-unknown" || (typeof store.marker === "string" && !recovery())}>
           <p role="alert">{t("sf.u33.unknown")}</p>
         </Show>

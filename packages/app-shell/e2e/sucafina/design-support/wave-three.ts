@@ -1,6 +1,8 @@
-import { test, expect, type Page, type TestInfo } from "@playwright/test"
+import { test, expect, type Page, type Response, type TestInfo } from "@playwright/test"
 import { ServerConnection } from "../../../src/context/server-connection"
 import { authenticateDesignInstallation, withDesignInstallation, type DesignInstallation } from "./installation"
+import { originalReads, type OriginalRead } from "./original-read"
+export { armOriginalRead, originalRead, originalReads, type OriginalRead } from "./original-read"
 
 type Owner = Awaited<ReturnType<typeof authenticateDesignInstallation>>
 export const waveThreeTest = test.extend<{ installation: DesignInstallation; owner: Owner }>({
@@ -58,17 +60,56 @@ waveThreeTest.afterEach(async ({ page }, info) => {
 })
 
 /** Absolute source URL; owner-bound bookmark navigation uses the real installed host. */
-export async function enter(page: Page, owner: Owner, href: string, title: string, busyTimeoutMs = 10_000) {
+export async function enter(page: Page, owner: Owner, href: string, title: string, busyTimeoutMs = 10_000,
+  operation?: OriginalRead | readonly OriginalRead[], beforeReady?: () => Promise<unknown>) {
   const target = new URL(href)
   target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
   target.searchParams.set("project", owner.projectId)
   target.searchParams.set("installation", owner.installationId)
-  await page.goto(target.href)
+  // The owner has two distinct original reads: provider admission, then route
+  // admission. Keep Playwright's existing response deadline for both replies;
+  // the caller's unchanged DOM budget starts after the actual read contracts.
+  // A matching response proves the original HTTP status. The existing ready()
+  // assertions below prove that the app consumed and rendered the admissions;
+  // Response.finished() can remain pending after that state in routed Chromium.
+  const contexts: { status: number; elapsedMs: number }[] = []
+  const started = performance.now()
+  const contextResponse = (response: Response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === target.origin &&
+      url.pathname === owner.mount + "/api/ui/context" &&
+      url.searchParams.get("projectId") === owner.projectId &&
+      url.searchParams.get("installationId") === owner.installationId &&
+      url.searchParams.get("hostId") === owner.hostId
+  }
+  let routeAdmission: Promise<Response> | undefined
+  const providerAdmission = page.waitForResponse((response) => {
+    if (!contextResponse(response)) return false
+    if (response.status() === 200)
+      routeAdmission = page.waitForResponse(contextResponse)
+    return true
+  })
+  const originalAdmissions = async () => {
+    const provider = await providerAdmission
+    contexts.push({ status: provider.status(), elapsedMs: performance.now() - started })
+    expect(provider.status(), "the original provider context is authorized").toBe(200)
+    expect(routeAdmission, "route admission rereads the original context").toBeDefined()
+    const route = await routeAdmission!
+    contexts.push({ status: route.status(), elapsedMs: performance.now() - started })
+    console.info("SF_OWNER_ADMISSION_READS " + JSON.stringify({ contexts }))
+    expect(route.status(), "the original route context is authorized").toBe(200)
+  }
+  const navigate = () => Promise.all([page.goto(target.href), originalAdmissions()])
+  const observed = operation
+    ? await originalReads(page, owner, Array.isArray(operation) ? operation : [operation as OriginalRead], navigate)
+    : (await navigate(), undefined)
+  await beforeReady?.()
   await ready(page, title, busyTimeoutMs)
   await expect(page).toHaveURL((url) => url.origin === target.origin && url.pathname === target.pathname &&
     url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
   await reflow(page)
   await scrollPageTop(page)
+  return observed?.receipts
 }
 
 export async function ready(page: Page, title: string, busyTimeoutMs = 10_000) {

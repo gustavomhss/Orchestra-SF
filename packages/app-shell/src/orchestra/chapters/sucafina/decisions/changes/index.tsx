@@ -380,14 +380,14 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
     onLayoutMode={() => undefined}
   >
     <div class="sf-decision-page sf-decision-changes sf-workflow" data-sf-wave="four" data-sf-decision="UI39" data-sf-surface="UI39">
-    <SfStatePanel state={active()} messageKey={u18ErrorKey(active())}
+    <SfStatePanel state={active()} messageKey={active() === "empty" ? u18Key("sf.u18.changes.empty") : u18ErrorKey(active())}
       coverage={selected() ? coverage() : undefined}
       onRetryRead={() => void read()}>
       <Show when={view.caseData}>
         {(data) => <>
-          <section class="mx-card sf-u18-section sf-decision-change-ledger" hidden={!!view.review}>
-            <h2>{t("sf.u18.changes.title")}</h2>
-            <Show when={data().preparedChanges.length > 0} fallback={<Show when={active() !== "empty"}><p>{language.t("sf.common.empty")}</p></Show>}>
+          <Show when={data().preparedChanges.length > 0}>
+            <section class="mx-card sf-u18-section sf-decision-change-ledger" hidden={!!view.review}>
+              <h2>{t("sf.u18.changes.title")}</h2>
               <ul class="sf-u18-change-list">
                 <For each={data().preparedChanges}>
                   {(change) => <li>
@@ -401,8 +401,8 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
                   </li>}
                 </For>
               </ul>
-            </Show>
-          </section>
+            </section>
+          </Show>
           <Show when={selected()}>
             {(change) => <>
               <section class="mx-card sf-u18-section sf-decision-change-detail" hidden={!!view.review}>

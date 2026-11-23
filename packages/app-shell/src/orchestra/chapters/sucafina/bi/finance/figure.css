@@ -22,3 +22,17 @@
 .sf-bi-waterfall-table { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .sf-bi-waterfall-table th, .sf-bi-waterfall-table td { border-block-end: 1px solid var(--border, currentColor); text-align: start; padding: .5rem; }
 .sf-bi-unknown-aging { overflow-wrap: anywhere; font-weight: 600; }
+
+/* The scrollable plot compares magnitudes; narrow rows keep each period, value and unit together. */
+.sf-bi-mobile-values { display: none; margin: .75rem 0 0; }
+@media (max-width: 35rem) {
+  .sf-bi-mobile-values { display: grid; gap: .875rem; }
+  .sf-bi-mobile-values > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .375rem .75rem; align-items: baseline; }
+  .sf-bi-mobile-values dt { min-inline-size: 0; overflow-wrap: anywhere; font-size: .875rem; }
+  .sf-bi-mobile-values dd { display: grid; gap: .125rem; margin: 0; text-align: end; min-inline-size: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+  .sf-bi-mobile-values dd > span { font-size: .75rem; }
+  .sf-bi-mobile-track { grid-column: 1 / -1; position: relative; block-size: .5rem; border-radius: 999px; background: color-mix(in srgb, currentColor 9%, transparent); overflow: hidden; }
+  .sf-bi-mobile-track::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 50%; border-inline-start: 1px solid currentColor; opacity: .45; }
+  .sf-bi-mobile-mark { position: absolute; inset-block: 0; background: currentColor; opacity: .72; border-radius: inherit; }
+  .sf-bi-mobile-mark[data-negative="true"] { opacity: .45; }
+}

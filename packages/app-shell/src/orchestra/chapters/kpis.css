@@ -479,3 +479,20 @@
 html[data-color-scheme="light"] .orchestra-home-dashboard {
   color-scheme: light;
 }
+
+/* Terminal absence is a compact explanation; pending and numeric tiles retain graph space. */
+.home-kpi[data-state]:not([data-state="loading"]) {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding-block: 16px;
+}
+.home-kpi[data-state]:not([data-state="loading"]) .home-kpi-value {
+  margin-block-start: 0;
+  font-size: var(--orchestra-font-size-md);
+  line-height: 1.5;
+}
+.home-kpi[data-state]:not([data-state="loading"]) .home-kpi-foot {
+  min-block-size: 0;
+  margin-block-start: 0;
+}

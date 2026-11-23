@@ -131,7 +131,9 @@
 .integrations-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--mx-backdrop);
+  background: var(--orchestra-scrim);
+  -webkit-backdrop-filter: var(--orchestra-scrim-filter);
+  backdrop-filter: var(--orchestra-scrim-filter);
   z-index: 100;
 }
 .integrations-layer {

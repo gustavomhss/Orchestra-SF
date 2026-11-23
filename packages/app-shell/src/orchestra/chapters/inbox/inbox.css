@@ -278,6 +278,12 @@ html[data-color-scheme="light"] :is(.inbox-page, .inbox-dialog) {
   overflow: hidden;
   box-shadow: var(--inbox-frame-shadow);
 }
+.inbox-workspace[data-has-items="false"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.inbox-workspace[data-has-items="false"] .inbox-list-pane {
+  border-inline-end: 0;
+}
 .inbox-list-pane {
   display: flex;
   flex-direction: column;

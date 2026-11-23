@@ -10,6 +10,12 @@ O cabeçalho reúne **Atualizar acesso** e **Sair**. A seleção de equipe fica 
 
 A administração organiza cada equipe em uma linha com seu estado e suas próprias ações. O editor de configuração mantém os campos junto da ação de salvar. Em uma janela estreita, os grupos se reorganizam e o conteúdo pode ser percorrido verticalmente. Se houver um rascunho ao sair da edição, a confirmação distingue continuar editando de descartar o rascunho.
 
+## Conversa e reconexão
+
+Uma interrupção da conexão mantém o texto ainda não enviado protegido enquanto o acesso é revalidado. Quando a mesma equipe e o mesmo contexto são confirmados, o rascunho volta à conversa. A recuperação não envia a mensagem automaticamente.
+
+Trocar de equipe ou de conta, perder o acesso ou sair da sessão remove os dados privados do contexto anterior. Uma ação já enviada cujo resultado ainda não foi confirmado continua exigindo a reconciliação indicada na tela.
+
 ## Modelo e agente
 
 Informe o identificador de modelo no formato `provedor/modelo`, exatamente como foi preparado para esta instalação. O campo é obrigatório neste editor: uma configuração vazia não seleciona um modelo para novas sessões do Chat. O editor não escolhe um provedor automaticamente.

@@ -80,7 +80,7 @@ export function seedWaveThreeDashboard(snapshot: Snapshot, actor: Actor, environ
     start: year + "-01-10", end: year + "-06-30", budget: 64000, spent: 61200, pct: 100, watchList: false })
 
   for (const contract of [
-    { name: waveThreeData.contracts.primary, vendor: waveThreeData.contracts.vendor, num: "TEST-MSA-001", category: "Infrastructure", amount: 144000, amtType: "annual", renewType: "auto", eval: "A", notice: "90 days" },
+    { name: waveThreeData.contracts.primary, vendor: waveThreeData.contracts.vendor, num: "TEST-MSA-001", category: "Infrastructure", amount: 144000, currency: "USD", amtType: "annual", renewType: "auto", eval: "A", notice: "90 days" },
     { name: waveThreeData.contracts.renewal, vendor: "Design test data · Shield Assurance", num: "TEST-SEC-002", category: "Security", amount: 2400, amtType: "monthly", renewType: "fixed", eval: "B", notice: "60 days" },
     { name: waveThreeData.contracts.missing, vendor: "Design test data · Meridian Advisory", num: "", category: "", amount: 0, amtType: "total", renewType: "na", eval: "", notice: "" },
   ]) add(DashboardPortfolio.domain, "Vendor Contracts", "save", { ...contract, owner: "Design test operator",

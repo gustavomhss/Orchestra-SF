@@ -1,0 +1,183 @@
+{
+  "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "findings": [
+    {
+      "id": "ROOT-01",
+      "severity": "P2",
+      "category": "UX responsiva; observado em PNG e confirmado na fonte",
+      "title": "UI46: o gráfico móvel separa o período da barra e do valor",
+      "surfaces": [
+        "UI46"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI46-original-financial-chart-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-320.png",
+          "sha256": "590a48933883b6c159e0c4bead251d2e055dc3a9c34c6b8ba104ff92052da8c3",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI46-original-financial-chart-values-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-values-dark-320.png",
+          "sha256": "f39df0ec498be0a40699876957e197462c5483aca279170f31811256df1ff604",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "No início do scroll horizontal há uma coluna longa de períodos; no extremo dos valores aparecem as barras e o número58000 sem o período correspondente no mesmo recorte. O mecanismo de scroll existe, mas comparar exige memorizar a associação.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+          "lines": "1–9",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css#L1-L9"
+        }
+      ],
+      "cause": "SVG mantém min-inline-size700px para preservar letras12px. A estratégia protege tamanho de texto, mas não protege o par período/medida a320px.",
+      "acceptance": [
+        "Em320/390px, uma medida deve permanecer associada ao período sem depender da memória entre dois extremos do scroll.",
+        "Preservar unidade, precisão e série original. Avaliar gráfico móvel próprio ou tabela/lista acessível adjacente com pares íntegros.",
+        "Validar teclado e ambos extremos da rolagem; não diminuir tipografia para encaixar tudo."
+      ],
+      "limits": "Não alego cálculo errado, perda de dados ou scroll inacessível. É crítica de eficácia da comparação. Apenas Chromium/viewport capturado.",
+      "overlap": "#613 cobre famíliaUI42–56; novo requisito de UX deve ser coordenado ali."
+    },
+    {
+      "id": "ROOT-02",
+      "severity": "P2",
+      "category": "UX responsiva; observado em PNG e confirmado na fonte",
+      "title": "UI49: comparação móvel deixa antes/depois fora da primeira leitura",
+      "surfaces": [
+        "UI49"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI49-original-comparison-detail-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-320.png",
+          "sha256": "67c7c64cb58bb3422ce9081f8e853906644ec67e5137a55939811f78799d625b",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI49-original-comparison-detail-dark-desktop.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--21029-arison-and-report-selection-chromium/UI49-original-comparison-detail-dark-desktop.png",
+          "sha256": "0c932348d05f06642e7eb8f00b0cc196961f6cbdde32868919bd86e2ee7748ff",
+          "dimensions": [
+            1440,
+            1100
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "A primeira coluna de identidade/proveniência domina a largura móvel; antes e depois ficam fora do recorte. UUIDs e avisos repetidos antecedem a diferença que a pessoa veio avaliar.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "lines": "263–342",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L263-L342"
+        }
+      ],
+      "cause": "Tabela min-width48rem, primeira coluna min-width16rem e células de valor min-width12rem. Região tem tabIndex0, mas a composição não mantém identidade e valores juntos.",
+      "acceptance": [
+        "Cada campo deve mostrar identidade humana e antes/depois associados no mobile, com proveniência em disclosure secundário.",
+        "Manter comparabilidade autorizada, ausência explícita, versões e qualificações da fonte.",
+        "Testar começo/fim do scroll, 320/390px e rótulos PT-BR extensos."
+      ],
+      "limits": "Não alego divergência calculada errada. O scroll é intencional e focável; a falha é de leitura/comparação.",
+      "overlap": "#613 mantém a família; largura já foi alterada em rodadas anteriores e merece nova composição móvel."
+    },
+    {
+      "id": "ROOT-03",
+      "severity": "P2",
+      "category": "Feedback e localização; observado em PNG e confirmado na fonte",
+      "title": "Guard nativo entrega uma linha técnica em inglês sem orientação útil de recuperação",
+      "surfaces": [
+        "UI43",
+        "UI51",
+        "UI52",
+        "UI53",
+        "UI61",
+        "UI63",
+        "UI64",
+        "UI65",
+        "UI66",
+        "UI70"
+      ],
+      "evidence": [
+        {
+          "group": "workflows",
+          "name": "UI70-native-host-refusal-dark-desktop.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--beb89-s-exports-and-local-context-chromium/UI70-native-host-refusal-dark-desktop.png",
+          "sha256": "4b557353632342c5d06108a66a4d36fc73a79c80d9f8d9098dea2b62fb4eb674",
+          "dimensions": [
+            1440,
+            1100
+          ],
+          "uniqueInGroup": true
+        },
+        {
+          "group": "workflows",
+          "name": "UI61-native-host-refusal-dark-320.png",
+          "path": "artifact-extract/workflows/packages/app-shell/e2e/test-results/sucafina-design-workflows--2af1a-plicit-missing-observations-chromium/UI61-native-host-refusal-dark-320.png",
+          "sha256": "dce2f9a9f3cec4af6e5e6ff03ef7c85458e21784a15bca187636e02f304f189f",
+          "dimensions": [
+            320,
+            800
+          ],
+          "uniqueInGroup": true
+        }
+      ],
+      "observed": "O fallback visível é 'Sucafina route not admitted' no alto de um painel quase vazio. Não explica em linguagem de tarefa o que falta nem oferece um destino de retorno contextual. Refresh access e Sign out não esclarecem a condição.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+          "lines": "265–308",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx#L265-L308"
+        }
+      ],
+      "cause": "Switch fallback literal em inglês, fora do catálogo i18n. O host trataCAP01–28/UI29–41 como polishedSurface e mantém toolbar diferente nas demais rotas.",
+      "acceptance": [
+        "Usar estado nativo coerente com material, tipografia e i18n, distinguindo indisponibilidade, ausência de autorização e pré-requisito sem expor dados privados.",
+        "Oferecer retorno a uma área admitida e retry contextual quando aplicável.",
+        "Manter todos os guards e exigências do produtor. Só afirmar qualidade da folha após renderização autorizada."
+      ],
+      "limits": "As dez folhas NÃO renderizaram nessas evidências. Não é autorização para admitir rotas artificialmente; este achado avalia apenas o fallback real.",
+      "overlap": "UI42–56#613 eUI57–70#713; componente host compartilhado."
+    }
+  ],
+  "refinements": [
+    {
+      "id": "ROOT-N1",
+      "title": "Estados vazios e mensagens do produtor",
+      "observed": "UI39 conserva um card só com título após declarar ausência; UI35/UI38 mostram reason do produtor em PT dentro de chromeEN; UI36 imprime códigos de divergência, prefixoscoverage e refs longas no corpo principal.",
+      "classification": "Refinamento de hierarquia/contrato semântico. Não traduzir silenciosamente texto autoral nem inventar nomes; códigos próprios devem ter labels localizados e provenance preservada.",
+      "sources": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/decisions/alternatives/index.tsx#L301-L307",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5b48dab52621037168ad4e3a6243c79a4fe5ad6e/packages/app-shell/src/orchestra/chapters/sucafina/decisions/assumptions/index.tsx#L124-L127"
+      ]
+    },
+    {
+      "id": "ROOT-N2",
+      "title": "Transição após pergunta preparada",
+      "observed": "UI37 orienta a continuar no fluxo de colaboração, mas o checkpoint exibe só texto; destino autorizado não foi demonstrado.",
+      "classification": "Lacuna de jornada e de qualificação; não assumo disponibilidade do produtor e não proponho replay automático da preparação."
+    }
+  ]
+}

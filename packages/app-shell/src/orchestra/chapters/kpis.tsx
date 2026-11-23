@@ -503,7 +503,7 @@ export function KpiDashboard(props: {
         <div class="home-grid" data-slot="home-kpis">
           <For each={tiles()}>
             {(tile) => (
-              <article class="home-kpi" data-tile={tile.id}>
+              <article class="home-kpi" data-tile={tile.id} data-state={tile.state}>
                 <div class="home-kpi-label">{tile.label}</div>
                 <Show
                   when={tile.value}
@@ -522,6 +522,7 @@ export function KpiDashboard(props: {
                     </div>
                   )}
                 </Show>
+                <Show when={tile.value || tile.state === "loading" || tile.change || tile.note}>
                 <div class="home-kpi-foot">
                   <Show when={tile.change}>
                     {(delta) => (
@@ -532,9 +533,12 @@ export function KpiDashboard(props: {
                   </Show>
                   <span title={tile.note || undefined}>{tile.note}</span>
                 </div>
+                </Show>
+                <Show when={tile.value || tile.state === "loading"}>
                 <div class="home-bars" aria-hidden="true">
                   <For each={tile.bars}>{(height) => <i style={{ height: `${height}%` }} />}</For>
                 </div>
+                </Show>
               </article>
             )}
           </For>

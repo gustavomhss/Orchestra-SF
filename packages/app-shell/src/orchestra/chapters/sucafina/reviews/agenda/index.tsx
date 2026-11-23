@@ -57,7 +57,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   let commandAbort: AbortController | undefined
   const ready = () => owner.ready()
   const openPreserved = () => {
-    if (!ready() || !store.preserved) return
+    if (!ready() || !store.preserved || store.phase !== "confirmed") return
     const query = new URLSearchParams({
       server: props.route.ownerSelection.serverKey,
       project: props.route.ownerSelection.projectId,

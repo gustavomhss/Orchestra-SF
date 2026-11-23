@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import type { SfIntentRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import type { SfCopyKey, SfDisplayValue, SfMessage, SfUnit } from "../frame/types"
 import type { SfReviewField, SfReviewSnapshot } from "./types"
-import { sfReviewComparison } from "./compare"
+import { sfReviewComparison, sfReviewReasons } from "./compare"
 
 const label: SfMessage = { key: "sf.common.currentSource" as SfCopyKey }
 const usd: SfUnit = { kind: "currency", code: "USD" }
@@ -99,5 +99,31 @@ describe("read-only review comparison", () => {
     expect(rows[0]!.current).toBe(current.kind === "persisted" ? current.fields[0] : undefined)
     expect(rows[0]!.proposed).toBeUndefined()
     expect(rows[0]!.difference).toBe("unavailable")
+  })
+})
+
+describe("source snapshots without record identity", () => {
+  test("compares a versioned scalar source without fabricating a record reference", () => {
+    const source: SfReviewSnapshot = { kind: "source", version: 7 as SfVersion,
+      scope: { kind: "data", text: "Current month · 2026" }, fields: [field("month", number(6))] }
+    const result = sfReviewComparison(source, source, draft([field("month", number(7))]))[0]!
+    expect(result.difference).toBe("changed")
+    expect(result.sourceChanged).toBe(false)
+    expect(result.base?.value).toEqual(number(6))
+    expect(result.current?.value).toEqual(number(6))
+    expect(result.proposed?.value).toEqual(number(7))
+    expect(sfReviewComparison(source, unknown, draft([field("month", number(7))]))[0]!.difference).toBe("unavailable")
+  })
+})
+
+describe("review blocking reasons", () => {
+  test("retains ordered reason identity while removing duplicate keys and parameters", () => {
+    const first: SfMessage = { key: label.key, params: { field: "amount", version: 4 } }
+    const equivalent: SfMessage = { key: label.key, params: { version: 4, field: "amount" } }
+    const differentValue: SfMessage = { key: label.key, params: { field: "amount", version: 5 } }
+    const differentKey: SfMessage = { key: "sf.common.unknown" as SfCopyKey, params: first.params }
+    expect(sfReviewReasons([first, equivalent, differentValue, differentKey, first]))
+      .toEqual([first, differentValue, differentKey])
+    expect(sfReviewReasons([label, { ...label, params: {} }])).toEqual([label])
   })
 })

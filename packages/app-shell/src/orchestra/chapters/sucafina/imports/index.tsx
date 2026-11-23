@@ -15,6 +15,7 @@ import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { readSfAuthorizedImportHistoryReference } from "./history"
+import { SfImportPreviewChanges, SfImportPreviewGaps } from "./preview"
 import "./imports.css"
 import "../reviews/workflows.css"
 import "../documents/records.css"
@@ -618,6 +619,11 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const DomainImpact = () => (
     <section class="sf-files-section" aria-label={t("sf.u23.context")}>
       <h2>{t("sf.u23.context")}</h2>
+      <Show when={designed()}>
+        <For each={state.manifest!.commands}>{(command) =>
+          <SfImportPreviewGaps gaps={command.preview.missing} changes={state.detail?.detail.changes ?? []} />
+        }</For>
+      </Show>
       <Show when={designed()} fallback={<OriginalImpact />}>
         <details class="sf-files-impact">
           <summary>{t("sf.u23.fullImpact")}</summary>
@@ -843,10 +849,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   <For each={command.preview.values}>{(item) => <>
                     <dt>{item.id}</dt><dd>{item.value === null ? t("sf.common.unknown") : String(item.value)} · {item.unit ?? ""} · {item.evidenceState}</dd>
                   </>}</For>
-                  <For each={command.preview.missing}>{(item) => <>
-                    <dt>{item.field}</dt><dd>{item.reason}</dd>
-                  </>}</For>
                 </dl>
+                <SfImportPreviewGaps gaps={command.preview.missing} changes={state.detail?.detail.changes ?? []} />
               </article>}</For>
               <For each={state.manifest!.issues}>{(issue) =>
                 <p role="status">{t("sf.u23.issues")}: {t("sf.u23.row")} {issue.row} · {issue.field} · {issue.reason}</p>
@@ -889,6 +893,10 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   }</For>
                 </dl>
               </Show>
+              <Show when={props.surfaceId === "UI57"}
+                fallback={<Show when={state.detail} fallback={<p>{t("sf.common.unavailable")}</p>}>
+                  {(detail) => <SfImportPreviewChanges changes={detail().detail.changes} />}
+                </Show>}>
               <For each={["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const}>
                 {(kind) => <details>
                   <summary>{t("sf.u23." + kind)} ({changeSummary(kind).length})</summary>
@@ -932,6 +940,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   </article>}</For>
                 </details>}
               </For>
+              </Show>
             </section>
             <Show when={designed()}><DomainImpact /></Show>
             <Show when={props.surfaceId !== "UI57" && state.reference?.receipt}>

@@ -195,9 +195,10 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
   const tableRows: SfBiChartFrameRow[] = []
   const plot: SfPlotSeries[] = []
   for (const series of result.presentation.series) {
-    const unit: SfUnit = series.unit === context.currency
+    const missingCurrency = series.unit === "unspecified" && context.currency === "unspecified"
+    const unit: SfUnit = series.unit === context.currency && !missingCurrency
       ? { kind: "currency", code: context.currency }
-      : { kind: "unspecified", label: message(prefix + ".unit.raw") }
+      : { kind: "unspecified", label: message(prefix + (missingCurrency ? ".currencyUnspecified" : ".unit.raw")) }
     const plotPoints: SfPlotSeries["points"][number][] = []
     for (const id of series.valueIds) {
       const value = values.get(id)
@@ -230,7 +231,9 @@ export function sfBiChartModel(viewId: SfBiOwnedView, result: SfBiSnapshot, pref
         cells: {
           series: dataCell(series.label),
           value: cellValue(value, unit, prefix, locale),
-          unit: dataCell(series.unit),
+          unit: missingCurrency
+            ? { kind: "text", text: { kind: "message", message: message(prefix + ".currencyUnspecified") } }
+            : dataCell(series.unit),
           period: dataCell(period),
           evidence: { kind: "text", text: { kind: "message", message: message(prefix + ".evidence." + value.evidenceState) } },
           source: reference ? dataCell(reference) : absent(prefix + ".noSource"),

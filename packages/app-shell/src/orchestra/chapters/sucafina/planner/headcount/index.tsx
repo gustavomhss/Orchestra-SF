@@ -689,7 +689,8 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           <Show when={current.kind === "sync"}><p role="note" class="sf-u08-source-note">{t("sf.u08.noRoster")}</p></Show>
           <SfChangeReview
             operation={{ ref: current.operationRef, label: msg(reviewLabels[current.kind]),
-              scope: { kind: "data", text: currentVersion() } }}
+              scope: { kind: "data", text: [state.page?.data.selectedVersion?.name, currentYear()]
+                .filter((value) => value !== undefined && value !== "").join(" · ") || t("sf.u08.version") } }}
             base={{ kind: "persisted", ref: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,
               version: current.version, fields: reviewFields() }}
             current={{ kind: "persisted", ref: ("id" in current ? (current as {id: string}).id : currentVersion()) as SfRef,

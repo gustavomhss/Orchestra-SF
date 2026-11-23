@@ -26,8 +26,17 @@
   .sf-u46-source-choices > li > * { inline-size: 100%; }
 }
 
+/* Repeat readable identity beside the actions only when the name column scrolls away. */
+.sf-u46-action-context { display: none; }
+
 /* Four ledger actions keep readable labels inside the table’s own narrow-screen scroller. */
 @media (max-width: 640px) {
+  .sf-u46-action-context {
+    display: grid; gap: 2px; inline-size: 212px; margin-block-end: 8px;
+    text-align: start; overflow-wrap: anywhere;
+  }
+  .sf-u46-action-context bdi { color: var(--orchestra-text); font-weight: 500; }
+  .sf-u46-action-context > span { color: var(--orchestra-muted); font-size: var(--orchestra-font-size-sm); }
   .sf-u46-ledger .sf-s01-table td { vertical-align: top; }
   .sf-u46-ledger .sf-s01-row-actions {
     display: grid;

@@ -182,12 +182,16 @@ function mount(target = href(a)) {
       if (!target) throw new Error("Expected Team picker")
       target.value = team; target.dispatchEvent(new Event("change", { bubbles: true }))
     },
-    emit(team: string, type: string, data: Record<string, unknown>) {
+    emit(team: string, type: string, data: Record<string, unknown>, durable?: { aggregateID: string; seq: number; version: 1 }) {
       const event = Schema.encodeSync(SessionEvent.All)(Schema.decodeUnknownSync(SessionEvent.All)({
-        id: "evt_ui_" + ++serial, type, data: { timestamp: serial + 20, ...data },
+        id: "evt_ui_" + ++serial, type, data: { timestamp: serial + 20, ...data }, ...(durable ? { durable } : {}),
       }))
       for (const stream of streams) if (stream.team === team && stream.principal === principalObjectId)
         stream.controller.enqueue(new TextEncoder().encode("data: " + JSON.stringify({ namespace: namespace(team), event }) + "\n\n"))
+    },
+    dropStreams() {
+      for (const stream of streams) stream.controller.error(new Error("Event transport interrupted"))
+      streams.clear()
     },
     losePrompt() { lostPrompt = true },
     setPrincipal(value: string) { principalObjectId = value },
@@ -420,4 +424,50 @@ test("late private HTTP data cannot reappear after the current principal changes
     expect(view.host.querySelector("[data-sf-message-id]")).toBeNull()
     expect(view.host.querySelector('[data-component="prompt-input-v2"]')).toBeNull()
   } finally { release.resolve(); view.close() }
+}, 15000)
+
+
+test("a recovered current stream removes the resolved interruption notice and keeps the never-submitted draft", async () => {
+  const view = mount()
+  const stream = () => view.host.querySelector("[data-sf-session-workspace]")?.getAttribute("data-sf-session-stream")
+  try {
+    await ready(view)
+    await eventually(() => stream() === "open")
+    view.write("Never submitted during transport recovery")
+    view.dropStreams()
+    await eventually(() => view.host.querySelector("[data-sf-session-workspace]")?.getAttribute("data-sf-session-state") === "unavailable")
+    expect(view.host.textContent).toContain("Chat updates stopped. Refresh access before continuing.")
+    view.refresh()
+    await ready(view)
+    await eventually(() => stream() === "open")
+    expect(view.editor().textContent).toBe("Never submitted during transport recovery")
+    expect(view.host.querySelector("[data-sf-chat-notice]")).toBeNull()
+    expect(view.host.textContent).not.toContain("Chat updates stopped. Refresh access before continuing.")
+    expect(sessionRequests(view).every((request) => request.method === "GET")).toBe(true)
+  } finally { view.close() }
+}, 15000)
+
+test("an unavailable transcript keeps its update warning while the event stream is open", async () => {
+  const id = Session.ID.create(), view = mount(href(a, id))
+  view.rows.set(view.key(a, id), view.info(a, id, "Current chat"))
+  const stream = () => view.host.querySelector("[data-sf-session-workspace]")?.getAttribute("data-sf-session-stream")
+  try {
+    await ready(view)
+    await eventually(() => stream() === "open")
+    view.setHook(async (request) => new URL(request.url).pathname.endsWith("/message")
+      ? json({ error: "Transcript temporarily unavailable" }, 503) : undefined)
+    view.emit(a, "session.next.renamed", { sessionID: id, title: "Current chat" }, { aggregateID: id, seq: 1, version: 1 })
+    await eventually(() => !!view.host.querySelector("[data-sf-chat-notice]")?.textContent?.includes("Chat updates stopped."))
+    expect(view.ready()).toBe(true)
+    expect(stream()).toBe("open")
+    await tick()
+    expect(view.host.querySelector("[data-sf-chat-notice]")?.textContent).toBe("Chat updates stopped. Refresh access before continuing.")
+    expect(view.host.querySelector<HTMLButtonElement>('[data-action="prompt-submit"]')?.disabled).toBe(true)
+    view.setHook(undefined)
+    view.refresh()
+    await ready(view)
+    await eventually(() => stream() === "open")
+    expect(view.host.querySelector("[data-sf-chat-notice]")).toBeNull()
+    expect(sessionRequests(view).every((request) => request.method === "GET")).toBe(true)
+  } finally { view.close() }
 }, 15000)

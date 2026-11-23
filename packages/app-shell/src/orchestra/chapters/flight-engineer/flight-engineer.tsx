@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "@solidjs/router"
+import { A, useNavigate, useParams } from "@solidjs/router"
 import { createMemo, For, Match, Show, Switch } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { useServerSDK } from "@/context/server-sdk"
@@ -40,7 +40,12 @@ export default function FlightEngineer(props: ChapterPageProps) {
       title={t("orchestra.flightEngineer.title")}
       description={t("orchestra.flightEngineer.description")}
     >
-      <Show when={flight.available()} fallback={<Note>{t("orchestra.flightEngineer.desktopOnly")}</Note>}>
+      <Show when={flight.available()} fallback={
+        <div class="fe-unavailable">
+          <Note>{t("orchestra.flightEngineer.desktopOnly")}</Note>
+          <A class="mx-btn" href="/">{t("orchestra.flightEngineer.backHome")}</A>
+        </div>
+      }>
         <nav class="fe-nav" aria-label={t("orchestra.flightEngineer.title")}>
           <For each={views}>
             {(item) => (

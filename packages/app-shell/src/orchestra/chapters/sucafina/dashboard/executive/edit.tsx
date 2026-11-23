@@ -241,6 +241,10 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
   const base = () => props.recordId && props.version !== undefined
     ? { kind: "persisted" as const, ref: props.recordId as SfRef, version: props.version,
       fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) }, value: reviewValue(props.value) }] }
+    : props.version !== undefined && props.value !== undefined
+    ? { kind: "source" as const, version: props.version,
+      scope: { kind: "data" as const, text: t(key(props.valueLabelKey)) + " · " + props.year },
+      fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) }, value: reviewValue(props.value) }] }
     : { kind: "not-provided" as const, reason: { key: key("sf.u02.noValue") } }
 
   async function confirm() {

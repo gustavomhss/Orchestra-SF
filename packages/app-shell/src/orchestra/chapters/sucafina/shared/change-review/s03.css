@@ -265,3 +265,21 @@
     animation-duration: 0s;
   }
 }
+
+.sf-s03-unchanged,
+.sf-s03-effect-details { min-inline-size: 0; }
+.sf-s03-unchanged > summary,
+.sf-s03-effect-details > summary {
+  cursor: pointer;
+  color: var(--mx-dim);
+  font-size: var(--orchestra-font-size-sm);
+  padding-block: var(--sf-space-3);
+  overflow-wrap: anywhere;
+}
+.sf-s03-unchanged > summary { padding-inline: var(--sf-space-4); }
+.sf-s03-unchanged[open] > summary { border-block-end: var(--sf-rule) solid var(--mx-line); }
+.sf-s03-unchanged > summary:focus-visible,
+.sf-s03-effect-details > summary:focus-visible {
+  outline: var(--sf-focus-width) solid var(--mx-blue);
+  outline-offset: calc(-1 * var(--sf-focus-width));
+}

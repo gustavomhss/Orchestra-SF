@@ -198,6 +198,79 @@ test("refresh quarantines text until the same full owner, F02 stamp and durable 
   } finally { f.close() }
 })
 
+test("stream recovery restores separate never-submitted drafts only after fresh same-authority admission", async () => {
+  const f = fixture(), a = Session.ID.create(), b = Session.ID.create()
+  f.rows.set(a, f.info(a, "A title")); f.rows.set(b, f.info(b, "B title"))
+  try {
+    await f.workspace.open(a); f.draft("unsent A")
+    await f.workspace.open(b); f.draft("unsent B")
+    await f.workspace.open(); f.draft("unsent new chat")
+    await eventually(() => f.workspace.state.stream === "open")
+    f.dropStream()
+    await eventually(() => f.workspace.state.status === "unavailable")
+    expect(f.workspace.state.reason).toBe("stream")
+    expect(f.workspace.prompt[0].prompt).toEqual([])
+    expect(f.workspace.state.threads).toEqual({})
+    expect(f.workspace.hasDirtyDrafts()).toBe(true)
+    f.refresh()
+    expect(f.workspace.prompt[0].prompt).toEqual([])
+    const before = f.calls.length
+    await f.workspace.open()
+    expect(f.workspace.prompt[0].prompt[0]).toMatchObject({ content: "unsent new chat" })
+    await f.workspace.open(a)
+    expect(f.workspace.prompt[0].prompt[0]).toMatchObject({ content: "unsent A" })
+    await f.workspace.open(b)
+    expect(f.workspace.prompt[0].prompt[0]).toMatchObject({ content: "unsent B" })
+    expect(f.calls.slice(before).some((request) => new URL(request.url).pathname.endsWith("/" + a))).toBe(true)
+    expect(f.calls.slice(before).some((request) => new URL(request.url).pathname.endsWith("/" + b))).toBe(true)
+    expect(f.calls.every((request) => request.method === "GET")).toBe(true)
+    expect([...f.storage.values()].join("")).not.toMatch(/unsent A|unsent B|unsent new chat|A title|B title/)
+  } finally { f.close() }
+})
+
+for (const change of ["effective revision", "authority generation", "Team"] as const) {
+  test("stream recovery removes the quarantined draft after a changed " + change, async () => {
+    const f = fixture({ persistent: false })
+    const otherTeam = Schema.decodeUnknownSync(TeamProfile.Ref)({
+      ...profile, teamObjectId: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+    })
+    try {
+      await f.workspace.open(); f.draft("must not cross authority")
+      await eventually(() => f.workspace.state.stream === "open")
+      f.dropStream()
+      await eventually(() => f.workspace.state.status === "unavailable")
+      f.refresh(context(change === "effective revision" ? "new-access" : "ui-source",
+        change === "Team" ? otherTeam : profile), change === "authority generation" ? 2 : 1)
+      await f.workspace.open()
+      expect(f.workspace.prompt[0].prompt).toEqual([])
+      expect(f.workspace.hasDirtyDrafts()).toBe(false)
+      expect(f.notices).toContain("sf.teams.chatDraftsRemoved")
+      expect(f.calls.every((request) => request.method === "GET")).toBe(true)
+      expect([...f.storage.values()].join("")).not.toContain("must not cross authority")
+    } finally { f.close() }
+  })
+}
+
+for (const reason of ["logout", "revoked", "principal-change"] as const) {
+  test(reason + " removes a draft already quarantined by stream failure", async () => {
+    const f = fixture()
+    try {
+      await f.workspace.open(); f.draft("must be purged")
+      await eventually(() => f.workspace.state.stream === "open")
+      f.dropStream()
+      await eventually(() => f.workspace.state.status === "unavailable")
+      expect(f.workspace.hasDirtyDrafts()).toBe(true)
+      f.workspace.retire(reason)
+      expect(f.workspace.hasDirtyDrafts()).toBe(false)
+      expect(f.storage.size).toBe(0)
+      f.refresh()
+      await f.workspace.open()
+      expect(f.workspace.prompt[0].prompt).toEqual([])
+      expect(f.calls.every((request) => request.method === "GET")).toBe(true)
+    } finally { f.close() }
+  })
+}
+
 test("late HTTP data and stream frames cannot repopulate a retired workspace", async () => {
   const f = fixture(), id = Session.ID.create(), entered = gate<void>(), release = gate<void>()
   f.rows.set(id, f.info(id))

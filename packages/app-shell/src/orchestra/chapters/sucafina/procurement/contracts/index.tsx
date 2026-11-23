@@ -47,8 +47,8 @@ const EDIT_SECTIONS: readonly { id: string; title: Key; fields: readonly Field[]
   { id: "notes", title: "sf.u15.notes", fields: ["notes"] },
 ]
 function fieldKey(field: Field): Key { return ("sf.u15.field." + field) as Key }
-function editFields(values: SfVendorEdit, locale: string): readonly SfReviewField[] {
-  return FIELDS.map((field) => {
+function editFields(values: SfVendorEdit, locale: string, currency: SfVendorContract["currency"]): readonly SfReviewField[] {
+  return FIELDS.map<SfReviewField>((field) => {
     const value = values[field]
     const option = field === "amtType" && ["total", "monthly", "annual"].includes(String(value)) ||
       field === "renewType" && ["fixed", "na", "auto"].includes(String(value))
@@ -59,9 +59,15 @@ function editFields(values: SfVendorEdit, locale: string): readonly SfReviewFiel
         : { kind: "text" as const, text: value === ""
           ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
           : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
-            : dataText(field === "amount" ? vendorAmountText(value, locale) : String(value)) },
+            : dataText(field === "amount" ? vendorAmountText(value, locale) + (currency !== undefined && currency !== null && currency !== "" ? " · " + String(currency) : "") : String(value)) },
     }
-  })
+  }).concat([{
+    path: "currency", label: message("sf.u15.field.currency"),
+    value: currency === undefined || currency === null
+      ? { kind: "missing", reason: message("sf.u15.noCurrency") }
+      : { kind: "text", text: currency === ""
+        ? { kind: "message", message: message("sf.u15.emptyValue") } : dataText(String(currency)) },
+  }])
 }
 function safeField(row: SfVendorContract, field: keyof SfVendorContract): string {
   const value = row[field]
@@ -120,6 +126,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
   const selectedRow = createMemo(() =>
     view.read?.records.find((row) => vendorRef(row) === selectedRef()),
   )
+  const sourceCurrency = () => {
+    const value = selectedRow()?.currency
+    return value === undefined || value === null ? t("sf.u15.noCurrency") : value === "" ? t("sf.u15.emptyValue") : String(value)
+  }
   const currentVersion = () => {
     const ref = selectedRef()
     return ref && view.read ? vendorVersion(view.read, ref) : undefined
@@ -443,12 +453,14 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const base = selectedRow()
     const original: SfReviewSnapshot | null = base && ref
       ? { kind: "persisted", ref, version: review.version,
-        fields: editFields(vendorEditFromRecord(base), language.intl()) } : null
+        fields: editFields(vendorEditFromRecord(base), language.intl(), base.currency) } : null
     const actionKey = review.action === "save" ? "sf.u15.save" : "sf.u15.delete"
     const fields = review.action === "delete"
-      ? editFields(vendorEditFromRecord(base), language.intl()) : editFields(review.values, language.intl())
+      ? editFields(vendorEditFromRecord(base), language.intl(), base?.currency) : editFields(review.values, language.intl(), base?.currency)
     return <fieldset class="sf-u15-review-controls" disabled={view.sending || view.outcomeUnknown}
-      aria-label={t("sf.u15.reviewScope")}><SfChangeReview
+      aria-label={t("sf.u15.reviewScope")}>
+      <p class="sf-u15-field-hint" data-sf-currency>{t("sf.u15.field.currency")}: <bdi>{sourceCurrency()}</bdi></p>
+      <SfChangeReview
       operation={{ ref: review.operationRef, label: message(actionKey), scope: dataText(t("sf.u15.reviewScope")) }}
       base={original} current={original}
       proposed={{ kind: "draft", intentRef: review.intentRef, sourceRef: ref ?? null,
@@ -555,10 +567,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                     <For each={EDIT_SECTIONS}>{(section) => <fieldset data-sf-section={section.id}>
                       <legend>{t(section.title)}</legend>
                       <div class="sf-u15-fields"><For each={section.fields}>{(field) => renderField(field)}</For></div>
+                      <Show when={section.id === "commercial"}>
+                        <p class="sf-u15-field-hint" data-sf-currency>{t("sf.u15.field.currency")}: <bdi>{sourceCurrency()}</bdi></p>
+                      </Show>
                     </fieldset>}</For>
-                    <Show when={selectedRow()?.currency !== undefined}>
-                      <p class="sf-u15-field-hint">{t("sf.u15.field.currency")}: {safeField(selectedRow()!, "currency")}</p>
-                    </Show>
                     <div class="sf-u15-actions">
                       <button type="submit" class="mx-btn primary" disabled={view.sending || view.outcomeUnknown ||
                         !!view.reviewing || !activeDraft() || !editableVendor(activeDraft()!.value)}>{t("sf.u15.reviewSave")}</button>
@@ -581,7 +593,12 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
                             <span class="sf-u15-missing" data-sf-value="missing"><span aria-hidden="true">—</span><span class="sf-u15-sr">{t("sf.u15.missing")}</span></span>
                           }><bdi>{readField(selectedRow()!, field)}</bdi></Show></dd>
                         </div>
-                      }</For></dl>
+                      }</For>
+                        <Show when={section.id === "commercial"}>
+                          <div data-sf-field="currency"><dt>{t("sf.u15.field.currency")}</dt>
+                            <dd><bdi>{sourceCurrency()}</bdi></dd></div>
+                        </Show>
+                      </dl>
                     </section>}</For>
                     <section>
                       <h3>{t("sf.u15.documents")}</h3>

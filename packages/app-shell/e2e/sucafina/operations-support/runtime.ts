@@ -4,6 +4,7 @@ import { expect } from "@playwright/test"
 import type { APIResponse, Page, Request, Route, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/context"
+import { forwardError } from "./forward-error"
 
 export type Account = { baseURL: string; principal: string; origin: string; projectId: string; installationId: string }
 type EnrolledAccount = Omit<Account, "origin"> & { enrollments: Record<string, string> }
@@ -126,7 +127,13 @@ export async function forwardOnce(page: Page, endpoint: string | ((url: URL) => 
   }
   const producer = Promise.withResolvers<{ response: APIResponse; request: Request }>()
   void producer.promise.catch(() => undefined)
+  let claimed = false, closing = false
+  let forwarding: Promise<void> | undefined
   const forward = async (route: Route) => {
+    if (claimed || closing) { await route.fallback(); return }
+    claimed = true
+    const finished = Promise.withResolvers<void>()
+    forwarding = finished.promise
     const request = route.request()
     try {
       expect(request.method()).toBe(method)
@@ -139,12 +146,23 @@ export async function forwardOnce(page: Page, endpoint: string | ((url: URL) => 
       }
       producer.resolve({ response, request })
     } catch (error) {
-      producer.reject(error)
+      producer.reject(forwardError(error, method, request.url()))
       await route.abort("failed").catch(() => undefined)
-    }
+    } finally { finished.resolve() }
   }
-  await page.route(match, forward, { times: 1 })
-  return { completed: producer.promise, close: () => unrouteLivePage(page, match, forward) }
+  // Keep this observer registered until its original delivery has finished.
+  // In Playwright 1.59, times: 1 removes it before the async callback completes.
+  // With concurrent reads, the faster callback can then empty the registry and
+  // disable interception, continuing another original request still in fetch().
+  await page.route(match, forward)
+  return {
+    completed: producer.promise,
+    close: async () => {
+      closing = true
+      await forwarding
+      await unrouteLivePage(page, match, forward)
+    },
+  }
 }
 
 async function unrouteLivePage(page: Page, match: (url: URL) => boolean, handle: (route: Route) => Promise<void>) {
