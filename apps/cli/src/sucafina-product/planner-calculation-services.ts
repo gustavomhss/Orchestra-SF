@@ -122,8 +122,17 @@ export function createSfPlannerCalculationServices(input: {
       frame.call === call && frame.runId === request.resultRef) frame.observation?.result(found.value)
     return found
   }
+  const readObservation: NonNullable<Parameters<typeof createPlannerCalculationEvidence>[0]["readObservation"]> = async (runId, call) => {
+    const frame = replaying.getStore()
+    const found = await requests.readObservation(runId, call)
+    if (found.status === "ok" && frame?.open && frame === replaying.getStore() && frame.call === call && frame.runId === runId) {
+      frame.observation?.request(found.value.request)
+      frame.observation?.result(found.value.result)
+    }
+    return found
+  }
   const recordCalculation = createPlannerCalculationEvidence({ host: input.host,
-    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult,
+    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult, readObservation,
     replayRecordOnly: recordOnly.simulateScenario,
   })
   const freshRecordSources = async (refs: readonly PlannerRecord[], call: TrustedDomainContext): Promise<boolean> => {
@@ -144,7 +153,7 @@ export function createSfPlannerCalculationServices(input: {
       binding === digestSfValue([call.kind, call.binding]) && selected === digestSfValue(refs)
   }
   const calculation = createPlannerCalculationEvidence({ host: input.host,
-    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult,
+    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult, readObservation,
     replayRecordOnly: recordOnly.simulateScenario,
     nested: { replayScenario: input.replayScenario, evidence: input.evidence },
   })
