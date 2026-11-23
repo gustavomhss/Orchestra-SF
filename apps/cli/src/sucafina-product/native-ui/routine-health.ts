@@ -67,8 +67,8 @@ export async function observeSfRoutineReadingHealth(input: {
     const admitted = await ui.admit(request, candidate.operation, digest)
     if (admitted.status !== "ok") return undefined
     const read = async () => {
-      if (!matches(admitted.value, expected) || ui.requestFor(admitted.value) !== request ||
-        !await ui.validate(admitted.value, candidate.operation, digest) || !current() ||
+      if (!matches(admitted.value, expected) || !await ui.validate(admitted.value, candidate.operation, digest) ||
+        ui.requestFor(admitted.value) !== request || !current() ||
         !await publication.authorize(admitted.value) || !current()) return undefined
       // authorize acquires the actual Location before its already-installed native
       // resources are inspected; no native owner is inferred from these resources.
