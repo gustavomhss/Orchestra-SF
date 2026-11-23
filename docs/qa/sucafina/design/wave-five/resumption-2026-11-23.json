@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Resolve original C17, Portfolio Preview and import-reference failures and observe the BI06 Portuguese failure without changing oracles, deadlines or authority guards. C3 has five failed campaigns and one passed Reviews campaign; no global qualification, acceptance promotion or merge claim."
   },
-  "updatedAt": "2026-11-23T17:17:17Z",
+  "updatedAt": "2026-11-23T17:18:27Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3360,6 +3360,17 @@
       ],
       "qualification": false,
       "acceptedBaseline": 55
+    },
+    {
+      "recordedAt": "2026-11-23T17:18:27Z",
+      "status": "ISOLATED_C17_COST_PROFILES_LAUNCHED",
+      "runs": [
+        45226061143,
+        45226064829
+      ],
+      "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false,
+      "promoteDiagnosticCode": false
     }
   ],
   "sourceCorrections": [
@@ -6479,13 +6490,59 @@
         "testJob": 137866026401,
         "status": "PENDING",
         "lastParentObservation": {
-          "observedAt": "2026-11-23T17:09:19Z",
-          "testStep": "Run tests",
-          "runningSince": "2026-11-23T17:08:29Z"
+          "observedAt": "2026-11-23T17:17:46Z",
+          "status": "in_progress",
+          "testStep": "Run tests"
         },
         "overlayCount": 5,
         "overlaySummary": "Original Analytics .ci-run plus phase/time log instrumentation in product/portfolio/port.ts and analysis.ts, and diagnostic-prefix forwarding in two original fixtures.",
         "scope": "Both original Analytics tests with original assertions and deadlines; instrumentation-only measurement to identify the Preview stage consuming 60 seconds.",
+        "qualification": false,
+        "promoteDiagnosticCode": false
+      },
+      {
+        "name": "ISOLATED_C17_COST_PROFILE_NORMAL",
+        "run": 45226061143,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45226061143",
+        "snapshot": "861af5749673fe5e3e171cbc8b9b42bca1e16b8c",
+        "snapshotTree": "7d1b321d33bf5b4205e6e249e8de313d1c5f5963",
+        "branch": "ci-run-linux-sf613-cost",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "instrumentationCommitPrefix": "78e1498c",
+        "instrumentationPathsReported": 7,
+        "wrapperScope": "Three original focal wrappers: original controls and storage/C17.",
+        "originalCooperativeDeadlineMs": 105000,
+        "originalTestDeadlineMs": 120000,
+        "assertionsAndDeadlinesUnchanged": true,
+        "rootStaticReview": "ACK reported by /root",
+        "evidenceAttribution": "Dispatch identifiers and scope reported by /root; runtime result pending.",
+        "reportedAt": "2026-11-23T17:17:46Z",
+        "status": "PENDING",
+        "qualification": false,
+        "promoteDiagnosticCode": false
+      },
+      {
+        "name": "ISOLATED_C17_COST_PROFILE_RELEASE",
+        "run": 45226064829,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45226064829",
+        "snapshot": "4048919a5933a820d48ef7ef65fcce0a5e9b2703",
+        "snapshotTree": "8a42d3bfa3c3073afa83a9cd47b15c0a8e658e13",
+        "branch": "ci-run-linux-sf613-costrelease",
+        "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "instrumentationCommitPrefix": "78e1498c",
+        "instrumentationPathsReported": 7,
+        "wrapperScope": "Three original focal wrappers: original controls and storage/C17.",
+        "originalCooperativeDeadlineMs": 105000,
+        "originalTestDeadlineMs": 120000,
+        "assertionsAndDeadlinesUnchanged": true,
+        "rootStaticReview": "ACK reported by /root",
+        "releaseOverlayCheck": {
+          "reportedExactPathCount": 11,
+          "explicitDiagnosticQualificationFalse": true
+        },
+        "evidenceAttribution": "Dispatch identifiers and scope reported by /root; runtime result pending.",
+        "reportedAt": "2026-11-23T17:17:46Z",
+        "status": "PENDING",
         "qualification": false,
         "promoteDiagnosticCode": false
       }
