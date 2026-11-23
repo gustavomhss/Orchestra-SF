@@ -797,13 +797,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                   </dl>
                   <details class="sf-records-technical">
                     <summary>{t("sf.u23.receiptDetails")}</summary>
-                    <p><code>{receipt().receiptId}</code></p>
+                    <p>{receipt().receiptId} · {t("sf.u23.outcome")}: {receipt().outcome} · {receipt().changedFields}</p>
                     <For each={state.manifest!.receipts}>{(item) =>
-                      <dl><dt>{t("sf.u23.receiptReference")}</dt><dd><code>{item.id}</code></dd>
-                        <dt>{t("sf.u23.recordedAt")}</dt><dd>{item.at}</dd>
-                        <dt>{t("sf.u23.outcome")}</dt><dd>{item.status}</dd>
-                        <dt>{t("sf.u23.version")}</dt><dd>{item.version}</dd>
-                      </dl>
+                      <p>{item.id} · {item.at} · {item.status} · {item.version}</p>
                     }</For>
                   </details>
                 </Show>

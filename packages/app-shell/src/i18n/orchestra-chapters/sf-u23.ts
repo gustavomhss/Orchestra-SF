@@ -78,7 +78,7 @@ export const SF_U23_COPY = {
   "sf.u23.row": "row",
   "sf.u23.column": "column",
   "sf.u23.noImpact": "No changes",
-  "sf.u23.rejectedReceipt": "Rejected import receipt"
+  "sf.u23.rejectedReceipt": "Rejected import receipt",
   "sf.u23.historySubtitle": "Review the original import, its changes and its recorded outcome.",
   "sf.u23.exportSubtitle": "Choose a format and download the current authorized source.",
   "sf.u23.reopenImport": "Find an import",
@@ -179,7 +179,7 @@ export const SF_U23_COPY_BR: Record<keyof typeof SF_U23_COPY, string> = {
   "sf.u23.row": "row",
   "sf.u23.column": "column",
   "sf.u23.noImpact": "No changes",
-  "sf.u23.rejectedReceipt": "Rejected import receipt"
+  "sf.u23.rejectedReceipt": "Rejected import receipt",
   "sf.u23.historySubtitle": "Revise a importação original, suas alterações e o resultado registrado.",
   "sf.u23.exportSubtitle": "Escolha um formato e baixe a fonte autorizada atual.",
   "sf.u23.reopenImport": "Consultar uma importação",
