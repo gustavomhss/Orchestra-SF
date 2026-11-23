@@ -622,3 +622,102 @@ for (const fileApi of [false, "html"] as const) {
     expect(mock.writes).toEqual([])
   })
 }
+
+for (const variant of [
+  { width: 320, scheme: "dark" },
+  { width: 320, scheme: "light" },
+  { width: 390, scheme: "dark" },
+  { width: 390, scheme: "light" },
+] as const) {
+  test(`round four: Portuguese agent composition at ${variant.width}px in ${variant.scheme}`, async ({ page }, info) => {
+    expect(info.config.metadata.bundle, "Inspect the original production application").toBe("production")
+    const originalDescription = "Planeja mudanças no repositório"
+    const originalPrompt = "Preserve o contexto e a intenção de cada solicitação."
+    const mock = await setup(page, {
+      scheme: variant.scheme,
+      models: true,
+      files: {
+        plan: {
+          path: `${directory}/.orchestra/agent/plan.md`,
+          exists: true,
+          revision: "r1",
+          description: originalDescription,
+          system: originalPrompt,
+          permission: { "*": "ask", edit: "deny" },
+        },
+      },
+    })
+    await page.addInitScript(() => localStorage.setItem("language.v1", JSON.stringify({ locale: "br" })))
+    await page.setViewportSize({ width: variant.width, height: 844 })
+    await page.goto("/orchestra/agents")
+    const roster = page.getByRole("list", { name: "Agentes configurados", exact: true })
+    await expect(roster.getByRole("listitem")).toHaveCount(5)
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR")
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", variant.scheme)
+
+    // Record the untouched layout first. These measurements become concrete
+    // regression oracles after the baseline screenshots have been reviewed.
+    const capture = async (checkpoint: string) => {
+      await page.evaluate(() => document.fonts.ready.then(() => undefined))
+      const geometry = await page.evaluate(() => {
+        const selectors = [
+          ".orchestra-agents", ".agents-inner", ".agents-grid", ".agent-stats",
+          ".agent-screen", ".agent-tabs", ".agent-tabs button", ".agent-savebar",
+          ".agent-savebar > *", ".agent-prompt-foot", ".agent-prompt-foot > *",
+          ".agent-group-actions", ".agent-group-actions > *",
+        ]
+        return {
+          viewport: { width: innerWidth, height: innerHeight },
+          document: { width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth },
+          elements: selectors.flatMap((selector) => [...document.querySelectorAll<HTMLElement>(selector)].map((element) => {
+            const rect = element.getBoundingClientRect()
+            const style = getComputedStyle(element)
+            return {
+              selector, text: element.innerText, x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+              right: rect.right, bottom: rect.bottom, clientWidth: element.clientWidth, scrollWidth: element.scrollWidth,
+              paddingInlineStart: style.paddingInlineStart, paddingInlineEnd: style.paddingInlineEnd,
+              paddingBlockStart: style.paddingBlockStart, paddingBlockEnd: style.paddingBlockEnd,
+              fontSize: style.fontSize, lineHeight: style.lineHeight,
+            }
+          })),
+        }
+      })
+      const name = `agents-${checkpoint}-br-${variant.scheme}-${variant.width}`
+      const path = info.outputPath(name + ".png")
+      await page.screenshot({ path, animations: "disabled", fullPage: true })
+      await info.attach(name, { path, contentType: "image/png" })
+      await info.attach(name + "-geometry", {
+        contentType: "application/json",
+        body: JSON.stringify({ classification: "production-component-observation", checkpoint, variant,
+          locale: "br", backendQualified: false, geometry }, null, 2),
+      })
+    }
+
+    await capture("roster")
+    await roster.getByRole("listitem", { name: "plan", exact: true }).getByRole("button", { name: "plan", exact: true }).click()
+    await expect(page).toHaveURL(/\/orchestra\/agents\/plan$/)
+    const description = screen(page).getByLabel("Descrição", { exact: true })
+    await expect(description).toHaveValue(originalDescription)
+    await description.fill("Planeja mudanças, revisa dependências e conserva os critérios de aceitação.")
+    const unsaved = page.getByRole("region", { name: "Alterações não salvas", exact: true })
+    await expect(unsaved).toBeVisible()
+    await unsaved.scrollIntoViewIfNeeded()
+    await unsaved.getByRole("button", { name: "Descartar", exact: true }).focus()
+    await page.keyboard.press("Tab")
+    await expect(unsaved.getByRole("button", { name: "Salvar", exact: true })).toBeFocused()
+    await capture("unsaved-overview")
+
+    await page.getByRole("tab", { name: "Prompt de sistema", exact: true }).click()
+    const prompt = screen(page).getByRole("textbox", { name: "Instruções do sistema", exact: true })
+    await expect(prompt).toHaveValue(originalPrompt)
+    await prompt.fill(originalPrompt + " Explique as decisões e mantenha as alterações verificáveis.")
+    await screen(page).getByRole("button", { name: "Voltar ao padrão", exact: true }).scrollIntoViewIfNeeded()
+    await capture("prompt-footer")
+    await unsaved.getByRole("button", { name: "Descartar", exact: true }).click()
+    await expect(prompt).toHaveValue(originalPrompt)
+    await expect(unsaved).toHaveCount(0)
+    await page.getByRole("tab", { name: "Visão geral", exact: true }).click()
+    await expect(description).toHaveValue(originalDescription)
+    expect(mock.writes, "Inspecting and discarding a draft must not change the agent definition").toEqual([])
+  })
+}
