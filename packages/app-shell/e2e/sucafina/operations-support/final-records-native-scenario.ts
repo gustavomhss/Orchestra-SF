@@ -3,7 +3,7 @@ import { expect } from "@playwright/test"
 import type { Browser, Page, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
-import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
+import { SfDomain } from "@orchestra/schema/sucafina/domain"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import { SfDocumentEvidence } from "@orchestra/schema/sucafina/files/structures"
 import { authenticateDesignInstallation, withDesignInstallation } from "../design-support/installation"
@@ -44,91 +44,60 @@ async function enterNativeScenario(page: Page, account: Account, documentRef: st
   await expect(page).toHaveURL(target.href)
 }
 
-async function readSuppliers(page: Page, account: Account) {
-  const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP27", { maxRetries: 0 })
+async function readContracts(page: Page, account: Account) {
+  const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP14", { maxRetries: 0 })
   expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await response.json())
-  if (body.status !== "ok") throw new Error("The original supplier source is unavailable")
+  const body = Schema.decodeUnknownSync(SfDomain.operations["domain.page.CAP14"].output)(await response.json())
+  if (body.status !== "ok") throw new Error("The original contract source is unavailable")
   expect(body.context.principalRef).toBe(account.principal)
+  expect(Array.isArray(body.value.data.contracts)).toBe(true)
   return body.value
 }
 
-async function readSettings(page: Page, account: Account) {
-  const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP28", { maxRetries: 0 })
-  expect(response.status()).toBe(200)
-  const body = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP28"].output)(await response.json())
-  if (body.status !== "ok") throw new Error("The original procurement settings are unavailable")
-  expect(body.context.principalRef).toBe(account.principal)
-  return body.value
-}
-
-/** API setup accepted by the original local operator; only the subsequent UI60 interaction is UI coverage. */
+/** API setup accepted by the original local administrator; only the subsequent UI60 interaction is UI coverage. */
 async function prepareConfirmedSource(page: Page, account: Account, info: TestInfo) {
   const key = randomUUID(), filename = "confirmed-price-" + key + ".txt"
   const bytes = Buffer.from("Price: 42\nReference: " + key + "\n", "utf8")
-  const settings = await readSettings(page, account)
-  const settingsVersion = settings.versions.settings?.version ?? 0
-  expect(settingsVersion, "the basic native fixture has no procurement settings edit").toBe(0)
-  const reset = await page.request.post(account.baseURL + "/procurement?page=Settings", {
-    maxRetries: 0, headers: { Origin: account.origin },
-    data: { page: "Settings", action: "reset", version: settingsVersion, values: {}, confirmed: true },
-  })
-  expect(reset.status()).toBe(200)
-  expect(await reset.json()).toMatchObject({ ok: true })
-  const resetSettings = await readSettings(page, account)
-  expect(resetSettings.versions.settings?.version).toBe(settingsVersion + 1)
-  expect(resetSettings.data.settings.uploadCap).toBeNull()
-  // Reset deliberately leaves uploads unconfigured. The original administrator
-  // saves a bounded limit through the normal command, with the fresh CAS.
-  const uploadCap = 1024 * 1024
-  const saved = await page.request.post(account.baseURL + "/procurement?page=Settings", {
-    maxRetries: 0, headers: { Origin: account.origin },
-    data: { page: "Settings", action: "save", version: settingsVersion + 1,
-      values: { uploadCap }, confirmed: true },
-  })
-  expect(saved.status()).toBe(200)
-  expect(await saved.json()).toMatchObject({ ok: true })
-  const configured = await readSettings(page, account)
-  expect(configured.versions.settings?.version).toBe(settingsVersion + 2)
-  expect(configured.data.settings).toEqual({ ...resetSettings.data.settings, uploadCap })
-  expect(configured.data.settings.uploadCap).toBeGreaterThan(bytes.byteLength)
-
-  const before = await readSuppliers(page, account)
+  const before = await readContracts(page, account)
   const name = "Design test data · Confirmed document " + key
-  const created = await page.request.post(account.baseURL + "/procurement?page=Suppliers", {
+  // The basic native operator already administers contracts. No buyer policy,
+  // procurement role, upload setting or grant is introduced for this precondition.
+  const created = await page.request.post(account.baseURL + "/dashboard?" +
+    new URLSearchParams({ page: "Vendor Contracts" }), {
     maxRetries: 0, headers: { Origin: account.origin },
-    data: { page: "Suppliers", action: "create", version: 0, confirmed: true,
-      values: { supplier: { legalName: name, country: "France", address: "Isolated native test supplier",
-        taxId: key, contactEmail: "scenario@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } } },
+    data: { page: "Vendor Contracts", action: "save", version: 0, confirmed: true,
+      values: { vendor: name, num: key, amount: 42, currency: "USD", amtType: "total", renewType: "fixed" } },
   })
   expect(created.status()).toBe(200)
   expect(await created.json()).toMatchObject({ ok: true })
-  const current = await readSuppliers(page, account)
-  const own = current.data.suppliers.filter((entry) => entry.legalName === name && entry.taxId === key &&
-    !before.data.suppliers.some((prior) => prior.id === entry.id))
+  const current = await readContracts(page, account)
+  const own = current.data.contracts!.filter((entry) => entry.vendor === name && entry.num === key &&
+    !before.data.contracts!.some((prior) => prior.id === entry.id))
   expect(own).toHaveLength(1)
-  const supplier = own[0]!.id
-  const revision = current.versions["suppliers:" + supplier]?.version
-  if (revision === undefined) throw new Error("The new supplier has no original CAS")
+  const contract = String(own[0]!.id)
+  const revision = current.versions["contracts:" + contract]
+  expect(revision).toBe(1)
+  if (revision === undefined) throw new Error("The new contract has no original CAS")
   const query = new URLSearchParams({
-    page: "Suppliers", upload: "supplier", record: supplier, recordVersion: String(revision), name: filename,
+    page: "Vendor Contracts", upload: "contract", record: contract, recordVersion: String(revision), name: filename,
   })
-  const uploaded = await page.request.post(account.baseURL + "/procurement?" + query, {
+  const uploaded = await page.request.post(account.baseURL + "/dashboard?" + query, {
     maxRetries: 0, headers: { Origin: account.origin, "Content-Type": "text/plain" }, data: bytes,
   })
   expect(uploaded.status(), "the real qualified scanner must accept the exact source bytes").toBe(200)
   expect(await uploaded.json()).toMatchObject({ ok: true })
-  const attached = await readSuppliers(page, account)
-  expect(attached.versions["suppliers:" + supplier]?.version).toBe(revision + 1)
-  const files = attached.data.suppliers.find((entry) => entry.id === supplier)?.attachments?.filter((entry) => entry.name === filename)
+  const attached = await readContracts(page, account)
+  expect(attached.versions["contracts:" + contract]).toBe(revision + 1)
+  const files = attached.data.contracts!.find((entry) => String(entry.id) === contract)?.docs?.filter((entry) => entry.name === filename)
   expect(files).toHaveLength(1)
+  expect(files![0]?.size).toBe(bytes.byteLength)
 
-  const endpoint = (mode: string, selection: Record<string, string> = {}) => modeURL(account, "procurement", mode, selection).href
+  const endpoint = (mode: string, selection: Record<string, string> = {}) => modeURL(account, "dashboard", mode, selection).href
   const sourceResponse = await page.request.get(endpoint("document-sources"), { maxRetries: 0 })
   expect(sourceResponse.status()).toBe(200)
   const sources = Schema.decodeUnknownSync(SfFiles.operations["files.document-sources"].output)(await sourceResponse.json())
   if (sources.status !== "ok") throw new Error("The admitted attachment was not listed by its original source")
-  const selected = sources.value.filter((entry) => entry.label === filename && entry.surface === "procurement")
+  const selected = sources.value.filter((entry) => entry.label === filename && entry.surface === "dashboard")
   expect(selected).toHaveLength(1)
   const post = (mode: string, data: unknown) => page.request.post(endpoint(mode), {
     maxRetries: 0, headers: { Origin: account.origin, "Idempotency-Key": randomUUID() }, data,
@@ -168,8 +137,8 @@ async function prepareConfirmedSource(page: Page, account: Account, info: TestIn
   const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await reread.json())
   expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
   await observation(info, "final-records-native-source-preconditions", {
-    source: "original supplier upload through qualified ClamD; explicit field schema and human confirmation",
-    supplier, filename, documentRef, evidence: confirmed.ref, uploadStatus: uploaded.status(),
+    source: "original Dashboard contract upload through qualified ClamD; explicit field schema and human confirmation",
+    contract, filename, documentRef, evidence: confirmed.ref, uploadStatus: uploaded.status(),
     grantsModified: false, uiCoverageClaimed: false,
   })
   return confirmed
@@ -212,8 +181,15 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       }
       await enterNativeScenario(page, account, confirmed.fileRef)
       const surface = page.locator('[data-sf-surface="UI60"]')
+      // Select the original Dashboard source with its native control, including
+      // if the default source is unavailable. The server reauthorizes the read.
+      const source = surface.getByRole("combobox", { name: "Source", exact: true })
+      await expect(source).toBeEnabled()
+      await source.selectOption("dashboard")
+      await expect(source).toHaveValue("dashboard")
+      await expect(surface).toHaveAttribute("data-sf-read-state", "ready")
       await expect(surface.locator("[data-sf-evidence-id]")).toHaveCount(1)
-      await previewRecordScenario(page, info, account, confirmed, fixture)
+      await previewRecordScenario(page, info, account, confirmed, fixture, "dashboard")
       await captureRecordVariants(page, info, "UI60", "native-authorized-preview", false)
       await captureRecordDetail(page, info, "UI60", "preview-from-confirmed-evidence",
         surface.locator('[data-sf-scenario="preview"]'))

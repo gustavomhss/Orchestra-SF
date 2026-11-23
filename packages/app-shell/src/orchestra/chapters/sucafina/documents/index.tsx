@@ -574,19 +574,19 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
       <section class="sf-files sf-records-documents" data-sf-records="six" data-sf-wave="six" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
+        <Show when={auth.ready() && (!catalog() || props.route.kind === "detail")}>
+          <div class="sf-files-fields">
+            <label>{t("sf.u24.source")}
+              <select value={state.surface} disabled={state.busy}
+                onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
+                <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
+              </select>
+            </label>
+            <button type="button" class="mx-btn" disabled={state.busy}
+              onClick={refresh}>{t("sf.u24.reconcile")}</button>
+          </div>
+        </Show>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
-          <Show when={!catalog() || props.route.kind === "detail"}>
-            <div class="sf-files-fields">
-              <label>{t("sf.u24.source")}
-                <select value={state.surface} disabled={state.busy}
-                  onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
-                  <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
-                </select>
-              </label>
-              <button type="button" class="mx-btn" disabled={state.busy}
-                onClick={refresh}>{t("sf.u24.reconcile")}</button>
-            </div>
-          </Show>
           <Show when={catalog() && props.route.kind !== "detail"}>
             <details class="sf-records-register" open={props.route.kind === "new"}>
               <summary>{t("sf.ui58.primary")}</summary>
