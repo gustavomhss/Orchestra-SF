@@ -17,12 +17,14 @@ type Frame = {
   current: () => boolean
 }
 
+const asyncFunctionPrototype = Object.getPrototypeOf(async () => undefined)
+
 /** Pin factory-born readers before their objects are exposed to callers. */
 export function pinSfPlannerRecordReaders(readers: readonly unknown[]) {
   const pins = readers.map((reader) => {
     if (!reader || typeof reader !== "object" && typeof reader !== "function" || types.isProxy(reader)) return undefined
     const prototype = Object.getPrototypeOf(reader)
-    if (prototype !== Object.prototype && prototype !== Function.prototype) return undefined
+    if (prototype !== Object.prototype && prototype !== Function.prototype && prototype !== asyncFunctionPrototype) return undefined
     const keys = Reflect.ownKeys(reader)
     const descriptors = keys.map((key) => Object.getOwnPropertyDescriptor(reader, key))
     if (descriptors.some((descriptor) => !descriptor || !Object.hasOwn(descriptor, "value"))) return undefined
