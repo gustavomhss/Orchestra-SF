@@ -1,0 +1,18 @@
+name: G08 policy canary
+
+# Isolated administrative admission proof; this never reaches a self-hosted runner.
+on:
+  push:
+    branches:
+      - g08-policy-canary
+
+permissions: {}
+
+jobs:
+  canary:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/g08-policy-canary'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Public admission marker
+        run: echo g08-policy-canary-v1
