@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+  "productSource": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -144,11 +144,13 @@
       "resolution": "Constrain the peek's internal tracks to its padded width, wrap full content and split identity/status from actions at narrow widths; preserve the native scrolling and unsent draft.",
       "kind": "visual",
       "integration": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
-      "status": "awaiting-whole-shared-spec-requalification"
+      "status": "resolved-and-qualified",
+      "run": 45279046949,
+      "ledgerSha256": "e50907267828804ef41bc8a0678408debc7ec810b5a16da5942472e86306b84d"
     }
   ],
   "qualification": {
-    "uniqueBrowserCases": 64,
+    "uniqueBrowserCases": 97,
     "scopes": [
       {
         "scope": "Teams",
@@ -213,15 +215,35 @@
         "flaky": 0,
         "retries": 0,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45274211637"
+      },
+      {
+        "scope": "Shared native surfaces",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "sourceTree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
+        "snapshot": "c646a05cf4b565437daa0065c33ccdc780529789",
+        "tree": "5ec23fb152039b5235f17afb20e073c355ed2593",
+        "artifact": 14868973802,
+        "artifactBytes": 76689092,
+        "sha256": "ea1ce003bd207697d41afd4739a8f7eb1e99875e29851b9576a5800d60c9a62b",
+        "retainedCases": 33,
+        "fullRunCases": 33,
+        "result": "success",
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "retries": 0,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45279046949",
+        "ledgerSha256": "e50907267828804ef41bc8a0678408debc7ec810b5a16da5942472e86306b84d"
       }
     ],
     "pending": [
-      "Whole Shared33 after R4-19 correction, run45279046949",
       "Original Planner/Procurement6 across three registrars, run45279337167",
-      "Original consultation2, run45279084959",
-      "Full original Memory5, run45279587191, on pending open-assumptions candidate",
-      "Full native Recall4 control, run45279383231",
-      "Complete final13-file/39-case producer cohort after source freeze",
+      "Original consultation2 run45279084959 passed its test job; artifact review pending",
+      "Full original Memory5 run45279587191; pre-horizon source, no global qualification inferred",
+      "Full native Recall5 control after horizon-aligned observation guard",
+      "Original UI62 horizon diagnostic run45281735842 and full Memory qualification after all required repairs",
+      "Complete final13-file/40-case producer cohort after source freeze",
       "Final structural gates against exact current dev, documentation and merge"
     ],
     "supersededScopes": [
@@ -357,20 +379,10 @@
       "automatedPassed": 33,
       "visualFinding": "R4-19",
       "retainedCases": 0,
-      "ledgerSha256": "e11c2cb931e4a00344cb2bd6abc9636974f102b1afce651b961b318a527431ee"
+      "ledgerSha256": "e11c2cb931e4a00344cb2bd6abc9636974f102b1afce651b961b318a527431ee",
+      "supersededBy": 45279046949
     },
     "inProgress": [
-      {
-        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
-        "sourceTree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
-        "snapshot": "c646a05cf4b565437daa0065c33ccdc780529789",
-        "tree": "5ec23fb152039b5235f17afb20e073c355ed2593",
-        "branch": "ci-run-r4board",
-        "requestBlob": "58d13ff72536f42ab19a1d14d1d1d34fe297baaa",
-        "run": 45279046949,
-        "status": "in_progress",
-        "scope": "Shared33"
-      },
       {
         "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
         "sourceTree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
@@ -897,6 +909,556 @@
         "source": "34df764a67a3dd540f9066186dc8cab8b30a5aa0",
         "scope": "Documents",
         "method": "Original CI PNG reviewed without transformation"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+        "sha256": "095ed1a6e2cbef9b630aa2dd6f45addf0d09ed7eb71c4e8be67a6d365eed6213",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-wide.png",
+        "sha256": "55faa5d0f0d576989143d494250bc4ddcbd7d282b6c763f2c844849a027e86bf",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+        "sha256": "5fe508b86be016533e9000f919842bc8b486536d8634fc3b2e91e15a487c94b2",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+        "sha256": "25276accdede17ebe830bd8b2aa3e79edab6b20c7bf7c3574bbaf2bbc44da1f7",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-small.png",
+        "sha256": "acc3df1df3e94dde490235593287aef0bd254d0ccd8d09b9acdf4a37a7dbbc64",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-small.png",
+        "sha256": "be50368b2c9008ebe5ff0bbda850312035f2c5a7c4d6002dc69ea60765cc3955",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-wide.png",
+        "sha256": "6f21370d212250dde636063913cc9d5f74e0c399ee3aca4a2c254360addcd06e",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-dark-wide.png",
+        "sha256": "9e78df780bc02a340902d20eeecac5360287d07fa0692d594cd0e4293ad93a24",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-dark-wide.png",
+        "sha256": "bf92833e9c44d08610aca4a119a4e18ad12d03654b8c7f5c3d61104dea3df1e0",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-narrow.png",
+        "sha256": "ae3bfd328e0c55d6132c5a8c2f330d019e81051fcf12112e46d29eabfb43cffb",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-dark-narrow.png",
+        "sha256": "594bcfafd03a2d8a0eb770d205e90122ac7e8efd0e952a4c4b7d74c062c4f0df",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-narrow.png",
+        "sha256": "796fca8a17bf509e356a6c1521a6c7a374ec5aed8d67a44c11de08605738511c",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-local-read-recovery-dark-narrow.png",
+        "sha256": "27d1fcc5d26ade689fed7ed52e0aa1c8ba591c9decf395f09624f3556b84d31e",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-narrow.png",
+        "sha256": "e0c4aea03b2d5b78949dfbc2cef5640ed23cf0f2e648c1747d296fcc4d945634",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+        "sha256": "5194b3b98e1b3d0743b316747d8c814be6d1d901bbbeae7205fb901137ab8a33",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+        "sha256": "f1983a78ed6efe3a4f03a4044fc4e62e5a4fb3aca626e661fec06f705f02505a",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+        "sha256": "5e8eae14840218a857e30596bd88e532d4485a4376254cd490e04d939afe35ed",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-available-providers-guidance-light-small.png",
+        "sha256": "5840ef17c4b286c1f510c78d91522c83e72e15cc78c1c0c6f79ed6641ac403b0",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-light-small.png",
+        "sha256": "301b2b2e2d81f23b05f7c2785ed5a81a21dafacf6399e36e1eda2139fe0031e9",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-local-read-recovery-light-small.png",
+        "sha256": "696df2c2298406b4e19b89b991af4d3d9960b79ec896602df38c1a6faa2f9035",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-light-small.png",
+        "sha256": "d7532fb52c2691b7805f40221e334e35a34a6e5dab360f35d84b8dc53b416f95",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-wide.png",
+        "sha256": "8f48bf962c27bebb1d339c931a73b7331c282da996fc95657b711d76dce79c29",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-light-small.png",
+        "sha256": "f210b9be3600fb636804db957976e2160764b480c61e9672373ae0452b573f45",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-light-small.png",
+        "sha256": "7c6dd114ef2a16adee015400f0384db4e6ba0d75fabfaab10defd172f713239e",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-narrow.png",
+        "sha256": "8e11a277b3eff51c016cabc96e8e46d5699e06a4c77fdfaf2813820fe4e57f50",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-narrow.png",
+        "sha256": "57ee6343473af4daa530dc2eb79dedcf56479c18aa176e30c22ff75d81cf953f",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-light-wide.png",
+        "sha256": "e83f55c0fb25c32526188eb9a5b748c294689d0eac6863e3cf4ebd8ab07d6e70",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-light-wide.png",
+        "sha256": "adfd9eb31b7c6da6e50306f4fe077ef0d45714b42d2f304ed9cca23e768e510a",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-wide.png",
+        "sha256": "a5ca39e7a82f8966fb6ec0741f552539173d65d5583e5fc00355ffb0d83652d4",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-small.png",
+        "sha256": "a7d946e696460f5f7e306c660c2fc96d4e8dc760fbb95d4400a60312cdb9352f",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-small.png",
+        "sha256": "01600b0a6b34c588edfbc8dff48c661333a5d0301cdff81c45f0abba0935dc9d",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-fee46-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-small-short.png",
+        "sha256": "6573e04f7b14944d92b65a03a8840c8befedf58ecede2ec0a57bde1279c5dee5",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-fee46-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-small-short.png",
+        "sha256": "c5f98ea881f615eda5c368f03fe2b449d1131a764ec04ca0cc0036c48206f9ca",
+        "surface": "Shared",
+        "review": "personally-reviewed-no-new-defect",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "fresh original"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-42e79--an-unmounted-page-instance-chromium/rag-studio-late-reads-ignore-unmounted-page-dark-wide.png",
+        "sha256": "ce421ac1dbd75e6e7b4dc14e365ab7df7bac318a003a365bb8c0bc4afed2a869",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-42e79--an-unmounted-page-instance-chromium/rag-studio-late-reads-ignore-unmounted-page-dark-wide.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-bb335-arlier-read-completes-later-chromium/rag-studio-late-source-keeps-latest-selection-dark-wide.png",
+        "sha256": "f735f29a8cec0b95f50193725c1848c015de0e9eab88337b059d665aa07e4e16",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-bb335-arlier-read-completes-later-chromium/rag-studio-late-source-keeps-latest-selection-dark-wide.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-small.png",
+        "sha256": "2a4392766522158aa6c713c82fdbdb47f69ccde2d5ee8dce1f323e2e81210456",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-denied-read-light-small.png",
+        "sha256": "569c126c517f2d944be558124f0d445a937a7e46be9fd864e04034de2a1ad619",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-denied-read-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-light-small.png",
+        "sha256": "8dd427a2404c1cb422e7a61c96ac1d593ec9ecfcc7ed6eba83ed2419e1103df1",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-command-results-overlay-light-small.png",
+        "sha256": "f8d62837231e1e96feacdc3a99cbc181c174623db2827e6750c4693c32ea2c7d",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-command-results-overlay-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-no-results-overlay-light-small.png",
+        "sha256": "b02bb13a1761e7c35adffb0d36ac872063b0dcf0d54b06ba45d58961ba2dd989",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-no-results-overlay-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-small.png",
+        "sha256": "e0c246f5abae147f5c8f3c47a3b2d1cdc172abb9a5e9a7bd318a7c3b728fc32b",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-small.png",
+        "sha256": "9398b513ac9998e66049146c054868f54abc6f479496ffa96fc87aee6574495d",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-light-small.png",
+        "sha256": "c82767c3ca316c8d90b97237e1fe6e8e56d2ce7309b63cee6452fc84e7dbf3d5",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-light-small.png",
+        "sha256": "48b4237c6f06c9073bdbd588462a1e1cdf44323f6df5d5f833470b4a93989d33",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-small.png",
+        "sha256": "5f5135322087164193272fd4c7427c73a63f1f3e24ea68be2cf4ee83f2caee4a",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-empty-light-small.png",
+        "sha256": "1620a66e8f629dc68061aa8c9fc98b12357f4c9de73c670ce85bf92ce16cec83",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-empty-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-preferences-light-small.png",
+        "sha256": "97b184d77d55e82927d64cc1f6d93e60f890afb5c4e69edb8c2c88b8fa4fff39",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-preferences-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-small.png",
+        "sha256": "24fd9ccf198fd097e044351c038e3f4714aad49d97f349bbf350d9e6b530008d",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-light-small.png",
+        "sha256": "e5570d408cb06325af7a72e280bcd36605fe36d74ba5f33eae20f1858009d194",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-synthetic-source-list-light-small.png",
+        "sha256": "7e589783637d62b4891e25085564f50dd2f77596d42c4c15459b4310fac05528",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-synthetic-source-list-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-97552-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-light-small.png",
+        "sha256": "21391c3338deaade48f1aefba85c325dc86fbe0fa22cd62a2054b2816d26d036",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-97552-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-empty-light-small.png",
+        "sha256": "869916fe9d21c15b9adf2995e7451a4301603fa19b41ebd7ae24510fd64314a5",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-empty-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-read-unavailable-light-small.png",
+        "sha256": "797dffda3c4f474ee366aba92f97febc127d568ffb815fdc240be43a95a5c38b",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-read-unavailable-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-light-small.png",
+        "sha256": "f19c63465d7a75ad54f9ce03079e51b6cee59d5223a886ad081ad57b62195200",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
+      },
+      {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-small.png",
+        "sha256": "f6415899214a6fa8be3e9edf8a5ea24bee306d2eaf25671bca25b52490650261",
+        "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-small.png",
+        "review": "retained-identical-pixels-from-prior-personal-review",
+        "run": 45279046949,
+        "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+        "scope": "Shared",
+        "reviewMode": "retained exact original PNG SHA256"
       }
     ],
     "beforeOriginals": [
@@ -3232,6 +3794,146 @@
               44,
               44
             ]
+          }
+        ]
+      },
+      "sharedCorrection": {
+        "boardPeekCheckpoints": 8,
+        "measuredDescendants": 120,
+        "maxLeftOvershoot": 0,
+        "maxRightOvershoot": 0,
+        "maxTargetOverflow": 0,
+        "horizontalPaddingPx": 20,
+        "panelWidthsPx": {
+          "320": 294,
+          "390": 364,
+          "desktop": 520
+        },
+        "usableWidthsPx": {
+          "320": 254,
+          "390": 324,
+          "desktop": 480
+        },
+        "details": [
+          {
+            "name": "project-board-peek-opened-dark-wide",
+            "panel": {
+              "left": 888,
+              "right": 1408,
+              "contentLeft": 908,
+              "contentRight": 1388,
+              "clientWidth": 520,
+              "scrollWidth": 520
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-note-draft-dark-wide",
+            "panel": {
+              "left": 888,
+              "right": 1408,
+              "contentLeft": 908,
+              "contentRight": 1388,
+              "clientWidth": 520,
+              "scrollWidth": 520
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-opened-light-wide",
+            "panel": {
+              "left": 888,
+              "right": 1408,
+              "contentLeft": 908,
+              "contentRight": 1388,
+              "clientWidth": 520,
+              "scrollWidth": 520
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-note-draft-light-wide",
+            "panel": {
+              "left": 888,
+              "right": 1408,
+              "contentLeft": 908,
+              "contentRight": 1388,
+              "clientWidth": 520,
+              "scrollWidth": 520
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-opened-dark-narrow",
+            "panel": {
+              "left": 13,
+              "right": 377,
+              "contentLeft": 33,
+              "contentRight": 357,
+              "clientWidth": 364,
+              "scrollWidth": 364
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-note-draft-dark-narrow",
+            "panel": {
+              "left": 13,
+              "right": 377,
+              "contentLeft": 33,
+              "contentRight": 357,
+              "clientWidth": 364,
+              "scrollWidth": 364
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-opened-light-small",
+            "panel": {
+              "left": 13,
+              "right": 307,
+              "contentLeft": 33,
+              "contentRight": 287,
+              "clientWidth": 294,
+              "scrollWidth": 294
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
+          },
+          {
+            "name": "project-board-peek-note-draft-light-small",
+            "panel": {
+              "left": 13,
+              "right": 307,
+              "contentLeft": 33,
+              "contentRight": 287,
+              "clientWidth": 294,
+              "scrollWidth": 294
+            },
+            "maxRightOvershoot": 0,
+            "maxLeftOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "targets": 15
           }
         ]
       }
@@ -11061,6 +11763,303 @@
         }
       },
       "finalAfterBoardAndRecallPending": true
+    },
+    {
+      "source": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+      "sourceTree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
+      "snapshot": "cff028a930784bb02fa8da38950b3ecd50d6f140",
+      "tree": "e3cb57fc4af231dffd96adfc5a0d6faf21c4f2ca",
+      "branch": "ci-run-r4gates10",
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "wrapperBlob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+      "requestBlob": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+      "onlySnapshotPaths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-polish-verification.test.ts"
+      ],
+      "run": 45280596302,
+      "job": 138063712416,
+      "status": "completed",
+      "result": "success",
+      "ledgerSha256": "b1254b73babd91cd6df2e17967a8a0237915cbcae890854802231e55f4dab041",
+      "ledger": {
+        "qualification": "round-four-board-and-open-assumptions-structural",
+        "result": "success",
+        "repository": "gustavomhss/Orchestra-SF",
+        "source": {
+          "commit": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+          "tree": "be384c6f1d1e08b206cc2360d961b674248f8b7a"
+        },
+        "snapshot": {
+          "commit": "cff028a930784bb02fa8da38950b3ecd50d6f140",
+          "tree": "e3cb57fc4af231dffd96adfc5a0d6faf21c4f2ca",
+          "branch": "ci-run-r4gates10",
+          "requestBlob": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+          "wrapperBlob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+          "onlyAddedFiles": [
+            ".ci-run.json",
+            "apps/cli/test/sucafina-polish-verification.test.ts"
+          ]
+        },
+        "run": {
+          "id": 45280596302,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45280596302",
+          "job": 138063712416,
+          "cleanupJob": 138065571307,
+          "status": "completed",
+          "conclusion": "success",
+          "testsStartedAt": "2026-11-23T22:33:04Z",
+          "testsCompletedAt": "2026-11-23T22:35:29Z",
+          "artifacts": [],
+          "omni": {
+            "mode": "strict",
+            "declared": 10,
+            "spawns": 12,
+            "delegated": 0,
+            "positiveControl": "pass"
+          }
+        },
+        "summary": {
+          "outerPassed": 10,
+          "outerFailed": 0,
+          "outerAsserts": 17,
+          "outerDurationReportedSeconds": 145.24,
+          "innerPassed": 273,
+          "innerFailed": 0,
+          "innerAsserts": 2900,
+          "typechecks": 4
+        },
+        "nested": [
+          {
+            "suite": "review comparison and layout",
+            "passed": 15,
+            "failed": 0,
+            "assertions": 76
+          },
+          {
+            "suite": "browser commands and Teams",
+            "passed": 109,
+            "failed": 0,
+            "assertions": 1594
+          },
+          {
+            "suite": "native page and assets",
+            "passed": 145,
+            "failed": 0,
+            "assertions": 1161
+          },
+          {
+            "suite": "installed context and procurement",
+            "passed": 4,
+            "failed": 0,
+            "assertions": 69
+          }
+        ],
+        "guardrails": {
+          "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+          "bootstrap": false,
+          "rules": 78,
+          "files": 66,
+          "findings": [],
+          "errors": [],
+          "approved": [],
+          "touchesGuards": false
+        },
+        "palettes": {
+          "gate": "palette byte parity",
+          "files": 7,
+          "changed": []
+        },
+        "gates": [
+          {
+            "gate": "app-shell typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "fetch pinned guard base",
+            "command": [
+              "git",
+              "fetch",
+              "--no-tags",
+              "--depth=1",
+              "origin",
+              "490a1e1352081d28c0eb22afcd05fffea8b5323f:refs/remotes/origin/dev"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "resolve pinned guard base",
+            "command": [
+              "git",
+              "rev-parse",
+              "--verify",
+              "refs/remotes/origin/dev^{commit}"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "guardrails",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "check:guards",
+              "--base",
+              "origin/dev",
+              "--json"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "palette generation",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "script/orchestra-palettes.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "palette byte parity",
+            "files": 7,
+            "changed": []
+          },
+          {
+            "gate": "app-shell e2e typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "typecheck:e2e"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "review comparison",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "--conditions=solid",
+              "--preload",
+              "./happydom.ts",
+              "./src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts",
+              "./src/context/layout-route.test.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "browser command and Team regressions",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "--conditions=browser",
+              "--preload",
+              "./happydom.ts",
+              "./test-browser/mcp-fresh-editor.test.ts",
+              "./test-browser/settings-mcp-action.test.ts",
+              "./test-browser/sucafina-confirmation-payload.test.ts",
+              "./test-browser/sucafina-draft-confirmation.test.ts",
+              "./test-browser/sucafina-decision-command.test.ts",
+              "./test-browser/sucafina-procurement-command.test.ts",
+              "./test-browser/sucafina-saved-view-command.test.ts",
+              "./test-browser/sucafina-vendor-contract-command.test.ts",
+              "./test-browser/sucafina-preserved-review-model.test.ts",
+              "./test-browser/team-profile.test.ts",
+              "./test-browser/team-profile-configuration.test.ts",
+              "./test-browser/team-profile-navigation.test.ts",
+              "./test-browser/team-session-page.test.ts",
+              "./test-browser/sucafina-team-domain.test.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "CLI typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "apps/cli",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "Sucafina typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "modules/sucafina/Sucafinav1",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "native page and asset contracts",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "./test/native-ui-contract/request-context.test.ts",
+              "./test/planner-runtime.test.ts",
+              "./test/procurement-runtime.test.ts",
+              "./test/assets.test.ts"
+            ],
+            "cwd": "modules/sucafina/Sucafinav1",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "installed context and procurement",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "./test/sucafina-native-web.test.ts",
+              "./test/sucafina-native-procurement.test.ts"
+            ],
+            "cwd": "apps/cli",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          }
+        ],
+        "boundaries": {
+          "originalBoundsUnchanged": true,
+          "noSkipsOrRetriesAdded": true,
+          "noWorkflowOrValidatorChanges": true,
+          "noLocalProductExecution": true,
+          "stdoutTruncated": false,
+          "stderrTruncated": false,
+          "futureHorizonCandidateNotQualified": true
+        }
+      },
+      "finalAfterHorizonAndMaterialityPending": true
     }
   ],
   "producerGates": [
@@ -11420,8 +12419,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
-    "tree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
+    "source": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+    "tree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -11523,9 +12522,326 @@
           ]
         ],
         "scope": "Reviewed narrow peek containment and exact padded-content oracles; all original assertions and bounds remain."
+      },
+      {
+        "source": "44a7f77dd03ad0af7e879c61a5b39365e0677394",
+        "commit": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+        "tree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
+        "run": 45279383231,
+        "ledgerSha256": "0b3d7fe55c60cf3f7aae347302324491943bde99cfc183203a4bc41b828ce00b",
+        "scope": "Native-qualified unresolved Planner assumptions, complete canonical Recall parity, independent roots and original egress refusals."
       }
     ],
     "structural": {
+      "source": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+      "sourceTree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
+      "snapshot": "cff028a930784bb02fa8da38950b3ecd50d6f140",
+      "tree": "e3cb57fc4af231dffd96adfc5a0d6faf21c4f2ca",
+      "branch": "ci-run-r4gates10",
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "wrapperBlob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+      "requestBlob": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+      "onlySnapshotPaths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-polish-verification.test.ts"
+      ],
+      "run": 45280596302,
+      "job": 138063712416,
+      "status": "completed",
+      "result": "success",
+      "ledgerSha256": "b1254b73babd91cd6df2e17967a8a0237915cbcae890854802231e55f4dab041",
+      "ledger": {
+        "qualification": "round-four-board-and-open-assumptions-structural",
+        "result": "success",
+        "repository": "gustavomhss/Orchestra-SF",
+        "source": {
+          "commit": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+          "tree": "be384c6f1d1e08b206cc2360d961b674248f8b7a"
+        },
+        "snapshot": {
+          "commit": "cff028a930784bb02fa8da38950b3ecd50d6f140",
+          "tree": "e3cb57fc4af231dffd96adfc5a0d6faf21c4f2ca",
+          "branch": "ci-run-r4gates10",
+          "requestBlob": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+          "wrapperBlob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+          "onlyAddedFiles": [
+            ".ci-run.json",
+            "apps/cli/test/sucafina-polish-verification.test.ts"
+          ]
+        },
+        "run": {
+          "id": 45280596302,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45280596302",
+          "job": 138063712416,
+          "cleanupJob": 138065571307,
+          "status": "completed",
+          "conclusion": "success",
+          "testsStartedAt": "2026-11-23T22:33:04Z",
+          "testsCompletedAt": "2026-11-23T22:35:29Z",
+          "artifacts": [],
+          "omni": {
+            "mode": "strict",
+            "declared": 10,
+            "spawns": 12,
+            "delegated": 0,
+            "positiveControl": "pass"
+          }
+        },
+        "summary": {
+          "outerPassed": 10,
+          "outerFailed": 0,
+          "outerAsserts": 17,
+          "outerDurationReportedSeconds": 145.24,
+          "innerPassed": 273,
+          "innerFailed": 0,
+          "innerAsserts": 2900,
+          "typechecks": 4
+        },
+        "nested": [
+          {
+            "suite": "review comparison and layout",
+            "passed": 15,
+            "failed": 0,
+            "assertions": 76
+          },
+          {
+            "suite": "browser commands and Teams",
+            "passed": 109,
+            "failed": 0,
+            "assertions": 1594
+          },
+          {
+            "suite": "native page and assets",
+            "passed": 145,
+            "failed": 0,
+            "assertions": 1161
+          },
+          {
+            "suite": "installed context and procurement",
+            "passed": 4,
+            "failed": 0,
+            "assertions": 69
+          }
+        ],
+        "guardrails": {
+          "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+          "bootstrap": false,
+          "rules": 78,
+          "files": 66,
+          "findings": [],
+          "errors": [],
+          "approved": [],
+          "touchesGuards": false
+        },
+        "palettes": {
+          "gate": "palette byte parity",
+          "files": 7,
+          "changed": []
+        },
+        "gates": [
+          {
+            "gate": "app-shell typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "fetch pinned guard base",
+            "command": [
+              "git",
+              "fetch",
+              "--no-tags",
+              "--depth=1",
+              "origin",
+              "490a1e1352081d28c0eb22afcd05fffea8b5323f:refs/remotes/origin/dev"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "resolve pinned guard base",
+            "command": [
+              "git",
+              "rev-parse",
+              "--verify",
+              "refs/remotes/origin/dev^{commit}"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "guardrails",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "check:guards",
+              "--base",
+              "origin/dev",
+              "--json"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "palette generation",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "script/orchestra-palettes.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "palette byte parity",
+            "files": 7,
+            "changed": []
+          },
+          {
+            "gate": "app-shell e2e typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "run",
+              "typecheck:e2e"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "review comparison",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "--conditions=solid",
+              "--preload",
+              "./happydom.ts",
+              "./src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts",
+              "./src/context/layout-route.test.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "browser command and Team regressions",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "--conditions=browser",
+              "--preload",
+              "./happydom.ts",
+              "./test-browser/mcp-fresh-editor.test.ts",
+              "./test-browser/settings-mcp-action.test.ts",
+              "./test-browser/sucafina-confirmation-payload.test.ts",
+              "./test-browser/sucafina-draft-confirmation.test.ts",
+              "./test-browser/sucafina-decision-command.test.ts",
+              "./test-browser/sucafina-procurement-command.test.ts",
+              "./test-browser/sucafina-saved-view-command.test.ts",
+              "./test-browser/sucafina-vendor-contract-command.test.ts",
+              "./test-browser/sucafina-preserved-review-model.test.ts",
+              "./test-browser/team-profile.test.ts",
+              "./test-browser/team-profile-configuration.test.ts",
+              "./test-browser/team-profile-navigation.test.ts",
+              "./test-browser/team-session-page.test.ts",
+              "./test-browser/sucafina-team-domain.test.ts"
+            ],
+            "cwd": "packages/app-shell",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "CLI typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "apps/cli",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "Sucafina typecheck",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "typecheck"
+            ],
+            "cwd": "modules/sucafina/Sucafinav1",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "native page and asset contracts",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "./test/native-ui-contract/request-context.test.ts",
+              "./test/planner-runtime.test.ts",
+              "./test/procurement-runtime.test.ts",
+              "./test/assets.test.ts"
+            ],
+            "cwd": "modules/sucafina/Sucafinav1",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          },
+          {
+            "gate": "installed context and procurement",
+            "command": [
+              "/home/runner/.bun/bin/bun",
+              "test",
+              "./test/sucafina-native-web.test.ts",
+              "./test/sucafina-native-procurement.test.ts"
+            ],
+            "cwd": "apps/cli",
+            "exitCode": 0,
+            "stdoutTruncated": false,
+            "stderrTruncated": false
+          }
+        ],
+        "boundaries": {
+          "originalBoundsUnchanged": true,
+          "noSkipsOrRetriesAdded": true,
+          "noWorkflowOrValidatorChanges": true,
+          "noLocalProductExecution": true,
+          "stdoutTruncated": false,
+          "stderrTruncated": false,
+          "futureHorizonCandidateNotQualified": true
+        }
+      },
+      "finalAfterHorizonAndMaterialityPending": true
+    },
+    "atlasBrowser": {
+      "run": 45238030823,
+      "snapshot": "2a30dfc5b3804c23571ccead84327ac9844bbaf4",
+      "tree": "7d1821e6d4e89a0c9d3eff7449fb3e9b11f057f3",
+      "source": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+      "branch": "ci-run-r4recall6",
+      "status": "completed",
+      "qualifies": false,
+      "result": "failure",
+      "fixturePublication": "passed",
+      "reason": "Original recall fetch exceeded unchanged 40s bound; prepared-case fetch was HTTP200."
+    },
+    "previousStructural": {
       "source": "08e6f7f97d63296b768cdf4120a62f9ed1bdcebe",
       "sourceTree": "a75953cdd2f4c90a5f780cefc8e0090a8352f529",
       "snapshot": "bff7b61acea0fc2bacb37ae22b3d195ce4f8cb56",
@@ -11815,29 +13131,6 @@
         }
       },
       "finalAfterBoardAndRecallPending": true
-    },
-    "atlasBrowser": {
-      "run": 45238030823,
-      "snapshot": "2a30dfc5b3804c23571ccead84327ac9844bbaf4",
-      "tree": "7d1821e6d4e89a0c9d3eff7449fb3e9b11f057f3",
-      "source": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
-      "branch": "ci-run-r4recall6",
-      "status": "completed",
-      "qualifies": false,
-      "result": "failure",
-      "fixturePublication": "passed",
-      "reason": "Original recall fetch exceeded unchanged 40s bound; prepared-case fetch was HTTP200."
-    },
-    "previousStructural": {
-      "source": "3cb30732b8db46bfcb0b4df61e757bd7b2df5362",
-      "sourceTree": "9127480d12f6198f2fd36b8990f2f502bde5797a",
-      "snapshot": "6d290eb9d7ee2925f5a88c6a398a61e29ae11c6a",
-      "tree": "1bad08ac9433c10c64797b7bec517dff67eeb5c5",
-      "branch": "ci-run-r4gates8",
-      "run": 45265427046,
-      "status": "completed",
-      "result": "success",
-      "ledgerSha256": "351e8e8d642261eb46ecf19fdd80a50e35572f46de42cc1f0cd2443f2d72e4f0"
     },
     "uiRequalification": [
       {
@@ -13027,8 +14320,570 @@
         "branch": "ci-run-r4board",
         "requestBlob": "58d13ff72536f42ab19a1d14d1d1d34fe297baaa",
         "run": 45279046949,
-        "status": "in_progress",
-        "scope": "Shared33"
+        "status": "completed",
+        "scope": "Shared33",
+        "result": "success",
+        "ledgerSha256": "e50907267828804ef41bc8a0678408debc7ec810b5a16da5942472e86306b84d",
+        "ledger": {
+          "schema": "r4-ui-qualification-v2",
+          "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
+          "sourceTree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
+          "snapshot": "c646a05cf4b565437daa0065c33ccdc780529789",
+          "snapshotTree": "5ec23fb152039b5235f17afb20e073c355ed2593",
+          "requestBlob": "58d13ff72536f42ab19a1d14d1d1d34fe297baaa",
+          "branch": "ci-run-r4board",
+          "run": 45279046949,
+          "job": 138058341633,
+          "artifact": {
+            "id": 14868973802,
+            "bytes": 76689092,
+            "sha256": "ea1ce003bd207697d41afd4739a8f7eb1e99875e29851b9576a5800d60c9a62b",
+            "archive": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/shared-45279046949.zip"
+          },
+          "environment": {
+            "platform": "Linux ubuntu-24.04",
+            "bundle": "production",
+            "omni": "strict",
+            "retry": 0
+          },
+          "tests": {
+            "Shared": 33,
+            "passed": 33,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "runtimeStats": {
+            "startTime": "2026-11-23T22:25:44.586Z",
+            "duration": 135109.097,
+            "expected": 33,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "originalCaptureTotal": 120,
+          "personallyReviewedFresh": 33,
+          "retainedIdenticalReviews": 22,
+          "allCaptureComparison": {
+            "identicalToPrevious": 94,
+            "changedFromPrevious": 22,
+            "new": 4
+          },
+          "reviewed": [
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-wide.png",
+              "sha256": "095ed1a6e2cbef9b630aa2dd6f45addf0d09ed7eb71c4e8be67a6d365eed6213",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-076d9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-wide.png",
+              "sha256": "55faa5d0f0d576989143d494250bc4ddcbd7d282b6c763f2c844849a027e86bf",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-narrow.png",
+              "sha256": "5fe508b86be016533e9000f919842bc8b486536d8634fc3b2e91e15a487c94b2",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-2fc9f-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-narrow.png",
+              "sha256": "25276accdede17ebe830bd8b2aa3e79edab6b20c7bf7c3574bbaf2bbc44da1f7",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-dark-small.png",
+              "sha256": "acc3df1df3e94dde490235593287aef0bd254d0ccd8d09b9acdf4a37a7dbbc64",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-586d7-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-dark-small.png",
+              "sha256": "be50368b2c9008ebe5ff0bbda850312035f2c5a7c4d6002dc69ea60765cc3955",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-wide.png",
+              "sha256": "6f21370d212250dde636063913cc9d5f74e0c399ee3aca4a2c254360addcd06e",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-dark-wide.png",
+              "sha256": "9e78df780bc02a340902d20eeecac5360287d07fa0692d594cd0e4293ad93a24",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-87f9a-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-dark-wide.png",
+              "sha256": "bf92833e9c44d08610aca4a119a4e18ad12d03654b8c7f5c3d61104dea3df1e0",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-dark-narrow.png",
+              "sha256": "ae3bfd328e0c55d6132c5a8c2f330d019e81051fcf12112e46d29eabfb43cffb",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-c0ce0-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-dark-narrow.png",
+              "sha256": "594bcfafd03a2d8a0eb770d205e90122ac7e8efd0e952a4c4b7d74c062c4f0df",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-dark-narrow.png",
+              "sha256": "796fca8a17bf509e356a6c1521a6c7a374ec5aed8d67a44c11de08605738511c",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-local-read-recovery-dark-narrow.png",
+              "sha256": "27d1fcc5d26ade689fed7ed52e0aa1c8ba591c9decf395f09624f3556b84d31e",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-dark-narrow.png",
+              "sha256": "e0c4aea03b2d5b78949dfbc2cef5640ed23cf0f2e648c1747d296fcc4d945634",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-da-ded3d-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-dark-narrow.png",
+              "sha256": "5194b3b98e1b3d0743b316747d8c814be6d1d901bbbeae7205fb901137ab8a33",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-wide.png",
+              "sha256": "f1983a78ed6efe3a4f03a4044fc4e62e5a4fb3aca626e661fec06f705f02505a",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-087a2-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-wide.png",
+              "sha256": "5e8eae14840218a857e30596bd88e532d4485a4376254cd490e04d939afe35ed",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-available-providers-guidance-light-small.png",
+              "sha256": "5840ef17c4b286c1f510c78d91522c83e72e15cc78c1c0c6f79ed6641ac403b0",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-empty-files-declared-pipeline-light-small.png",
+              "sha256": "301b2b2e2d81f23b05f7c2785ed5a81a21dafacf6399e36e1eda2139fe0031e9",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-local-read-recovery-light-small.png",
+              "sha256": "696df2c2298406b4e19b89b991af4d3d9960b79ec896602df38c1a6faa2f9035",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-maintenance-passes-and-comparison-light-small.png",
+              "sha256": "d7532fb52c2691b7805f40221e334e35a34a6e5dab360f35d84b8dc53b416f95",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-9766d-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-wide.png",
+              "sha256": "8f48bf962c27bebb1d339c931a73b7331c282da996fc95657b711d76dce79c29",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-light-small.png",
+              "sha256": "f210b9be3600fb636804db957976e2160764b480c61e9672373ae0452b573f45",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-light-small.png",
+              "sha256": "7c6dd114ef2a16adee015400f0384db4e6ba0d75fabfaab10defd172f713239e",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-narrow.png",
+              "sha256": "8e11a277b3eff51c016cabc96e8e46d5699e06a4c77fdfaf2813820fe4e57f50",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-c3a79-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-narrow.png",
+              "sha256": "57ee6343473af4daa530dc2eb79dedcf56479c18aa176e30c22ff75d81cf953f",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-issue-detail-panel-light-wide.png",
+              "sha256": "e83f55c0fb25c32526188eb9a5b748c294689d0eac6863e3cf4ebd8ab07d6e70",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-issue-note-draft-light-wide.png",
+              "sha256": "adfd9eb31b7c6da6e50306f4fe077ef0d45714b42d2f304ed9cca23e768e510a",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-dc323-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-wide.png",
+              "sha256": "a5ca39e7a82f8966fb6ec0741f552539173d65d5583e5fc00355ffb0d83652d4",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-small.png",
+              "sha256": "a7d946e696460f5f7e306c660c2fc96d4e8dc760fbb95d4400a60312cdb9352f",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-f4fd9-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-small.png",
+              "sha256": "01600b0a6b34c588edfbc8dff48c661333a5d0301cdff81c45f0abba0935dc9d",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-fee46-ves-a-linked-recovery-error-chromium/error-recovery-server-connection-form-light-small-short.png",
+              "sha256": "6573e04f7b14944d92b65a03a8840c8befedf58ecede2ec0a57bde1279c5dee5",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-fee46-ves-a-linked-recovery-error-chromium/error-recovery-server-health-failure-light-small-short.png",
+              "sha256": "c5f98ea881f615eda5c368f03fe2b449d1131a764ec04ca0cc0036c48206f9ca",
+              "surface": "Shared",
+              "review": "personally-reviewed-no-new-defect"
+            }
+          ],
+          "retained": [
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-42e79--an-unmounted-page-instance-chromium/rag-studio-late-reads-ignore-unmounted-page-dark-wide.png",
+              "sha256": "ce421ac1dbd75e6e7b4dc14e365ab7df7bac318a003a365bb8c0bc4afed2a869",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-42e79--an-unmounted-page-instance-chromium/rag-studio-late-reads-ignore-unmounted-page-dark-wide.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-bb335-arlier-read-completes-later-chromium/rag-studio-late-source-keeps-latest-selection-dark-wide.png",
+              "sha256": "f735f29a8cec0b95f50193725c1848c015de0e9eab88337b059d665aa07e4e16",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-Ra-bb335-arlier-read-completes-later-chromium/rag-studio-late-source-keeps-latest-selection-dark-wide.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-small.png",
+              "sha256": "2a4392766522158aa6c713c82fdbdb47f69ccde2d5ee8dce1f323e2e81210456",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-connect-account-dialog-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-denied-read-light-small.png",
+              "sha256": "569c126c517f2d944be558124f0d445a937a7e46be9fd864e04034de2a1ad619",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-denied-read-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-light-small.png",
+              "sha256": "8dd427a2404c1cb422e7a61c96ac1d593ec9ecfcc7ed6eba83ed2419e1103df1",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-18674-nect-dialog-and-denied-read-chromium/integrations-empty-accounts-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-command-results-overlay-light-small.png",
+              "sha256": "f8d62837231e1e96feacdc3a99cbc181c174623db2827e6750c4693c32ea2c7d",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-command-results-overlay-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-no-results-overlay-light-small.png",
+              "sha256": "b02bb13a1761e7c35adffb0d36ac872063b0dcf0d54b06ba45d58961ba2dd989",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-2a4a7-d-results-and-empty-overlay-chromium/search-no-results-overlay-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-small.png",
+              "sha256": "e0c246f5abae147f5c8f3c47a3b2d1cdc172abb9a5e9a7bd318a7c3b728fc32b",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-controls-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-small.png",
+              "sha256": "9398b513ac9998e66049146c054868f54abc6f479496ffa96fc87aee6574495d",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-model-and-metric-controls-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-light-small.png",
+              "sha256": "c82767c3ca316c8d90b97237e1fe6e8e56d2ce7309b63cee6452fc84e7dbf3d5",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-pipeline-numeric-metric-and-fusion-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-light-small.png",
+              "sha256": "48b4237c6f06c9073bdbd588462a1e1cdf44323f6df5d5f833470b4a93989d33",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-revision-comparison-controls-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-small.png",
+              "sha256": "5f5135322087164193272fd4c7427c73a63f1f3e24ea68be2cf4ee83f2caee4a",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-42735-peline-and-unavailable-read-chromium/rag-studio-source-and-pipeline-unavailable-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-empty-light-small.png",
+              "sha256": "1620a66e8f629dc68061aa8c9fc98b12357f4c9de73c670ce85bf92ce16cec83",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-empty-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-preferences-light-small.png",
+              "sha256": "97b184d77d55e82927d64cc1f6d93e60f890afb5c4e69edb8c2c88b8fa4fff39",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-preferences-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-small.png",
+              "sha256": "24fd9ccf198fd097e044351c038e3f4714aad49d97f349bbf350d9e6b530008d",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-read-unavailable-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-light-small.png",
+              "sha256": "e5570d408cb06325af7a72e280bcd36605fe36d74ba5f33eae20f1858009d194",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-selected-source-detail-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-synthetic-source-list-light-small.png",
+              "sha256": "7e589783637d62b4891e25085564f50dd2f77596d42c4c15459b4310fac05528",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-696a5-ences-empty-and-failed-read-chromium/inbox-synthetic-source-list-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-97552-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-light-small.png",
+              "sha256": "21391c3338deaade48f1aefba85c325dc86fbe0fa22cd62a2054b2816d26d036",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-97552-the-real-web-platform-limit-chromium/flight-engineer-web-unavailable-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-empty-light-small.png",
+              "sha256": "869916fe9d21c15b9adf2995e7451a4301603fa19b41ebd7ae24510fd64314a5",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-empty-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-read-unavailable-light-small.png",
+              "sha256": "797dffda3c4f474ee366aba92f97febc127d568ffb815fdc240be43a95a5c38b",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-read-unavailable-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-light-small.png",
+              "sha256": "f19c63465d7a75ad54f9ce03079e51b6cee59d5223a886ad081ad57b62195200",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-project-overview-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            },
+            {
+              "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shared-45279046949/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-small.png",
+              "sha256": "f6415899214a6fa8be3e9edf8a5ea24bee306d2eaf25671bca25b52490650261",
+              "previousPath": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/requalify-shell-45274063363/artifact/packages/app-shell/e2e/test-results/orchestra-shared-visual-li-98128-anel-empty-and-read-failure-chromium/project-board-synthetic-stage-board-light-small.png",
+              "review": "retained-identical-pixels-from-prior-personal-review"
+            }
+          ],
+          "metrics": {
+            "boardPeekCheckpoints": 8,
+            "measuredDescendants": 120,
+            "maxLeftOvershoot": 0,
+            "maxRightOvershoot": 0,
+            "maxTargetOverflow": 0,
+            "horizontalPaddingPx": 20,
+            "panelWidthsPx": {
+              "320": 294,
+              "390": 364,
+              "desktop": 520
+            },
+            "usableWidthsPx": {
+              "320": 254,
+              "390": 324,
+              "desktop": 480
+            },
+            "details": [
+              {
+                "name": "project-board-peek-opened-dark-wide",
+                "panel": {
+                  "left": 888,
+                  "right": 1408,
+                  "contentLeft": 908,
+                  "contentRight": 1388,
+                  "clientWidth": 520,
+                  "scrollWidth": 520
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-note-draft-dark-wide",
+                "panel": {
+                  "left": 888,
+                  "right": 1408,
+                  "contentLeft": 908,
+                  "contentRight": 1388,
+                  "clientWidth": 520,
+                  "scrollWidth": 520
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-opened-light-wide",
+                "panel": {
+                  "left": 888,
+                  "right": 1408,
+                  "contentLeft": 908,
+                  "contentRight": 1388,
+                  "clientWidth": 520,
+                  "scrollWidth": 520
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-note-draft-light-wide",
+                "panel": {
+                  "left": 888,
+                  "right": 1408,
+                  "contentLeft": 908,
+                  "contentRight": 1388,
+                  "clientWidth": 520,
+                  "scrollWidth": 520
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-opened-dark-narrow",
+                "panel": {
+                  "left": 13,
+                  "right": 377,
+                  "contentLeft": 33,
+                  "contentRight": 357,
+                  "clientWidth": 364,
+                  "scrollWidth": 364
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-note-draft-dark-narrow",
+                "panel": {
+                  "left": 13,
+                  "right": 377,
+                  "contentLeft": 33,
+                  "contentRight": 357,
+                  "clientWidth": 364,
+                  "scrollWidth": 364
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-opened-light-small",
+                "panel": {
+                  "left": 13,
+                  "right": 307,
+                  "contentLeft": 33,
+                  "contentRight": 287,
+                  "clientWidth": 294,
+                  "scrollWidth": 294
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              },
+              {
+                "name": "project-board-peek-note-draft-light-small",
+                "panel": {
+                  "left": 13,
+                  "right": 307,
+                  "contentLeft": 33,
+                  "contentRight": 287,
+                  "clientWidth": 294,
+                  "scrollWidth": 294
+                },
+                "maxRightOvershoot": 0,
+                "maxLeftOvershoot": 0,
+                "maxTargetOverflow": 0,
+                "targets": 15
+              }
+            ]
+          },
+          "findings": [
+            {
+              "id": "R4-19",
+              "status": "resolved-and-qualified",
+              "description": "Peek intrinsic grid sizing and mobile header composition now contain title, note field and actions within the existing horizontal padding. All eight original opened/draft images were inspected; all targeted descendants stay within the inner panel.",
+              "productPaths": [
+                "packages/app-shell/src/orchestra/chapters/board/board.css",
+                "packages/app-shell/e2e/orchestra/shared-visual.spec.ts"
+              ],
+              "newDefectFound": false
+            }
+          ],
+          "reviewNotes": [
+            "All eight Board opened/draft originals inspected in dark/light desktop and 390/320 mobile.",
+            "All fourteen Add server ready/failure originals inspected across seven original viewport/theme variants.",
+            "All twenty-two changed originals and four new draft originals personally inspected.",
+            "Note focus ring, preserved entered value, enabled action and narrow header separation visible in originals; no submitted note/write was introduced."
+          ],
+          "retainedOtherSuites": {
+            "Teams": {
+              "run": 45274063363,
+              "passed": 17
+            },
+            "MCP": {
+              "run": 45274063363,
+              "passed": 15
+            },
+            "Agents": {
+              "run": 45274084517,
+              "passed": 27
+            },
+            "reason": "Board fix is confined to board peek CSS and the Shared spec; root authorized retention of these independent cohorts."
+          },
+          "limits": [
+            "Compiled production UI with explicit component HTTP fixtures; not live backend/provider authentication/Microsoft integration.",
+            "120 is the original capture count, not a claim of 120 personal visual inspections.",
+            "Fresh and retained identical personal reviews are listed separately; no review is inferred merely from an automated test passing.",
+            "This qualifies the scoped Board correction and Shared cohort, not the still-pending complete Memory/backend work."
+          ]
+        },
+        "visualQualification": "R4-19 resolved;33fresh originals reviewed and22retained only by exact PNG equality"
       },
       {
         "source": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
@@ -13069,18 +14924,18 @@
     ]
   },
   "checkpoint": {
-    "productSource": "7998f9d8b4502c0fb97a65726aa4654af8ff85ba",
-    "productTree": "85edd02b4c32e2c95aafa4a8ce44cc7efc52797e",
+    "productSource": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+    "productTree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
     "status": "qualification-in-progress",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-    "browserCases": 64,
-    "reviewedOriginals": 47,
+    "browserCases": 97,
+    "reviewedOriginals": 102,
     "previousBaseBrowserCases": 94,
     "previousBaseReviewedOriginals": 64,
     "trackedFindings": 19,
     "visualFindings": 16,
     "loadingFindings": 3,
-    "automatedSharedCasesAwaitingVisualRepair": 33
+    "automatedSharedCasesAwaitingVisualRepair": 0
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -13744,8 +15599,8 @@
   ],
   "performancePending": {
     "plannerCompletedProof": {
-      "source": "08e6f7f97d63296b768cdf4120a62f9ed1bdcebe",
-      "tree": "a75953cdd2f4c90a5f780cefc8e0090a8352f529",
+      "source": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+      "tree": "be384c6f1d1e08b206cc2360d961b674248f8b7a",
       "branch": "ui-polish-four",
       "status": "qualification-in-progress",
       "integrated": true,
@@ -14624,11 +16479,7 @@
       },
       "additionalReview": "Planner-only authority now pins the factory-retained source callbacks and optional own data fields. Canonical source readers and general readonly helpers retain their prior behavior. The two real CurrentChoice/Source controls passed on source 86ba; explicit parameter types were then added without changing their assertions.",
       "performanceClaim": "No end-to-end improvement or Memory qualification claimed before original browser journeys complete within unchanged guards.",
-      "priorSource": {
-        "source": "5d9ede025232ee8190af66812d94f50c597f3217",
-        "tree": "9786fbc9b90723f75f55b501f172892a173c339a",
-        "branch": "planner-proof-control"
-      },
+      "priorSource": "08e6f7f97d63296b768cdf4120a62f9ed1bdcebe",
       "integratedCommit": "3cb30732b8db46bfcb0b4df61e757bd7b2df5362",
       "composedRecallPreflightGate": {
         "ledger": {
@@ -18461,8 +20312,8 @@
         "source": "7104bec7c54e1083eb3791fc236bd2bd865be2d3",
         "tree": "1c00be3223040ec3dd9b5ace79945f9d3e7f7fd3",
         "productBlob": "54eea355ccc0c20197393a8e397dd207ec3245d4",
-        "integrated": false,
-        "qualified": false,
+        "integrated": true,
+        "qualified": true,
         "change": "Only unresolved open assumptions may enter the existing complete Planner evidence closure; confirmed/rejected and non-Planner references retain canonical fallback. Actual browser seed contains two open assumptions.",
         "controls": {
           "source": "44a7f77dd03ad0af7e879c61a5b39365e0677394",
@@ -18478,8 +20329,638 @@
           "wrapper": 540000,
           "run": 45279383231,
           "job": 138059509144,
-          "status": "in_progress",
-          "originalThreeBodiesIdentical": true
+          "status": "completed",
+          "originalThreeBodiesIdentical": true,
+          "result": "success",
+          "ledgerSha256": "0b3d7fe55c60cf3f7aae347302324491943bde99cfc183203a4bc41b828ce00b",
+          "ledger": {
+            "qualification": "round-four-native-recall-open-assumptions",
+            "result": "success",
+            "repository": "gustavomhss/Orchestra-SF",
+            "source": {
+              "commit": "44a7f77dd03ad0af7e879c61a5b39365e0677394",
+              "tree": "ce7793b6dcaa3155467f746d77ccb10d50c2cea1",
+              "productBlob": "54eea355ccc0c20197393a8e397dd207ec3245d4",
+              "testBlob": "6fb8397f3fab425b7a214772ccce512ea26b399f"
+            },
+            "snapshot": {
+              "commit": "689e7f306e5dd82db5ba70b88194426c4189766a",
+              "tree": "0e7b1d33f88435a725b61fbb9bc7e21ee12d23bc",
+              "branch": "ci-run-r4recallopen",
+              "requestBlob": "139ce68c08a289f9e143a2c10176c9cb37413bf0",
+              "wrapperBlob": "b7f7cefd1b56af931439e2b43aa6142a377f5fac",
+              "onlyAddedFiles": [
+                ".ci-run.json",
+                "apps/cli/test/sucafina-recall-verification.test.ts"
+              ]
+            },
+            "run": {
+              "id": 45279383231,
+              "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45279383231",
+              "job": 138059509144,
+              "cleanupJob": 138062025024,
+              "status": "completed",
+              "conclusion": "success",
+              "testsStartedAt": "2026-11-23T22:26:03Z",
+              "testsCompletedAt": "2026-11-23T22:29:01Z",
+              "artifacts": [],
+              "omni": {
+                "mode": "strict",
+                "declared": 1,
+                "spawns": 1,
+                "delegated": 0,
+                "positiveControl": "pass"
+              }
+            },
+            "summary": {
+              "outerPassed": 1,
+              "outerFailed": 0,
+              "outerAssertions": 1,
+              "innerPassed": 4,
+              "innerFailed": 0,
+              "innerAssertions": 364,
+              "outerDurationMs": 177992.54
+            },
+            "cases": [
+              {
+                "title": "Planner case preflight uses its private version and closes independent native observations",
+                "durationMs": 581.46
+              },
+              {
+                "title": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+                "durationMs": 57326.79
+              },
+              {
+                "title": "Planner Recall refuses changed case selections and Atlas publication closure",
+                "durationMs": 58031.55
+              },
+              {
+                "title": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+                "durationMs": 61483.73
+              }
+            ],
+            "phases": [
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "native-fixture",
+                "state": "started",
+                "elapsedMs": 0
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "native-fixture",
+                "state": "returned",
+                "phaseMs": 156,
+                "elapsedMs": 156,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "public-reference-keeps-canonical-read",
+                "state": "started",
+                "elapsedMs": 156
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "public-reference-keeps-canonical-read",
+                "state": "returned",
+                "phaseMs": 37,
+                "elapsedMs": 193,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "with-case-captures-version-before-preflight",
+                "state": "started",
+                "elapsedMs": 193
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "with-case-captures-version-before-preflight",
+                "state": "returned",
+                "phaseMs": 54,
+                "elapsedMs": 247,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "selected-read-is-complete-and-independent",
+                "state": "started",
+                "elapsedMs": 247
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "selected-read-is-complete-and-independent",
+                "state": "returned",
+                "phaseMs": 127,
+                "elapsedMs": 374,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "revocation-after-work-does-not-replay",
+                "state": "started",
+                "elapsedMs": 375
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "revocation-after-work-does-not-replay",
+                "state": "returned",
+                "phaseMs": 59,
+                "elapsedMs": 433,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "source-port-drift-after-admission-does-not-replay",
+                "state": "started",
+                "elapsedMs": 433
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "source-port-drift-after-admission-does-not-replay",
+                "state": "returned",
+                "phaseMs": 54,
+                "elapsedMs": 487,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "case-change-between-work-and-fresh-egress",
+                "state": "started",
+                "elapsedMs": 487
+              },
+              {
+                "fixture": "planner-recall-preflight",
+                "phase": "case-change-between-work-and-fresh-egress",
+                "state": "returned",
+                "phaseMs": 89,
+                "elapsedMs": 576,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "native-scanner-and-fixture",
+                "state": "started",
+                "elapsedMs": 0
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "native-scanner-and-fixture",
+                "state": "returned",
+                "phaseMs": 816,
+                "elapsedMs": 816,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "stage-real-precedent",
+                "state": "started",
+                "elapsedMs": 816
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "stage-real-precedent",
+                "state": "returned",
+                "phaseMs": 3,
+                "elapsedMs": 819,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "started",
+                "elapsedMs": 819
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "returned",
+                "phaseMs": 4,
+                "elapsedMs": 822,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "started",
+                "elapsedMs": 822
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "returned",
+                "phaseMs": 106,
+                "elapsedMs": 929,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "started",
+                "elapsedMs": 929
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "returned",
+                "phaseMs": 418,
+                "elapsedMs": 1347,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "stage-current-case-without-publication",
+                "state": "started",
+                "elapsedMs": 1347
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "stage-current-case-without-publication",
+                "state": "returned",
+                "phaseMs": 23,
+                "elapsedMs": 1369,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "started",
+                "elapsedMs": 1378
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "returned",
+                "phaseMs": 23725,
+                "elapsedMs": 25104,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "installed-recall-has-independent-work-and-egress-owners",
+                "state": "started",
+                "elapsedMs": 25104
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "installed-recall-has-independent-work-and-egress-owners",
+                "state": "returned",
+                "phaseMs": 21136,
+                "elapsedMs": 46240,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "child-case-results-are-detached-and-closed-owners-refuse",
+                "state": "started",
+                "elapsedMs": 46240
+              },
+              {
+                "fixture": "planner-recall-atlas",
+                "phase": "child-case-results-are-detached-and-closed-owners-refuse",
+                "state": "returned",
+                "phaseMs": 11082,
+                "elapsedMs": 57322,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "native-scanner-and-fixture",
+                "state": "started",
+                "elapsedMs": 0
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "native-scanner-and-fixture",
+                "state": "returned",
+                "phaseMs": 541,
+                "elapsedMs": 541,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "stage-real-precedent",
+                "state": "started",
+                "elapsedMs": 541
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "stage-real-precedent",
+                "state": "returned",
+                "phaseMs": 3,
+                "elapsedMs": 544,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "started",
+                "elapsedMs": 544
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "returned",
+                "phaseMs": 2,
+                "elapsedMs": 546,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "started",
+                "elapsedMs": 546
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "returned",
+                "phaseMs": 100,
+                "elapsedMs": 646,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "started",
+                "elapsedMs": 646
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "returned",
+                "phaseMs": 403,
+                "elapsedMs": 1050,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "stage-current-case-without-publication",
+                "state": "started",
+                "elapsedMs": 1050
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "stage-current-case-without-publication",
+                "state": "returned",
+                "phaseMs": 27,
+                "elapsedMs": 1076,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "started",
+                "elapsedMs": 1087
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "returned",
+                "phaseMs": 23941,
+                "elapsedMs": 25028,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "a-divergent-private-child-selection-refuses-before-its-producer",
+                "state": "started",
+                "elapsedMs": 25028
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "a-divergent-private-child-selection-refuses-before-its-producer",
+                "state": "returned",
+                "phaseMs": 10888,
+                "elapsedMs": 35916,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "a-child-cannot-substitute-another-case-version",
+                "state": "started",
+                "elapsedMs": 35916
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "a-child-cannot-substitute-another-case-version",
+                "state": "returned",
+                "phaseMs": 10921,
+                "elapsedMs": 46837,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "atlas-publication-change-between-work-and-egress-refuses",
+                "state": "started",
+                "elapsedMs": 46837
+              },
+              {
+                "fixture": "planner-recall-closure",
+                "phase": "atlas-publication-change-between-work-and-egress-refuses",
+                "state": "returned",
+                "phaseMs": 11188,
+                "elapsedMs": 58025,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "native-scanner-and-fixture",
+                "state": "started",
+                "elapsedMs": 0
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "native-scanner-and-fixture",
+                "state": "returned",
+                "phaseMs": 802,
+                "elapsedMs": 802,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "stage-real-precedent",
+                "state": "started",
+                "elapsedMs": 802
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "stage-real-precedent",
+                "state": "returned",
+                "phaseMs": 3,
+                "elapsedMs": 805,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "started",
+                "elapsedMs": 805
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "malformed-selection-keeps-canonical-pre-admission-refusal",
+                "state": "returned",
+                "phaseMs": 7,
+                "elapsedMs": 812,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "started",
+                "elapsedMs": 812
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "pending-is-unavailable-and-does-not-publish",
+                "state": "returned",
+                "phaseMs": 94,
+                "elapsedMs": 906,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "started",
+                "elapsedMs": 906
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "publish-through-the-real-atlas-writer",
+                "state": "returned",
+                "phaseMs": 412,
+                "elapsedMs": 1318,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "stage-current-case-without-publication",
+                "state": "started",
+                "elapsedMs": 1318
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "stage-current-case-without-publication",
+                "state": "returned",
+                "phaseMs": 20,
+                "elapsedMs": 1339,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "started",
+                "elapsedMs": 1348
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "canonical-recall-without-a-shared-recall-owner",
+                "state": "returned",
+                "phaseMs": 24657,
+                "elapsedMs": 26005,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "open-uncertainty-preserves-the-complete-installed-recall",
+                "state": "started",
+                "elapsedMs": 26006
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "open-uncertainty-preserves-the-complete-installed-recall",
+                "state": "returned",
+                "phaseMs": 21826,
+                "elapsedMs": 47832,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "an-admitted-terminal-hit-still-refuses-revocation-at-egress",
+                "state": "started",
+                "elapsedMs": 47832
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "an-admitted-terminal-hit-still-refuses-revocation-at-egress",
+                "state": "returned",
+                "phaseMs": 11306,
+                "elapsedMs": 59138,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "unknown-states-and-foreign-evidence-remain-human-command-refusals",
+                "state": "started",
+                "elapsedMs": 59138
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "unknown-states-and-foreign-evidence-remain-human-command-refusals",
+                "state": "returned",
+                "phaseMs": 411,
+                "elapsedMs": 59550,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "confirmed-and-rejected-assumptions-keep-the-canonical-reader",
+                "state": "started",
+                "elapsedMs": 59550
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "confirmed-and-rejected-assumptions-keep-the-canonical-reader",
+                "state": "returned",
+                "phaseMs": 765,
+                "elapsedMs": 60315,
+                "aborted": false
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "an-open-assumption-with-real-dashboard-evidence-keeps-the-canonical-reader",
+                "state": "started",
+                "elapsedMs": 60315
+              },
+              {
+                "fixture": "planner-recall-open-assumptions",
+                "phase": "an-open-assumption-with-real-dashboard-evidence-keeps-the-canonical-reader",
+                "state": "returned",
+                "phaseMs": 1163,
+                "elapsedMs": 61478,
+                "aborted": false
+              }
+            ],
+            "boundaries": {
+              "originalThreeBodiesIdentical": true,
+              "innerCooperativeMs": 105000,
+              "innerBunMs": 120000,
+              "aggregateChildMs": 510000,
+              "aggregateWrapperMs": 540000,
+              "aggregateReason": "Four unchanged120-second cases plus child shutdown and wrapper capture",
+              "noWorkflowChanges": true,
+              "noRetriesAdded": true,
+              "noSkipsAdded": true,
+              "noLocalProductExecution": true,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            },
+            "findings": [
+              "Two real open assumptions in both current and published candidate preserve the complete canonical Recall payload and full state.",
+              "Two installed Recall calls close independent native owners. An explicit external observer separately proves completed terminal reuse and refusal after revocation at egress.",
+              "Confirmed/rejected assumptions and freshly authorized Dashboard evidence keep the canonical fallback. Unknown states and foreign evidence are refused by the original human edit command without a state mutation.",
+              "The real scanner/writer publishes the original ledger event; no fabricated Atlas data or direct memory write.",
+              "Complete native controls pass. Actual original40-second browser qualification remains pending."
+            ],
+            "performanceObservation": {
+              "fixture": "planner-recall-open-assumptions",
+              "canonicalSingleRecallMs": 24657,
+              "twoInstalledRecallsCombinedMs": 21826,
+              "scope": "Fixture phases only; not a browser latency guarantee."
+            }
+          }
         },
         "progressDiagnostic": {
           "source": "7104bec7c54e1083eb3791fc236bd2bd865be2d3",
@@ -18487,9 +20968,948 @@
           "tree": "35dc13e6e705c9d12b445b09069a40c20b63a6af",
           "run": 45279066681,
           "job": 138058407864,
-          "status": "in_progress",
+          "status": "completed",
           "qualified": false,
-          "boundary": "Snapshot-only numeric entry/progress/settlement/stage markers; original UI62 body,40s request/300s case limits and retry0."
+          "boundary": "Snapshot-only numeric entry/progress/settlement/stage markers; original UI62 body,40s request/300s case limits and retry0.",
+          "result": "failure",
+          "ledgerSha256": "ab6d72bcbb3821ae8c9591e1466bc169a00970f4fd7d13738c6c96b1c2999000",
+          "ledger": {
+            "run": 45279066681,
+            "job": 138058407864,
+            "snapshot": "d4170262c81032fc7802954770539f1ef87db55d",
+            "functional_source": "7104bec7c54e1083eb3791fc236bd2bd865be2d3",
+            "conclusion": "failure",
+            "qualification": false,
+            "stats": {
+              "startTime": "2026-11-23T22:24:12.769Z",
+              "duration": 400425.024,
+              "expected": 0,
+              "skipped": 0,
+              "unexpected": 1,
+              "flaky": 0
+            },
+            "tests": [
+              {
+                "title": "[diagnostic] UI62 · private authorized case recall in an isolated installation",
+                "timeout_ms": 300000,
+                "results": [
+                  {
+                    "status": "failed",
+                    "duration_ms": 252135,
+                    "retry": 0
+                  }
+                ]
+              }
+            ],
+            "artifact": {
+              "id": 14869111819,
+              "sha256": "fb83e16a4931dc22df2ebdc72ebf27890f8fcd337e79b5fa488ab15eeece87d1",
+              "zip": "/workspace/scratch/e460075886fd/round-four-final-after/recall-progress-45279066681/artifact.zip",
+              "trace": "/workspace/scratch/e460075886fd/round-four-final-after/recall-progress-45279066681/artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace.zip"
+            },
+            "numeric": {
+              "path": "/workspace/scratch/e460075886fd/round-four-final-after/recall-progress-45279066681/planner-proof-numeric.log",
+              "sha256": "5035ff0d7e4c7f97f6b32c1089aa55011f230b6d26549cd85bca2a2b783e7dd9",
+              "rows": 775,
+              "settlement_rows": 354,
+              "progress_rows": 367,
+              "stage_rows": 54,
+              "settled_kinds": {
+                "0": 42,
+                "1": 312
+              },
+              "recall_rows": [
+                {
+                  "time": "2026-11-23T22:29:50.7267284Z",
+                  "marker": "PROGRESS",
+                  "values": [
+                    1,
+                    2,
+                    0,
+                    0,
+                    0,
+                    17,
+                    0,
+                    0
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "event": 0,
+                  "elapsed_us": 17,
+                  "counter": null,
+                  "count": 0
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7307483Z",
+                  "marker": "PROGRESS",
+                  "values": [
+                    1,
+                    2,
+                    0,
+                    0,
+                    1,
+                    4300,
+                    2,
+                    1
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "event": 1,
+                  "elapsed_us": 4300,
+                  "counter": "nativeProofs",
+                  "count": 1
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7314421Z",
+                  "marker": "STAGE",
+                  "values": [
+                    2,
+                    0,
+                    0,
+                    1,
+                    5126
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "stage": 1,
+                  "elapsed_us": 5126
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7409172Z",
+                  "marker": "STAGE",
+                  "values": [
+                    2,
+                    0,
+                    0,
+                    2,
+                    14251
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "stage": 2,
+                  "elapsed_us": 14251
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7412198Z",
+                  "marker": "STAGE",
+                  "values": [
+                    2,
+                    0,
+                    0,
+                    3,
+                    14677
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "stage": 3,
+                  "elapsed_us": 14677
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7412611Z",
+                  "marker": "STAGE",
+                  "values": [
+                    2,
+                    0,
+                    0,
+                    2,
+                    14686
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "stage": 2,
+                  "elapsed_us": 14686
+                },
+                {
+                  "time": "2026-11-23T22:29:50.7433438Z",
+                  "marker": "PROGRESS",
+                  "values": [
+                    1,
+                    2,
+                    0,
+                    0,
+                    1,
+                    16010,
+                    21,
+                    1
+                  ],
+                  "kind": 2,
+                  "parent": 0,
+                  "depth": 0,
+                  "event": 1,
+                  "elapsed_us": 16010,
+                  "counter": "ownerUnsupported",
+                  "count": 1
+                }
+              ],
+              "recall_children": [
+                {
+                  "time": "2026-11-23T22:29:51.1942518Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    449189,
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 449189,
+                  "counters": {
+                    "rootEntries": 2,
+                    "nativeProofs": 2,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 1,
+                    "admitted": 1,
+                    "scopeOpen": 1,
+                    "scopeClosed": 1,
+                    "hits": 2,
+                    "misses": 2,
+                    "stored": 2,
+                    "unscoped": 0,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:29:51.6530734Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    456158,
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 456158,
+                  "counters": {
+                    "rootEntries": 2,
+                    "nativeProofs": 2,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 1,
+                    "admitted": 1,
+                    "scopeOpen": 1,
+                    "scopeClosed": 1,
+                    "hits": 2,
+                    "misses": 2,
+                    "stored": 2,
+                    "unscoped": 0,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:29:52.1251417Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    452930,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 452930,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:29:52.6439463Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    417991,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 417991,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:29:58.3560067Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    349991,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 349991,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:30:04.2858687Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    390084,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 390084,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:30:16.8492409Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    451859,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 451859,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:30:22.4158724Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    347984,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 347984,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:30:40.4685704Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    360796,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 360796,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                },
+                {
+                  "time": "2026-11-23T22:30:46.1085258Z",
+                  "marker": "PROOF",
+                  "values": [
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    415027,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    4,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "kind": 1,
+                  "parent": 3,
+                  "depth": 1,
+                  "fulfilled": 1,
+                  "duration_us": 415027,
+                  "counters": {
+                    "rootEntries": 0,
+                    "nativeProofs": 0,
+                    "rootOpaque": 0,
+                    "rootInherited": 0,
+                    "rootUnsupported": 0,
+                    "runs": 0,
+                    "admitted": 0,
+                    "scopeOpen": 0,
+                    "scopeClosed": 0,
+                    "hits": 0,
+                    "misses": 0,
+                    "stored": 0,
+                    "unscoped": 4,
+                    "noProof": 0,
+                    "readersFallback": 0,
+                    "runRefused": 0,
+                    "leafRefused": 0,
+                    "ownerIneligible": 0,
+                    "ownerSelectionFallback": 0,
+                    "ownerForeign": 0,
+                    "ownerUnsupported": 0,
+                    "ownerPreparedFailed": 0,
+                    "ownerProofMissing": 0,
+                    "ownerChild": 0,
+                    "ownerPlanFallback": 0,
+                    "ownerRefused": 0
+                  }
+                }
+              ]
+            },
+            "fetch": [
+              {
+                "bound_ms": 40000,
+                "max_retries": 0,
+                "start_monotonic_ms": 337682.266,
+                "duration_ms": 40002.289,
+                "error_present": true,
+                "http_response_body_present": false,
+                "http_status_present": false
+              }
+            ],
+            "current_case_observed": {
+              "resource": "resources/76681c6e5dafbc827aae3236e2e6e218f1afe597.json",
+              "horizon": {
+                "start": "2026-01-01",
+                "end": "2026-01-31"
+              },
+              "case_fields_counts": {
+                "questions": 0,
+                "preparedChanges": 0,
+                "receipts": 0,
+                "assumptions": 0,
+                "alternatives": 2,
+                "choices": 1
+              },
+              "scenario_assumptions_counts": [
+                0,
+                0,
+                0
+              ],
+              "scenario_operations_counts": [
+                0,
+                0,
+                0
+              ],
+              "candidate_full_horizon_in_browser_response": false
+            },
+            "findings": [
+              "Native physical Recall root produced a proof at 4300us.",
+              "First selected case passed version and horizon/plannerCase; second passed version but not the horizon/plannerCase condition.",
+              "Existing ownerUnsupported branch occurred at 16010us, before record proof admission or work.",
+              "No kind2 settlement/admitted/hit row exists. This run demonstrates early canonical fallback, not an admitted Recall producer cost.",
+              "Current browser projection has January horizon; annual candidate horizon is supported by source seed, not a full candidate body in this trace.",
+              "Original 40s fetch bound and subsequent PT 15s navigation failure remain; no late HTTP200 inferred."
+            ],
+            "limitations": [
+              "Only strict numeric markers and original runtime/trace evidence analyzed. No payload/identifiers logged by observers.",
+              "Profile durations are inclusive; parent and child durations must not be added."
+            ]
+          }
         },
         "fullMemory": {
           "source": "fc71dd42a704d97a54ae2e5f3fa0ee6717a150ef",
@@ -18503,6 +21923,53 @@
           "status": "in_progress",
           "scope": "Full Memory5",
           "qualified": false
+        },
+        "integratedCommit": "ae70d267719e4fff1b6b6d8d63d7dfc0747eaf99",
+        "qualificationScope": "Complete native controls, not end-to-end browser deadline"
+      },
+      "horizonCandidate": {
+        "source": "ff9006d6209513005da23cc8979b6b22bd114bc2",
+        "tree": "f53cd7bacb358061ffd7a6c2667befca16d985eb",
+        "integrated": false,
+        "qualified": false,
+        "guardChange": "Only the first private selected case must match the query period. Candidates preserve their own full horizons, original matching, full reference/materialization closure and independent egress.",
+        "evidence": {
+          "canonicalReader": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+          "ranker": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+          "currentPeriod": "January",
+          "candidateHorizon": "Full year",
+          "currentPeriodEvidence": "Actual UI62 trace and final-memory-seed.ts",
+          "candidateHorizonEvidence": "wave-four-decisions-seed.ts; complete candidate body is not present in the browser trace",
+          "previousDiagnostic": 45279066681,
+          "previousFailure": "Physical root entered, but second case failed the horizon/plannerCase eligibility before terminal proof admission at16.010ms"
+        },
+        "controls": {
+          "source": "065f697ef01ba0a03468c9aa32e46a4901b8ca6c",
+          "sourceTree": "cd6e593b805965d959afb88f911a535707a1db86",
+          "snapshot": "ed92f30f324b46fcdecb55fa0513aa7710b3a41d",
+          "tree": "185bee89d45a7f24538c1dbef556ddb3ca7d3eff",
+          "branch": "ci-run-r4recallfive",
+          "testBlob": "cce24526efa015ae6a1100308c5483905d7c9ecb",
+          "cases": 5,
+          "innerCooperative": 105000,
+          "innerBun": 120000,
+          "childProcess": 630000,
+          "wrapper": 660000,
+          "status": "in_progress",
+          "originalFourBodiesIdentical": true
+        },
+        "browser": {
+          "source": "ff9006d6209513005da23cc8979b6b22bd114bc2",
+          "snapshot": "eabce182a4a41638af112f19330b64a0f268ae8e",
+          "tree": "df627816185a713ef5b078d71f107666b09092b4",
+          "run": 45281735842,
+          "job": 138067646352,
+          "status": "in_progress",
+          "qualification": false,
+          "originalUI62Body": true,
+          "requestTimeoutMs": 40000,
+          "caseTimeoutMs": 300000,
+          "retries": 0
         }
       }
     }
