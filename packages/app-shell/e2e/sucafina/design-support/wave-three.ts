@@ -1,6 +1,8 @@
-import { test, expect, type Page, type TestInfo } from "@playwright/test"
+import { test, expect, type Page, type Response, type TestInfo } from "@playwright/test"
 import { ServerConnection } from "../../../src/context/server-connection"
 import { authenticateDesignInstallation, withDesignInstallation, type DesignInstallation } from "./installation"
+import { originalReads, type OriginalRead } from "./original-read"
+export { originalRead, originalReads, type OriginalRead } from "./original-read"
 
 type Owner = Awaited<ReturnType<typeof authenticateDesignInstallation>>
 export const waveThreeTest = test.extend<{ installation: DesignInstallation; owner: Owner }>({
@@ -55,12 +57,47 @@ waveThreeTest.afterEach(async ({ page }, info) => {
 })
 
 /** Absolute source URL; owner-bound bookmark navigation uses the real installed host. */
-export async function enter(page: Page, owner: Owner, href: string, title: string, busyTimeoutMs = 10_000) {
+export async function enter(page: Page, owner: Owner, href: string, title: string, busyTimeoutMs = 10_000,
+  operation?: OriginalRead | readonly OriginalRead[]) {
   const target = new URL(href)
   target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
   target.searchParams.set("project", owner.projectId)
   target.searchParams.set("installation", owner.installationId)
-  await page.goto(target.href)
+  // The owner has two distinct original reads: provider admission, then route
+  // admission. Wait for each reply within the caller's existing read budget;
+  // a DOM timeout must not stand in for the authenticated producer's receipt.
+  const contexts: { status: number; elapsedMs: number }[] = []
+  const started = performance.now()
+  const contextResponse = (response: Response) => {
+    const url = new URL(response.url())
+    return response.request().method() === "GET" && url.origin === target.origin &&
+      url.pathname === owner.mount + "/api/ui/context" &&
+      url.searchParams.get("projectId") === owner.projectId &&
+      url.searchParams.get("installationId") === owner.installationId &&
+      url.searchParams.get("hostId") === owner.hostId
+  }
+  let routeAdmission: Promise<Response> | undefined
+  const providerAdmission = page.waitForResponse((response) => {
+    if (!contextResponse(response)) return false
+    if (response.status() === 200)
+      routeAdmission = page.waitForResponse(contextResponse, { timeout: busyTimeoutMs })
+    return true
+  }, { timeout: busyTimeoutMs })
+  const originalAdmissions = async () => {
+    const provider = await providerAdmission
+    await provider.finished()
+    contexts.push({ status: provider.status(), elapsedMs: performance.now() - started })
+    expect(provider.status(), "the original provider context is authorized").toBe(200)
+    expect(routeAdmission, "route admission rereads the original context").toBeDefined()
+    const route = await routeAdmission!
+    await route.finished()
+    contexts.push({ status: route.status(), elapsedMs: performance.now() - started })
+    console.info("SF_OWNER_ADMISSION_READS " + JSON.stringify({ contexts }))
+    expect(route.status(), "the original route context is authorized").toBe(200)
+  }
+  const navigate = () => Promise.all([page.goto(target.href), originalAdmissions()])
+  if (operation) await originalReads(page, owner, Array.isArray(operation) ? operation : [operation as OriginalRead], navigate)
+  else await navigate()
   await ready(page, title, busyTimeoutMs)
   await expect(page).toHaveURL((url) => url.origin === target.origin && url.pathname === target.pathname &&
     url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
