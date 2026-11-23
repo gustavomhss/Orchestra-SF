@@ -468,6 +468,8 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const uploadViewport = page.viewportSize()
   const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
   for (const scheme of ["dark", "light"] as const) {
+    // The native theme control is available in the desktop chrome.
+    await page.setViewportSize({ width: 1440, height: 1100 })
     if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
       await page.locator('[data-slot="orchestra-theme-toggle"]').click()
     await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
@@ -479,11 +481,22 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
       const bounds = await targetRecord.evaluate((element) => {
         const box = element.getBoundingClientRect()
         const form = element.closest("form")!.getBoundingClientRect()
-        return { left: box.left, right: box.right, width: box.width, formLeft: form.left, formRight: form.right }
+        return { left: box.left, right: box.right, bottom: box.bottom, width: box.width, formLeft: form.left, formRight: form.right }
       })
       expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft - 1)
       expect(bounds.right).toBeLessThanOrEqual(bounds.formRight + 1)
       expect(bounds.width).toBeGreaterThan(80)
+      if (width === 1440) {
+        const classification = await register.getByRole("combobox", { name: "Classification", exact: true }).boundingBox()
+        const refresh = await register.getByRole("button", { name: "Refresh records", exact: true }).boundingBox()
+        expect(classification).not.toBeNull()
+        expect(refresh).not.toBeNull()
+        expect(Math.abs(classification!.y + classification!.height - bounds.bottom), "Record and classification controls share a baseline").toBeLessThanOrEqual(1)
+        expect(Math.abs(refresh!.y + refresh!.height - bounds.bottom), "Refresh remains beside its record selector").toBeLessThanOrEqual(1)
+        await info.attach("UI58-authorized-target-alignment-" + scheme, {
+          contentType: "application/json", body: JSON.stringify({ width, scheme, target: bounds, classification, refresh }),
+        })
+      }
       await captureRecord(page, info, "UI58", "register-authorized-target-" + scheme + "-" + width)
     }
   }

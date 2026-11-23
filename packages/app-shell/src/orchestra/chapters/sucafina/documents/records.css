@@ -111,3 +111,15 @@
   flex-basis: 100%;
   margin: 0;
 }
+
+@container (min-width: 621px) {
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+  }
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] > .sf-records-upload-targets {
+    grid-column: 2 / -1;
+  }
+  .sf-files[data-sf-records="six"] [data-sf-document-upload="authorized-asset"] > label:has(input[type="file"]) {
+    grid-column: 1 / span 2;
+  }
+}
