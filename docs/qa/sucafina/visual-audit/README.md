@@ -1,3 +1,5 @@
+> **Verificação após as correções:** consulte [VERIFICATION.md](VERIFICATION.md) e [verification-runs.json](verification-runs.json) para os testes, capturas e limites da entrega do PR #710. O conteúdo abaixo é a auditoria histórica anterior às correções e permanece preservado.
+
 # Auditoria de escopo completo — cobertura visual e lacunas — Orchestra-SF
 
 **Data:** 22 de novembro de 2026.  

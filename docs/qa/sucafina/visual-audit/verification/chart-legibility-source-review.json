@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/video_inventario",
+  "createdAtUtc": "2026-11-23T02:05:22.666Z",
+  "scope": "UI46/BI01 chart readability at narrow width; no additional visual sweep",
+  "status": "IMPLEMENTED_AWAITING_INTEGRATED_MATRIX6",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-bi-readability",
+  "parentSha": "1581782f4072dc39e9d8ab2a942bbd643b75a2ff",
+  "commitSha": "d252fbfc90868e94579ac269af886f729a9be3ea",
+  "evidence": {
+    "run": 45095081578,
+    "artifact": 14783153577,
+    "productSha": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "imageIndex": 12,
+    "imagePath": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix5/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-320.png",
+    "imageSha256": "3eb6546a05a1d6e062de1fa5a273ee21accc53ac3d2f7062eb4e17c84f604bf6",
+    "viewport": [
+      320,
+      800
+    ],
+    "originalOpenedWithViewImage": true,
+    "observation": "Twelve month labels and values were visibly tiny while source buttons were legible. The SVG has a 700-unit-wide viewBox and 12 px labels but was reduced to approximately 226 px content width.",
+    "geometricInference": "12 × 226/700 is approximately 3.87 CSS pixels. This explains the screenshot; it is not a measured browser CTM receipt."
+  },
+  "implementation": {
+    "changedFiles": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/figure.css",
+        "blobSha": "c90a2e718dcbedff1efbe16bfbd303657afca2d4",
+        "additions": 5,
+        "deletions": 2
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+        "blobSha": "4a30d9e08aa5ba536d2f7c0c277bd36523eeb40d",
+        "additions": 37,
+        "deletions": 33
+      }
+    ],
+    "changes": [
+      "A per-series caption id names a keyboard-focusable chart scroll region: role=region, tabIndex=0 and aria-labelledby.",
+      "Only the SVG is inside the horizontal scroller. Original source buttons remain outside it.",
+      "The chart width token is 700 px, equal to the unchanged SVG viewBox width. The original 12 px text rule remains.",
+      "Minimum SVG block size equals the unchanged original viewBox height. The 38rem maximum remains declared; when a longer series needs more height, the minimum wins and the chart grows vertically, including on desktop, to preserve its readable scale.",
+      "Focus uses the existing --sf-focus-width and --mx-blue tokens; no new material, palette or blur is added."
+    ],
+    "sharedRendererScope": "SfBiOwnedFigure is the existing renderer shared by BI01–BI08. The wrapper and minimum readable geometry apply to its existing SVG series; there is no new renderer, data path or view-specific calculation.",
+    "unchanged": [
+      "All original row ids, periods, units, values, missing/evidence states and source references.",
+      "All numeric formatting, source admission, model construction, financial values and amounts.",
+      "The original extent/magnitude math and SVG bar/label/title content.",
+      "All source callbacks, waterfall/timeline rendering and limitations."
+    ],
+    "staticVerification": {
+      "publishedCompareStatus": "ahead",
+      "publishedCommits": 1,
+      "publishedFiles": 2,
+      "svgMarksIdenticalIgnoringIndentation": true,
+      "sourceActionsAndFollowingContentByteIdentical": true,
+      "formatterAndModelCreationByteIdentical": true,
+      "focusTokenChain": [
+        "shared/frame/index.tsx imports frame.css and renders .sf-chart-frame",
+        "frame.css imports ../foundation.css",
+        "foundation.css defines --sf-focus-width: 2px on :where(...,.sf-chart-frame,...)"
+      ]
+    }
+  },
+  "selectors": {
+    "chart": "[data-sf-bi-view=\"BI01\"] > .sf-bi-series:first-of-type .sf-bi-svg",
+    "scrollRegion": "[data-sf-bi-view=\"BI01\"] > .sf-bi-series:first-of-type .sf-bi-chart-scroll",
+    "periods": ".sf-bi-axis-label",
+    "values": ".sf-bi-axis-value"
+  },
+  "plannedRootValidation": [
+    "Use the existing native Matrix6 journey and original admitted BI source.",
+    "At 320 px, verify physical text size through computed font size multiplied by screen CTM scale is at least 11 px.",
+    "Reveal the scroll region vertically so the initial left frame retains scrollLeft 0 and the periods.",
+    "Use real horizontal wheel input on the region, assert arrival at its right edge, and capture the value end.",
+    "Review the actual SVG lower chart in desktop dark/light and narrow; do not count a figcaption-only frame.",
+    "Run integrated app/e2e types and existing guard/palette gates; no local execution was performed."
+  ],
+  "boundaries": {
+    "productEditsThrough": "GitHub MCP only",
+    "localProductCheckout": false,
+    "localTests": false,
+    "ciDispatched": false,
+    "posts": false,
+    "merge": false,
+    "newCaptureGenerated": false
+  },
+  "limitations": [
+    "The new physical typography and scroll behavior require the integrated Matrix6 artifact; no fresh runtime or visual approval is claimed here.",
+    "No data aggregation, currency inference or source/API/authority change was made."
+  ],
+  "coldReview": {
+    "reviewer": "/root/git_video_recuperacao",
+    "status": "PASS_LIMITED_CODE_REVIEW",
+    "completedAtUtc": "2026-11-23T02:09:49.157656+00:00",
+    "findings": [],
+    "evidence": "Independent comparison confirmed identical SVG marks ignoring indentation, unchanged formatter, byte-identical source-actions remainder, coherent createUniqueId/caption/region association and containment by min-inline-size:0 ancestors.",
+    "qualification": "max-block-size:38rem remains declared, but min-block-size wins when the intrinsic chart height exceeds it. Long series can become taller on desktop to preserve readable scale; this is not an unchanged hard height cap. Runtime font size and wheel behavior remain pending Matrix6."
+  },
+  "integration": {
+    "sourceSha": "abfd60694f76311f48274fafe4292cd813d7efff",
+    "matrix6SnapshotSha": "90755385d6a17d6ac56bada4e38437e1998fae19",
+    "status": "running as reported by root; awaiting original artifact",
+    "plannedOriginals": 4
+  }
+}

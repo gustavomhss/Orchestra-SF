@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/video_inventario",
+  "reviewedAtUtc": "2026-11-23T02:37:56.616376+00:00",
+  "scope": {
+    "surface": "UI46",
+    "renderer": "BI01 / SfBiOwnedFigure",
+    "series": "First financial series: Effective budget",
+    "originalImageIndices": [
+      13,
+      14,
+      15,
+      16
+    ],
+    "originalImagesOpened": 4,
+    "contactSheetsOpened": 0,
+    "productChangesDuringReview": false,
+    "newCiDuringReview": false,
+    "scopeExpanded": false
+  },
+  "decision": {
+    "status": "PASS_FOR_FOUR_CAPTURED_BI_CHART_STATES",
+    "materialBlockers": [],
+    "priorUnreadableMobileChart": "Resolved in these captured states: labels and values are visually legible and the measured minimum physical font is 12 px.",
+    "wholeMatrixGreen": false,
+    "wholeInterfaceApproved": false
+  },
+  "provenance": {
+    "run": 45098189117,
+    "job": 137442637176,
+    "artifact": 14784912750,
+    "snapshot": "90755385d6a17d6ac56bada4e38437e1998fae19",
+    "product": "abfd60694f76311f48274fafe4292cd813d7efff",
+    "zipSha256": "01c33045c1301522d985fe287b0536379be0273bbf0deae022732be0851cf917"
+  },
+  "codeChange": {
+    "commit": "d252fbfc90868e94579ac269af886f729a9be3ea",
+    "integratedProduct": "abfd60694f76311f48274fafe4292cd813d7efff",
+    "implementationReceipt": {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ui46-chart-readability-receipt.json",
+      "bytes": 6214,
+      "sha256": "e3b38e2056be7d0339379fdf9ec021c6de4fe041b53daa9e67673eaafb5f9e29"
+    },
+    "summary": "The existing SVG keeps its geometry and data, with a minimum readable width/height inside a focusable horizontally scrollable region. Source controls remain outside that region.",
+    "priorCodeReview": "Independent review by /root/git_video_recuperacao found no concrete data, markup, focus or contract defect. This receipt supplies the pending visual and runtime evidence.",
+    "heightLimitQualification": "The existing max-block-size declaration is not an absolute cap when the new minimum chart height is larger; no rigid desktop cap is claimed."
+  },
+  "runtime": {
+    "biCase": {
+      "title": "workflow polish: original portfolio inputs and contextual analytics",
+      "status": "passed",
+      "retry": 0,
+      "durationMs": 50068,
+      "errors": []
+    },
+    "cohort": {
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "status": "NOT_GREEN"
+    },
+    "separateFailure": {
+      "title": "workflow polish: routines, schedules, exports and local context",
+      "status": "timedOut",
+      "scope": "UI69 summary review cancellation",
+      "observedLog": "The test timed out waiting for the exact button name Cancel in the UI69 review.",
+      "reportedActualAccessibleName": "Cancel review",
+      "disposition": "Root owns the separate QA locator correction. This focal BI review does not validate that correction."
+    }
+  },
+  "evidenceFiles": [
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/image-index.json",
+      "bytes": 93744,
+      "sha256": "3bc0ef6a5e33f50191ad39d9505e739d4f72480148c40217531c2a9392d83c7a"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/runtime-summary.json",
+      "bytes": 2927,
+      "sha256": "d426f352a50d3ca2fb0f8364269bed2a9c825ff970ce99de87b5c9fa3626dd7b"
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/source-attachments.json",
+      "bytes": 1473669,
+      "sha256": "1235e241ec64c73ebff2181a040c32c893c79cd0f3bc6dd2828a308ee4db6bd9"
+    }
+  ],
+  "originals": [
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-320.png",
+      "bytes": 50812,
+      "sha256": "f0ef11d5767c18a0a19256b658e1bfab516575274465a450efb2dba7796c5b98",
+      "index": 13,
+      "sizePixels": [
+        320,
+        800
+      ],
+      "checkpoint": "UI46-original-financial-chart-dark-320",
+      "inspection": "Original PNG opened individually with view_image; not a contact sheet or attachment duplicate.",
+      "visuallyReviewed": true,
+      "materialFinding": null,
+      "state": "dark, 320 × 800, chart at horizontal start",
+      "visibleFindings": [
+        "All twelve monthly period labels from January through December 2026 are individually legible, with clear row separation and no label collisions.",
+        "The figure caption remains Effective budget; its unit is visibly unspecified. No currency was inferred or added.",
+        "This initial narrow viewport shows the period column; the numerical values are outside its horizontal viewport. Source controls remain below the chart, outside the chart scroller."
+      ],
+      "limits": [
+        "The initial image does not show the right-side values. It must be read together with index 16 and the native-wheel proof.",
+        "Lower source buttons continue below the vertical viewport; this is not a full-page capture."
+      ]
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-dark-desktop.png",
+      "bytes": 449935,
+      "sha256": "be43891d13739d4e80e695975c92e4bc1f15f11a0f75978b529d5c7544b33f73",
+      "index": 14,
+      "sizePixels": [
+        1440,
+        1100
+      ],
+      "checkpoint": "UI46-original-financial-chart-dark-desktop",
+      "inspection": "Original PNG opened individually with view_image; not a contact sheet or attachment duplicate.",
+      "visuallyReviewed": true,
+      "materialFinding": null,
+      "state": "dark, 1440 × 1100, complete first financial series",
+      "visibleFindings": [
+        "The entire twelve-row chart is visible, including each monthly period, bar and numerical value. All twelve values are visibly 58,000.",
+        "Period labels and value labels remain separated from the bars and from adjacent rows. No text collisions or cropped chart labels are visible.",
+        "Partial source coverage remains disclosed above the chart. Original-source buttons remain below the chart and are readable where visible."
+      ],
+      "limits": [
+        "The screenshot captures the first financial series and only the upper source-button rows; it does not qualify every BI series or every source navigation action."
+      ]
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-light-desktop.png",
+      "bytes": 478775,
+      "sha256": "cd5b25b7ac78e3a7a0bf0865fd84c73b7b07070d88c68e4e8f9b4b4f54389645",
+      "index": 15,
+      "sizePixels": [
+        1440,
+        1100
+      ],
+      "checkpoint": "UI46-original-financial-chart-light-desktop",
+      "inspection": "Original PNG opened individually with view_image; not a contact sheet or attachment duplicate.",
+      "visuallyReviewed": true,
+      "materialFinding": null,
+      "state": "light, 1440 × 1100, complete first financial series",
+      "visibleFindings": [
+        "The light-theme chart shows the same twelve monthly periods and twelve 58,000 values as the dark desktop original.",
+        "Text, bars, chart boundary and source controls are visually distinguishable; no overlap or loss of chart labels is visible.",
+        "The translucent surrounding theme and the explicit unspecified unit remain visible."
+      ],
+      "limits": [
+        "Visual inspection is not a measured color-contrast audit. The source-button list extends below the viewport."
+      ]
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-matrix6/packages/app-shell/e2e/test-results/sucafina-design-workflows--32664-ts-and-contextual-analytics-chromium/UI46-original-financial-chart-values-dark-320.png",
+      "bytes": 35907,
+      "sha256": "b793d68108fff83c1462539a9bbc04c7bbfec155a1b9465f93ab00f81700fb0a",
+      "index": 16,
+      "sizePixels": [
+        320,
+        800
+      ],
+      "checkpoint": "UI46-original-financial-chart-values-dark-320",
+      "inspection": "Original PNG opened individually with view_image; not a contact sheet or attachment duplicate.",
+      "visuallyReviewed": true,
+      "materialFinding": null,
+      "state": "dark, 320 × 800, chart at horizontal end after native wheel",
+      "visibleFindings": [
+        "All twelve value labels are legible as 58,000, each aligned with its own bar and row.",
+        "The chart is horizontally shifted while the figure caption and source controls remain in place. No value label is cropped at the right endpoint.",
+        "The period column is intentionally outside this scrolled viewport; index 13 supplies its corresponding start view."
+      ],
+      "limits": [
+        "This is the narrow endpoint view, not simultaneous visibility of period and value columns. Navigation between the columns relies on horizontal scrolling.",
+        "Native horizontal wheel is proven by the attachment; this review did not execute additional keyboard or touch interactions."
+      ]
+    }
+  ],
+  "sourceEvidence": {
+    "valueProof": {
+      "source": "original contextual BI01 response",
+      "selectionRef": "sf-source:f67ede63-33c4-4fcd-a646-95d8a1743260:1",
+      "period": {
+        "start": "2026-01-01",
+        "end": "2026-12-31"
+      },
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "text": {
+        "labelCount": 24,
+        "minimumFontPx": 12
+      },
+      "horizontalScroll": {
+        "viewportWidth": 226,
+        "contentWidth": 700,
+        "scrollLeft": 474
+      },
+      "input": "native horizontal wheel",
+      "recomputedValues": false
+    },
+    "chartState": {
+      "surface": "UI46",
+      "state": "original-financial-chart",
+      "evidence": "Original BI values and exact contextual response were verified before scrolling to the first financial series; no new computation or source is introduced.",
+      "route": "/orchestra/sf-bi/r_QkkwMQ",
+      "observed": {
+        "readState": null,
+        "state": null,
+        "phase": null,
+        "panels": [
+          "ready",
+          "ready",
+          "partial",
+          "empty"
+        ],
+        "headings": [
+          "How do budget, actuals and outlook evolve?",
+          "Authorized selections",
+          "Producer versions",
+          "Related source pages",
+          "Financial analysis",
+          "Source limitations"
+        ]
+      },
+      "source": "original isolated installed producer",
+      "syntheticSuccess": false,
+      "liveMicrosoftClaimed": false,
+      "visualApprovalClaimed": false,
+      "variants": [
+        "dark-desktop",
+        "light-desktop",
+        "dark-320"
+      ]
+    },
+    "valuesState": {
+      "surface": "UI46",
+      "state": "original-financial-values",
+      "evidence": "Original contextual BI response, exact selection and period verified before capture.",
+      "route": "/orchestra/sf-bi/r_QkkwMQ",
+      "observed": {
+        "readState": null,
+        "state": null,
+        "phase": null,
+        "panels": [
+          "ready",
+          "ready",
+          "partial",
+          "empty"
+        ],
+        "headings": [
+          "How do budget, actuals and outlook evolve?",
+          "Authorized selections",
+          "Producer versions",
+          "Related source pages",
+          "Financial analysis",
+          "Source limitations"
+        ]
+      },
+      "source": "original isolated installed producer",
+      "syntheticSuccess": false,
+      "liveMicrosoftClaimed": false,
+      "visualApprovalClaimed": false,
+      "variants": [
+        "dark-desktop",
+        "light-desktop",
+        "dark-320"
+      ]
+    },
+    "basis": "The original installed producer and exact contextual source were qualified by the passing native journey and its attached source-state evidence. This review did not execute additional requests or recompute the values.",
+    "visuallyObservedValues": {
+      "count": 12,
+      "displayText": "58,000",
+      "label": "Effective budget",
+      "unitText": "unspecified",
+      "period": "January through December 2026"
+    },
+    "currencyInferred": false
+  },
+  "measurementInterpretation": {
+    "svgTextNodes": 24,
+    "minimumPhysicalFontPx": 12,
+    "requiredMinimumPhysicalFontPx": 11,
+    "physicalFontGatePassed": true,
+    "horizontalViewportPx": 226,
+    "horizontalContentPx": 700,
+    "nativeWheelEndpointPx": 474,
+    "computedEndpointPx": 474,
+    "nativeWheelReachedEndpoint": true,
+    "reason": "The narrow display exposes a readable window into the original chart rather than shrinking all text to roughly four physical pixels."
+  },
+  "limits": [
+    "Only these four original images were visually reviewed in this final pass.",
+    "Mobile evidence is the dark 320 × 800 viewport at horizontal start and end; light mobile and other widths are not newly qualified here.",
+    "All twelve period labels and all twelve numeric labels are visible across the two mobile frames, but the entire 700 px chart is not simultaneously visible within the 226 px horizontal content viewport.",
+    "Desktop evidence covers dark and light at 1440 × 1100 for the first financial series. It does not qualify every BI renderer or dataset.",
+    "The source-button list extends below the vertical viewport. No new source-button interaction, keyboard or touch test was executed in this review.",
+    "Partial source coverage and unspecified units remain explicit. No missing values, currency or source identity were inferred.",
+    "Matrix6 remains 4 PASS / 1 FAIL. Its UI69 failure is separate and is not waived by the BI case passing."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "git_video_recuperacao",
+  "reviewedAt": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Narrow integration review of four Core files and two native design supports; authorized minimal follow-up implementation.",
+  "reviewRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7088132472",
+  "sources": {
+    "reviewedRoot": "5e55fe7dbdf9b797bf2a2930c2c48e96806b55a6",
+    "branchBase": "71e43a8f1975dfa716ea81954265df13747c8ac3",
+    "designSource": "6e1795cf559a9918ab4ecab5f77eadbb7f8c635e",
+    "rootAdvance": "The compare 5e55...71e43 changed no Core/support files in this review."
+  },
+  "verdict": {
+    "production": "No demonstrated production guard/security regression in this overlap. local/entry.ts still calls prepareSfLocalWorkspace for the local-operator host runtime; the workspace helper and native fixture are byte-identical between the reviewed root and Design.",
+    "core": "The original three consumers differ only by app-node-system versus app-node-filesystem. The original leaf differs only by its explanatory comment. The reviewed root had one leaf, not duplicate instantiated modules; the collision risk arises if both fronts are composed without reconciliation.",
+    "fixture": "The reviewed root's native-host used realpath(workspace) for E2E metadata. That resolves the path but is not equivalent to repeating physical-directory, owner/mode and before/after identity checks. The follow-up calls the existing prepareSfLocalWorkspace instead and exports the canonical workspace field in both paired supports."
+  },
+  "sourceEvidence": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "329a500051ff1ef3ad576e21a6dde4e76339f489",
+      "observation": "Line78 calls prepareSfLocalWorkspace(loaded.directory) under operator && context.createHostRuntime before runtime discovery."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/workspace.ts",
+      "blob": "6f52e952317214fe2e551999b5bd2318a6ae8135",
+      "observation": "Validates installation, validates/creates workspace, checks installation dev/ino/uid/mode before/after. Same blob in root and Design."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-private-files.ts",
+      "blob": "62b23e5878e8a58d1667f26c9983e20c1ccb3c0b",
+      "observation": "Private-directory validator checks physical ancestry, ownership/mode, symlinks, opened-descriptor identity and before/after identity. Existing validator reused unchanged."
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "blob": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "observation": "Same fixture blob in both sources; actual isolated native CLI starts with private mkdtemp installation."
+    }
+  ],
+  "implementation": {
+    "branch": "core-workspace-alignment",
+    "head": "b5e9e5f6b8fe5ed52678642961f2a9f6d1f142eb",
+    "base": "71e43a8f1975dfa716ea81954265df13747c8ac3",
+    "alignmentCommit": {
+      "sha": "059a384e1b27ad44114544abaa0e5b27680a44cd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/059a384e1b27ad44114544abaa0e5b27680a44cd",
+      "files": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "previousPath": null,
+          "status": "modified",
+          "blob": "96168ab4f2c1dfd600aeed165a6fda910aa5f8a4"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+          "previousPath": null,
+          "status": "modified",
+          "blob": "e7c723dce7aab7935d348387b006e2aa19869402"
+        },
+        {
+          "path": "packages/core/src/cross-spawn-spawner.ts",
+          "previousPath": null,
+          "status": "modified",
+          "blob": "c242f8272a26a344f28a987ffc98714a637764d6"
+        },
+        {
+          "path": "packages/core/src/effect/app-node-filesystem.ts",
+          "previousPath": "packages/core/src/effect/app-node-system.ts",
+          "status": "renamed",
+          "blob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7"
+        },
+        {
+          "path": "packages/core/src/effect/app-node-platform.ts",
+          "previousPath": null,
+          "status": "modified",
+          "blob": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa"
+        },
+        {
+          "path": "packages/core/src/fs-util.ts",
+          "previousPath": null,
+          "status": "modified",
+          "blob": "e2045ace89e442a7552e769338dce386e37947b2"
+        }
+      ]
+    },
+    "coreExactSourceParity": [
+      {
+        "path": "packages/core/src/cross-spawn-spawner.ts",
+        "priorPath": "packages/core/src/cross-spawn-spawner.ts",
+        "resultBlob": "c242f8272a26a344f28a987ffc98714a637764d6",
+        "designBlob": "c242f8272a26a344f28a987ffc98714a637764d6",
+        "byteIdenticalToDesign": true
+      },
+      {
+        "path": "packages/core/src/effect/app-node-filesystem.ts",
+        "priorPath": "packages/core/src/effect/app-node-system.ts",
+        "resultBlob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7",
+        "designBlob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7",
+        "byteIdenticalToDesign": true
+      },
+      {
+        "path": "packages/core/src/effect/app-node-platform.ts",
+        "priorPath": "packages/core/src/effect/app-node-platform.ts",
+        "resultBlob": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa",
+        "designBlob": "dbb3f3826df35a0fa7e43bef5e46b61cf3f6a0aa",
+        "byteIdenticalToDesign": true
+      },
+      {
+        "path": "packages/core/src/fs-util.ts",
+        "priorPath": "packages/core/src/fs-util.ts",
+        "resultBlob": "e2045ace89e442a7552e769338dce386e37947b2",
+        "designBlob": "e2045ace89e442a7552e769338dce386e37947b2",
+        "byteIdenticalToDesign": true
+      }
+    ],
+    "uniqueLeafReadback": [
+      {
+        "path": "packages/core/src/effect/app-node-filesystem.ts",
+        "blob": "fd36667ff5c0f2ffb9db90f964f9faca316d9dd7"
+      }
+    ],
+    "supportDelta": "Replace directory metadata field with workspace in DesignInstallation, runtime metadata validation and discovery selector value; use prepareSfLocalWorkspace(installed.root) immediately before metadata publication; preserve diagnostics, isolation, schemas, enrollment checks, private metadata mode and all existing wave behavior.",
+    "separateFixtureCommit": {
+      "sha": "b5e9e5f6b8fe5ed52678642961f2a9f6d1f142eb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/b5e9e5f6b8fe5ed52678642961f2a9f6d1f142eb",
+      "parent": "059a384e1b27ad44114544abaa0e5b27680a44cd",
+      "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+      "delta": "One source notes property on Hot Topics & Actions, requested by workflow owner to make original UI54 proposal draft available from valid seed data."
+    },
+    "excluded": "Did not import Design's four-files mode, ClamD probe/scanner branch, WaveFive specs, producer changes or unrelated overlapping app files."
+  },
+  "verification": {
+    "remoteReadback": "Both commits fetched and all exact patches inspected; final effect directory contains app-node-filesystem only. Four Core result blob SHAs equal the Design source blobs.",
+    "boundedConsumerRead": "Read34 current specs/support files directly under e2e/sucafina and design-support. No external DesignInstallation.directory consumer was found in those files; paired supports were changed together. This is not a claim of a repository-wide textual search.",
+    "runtime": "No local tests, build or typecheck and no CI run by this agent. Root owns final process/bootstrap/native/E2E type qualification on the combined candidate.",
+    "evidenceReuse": "Earlier green runs remain evidence for their own bytes; new canonical-name/revalidation/notes changes are pending combined qualification."
+  },
+  "risks": [
+    "The E2E metadata field is an internal contract changed in both producers and consumers. Final E2E typecheck and actual bootstrap must confirm any consumer outside the bounded source read.",
+    "The second validation can deliberately fail a fixture whose private physical workspace identity or permissions changed after startup.",
+    "Byte parity of four Core files is not qualification of the full Design source or any unmerged Design features."
+  ]
+}
