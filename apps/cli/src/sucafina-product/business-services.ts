@@ -50,6 +50,7 @@ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfFinancePairObservation } from "./finance-pair-observation.ts"
+import { createSfPlannerRecordProofScope, pinSfPlannerRecordReaders } from "./planner-record-proof-scope.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
@@ -465,8 +466,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
+  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
+  const canonicalPlannerReaders = pinSfPlannerRecordReaders([host, input.authority.state, canonicalCases, cases,
+    product.scenarios, product.planner, planner, plannerSources, results, context, projectPlannerEvidence])
+  let canonicalPlannerAtlas: { value: BusinessContextService; current: () => boolean } | undefined
+  const plannerRecordProof = createSfPlannerRecordProofScope({ host, readersCurrent: () => canonicalPlannerReaders() &&
+    !!canonicalPlannerAtlas && evidence.current === canonicalPlannerAtlas.value && canonicalPlannerAtlas.current() })
   const withPlannerObservation = createSfFinancePairObservation({
-    host, state: input.authority.state, lockedSourceFences,
+    host, state: input.authority.state, lockedSourceFences, recordProof: plannerRecordProof,
     selectedScope: (call) => {
       const scope = caseBindings.get(call)
       if (!scope || scope.historical) return undefined
@@ -478,13 +485,12 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
     readerIdentities: () => [forecastCoverage.current,
       ...[cases, product.scenarios, product.planner, plannerSources, results, context, evidence.current,
-        decisionDomain.current?.proposalCoverage, baselineCoverage].flatMap((reader) =>
+        decisionDomain.current?.proposalCoverage, baselineCoverage, projectPlannerEvidence].flatMap((reader) =>
         reader ? [reader, ...Object.entries(reader).flat()] : [reader])],
   })
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
-  const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
   const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
@@ -581,6 +587,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? matches.map((entry) => entry.ref) : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords, dashboardEvidence: dashboardDecisions,
+      observePlannerRecord: plannerRecordProof.observe,
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
@@ -620,6 +627,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       } })
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
+    canonicalPlannerAtlas = { value: atlas.context, current: pinSfPlannerRecordReaders([atlas.context]) }
     recall.current = createSfCaseRecall({ host, cases,
       ...(input.reviewerRecall ? { candidateAccess: input.reviewerRecall.candidateAccess } : {}),
       memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },

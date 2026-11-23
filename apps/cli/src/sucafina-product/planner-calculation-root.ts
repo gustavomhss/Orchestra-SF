@@ -1,11 +1,21 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
-import { currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { currentSfPlannerReadonlySnapshotScope, currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { plannerRequestIdentity } from "./planner-calculation-read-scope.ts"
 
-type Root = { open: boolean; children: number; current: (call: TrustedDomainContext) => boolean }
+/** An opaque capability born only inside this factory's active native readonly frame. */
+export type SfPlannerCalculationRootProof = Readonly<object>
+type Proof = Readonly<{ host: DomainPortHost; call: TrustedDomainContext; identity: object; bytesIdentity: object; current: () => boolean }>
+const rootProofs = new WeakMap<SfPlannerCalculationRootProof, Proof>()
+
+export function readSfPlannerCalculationRootProof(proof: SfPlannerCalculationRootProof, host: DomainPortHost, call: TrustedDomainContext) {
+  const found = proof && typeof proof === "object" ? rootProofs.get(proof) : undefined
+  return found?.host === host && found.call === call ? found : undefined
+}
+
+type Root = { open: boolean; children: number; current: (call: TrustedDomainContext) => boolean; proof?: SfPlannerCalculationRootProof }
 type Prepared = { run: <Value>(work: () => Promise<PortResult<Value>>) => Promise<PortResult<Value>> }
 
 /** Prepare sources before the witness, then own only the local replay's physical read root. */
@@ -112,8 +122,22 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           if (invocations !== 1 || !current()) return false
           const healthy = currentSfReadonlySnapshotScope(persistence)?.current ?? live
           if (!healthy()) return false
+          const native = currentSfPlannerReadonlySnapshotScope(persistence)
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }
+          if (native?.bytesIdentity) {
+            const proof = Object.freeze({})
+            let failed = false
+            owner.proof = proof
+            rootProofs.set(proof, Object.freeze({ host, call, identity: native.identity, bytesIdentity: native.bytesIdentity, current: () => {
+              if (failed) return false
+              try {
+                const valid = owner.current(call) && native.current()
+                if (!valid) failed = true
+                return valid
+              } catch (error) { failed = true; throw error }
+            } }))
+          }
           try {
             return await roots.run(owner, async () => {
               if (!owner.current(call) || !current() || !await revalidate.call(host, call) || !owner.current(call) || !current()) return false
@@ -126,7 +150,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
               completed = true
               return true
             })
-          } finally { owner.open = false }
+          } finally { owner.open = false; if (owner.proof) rootProofs.delete(owner.proof) }
         }, { signal: request.signal })
         if (accepted !== true || !completed || invocations !== 1 || !staged || !current() ||
           present()) return unavailable()
@@ -139,6 +163,12 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
   }
   return {
     prepare,
+    proof: (call: TrustedDomainContext): SfPlannerCalculationRootProof | undefined => {
+      try {
+        const owner = roots.getStore(), proof = owner?.proof
+        return proof && readSfPlannerCalculationRootProof(proof, input.host, call)?.current() ? proof : undefined
+      } catch { return undefined }
+    },
     // The consumer consults this before routing, including when a closed
     // ancestral frame would otherwise look ineligible for the optimization.
     allows: (call: TrustedDomainContext) => {

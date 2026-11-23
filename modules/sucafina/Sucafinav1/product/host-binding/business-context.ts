@@ -69,10 +69,14 @@ function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
   return true
 }
 
+export type SfPlannerRecordObservation = (ref: BusinessEvidenceRef, call: TrustedDomainContext,
+  readCanonical: () => Promise<BusinessEvidenceResolution>) => Promise<BusinessEvidenceResolution>
+
 /** All source readers and memory operations are host-bound; references are selectors, not authority. */
 function assembleSfBusinessContext(host: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
   resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution>
+  observePlannerRecord?: SfPlannerRecordObservation
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   recall: BusinessContextService["recall"]
   finalizeRecall?: (records: Awaited<ReturnType<BusinessContextService["recall"]>>, call: TrustedDomainContext) => Promise<boolean>
@@ -113,7 +117,11 @@ function assembleSfBusinessContext(host: {
     return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
   }
 
-  const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
+  const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => {
+    const read = () => resolveAncestry(ref, call, new Set())
+    return host.observePlannerRecord && ref.kind === "record" && ref.target.surface === "planner" &&
+      ref.target.recordType === "planner-version" ? host.observePlannerRecord(ref, call, read) : read()
+  }
   const service: BusinessContextService = {
     resolve,
     context: async (request, call) => {
@@ -264,6 +272,7 @@ export function createSfAtlasBusiness(input: {
   calculationHistorical?: (ref: BusinessEvidenceRef, call: TrustedDomainContext,
     readCapture: (caseRef: { id: string; incarnation: string; version: number }, digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>) => Promise<BusinessEvidenceResolution>
   withCalculationCase?: SfCalculationCaseScope
+  observePlannerRecord?: SfPlannerRecordObservation
   lockedSourceFences?: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "scopedRecall" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
@@ -450,7 +459,7 @@ export function createSfAtlasBusiness(input: {
     call: TrustedDomainContext; selection: CaptureSelection; selectionDigest: string; recordsDigest: string; groups: readonly (readonly unknown[])[]
   }>()
   const assembled = assembleSfBusinessContext({
-    revalidate: input.host.revalidate, ...router,
+    revalidate: input.host.revalidate, ...router, observePlannerRecord: input.observePlannerRecord,
     recall: async (request, call) => {
       const records = await mapSfEvidenceInOrder(request.caseRefs, (ref) => memory.recall(ref, call))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
