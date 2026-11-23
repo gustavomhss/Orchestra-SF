@@ -1,4 +1,4 @@
-import { For, Show, createEffect, onCleanup } from "solid-js"
+import { For, Show, createEffect, createUniqueId, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
@@ -82,6 +82,7 @@ function stateFrom(status: string | undefined): SfUiState {
 export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const sourceLabelId = createUniqueId()
   const t = (key: keyof typeof SF_SIMILARITY217_COPY | "sf.u26.version" |
     "sf.u26.period" | "sf.u26.limitations" | "sf.u26.source" |
     "sf.common.loading" | "sf.common.noAccess" | "sf.common.unavailable" |
@@ -357,8 +358,8 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
         <Show when={privacy() === "ready" && (view.catalogState === "ready" || view.catalogState === "empty")}>
           <form class="sf-memory-similarity-form sf-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
             <p class="sf-memory-help">{t("sf.u26.similarQueryHelp")}</p>
-            <label>{t("sf.u26.similarSource")}
-              <select value={view.selected} onChange={(event) => { void changeSelected(event.currentTarget.value) }}>
+            <label><span id={sourceLabelId}>{t("sf.u26.similarSource")}</span>
+              <select aria-labelledby={sourceLabelId} value={view.selected} onChange={(event) => { void changeSelected(event.currentTarget.value) }}>
                 <option value="">{t("sf.u26.similarChoose")}</option>
                 <For each={view.cases}>{(candidate) =>
                   <option value={candidate.encoded}>{candidate.title} — {candidate.version}</option>}</For>

@@ -199,6 +199,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
           <Show when={canWrite()} fallback={<>
             <p>{text("sf.common.readOnly")}</p>
             <ul><For each={source().pages}>{(page) => <li>{pageTitle(page)}</li>}</For></ul>
+            <button type="button" class="mx-btn" disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
           </>}>
             <form hidden={state.review} data-sf-summary-form data-version={source().version} onSubmit={(event) => {
               event.preventDefault()
@@ -212,12 +213,14 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
                   <span>{pageTitle(page)}</span>
                 </label>}</For>
               </fieldset>
-              <button type="submit" class="mx-btn primary" disabled={state.busy || state.blocked || state.review}>
-                {text("sf.common.review")}
-              </button>
+              <div class="sf-u28-actions">
+                <button type="submit" class="mx-btn primary" disabled={state.busy || state.blocked || state.review}>
+                  {text("sf.common.review")}
+                </button>
+                <button type="button" class="mx-btn" disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
+              </div>
             </form>
           </Show>
-          <button type="button" class="mx-btn" hidden={state.review} disabled={state.busy} onClick={refresh}>{text("sf.common.currentSource")}</button>
           <Show when={state.review && canWrite()}>
             <SfChangeReview
               operation={{ ref: state.intent as SfOperationRef,

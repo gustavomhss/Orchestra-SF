@@ -4,16 +4,16 @@ import type { DomainProjection } from "../../../../../modules/sucafina/Sucafinav
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import type { DecisionCase } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { plannerMonthlyPrefix } from "../../../../../modules/sucafina/Sucafinav1/product/planner/bi"
-import { createFinalMemoryInventory, finalMemoryCoverage } from "./final-memory-inventory"
+import { waveFourDecisionsData } from "./wave-four-decisions-data"
 
 type Installed = { actorId: string; request(pathname: string, init?: RequestInit): Promise<Response> }
 type CaseRef = { id: string; incarnation: string; version: number }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 export const finalMemoryData = {
-  objective: "Design test data · January itemized renewal and observed result",
-  criterion: "Keep the complete January cost difference within USD 200",
+  objective: "Design test data · January service renewal and observed result",
+  criterion: "Keep the known January service difference within USD 200",
   condition: "January service commitment · authorized Planner observation",
-  reason: "Record the January comparison using separately priced, confirmed costs in every required inventory category.",
+  reason: "Record the January service comparison while other cost categories remain pending.",
 } as const
 
 function object(value: unknown): Record<string, unknown> {
@@ -58,13 +58,12 @@ export async function seedFinalMemory(installed: Installed, year: number) {
       throw new Error("Final memory seed received mismatched original case controls")
     return { decision, caseRef }
   }
-  const inventories = await createFinalMemoryInventory(installed, year)
   const parameters = { viewId: "BI01", ...period }
   const options = object((await request("bi-options", parameters)).value)
   const versions = list(options.versions).map(object)
   const sources: RecordEvidence[] = []
   const projections: DomainProjection[] = []
-  const titles = inventories.map((inventory) => inventory.title)
+  const titles = [waveFourDecisionsData.plannerBaseline, waveFourDecisionsData.plannerCandidate]
   for (const title of titles) {
     const version = versions.find((entry) => typeof entry.label === "string" && entry.label.startsWith(title + " ("))
     if (!version) throw new Error("Final memory seed cannot find the canonical Planner version")
@@ -93,11 +92,9 @@ export async function seedFinalMemory(installed: Installed, year: number) {
   let caseRef = object(edited.value).caseRef as CaseRef
   const basis = { id: "human-memory-cost-inventory:" + randomUUID(), version: 1, decisionType: "renewal-transition-v1",
     categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: sources }
+  const entries = basis.categoryIds.map((categoryId) => ({ categoryId, status: "pending",
+    reason: "The original service subtotal does not establish complete decision-wide cost coverage." }))
   for (const [index, evidence] of sources.entries()) {
-    const inventory = inventories[index]
-    const projected = projections[index]
-    if (!inventory || !projected) throw new Error("Final memory seed omitted an original cost inventory")
-    const entries = finalMemoryCoverage(inventory, projected, evidence)
     const coverage = await post("decision-coverage", { caseRef, source: evidence, basis, entries, expectedVersion: 0 })
     const promoted = await post("decision-promote", { caseRef, coverageRef: text(object(coverage.value).coverageRef),
       title: titles[index], scenario: { baseRef: evidence.refId, operations: [], assumptions: [] } })
@@ -113,13 +110,13 @@ export async function seedFinalMemory(installed: Installed, year: number) {
   const compared = object((await post("decision-compare", { caseRef, baselineAlternativeId: alternatives[0].id,
     alternativeId: alternatives[1].id, criteria: [criterion.id] })).value)
   const comparison = object(compared.comparison)
-  if (comparison.comparisonStatus !== "complete" || typeof comparison.completeDifference !== "number")
-    throw new Error("Final memory seed requires producer-proven complete January coverage")
+  if (comparison.comparisonStatus !== "conditioned" || comparison.completeDifference !== null)
+    throw new Error("Final memory seed must preserve incomplete cost coverage")
   await post("decision-choose", { caseRef, alternativeId: alternatives[1].id, alternativeVersion: alternatives[1].version,
     comparison: compared.request, criteria: [criterion.id], reason: finalMemoryData.reason })
   const selected = await controls(reference)
   const choice = selected.decision.choices[0]
-  if (!choice || choice.comparisonStatus !== "complete" || choice.costCoverage.coverageState !== "complete" ||
+  if (!choice || choice.comparisonStatus !== "conditioned" || choice.costCoverage.coverageState === "complete" ||
       selected.decision.choices.length !== 1 || selected.decision.receipts.length !== 0)
     throw new Error("Final memory seed did not record exactly one original choice")
   caseRef = selected.caseRef
@@ -149,10 +146,11 @@ export async function seedFinalMemory(installed: Installed, year: number) {
   const selection = await post("memory-outcome-selection", { caseRef, choiceId: choice.id, criterionRef: criterion.id,
     valueId: observed[0].id, period, evidenceRefs: [source] })
   const selectionRef = text(selection.selectionRef)
-  const outcome = await request("memory-outcome", { selectionRef })
-  if (outcome.status !== "comparable" || typeof outcome.expected !== "number" ||
-    outcome.observed !== observed[0].value || typeof outcome.delta !== "number")
-    throw new Error("Final memory source did not produce a comparable original outcome")
-  return { reference, caseRef, choiceId: choice.id, registerCondition, initialConditionCount: beforeConditions.length, period, selectionRef,
-    expected: outcome.expected, observed: outcome.observed, delta: outcome.delta }
+  console.info("SF_FINAL_MEMORY_STAGE memory-outcome-original-unavailable")
+  const outcomeReply = await installed.request("/dashboard?" + new URLSearchParams({ sf: "memory-outcome", selectionRef }))
+  const outcome = object(await outcomeReply.json())
+  if (outcomeReply.status !== 503 || outcome.status !== "unavailable" || outcome.reason !== "coverage-incomplete")
+    throw new Error("Original outcome must preserve its recorded incomplete cost coverage")
+  return { reference, caseRef, choiceId: choice.id, registerCondition, initialConditionCount: beforeConditions.length,
+    period, selectionRef, outcomeReason: "coverage-incomplete" as const }
 }
