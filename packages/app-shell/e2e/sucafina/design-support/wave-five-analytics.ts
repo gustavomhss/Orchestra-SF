@@ -37,10 +37,14 @@ export async function captureOriginalBiData(
   }
   const session = await page.context().newCDPSession(page)
   const producer = Promise.withResolvers<{ url: string; status: number; body: unknown }>()
+  const completion = Promise.withResolvers<Request>()
   void producer.promise.catch(() => undefined) // The original response wait receives the failure below.
+  void completion.promise.catch(() => undefined)
   const requests: Request[] = []
   const observed: { response: Response; body: unknown }[] = []
   const failures: string[] = []
+  const completedRequests: Request[] = []
+  let primaryFailure: { error: unknown } | undefined
   let responses = 0
   type TeardownPhase = "observing" | "detaching" | "detached"
   let teardownPhase: TeardownPhase = "observing"
@@ -48,13 +52,20 @@ export async function captureOriginalBiData(
     sameNativeRequest: boolean; bodyObserved: boolean; http: number | null; teardownPhase: TeardownPhase; errorText: string
   }) => {
     failures.push(phase)
+    primaryFailure ??= { error }
     console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
       view: viewId, acquisition: "native-response-cdp", phase, acquisitionFailure: true,
       errorClass: error instanceof SyntaxError ? "SyntaxError" : error instanceof Error ? "Error" : "NonError", ...requestFailure }))
     producer.reject(error)
+    completion.reject(error)
   }
   const onRequest = (request: Request) => {
     if (matches(request.method(), request.url())) requests.push(request)
+  }
+  const onRequestFinished = (request: Request) => {
+    if (!matches(request.method(), request.url())) return
+    completedRequests.push(request)
+    completion.resolve(request)
   }
   const onRequestFailed = (request: Request) => {
     if (!matches(request.method(), request.url())) return
@@ -65,17 +76,12 @@ export async function captureOriginalBiData(
       ? nativeError : "unclassified"
     const requestFailure = { sameNativeRequest, bodyObserved: observed.length > 0,
       http: original?.response.status() ?? null, teardownPhase, errorText }
-    if (original && sameNativeRequest) {
-      console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
-        view: viewId, acquisition: "native-response-cdp", phase: "late-native-request-failure",
-        acquisitionFailure: false, ...requestFailure }))
-      return
-    }
     fail("native-request-failed", new Error("Original BI request failed"), requestFailure)
   }
   const onPageClose = () => fail("page-closed", new Error("Page closed during original BI acquisition"))
   const onSessionClose = () => fail("session-closed", new Error("CDP session closed during original BI acquisition"))
   page.on("request", onRequest)
+  page.on("requestfinished", onRequestFinished)
   page.on("requestfailed", onRequestFailed)
   page.on("close", onPageClose)
   session.on("close", onSessionClose)
@@ -116,28 +122,49 @@ export async function captureOriginalBiData(
         const original = await producer.promise
         expect(response.url()).toBe(original.url)
         expect(response.status()).toBe(original.status)
+        const completed = await completion.promise
+        expect(completed === response.request(), "the same native BI Request must finish").toBe(true)
+        if (primaryFailure) throw primaryFailure.error
         observed.push({ response, body: original.body })
+        console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
+          view: viewId, acquisition: "native-response-cdp", phase: "original-request-completed",
+          http: response.status(), sameNativeRequest: true, nativeRequestFinished: true }))
       })
+      if (primaryFailure) throw primaryFailure.error
       expect(observed.length, "capture completed within the original response wait").toBe(1)
       expect(response === observed[0]!.response, "same observed native Response identity").toBe(true)
       return { response, body: observed[0]!.body }
+    } catch (error) {
+      primaryFailure ??= { error }
+      throw primaryFailure.error
     } finally {
-      producer.reject(new Error("Original BI observation ended before acquisition"))
+      const ended = new Error("Original BI observation ended before acquisition")
+      producer.reject(ended)
+      completion.reject(ended)
       session.off("close", onSessionClose)
       teardownPhase = "detaching"
       try {
         await session.detach()
         teardownPhase = "detached"
+      } catch (error) {
+        console.info("SF_ANALYTICS_SOURCE " + JSON.stringify({ operation: "bi-data-original-acquisition",
+          view: viewId, acquisition: "native-response-cdp", phase: "detach-failed", acquisitionFailure: true,
+          primaryFailurePreserved: primaryFailure !== undefined,
+          errorClass: error instanceof SyntaxError ? "SyntaxError" : error instanceof Error ? "Error" : "NonError" }))
+        primaryFailure ??= { error }
       } finally {
         page.off("request", onRequest)
+        page.off("requestfinished", onRequestFinished)
         page.off("requestfailed", onRequestFailed)
         page.off("close", onPageClose)
       }
+      if (primaryFailure) throw primaryFailure.error
     }
   })()
   expect(failures, "original BI response acquisition must succeed").toEqual([])
   expect(responses, "one original BI response").toBe(1)
   expect(requests.length, "one native BI request; no readback or retry").toBe(1)
+  expect(completedRequests.length, "one finished native BI request").toBe(1)
   expect(acquired.response.request() === requests[0], "same native Request identity").toBe(true)
   expect(acquired.response.request().redirectedFrom() === null, "no redirected BI request").toBe(true)
   return acquired
