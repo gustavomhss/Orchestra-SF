@@ -15,6 +15,7 @@ import { reconcileSfSignal } from "../../../../modules/sucafina/Sucafinav1/produ
 import { createSfOutcomeSelectionRegistry } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
 import { createSfDomainOutcomeAccess } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts"
 import { createSfReviewOutcomeAdapter } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts"
+import { resolvePlannerScenarioBatch } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import { createPlannerMateriality } from "../../../../modules/sucafina/Sucafinav1/product/planner/materiality.ts"
 import { createPlannerObservedProjection } from "../../../../modules/sucafina/Sucafinav1/product/planner/observed.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
@@ -28,7 +29,7 @@ import type { SfMaterialSelectionScope, SfMemoryCaseRef } from "./memory-selecti
 
 export type SfMemoryServicesInput = {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "human">
-  business: Pick<ReturnType<typeof createSfBusinessServices>, "cases" | "context" | "plannerSources" | "resolveCase" | "operationIdentity" | "readSourceFences" | "lockedSourceFences"> & {
+  business: Pick<ReturnType<typeof createSfBusinessServices>, "cases" | "context" | "plannerSources" | "resolveCase" | "operationIdentity" | "readSourceFences" | "lockedSourceFences" | "observePlannerScenarios"> & {
     planner: Pick<ReturnType<typeof createSfBusinessServices>["planner"], "compareScenarios" | "compareForecast">
     plannerProduct: Pick<ReturnType<typeof createSfBusinessServices>["plannerProduct"], "scenarios">
   }
@@ -90,9 +91,13 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
       object(state.versions).cases === captured.casesVersion && sfRunSourceFence(snapshot) === captured.sources.planner && same(captured.sources, locked)
   }
   const scenarios = business.plannerProduct.scenarios
+  const observedScenarios = scenarios ? { ...scenarios,
+    resolveMany: (references: readonly string[], call: TrustedDomainContext) => business.observePlannerScenarios(references, call,
+      () => resolvePlannerScenarioBatch(scenarios, references, call)),
+  } : undefined
   const authorizeSignal = (selection: SfSignalSelection, call: TrustedDomainContext) => authorizeFenced(selection, call, async () => {
     const request = host.requestFor(call)
-    if (!request || !scenarios || !memorySignalSelection(selection) || !await authorizeEvidence([selection.evidence], call)) return false
+    if (!request || !observedScenarios || !memorySignalSelection(selection) || !await authorizeEvidence([selection.evidence], call)) return false
     const read = () => input.authority.state.read(request, "cases", (state, actor) => actor.principalRef === call.binding.principalRef &&
       actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
       ? selection.scenarioRefs.map((ref) => state.decisionResults?.[ref]) : undefined)
@@ -100,12 +105,12 @@ export function createSfMemoryServices(input: SfMemoryServicesInput) {
     if (stored.status !== "ok" || !stored.value || stored.value.some((record, index) => !record || record.schema !== "sf-decision-result-v1" ||
       record.kind !== "scenario" || record.resultRef !== selection.scenarioRefs[index] || record.caseRef.id !== selection.caseRef.id ||
       record.caseRef.incarnation !== selection.caseRef.incarnation || record.caseRef.version > selection.caseRef.version || record.resultDigest !== digestSfValue(record.result))) return false
-    const resolved = await Promise.all(selection.scenarioRefs.map((ref) => scenarios.resolve(ref, call)))
+    const resolved = await resolvePlannerScenarioBatch(observedScenarios, selection.scenarioRefs, call)
     const again = await read()
     return resolved.every((result, index) => result.status === "ok" && same(result.value.result, stored.value![index]!.result)) &&
       again.status === "ok" && stored.storageVersion === again.storageVersion && same(stored.value, again.value) && await host.revalidate(call)
   })
-  const domainProducer = scenarios ? createPlannerMateriality({ scenarios, planner: business.planner, verifyBinding: async (selection, choice, call) => {
+  const domainProducer = observedScenarios ? createPlannerMateriality({ scenarios: observedScenarios, planner: business.planner, verifyBinding: async (selection, choice, call) => {
     const current = await business.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
     return current.status === "ok" && current.value.case.id === selection.caseRef.id && current.value.case.incarnation === selection.caseRef.incarnation &&
       current.value.case.version >= selection.caseRef.version && current.value.case.choices.filter((item) => item.id === selection.choiceId && same(item, choice)).length === 1 &&
