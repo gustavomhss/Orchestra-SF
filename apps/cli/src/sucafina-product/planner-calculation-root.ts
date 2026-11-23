@@ -4,6 +4,7 @@ import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Su
 import { currentSfPlannerReadonlySnapshotScope, currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { plannerRequestIdentity } from "./planner-calculation-read-scope.ts"
+import { sfPlannerProofCount } from "./planner-proof-diagnostic.ts"
 
 /** An opaque capability born only inside this factory's active native readonly frame. */
 export type SfPlannerCalculationRootProof = Readonly<object>
@@ -49,7 +50,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const root = persistence.readSnapshotRoot, snapshots = persistence.currentSnapshots
       // Older adapters keep the complete original producer, without preparation
       // or a claim that an owned root protected its observation.
-      if (!root || !snapshots) return once((work) => work())
+      if (!root || !snapshots) { sfPlannerProofCount("rootOpaque"); return once((work) => work()) }
       const transaction = persistence.transaction, transactionAll = persistence.transactionAll
       const snapshotScope = persistence.currentSnapshotScope
       const requestFor = host.requestFor, revalidate = host.revalidate
@@ -76,6 +77,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const inherited = local === undefined ? snapshots.call(persistence) : undefined
       const present = () => hasSfLocalSnapshotScope(persistence) ?? snapshots.call(persistence) !== undefined
       if (local === true || inherited !== undefined) {
+        sfPlannerProofCount("rootInherited")
         // A pre-existing C08 owner (including Memory preflight/commit) keeps its
         // original route. Do not prepare sources, open a root or borrow ownership.
         if (local !== true && (!inherited || typeof inherited !== "object")) return undefined
@@ -103,6 +105,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       if (initialized !== true && initialized !== "unsupported") return undefined
       if (!current() || present()) return undefined
       if (initialized === "unsupported") {
+        sfPlannerProofCount("rootUnsupported")
         // Eligibility was inspected without opening a root or warming sources.
         // Preserve the full producer only while these exact observations live.
         return once(async (work) => {
@@ -119,6 +122,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         let staged: PortResult<Value> | undefined
         const accepted = await root.call(persistence, async () => {
           invocations++
+          sfPlannerProofCount("rootEntries")
           if (invocations !== 1 || !current()) return false
           const native = currentSfPlannerReadonlySnapshotScope(persistence)
           // A C08 descendant has its own logical scope within this same physical
@@ -132,6 +136,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }
           if (native?.bytesIdentity) {
+            sfPlannerProofCount("nativeProofs")
             const proof = Object.freeze({})
             let failed = false
             owner.proof = proof
