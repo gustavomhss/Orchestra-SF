@@ -13,6 +13,7 @@ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.t
 import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
 import type { createSfPlannerRecordProofScope } from "./planner-record-proof-scope.ts"
+import { sfPlannerProofCount, sfPlannerProofOwner } from "./planner-proof-diagnostic.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -31,9 +32,9 @@ export function createSfFinancePairObservation(input: {
 }) {
   const root = createSfPlannerCalculationRoot({ host: input.host })
   const unsupported = { kind: "unsupported" as const }
-  const unavailable = () => ({ status: "unavailable" as const, reason: "finance-pair-observation-changed" })
+  const unavailable = () => { sfPlannerProofCount("ownerRefused"); return ({ status: "unavailable" as const, reason: "finance-pair-observation-changed" }) }
 
-  return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
+  const observe = async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     try {
       if (!root.allows(call)) return unavailable()
@@ -42,9 +43,9 @@ export function createSfFinancePairObservation(input: {
       if (call.kind !== "ui" || !parsed.ok || parsed.value.criteria.length || parsed.value.scenarioRefs.length !== 2 ||
         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
         digestSfValue(parsed.value) !== digestSfValue(incoming) ||
-        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
+        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) { sfPlannerProofCount("ownerIneligible"); return await work() }
       const selection = input.selectedScope(call)
-      if (!selection) return await work()
+      if (!selection) { sfPlannerProofCount("ownerSelectionFallback"); return await work() }
       const request = host.requestFor(call)
       if (!request || request.signal.aborted || !selection.current()) return unavailable()
 
@@ -93,7 +94,7 @@ export function createSfFinancePairObservation(input: {
         return current() && closed === observed.value.environment ? observed.value : undefined
       }
       const prepared = await root.prepare(call, async () => true, current)
-      if (!prepared) return unavailable()
+      if (!prepared) { sfPlannerProofCount("ownerPreparedFailed"); return unavailable() }
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
@@ -119,7 +120,7 @@ export function createSfFinancePairObservation(input: {
           : unavailable()
       })
       if (grouped.status !== "ok") return grouped
-      if (grouped.value.kind === "unsupported") return current() ? await work() : unavailable()
+      if (grouped.value.kind === "unsupported") { sfPlannerProofCount("ownerUnsupported"); return current() ? await work() : unavailable() }
       // The first root is closed. Never replay the work when a source or reader has changed.
       const egress = await root.prepare(call, async () => true, current)
       if (!egress) return unavailable()
@@ -130,6 +131,8 @@ export function createSfFinancePairObservation(input: {
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
   }
+  return <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>) =>
+    sfPlannerProofOwner(0, () => observe(incoming, call, work))
 }
 
 function sameReaders(current: readonly unknown[], pinned: readonly unknown[]) {

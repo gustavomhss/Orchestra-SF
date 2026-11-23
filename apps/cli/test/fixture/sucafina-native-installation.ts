@@ -96,6 +96,9 @@ export function withNativeInstallation(input: {
     const publication = { used: false }
     const diagnostic = { last: "" }
     yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      if (/^SF_PLANNER_PROOF(?: [0-9]+){32}$/.test(line)) return Effect.sync(() => { process.stdout.write(line + "\n") })
+      if (/^SF_PLANNER_PROGRESS 1 [012](?: [0-9]+){6}$/.test(line) || /^SF_PLANNER_STAGE [12](?: [0-9]+){2} (?:[1-9]|1[0-2]) [0-9]+$/.test(line))
+        return Effect.sync(() => { process.stdout.write(line + "\n") })
       if (input.memoryPrecedent && line === "SF_NATIVE_MEMORY_COMMITTED") return Effect.asVoid(Deferred.succeed(published, undefined))
       const failed = input.memoryPrecedent && /^SF_NATIVE_MEMORY_FAILED (input|owner|scanner|manifest|admission|case|ledger|publication|receipt) ([a-z-]+)$/.exec(line)
       if (failed) return Effect.asVoid(Deferred.fail(published, new Error("Canonical memory precedent preparation failed: " + failed[1] + " (" + failed[2] + ")")))

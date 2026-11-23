@@ -68,6 +68,8 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+        if (/^SF_PLANNER_PROOF(?: [0-9]+){32}$/.test(line)) console.info(line)
+        if (/^SF_PLANNER_PROGRESS 1 [012](?: [0-9]+){6}$/.test(line) || /^SF_PLANNER_STAGE [12](?: [0-9]+){2} (?:[1-9]|1[0-2]) [0-9]+$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
