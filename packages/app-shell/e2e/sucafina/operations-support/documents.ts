@@ -173,16 +173,25 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
   return { supplier, supplierNumber }
 }
 
-/** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
+/** Original native evidence flow; upload/delivery checks have their own isolated journey. */
 export async function documentJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
+  await runDocumentJourney(page, info, "evidence", capture)
+}
+
+/** SUP03 and original private delivery use a fresh supplier/file, without sharing test state. */
+export async function documentUploadJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
+  await runDocumentJourney(page, info, "upload", capture)
+}
+
+async function runDocumentJourney(page: Page, info: TestInfo, journey: "upload" | "evidence", capture?: WorkflowCapture) {
   const releases: (() => Promise<void>)[] = []
   let failed = false
-  try { await observeDocumentJourney(page, info, releases, capture) }
+  try { await observeDocumentJourney(page, info, releases, journey, capture) }
   catch (error) { failed = true; throw error }
   finally { await closeRecordObservers(releases, failed) }
 }
 
-async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() => Promise<void>)[], capture?: WorkflowCapture) {
+async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() => Promise<void>)[], journey: "upload" | "evidence", capture?: WorkflowCapture) {
   const account = await login(page, "first", "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
@@ -279,87 +288,91 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   expect(asset).toMatch(/^[A-Za-z0-9_-]+$/)
   expect(asset).toBe(projectedFiles?.[0]?.id)
   if (!asset) throw new Error("The reconciled supplier asset did not expose its reference")
-  const assetEndpoint = new URL(account.baseURL + "/procurement")
-  const linkURL = new URL(assetEndpoint)
-  linkURL.searchParams.set("asset-link", asset)
-  const contextEndpoint = new URL(account.baseURL + "/api/ui/context")
-  const started = performance.now()
-  const elapsedMs = () => Math.round(performance.now() - started)
-  const phases: Partial<Record<"linkRequested" | "linkIssued" | "linkDelivered" | "linkBrowserResponse" |
-    "signedBytesRequested" | "signedBytesResponse" | "signedBytesFailed" | "chromiumDownload",
-    { elapsedMs: number; status?: number }>> = {}
-  const contextCounts = { request: 0, response: 0, failed: 0 }
-  const contextEvents: { phase: keyof typeof contextCounts; elapsedMs: number; status?: number }[] = []
-  const recordContext = (phase: keyof typeof contextCounts, request: Request, status?: number) => {
-    if (request.method() !== "GET") return
-    const url = new URL(request.url())
-    if (url.origin !== contextEndpoint.origin || url.pathname !== contextEndpoint.pathname) return
-    contextCounts[phase]++
-    if (contextEvents.length < 48) contextEvents.push({ phase, elapsedMs: elapsedMs(), status })
+  let downloadedAssetURL: URL | undefined
+  if (journey === "upload") {
+    const assetEndpoint = new URL(account.baseURL + "/procurement")
+    const linkURL = new URL(assetEndpoint)
+    linkURL.searchParams.set("asset-link", asset)
+    const contextEndpoint = new URL(account.baseURL + "/api/ui/context")
+    const started = performance.now()
+    const elapsedMs = () => Math.round(performance.now() - started)
+    const phases: Partial<Record<"linkRequested" | "linkIssued" | "linkDelivered" | "linkBrowserResponse" |
+      "signedBytesRequested" | "signedBytesResponse" | "signedBytesFailed" | "chromiumDownload",
+      { elapsedMs: number; status?: number }>> = {}
+    const contextCounts = { request: 0, response: 0, failed: 0 }
+    const contextEvents: { phase: keyof typeof contextCounts; elapsedMs: number; status?: number }[] = []
+    const recordContext = (phase: keyof typeof contextCounts, request: Request, status?: number) => {
+      if (request.method() !== "GET") return
+      const url = new URL(request.url())
+      if (url.origin !== contextEndpoint.origin || url.pathname !== contextEndpoint.pathname) return
+      contextCounts[phase]++
+      if (contextEvents.length < 48) contextEvents.push({ phase, elapsedMs: elapsedMs(), status })
+    }
+    const signedAssetRequest = (request: Request, observedURL = request.url()) => {
+      const url = new URL(observedURL)
+      return request.method() === "GET" && url.origin === assetEndpoint.origin &&
+        url.pathname === assetEndpoint.pathname && url.searchParams.get("asset") === asset &&
+        url.searchParams.has("expires") && url.searchParams.has("signature")
+    }
+    const requestObserved = (request: Request) => {
+      if (request.method() === "GET" && request.url() === linkURL.href)
+        phases.linkRequested = { elapsedMs: elapsedMs() }
+      if (signedAssetRequest(request)) phases.signedBytesRequested = { elapsedMs: elapsedMs() }
+      recordContext("request", request)
+    }
+    const requestFailed = (request: Request) => {
+      if (signedAssetRequest(request)) phases.signedBytesFailed = { elapsedMs: elapsedMs() }
+      recordContext("failed", request)
+    }
+    const responseObserved = (response: Response) => {
+      if (response.request().method() === "GET" && response.url() === linkURL.href)
+        phases.linkBrowserResponse = { elapsedMs: elapsedMs(), status: response.status() }
+      recordContext("response", response.request(), response.status())
+    }
+    page.on("request", requestObserved)
+    page.on("requestfailed", requestFailed)
+    page.on("response", responseObserved)
+    // Keep the same original producer response outside Chromium's navigation cache.
+    // The observer forwards it unchanged; it does not mint another signed link.
+    const linkRead = await observe(page, linkURL.href, "GET", async (response) => {
+      phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
+    })
+    const issuedLink = linkRead.completed.then(async ({ response, request }) => {
+      expect(request.url()).toBe(linkURL.href)
+      expect(request.postData()).toBeNull()
+      expect(response.status()).toBe(200)
+      const link = await response.json() as { ok?: boolean; query?: string }
+      phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
+      expect(link.ok).toBe(true)
+      return link.query
+    })
+    const linkedAsset = page.waitForResponse((response) => signedAssetRequest(response.request(), response.url())).then((response) => {
+      phases.signedBytesResponse = { elapsedMs: elapsedMs(), status: response.status() }
+      expect(response.status()).toBe(200)
+      return new URL(response.url())
+    })
+    const downloaded = page.waitForEvent("download").then((download) => {
+      phases.chromiumDownload = { elapsedMs: elapsedMs() }
+      return download
+    })
+    const [signedQuery, assetURL, download] = await Promise.all([
+      issuedLink, linkedAsset, downloaded, file.getByRole("button", { name: "Download (verify access)", exact: true }).click(),
+    ]).finally(async () => {
+      page.off("request", requestObserved)
+      page.off("requestfailed", requestFailed)
+      page.off("response", responseObserved)
+      const evidence = JSON.stringify({ elapsedMs: elapsedMs(), phases, contextCounts, contextEvents })
+      if (!phases.chromiumDownload) console.info("SF_FILES_DOCUMENT_DOWNLOAD_PHASES", evidence)
+      await info.attach("operations-document-download-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
+    })
+    expect(assetURL.search.slice(1) === signedQuery, "download uses the producer's exact signed query").toBe(true)
+    expect(assetURL.searchParams.get("asset")).toBe(asset)
+    expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)
+    expect(/^[a-f0-9]{64}$/.test(assetURL.searchParams.get("signature") ?? ""), "signed query contains an HMAC").toBe(true)
+    expect(download.suggestedFilename()).toBe(filename)
+    expect(await readFile(await download.path())).toEqual(bytes)
+    downloadedAssetURL = assetURL
   }
-  const signedAssetRequest = (request: Request, observedURL = request.url()) => {
-    const url = new URL(observedURL)
-    return request.method() === "GET" && url.origin === assetEndpoint.origin &&
-      url.pathname === assetEndpoint.pathname && url.searchParams.get("asset") === asset &&
-      url.searchParams.has("expires") && url.searchParams.has("signature")
-  }
-  const requestObserved = (request: Request) => {
-    if (request.method() === "GET" && request.url() === linkURL.href)
-      phases.linkRequested = { elapsedMs: elapsedMs() }
-    if (signedAssetRequest(request)) phases.signedBytesRequested = { elapsedMs: elapsedMs() }
-    recordContext("request", request)
-  }
-  const requestFailed = (request: Request) => {
-    if (signedAssetRequest(request)) phases.signedBytesFailed = { elapsedMs: elapsedMs() }
-    recordContext("failed", request)
-  }
-  const responseObserved = (response: Response) => {
-    if (response.request().method() === "GET" && response.url() === linkURL.href)
-      phases.linkBrowserResponse = { elapsedMs: elapsedMs(), status: response.status() }
-    recordContext("response", response.request(), response.status())
-  }
-  page.on("request", requestObserved)
-  page.on("requestfailed", requestFailed)
-  page.on("response", responseObserved)
-  // Keep the same original producer response outside Chromium's navigation cache.
-  // The observer forwards it unchanged; it does not mint another signed link.
-  const linkRead = await observe(page, linkURL.href, "GET", async (response) => {
-    phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
-  })
-  const issuedLink = linkRead.completed.then(async ({ response, request }) => {
-    expect(request.url()).toBe(linkURL.href)
-    expect(request.postData()).toBeNull()
-    expect(response.status()).toBe(200)
-    const link = await response.json() as { ok?: boolean; query?: string }
-    phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
-    expect(link.ok).toBe(true)
-    return link.query
-  })
-  const linkedAsset = page.waitForResponse((response) => signedAssetRequest(response.request(), response.url())).then((response) => {
-    phases.signedBytesResponse = { elapsedMs: elapsedMs(), status: response.status() }
-    expect(response.status()).toBe(200)
-    return new URL(response.url())
-  })
-  const downloaded = page.waitForEvent("download").then((download) => {
-    phases.chromiumDownload = { elapsedMs: elapsedMs() }
-    return download
-  })
-  const [signedQuery, assetURL, download] = await Promise.all([
-    issuedLink, linkedAsset, downloaded, file.getByRole("button", { name: "Download (verify access)", exact: true }).click(),
-  ]).finally(async () => {
-    page.off("request", requestObserved)
-    page.off("requestfailed", requestFailed)
-    page.off("response", responseObserved)
-    const evidence = JSON.stringify({ elapsedMs: elapsedMs(), phases, contextCounts, contextEvents })
-    if (!phases.chromiumDownload) console.info("SF_FILES_DOCUMENT_DOWNLOAD_PHASES", evidence)
-    await info.attach("operations-document-download-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
-  })
-  expect(assetURL.search.slice(1) === signedQuery, "download uses the producer's exact signed query").toBe(true)
-  expect(assetURL.searchParams.get("asset")).toBe(asset)
-  expect(assetURL.searchParams.get("expires")).toMatch(/^[1-9]\d*$/)
-  expect(/^[a-f0-9]{64}$/.test(assetURL.searchParams.get("signature") ?? ""), "signed query contains an HMAC").toBe(true)
-  expect(download.suggestedFilename()).toBe(filename)
-  expect(await readFile(await download.path())).toEqual(bytes)
   const requests: string[] = []
   page.context().on("request", (request) => {
     const mode = new URL(request.url()).searchParams.get("sf")
@@ -446,136 +459,222 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
     expect(await valueOf<DocumentEvidence[]>((await candidates.completed).response)).toEqual(expected)
     await candidates.finish()
   }
-  const register = root.locator("details.sf-records-register")
-  await register.locator("summary").click()
-  const documentInput = register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })
-  const attachDocument = register.getByRole("button", { name: "Scan and attach to record", exact: true })
-  await expect(documentInput).toBeVisible()
-  await expect(attachDocument).toBeDisabled()
-  await expect(register.getByLabel("Existing record ID", { exact: true })).toHaveCount(0)
-  await expect(register.getByLabel("Current record version (CAS)", { exact: true })).toHaveCount(0)
-  const targetCatalogURL = new URL(account.baseURL + "/api/ui/pages/CAP27").href
-  const catalogTargets = await observe(page, targetCatalogURL)
-  await register.getByRole("combobox", { name: "Classification", exact: true }).selectOption("supplier")
-  const { response: catalogTargetResponse } = await catalogTargets.completed
-  expect(catalogTargetResponse.status()).toBe(200)
-  const catalogTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await catalogTargetResponse.json())
-  if (catalogTargetBody.status !== "ok") throw new Error("The original supplier upload catalog is unavailable")
-  expect(catalogTargetBody.context).toEqual(fileStamp)
-  expect(catalogTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 1)
-  expect(catalogTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
-  const targetRecord = register.getByRole("combobox", { name: "Target record", exact: true })
-  const targetLabel = name + " · " + supplierNumber
-  await expect(targetRecord).toBeEnabled()
-  await expect(targetRecord.getByRole("option", { name: targetLabel, exact: true })).toHaveAttribute("value", supplier)
-  await targetRecord.selectOption({ label: targetLabel })
-  await expect(targetRecord).toHaveValue(supplier)
-  await expect(attachDocument).toBeDisabled()
-  const uploadViewport = page.viewportSize()
-  const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
-  for (const scheme of ["dark", "light"] as const) {
-    // The native theme control is available in the desktop chrome.
-    await page.setViewportSize({ width: 1440, height: 1100 })
-    if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
-      await page.locator('[data-slot="orchestra-theme-toggle"]').click()
-    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
-    for (const width of [1440, 390, 320]) {
-      await page.setViewportSize({ width, height: width === 1440 ? 1100 : 900 })
-      await expect(targetRecord).toBeEnabled()
-      await expect(targetRecord).toHaveValue(supplier)
-      await expect(register.getByRole("button", { name: "Refresh records", exact: true })).toBeEnabled()
-      const bounds = await targetRecord.evaluate((element) => {
-        const box = element.getBoundingClientRect()
-        const form = element.closest("form")!.getBoundingClientRect()
-        return { left: box.left, right: box.right, bottom: box.bottom, width: box.width, formLeft: form.left, formRight: form.right }
-      })
-      expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft - 1)
-      expect(bounds.right).toBeLessThanOrEqual(bounds.formRight + 1)
-      expect(bounds.width).toBeGreaterThan(80)
-      if (width === 1440) {
-        const classification = await register.getByRole("combobox", { name: "Classification", exact: true }).boundingBox()
-        const refresh = await register.getByRole("button", { name: "Refresh records", exact: true }).boundingBox()
-        expect(classification).not.toBeNull()
-        expect(refresh).not.toBeNull()
-        expect(Math.abs(classification!.y + classification!.height - bounds.bottom), "Record and classification controls share a baseline").toBeLessThanOrEqual(1)
-        expect(Math.abs(refresh!.y + refresh!.height - bounds.bottom), "Refresh remains beside its record selector").toBeLessThanOrEqual(1)
-        await info.attach("UI58-authorized-target-alignment-" + scheme, {
-          contentType: "application/json", body: JSON.stringify({ width, scheme, target: bounds, classification, refresh }),
-        })
-      }
-      await captureRecord(page, info, "UI58", "register-authorized-target-" + scheme + "-" + width)
-    }
-  }
-  if (uploadViewport) await page.setViewportSize(uploadViewport)
-  if (await page.locator("html").getAttribute("data-color-scheme") !== uploadTheme)
-    await page.locator('[data-slot="orchestra-theme-toggle"]').click()
-  await expect(page.locator("html")).toHaveAttribute("data-color-scheme", uploadTheme ?? "dark")
-  const catalogFilename = "catalog-" + filename
-  const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
-  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
-  await expect(attachDocument).toBeEnabled()
-  const sourcesWithDraft = await observeFile(page, "files.document-sources", endpoint("document-sources"))
-  await root.getByRole("button", { name: "Refresh sources", exact: true }).click()
-  expect((await valueOf<Source[]>((await sourcesWithDraft.completed).response))
-    .filter((source) => source.label === filename)).toHaveLength(1)
-  await sourcesWithDraft.finish()
-  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
-  await expect(documentInput).toBeVisible()
-  expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
-  await expect(targetRecord).toHaveValue(supplier)
-  await expect(attachDocument).toBeEnabled()
-  // Observe exactly one original scanned upload. Record identity and CAS come
-  // from the authorized catalog, not a manually entered ID or asset revision.
-  const catalogUpload = await observe(page, (url) =>
-    url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
-      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST", async () => {
-    await expect(register.locator("form")).toHaveAttribute("aria-busy", "true")
+  if (journey === "upload") {
+    const register = root.locator("details.sf-records-register")
+    await register.locator("summary").click()
+    const documentInput = register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })
+    const attachDocument = register.getByRole("button", { name: "Scan and attach to record", exact: true })
     await expect(documentInput).toBeVisible()
-    await expect(documentInput).toBeDisabled()
-    expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
-    await expect(register.getByRole("status")).toHaveText("Uploading document…")
     await expect(attachDocument).toBeDisabled()
-  })
-  const refreshedTargets = await observe(page, targetCatalogURL)
-  const refreshedSources = await observeFile(page, "files.document-sources", endpoint("document-sources"))
-  await attachDocument.click()
-  const { response: catalogUploadResponse, request: catalogUploadRequest } = await catalogUpload.completed
-  expect(catalogUploadRequest.method()).toBe("POST")
-  expect(catalogUploadRequest.postDataBuffer()).toEqual(catalogBytes)
-  expect(catalogUploadResponse.status()).toBe(200)
-  const catalogUploadQuery = new URL(catalogUploadRequest.url()).searchParams
-  expect(catalogUploadQuery.get("record")).toBe(supplier)
-  expect(catalogUploadQuery.get("recordVersion")).toBe(String(beforeVersion + 1))
-  expect(catalogUploadQuery.get("name")).toBe(catalogFilename)
-  expect(await catalogUploadResponse.json()).toMatchObject({ ok: true })
-  const { response: refreshedTargetResponse } = await refreshedTargets.completed
-  expect(refreshedTargetResponse.status()).toBe(200)
-  const refreshedTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await refreshedTargetResponse.json())
-  if (refreshedTargetBody.status !== "ok") throw new Error("The uploaded catalog target could not be read back")
-  expect(refreshedTargetBody.context).toEqual(fileStamp)
-  expect(refreshedTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 2)
-  expect(refreshedTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
-  const refreshedCatalog = await valueOf<Source[]>((await refreshedSources.completed).response)
-  await refreshedSources.finish()
-  expect(refreshedCatalog.filter((source) => source.label === catalogFilename)).toHaveLength(1)
-  const originalSource = refreshedCatalog.filter((source) => source.label === filename)
-  expect(originalSource).toHaveLength(1)
-  const selectedSourceRef = originalSource[0]!.selectionRef
-  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
-  await expect(root.locator("[data-sf-upload-outcome]")).toBeVisible()
-  await expect(root.locator("[data-sf-upload-outcome]")).toHaveText(
-    "File accepted by the server scanner and attached to the authorized record. Refresh and choose the newly admitted source for extraction.",
-  )
-  await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selectedSourceRef)
-  await observation(info, "operations-document-authorized-upload-target", {
-    source: "original CAP27 record catalog and original supplier upload",
-    targetLabel, record: supplier, catalogVersion: beforeVersion + 1,
-    uploadedVersion: beforeVersion + 2, httpStatus: catalogUploadResponse.status(),
-    scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
-    manualRecordId: false, manualVersion: false, fileSelectionPreservedAcrossRead: true,
-    responseSubstituted: false, automaticRetries: 0,
-  })
-  if (await register.getAttribute("open") !== null) await register.locator("summary").click()
+    await expect(register.getByLabel("Existing record ID", { exact: true })).toHaveCount(0)
+    await expect(register.getByLabel("Current record version (CAS)", { exact: true })).toHaveCount(0)
+    const targetCatalogURL = new URL(account.baseURL + "/api/ui/pages/CAP27").href
+    const catalogTargets = await observe(page, targetCatalogURL)
+    await register.getByRole("combobox", { name: "Classification", exact: true }).selectOption("supplier")
+    const { response: catalogTargetResponse } = await catalogTargets.completed
+    expect(catalogTargetResponse.status()).toBe(200)
+    const catalogTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await catalogTargetResponse.json())
+    if (catalogTargetBody.status !== "ok") throw new Error("The original supplier upload catalog is unavailable")
+    expect(catalogTargetBody.context).toEqual(fileStamp)
+    expect(catalogTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 1)
+    expect(catalogTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
+    const targetRecord = register.getByRole("combobox", { name: "Target record", exact: true })
+    const targetLabel = name + " · " + supplierNumber
+    await expect(targetRecord).toBeEnabled()
+    await expect(targetRecord.getByRole("option", { name: targetLabel, exact: true })).toHaveAttribute("value", supplier)
+    await targetRecord.selectOption({ label: targetLabel })
+    await expect(targetRecord).toHaveValue(supplier)
+    await expect(attachDocument).toBeDisabled()
+    const uploadViewport = page.viewportSize()
+    const uploadTheme = await page.locator("html").getAttribute("data-color-scheme")
+    for (const scheme of ["dark", "light"] as const) {
+      // The native theme control is available in the desktop chrome.
+      await page.setViewportSize({ width: 1440, height: 1100 })
+      if (await page.locator("html").getAttribute("data-color-scheme") !== scheme)
+        await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+      await expect(page.locator("html")).toHaveAttribute("data-color-scheme", scheme)
+      for (const width of [1440, 390, 320]) {
+        await page.setViewportSize({ width, height: width === 1440 ? 1100 : 900 })
+        await expect(targetRecord).toBeEnabled()
+        await expect(targetRecord).toHaveValue(supplier)
+        await expect(register.getByRole("button", { name: "Refresh records", exact: true })).toBeEnabled()
+        const bounds = await targetRecord.evaluate((element) => {
+          const box = element.getBoundingClientRect()
+          const form = element.closest("form")!.getBoundingClientRect()
+          return { left: box.left, right: box.right, bottom: box.bottom, width: box.width, formLeft: form.left, formRight: form.right }
+        })
+        expect(bounds.left).toBeGreaterThanOrEqual(bounds.formLeft - 1)
+        expect(bounds.right).toBeLessThanOrEqual(bounds.formRight + 1)
+        expect(bounds.width).toBeGreaterThan(80)
+        if (width === 1440) {
+          const classification = await register.getByRole("combobox", { name: "Classification", exact: true }).boundingBox()
+          const refresh = await register.getByRole("button", { name: "Refresh records", exact: true }).boundingBox()
+          expect(classification).not.toBeNull()
+          expect(refresh).not.toBeNull()
+          expect(Math.abs(classification!.y + classification!.height - bounds.bottom), "Record and classification controls share a baseline").toBeLessThanOrEqual(1)
+          expect(Math.abs(refresh!.y + refresh!.height - bounds.bottom), "Refresh remains beside its record selector").toBeLessThanOrEqual(1)
+          await info.attach("UI58-authorized-target-alignment-" + scheme, {
+            contentType: "application/json", body: JSON.stringify({ width, scheme, target: bounds, classification, refresh }),
+          })
+        }
+        await captureRecord(page, info, "UI58", "register-authorized-target-" + scheme + "-" + width)
+      }
+    }
+    if (uploadViewport) await page.setViewportSize(uploadViewport)
+    if (await page.locator("html").getAttribute("data-color-scheme") !== uploadTheme)
+      await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", uploadTheme ?? "dark")
+    const catalogFilename = "catalog-" + filename
+    const catalogBytes = Buffer.from("Catalog attachment\nReference: " + key + "\n", "utf8")
+    await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: catalogBytes })
+    await expect(attachDocument).toBeEnabled()
+    const sourcesWithDraft = await observeFile(page, "files.document-sources", endpoint("document-sources"))
+    await root.getByRole("button", { name: "Refresh sources", exact: true }).click()
+    expect((await valueOf<Source[]>((await sourcesWithDraft.completed).response))
+      .filter((source) => source.label === filename)).toHaveLength(1)
+    await sourcesWithDraft.finish()
+    await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+    await expect(documentInput).toBeVisible()
+    expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+    await expect(targetRecord).toHaveValue(supplier)
+    await expect(attachDocument).toBeEnabled()
+    // Observe exactly one original scanned upload. Record identity and CAS come
+    // from the authorized catalog, not a manually entered ID or asset revision.
+    const catalogUpload = await observe(page, (url) =>
+      url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+        url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST", async () => {
+      await expect(register.locator("form")).toHaveAttribute("aria-busy", "true")
+      await expect(documentInput).toBeVisible()
+      await expect(documentInput).toBeDisabled()
+      expect(await documentInput.evaluate((element) => (element as HTMLInputElement).files?.[0]?.name)).toBe(catalogFilename)
+      await expect(register.getByRole("status")).toHaveText("Uploading document…")
+      await expect(attachDocument).toBeDisabled()
+    })
+    const refreshedTargets = await observe(page, targetCatalogURL)
+    const refreshedSources = await observeFile(page, "files.document-sources", endpoint("document-sources"))
+    await attachDocument.click()
+    const { response: catalogUploadResponse, request: catalogUploadRequest } = await catalogUpload.completed
+    expect(catalogUploadRequest.method()).toBe("POST")
+    expect(catalogUploadRequest.postDataBuffer()).toEqual(catalogBytes)
+    expect(catalogUploadResponse.status()).toBe(200)
+    const catalogUploadQuery = new URL(catalogUploadRequest.url()).searchParams
+    expect(catalogUploadQuery.get("record")).toBe(supplier)
+    expect(catalogUploadQuery.get("recordVersion")).toBe(String(beforeVersion + 1))
+    expect(catalogUploadQuery.get("name")).toBe(catalogFilename)
+    expect(await catalogUploadResponse.json()).toMatchObject({ ok: true })
+    const { response: refreshedTargetResponse } = await refreshedTargets.completed
+    expect(refreshedTargetResponse.status()).toBe(200)
+    const refreshedTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await refreshedTargetResponse.json())
+    if (refreshedTargetBody.status !== "ok") throw new Error("The uploaded catalog target could not be read back")
+    expect(refreshedTargetBody.context).toEqual(fileStamp)
+    expect(refreshedTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 2)
+    expect(refreshedTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
+    const refreshedCatalog = await valueOf<Source[]>((await refreshedSources.completed).response)
+    await refreshedSources.finish()
+    expect(refreshedCatalog.filter((source) => source.label === catalogFilename)).toHaveLength(1)
+    const originalSource = refreshedCatalog.filter((source) => source.label === filename)
+    expect(originalSource).toHaveLength(1)
+    const selectedSourceRef = originalSource[0]!.selectionRef
+    await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+    await expect(root.locator("[data-sf-upload-outcome]")).toBeVisible()
+    await expect(root.locator("[data-sf-upload-outcome]")).toHaveText(
+      "File accepted by the server scanner and attached to the authorized record. Refresh and choose the newly admitted source for extraction.",
+    )
+    await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selectedSourceRef)
+    await observation(info, "operations-document-authorized-upload-target", {
+      source: "original CAP27 record catalog and original supplier upload",
+      targetLabel, record: supplier, catalogVersion: beforeVersion + 1,
+      uploadedVersion: beforeVersion + 2, httpStatus: catalogUploadResponse.status(),
+      scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+      manualRecordId: false, manualVersion: false, fileSelectionPreservedAcrossRead: true,
+      responseSubstituted: false, automaticRetries: 0,
+    })
+    if (await register.getAttribute("open") !== null) await register.locator("summary").click()
+    await document.selectOption({ value: selectedSourceRef })
+    await expect(document).toHaveValue(selectedSourceRef)
+    // The upload journey independently rereads its own original catalog before revoking signed access.
+    const reader = await page.context().newPage()
+    // Capture the initial original source read as well as the subsequent reload.
+    // A missing UI option must be distinguishable from a producer/catalog failure.
+    const initialSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
+    expect((await withRecordNavigation(reader, account, () => reader.goto(catalogRoute.href)))?.status()).toBe(200)
+    expect((await valueOf<Source[]>((await initialSources.completed).response))
+      .filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface })))
+      .toEqual([{ label: filename, surface: "procurement" }])
+    await initialSources.finish()
+    const readerCatalog = reader.locator(catalogLeaf)
+    await expect(readerCatalog).toHaveCount(1)
+    await expect(reader.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
+    const reloadSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
+    expect((await withRecordNavigation(reader, account, () => reader.reload()))?.status()).toBe(200)
+    expect((await valueOf<Source[]>((await reloadSources.completed).response)).filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface }))).toEqual([{ label: filename, surface: "procurement" }])
+    await reloadSources.finish()
+    const cap27 = new URL(account.baseURL + "/api/ui/pages/CAP27").href
+    const projection = await observe(reader, cap27)
+    expect((await withRecordNavigation(reader, account, () =>
+      reader.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href)))?.status()).toBe(200)
+    const projected = (await projection.completed).response
+    expect(projected.status()).toBe(200)
+    const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
+    expect(projectedBody.status).toBe("ok")
+    const projectedVersion = projectedBody.value?.versions?.["suppliers:" + supplier]?.version
+    expect(projectedVersion).toBe(beforeVersion + 2)
+    const readerRow = reader.locator(`tr[data-sf-row="${supplier}"]`)
+    await expect(readerRow).toHaveCount(1)
+    await expect(readerRow.locator('button[data-sf-action="edit"]')).toBeEnabled()
+    await readerRow.getByRole("button", { name: "Open record", exact: true }).click()
+    const readerDetail = reader.locator("[data-sf-record-detail]")
+    await expect(readerDetail).toHaveCount(1)
+    const readerSupplier = reader.locator(`[data-sf-supplier-ref="${supplier}"]`)
+    await expect(readerSupplier).toHaveCount(1)
+    const readerAssets = readerSupplier.locator(`.sf-bound-assets[data-sf-asset-record="${supplier}"]`)
+    await expect(readerAssets).toHaveCount(1)
+    await expect(readerAssets.getByText(filename, { exact: true })).toBeVisible()
+    await expect(readerAssets.getByText(catalogFilename, { exact: true })).toBeVisible()
+    const supplierReference = readerDetail.locator("details.sf-s01-secondary")
+    await expect(supplierReference).toHaveCount(1)
+    await expect(supplierReference.locator("summary")).toHaveText("Record reference")
+    await supplierReference.locator("summary").click()
+    await expect(supplierReference.locator("bdi")).toBeVisible()
+    await expect(supplierReference.locator("bdi")).toHaveText(supplierNumber)
+    const remove = readerDetail.getByRole("button", { name: "Delete pending supplier", exact: true })
+    await expect(remove).toHaveCount(1)
+    await expect(remove).toBeEnabled()
+    if (!downloadedAssetURL) throw new Error("The original signed download did not expose its delivered URL")
+    const assetURL = downloadedAssetURL
+    await remove.click()
+    const deleteReview = reader.locator('[data-component="sf-change-review"]')
+    await expect(deleteReview).toHaveCount(1)
+    await expect(deleteReview.getByRole("heading", { name: "Delete pending supplier", exact: true })).toBeVisible()
+    await expect(deleteReview).toContainText(supplier)
+    const confirmDelete = deleteReview.getByRole("button", { name: "Delete pending supplier", exact: true })
+    await expect(confirmDelete).toBeEnabled()
+    const deleted = await captureCommandResponse(reader, account, { action: "delete", id: supplier }, confirmDelete)
+    expect(deleted.status).toBe(200)
+    expect(deleted.body).toMatchObject({ ok: true })
+    expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 2, values: {} })
+    await expect(reader.locator(".sf-u14-layout").getByRole("status").filter({ hasText:
+      "Operation accepted.",
+    })).toBeVisible()
+    await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
+    await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
+    await expect(reader.getByText(filename, { exact: true })).toHaveCount(0)
+    const revokedAsset = await page.request.get(assetURL.href, { maxRetries: 0 })
+    expect(revokedAsset.status()).toBe(403)
+    expect(await revokedAsset.text()).toBe("Access denied")
+    await expect(reader.getByText(catalogFilename, { exact: true })).toHaveCount(0)
+    expect(requests).toEqual([])
+    await observation(info, "operations-document-upload-delivery-complete", {
+      supplier, asset, filename, catalogFilename, blobDigest,
+      uploadedVersion: beforeVersion + 2, signedDownloadBytesExact: true,
+      sourceRevocation: { assetStatus: revokedAsset.status() },
+      schemaOrConfirmationCommands: requests,
+      independentJourney: "native uploads, catalog selection, signed delivery and asset revocation",
+    })
+    await reader.close()
+    return
+  }
+  const selectedSourceRef = selected[0]!.selectionRef
   await document.selectOption({ value: selectedSourceRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
   // Extra locale re-mounts belong to the existing opt-in visual sweep;
@@ -754,7 +853,10 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   expect(JSON.parse(new URL(confirmedSourceTransport.url()).searchParams.get("ref")!)).toEqual(confirmed.ref)
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
-  expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
+  const assetURL = new URL(currentPresentation.href!, account.origin)
+  expect(assetURL.origin).toBe(account.origin)
+  expect(assetURL.pathname).toBe(new URL(account.baseURL).pathname + "/procurement")
+  expect(assetURL.searchParams.get("asset")).toBe(asset)
   await confirmedSource.finish()
   await expect(scenario.getByRole("region", { name: "source-text", exact: true }).locator("blockquote")).toHaveText("42")
   await capture?.(page, info, { surface: "UI60", state: "confirmed-source-prerequisite", evidence: "The original confirmed evidence and source excerpt are visible. Planner scenario preview remains unavailable and is not claimed." })
@@ -786,23 +888,9 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
     }, navigateCandidates([confirmed]))
   }
 
-  // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
+  // Keep the confirmed source open while this independent source journey revokes it.
   const reader = await page.context().newPage()
-  // Capture the initial original source read as well as the subsequent reload.
-  // A missing UI option must be distinguishable from a producer/catalog failure.
-  const initialSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
-  expect((await withRecordNavigation(reader, account, () => reader.goto(catalogRoute.href)))?.status()).toBe(200)
-  expect((await valueOf<Source[]>((await initialSources.completed).response))
-    .filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface })))
-    .toEqual([{ label: filename, surface: "procurement" }])
-  await initialSources.finish()
   const readerCatalog = reader.locator(catalogLeaf)
-  await expect(readerCatalog).toHaveCount(1)
-  await expect(reader.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
-  const reloadSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
-  expect((await withRecordNavigation(reader, account, () => reader.reload()))?.status()).toBe(200)
-  expect((await valueOf<Source[]>((await reloadSources.completed).response)).filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface }))).toEqual([{ label: filename, surface: "procurement" }])
-  await reloadSources.finish()
   expect(await readCandidates()).toEqual([confirmed])
   expect(await readSchemas()).toEqual([schema])
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
@@ -815,7 +903,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
   expect(projectedBody.status).toBe("ok")
   const projectedVersion = projectedBody.value?.versions?.["suppliers:" + supplier]?.version
-  expect(projectedVersion).toBe(beforeVersion + 2)
+  expect(projectedVersion).toBe(beforeVersion + 1)
   const readerRow = reader.locator(`tr[data-sf-row="${supplier}"]`)
   await expect(readerRow).toHaveCount(1)
   await expect(readerRow.locator('button[data-sf-action="edit"]')).toBeEnabled()
@@ -827,7 +915,6 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const readerAssets = readerSupplier.locator(`.sf-bound-assets[data-sf-asset-record="${supplier}"]`)
   await expect(readerAssets).toHaveCount(1)
   await expect(readerAssets.getByText(filename, { exact: true })).toBeVisible()
-  await expect(readerAssets.getByText(catalogFilename, { exact: true })).toBeVisible()
   const supplierReference = readerDetail.locator("details.sf-s01-secondary")
   await expect(supplierReference).toHaveCount(1)
   await expect(supplierReference.locator("summary")).toHaveText("Record reference")
@@ -849,7 +936,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const deleted = await captureCommandResponse(reader, account, { action: "delete", id: supplier }, confirmDelete)
   expect(deleted.status).toBe(200)
   expect(deleted.body).toMatchObject({ ok: true })
-  expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 2, values: {} })
+  expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
   await expect(reader.locator(".sf-u14-layout").getByRole("status").filter({ hasText:
     "Operation accepted.",
   })).toBeVisible()
