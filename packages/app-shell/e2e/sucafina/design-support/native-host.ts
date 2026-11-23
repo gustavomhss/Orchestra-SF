@@ -37,7 +37,8 @@ const scanner = (() => {
 })()
 
 const secondWave = process.argv[3] === "two"
-const decisionsWave = process.argv[3] === "four-decisions"
+const memoryWave = process.argv[3] === "four-memory"
+const decisionsWave = process.argv[3] === "four-decisions" || memoryWave
 const fourthWave = process.argv[3] === "four" || decisionsWave
 const thirdWave = process.argv[3] === "three" || fourthWave
 const now = new Date()
@@ -75,6 +76,7 @@ const program = Effect.scoped(Effect.gen(function* () {
   let configuration: string | undefined
   process.stdout.write("SF_DESIGN_STAGE installation\n")
   const installed = yield* withNativeInstallation({
+    ...(memoryWave ? { memoryPrecedent: true } : {}),
     webRoot,
     serverPassword,
     ...(scanner ? { scanner } : {}),
@@ -211,8 +213,8 @@ const program = Effect.scoped(Effect.gen(function* () {
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
-    yield* Effect.promise(async () => {
-      try { await seedWaveFourDecisions(installed, year) }
+    const precedent = yield* Effect.promise(async () => {
+      try { return await seedWaveFourDecisions(installed, year) }
       catch (error: unknown) {
         // Record the source failure before scoped child-process cleanup starts.
         await reportFailure(error)
@@ -220,6 +222,11 @@ const program = Effect.scoped(Effect.gen(function* () {
       }
     })
     process.stdout.write("SF_DESIGN_STAGE decisions-ready\n")
+    if (memoryWave) {
+      process.stdout.write("SF_DESIGN_STAGE memory-publication\n")
+      yield* installed.publishMemoryPrecedent(precedent)
+      process.stdout.write("SF_DESIGN_STAGE memory-published\n")
+    }
   }
   if (!configuration) throw new Error("Native installation configuration was not observed")
   // The fixture consumed its own enrollment. Mint a new genuine one-use handoff

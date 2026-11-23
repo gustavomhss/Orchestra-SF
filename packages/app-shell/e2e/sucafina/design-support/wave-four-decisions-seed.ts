@@ -76,7 +76,7 @@ export function seedWaveFourDecisionsPlanner(snapshot: Snapshot, actor: Actor, e
  * Planner inputs are read through BI01. Nothing patches a projection, grant,
  * native binding, archived source or application receipt.
  */
-export async function seedWaveFourDecisions(installed: Installed, year: number): Promise<void> {
+export async function seedWaveFourDecisions(installed: Installed, year: number): Promise<CaseRef> {
   const horizon = { start: year + "-01-01", end: year + "-12-31" }
   const currency = "USD"
   const request = async (mode: string, parameters: Record<string, string> = {}, init?: RequestInit) => {
@@ -178,4 +178,5 @@ export async function seedWaveFourDecisions(installed: Installed, year: number):
   if (recorded.decision.choices.length !== 1 || recorded.decision.alternatives.length !== 2 ||
       recorded.decision.assumptions.some((entry) => entry.state !== "open") || recorded.decision.receipts.length !== 0)
     throw new Error("Canonical Decisions seed did not preserve the recorded uncertainty")
+  return recorded.caseRef
 }

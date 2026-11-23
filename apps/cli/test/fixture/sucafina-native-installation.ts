@@ -11,6 +11,7 @@ import { openLocalStore } from "../../../../modules/sucafina/Sucafinav1/runtime/
 
 const entry = fileURLToPath(new URL("../../src/index.ts", import.meta.url))
 const factory = fileURLToPath(new URL("../../../../modules/sucafina/Sucafinav1/local/entry.ts", import.meta.url))
+const memoryFactory = fileURLToPath(new URL("./sucafina-memory-installation.ts", import.meta.url))
 const hostname = "127.0.0.1"
 
 export type NativeFixtureSeed = {
@@ -24,6 +25,7 @@ export type NativeFixtureSeed = {
 }
 
 export function withNativeInstallation(input: {
+  memoryPrecedent?: boolean
   scanner?: { host: string; port: number }
   webRoot?: string
   serverPassword?: string
@@ -63,9 +65,10 @@ export function withNativeInstallation(input: {
     })
     const app = yield* AppProcess.Service
     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
-      entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", factory,
+      entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", input.memoryPrecedent ? memoryFactory : factory,
     ], {
       cwd: root,
+      ...(input.memoryPrecedent ? { stdin: "pipe" as const } : {}),
       env: {
         SUCAFINA_LOCAL_CONFIG: seed.config,
         ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"),
@@ -82,10 +85,15 @@ export function withNativeInstallation(input: {
       },
     }))
     const ready = yield* Deferred.make<void>()
+    const published = yield* Deferred.make<void, Error>()
+    const publication = { used: false }
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      if (input.memoryPrecedent && line === "SF_NATIVE_MEMORY_COMMITTED") return Effect.asVoid(Deferred.succeed(published, undefined))
+      const failed = input.memoryPrecedent && /^SF_NATIVE_MEMORY_FAILED (input|owner|scanner|manifest|admission|case|ledger|publication|receipt) ([a-z-]+)$/.exec(line)
+      if (failed) return Effect.asVoid(Deferred.fail(published, new Error("Canonical memory precedent preparation failed: " + failed[1] + " (" + failed[2] + ")")))
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
@@ -108,6 +116,17 @@ export function withNativeInstallation(input: {
       mount: seed.mount,
       actorId: seed.actorId,
       businessDirectory: seed.shop,
+      // A private, one-use setup command. It carries the genuine enrollment cookie
+      // only through the owned subprocess pipe, never a URL, reporter or log.
+      publishMemoryPrecedent: (caseRef: { id: string; incarnation: string; version: number }) => Effect.gen(function* () {
+        if (!input.memoryPrecedent || publication.used) throw new Error("Memory precedent preparation is not available")
+        publication.used = true
+        yield* Stream.run(Stream.make(new TextEncoder().encode(JSON.stringify({ cookie, caseRef }))), child.stdin)
+        yield* Deferred.await(published).pipe(
+          Effect.raceFirst(child.exitCode.pipe(Effect.flatMap(() => Effect.fail(new Error("Native host stopped during memory preparation"))))),
+          Effect.timeout("40 seconds"),
+        )
+      }),
       request: (pathname: string, init?: RequestInit) => {
         const headers = new Headers(init?.headers)
         headers.set("cookie", cookie)

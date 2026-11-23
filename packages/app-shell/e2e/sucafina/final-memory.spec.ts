@@ -12,7 +12,7 @@ import { observeFinalGet } from "./design-support/final-navigation"
 import { observeFinalMemoryRecall } from "./design-support/final-memory-recall"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
-waveFourTest.use({ designWave: "four-decisions" })
+waveFourTest.use({ designWave: "four-memory" })
 waveFourTest.beforeEach(async ({ page }, info) => {
   waveFourTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
