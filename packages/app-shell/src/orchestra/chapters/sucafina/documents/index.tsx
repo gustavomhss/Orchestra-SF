@@ -125,7 +125,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const ownerStamp = () => {
     const context = auth.state()
     return context.status === "ready"
-      ? String(context.ownerKey) + ":" + context.context.stamp.accessRevision + ":" + auth.generation()
+      ? JSON.stringify([context.ownerKey, context.owner.authEpoch, context.context.stamp, auth.generation()])
       : undefined
   }
   const fence = () => {
