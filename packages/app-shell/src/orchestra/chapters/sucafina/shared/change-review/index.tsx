@@ -7,7 +7,7 @@ import type {
   SfCopyKey, SfDisplayValue, SfMessage, SfText,
 } from "../frame/types"
 import type { SfReviewField, SfReviewSnapshot, SfEffect, SfChangeReviewProps } from "./types"
-import { sfReviewComparison } from "./compare"
+import { sfReviewComparison, sfReviewReasons, type SfReviewComparison } from "./compare"
 import "./s03.css"
 
 export type {
@@ -134,7 +134,10 @@ export function SfEffectList(props: Readonly<{ effects: readonly SfEffect[] }>):
             {(reason) => <p>{sfMessage(language, reason())}</p>}
           </Show>
           <Show when={effect.details.length > 0}>
-            <SfReviewFieldList fields={effect.details} />
+            <details class="sf-s03-effect-details">
+              <summary>{sfCopy(language, "sf.s03.effectDetails")}</summary>
+              <SfReviewFieldList fields={effect.details} />
+            </details>
           </Show>
         </li>
       )}</For>
@@ -150,11 +153,11 @@ function SnapshotHeading(props: Readonly<{
   const snapshot = () => props.value.kind === "not-provided" ? undefined : props.value
   const version = () => {
     const value = snapshot()
-    return value?.kind === "persisted" ? value.version : value?.sourceVersion
+    return value?.kind === "draft" ? value.sourceVersion : value?.version
   }
   const reference = () => {
     const value = snapshot()
-    if (!value) return undefined
+    if (!value || value.kind === "source") return undefined
     return value.kind === "persisted" ? value.ref : value.sourceRef ?? value.intentRef
   }
   return (
@@ -169,7 +172,10 @@ function SnapshotHeading(props: Readonly<{
           <Show when={version() !== null && version() !== undefined}>
             <p>{sfCopy(language, "sf.s03.receiptVersion", { version: String(version()) })}</p>
           </Show>
-          <code>{reference()}</code>
+          <Show when={props.value.kind === "source" ? props.value : undefined}>
+            {(value) => <p>{sfText(language, value().scope)}</p>}
+          </Show>
+          <Show when={reference()}>{(ref) => <code>{ref()}</code>}</Show>
         </details>
       </Show>
     </section>
@@ -199,6 +205,42 @@ function ComparisonValue(props: Readonly<{ field: SfReviewField | undefined }>):
   )
 }
 
+type ComparisonColumn = Readonly<{
+  id: "base" | "current" | "proposed"
+  title: SfPresentationKey
+  value: SfReviewSnapshot
+}>
+
+function ComparisonField(props: Readonly<{
+  field: SfReviewComparison
+  columns: readonly ComparisonColumn[]
+}>): JSX.Element {
+  const language = useLanguage()
+  const id = createUniqueId()
+  return (
+    <section class="sf-s03-comparison-field" data-difference={props.field.difference}
+      data-source-changed={props.field.sourceChanged} aria-labelledby={id}>
+      <header class="sf-s03-field-heading">
+        <h4 id={id}>{sfMessage(language, props.field.label)}</h4>
+        <Show when={props.field.difference === "changed"}>
+          <span class="sf-s03-difference">{sfCopy(language, "sf.s03.changed")}</span>
+        </Show>
+        <Show when={props.field.sourceChanged}>
+          <span class="sf-s03-source-change">{sfCopy(language, "sf.s03.sourceDifference")}</span>
+        </Show>
+      </header>
+      <dl class="sf-s03-versions">
+        <For each={props.columns}>{(column) => (
+          <div class="sf-s03-version" data-version={column.id}>
+            <dt>{sfCopy(language, column.title)}</dt>
+            <dd><ComparisonValue field={props.field[column.id]} /></dd>
+          </div>
+        )}</For>
+      </dl>
+    </section>
+  )
+}
+
 /** Producer-admitted read-only comparison; never dispatches a command. */
 export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
   const language = useLanguage()
@@ -208,6 +250,11 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
   const deleting = () => props.confirmation.kind === "admitted" && props.confirmation.purpose === "delete"
   const comparison = createMemo(() => isRevoked() ? [] : sfReviewComparison(props.base, props.current, props.proposed))
   const changed = () => comparison().filter((field) => field.difference === "changed").length
+  const foreground = createMemo(() => [
+    ...comparison().filter((field) => field.difference === "changed" || field.sourceChanged),
+    ...comparison().filter((field) => field.difference === "unavailable" && !field.sourceChanged),
+  ])
+  const unchanged = createMemo(() => comparison().filter((field) => field.difference === "same" && !field.sourceChanged))
   const columns = createMemo(() => [
     ...(props.base === null ? [] : [{ id: "base" as const, title: "sf.s03.base" as const, value: props.base }]),
     ...(props.current === null ? [] : [{ id: "current" as const, title: "sf.common.currentSource" as const, value: props.current }]),
@@ -274,28 +321,13 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
             <For each={columns()}>{(column) => <SnapshotHeading title={column.title} value={column.value} />}</For>
           </div>
           <div class="sf-s03-comparison-rows">
-            <For each={comparison()}>{(field, index) => (
-              <section class="sf-s03-comparison-field" data-difference={field.difference}
-                data-source-changed={field.sourceChanged} aria-labelledby={id + "-field-" + index()}>
-                <header class="sf-s03-field-heading">
-                  <h4 id={id + "-field-" + index()}>{sfMessage(language, field.label)}</h4>
-                  <Show when={field.difference === "changed"}>
-                    <span class="sf-s03-difference">{sfCopy(language, "sf.s03.changed")}</span>
-                  </Show>
-                  <Show when={field.sourceChanged}>
-                    <span class="sf-s03-source-change">{sfCopy(language, "sf.s03.sourceDifference")}</span>
-                  </Show>
-                </header>
-                <dl class="sf-s03-versions">
-                  <For each={columns()}>{(column) => (
-                    <div class="sf-s03-version" data-version={column.id}>
-                      <dt>{sfCopy(language, column.title)}</dt>
-                      <dd><ComparisonValue field={field[column.id]} /></dd>
-                    </div>
-                  )}</For>
-                </dl>
-              </section>
-            )}</For>
+            <For each={foreground()}>{(field) => <ComparisonField field={field} columns={columns()} />}</For>
+            <Show when={unchanged().length > 0}>
+              <details class="sf-s03-unchanged">
+                <summary>{sfCopy(language, "sf.s03.unchangedFields", { count: unchanged().length })}</summary>
+                <For each={unchanged()}>{(field) => <ComparisonField field={field} columns={columns()} />}</For>
+              </details>
+            </Show>
             <Show when={comparison().length === 0}>
               <p class="sf-s03-absence">{sfCopy(language, "sf.s03.noFields")}</p>
             </Show>
@@ -313,12 +345,14 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
           <div class="sf-s03-notice" role="alert">
             <p>{sfCopy(language, "sf.s03.confirmationBlocked")}</p>
             <ul>
-              <For each={[...props.blockingReasons, ...(confirmationBlocked() && props.confirmation.kind === "blocked" ? props.confirmation.reasons : [])]}>
+              <For each={sfReviewReasons([...props.blockingReasons, ...(confirmationBlocked() && props.confirmation.kind === "blocked" ? props.confirmation.reasons : [])])}>
                 {(reason) => <li>{sfMessage(language, reason)}</li>}
               </For>
             </ul>
           </div>
         </Show>
+
+        {props.confirmationContext}
 
         <footer class="sf-s03-footer">
           <div class="sf-s03-confirm-context">

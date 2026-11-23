@@ -174,7 +174,7 @@
 .sf-people-workspace :is(.sf-people-stage-nav,.sf-people-editor-stage,.sf-people-detail,.sf-people-deletion,.sf-people-workbook-stage) {
   max-inline-size: var(--sf-people-editor-width);
   inline-size: 100%;
-  margin-inline: auto;
+  margin-inline: 0;
   box-sizing: border-box;
 }
 .sf-people-workspace .sf-people-stage-nav { margin-block: 0 var(--sf-people-small-gap); }
@@ -254,3 +254,19 @@
 .sf-people-workspace .sf-people-field-help { color: var(--mx-dim); font-size: var(--orchestra-font-size-xs); line-height: 1.5; }
 .sf-people-workspace .sf-people-table-region { scrollbar-width: thin; scrollbar-color: var(--mx-line) transparent; padding-block-end: 8px; }
 .sf-people-workspace[data-sf-surface="CAP06"] .sf-people-table :is(th, td):first-child { position: sticky; inset-inline-start: 0; z-index: 1; background: var(--orchestra-surface); }
+
+.sf-people-editor-person {
+  display: grid;
+  gap: var(--sf-space-1);
+  overflow-wrap: anywhere;
+}
+.sf-people-editor-person strong { color: var(--mx-strong); }
+.sf-people-profile-fields { min-inline-size: 0; border-block-start: 1px solid var(--mx-line); }
+.sf-people-profile-fields > summary {
+  cursor: pointer;
+  padding-block: var(--sf-space-4);
+  font-weight: 600;
+  color: var(--mx-dim);
+}
+.sf-people-profile-fields > summary:focus-visible { outline: 2px solid var(--mx-blue); outline-offset: 2px; }
+.sf-people-profile-fields .sf-people-fieldset > legend { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }

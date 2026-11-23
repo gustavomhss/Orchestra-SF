@@ -3,7 +3,7 @@ import { createEffect, createMemo, createSignal, createUniqueId, For, onCleanup,
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_U05_COPY } from "@/i18n/orchestra-chapters/sf-u05"
-import type { SfEditScopeKey, SfIntentRef, SfRef } from "@orchestra/schema/sucafina/context"
+import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../../context"
 import type { SfPublicDraftController, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
@@ -11,12 +11,13 @@ import { SfDisplayValueText } from "../../shared/frame/presentation"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfSort, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { SfListDetail, SfRecordDetail } from "../../shared/detail"
+import { SfChangeReview, type SfReviewField } from "../../shared/change-review"
 import { SfMilestoneEditor, SfProjectEditor, type SfMilestoneDraft } from "./editor"
 import { sfProjectHref } from "./paths"
 import { createSfPortfolioViewState } from "../view-state"
 import { sfAdmitted, sfOwnerMatches, sfProjectCommand, sfReadProjects } from "./producer"
 import { PROJECT_STATUS, sfProjectDraft, sfProjectValues, sfProjectVersion, sfSourceDate,
-  type SfProjectEdit, type SfProjectPage, type SfProjectRecord } from "./model"
+  type SfProjectEdit, type SfProjectMilestone, type SfProjectPage, type SfProjectRecord } from "./model"
 import { sfProjectStatusKey, sfProjectRiskKey, sfMilestoneStatusKey } from "./presentation"
 import "./projects.css"
 
@@ -31,6 +32,8 @@ type ReviewCommand =
   | Readonly<{ kind: "delete-project"; id: string }>
   | Readonly<{ kind: "save-milestone"; projectId: string; draft: SfMilestoneDraft }>
   | Readonly<{ kind: "delete-milestone"; projectId: string; milestoneId: string }>
+
+type PreparedReview = ReviewCommand & Readonly<{ source: SfProjectRecord; version: number; operationRef: SfOperationRef; intentRef: SfIntentRef }>
 
 /** CAP10: current-source collection, route-specific record, CAS and human review. */
 export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
@@ -47,7 +50,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     state: SfUiState
     page: SfProjectPage | null
     selectedId: string | null
-    review: ReviewCommand | null
+    review: PreparedReview | null
     reviewSave: boolean
     busy: boolean
     uncertain: boolean
@@ -191,12 +194,14 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
       render: (row) => <span class="sf-u05-status" data-risk={row.risk}>{t(sfProjectRiskKey(row.risk))}</span> },
     { id: "budget", labelKey: kt("sf.u05.projects.budget"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "budget",
-      render: (row) => <span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</span> },
+      render: (row) => <><span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</span>
+        <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
     { id: "spent", labelKey: kt("sf.u05.projects.spent"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "spent",
-      render: (row) => <span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</span> },
+      render: (row) => <><span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</span>
+        <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
     { id: "pct", labelKey: kt("sf.u05.projects.progress"), align: "end",
       widthPolicy: { kind: "fixed", px: 160 }, sortKey: "pct",
       render: (row) => <span class="sf-u05-num">{row.pct === null || row.pct === undefined ?
@@ -208,7 +213,11 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
   ]
   const begin = (action: ReviewCommand) => {
     if (view.busy || view.uncertain) return
-    setView("review", action)
+    const record = selected()
+    const version = record && view.page ? sfProjectVersion(view.page, record.id) : null
+    if (!record || version === null) return
+    setView("review", { ...action, source: structuredClone(record), version,
+      operationRef: crypto.randomUUID() as SfOperationRef, intentRef: crypto.randomUUID() as SfIntentRef })
   }
   const submit = async (action: "save" | "delete" | "save-milestone" | "delete-milestone",
     id: string | undefined, version: number, values: object) => {
@@ -256,7 +265,10 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     if (!review || !page || !record || record.id !==
       (review.kind === "delete-project" ? review.id : review.projectId)) return
     const version = sfProjectVersion(page, record.id)
-    if (version === null) return
+    if (version === null || version !== review.version) {
+      setView("notice", "sf.u05.projects.stale")
+      return
+    }
     if (review.kind === "delete-project") void submit("delete", record.id, version, {})
     else if (review.kind === "save-milestone") {
       const milestone = review.draft
@@ -291,8 +303,8 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
         </dl> },
       { id: "budget-spent", titleKey: kt("sf.u05.projects.financial"), state: "ready" as const,
         content: <dl class="sf-u05-detail-fields">
-          <div><dt>{t("sf.u05.projects.budget")}</dt><dd>{row.budget === null || row.budget === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</dd></div>
-          <div><dt>{t("sf.u05.projects.spent")}</dt><dd>{row.spent === null || row.spent === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</dd></div>
+          <div><dt>{t("sf.u05.projects.budget")}</dt><dd>{row.budget === null || row.budget === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
+          <div><dt>{t("sf.u05.projects.spent")}</dt><dd>{row.spent === null || row.spent === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
           <div><dt>{t("sf.u05.projects.progress")}</dt><dd>{row.pct === null || row.pct === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct) + "%"}</dd></div>
         </dl> },
       { id: "watch", titleKey: kt("sf.u05.projects.watchSection"), state: "ready" as const,
@@ -441,40 +453,70 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
           </div>
           <Show when={view.review}>
             {(review) => <section class="sf-u05-command-review" role="region" aria-label={t("sf.u05.projects.review")}>
-              <header class="sf-u05-editor-heading">
-                <h2>{t(review().kind === "save-milestone" ? "sf.u05.design.reviewMilestone" : review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}</h2>
-                <p>{t(review().kind === "save-milestone" ? "sf.u05.projects.review" : "sf.u05.design.deleteHint")}</p>
-              </header>
-              <dl class="sf-u05-review-summary">
-                <div><dt>{t("sf.u05.projects.project")}</dt><dd><bdi>{selected()?.name ?? t("sf.u05.projects.notRecorded")}</bdi></dd></div>
-                <Show when={review().kind !== "delete-project"}>
-                  <div><dt>{t("sf.u05.projects.milestone")}</dt><dd><bdi>{(() => {
-                    const command = review()
-                    if (command.kind === "save-milestone") return command.draft.name
-                    if (command.kind === "delete-milestone") return selected()?.milestones?.find((item) => item.id === command.milestoneId)?.name ?? command.milestoneId
-                    return ""
-                  })()}</bdi></dd></div>
-                </Show>
-                <Show when={review().kind === "save-milestone"}>
-                  {(() => {
-                    const command = review()
-                    if (command.kind !== "save-milestone") return null
-                    return <>
-                      <div><dt>{t("sf.u05.projects.date")}</dt><dd>{recordedDate(command.draft.date, t("sf.u05.projects.notRecorded"))}</dd></div>
-                      <div><dt>{t("sf.u05.projects.milestoneStatus")}</dt><dd>{t(sfMilestoneStatusKey(command.draft.status))}</dd></div>
-                      <div class="sf-u05-field-wide"><dt>{t("sf.u05.projects.milestoneNotes")}</dt><dd>{command.draft.notes || t("sf.u05.projects.notRecorded")}</dd></div>
-                    </>
-                  })()}
-                </Show>
-              </dl>
-              <div class="sf-u05-form-actions">
-                <button class="mx-btn" classList={{ primary: review().kind === "save-milestone", "sf-u05-danger": review().kind !== "save-milestone" }}
-                  type="button" disabled={view.busy || view.uncertain} onClick={confirmReview}>
-                  {t(review().kind === "save-milestone" ? "sf.u05.projects.milestoneSave" : review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}
-                </button>
-                <button class="mx-btn" type="button" disabled={view.busy}
-                  onClick={() => setView("review", null)}>{t("sf.u05.design.revise")}</button>
-              </div>
+              <Show when={review().kind === "save-milestone" ? review() as Extract<PreparedReview, { kind: "save-milestone" }> : undefined}
+                fallback={<>
+                  <header class="sf-u05-editor-heading">
+                    <h2>{t(review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}</h2>
+                    <p>{t("sf.u05.design.deleteHint")}</p>
+                  </header>
+                  <dl class="sf-u05-review-summary">
+                    <div><dt>{t("sf.u05.projects.project")}</dt><dd><bdi>{review().source.name}</bdi></dd></div>
+                    <Show when={review().kind === "delete-milestone" ? review() as Extract<PreparedReview, { kind: "delete-milestone" }> : undefined}>
+                      {(command) => <div><dt>{t("sf.u05.projects.milestone")}</dt>
+                        <dd><bdi>{command().source.milestones?.find((item) => item.id === command().milestoneId)?.name ?? command().milestoneId}</bdi></dd></div>}
+                    </Show>
+                  </dl>
+                  <div class="sf-u05-form-actions">
+                    <button class="mx-btn sf-u05-danger" type="button"
+                      disabled={view.busy || view.uncertain || sourceVersion() !== review().version} onClick={confirmReview}>
+                      {t(review().kind === "delete-milestone" ? "sf.u05.projects.milestoneDelete" : "sf.u05.projects.delete")}
+                    </button>
+                    <button class="mx-btn" type="button" disabled={view.busy}
+                      onClick={() => setView("review", null)}>{t("sf.u05.design.revise")}</button>
+                  </div>
+                </>}>
+                {(command) => {
+                  const original = () => command().source.milestones?.find((item) => item.id === command().draft.milestoneId)
+                  const fields = (value: Pick<SfProjectMilestone, "name" | "date" | "status" | "notes">): readonly SfReviewField[] =>
+                    ([
+                      ["name", "sf.u05.projects.milestoneName"],
+                      ["date", "sf.u05.projects.date"],
+                      ["status", "sf.u05.projects.milestoneStatus"],
+                      ["notes", "sf.u05.projects.milestoneNotes"],
+                    ] as const).map(([path, label]) => ({
+                      path, label: { key: k(label) },
+                      value: value[path] === null || value[path] === undefined
+                        ? { kind: "missing", reason: { key: k("sf.u05.projects.notRecorded") } }
+                        : path === "date" && sfSourceDate(value.date)
+                          ? { kind: "date", isoDate: sfSourceDate(value.date)! }
+                          : { kind: "text", text: { kind: "data", text: path === "status"
+                            ? t(sfMilestoneStatusKey(value.status))
+                            : value[path] === "" ? t("sf.u05.projects.emptyValue") : String(value[path]) } },
+                    }))
+                  const current = () => sourceVersion() === command().version
+                  return <SfChangeReview
+                    operation={{ ref: command().operationRef, label: { key: k("sf.u05.design.reviewMilestone") },
+                      scope: { kind: "data", text: command().source.name + " · " + command().draft.name } }}
+                    base={original() ? { kind: "source", version: command().version,
+                      scope: { kind: "data", text: command().source.name }, fields: fields(original()!) }
+                      : { kind: "not-provided", reason: { key: "sf.s03.noOriginal" as SfCopyKey } }}
+                    current={null}
+                    proposed={{ kind: "draft", intentRef: command().intentRef,
+                      sourceRef: command().source.id as SfRef, sourceVersion: command().version, fields: fields(command().draft) }}
+                    effects={[]} coverage={{ state: "complete", summary: { key: k("sf.u05.projects.review") },
+                      reasons: [], knownCount: 4, expectedCount: 4 }}
+                    blockingReasons={current() ? [] : [{ key: k("sf.u05.projects.stale") }]}
+                    confirmation={current() && canSaveMilestone()
+                      ? { kind: "admitted", labelKey: k("sf.u05.projects.milestoneSave"), purpose: "save",
+                        binding: { kind: "catalog-command", operationId: "domain.command.CAP10.save-milestone",
+                          version: { kind: "record", expectedVersion: command().version }, confirmation: "presentation-only" } }
+                      : { kind: "blocked", labelKey: k("sf.u05.projects.milestoneSave"),
+                        reasons: [{ key: k("sf.u05.projects.stale") }] }}
+                    state={view.uncertain ? "outcome-unknown" : current() ? "ready" : "conflict"} busy={view.busy}
+                    onConfirm={confirmReview} onRevise={() => setView("review", null)} onCancel={() => setView("review", null)}
+                  />
+                }}
+              </Show>
             </section>}
           </Show>
         </SfStatePanel>
