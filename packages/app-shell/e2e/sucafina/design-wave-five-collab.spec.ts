@@ -16,6 +16,15 @@ import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigati
 const { Workbook } = createRequire(new URL("../../../../modules/sucafina/package.json", import.meta.url))("exceljs") as typeof import("../../../../modules/sucafina/node_modules/exceljs")
 type Destination = { label: string; selectionRef: string; surface: "planner" | "dashboard"; formats: string[] }
 
+function importLifecycleMarker(label: "refresh-click-before" | "refresh-click-after" |
+  "refresh-expect-before" | "refresh-expect-passed" | "refresh-expect-threw") {
+  try {
+    console.info("SF_IMPORT_LIFECYCLE " + JSON.stringify({
+      schema: "sf-import-lifecycle-v1", qualification: false, source: "spec", label, timeMs: Date.now(),
+    }))
+  } catch { /* Diagnostic output must not replace the original assertion result. */ }
+}
+
 collabTest("UI55 UI56 · original scanned import preview, cancellation and provenance", async ({ page, browser, installation, owner }, info) => {
   collabTest.setTimeout(900_000)
   page.setDefaultTimeout(20_000)
@@ -191,8 +200,17 @@ collabTest("UI55 UI56 · original scanned import preview, cancellation and prove
     await enter(page, owner, url(previewPath), "Import preview")
     const surface = page.locator('[data-sf-surface="UI56"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "five")
+    importLifecycleMarker("refresh-click-before")
     await surface.getByRole("button", { name: "Refresh receipt", exact: true }).click()
-    await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
+    importLifecycleMarker("refresh-click-after")
+    importLifecycleMarker("refresh-expect-before")
+    try {
+      await expect(surface.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
+    } catch (error) {
+      importLifecycleMarker("refresh-expect-threw")
+      throw error
+    }
+    importLifecycleMarker("refresh-expect-passed")
     const continuation = surface.getByRole("link", { name: "Review impact", exact: true })
     await expect(continuation).toHaveAttribute("href", new RegExp("/orchestra/sf-imports/" + encodeSfRouteRef(manifestId) + "/review\\?"))
     await looks(page, info, "UI56-preview")
