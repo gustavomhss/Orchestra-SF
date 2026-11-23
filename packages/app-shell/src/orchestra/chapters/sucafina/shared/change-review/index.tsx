@@ -324,7 +324,7 @@ export function SfChangeReview(props: SfChangeReviewProps): JSX.Element {
             <For each={foreground()}>{(field) => <ComparisonField field={field} columns={columns()} />}</For>
             <Show when={unchanged().length > 0}>
               <details class="sf-s03-unchanged">
-                <summary>{sfCopy(language, "sf.s03.unchangedFields", { count: unchanged().length })}</summary>
+                <summary>{language.plural("sf.s03.unchangedFields", unchanged().length)}</summary>
                 <For each={unchanged()}>{(field) => <ComparisonField field={field} columns={columns()} />}</For>
               </details>
             </Show>

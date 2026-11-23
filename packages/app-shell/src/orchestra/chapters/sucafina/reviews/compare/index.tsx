@@ -80,9 +80,9 @@ function ChangeKinds(props: {
 function ValueCell(props: { entry: PreservedValue | undefined; projection: ReviewProjection; t: Translate }) {
   return <Show when={props.entry} fallback={<span>{props.t("sf.u32.notRecorded")}</span>}>
     {(entry) => <div class="sf-n28-compare-value">
-      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <SfPreservedValueText value={entry()} />}</strong>
-      <span>{props.t("sf.u32.currency")}: {entry().currency ?? props.t("sf.u32.notProvided")}</span>
-      <span>{props.t("sf.u32.unit")}: {entry().unit ?? props.t("sf.u32.notProvided")}</span>
+      <strong>{entry().value === null ? props.t("sf.u32.explicitNull") : <SfPreservedValueText value={entry()} showUnits={false} />}</strong>
+      <span>{props.t("sf.u32.currency")}: {entry().currency === "unspecified" ? props.t("sf.u32.currencyNotProvided") : entry().currency === "" ? props.t("sf.u32.emptyText") : entry().currency ?? props.t("sf.u32.notProvided")}</span>
+      <span>{props.t("sf.u32.unit")}: {entry().unit === "" ? props.t("sf.u32.emptyText") : entry().unit ?? props.t("sf.u32.notProvided")}</span>
       <span>{props.t("sf.u32.evidence")}: <StatusText value={entry().evidenceState} /></span>
       <span>{props.t("sf.u32.completeness")}: {props.projection.missing.length > 0
         ? props.t("sf.u32.declaredGaps") : props.t("sf.u32.noDeclaredGaps")}</span>

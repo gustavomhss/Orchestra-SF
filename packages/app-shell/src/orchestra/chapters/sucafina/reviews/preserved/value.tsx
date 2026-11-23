@@ -20,12 +20,13 @@ export function SfPreservedFieldLabel(props: { value: PreservedValue; values: re
 }
 
 /** A bare scalar is literal. Only producer-declared currency/unit admits numeric formatting. */
-export function SfPreservedValueText(props: { value: PreservedValue }) {
+export function SfPreservedValueText(props: { value: PreservedValue; showUnits?: boolean }) {
   const language = useLanguage()
   const value = () => props.value.value
   const formatted = () => {
     const current = value()
     if (current === null) return language.t("sf.u32.missing")
+    if (current === "") return language.t("sf.u32.emptyText")
     if (typeof current === "number" && (props.value.currency || props.value.unit))
       return new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(current)
     return String(current)
@@ -34,10 +35,10 @@ export function SfPreservedValueText(props: { value: PreservedValue }) {
     <Show when={typeof value() === "boolean"} fallback={<bdi classList={{ "sf-numeric": typeof value() === "number" }}>{formatted()}</bdi>}>
       <StatusText value={String(value())} />
     </Show>
-    <Show when={props.value.currency}>
+    <Show when={props.showUnits !== false && props.value.currency}>
       <small>{props.value.currency === "unspecified" ? language.t("sf.u32.currencyNotProvided") : props.value.currency}</small>
     </Show>
-    <Show when={props.value.unit && props.value.unit !== props.value.currency}><small>{props.value.unit}</small></Show>
+    <Show when={props.showUnits !== false && props.value.unit && props.value.unit !== props.value.currency}><small>{props.value.unit}</small></Show>
   </span>
 }
 
