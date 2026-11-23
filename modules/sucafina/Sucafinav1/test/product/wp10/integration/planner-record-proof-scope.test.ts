@@ -1,10 +1,11 @@
 import { expect, test } from "bun:test"
-import { createSfPlannerCalculationRoot } from "../../../../../../../apps/cli/src/sucafina-product/planner-calculation-root.ts"
+import { createSfPlannerCalculationRoot, readSfPlannerCalculationRootProof } from "../../../../../../../apps/cli/src/sucafina-product/planner-calculation-root.ts"
 import { createSfPlannerRecordProofScope, pinSfPlannerRecordReaders } from "../../../../../../../apps/cli/src/sucafina-product/planner-record-proof-scope.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../product/contracts/business-context.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
+import { currentSfPlannerReadonlySnapshotScope } from "../../../../product/integration/source-lifecycle.ts"
 import { rows } from "../../../../runtime/contract.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
 import { sensitivityObservationFixture, sensitivityOk } from "./sensitivity-observation-fixture.ts"
@@ -155,6 +156,79 @@ test("Planner record proofs preserve complete canonical values within only one l
         return { status: "ok", value }
       }))
       expect(sensitivityOk(next)).toEqual(captures[2])
+      expect(f.root.proof(call)).toBeUndefined()
+    }))
+    await deadline.phase("canonical-c08-children-keep-the-physical-owner", () => withCall(f, deadline, async (call) => {
+      const request = f.host.requestFor(call)
+      if (!request) throw new Error("The admitted transport is required")
+      const captures: BusinessEvidenceResolution[] = []
+      let reads = 0, children = 0
+      const canonical = async (ref: BusinessEvidenceRef) => {
+        reads++
+        const value = await f.business.context.resolve(structuredClone(ref), call)
+        captures.push(structuredClone(value))
+        return value
+      }
+      const result = await withRoot(f, call, async (proof) => {
+        const owner = readSfPlannerCalculationRootProof(proof, f.host, call)
+        if (!owner?.bytesIdentity) throw new Error("The real physical snapshot proof is required")
+        expect(owner.current()).toBe(true)
+        return f.scope.run([reference, other], call, proof, () => f.host.revalidate(call), () => true, async () => {
+          const first = await f.scope.observe(reference, call, () => canonical(reference))
+          expectFresh(first)
+          expect(first).toEqual(captures[0])
+          const readChild = async (readOther: boolean) => {
+            let retained: NonNullable<ReturnType<typeof currentSfPlannerReadonlySnapshotScope>> | undefined
+            const child = await f.authority.state.read(request, "cases", async (state, actor) => {
+              children++
+              const current = currentSfPlannerReadonlySnapshotScope(f.host.persistence)
+              if (!current) throw new Error("The real C08 child has no readonly snapshot proof")
+              retained = current
+              expect(current.current()).toBe(true)
+              expect(current.identity).toBe(owner.identity)
+              expect(current.bytesIdentity).toBe(owner.bytesIdentity)
+              expect(owner.current()).toBe(true)
+              expect(f.root.proof(call)).toBe(proof)
+              expect(actor.principalRef).toBe(call.binding.principalRef)
+              expect(actor.accessRevision).toBe(call.binding.accessRevision)
+              expect(state.cases[f.caseRef.id]).toMatchObject(f.caseRef)
+              const hit = await f.scope.observe(reference, call, () => canonical(reference))
+              expect(hit).toEqual(captures[0])
+              expect(reads).toBe(readOther ? 1 : 2)
+              const second = await f.scope.observe(other, call, () => canonical(other))
+              expectFresh(second)
+              expect(second).toEqual(captures[1])
+              expect(reads).toBe(2)
+              expect(await f.scope.observe(other, call, () => canonical(other))).toEqual(captures[1])
+              expect(reads).toBe(2)
+              expect(owner.current()).toBe(true)
+              return { case: structuredClone(state.cases[f.caseRef.id]), values: [hit, second] }
+            })
+            if (!retained) throw new Error("The C08 callback did not execute")
+            // The logical child still closes independently; the owner must obtain
+            // current native proof in whichever legitimate child is active.
+            const closed = retained
+            expect(() => closed.current()).toThrow()
+            expect(owner.current()).toBe(true)
+            const restored = currentSfPlannerReadonlySnapshotScope(f.host.persistence)
+            expect(restored?.identity).toBe(owner.identity)
+            expect(restored?.bytesIdentity).toBe(owner.bytesIdentity)
+            expect(restored?.current()).toBe(true)
+            return sensitivityOk(child)
+          }
+          const firstChild = await readChild(true), secondChild = await readChild(false)
+          expect(secondChild).toEqual(firstChild)
+          expect(await f.scope.observe(reference, call, () => canonical(reference))).toEqual(captures[0])
+          expect(reads).toBe(2)
+          return { status: "ok", value: secondChild }
+        })
+      })
+      expect(sensitivityOk(result).values).toEqual(captures)
+      expect(captures).toHaveLength(2)
+      captures.forEach(expectFresh)
+      expect(children).toBe(2)
+      expect(reads).toBe(2)
+      expect(currentSfPlannerReadonlySnapshotScope(f.host.persistence)).toBeUndefined()
       expect(f.root.proof(call)).toBeUndefined()
     }))
     await deadline.phase("unsupported-preserves-the-complete-producer", () => withCall(f, deadline, async (call) => {
@@ -431,6 +505,41 @@ test("Planner record proofs refuse changed authority, pending work and expired o
         expect(await lateRun).toEqual(unavailable)
         expect(reads).toBe(1)
       } finally { release.release(); await Promise.all([late, lateRun]) }
+    }))
+
+    await deadline.phase("closed-c08-child-cannot-borrow-the-live-parent", () => withCall(f, deadline, async (call) => {
+      const request = f.host.requestFor(call), release = gate()
+      if (!request) throw new Error("The admitted transport is required")
+      let reads = 0, first: BusinessEvidenceResolution | undefined
+      let late: Promise<BusinessEvidenceResolution> | undefined
+      const canonical = async () => { reads++; return f.business.context.resolve(structuredClone(reference), call) }
+      try {
+        const result = await withRoot(f, call, (proof) => f.scope.run([reference], call, proof,
+          () => f.host.revalidate(call), () => true, async () => {
+            const child = await f.authority.state.read(request, "cases", async () => {
+              first = await f.scope.observe(reference, call, canonical)
+              late = (async () => {
+                await release.promise
+                expect(f.root.proof(call)).toBe(proof)
+                return f.scope.observe(reference, call, canonical)
+              })()
+              return first
+            })
+            sensitivityOk(child)
+            if (!late) throw new Error("The real C08 child did not create its continuation")
+            expect(readSfPlannerCalculationRootProof(proof, f.host, call)?.current()).toBe(true)
+            expect(currentSfPlannerReadonlySnapshotScope(f.host.persistence)?.current()).toBe(true)
+            // Only the child has closed. Its inherited callback cannot reuse
+            // the still-open parent's proof or select a legacy producer.
+            release.release()
+            return { status: "ok", value: await late }
+          }))
+        expect(result.status).not.toBe("ok")
+        if (!first || !late) throw new Error("The closed-child boundary was not reached")
+        expectFresh(first)
+        expect((await late).state).toBe("unavailable")
+        expect(reads).toBe(1)
+      } finally { release.release(); await late }
     }))
 
     await deadline.phase("a-hit-reauthorizes-the-live-principal", () => withCall(f, deadline, async (call) => {
