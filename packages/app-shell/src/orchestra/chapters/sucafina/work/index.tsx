@@ -486,6 +486,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                 <Show when={view().item.observedVersion !== undefined}>
                                   <div><dt>{t("sf.u41.observedVersion")}</dt><dd data-sf-work-observed-version>{view().item.observedVersion}</dd></div>
                                 </Show>
+                                <For each={view().details}>{(field) => <div><dt>{field.label}</dt><dd>{field.value}</dd></div>}</For>
                               </dl>
                               <div class="sf-work-links">
                                  <Show when={nextNativeWorkRoute(view().item, snapshot())}>
@@ -508,7 +509,6 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                   <div><dt>{t("sf.u41.actionRef")}</dt><dd data-sf-work-action-ref><bdi>{view().item.actionRef}</bdi></dd></div>
                                   <div><dt>{t("sf.u41.kindCode")}</dt><dd><bdi>{view().item.kind}</bdi></dd></div>
                                   <div><dt>{t("sf.u41.stateCode")}</dt><dd><bdi>{view().item.state}</bdi></dd></div>
-                                  <For each={view().details}>{(field) => <div><dt>{field.label}</dt><dd>{field.value}</dd></div>}</For>
                                 </dl>
                                 {/* Source labels remain literal provenance. Their URLs do not
                                     authorize opening another origin or a private desktop window. */}
