@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test"
+import { expect, type Page, type TestInfo } from "@playwright/test"
 import { ServerConnection } from "../../src/context/server-connection"
 import { originalRead } from "./design-support/original-read"
 import { waveTwoTest, observePage, ready, scheme, scrollPageTop, reflow, reviewActions, capture } from "./design-support/wave-two"
@@ -297,6 +297,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await scrollPageTop(page)
     await capture(page, info, "CAP04-dark-320-detail-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
+    await readablePeriods(page, info, installation.year, false)
     await january.getByRole("button", { name: "Save month", exact: true }).click()
     const editor = page.locator('.sf-budget-editor[data-sf-action="save-entry"]')
     await expect(editor.getByLabel("Month", { exact: true })).toHaveValue("January " + installation.year)
@@ -395,6 +396,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(localized.locator('[data-sf-opex-detail] tr[data-sf-month="1"]')).toContainText("14.600")
     await scrollPageTop(localized)
     await capture(localized, info, "CAP04-pt-BR-dark-desktop-detail-test-data")
+    await readablePeriods(localized, info, installation.year, true)
     await localized.locator('tr[data-sf-month="1"]').getByRole("button", { name: "Salvar mês", exact: true }).click()
     const opex = localized.locator('.sf-budget-editor[data-sf-action="save-entry"]')
     await expect(opex.getByLabel("Mês", { exact: true })).toHaveValue("janeiro de " + installation.year)
@@ -425,6 +427,36 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     contentType: "application/json",
   })
 })
+
+
+async function readablePeriods(page: Page, info: TestInfo, year: number, br: boolean) {
+  const months = [
+    { month: 1, label: br ? "janeiro de " : "January " },
+    { month: 9, label: br ? "setembro de " : "September " },
+    { month: 12, label: br ? "dezembro de " : "December " },
+  ]
+  for (const period of months) {
+    await page.locator('tr[data-sf-month="' + period.month + '"]')
+      .getByRole("button", { name: br ? "Salvar mês" : "Save month", exact: true }).click()
+    const editor = page.locator('.sf-budget-editor[data-sf-action="save-entry"]')
+    const field = editor.getByLabel(br ? "Mês" : "Month", { exact: true })
+    await expect(field).toHaveValue(period.label + year)
+    for (const width of [1440, 320]) {
+      await page.setViewportSize({ width, height: width === 320 ? 900 : 1100 })
+      await reflow(page)
+      await field.scrollIntoViewIfNeeded()
+      await expect(field).toBeInViewport()
+      await expect.poll(() => field.evaluate((input) => input.scrollWidth - input.clientWidth), {
+        message: "the complete read-only month and year fit at " + width + "px",
+      }).toBeLessThanOrEqual(1)
+      if (period.month === 9)
+        await capture(page, info, "CAP04-" + (br ? "pt-BR" : "en-US") + "-dark-" + width + "-complete-period-test-data")
+    }
+    await editor.getByRole("button", { name: br ? "Cancelar" : "Cancel", exact: true }).click()
+    await expect(editor).toHaveCount(0)
+    await page.setViewportSize({ width: 1440, height: 1100 })
+  }
+}
 
 async function fillTopic(page: Page, year: number, br: boolean) {
   const editor = page.locator("[data-sf-topic-editor]")
