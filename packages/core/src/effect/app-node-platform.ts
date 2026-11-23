@@ -5,7 +5,7 @@ import { makeGlobalNode } from "./app-node"
 import { PrivateProvider } from "../provider/private"
 import { SessionOwner } from "../session/owner"
 
-export { filesystem, path } from "./app-node-system"
+export { filesystem, path } from "./app-node-filesystem"
 export const httpClient = makeGlobalNode({ service: HttpClient.HttpClient, layer: FetchHttpClient.layer, deps: [] })
 export const requestExecutor = makeGlobalNode({
   service: RequestExecutor.Service,

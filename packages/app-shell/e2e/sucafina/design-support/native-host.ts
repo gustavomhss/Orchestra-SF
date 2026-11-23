@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { readFile, realpath, writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { AppProcess } from "@orchestra/core/process"
@@ -8,6 +8,7 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { withNativeInstallation } from "../../../../../apps/cli/test/fixture/sucafina-native-installation"
 import { prepareOperatorAccess } from "../../../../../modules/sucafina/Sucafinav1/local/enroll"
+import { prepareSfLocalWorkspace } from "../../../../../modules/sucafina/Sucafinav1/local/workspace"
 import type { Actor, Command, Domain } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
 import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget"
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
@@ -219,11 +220,10 @@ const program = Effect.scoped(Effect.gen(function* () {
   if (destination.origin !== installed.origin || destination.pathname !== installed.mount + "/auth/local" ||
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
-  // The local factory registers its runtime workspace separately from private host state.
-  // Resolve the workspace it already created; do not create a second registration.
-  const directory = yield* Effect.promise(() => realpath(path.join(installed.root, "workspace")))
+  // Revalidate the private physical workspace before publishing discovery metadata.
+  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   const metadata = {
-    root: installed.root, directory, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
+    root: installed.root, workspace, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
   }
   yield* Effect.promise(() => writeFile(path.join(privateRoot, "installation.json"), JSON.stringify(metadata), { mode: 0o600, flag: "wx" }))
