@@ -140,13 +140,15 @@ Em **Sinais**, selecione um caso autorizado para consultar suas condições regi
 
 A revisão de uma condição pode consultar sua materialidade. As condições já recebidas continuam visíveis enquanto outra consulta está em andamento. Para consultar os sinais, escolha **Consultar sinais atuais**. A interface distingue uma leitura ainda não iniciada, uma consulta pendente, uma resposta vazia confirmada e uma fonte indisponível.
 
-A ação de interromper a espera encerra a consulta nesta tela. Ela não afirma que o processamento do servidor foi interrompido ou revertido. Sem uma resposta original atual, a tela não apresenta um resultado como confirmado. Trocar de caso ou contexto remove os dados da seleção anterior.
+Durante a consulta, use **Cancelar consulta de materialidade** ou **Cancelar consulta de sinais** para interromper a espera nesta tela. As condições recebidas permanecem visíveis e uma nova consulta depende de outra ação sua. A interface não afirma que o processamento do servidor foi interrompido ou revertido. Sem uma resposta original atual, não apresenta um resultado como confirmado. Trocar de caso ou contexto remove os dados da seleção anterior.
 
 ### Casos semelhantes
 
 Selecione o caso atual, confira os candidatos autorizados e escreva a pergunta da comparação. A pergunta é enviada no corpo da consulta e não é colocada na URL.
 
-A resposta apresenta os casos encontrados e as explicações fornecidas pela fonte. Uma consulta vazia permanece identificada como vazia. Abra os detalhes de um candidato para conferir sua identidade e as diferenças atuais; a tela não transforma semelhança em recomendação automática.
+Quando a fonte conclui a consulta, a resposta apresenta os casos encontrados e as explicações originais. Uma lista vazia só aparece como tal quando a origem confirmar esse resultado. Se a fonte estiver indisponível para a seleção, a tela informa a recusa e conserva os critérios da consulta; não a apresenta como ausência de casos semelhantes. A pergunta continua privada, no corpo da consulta.
+
+Abra os detalhes de um caso retornado para conferir sua identidade e as diferenças atuais. Semelhança não representa recomendação automática.
 
 ### Resultados das escolhas
 
