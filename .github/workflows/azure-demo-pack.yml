@@ -1,0 +1,93 @@
+name: Azure Demo Package
+on:
+  push:
+    branches: [azure-demo-pack]
+    paths: [.github/workflows/azure-demo-pack.yml]
+permissions:
+  contents: read
+  actions: read
+env:
+  SOURCE_SHA: e115b667d845822a1df5f523bbfd828ab57ca978
+  SOURCE_TREE: 18291f2b17550875a987c39c8831873a98b46220
+  ORCHESTRA_CHANNEL: dev
+  ORCHESTRA_BRAND: sucafina
+jobs:
+  package:
+    if: github.repository == 'gustavomhss/Orchestra-SF'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.15'
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+          no-cache: true
+      - name: Recover and verify exact Linux build receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(git rev-parse 'HEAD^{tree}')" = "$SOURCE_TREE"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14837007736/zip" > "$RUNNER_TEMP/producer.zip"
+          printf '%s  %s\n' 3123c93ff32a2a2aca61b265519564aa4955adb7db510f27a41f31456e037691 "$RUNNER_TEMP/producer.zip" | sha256sum --check
+          python3 -B - <<'PY'
+          import hashlib, json, os, shutil, tarfile, zipfile
+          from pathlib import Path, PurePosixPath
+          tmp = Path(os.environ["RUNNER_TEMP"])
+          target_name = "linux-x64-baseline"
+          with zipfile.ZipFile(tmp / "producer.zip") as inputs:
+              receipt = json.loads(inputs.read("build-receipt.json"))
+              assert receipt["sourceSHA"] == os.environ["SOURCE_SHA"]
+              assert receipt["target"] == target_name
+              assert receipt["archive"]["file"] == "orchestra-sf-linux-x64-baseline.tar.gz"
+              archive = tmp / receipt["archive"]["file"]
+              with inputs.open(archive.name) as src, archive.open("xb") as dst:
+                  shutil.copyfileobj(src, dst)
+          with archive.open("rb") as stream:
+              assert hashlib.file_digest(stream, "sha256").hexdigest() == receipt["archive"]["sha256"]
+          root = tmp / "raw" / ("cli-" + target_name)
+          seen = set()
+          with tarfile.open(archive, "r:gz") as package:
+              for row in receipt["manifest"]["files"]:
+                  name = row["path"]
+                  path = PurePosixPath(name)
+                  assert path.as_posix() == name and not path.is_absolute() and ".." not in path.parts
+                  assert name == "package.json" or name.startswith("bin/")
+                  assert name not in seen
+                  seen.add(name)
+                  if name.startswith("bin/web/"):
+                      continue
+                  member = package.getmember(name)
+                  assert member.isfile()
+                  destination = root.joinpath(*path.parts)
+                  destination.parent.mkdir(exist_ok=True, parents=True)
+                  with package.extractfile(member) as src, destination.open("xb") as dst:
+                      shutil.copyfileobj(src, dst)
+                  with destination.open("rb") as stream:
+                      assert hashlib.file_digest(stream, "sha256").hexdigest() == row["sha256"]
+                  destination.chmod(0o755 if row["executable"] else 0o644)
+          assert {"package.json", "bin/orchestra", "bin/hugr-omni-supervisor", "bin/hugr_omni.node"} <= seen
+          print("Exact verified producer and native files recovered.")
+          PY
+      - name: Build Sucafina Web and verify the Entra QA package
+        run: |
+          set -euo pipefail
+          ORCHESTRA_VERSION="$(jq -er '.version' apps/cli/package.json)"
+          export ORCHESTRA_VERSION
+          export NODE_ENV=production
+          bun install --frozen-lockfile
+          bun run --cwd apps/web build --base / --sourcemap hidden
+          bun apps/cli/script/azure-entra-package.ts --dist "$RUNNER_TEMP/raw" --out "$RUNNER_TEMP/entra-demo" --source-sha "$SOURCE_SHA" --web apps/web/dist
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: orchestra-sf-entra-demo-${{ env.SOURCE_SHA }}
+          path: ${{ runner.temp }}/entra-demo
+          if-no-files-found: error
+          retention-days: 2
