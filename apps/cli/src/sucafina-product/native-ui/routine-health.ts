@@ -7,6 +7,8 @@ import type { TrustedUiContext } from "../../../../../modules/sucafina/Sucafinav
 import { isSfProductStateReader, selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import type { RoutinePublicationHost } from "../../../../../modules/sucafina/Sucafinav1/product/routines/publication.ts"
 import type { SfRoutineNativeRuntimeResources } from "../routine-native-runtime.ts"
+import { assertSfRoutinePhaseOriginDirectory } from "../routine-native-phase-origin.ts"
+import { requireSfRoutinePrivateDirectory } from "../routine-native-private-files.ts"
 import { sfHasOperationalResource } from "./live-context.ts"
 
 type Operation = "routines.read-admission" | "routines.read-run" | "projection.routine"
@@ -16,6 +18,7 @@ type Source = Readonly<{
   publication: RoutinePublicationHost
   resources: () => SfRoutineNativeRuntimeResources | undefined
   generation: () => Promise<number | undefined>
+  generationCurrent: (observed: number) => boolean
 }>
 
 /** A live original publication, native Location and C08 reader prove historical
@@ -47,11 +50,11 @@ export async function observeSfRoutineReadingHealth(input: {
     if (!sfHasOperationalResource(candidate.id) || metadata.method !== candidate.method || metadata.effect !== "read" ||
       metadata.pathTemplate !== "{mount}/api/ui/" + candidate.path || metadata.responseMode !== "json") return undefined
     const source = sourceFor(candidate.id)
-    if (!source || typeof source.generation !== "function" || !source.dependencies.length || source.dependencies.some((entry) => !entry ||
+    if (!source || typeof source.generation !== "function" || typeof source.generationCurrent !== "function" || !source.dependencies.length || source.dependencies.some((entry) => !entry ||
       typeof entry !== "object" && typeof entry !== "function") ||
       source.publication.publication.projectID !== expected.projectId) return undefined
     const dependencies = [...source.dependencies], publication = source.publication, resourcesFor = source.resources
-    const generationFor = source.generation
+    const generationFor = source.generation, generationCurrentFor = source.generationCurrent
     const installed = bindingFor(candidate.id, source.producer)
     if (!installed || typeof installed !== "object" && typeof installed !== "function") return undefined
     const own = () => [ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish, state.read, persistence.transaction,
@@ -63,7 +66,7 @@ export async function observeSfRoutineReadingHealth(input: {
         input.ui === ui && input.state === state && input.persistence === persistence &&
         isSfProductStateReader(state, persistence) && digestSfValue(stamp) === stampDigest &&
         next?.producer === source.producer && next.publication === publication && next.resources === resourcesFor &&
-        next.generation === generationFor &&
+        next.generation === generationFor && next.generationCurrent === generationCurrentFor &&
         publication.publication.projectID === expected.projectId && next.dependencies.length === dependencies.length &&
         dependencies.every((entry, index) => next.dependencies[index] === entry) &&
         bindingFor(candidate.id, source.producer) === installed && original.every((entry, index) => own()[index] === entry)
@@ -81,6 +84,8 @@ export async function observeSfRoutineReadingHealth(input: {
       if (!resources?.current() || !resources.sessions || !resources.originDirectory ||
         resources.identity.installationId !== expected.installationId || resources.identity.projectId !== expected.projectId ||
         resources.identity.hostId !== expected.hostId || !resources.taskRegistration || !resources.governanceInstallation) return undefined
+      const originDirectory = resources.originDirectory
+      assertSfRoutinePhaseOriginDirectory(originDirectory, resources)
       const nativeCurrent = () => current() && resourcesFor() === resources && resources.current() &&
         resources.identity.installationId === expected.installationId && resources.identity.projectId === expected.projectId &&
         resources.identity.hostId === expected.hostId
@@ -89,9 +94,14 @@ export async function observeSfRoutineReadingHealth(input: {
       // prepare, prompt, run a provider or write a business record.
       const generation = await generationFor()
       if (generation === undefined || !Number.isSafeInteger(generation) || generation < 0 || !nativeCurrent()) return undefined
-      const sameGeneration = async () => nativeCurrent() && await generationFor() === generation && nativeCurrent()
+      const readingCurrent = () => nativeCurrent() && generationCurrentFor(generation)
+      const sameGeneration = async () => readingCurrent() && await generationFor() === generation && readingCurrent()
       const observe = async () => {
         if (!nativeCurrent() || !await publication.authorize(admitted.value) || !nativeCurrent()) return undefined
+        // false is an absent historical directory, the original empty-read case.
+        // Errors reject readiness; create=false never creates or repairs a path.
+        const originPresent = await requireSfRoutinePrivateDirectory(originDirectory, false)
+        if (!readingCurrent()) return undefined
         const listed = await Effect.runPromise(publication.publication.use((store) => store.documents()))
         if (!nativeCurrent() || !Array.isArray(listed)) return undefined
         const health = await state.read(request, "cases", selectSfNamespaceHealth("cases", expected))
@@ -99,12 +109,12 @@ export async function observeSfRoutineReadingHealth(input: {
           health.aggregateRevision !== health.value.aggregateRevision || health.incarnation !== health.value.incarnation ||
           !await ui.revalidate(admitted.value) || ui.requestFor(admitted.value) !== request ||
           !await publication.authorize(admitted.value) || !nativeCurrent() || !await sameGeneration()) return undefined
-        return digestSfValue({ publications: listed, cases: health.value, generation })
+        return digestSfValue({ publications: listed, cases: health.value, generation, originPresent })
       }
       const first = await observe(), second = first ? await observe() : undefined
       if (!first || first !== second || !nativeCurrent() || !await ui.revalidate(admitted.value) ||
         ui.requestFor(admitted.value) !== request || !nativeCurrent() || !await sameGeneration()) return undefined
-      return { current: nativeCurrent, value: { operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const } }
+      return { current: readingCurrent, value: { operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const } }
     }
     try { return await read() }
     finally { finish(admitted.value) }

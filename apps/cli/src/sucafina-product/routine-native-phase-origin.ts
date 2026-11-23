@@ -53,26 +53,35 @@ export async function readSfRoutinePhaseParent(directory: string, session: Sessi
   return true
 }
 
+function phaseOriginDirectory(input: string | (() => string | undefined)) {
+  const value = typeof input === "string" ? input : input()
+  if (!value || !path.isAbsolute(value)) throw new Error("SF_NATIVE_PHASE_ORIGIN_DIRECTORY_INVALID")
+  return value
+}
+
+/** The original location-isolation predicate, shared with read-only health.
+ * This checks path geometry only; the original private-directory reader checks
+ * the filesystem without creating or repairing anything.
+ */
+export function assertSfRoutinePhaseOriginDirectory(input: string | (() => string | undefined),
+  resources: Pick<SfRoutineNativeRuntimeResources, "identity" | "location">) {
+  const roots = [resources.identity.location.directory, ...(Project.isRoot(resources.location.project.directory)
+    ? [] : [resources.location.project.directory])]
+  if (roots.some((root) => {
+    const relative = path.relative(root, phaseOriginDirectory(input))
+    return relative === "" || !relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative)
+  })) throw new Error("SF_NATIVE_PHASE_ORIGIN_MUST_BE_HOST_PRIVATE")
+}
+
 /** Source-issued provenance only, not native admission/approval/run storage. Active lookup is case/job/epoch/host
  * isolated. By-Session lookup is stable across process hosts, but carries no execution or planning capability.
  * Only canonical native records may supply the locator to the bridge; this lower-level reader still requires the
  * independent private proof, real root Session, original admitted prompt and matching stable authenticated identity.
  */
 export function createSfRoutinePhaseOrigin(input: string | (() => string | undefined)) {
-  const directory = () => {
-    const value = typeof input === "string" ? input : input()
-    if (!value || !path.isAbsolute(value)) throw new Error("SF_NATIVE_PHASE_ORIGIN_DIRECTORY_INVALID")
-    return value
-  }
+  const directory = () => phaseOriginDirectory(input)
   const creating = new Set<string>()
-  const privateDirectory = (resources: SfRoutineNativeRuntimeResources) => {
-    const roots = [resources.identity.location.directory, ...(Project.isRoot(resources.location.project.directory)
-      ? [] : [resources.location.project.directory])]
-    if (roots.some((root) => {
-      const relative = path.relative(root, directory())
-      return relative === "" || !relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative)
-    })) throw new Error("SF_NATIVE_PHASE_ORIGIN_MUST_BE_HOST_PRIVATE")
-  }
+  const privateDirectory = (resources: SfRoutineNativeRuntimeResources) => assertSfRoutinePhaseOriginDirectory(input, resources)
   const stable = (resources: SfRoutineNativeRuntimeResources, context: TrustedDomainContext) => ({
     installationId: resources.identity.installationId, projectId: resources.identity.projectId,
     locationId: digestSfValue(resources.identity.location), principalRef: context.binding.principalRef,
