@@ -738,7 +738,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                         }}>{t("sf.ui59.primary")}</button>
                     </Show>
                     <Show when={scenarioView() && validCurrency(candidate)}>
-                      <button type="button" class="mx-btn" disabled={state.busy}
+                      <button type="button" class="mx-btn"
+                        disabled={state.busy || !permitted("files.document-scenario-targets")}
                         onClick={() => { void readScenarioTargets(candidate) }}>{t("sf.u24.useScenario")}</button>
                     </Show>
                     <Show when={evidence() && validCurrency(candidate) ? documentHref("scenario") : undefined}>
@@ -830,7 +831,8 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                 <p>{selected()!.fieldCandidate}: {selected()!.value} · {selected()!.unit} ·
                   {selected()!.ref.refId}</p>
               </Show>
-              <button type="button" class="mx-btn" disabled={state.busy || !selected() || !validCurrency(selected()!)}
+              <button type="button" class="mx-btn" disabled={state.busy || !selected() || !validCurrency(selected()!) ||
+                !permitted("files.document-scenario-targets")}
                 onClick={() => { const value = selected(); if (value) void readScenarioTargets(value) }}>
                 {t("sf.u24.refreshDestinations")}
               </button>
@@ -842,7 +844,10 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                     <option value={String(index())}>{target.label}{target.linkRef ? " " + t("sf.u24.scenarioLinkLabel") : ""}</option>}</For>
                 </select>
               </label>
-              <Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>
+              <Show when={!permitted("files.document-scenario-targets") || !permitted("files.document-scenario-preview")}
+                fallback={<Show when={!state.targets.length}><p role="status">{t("sf.u24.noTargets")}</p></Show>}>
+                <p role="status">{t("sf.u24.scenarioUnavailable")}</p>
+              </Show>
               <button type="button" class="mx-btn primary" disabled={!state.selectedTarget || state.busy ||
                 !permitted("files.document-scenario-preview")}
                 onClick={() => { void scenario() }}>{t("sf.u24.previewScenario")}</button>

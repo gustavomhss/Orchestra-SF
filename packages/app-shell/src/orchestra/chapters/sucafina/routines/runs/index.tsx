@@ -244,7 +244,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
               onClick={() => { void readOriginal() }}>{t("sf.u27.refresh")}</button>
           </div>
         </Show>
-        <SfStatePanel state={view.state} messageKey={n29StateKey(view.state)}
+        <SfStatePanel state={view.state} messageKey={!runRef() && view.state === "empty"
+          ? n29Key("sf.u27.runSelectionRequired") : n29StateKey(view.state)}
           onRetryRead={() => { void owner.reload() }}>
           <Show when={view.result}>
             {(source) => (

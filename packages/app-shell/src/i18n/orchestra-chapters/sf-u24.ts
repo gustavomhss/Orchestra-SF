@@ -99,6 +99,7 @@ export const SF_U24_COPY = {
   "sf.u24.state.extracted": "Extracted",
   "sf.u24.state.confirmed": "Confirmed",
   "sf.u24.state.rejected": "Rejected",
+  "sf.u24.scenarioUnavailable": "Scenario preview is unavailable for your current access. You can still review the confirmed source.",
 } as const
 
 export const SF_U24_COPY_BR: Record<keyof typeof SF_U24_COPY, string> = {
@@ -200,4 +201,5 @@ export const SF_U24_COPY_BR: Record<keyof typeof SF_U24_COPY, string> = {
   "sf.u24.state.extracted": "Extraído",
   "sf.u24.state.confirmed": "Confirmado",
   "sf.u24.state.rejected": "Rejeitado",
+  "sf.u24.scenarioUnavailable": "A prévia de cenário não está disponível com seu acesso atual. Você pode consultar a fonte confirmada.",
 }
