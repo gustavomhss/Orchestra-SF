@@ -94,11 +94,23 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
     try {
       const url = new URL(request.url)
       if (!contextRoot || request.method !== "GET" || url.origin !== config.origin ||
-        url.pathname !== config.mount + "/api/ui/context" || !contextCurrent() || hasLocalSnapshotScope(driver) !== false) return false
+        url.pathname !== config.mount + "/api/ui/context" || !contextCurrent()) return false
       const identity = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
       const current = () => !request.signal.aborted && contextCurrent() &&
         digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === identity
       if (!current()) return false
+      const inherited = hasLocalSnapshotScope(driver)
+      if (inherited === undefined) return false
+      if (inherited) {
+        // An existing native owner keeps its canonical path, without a new root
+        // or a proof supplied by this callback. Its own lifetime and poison remain binding.
+        const before = driver.currentSnapshotScope?.()
+        if (!before || before.poisoned) return false
+        await read()
+        const after = driver.currentSnapshotScope?.()
+        return current() && !!after && !after.poisoned && after.identity === before.identity &&
+          after.bytesIdentity === before.bytesIdentity && after.readOnly === before.readOnly
+      }
       let calls = 0
       let completed = false
       const accepted = await contextRoot.call(driver, async () => {
