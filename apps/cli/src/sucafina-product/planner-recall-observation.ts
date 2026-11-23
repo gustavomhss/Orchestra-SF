@@ -283,7 +283,9 @@ function sameReaders(current: readonly unknown[], pinned: readonly unknown[]) {
 function caseKey(ref: { id: string; incarnation: string }) { return JSON.stringify([ref.id, ref.incarnation]) }
 
 function plannerCase(value: DecisionCase, call: TrustedDomainContext, refs: Map<string, PlannerRecord>) {
-  if (value.preparedChanges.length || value.receipts.length || value.assumptions.length || value.questions.length ||
+  // Open assumptions stay unresolved. Their explicit evidence must pass the
+  // same complete materialized Planner reference closure below.
+  if (value.preparedChanges.length || value.receipts.length || value.assumptions.some((assumption) => assumption.state !== "open") || value.questions.length ||
     [...value.alternatives, ...value.choices].some((item) => item.scenario.assumptions.length ||
       item.scenario.operations.some((operation) => operation.replacementRef !== undefined || operation.targetRef.startsWith("sf-procurement:") ||
         !["replace", "exclude", "include", "defer"].includes(operation.kind)))) return false
