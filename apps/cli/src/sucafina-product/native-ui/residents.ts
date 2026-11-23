@@ -82,17 +82,17 @@ async function readInventory(runtime: Runtime, request: Request, stamp: SfContex
   installed: () => boolean, verify: () => Promise<boolean> = async () => true): Promise<Inventory> {
   const ui = runtime.ui, selected = runtime.selected, finish = ui.finish
   const selectedDigest = digestSfValue(selected), stampDigest = digestSfValue(stamp)
-  const dependencies = [ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish]
+  const dependencies = [ui.admit, ui.validate, ui.matchesIntent, ui.revalidate, ui.requestFor, ui.finish]
   const current = () => installed() && !request.signal.aborted && runtime.ui === ui && runtime.selected === selected &&
     digestSfValue(selected) === selectedDigest && digestSfValue(stamp) === stampDigest &&
-    dependencies.every((entry, index) => entry === [ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish][index])
+    dependencies.every((entry, index) => entry === [ui.admit, ui.validate, ui.matchesIntent, ui.revalidate, ui.requestFor, ui.finish][index])
   const digest = digestSfValue(undefined)
   const read = await ui.admit(request, "sf-human:analysis.read", digest)
   if (read.status !== "ok") return { status: read.status === "unavailable" ? "unavailable" : "denied" }
   const leases: { operation: string; context: TrustedUiContext }[] = [{ operation: "sf-human:analysis.read", context: read.value }]
   const collect = async (): Promise<Inventory> => {
-    if (!current() || !matches(read.value, stamp) || ui.requestFor(read.value) !== request ||
-      !await ui.validate(read.value, "sf-human:analysis.read", digest) || !current()) return { status: "denied" }
+    if (!current() || !matches(read.value, stamp) || !await ui.validate(read.value, "sf-human:analysis.read", digest) ||
+      ui.requestFor(read.value) !== request || !current()) return { status: "denied" }
     const operations = [...new Set(selected.flatMap((entry) => entry.skills.flatMap((skill) =>
       skill.allowedOperations.filter((operation) => entry.operationIds.includes(operation) &&
         entry.profile.allowedOperations.includes(operation) && entry.profile.allowedSkills.includes(skill.id) &&
@@ -104,8 +104,8 @@ async function readInventory(runtime: Runtime, request: Request, stamp: SfContex
       if (admission.status === "unavailable") return { status: "unavailable" }
       if (admission.status !== "ok") continue
       leases.push({ operation, context: admission.value })
-      if (!matches(admission.value, stamp) || ui.requestFor(admission.value) !== request ||
-        !await ui.validate(admission.value, operation, digest) || !current()) return { status: "denied" }
+      if (!matches(admission.value, stamp) || !await ui.validate(admission.value, operation, digest) ||
+        ui.requestFor(admission.value) !== request || !current()) return { status: "denied" }
       granted.add(operation)
     }
     const profiles = selected.flatMap((entry) => {
@@ -121,8 +121,8 @@ async function readInventory(runtime: Runtime, request: Request, stamp: SfContex
     const decoded = Schema.decodeUnknownOption(SfResidentCatalog, { onExcessProperty: "error" })({ profiles })
     if (Option.isNone(decoded) || !await verify() || !current()) return { status: "unavailable" }
     for (const lease of leases) {
-      if (!matches(lease.context, stamp) || ui.requestFor(lease.context) !== request ||
-        !await ui.validate(lease.context, lease.operation, digest) || !await ui.revalidate(lease.context) ||
+      if (!matches(lease.context, stamp) || !ui.matchesIntent(lease.context, lease.operation, digest) ||
+        ui.requestFor(lease.context) !== request || !await ui.revalidate(lease.context) ||
         !current()) return { status: "denied" }
     }
     return current() ? { status: "ok", value: decoded.value } : { status: "unavailable" }

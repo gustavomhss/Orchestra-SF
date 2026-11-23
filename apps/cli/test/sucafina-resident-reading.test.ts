@@ -61,8 +61,11 @@ async function fixture() {
       try {
         if (!await ui.validate(read.value, "sf-human:analysis.read", digest) || !await ui.revalidate(read.value))
           return { status: "denied" }
-        return { status: "ok", stamp: { ...read.value.binding, hostId: stamp.hostId },
-          authMode: "local-operator", destinations: [] }
+        return { status: "ok", stamp: {
+          installationId: read.value.binding.installationId, projectId: read.value.binding.projectId, hostId: stamp.hostId,
+          principalRef: read.value.binding.principalRef, policyVersion: read.value.binding.policyVersion,
+          accessRevision: read.value.binding.accessRevision,
+        }, authMode: "local-operator", destinations: [] }
       } finally { ui.finish(read.value) }
     },
   })
