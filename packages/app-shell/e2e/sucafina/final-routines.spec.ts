@@ -340,7 +340,7 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
       await page.setViewportSize({ width: 360, height: 900 })
       await reflow(page)
       await detail.scrollIntoViewIfNeeded()
-      await captureFinalSurface(page, info, "UI70", "en-light-360-resident-case-detail")
+      await captureFinalSurface(page, info, "UI70", "en-light-360-resident-case-detail", { preview: true })
       limits.push("UI70: actual installed inventory and case-scoped reads are qualified; no attributed model execution or verified contribution is invented.")
       expect(writes).toEqual([])
     })
