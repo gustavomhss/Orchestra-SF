@@ -35,7 +35,10 @@ export async function workflowCase(page: Page, owner: WorkflowOwner) {
   const identity = sourceObject(selected.caseRef)
   expect(identity.version).toEqual(expect.any(Number))
   expect(Number(identity.version)).toBeGreaterThan(0)
-  return { ref, id: sourceText(identity.id), incarnation: sourceText(identity.incarnation),
+  const title = sourceText(matches[0]!.title)
+  const decision = sourceObject(selected.decision)
+  expect(decision).toMatchObject({ id: identity.id, incarnation: identity.incarnation, version: identity.version, objective: title })
+  return { ref, title, id: sourceText(identity.id), incarnation: sourceText(identity.incarnation),
     version: Number(identity.version), selected }
 }
 
