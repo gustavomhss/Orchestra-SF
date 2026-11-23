@@ -5,7 +5,7 @@ import { SfContextResult, type SfContextStamp } from "@orchestra/schema/sucafina
 import type { Account } from "./runtime"
 import { forwardOnce } from "./runtime"
 
-type FileOperation = "files.document-candidates" | "files.document-scenario-targets" | "files.document-scenario-preview"
+type FileOperation = "files.document-sources" | "files.document-candidates" | "files.document-scenario-targets" | "files.document-scenario-preview"
 type Observed = Awaited<ReturnType<typeof forwardOnce>>
 
 /**
@@ -13,19 +13,20 @@ type Observed = Awaited<ReturnType<typeof forwardOnce>>
  * The transport revalidates authority before releasing JSON to the consumer.
  * Neither observer emits, retries or changes a request or response.
  */
-export async function observeRecordFileOperation(page: Page, account: Account, expected: SfContextStamp,
+export async function observeRecordFileOperation(page: Page, account: Account, expected: SfContextStamp | Promise<SfContextStamp>,
   operation: FileOperation, endpoint: Parameters<typeof forwardOnce>[1], method: "GET" | "POST") {
   let egress: Observed | undefined
   const contextPath = new URL(account.baseURL).pathname + "/api/ui/context"
   const original = await forwardOnce(page, endpoint, method, async (response) => {
     if (response.status() !== 200) return
+    const stamp = await expected
     // Armed before the producer response reaches the UI, so the next matching
     // context request is the transport's existing post-response authority read.
     egress = await forwardOnce(page, (url) =>
       url.origin === account.origin && url.pathname === contextPath &&
-      url.searchParams.get("installationId") === expected.installationId &&
-      url.searchParams.get("projectId") === expected.projectId &&
-      url.searchParams.get("hostId") === expected.hostId, "GET")
+      url.searchParams.get("installationId") === stamp.installationId &&
+      url.searchParams.get("projectId") === stamp.projectId &&
+      url.searchParams.get("hostId") === stamp.hostId, "GET")
   })
   return {
     completed: original.completed,
@@ -38,8 +39,9 @@ export async function observeRecordFileOperation(page: Page, account: Account, e
       expect(fence.response.status()).toBe(200)
       const context = Schema.decodeUnknownSync(SfContextResult, { onExcessProperty: "error" })(await fence.response.json())
       if (context.status !== "ok") throw new Error("The original Files authority fence is unavailable")
-      expect(context.value.stamp).toEqual(expected)
-      const resources = operation === "files.document-candidates" ? ["documents", "evidence"] : ["document-scenario"]
+      expect(context.value.stamp).toEqual(await expected)
+      const resources = operation === "files.document-candidates" || operation === "files.document-sources"
+        ? ["documents", "evidence"] : ["document-scenario"]
       for (const resource of resources) {
         const matches = context.value.availability.filter((entry) => entry.family === "files" && entry.resource === resource)
         expect(matches).toHaveLength(1)

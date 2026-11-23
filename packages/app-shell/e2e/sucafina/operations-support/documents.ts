@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
-import { SfContextResult } from "@orchestra/schema/sucafina/context"
+import { SfContextResult, type SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -11,6 +11,8 @@ import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
 import { captureRecord, captureRecordVariants, capturePortugueseRecord, describeRecordPage } from "./final-records"
+import { observeRecordFileOperation } from "./final-records-file-fence"
+import { observeFinalGet } from "../design-support/final-navigation"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type DocumentSchema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -25,6 +27,7 @@ function observeDocumentCatalog(page: Page, account: Account, info: TestInfo) {
     phase: "request" | "response" | "failed"
     elapsedMs: number
     status?: number
+    failure?: string
     contextStatus?: SfContextResult["status"] | "pending" | "invalid" | "unreadable"
     readiness?: { operation: typeof operations[number]; states: readonly ("ready" | "denied" | "unavailable")[] }[]
   }
@@ -45,7 +48,10 @@ function observeDocumentCatalog(page: Page, account: Account, info: TestInfo) {
     return event
   }
   const requested = (request: Request) => { record(request, "request") }
-  const failed = (request: Request) => { record(request, "failed") }
+  const failed = (request: Request) => {
+    const event = record(request, "failed")
+    if (event) event.failure = request.failure()?.errorText?.replace(/https?:\/\/\S+/g, "[url]").slice(0, 160)
+  }
   const responded = (response: Response) => {
     const event = record(response.request(), "response", response.status())
     if (event?.mode !== "context") return
@@ -66,12 +72,12 @@ function observeDocumentCatalog(page: Page, account: Account, info: TestInfo) {
   page.on("request", requested)
   page.on("requestfailed", failed)
   page.on("response", responded)
-  return async () => {
+  return async (failed = false) => {
     page.off("request", requested)
     page.off("requestfailed", failed)
     page.off("response", responded)
     const evidence = JSON.stringify({ elapsedMs: Math.round(performance.now() - started), events, dropped })
-    if (!events.some((event) => event.mode === "document-sources" && event.phase === "response" && event.status === 200))
+    if (failed || !events.some((event) => event.mode === "document-sources" && event.phase === "response" && event.status === 200))
       console.info("SF_FILES_DOCUMENT_CATALOG_PHASES", evidence)
     await info.attach("operations-document-catalog-phases.json", { body: evidence, contentType: "application/json" }).catch(() => undefined)
   }
@@ -344,23 +350,66 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
     const mode = new URL(request.url()).searchParams.get("sf")
     if (request.method() === "POST" && mode && ["document-admit", "document-schema", "document-extract", "document-confirm"].includes(mode) && isMode(request.url(), mode)) requests.push(mode)
   })
-  const discovered = await observe(page, endpoint("document-sources"))
   const catalogRoute = chapterURL(account, "/orchestra/sf-documents")
   const catalogLeaf = '[data-sf-leaf="u24"][data-sf-surface="UI58"]'
   const root = page.locator(catalogLeaf)
   const finishCatalogObservation = observeDocumentCatalog(page, account, info)
-  const sources = await (async () => {
+  // Capture only the original provider and route reads. Files preflight/egress
+  // reads follow those two and remain under their own original authority fences.
+  const navigation = await observeFinalGet(page, account.origin,
+    new URL(account.baseURL).pathname + "/api/ui/context", 2, (url) =>
+      url.searchParams.get("installationId") === account.installationId &&
+      url.searchParams.get("projectId") === account.projectId)
+  const navigationStamp = (async () => {
+    let expected: SfContextStamp | undefined
+    for (let index = 0; index < 2; index += 1) {
+      const original = await navigation.next()
+      expect(original.status).toBe(200)
+      const query = new URL(original.request.url()).searchParams
+      expect([...query.keys()].sort()).toEqual(["hostId", "installationId", "projectId"])
+      expect(query.getAll("installationId")).toEqual([account.installationId])
+      expect(query.getAll("projectId")).toEqual([account.projectId])
+      const context = Schema.decodeUnknownSync(SfContextResult, { onExcessProperty: "error" })(original.body)
+      if (context.status !== "ok") throw new Error("The original document catalog context is unavailable")
+      expect(context.value.stamp).toMatchObject({
+        installationId: account.installationId, projectId: account.projectId, principalRef: account.principal,
+      })
+      expect(query.getAll("hostId")).toEqual([context.value.stamp.hostId])
+      if (expected) expect(context.value.stamp).toEqual(expected)
+      expected = context.value.stamp
+    }
+    if (!expected) throw new Error("The original catalog navigation supplied no context stamp")
+    return expected
+  })()
+  void navigationStamp.catch(() => undefined)
+  let discovered: Awaited<ReturnType<typeof observeRecordFileOperation>> | undefined
+  let catalogFailed = false
+  const { selected, document } = await (async () => {
+    discovered = await observeRecordFileOperation(page, account, navigationStamp,
+      "files.document-sources", endpoint("document-sources"), "GET")
     expect((await page.goto(catalogRoute.href))?.status()).toBe(200)
+    await navigationStamp
     await expect(root).toHaveCount(1)
     await expect(root.getByRole("searchbox")).toBeVisible()
     await expect(root.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
-    return valueOf<Source[]>((await discovered.completed).response)
-  })().finally(finishCatalogObservation)
-  const selected = sources.filter((source) => source.label === filename)
-  expect(selected).toHaveLength(1)
-  expect(selected[0]!.surface).toBe("procurement")
-  const document = root.getByRole("combobox", { name: "Document", exact: true })
-  await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selected[0]!.selectionRef)
+    const sources = await valueOf<Source[]>((await discovered.completed).response)
+    const selected = sources.filter((source) => source.label === filename)
+    expect(selected).toHaveLength(1)
+    expect(selected[0]!.surface).toBe("procurement")
+    // HTTP200 precedes the Files transport's original outgoing F01 validation.
+    // Keep its exact owner/stamp/readiness check before the unchanged DOM10.
+    await discovered.finish()
+    const document = root.getByRole("combobox", { name: "Document", exact: true })
+    await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selected[0]!.selectionRef)
+    return { selected, document }
+  })().catch((error: unknown) => { catalogFailed = true; throw error })
+    .finally(async () => {
+      try { await discovered?.close() }
+      finally {
+        try { await navigation.close() }
+        finally { await finishCatalogObservation(catalogFailed) }
+      }
+    })
   const register = root.locator("details.sf-records-register")
   await register.locator("summary").click()
   await expect(register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })).toBeVisible()
