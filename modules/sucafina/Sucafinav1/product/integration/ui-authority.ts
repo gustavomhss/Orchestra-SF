@@ -1,5 +1,6 @@
 import { types } from "node:util"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { sfImportProfile, rememberSfImportProfile, sfImportContextProfile } from "../contracts/import-cost-profile.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { SfBindingRegistry, SfDomainValidation } from "../contracts/runtime.ts"
 import type { BoundCapabilityReceipt, TrustedDomainContext, TrustedUiContext, TrustedUiLease } from "../contracts/sf-execution.ts"
@@ -104,24 +105,45 @@ export function createSfUiAuthority(input: {
   const admissions = new WeakMap<TrustedUiContext, UiAdmission>()
   const current = (context: TrustedUiContext, at = input.now(), retainExpiredCommand = false) => {
     const admission = admissions.get(context)
-    if (!admission) return undefined
+    if (!admission) {
+      sfImportContextProfile(context, "current-missing")
+      return undefined
+    }
     if (!admission.request.signal.aborted && validTime(at)) {
       // Once observed, expiry survives a clock rollback until live reauthorization.
       if (at >= admission.expiresAt) admission.expired = true
       if (!admission.expired) return admission
+      sfImportContextProfile(context, "current-expired", { observedAt: at, expiresAt: admission.expiresAt,
+        consumed: admission.consumed, renewable: admission.renewable, retainExpiredCommand })
       // A consumed command can retain its private identity while awaiting live reauthorization.
       if (admission.consumed && admission.renewable) return retainExpiredCommand ? admission : undefined
     }
+    sfImportContextProfile(context, "current-discarded", { observedAt: at, expiresAt: admission.expiresAt,
+      expired: admission.expired, consumed: admission.consumed, renewable: admission.renewable })
     admissions.delete(context)
     return undefined
   }
   const revalidate = async (context: TrustedUiContext) => {
     const admission = current(context, input.now(), true)
-    if (!admission) return false
+    if (!admission) {
+      sfImportContextProfile(context, "revalidate-missing")
+      return false
+    }
+    sfImportContextProfile(context, "revalidate-authorize-start")
     const identity = await input.authorize(admission.request, admission.operation, admission.inputDigest)
     const at = input.now()
-    const valid = current(context, at, true) === admission && !!identity && Object.keys(identity).length === identityFields.length &&
-      identityFields.every((key) => context.binding[key] === identity[key])
+    let sameAdmission: boolean | undefined
+    let identityShape: boolean | undefined
+    let differentField: string | undefined
+    const valid = (sameAdmission = current(context, at, true) === admission) && !!identity &&
+      (identityShape = Object.keys(identity).length === identityFields.length) &&
+      identityFields.every((key) => {
+        const same = context.binding[key] === identity[key]
+        if (!same) differentField = key
+        return same
+      })
+    sfImportContextProfile(context, "revalidate-result", { valid, sameAdmission,
+      identityPresent: !!identity, identityShape, differentField })
     if (!valid) admissions.delete(context)
     if (!valid) return false
     if (admission.expired) {
@@ -137,12 +159,16 @@ export function createSfUiAuthority(input: {
   }
   return {
     async admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>> {
+      sfImportProfile(request, "admit-start")
       const routes = freeze.operations.filter((entry) => entry.operation === operation)
       if ((!privateCommands.has(operation) && routes.length !== 1) || !/^[a-f0-9]{64}$/.test(inputDigest))
         return { status: "denied", reason: "invalid-ui-operation" }
       const identity = await input.authorize(request, operation, inputDigest)
-      if (request.signal.aborted || !identity || Object.keys(identity).length !== identityFields.length || identityFields.some((key) => typeof identity[key] !== "string" || !identity[key].trim()))
+      sfImportProfile(request, "admit-authorized", { identityPresent: !!identity })
+      if (request.signal.aborted || !identity || Object.keys(identity).length !== identityFields.length || identityFields.some((key) => typeof identity[key] !== "string" || !identity[key].trim())) {
+        sfImportProfile(request, "admit-authority-refused")
         return { status: "denied", reason: "ui-authority-unavailable" }
+      }
       const requestId = input.createId()
       // The host resolves a persisted command intention; a transport retry gets another requestId.
       const commandId = await input.commandIdentity(request, operation, inputDigest)
@@ -158,6 +184,8 @@ export function createSfUiAuthority(input: {
         lease: Object.freeze({}) as TrustedUiLease,
       })
       admissions.set(context, { request, operation, inputDigest, commandId, expiresAt, expired: false, consumed: false, renewable })
+      rememberSfImportProfile(context, request)
+      sfImportContextProfile(context, "admit-lease-created", { expiresAt, renewable })
       if (!await revalidate(context)) {
         admissions.delete(context)
         return { status: "denied", reason: "ui-authority-changed" }
@@ -167,10 +195,16 @@ export function createSfUiAuthority(input: {
     },
     async validate(context: TrustedUiContext, operation: string, inputDigest: string) {
       const admission = current(context)
-      if (!admission || admission.consumed || admission.operation !== operation || admission.inputDigest !== inputDigest || !await revalidate(context)) return false
+      if (!admission) { sfImportContextProfile(context, "validate-missing"); return false }
+      if (admission.consumed) { sfImportContextProfile(context, "validate-consumed"); return false }
+      if (admission.operation !== operation) { sfImportContextProfile(context, "validate-operation"); return false }
+      if (admission.inputDigest !== inputDigest) { sfImportContextProfile(context, "validate-digest"); return false }
+      if (!await revalidate(context)) { sfImportContextProfile(context, "validate-authority"); return false }
       // Recheck after the asynchronous authorization boundary: competing dispatches consume once.
-      if (!current(context) || admission.consumed) return false
+      if (!current(context)) { sfImportContextProfile(context, "validate-current-after-await"); return false }
+      if (admission.consumed) { sfImportContextProfile(context, "validate-consumed-after-await"); return false }
       admission.consumed = true
+      sfImportContextProfile(context, "validate-consumed-now")
       return true
     },
     matchesIntent(context: TrustedUiContext, operation: string, inputDigest: string) {
@@ -198,7 +232,7 @@ export function createSfUiAuthority(input: {
         accessRevision: context.binding.accessRevision, at: new Date(at).toISOString(),
       }
     },
-    finish(context: TrustedUiContext) { admissions.delete(context) },
+    finish(context: TrustedUiContext) { sfImportContextProfile(context, "finish"); admissions.delete(context) },
   }
 }
 

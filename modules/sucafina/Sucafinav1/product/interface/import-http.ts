@@ -1,4 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { sfImportProfile } from "../contracts/import-cost-profile.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Period } from "../contracts/context.ts"
@@ -69,14 +70,24 @@ export function createSfImportHttp(input: {
     if (mode === "import-reference") {
       const ref = url.searchParams.get("importPreviewRef")
       if (!ref?.trim() || ref.length > 512) return reply({ status: "invalid" }, 400)
+      sfImportProfile(request, "http-start")
       const digest = digestSfValue({ importPreviewRef: ref })
       const admitted = await runtime.ui.admit(request, "sf_import_preview", digest)
+      sfImportProfile(request, "http-admitted", { status: admitted.status, reason: admitted.status === "ok" ? undefined : admitted.reason })
       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
       try {
-        if (!await runtime.ui.validate(admitted.value, "sf_import_preview", digest)) return reply({ status: "denied" }, 403)
+        if (!await runtime.ui.validate(admitted.value, "sf_import_preview", digest)) {
+          sfImportProfile(request, "http-validate-refused")
+          return reply({ status: "denied" }, 403)
+        }
+        sfImportProfile(request, "http-validated")
         const result = await runtime.service.imports.readPreviewReference(ref, admitted.value)
+        sfImportProfile(request, "http-reference-result", { status: result.status, reason: result.status === "ok" ? undefined : result.reason })
         return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) : reply({ status: result.status }, status(result))
-      } finally { runtime.ui.finish(admitted.value) }
+      } finally {
+        runtime.ui.finish(admitted.value)
+        sfImportProfile(request, "http-finished")
+      }
     }
     if (mode === "imports") {
       if (surface !== "planner" && surface !== "dashboard") return reply({ status: "denied" }, 403)
