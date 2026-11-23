@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { createSfLiveContext, type SfLiveContextAdmission, type SfLiveOperationalObservation } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
+import { createSfLiveContext, createSfPageObservations, type SfLiveContextAdmission, type SfLiveOperationalObservation } from "../../../../../apps/cli/src/sucafina-product/native-ui/live-context.ts"
 
 const origin = "http://127.0.0.1:4096"
 const mount = "/sucafina"
@@ -300,4 +300,108 @@ test("duplicate page observations remain a contract mismatch", async () => {
   })
   expect(await live.readRequestContext(new Request(origin + mount + "/api/ui/pages/CAP27"), binding))
     .toEqual({ status: "unavailable", reason: "contract-mismatch" })
+})
+
+const versions = {
+  capabilityId: "CAP23", surface: "planner", page: "Versions",
+  canRead: true, allowedActionIds: ["save", "copy"],
+} as const
+const versionsAdmission = { ...admitted, destinations: [versions] } as const
+
+test("the installed CAP23 page composition retains three admissions without unrelated health", async () => {
+  const request = new Request(origin + mount + "/api/ui/pages/CAP23?year=2026")
+  let checks = 0
+  let probes = 0
+  const live = createSfLiveContext({
+    origin, mount, currentBinding: () => binding,
+    admit: async (original) => { expect(original).toBe(request); checks++; return versionsAdmission },
+    pageOperational: createSfPageObservations(mount, async () => {
+      probes++
+      throw new Error("Unrelated installation health must not delay the versions source")
+    }),
+  })
+  const result = await live.readRequestContext(request, binding)
+  expect(result).toMatchObject({ status: "ok", value: { stamp, destinations: [versions] } })
+  if (result.status !== "ok") throw new Error("The original versions authority was not admitted")
+  expect(result.value.availability.find((entry) => entry.resource === "CAP23")?.operations
+    .find((entry) => entry.operationId === "domain.page.CAP23")).toEqual({
+      operationId: "domain.page.CAP23", state: "unavailable",
+      reason: "operational-source-unavailable", operational: false,
+    })
+  expect(checks).toBe(3)
+  expect(probes).toBe(0)
+})
+
+for (const duringAdmission of [2, 3]) {
+  test("installed CAP23 composition refuses revocation at original admission " + duringAdmission, async () => {
+    const request = new Request(origin + mount + "/api/ui/pages/CAP23?year=2026")
+    let checks = 0
+    let probes = 0
+    const live = createSfLiveContext({
+      origin, mount, currentBinding: () => binding,
+      admit: async () => {
+        checks++
+        return checks === duringAdmission
+          ? { ...versionsAdmission, stamp: { ...stamp, accessRevision: "revoked" } }
+          : versionsAdmission
+      },
+      pageOperational: createSfPageObservations(mount, async () => { probes++; return [] }),
+    })
+    expect(await live.readRequestContext(request, binding))
+      .toEqual({ status: "unavailable", reason: "contract-mismatch" })
+    expect(checks).toBe(duringAdmission)
+    expect(probes).toBe(0)
+  })
+}
+
+for (const capability of ["CAP22", "CAP24", "CAP26", "CAP27"]) {
+  test("installed " + capability + " composition preserves its original health observations", async () => {
+    const request = new Request(origin + mount + "/api/ui/pages/" + capability)
+    let probes = 0
+    const live = createSfLiveContext({
+      origin, mount, currentBinding: () => binding, admit: async () => admitted,
+      pageOperational: createSfPageObservations(mount, async (original, observedStamp) => {
+        expect(original).toBe(request)
+        expect(observedStamp).toEqual(stamp)
+        probes++
+        return assetReads
+      }),
+    })
+    const result = await live.readRequestContext(request, binding)
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("The original page observations were not admitted")
+    const evidence = result.value.availability.find((entry) => entry.family === "files" && entry.resource === "evidence")
+    for (const observation of assetReads)
+      expect(evidence?.operations.find((entry) => entry.operationId === observation.operationId)).toEqual(observation)
+    expect(probes).toBe(2)
+  })
+}
+
+test("installed CAP27 composition still refuses attachment health changed between observations", async () => {
+  let probes = 0
+  const live = createSfLiveContext({
+    origin, mount, currentBinding: () => binding, admit: async () => admitted,
+    pageOperational: createSfPageObservations(mount, async () => ++probes === 1 ? assetReads : unavailableAssets),
+  })
+  expect(await live.readRequestContext(new Request(origin + mount + "/api/ui/pages/CAP27"), binding))
+    .toEqual({ status: "unavailable", reason: "contract-mismatch" })
+  expect(probes).toBe(2)
+})
+
+test("installed page composition never substitutes for full context observations", async () => {
+  const request = new Request(contextUrl)
+  let globalProbes = 0
+  let pageProbes = 0
+  const live = createSfLiveContext({
+    origin, mount, currentBinding: () => binding, admit: async () => versionsAdmission,
+    operational: async (original) => {
+      expect(original).toBe(request)
+      globalProbes++
+      return assetReads
+    },
+    pageOperational: createSfPageObservations(mount, async () => { pageProbes++; return [] }),
+  })
+  expect((await live.readContext(request, binding)).status).toBe("ok")
+  expect(globalProbes).toBe(2)
+  expect(pageProbes).toBe(0)
 })
