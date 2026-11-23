@@ -195,17 +195,17 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     { id: "budget", labelKey: kt("sf.u05.projects.budget"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "budget",
       render: (row) => <><span class="sf-u05-num">{row.budget === null || row.budget === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}</span>
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.budget)}</span>
         <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
     { id: "spent", labelKey: kt("sf.u05.projects.spent"), align: "end",
       widthPolicy: { kind: "fixed", px: 128 }, sortKey: "spent",
       render: (row) => <><span class="sf-u05-num">{row.spent === null || row.spent === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}</span>
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.spent)}</span>
         <small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></> },
     { id: "pct", labelKey: kt("sf.u05.projects.progress"), align: "end",
       widthPolicy: { kind: "fixed", px: 160 }, sortKey: "pct",
       render: (row) => <span class="sf-u05-num">{row.pct === null || row.pct === undefined ?
-        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct) + "%"}</span> },
+        t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.pct) + "%"}</span> },
     { id: "watchList", labelKey: kt("sf.u05.projects.watch"), align: "center",
       widthPolicy: { kind: "content", minPx: 90, maxPx: 145 },
       render: (row) => <span>{row.watchList === undefined || row.watchList === null ?
@@ -303,9 +303,9 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
         </dl> },
       { id: "budget-spent", titleKey: kt("sf.u05.projects.financial"), state: "ready" as const,
         content: <dl class="sf-u05-detail-fields">
-          <div><dt>{t("sf.u05.projects.budget")}</dt><dd>{row.budget === null || row.budget === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.budget)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
-          <div><dt>{t("sf.u05.projects.spent")}</dt><dd>{row.spent === null || row.spent === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.spent)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
-          <div><dt>{t("sf.u05.projects.progress")}</dt><dd>{row.pct === null || row.pct === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl()).format(row.pct) + "%"}</dd></div>
+          <div><dt>{t("sf.u05.projects.budget")}</dt><dd>{row.budget === null || row.budget === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.budget)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
+          <div><dt>{t("sf.u05.projects.spent")}</dt><dd>{row.spent === null || row.spent === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.spent)}<small class="sf-u05-currency">{t("sf.u05.projects.noCurrency")}</small></dd></div>
+          <div><dt>{t("sf.u05.projects.progress")}</dt><dd>{row.pct === null || row.pct === undefined ? t("sf.u05.projects.notRecorded") : new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(row.pct) + "%"}</dd></div>
         </dl> },
       { id: "watch", titleKey: kt("sf.u05.projects.watchSection"), state: "ready" as const,
         content: <p>{row.watchList === undefined || row.watchList === null ?
