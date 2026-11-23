@@ -333,3 +333,244 @@ test("Planner case preflight uses its private version and closes independent nat
     }))
   } finally { await deadline.close() }
 }, 120_000)
+
+type RecallResult = Awaited<ReturnType<ReturnType<typeof createSfPlannerRecallObservation>["recall"]>>
+function recallOk(result: RecallResult) {
+  if (result.status !== "ok") throw new Error("The canonical Recall is unavailable")
+  return result
+}
+function gate() {
+  let release!: () => void
+  const promise = new Promise<void>((resolve) => { release = resolve })
+  return { promise, release }
+}
+
+test("Planner Recall preserves published Atlas closure and freshly closes every native owner", async () => {
+  const deadline = compositionTestDeadline("planner-recall-atlas")
+  try {
+    const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true))
+    const scanner = f.scanner, memory = f.business.atlasRecall()?.memory
+    if (!scanner || !memory) throw new Error("The canonical scanner and Atlas reader are required")
+    const staged = await deadline.phase("stage-real-precedent", () => f.stage(f.previous))
+    Object.assign(f.previous, staged.ref)
+    const incoming = () => ({ caseRef: structuredClone(f.current), limit: 10, scope: {
+      query: "Review the observed service cost",
+      recallScope: { cases: [structuredClone(f.previous)], period: structuredClone(f.period), includeHistorical: false },
+    } })
+    const canonical = f.business.caseRecallSource()?.recall
+    if (!canonical) throw new Error("The complete installed Recall reader is required")
+
+    await deadline.phase("pending-is-unavailable-and-does-not-publish", async () => {
+      const before = await f.snapshot()
+      expect(before.outbox[staged.outbox.key]?.state).toBe("pending")
+      const input = incoming()
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, produced: RecallResult | undefined
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          produced = await canonical(input, call)
+          return produced
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        expect(produced?.status).toBe("unavailable")
+        expect(reads).toBe(1)
+        expectIndependentRoots(measured.roots)
+      })
+      expect(await f.snapshot()).toEqual(before)
+    })
+
+    const receipt = await deadline.phase("publish-through-the-real-atlas-writer", async () => {
+      const before = await f.snapshot()
+      const payload = { caseRef: encodeCaseRef(f.previous) }
+      const published = await f.ui("sf_case_read", payload,
+        (call) => f.business.context.emitFromLedger(staged.outbox.eventRef, call))
+      expect(published.status).toBe("committed")
+      expect(published.scanner).toMatchObject({ name: scanner.spec.name, version: scanner.version, status: "clean" })
+      const after = await f.snapshot()
+      expect(after.cases).toEqual(before.cases)
+      expect(after.versions.cases).toBe(before.versions.cases)
+      expect(after.outbox[staged.outbox.key]).toMatchObject({ state: "settled", receipt: published })
+      return published
+    })
+    // The current case is still being worked on. Its unpublished event must not
+    // be confused with the explicitly selected, already published precedent.
+    const currentPending = await deadline.phase("stage-current-case-without-publication", () => f.stage(f.current))
+    Object.assign(f.current, currentPending.ref)
+    const publishedState = await f.snapshot()
+    expect(publishedState.outbox[currentPending.outbox.key]?.state).toBe("pending")
+
+    const baseline = await deadline.phase("canonical-recall-without-a-shared-recall-owner", async () => {
+      const input = incoming()
+      const unversioned = { ...input, caseRef: { id: f.current.id, incarnation: f.current.incarnation } }
+      return f.ui("sf_decision_recall", unversioned, async (call) => {
+        const recalled = await memory.recall(f.previous, call)
+        if (recalled.status !== "ok") throw new Error("The published Atlas precedent is not readable")
+        expect(recalled.records).toHaveLength(1)
+        for (const record of recalled.records) {
+          expect(record.resolutions.length).toBeGreaterThan(0)
+          expect(record.resolutions.every((resolution) => resolution.state === "fresh")).toBe(true)
+        }
+        // The original request contract permits an omitted source version. The
+        // real withCase selection still pins it; the Recall observer preserves
+        // the canonical path before admission. Internal case reads keep their
+        // own independent observations.
+        const value = ok(await f.business.withCase(call, f.current, {}, async () => ({
+          status: "ok", value: await f.business.caseRecall(unversioned, call),
+        })))
+        const complete = recallOk(value)
+        expect(complete.matches).toHaveLength(1)
+        expect(complete.matches[0]!.caseRef).toEqual(f.previous)
+        expect(complete.matches[0]!.memoryRecordRef).toBe(receipt.eventId)
+        return structuredClone(complete)
+      })
+    })
+
+    await deadline.phase("installed-recall-has-independent-work-and-egress-owners", async () => {
+      const roots: RootObservation[] = []
+      for (let phase = 0; phase < 2; phase++) {
+        const input = incoming()
+        await f.ui("sf_decision_recall", input, async (call) => {
+          const measured = await f.measure(() => f.business.withCase(call, f.current, {}, async () => {
+            expectIndependentRoots(f.control.roots)
+            f.control.roots = []
+            return { status: "ok", value: await f.business.caseRecall(input, call) }
+          }))
+          const value = recallOk(ok(measured.value))
+          expect(value).toEqual(baseline)
+          expectIndependentRoots(measured.roots)
+          roots.push(...measured.roots)
+          // Changing the consumer's detached result cannot affect the next run.
+          expect(Reflect.set(value.matches[0]!.explanation.limitations, value.matches[0]!.explanation.limitations.length, "caller-only change")).toBe(true)
+        })
+      }
+      expect(new Set(roots.map((root) => root.identity)).size).toBe(4)
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("child-case-results-are-detached-and-closed-owners-refuse", async () => {
+      const input = incoming(), release = gate()
+      await f.ui("sf_decision_recall", input, async (call) => {
+        const caseInput = { caseRef: encodeCaseRef(f.current) }
+        let children = 0, reads = 0, lateReads = 0
+        let retained: PortResult<AuthorizedCaseProjection> | undefined
+        let capturedChild: PortResult<AuthorizedCaseProjection> | undefined
+        let capturedRecall: RecallResult | undefined
+        let late: Promise<PortResult<AuthorizedCaseProjection>> | undefined
+        try {
+          const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+            reads++
+            const child = await f.observer.read(caseInput, call, async () => {
+              children++
+              retained = await f.business.cases.read(caseInput, call)
+              capturedChild = structuredClone(retained)
+              late = (async () => {
+                await release.promise
+                return f.observer.read(caseInput, call, async () => {
+                  lateReads++
+                  return f.business.cases.read(caseInput, call)
+                })
+              })()
+              return retained
+            })
+            if (!retained || !capturedChild) throw new Error("The real child case did not complete")
+            const retainedValue = ok(retained)
+            retainedValue.case.objective = "mutated retained child"
+            expect(Reflect.set(retainedValue.evidenceRefs, "length", 0)).toBe(true)
+            expect(child).toEqual(capturedChild)
+            const value = await canonical(input, call)
+            capturedRecall = structuredClone(value)
+            return value
+          }))
+          expect(recallOk(measured.value)).toEqual(baseline)
+          expect(measured.value).toEqual(capturedRecall)
+          expectIndependentRoots(measured.roots)
+          expect(children).toBe(1)
+          expect(reads).toBe(1)
+          if (!late || !capturedChild) throw new Error("The child continuation was not created")
+          expect(ok(capturedChild).case).toMatchObject(f.current)
+          release.release()
+          expect((await late).status).toBe("unavailable")
+          expect(lateReads).toBe(0)
+        } finally { release.release(); await late }
+      })
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("a-child-cannot-substitute-another-case-version", async () => {
+      const input = incoming()
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, childReads = 0
+        let original: PortResult<AuthorizedCaseProjection> | undefined
+        let refused: PortResult<AuthorizedCaseProjection> | undefined
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          const caseInput = { caseRef: encodeCaseRef(f.current) }
+          refused = await f.observer.read(caseInput, call, async () => {
+            childReads++
+            const value = await f.business.cases.read(caseInput, call)
+            original = structuredClone(value)
+            if (value.status === "ok") value.value.case.version++
+            return value
+          })
+          // Even a caller that ignores the refusal still runs the complete
+          // reader; the invalid owner must not release its outcome.
+          return canonical(input, call)
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        expect(refused?.status).toBe("unavailable")
+        if (!original) throw new Error("The real child reader did not execute")
+        expect(ok(original).case).toMatchObject(f.current)
+        expect(childReads).toBe(1)
+        expect(reads).toBe(1)
+        expect(measured.roots).toHaveLength(1)
+      })
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("atlas-publication-change-between-work-and-egress-refuses", async () => {
+      const input = incoming()
+      let corruptedDigest = ""
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, captured: RecallResult | undefined
+        f.control.afterRoot = async (count) => {
+          expect(count).toBe(1)
+          expect(reads).toBe(1)
+          if (!captured) throw new Error("The complete Recall did not finish before the publication changed")
+          expect(recallOk(captured)).toEqual(baseline)
+          const before = await f.snapshot()
+          corruptedDigest = digestSfValue({ changed: "publication-identity" })
+          const changed = await f.authority.state.transaction(f.request(), { namespace: "outbox",
+            expectedStorageVersion: before.versions.outbox, targetRef: f.previous.id, targetIncarnation: f.previous.incarnation,
+            idempotencyKey: randomUUID(), commandDigest: digestSfValue({ event: staged.event.id, corruptedDigest }),
+          }, async (state) => {
+            const entry = state.outbox[staged.outbox.key]
+            if (!entry || entry.state !== "settled") throw new Error("The real publication receipt is not settled")
+            state.outbox[staged.outbox.key] = { ...entry, receipt: { ...entry.receipt, recordDigest: corruptedDigest } }
+            return { commit: true, value: true }
+          })
+          expect(ok(changed)).toBe(true)
+        }
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          const value = await canonical(input, call)
+          captured = structuredClone(value)
+          return value
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        expect(reads).toBe(1)
+        expect(measured.roots).toHaveLength(2)
+        expect(measured.roots[0]!.identity).not.toBe(measured.roots[1]!.identity)
+      })
+      const changed = await f.snapshot()
+      expect(changed.cases).toEqual(publishedState.cases)
+      expect(changed.atlas).toEqual(publishedState.atlas)
+      expect(changed.outbox[staged.outbox.key]).toMatchObject({ state: "settled", receipt: { recordDigest: corruptedDigest } })
+      // The canonical reader independently rejects the broken publication link.
+      // A read never repairs, settles or rewrites that receipt.
+      await f.ui("sf_decision_recall", input, async (call) => {
+        expect((await f.business.caseRecall(input, call)).status).toBe("unavailable")
+      })
+      expect(await f.snapshot()).toEqual(changed)
+    })
+  } finally { await deadline.close() }
+}, 120_000)
