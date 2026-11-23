@@ -111,7 +111,8 @@ const program = Effect.scoped(Effect.gen(function* () {
         })
         execute(DashboardPeople.domain, {
           page: "Hot Topics & Actions", action: "save", version: 0,
-          values: { action: topicName, owner: "Design test operator", due: year + "-12-15", status: "progress", priority: "high" },
+          values: { action: topicName, owner: "Design test operator", due: year + "-12-15", status: "progress", priority: "high",
+            notes: "Design test data · Original source notes." },
         })
         execute(DashboardPortfolio.domain, {
           page: "IT Risks", action: "save", version: 0,
