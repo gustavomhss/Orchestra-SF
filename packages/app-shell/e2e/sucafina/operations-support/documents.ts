@@ -321,8 +321,14 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   page.on("request", requestObserved)
   page.on("requestfailed", requestFailed)
   page.on("response", responseObserved)
-  const issuedLink = page.waitForResponse((response) =>
-    response.request().method() === "GET" && response.url() === linkURL.href).then(async (response) => {
+  // Keep the same original producer response outside Chromium's navigation cache.
+  // The observer forwards it unchanged; it does not mint another signed link.
+  const linkRead = await observe(page, linkURL.href, "GET", async (response) => {
+    phases.linkIssued = { elapsedMs: elapsedMs(), status: response.status() }
+  })
+  const issuedLink = linkRead.completed.then(async ({ response, request }) => {
+    expect(request.url()).toBe(linkURL.href)
+    expect(request.postData()).toBeNull()
     expect(response.status()).toBe(200)
     const link = await response.json() as { ok?: boolean; query?: string }
     phases.linkDelivered = { elapsedMs: elapsedMs(), status: response.status() }
