@@ -14,6 +14,7 @@ import { createSfSourcePersistence, currentSfPlannerReadonlySnapshotScope, curre
   currentSfReadonlySnapshotScope, plannerScopeAuthority } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector, sfPlannerProjectionSelector } from "../../../../product/integration/source-projections.ts"
 import { roleMap } from "../../../../runtime/admin.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 import { object, rows } from "../../../../runtime/contract.ts"
 import type { Actor, Snapshot } from "../../../../runtime/contract.ts"
 import { currentLocalReadonlyAuthorityData, openLocalStore } from "../../../../runtime/local-store.ts"
@@ -365,7 +366,7 @@ test("CurrentChoice prepared sources preserve canonical values and close owner, 
         expect(invoked).toEqual({ writes: 1, authorizations: 2 })
       }
       expect(await f.snapshot()).toEqual(before)
-      await f.store.transaction("planner", async (_snapshot, blobs) => {
+      await f.store.transaction("planner", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
         expect(await blobs.get("forbidden")).toBeUndefined()
         return { commit: false, value: undefined }
       })
