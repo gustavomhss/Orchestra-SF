@@ -18,6 +18,7 @@ import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { beginC17JscDiagnostic } from "./c17-jsc-diagnostic.ts"
 
 // Real SQLite/C08, admitted UI calls, Planner producer, persisted request/result
 // stores and BCS. The pending coverage and accepted ledger event are explicit
@@ -108,6 +109,7 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
     }
     return { store, authority, business, ui, produce, request }
   }
+  const diagnostic = beginC17JscDiagnostic()
   try {
     const first = await deadline.phase("initialize", () => open(true))
     const inner = await deadline.phase("produce-inner", () => first.produce(undefined, "inner"))
@@ -181,5 +183,8 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
       expect(refused.state).toBe("unavailable")
       expect(refused.authorizedProjection).toBeUndefined()
     }))
-  } finally { await deadline.close() }
+  } finally {
+    try { await deadline.close() }
+    finally { diagnostic?.finish() }
+  }
 }, 120_000)
