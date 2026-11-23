@@ -1,0 +1,101 @@
+{
+  "schema": "sf613-reviews-composition-independent-review-v1",
+  "verdict": "STATIC_PASS",
+  "reviewer": "/root/copy_hotpath",
+  "qualification": false,
+  "manifest": "07264f7a2ab3be81487e4c23a84a4dbc664bcc45",
+  "antecedent": "626e726900ff59ccd35a21a9bb2ab321ad13fde9",
+  "source": {
+    "commit": "6ad989c37c075c9033db50e117d5beb056b82e72",
+    "tree": "3830a7922f1fce08283d003c7dad5a6e971ea146",
+    "parents": [
+      "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    ],
+    "commitAndTreeReread": true
+  },
+  "scopedFiles": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+      "final": "c8bf0b8fbf3437410f2745781ab06346883942e0",
+      "dev": "34a6dba6d6dbd55fd891bbd3916088fa213018d0",
+      "original": "974e5cec91132eefc6dcabb0a45a95b66c6ccfc9"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+      "final": "3ba3381a437894dccafd7a52ef7a18f66ca33719",
+      "dev": "cb2fa6ca37e085124c2e7c863890c8d02cbf7482",
+      "original": "69cd9f00980ac4db9e8af27ece617a31df0a49dd"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+      "final": "2dd73f2893a000538daf4444b97542627230ba9f",
+      "dev": "5dcbc7734c750b0a246a1e9f3e1f8fc445df296a",
+      "original": "1c169fdbbbe0666f45f5d1a0348ea3f2a38115d9"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/value.tsx",
+      "final": "ac0775f910672ca487683d11bf361afa72741ab4",
+      "devPrefix": "1079091475d638039a9c065164ffc097003b68a5",
+      "originalSuffix": "c6a9dacff1cc3226a5415d8539a5e9f721e7ef7f",
+      "prefixExact": true,
+      "literalEvidenceSuffixExact": true
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+      "final": "c217a35f6014a9e78c25fde371507decf92626eb",
+      "exactOriginalC3": true
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/presentation.ts",
+      "final": "3ff647b2511dc10d7226a4d8a3c992c379c96d1d",
+      "exactMergedDev": true
+    }
+  ],
+  "checks": {
+    "actualSourceFileBlobsMatchManifest": true,
+    "actualDevAndOriginalFileBlobsReread": true,
+    "compareOperationBodyExactDev": true,
+    "preservedOperationBodyExactDev": true,
+    "range": "Each exported view function through immediately before its main SfPageFrame return, including translators, state, read/update operations and all guards.",
+    "componentAmountLineExactDev": true,
+    "componentAmountNullAndUnspecifiedCurrencyPreserved": true,
+    "scalarSites": "Compare ValueCell, preserved detail, and meeting use exact original SfPreservedLiteral and SfPreservedEvidence.",
+    "scalarContract": "Original String(value), explicit localized null, and separate producer unit/currency metadata retained.",
+    "translations": {
+      "allDevLinesRetained": true,
+      "additions": 20,
+      "allAddedLinesAlreadyInOriginalC3": true,
+      "openSourceEnglish": "Open source",
+      "openSourcePortuguese": "Abrir origem",
+      "bothOpenSourceLinesExactDev": true
+    },
+    "sourceAction": {
+      "plainButtonExactDev": true,
+      "passesUnchangedReferenceId": true,
+      "adjacentDetailsExposeOriginalReference": true,
+      "freshReviewReadBeforeSourceResolver": true,
+      "reviewIdVersionCheck": true,
+      "controllerOwnerGenerationKeyTransportContextRouteAndSelectedRefFencesExactDev": true,
+      "deniedAndSessionExpiredClearingExactDev": true,
+      "sameOriginHttpHttpsValidationExactDev": true
+    },
+    "preservedMeetingLineExactOriginal": true,
+    "modelSourceReferenceAndPeriodTextRetained": true,
+    "originalDiscussionMountRetained": "Presentation/discussion use hidden wrappers; source result stays in presentation wrapper; update result remains outside both."
+  },
+  "supersededAntecedentClause": "The earlier draft retained a source-reference interpolation in openSource. The final manifest explicitly supersedes it with the exact dev plain button and labels; the original ref remains in its details and action argument.",
+  "findings": [],
+  "excludedFromReview": [
+    "Imports composition",
+    "BI composition",
+    "Historical harness overlays",
+    "Agenda/reports composition already assigned elsewhere",
+    "Runtime/type/browser qualification",
+    "Visual rendering"
+  ],
+  "nextGate": "Original installed Reviews campaign on this exact source must verify values, sequence, reflow, meeting/source details and discussion state.",
+  "noCodeOrRefsChanged": true
+}

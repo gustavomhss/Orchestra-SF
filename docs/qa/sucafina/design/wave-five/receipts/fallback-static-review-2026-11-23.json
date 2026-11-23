@@ -1,0 +1,45 @@
+{
+  "schema": "sf613-fallback-canonical-independent-review-v1",
+  "verdict": "STATIC_PASS_FOR_ISOLATED_PRODUCT_MEASUREMENT",
+  "reviewer": "/root/copy_hotpath",
+  "qualification": false,
+  "mergeApproved": false,
+  "sourceBase": "e78821194263260fd058a2a2648ef6a750ed24c5",
+  "originalCanonicalBlob": "461c1728b9c6081d0ade0183bc194382523764f3",
+  "acceptedCanonicalBlob": "2afab6a76821839d5e85a97807864b3c860dcc6c",
+  "helperRetainedUnchanged": "5f9612729a89085e6b4a61440c7ac955aa7a85dd",
+  "exactChanges": [
+    "Replace import { sfCanonicalCloneTree } from \"./canonical-clone.ts\" with import \"./canonical-clone.ts\".",
+    "Remove const tree = sfCanonicalCloneTree(value).",
+    "Remove if (tree) return JSON.stringify(tree)."
+  ],
+  "verification": {
+    "entireFileEqualsExpectedTransform": true,
+    "canonicalVisitorByteExact": true,
+    "captureRuntimePrefixByteExact": true,
+    "digestAndAllTrailingFunctionsByteExact": true,
+    "noNewCastsOrIgnores": true,
+    "noSQLAuthOrSourceCallbackChanged": true,
+    "noRuntimeAdmissionWidened": true,
+    "originalImportInitializationOrderRetained": true
+  },
+  "reasoning": [
+    "Every value accepted by the existing tree path is a current privately registered ordinary clone graph under the original native primitive checks. The admitted traversal invokes no caller getter, Proxy trap or other mutable callback. The unchanged eager canonical visitor therefore produces the same tagged value representation and native JSON bytes.",
+    "Accessor descriptors, new unregistered children, changed runtime primitives, exotic objects, cycles and exceeded fast-path budgets already refuse the optional tree and use this same eager canonical fallback. Removing the preliminary optional walk does not remove canonical validation.",
+    "The retained JSON.stringify(canonical(value)) expression selects the serializer before the eager canonical argument traversal, exactly as the original refusal path. Native successful tree traversal has no user effect that could distinguish its earlier tree construction.",
+    "The digest function is byte-identical, retaining constructor, update method lookup, argument evaluation and digest call order.",
+    "The bare side-effect import retains original helper bootstrap timing; it prevents later consumers from establishing a new baseline after mutations."
+  ],
+  "rejectedFirstDraft": {
+    "blob": "e21e99d44bb48eea34e79d5c5fcfac38fd485f21",
+    "reason": "Deleting the import could defer canonical-clone initialization until after hooks were installed. Final draft restores the eager dependency with a side-effect import."
+  },
+  "limitations": [
+    "This review does not assert installed speed or qualification.",
+    "Alias-heavy original fallback traversal can repeat work; the measured negative control remains material.",
+    "Original normal T and Analytics must measure the installed result with unchanged assertions/deadlines.",
+    "No extra microcampaign was requested; prior U15 evidence is held by canonical_perf.",
+    "No new trust claim for globals modified before original module bootstrap is made."
+  ],
+  "readbackExact": true
+}

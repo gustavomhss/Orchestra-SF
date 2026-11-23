@@ -1,0 +1,95 @@
+{
+  "schema": "sf613-descriptors-identity-and-static-review-supplement-v1",
+  "recordedAt": "2026-11-23 22:02:30 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "audit_catalog",
+  "resultReceipt": "fcd643e46f0bb367fb92e46f65dd8f2d880467e8",
+  "correction": "Original final result receipt omitted source and snapshot commit/tree/blob fields from temporary-state serialization. This supplement supplies independently verified explicit identities without changing results.",
+  "decision": "REJECT_FOR_PRODUCT",
+  "qualification": false,
+  "productAdoption": false,
+  "source": {
+    "branch": "sf613-descriptors",
+    "commit": "8c5e424e26899310ee5e11e05b731073e418bcf4",
+    "tree": "d2244e28eab34c2336d407d64a46d14825acdc5d",
+    "parents": [
+      "e78821194263260fd058a2a2648ef6a750ed24c5"
+    ],
+    "exactChangedPaths": [
+      {
+        "path": "apps/cli/test/sf613-clone-descriptors-benchmark.test.ts",
+        "blob": "3f1279d83aa2964d9466276ebed7dd73dde80bde",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/sf613-clone-descriptors-controls.test.ts",
+        "blob": "17a3036f17f456c1711ebd7d7037bbef90904135",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+        "blob": "d0d83f58e0fb76c7d7c93d5502decd956b73d03d",
+        "status": "modified"
+      }
+    ]
+  },
+  "snapshot": {
+    "branch": "ci-run-linux-sf613-descriptors",
+    "commit": "0f817436c4603d78f637be1b7796fdd0a82c6252",
+    "tree": "999349d824f0e2e55f604099440b228be615f406",
+    "parents": [
+      "8c5e424e26899310ee5e11e05b731073e418bcf4"
+    ],
+    "exactAddedPaths": [
+      {
+        "path": ".ci-run.json",
+        "blob": "568557ae2ac8215e943a7c3130bd714e196cb4c1",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/sf613-clone-descriptors-verification.test.ts",
+        "blob": "a786a38f4f2c93dc4ed5828bb6df349c86396192",
+        "status": "added"
+      }
+    ]
+  },
+  "staticReview": {
+    "verdict": "PASS_FOR_ISOLATED_DIAGNOSTIC_ONLY",
+    "originalClone": "5f9612729a89085e6b4a61440c7ac955aa7a85dd",
+    "overlayClone": "d0d83f58e0fb76c7d7c93d5502decd956b73d03d",
+    "rationale": "b9d92afdd87dc493442ebfd6e405e29fbcb2957e",
+    "findings": [
+      "Both diagnostic lanes share the same original private bootstrap, ordinary-object registry and captured native methods; no later independent re-anchoring.",
+      "Object.getOwnPropertyDescriptors is captured in that original bootstrap and its additional pin applies to both lanes.",
+      "Original ownKeys, property budget and rejection run before optional bulk collection for admitted ordinary identities.",
+      "The diagnostic mode defaults false, is set outside timed batches and is reset in finally.",
+      "Reversing the six substitutions and deleting only the setter reproduces the original clone text exactly.",
+      "All 13 original controls and all 111 source expect calls remain; copied bulk controls add two cases and eight source expect calls."
+    ],
+    "baselineLimitation": "Both lanes include the additional pin and mode branch. This is not a byte-exact production baseline.",
+    "supersededDrafts": "Earlier fixture-only later-bootstrap proposal was rejected before launch and is not adopted."
+  },
+  "result": {
+    "run": 45270352240,
+    "mainJob": 138028207873,
+    "cleanupJob": 138030036339,
+    "workflowConclusion": "success",
+    "functionalAndTypeControls": "pass",
+    "performance": "reject",
+    "allTenMedianRatiosGreaterThanOne": true,
+    "cloneRegistrationFullCanonicalRange": [
+      1.076,
+      1.111
+    ],
+    "repeatedCanonicalRange": [
+      1.05,
+      1.094
+    ],
+    "exactRatiosLocation": "fcd643e46f0bb367fb92e46f65dd8f2d880467e8",
+    "nextStep": "No full product or release qualification for this rejected mechanism."
+  },
+  "logs": {
+    "main": "ef3281bbb6ce1e7edff1c329224de5c567b701c6",
+    "cleanup": "61e5ba3fe2d79ebbc8fc8ca96fb68040cbd56f11"
+  }
+}

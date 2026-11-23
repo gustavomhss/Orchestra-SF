@@ -1,0 +1,400 @@
+{
+  "schema": "sf613-dev717-independent-composition-harness-review-v1",
+  "recordedAt": "2026-11-23T21:59:00Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "audit_catalog",
+  "decision": "STATIC_PASS_FOR_ISOLATED_VERIFICATION",
+  "qualification": false,
+  "promotion": false,
+  "identity": {
+    "source": "6ad989c37c075c9033db50e117d5beb056b82e72",
+    "tree": "3830a7922f1fce08283d003c7dad5a6e971ea146",
+    "parents": [
+      "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    ],
+    "commitParentsAndTreeIndependentlyRead": true,
+    "manifest": "07264f7a2ab3be81487e4c23a84a4dbc664bcc45",
+    "incomingDevComparison": {
+      "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "head": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "changedPaths": 191,
+      "allPathsInsideAppShellOrDocs": true,
+      "classificationIsNotAnAssertionOfLineByLineReviewOfAll191Paths": true
+    }
+  },
+  "provenance": {
+    "checkpoint": {
+      "ref": "sf613-ledger@b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-checkpoint.json",
+      "blob": "3b7f8f8699a387265fc8b3e549c13b233892505d",
+      "limits": [
+        "GitHub MCP only for repository work;projectexecution onlyexistingtest-ciLinuxstrictOmni/prod",
+        "Original C17 105000cooperative/120000test;Preview60000;evaluation60000;Sensitivity120000",
+        "Original complete specs;oneworker/retries0/repeat1;nooracle/config/workflowweakening",
+        "No stale SQL/auth/grantcache;fresh guards and callbacks preserved",
+        "Snapshot diagnostics not product;working product,executed snapshot,docshead,andactualmerge remain distinct",
+        "Never claim crossrunner timingcausality orhumanvisualacceptance",
+        "Do not promote sharedhead ormerge until completegreen"
+      ],
+      "authorization": "User confirmed session and requested finish with every required gate green and merge",
+      "authorizationIsCoordinatorSummaryNotOriginalHumanTranscript": true
+    },
+    "scope": {
+      "path": "docs/qa/sucafina/design/wave-five/scope.json",
+      "blob": "2a0e8dd54dbdff7f8086b1ebe773b9f8aba9a910",
+      "userRequest": "Otimo. Pegue um bloco de 15",
+      "constraints": {
+        "native": true,
+        "githubMcpOnly": true,
+        "actionsOnly": true,
+        "preserveExistingEnglish": true,
+        "preserveCanonicalProducers": true,
+        "preserveShellAndPalettes": true,
+        "showRealCapturesBeforeMerge": true
+      }
+    },
+    "earlierDeadlineReceipt": "df1d3b9c6bbbf094c32f5c22bcb234504b799a16",
+    "finding": "No literal human instruction prohibiting locator maintenance or requiring specs byte-exact was found in these recovered documents. The checkpoint requires original complete specs and no oracle/config/workflow weakening. Byte-exact was our conservative implementation rule.",
+    "limit": "Bounded review of recovered source documents; the complete original conversation was not retrieved. Absence of a literal prohibition in these documents does not establish its absence in every historical message.",
+    "decision": "Exact, case-sensitive copy alignment is consistent with complete original specs and does not authorize changing assertion substance or temporal boundaries."
+  },
+  "locatorMaintenance": {
+    "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+    "originalBlob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+    "finalBlob": "756732ed624aefc40345b896005cc7f5a781a247",
+    "changes": [
+      {
+        "original": "/^changed /",
+        "final": "/^Changed /",
+        "occurrences": 2
+      }
+    ],
+    "exactTwoReplacementsVerified": true,
+    "unchanged": [
+      "all assertions",
+      "all source identity and authorization checks",
+      "all value and complete-impact oracles",
+      "ordering",
+      "actions",
+      "timing budgets",
+      "anchoring and case sensitivity"
+    ],
+    "cause": {
+      "currentDevImportsOracleBlob": "19f4de93a34cc7d5cd39c7f0a132943f1d7d0d5e",
+      "currentDevPreviewHelperBlob": "647129703af3917ae412d920556d1df28819e00c",
+      "originalAndCurrentDevLiteralTextOraclesConflict": true,
+      "discardedDedicatedLowercaseLabels": true
+    },
+    "description": "Complete original Collab spec with two explicit copy alignments; do not describe it as byte-exact."
+  },
+  "rootScopeReview": {
+    "imports": {
+      "index": "243c6400c2f9d72d4e80d589d47f1c1e68874c39",
+      "css": "6b283932711a14323742db635d5f4c3cd0165a5c",
+      "previewHelper": "647129703af3917ae412d920556d1df28819e00c",
+      "findings": [
+        "OriginalImpact body is byte-exact C3.",
+        "Pre-render runtime body is byte-exact C3.",
+        "Readable gaps are outside the original complete .sf-files-impact dt list; last source identity and all impact rows remain.",
+        "Exact dev preview helper retains populated disclosures, groups empty categories, and preserves all before/after/path/source values.",
+        "Current dev Titlecase labels retained; no duplicate fake/hidden alternative summary."
+      ]
+    },
+    "bi": {
+      "model": "7e65ecbc577c2a8ec4cd99738b1cf46403b3dcf2",
+      "visual": "249c80eac6c43cb68f709b0c18c01644d7a7f191",
+      "css": "80c7802df9d69d05c9be529746053151f07bc66d",
+      "originalAnalyticsHelper": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "findings": [
+        "C3 scalar precision, selection/source reference and digest bindings remain.",
+        "Dev currencyLabel/unspecified-currency handling and period/value/unit pairs retained.",
+        "SVG title/text and paired mobile values use fmt(row.value,row.unit).",
+        "CSS is exact dev except removing the narrow-screen chart display:none rule and updating the comment.",
+        "Original visible horizontally scrollable magnitude graph is complementary to paired mobile rows; this is an intentional responsive composition, not a claim of unchanged dev layout."
+      ],
+      "requiredVisualChecks": [
+        "320px mobile",
+        "390px mobile",
+        "desktop"
+      ],
+      "visualAcceptanceClaimed": false
+    },
+    "dictionaries": {
+      "u23": "bfc529b5dc38365893348785bac5821be1238f99",
+      "u32": "2dd73f2893a000538daf4444b97542627230ba9f",
+      "u33": "66d5d61906817441a5576863e9f92e2276ac8503",
+      "keysPerLanguage": {
+        "u23": 133,
+        "u32": 193,
+        "u33": 31
+      },
+      "findings": [
+        "No duplicate keys; English and pt-BR keysets match.",
+        "Three-way merge preserves candidate translations when dev was unchanged and dev refinements for overlapping edited values.",
+        "Open source/Abrir origem remain exact dev without a placeholder; final u32 subset also independently reviewed by copy_hotpath."
+      ]
+    },
+    "host": "29b223479e4861a208326850b8f2845e962cecbb",
+    "hostExactlyCurrentDev": true,
+    "sharedHelpers": {
+      "waveThree": "b3c02539245cce5091e0f200e84d3021016074ea",
+      "waveFour": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+      "decision": "Merged source retains new dev helper exports/behavior and C3 trace-off/retries-zero. Final strict original browser snapshots overlay only the original harness dependencies listed below."
+    },
+    "reviewsSubset": {
+      "owner": "copy_hotpath",
+      "status": "PASS reported independently for final source and blob set; separate receipt to be linked",
+      "compare": "c8bf0b8fbf3437410f2745781ab06346883942e0",
+      "preserved": "3ba3381a437894dccafd7a52ef7a18f66ca33719",
+      "value": "ac0775f910672ca487683d11bf361afa72741ab4",
+      "agenda": "56d7c6faa6f2730b93673ad95f369d8ce506fdb6",
+      "reports": "043a66289f45290209f011cad943580c6156f6e1"
+    }
+  },
+  "strictHarness": {
+    "baseline": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "baselineAppShellTree": "2083a86281a123e68266e169a403f781f0f3f628",
+    "treeEntries": 2585,
+    "treeTruncated": false,
+    "method": "Read-only lexical traversal of relative static imports/exports, literal dynamic imports and require, plus explicit spawned native-host.ts from installation.ts. Cross-check every reachable path against all 191 incoming dev changed paths. No repository code was executed locally.",
+    "entrypoints": [
+      "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+      "packages/app-shell/e2e/sucafina/design-support/native-host.ts"
+    ],
+    "reachableE2EFiles": 23,
+    "completeReachableGraph": {
+      "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts": {
+        "blob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts": {
+        "blob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-seed.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-three-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts": {
+        "blob": "7cda60f820508ac4123693a97cd9ffe2e0eeee56",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-reviews-seed.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/native-host.ts": {
+        "blob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-three-seed.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-planner-seed.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement-seed.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts": {
+        "blob": "79c5283fd841a0e86b7ef72ad321b14e11d8dfb0",
+        "dependencies": []
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics-source.ts": {
+        "blob": "581ac6c7f506c9ef7e46c633e70139edebddcfdd",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four.ts": {
+        "blob": "7ba8ab74f814ec72094a6945c8f9f93fcbe12003",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+          "packages/app-shell/e2e/sucafina/design-support/installation.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts": {
+        "blob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts": {
+        "blob": "a65fcc203fa02d0129a44ad3a84c32ff615c4b77",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+          "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-three.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-seed.ts": {
+        "blob": "2192b5260a9837dc614a58ada15cb1843b36a533",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-work-seed.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts": {
+        "blob": "c407b9b67c7f3142935d10ba524d36399f618250",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/operations-support/runtime.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/operations-support/runtime.ts": {
+        "blob": "d3f50920d69cd04029298d286f5b08fc02c21349",
+        "dependencies": []
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-three-data.ts": {
+        "blob": "c47350503784c1b8785ff77b5e5c39609b18c6ec",
+        "dependencies": []
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-five-reviews-seed.ts": {
+        "blob": "5b08c2b74e77d8cc71cb49929421cb313d1b6370",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/installation.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-three-seed.ts": {
+        "blob": "650d053ff3bf89afebed57a028506fb3e48dfe47",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-three-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-planner-seed.ts": {
+        "blob": "962fe21d2f6570183fe1ac05012a72ec30a170fe",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-planner-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement-seed.ts": {
+        "blob": "8de7edaba178669d8065383eee1f74356f43c03f",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-seed.ts": {
+        "blob": "32b39933bf81c220729d3af910809e7d7b88910f",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-decisions-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-three.ts": {
+        "blob": "61bab8a4b008a0dd7d55be7726ede3419c319a1d",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/installation.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/installation.ts": {
+        "blob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "dependencies": []
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-work-seed.ts": {
+        "blob": "078abfe0bf3955bc27ed3816fb432a8397498620",
+        "dependencies": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement-data.ts"
+        ]
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-planner-data.ts": {
+        "blob": "79733f02d27eece4891109dbb99ce54f833f18ff",
+        "dependencies": []
+      },
+      "packages/app-shell/e2e/sucafina/design-support/wave-four-procurement-data.ts": {
+        "blob": "c099e732954cd63ebbf5220c0ec41ec5079b2296",
+        "dependencies": []
+      }
+    },
+    "overlayWhitelist": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "blob": "7ba8ab74f814ec72094a6945c8f9f93fcbe12003",
+        "devBlob": "a39f82893fb2c422f0d65bb4a319b7057ee17fbd",
+        "importedBy": [
+          "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts"
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three-seed.ts",
+        "blob": "650d053ff3bf89afebed57a028506fb3e48dfe47",
+        "devBlob": "037e5ce0fb76222b2b88aa5317833e7ebe8b9355",
+        "importedBy": [
+          "packages/app-shell/e2e/sucafina/design-support/native-host.ts"
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "blob": "61bab8a4b008a0dd7d55be7726ede3419c319a1d",
+        "devBlob": "0004e068a7033d87c3e6453b304ec63e2b116d8d",
+        "importedBy": [
+          "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab.ts"
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+        "blob": "d3f50920d69cd04029298d286f5b08fc02c21349",
+        "devBlob": "51bac0966257e1799bf29281e1d5dfcecebc73df",
+        "importedBy": [
+          "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "packages/app-shell/e2e/sucafina/design-support/wave-five-collab-imports.ts"
+        ]
+      }
+    ],
+    "reasons": {
+      "waveThree": "New dev waits original provider and route responses before ready/DOM checks; old enter starts them directly after page.goto. Preserve the original temporal boundary.",
+      "waveFour": "Re-export and fixture support follows original waveThree behavior and exact original fixture lifetime.",
+      "waveThreeSeed": "Native-host is a spawned entry point used by every original wave-five installation. Dev adds currency USD to a primary Vendor Contracts fixture; freeze original data for the original campaigns.",
+      "runtime": "Dev forwardOnce adds claimed/closing ownership, awaits in-flight forwarding at close, removes times:1, and changes failure wrapping. Exact old runtime preserves the original observation/interception behavior."
+    },
+    "notOverlaid": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-admission.ts",
+        "reason": "Not reachable from any of the three original specs or explicit native-host entrypoint. Imports runtime; the reverse dependency does not exist."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/forward-error.ts",
+        "reason": "New helper is unreachable after exact C3 runtime overlay removes its sole graph import. Leave file present; do not delete."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "reason": "Not reachable from original Collab; its C3 helper imports operations runtime directly."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/original-read.ts",
+        "reason": "New dev helper is not imported by overlaid C3 waveThree/waveFour graph."
+      }
+    ],
+    "externalBoundary": "All 191 incoming dev paths are app-shell or docs. External modules/CLI native installation fixture and dependency versions have no incoming dev change in this comparison. Product code and dependencies must not be overlaid.",
+    "scope": "These four overlays apply only to the three original wave-five browser campaigns. Run new dev reading specs with current dev harness separately; run source e2e types on merged helpers.",
+    "prohibited": [
+      "product source overlays",
+      "added response wait before original matchers",
+      "timeout increase",
+      "assertion omission",
+      "workflow change",
+      "configuration weakening"
+    ]
+  },
+  "verificationAtReview": {
+    "focusedFrontendReceipt": "2840f1adff29aa81ba120d4dd56771a72c8dc825",
+    "focusedFrontendOnly": true,
+    "originalBrowserCampaigns": "Launched by root after whitelist; pending when this review was written",
+    "allSixFinalSourceCampaignsPassed": false
+  },
+  "limits": [
+    "Static review permits isolated verification, not product qualification or promotion.",
+    "All final acceptance campaigns must be attributed to the exact final source and current dev ancestry.",
+    "Do not transfer earlier C10 pass on source36cc or focused pass on e788 to source6ad989.",
+    "Do not claim visual acceptance from source review or DOM/type checks."
+  ]
+}

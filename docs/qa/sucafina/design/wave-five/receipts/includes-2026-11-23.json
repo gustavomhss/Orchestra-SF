@@ -1,0 +1,842 @@
+{
+  "schema": "sf613-canonical-includes-receipt-v1",
+  "date": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "qualification": false,
+  "fixtureOnly": true,
+  "verdict": {
+    "performance": "REJECT",
+    "correctnessControls": "PASS",
+    "cliTypes": "PASS",
+    "reason": "Every real C14 fixture has median paired candidate/original ratio above 1. Captured context and both large projections are slower in every pair. No material improvement demonstrated; candidate not adopted.",
+    "productAdoption": false,
+    "releaseRerun": false,
+    "installedFlowRerun": false,
+    "originalC17Qualification": false
+  },
+  "identity": {
+    "productSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "productCanonicalBlob": "461c1728b9c6081d0ade0183bc194382523764f3",
+    "diagnosticSource": {
+      "branch": "sf613-includes",
+      "commit": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+      "tree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+      "parents": [
+        "97c921ab0054bd5154227593adcbcca56b0538c3"
+      ],
+      "files": [
+        {
+          "path": "apps/cli/test/fixture/sucafina-includes-diagnostic.ts",
+          "blob": "b0422e137524c67fb017f0d2ead6a8ed878df0dd",
+          "status": "added"
+        },
+        {
+          "path": "apps/cli/test/sucafina-includes-diagnostic.test.ts",
+          "blob": "1fa6bbea2cb8f78eed74a17b97b325777655d744",
+          "status": "added"
+        }
+      ],
+      "onlyTwoFixtureAdditions": true
+    },
+    "snapshot": {
+      "branch": "ci-run-linux-sf613-includes",
+      "commit": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+      "tree": "6b726a6e9445cfee283ae212e89a8946d695877a",
+      "parents": [
+        "b148a3dbc53434c521f45c14bb67c4489680d04f"
+      ],
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "blob": "af4255109d219cb25005331c0763651f47ccc70d",
+          "status": "added"
+        },
+        {
+          "path": "apps/cli/test/sucafina-includes-verification.test.ts",
+          "blob": "38b9f1b8926486621d5049081ce6b0259b2b2c41",
+          "status": "added"
+        }
+      ]
+    },
+    "identityVerification": "Existing test-ci wrapper fetched the snapshot at depth two, asserted HEAD equals GITHUB_SHA, and asserted its parent commit and tree equal the reviewed diagnostic source. Diagnostic record source names the unchanged C3 product baseline; wrapper records identify the diagnostic source and snapshot separately."
+  },
+  "experiment": {
+    "change": "Replace only the full canonical fallback's per-object private two-element prototype membership literal with a captured-native own descriptor identity guard and SameValueZero comparisons; literal method call remains exact fallback after any includes change.",
+    "bootstrap": "Original sfCanonicalProjectionRuntime proof runs first. Only its admitted bootstrap/runtime can capture native descriptor/hasOwn and intrinsic literal-array prototype/includes. Full proof checked once outside timed loops, not on each node. Existing prebootstrap trust limitation retained.",
+    "perNode": "Read current Object.prototype first, inspect captured intrinsic Array prototype's own includes descriptor before dynamic Object.getPrototypeOf(value). Fast lane only while the original own data method remains identical. Preserve Object.getPrototypeOf receiver and one trap, native method-selection timing, fallback accessor/inherited/replacement receiver and error order. SameValueZero handles NaN facades.",
+    "originalBehaviorRetained": [
+      "Original sfCanonicalCloneTree invoked first in both lanes",
+      "Original key enumeration, sorting, mapper callbacks and property reads",
+      "Full current graph traversal and canonical output",
+      "Original JSON/dynamic operations and unsupported-value errors",
+      "No graph/object/credential/generation memoization",
+      "No product canonical or runtime admission edits"
+    ],
+    "fixtures": "Exact five C14 fixture() graphs from apps/cli/test/sucafina-canonical-direct-diagnostic.test.ts at diagnostic snapshot 66c2bddf57a23279a2319fef9678628ddba83e5e; no shape/value changes.",
+    "lanes": [
+      "original product canonical",
+      "fixture-only guarded prototype predicate in otherwise exact canonical traversal"
+    ],
+    "pairsPerFixture": 4,
+    "alternatingCandidateFirst": [
+      false,
+      true,
+      false,
+      true
+    ],
+    "warmupCallsPerLanePerFixture": 100,
+    "measuredCallsPerLane": 12000,
+    "timed": "Full canonical calls, including per-node captured native descriptor and hasOwn guard overhead.",
+    "excluded": [
+      "One-time bootstrap proof/capture",
+      "Hashing",
+      "Installed Preview/C17 context path",
+      "Heap/allocation measurement",
+      "Release binary behavior"
+    ],
+    "bounds": {
+      "records": 7,
+      "maxRecordLineBytes": 4096,
+      "observedMaxRecordLineBytes": 809,
+      "testTimeoutMs": 120000,
+      "processTimeoutMs": 180000,
+      "wrapperTestTimeoutMs": 240000,
+      "outputBytesPerStream": 1048576
+    },
+    "noTimingPassThreshold": true
+  },
+  "review": {
+    "independentReviewer": "/root/audit_catalog",
+    "staticVerdict": "PASS for isolated diagnostic CI only",
+    "reviewedHelper": "b0422e137524c67fb017f0d2ead6a8ed878df0dd",
+    "reviewedTests": "1fa6bbea2cb8f78eed74a17b97b325777655d744",
+    "reviewScope": "Original canonical body and cloneTree-first ordering, original bootstrap proof before captures, own descriptor guard, literal fallback ordering/receiver, SameValueZero facades; not product adoption."
+  },
+  "ci": {
+    "workflow": "test-ci",
+    "workflowId": 416464764,
+    "path": ".github/workflows/test-ci.yml",
+    "run": 45268700004,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45268700004",
+    "attempt": 1,
+    "createdAt": "2026-11-23T21:20:46Z",
+    "updatedAt": "2026-11-23T21:22:59Z",
+    "status": "completed",
+    "conclusion": "success",
+    "runner": "ubuntu-24.04",
+    "runnerOS": "Linux",
+    "channel": "prod",
+    "omni": "strict",
+    "runtime": {
+      "version": "1.3.14",
+      "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    },
+    "jobs": [
+      {
+        "id": 138022411555,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 19
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 21
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 23
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 46
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 47
+          }
+        ]
+      },
+      {
+        "id": 138023654581,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ],
+    "gateRecords": [
+      {
+        "gate": "fetch source parent",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "sourceTree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+        "snapshot": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+        "run": "45268700004",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=2",
+          "origin",
+          "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 360,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "gate": "snapshot identity",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "sourceTree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+        "snapshot": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+        "run": "45268700004",
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "gate": "source identity",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "sourceTree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+        "snapshot": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+        "run": "45268700004",
+        "command": [
+          "git",
+          "show",
+          "-s",
+          "--format=%H%n%T",
+          "HEAD^"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 16,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "gate": "six prototype membership controls and paired full canonical comparison",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "sourceTree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+        "snapshot": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+        "run": "45268700004",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/sucafina-includes-diagnostic.test.ts"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 1245,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "gate": "CLI package typecheck",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "sourceTree": "ed42aa4c1fc7b59cc2e2fe5e50060ebaac1d0b2e",
+        "snapshot": "2b6501f8a1b3c10d0a187ce3e623f0bc133ca126",
+        "run": "45268700004",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 27451,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ],
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "tests": {
+      "fixture": {
+        "passed": 6,
+        "failed": 0,
+        "assertions": 201,
+        "commandDurationMs": 1245,
+        "benchmarkMs": 1206.81
+      },
+      "wrapper": {
+        "passed": 3,
+        "failed": 0,
+        "assertions": 7
+      },
+      "cliTypecheck": {
+        "exitCode": 0,
+        "durationMs": 27451
+      },
+      "omni": {
+        "positiveControl": "pass",
+        "declaredTests": 3,
+        "spawns": 5,
+        "delegated": 0
+      }
+    },
+    "controls": [
+      {
+        "name": "bootstrap proof rejects a transient replacement before capturing a literal prototype",
+        "ms": 7.1
+      },
+      {
+        "name": "prototype-check candidate retains full canonical bytes and current values",
+        "ms": 4.67
+      },
+      {
+        "name": "hooked accessor and inherited includes retain receiver, method selection and error order",
+        "ms": 0.56
+      },
+      {
+        "name": "prototype traps changing includes run after the original native method was selected",
+        "ms": 0.22
+      },
+      {
+        "name": "custom Object reads retain receiver and SameValueZero prototype membership",
+        "ms": 0.22
+      },
+      {
+        "name": "paired full canonical comparison includes the prototype descriptor guard",
+        "ms": 1206.81
+      }
+    ],
+    "artifacts": [],
+    "cleanup": {
+      "conclusion": "success",
+      "snapshotBranchAbsent": true,
+      "referenceReadbackHttpStatus": 404
+    }
+  },
+  "measurement": {
+    "ratioDefinition": "candidate elapsed / original elapsed; values above 1 indicate candidate slower. Median is mean of the two middle per-pair ratios. Calculated from logged three-decimal millisecond timings, without statistical significance claim.",
+    "summary": [
+      {
+        "fixture": "tagged-values",
+        "medianPairedRatio": 1.0477338389752586,
+        "originalMs": 15.844,
+        "candidateMs": 16.306,
+        "pairsWon": 1,
+        "pairs": 4,
+        "pairedRatios": [
+          1.1495570609692547,
+          1.0553070353802358,
+          0.8770731707317074,
+          1.0401606425702812
+        ],
+        "slowdownPercent": 4.7733838975258625
+      },
+      {
+        "fixture": "evidence-reference",
+        "medianPairedRatio": 1.0488940853590745,
+        "originalMs": 14.148,
+        "candidateMs": 14.162,
+        "pairsWon": 1,
+        "pairs": 4,
+        "pairedRatios": [
+          0.8520291837665299,
+          1.0180559735179056,
+          1.108150967332699,
+          1.0797321972002434
+        ],
+        "slowdownPercent": 4.889408535907447
+      },
+      {
+        "fixture": "captured-context",
+        "medianPairedRatio": 1.1392375338428542,
+        "originalMs": 31.043,
+        "candidateMs": 35.277,
+        "pairsWon": 0,
+        "pairs": 4,
+        "pairedRatios": [
+          1.0155500993803344,
+          1.267753047164812,
+          1.1595388121732135,
+          1.1189362555124949
+        ],
+        "slowdownPercent": 13.923753384285419
+      },
+      {
+        "fixture": "aliased-projection",
+        "medianPairedRatio": 1.0742559347225793,
+        "originalMs": 233.506,
+        "candidateMs": 250.40300000000002,
+        "pairsWon": 0,
+        "pairs": 4,
+        "pairedRatios": [
+          1.077322262584328,
+          1.0521329423927597,
+          1.0711896068608304,
+          1.0892437032936617
+        ],
+        "slowdownPercent": 7.42559347225793
+      },
+      {
+        "fixture": "distinct-projection",
+        "medianPairedRatio": 1.066972895132207,
+        "originalMs": 235.129,
+        "candidateMs": 250.925,
+        "pairsWon": 0,
+        "pairs": 4,
+        "pairedRatios": [
+          1.0731392809861942,
+          1.067529602371637,
+          1.0664161878927771,
+          1.0617847434305467
+        ],
+        "slowdownPercent": 6.6972895132207055
+      }
+    ],
+    "aggregate": {
+      "originalMs": 529.67,
+      "candidateMs": 567.0730000000001,
+      "candidateOverOriginal": 1.0706156663582989,
+      "interpretation": "Sum over the fixed measured schedule only; not an installed-flow speed prediction."
+    },
+    "records": [
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "start",
+        "pairsPerFixture": 4,
+        "warmupCallsPerLane": 100,
+        "fullCanonicalMeasured": true,
+        "cloneTreeFirstInBothLanes": true,
+        "candidateDifference": "guarded private prototype membership only",
+        "perObjectGuard": "captured native own descriptor plus own-data identity check",
+        "broadRuntimeScanPerNode": false,
+        "objectMemo": false,
+        "nativeHashMeasured": false,
+        "installedPreviewMeasured": false,
+        "heapMeasured": false,
+        "bootstrapTrustOnly": true,
+        "bootstrapProof": "existing canonical proof checked once outside timing",
+        "originalHasherChanged": false,
+        "maxLines": 7,
+        "maxLineBytes": 4096
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "fixture",
+        "fixture": "tagged-values",
+        "iterationsPerLane": 1000,
+        "canonicalUnits": 418,
+        "columns": [
+          "candidateFirst",
+          "originalMs",
+          "candidateMs"
+        ],
+        "pairs": [
+          [
+            0,
+            3.838,
+            4.412
+          ],
+          [
+            1,
+            4.918,
+            5.19
+          ],
+          [
+            0,
+            4.1,
+            3.596
+          ],
+          [
+            1,
+            2.988,
+            3.108
+          ]
+        ]
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "fixture",
+        "fixture": "evidence-reference",
+        "iterationsPerLane": 1000,
+        "canonicalUnits": 645,
+        "columns": [
+          "candidateFirst",
+          "originalMs",
+          "candidateMs"
+        ],
+        "pairs": [
+          [
+            0,
+            4.386,
+            3.737
+          ],
+          [
+            1,
+            3.323,
+            3.383
+          ],
+          [
+            0,
+            3.153,
+            3.494
+          ],
+          [
+            1,
+            3.286,
+            3.548
+          ]
+        ]
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "fixture",
+        "fixture": "captured-context",
+        "iterationsPerLane": 500,
+        "canonicalUnits": 3160,
+        "columns": [
+          "candidateFirst",
+          "originalMs",
+          "candidateMs"
+        ],
+        "pairs": [
+          [
+            0,
+            8.553,
+            8.686
+          ],
+          [
+            1,
+            7.548,
+            9.569
+          ],
+          [
+            0,
+            7.459,
+            8.649
+          ],
+          [
+            1,
+            7.483,
+            8.373
+          ]
+        ]
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "fixture",
+        "fixture": "aliased-projection",
+        "iterationsPerLane": 250,
+        "canonicalUnits": 49879,
+        "columns": [
+          "candidateFirst",
+          "originalMs",
+          "candidateMs"
+        ],
+        "pairs": [
+          [
+            0,
+            57.81,
+            62.28
+          ],
+          [
+            1,
+            59.003,
+            62.079
+          ],
+          [
+            0,
+            58.885,
+            63.077
+          ],
+          [
+            1,
+            57.808,
+            62.967
+          ]
+        ]
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "fixture",
+        "fixture": "distinct-projection",
+        "iterationsPerLane": 250,
+        "canonicalUnits": 49879,
+        "columns": [
+          "candidateFirst",
+          "originalMs",
+          "candidateMs"
+        ],
+        "pairs": [
+          [
+            0,
+            58.163,
+            62.417
+          ],
+          [
+            1,
+            58.019,
+            61.937
+          ],
+          [
+            0,
+            59.353,
+            63.295
+          ],
+          [
+            1,
+            59.594,
+            63.276
+          ]
+        ]
+      },
+      {
+        "schema": "sf-canonical-includes-v1",
+        "qualification": false,
+        "fixtureOnly": true,
+        "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "runtime": {
+          "version": "1.3.14",
+          "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+        },
+        "phase": "complete",
+        "fixtures": 5,
+        "pairs": 20,
+        "measuredCallsPerLane": 12000,
+        "timeThresholdApplied": false,
+        "productAdoption": false
+      }
+    ]
+  },
+  "logs": {
+    "contentAddressing": "Git blob SHA over exact decoded UTF-8 job log text, including leading BOM. No raw archive or SHA256 claim.",
+    "main": {
+      "job": 138022411555,
+      "blob": "5be5f11e0135beac27344e9cbbd29af62e2d0969",
+      "name": "main",
+      "chars": 74434,
+      "utf8Bytes": 74436
+    },
+    "cleanup": {
+      "job": 138023654581,
+      "blob": "1497c2f14da8c6095ce062602a07b1eb34c03712",
+      "name": "cleanup",
+      "chars": 2292,
+      "utf8Bytes": 2294
+    }
+  },
+  "limitations": [
+    "Single normal-runtime bounded paired experiment; small fixture timings are noisy.",
+    "Correctness controls and CLI typecheck pass, but performance rejects the proposed mechanism.",
+    "No release binary or full installed-flow qualification and no source promotion.",
+    "The complete guard cost is measured per node; one-time bootstrap proof is disclosed as excluded."
+  ]
+}

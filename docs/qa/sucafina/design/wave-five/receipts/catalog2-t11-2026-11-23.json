@@ -1,0 +1,876 @@
+{
+  "schema": "sf613-catalog2-t11-completed-receipt-v1",
+  "recordedAt": "2026-11-23 22:02:30 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "audit_catalog",
+  "campaign": "T11 original normal technical",
+  "conclusion": "FAIL_ORIGINAL_C17_COOPERATIVE_DEADLINE",
+  "qualification": false,
+  "identity": {
+    "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+    "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+    "snapshotTree": "17be5817cb0d3643f20e29cfe0b7810dc40610d9",
+    "branch": "ci-run-linux-sf613-catalog2tech",
+    "snapshotParentIndependentlyVerified": true,
+    "exactOverlay": [
+      {
+        "path": ".ci-run.json",
+        "blob": "5837e17e056b2c8b9c9581e4410f2d8e17de8856",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/sucafina-finish-verification.test.ts",
+        "blob": "6cbecc48ce8c6573296a53c72643ca7f2ff95e9b",
+        "status": "added"
+      }
+    ],
+    "noProductOrOriginalTestOverlay": true
+  },
+  "ci": {
+    "workflow": "test-ci",
+    "run": 45267076107,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45267076107",
+    "createdAt": "2026-11-23T21:11:18Z",
+    "updatedAt": "2026-11-23T21:19:40Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "runner": "ubuntu-24.04",
+    "strictOmni": true,
+    "channel": "prod",
+    "jobs": [
+      {
+        "id": 138016702436,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T21:11:20Z",
+        "completedAt": "2026-11-23T21:19:32Z"
+      },
+      {
+        "id": 138021680399,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T21:19:35Z",
+        "completedAt": "2026-11-23T21:19:40Z"
+      }
+    ],
+    "cleanupBranchReadback404": true,
+    "artifacts": []
+  },
+  "results": {
+    "wrapper": {
+      "passed": 14,
+      "failed": 1,
+      "assertions": 568,
+      "durationSeconds": 452.71
+    },
+    "storageGroup": {
+      "passed": 59,
+      "skipped": 2,
+      "failed": 1,
+      "skipExplanation": "Two original UID skips, unchanged.",
+      "command": [
+        "bun",
+        "test",
+        "./test/local-store.test.ts",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts",
+        "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "./test/product/wp10/integration/finance-pair-observation.test.ts"
+      ],
+      "commandDurationMs": 173616
+    },
+    "C17": {
+      "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "originalCooperativeDeadlineMs": 105000,
+      "originalTestTimeoutMs": 120000,
+      "observedTestDurationMs": 105007.21,
+      "inner": {
+        "phaseMs": 1422,
+        "reads": 14,
+        "completed": 14,
+        "aborted": false
+      },
+      "outer": {
+        "phaseMs": 103556,
+        "reads": 1928,
+        "completed": 1928,
+        "elapsedMs": 105003,
+        "aborted": true
+      },
+      "reopenReached": false,
+      "ancestryReached": false,
+      "cycleAndRevocationReached": false,
+      "counterMeaning": "business.results.readForCalculation calls, not SQL queries or Planner preparation calls",
+      "causality": "No Catalog2 C17 benefit or cross-run timing causality is claimed."
+    },
+    "types": [
+      {
+        "gate": "CLI package typecheck",
+        "exitCode": 0,
+        "durationMs": 42315
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "exitCode": 0,
+        "durationMs": 43885
+      },
+      {
+        "gate": "app-shell typecheck",
+        "exitCode": 0,
+        "durationMs": 23502
+      },
+      {
+        "gate": "app-shell e2e typecheck",
+        "exitCode": 0,
+        "durationMs": 7762
+      }
+    ],
+    "guards": {
+      "actualDev": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "actualMergeBase": "e115b667d845822a1df5f523bbfd828ab57ca978",
+      "rules": 78,
+      "files": 825,
+      "warnings": 40,
+      "errors": [],
+      "approved": [],
+      "warningsNotWaived": true
+    },
+    "omni": {
+      "declaredTests": 15,
+      "spawns": 26,
+      "delegated": 0,
+      "positiveControl": "pass"
+    },
+    "gateRecords": [
+      {
+        "timestamp": "2026-11-23T21:11:58.2518962Z",
+        "value": {
+          "gate": "fetch source parent",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=2",
+            "origin",
+            "351870e7db48863b60ce8ebc073b43cd7670f886"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 227,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:11:58.2564724Z",
+        "value": {
+          "gate": "snapshot identity",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 5,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:11:58.2779473Z",
+        "value": {
+          "gate": "source identity",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "-s",
+            "--format=%H%n%T",
+            "HEAD^"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 21,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:11:59.8858153Z",
+        "value": {
+          "gate": "26 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/captured-context-identity.test.ts",
+            "./test/canonical-native.test.ts",
+            "./test/product/wp10/integration/canonical-clone.test.ts",
+            "./test/canonical-clone-bytes.test.ts",
+            "./test/product/wp10/integration/planner-source-preparation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 1604,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:12:00.8029144Z",
+        "value": {
+          "gate": "8 synchronous planner byte controls and 4 isolated loading controls",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/planner-projection-source-refs.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 916,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:12:05.1389683Z",
+        "value": {
+          "gate": "14 C08 selection and 1 original coverage proof controls",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/coverage-case-selection.test.ts",
+            "./test/product/wp10/integration/coverage-proof-order.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 4334,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:12:05.2128532Z",
+        "value": {
+          "gate": "original UI authority and context integrity",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/ui-authority.test.ts",
+            "./test/product/wp10/integration/ui-context-integrity.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 72,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8308728Z",
+        "value": {
+          "gate": "CurrentChoice readonly storage and nested calculation composition",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/local-store.test.ts",
+            "./test/product/wp10/integration/current-choice-readonly.test.ts",
+            "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+            "./test/product/wp10/integration/finance-pair-observation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 1,
+          "durationMs": 173616,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:15:41.1491806Z",
+        "value": {
+          "gate": "CLI package typecheck",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "durationMs": 42315,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:25.0357987Z",
+        "value": {
+          "gate": "Sucafina package typecheck",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 43885,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:25.0419504Z",
+        "value": {
+          "gate": "inspect history completeness",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "rev-parse",
+            "--is-shallow-repository"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:49.3954517Z",
+        "value": {
+          "gate": "fetch current dev and source ancestry",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--unshallow",
+            "origin",
+            "+refs/heads/dev:refs/remotes/origin/dev",
+            "351870e7db48863b60ce8ebc073b43cd7670f886"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 24353,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:49.3989935Z",
+        "value": {
+          "gate": "current dev identity",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:49.4076945Z",
+        "value": {
+          "gate": "actual guard merge base",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "merge-base",
+            "HEAD",
+            "origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 9,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:49.4084738Z",
+        "value": {
+          "gate": "guard ancestry",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "dev": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+          "mergeBase": "e115b667d845822a1df5f523bbfd828ab57ca978",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+          "command": "bun run check:guards --base origin/dev --json"
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:16:52.3980756Z",
+        "value": {
+          "gate": "canonical guardrails",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 2990,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:15.9017055Z",
+        "value": {
+          "gate": "app-shell typecheck",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "typecheck"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "durationMs": 23502,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6646137Z",
+        "value": {
+          "gate": "app-shell e2e typecheck",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck:e2e"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "durationMs": 7762,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6710434Z",
+        "value": {
+          "gate": "read pinned English source sf-u23",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6728785Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+          "preserved": 78,
+          "added": 41
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6770018Z",
+        "value": {
+          "gate": "read pinned English source sf-u25",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6774089Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+          "preserved": 31,
+          "added": 6
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6827407Z",
+        "value": {
+          "gate": "read pinned English source sf-u32",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 5,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6839343Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+          "preserved": 100,
+          "added": 15
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6882384Z",
+        "value": {
+          "gate": "read pinned English source sf-u33",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6885985Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+          "preserved": 27,
+          "added": 4
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6927396Z",
+        "value": {
+          "gate": "read pinned English source sf-u38",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6934497Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u38.ts",
+          "preserved": 73,
+          "added": 3
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6985432Z",
+        "value": {
+          "gate": "read pinned English source sf-u44",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "git",
+            "show",
+            "346af44f4aac7bf1eb9821d4c5482bacf233a706:packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 5,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:17:23.6990196Z",
+        "value": {
+          "gate": "bilingual parity",
+          "file": "packages/app-shell/src/i18n/orchestra-chapters/sf-u44.ts",
+          "preserved": 70,
+          "added": 7
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:19:25.0692666Z",
+        "value": {
+          "gate": "reconciled authority storage and source contracts",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/ui-authority.test.ts",
+            "./test/teams-profile/policy-store.test.ts",
+            "./test/teams-profile/private-connection-store.test.ts",
+            "./test/procurement-answer-source.test.ts",
+            "./test/po-operational-health.test.ts",
+            "./test/product/wp10/integration/confirmation-selection-sqlite.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 121368,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:19:28.2441134Z",
+        "value": {
+          "gate": "reconciled confirmation and imports DOM regressions",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "--conditions=browser",
+            "--preload",
+            "./happydom.ts",
+            "./test-browser/sucafina-confirmation-payload.test.ts",
+            "./test-browser/sucafina-imports-copy.test.ts"
+          ],
+          "cwd": "packages/app-shell",
+          "exitCode": 0,
+          "durationMs": 3174,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:19:30.3751937Z",
+        "value": {
+          "gate": "core process filesystem and layer-node regressions",
+          "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+          "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+          "snapshot": "351870e7db48863b60ce8ebc073b43cd7670f886",
+          "run": "45267076107",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/process/process.test.ts",
+            "./test/fs-util-temp.test.ts",
+            "./test/effect/layer-node/layer-node.test.ts"
+          ],
+          "cwd": "packages/core",
+          "exitCode": 0,
+          "durationMs": 2130,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      }
+    ],
+    "phaseRecords": [
+      {
+        "timestamp": "2026-11-23T21:14:58.8314895Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "started",
+          "elapsedMs": 1
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8316966Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "initialize",
+          "state": "returned",
+          "phaseMs": 21,
+          "elapsedMs": 21,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8319412Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "started",
+          "elapsedMs": 21
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8321442Z",
+        "value": {
+          "phase": "produce-inner",
+          "elapsedMs": 1422,
+          "canonicalResultReads": 14,
+          "canonicalResultReadsCompleted": 14,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8323753Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-inner",
+          "state": "returned",
+          "phaseMs": 1422,
+          "elapsedMs": 1443,
+          "aborted": false
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8325890Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "started",
+          "elapsedMs": 1447
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8329378Z",
+        "value": {
+          "phase": "produce-outer",
+          "elapsedMs": 103556,
+          "canonicalResultReads": 1928,
+          "canonicalResultReadsCompleted": 1928,
+          "aborted": true
+        }
+      },
+      {
+        "timestamp": "2026-11-23T21:14:58.8331687Z",
+        "value": {
+          "fixture": "calculation-ancestry-composition",
+          "phase": "produce-outer",
+          "state": "returned",
+          "phaseMs": 103556,
+          "elapsedMs": 105003,
+          "aborted": true
+        }
+      }
+    ]
+  },
+  "logs": {
+    "definition": "Git blob over exact decoded UTF-8 log text including BOM; SHA256 below is that decoded UTF-8 text, not an archive digest.",
+    "main": {
+      "job": 138016702436,
+      "blob": "c0c40f26f2226cf166466a9ccd012bd913707dbc",
+      "chars": 155505,
+      "utf8Bytes": 155507,
+      "sha256": "47e2737f77b0ec3409fd76ce512c46eedd1cfa57403a0b62613e096d0c81afde",
+      "exactReadback": true
+    },
+    "cleanup": {
+      "job": 138021680399,
+      "blob": "9cc835f79f04095e327b480a975333a85b70f857",
+      "chars": 2297,
+      "utf8Bytes": 2299,
+      "sha256": "e7f278e8113fcc8823087266001bfe86701a32142a488d1de2e50c11a10513af",
+      "exactReadback": true
+    }
+  },
+  "limits": [
+    "This run predates the dev717 composition; its source remains e788.",
+    "Current dev advanced during the run; guard comparison merge base e115 is recorded rather than silently treated as latest-dev ancestry.",
+    "Failure is retained despite all four typechecks and other outer gates passing.",
+    "No timeout, assertions, original four-file command, source identity or workflow was changed.",
+    "No final product qualification, shared-head promotion, merge or deployment."
+  ]
+}

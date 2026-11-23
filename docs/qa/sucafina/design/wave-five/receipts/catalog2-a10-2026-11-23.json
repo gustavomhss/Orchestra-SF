@@ -1,0 +1,835 @@
+{
+  "schema": "sf613-catalog2-a10-completed-receipt-v1",
+  "recordedAt": "2026-11-23 22:02:30 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "audit_catalog",
+  "campaign": "A10 original normal Analytics",
+  "conclusion": "FAIL_ORIGINAL_PREVIEW_RESPONSE_DEADLINE_BI_PASSED",
+  "qualification": false,
+  "identity": {
+    "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+    "snapshot": "0ab4296cd449872047f8a76ac8ef6a60ea18a3b0",
+    "snapshotTree": "fc6723e2b1e5d73b100f90a20f2be28e9e148cde",
+    "branch": "ci-run-linux-sf613-catalog2analytics",
+    "snapshotParentIndependentlyVerified": true,
+    "exactOverlay": [
+      {
+        "path": ".ci-run.json",
+        "blob": "a11922821a47594d76397582be38f9b7940177ca",
+        "status": "added"
+      }
+    ],
+    "originalSpec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "noProductOrOriginalTestOverlay": true
+  },
+  "ci": {
+    "workflow": "test-ci",
+    "run": 45267085439,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45267085439",
+    "createdAt": "2026-11-23T21:11:22Z",
+    "updatedAt": "2026-11-23T21:26:48Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "runner": "ubuntu-24.04",
+    "strictOmni": true,
+    "channel": "prod",
+    "jobs": [
+      {
+        "id": 138016737289,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T21:11:25Z",
+        "completedAt": "2026-11-23T21:26:36Z"
+      },
+      {
+        "id": 138025904779,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T21:26:38Z",
+        "completedAt": "2026-11-23T21:26:47Z"
+      }
+    ],
+    "cleanupBranchReadback404": true,
+    "artifacts": [
+      {
+        "id": 14863982404,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 45283177,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14863982404",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14863982404/zip",
+        "expired": false,
+        "created_at": "2026-11-23T21:26:31Z",
+        "expires_at": "2026-11-30T21:26:29Z",
+        "updated_at": "2026-11-23T21:26:31Z",
+        "digest": "sha256:d25c0ef724ecfee373205a3ad0c7163f0f3b9fa3fa118b634496a614ec9f296a",
+        "workflow_run": {
+          "id": 45267085439,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-sf613-catalog2analytics",
+          "head_sha": "0ab4296cd449872047f8a76ac8ef6a60ea18a3b0"
+        }
+      }
+    ]
+  },
+  "results": {
+    "browser": {
+      "passed": 1,
+      "failed": 1,
+      "reportedDuration": "8.5m",
+      "completeOriginalSpecs": true
+    },
+    "preview": {
+      "conclusion": "failure",
+      "error": "TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+      "timestamp": "2026-11-23T21:24:04.7458737Z",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 72,
+      "column": 32,
+      "originalDeadlineMs": 60000,
+      "operation": "decision-portfolio-preview",
+      "failedBeforeReadingOriginalPreview": true,
+      "originalWaitAndClickOrderPreserved": true,
+      "errorExcerpt": [
+        "2026-11-23T21:24:04.7458737Z     TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+        "2026-11-23T21:24:04.7459101Z ",
+        "2026-11-23T21:24:04.7459306Z       70 |   await expect(limit).toHaveCSS(\"outline-style\", \"solid\")",
+        "2026-11-23T21:24:04.7459763Z       71 |   await captureAnalytics(page, info, \"UI42-configure-focused-candidate-test-data\")",
+        "2026-11-23T21:24:04.7460430Z     > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+        "2026-11-23T21:24:04.7460919Z          |                                ^",
+        "2026-11-23T21:24:04.7461279Z       73 |   await page.getByRole(\"button\", { name: \"Preview combinations\", exact: true }).click()",
+        "2026-11-23T21:24:04.7461668Z       74 |   const originalPreview = await previewResponse",
+        "2026-11-23T21:24:04.7461978Z       75 |   expect(originalPreview.status()).toBe(200)",
+        "2026-11-23T21:24:04.7462475Z         at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32"
+      ],
+      "nativeHostStateAtFailure": {
+        "timestamp": "2026-11-23T21:24:02.1694927Z",
+        "record": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:33947⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.0daeb548-95f1-40fd-ac9b-b95234435eb2 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        },
+        "interpretation": "Text diagnostics show ready owner host and Portfolio scenarios Running/Preview is not yet available. This is DOM text evidence, not a visual review or proof of an internal hang."
+      }
+    },
+    "bi": {
+      "conclusion": "success",
+      "nativeBI06CompletedResponses": [
+        {
+          "timestamp": "2026-11-23T21:26:01.5319228Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:27.2759859Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        }
+      ],
+      "acquisitionFailureInThoseTwoRecords": false,
+      "sourceValuesAndNegativeSourceCheckReached": true,
+      "observedNegativeSourceReason": "bi-source-outside-selected-value",
+      "observedNegativeSourceHttp": 403,
+      "sourceRecords": [
+        {
+          "timestamp": "2026-11-23T21:25:50.0046236Z",
+          "value": {
+            "operation": "bi-data-readback",
+            "view": "BI01",
+            "http": 200,
+            "rows": 36,
+            "numericValues": 14,
+            "missing": 22
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:01.5319228Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:01.5559995Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "http": 200,
+            "acquisition": "native-response-cdp"
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:01.6466701Z",
+          "value": {
+            "operation": "bi-data-readback",
+            "view": "BI06",
+            "http": 200,
+            "rows": 3,
+            "numericValues": 3,
+            "missing": 1
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:06.4549807Z",
+          "value": {
+            "operation": "bi06-original-source-resolution",
+            "http": 200,
+            "acquisition": "native-response",
+            "valueId": "PR-2026-0003:2a4737b2-7fdd-4cc9-9e4f-648de61e4f92:ageDays",
+            "links": [
+              {
+                "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+                "url": "http://127.0.0.1:33185/orchestra/sf-procurement/requests?request=PR-2026-0003"
+              }
+            ],
+            "negativeHttp": 403,
+            "negative": {
+              "status": "denied",
+              "reason": "bi-source-outside-selected-value"
+            }
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:27.2759859Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:27.2931457Z",
+          "value": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "locale": "pt-BR",
+            "http": 200,
+            "acquisition": "native-response-cdp"
+          }
+        },
+        {
+          "timestamp": "2026-11-23T21:26:27.3626658Z",
+          "value": {
+            "operation": "bi-data-readback",
+            "view": "BI06",
+            "http": 200,
+            "rows": 3,
+            "numericValues": 3,
+            "missing": 1
+          }
+        }
+      ]
+    },
+    "separateEarlierObservation": {
+      "records": [
+        {
+          "timestamp": "2026-11-23T21:23:02.1226492Z",
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 609,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          }
+        }
+      ],
+      "interpretation": "One earlier decision-portfolio-results response-body-unavailable acquisition observation is recorded separately. It is not either successful BI06 completed response and is not asserted to cause the Preview timeout."
+    }
+  },
+  "imageEvidence": {
+    "format": "JPEG image bytes emitted as base64 chunks in SF_DESIGN_PREVIEW lines; artifact also contains original Playwright images.",
+    "groups": 47,
+    "completeGroups": 47,
+    "malformedRecords": 0,
+    "duplicateParts": 0,
+    "totalJpegBytes": 3421754,
+    "inventory": [
+      {
+        "name": "UI42-list-dark-desktop-test-data",
+        "expectedParts": 5,
+        "receivedParts": 5,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 108040,
+        "jpegBytes": 81028,
+        "firstTimestamp": "2026-11-23T21:22:43.3282079Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI42-list-light-desktop-test-data",
+        "expectedParts": 5,
+        "receivedParts": 5,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 114808,
+        "jpegBytes": 86105,
+        "firstTimestamp": "2026-11-23T21:22:43.8076080Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI42-list-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 38220,
+        "jpegBytes": 28664,
+        "firstTimestamp": "2026-11-23T21:22:43.9736174Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI42-list-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 37424,
+        "jpegBytes": 28067,
+        "firstTimestamp": "2026-11-23T21:22:44.2564931Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI42-empty-authorized-case-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 132996,
+        "jpegBytes": 99747,
+        "firstTimestamp": "2026-11-23T21:22:52.2222507Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 145552,
+        "jpegBytes": 109163,
+        "firstTimestamp": "2026-11-23T21:23:01.9517691Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 147464,
+        "jpegBytes": 110596,
+        "firstTimestamp": "2026-11-23T21:24:02.5498501Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 133356,
+        "jpegBytes": 100016,
+        "firstTimestamp": "2026-11-23T21:25:39.7210597Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 140312,
+        "jpegBytes": 105233,
+        "firstTimestamp": "2026-11-23T21:25:40.1712854Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 45636,
+        "jpegBytes": 34225,
+        "firstTimestamp": "2026-11-23T21:25:40.4263860Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-question-catalog-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 37580,
+        "jpegBytes": 28185,
+        "firstTimestamp": "2026-11-23T21:25:40.7513485Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-authorized-financial-context-test-data",
+        "expectedParts": 5,
+        "receivedParts": 5,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 117584,
+        "jpegBytes": 88186,
+        "firstTimestamp": "2026-11-23T21:25:41.6335115Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-financial-source-values-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 138900,
+        "jpegBytes": 104175,
+        "firstTimestamp": "2026-11-23T21:25:43.2033845Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-selected-context-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 139436,
+        "jpegBytes": 104577,
+        "firstTimestamp": "2026-11-23T21:25:50.3562597Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 144444,
+        "jpegBytes": 108332,
+        "firstTimestamp": "2026-11-23T21:25:50.7700373Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 151676,
+        "jpegBytes": 113755,
+        "firstTimestamp": "2026-11-23T21:25:51.2737222Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 36544,
+        "jpegBytes": 27408,
+        "firstTimestamp": "2026-11-23T21:25:51.5500128Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 30408,
+        "jpegBytes": 22805,
+        "firstTimestamp": "2026-11-23T21:25:51.6169942Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 33860,
+        "jpegBytes": 25394,
+        "firstTimestamp": "2026-11-23T21:25:52.0331870Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 27460,
+        "jpegBytes": 20595,
+        "firstTimestamp": "2026-11-23T21:25:52.0987372Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "expectedParts": 8,
+        "receivedParts": 8,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 175864,
+        "jpegBytes": 131898,
+        "firstTimestamp": "2026-11-23T21:25:52.8047190Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "expectedParts": 8,
+        "receivedParts": 8,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 180888,
+        "jpegBytes": 135664,
+        "firstTimestamp": "2026-11-23T21:25:53.3334425Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 43872,
+        "jpegBytes": 32904,
+        "firstTimestamp": "2026-11-23T21:25:53.6826941Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 38088,
+        "jpegBytes": 28564,
+        "firstTimestamp": "2026-11-23T21:25:53.9813821Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-resolved-original-source-1-test-data",
+        "expectedParts": 8,
+        "receivedParts": 8,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 175888,
+        "jpegBytes": 131915,
+        "firstTimestamp": "2026-11-23T21:25:55.5403010Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-resolved-original-source-2-test-data",
+        "expectedParts": 8,
+        "receivedParts": 8,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 175888,
+        "jpegBytes": 131915,
+        "firstTimestamp": "2026-11-23T21:25:56.7039291Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-coverage-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 135096,
+        "jpegBytes": 101321,
+        "firstTimestamp": "2026-11-23T21:26:01.9704446Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-dark-desktop-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 135096,
+        "jpegBytes": 101321,
+        "firstTimestamp": "2026-11-23T21:26:02.3035367Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-light-desktop-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 140076,
+        "jpegBytes": 105056,
+        "firstTimestamp": "2026-11-23T21:26:02.8029986Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 42784,
+        "jpegBytes": 32087,
+        "firstTimestamp": "2026-11-23T21:26:03.0167782Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 40792,
+        "jpegBytes": 30593,
+        "firstTimestamp": "2026-11-23T21:26:03.0824828Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 37888,
+        "jpegBytes": 28415,
+        "firstTimestamp": "2026-11-23T21:26:03.3999841Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 35940,
+        "jpegBytes": 26954,
+        "firstTimestamp": "2026-11-23T21:26:03.4820424Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-table-dark-desktop-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 157356,
+        "jpegBytes": 118017,
+        "firstTimestamp": "2026-11-23T21:26:04.1186167Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-table-light-desktop-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 163812,
+        "jpegBytes": 122857,
+        "firstTimestamp": "2026-11-23T21:26:04.5850775Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-table-dark-390-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 41600,
+        "jpegBytes": 31199,
+        "firstTimestamp": "2026-11-23T21:26:04.8326104Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-original-table-light-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 36368,
+        "jpegBytes": 27274,
+        "firstTimestamp": "2026-11-23T21:26:05.1648264Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-dark-320-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 36016,
+        "jpegBytes": 27012,
+        "firstTimestamp": "2026-11-23T21:26:05.4974914Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-operations-resolved-original-source-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 164316,
+        "jpegBytes": 123236,
+        "firstTimestamp": "2026-11-23T21:26:06.2700779Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-source-empty-sensitivity-catalog-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 121876,
+        "jpegBytes": 91405,
+        "firstTimestamp": "2026-11-23T21:26:11.4383800Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 135272,
+        "jpegBytes": 101453,
+        "firstTimestamp": "2026-11-23T21:26:16.2209759Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-desktop-values-test-data",
+        "expectedParts": 7,
+        "receivedParts": 7,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 160512,
+        "jpegBytes": 120383,
+        "firstTimestamp": "2026-11-23T21:26:22.2521721Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-320-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 36256,
+        "jpegBytes": 27192,
+        "firstTimestamp": "2026-11-23T21:26:22.4139263Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+        "expectedParts": 6,
+        "receivedParts": 6,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 143396,
+        "jpegBytes": 107546,
+        "firstTimestamp": "2026-11-23T21:26:27.6898321Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-320-operations-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 37772,
+        "jpegBytes": 28327,
+        "firstTimestamp": "2026-11-23T21:26:27.8469381Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 31928,
+        "jpegBytes": 23945,
+        "firstTimestamp": "2026-11-23T21:26:27.9308682Z",
+        "visuallyViewedByAuditCatalog": false
+      },
+      {
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+        "expectedParts": 2,
+        "receivedParts": 2,
+        "complete": true,
+        "duplicates": 0,
+        "base64Characters": 36060,
+        "jpegBytes": 27045,
+        "firstTimestamp": "2026-11-23T21:26:28.0318768Z",
+        "visuallyViewedByAuditCatalog": false
+      }
+    ],
+    "visuallyViewedByAuditCatalog": 0,
+    "inventoryOnly": 47,
+    "limits": [
+      "Group completeness establishes preserved parts, not visual acceptance.",
+      "No image from this run was displayed or visually reviewed by audit_catalog in this closure.",
+      "No review of offscreen content, PNG-exclusive content or generated Office output is claimed."
+    ]
+  },
+  "logs": {
+    "definition": "Git blob over exact decoded UTF-8 log text including BOM and image chunks; SHA256 below is that decoded UTF-8 text, not an artifact/archive digest.",
+    "main": {
+      "job": 138016737289,
+      "blob": "10e8c634be631ba9001e5cd7e8d1ba44bcda697d",
+      "chars": 4757832,
+      "utf8Bytes": 4762662,
+      "sha256": "84319a86e808f31b5450e387a450d91d69c9e181f2fb3a114d7e51a7ac953469",
+      "exactReadback": true
+    },
+    "cleanup": {
+      "job": 138025904779,
+      "blob": "1bbe5b26e58362e01b0f958171234c94c19caa0f",
+      "chars": 2302,
+      "utf8Bytes": 2304,
+      "sha256": "f785da5c03928ed59cd8ce63de4c61b5939598af7c61bbda15089bf630385dc0",
+      "exactReadback": true
+    }
+  },
+  "limits": [
+    "This run predates dev717 composition; no result transfers to source6ad989.",
+    "Catalog2 causality for acquisition variability or timing is not established by this unpaired run.",
+    "BI passing does not waive the failed original Preview gate.",
+    "No timeout increase, response-wait relocation, assertion removal, synthetic response or workflow change.",
+    "No final qualification, promotion, merge or deployment."
+  ]
+}

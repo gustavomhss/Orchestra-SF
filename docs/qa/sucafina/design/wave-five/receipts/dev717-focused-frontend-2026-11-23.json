@@ -1,0 +1,91 @@
+{
+  "schema": "sf613-focused-frontend-dev717-v1",
+  "date": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "conclusion": "focused-pass-not-final-qualification",
+  "source": "6ad989c37c075c9033db50e117d5beb056b82e72",
+  "sourceTree": "3830a7922f1fce08283d003c7dad5a6e971ea146",
+  "wrapper": "56e169675423dd6d0d795d52b504b8770219eb93",
+  "snapshot": "64f1da1443d2e396be040ac170cb6e0c8e443260",
+  "snapshotTree": "3b8b3b3b9a17eccbb3cfc6e2091d628e71d0ff07",
+  "branch": "ci-run-linux-sf613-front717",
+  "sourceBranch": "sf613-dev717",
+  "compositionManifest": "07264f7a2ab3be81487e4c23a84a4dbc664bcc45",
+  "run": 45273793086,
+  "mainJob": 138040165852,
+  "cleanupJob": 138041223760,
+  "jobsConclusion": "success",
+  "logs": {
+    "main": "34bd439d33f756ebf63e399dfe79bf72adbc90db",
+    "cleanup": "fa20aefc9129d3d818f482e0cecac124b32c5272"
+  },
+  "logCharacters": {
+    "main": 93733,
+    "cleanup": 2293
+  },
+  "coverage": {
+    "wrapper": {
+      "passed": 6,
+      "failed": 0,
+      "assertions": 620,
+      "durationSeconds": 47.71
+    },
+    "typechecks": {
+      "appShellMs": 17116,
+      "e2eMs": 4993
+    },
+    "dom": {
+      "passed": 7,
+      "failed": 0,
+      "assertions": 147,
+      "files": [
+        "test-browser/sucafina-confirmation-payload.test.ts",
+        "test-browser/sucafina-imports-copy.test.ts"
+      ]
+    },
+    "omni": {
+      "declaredTests": 6,
+      "spawns": 17,
+      "delegated": 0
+    },
+    "bilingual": {
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "preserved": {
+        "u23": 116,
+        "u25": 31,
+        "u32": 183,
+        "u33": 28,
+        "u38": 74,
+        "u44": 70
+      },
+      "added": {
+        "u23": 17,
+        "u25": 6,
+        "u32": 10,
+        "u33": 3,
+        "u38": 2,
+        "u44": 7
+      }
+    }
+  },
+  "guard": {
+    "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "rules": 78,
+    "files": 824,
+    "findings": 40,
+    "errors": [],
+    "approved": []
+  },
+  "cleanup": {
+    "jobSucceeded": true,
+    "branchRefIndependently404": true
+  },
+  "artifacts": [],
+  "limits": [
+    "Only six focused gates; does not claim original full T, Release, Analytics, ReleaseAnalytics, Collab or Reviews qualification.",
+    "No installed browser test or screenshot was executed by this campaign.",
+    "New merged dev English baseline is explicit; all existing English keys and pt-BR parity passed.",
+    "The 26 loading-control metadata print inherited from T9 was removed because those controls are not run by this focused wrapper.",
+    "No shared PR head promotion, merge, deployment, deadline increase, assertion omission or workflow change."
+  ]
+}

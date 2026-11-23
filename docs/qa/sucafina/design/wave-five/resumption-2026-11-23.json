@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Read the detailed fixed Catalog2 focused and original C10 success receipts with exact source attribution; keep first typecheck failure. Candidate1's six original campaigns completed with four failures/two passes. Continue fixing/qualifying normal C17 and original Analytics Preview on the final candidate without changing deadlines, source fences or original assertions. No global qualification, PR promotion or merge."
   },
-  "updatedAt": "2026-11-23T21:15:46Z",
+  "updatedAt": "2026-11-23T22:06:24Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3797,6 +3797,65 @@
       },
       "newDev": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
       "priorRecordsCommit": "c29c190fa4dd40c8070d9dfae9e557473c484615",
+      "qualification": false,
+      "promoted": false,
+      "merged": false
+    },
+    {
+      "recordedAt": "2026-11-23T22:06:24Z",
+      "status": "CATALOG2_T11_A10_FAILURES_PERSISTED_DEV717_REVIEW_AND_FOCUSED_PASS_STRICT_BROWSER_DETAILS_PENDING",
+      "by": "/root/audit_catalog",
+      "priorRecordsCommit": "acc78b795c27b6e85a0cfab3de47a9a6f0d847ef",
+      "closedOriginalGates": {
+        "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+        "T11": {
+          "run": 45267076107,
+          "receipt": "e0feb83bb9654229a86160c8cdcf39c041f33ff5",
+          "conclusion": "failure"
+        },
+        "A10": {
+          "run": 45267085439,
+          "receipt": "7f88772ab91e60209fb09519d10ad15fb9f3a090",
+          "conclusion": "failure"
+        }
+      },
+      "dev717Composition": {
+        "source": "6ad989c37c075c9033db50e117d5beb056b82e72",
+        "review": "860971f4f1bc9f26eefa6b10775617b247711538",
+        "reviewsReview": "4f5dff15190354f36b51af102aac660e22d20f89",
+        "focused": "2840f1adff29aa81ba120d4dd56771a72c8dc825",
+        "strictOriginalHarnessOverlayCount": 4,
+        "collabLocatorCopyAlignments": 2,
+        "Collab": {
+          "run": 45274798295,
+          "status": "completed",
+          "conclusion": "failure",
+          "detailsPending": true
+        },
+        "Reviews": {
+          "run": 45274804857,
+          "status": "completed",
+          "conclusion": "failure",
+          "detailsPending": true
+        },
+        "currentDevReading": {
+          "run": 45274021585,
+          "status": "in_progress",
+          "conclusion": null
+        }
+      },
+      "rejectedDiagnostics": [
+        "adb8239dda1474e36414069d598b9f6a875bebad",
+        "fcd643e46f0bb367fb92e46f65dd8f2d880467e8"
+      ],
+      "descriptorIdentityCorrection": "ebfc8bd9d92b72afe049f7146f488b8066b70d73",
+      "separateFallbackOnlyTechnical": {
+        "source": "f1ad4140a08e047f87475cf4e749ffd3f88abb17",
+        "run": 45274255184,
+        "conclusion": "success",
+        "receipt": "ccbd21c814b750ca00c9d13e57703e68cf364849",
+        "analyticsPending": true
+      },
       "qualification": false,
       "promoted": false,
       "merged": false
@@ -6706,7 +6765,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T21:07:10Z",
+    "observedAt": "2026-11-23T22:06:24Z",
     "qualification": false,
     "experiments": [
       {
@@ -11366,6 +11425,42 @@
         "reportedBy": "/root/canonical_perf",
         "receiptReviewedBy": "/root/audit_catalog",
         "observedAt": "2026-11-23T20:47:55Z"
+      },
+      {
+        "recordedAt": "2026-11-23T22:06:24Z",
+        "name": "guarded private includes predicate",
+        "status": "COMPLETED_REJECTED_FOR_PRODUCT",
+        "source": "b148a3dbc53434c521f45c14bb67c4489680d04f",
+        "baseline": "97c921ab0054bd5154227593adcbcca56b0538c3",
+        "run": 45268700004,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/includes-2026-11-23.json",
+          "blob": "adb8239dda1474e36414069d598b9f6a875bebad"
+        },
+        "correctnessAndTypes": "PASS",
+        "performance": "All five real-fixture medians above1; weighted fixed-schedule ratio1.0706156663582989.",
+        "productAdoption": false,
+        "qualification": false
+      },
+      {
+        "recordedAt": "2026-11-23T22:06:24Z",
+        "name": "shared-bootstrap bulk clone descriptors",
+        "status": "COMPLETED_REJECTED_FOR_PRODUCT",
+        "source": "8c5e424e26899310ee5e11e05b731073e418bcf4",
+        "baseline": "e78821194263260fd058a2a2648ef6a750ed24c5",
+        "run": 45270352240,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/clone-descriptors-2026-11-23.json",
+          "blob": "fcd643e46f0bb367fb92e46f65dd8f2d880467e8"
+        },
+        "identitySupplement": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/clone-descriptors-identity-2026-11-23.json",
+          "blob": "ebfc8bd9d92b72afe049f7146f488b8066b70d73"
+        },
+        "correctnessAndTypes": "PASS",
+        "performance": "All ten shape/mode paired median ratios above1; common pin and mode overhead disclosed.",
+        "productAdoption": false,
+        "qualification": false
       }
     ]
   },
@@ -13652,7 +13747,7 @@
     "attribution": "Draft inventory supplied by /root recovery summary; no execution or adoption asserted."
   },
   "catalogEarlySelectionCandidate": {
-    "status": "FOCUSED_FIXED_AND_ORIGINAL_C10_PASSED_PRE_RECOMPOSITION_OTHER_GATES_RUNNING",
+    "status": "FOCUSED_FIXED_AND_C10_PASSED_T11_AND_A10_FAILED_UNPROMOTED",
     "recordedAt": "2026-11-23T21:07:10Z",
     "qualification": false,
     "productPromoted": false,
@@ -13752,7 +13847,7 @@
         "blob": "05846983a3dce25d379fe58fca97f87c379c12fa"
       }
     },
-    "updatedAt": "2026-11-23T21:15:46Z",
+    "updatedAt": "2026-11-23T22:06:24Z",
     "originalNormalGates": {
       "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
       "sourceTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
@@ -13766,10 +13861,26 @@
         "wrapperBlob": "6cbecc48ce8c6573296a53c72643ca7f2ff95e9b",
         "recipeClaimByRoot": "Exact T9 full original technical gate except source/sourceTree rebound.",
         "createdAt": "2026-11-23T21:11:18Z",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "headShaVerified": true,
-        "observationAt": "2026-11-23T21:15:46Z"
+        "observationAt": "2026-11-23T22:06:24Z",
+        "updatedAt": "2026-11-23T21:19:40Z",
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-t11-2026-11-23.json",
+          "blob": "e0feb83bb9654229a86160c8cdcf39c041f33ff5"
+        },
+        "detailedLogsIndependentlyRead": true,
+        "summary": {
+          "wrapperPassed": 14,
+          "wrapperFailed": 1,
+          "originalC17Ms": 105007.21,
+          "originalC17CooperativeLimitMs": 105000,
+          "outerReads": 1928,
+          "outerCompleted": 1928,
+          "outerAborted": true,
+          "reopenReached": false
+        }
       },
       "A10": {
         "run": 45267085439,
@@ -13779,10 +13890,25 @@
         "branch": "ci-run-linux-sf613-catalog2analytics",
         "recipeClaimByRoot": "Original a119 Analytics recipe.",
         "createdAt": "2026-11-23T21:11:22Z",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "headShaVerified": true,
-        "observationAt": "2026-11-23T21:15:46Z"
+        "observationAt": "2026-11-23T22:06:24Z",
+        "updatedAt": "2026-11-23T21:26:48Z",
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-a10-2026-11-23.json",
+          "blob": "7f88772ab91e60209fb09519d10ad15fb9f3a090"
+        },
+        "detailedLogsIndependentlyRead": true,
+        "summary": {
+          "browserPassed": 1,
+          "browserFailed": 1,
+          "failedGate": "Original Preview response wait",
+          "unchangedTimeoutMs": 60000,
+          "BI": "passed",
+          "imagesInventoried": 47,
+          "imagesVisuallyViewedByAuditCatalog": 0
+        }
       }
     },
     "devAdvanceAfterLaunch": {
@@ -13798,5 +13924,150 @@
       "qualification": false,
       "attribution": "Existing focused/C10/T11/A10 snapshots retain their exact old source identities. No result is transferred to a new composition."
     }
+  },
+  "isolatedDev717Composition": {
+    "status": "STATIC_AND_FOCUSED_FRONTEND_PASS_ORIGINAL_C_R_METADATA_FAILURE_DETAILS_PENDING",
+    "observedAt": "2026-11-23T22:06:24Z",
+    "qualification": false,
+    "productPromoted": false,
+    "sharedPRUpdated": false,
+    "merged": false,
+    "branch": "sf613-dev717",
+    "source": "6ad989c37c075c9033db50e117d5beb056b82e72",
+    "sourceTree": "3830a7922f1fce08283d003c7dad5a6e971ea146",
+    "parents": [
+      "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    ],
+    "manifest": "07264f7a2ab3be81487e4c23a84a4dbc664bcc45",
+    "independentCompositionHarnessReview": {
+      "path": "docs/qa/sucafina/design/wave-five/receipts/dev717-composition-harness-review-2026-11-23.json",
+      "blob": "860971f4f1bc9f26eefa6b10775617b247711538"
+    },
+    "independentReviewsReview": {
+      "path": "docs/qa/sucafina/design/wave-five/receipts/dev717-reviews-static-review-2026-11-23.json",
+      "blob": "4f5dff15190354f36b51af102aac660e22d20f89"
+    },
+    "completeOriginalSpecs": {
+      "analytics": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "reviews": "7cda60f820508ac4123693a97cd9ffe2e0eeee56",
+      "collab": "756732ed624aefc40345b896005cc7f5a781a247",
+      "collabMaintenance": "Exactly two /^changed / locators aligned to /^Changed / from current dev; all actions/assertions/budgets/source and authorization oracles unchanged. Do not call Collab byte-exact."
+    },
+    "originalBrowserHarnessOverlay": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "blob": "7ba8ab74f814ec72094a6945c8f9f93fcbe12003"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three-seed.ts",
+        "blob": "650d053ff3bf89afebed57a028506fb3e48dfe47"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "blob": "61bab8a4b008a0dd7d55be7726ede3419c319a1d"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+        "blob": "d3f50920d69cd04029298d286f5b08fc02c21349"
+      }
+    ],
+    "focused": {
+      "run": 45273793086,
+      "conclusion": "success",
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/dev717-focused-frontend-2026-11-23.json",
+        "blob": "2840f1adff29aa81ba120d4dd56771a72c8dc825"
+      },
+      "scope": "Six frontend gates only; no installed browser qualification"
+    },
+    "originalBrowserLaunches": [
+      {
+        "campaign": "Collab",
+        "run": 45274798295,
+        "branch": "ci-run-linux-sf613-frontcollab",
+        "snapshot": "eecd1544d505975f05ae36350ea385c11842da1d",
+        "snapshotTree": "df117669c6b8d434756a7fb2710d51547410cf07",
+        "createdAt": "2026-11-23T21:57:02Z",
+        "status": "completed",
+        "conclusion": "failure",
+        "verificationLevel": "metadata only; detailed closure owned by root"
+      },
+      {
+        "campaign": "Reviews",
+        "run": 45274804857,
+        "branch": "ci-run-linux-sf613-frontreviews",
+        "snapshot": "7d333ba5e41a74a440fc22d412cdee795e697b44",
+        "snapshotTree": "3b5eaa1cf1f5336664695ea19aa267e7dbee82f2",
+        "createdAt": "2026-11-23T21:57:04Z",
+        "status": "completed",
+        "conclusion": "failure",
+        "verificationLevel": "metadata only; detailed closure owned by copy_hotpath"
+      }
+    ],
+    "separateMergedDevReading": {
+      "run": 45274021585,
+      "branch": "ci-run-linux-sf613-devreading",
+      "snapshot": "970536656d92dfa9633160ad09e97107fc853d66",
+      "snapshotTree": "dc9a4948eafbaa55648d88946e05f5b6a0da7ab5",
+      "recipe": "49c3cb4e2608ed23ecf972aa43e0d3187313ea79",
+      "createdAt": "2026-11-23T21:52:18Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "harness": "current dev; no historical overlays",
+      "scope": "Both complete #717 reading specs; does not replace original strict campaigns"
+    },
+    "limits": [
+      "No current composed-source all-six qualification.",
+      "No runtime or visual pass inferred from static review, DOM/type gates or campaign metadata.",
+      "Historical T11/A10 results remain attributed to e788; C10 remains source36cc.",
+      "No response wait inserted before original temporal oracles, assertion omitted, deadline raised, workflow changed or product code overlaid."
+    ]
+  },
+  "isolatedFallbackOnlyCandidate": {
+    "status": "ORIGINAL_NORMAL_TECHNICAL_PASS_ANALYTICS_PENDING_UNPROMOTED",
+    "recordedAt": "2026-11-23T22:06:24Z",
+    "qualification": false,
+    "productAdoption": false,
+    "branch": "sf613-fallback",
+    "source": "f1ad4140a08e047f87475cf4e749ffd3f88abb17",
+    "tree": "4d019114a514e4a145052655bc4a68de010acb97",
+    "parent": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "canonicalBlob": "2afab6a76821839d5e85a97807864b3c860dcc6c",
+    "review": {
+      "path": "docs/qa/sucafina/design/wave-five/receipts/fallback-static-review-2026-11-23.json",
+      "blob": "667428dab41263320882ce926c4b39a9c2a2dac3"
+    },
+    "sourceReview": {
+      "path": "docs/qa/sucafina/design/wave-five/receipts/fallback-source-review-2026-11-23.json",
+      "blob": "79f9f85ff44e68400265c746a19a38f0a1cd285c"
+    },
+    "technical": {
+      "run": 45274255184,
+      "conclusion": "success",
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/fallback-technical-2026-11-23.json",
+        "blob": "ccbd21c814b750ca00c9d13e57703e68cf364849"
+      },
+      "originalC17Ms": 93964,
+      "originalCooperativeLimitMs": 105000,
+      "originalBunLimitMs": 120000,
+      "wrapperPassed": 15,
+      "wrapperFailed": 0,
+      "underlyingPassed": 272,
+      "underlyingFailed": 0
+    },
+    "analytics": {
+      "run": 45274263652,
+      "status": "in_progress",
+      "conclusion": null,
+      "attribution": "Latest canonical_perf report; completed receipt not yet available at this records update"
+    },
+    "limits": [
+      "Isolated backend source is based on e788, not composed dev717 source6ad989.",
+      "No result transfer to a future combined source.",
+      "Eager side-effect helper import retained to preserve bootstrap order.",
+      "No product promotion, final-source qualification or merge."
+    ]
   }
 }

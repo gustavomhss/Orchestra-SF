@@ -1,0 +1,194 @@
+{
+  "schema": "sf613-canonical-fallback-source-review-v1",
+  "date": "2026-11-23",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "static-pass; original installed gates running",
+  "qualification": false,
+  "productAdoption": false,
+  "source": {
+    "branch": "sf613-fallback",
+    "commit": "f1ad4140a08e047f87475cf4e749ffd3f88abb17",
+    "tree": "4d019114a514e4a145052655bc4a68de010acb97",
+    "parent": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "parentTree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "before": "461c1728b9c6081d0ade0183bc194382523764f3",
+        "after": "2afab6a76821839d5e85a97807864b3c860dcc6c",
+        "additions": 1,
+        "deletions": 3
+      }
+    ],
+    "exactCommitDeltaVerified": true
+  },
+  "patch": {
+    "importBefore": "import { sfCanonicalCloneTree } from \"./canonical-clone.ts\"",
+    "importAfter": "import \"./canonical-clone.ts\"",
+    "removed": [
+      "  const tree = sfCanonicalCloneTree(value)",
+      "  if (tree) return JSON.stringify(tree)"
+    ],
+    "retainedBody": "return JSON.stringify(canonical(value))",
+    "cloneHelperUnchanged": "5f9612729a89085e6b4a61440c7ac955aa7a85dd",
+    "testsUnchanged": true,
+    "newDeadlines": false,
+    "frontendChanges": false
+  },
+  "rejectedDraft": {
+    "blob": "e21e99d44bb48eea34e79d5c5fcfac38fd485f21",
+    "reason": "It also removed the eager import, changing helper bootstrap timing. Load canonical while clean, install a structuredClone wrapper, then load canonical-clone: the draft could capture the later wrapper as the original baseline, whereas the previous dependency eagerly captured natives. Retaining a side-effect import preserves evaluation order without invoking the optional tree on each serialization."
+  },
+  "semanticReview": {
+    "staticFacts": {
+      "originalCanonicalAndRestExact": true,
+      "allDigestAndFollowingExact": true,
+      "captureBootstrapExact": true,
+      "eagerCloneModuleStillImported": true,
+      "onlyFallbackReturn": true,
+      "parentCanonicalIsC3": true,
+      "parentCloneIsC3": true
+    },
+    "positiveTreeCase": "Under the unchanged native bootstrap/identity proof, positive sfCanonicalCloneTree admission requires registered ordinary objects/arrays, current supported runtime/natives, no Proxy identities, own enumerable data fields, safe dense arrays, finite values and bounded acyclic traversal. Original canonical observes equivalent data and emits identical tagged bytes. Alias subtree sharing affects private allocations, not the JSON byte stream.",
+    "refusalCase": "All refusals already continue into the exact retained JSON.stringify(canonical(value)) expression. Inspection through captured native WeakSet/descriptor methods has no application callback on the admitted ordinary identities. Accessors, Proxy children, custom maps/species/hooks, unsupported values and graph-budget refusals keep the original fallback observation and errors.",
+    "serializerOrder": "The unchanged expression selects dynamic JSON.stringify and its receiver before evaluating canonical(value). Late getter or data-method hooks are handled by that exact existing fallback. Positive-tree cases attest an unchanged native serializer and have no user callbacks that can change method selection during traversal.",
+    "hashOrder": "digestSfValue, digestSfEvidenceRef and digestSfContribution are byte-exact. Hasher constructor, update member lookup, canonical argument evaluation, update call and digest selection/order remain unchanged.",
+    "bootstrap": "Eager side-effect import keeps canonical-clone initialization before canonical runtime anchors. Capture-runtime and projection-runtime initialization/functions are byte-exact.",
+    "boundaries": "No registration/helper API/admission, SQL, auth, callback, source, credential, generation, freshness or capture-identity changes. cloneSfCanonicalValues registration cost remains.",
+    "independent": {
+      "reviewer": "/root/copy_hotpath",
+      "verdict": "STATIC PASS",
+      "receipt": "667428dab41263320882ce926c4b39a9c2a2dac3",
+      "rootAcceptedSideEffectImport": true
+    },
+    "limitation": "Performance can regress on alias-heavy inputs because generic canonical revisits aliases. No global speed guarantee; original installed gates decide."
+  },
+  "priorEvidence": {
+    "microRepeated": false,
+    "normal": {
+      "ref": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/u15-clone-capture-normal.json",
+      "run": 45121910093,
+      "snapshot": "33bb046ee5b7dd558089967380a0900e262d4e72",
+      "runtime": "1.3.14",
+      "ratios": [
+        {
+          "fixture": "tagged-values",
+          "fallbackOverTreePairs": [
+            0.33211658016312096,
+            0.20770802919708028,
+            0.2885664109437101,
+            0.35506377411969914
+          ],
+          "fallbackOverTreeMedian": 0.3103414955534155,
+          "treeMs": 54.650000000000006,
+          "fallbackMs": 15.759
+        },
+        {
+          "fixture": "evidence-reference",
+          "fallbackOverTreePairs": [
+            0.4554994954591322,
+            0.4792503346720214,
+            0.5053898482469911,
+            0.4532070421085144
+          ],
+          "fallbackOverTreeMedian": 0.4673749150655768,
+          "treeMs": 38.889,
+          "fallbackMs": 18.399
+        },
+        {
+          "fixture": "captured-context",
+          "fallbackOverTreePairs": [
+            0.38659301691216585,
+            0.4217791411042945,
+            0.40831668785182496,
+            0.44956408829530703
+          ],
+          "fallbackOverTreeMedian": 0.4150479144780597,
+          "treeMs": 110.55,
+          "fallbackMs": 45.974000000000004
+        },
+        {
+          "fixture": "aliased-projection",
+          "fallbackOverTreePairs": [
+            1.2190874692738973,
+            1.1650405848519054,
+            1.149491825595073,
+            1.1635789995176198
+          ],
+          "fallbackOverTreeMedian": 1.1643097921847625,
+          "treeMs": 299.192,
+          "fallbackMs": 351.19599999999997
+        },
+        {
+          "fixture": "distinct-projection",
+          "fallbackOverTreePairs": [
+            0.745848252620664,
+            0.7110987537208465,
+            0.7414153478650343,
+            0.7160749919155749
+          ],
+          "fallbackOverTreeMedian": 0.7287451698903046,
+          "treeMs": 496.42600000000004,
+          "fallbackMs": 361.685
+        }
+      ]
+    },
+    "release": {
+      "ref": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/u15-clone-capture-release.json",
+      "run": 45121911981,
+      "snapshot": "dc5b1795724372ac1d358dfb2c158ce697228114",
+      "runtime": "1.4.1",
+      "treeAdmitted": false
+    },
+    "comparisonDefinition": "Ratios use U15 logged unregistered-fallback elapsed / registered-tree elapsed within each pair; median is mean of two middle ratios. Five complete C14 fixtures, four recorded three-lane orders. U15 fallback serializes an equivalent native clone outside the registry; it is not a direct measurement of this new source.",
+    "limitations": [
+      "Four of five fixture medians favor original fallback; alias fixture is about 16.4% slower.",
+      "Whole fixture clone and registration excluded from U15 timing; new source retains registration.",
+      "U15 is fixture-only, not installed Preview/C17 qualification.",
+      "Normal/release runtime differences do not isolate the causal mechanism."
+    ]
+  },
+  "executions": [
+    {
+      "gate": "Original T11",
+      "run": 45274255184,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45274255184",
+      "snapshot": "7483b5b194734bb61db1de6d0fa1895fb4d6a710",
+      "tree": "fef6dda4e78e51cfd8175d1eb6d7679fe141ad5a",
+      "parent": "f1ad4140a08e047f87475cf4e749ffd3f88abb17",
+      "branch": "ci-run-linux-sf613-fallbackt",
+      "wrapper": "9c8159c57de4fae5bb8f7564d1dfb0777f2d8614",
+      "originalWrapper": "6cbecc48ce8c6573296a53c72643ca7f2ff95e9b",
+      "wrapperOnlySourceTreeRebound": true,
+      "recipe": "5837e17e056b2c8b9c9581e4410f2d8e17de8856",
+      "commandsAndDeadlinesUnchanged": true,
+      "status": "running at receipt creation"
+    },
+    {
+      "gate": "Original Analytics A10",
+      "run": 45274263652,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45274263652",
+      "snapshot": "c6b50b558c60a509843181f659e7cb59c544c80c",
+      "tree": "18610dd63947d97f777d1cca5c11d461a918fb60",
+      "parent": "f1ad4140a08e047f87475cf4e749ffd3f88abb17",
+      "branch": "ci-run-linux-sf613-fallbacka",
+      "recipe": "a11922821a47594d76397582be38f9b7940177ca",
+      "recipeExact": true,
+      "status": "running at receipt creation"
+    }
+  ],
+  "executionBoundary": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "normalBun": true,
+    "omni": "strict",
+    "channel": "prod",
+    "sourceAndSnapshotDeltaVerified": true,
+    "currentDevAtLaunch": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "guard": "Original wrapper fetches actual current origin/dev and verifies actual merge base; its historical English-copy baseline remains the original T11 pin.",
+    "releaseRun": false,
+    "localExecution": false
+  }
+}

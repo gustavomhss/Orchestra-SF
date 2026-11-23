@@ -1,0 +1,499 @@
+{
+  "schema": "sf613-clone-descriptor-diagnostic-result-v2",
+  "decision": "REJECT_FOR_PRODUCT",
+  "reason": "Every one of the ten shape/mode median ratios is greater than1. The shared-bootstrap bulk descriptor operation is slower despite all functional and type gates passing.",
+  "productAdoption": false,
+  "qualification": false,
+  "source": {
+    "branch": "sf613-descriptors",
+    "parent": "e78821194263260fd058a2a2648ef6a750ed24c5"
+  },
+  "snapshot": {
+    "branch": "ci-run-linux-sf613-descriptors",
+    "exactOverlay": [
+      {
+        "path": ".ci-run.json"
+      },
+      {
+        "path": "apps/cli/test/sf613-clone-descriptors-verification.test.ts"
+      }
+    ]
+  },
+  "review": {
+    "reviewer": "/root/audit_catalog",
+    "verdict": "STATIC_PASS_FOR_ISOLATED_DIAGNOSTIC_ONLY",
+    "reversalReproducedOriginalBlob": "5f9612729a89085e6b4a61440c7ac955aa7a85dd",
+    "originalControlsUnchanged": true
+  },
+  "ci": {
+    "run": 45270352240,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45270352240",
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "runtime": {
+      "version": "1.3.14",
+      "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    },
+    "createdAt": "2026-11-23T21:30:27Z",
+    "completedMetadataUpdatedAt": "2026-11-23T21:33:35Z",
+    "mainJob": {
+      "id": 138028207873,
+      "conclusion": "success"
+    },
+    "cleanupJob": {
+      "id": 138030036339,
+      "conclusion": "success",
+      "lastLogTimestamp": "2026-11-23T21:33:33.5976942Z"
+    },
+    "cleanupBranch404Verified": true,
+    "artifacts": [],
+    "environment": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "gates": {
+    "sourceIdentity": {
+      "exitCode": 0
+    },
+    "originalControls": {
+      "pass": 13,
+      "fail": 0,
+      "assertions": 297,
+      "durationMs": 194,
+      "commandDurationMs": 206
+    },
+    "bulkControlsAndBenchmark": {
+      "pass": 16,
+      "fail": 0,
+      "bulkControlTests": 15,
+      "benchmarkTests": 1,
+      "assertions": 572,
+      "durationMs": 30240,
+      "commandDurationMs": 30264
+    },
+    "sucafinaTypes": {
+      "exitCode": 0,
+      "durationMs": 44425
+    },
+    "cliTypes": {
+      "exitCode": 0,
+      "durationMs": 46888
+    },
+    "outer": {
+      "pass": 5,
+      "fail": 0,
+      "assertions": 9,
+      "durationMs": 122530
+    },
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 5,
+      "spawns": 7,
+      "delegated": 0
+    },
+    "outputTruncated": false
+  },
+  "method": {
+    "fixtureOnly": true,
+    "sharedOriginalBootstrap": true,
+    "sharedOriginalOrdinaryRegistry": true,
+    "baselineIncludesNewDescriptorPin": true,
+    "baselineIncludesModeBranch": true,
+    "modeSelectedOutsideTiming": true,
+    "pairedOrders": [
+      "original/bulk",
+      "bulk/original",
+      "original/bulk",
+      "bulk/original"
+    ],
+    "warmupIterationsPerLane": 50,
+    "byteEqualityEveryIteration": true,
+    "measuredCanonicalCallsPerLane": 96000,
+    "measuredNativeClonesPerLane": 48000,
+    "medians": "Arithmetic mean of the two middle exact bulkMs/originalMs ratios computed from the four logged duration pairs.",
+    "hashTimeIncluded": false,
+    "timeThresholdApplied": false,
+    "installedPreviewMeasured": false,
+    "fullC17Measured": false,
+    "originalRuntimeAdmissionWidened": false,
+    "authorizationOrSQLCacheAdded": false
+  },
+  "results": [
+    {
+      "fixture": "tagged-values",
+      "mode": "native-clone-registration-and-canonical",
+      "outputUnits": 418,
+      "iterationsPerLane": 4000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 116.202,
+          "bulkMs": 112.128,
+          "ratio": 0.965
+        },
+        {
+          "first": "bulk",
+          "originalMs": 96.335,
+          "bulkMs": 107.095,
+          "ratio": 1.112
+        },
+        {
+          "first": "original",
+          "originalMs": 96.47,
+          "bulkMs": 106.876,
+          "ratio": 1.108
+        },
+        {
+          "first": "bulk",
+          "originalMs": 97.22,
+          "bulkMs": 106.556,
+          "ratio": 1.096
+        }
+      ],
+      "medianBulkOverOriginal": 1.1019486772175253,
+      "medianPercentSlower": 10.194867721752532
+    },
+    {
+      "fixture": "tagged-values",
+      "mode": "repeated-canonical-walk",
+      "outputUnits": 418,
+      "iterationsPerLane": 4000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 50.681,
+          "bulkMs": 52.874,
+          "ratio": 1.043
+        },
+        {
+          "first": "bulk",
+          "originalMs": 49.072,
+          "bulkMs": 53.236,
+          "ratio": 1.085
+        },
+        {
+          "first": "original",
+          "originalMs": 51.801,
+          "bulkMs": 54.064,
+          "ratio": 1.044
+        },
+        {
+          "first": "bulk",
+          "originalMs": 49.542,
+          "bulkMs": 53.645,
+          "ratio": 1.083
+        }
+      ],
+      "medianBulkOverOriginal": 1.0632525169330238,
+      "medianPercentSlower": 6.325251693302381
+    },
+    {
+      "fixture": "evidence-reference",
+      "mode": "native-clone-registration-and-canonical",
+      "outputUnits": 645,
+      "iterationsPerLane": 4000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 118.424,
+          "bulkMs": 123.076,
+          "ratio": 1.039
+        },
+        {
+          "first": "bulk",
+          "originalMs": 111.489,
+          "bulkMs": 119.651,
+          "ratio": 1.073
+        },
+        {
+          "first": "original",
+          "originalMs": 112.325,
+          "bulkMs": 121.76,
+          "ratio": 1.084
+        },
+        {
+          "first": "bulk",
+          "originalMs": 111.351,
+          "bulkMs": 120.135,
+          "ratio": 1.079
+        }
+      ],
+      "medianBulkOverOriginal": 1.0760473509702346,
+      "medianPercentSlower": 7.604735097023463
+    },
+    {
+      "fixture": "evidence-reference",
+      "mode": "repeated-canonical-walk",
+      "outputUnits": 645,
+      "iterationsPerLane": 4000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 55.96,
+          "bulkMs": 58.296,
+          "ratio": 1.042
+        },
+        {
+          "first": "bulk",
+          "originalMs": 53.299,
+          "bulkMs": 57.852,
+          "ratio": 1.085
+        },
+        {
+          "first": "original",
+          "originalMs": 54.141,
+          "bulkMs": 57.348,
+          "ratio": 1.059
+        },
+        {
+          "first": "bulk",
+          "originalMs": 53.235,
+          "bulkMs": 57.759,
+          "ratio": 1.085
+        }
+      ],
+      "medianBulkOverOriginal": 1.0721079533679965,
+      "medianPercentSlower": 7.210795336799647
+    },
+    {
+      "fixture": "captured-context",
+      "mode": "native-clone-registration-and-canonical",
+      "outputUnits": 3160,
+      "iterationsPerLane": 2000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 276.135,
+          "bulkMs": 305.024,
+          "ratio": 1.105
+        },
+        {
+          "first": "bulk",
+          "originalMs": 277.612,
+          "bulkMs": 306.212,
+          "ratio": 1.103
+        },
+        {
+          "first": "original",
+          "originalMs": 278.298,
+          "bulkMs": 309.274,
+          "ratio": 1.111
+        },
+        {
+          "first": "bulk",
+          "originalMs": 274.547,
+          "bulkMs": 307.795,
+          "ratio": 1.121
+        }
+      ],
+      "medianBulkOverOriginal": 1.1079621325900066,
+      "medianPercentSlower": 10.796213259000664
+    },
+    {
+      "fixture": "captured-context",
+      "mode": "repeated-canonical-walk",
+      "outputUnits": 3160,
+      "iterationsPerLane": 2000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 175.983,
+          "bulkMs": 188.128,
+          "ratio": 1.069
+        },
+        {
+          "first": "bulk",
+          "originalMs": 175.324,
+          "bulkMs": 189.265,
+          "ratio": 1.08
+        },
+        {
+          "first": "original",
+          "originalMs": 174.993,
+          "bulkMs": 188.581,
+          "ratio": 1.078
+        },
+        {
+          "first": "bulk",
+          "originalMs": 174.005,
+          "bulkMs": 188.109,
+          "ratio": 1.081
+        }
+      ],
+      "medianBulkOverOriginal": 1.0785822299271604,
+      "medianPercentSlower": 7.858222992716035
+    },
+    {
+      "fixture": "aliased-projection",
+      "mode": "native-clone-registration-and-canonical",
+      "outputUnits": 49879,
+      "iterationsPerLane": 1000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 523.714,
+          "bulkMs": 568.164,
+          "ratio": 1.085
+        },
+        {
+          "first": "bulk",
+          "originalMs": 526.892,
+          "bulkMs": 584.056,
+          "ratio": 1.108
+        },
+        {
+          "first": "original",
+          "originalMs": 551.125,
+          "bulkMs": 611.399,
+          "ratio": 1.109
+        },
+        {
+          "first": "bulk",
+          "originalMs": 567.931,
+          "bulkMs": 616.245,
+          "ratio": 1.085
+        }
+      ],
+      "medianBulkOverOriginal": 1.0967815077222896,
+      "medianPercentSlower": 9.678150772228955
+    },
+    {
+      "fixture": "aliased-projection",
+      "mode": "repeated-canonical-walk",
+      "outputUnits": 49879,
+      "iterationsPerLane": 1000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 385.691,
+          "bulkMs": 410.203,
+          "ratio": 1.064
+        },
+        {
+          "first": "bulk",
+          "originalMs": 402.911,
+          "bulkMs": 406.733,
+          "ratio": 1.009
+        },
+        {
+          "first": "original",
+          "originalMs": 387.341,
+          "bulkMs": 407.182,
+          "ratio": 1.051
+        },
+        {
+          "first": "bulk",
+          "originalMs": 394.929,
+          "bulkMs": 414.566,
+          "ratio": 1.05
+        }
+      ],
+      "medianBulkOverOriginal": 1.0504732302110398,
+      "medianPercentSlower": 5.047323021103978
+    },
+    {
+      "fixture": "distinct-projection",
+      "mode": "native-clone-registration-and-canonical",
+      "outputUnits": 49879,
+      "iterationsPerLane": 1000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 1094.878,
+          "bulkMs": 1226.974,
+          "ratio": 1.121
+        },
+        {
+          "first": "bulk",
+          "originalMs": 1151.34,
+          "bulkMs": 1251.491,
+          "ratio": 1.087
+        },
+        {
+          "first": "original",
+          "originalMs": 1163.665,
+          "bulkMs": 1282.33,
+          "ratio": 1.102
+        },
+        {
+          "first": "bulk",
+          "originalMs": 1026.629,
+          "bulkMs": 1209.253,
+          "ratio": 1.178
+        }
+      ],
+      "medianBulkOverOriginal": 1.111312141722514,
+      "medianPercentSlower": 11.131214172251402
+    },
+    {
+      "fixture": "distinct-projection",
+      "mode": "repeated-canonical-walk",
+      "outputUnits": 49879,
+      "iterationsPerLane": 1000,
+      "pairs": [
+        {
+          "first": "original",
+          "originalMs": 686.963,
+          "bulkMs": 756.366,
+          "ratio": 1.101
+        },
+        {
+          "first": "bulk",
+          "originalMs": 725.168,
+          "bulkMs": 771.993,
+          "ratio": 1.065
+        },
+        {
+          "first": "original",
+          "originalMs": 738.033,
+          "bulkMs": 809.617,
+          "ratio": 1.097
+        },
+        {
+          "first": "bulk",
+          "originalMs": 777.258,
+          "bulkMs": 847.686,
+          "ratio": 1.091
+        }
+      ],
+      "medianBulkOverOriginal": 1.0938018962668097,
+      "medianPercentSlower": 9.380189626680968
+    }
+  ],
+  "aggregate": [
+    {
+      "mode": "native-clone-registration-and-canonical",
+      "originalMs": 8572.581999999999,
+      "bulkMs": 9495.494,
+      "bulkOverOriginal": 1.1076585794104976,
+      "scope": "This exact benchmark workload only; not an installed Preview or C17 estimate"
+    },
+    {
+      "mode": "repeated-canonical-walk",
+      "originalMs": 5616.33,
+      "bulkMs": 6023.503,
+      "bulkOverOriginal": 1.0724980547795446,
+      "scope": "This exact benchmark workload only; not an installed Preview or C17 estimate"
+    }
+  ],
+  "logs": [
+    {
+      "kind": "main",
+      "blob": "ef3281bbb6ce1e7edff1c329224de5c567b701c6",
+      "characters": 84500
+    },
+    {
+      "kind": "cleanup",
+      "blob": "61e5ba3fe2d79ebbc8fc8ca96fb68040cbd56f11",
+      "characters": 2298
+    }
+  ],
+  "nonClaims": [
+    "Workflow success is functional/type evidence only.",
+    "These timings do not qualify any installed product gate.",
+    "No release runtime measurement is needed for a candidate rejected in the admitted normal runtime.",
+    "No product source, shared PR ref, deadlines, original assertions, or workflows were changed."
+  ],
+  "nextStep": "Do not adopt or run a full product campaign for this candidate. Review the separate fallback-only proposal if requested."
+}
