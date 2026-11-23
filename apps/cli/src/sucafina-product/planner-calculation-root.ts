@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { sfPlannerCost, sfPlannerAsyncCost } from "./planner-observation-cost.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { currentSfPlannerReadonlySnapshotScope, currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
@@ -56,15 +57,15 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const authenticate = host.authenticate, environment = host.environment
       const request = requestFor.call(host, call), binding = call.binding, lease = call.lease
       if (!request || request.signal.aborted) return undefined
-      const identity = digestSfValue([call.kind, binding]), headers = plannerRequestIdentity(request)
-      const pinned = () => input.host === host && host.persistence === persistence &&
+      const identity = sfPlannerCost("root-binding-digest", () => digestSfValue([call.kind, binding])), headers = sfPlannerCost("root-request-identity", () => plannerRequestIdentity(request))
+      const pinned = () => sfPlannerCost("root-pinned", () => input.host === host && host.persistence === persistence &&
         persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots &&
         persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
         persistence.currentSnapshotScope === snapshotScope && host.requestFor === requestFor &&
         host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
-        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === identity &&
-        !request.signal.aborted && requestFor.call(host, call) === request && plannerRequestIdentity(request) === headers && ownerCurrent()
-      const current = () => pinned() && unchanged()
+        call.binding === binding && call.lease === lease && sfPlannerCost("root-binding-digest", () => digestSfValue([call.kind, call.binding])) === identity &&
+        !request.signal.aborted && requestFor.call(host, call) === request && sfPlannerCost("root-request-identity", () => plannerRequestIdentity(request)) === headers && ownerCurrent())
+      const current = () => sfPlannerCost("root-current", () => pinned() && unchanged())
       const live = () => {
         const local = hasSfLocalSnapshotScope(persistence)
         if (local !== undefined) return local
@@ -91,11 +92,11 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           }, { signal: request.signal })
           return accepted === true && callbacks === 1 && current() && live()
         }
-        if (!await healthy()) return undefined
+        if (!await sfPlannerAsyncCost("root-healthy", healthy)) return undefined
         return once(async (work) => {
-          if (!await healthy()) return unavailable()
+          if (!await sfPlannerAsyncCost("root-healthy", healthy)) return unavailable()
           const result = await work()
-          return await healthy() ? result : unavailable()
+          return await sfPlannerAsyncCost("root-healthy", healthy) ? result : unavailable()
         })
       }
       if (!await revalidate.call(host, call) || !current()) return undefined
@@ -120,17 +121,17 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         const accepted = await root.call(persistence, async () => {
           invocations++
           if (invocations !== 1 || !current()) return false
-          const native = currentSfPlannerReadonlySnapshotScope(persistence)
+          const native = sfPlannerCost("root-native-lookup", () => currentSfPlannerReadonlySnapshotScope(persistence))
           // A C08 descendant has its own logical scope within this same physical
           // root. Use that scope's original strict current, never a parent-scope
           // closure in the child, and require both original physical identities.
           const healthy = native?.bytesIdentity ? () => {
-            const active = currentSfPlannerReadonlySnapshotScope(persistence)
-            return !!active && active.identity === native.identity && active.bytesIdentity === native.bytesIdentity && active.current()
+            const active = sfPlannerCost("root-native-lookup", () => currentSfPlannerReadonlySnapshotScope(persistence))
+            return !!active && active.identity === native.identity && active.bytesIdentity === native.bytesIdentity && sfPlannerCost("root-native-current", () => active.current())
           } : currentSfReadonlySnapshotScope(persistence)?.current ?? live
-          if (!healthy()) return false
+          if (!sfPlannerCost("root-healthy", healthy)) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
-            candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }
+            sfPlannerCost("root-owner-current", () => candidate === call && owner.open && roots.getStore() === owner && pinned() && sfPlannerCost("root-healthy", healthy)) }
           if (native?.bytesIdentity) {
             const proof = Object.freeze({})
             let failed = false

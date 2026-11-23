@@ -1,3 +1,4 @@
+import { sfPlannerCost, sfPlannerAsyncCost, sfPlannerCostOwner } from "./planner-observation-cost.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -35,6 +36,7 @@ export function createSfFinancePairObservation(input: {
 
   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    return sfPlannerCostOwner(async () => {
     try {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
@@ -42,20 +44,20 @@ export function createSfFinancePairObservation(input: {
       if (call.kind !== "ui" || !parsed.ok || parsed.value.criteria.length || parsed.value.scenarioRefs.length !== 2 ||
         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
         digestSfValue(parsed.value) !== digestSfValue(incoming) ||
-        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
+        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await sfPlannerAsyncCost("finance-work", work)
       const selection = input.selectedScope(call)
-      if (!selection) return await work()
+      if (!selection) return await sfPlannerAsyncCost("finance-work", work)
       const request = host.requestFor(call)
       if (!request || request.signal.aborted || !selection.current()) return unavailable()
 
       const pairDigest = digestSfValue(incoming), caseDigest = digestSfValue(selection.ref)
       const readState = input.state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
-      const identities = [...readers()], recordProof = input.recordProof, observeRecords = recordProof?.run
-      const current = () => selection.current() && digestSfValue(selection.ref) === caseDigest &&
+      const identities = [...sfPlannerCost("finance-reader-identities", readers)], recordProof = input.recordProof, observeRecords = recordProof?.run
+      const current = () => sfPlannerCost("finance-current", () => selection.current() && digestSfValue(selection.ref) === caseDigest &&
         input.host === host && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted &&
         digestSfValue(incoming) === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
-        input.readerIdentities === readers && sameReaders(readers(), identities) &&
-        input.recordProof === recordProof && recordProof?.run === observeRecords
+        input.readerIdentities === readers && sameReaders(sfPlannerCost("finance-reader-identities", readers), identities) &&
+        input.recordProof === recordProof && recordProof?.run === observeRecords)
       const environment = async () => {
         const value = await host.environment(request), at = Date.parse(value.at)
         return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
@@ -68,28 +70,28 @@ export function createSfFinancePairObservation(input: {
             decision.version !== selection.ref.version || !decision.participants.includes(actor.principalRef) ||
             actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
             actor.policyVersion !== call.binding.policyVersion) return undefined
-          const refs = closedPair(decision, state, parsed.value.scenarioRefs)
+          const refs = sfPlannerCost("finance-closed-pair", () => closedPair(decision, state, parsed.value.scenarioRefs))
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
-          const snapshotDigest = digestSfValue({ state, snapshots, sources })
-          const before = await environment()
-          const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
+          const snapshotDigest = sfPlannerCost("finance-snapshot-digest", () => digestSfValue({ state, snapshots, sources }))
+          const before = await sfPlannerAsyncCost("finance-environment", environment)
+          const principal = structuredClone(await sfPlannerAsyncCost("finance-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
           if (principal.id.startsWith("local:")) return unsupported
-          if (!refs.every((ref) => plannerRecordMaterialized(ref, call, snapshots.planner, principal))) return unsupported
-          if (!await host.revalidate(call) || !current()) return undefined
-          const after = await environment()
-          const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
+          if (!refs.every((ref) => sfPlannerCost("finance-materialized", () => plannerRecordMaterialized(ref, call, snapshots.planner, principal)))) return unsupported
+          if (!await sfPlannerAsyncCost("finance-revalidate", () => host.revalidate(call)) || !current()) return undefined
+          const after = await sfPlannerAsyncCost("finance-environment", environment)
+          const again = await sfPlannerAsyncCost("finance-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+            snapshotDigest !== sfPlannerCost("finance-snapshot-digest", () => digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }))) return undefined
           return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after,
             refs: structuredClone(refs), principalDigest: digestSfValue(principal), plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
         })
         if (!current() || observed.status !== "ok" || !observed.value) return undefined
         if (observed.value.kind === "unsupported") return observed.value
         // C08 reauthorizes after its callback. Close the clock witness after that await too.
-        const closed = await environment()
+        const closed = await sfPlannerAsyncCost("finance-environment", environment)
         return current() && closed === observed.value.environment ? observed.value : undefined
       }
       const prepared = await root.prepare(call, async () => true, current)
@@ -97,38 +99,39 @@ export function createSfFinancePairObservation(input: {
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
-        const before = await witness()
+        const before = await sfPlannerAsyncCost("finance-witness-before", witness)
         if (!before) return unavailable()
         if (before.kind === "unsupported") return { status: "ok", value: unsupported }
         // The private root seals these ACL/source bytes. Authentication and the
         // environment are still freshly observed for every terminal proof read.
         const authorizeRecords = async () => {
-          if (!current() || !await host.revalidate(call) || !current()) return false
-          const environmentNow = await environment()
+          if (!current() || !await sfPlannerAsyncCost("finance-revalidate", () => host.revalidate(call)) || !current()) return false
+          const environmentNow = await sfPlannerAsyncCost("finance-environment", environment)
           if (!current() || environmentNow !== before.environment) return false
-          const principalNow = await host.authenticate(request, { surface: "planner", roleMap: structuredClone(before.plannerRoleMap) })
+          const principalNow = await sfPlannerAsyncCost("finance-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: structuredClone(before.plannerRoleMap) }))
           return current() && digestSfValue(principalNow) === before.principalDigest &&
-            await host.revalidate(call) && current()
+            await sfPlannerAsyncCost("finance-revalidate", () => host.revalidate(call)) && current()
         }
         const result = observeRecords
           ? await observeRecords(before.refs, call, root.proof(call), authorizeRecords, current, work)
-          : await work()
-        const after = await witness()
+          : await sfPlannerAsyncCost("finance-work", work)
+        const after = await sfPlannerAsyncCost("finance-witness-after", witness)
         return after?.kind === "current" && after.digest === before.digest
           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } }
           : unavailable()
       })
       if (grouped.status !== "ok") return grouped
-      if (grouped.value.kind === "unsupported") return current() ? await work() : unavailable()
+      if (grouped.value.kind === "unsupported") return current() ? await sfPlannerAsyncCost("finance-work", work) : unavailable()
       // The first root is closed. Never replay the work when a source or reader has changed.
       const egress = await root.prepare(call, async () => true, current)
       if (!egress) return unavailable()
-      const fresh = await egress.run(async () => ({ status: "ok" as const, value: await witness() }))
+      const fresh = await egress.run(async () => ({ status: "ok" as const, value: await sfPlannerAsyncCost("finance-witness-egress", witness) }))
       if (fresh.status !== "ok" || fresh.value?.kind !== "current" || fresh.value.digest !== grouped.value.witness || !current())
         return unavailable()
-      const closed = await environment()
+      const closed = await sfPlannerAsyncCost("finance-environment", environment)
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
+    })
   }
 }
 
