@@ -142,6 +142,12 @@ export function registerProcurementJourneys(ids: readonly ProcurementJourneyID[]
         await expect(surface.locator(".sf-n21-metrics")).toContainText("14,800.00")
         await alignedMetricValues(surface)
         await capture(page, info, "CAP24-dark-desktop-source-overview-test-data")
+        await page.setViewportSize({ width: 768, height: 1100 })
+        await reflow(page)
+        await scrollPageTop(page)
+        await alignedMetricRows(surface)
+        await capture(page, info, "CAP24-dark-768-source-overview-test-data")
+        await desktop()
         await scheme(page, "light")
         await capture(page, info, "CAP24-light-desktop-source-overview-test-data")
         await surface.locator("#sf-n21-status").selectOption("po_issued")
@@ -613,6 +619,13 @@ export function registerProcurementJourneys(ids: readonly ProcurementJourneyID[]
             if (screen.id === "CAP26") await readableRequestIdentity(localized.locator('[data-sf-cap26="submitted-pr"] tr[data-sf-row]'))
             await expect(localized.locator('[data-sf-frame="page"]')).not.toContainText(/sf\.(?:u1[1234]|u36|n21)\./)
             await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
+            if (screen.id === "CAP24") {
+              await localized.setViewportSize({ width: 768, height: 1100 })
+              await reflow(localized)
+              await scrollPageTop(localized)
+              await alignedMetricRows(localized.locator('[data-sf-surface="CAP24"]'))
+              await capture(localized, info, "CAP24-pt-BR-dark-768-source-overview-test-data")
+            }
             await localized.setViewportSize({ width: 320, height: 900 })
             await reflow(localized)
             await scrollPageTop(localized)
@@ -636,7 +649,7 @@ export function registerProcurementJourneys(ids: readonly ProcurementJourneyID[]
     await info.attach("native-procurement-wave-four-evidence", {
       body: JSON.stringify({
         source: "original producers in an isolated installation; no mocked auth, grants, records, decisions or receipts",
-        group: journey.id, areas: journey.areas, widths: [1440, 320],
+        group: journey.id, areas: journey.areas, widths: journey.id === "requests-approvals" || journey.id === "localized" ? [1440, 768, 320] : [1440, 320],
         schemes: journey.id === "localized" ? ["dark"] : ["dark", "light"],
         locales: journey.id === "localized" ? ["pt-BR"] : ["en-US"],
         actualBrowserZoom: "not measured",
@@ -665,6 +678,31 @@ async function alignedMetricValues(surface: Locator) {
     const tops = elements.map((element) => element.getBoundingClientRect().top)
     return Math.max(...tops) - Math.min(...tops)
   }), { message: "the financial band shares one value baseline even when labels wrap" }).toBeLessThanOrEqual(1)
+}
+
+async function alignedMetricRows(surface: Locator) {
+  const metrics = surface.locator(".sf-n21-metric")
+  await expect(metrics).toHaveCount(5)
+  await expect.poll(() => metrics.evaluateAll((elements) => {
+    const rows: { top: number; bottom: number; value: number }[][] = []
+    for (const element of elements) {
+      const bounds = element.getBoundingClientRect()
+      const value = element.querySelector("dd")!.getBoundingClientRect().top
+      const row = rows.find((items) => Math.abs(items[0]!.top - bounds.top) <= 1)
+      const item = { top: bounds.top, bottom: bounds.bottom, value }
+      if (row) row.push(item)
+      else rows.push([item])
+    }
+    return rows.map((row, index) => ({
+      count: row.length,
+      aligned: Math.max(...row.map((item) => item.value)) - Math.min(...row.map((item) => item.value)) <= 1,
+      separated: index === 0 || row[0]!.top > Math.max(...rows[index - 1]!.map((item) => item.bottom)),
+    }))
+  }), { message: "the full-width count and each two-column metric row keep independent aligned values" }).toEqual([
+    { count: 1, aligned: true, separated: true },
+    { count: 2, aligned: true, separated: true },
+    { count: 2, aligned: true, separated: true },
+  ])
 }
 
 async function readableRequestIdentity(rows: Locator) {
