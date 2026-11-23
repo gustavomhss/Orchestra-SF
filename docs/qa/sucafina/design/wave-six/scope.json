@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "IN_PROGRESS",
+  "status": "FINAL_BROWSER_QUALIFICATION_IN_PROGRESS",
   "base": "a5eee3584da531d087a419b8f3ef29d3881117c7",
   "branch": "sf-final-fourteen",
   "target": "dev",
@@ -274,7 +274,8 @@
   "authorization": {
     "implementation": true,
     "reviewedMergeToDev": true,
-    "userInstruction": "Mesmo trabalho das sessões anteriores, com atenção ao design e UX. O trabalho acaba no merge.",
+    "personalVisualReviewClaimed": false,
+    "userInstruction": "Mesmo trabalho das sessões anteriores, com atenção ao design e UX. eu trabalho acaba no merge.",
     "productionCutover": false
   },
   "coordination": {
@@ -284,11 +285,28 @@
       588
     ],
     "parallelDesignPR": 613,
-    "parallelVisualPR": 710,
+    "parallelVisualPR": {
+      "number": 710,
+      "status": "MERGED",
+      "mergeCommit": "65349c1c723a8c626135d5b8032b929f5c635193",
+      "compositionCommit": "760ddd364a4ea2bbf3e0be0ec00d7d4545d1f400"
+    },
     "overlapPolicy": "Preserve both branches' reviewed changes during composition; no whole-branch intake or writes to their branches.",
     "sharedImportsAreasToPreserve": [
       "UI55",
       "UI56"
-    ]
-  }
+    ],
+    "parallelDocumentationPR": {
+      "number": 714,
+      "status": "MERGED",
+      "mergeCommit": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+      "compositionCommit": "c51de8614a756b673f1944084978d1117e731022",
+      "paths": 3,
+      "productUnchanged": true
+    }
+  },
+  "originalBase": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+  "integrationBase": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+  "productCandidate": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+  "pullRequest": 713
 }

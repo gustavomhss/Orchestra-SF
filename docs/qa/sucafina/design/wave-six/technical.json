@@ -1,0 +1,86 @@
+{
+  "run": 45117046888,
+  "job": 137502149296,
+  "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
+  "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+  "status": "PASSED",
+  "checks": 9,
+  "guard": {
+    "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "rules": 78,
+    "files": 71,
+    "errors": 0,
+    "approved": 0,
+    "warnings": 10,
+    "warningRules": [
+      "test-timeout-raised"
+    ],
+    "touchesGuards": false
+  },
+  "palette": {
+    "gate": "palette byte parity",
+    "files": 7,
+    "changed": []
+  },
+  "commands": [
+    {
+      "gate": "app-shell typecheck",
+      "exitCode": 0
+    },
+    {
+      "gate": "fetch pinned guard base",
+      "exitCode": 0
+    },
+    {
+      "gate": "resolve pinned guard base",
+      "exitCode": 0
+    },
+    {
+      "gate": "guardrails",
+      "exitCode": 0
+    },
+    {
+      "gate": "palette generation",
+      "exitCode": 0
+    },
+    {
+      "gate": "palette byte parity"
+    },
+    {
+      "gate": "app-shell e2e typecheck",
+      "exitCode": 0
+    },
+    {
+      "gate": "core typecheck",
+      "exitCode": 0
+    },
+    {
+      "gate": "filesystem and strict process regressions",
+      "exitCode": 0
+    },
+    {
+      "gate": "cli typecheck",
+      "exitCode": 0
+    },
+    {
+      "gate": "client typecheck",
+      "exitCode": 0
+    },
+    {
+      "gate": "native source codec regressions",
+      "exitCode": 0
+    }
+  ],
+  "summaries": [
+    "2026-11-23T05:20:58.4782078Z  11 pass",
+    "2026-11-23T05:20:58.4782263Z  1 skip",
+    "2026-11-23T05:20:58.4782446Z  0 fail",
+    "2026-11-23T05:20:58.4782635Z  37 expect() calls",
+    "2026-11-23T05:21:39.9410771Z  12 pass",
+    "2026-11-23T05:21:39.9410948Z  0 fail",
+    "2026-11-23T05:21:39.9411145Z  243 expect() calls",
+    "2026-11-23T05:21:39.9412347Z  9 pass",
+    "2026-11-23T05:21:39.9412918Z  0 fail",
+    "2026-11-23T05:21:39.9413107Z  16 expect() calls"
+  ]
+}

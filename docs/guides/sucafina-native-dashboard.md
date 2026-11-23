@@ -104,6 +104,88 @@ Na revisão de mudanças, **ausente**, **indefinido** e **nulo** identificam est
 
 A disponibilidade de exportação de pedidos acompanha o serviço e o acesso ativos. Cada download confere novamente o pedido selecionado; uma mudança de fonte ou de permissão exige uma nova leitura antes de obter o arquivo.
 
+## Recibos e revisão de importação
+
+Abra uma importação pelo histórico ou pela referência do recibo. O resumo distingue alterações aplicadas, registros sem mudança e recusas. Consulte as diferenças para comparar os valores de origem com os propostos; os detalhes técnicos do pedido e do recibo ficam disponíveis quando forem necessários.
+
+Consultar ou reabrir um recibo não envia a importação novamente. Se um envio ficar sem resultado confirmado, use a reconciliação da operação original antes de tentar outra ação. Uma resposta desconhecida não equivale a sucesso nem a falha confirmada.
+
+## Documentos e evidências
+
+### Escolher a fonte e abrir um documento
+
+Escolha uma fonte disponível para seu acesso e use a busca para localizar o documento. Uma fonte que recusa a leitura pode ser trocada por outra origem autorizada quando essa opção estiver disponível. Durante um envio ou um resultado desconhecido, a seleção fica bloqueada para manter a operação vinculada à origem correta.
+
+O formulário de novo documento é aberto separadamente da consulta. Confira o arquivo e os campos apresentados; a disponibilidade de envio depende da instalação e da verificação do arquivo. Depois de selecionar um documento, abra seu detalhe para consultar os dados e o conteúdo original.
+
+### Revisar uma evidência extraída
+
+A lista apresenta os candidatos com valor, unidade e estado. Abra um candidato para conferir o trecho original e sua localização no documento. A extração ainda não é um dado confirmado: revise o valor e a evidência antes de confirmar. A rejeição pede uma justificativa.
+
+A referência da fonte, o trecho e a versão continuam vinculados à revisão. Se o documento for substituído, removido ou deixar de estar acessível, a evidência anterior não permanece utilizável como se estivesse atual. Releia a fonte autorizada antes de continuar.
+
+### Levar uma evidência ao cenário
+
+Abra o cenário a partir da evidência confirmada. Confira a fonte, o valor e a moeda; selecione o destino e o mês do Planner antes de solicitar a prévia.
+
+A prévia mostra o que a fonte permite calcular e informa que nenhuma alteração de domínio foi aplicada. Um subtotal conhecido pode aparecer mesmo quando o total está indisponível por falta de cobertura. A vinculação da evidência é uma ação separada, com sua própria autorização e confirmação.
+
+Se a simulação não estiver disponível para seu acesso, a tela mantém a fonte identificada, explica a limitação e desabilita a ação correspondente.
+
+## Memória e acompanhamento de decisões
+
+### Condições, materialidade e sinais
+
+Em **Sinais**, selecione um caso autorizado para consultar suas condições registradas. Uma condição vem da fonte original; abrir a tela não cria condições automaticamente.
+
+A revisão de uma condição pode consultar sua materialidade. As condições já recebidas continuam visíveis enquanto outra consulta está em andamento. Para consultar os sinais, escolha **Consultar sinais atuais**. A interface distingue uma leitura ainda não iniciada, uma consulta pendente, uma resposta vazia confirmada e uma fonte indisponível.
+
+A ação de interromper a espera encerra a consulta nesta tela. Ela não afirma que o processamento do servidor foi interrompido ou revertido. Sem uma resposta original atual, a tela não apresenta um resultado como confirmado. Trocar de caso ou contexto remove os dados da seleção anterior.
+
+### Casos semelhantes
+
+Selecione o caso atual, confira os candidatos autorizados e escreva a pergunta da comparação. A pergunta é enviada no corpo da consulta e não é colocada na URL.
+
+A resposta apresenta os casos encontrados e as explicações fornecidas pela fonte. Uma consulta vazia permanece identificada como vazia. Abra os detalhes de um candidato para conferir sua identidade e as diferenças atuais; a tela não transforma semelhança em recomendação automática.
+
+### Resultados das escolhas
+
+Em **Resultados**, escolha uma decisão registrada para consultar seu acompanhamento. As escolhas disponíveis não dependem de existir uma condição de sinal para o caso. A referência da seleção permite reabrir o mesmo acompanhamento enquanto a fonte e o acesso continuarem válidos.
+
+Uma comparação só apresenta valores previstos, observados e diferenças quando a origem comprova a cobertura necessária. **Cobertura incompleta** indica que essa comparação ainda não está disponível; não representa resultado zero.
+
+## Rotinas, recorrência e contribuições
+
+### Rotinas
+
+A entrada informa a disponibilidade de planejamento de rotinas nesta instalação. Se o catálogo estiver indisponível, a tela explica a situação e oferece **Voltar às decisões** e **Revisar contexto**. Essas ações conservam o projeto e a instalação selecionados. Nenhuma rotina é preparada ou executada por essa apresentação.
+
+Quando uma instalação admitir o fluxo original do catálogo, a folha organiza caso, finalidade e receita em etapas. A disponibilidade dessa folha não deve ser deduzida apenas de haver perfis ou leitores históricos instalados.
+
+### Resultado da rotina
+
+Abra uma execução autorizada para consultar seu estado e resultado. Sem execução selecionada, a página pede que uma seja escolhida; não inventa um histórico vazio ou um resultado.
+
+O retorno a Rotinas conserva o contexto. Se o catálogo estiver indisponível, o retorno chega à explicação correspondente.
+
+### Recorrência
+
+Quando agendamentos não estiverem disponíveis nesta instalação, **Recorrência** apresenta essa limitação e a ação **Voltar para rotinas**. A tela não cria, altera ou executa uma programação enquanto essa capacidade estiver indisponível.
+
+### Contribuições
+
+A página mostra os perfis residentes e as skills que a instalação realmente informa. Use o filtro para localizar um perfil ou uma habilidade; abra os detalhes para consultar versão, operações permitidas e schemas disponíveis.
+
+O inventário descreve capacidades instaladas. Ele não comprova que um perfil foi carregado, que executou um trabalho ou que contribuiu para a decisão atual. Selecione um caso autorizado para consultar a prova original disponível; ausência de contribuição verificada permanece explícita.
+
+## Contexto e administração local
+
+Em **Contexto**, confira servidor, projeto, instalação e identidade atual. A atualização de acesso relê a fonte original. Trocar de contexto não transporta resultados nem autorizações da seleção anterior.
+
+Na **Administração local**, as preferências de resumos têm leitura e revisão próprias. Selecione as páginas desejadas, revise os valores propostos e confirme o salvamento. **Cancelar revisão** ou voltar aos campos conserva o rascunho. Um salvamento confirmado depende também da releitura dos valores persistidos.
+
+Notificações e histórico de backups podem estar indisponíveis mesmo quando os resumos funcionam. A tela explica essas condições separadamente.
+
 ## Planner
 
 ### Visão geral

@@ -1,6 +1,21 @@
 # Sucafina nativa — inventário e retrabalho das telas
 
-## Quarto bloco — 20 áreas aprovadas e mescladas
+## Lote final — UI57–UI70
+
+O [PR #713](https://github.com/gustavomhss/Orchestra-SF/pull/713) reúne as 14 áreas deste lote e seus 25 padrões de rota existentes. O usuário autorizou implementação, revisão e merge em `dev`. O estado efetivo e o SHA da integração são os do PR.
+
+[Resultado e decisões](WAVE-SIX.md) · [Validação e limites](wave-six/VALIDATION.md) · [Galeria real](wave-six/evidence/README.md) · [Mapa exato](wave-six/scope.json)
+
+| Situação após a integração deste lote | Áreas |
+| --- | ---: |
+| Anteriormente integradas (#583, #587 e #588) | 41 |
+| Áreas de design deste PR | 14 |
+| Campanha com este lote integrado | **55 de 70** |
+| UI42–UI56, frente independente do PR #613 | 15 |
+
+A contagem inclui as apresentações contextuais indisponíveis de Rotinas (UI64) e Recorrência (UI66). O catálogo conserva a negativa de prontidão; Schedule continua sem port nativo. As evidências separam design, operação original exercitada e capacidade ainda não qualificada.
+
+## Histórico — quarto bloco, 20 áreas aprovadas e mescladas
 
 O quarto bloco implementa **CAP20–CAP28, UI30–UI32 e UI34–UI41**, com 49 padrões de rota já existentes. O [PR #588](https://github.com/gustavomhss/Orchestra-SF/pull/588) foi aprovado pelo usuário e mesclado em `f2a6c23551289ef8705baea03f8cec2425b8445a`. [Registro verificado do merge](wave-four/MERGE.md).
 
