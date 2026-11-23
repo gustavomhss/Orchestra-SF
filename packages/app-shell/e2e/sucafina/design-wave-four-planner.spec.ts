@@ -4,6 +4,10 @@ import { waveThreeData } from "./design-support/wave-three-data"
 import { waveFourPlannerData } from "./design-support/wave-four-planner-data"
 import type { DesignInstallation } from "./design-support/installation"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP20", path: "/orchestra/sf-planner/headcount", title: "Headcount", br: "Headcount" },
   { id: "CAP21", path: "/orchestra/sf-planner/allocations", title: "Entities & allocations", br: "Entidades e alocações" },

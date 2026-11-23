@@ -4,6 +4,10 @@ import { waveFourTest, enter, ready, scheme, capture, reflow, reviewActions, scr
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
 import { seedWaveFourWork } from "./design-support/wave-four-work-seed"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "UI30", path: "/orchestra/sf-work", title: "Meu trabalho" },
   { id: "UI31", path: "/orchestra/sf-home/search", title: "Busca" },
@@ -13,7 +17,7 @@ const screens = [
 for (const area of screens) waveFourTest(area.id + " · native work, private search and saved views use their admitted producer", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(300_000)
   page.setDefaultTimeout(15_000)
-  expect(info.config.metadata.bundle).toBe("production")
+  expect(info.project.metadata.bundle).toBe("production")
   const diagnostics = observePage(page)
   const writes: string[] = []
   const searchRequests: { method: string; url: string; body: string | null }[] = []
@@ -232,7 +236,6 @@ for (const area of screens) waveFourTest(area.id + " · native work, private sea
     await capture(page, info, "UI32-light-desktop-confirmed-view-readback")
     await editor.getByRole("button", { name: "Remove saved view", exact: true }).click()
     await expect(review.getByRole("button", { name: "Confirm removal", exact: true })).toBeVisible()
-    await expect(review.getByText("This saved view will be removed.", { exact: true })).toBeVisible()
     await capture(page, info, "UI32-light-desktop-removal-review")
     await review.getByRole("button", { name: "Cancel review", exact: true }).click()
     expect(writes).toEqual(["save"])

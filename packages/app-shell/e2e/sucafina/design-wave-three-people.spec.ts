@@ -2,6 +2,10 @@ import { expect } from "@playwright/test"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveThreeTest.use({ trace: "off", video: "off" })
+waveThreeTest.describe.configure({ retries: 0 })
+
 const peopleScreens = [
   { id: "CAP06", path: "/orchestra/sf-people/overview", title: "Headcount Overview", br: "Visão de headcount" },
   { id: "CAP07", path: "/orchestra/sf-people/structure", title: "Team Structure", br: "Estrutura da equipe" },

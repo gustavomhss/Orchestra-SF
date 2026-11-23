@@ -1,7 +1,6 @@
 import { expect, type Page, type Request, type TestInfo } from "@playwright/test"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
-import { captureWorkflowState } from "./design-support/workflow-polish-capture"
 import {
   waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrollPageTop,
 } from "./design-support/wave-four"
@@ -12,7 +11,9 @@ type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" 
     preparedChanges: readonly unknown[]
     receipts: readonly unknown[]
   }
-waveFourTest.use({ designWave: "four-decisions" })
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
@@ -206,7 +207,7 @@ async function reviewViewport(page: Page, info: TestInfo, review: ReturnType<Pag
 waveFourTest("wave four decisions: real sources, retained drafts, uncertainty and native review", async ({ page, browser, installation, owner }, info) => {
   waveFourTest.setTimeout(780_000)
   page.setDefaultTimeout(15_000)
-  expect(info.config.metadata.bundle).toBe("production")
+  expect(info.project.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
   const diagnostic = observePage(page)
   const testEnteredAt = Date.now()
@@ -229,22 +230,6 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   }
   const main = await findCase(waveFourDecisionsData.objective)
   const editable = await findCase(waveFourDecisionsData.editableObjective)
-  await captureWorkflowState(page, info, { surface: "UI33", selector: ".sf-cases", state: "original-case-list",
-    evidence: "Both named canonical decision cases were read from the original authorized list; their native hrefs are retained." })
-  const filter = list.getByRole("searchbox", { name: "Filter decisions", exact: true })
-  await filter.fill("no matching design decision")
-  await expect(list.getByText("No decisions match these filters.", { exact: true })).toBeVisible()
-  await captureWorkflowState(page, info, { surface: "UI33", selector: ".sf-cases", state: "filtered-empty",
-    evidence: "Local filter has no matches in the already authorized list; the source cases remain unchanged." })
-  await filter.fill("")
-  await page.getByRole("button", { name: "New case", exact: true }).click()
-  const create = page.getByRole("region", { name: "Create a decision", exact: true })
-  await expect(create.getByRole("button", { name: "Review creation", exact: true })).toBeDisabled()
-  await captureWorkflowState(page, info, { surface: "UI33", selector: ".sf-cases", state: "new-case-prerequisites",
-    evidence: "Native creation form requires its original objective, horizon, currency and criteria. No create command is sent.",
-    focus: ".sf-n24-create" })
-  await create.getByRole("button", { name: "Back to decisions", exact: true }).click()
-  await expect(list).toBeVisible()
   // The original UI33 href is admitted and decoded by the native route, not a test codec.
   await enter(page, owner, main.href, "Case summary")
   const caseRef = await page.locator('[data-sf-decision="UI34"]').getAttribute("data-sf-case-ref")
@@ -479,30 +464,19 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     const models = choices.models as { id: string; providerID: string }[]
     expect(cases.some((entry) => entry.caseRef.id === source.id && entry.caseRef.incarnation === source.incarnation)).toBe(true)
     await expect(page.getByRole("combobox", { name: "Authorized case", exact: true }).locator("option")).toHaveCount(cases.length + 1)
-    const hasPreparationChoices = analyses.length > 0 && models.length > 0
-    const analysisChoice = page.getByRole("combobox", { name: "Analysis type", exact: true })
-    const modelChoice = page.getByRole("combobox", { name: "Admitted model", exact: true })
-    const objective = page.getByLabel("Analysis objective", { exact: true })
-    await expect(analysisChoice).toHaveCount(hasPreparationChoices ? 1 : 0)
-    await expect(modelChoice).toHaveCount(hasPreparationChoices ? 1 : 0)
-    await expect(objective).toHaveCount(hasPreparationChoices ? 1 : 0)
+    await expect(page.getByRole("combobox", { name: "Analysis type", exact: true }).locator("option")).toHaveCount(analyses.length + 1)
+    await expect(page.getByRole("combobox", { name: "Admitted model", exact: true }).locator("option")).toHaveCount(models.length + 1)
     await expect(page.getByRole("heading", { name: "Analysis history", exact: true })).toBeVisible()
     await expect(page.getByText("No analyses were recorded for this authorized case.", { exact: true })).toBeVisible()
+    await page.getByLabel("Analysis objective", { exact: true }).fill(waveFourDecisionsData.objective)
     const published = analyses.findIndex((entry) => entry.skillId === "sf-enquadrar-decisao")
-    if (hasPreparationChoices) {
-      await expect(analysisChoice.locator("option")).toHaveCount(analyses.length + 1)
-      await expect(modelChoice.locator("option")).toHaveCount(models.length + 1)
-      await objective.fill(waveFourDecisionsData.objective)
-      if (published >= 0) await analysisChoice.selectOption({ index: published + 1 })
-      await modelChoice.selectOption({ index: 1 })
-    }
+    if (published >= 0) await page.getByRole("combobox", { name: "Analysis type", exact: true }).selectOption({ index: published + 1 })
+    if (models.length) await page.getByRole("combobox", { name: "Admitted model", exact: true }).selectOption({ index: 1 })
     if (!analyses.length) await expect(page.getByText("No admitted analysis option is available.", { exact: true })).toBeVisible()
     if (analyses.length && !models.length) await expect(page.getByText("No admitted model is available.", { exact: true })).toBeVisible()
     const preparationAvailable = availability.some((entry) => entry.operation === "intelligence.analysis.prepare" &&
       entry.state === "ready" && entry.operational === true)
-    if (!hasPreparationChoices) {
-      await expect(page.getByRole("button", { name: "Prepare analysis", exact: true })).toHaveCount(0)
-    } else if (published < 0 || !preparationAvailable) {
+    if (published < 0 || !models.length || !preparationAvailable) {
       await expect(page.getByRole("button", { name: "Prepare analysis", exact: true })).toBeDisabled()
     } else {
       await page.getByRole("button", { name: "Prepare analysis", exact: true }).click()

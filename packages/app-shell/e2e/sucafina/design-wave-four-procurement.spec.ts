@@ -3,6 +3,10 @@ import { waveFourTest, enter, ready, observePage, scheme, reflow, capture, scrol
 import { waveFourProcurementData } from "./design-support/wave-four-procurement-data"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP24", path: "/orchestra/sf-procurement/overview", title: "Dashboard", br: "Visão de Procurement" },
   { id: "CAP25", path: "/orchestra/sf-procurement/requests", title: "Requests", br: "Pedidos" },

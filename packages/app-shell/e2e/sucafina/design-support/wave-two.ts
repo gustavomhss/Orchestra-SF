@@ -16,9 +16,6 @@ export const waveTwoTest = test.extend<{ installation: DesignInstallation; owner
     await use(await authenticateDesignInstallation(context, installation))
   },
 })
-// The real single-use enrollment and scoped session must never enter a trace.
-waveTwoTest.use({ trace: "off", video: "off" })
-waveTwoTest.describe.configure({ retries: 0 })
 const previewBytes = new WeakMap<TestInfo, number>()
 const diagnostics = new WeakMap<Page, { consoleErrors: string[]; pageErrors: string[] }>()
 
