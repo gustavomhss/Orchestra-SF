@@ -114,9 +114,13 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
   expect(info.project.metadata.bundle, "maintained production browser runner").toBe("production")
   const messages = observePage(page)
   const mutations: string[] = []
+  const savedPositionRateRefs: unknown[] = []
   page.on("request", (request) => {
-    if (request.method() === "POST" && new URL(request.url()).pathname === installation.mount + "/planner")
-      mutations.push(request.postDataJSON().page + "/" + request.postDataJSON().action)
+    if (request.method() !== "POST" || new URL(request.url()).pathname !== installation.mount + "/planner") return
+    const input = request.postDataJSON()
+    mutations.push(input.page + "/" + input.action)
+    if (input.page === "Headcount" && input.action === "save" && input.values?.collection === "positions")
+      savedPositionRateRefs.push(input.values.rateId)
   })
 
   await waveFourTest.step("CAP20 · source roster, draft preservation, review and persisted position", async () => {
@@ -134,10 +138,16 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     const detail = surface.locator("[data-sf-headcount-position]")
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(waveFourPlannerData.headcount.position)
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("1")
+    const rateCard = detail.getByRole("combobox", { name: "Rate card", exact: true })
+    await expect(rateCard.locator("option:checked")).toHaveText(waveFourPlannerData.headcount.rate)
+    const rateRef = await rateCard.inputValue()
+    expect(rateRef).not.toBe("")
     await expect(detail.getByRole("region", { name: "Monthly cost (USD)", exact: true }).locator("tbody td")).toHaveCount(12)
     await detail.getByLabel("FTE", { exact: true }).fill("0.9")
     await scrollPageTop(page)
     await capture(page, info, "CAP20-dark-320-position-editor-test-data")
+    await rateCard.scrollIntoViewIfNeeded()
+    await capture(page, info, "CAP20-dark-320-rate-card-label-test-data")
     const before = mutations.length
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(surface).toBeHidden()
@@ -154,12 +164,15 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     await width(page, 1440)
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     await confirm(page, installation, "Headcount", "save", "Save position", "positions")
+    expect(savedPositionRateRefs).toEqual([rateRef])
     expect(mutations).toHaveLength(before + 1)
     await go(page, owner, installation, screens[0])
     await surface.getByLabel("Version", { exact: true }).selectOption({ label: waveThreeData.planner.version })
     await ready(page, "Headcount")
     await positionRow.getByRole("button", { name: "Show details", exact: true }).click()
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("0.9")
+    await expect(rateCard).toHaveValue(rateRef)
+    await expect(rateCard.locator("option:checked")).toHaveText(waveFourPlannerData.headcount.rate)
     // The mounted roster can be reopened without clearing the selected record or its draft owner.
     await positions.locator("summary").click()
     await expect(positionRow).toContainText("0.9")
