@@ -25,12 +25,15 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
   if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
   if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
   const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-first-start")
   const resolved = await resolveScenarios()
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-first-end")
   const failed = resolved.find((result) => result.status !== "ok")
   if (failed) return failed
   if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
   const values = [resolved[0].value, resolved[1].value]
   const validateSources = async () => {
+    console.info("SF_DESIGN_STAGE recall-comparison-sources-start")
     const checks: boolean[] = []
     for (const value of values) {
       if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
@@ -41,11 +44,14 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
       const coverage = structuredClone(await input.sources.resolveForecastCoverage(value.coverageRef, binding))
       checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
     }
+    console.info(checks.every(Boolean) ? "SF_DESIGN_STAGE recall-comparison-sources-ok" : "SF_DESIGN_STAGE recall-comparison-sources-non-ok")
     return checks
   }
   if ((await validateSources()).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
   const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-second-start")
   const again = await resolveScenarios()
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-second-end")
   if (!(await input.host.revalidate(binding)) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-or-authority-changed" }
   if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
   if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
@@ -56,12 +62,18 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
     for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
     return results
   }
+  console.info("SF_DESIGN_STAGE recall-comparison-criteria-first-start")
   const evaluated = await evaluate()
+  console.info("SF_DESIGN_STAGE recall-comparison-criteria-first-end")
   const failure = evaluated.find((item) => item.status !== "ok")
   if (failure) return failure
   if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
+  console.info("SF_DESIGN_STAGE recall-comparison-criteria-second-start")
   const checked = await evaluate()
+  console.info("SF_DESIGN_STAGE recall-comparison-criteria-second-end")
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-final-start")
   const finalScenarios = await resolveScenarios()
+  console.info("SF_DESIGN_STAGE recall-comparison-scenarios-final-end")
   if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await input.host.revalidate(binding)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "criterion-or-authority-changed" }
   const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
   return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }

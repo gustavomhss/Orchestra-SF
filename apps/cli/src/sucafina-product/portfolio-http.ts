@@ -43,15 +43,21 @@ export function createSfPortfolioHttp(input: {
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
     const mode = selected as Mode
+    if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-http-body-start")
     const payload = await boundedJson(request)
+    if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-http-body-end")
     if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+    if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-admission-start")
     const admitted = await input.authority.human.admit(request, actions[mode], payload)
+    if (mode === "decision-choose") console.info(admitted.status === "ok" ? "SF_DESIGN_STAGE recall-choose-admission-ok" : "SF_DESIGN_STAGE recall-choose-admission-refused")
     if (admitted.status !== "ok") return reply(admitted)
     try {
       const call = admitted.value
       const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
       const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+      if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-case-start")
       const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+        if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-case-ready")
         if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
         if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
         if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
@@ -71,10 +77,13 @@ export function createSfPortfolioHttp(input: {
         if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
         return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
       })
+      if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-case-end")
+      if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-egress-start")
       if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
       if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
         binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
         return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
+      if (mode === "decision-choose") console.info("SF_DESIGN_STAGE recall-choose-egress-end")
       return reply(result)
     } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
     finally { input.authority.human.finish(admitted.value) }

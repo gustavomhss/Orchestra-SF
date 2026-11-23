@@ -178,33 +178,50 @@ export function createDecisionMutations(input: MutationHost) {
       return saveCase(input, loaded.value, context, "answer-question", request, (value) => ({ ...value, questions: value.questions.map((question) => question.id === request.questionId ? { ...question, state: "answered" as const, answerRef: request.answerRef } : question), sourceRefs: [...value.sourceRefs, evidence.value].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }))
     },
     recordChoice: async (incoming: { caseRef: CaseRef; alternativeId: string; alternativeVersion: number; comparison: ScenarioCompareRequest; criteria: readonly string[]; reason: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+      console.info("SF_DESIGN_STAGE recall-choose-producer-start")
       const request = structuredClone(incoming)
       if (context.kind !== "ui" || !await input.authorizeMutation("record-choice", request, context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+      console.info("SF_DESIGN_STAGE recall-choose-authority-ok")
+      console.info("SF_DESIGN_STAGE recall-choose-replay-start")
       const replay = await replayMutation(input, request.caseRef, context, "record-choice", request)
+      console.info("SF_DESIGN_STAGE recall-choose-replay-end")
       if (replay) return replay
+      console.info("SF_DESIGN_STAGE recall-choose-confirm-start")
       if (context.kind !== "ui" || !await input.confirmChoice(request.caseRef, request.alternativeId, context).catch(() => false)) return { status: "denied", reason: "human-choice-required" }
+      console.info("SF_DESIGN_STAGE recall-choose-confirm-ok")
+      console.info("SF_DESIGN_STAGE recall-choose-load-start")
       const loaded = await loadCase(input, request.caseRef, context)
+      console.info("SF_DESIGN_STAGE recall-choose-load-end")
       if (loaded.status !== "ok") return loaded
       if (new Set(request.comparison.criteria).size !== request.criteria.length || request.criteria.some((criterion) => !request.comparison.criteria.includes(criterion))) return { status: "conflict", reason: "comparison-criteria-mismatch" }
+      console.info("SF_DESIGN_STAGE recall-choose-comparison-start")
       const comparison = await callMutationPort(() => input.planner.compareScenarios(request.comparison, context))
+      console.info("SF_DESIGN_STAGE recall-choose-comparison-end")
       if (comparison.status !== "ok") return comparison
       if (request.comparison.scenarioRefs.length !== 2 || comparison.value.baselineResultRef !== request.comparison.scenarioRefs[0] || comparison.value.alternativeResultRef !== request.comparison.scenarioRefs[1]) return { status: "conflict", reason: "comparison-reference-mismatch" }
       const alternative = loaded.value.case.alternatives.find((item) => item.id === request.alternativeId && item.version === request.alternativeVersion)
       if (!alternative) return { status: "conflict", reason: "alternative-unavailable" }
       if (comparison.value.alternativeResultRef !== alternative.result.id) {
         if (!input.readScenarioResult) return { status: "unavailable", reason: "scenario-result-unavailable" }
+        console.info("SF_DESIGN_STAGE recall-choose-alternative-start")
         const stored = await callMutationPort(() => input.readScenarioResult!(comparison.value.alternativeResultRef, context))
+        console.info("SF_DESIGN_STAGE recall-choose-alternative-end")
         if (stored.status !== "ok") return stored
         if (stored.value.kind !== "scenario" || stored.value.caseRef.id !== loaded.value.case.id || stored.value.caseRef.incarnation !== loaded.value.case.incarnation || stored.value.caseRef.version > loaded.value.case.version || stored.value.requestDigest !== digestSfValue(alternative.scenario) || stored.value.resultDigest !== digestSfValue(alternative.result)) return { status: "conflict", reason: "comparison-alternative-mismatch" }
+        console.info("SF_DESIGN_STAGE recall-choose-baseline-start")
         const baseline = await callMutationPort(() => input.readScenarioResult!(comparison.value.baselineResultRef, context))
+        console.info("SF_DESIGN_STAGE recall-choose-baseline-end")
         if (baseline.status !== "ok") return baseline
         const baselineValue = baseline.value
         if (baselineValue.kind !== "scenario" || baselineValue.caseRef.id !== loaded.value.case.id || baselineValue.caseRef.incarnation !== loaded.value.case.incarnation || baselineValue.caseRef.version > loaded.value.case.version || baselineValue.result.costCoverage.basisId !== alternative.result.costCoverage.basisId || baselineValue.result.costCoverage.basisVersion !== alternative.result.costCoverage.basisVersion || loaded.value.case.alternatives.filter((item) => item.id !== alternative.id && digestSfValue(item.scenario) === baselineValue.requestDigest && digestSfValue(item.result) === baselineValue.resultDigest).length !== 1) return { status: "conflict", reason: "comparison-baseline-mismatch" }
       }
+      console.info("SF_DESIGN_STAGE recall-choose-values-start")
       const values = await callMutationPort(() => input.resolveChoiceValues(request.caseRef, request.comparison, context))
+      console.info("SF_DESIGN_STAGE recall-choose-values-end")
       if (values.status !== "ok") return values
       const choice = createChoiceSnapshot({ case: loaded.value.case, alternativeId: request.alternativeId, alternativeVersion: request.alternativeVersion, comparison: comparison.value, alternativeResultRef: comparison.value.alternativeResultRef, criteria: request.criteria, values: values.value, evidenceRefs: [...loaded.value.case.sourceRefs, ...loaded.value.case.costCoverageBases.flatMap((basis) => basis.sourceRefs), ...loaded.value.case.alternatives.flatMap((item) => [...item.scenario.assumptions.flatMap((assumption) => assumption.evidenceRefs), ...item.result.sourceRefs, ...item.result.costCoverage.evaluatedSourceRefs, ...item.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)])], id: input.createId(), principalRef: context.binding.principalRef, reason: request.reason, at: input.now() })
       if (choice.status !== "ok") return choice
+      console.info("SF_DESIGN_STAGE recall-choose-save-start")
       return saveCase(input, loaded.value, context, "record-choice", request, (value) => {
         const version = value.version + 1
         return { ...value, state: "chosen", choices: [...value.choices, choice.choice], ledger: [...value.ledger, { id: input.createId(), caseRef: { id: value.id, incarnation: value.incarnation, version }, kind: "choice-recorded", principalRef: context.binding.principalRef, at: choice.choice.at, consideredActions: value.alternatives.map((alternative) => alternative.id), factualGaps: choice.choice.result.unresolvedConditions, lifecycleState: "chosen", rationale: choice.choice.reason, evidenceRefs: choice.choice.evidenceRefs, outputDigest: digestSfValue(choice.choice) }] }
@@ -252,14 +269,19 @@ async function replayMutation(input: MutationHost, ref: CaseRef, context: Truste
 }
 
 async function saveCase(input: MutationHost, loaded: LoadedCase, context: TrustedDomainContext, operation: DecisionMutationOperation, request: unknown, update: (value: DecisionCase) => DecisionCase, scenario?: { request: ScenarioRequest; result: ScenarioResult; sourceFence?: (snapshot: import("../../runtime/contract.ts").Snapshot) => boolean }, verifyState?: (state: import("../contracts/state.ts").SfProductState) => boolean): Promise<PortResult<MutationReceipt>> {
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-save-authority-start")
   const nextValue = { ...update(loaded.case), version: loaded.case.version + 1 }
   const caseRef = { id: nextValue.id, incarnation: nextValue.incarnation, version: nextValue.version }
   const resultRef = scenario ? decisionScenarioResultRef(caseRef, digestSfValue(scenario.request)) : undefined
   const parent = operation === "add-alternative" || operation === "prepare-changes" ? input.portfolioParent?.(operation, request, context) : undefined
   if (!await input.authorizeCase(loaded.case, context) || !await input.authorizeCase(nextValue, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-save-authority-ok")
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-outbox-start")
   const outbox = operation === "record-choice" || operation === "reject-change" ? await input.state.read(loaded.source, "outbox", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" })) : undefined
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-outbox-end")
   if (outbox && outbox.status !== "ok") return failure(outbox)
   if (outbox && !outbox.value) return { status: "denied", reason: "outbox-access-unavailable" }
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-transaction-start")
   const saved = await input.state.transaction(loaded.source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
     if (!input.verifyMutation(snapshot, operation, request, context) || (verifyState && !verifyState(state))) return { commit: false, value: null }
     if (scenario?.sourceFence && !scenario.sourceFence(snapshot)) return { commit: false, value: null }
@@ -278,8 +300,10 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
     }
     return { commit: true, value: parent === undefined ? nextValue : { ...nextValue, portfolioReplay: { parentDigest: digestSfValue(parent), child: structuredClone(request) } } }
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-transaction-end")
   if (saved.status !== "ok") return failure(saved)
   if (!saved.value || !await input.authorizeCase(saved.value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
+  if (operation === "record-choice") console.info("SF_DESIGN_STAGE recall-choose-save-end")
   return { status: "ok", value: { caseRef: { id: saved.value.id, incarnation: saved.value.incarnation, version: saved.value.version }, ...(resultRef ? { resultRef } : {}) } }
 }
 

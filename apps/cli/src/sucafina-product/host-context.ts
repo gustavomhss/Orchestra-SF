@@ -1014,6 +1014,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
     // readiness, without repeating unrelated native-operation health probes.
     ...(input.operational ? { pageOperational: input.operational } : {}),
     operational: async (request, stamp) => {
+      console.info("SF_DESIGN_STAGE recall-health-global-start")
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),
         observeSfPersonalViewsHealth({ ui: authority.ui, state: authority.state, binding: input.nativeReadBinding,
@@ -1188,6 +1189,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
         }, request, stamp),
         observeSfRecallHealth({ ui: authority.ui, state: authority.state, source: business.caseRecallSource }, request, stamp),
       ])
+      console.info("SF_DESIGN_STAGE recall-health-global-end")
       return observations.flatMap((item): readonly SfOperationAvailability[] => item.status === "fulfilled" ? item.value : [])
     },
     admit: async (request) => {
