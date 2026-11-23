@@ -229,7 +229,7 @@ export function SfDecisionReceiptsView(props: SfSurfaceProps<"UI40">): JSX.Eleme
 
   return <SfPageFrame
     titleKey={u18Key("sf.ui40.title")}
-    context={view.caseData ? [{ id: "case", label: u18Message("sf.common.chooseCase"),
+    context={view.caseData ? [{ id: "case", label: u18Message("sf.u18.choice.currentCase"),
       value: { kind: "data", text: view.caseData.objective } }] : []}
     tabs={[]} activeTab={null} secondaryActions={[]} density="comfortable" layout="reading"
     onLayoutMode={() => undefined}
