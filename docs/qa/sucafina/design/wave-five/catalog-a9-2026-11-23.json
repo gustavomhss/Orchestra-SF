@@ -1,0 +1,617 @@
+{
+  "schema": "sf613-catalog-a9-receipt-v1",
+  "recordedAt": "2026-11-23T20:52:33Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "isolated": true
+  },
+  "snapshot": {
+    "commit": "ceb04e2e7c52657138ecfda22c359c335023016c",
+    "tree": "9077dd0274358ceadd400bf128e9db45916a9c33",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "recipeBlob": "a11922821a47594d76397582be38f9b7940177ca",
+    "diagnosticOverlay": false,
+    "originalSpecsAndDeadlinesUnchanged": true,
+    "temporaryBranch": "ci-run-linux-sf613-cataloganalytics",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45260672235,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260672235",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-23T20:33:54Z",
+    "updatedAt": "2026-11-23T20:45:29Z",
+    "headSha": "ceb04e2e7c52657138ecfda22c359c335023016c",
+    "jobs": [
+      {
+        "id": 137994255715,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:33:56Z",
+        "completedAt": "2026-11-23T20:45:22Z"
+      },
+      {
+        "id": 138001148971,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:45:25Z",
+        "completedAt": "2026-11-23T20:45:29Z"
+      }
+    ]
+  },
+  "testResult": {
+    "passed": 0,
+    "failed": 2,
+    "failures": [
+      {
+        "name": "Original Portfolio Preview",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "line": 72,
+        "originalTimeoutMs": 60000,
+        "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+        "reportedAt": "2026-11-23T20:42:54.3707753Z",
+        "observedUi": "UI42 Preview combinations remains Running with an unavailable preview skeleton."
+      },
+      {
+        "name": "Original BI06 Portuguese acquisition",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "line": 759,
+        "error": "page.waitForResponse: Original BI request failed",
+        "reportedAt": "2026-11-23T20:45:19.0555033Z",
+        "nativeRequestFailedAt": "2026-11-23T20:45:17.9630749Z",
+        "nativeRequestError": "net::ERR_ABORTED",
+        "networkLoadingFailedAt": "2026-11-23T20:45:17.9751507Z",
+        "networkCanceled": true,
+        "bodyObserved": false,
+        "httpStatus": null,
+        "observedUi": "BI06 Analysis details has no authorized selections matching the filters and shows a Portuguese source limitation."
+      }
+    ]
+  },
+  "log": {
+    "characters": 4650506,
+    "utf8Bytes": 4664486,
+    "sha256": "4e53499631e63e8a73ff6f37c04b04c062aebf8e46354d4d8fa04835636f593d",
+    "lineCount": 2113,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "failureMarkers": [
+      {
+        "runnerAt": "2026-11-23T20:42:51.7205937Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "data": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:42:51.7281511Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "data": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:45793⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.16333937-2ff7-419e-bf13-cfda8d9dd342 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:45:17.9630749Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "data": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "native-request-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "sameNativeRequest": false,
+          "bodyObserved": false,
+          "http": null,
+          "teardownPhase": "observing",
+          "errorText": "net::ERR_ABORTED"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:45:17.9751507Z",
+        "marker": "SF_ANALYTICS_SOURCE",
+        "data": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "network-loading-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "networkLoadingFailed": true,
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:45:18.4416600Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "data": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:45:18.4476747Z",
+        "marker": "SF_DESIGN_DIAGNOSTICS",
+        "data": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:39849⁩ · Analysis detailsAnalysis detailsDecision analysisWhich variable changes the condition?Analysis viewChoose an authorized viewHow do budget, actuals and outlook evolve?Which components explain the difference?What contributes to the variance?How are capacity and costs distributed?Where are open requests?Which approvals have waited longest?What was opened and completed?Which milestones are planned or completed?Which components support the alternative?Which date changes cost or feasibility?Which variable changes the condition?Start dateEnd dateChoose contextNo authorized selections match these filters.Related source pagesAbrir cases e resultados preservados — dashboard: WorkbenchSource limitationsNenhum conjunto de resultados preservados, vinculados e autorizado cobre este período. Selecione ou produza os resultados no case.View data"
+          }
+        }
+      }
+    ],
+    "failureLines": [
+      "2026-11-23T20:42:54.3707753Z     TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "2026-11-23T20:42:54.3709290Z     > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+      "2026-11-23T20:45:19.0555033Z     Error: page.waitForResponse: Original BI request failed",
+      "2026-11-23T20:45:19.0557173Z     > 759 |       const operationalData = localized.waitForResponse(async (response) => {",
+      "2026-11-23T20:45:19.3316093Z \u001b[1A\u001b[2K  2 failed"
+    ]
+  },
+  "artifact": {
+    "id": 14861442228,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 46287909,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861442228",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861442228/zip",
+    "expired": false,
+    "created_at": "2026-11-23T20:45:21Z",
+    "expires_at": "2026-11-30T20:45:19Z",
+    "updated_at": "2026-11-23T20:45:21Z",
+    "digest": "sha256:cf97cfcd5ddd0ecf53b986b0e5077323fe2653ba09bb789941c0bbdfe47992b6",
+    "workflow_run": {
+      "id": 45260672235,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-linux-sf613-cataloganalytics",
+      "head_sha": "ceb04e2e7c52657138ecfda22c359c335023016c"
+    }
+  },
+  "captures": {
+    "inventory": [
+      {
+        "index": 0,
+        "name": "UI42-list-dark-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:41:31.5519862Z",
+        "last": "2026-11-23T20:41:31.6548356Z"
+      },
+      {
+        "index": 1,
+        "name": "UI42-list-light-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:41:32.1686822Z",
+        "last": "2026-11-23T20:41:32.2907426Z"
+      },
+      {
+        "index": 2,
+        "name": "UI42-list-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:41:32.3993327Z",
+        "last": "2026-11-23T20:41:32.4164540Z"
+      },
+      {
+        "index": 3,
+        "name": "UI42-list-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:41:32.6855744Z",
+        "last": "2026-11-23T20:41:32.7059265Z"
+      },
+      {
+        "index": 4,
+        "name": "UI42-empty-authorized-case-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:41:40.8874611Z",
+        "last": "2026-11-23T20:41:40.9974479Z"
+      },
+      {
+        "index": 5,
+        "name": "UI42-configure-focused-candidate-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:41:51.5105751Z",
+        "last": "2026-11-23T20:41:51.6695078Z"
+      },
+      {
+        "index": 6,
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:42:52.1753729Z",
+        "last": "2026-11-23T20:42:52.3239535Z"
+      },
+      {
+        "index": 7,
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:30.3947815Z",
+        "last": "2026-11-23T20:44:30.5336965Z"
+      },
+      {
+        "index": 8,
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:30.8434894Z",
+        "last": "2026-11-23T20:44:30.9668037Z"
+      },
+      {
+        "index": 9,
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:31.0421948Z",
+        "last": "2026-11-23T20:44:31.0695337Z"
+      },
+      {
+        "index": 10,
+        "name": "UI45-question-catalog-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:31.3741120Z",
+        "last": "2026-11-23T20:44:31.3899784Z"
+      },
+      {
+        "index": 11,
+        "name": "UI45-authorized-financial-context-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:44:32.1459171Z",
+        "last": "2026-11-23T20:44:32.2576288Z"
+      },
+      {
+        "index": 12,
+        "name": "UI45-financial-source-values-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:33.7636853Z",
+        "last": "2026-11-23T20:44:33.9142068Z"
+      },
+      {
+        "index": 13,
+        "name": "UI46-financial-selected-context-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:40.9347334Z",
+        "last": "2026-11-23T20:44:41.0571297Z"
+      },
+      {
+        "index": 14,
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:41.2930459Z",
+        "last": "2026-11-23T20:44:41.4377813Z"
+      },
+      {
+        "index": 15,
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:41.8002362Z",
+        "last": "2026-11-23T20:44:41.9677268Z"
+      },
+      {
+        "index": 16,
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:42.1589537Z",
+        "last": "2026-11-23T20:44:42.1785284Z"
+      },
+      {
+        "index": 17,
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:42.2249214Z",
+        "last": "2026-11-23T20:44:42.2397252Z"
+      },
+      {
+        "index": 18,
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:42.6075861Z",
+        "last": "2026-11-23T20:44:42.6221503Z"
+      },
+      {
+        "index": 19,
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:42.6740300Z",
+        "last": "2026-11-23T20:44:42.6885279Z"
+      },
+      {
+        "index": 20,
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:44:43.3787824Z",
+        "last": "2026-11-23T20:44:43.5505785Z"
+      },
+      {
+        "index": 21,
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:44:43.8956083Z",
+        "last": "2026-11-23T20:44:44.1132388Z"
+      },
+      {
+        "index": 22,
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:44.2236185Z",
+        "last": "2026-11-23T20:44:44.2398806Z"
+      },
+      {
+        "index": 23,
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:44.6251018Z",
+        "last": "2026-11-23T20:44:44.6490351Z"
+      },
+      {
+        "index": 24,
+        "name": "UI46-resolved-original-source-1-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:44:46.1135883Z",
+        "last": "2026-11-23T20:44:46.2760156Z"
+      },
+      {
+        "index": 25,
+        "name": "UI46-resolved-original-source-2-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:44:47.3142523Z",
+        "last": "2026-11-23T20:44:47.5460739Z"
+      },
+      {
+        "index": 26,
+        "name": "UI46-operations-original-coverage-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:52.5462184Z",
+        "last": "2026-11-23T20:44:52.6642582Z"
+      },
+      {
+        "index": 27,
+        "name": "UI46-operations-original-values-dark-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:52.8786777Z",
+        "last": "2026-11-23T20:44:53.0152394Z"
+      },
+      {
+        "index": 28,
+        "name": "UI46-operations-original-values-light-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:53.3289344Z",
+        "last": "2026-11-23T20:44:53.4871454Z"
+      },
+      {
+        "index": 29,
+        "name": "UI46-operations-original-values-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:53.6594592Z",
+        "last": "2026-11-23T20:44:53.6801292Z"
+      },
+      {
+        "index": 30,
+        "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:53.7282484Z",
+        "last": "2026-11-23T20:44:53.7462284Z"
+      },
+      {
+        "index": 31,
+        "name": "UI46-operations-original-values-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:54.0586148Z",
+        "last": "2026-11-23T20:44:54.0774592Z"
+      },
+      {
+        "index": 32,
+        "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:54.1446768Z",
+        "last": "2026-11-23T20:44:54.1601758Z"
+      },
+      {
+        "index": 33,
+        "name": "UI46-operations-original-table-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:54.7982345Z",
+        "last": "2026-11-23T20:44:54.9752747Z"
+      },
+      {
+        "index": 34,
+        "name": "UI46-operations-original-table-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:55.3120842Z",
+        "last": "2026-11-23T20:44:55.4682306Z"
+      },
+      {
+        "index": 35,
+        "name": "UI46-operations-original-table-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:55.5113665Z",
+        "last": "2026-11-23T20:44:55.5374620Z"
+      },
+      {
+        "index": 36,
+        "name": "UI46-operations-original-table-light-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:55.8573693Z",
+        "last": "2026-11-23T20:44:55.8720437Z"
+      },
+      {
+        "index": 37,
+        "name": "UI46-operations-dark-320-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:44:56.1728865Z",
+        "last": "2026-11-23T20:44:56.1884592Z"
+      },
+      {
+        "index": 38,
+        "name": "UI46-operations-resolved-original-source-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:56.8942007Z",
+        "last": "2026-11-23T20:44:57.0656342Z"
+      },
+      {
+        "index": 39,
+        "name": "UI46-source-empty-sensitivity-catalog-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:45:02.0190994Z",
+        "last": "2026-11-23T20:45:02.1672655Z"
+      },
+      {
+        "index": 40,
+        "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:45:06.7955294Z",
+        "last": "2026-11-23T20:45:06.9363583Z"
+      },
+      {
+        "index": 41,
+        "name": "UI46-pt-BR-dark-desktop-values-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:45:12.9094387Z",
+        "last": "2026-11-23T20:45:13.0467907Z"
+      },
+      {
+        "index": 42,
+        "name": "UI46-pt-BR-dark-320-values-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:45:13.0726936Z",
+        "last": "2026-11-23T20:45:13.0917268Z"
+      },
+      {
+        "index": 43,
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:45:18.7446710Z",
+        "last": "2026-11-23T20:45:18.8947752Z"
+      }
+    ],
+    "completeCount": 44,
+    "duplicateNames": "The two independent failure images reuse FAILED-native-wave-three-test-data; capture groups are indexed separately.",
+    "actuallyViewed": [
+      {
+        "index": 6,
+        "name": "FAILED-native-wave-three-test-data",
+        "viewedBy": "/root/audit_catalog",
+        "observation": "UI42 desktop dark: Preview combinations says Running, candidate and constraint are selected, preview is not yet available and skeleton remains."
+      },
+      {
+        "index": 43,
+        "name": "FAILED-native-wave-three-test-data",
+        "viewedBy": "/root/audit_catalog",
+        "observation": "BI06 desktop dark: no authorized selections, Portuguese preserved-result source limitation and View data action."
+      }
+    ],
+    "inventoryOnlyCount": 42
+  },
+  "limits": [
+    "Only the two named original failure JPEGs were visually inspected by this reviewer; no visual qualification of the42 other captures, offscreen states or user review is claimed.",
+    "The BI network markers establish acquisition failure without an observed body/status. They do not establish the underlying cause of cancellation or a typed authorization refusal.",
+    "No added profiler or client lifecycle instrumentation exists in this clean snapshot; original spec diagnostics are retained.",
+    "Both original tests fail on this source. No global qualification, product promotion, merge or deployment."
+  ]
+}

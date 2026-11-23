@@ -1,0 +1,124 @@
+{
+  "schema": "sf613-catalog2-static-review-v1",
+  "recordedAt": "2026-11-23T21:02:58Z",
+  "reviewer": "/root/audit_catalog",
+  "status": "PASS_STATIC_FOR_FOCUSED_CI_ONLY",
+  "qualification": false,
+  "productCoreBlob": "2e5535d7d4d35e358cd6ea6f443e5adcb7fdcee7",
+  "initialTestBlob": "7f1692ceefb0c24e25acfb674bef1d7420087053",
+  "currentTestBlob": "fbddbf34d4c5723420ebba741604137ba5512499",
+  "sourceHistory": [
+    {
+      "commit": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "tree": "610bbdbaa346d6096e24effc120e9e2e2a2af025",
+      "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+      "changedPaths": 2,
+      "exactSourceCompareVerified": true
+    },
+    {
+      "commit": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "tree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+      "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "change": "Test-only required(selected.api.settings) assertion after typecheck found optional-field access; core unchanged."
+    }
+  ],
+  "checks": {
+    "projectModelExactC3": true,
+    "stateDiscoveryExact": true,
+    "resultAndExportsExact": true,
+    "yieldCount": 31,
+    "priorYieldCount": 31,
+    "duplicatedProjectModelInputAbsent": true,
+    "testCases": 9,
+    "newAny": false,
+    "newCast": false,
+    "retainedCases": [
+      {
+        "name": "validates hidden metadata immediately when a credential makes its provider available",
+        "exact": true
+      },
+      {
+        "name": "validates a disabled model before filtering it from an available provider",
+        "exact": true
+      },
+      {
+        "name": "omits nested hidden metadata reads only in available and restores them when visible",
+        "exact": true
+      },
+      {
+        "name": "keeps fresh virtual providers, merged metadata and release ordering",
+        "exact": true
+      }
+    ]
+  },
+  "contract": [
+    "model.available() reads fresh credential/integration/provider availability, then determines each model's eligibility identity before performing model metadata projection.",
+    "Base models use their own effective model.providerID, not their parent provider ID. Virtual models use the current virtual credential provider ID.",
+    "Eligibility identity reads and errors precede API/request/top-level projection. Hidden models do not execute those projection getters, spreads, nested schema validation or release sorting.",
+    "Provider discovery still reads its own authentication metadata; its API/request roots are not blanket-suppressed.",
+    "Selected models invoke the full original projectModel, including its original ModelV2.Info.make lookup order. A final filter checks the actual projected providerID and enabled state.",
+    "all()/get() retain original full projection and validation, including errors for hidden metadata."
+  ],
+  "preserved": [
+    "Original C3 projectModel byte-exact.",
+    "normalizeApi/state/discovery section and everything from result:Interface onward byte-exact to prior46e4 candidate.",
+    "All31 yield* sites remain; no credential/auth/SQL result cache or generation/admission boundary removed.",
+    "Four previously valid new test cases remain byte-exact; original17-test catalog suite is unchanged.",
+    "No UI test, response wait, expect timeout, operation deadline or workflow change."
+  ],
+  "tests": {
+    "initialCases": 9,
+    "originalCases": 17,
+    "controls": [
+      "Real credential activation/removal with no explicit catalog reload",
+      "Disabled selected model validation",
+      "Nine projection-only hidden getter sites and immediate restoration when selected",
+      "Eligibility identity error precedence versus original all/get error precedence",
+      "Base effective IDs differing from parent records",
+      "Identity changed during original projection and final provider membership",
+      "Hidden metadata cannot promote itself through a skipped projection side effect",
+      "Current virtual credential override and removal",
+      "Nested metadata omission, API/request inheritance, release ordering and reload"
+    ],
+    "newAny": false,
+    "newCasts": false,
+    "globalMocks": false
+  },
+  "deliberateLimits": [
+    "This changes available() metadata eligibility and error precedence; it is not universal JavaScript hook equivalence.",
+    "It supersedes the invented11-getter preservation test from the first isolated Catalog candidate, not a preexisting original Catalog suite requirement.",
+    "Static PASS is permission to evaluate the candidate in original CI, not a passing test/typecheck or global qualification."
+  ],
+  "focusedFirstFailureReceipt": {
+    "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-focused-first-2026-11-23.json",
+    "blob": "9337855cdcb73c23a57e248a4ca4cb5c2d57f3cd"
+  },
+  "launches": {
+    "focusedFirst": {
+      "run": 45264473681,
+      "source": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "conclusion": "failure",
+      "runtimeTestsPassed": 26,
+      "typecheckExit": 2
+    },
+    "focusedFixed": {
+      "run": 45265435900,
+      "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "snapshot": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+      "status": "in_progress",
+      "observedAt": "2026-11-23T21:02:28Z"
+    },
+    "originalC10": {
+      "run": 45264521459,
+      "source": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "snapshot": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe",
+      "tree": "471f545bb86451f1935cf78e2c3034d7110f9ff0",
+      "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+      "status": "in_progress",
+      "observedAt": "2026-11-23T21:01:25Z",
+      "original10sHeadingExpectationRetained": true
+    }
+  },
+  "productPromoted": false,
+  "merged": false
+}

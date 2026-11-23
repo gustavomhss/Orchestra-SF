@@ -1,0 +1,232 @@
+{
+  "schema": "sf613-ui56-deadline-provenance-v1",
+  "recordedAt": "2026-11-23T20:57:37Z",
+  "reviewer": "/root/audit_catalog/deadline_provenance",
+  "status": "READ_ONLY_PROVENANCE_COMPLETE",
+  "review": "NOT_PASS_FOR_UNCHANGED_GATE",
+  "qualification": false,
+  "permissionDecision": "NOT_ASSERTED",
+  "question": "Does the original UI56 10000ms post-Refresh heading assertion originate in a recovered human latency requirement, or only later agent policy; would awaiting the exact operation response before the same matcher preserve its gate?",
+  "findings": {
+    "humanTenSecondSlaRecovered": false,
+    "positiveHistoricalTenSecondReadinessAcceptance": true,
+    "originalPermanentSpecByteExactToC3": true,
+    "responseAwaitBeforeMatcherPreservesOriginalTemporalOracle": false,
+    "interpretation": "No direct human instruction imposing a UI56 ten-second SLA was recovered in the bounded sources. Positive original project records deliberately evaluate Refresh-to-visible readiness against ten seconds, including prior failures, a9955ms trace and a subsequent clean pass. Moving the matcher start after a response changes that temporal criterion; identical matcher text or global timeout is insufficient to call it the unchanged gate."
+  },
+  "sources": [
+    {
+      "id": "checkpoint",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/b6278bcd02c544a5583d978a8b48583798bf6ebe/docs/qa/sucafina/design/wave-five/recovery-checkpoint.json",
+      "commit": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "blob": "3b7f8f8699a387265fc8b3e549c13b233892505d",
+      "blobExactToFetchedFile": true,
+      "authorType": "Project recovery/coordinator record, not a direct human transcript",
+      "quotes": [
+        {
+          "field": "limits[1]",
+          "text": "Original C17 105000cooperative/120000test;Preview60000;evaluation60000;Sensitivity120000"
+        },
+        {
+          "field": "limits[2]",
+          "text": "Original complete specs;oneworker/retries0/repeat1;nooracle/config/workflowweakening"
+        }
+      ],
+      "fact": "The explicitly enumerated numeric limits name C17, Preview, evaluation and Sensitivity, not UI56. The general no-oracle/config/workflow-weakening rule remains part of the recovered record. task.authorization is an authorization summary rather than a literal user quote."
+    },
+    {
+      "id": "scope",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/97c921ab0054bd5154227593adcbcca56b0538c3/docs/qa/sucafina/design/wave-five/scope.json",
+      "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "blob": "2a0e8dd54dbdff7f8086b1ebe773b9f8aba9a910",
+      "authorType": "Project scope record containing an attributed user quotation; underlying original user transcript not retrieved",
+      "quotes": [
+        {
+          "field": "userRequest",
+          "text": "Otimo. Pegue um bloco de 15"
+        }
+      ],
+      "constraints": {
+        "native": true,
+        "githubMcpOnly": true,
+        "actionsOnly": true,
+        "preserveExistingEnglish": true,
+        "preserveCanonicalProducers": true,
+        "preserveShellAndPalettes": true,
+        "showRealCapturesBeforeMerge": true
+      },
+      "fact": "No UI56 numeric latency requirement appears in these scope constraints."
+    },
+    {
+      "id": "spec",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/97c921ab0054bd5154227593adcbcca56b0538c3/packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "blob": "a7481a0f5e6346d4794b2309c54f06bae3e4162b",
+      "byteExactToHistoricalClean6PermanentSpec": true,
+      "authorType": "Executable project test contract",
+      "facts": [
+        {
+          "line": 20,
+          "text": "Whole UI55/UI56 journey timeout900000ms."
+        },
+        {
+          "line": 21,
+          "text": "page.setDefaultTimeout20000ms."
+        },
+        {
+          "lines": [
+            50,
+            55
+          ],
+          "text": "Independent authenticated sourceRequest uses40000ms."
+        },
+        {
+          "lines": [
+            190,
+            195
+          ],
+          "text": "UI56 enters its native route, clicks Refresh receipt, then immediately awaits the simulation heading matcher without an operation-response wait."
+        }
+      ]
+    },
+    {
+      "id": "playwrightConfig",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/97c921ab0054bd5154227593adcbcca56b0538c3/packages/app-shell/playwright.config.ts",
+      "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "authorType": "Executable project test configuration",
+      "facts": [
+        {
+          "lines": [
+            17,
+            18
+          ],
+          "text": "expect.timeout is10000ms, separate from page default timeout and whole-journey timeout."
+        }
+      ]
+    },
+    {
+      "id": "historicalHandoff",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/97c921ab0054bd5154227593adcbcca56b0538c3/docs/qa/sucafina/design/wave-five/collab/HANDOFF.md",
+      "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "authorType": "Agent/coordinator QA handoff; not a recovered human instruction",
+      "quotes": [
+        {
+          "line": 3,
+          "text": "Both keep the original assertion budgets."
+        },
+        {
+          "line": 79,
+          "text": "Refresh→visible preview takes 9.955 s against the original 10 s assertion."
+        }
+      ],
+      "facts": [
+        "UI56 acceptance row explicitly names the unchanged10s heading assertion.",
+        "Earlier Import4 and Import5 failed that Refresh expectation; later draft/intent batching and clean6 are recorded as resolving the clean journey."
+      ]
+    },
+    {
+      "id": "clean6Receipt",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/97c921ab0054bd5154227593adcbcca56b0538c3/docs/qa/sucafina/design/wave-five/collab/attempts/import-fixed-06.json",
+      "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "authorType": "Agent/coordinator execution receipt; not a recovered human instruction",
+      "quotes": [
+        {
+          "line": 628,
+          "text": "UI56 refresh renders the original preview within the unchanged 10-second heading assertion; owner-bound Review impact continuation is preserved."
+        }
+      ],
+      "facts": [
+        "Run44998959512 on product84c85b406f55dbb9c4f62e7ded29fee8abcdcbbf uses permanent speca7481a0f5e6346d4794b2309c54f06bae3e4162b.",
+        "The receipt explicitly declines to infer exact Refresh latency from the independent HTTP reference timing."
+      ]
+    },
+    {
+      "id": "pr613",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/613",
+      "pullRequest": 613,
+      "bodyUpdatedAt": "2026-11-23T16:09:59Z",
+      "account": "gustavomhss",
+      "authorType": "PR body describes Astra coordination; account identity alone does not establish direct human instruction",
+      "quotes": [
+        {
+          "text": "the unchanged 10-second refresh expectation"
+        },
+        {
+          "text": "Original product assertions and deadlines remain intact."
+        }
+      ]
+    },
+    {
+      "id": "historicalReviews",
+      "urls": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7091234190",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7091406879"
+      ],
+      "commentIds": [
+        7091234190,
+        7091406879
+      ],
+      "authorType": "Texts identify independent review/Astra coordination; user login is not proof of a fresh human instruction",
+      "facts": [
+        "Both refer to preserving prior deadlines/oracles in scoped SQL or composition work. Neither supplies a verbatim human UI56 ten-second instruction."
+      ]
+    },
+    {
+      "id": "pr717",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/717",
+      "pullRequest": 717,
+      "headObserved": "b1b77d5c2d393601af377f22454178fba5f44aec",
+      "stateObserved": "open",
+      "draftObserved": true,
+      "bodyUpdatedAt": "2026-11-23T20:43:36Z",
+      "observationNoLaterThan": "2026-11-23T20:52:12Z",
+      "authorType": "Separate unmerged PR coordination record, not authority for613",
+      "quotes": [
+        {
+          "text": "os limites globais"
+        }
+      ],
+      "fact": "The body says its harness observes the exact operation response before the same screen oracles while preserving global limits. It does not claim to preserve the inclusive per-assertion click-to-ready interval."
+    },
+    {
+      "id": "currentResumptionLedger",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91f5cd6e4ed691f75b1ca7d40abf116064657353/docs/qa/sucafina/design/wave-five/resumption-2026-11-23.json",
+      "commit": "91f5cd6e4ed691f75b1ca7d40abf116064657353",
+      "authorType": "Current agent recovery record",
+      "facts": [
+        "scope.exclusions includes timeout extensions.",
+        "The earlier provenance review did not relax any original oracle or deadline and did not search the full original conversation."
+      ]
+    }
+  ],
+  "temporalReasoning": {
+    "original": "The heading assertion starts immediately after the click returns and allows up to10000ms for visibility.",
+    "proposedSequentialResponseWait": "An operation-response wait would precede the10000ms matcher; elapsed readiness acceptance becomes response-wait time plus matcher time.",
+    "unchangedLiteralIsNotUnchangedBudget": true,
+    "diagnosticAlternative": "A response observer can be armed without delaying the original matcher. That adds information without substituting a later-starting temporal oracle.",
+    "legitimateTestFixCaveat": "A separately justified correction to a test contract may be an engineering task, but this receipt does not approve a changed acceptance contract or classify a delayed matcher as the unchanged original gate."
+  },
+  "boundedSearch": {
+    "read": [
+      "Original recovery checkpoint",
+      "C3 scope and current resumption ledger",
+      "Permanent collaboration spec and Playwright config",
+      "Historical collaboration handoff and clean6 receipt",
+      "WAVE-FIVE delivery record and collaboration gallery",
+      "Current PR613 and PR717 bodies",
+      "Two checkpoint-cited historical review comments"
+    ],
+    "fullOriginalConversationRetrieved": false,
+    "noExhaustiveHistorySearch": true,
+    "absenceOfHumanQuoteIsNotProofNoAdditionalRestrictionExists": true
+  },
+  "effects": {
+    "repositoryCodeChanges": false,
+    "testChanges": false,
+    "deadlineChanges": false,
+    "workflowChanges": false,
+    "ciLaunches": false,
+    "refsOrBranchesChanged": false,
+    "onlyReceiptBlobCreated": true
+  }
+}

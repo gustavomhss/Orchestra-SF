@@ -118,14 +118,50 @@
       "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
       "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
       "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "createdAt": "2026-11-23T20:33:54Z",
-      "updatedAt": "2026-11-23T20:33:57Z",
+      "updatedAt": "2026-11-23T20:45:29Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T21:05:08Z",
       "qualification": false,
-      "completedLogReviewPending": false
+      "completedLogReviewPending": false,
+      "campaignPassed": false,
+      "testJob": 137994255715,
+      "cleanupJob": 138001148971,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-a9-2026-11-23.json",
+        "blob": "68506d4969fd3cdf32941bce4aec32b0d592b219"
+      },
+      "testResult": {
+        "passed": 0,
+        "failed": 2,
+        "failures": [
+          {
+            "name": "Original Portfolio Preview",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 72,
+            "originalTimeoutMs": 60000,
+            "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+            "reportedAt": "2026-11-23T20:42:54.3707753Z",
+            "observedUi": "UI42 Preview combinations remains Running with an unavailable preview skeleton."
+          },
+          {
+            "name": "Original BI06 Portuguese acquisition",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 759,
+            "error": "page.waitForResponse: Original BI request failed",
+            "reportedAt": "2026-11-23T20:45:19.0555033Z",
+            "nativeRequestFailedAt": "2026-11-23T20:45:17.9630749Z",
+            "nativeRequestError": "net::ERR_ABORTED",
+            "networkLoadingFailedAt": "2026-11-23T20:45:17.9751507Z",
+            "networkCanceled": true,
+            "bodyObserved": false,
+            "httpStatus": null,
+            "observedUi": "BI06 Analysis details has no authorized selections matching the filters and shows a Portuguese source limitation."
+          }
+        ]
+      }
     },
     {
       "name": "releaseAnalytics",
@@ -140,14 +176,35 @@
       "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
       "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
       "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "createdAt": "2026-11-23T20:37:17Z",
-      "updatedAt": "2026-11-23T20:37:20Z",
+      "updatedAt": "2026-11-23T20:52:15Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T21:05:08Z",
       "qualification": false,
-      "completedLogReviewPending": false
+      "completedLogReviewPending": false,
+      "campaignPassed": false,
+      "testJob": 137996308351,
+      "cleanupJob": 138005144087,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-ra6-2026-11-23.json",
+        "blob": "c5e26450975e3bba324c310399748b538ced6450"
+      },
+      "testResult": {
+        "passed": 1,
+        "failed": 1,
+        "duration": "7.9m",
+        "failure": {
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 72,
+          "operation": "decision-portfolio-preview",
+          "originalTimeoutMs": 60000,
+          "error": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+          "reportedAt": "2026-11-23T20:49:49.1859786Z"
+        },
+        "otherOriginalTest": "Original contextual BI including Portuguese passed."
+      }
     },
     {
       "name": "collaboration",
@@ -189,14 +246,27 @@
       "source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
       "sourceTree": "5047ea10712ed52783a9fb4e16334463e51786c5",
       "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "createdAt": "2026-11-23T20:37:30Z",
-      "updatedAt": "2026-11-23T20:37:33Z",
+      "updatedAt": "2026-11-23T20:47:35Z",
       "headShaVerified": true,
-      "observedAt": "2026-11-23T20:39:27Z",
+      "observedAt": "2026-11-23T21:05:08Z",
       "qualification": false,
-      "completedLogReviewPending": false
+      "completedLogReviewPending": false,
+      "campaignPassed": true,
+      "testJob": 137996435555,
+      "cleanupJob": 138002367223,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/catalog-r9-2026-11-23.json",
+        "blob": "7d4c9d7085276dd7ecadaf17267e801c0c1e059b"
+      },
+      "testResult": {
+        "passed": 2,
+        "failed": 0,
+        "duration": "8.9m",
+        "scope": "Original Reviews browser campaign on this source only."
+      }
     }
   ],
   "focusedReceipt": {
@@ -204,9 +274,13 @@
     "blob": "a8f7ea36775b35b0574c9db195dfbaefcef9a37d"
   },
   "limits": [
-    "T10 fails only the original normal-runtime C17 deadline; C9 fails the original UI56 heading expectation. Release6 passes its original full source-runtime campaign.",
-    "A9, RA6 and R9 retain their individually timestamped previous observations; no later completed-log receipts have been added here yet.",
-    "No global qualification, PR promotion, merge or production deployment."
+    "All six original campaigns completed on isolated source7d5aa66c: T10, A9, RA6 and C9 failed; Release6 and R9 passed. The composition remains unqualified.",
+    "The separate Catalog2 core change and its later test-only correction have different source identities and are not qualified by these six receipts.",
+    "Visual inspection scope is explicitly bounded in each campaign receipt; R9 was inventoried only.",
+    "No PR promotion, merge or production deployment."
   ],
-  "updatedAt": "2026-11-23T20:46:12Z"
+  "updatedAt": "2026-11-23T21:05:08Z",
+  "status": "COMPLETE_FOUR_FAILED_RELEASE_AND_REVIEWS_PASSED",
+  "allCampaignsCompleted": true,
+  "fullCompositionQualified": false
 }

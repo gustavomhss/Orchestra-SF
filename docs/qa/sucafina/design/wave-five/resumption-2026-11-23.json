@@ -3053,9 +3053,9 @@
     "acceptancePromoted": false,
     "merged": false,
     "mergeCommit": null,
-    "nextAction": "Repair the original normal-runtime C17 deadline and remaining UI56 Import delay; inspect Catalog Filephases and remaining A9/RA6/R9 receipts. Release6 and focused Catalog controls passed on isolated source7d5aa66c, but T10 and C9 failed. Preserve selected authorization/generation boundaries and original deadlines; do not promote or merge. Both canonical key-order candidates are rejected after regressions across all five real C14 fixture categories."
+    "nextAction": "Read the detailed fixed Catalog2 focused and original C10 success receipts with exact source attribution; keep first typecheck failure. Candidate1's six original campaigns completed with four failures/two passes. Continue fixing/qualifying normal C17 and original Analytics Preview on the final candidate without changing deadlines, source fences or original assertions. No global qualification, PR promotion or merge."
   },
-  "updatedAt": "2026-11-23T20:47:55Z",
+  "updatedAt": "2026-11-23T21:07:10Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3733,6 +3733,41 @@
         "qualification": false
       },
       "priorRecordsCommit": "162a39ed8026fc102797c883392bc811ece7b996",
+      "qualification": false,
+      "promoted": false,
+      "merged": false
+    },
+    {
+      "recordedAt": "2026-11-23T21:07:10Z",
+      "status": "CATALOG1_SIX_GATES_COMPLETE_LATE_IMPORT_EXPLAINED_CATALOG2_UNPROMOTED",
+      "by": "/root/audit_catalog",
+      "catalog1Source": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+      "catalog1Results": {
+        "passed": [
+          "Release6",
+          "R9"
+        ],
+        "failed": [
+          "T10",
+          "A9",
+          "RA6",
+          "C9"
+        ],
+        "indexBlob": "35b7c6ba75e6e23d5cb108111aeab6cb2f5fcc86"
+      },
+      "remainingReceipts": {
+        "A9": "68506d4969fd3cdf32941bce4aec32b0d592b219",
+        "RA6": "c5e26450975e3bba324c310399748b538ced6450",
+        "R9": "7d4c9d7085276dd7ecadaf17267e801c0c1e059b",
+        "catalogFilephases": "5aee2414c8ca6ce4dfcf6cfe1e1729e31f6c34f1"
+      },
+      "ui56DeadlineReceipt": "df1d3b9c6bbbf094c32f5c22bcb234504b799a16",
+      "catalog2Review": "f2d066eefa0a30b6bdeed09f827f12daf9026bb4",
+      "catalog2FirstFocusedFailure": "9337855cdcb73c23a57e248a4ca4cb5c2d57f3cd",
+      "catalog2FixedFocusedRun": 45265435900,
+      "catalog2C10Run": 45264521459,
+      "metadataOnlySuccessUntilDetailedReceipts": true,
+      "priorRecordsCommit": "91f5cd6e4ed691f75b1ca7d40abf116064657353",
       "qualification": false,
       "promoted": false,
       "merged": false
@@ -6642,7 +6677,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T20:47:55Z",
+    "observedAt": "2026-11-23T21:07:10Z",
     "qualification": false,
     "experiments": [
       {
@@ -11244,15 +11279,45 @@
         "run": 45262019948,
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45262019948",
         "createdAt": "2026-11-23T20:41:45Z",
-        "status": "IN_PROGRESS",
-        "observedAt": "2026-11-23T20:43:52Z",
+        "status": "COMPLETED_FAILURE_WITH_LATE_READY",
+        "observedAt": "2026-11-23T21:07:10Z",
         "headShaVerified": true,
         "purpose": "Locate the remaining original Import pre/post-context and fetch/body intervals after the Catalog correction.",
         "overlayAttribution": "Root reports exact previously reviewed nine Filephases blobs reapplied to the Catalog candidate.",
         "originalTestsAndDeadlinesUnchanged": true,
         "diagnosticOnly": true,
         "promoteDiagnosticCode": false,
-        "qualification": false
+        "qualification": false,
+        "testJob": 137998987520,
+        "cleanupJob": 138003374929,
+        "conclusion": "failure",
+        "browserTests": {
+          "passed": 1,
+          "failed": 1,
+          "duration": "4.7m"
+        },
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-filephases-2026-11-23.json",
+          "blob": "5aee2414c8ca6ce4dfcf6cfe1e1729e31f6c34f1"
+        },
+        "timing": {
+          "ui55ClientTotalMs": 10394,
+          "ui56PreContextMs": 4880,
+          "ui56FetchMs": 411,
+          "ui56BodyMs": 16,
+          "ui56PostContextMs": 4834,
+          "ui56ClientTotalMs": 10211,
+          "expectElapsedMs": 10001,
+          "postContextAfterExpectationFailedMs": 207,
+          "componentReadyAfterPostContextMs": 40,
+          "componentReadyAfterExpectationFailedMs": 247
+        },
+        "clientSignalAborted": false,
+        "bothContextChecksLive": true,
+        "browserRequestFailedEvents": 1,
+        "browserRequestFailedDoesNotImplyFetchRejection": true,
+        "actualFailureCaptureShowsLateReadyPreview": true,
+        "original10sGateStillFailed": true
       },
       {
         "name": "ISOLATED_CANONICAL_KEYORDER_FIXTURE_COMPARISON",
@@ -12979,6 +13044,19 @@
       "reportedBy": "/root/canonical_perf",
       "receiptReviewedBy": "/root/audit_catalog",
       "observedAt": "2026-11-23T20:47:55Z"
+    },
+    "ui56DeadlineProvenance": {
+      "review": "NOT_PASS_FOR_UNCHANGED_GATE",
+      "recordedAt": "2026-11-23T21:07:10Z",
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/ui56-deadline-provenance-2026-11-23.json",
+        "blob": "df1d3b9c6bbbf094c32f5c22bcb234504b799a16"
+      },
+      "finding": "No direct human10s SLA was recovered, but original HANDOFF and clean6 receipt explicitly qualify Refresh-to-visible within10s and preserve that budget. A response wait before the same matcher changes the temporal gate.",
+      "boundedSearch": true,
+      "originalConversationRecovered": false,
+      "permissionDecision": "NOT_ASSERTED",
+      "testChanged": false
     }
   },
   "portfolioHistoryAbortInvestigation": {
@@ -13278,7 +13356,7 @@
     }
   },
   "catalogAvailabilityCandidate": {
-    "status": "PARTIAL_RESULTS_T10_C9_FAILED_RELEASE6_PASSED",
+    "status": "COMPLETE_FOUR_FAILED_RELEASE_AND_REVIEWS_PASSED",
     "recordedAt": "2026-11-23T20:32:06Z",
     "source": {
       "branch": "sf613-catalog",
@@ -13332,7 +13410,7 @@
         "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45260427535",
         "createdAt": "2026-11-23T20:32:30Z",
         "headShaVerified": true,
-        "observedAt": "2026-11-23T20:47:55Z",
+        "observedAt": "2026-11-23T20:46:12Z",
         "label": "C9",
         "conclusion": "failure",
         "updatedAt": "2026-11-23T20:39:11Z",
@@ -13357,7 +13435,7 @@
         "conclusion": "failure",
         "createdAt": "2026-11-23T20:36:49Z",
         "updatedAt": "2026-11-23T20:45:06Z",
-        "observedAt": "2026-11-23T20:47:55Z",
+        "observedAt": "2026-11-23T20:46:12Z",
         "headShaVerified": true,
         "qualification": false,
         "campaignPassed": false,
@@ -13380,7 +13458,7 @@
         "conclusion": "success",
         "createdAt": "2026-11-23T20:37:03Z",
         "updatedAt": "2026-11-23T20:41:02Z",
-        "observedAt": "2026-11-23T20:47:55Z",
+        "observedAt": "2026-11-23T20:46:12Z",
         "headShaVerified": true,
         "qualification": false,
         "campaignPassed": true,
@@ -13399,13 +13477,19 @@
         "branch": "ci-run-linux-sf613-cataloganalytics",
         "snapshot": "ceb04e2e7c52657138ecfda22c359c335023016c",
         "snapshotTree": "9077dd0274358ceadd400bf128e9db45916a9c33",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "createdAt": "2026-11-23T20:33:54Z",
-        "updatedAt": "2026-11-23T20:33:57Z",
-        "observedAt": "2026-11-23T20:39:27Z",
+        "updatedAt": "2026-11-23T20:45:29Z",
+        "observedAt": "2026-11-23T21:05:08Z",
         "headShaVerified": true,
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": false,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-a9-2026-11-23.json",
+          "blob": "68506d4969fd3cdf32941bce4aec32b0d592b219"
+        },
+        "completedLogReviewPending": false
       },
       "releaseAnalytics": {
         "label": "RA6",
@@ -13414,13 +13498,19 @@
         "branch": "ci-run-linux-sf613-catalogreleaseanalytics",
         "snapshot": "a17c4b2300e5ee03e2e60512181032b382c53255",
         "snapshotTree": "22255b6cedd57b2547c7b7590fe59fd05af564cd",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "createdAt": "2026-11-23T20:37:17Z",
-        "updatedAt": "2026-11-23T20:37:20Z",
-        "observedAt": "2026-11-23T20:39:27Z",
+        "updatedAt": "2026-11-23T20:52:15Z",
+        "observedAt": "2026-11-23T21:05:08Z",
         "headShaVerified": true,
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": false,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-ra6-2026-11-23.json",
+          "blob": "c5e26450975e3bba324c310399748b538ced6450"
+        },
+        "completedLogReviewPending": false
       },
       "reviews": {
         "label": "R9",
@@ -13429,18 +13519,24 @@
         "branch": "ci-run-linux-sf613-catalogreviews",
         "snapshot": "07076ed1296660b6846e97a7a5b4f322788f7cdc",
         "snapshotTree": "d8f9a9b9c296950ab46e73f72e4687bae12671fc",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "createdAt": "2026-11-23T20:37:30Z",
-        "updatedAt": "2026-11-23T20:37:33Z",
-        "observedAt": "2026-11-23T20:39:27Z",
+        "updatedAt": "2026-11-23T20:47:35Z",
+        "observedAt": "2026-11-23T21:05:08Z",
         "headShaVerified": true,
-        "qualification": false
+        "qualification": false,
+        "campaignPassed": true,
+        "receipt": {
+          "path": "docs/qa/sucafina/design/wave-five/catalog-r9-2026-11-23.json",
+          "blob": "7d4c9d7085276dd7ecadaf17267e801c0c1e059b"
+        },
+        "completedLogReviewPending": false
       }
     },
     "originalCampaignReceipt": {
       "path": "docs/qa/sucafina/design/wave-five/catalog-original-campaigns-2026-11-23.json",
-      "blob": "04cedd247e93f3753587a844108cdfc847cc96e5"
+      "blob": "35b7c6ba75e6e23d5cb108111aeab6cb2f5fcc86"
     },
     "partialResults": {
       "technical": {
@@ -13469,8 +13565,32 @@
         "rootViewed": 2,
         "inventoryOnly": 36
       },
-      "qualification": false
-    }
+      "qualification": false,
+      "analytics": {
+        "run": 45260672235,
+        "passed": 0,
+        "failed": 2,
+        "failures": [
+          "Original Preview60000ms response deadline",
+          "Original BI06 Portuguese acquisition failure"
+        ]
+      },
+      "releaseAnalytics": {
+        "run": 45261263386,
+        "passed": 1,
+        "failed": 1,
+        "failure": "Original Preview60000ms response deadline"
+      },
+      "reviews": {
+        "run": 45261298952,
+        "passed": 2,
+        "failed": 0,
+        "visualInventoryOnly": 49
+      },
+      "campaignsPassed": 2,
+      "campaignsFailed": 4
+    },
+    "allOriginalCampaignsCompleted": true
   },
   "suspendedImportContextDraft": {
     "status": "SUSPENDED_UNADOPTED_NOT_TYPECHECKED",
@@ -13501,5 +13621,70 @@
       }
     ],
     "attribution": "Draft inventory supplied by /root recovery summary; no execution or adoption asserted."
+  },
+  "catalogEarlySelectionCandidate": {
+    "status": "FOCUSED_FIXED_AND_C10_SUCCESS_METADATA_PENDING_DETAILED_RECEIPTS",
+    "recordedAt": "2026-11-23T21:07:10Z",
+    "qualification": false,
+    "productPromoted": false,
+    "branch": "sf613-catalog2",
+    "initialSource": {
+      "commit": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "tree": "610bbdbaa346d6096e24effc120e9e2e2a2af025",
+      "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f"
+    },
+    "currentSource": {
+      "commit": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "tree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+      "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "testOnlyCorrection": true
+    },
+    "coreBlob": "2e5535d7d4d35e358cd6ea6f443e5adcb7fdcee7",
+    "initialTestBlob": "7f1692ceefb0c24e25acfb674bef1d7420087053",
+    "currentTestBlob": "fbddbf34d4c5723420ebba741604137ba5512499",
+    "reviewReceipt": {
+      "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-static-review-2026-11-23.json",
+      "blob": "f2d066eefa0a30b6bdeed09f827f12daf9026bb4"
+    },
+    "contract": "Fresh provider discovery and eligibility identity precede model projection. Hidden model projection is omitted, selected models use the original projector, and final actual provider membership remains. all/get and all fresh authorization/generation boundaries remain. Explicit error-precedence change; no universal hook equivalence.",
+    "focusedFirst": {
+      "run": 45264473681,
+      "source": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "conclusion": "failure",
+      "runtimePassed": 26,
+      "expectCalls": 195,
+      "typecheckExit": 2,
+      "receipt": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/catalog2-focused-first-2026-11-23.json",
+        "blob": "9337855cdcb73c23a57e248a4ca4cb5c2d57f3cd"
+      }
+    },
+    "focusedFixed": {
+      "run": 45265435900,
+      "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "snapshot": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+      "snapshotTree": "585f662a51924538af8ae1ae9b1faed7039f5a3c",
+      "status": "completed",
+      "conclusion": "success",
+      "headShaVerified": true,
+      "updatedAt": "2026-11-23T21:04:11Z",
+      "observedAt": "2026-11-23T21:05:08Z",
+      "completedLogReviewPending": true
+    },
+    "originalC10": {
+      "run": 45264521459,
+      "source": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+      "snapshot": "2f6a0faf378587a5c535f9ce45bced66a4c15ffe",
+      "snapshotTree": "471f545bb86451f1935cf78e2c3034d7110f9ff0",
+      "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+      "status": "completed",
+      "conclusion": "success",
+      "headShaVerified": true,
+      "updatedAt": "2026-11-23T21:03:26Z",
+      "observedAt": "2026-11-23T21:05:08Z",
+      "completedLogReviewPending": true,
+      "original10sExpectationUnchanged": true,
+      "notRelabeledAsCurrentSourceQualification": true
+    }
   }
 }

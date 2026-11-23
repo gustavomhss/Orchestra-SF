@@ -1,0 +1,1643 @@
+{
+  "schema": "sf613-catalog-filephases-receipt-v1",
+  "recordedAt": "2026-11-23T21:00:58Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "diagnosticOnly": true,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5"
+  },
+  "sourceOverlay": {
+    "branch": "sf613-catalogphases",
+    "commit": "f791d58fac94a895628eed1758079385db4a9b95",
+    "tree": "36c25d2e9da2c92c41a972334df320622615a90e",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "diagnosticPaths": 9
+  },
+  "snapshot": {
+    "commit": "3f20ed7e2c832d979b669001a4bed2d7c40b6101",
+    "tree": "eca292acfa7b4cbb6dbf6a0773b7dbeb52ed5d62",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "paths": [
+      {
+        "path": ".ci-run.json",
+        "sha": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "40efbaa055cca1f4bd9aedb93639c26d90f3abbf",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "sha": "cd7263d802fd26e559749c9c2d9acb53aa6e3482",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/import-fault-profile.ts",
+        "sha": "c7d34984d40299730a4c22724b388ca3d2173338",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "597ec4b6446395981a2c3ee206eb95ba90d8af9c",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "38bfa60b41a6e19a013be9cc3091525502c3acd0",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "sha": "9ca65dc2829ddfbca43afeed921448715c090727",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+        "sha": "fe5914829532c7162dcff8897d07c56aed3eaac1",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "sha": "af9e18147095b489169435dba8b20cc0cb695f53",
+        "status": "modified"
+      },
+      {
+        "path": "packages/client/src/sucafina/transport.ts",
+        "sha": "41cb2313d37394a08c1c2062158fab7f9f43c2b2",
+        "status": "modified"
+      }
+    ],
+    "originalAssertionsAndDeadlinesUnchanged": true,
+    "temporaryBranch": "ci-run-linux-sf613-catalogphases",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45262019948,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45262019948",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-23T20:41:45Z",
+    "updatedAt": "2026-11-23T20:49:18Z",
+    "headSha": "3f20ed7e2c832d979b669001a4bed2d7c40b6101",
+    "jobs": [
+      {
+        "id": 137998987520,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:41:48Z",
+        "completedAt": "2026-11-23T20:49:08Z"
+      },
+      {
+        "id": 138003374929,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:49:11Z",
+        "completedAt": "2026-11-23T20:49:18Z"
+      }
+    ]
+  },
+  "testResult": {
+    "passed": 1,
+    "failed": 1,
+    "duration": "4.7m",
+    "failure": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "originalLine": 195,
+      "snapshotLine": 208,
+      "originalTimeoutMs": 10000,
+      "expectedHeading": "Simulation · no domain changes applied",
+      "reportedAt": "2026-11-23T20:47:15.4966117Z"
+    },
+    "lateCompletionDoesNotQualifyOriginalGate": true
+  },
+  "log": {
+    "characters": 4171939,
+    "utf8Bytes": 4178644,
+    "sha256": "5dbfd47599a3599961a49ab66ff611ca7d169418f73dcd8855112f708a8ed10c",
+    "lineCount": 1798,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true
+  },
+  "phases": {
+    "timeBasis": "Frontend timeMs markers; runner timestamps remain separate in each retained marker.",
+    "ui55": {
+      "index": 0,
+      "ticket": 1,
+      "begin": "2026-11-23T20:46:38.5608110Z",
+      "end": "2026-11-23T20:46:48.9556965Z",
+      "preContextMs": 5098,
+      "fetchMs": 472,
+      "bodyMs": 18,
+      "postContextMs": 4738,
+      "clientTotalMs": 10394,
+      "preLive": true,
+      "postLive": true,
+      "allTransportMarkersAbortedFalse": true,
+      "markers": [
+        {
+          "runnerAt": "2026-11-23T20:46:38.5608110Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-pre-context-begin",
+            "timeMs": 1795466798559,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:43.6593115Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-pre-context-end",
+            "timeMs": 1795466803657,
+            "ticket": 1,
+            "aborted": false,
+            "live": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:43.6596414Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-fetch-begin",
+            "timeMs": 1795466803657,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:44.1460138Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-fetch-resolved",
+            "timeMs": 1795466804129,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:44.1461881Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-body-begin",
+            "timeMs": 1795466804130,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:44.1515576Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-body-decoded",
+            "timeMs": 1795466804148,
+            "ticket": 1,
+            "aborted": false,
+            "resultPresent": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:44.2164450Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-post-context-begin",
+            "timeMs": 1795466804215,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:48.9555286Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-post-context-end",
+            "timeMs": 1795466808953,
+            "ticket": 1,
+            "aborted": false,
+            "live": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:46:48.9556965Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-execute-settled",
+            "timeMs": 1795466808953,
+            "ticket": 1,
+            "aborted": false
+          }
+        }
+      ]
+    },
+    "ui56": {
+      "index": 1,
+      "ticket": 1,
+      "begin": "2026-11-23T20:47:04.2612173Z",
+      "end": "2026-11-23T20:47:14.4728416Z",
+      "preContextMs": 4880,
+      "fetchMs": 411,
+      "bodyMs": 16,
+      "postContextMs": 4834,
+      "clientTotalMs": 10211,
+      "preLive": true,
+      "postLive": true,
+      "allTransportMarkersAbortedFalse": true,
+      "markers": [
+        {
+          "runnerAt": "2026-11-23T20:47:04.2612173Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-pre-context-begin",
+            "timeMs": 1795466824260,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.1414322Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-pre-context-end",
+            "timeMs": 1795466829140,
+            "ticket": 1,
+            "aborted": false,
+            "live": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.1415907Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-fetch-begin",
+            "timeMs": 1795466829140,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.5535900Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-fetch-resolved",
+            "timeMs": 1795466829551,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.5548185Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-body-begin",
+            "timeMs": 1795466829552,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.5746208Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-body-decoded",
+            "timeMs": 1795466829568,
+            "ticket": 1,
+            "aborted": false,
+            "resultPresent": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:09.6394244Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-post-context-begin",
+            "timeMs": 1795466829637,
+            "ticket": 1,
+            "aborted": false
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:14.4726995Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-post-context-end",
+            "timeMs": 1795466834471,
+            "ticket": 1,
+            "aborted": false,
+            "live": true
+          }
+        },
+        {
+          "runnerAt": "2026-11-23T20:47:14.4728416Z",
+          "data": {
+            "schema": "sf-import-lifecycle-v1",
+            "qualification": false,
+            "source": "transport",
+            "label": "reference-execute-settled",
+            "timeMs": 1795466834471,
+            "ticket": 1,
+            "aborted": false
+          }
+        }
+      ]
+    },
+    "expectationAndComponent": {
+      "expectBeforeMs": 1795466824263,
+      "expectFailedMs": 1795466834264,
+      "expectElapsedMs": 10001,
+      "postContextEndMs": 1795466834471,
+      "postContextAfterExpectationFailedMs": 207,
+      "componentReadyMs": 1795466834511,
+      "componentReadyAfterPostContextMs": 40,
+      "componentReadyAfterExpectationFailedMs": 247,
+      "clientTotalMs": 10211
+    },
+    "allMarkers": [
+      {
+        "runnerAt": "2026-11-23T20:46:16.5165972Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "scope-change",
+          "timeMs": 1795466776513,
+          "chapter": "UI55",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "initialScope": true,
+          "routeKindChanged": true,
+          "chapterChanged": true,
+          "hrefChanged": true,
+          "ownerStampChanged": true,
+          "authStatusChanged": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:16.5169830Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466776513,
+          "chapter": "UI55",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:16.5172568Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466776514,
+          "chapter": "UI55",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:21.8682998Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "scope-change",
+          "timeMs": 1795466781866,
+          "chapter": "UI55",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "initialScope": true,
+          "routeKindChanged": true,
+          "chapterChanged": true,
+          "hrefChanged": true,
+          "ownerStampChanged": true,
+          "authStatusChanged": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:21.8684980Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466781866,
+          "chapter": "UI55",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:21.8686540Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466781866,
+          "chapter": "UI55",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.0315098Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466782028,
+          "chapter": "UI55",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change-period"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.0351162Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466782029,
+          "chapter": "UI55",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change-period"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.0518815Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466782050,
+          "chapter": "UI55",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change-period"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.0523327Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466782050,
+          "chapter": "UI55",
+          "generation": 3,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change-period"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.1480748Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466782145,
+          "chapter": "UI55",
+          "generation": 3,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "discover"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:22.1487799Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466782146,
+          "chapter": "UI55",
+          "generation": 4,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "discover"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:24.8466460Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466784845,
+          "chapter": "UI55",
+          "generation": 4,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:24.8469925Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466784845,
+          "chapter": "UI55",
+          "generation": 5,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:27.3436835Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466787341,
+          "chapter": "UI55",
+          "generation": 5,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:27.3445009Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466787341,
+          "chapter": "UI55",
+          "generation": 6,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:27.9906986Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466787962,
+          "chapter": "UI55",
+          "generation": 6,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "preview"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:27.9909599Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466787963,
+          "chapter": "UI55",
+          "generation": 7,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "preview"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:38.5608110Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-pre-context-begin",
+          "timeMs": 1795466798559,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:43.6593115Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-pre-context-end",
+          "timeMs": 1795466803657,
+          "ticket": 1,
+          "aborted": false,
+          "live": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:43.6596414Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-fetch-begin",
+          "timeMs": 1795466803657,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:44.1460138Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-fetch-resolved",
+          "timeMs": 1795466804129,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:44.1461881Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-body-begin",
+          "timeMs": 1795466804130,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:44.1515576Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-body-decoded",
+          "timeMs": 1795466804148,
+          "ticket": 1,
+          "aborted": false,
+          "resultPresent": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:44.2164450Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-post-context-begin",
+          "timeMs": 1795466804215,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:48.9555286Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-post-context-end",
+          "timeMs": 1795466808953,
+          "ticket": 1,
+          "aborted": false,
+          "live": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:48.9556965Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-execute-settled",
+          "timeMs": 1795466808953,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:52.7513985Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466812724,
+          "chapter": "UI55",
+          "generation": 7,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "reviewing",
+          "busy": false,
+          "caller": "cancel-preview"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:46:52.7516605Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466812724,
+          "chapter": "UI55",
+          "generation": 8,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "reviewing",
+          "busy": false,
+          "caller": "cancel-preview"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:03.3096027Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "scope-change",
+          "timeMs": 1795466823307,
+          "chapter": "UI56",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "initialScope": true,
+          "routeKindChanged": true,
+          "chapterChanged": true,
+          "hrefChanged": true,
+          "ownerStampChanged": true,
+          "authStatusChanged": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:03.3098282Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466823308,
+          "chapter": "UI56",
+          "generation": 0,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:03.3100140Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466823308,
+          "chapter": "UI56",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "loading",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "scope-change"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2398731Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "spec",
+          "label": "refresh-click-before",
+          "timeMs": 1795466824239
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2582175Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "load-reference-begin",
+          "timeMs": 1795466824257,
+          "chapter": "UI56",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2584904Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-before",
+          "timeMs": 1795466824257,
+          "chapter": "UI56",
+          "generation": 1,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "load-reference"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2587752Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "fence-aborted",
+          "timeMs": 1795466824257,
+          "chapter": "UI56",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": true,
+          "status": "ready",
+          "phase": "selecting",
+          "busy": false,
+          "caller": "load-reference"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2612173Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-pre-context-begin",
+          "timeMs": 1795466824260,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2639137Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "spec",
+          "label": "refresh-click-after",
+          "timeMs": 1795466824263
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:04.2641559Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "spec",
+          "label": "refresh-expect-before",
+          "timeMs": 1795466824263
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.1414322Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-pre-context-end",
+          "timeMs": 1795466829140,
+          "ticket": 1,
+          "aborted": false,
+          "live": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.1415907Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-fetch-begin",
+          "timeMs": 1795466829140,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.5535900Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-fetch-resolved",
+          "timeMs": 1795466829551,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.5548185Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-body-begin",
+          "timeMs": 1795466829552,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.5746208Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-body-decoded",
+          "timeMs": 1795466829568,
+          "ticket": 1,
+          "aborted": false,
+          "resultPresent": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:09.6394244Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-post-context-begin",
+          "timeMs": 1795466829637,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.2789937Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "spec",
+          "label": "refresh-expect-threw",
+          "timeMs": 1795466834264
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.4726995Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-post-context-end",
+          "timeMs": 1795466834471,
+          "ticket": 1,
+          "aborted": false,
+          "live": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.4728416Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "transport",
+          "label": "reference-execute-settled",
+          "timeMs": 1795466834471,
+          "ticket": 1,
+          "aborted": false
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.5133160Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "load-reference-result",
+          "timeMs": 1795466834511,
+          "chapter": "UI56",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "preview",
+          "busy": false,
+          "ticket": 2,
+          "tokenAborted": false,
+          "resultPresent": true
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.5136541Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "load-reference-live",
+          "timeMs": 1795466834511,
+          "chapter": "UI56",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "preview",
+          "busy": false,
+          "ticket": 2,
+          "tokenAborted": false,
+          "live": true,
+          "check": "reviewing"
+        }
+      },
+      {
+        "runnerAt": "2026-11-23T20:47:14.5139755Z",
+        "data": {
+          "schema": "sf-import-lifecycle-v1",
+          "qualification": false,
+          "source": "imports",
+          "label": "load-reference-live",
+          "timeMs": 1795466834511,
+          "chapter": "UI56",
+          "generation": 2,
+          "controllerPresent": true,
+          "aborted": false,
+          "status": "ready",
+          "phase": "preview",
+          "busy": false,
+          "ticket": 2,
+          "tokenAborted": false,
+          "live": true,
+          "check": "busy"
+        }
+      }
+    ],
+    "noOwnerResetDuringPendingReference": true,
+    "noClientFetchRejectionObserved": true,
+    "noClientSignalAbortObserved": true,
+    "noImportFaultMarkers": true
+  },
+  "networkEvents": [
+    "2026-11-23T20:47:09.5743913Z \u001b[1A\u001b[2KSF_DESIGN_DIAGNOSTICS {\"kind\":\"original-import-request\",\"event\":\"requestfailed\",\"mode\":\"import-reference\",\"method\":\"GET\",\"failure\":\"net::ERR_ABORTED\"}"
+  ],
+  "artifacts": [
+    {
+      "id": 14861143126,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 44523525,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861143126",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14861143126/zip",
+      "expired": false,
+      "created_at": "2026-11-23T20:49:04Z",
+      "expires_at": "2026-11-30T20:49:01Z",
+      "updated_at": "2026-11-23T20:49:04Z",
+      "digest": "sha256:e88439c5f96f5d1777ba013212091de2e631f73c080ec52110284dac1802c8bb",
+      "workflow_run": {
+        "id": 45262019948,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-sf613-catalogphases",
+        "head_sha": "3f20ed7e2c832d979b669001a4bed2d7c40b6101"
+      }
+    }
+  ],
+  "captures": {
+    "inventory": [
+      {
+        "index": 0,
+        "name": "UI55-setup-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:17.5909032Z",
+        "last": "2026-11-23T20:46:17.7416762Z"
+      },
+      {
+        "index": 1,
+        "name": "UI55-setup-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.2022149Z",
+        "last": "2026-11-23T20:46:18.4262295Z"
+      },
+      {
+        "index": 2,
+        "name": "UI55-setup-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.4592676Z",
+        "last": "2026-11-23T20:46:18.5190699Z"
+      },
+      {
+        "index": 3,
+        "name": "UI55-setup-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.7155185Z",
+        "last": "2026-11-23T20:46:18.7761371Z"
+      },
+      {
+        "index": 4,
+        "name": "UI55-dark-desktop-selected-file-options",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:27.7944032Z",
+        "last": "2026-11-23T20:46:27.9230849Z"
+      },
+      {
+        "index": 5,
+        "name": "UI55-dark-390-selected-file-options",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:27.9492438Z",
+        "last": "2026-11-23T20:46:27.9775614Z"
+      },
+      {
+        "index": 6,
+        "name": "UI55-scanned-simulation-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:50.6296947Z",
+        "last": "2026-11-23T20:46:50.7691115Z"
+      },
+      {
+        "index": 7,
+        "name": "UI55-scanned-simulation-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:51.1394291Z",
+        "last": "2026-11-23T20:46:51.2719417Z"
+      },
+      {
+        "index": 8,
+        "name": "UI55-scanned-simulation-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:46:51.3198477Z",
+        "last": "2026-11-23T20:46:51.3775220Z"
+      },
+      {
+        "index": 9,
+        "name": "UI55-scanned-simulation-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:46:51.6408874Z",
+        "last": "2026-11-23T20:46:51.6918802Z"
+      },
+      {
+        "index": 10,
+        "name": "UI55-dark-desktop-field-change",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:52.1933451Z",
+        "last": "2026-11-23T20:46:52.2951249Z"
+      },
+      {
+        "index": 11,
+        "name": "UI55-dark-desktop-complete-source-impact",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:52.6272807Z",
+        "last": "2026-11-23T20:46:52.7438430Z"
+      },
+      {
+        "index": 12,
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:53.0758190Z",
+        "last": "2026-11-23T20:46:53.2113818Z"
+      },
+      {
+        "index": 13,
+        "name": "FAILED-native-wave-three-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:47:14.8400556Z",
+        "last": "2026-11-23T20:47:14.9586035Z"
+      },
+      {
+        "index": 14,
+        "name": "UI51-relationship-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:21.2589408Z",
+        "last": "2026-11-23T20:48:21.3809810Z"
+      },
+      {
+        "index": 15,
+        "name": "UI51-relationship-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:21.7926664Z",
+        "last": "2026-11-23T20:48:21.9189355Z"
+      },
+      {
+        "index": 16,
+        "name": "UI51-relationship-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:21.9412156Z",
+        "last": "2026-11-23T20:48:21.9901687Z"
+      },
+      {
+        "index": 17,
+        "name": "UI51-relationship-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:22.2362924Z",
+        "last": "2026-11-23T20:48:22.2928242Z"
+      },
+      {
+        "index": 18,
+        "name": "UI51-dark-desktop-removal-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:22.7190172Z",
+        "last": "2026-11-23T20:48:22.8167754Z"
+      },
+      {
+        "index": 19,
+        "name": "UI51-dark-desktop-explicit-editor",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:27.9711163Z",
+        "last": "2026-11-23T20:48:28.0938939Z"
+      },
+      {
+        "index": 20,
+        "name": "UI51-dark-desktop-create-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:28.3706765Z",
+        "last": "2026-11-23T20:48:28.4576030Z"
+      },
+      {
+        "index": 21,
+        "name": "UI51-dark-desktop-case-alias-empty",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:33.3877865Z",
+        "last": "2026-11-23T20:48:33.5146252Z"
+      },
+      {
+        "index": 22,
+        "name": "UI52-discussion-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:37.1536672Z",
+        "last": "2026-11-23T20:48:37.2694240Z"
+      },
+      {
+        "index": 23,
+        "name": "UI52-discussion-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:37.6184137Z",
+        "last": "2026-11-23T20:48:37.7332377Z"
+      },
+      {
+        "index": 24,
+        "name": "UI52-discussion-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:37.7506250Z",
+        "last": "2026-11-23T20:48:37.7915871Z"
+      },
+      {
+        "index": 25,
+        "name": "UI52-discussion-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:38.0340521Z",
+        "last": "2026-11-23T20:48:38.0743851Z"
+      },
+      {
+        "index": 26,
+        "name": "UI52-dark-desktop-origin-unsent-draft",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:48:38.5532697Z",
+        "last": "2026-11-23T20:48:38.7142971Z"
+      },
+      {
+        "index": 27,
+        "name": "UI52-dark-390-unsent-draft",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:38.7324055Z",
+        "last": "2026-11-23T20:48:38.7743954Z"
+      },
+      {
+        "index": 28,
+        "name": "UI53-material-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:42.7386237Z",
+        "last": "2026-11-23T20:48:42.8933960Z"
+      },
+      {
+        "index": 29,
+        "name": "UI53-material-light-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:43.1535235Z",
+        "last": "2026-11-23T20:48:43.2804593Z"
+      },
+      {
+        "index": 30,
+        "name": "UI53-material-light-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:43.3055018Z",
+        "last": "2026-11-23T20:48:43.3391626Z"
+      },
+      {
+        "index": 31,
+        "name": "UI53-material-dark-390",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:48:43.5662932Z",
+        "last": "2026-11-23T20:48:43.6051199Z"
+      },
+      {
+        "index": 32,
+        "name": "UI53-dark-desktop-confirmation-review",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:43.9998754Z",
+        "last": "2026-11-23T20:48:44.0886314Z"
+      },
+      {
+        "index": 33,
+        "name": "UI53-dark-desktop-original-receipt",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:45.1174615Z",
+        "last": "2026-11-23T20:48:45.2313875Z"
+      },
+      {
+        "index": 34,
+        "name": "UI53-dark-desktop-recorded-validity",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:48:48.6571162Z",
+        "last": "2026-11-23T20:48:48.7689077Z"
+      },
+      {
+        "index": 35,
+        "name": "UI51-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:53.5403987Z",
+        "last": "2026-11-23T20:48:53.7405504Z"
+      },
+      {
+        "index": 36,
+        "name": "UI52-pt-BR-dark-desktop",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:48:57.1573326Z",
+        "last": "2026-11-23T20:48:57.2881734Z"
+      },
+      {
+        "index": 37,
+        "name": "UI53-pt-BR-dark-desktop",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:49:00.6015046Z",
+        "last": "2026-11-23T20:49:00.6913607Z"
+      }
+    ],
+    "completeCount": 38,
+    "actuallyViewed": [
+      {
+        "index": 12,
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "viewedBy": "/root/audit_catalog",
+        "observation": "Original file and selected destination/options remain after cancellation; Generate preview is available."
+      },
+      {
+        "index": 13,
+        "name": "FAILED-native-wave-three-test-data",
+        "viewedBy": "/root/audit_catalog",
+        "observation": "Captured after the failed expectation: UI56 now visibly shows Simulation heading, original source metadata and item-change counts. This confirms late visible completion, not an on-time pass."
+      }
+    ],
+    "inventoryOnlyCount": 36,
+    "failedCaptureFirstChunkAt": "2026-11-23T20:47:14.8400556Z"
+  },
+  "matchedPriorPipelineComparison": {
+    "priorReceiptBlob": "f3f67caa33c91de40b36dfde8246cbe9f6a7822a",
+    "priorSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "priorUi55": {
+      "preContextMs": 8937,
+      "fetchMs": 456,
+      "bodyMs": 47,
+      "postContextMs": 8567,
+      "clientTotalMs": 18072
+    },
+    "currentUi55": {
+      "preContextMs": 5098,
+      "fetchMs": 472,
+      "bodyMs": 18,
+      "postContextMs": 4738,
+      "clientTotalMs": 10394
+    },
+    "priorUi56": {
+      "preContextMs": 8826,
+      "fetchMs": 436,
+      "bodyMs": 16,
+      "postContextEndObserved": false
+    },
+    "currentUi56": {
+      "preContextMs": 4880,
+      "fetchMs": 411,
+      "bodyMs": 16,
+      "postContextMs": 4834,
+      "clientTotalMs": 10211
+    },
+    "limit": "Same original Files import-reference client pipeline, separate CI runs/runners. Descriptive comparison only; not paired causal proof or a performance percentile. Independent authenticated HTTP control timings are not substituted for the full client path."
+  },
+  "findings": [
+    "UI56 completed its client pipeline in10211ms with both fresh context checks live. Fetch resolved and bounded JSON decoded; no client cancellation or owner reset occurred during that pending request.",
+    "The original heading expectation threw after10001ms. Post-context ended207ms later and the component reported ready/preview40ms after that,247ms after the expectation failed.",
+    "A browser requestfailed/ERR_ABORTED event exists at20:47:09.5743913Z despite fetch resolution and decoded JSON. It is not evidence of a client Promise rejection or hung request here.",
+    "The exact late-ready preview is present in the subsequently captured failure JPEG. This does not turn the unchanged original10s gate green."
+  ],
+  "limits": [
+    "Diagnostic overlay is not adopted into product and does not qualify a clean original campaign.",
+    "Elapsed intervals include instrumentation overhead and are not performance percentiles.",
+    "Earlier403 variation remains unresolved; zero fault markers does not prove all failure paths are absent.",
+    "No expectation delay, response-before-assertion wait, deadline change, product promotion or merge."
+  ]
+}

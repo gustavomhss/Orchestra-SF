@@ -1,0 +1,135 @@
+{
+  "schema": "sf613-catalog2-focused-first-receipt-v1",
+  "recordedAt": "2026-11-23T21:02:58Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "source": {
+    "commit": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "tree": "610bbdbaa346d6096e24effc120e9e2e2a2af025",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f"
+  },
+  "snapshot": {
+    "commit": "d0e9595895d52a6f5ec1716f1fcbd39f52af52df",
+    "tree": "d121495e7734282199cecb5481440d0339c507ee",
+    "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "wrapperBlob": "85a6c201cce358462f31716187ee38f32c24d808"
+  },
+  "ci": {
+    "id": 45264473681,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45264473681",
+    "status": "completed",
+    "conclusion": "failure",
+    "headSha": "d0e9595895d52a6f5ec1716f1fcbd39f52af52df",
+    "createdAt": "2026-11-23T20:56:15Z",
+    "updatedAt": "2026-11-23T20:58:11Z",
+    "jobs": [
+      {
+        "id": 138007606998,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:56:19Z",
+        "completedAt": "2026-11-23T20:58:04Z"
+      },
+      {
+        "id": 138008665946,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:58:06Z",
+        "completedAt": "2026-11-23T20:58:10Z"
+      }
+    ]
+  },
+  "result": {
+    "outcome": "RUNTIME_CONTROLS_PASSED_TEST_TYPECHECK_FAILED",
+    "identityChecksPassed": true,
+    "catalog": {
+      "originalCases": 17,
+      "newCases": 9,
+      "passed": 26,
+      "failed": 0,
+      "expectCalls": 195,
+      "commandDurationMs": 1659
+    },
+    "coreTypecheck": {
+      "exitCode": 2,
+      "durationMs": 19800,
+      "error": "TS18048: selected.api.settings is possibly undefined",
+      "path": "packages/core/test/catalog-available.test.ts",
+      "line": 269,
+      "column": 14
+    },
+    "outer": {
+      "passed": 2,
+      "failed": 1,
+      "durationSeconds": 22.18
+    },
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 3,
+      "spawns": 5,
+      "delegated": 0
+    }
+  },
+  "log": {
+    "characters": 76091,
+    "utf8Bytes": 76093,
+    "sha256": "e0468f93adcd972dfe809bc61b818af14fcc6c3d12c189c03d123f8bea671f5f",
+    "lineCount": 880,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "evidenceLines": [
+      "2026-11-23T20:57:39.9199251Z {\"gate\":\"fetch source parent\",\"source\":\"36cc3b38298f6b784f6d6678da2dfb415757b631\",\"sourceTree\":\"610bbdbaa346d6096e24effc120e9e2e2a2af025\",\"snapshot\":\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\",\"run\":\"45264473681\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":440,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:57:39.9232736Z {\"gate\":\"snapshot identity\",\"source\":\"36cc3b38298f6b784f6d6678da2dfb415757b631\",\"sourceTree\":\"610bbdbaa346d6096e24effc120e9e2e2a2af025\",\"snapshot\":\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\",\"run\":\"45264473681\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:57:39.9394084Z {\"gate\":\"source identity\",\"source\":\"36cc3b38298f6b784f6d6678da2dfb415757b631\",\"sourceTree\":\"610bbdbaa346d6096e24effc120e9e2e2a2af025\",\"snapshot\":\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\",\"run\":\"45264473681\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":16,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:57:41.6009993Z {\"gate\":\"original Catalog suite and nine availability contracts\",\"source\":\"36cc3b38298f6b784f6d6678da2dfb415757b631\",\"sourceTree\":\"610bbdbaa346d6096e24effc120e9e2e2a2af025\",\"snapshot\":\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\",\"run\":\"45264473681\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/catalog.test.ts\",\"./test/catalog-available.test.ts\"],\"cwd\":\"packages/core\",\"exitCode\":0,\"durationMs\":1659,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:57:41.6033796Z  26 pass",
+      "2026-11-23T20:57:41.6034019Z  0 fail",
+      "2026-11-23T20:57:41.6034248Z  195 expect() calls",
+      "2026-11-23T20:57:41.6034567Z Ran 26 tests across 2 files. [1.64s]",
+      "2026-11-23T20:58:01.4024776Z {\"gate\":\"core package typecheck\",\"source\":\"36cc3b38298f6b784f6d6678da2dfb415757b631\",\"sourceTree\":\"610bbdbaa346d6096e24effc120e9e2e2a2af025\",\"snapshot\":\"d0e9595895d52a6f5ec1716f1fcbd39f52af52df\",\"run\":\"45264473681\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"packages/core\",\"exitCode\":2,\"durationMs\":19800,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+      "2026-11-23T20:58:01.4050123Z ##[error]test/catalog-available.test.ts(269,14): error TS18048: 'selected.api.settings' is possibly 'undefined'.",
+      "2026-11-23T20:58:01.4062019Z error: core package typecheck",
+      "2026-11-23T20:58:01.4073593Z  2 pass",
+      "2026-11-23T20:58:01.4073797Z  1 fail",
+      "2026-11-23T20:58:01.4074294Z Ran 3 tests across 1 file. [22.18s]",
+      "2026-11-23T20:58:01.4078411Z error: core package typecheck",
+      "2026-11-23T20:58:01.4080574Z omni positive control [bf13c455a0b3d7fbd6f36683f759521b]: pass (declared: 3 test(s) in test/sf613-catalog-verification.test.ts); 5 omni spawn(s), 0 delegated."
+    ]
+  },
+  "followup": {
+    "source": "e78821194263260fd058a2a2648ef6a750ed24c5",
+    "tree": "4b9b6d465c78245960fb4d941e50da2cc9b52b69",
+    "parent": "36cc3b38298f6b784f6d6678da2dfb415757b631",
+    "testBlob": "fbddbf34d4c5723420ebba741604137ba5512499",
+    "coreUnchanged": "2e5535d7d4d35e358cd6ea6f443e5adcb7fdcee7",
+    "exactSingleExpressionFix": {
+      "before": "expect(selected.api.settings.owner).toBe(\"hidden-parent\")",
+      "after": "expect(required(selected.api.settings).owner).toBe(\"hidden-parent\")",
+      "reviewer": "/root/audit_catalog",
+      "singleExpressionDiffVerified": true,
+      "castsOrIgnoresAdded": false,
+      "assertionNotWeakened": true
+    },
+    "rerun": {
+      "id": 45265435900,
+      "snapshot": "f0e0fc7cea06c159723e4f80fbf0bd9fb95c01ef",
+      "tree": "585f662a51924538af8ae1ae9b1faed7039f5a3c",
+      "parent": "e78821194263260fd058a2a2648ef6a750ed24c5",
+      "status": "in_progress",
+      "observedAt": "2026-11-23T21:02:28Z"
+    }
+  },
+  "limits": [
+    "Static review did not establish type correctness; this actual failing typecheck is preserved.",
+    "Runtime26/26 does not make this focused job green.",
+    "C10 on previous source36cc has the same product core but is not relabeled as qualification of sourcee788.",
+    "No original17-test alteration, deadline increase, cast, ignore, product promotion or merge."
+  ]
+}

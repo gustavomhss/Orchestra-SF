@@ -1,0 +1,552 @@
+{
+  "schema": "sf613-catalog-r9-receipt-v1",
+  "recordedAt": "2026-11-23T20:59:36Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "originalCampaignPassed": true,
+  "source": {
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "isolated": true
+  },
+  "snapshot": {
+    "commit": "07076ed1296660b6846e97a7a5b4f322788f7cdc",
+    "tree": "d8f9a9b9c296950ab46e73f72e4687bae12671fc",
+    "parent": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "recipeBlob": "af8d722d60cd3eac4da7d7d39660b7722db057bf",
+    "diagnosticOverlay": false,
+    "originalSpecsAndDeadlinesUnchanged": true,
+    "temporaryBranch": "ci-run-linux-sf613-catalogreviews",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45261298952,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261298952",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-23T20:37:30Z",
+    "updatedAt": "2026-11-23T20:47:35Z",
+    "headSha": "07076ed1296660b6846e97a7a5b4f322788f7cdc",
+    "jobs": [
+      {
+        "id": 137996435555,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:37:32Z",
+        "completedAt": "2026-11-23T20:47:26Z"
+      },
+      {
+        "id": 138002367223,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:47:28Z",
+        "completedAt": "2026-11-23T20:47:35Z"
+      }
+    ]
+  },
+  "environment": {
+    "workflow": "test-ci",
+    "runner": "ubuntu-24.04",
+    "ORCHESTRA_CHANNEL": "prod",
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  },
+  "testResult": {
+    "passed": 2,
+    "failed": 0,
+    "duration": "8.9m",
+    "scope": "Original Reviews browser campaign on this source only."
+  },
+  "log": {
+    "characters": 5992611,
+    "utf8Bytes": 5995275,
+    "sha256": "16b96cd20dfbb73391d1dcf0d80b7b0683953e62683c62c022cd5d936d6c0442",
+    "lineCount": 1768,
+    "utf8BomIncluded": true,
+    "knownVectorChecks": [
+      "empty",
+      "abc",
+      "focused-log-agreement"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true,
+    "evidenceLines": [
+      "2026-11-23T20:47:20.7338250Z   2 passed (8.9m)"
+    ],
+    "runtimeLines": []
+  },
+  "artifacts": [
+    {
+      "id": 14860397554,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 57523238,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14860397554",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14860397554/zip",
+      "expired": false,
+      "created_at": "2026-11-23T20:47:23Z",
+      "expires_at": "2026-11-30T20:47:21Z",
+      "updated_at": "2026-11-23T20:47:23Z",
+      "digest": "sha256:ab47ccdcdeaebfe9265f7c2601f28d618d5ea0211da1bad810a0b855b271efd5",
+      "workflow_run": {
+        "id": 45261298952,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-sf613-catalogreviews",
+        "head_sha": "07076ed1296660b6846e97a7a5b4f322788f7cdc"
+      }
+    }
+  ],
+  "captures": {
+    "inventory": [
+      {
+        "index": 0,
+        "name": "UI54-dark-desktop-initial-source-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:40:50.5037850Z",
+        "last": "2026-11-23T20:40:50.6205135Z"
+      },
+      {
+        "index": 1,
+        "name": "UI54-dark-desktop-original-draft-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:41:01.8855835Z",
+        "last": "2026-11-23T20:41:02.1385914Z"
+      },
+      {
+        "index": 2,
+        "name": "UI54-light-desktop-original-draft-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:41:02.6805985Z",
+        "last": "2026-11-23T20:41:03.0237553Z"
+      },
+      {
+        "index": 3,
+        "name": "UI54-dark-320-original-draft-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:41:03.0674157Z",
+        "last": "2026-11-23T20:41:03.0923715Z"
+      },
+      {
+        "index": 4,
+        "name": "UI54-dark-320-missing-source-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:41:08.3338026Z",
+        "last": "2026-11-23T20:41:08.3592412Z"
+      },
+      {
+        "index": 5,
+        "name": "UI54-pt-BR-dark-desktop-original-draft-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:41:14.5333213Z",
+        "last": "2026-11-23T20:41:14.7532704Z"
+      },
+      {
+        "index": 6,
+        "name": "UI47-dark-desktop-initial-selection-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:42:31.9060021Z",
+        "last": "2026-11-23T20:42:32.1327536Z"
+      },
+      {
+        "index": 7,
+        "name": "UI47-dark-desktop-ordered-sections-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:42:38.8839716Z",
+        "last": "2026-11-23T20:42:39.0947556Z"
+      },
+      {
+        "index": 8,
+        "name": "UI47-dark-desktop-preservation-review-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:42:40.2622480Z",
+        "last": "2026-11-23T20:42:40.4439065Z"
+      },
+      {
+        "index": 9,
+        "name": "UI47-dark-390-preservation-review-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:42:40.4744934Z",
+        "last": "2026-11-23T20:42:40.5339042Z"
+      },
+      {
+        "index": 10,
+        "name": "UI47-dark-desktop-producer-confirmed-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:42:43.9501785Z",
+        "last": "2026-11-23T20:42:44.0953113Z"
+      },
+      {
+        "index": 11,
+        "name": "UI47-dark-desktop-sections-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:43:16.4095527Z",
+        "last": "2026-11-23T20:43:16.7460744Z"
+      },
+      {
+        "index": 12,
+        "name": "UI48-list-unavailable-dark-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:43:24.1987045Z",
+        "last": "2026-11-23T20:43:24.4007558Z"
+      },
+      {
+        "index": 13,
+        "name": "UI48-detail-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:32.9493219Z",
+        "last": "2026-11-23T20:43:33.2322230Z"
+      },
+      {
+        "index": 14,
+        "name": "UI48-detail-values-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:33.3511043Z",
+        "last": "2026-11-23T20:43:33.7423183Z"
+      },
+      {
+        "index": 15,
+        "name": "UI48-dark-desktop-original-stale-update-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:44.5557469Z",
+        "last": "2026-11-23T20:43:44.8441080Z"
+      },
+      {
+        "index": 16,
+        "name": "UI48-present-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:45.0381478Z",
+        "last": "2026-11-23T20:43:45.2660803Z"
+      },
+      {
+        "index": 17,
+        "name": "UI48-present-values-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:45.4395828Z",
+        "last": "2026-11-23T20:43:45.7123766Z"
+      },
+      {
+        "index": 18,
+        "name": "UI48-dark-desktop-expanded-original-source-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:45.9771807Z",
+        "last": "2026-11-23T20:43:46.3608297Z"
+      },
+      {
+        "index": 19,
+        "name": "UI49-compare-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:43:56.9387617Z",
+        "last": "2026-11-23T20:43:57.3421612Z"
+      },
+      {
+        "index": 20,
+        "name": "UI50-list-unavailable-dark-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:44:04.8316974Z",
+        "last": "2026-11-23T20:44:05.0390184Z"
+      },
+      {
+        "index": 21,
+        "name": "UI50-selection-dark-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:13.3862212Z",
+        "last": "2026-11-23T20:44:13.7413116Z"
+      },
+      {
+        "index": 22,
+        "name": "UI47-light-desktop-sections-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:44:26.6158618Z",
+        "last": "2026-11-23T20:44:26.8459643Z"
+      },
+      {
+        "index": 23,
+        "name": "UI48-list-unavailable-light-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:44:34.3988522Z",
+        "last": "2026-11-23T20:44:34.6560975Z"
+      },
+      {
+        "index": 24,
+        "name": "UI48-detail-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:43.3440639Z",
+        "last": "2026-11-23T20:44:43.6323291Z"
+      },
+      {
+        "index": 25,
+        "name": "UI48-detail-values-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:43.8071451Z",
+        "last": "2026-11-23T20:44:44.1453134Z"
+      },
+      {
+        "index": 26,
+        "name": "UI48-present-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:52.7163965Z",
+        "last": "2026-11-23T20:44:52.9509435Z"
+      },
+      {
+        "index": 27,
+        "name": "UI48-present-values-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:44:53.1731165Z",
+        "last": "2026-11-23T20:44:53.4651731Z"
+      },
+      {
+        "index": 28,
+        "name": "UI49-compare-light-desktop-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:45:04.0308492Z",
+        "last": "2026-11-23T20:45:04.4093499Z"
+      },
+      {
+        "index": 29,
+        "name": "UI50-list-unavailable-light-desktop-test-data",
+        "parts": 5,
+        "received": 5,
+        "complete": true,
+        "first": "2026-11-23T20:45:11.8971767Z",
+        "last": "2026-11-23T20:45:12.0758297Z"
+      },
+      {
+        "index": 30,
+        "name": "UI50-selection-light-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:45:20.4436386Z",
+        "last": "2026-11-23T20:45:20.8630166Z"
+      },
+      {
+        "index": 31,
+        "name": "UI48-dark-desktop-unsent-draft-retained-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:45:30.0329064Z",
+        "last": "2026-11-23T20:45:30.3881950Z"
+      },
+      {
+        "index": 32,
+        "name": "UI50-dark-desktop-one-section-pptx-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:45:38.9969614Z",
+        "last": "2026-11-23T20:45:39.2554024Z"
+      },
+      {
+        "index": 33,
+        "name": "UI47-dark-390-sections-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:45:51.3307086Z",
+        "last": "2026-11-23T20:45:51.3840692Z"
+      },
+      {
+        "index": 34,
+        "name": "UI48-detail-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:45:59.7449612Z",
+        "last": "2026-11-23T20:45:59.8066276Z"
+      },
+      {
+        "index": 35,
+        "name": "UI48-detail-values-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:45:59.8680185Z",
+        "last": "2026-11-23T20:45:59.9057179Z"
+      },
+      {
+        "index": 36,
+        "name": "UI48-present-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:08.1319288Z",
+        "last": "2026-11-23T20:46:08.1745187Z"
+      },
+      {
+        "index": 37,
+        "name": "UI48-present-values-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:08.2367097Z",
+        "last": "2026-11-23T20:46:08.3074000Z"
+      },
+      {
+        "index": 38,
+        "name": "UI49-compare-dark-390-test-data",
+        "parts": 3,
+        "received": 3,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.5579181Z",
+        "last": "2026-11-23T20:46:18.6244016Z"
+      },
+      {
+        "index": 39,
+        "name": "UI49-dark-390-original-comparison-table-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.6509210Z",
+        "last": "2026-11-23T20:46:18.6888936Z"
+      },
+      {
+        "index": 40,
+        "name": "UI49-dark-390-current-source-column-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:18.7290823Z",
+        "last": "2026-11-23T20:46:18.7819100Z"
+      },
+      {
+        "index": 41,
+        "name": "UI50-selection-dark-390-test-data",
+        "parts": 2,
+        "received": 2,
+        "complete": true,
+        "first": "2026-11-23T20:46:26.8753456Z",
+        "last": "2026-11-23T20:46:26.9135016Z"
+      },
+      {
+        "index": 42,
+        "name": "UI47-pt-BR-dark-desktop-test-data",
+        "parts": 6,
+        "received": 6,
+        "complete": true,
+        "first": "2026-11-23T20:46:40.1314260Z",
+        "last": "2026-11-23T20:46:40.5089743Z"
+      },
+      {
+        "index": 43,
+        "name": "UI48-detail-pt-BR-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:46:49.3814522Z",
+        "last": "2026-11-23T20:46:49.6346514Z"
+      },
+      {
+        "index": 44,
+        "name": "UI48-detail-values-pt-BR-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:46:49.8123387Z",
+        "last": "2026-11-23T20:46:50.1723378Z"
+      },
+      {
+        "index": 45,
+        "name": "UI48-present-pt-BR-dark-desktop-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:46:59.5049164Z",
+        "last": "2026-11-23T20:46:59.7879470Z"
+      },
+      {
+        "index": 46,
+        "name": "UI48-present-values-pt-BR-dark-desktop-test-data",
+        "parts": 8,
+        "received": 8,
+        "complete": true,
+        "first": "2026-11-23T20:46:59.9415064Z",
+        "last": "2026-11-23T20:47:00.4036258Z"
+      },
+      {
+        "index": 47,
+        "name": "UI49-compare-pt-BR-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:47:10.9579294Z",
+        "last": "2026-11-23T20:47:11.2741013Z"
+      },
+      {
+        "index": 48,
+        "name": "UI50-selection-pt-BR-dark-desktop-test-data",
+        "parts": 7,
+        "received": 7,
+        "complete": true,
+        "first": "2026-11-23T20:47:19.6156058Z",
+        "last": "2026-11-23T20:47:19.8793709Z"
+      }
+    ],
+    "completeCount": 49,
+    "actuallyViewed": [],
+    "inventoryOnlyCount": 49
+  },
+  "limits": [
+    "Functional Reviews campaign passed on this exact source; all49 original JPEG groups were inventoried but not visually inspected by this reviewer.",
+    "The previous C3 visual review is not reattributed to this run.",
+    "No global composition qualification, product promotion, merge or deployment."
+  ]
+}
