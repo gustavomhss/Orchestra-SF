@@ -685,3 +685,151 @@ A rota [#613](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-
 Depois, #673 incorpora o dev resultante, revalida as seis uniões e executa20 jobs A2 mais o suplemento de quatro invocações; SF/Decisions/APP-SRC continuam com baselines pendentes. A campanha visual opt-in420s não substitui os prazos canônicos210/180s. Reports11 e pool originais permanecem obrigatórios.
 
 **0/5 gates finais; NOT_READY.** finalCandidate, dois ACKs, tar final, reservas, janela e decisão de produção permanecem sem valores inventados. Nenhum ambiente foi mutado por esta atualização documental. #349/#588, G09/#647 e Compras222(2) ficam nos seus escopos originais. O aval explícito de produção continua necessário após os recibos finais e a janela proposta.
+
+
+## Reconciliação após o merge de #710 e recebimento de preparação G08 — 2026-11-23T03:38:53Z
+
+**Corte: 2026-11-23T03:38:53Z (2026-11-23 00:38:53 BRT, America/Sao_Paulo). Estado final: 0/5, NOT_READY.** Este apêndice conserva literalmente todo o registro anterior e acrescenta os recibos recebidos até este corte. As expressões de estado corrente nos apêndices anteriores continuam referidas aos seus respectivos instantes; esta seção atualiza a sequência de integração e as pendências operacionais.
+
+Base documental: **dev `65349c1c723a8c626135d5b8032b929f5c635193` / T `bd8c4a150de292a5cffbf394f33ebf70c2de7a75`**. O [lease 7090724640](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7090724640) abrange somente status.json, README.md e este registro. Produto, outros runbooks, workflows permanentes e administração ficam fora. A base documental não é C/T final de go-live.
+
+### 1. #710 integrado; rota corrente e limites da auditoria
+
+O [recebimento original de integração](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090716635) confirma #710 mergeado em dev às 03:13:29Z de 23/11. Merge **65349c1c723a8c626135d5b8032b929f5c635193**, pais **a5eee3584da531d087a419b8f3ef29d3881117c7** e **7c2338ac8bb6569fa39ed99b665a61d067f8cd07**; árvore **bd8c4a150de292a5cffbf394f33ebf70c2de7a75**, idêntica à fonte C7c.
+
+A [auditoria documental posterior 7090771779](https://github.com/gustavomhss/Orchestra-SF/pull/710#issuecomment-7090771779) recebeu os **40 blobs Git** do delta de auditoria e **32 cotejos** com originais, sem divergência ou finding documental material. Não é nova aprovação visual de todos os pixels nem requalificação integral do produto.
+
+O Gate8 de #710 também está recebido: [45104211969/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45104211969), **S 5bd078ff0c8aefbba07be48d55aa9fba7803a6d0 / T 09c2b021ca4700b7427c1487ff6aaeabf5486cdf**, filho único de C7c, acrescentando somente request e o wrapper técnico já usado no Gate7. Main 137461666475 e cleanup 137462272061 SUCCESS; ref 404, artifacts=[]; **7/7**, 14 assertions externos, filhos 13/13 e 100/100, Omni 7 declarações / 9 spawns / 0 delegações. Guards: 78 regras / 268 paths / 12 WARN / 0 erros / 0 exceções, base pinada em a5eee. Os logs originais recebidos são main 93.502 B, SHA-256 `59087e4a5e673b60d6fc4002225757af41d2f262e6dae9adcd9fcad7075c4e7f`, e cleanup 2.292 B, SHA-256 `479f0b2358523d2d45d6bff8aa589d39e80a434805a41d06ca781bf630ff5ecb`.
+
+O checkout desse run foi **S, não C7c ou o merge**. Finance7/Gate7/Matrix8 mantêm suas fontes e limites, inclusive a lacuna de transporte do main Matrix8, os negativos Matrix4/5/6, UI42/UI44 parciais, folhas recusadas, UI49 mobile somente no início da tabela, UI69 sem gravação, private-profile503, Microsoft como fixture e suíte ampla histórica. **Gate8 técnico de #710 não é G08 instalado.**
+
+A sequência anterior #613 → #710 → #673 foi superada pelo merge observado. A [rota canônica](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090716635), recebida também em [#613/7090723861](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7090723861) e [#673/7090724075](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7090724075), passa a ser:
+
+1. **Dev com #710 → composição e qualificação do #613 existente.** `sf613-finish` continua único writer de Design/performance/Core/workspace. A união deve preservar admissões WaveFive, regra `hidden`, autoridade, contratos, Core e o helper completo de instalação, incluindo os hunks da [revisão 6015669302](https://github.com/gustavomhss/Orchestra-SF/pull/710#pullrequestreview-6015669302).
+2. **Dev após #613 → #673 e qualificação integrada.** O pai `b2f97817a82dc55a66298428107c30d5e3d97354` / T `289fd8ac1792a103bfea3e57ce9c8c4283cc6b92` permanece congelado. Revalidar as seis uniões; executar 20 jobs A2 mais o suplemento de quatro invocações originais, Reports 11 e pool; receber baselines autênticas de SF, Decisions e APP-SRC e os ACKs do candidato executado.
+3. **Mesmo C/T confirmado por Migração e Release → G05/G06 → G07 → G08 → G10.** Não haverá segundo merge ou cherry-pick de #710. #713 segue separado e não entra automaticamente nos gates.
+
+Nenhum verde de componente, visual ou snapshot substitui a prova dessa composição. A campanha opt-in de 420 s não altera os prazos canônicos de 210/180 s.
+
+### 2. Design: T6 negativo, rodada A5/C5/R5 e prova real Rel2
+
+#### T6 — fonte C9ea; C17 original permanece negativo
+
+O [intake 7089501847](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7089501847) recebeu [45094264994/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45094264994), **S a456c7f24b801fb3d1c8d3d660f1b4d4edcc535b / T 68b18ab1bf4197b4d1c7627a58028a46c8af1798**, filho único de **C 9ea7345587465822daabfecb635d48d96f643b19 / T e9423a5832f50470afdd70e63979e45f61e9b7cb**. Overlay: request + wrapper; os quinze corpos, comandos, seleções e deadlines permanecem literais após substituir somente os pins de identidade de T5. A revisão estática do delta C9ea não encontrou novo finding; isso não qualifica sua latência.
+
+Main 137430456296 FAILURE, cleanup 137432838282 SUCCESS, ref 404, artifacts=[]. Bun 1.3.14+0d9b296af, Linux x64, prod/strict. **14/15 grupos**, 512 assertions externos, 26 recibos completos — 25 exit0 e um exit1 — e Omni 15 declarações / 26 spawns / 0 delegações. Guards: 78 regras / 801 paths / 40 WARN / 0 errors / approved[], base e origin/dev a5eee reais.
+
+C17 preservou teste original `0d9094ae67866a919573c9c172176ca2bc88d4dc` e helper `3eb140557b597156baf52578d8981d332e52aef3`: **105.000 ms cooperativos / 120.000 ms externos**. Inner 14/14 leituras em 1.445 ms; outer 1.952/1.952 em 94.026 ms; reabertura 8 ms; ancestralidade retornou aborted=true aos 105.002 ms. **FAIL em 105.010,31 ms; ciclo, recuperação e revogação não alcançados.** Finance passou separadamente; não converte o grupo em PASS. Diferenças de duração entre runs não determinam causa nem autorizam reclassificar esse negativo.
+
+Logs originais: main **153.861 B**, SHA-256 `14fc36b72d9eafbcd191f48fbbec63dbafa9ef382ee5d2a7326edcd734d41559`; cleanup **2.281 B**, SHA-256 `fc6c1b928101e13940e1d647002ed1247e0292a03387980abe8e16ef1cdc5d80`. O checkout executado foi S, não C9ea literal.
+
+#### A5/C5/R5 — cinco dos seis casos, com limites dos oráculos
+
+O [recebimento 7089198679](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7089198679) fecha a rodada de snapshots filhos de **C f8aa661a448be70af4aa40c4321fadf1c676dbe1 / T 1d533c300e7f4f0448cdb57debe42c2b7418ce61**: **A5 1/2 + C5 2/2 + R5 2/2 = 5/6 casos**.
+
+| Run | Resultado e identidade recebida |
+| --- | --- |
+| [A5 45091256735](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45091256735) | Primeiro preview de UI42 negativo no prazo original de 60 s; UI43/UI44 não alcançadas; BI Network positivo, nos limites do [intake A5](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7088973312). |
+| [C5 45091974788](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45091974788) | S `870291f391026c08538fabbdd39a71884f855836` / T `65328cda4eb2aba3dd259c31a4faa016688e6211`; main 137423352932 e cleanup 137425317442 PASS. |
+| [R5 45091975237](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45091975237) | S `9c24a02536f2384d56d8fa6ebe5d3d539c484a12` / T `fda350d8ed21ad807d3e46533331d52dab0cf0a6`; main 137423354194 e cleanup 137426083313 PASS. |
+
+Cada snapshot C5/R5 acrescentou somente sua request; Bun 1.3.14+0d9b296af, Playwright 1.59.1, production/prod/strict, um worker, retry 0. As refs temporárias foram removidas. UI55–56, UI51–53, UI54 e UI47–50 passaram com seus prazos originais.
+
+**C5 não executou Apply.** A importação conservou ClamD real, admissão, preview e referência/digest originais; dois requestfailed diagnósticos não foram convertidos em corpo de acknowledgement presumido. Colaboração incluiu confirmação no-change e reply não enviado, sem criação/remoção de relação. **R5 não gerou/publicou relatório, não fez escolha atual, Apply ou notificação.** Foram recebidos draft, duas preservações, aquisição nativa original do workbench e o 409/stale/review-read-changed. O oracle dos 211 valores originais permaneceu; a comparação tinha zero linhas de valores, sem reivindicar diff numérico não vazio.
+
+ZIP C5 **14781554313**, 53.851.716 B, SHA-256 `39f1a5caa4f0999b5639d03a9bb5fd7b3232936e910a628ebf7e8533e778497d`, 140 CRC + 2 do HTML; ZIP R5 **14781609347**, 62.713.260 B, SHA-256 `97fceeb93bfed3f5741e9ae49f04d200228728113374cb43b55f6d7c5b744302`, 145 CRC + 2 do HTML. Os originais coincidem com tamanho/digest da API e stdout/anexos runtime/HTML. Esses aceites de instalação com dados de teste não são Microsoft/G08 nem prova do C literal.
+
+#### Rel2 — Bun 1.4.1 observado, sem transferência para o candidato final
+
+[45092308693/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45092308693) executou **S cd43fec8493236e010bf2dbc4c577d4834851dde / T e2d419954562829d0c381d5e3f6bc750c46b3bd7**, pai único **C e9ef6219f36fddb5c3f5de674cef8c6056fb6efe / T 8daca4e61659bf27350aa34bcae528d2adf7d191**. O [intake original](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7089198679) recebeu main 137424387898 e cleanup 137425498382 PASS, ref removida e artifacts=[].
+
+Os quatro paths de overlay são request, wrapper, fixture e packageManager; a troca bun@1.3.14 → bun@1.4.1 ficou no snapshot. O runtime real foi **Bun 1.4.1 / 4661e494f052c83c80dade1318e5710238340be6**, Linux x64, prod/strict. Wrapper **5/5 / 24 assertions**, grupos internos **98 PASS / 2 SKIP originais de UID / 0 FAIL**, nove recibos externos exit0 sem truncamento, Omni 5 declarações / 9 spawns / 0 delegações.
+
+**C17 original PASS em 80.937,47 ms**, mantendo os limites 105.000/120.000 ms, outer 1.952/1.952 e conclusão de ancestralidade, ciclo, recovery e revogação. Finance passou em 35.845,32 ms. Planner/loading, autoridade/integridade UI, os dois canônicos originais e três controles de fallback Release também passaram. **Os 13 controles de clone nativo não foram selecionados**; o marcador recebido foi plannerCapability=true, cloneTreeAdmitted=false e nativeFallbackBytesMatched=true.
+
+Main **103.534 B**, SHA-256 `2a50c2bd05eb78ec4f5bbc4faaa4331a6b2c84c4383d22a27d427c7ab053a065`; cleanup **2.284 B**, SHA-256 `4b9ea63d61e58f67e87e314894d97c6fe1a32d159a97f156cddfc1709d0af6cb`. Esta prova real retira a antiga pendência genérica de observar Bun 1.4.1. **Não é qualificação de C9ea, do candidato final, do tar G07, da campanha técnica completa ou da jornada Analytics em Release.** Rel1 e T6 negativos permanecem preservados; não há conclusão causal de velocidade entre runtimes/runners.
+
+### 3. P8, P9 e P10 — negativos de preview e BI variável
+
+Os três diagnósticos têm como pai de produto **C9ea / T e9423a5832f50470afdd70e63979e45f61e9b7cb**. Suas instrumentações e checkouts são próprios; nenhum resultado é promovido para C9ea literal ou para dev653.
+
+| Diagnóstico | Snapshot / árvore | Resultado recebido |
+| --- | --- | --- |
+| [P8 45094860681/1](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7089574685) | S `9d6fc180ef36a407f6a82d198aa2ac7f20716b43` / T `d967611255a9d3e66c8908833953ea6b8603b5a3` | **0/2**. UI42 waiter 60.007 ms; UI43/UI44 NOT_REACHED. BI ERR_ABORTED antes da conclusão do corpo, waiter 362 ms. Main FAILURE, cleanup SUCCESS. |
+| [P9 45098241651/1](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7089925997) | S `1f7fa4fbcda32e6be25246c0a150c50c75048f64` / T `9d25ee874ca3d8e8d701ff1fe96f96202e95db9b` | **1 FAIL + 1 PASS**. UI42 waiter 60.011 ms; UI43/UI44 NOT_REACHED. BI PASS diagnóstico, 59.366 ms. Main FAILURE, cleanup SUCCESS. |
+| [P10 45104292101/1](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7090892583) | S `f9fdba25c44bec9559707cb6153502fdb38ad38d` / T `ceb6a8b407a14dc581a4c7e7f1826dc3362a6a3f` | **1 FAIL + 1 PASS**. UI42 waiter 60.009 ms, caso 304.273 ms; UI43/UI44 NOT_REACHED. BI PASS diagnóstico, 47.630 ms. Main 137461913269 FAILURE, cleanup 137465484250 SUCCESS; ref 404. |
+
+P8 recebeu Network request e response antes de ERR_ABORTED/loadingFailed; o erro antecedeu After Hooks e o Close context registrados. O status numérico e a identidade ordinal não foram emitidos; sameNativeRequest=false decorria de observed[] vazio e não demonstrava outra Request. P9 recebeu o stream HTTP200 completo de 97.620 B e a publicação antes do abort posterior por next-source daquela tentativa. **Isso não explica retroativamente P8**, nem prova ausência de falha em outro runtime/tentativa. Nenhum novo GET/replay ou relaxamento de prazo/oráculo é admitido por estes recibos.
+
+P9 produziu oito linhas JSC idênticas entre main/runtime/HTML. O sinal de janela veio aos 30.064 ms, o perfil aos 30.152 ms e o resumo aos 30.184 ms; parada nativa/início do relatório nativo continuam desconhecidos. Foram 2.930 traces, com 193 sem site permitido e 22 por excesso de sites. Os seis sites exportados de local-store somaram 1.204 observações de primeiro frame permitido. **São amostras whole-isolate, não tempo de CPU, proporção de latência ou caller imediato.** O diagnóstico delimitou investigação de observação/materialização local; não demonstrou sozinho um patch seguro nem autorizou cache de stat/ACL ou compartilhamento de grafos.
+
+P10 recebeu **sete linhas SF_PREVIEW_STORE**, 8.468 B com LF, SHA-256 `2b6811abd3294581cedb55cb921e1ade7c736f5218a897a7fef97b8c3686a688`, janela observada **60.000,592 ms**, erros/clamp/skipped = 0. Contadores de alcance **process-wide**, não exclusivos de um Request: **3.628.446 visitas a requireDatabaseFile**, **709.980 a credentialGet**, **23.791 tentativas de materialização**; os volumes somados repetidamente totalizam **1.498.763.608 unidades UTF-16**, das quais **1.261.310.160** no bucket Dashboard. Esses volumes não são bytes únicos, heap, CPU ou prova causal de latência. O bucket SQL `all` identifica seu caminho próprio de consulta; não é a soma das outras categorias. Tempos inclusivos, tentativas, retenção estimada e contagens de visitas conservam os limites do helper; não devem ser convertidos em frequência de negócio ou custo exclusivo.
+
+| Artefato original | Bytes / SHA-256 / integridade recebida |
+| --- | --- |
+| P8 — 14783027505 | 29.900.171 B / `35ebee1a3d269526e8fcb6b02baf16d257781ea7f37f8a3b01ff8669fe106339` / 91 CRC + 2 do HTML |
+| P9 — 14784304010 | 44.998.571 B / `da3ca6dc8bd5e5e1ea8b540ebaec03839bd3a0c51d59e29ddee8eb609cd02f18` / 147 CRC + 2 do HTML |
+| P10 — 14787496214 | 44.988.956 B / `b4eab814b765d925273108527d0eb5a5a2aeca863110940be9420693a7278ff9` / 147 CRC + 2 do HTML |
+
+O recibo P10 recebido tem 35.993 B, SHA-256 `f71a129e434db48d0c91aa96d23c5b99b7e95dc5aecfe6111a2031161fbe8b5a`. O estado “intake em curso” dos comentários de coordenação anteriores fica histórico; este apêndice registra seu recebimento completo. **UI42–UI44 e o negativo C17 original continuam bloqueando #613; nenhuma causa de produto foi escolhida apenas pelos contadores.**
+
+### 4. Inventário guest: preparação delimitada e recuperação ainda pendente
+
+O [operador Codex local, 7089930087](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7089930087), relatou coleta guest entre 22/11, 23h17–23h24 de Brasília. O [recebimento 7090005587](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090005587) conserva o escopo: inspeção e criação de staging vazio; **não foi reserva exclusiva de ensaio**. Codex local permanece o único executor guest, com Astra na coordenação.
+
+Foram relatados ARM/IMDS da orchsf-vm, metadados do piloto/volumes/ingresso e quatro hashes de material privado. Executável ativo, diretório de trabalho e current correspondem a **três instalações distintas**. Antes da intervenção, o operador deve reconciliar privadamente suas raízes, os dados/configuração efetivos do piloto e o R retido; raízes canônicas do adaptador não demonstram cobertura de toda a instalação ativa.
+
+A única escrita guest relatada foi um diretório **vazio, root-owned 0700**, fora do estado/configuração e em dispositivo distinto do estado. Os números de capacidade coletados são preparação, não reserva de espaço ou backup. **Não houve backup consistente, parada, instalação, corte, restore, restart, retry, rollback ou medição RPO/RTO.** Os quatro hashes são referências privadas atribuídas ao operador; o recebimento público não declara rehash ou validação de esquema sem os bytes.
+
+TCP/22 do Mac expirou; a autenticação SSH/SFTP ficou NOT_RUN. A listagem de dois contêineres Blob funcionou, mas o acesso aos objetos foi recusado. Permanecem pendentes **canal privado utilizável**, **destino independente autorizado e observado**, custódia/chave, responsável e observador, além da reserva. A VM Linux local existente foi mencionada como opção ainda sem confirmação efetiva. O verify-clone atual exige destino Azure distinto; uma modalidade offline requer admissão e recibo próprios, sem simular IMDS ou marcar a origem inteira como descartável.
+
+**Não há necessidade demonstrada nem pedido novo de VM, cota ou orçamento.** O mandato mantém orchsf-vm existente; piloto, Claw, rede e recursos fora do recorte são preservados. A próxima entrega operacional é a reconciliação sanitizada das três instalações e a confirmação concreta do canal/destino, pelo mesmo executor.
+
+### 5. Canário de policy: PASS → BLOCKED → PASS no recorte path/evento
+
+O [original 7090426254](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090426254) e o [intake 7090538457](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090538457) corroboram a disponibilidade e o enforcement de path/evento na conta pública/pessoal:
+
+| Fase | C / T | Execução |
+| --- | --- | --- |
+| P1 | `1adc36945e552493c520ca3304272ab1a919226c` / `6513cc243f6aa58fe7ca132df686fb6121410698` | [45102097574/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45102097574), job 137455041992 SUCCESS |
+| P2 | `e86957327d2ea6dff9391d9199578047d6127d80` / `f03674b857a7463bf32e364fbd152092b5913f1c` | [45102863499/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45102863499), startup_failure, zero jobs |
+| P3 | `023f372ddb61e5faa5efdddabac5402ec8615fa6` / `22ad5d83a26cadd933c7e4ffbb490292d182b78c` | [45103073178/1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45103073178), job 137458103299 SUCCESS |
+
+Todos foram push, attempt1, branch/path fixos. P1 acrescentou somente o canário a dev a5eee; P2/P3 mudaram apenas comentários, com lógica executável idêntica. Positivos executaram um echo em Ubuntu24.04 hospedado, sem checkout/action externa/environment/host privado. Artifacts=[] nas três fases; não houve ZIP. Logs P1/P3 com 2.007 B cada: SHA-256 `fd2d407b09b8cc9ef11874afc860c98cdcf089827da56c555d8cae964157a712` e `35a0821685e82788d35a1e99bb40e36b6485cb96a03cf41d216a9953df77eaed`.
+
+Policy Insights, configuração **17045** e estado final **Disabled** são observações administrativas do operador autenticado. Zero jobs de P2 foi recebido independentemente; zero check-runs permanece relato do operador, pois o endpoint MCP foi recusado antes de chegar ao GitHub. Não se atribui causa apenas pelo rótulo startup_failure.
+
+O canário não prova restrição de ator, isolamento de todos os workflows, tratamento de filas/reruns ou vínculo de SHA/job por label/JIT. A branch fica isolada, fora do candidato. Seu recebimento não cria runner, reserva ou autorização de produção.
+
+### 6. Environment persistido; retenção não é reserva
+
+O [readback original 7090652467](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090652467) confirma **g08-isolated-qa**, ID **28206052143**, após releitura administrativa em nova aba. O estado de environment 404 no censo anterior é histórico e foi superado:
+
+| Controle | Estado observado pelo operador |
+| --- | --- |
+| Reviewer obrigatório | `gustavomhss`, proprietário do repositório |
+| Prevent self-review | Habilitado |
+| Bypass administrativo | Desabilitado |
+| Secrets / variables | Zero |
+| Deployment branches and tags | **No restriction** |
+| Runner / dispatch por essa preparação | Nenhum |
+
+A configuração é retenção administrativa, não aceite humano independente de G08. O mesmo login não pode aprovar o próprio run sob a proteção escolhida; **ator de disparo e revisor autorizado efetivos ainda precisam ser definidos**. Ref de C, policies, filas/reruns e runner continuam pendentes. A interface deixou de responder após o salvamento, mas o operador não repetiu a mutação: confirmou a persistência por nova leitura. Esta coordenação atribui o recibo a ele, sem alegar leitura própria desses endpoints administrativos por API.
+
+O plano da [janela de admissão 7090538457](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7090538457) continua **não aplicado**. Após C/T, ACKs e G07: registrar a reserva exclusiva e autorizações originais; inventariar IDs/paths/estados/atores; desativar workflows não admitidos; receber separadamente conclusão/cancelamento das filas e runs anteriores; aplicar e conferir restrições de ator/evento/ref das rotas admitidas; conferir C/T/run/attempt/job efetivos antes do runner e do acesso privado; executar as onze invocações, agregação e cleanup.
+
+A documentação oficial recebida confirma que Disabled impede novos disparos e reruns, inclusive de jobs, mas **não cancela execuções existentes**. Não se presume lista vazia como deny-all, selected_workflows de organização em repositório pessoal, ou label/environment/JIT como ACL. A limitação MCP 400 antes do provider não é ausência desses recursos. O inventário final deve vir da frente administrativa autenticada.
+
+### 7. Fechamento permanece condicionado ao candidato e aos mesmos bytes
+
+As entregas integradas #705/#709/#711 e os demais componentes permanecem preservados, cada qual com seu escopo de controles. O staging e o environment não são reservas de QA/recuperação. Os contextos Microsoft reais, grants e papéis ainda devem ser recebidos na matriz, incluindo readonly empresarial e admin sem Team em seus usos próprios.
+
+Depois de #613 e #673, **Migração e Release devem confirmar o mesmo C/T**. Executar G05/G06 no candidato, produzir e verificar G07 e usar os mesmos bytes em G08 e G10. G08 ocorre no host existente autorizado; preservar sua evidência antes de G10. Recuperação exige backup original, checkpoint lógico, R retido, restore independente, restart, retry e rollback com recibos reais. Nenhuma prova de componente ou diagnóstico substitui esse ciclo.
+
+**0/5 gates finais; NOT_READY.** C/T final, ACKs finais de Migração e Release, tar final verificado, reservas confirmadas, aceites instalados, janela e decisão de produção permanecem ausentes/nulos. Os registros encerrados de #349/#588 e G09/#647 ficam intactos. Compras 222 (2) conserva seu aceite 4/4 no QA original e a pendência de backlink para qualquer vínculo adicional. Após os gates comprovados, a coordenação apresentará go/no-go e janela para **aval explícito de Gustavo**, antes de qualquer virada de produção.
+
+
+### Checkpoint do writer recebido antes de fechar o corte
+No [checkpoint do writer](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7090828294), a união com dev653 e uma proposta de comparação de texto no SQLite ainda estavam em preparação, sem novo commit de produto. O owner descartou a tentativa de Stats. São decisões e inventários relatados pelo responsável; o delta SQL, sua preservação de SELECT fresco e a composição efetiva ainda precisam de revisão e prova. O [intake independente de P10/stat1–4](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7090892583) conserva os limites e todos os negativos.
+
+O checkpoint mantém `sf613-finish` como writer único, C9ea/T e942 como última fonte de trabalho recebida e o head compartilhado do #613 sem promoção. O inventário informado de 265 paths (239 sem conflito, 5 convergentes e 21 por hunk) é atribuído ao owner, não um novo cotejo independente desta atualização. A tentativa Stats descartada não é descrita aqui como conclusão causal de benchmark; a qualificação segue exigida na composição nova, com oráculos e prazos originais.
