@@ -15,6 +15,7 @@ import "./routine-catalog-unavailable.css"
 export function sfUnavailableRoutineCatalogOwner(state: SfContextState, candidate: SfNativeRouteCandidate | undefined,
   query: URLSearchParams): SfReadyOwnerSnapshot | undefined {
   if (state.status !== "ready" || candidate?.surfaceId !== "UI64" ||
+    (candidate.kind !== "entry" && candidate.kind !== "recipe") ||
     parseRoutinesRouteQuery(query, candidate) === undefined) return
   const owner = sfCaptureReadyOwner(state)
   if (!owner) return
