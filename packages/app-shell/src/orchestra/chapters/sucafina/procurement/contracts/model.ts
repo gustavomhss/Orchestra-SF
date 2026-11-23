@@ -62,6 +62,14 @@ const numberInput = (value: string | number | boolean | null | undefined): strin
 const oneOf = <T extends string>(value: unknown, values: readonly T[]): T | undefined =>
   typeof value === "string" && values.includes(value as T) ? value as T : undefined
 
+/** Format only exact numeric representations; the command keeps its original scalar. */
+export function vendorAmountText(value: unknown, locale: string): string {
+  if (typeof value !== "number" && typeof value !== "string") return value == null ? "" : String(value)
+  const numeric = typeof value === "number" ? value : Number(value)
+  if (!Number.isFinite(numeric) || (typeof value === "string" && String(numeric) !== value)) return String(value)
+  return new Intl.NumberFormat(locale, { maximumSignificantDigits: 21 }).format(numeric)
+}
+
 export function vendorEditFromRecord(row?: SfVendorContract): SfVendorEdit {
   // Readonly fields ownerId, currency, createdAt/updatedAt and docs MUST NOT
   // become new writable controls merely because the projection has them.

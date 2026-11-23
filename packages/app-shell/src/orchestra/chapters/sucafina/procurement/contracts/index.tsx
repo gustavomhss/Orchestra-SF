@@ -18,7 +18,7 @@ import type { SfDraftState } from "../../shared/draft"
 import { SF_U15_COPY } from "@/i18n/orchestra-chapters/sf-u15"
 import {
   decodeVendorContractsPage, vendorAuthorizedAction, vendorCommandInput,
-  vendorEditFromRecord, vendorRef, vendorVersion,
+  vendorAmountText, vendorEditFromRecord, vendorRef, vendorVersion,
   type SfVendorAction, type SfVendorContract, type SfVendorEdit, type SfVendorRead, type SfVendorSave,
 } from "./model"
 import "./contracts.css"
@@ -59,8 +59,7 @@ function editFields(values: SfVendorEdit, locale: string): readonly SfReviewFiel
         : { kind: "text" as const, text: value === ""
           ? { kind: "message" as const, message: message("sf.u15.emptyValue") }
           : option ? { kind: "message" as const, message: message(("sf.u15.option." + value) as Key) }
-            : dataText(field === "amount" && typeof value === "number" && Number.isFinite(value)
-              ? new Intl.NumberFormat(locale, { maximumSignificantDigits: 21 }).format(value) : String(value)) },
+            : dataText(field === "amount" ? vendorAmountText(value, locale) : String(value)) },
     }
   })
 }
@@ -106,8 +105,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     value === "auto" ? t("sf.u15.option.auto") : value
   const readField = (row: SfVendorContract, field: Field) => {
     const value = row[field]
-    if (field === "amount" && typeof value === "number")
-      return new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 20 }).format(value)
+    if (field === "amount") return vendorAmountText(value, language.intl())
     return field === "amtType" || field === "renewType" ? optionText(safeField(row, field)) : safeField(row, field)
   }
   const routeRef = () =>

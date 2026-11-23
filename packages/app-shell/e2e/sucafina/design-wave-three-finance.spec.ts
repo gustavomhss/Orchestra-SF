@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { forwardOnce } from "./operations-support/runtime"
 import { waveThreeData } from "./design-support/wave-three-data"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -463,20 +464,22 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await desktop()
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     const before = posts.length
-    // Read the command body as its response arrives; a successful save immediately reloads the plan.
-    const saved = page.waitForResponse((response) => {
-      const request = response.request()
-      if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
-      const input = request.postDataJSON()
-      return input?.page === "CAPEX" && input.action === "save" && input.values?.collection === "projects"
-    }).then(async (response) => {
+    // Retain the one original producer response outside Chromium's body cache.
+    // The shared observer forwards it unchanged with redirects and retries disabled.
+    const saved = await forwardOnce(page, (url) =>
+      url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST")
+    try {
+      const [{ response, request }] = await Promise.all([
+        saved.completed,
+        review.getByRole("button", { name: "Save project", exact: true }).click(),
+      ])
+      expect(request.method()).toBe("POST")
+      expect(request.postDataJSON()).toMatchObject({ page: "CAPEX", action: "save", values: { collection: "projects" } })
       expect(response.ok()).toBe(true)
       expect(await response.json()).toMatchObject({ ok: true })
-    })
-    await Promise.all([
-      saved,
-      review.getByRole("button", { name: "Save project", exact: true }).click(),
-    ])
+    } finally {
+      await saved.close()
+    }
     await expect(review).toHaveCount(0)
     await ready(page, "CAPEX")
     expect(posts).toHaveLength(before + 1)
