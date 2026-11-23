@@ -35,7 +35,20 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
   const outcomeFailures = observeFinalMemoryOutcomeFailures(page)
   const failures: unknown[] = []
   const independently = async (name: string, work: () => Promise<void>) => {
-    try { await waveFourTest.step(name, work) } catch (error) { failures.push(error) }
+    try {
+      await waveFourTest.step(name, work)
+      console.info("SF_FINAL_MEMORY_STEP " + JSON.stringify({ name, status: "passed" }))
+    } catch (error) {
+      failures.push(error)
+      // Bound diagnostics to assertion text and source locations; never emit request headers.
+      const clean = (value: string) => value.replace(/\u001b\[[0-9;]*m/g, "").slice(0, 300)
+      const detail = error instanceof Error ? {
+        kind: error.name, summary: clean(error.message.split("\n")[0] ?? ""),
+        assertion: error.message.split("\n").filter((line) => /^(Locator:|Expected:|Received:)/.test(line)).map(clean).slice(0, 3),
+        location: (error.stack ?? "").split("\n").filter((line) => /^\s*at /.test(line)).map(clean).slice(0, 3),
+      } : { kind: typeof error }
+      console.info("SF_FINAL_MEMORY_STEP " + JSON.stringify({ name, status: "failed", detail }))
+    }
   }
   const seeded = await seedFinalMemory({
     actorId: installation.actorId,
@@ -198,9 +211,12 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
       })
     })
   })
-  expect(memoryWrites).toEqual([])
-  expect(diagnostics.pageErrors).toEqual([])
-  outcomeFailures.assertOnlyExpectedErrors(diagnostics.consoleErrors)
+  await independently("No memory selection command was issued by the browser", async () => { expect(memoryWrites).toEqual([]) })
+  await independently("Memory pages emitted no JavaScript errors", async () => { expect(diagnostics.pageErrors).toEqual([]) })
+  await independently("Memory console contains only verified original coverage refusals", async () => {
+    outcomeFailures.assertOnlyExpectedErrors(diagnostics.consoleErrors)
+  })
+  if (failures.length) throw new AggregateError(failures, "Independent original-memory journeys failed")
   await info.attach("UI61-UI63-original-memory-evidence", { contentType: "application/json", body: JSON.stringify({
     areas: ["UI61", "UI62", "UI63"], source: "original human decision, memory and Planner HTTP producers",
     caseVersion: seeded.caseRef.version, period: seeded.period, outcome: { status: "unavailable", reason: seeded.outcomeReason },
@@ -208,7 +224,6 @@ waveFourTest("UI61–UI63 · original condition, incomplete outcome and authoriz
     choicesWithoutConditions: 1, initialConditionCount: seeded.initialConditionCount,
     limitations: ["Original cost coverage remains pending; no numeric expected/observed comparison is claimed.", "R3 accepted nine-component inventories but original decision-compare exceeded the unchanged 40-second deadline.", "No causal effect inferred.", "Actual browser zoom not measured."],
   }, null, 2) })
-  if (failures.length) throw new AggregateError(failures, "Independent original-memory journeys failed")
 })
 
 waveFourTest("UI67 · current owner details and refresh remain scoped to the installed context", async ({ page, browser, installation, owner }, info) => {
