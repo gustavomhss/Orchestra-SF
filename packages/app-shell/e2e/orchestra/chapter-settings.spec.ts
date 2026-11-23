@@ -561,10 +561,13 @@ for (const sample of [
     await expect(view.locator('[data-model="openai/gpt-5"] .mx-badge')).toBeVisible()
     await capture("models")
     await inspect("models", ".orchestra-settings .mx-row[data-model]")
-    const overlaps = await modelCopyOverlaps(page)
-    expect.soft(overlaps, "Model names and metadata stay clear of every action").toEqual([])
+    const modelCopy = await modelCopyOverlaps(page)
+    for (const row of modelCopy) {
+      expect.soft(row.fragments, `${row.model} has rendered identity text`).toBeGreaterThan(0)
+      expect.soft(row.overlaps, `${row.model} keeps its identity clear of every action`).toEqual([])
+    }
     await testInfo.attach("settings-narrow-layout", {
-      body: JSON.stringify({ sample, measurements, overlaps }, null, 2),
+      body: JSON.stringify({ sample, measurements, modelCopy }, null, 2),
       contentType: "application/json",
     })
   })
@@ -573,27 +576,26 @@ for (const sample of [
 
 async function modelCopyOverlaps(page: Page) {
   return page.locator(".orchestra-settings .mx-row[data-model]").evaluateAll((rows) =>
-    rows.flatMap((row) => {
-      const controls = Array.from(row.querySelectorAll("button, .mx-badge"))
-      return Array.from(row.querySelectorAll("strong, small")).flatMap((label) => {
+    rows.map((row) => {
+      const controls = Array.from(row.querySelectorAll(":scope > button, :scope > .mx-badge"))
+      const fragments = Array.from(row.querySelectorAll(".mx-grow strong, .mx-grow small")).flatMap((label) => {
         const range = document.createRange()
         range.selectNodeContents(label)
-        return Array.from(range.getClientRects()).flatMap((text) =>
+        return Array.from(range.getClientRects(), (rect) => ({ text: label.textContent, rect }))
+      })
+      return {
+        model: row.getAttribute("data-model"),
+        fragments: fragments.length,
+        overlaps: fragments.flatMap(({ text, rect }) =>
           controls.flatMap((control) => {
             const box = control.getBoundingClientRect()
-            const width = Math.min(text.right, box.right) - Math.max(text.left, box.left)
-            const height = Math.min(text.bottom, box.bottom) - Math.max(text.top, box.top)
+            const width = Math.min(rect.right, box.right) - Math.max(rect.left, box.left)
+            const height = Math.min(rect.bottom, box.bottom) - Math.max(rect.top, box.top)
             if (width <= 1 || height <= 1) return []
-            return [{
-              model: row.getAttribute("data-model"),
-              text: label.textContent,
-              control: control.getAttribute("aria-label") ?? control.textContent,
-              width,
-              height,
-            }]
+            return [{ text, control: control.getAttribute("aria-label") ?? control.textContent, width, height }]
           }),
-        )
-      })
+        ),
+      }
     }),
   )
 }
