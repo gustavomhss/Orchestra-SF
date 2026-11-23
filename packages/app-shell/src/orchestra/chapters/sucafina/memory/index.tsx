@@ -343,7 +343,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   return (
     <SfPageFrame titleKey={k(title())} subtitleKey={k(props.surfaceId === "UI63" ? "sf.u26.outcomesDescription" : "sf.u26.signalsDescription")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory sf-workflow" data-sf-wave="six" data-sf-surface={props.surfaceId}>
+      <section class="sf-memory" data-sf-wave="six" data-sf-surface={props.surfaceId}>
         <Show when={privacy() === "ready" && !referenceRoute()}>
           <form class="sf-memory-form sf-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
             <header class="sf-memory-section-heading">

@@ -32,7 +32,7 @@
 .sf-memory-help { max-inline-size: 76ch; color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); line-height: 1.6; }
 .sf-memory :is(label, .sf-memory-case-picker) { display: grid; gap: 8px; min-inline-size: 0; }
 .sf-memory label { font-size: var(--orchestra-font-size-sm); font-weight: 500; }
-.sf-memory :is(input:not([type="checkbox"]), select) {
+.sf-memory :is(input:not([type="checkbox"]), select, textarea) {
   box-sizing: border-box;
   inline-size: 100%;
   min-inline-size: 0;
@@ -44,7 +44,8 @@
   color: var(--mx-strong);
   font: var(--orchestra-font-size-md)/1.5 var(--mx-sans);
 }
-.sf-memory :is(input, select, button, summary):focus-visible {
+.sf-memory textarea { resize: vertical; }
+.sf-memory :is(input, select, textarea, button, summary):focus-visible {
   outline: var(--sf-memory-focus) solid var(--mx-blue);
   outline-offset: var(--sf-memory-focus);
 }
