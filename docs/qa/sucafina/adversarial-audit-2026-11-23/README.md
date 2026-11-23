@@ -1,5 +1,9 @@
 # Orchestra-SF — auditoria adversarial de frontend, UX e UI
 
+> **Fechamento das correções:** os 34 achados originais foram tratados, com 33 implementados nesta campanha e SYS-03 já resolvido na base. Veja [CLOSURE.md](CLOSURE.md), [closure.json](closure.json) e o recibo da [PR #717](https://github.com/gustavomhss/Orchestra-SF/pull/717). O texto abaixo é o diagnóstico histórico, preservado para comparação.
+
+## Registro histórico da auditoria
+
 **Referência auditada:** `dev` em `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`.  
 **Data:** 23 de novembro de 2026.  
 **Veredito:** a experiência ainda não atende ao padrão de acabamento impecável pedido. Há uma base visual consistente e aproveitável, mas permanecem perda de trabalho, sinais de interação ambíguos, comparações difíceis de ler em telas estreitas, falhas de material e diferenças de composição entre famílias.

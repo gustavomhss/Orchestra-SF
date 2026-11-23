@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "final-qualification-in-progress",
+  "status": "qualified",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 717,
   "auditedHistoricalBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
   "implementationBase": "e115b667d845822a1df5f523bbfd828ab57ca978",
-  "codeCandidate": "dbe117840c2eb40751be164128d25a3cfc2a697b",
+  "codeCandidate": "d522399b7542bb3fc2a12c516213be7f76098678",
   "counts": {
     "original": 34,
     "P1": 1,
@@ -19,7 +19,7 @@
       "id": "SYS-01",
       "severity": "P2",
       "title": "A superfície de Teams termina no meio da administração expandida em desktop",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Contenção integral do material de Teams com administração expandida.",
       "proofs": [
         "system"
@@ -29,7 +29,7 @@
       "id": "SYS-02",
       "severity": "P2",
       "title": "Campo Microsoft Team ID ativo e vazio tem contorno essencial abaixo de3:1",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Contorno essencial do campo Team ID com contraste medido nos temas base.",
       "proofs": [
         "system"
@@ -49,7 +49,7 @@
       "id": "SYS-04",
       "severity": "P2",
       "title": "Token de warning inexistente remove a semântica visual de três superfícies",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Consumidores de warning usam o token semântico nativo.",
       "proofs": [
         "system"
@@ -59,7 +59,7 @@
       "id": "REF-01",
       "severity": "P3 / design judgment",
       "title": "Estados terminais de ausência gastam altura de gráfico vazio no Home móvel",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Estados terminais de ausência sem área de gráfico/footer vazia.",
       "proofs": [
         "system"
@@ -69,7 +69,7 @@
       "id": "REF-02",
       "severity": "P3 / design judgment",
       "title": "A hierarquia de Teams repete instruções e dedica pouco espaço inicial à conversa",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Hierarquia de Teams prioriza conversa e reduz instruções repetidas.",
       "proofs": [
         "system"
@@ -79,7 +79,7 @@
       "id": "SUP-01",
       "severity": "P2",
       "title": "Add server perde largura, margem e padding próprios porque o seletor procura a classe no nó errado",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Seletor de Add server corrigido; largura, padding e margens móveis nativas.",
       "proofs": [
         "system"
@@ -89,7 +89,7 @@
       "id": "SUP-02",
       "severity": "P2",
       "title": "RAG Studio repete mensagens de indisponibilidade e não oferece nova tentativa local",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "RAG com recuperação local e isolamento de respostas por escopo.",
       "proofs": [
         "rag"
@@ -99,7 +99,7 @@
       "id": "SUP-03",
       "severity": "P2",
       "title": "Registro de documento exige que o usuário descubra e digite ID interno e versão CAS",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Upload seleciona registro autorizado e mantém seu CAS sem transcrição manual.",
       "proofs": [
         "files"
@@ -109,7 +109,7 @@
       "id": "B1",
       "severity": "P2",
       "title": "CAP03: a revisão oculta o valor anterior conhecido",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Revisão de orçamento apresenta o valor anterior conhecido.",
       "proofs": [
         "budget"
@@ -119,7 +119,7 @@
       "id": "B2",
       "severity": "P2",
       "title": "UI48: valores preservados perdem identidade semântica e associação ao registro",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Valores preservados agrupados por registro e campos semânticos autorizados.",
       "proofs": [
         "reading"
@@ -129,7 +129,7 @@
       "id": "B3",
       "severity": "P2",
       "title": "UI50: dois formulários de formato, duas ações de gerar e um título sem efeito",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Um formato de relatório, uma seleção de seções e uma ação de geração.",
       "proofs": [
         "reading"
@@ -139,7 +139,7 @@
       "id": "B4",
       "severity": "P2",
       "title": "UI47–50: preservar termina em referência crua e as rotas de entrada não ajudam a continuar",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Continuação para a revisão preservada exata e entrada por referência existente.",
       "proofs": [
         "reading"
@@ -149,7 +149,7 @@
       "id": "B5",
       "severity": "P2",
       "title": "UI48: Open source pode falhar em silêncio e conservar links de outra seleção",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Fonte com loading/erro, cancelamento, isolamento de identidade e recuperação de obsolescência.",
       "proofs": [
         "reading"
@@ -159,7 +159,7 @@
       "id": "B6",
       "severity": "P2",
       "title": "CAP10: Budget e Spent não informam moeda nem sua ausência",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Moeda original ou ausência explícita em projeto e contrato.",
       "proofs": [
         "people",
@@ -170,7 +170,7 @@
       "id": "B7",
       "severity": "P2",
       "title": "CAP10: revisão de milestone promete comparação, mas mostra só a proposta",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Milestone com antes/proposto verdadeiros e fonte completa.",
       "proofs": [
         "people"
@@ -180,7 +180,7 @@
       "id": "B8",
       "severity": "P2",
       "title": "CAP08: Edit review abre um cadastro completo e enterra a avaliação",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Avaliação de talento antes dos dados cadastrais secundários.",
       "proofs": [
         "people"
@@ -190,7 +190,7 @@
       "id": "B9",
       "severity": "P2",
       "title": "CAP07/08: Voltar para equipe/talentos depende de histórico arbitrário",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Retornos canônicos com owner e filtros, inclusive acesso direto.",
       "proofs": [
         "people"
@@ -200,8 +200,8 @@
       "id": "B10",
       "severity": "P3",
       "title": "CAP04: mês por extenso em PT perde o último dígito do ano",
-      "status": "implemented",
-      "resolution": "Mês completo em EN/PT, janeiro/setembro/dezembro e largura de320px.",
+      "status": "addressed-with-scoped-evidence",
+      "resolution": "Mês completo em EN/PT, janeiro/setembro/dezembro e largura de 320 px.",
       "proofs": [
         "opex"
       ]
@@ -210,7 +210,7 @@
       "id": "B11",
       "severity": "P3",
       "title": "Formulários equivalentes usam eixos de composição divergentes",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Eixo e largura de tarefa consistentes entre formulários equivalentes.",
       "proofs": [
         "people",
@@ -221,7 +221,7 @@
       "id": "B12",
       "severity": "P2",
       "title": "CAP16: confirmação de excesso de pesos aparece sem uma exceção identificada",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Exceção de pesos depende da resposta original e exige novo consentimento após revisão.",
       "proofs": [
         "weights"
@@ -231,7 +231,7 @@
       "id": "B13",
       "severity": "P3",
       "title": "Revisões operacionais repetem o payload inteiro em Effects depois do antes/depois",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Diferenças em primeiro plano, inalterados recolhidos e Effects sem repetição integral.",
       "proofs": [
         "operations",
@@ -243,7 +243,7 @@
       "id": "BA-01",
       "severity": "P1",
       "title": "Teams apaga um rascunho nunca enviado após interrupção do stream",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Rascunho não enviado preservado após interrupção com mesma autoridade.",
       "proofs": [
         "teams"
@@ -253,7 +253,7 @@
       "id": "BA-03",
       "severity": "P2",
       "title": "Editar uma alocação existente mostra Add allocation",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Alocação existente corretamente apresentada como edição.",
       "proofs": [
         "behavior"
@@ -263,7 +263,7 @@
       "id": "BA-04",
       "severity": "P2",
       "title": "Ações de versões perdem toda a identificação da linha em 320px",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Identidade da versão associada às ações na rolagem móvel.",
       "proofs": [
         "behavior",
@@ -274,7 +274,7 @@
       "id": "BA-05",
       "severity": "P2",
       "title": "Revisões elevam UUIDs e chaves técnicas à identidade principal",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Nome de negócio primário e referência técnica disponível em contexto.",
       "proofs": [
         "finance",
@@ -286,7 +286,7 @@
       "id": "BA-06",
       "severity": "P3",
       "title": "Aviso bloqueante duplica a mesma razão",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Razões exatamente iguais agrupadas sem colapsar diferenças reais.",
       "proofs": [
         "decisions"
@@ -296,7 +296,7 @@
       "id": "BA-07",
       "severity": "P3",
       "title": "Comparação mensal rola título e cabeçalho Month para fora do recorte",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Cabeçalhos e coluna Month fixos com fundo opaco nativo local.",
       "proofs": [
         "comparison"
@@ -306,7 +306,7 @@
       "id": "BA-08",
       "severity": "P3",
       "title": "KPIs perdem alinhamento vertical quando o rótulo PT-BR ocupa duas linhas",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Cinco valores KPI alinhados mesmo com rótulos PT de duas linhas.",
       "proofs": [
         "behavior"
@@ -316,7 +316,7 @@
       "id": "BA-09",
       "severity": "P3",
       "title": "Fila de aprovações comprime a identidade em desktop apesar do espaço livre no assunto",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Referência e ação de aprovação sem compressão desnecessária.",
       "proofs": [
         "requests",
@@ -327,7 +327,7 @@
       "id": "BF-01",
       "severity": "P3",
       "title": "Revisão financeira regride para números crus e código de mês",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Revisões financeiras com moeda, precisão e meses localizados.",
       "proofs": [
         "finance"
@@ -337,7 +337,7 @@
       "id": "ROOT-01",
       "severity": "P2",
       "title": "UI46: o gráfico móvel separa o período da barra e do valor",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Período, valor, unidade e marca assinada associados no mobile.",
       "proofs": [
         "readingBi"
@@ -347,7 +347,7 @@
       "id": "ROOT-02",
       "severity": "P2",
       "title": "UI49: comparação móvel deixa antes/depois fora da primeira leitura",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Previous/Current em células móveis de largura completa, sem quebrar palavras.",
       "proofs": [
         "reading"
@@ -357,7 +357,7 @@
       "id": "ROOT-03",
       "severity": "P2",
       "title": "Guard nativo entrega uma linha técnica em inglês sem orientação útil de recuperação",
-      "status": "implemented",
+      "status": "addressed-with-scoped-evidence",
       "resolution": "Guard nativo com explicação localizada e recuperação contextual autorizada.",
       "proofs": [
         "readingBi"
@@ -367,10 +367,10 @@
   "runs": [
     {
       "key": "gates",
-      "run": 45237283693,
+      "run": 45261780999,
       "status": "passed",
-      "scope": "6 gates;28 casos semânticos/122asserções;130 casos DOM/1801asserções;78 regras;7paletas idênticas.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45237283693"
+      "scope": "6 gates; 28 casos semânticos / 122 asserções; 132 casos DOM / 1.822 asserções; 78 regras; 7 paletas idênticas.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261780999"
     },
     {
       "key": "system",
@@ -480,16 +480,41 @@
     {
       "key": "files",
       "run": 45236527715,
-      "status": "pending",
-      "scope": "Cinco jornadas independentes, scanner ClamD real.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45236527715"
+      "status": "passed",
+      "scope": "5 casos: Import, Documents, Upload, Export e Scenario; ClamD real, CAS, bytes e revogação originais.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45236527715",
+      "cases": 5,
+      "durationsMs": [
+        150905,
+        138265,
+        126039,
+        30355,
+        288227
+      ],
+      "artifact": 14851385585,
+      "sha256": "ee520812652c5bdf7fc3e19853857b0064bfb29a1687089421c96f3811a415ab",
+      "retries": 0
+    },
+    {
+      "key": "comparison-diagnostic",
+      "run": 45236795001,
+      "status": "diagnostic-failure",
+      "scope": "Falha histórica: esperado innerText versus textContent do matcher; conteúdo idêntico. Corrigido com useInnerText, mantendo os oráculos; substituído pelo run final.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45236795001"
     },
     {
       "key": "comparison",
-      "run": 45236795001,
-      "status": "diagnostic-failure",
-      "scope": "Oráculo usou innerText como esperado e textContent como leitura; corrigido focalmente sem mudar os dados. Nova qualificação pendente.",
-      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45236795001"
+      "run": 45261772401,
+      "status": "passed",
+      "scope": "1 caso; 57.609 ms; 8 PNGs e 76 células/checkpoints com fundo opaco, valores/identidades preservados e zero POST.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45261772401",
+      "source": "d522399b7542bb3fc2a12c516213be7f76098678",
+      "snapshot": "853f785464118b539d1c274d4c2cc2926afa39d9",
+      "cases": 1,
+      "durationMs": 57609,
+      "retries": 0,
+      "artifact": 14860638005,
+      "sha256": "d20260c33ee1de84324a5c8f708e0dfee2a94a22db5f410b42a1f453a8f764ff"
     }
   ],
   "evidenceDocuments": {
@@ -538,15 +563,49 @@
     "sourceEquivalence": "Each evidence document pins tested source/snapshot; later deltas are scoped by file and blob."
   },
   "limits": [
-    "Historical70-area/165-route inventory is not70complete workflows:48content,12partial,10guard-only areas.",
-    "Original protected source opening returned409 stale/review-read-changed; refusal/recovery passed; positive opening remains unqualified.",
+    "Historical 70-area / 165-route inventory is not 70 complete workflows:48 content, 12 partial, 10 guard-only areas.",
+    "Original protected source opening returned 409 stale/review-read-changed; refusal/recovery passed; positive opening remains unqualified.",
     "UI50 report selection tested; DOCX/PPTX generation/download not exercised in that journey.",
     "Conditional decision prerequisites retain honest refusal/missing states; completed calculations are not inferred.",
     "Finite Teams SSE fixtures, not live Microsoft; timing samples are not statistical benchmarks.",
     "Contrast measured on native base dark/light palettes; other palette parity is source evidence only.",
     "No universal screen-reader, IME, real browser zoom, physical mobile keyboard, Safari/Firefox or WCAG certification.",
-    "Historical20secondF02 fixture timeout did not recur later; no unsupported root cause or zero-flakiness claim.",
-    "SO1 annual division semantics, SO4 counterevidence and SO5 distinct people/owner concepts are preserved; SO2 historical geometry and SO6 reliability limits remain explicit."
+    "Historical 20-second F02 fixture timeout did not recur later; no unsupported root cause or zero-flakiness claim.",
+    "SO1 annual division semantics, SO4 counterevidence and SO5 distinct people/owner concepts are preserved; SO2 historical geometry and SO6 reliability limits remain explicit.",
+    "Files upload runtime qualification exercises Supplier/TXT; Contract/Quote/SignedPO, PDF/DOCX, upload409 and browser FileList restoration refusal are source-reviewed only."
   ],
-  "integrationReceipt": "https://github.com/gustavomhss/Orchestra-SF/pull/717"
+  "integrationReceipt": "https://github.com/gustavomhss/Orchestra-SF/pull/717",
+  "finalGate": {
+    "run": 45261780999,
+    "snapshot": "240e9eb4fe9a5e4ae13d70848c5b3be9079d3740",
+    "reference": "fixes/final-gates.json",
+    "passed": true,
+    "semanticCases": 28,
+    "semanticAssertions": 122,
+    "browserDomCases": 132,
+    "browserDomAssertions": 1822,
+    "guardRules": 78,
+    "guardErrors": 0,
+    "approvedOverrides": 0,
+    "paletteFiles": 7,
+    "paletteChanges": 0
+  },
+  "integration": {
+    "target": "dev",
+    "pullRequest": 717,
+    "receipt": "https://github.com/gustavomhss/Orchestra-SF/pull/717"
+  },
+  "sourceEquivalence": {
+    "testedCode": "d522399b7542bb3fc2a12c516213be7f76098678",
+    "subsequentAllowedChanges": [
+      "docs/qa/sucafina/adversarial-audit-2026-11-23"
+    ],
+    "verification": "Root/package trees are compared with the tested source before merge; the merge receipt is checked afterwards."
+  },
+  "independentFinalVisualReview": {
+    "surface": "CAP23 monthly/light/320/end",
+    "sha256": "3fb6901e04fff8c6df49ffa66378d38fffe00620ed448f92a000c53d412d0993",
+    "reviewer": "root",
+    "result": "Month and row labels are opaque and legible; passing numeric values no longer show through."
+  }
 }
