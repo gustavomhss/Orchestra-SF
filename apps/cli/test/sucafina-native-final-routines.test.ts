@@ -18,12 +18,14 @@ it.live.skipIf(process.platform === "win32")(
   "installed routine read health and resident inventory keep native execution and Schedule unavailable",
   () => Effect.scoped(Effect.gen(function* () {
     expectSpawn(import.meta.path)
-    const installation = yield* withNativeInstallation({ seed: async () => {} })
+    const serverPassword = randomUUID()
+    const installation = yield* withNativeInstallation({ serverPassword, seed: async () => {} })
     yield* Effect.promise(async () => {
       const workspace = await prepareSfLocalWorkspace(installation.root)
       const discovery = await fetch(installation.origin + "/api/sucafina/installations?" +
         new URLSearchParams({ select: "location", "location[directory]": workspace }),
-        { signal: AbortSignal.timeout(20_000) })
+        { headers: { authorization: "Basic " + Buffer.from("orchestra:" + serverPassword).toString("base64") },
+          signal: AbortSignal.timeout(20_000) })
       expect(discovery.status).toBe(200)
       const catalog = Schema.decodeUnknownSync(SfInstallationList, { onExcessProperty: "error" })(await discovery.json())
       expect(catalog.installations).toHaveLength(1)
