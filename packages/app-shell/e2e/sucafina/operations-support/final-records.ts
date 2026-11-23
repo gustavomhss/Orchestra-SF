@@ -49,7 +49,8 @@ export async function captureRecordDetail(page: Page, info: TestInfo, area: Reco
 
 /** Reuse the same authorized session with the native persisted language preference. */
 export async function capturePortugueseRecord(page: Page, info: TestInfo, area: RecordArea,
-  state: string, prepare?: (localized: Page) => Promise<void>) {
+  state: string, prepare?: (localized: Page) => Promise<void>,
+  navigate?: (localized: Page, href: string) => Promise<void>) {
   const browser = page.context().browser()
   if (!browser) throw new Error("The localized record needs the installed browser")
   const origin = new URL(page.url()).origin
@@ -65,7 +66,8 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
   let failed = false
   try {
     const localized = await context.newPage()
-    expect((await localized.goto(page.url()))?.status()).toBe(200)
+    if (navigate) await navigate(localized, page.url())
+    else expect((await localized.goto(page.url()))?.status()).toBe(200)
     const surface = localized.locator('[data-sf-surface="' + area + '"]')
     await expect(surface).toBeVisible()
     await expect(surface).toHaveAttribute("data-sf-read-state", "ready")

@@ -11,7 +11,7 @@ import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime.ts"
 import { captureRecord, captureRecordVariants, capturePortugueseRecord, describeRecordPage } from "./final-records"
-import { observeRecordFileOperation } from "./final-records-file-fence"
+import { closeRecordObservers, observeRecordFileOperation, withRecordNavigation, type RecordFileOperation } from "./final-records-file-fence"
 import { observeFinalGet } from "../design-support/final-navigation"
 
 type Source = { selectionRef: string; label: string; surface: string }
@@ -125,7 +125,8 @@ async function valueOf<T>(response: APIResponse | Response): Promise<T> {
 
 /** The original native supplier creation, shared by document admission and its narrow prerequisite proof. */
 export async function createDocumentSupplier(page: Page, account: Account, key: string, name: string) {
-  expect((await page.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href))?.status()).toBe(200)
+  expect((await withRecordNavigation(page, account, () =>
+    page.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href)))?.status()).toBe(200)
   const suppliers = page.locator(".sf-u14-layout")
   await expect(suppliers).toHaveCount(1)
   await page.getByRole("button", { name: "New supplier", exact: true }).click()
@@ -174,6 +175,14 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
 export async function documentJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
+  const releases: (() => Promise<void>)[] = []
+  let failed = false
+  try { await observeDocumentJourney(page, info, releases, capture) }
+  catch (error) { failed = true; throw error }
+  finally { await closeRecordObservers(releases, failed) }
+}
+
+async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() => Promise<void>)[], capture?: WorkflowCapture) {
   const account = await login(page, "first", "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
@@ -389,9 +398,6 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
       "files.document-sources", endpoint("document-sources"), "GET")
     expect((await page.goto(catalogRoute.href))?.status()).toBe(200)
     await navigationStamp
-    await expect(root).toHaveCount(1)
-    await expect(root.getByRole("searchbox")).toBeVisible()
-    await expect(root.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
     const sources = await valueOf<Source[]>((await discovered.completed).response)
     const selected = sources.filter((source) => source.label === filename)
     expect(selected).toHaveLength(1)
@@ -399,6 +405,9 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
     // HTTP200 precedes the Files transport's original outgoing F01 validation.
     // Keep its exact owner/stamp/readiness check before the unchanged DOM10.
     await discovered.finish()
+    await expect(root).toHaveCount(1)
+    await expect(root.getByRole("searchbox")).toBeVisible()
+    await expect(root.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
     const document = root.getByRole("combobox", { name: "Document", exact: true })
     await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selected[0]!.selectionRef)
     return { selected, document }
@@ -410,6 +419,27 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
         finally { await finishCatalogObservation(catalogFailed) }
       }
     })
+  const fileStamp = await navigationStamp
+  const observeFile = async (tab: Page, operation: RecordFileOperation, target: Parameters<typeof forwardOnce>[1],
+    method: "GET" | "POST" = "GET", options?: Parameters<typeof observeRecordFileOperation>[6]) => {
+    const original = await observeRecordFileOperation(tab, account, fileStamp, operation, target, method, options)
+    releases.push(original.close)
+    return original
+  }
+  const navigateCatalog = async (tab: Page, href: string) => {
+    const sources = await observeFile(tab, "files.document-sources", endpoint("document-sources"))
+    expect((await withRecordNavigation(tab, account, () => tab.goto(href)))?.status()).toBe(200)
+    const catalog = await valueOf<Source[]>((await sources.completed).response)
+    expect(catalog.filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface })))
+      .toEqual([{ label: filename, surface: "procurement" }])
+    await sources.finish()
+  }
+  const navigateCandidates = (expected: DocumentEvidence[]) => async (tab: Page, href: string) => {
+    const candidates = await observeFile(tab, "files.document-candidates", endpoint("document-candidates", { documentRef: expected[0]!.fileRef }))
+    expect((await withRecordNavigation(tab, account, () => tab.goto(href)))?.status()).toBe(200)
+    expect(await valueOf<DocumentEvidence[]>((await candidates.completed).response)).toEqual(expected)
+    await candidates.finish()
+  }
   const register = root.locator("details.sf-records-register")
   await register.locator("summary").click()
   await expect(register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })).toBeVisible()
@@ -433,22 +463,24 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
       expect(currentRef).toBeTruthy()
       await expect(choice).toHaveValue(currentRef!)
       await expect(localized.getByRole("button", { name: "Abrir documento", exact: true })).toBeEnabled()
-    })
+    }, navigateCatalog)
   }
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([
-    observe(page, endpoint("document-admit"), "POST", async (response) => {
+    observeFile(page, "files.document-admit", endpoint("document-admit"), "POST", { beforeDelivery: async (response) => {
       admittedRef = (await valueOf<{ documentRef: string }>(response)).documentRef
       expect(admittedRef).not.toBe("")
-    }),
-    observe(page, () => admittedRef ? endpoint("document-candidates", { documentRef: admittedRef }) : undefined),
+    } }),
+    observeFile(page, "files.document-candidates", () => admittedRef ? endpoint("document-candidates", { documentRef: admittedRef }) : undefined),
   ])
   await root.getByRole("button", { name: "Open document", exact: true }).click()
   const admission = await admitted.completed
   expect(admission.request.postDataJSON()).toEqual({ selectionRef: selected[0]!.selectionRef })
   const { documentRef } = await valueOf<{ documentRef: string }>(admission.response)
   expect(documentRef).toBe(admittedRef)
+  await admitted.finish()
   expect(await valueOf<DocumentEvidence[]>((await emptyCandidates.completed).response)).toEqual([])
+  await emptyCandidates.finish()
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.getByText("No extracted candidates yet.", { exact: true })).toBeVisible()
   await capture?.(page, info, { surface: "UI58", state: "admitted-empty-evidence", evidence: "Original private attachment admitted; original candidates read returned an empty array.", attributes: { "data-sf-read-state": "ready" } })
@@ -456,7 +488,8 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   const documentRoute = `/orchestra/sf-documents/${encodeSfRouteRef(documentRef)}`
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
-  const observeCandidates = () => observe(page, endpoint("document-candidates", { documentRef }))
+  const observeCandidates = (expectedStatus: 200 | 503 = 200) => observeFile(page,
+    "files.document-candidates", endpoint("document-candidates", { documentRef }), "GET", { expectedStatus })
   const readSchemas = () => page.request.get(endpoint("document-schemas", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<DocumentSchema[]>(response))
   const readCandidates = () => page.request.get(endpoint("document-candidates", { documentRef }), { maxRetries: 0 }).then((response) => valueOf<DocumentEvidence[]>(response))
   expect(await readSchemas()).toEqual([])
@@ -469,8 +502,8 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await root.getByRole("combobox", { name: "Type", exact: true }).selectOption("number")
   await root.getByLabel("Unit", { exact: true }).fill("USD")
   const [schemaResponse, extractionResponse, candidateResponse] = await Promise.all([
-    observe(page, endpoint("document-schema"), "POST"),
-    observe(page, endpoint("document-extract"), "POST"),
+    observeFile(page, "files.document-schema", endpoint("document-schema"), "POST"),
+    observeFile(page, "files.document-extract", endpoint("document-extract"), "POST"),
     observeCandidates(),
   ])
   await root.getByRole("button", { name: "Extract candidate", exact: true }).click()
@@ -480,13 +513,16 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   expect(schema).toMatchObject({ version: 1, fields: [{ id: "Price", type: "number", unit: "USD" }] })
   expect(schema.ref).toBe(`schema:${schema.id}:1`)
   expect(schema.id).toMatch(/^schema_[a-f0-9]{40}$/)
+  await schemaResponse.finish()
   const extractionTransport = await extractionResponse.completed
   expect(extractionTransport.request.postDataJSON()).toEqual({ documentRef, fieldSchemaRef: schema.ref })
   const candidate = await valueOf<DocumentEvidence>(extractionTransport.response)
   expect(candidate).toMatchObject({ fileRef: documentRef, fieldCandidate: "Price", value: 42, unit: "USD", status: "extracted", textRange: { start: 7, end: 9, unit: "utf16" } })
   expect(candidate.ref).toMatchObject({ schema: "sf-evidence-v1", kind: "document", refId: candidate.id, target: { documentId: documentRef, revision: candidate.version, blobDigest: { algorithm: "sha256", value: blobDigest }, fieldCandidateId: candidate.id, segment: { start: 7, end: 9, unit: "utf16", textDigest: { algorithm: "sha256", value: createHash("sha256").update("42").digest("hex") } } } })
   expect(candidate.ref.target.confirmationVersion).toBeUndefined()
+  await extractionResponse.finish()
   expect(await valueOf<DocumentEvidence[]>((await candidateResponse.completed).response)).toEqual([candidate])
+  await candidateResponse.finish()
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
@@ -498,6 +534,7 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await continueToEvidence.click()
   await expect(page).toHaveURL(evidenceURL.href)
   expect(await valueOf<DocumentEvidence[]>((await routedCandidates.completed).response)).toEqual([candidate])
+  await routedCandidates.finish()
 
   const evidence = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI59"]')
   const cards = evidence.locator("[data-sf-evidence-id]")
@@ -505,12 +542,13 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await expect(cards).toHaveCount(1)
   const reviewSelection = extractedCard.getByRole("button", { name: /^(Confirm selection|Confirmar seleção)$/ })
   await expect(reviewSelection).toBeDisabled()
-  const presentationResponse = await observe(page, presentationEndpoint(candidate.ref))
+  const presentationResponse = await observeFile(page, "files.document-open", presentationEndpoint(candidate.ref))
   await extractedCard.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
   const presentationTransport = (await presentationResponse.completed).response
   expect(JSON.parse(new URL(presentationTransport.url()).searchParams.get("ref")!)).toEqual(candidate.ref)
   const presentation = await valueOf<Presentation>(presentationTransport)
   expect(presentation).toMatchObject({ title: filename, excerpt: text.slice(candidate.textRange.start, candidate.textRange.end), location: candidate.location })
+  await presentationResponse.finish()
   const sourceText = evidence.getByRole("region", { name: "source-text", exact: true })
   await expect(sourceText.getByRole("heading", { name: filename, exact: true })).toBeVisible()
   await expect(sourceText.locator("blockquote")).toHaveText("42")
@@ -535,14 +573,19 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   if (capture) {
     await capturePortugueseRecord(page, info, "UI59", "review-original-source", async (localized) => {
       const card = localized.locator(`[data-sf-evidence-id=${JSON.stringify(candidate.id)}]`)
+      const opened = await observeFile(localized, "files.document-open", presentationEndpoint(candidate.ref))
       await card.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
+      expect(await valueOf<Presentation>((await opened.completed).response)).toMatchObject({
+        title: filename, excerpt: presentation.excerpt, location: presentation.location,
+      })
+      await opened.finish()
       await expect(localized.locator('[data-sf-surface="UI59"] blockquote')).toHaveText("42")
       await card.getByRole("button", { name: /^(Confirm selection|Confirmar seleção)$/ }).click()
       await expect(localized.locator('[data-sf-confirmation="review"] blockquote')).toHaveText("42")
-    })
+    }, navigateCandidates([candidate]))
   }
   const [confirmResponse, confirmedCandidates] = await Promise.all([
-    observe(page, endpoint("document-confirm"), "POST"), observeCandidates(),
+    observeFile(page, "files.document-confirm", endpoint("document-confirm"), "POST"), observeCandidates(),
   ])
   await confirmationReview.getByRole("button", { name: "Confirm this field", exact: true }).click()
   const confirmationTransport = await confirmResponse.completed
@@ -550,7 +593,9 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   const confirmed = await valueOf<DocumentEvidence>(confirmationTransport.response)
   expect(confirmed).toEqual({ ...candidate, status: "confirmed", ref: { ...candidate.ref, refDigest: expect.stringMatching(/^[a-f0-9]{64}$/), target: { ...candidate.ref.target, confirmationVersion: 1 } } })
   expect(confirmed.ref.refDigest).not.toBe(candidate.ref.refDigest)
+  await confirmResponse.finish()
   expect(await valueOf<DocumentEvidence[]>((await confirmedCandidates.completed).response)).toEqual([confirmed])
+  await confirmedCandidates.finish()
   await expect(evidence).toHaveAttribute("data-sf-phase", "confirmed")
   await expect(cards).toHaveCount(1)
   const confirmedSelector = `[data-sf-evidence-id=${JSON.stringify(confirmed.id)}][data-sf-evidence-state="confirmed"]`
@@ -565,6 +610,7 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await scenarioLink.click()
   await expect(page).toHaveURL(scenarioURL.href)
   expect(await valueOf<DocumentEvidence[]>((await scenarioCandidates.completed).response)).toEqual([confirmed])
+  await scenarioCandidates.finish()
   const scenario = page.locator('[data-sf-leaf="u24"][data-sf-surface="UI60"]')
   await describeRecordPage(page, info, "scenario-candidates-read")
   const scenarioCard = scenario.locator(confirmedSelector)
@@ -572,13 +618,14 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await expect(scenarioAction).toBeVisible()
   await expect(scenario.getByRole("button", { name: "Preview scenario", exact: true })).toBeDisabled()
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
-  const confirmedSource = await observe(page, presentationEndpoint(confirmed.ref))
+  const confirmedSource = await observeFile(page, "files.document-open", presentationEndpoint(confirmed.ref))
   await scenarioCard.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
   const confirmedSourceTransport = (await confirmedSource.completed).response
   expect(JSON.parse(new URL(confirmedSourceTransport.url()).searchParams.get("ref")!)).toEqual(confirmed.ref)
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
+  await confirmedSource.finish()
   await expect(scenario.getByRole("region", { name: "source-text", exact: true }).locator("blockquote")).toHaveText("42")
   await capture?.(page, info, { surface: "UI60", state: "confirmed-source-prerequisite", evidence: "The original confirmed evidence and source excerpt are visible. Planner scenario preview remains unavailable and is not claimed." })
 
@@ -599,32 +646,40 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   // Locale remounts stay in the existing optional visual sweep.
   if (capture) {
     await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
+      const opened = await observeFile(localized, "files.document-open", presentationEndpoint(confirmed.ref))
       await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
+      expect(await valueOf<Presentation>((await opened.completed).response)).toMatchObject({
+        title: currentPresentation.title, excerpt: currentPresentation.excerpt, location: currentPresentation.location,
+      })
+      await opened.finish()
       await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
-    })
+    }, navigateCandidates([confirmed]))
   }
 
   // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
   const reader = await page.context().newPage()
   // Capture the initial original source read as well as the subsequent reload.
   // A missing UI option must be distinguishable from a producer/catalog failure.
-  const initialSources = await observe(reader, endpoint("document-sources"))
-  expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
+  const initialSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
+  expect((await withRecordNavigation(reader, account, () => reader.goto(catalogRoute.href)))?.status()).toBe(200)
   expect((await valueOf<Source[]>((await initialSources.completed).response))
     .filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface })))
     .toEqual([{ label: filename, surface: "procurement" }])
+  await initialSources.finish()
   const readerCatalog = reader.locator(catalogLeaf)
   await expect(readerCatalog).toHaveCount(1)
   await expect(reader.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
-  const reloadSources = await observe(reader, endpoint("document-sources"))
-  expect((await reader.reload())?.status()).toBe(200)
+  const reloadSources = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
+  expect((await withRecordNavigation(reader, account, () => reader.reload()))?.status()).toBe(200)
   expect((await valueOf<Source[]>((await reloadSources.completed).response)).filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface }))).toEqual([{ label: filename, surface: "procurement" }])
+  await reloadSources.finish()
   expect(await readCandidates()).toEqual([confirmed])
   expect(await readSchemas()).toEqual([schema])
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
   const cap27 = new URL(account.baseURL + "/api/ui/pages/CAP27").href
   const projection = await observe(reader, cap27)
-  expect((await reader.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href))?.status()).toBe(200)
+  expect((await withRecordNavigation(reader, account, () =>
+    reader.goto(chapterURL(account, "/orchestra/sf-procurement/suppliers").href)))?.status()).toBe(200)
   const projected = (await projection.completed).response
   expect(projected.status()).toBe(200)
   const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
@@ -674,11 +729,12 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   const revokedBody = await revokedSource.json() as { status: string; value?: unknown }
   expect(revokedBody.status).toBe("stale")
   expect(revokedBody.value).toBeUndefined()
-  const revokedCandidates = await observeCandidates()
+  const revokedCandidates = await observeCandidates(503)
   await scenario.getByRole("button", { name: "Refresh sources", exact: true }).click()
   const revokedCandidateRead = (await revokedCandidates.completed).response
   expect(revokedCandidateRead.status()).toBe(503)
   expect(await revokedCandidateRead.json()).toMatchObject({ status: "unavailable" })
+  await revokedCandidates.finish()
   await expect(page).toHaveURL(scenarioURL.href)
   await expect(scenario).toHaveAttribute("data-sf-read-state", "unavailable")
   await expect(scenario.locator("[data-sf-evidence-id]")).toHaveCount(0)
@@ -688,9 +744,10 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
 
   await capture?.(page, info, { surface: "UI60", state: "source-revoked", evidence: "Original supplier removal revoked the source; native refresh removed all source text and candidates.", attributes: { "data-sf-read-state": "unavailable" } })
   await captureRecord(page, info, "UI60", "revoked-source-unavailable")
-  const refreshed = await observe(reader, endpoint("document-sources"))
-  expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
+  const refreshed = await observeFile(reader, "files.document-sources", endpoint("document-sources"))
+  expect((await withRecordNavigation(reader, account, () => reader.goto(catalogRoute.href)))?.status()).toBe(200)
   expect((await valueOf<Source[]>((await refreshed.completed).response)).filter((source) => source.label === filename)).toEqual([])
+  await refreshed.finish()
   await expect(readerCatalog.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(0)
   await expect(readerCatalog.locator("[data-sf-evidence-id]")).toHaveCount(0)
   await expect(readerCatalog.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()

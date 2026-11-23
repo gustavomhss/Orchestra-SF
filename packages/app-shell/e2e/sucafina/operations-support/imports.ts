@@ -10,6 +10,7 @@ import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import type { Account } from "./runtime.ts"
 import { captureRecord, captureRecordVariants, captureRecordDetail, capturePortugueseRecord } from "./final-records"
+import { closeRecordObservers, observeRecordContext, observeRecordFileExit, observeRecordFileOperation, withRecordNavigation, type RecordContextStamp } from "./final-records-file-fence"
 
 // ExcelJS belongs to the existing Sucafina package. Resolve there under Bun's isolated workspace linker.
 const { Workbook } = createRequire(new URL("../../../../../modules/sucafina/package.json", import.meta.url))("exceljs") as typeof import("../../../../../modules/sucafina/node_modules/exceljs")
@@ -35,7 +36,7 @@ async function forwardedRead<T>(page: Page, url: string, action: () => Promise<T
   }
 }
 
-async function captureAdmission(page: Page, url: string) {
+async function captureAdmission(page: Page, url: string, beforeDelivery?: (status: number) => Promise<void>) {
   type Body = { status?: unknown; value?: { ref: string; digest: string } } | null
   const session = await page.context().newCDPSession(page)
   const producer = Promise.withResolvers<{ status: number; body: Body }>()
@@ -60,6 +61,7 @@ async function captureAdmission(page: Page, url: string) {
       } catch (error) {
         if (status === 200) throw error
       }
+      await beforeDelivery?.(status)
       await session.send("Fetch.continueResponse", { requestId })
       producer.resolve({ status, body })
     } catch (error) {
@@ -100,7 +102,7 @@ async function tokens(page: Page, account: Account, year: string, version: strin
   const projection = observeControls
     ? (await forwardedRead(page, endpoint, async () => {
         const route = chapterURL(account, `/orchestra/sf-planner/opex?${query}`)
-        expect((await page.goto(route.href))?.status()).toBe(200)
+        expect((await withRecordNavigation(page, account, () => page.goto(route.href)))?.status()).toBe(200)
       })).response
     : await page.request.get(endpoint, { maxRetries: 0 })
   expect(projection.status()).toBe(200)
@@ -234,19 +236,28 @@ async function reconcileCreatedVersion(page: Page, account: Account, createdRow:
   }
 }
 
-async function prepareImport(page: Page, account: Account, generate: Locator, sourceDigest: string, info: TestInfo) {
+async function prepareImport(page: Page, account: Account, stamp: RecordContextStamp,
+  generate: Locator, sourceDigest: string, info: TestInfo) {
   const close: (() => Promise<void>)[] = []
+  let failed = false
   let prepared: { preview: ImportManifest; referenceURL: string } | undefined
+  let admissionExit: Awaited<ReturnType<typeof observeRecordFileExit>> | undefined
   try {
-    const admission = await captureAdmission(page, modeURL(account, "planner", "import-admit").href)
-    close.push(admission.close)
-    // Bind the reference route to the producer's ID before the browser sees the preview.
-    const reference = await forwardOnce(page, () => prepared?.referenceURL, "GET")
-    close.push(reference.close)
-    const preview = await forwardOnce(page, modeURL(account, "planner", "import-preview").href, "POST", async (response) => {
-      const manifest = await valueOf<ImportManifest>(response)
-      prepared = { preview: manifest, referenceURL: modeURL(account, "planner", "import-reference", { importPreviewRef: manifest.id }).href }
+    // Preserve Chromium's original multipart boundary and XLSX bytes. Only arm
+    // the existing outgoing authority read at the original CDP response stage.
+    const admission = await captureAdmission(page, modeURL(account, "planner", "import-admit").href, async (status) => {
+      if (status === 200) admissionExit = await observeRecordFileExit(page, account, stamp, "files.import-admit")
     })
+    close.push(admission.close, async () => { await admissionExit?.close() })
+    // Bind the reference route to the producer's ID before the browser sees the preview.
+    const reference = await observeRecordFileOperation(page, account, stamp,
+      "files.import-reference", () => prepared?.referenceURL, "GET")
+    close.push(reference.close)
+    const preview = await observeRecordFileOperation(page, account, stamp,
+      "files.import-preview", modeURL(account, "planner", "import-preview").href, "POST", { beforeDelivery: async (response) => {
+        const manifest = await valueOf<ImportManifest>(response)
+        prepared = { preview: manifest, referenceURL: modeURL(account, "planner", "import-reference", { importPreviewRef: manifest.id }).href }
+      } })
     close.push(preview.close)
     const [admitted, previewTransport, referenceTransport] = await Promise.all([
       admission.completed.then(async ({ status, body }) => {
@@ -273,10 +284,14 @@ async function prepareImport(page: Page, account: Account, generate: Locator, so
     if (!prepared) throw new Error("The producer returned no import preview")
     expect(previewTransport.request.postDataJSON()).toEqual({ admittedFileRef: admitted.ref, format: "xlsx", options: {} })
     expect(referenceTransport.response.url()).toBe(prepared.referenceURL)
-    return { ...prepared, detail: await valueOf<Reference>(referenceTransport.response) }
-  } finally {
-    for (const release of close.reverse()) await release()
-  }
+    const detail = await valueOf<Reference>(referenceTransport.response)
+    if (!admissionExit) throw new Error("The original admission has no outgoing authority observation")
+    await admissionExit.finish()
+    await preview.finish()
+    await reference.finish()
+    return { ...prepared, detail }
+  } catch (error) { failed = true; throw error }
+  finally { await closeRecordObservers(close, failed) }
 }
 
 /** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */
@@ -288,7 +303,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
     const candidate = new URL(url)
     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/planner" && candidate.searchParams.get("sf") === mode
   }
-  expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
+  expect((await withRecordNavigation(page, account, () => page.goto("/orchestra/sf-planner/versions/new")))?.status()).toBe(200)
   const surface = page.locator('[data-sf-surface="CAP23"]')
   const reads: { event: string; method: string; path: string; status?: number; failure?: string }[] = []
   const versionRead = (request: Request) => {
@@ -392,7 +407,8 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   await expect(versionDetail.locator("#sf-u46-name")).toHaveValue(name)
   await expect(versionDetail.getByRole("heading", { name, exact: true })).toBeVisible()
   const fiscalYear = await year.inputValue()
-  expect((await page.goto(`/orchestra/sf-planner/versions?${new URLSearchParams({ year: fiscalYear })}`))?.status()).toBe(200)
+  expect((await withRecordNavigation(page, account, () =>
+    page.goto(`/orchestra/sf-planner/versions?${new URLSearchParams({ year: fiscalYear })}`)))?.status()).toBe(200)
   const versionRow = page.locator("tr[data-sf-row]").filter({ has: page.getByText(name, { exact: true }) })
   await expect(versionRow).toHaveCount(1)
   expect(await versionRow.getAttribute("data-sf-row")).toBe(version)
@@ -414,29 +430,35 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   workbook.addWorksheet("OPEX").addRows([["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Jan"], [renewal, "Licenses", "Renewal", "USD", "Forecast", 84000]])
   const bytes = Buffer.from(await workbook.xlsx.writeBuffer())
   const sourceDigest = createHash("sha256").update(bytes).digest("hex")
-  expect((await page.goto(chapterURL(account, "/orchestra/sf-imports/new").href))?.status()).toBe(200)
+  expect((await withRecordNavigation(page, account, () =>
+    page.goto(chapterURL(account, "/orchestra/sf-imports/new").href)))?.status()).toBe(200)
   const root = page.locator('[data-sf-leaf="u23"][data-sf-surface="UI55"]')
   await expect(root).toHaveCount(1)
   const invalid = await page.request.post(modeURL(account, "planner", "import-preview").href, { maxRetries: 0, headers: { Origin: account.origin, "Idempotency-Key": randomUUID() }, data: { admittedFileRef: "invalid-schema-probe", format: "xlsx", options: { unknown: true } } })
   expect(invalid.status()).toBe(400)
   expect(await invalid.json()).toEqual({ status: "invalid" })
   const targetsURL = modeURL(account, "planner", "import-targets", { surface: "planner" }).href
-  const [context, { response: targetsTransport }] = await Promise.all([
-    // Save the exact installed authority preflight URL for the cross-tab logout check.
-    page.waitForRequest((request) => {
-      const url = new URL(request.url())
-      return request.method() === "GET" && url.origin + url.pathname === account.baseURL + "/api/ui/context" &&
-        url.searchParams.size === 3 && Boolean(url.searchParams.get("hostId")) &&
-        url.searchParams.get("installationId") === account.installationId && url.searchParams.get("projectId") === account.projectId
-    }),
-    forwardedRead(page, targetsURL, () => root.getByRole("button", { name: "Find destinations", exact: true }).click()),
-  ])
-  expect(targetsTransport.url()).toBe(targetsURL)
-  const targets = await valueOf<Destination[]>(targetsTransport)
-  const matches = targets.filter((target) => target.label === name)
-  expect(matches).toHaveLength(1)
-  const target = matches[0]!
-  expect(target).toMatchObject({ surface: "planner", formats: expect.arrayContaining(["xlsx"]) })
+  const preflight = await observeRecordContext(page, account, 1)
+  const targetObservation = await observeRecordFileOperation(page, account, preflight.stamp,
+    "files.import-targets", targetsURL, "GET")
+  let targetsFailed = false
+  const { context, stamp, target } = await (async () => {
+    const [{ response: targetsTransport }, authority] = await Promise.all([
+      targetObservation.completed, preflight.completed,
+      root.getByRole("button", { name: "Find destinations", exact: true }).click(),
+    ])
+    // Retain the exact original preflight URL for the later cross-tab logout.
+    const context = authority.first.request
+    expect(targetsTransport.url()).toBe(targetsURL)
+    const targets = await valueOf<Destination[]>(targetsTransport)
+    const matches = targets.filter((target) => target.label === name)
+    expect(matches).toHaveLength(1)
+    const target = matches[0]!
+    expect(target).toMatchObject({ surface: "planner", formats: expect.arrayContaining(["xlsx"]) })
+    await targetObservation.finish()
+    return { context, stamp: authority.stamp, target }
+  })().catch((error: unknown) => { targetsFailed = true; throw error })
+    .finally(() => closeRecordObservers([preflight.close, targetObservation.close], targetsFailed))
   const destination = root.getByRole("combobox", { name: "Destination", exact: true })
   await expect(destination.getByRole("option", { name, exact: true })).toHaveAttribute("value", target.selectionRef)
   await destination.selectOption({ value: target.selectionRef })
@@ -447,10 +469,20 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   const generate = root.getByRole("button", { name: "Generate preview", exact: true })
   await expect(generate, "Preview needs the installed import admission and real scanner").toBeEnabled()
   await capture?.(page, info, { surface: "UI55", state: "source-file-selected", evidence: "Original target selection and real XLSX bytes; Generate preview is enabled." })
-  const { preview, detail, referenceURL } = await prepareImport(page, account, generate, sourceDigest, info)
+  const { preview, detail, referenceURL } = await prepareImport(page, account, stamp, generate, sourceDigest, info)
   const isReference = (request: Request) => request.method() === "GET" && request.url() === referenceURL
-  const readReference = async (tab: Page, action: () => Promise<unknown>) =>
-    valueOf<Reference>((await forwardedRead(tab, referenceURL, action)).response)
+  const readReference = async (tab: Page, action: () => Promise<unknown>) => {
+    const original = await observeRecordFileOperation(tab, account, stamp,
+      "files.import-reference", referenceURL, "GET")
+    let failed = false
+    try {
+      const [{ response }] = await Promise.all([original.completed, action()])
+      const reference = await valueOf<Reference>(response)
+      await original.finish()
+      return reference
+    } catch (error) { failed = true; throw error }
+    finally { await closeRecordObservers([original.close], failed) }
+  }
   expect(detail.manifest).toEqual(preview)
   expect(preview).toMatchObject({ sourceDigest, format: "xlsx", state: "preview", domainApplied: false, receipts: [], issues: [], context: {
     principalRef: account.principal, installationId: account.installationId, projectId: account.projectId, surface: "planner",
@@ -482,7 +514,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
     const previewPage = await page.context().newPage()
     try {
       const previewURL = chapterURL(account, "/orchestra/sf-imports/r_" + Buffer.from(preview.id).toString("base64url") + "/preview")
-      expect((await previewPage.goto(previewURL.href))?.status()).toBe(200)
+      expect((await withRecordNavigation(previewPage, account, () => previewPage.goto(previewURL.href)))?.status()).toBe(200)
       const previewRoot = previewPage.locator('[data-sf-surface="UI56"]')
       await expect(previewRoot).toBeVisible()
       const reread = await readReference(previewPage, () => previewRoot.locator(".sf-files-fields")
@@ -581,14 +613,20 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   expect(new URL(resultHref, page.url()).href).toBe(resultURL.href)
   const resultRoot = '[data-sf-leaf="u23"][data-sf-surface="UI57"]'
   const openResult = async (tab: Page, principal: string) => {
-    const { response: owner, result: navigation } = await forwardedRead(tab, context.url(), () => tab.goto(resultURL.href))
-    expect(navigation?.status()).toBe(200)
-    expect(owner.status()).toBe(200)
-    expect(await owner.json()).toMatchObject({
-      status: "ok",
-      value: { stamp: { principalRef: principal, installationId: account.installationId, projectId: account.projectId } },
-    })
-    return tab.locator(resultRoot)
+    const ownerReads = await observeRecordContext(tab, account, 2, principal)
+    let failed = false
+    try {
+      const [navigation, authority] = await Promise.all([tab.goto(resultURL.href), ownerReads.completed])
+      const owner = authority.first.response
+      expect(navigation?.status()).toBe(200)
+      expect(owner.status()).toBe(200)
+      expect(await owner.json()).toMatchObject({
+        status: "ok",
+        value: { stamp: { principalRef: principal, installationId: account.installationId, projectId: account.projectId } },
+      })
+      return tab.locator(resultRoot)
+    } catch (error) { failed = true; throw error }
+    finally { await closeRecordObservers([ownerReads.close], failed) }
   }
   const resultPage = await page.context().newPage()
   try {
@@ -604,9 +642,13 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
     await capture?.(resultPage, info, { surface: "UI57", state: "original-confirmed-receipt", evidence: "Independent native receipt route matches the committed producer receipt and one original Apply.", attributes: { "data-sf-phase": "receipt" }, focus: '[data-sf-receipt="producer"]' })
     await captureRecordVariants(resultPage, info, "UI57", "recovered-receipt", false)
     await capturePortugueseRecord(resultPage, info, "UI57", "recovered-receipt", async (localized) => {
-      await localized.locator(".sf-files-fields").getByRole("button", { name: "Atualizar recibo", exact: true }).click()
+      const localizedRead = await readReference(localized, () => localized.locator(".sf-files-fields")
+        .getByRole("button", { name: "Atualizar recibo", exact: true }).click())
+      expect(localizedRead).toEqual(recovered)
       await expect(localized.locator(resultRoot)).toHaveAttribute("data-sf-phase", "receipt")
       await expect(localized.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
+    }, async (localized, href) => {
+      expect((await withRecordNavigation(localized, account, () => localized.goto(href)))?.status()).toBe(200)
     })
     const changes = result.getByRole("region", { name: "Item and field changes", exact: true })
     const changedCount = detail.detail.changes.filter((change) => change.kind === "changed").length
@@ -614,13 +656,30 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
     await changes.getByText("changed (" + changedCount + ")", { exact: true }).click()
     await expect(changes.locator(".sf-records-diff")).toHaveCount(detail.detail.changes.length)
     await captureRecordDetail(resultPage, info, "UI57", "changed-fields-original-values", changes)
-    expect((await resultPage.goto(chapterURL(account, "/orchestra/sf-imports").href))?.status()).toBe(200)
+    expect((await withRecordNavigation(resultPage, account, () =>
+      resultPage.goto(chapterURL(account, "/orchestra/sf-imports").href)))?.status()).toBe(200)
     const history = resultPage.locator(resultRoot)
     await expect(history.getByRole("heading", { name: "Find an import", exact: true })).toBeVisible()
     await captureRecord(resultPage, info, "UI57", "history-empty-reference")
     await history.getByLabel("Import preview reference", { exact: true }).fill(preview.id)
-    const historyRead = await readReference(resultPage, () => history.locator("form").getByRole("button", { name: "Refresh receipt", exact: true }).click())
-    expect(historyRead).toEqual(recovered)
+    // History serially reconciles reference and detail before publishing. Arm
+    // both original reads before the one submit; do not query a second time.
+    const detailURL = modeURL(account, "planner", "import-detail", { manifestId: preview.id, version: String(preview.version) }).href
+    const historyDetail = await observeRecordFileOperation(resultPage, account, stamp,
+      "files.import-detail", detailURL, "GET")
+    let historyFailed = false
+    try {
+      const historyRead = await readReference(resultPage, () => history.locator("form")
+        .getByRole("button", { name: "Refresh receipt", exact: true }).click())
+      expect(historyRead).toEqual(recovered)
+      const detailRead = (await historyDetail.completed).response
+      expect(detailRead.url()).toBe(detailURL)
+      expect(await valueOf<Detail>(detailRead)).toEqual({
+        detail: recovered.detail, digest: recovered.digest, receipt: recovered.receipt,
+      })
+      await historyDetail.finish()
+    } catch (error) { historyFailed = true; throw error }
+    finally { await closeRecordObservers([historyDetail.close], historyFailed) }
     await expect(history.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
     await captureRecord(resultPage, info, "UI57", "history-authorized-reference")
   } finally {
