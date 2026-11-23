@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T04:42:11Z",
-  "status": "C14_ACL_GATES_RUNNING_NOT_QUALIFIED_NOT_MERGED",
+  "updatedAt": "2026-11-23T04:46:27.000Z",
+  "status": "C14_ACL_GATES_AND_BI_TRACE_RUNNING",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
   "task": {
@@ -97,7 +97,8 @@
       "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
       "status": "DISPATCHED",
       "dispatchedAt": "2026-11-23 04:42:11 UTC",
-      "peerAck": "sf613_status"
+      "peerAck": "sf613_status",
+      "run": 45113428923
     },
     {
       "kind": "release",
@@ -108,7 +109,27 @@
       "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
       "status": "DISPATCHED",
       "dispatchedAt": "2026-11-23 04:42:11 UTC",
-      "peerAck": "sf613_status"
+      "peerAck": "sf613_status",
+      "run": 45113430240
+    },
+    {
+      "kind": "analyticsBiTrace",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "sha": "661acd223fbc84968b9fe1f7daceeb7cd87ddd64",
+      "tree": "c2becc6149c8a11552105d6949262b9f473ecfbc",
+      "branch": "ci-run-sf613aclabi",
+      "overlayPaths": [
+        "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "packages/client/src/sucafina/transport.ts",
+        ".ci-run.json"
+      ],
+      "qualification": false,
+      "status": "DISPATCHED",
+      "peerAck": "sf613_ui",
+      "dispatchedAt": "2026-11-23 04:46:27 UTC"
     }
   ],
   "previousFullCampaign": {
