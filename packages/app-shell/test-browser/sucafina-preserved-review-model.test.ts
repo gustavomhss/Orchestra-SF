@@ -89,7 +89,7 @@ describe("Preserved review JSON retains its closed schema after reactive storage
     })
   })
 
-  test("unexpected producer string keys and uncloneable material stay rejected", () => {
+  test("unexpected period keys and uncloneable reactive material stay rejected", () => {
     createRoot((dispose) => {
       try {
         const original = projection()
@@ -98,9 +98,31 @@ describe("Preserved review JSON retains its closed schema after reactive storage
         } })
         createRenderEffect(() => { JSON.stringify(state.content) })
         expect(readPreservedProjection(state.content)).toBeUndefined()
-        expect(readPreservedProjection({ ...projection(), unsupported: () => undefined })).toBeUndefined()
+        const [uncloneable] = createStore({ content: { ...projection(), unsupported: () => undefined } })
+        expect(unwrap(uncloneable.content)).not.toBe(uncloneable.content)
+        expect(readPreservedProjection(uncloneable.content)).toBeUndefined()
         expect(readPreservedProjection(null)).toBeUndefined()
       } finally { dispose() }
     })
+  })
+
+  test("plain periods reject non-enumerable excess keys under the original decoder rules", () => {
+    const original = projection()
+    const ignored = { ...original, unsupported: () => undefined }
+    expect(unwrap(ignored)).toBe(ignored)
+    expect(readPreservedProjection(ignored)).toEqual(Schema.decodeUnknownSync(SfReviewDomainProjection)(ignored))
+
+    const content = {
+      ...original, context: { ...original.context, period: { ...original.context.period } },
+    }
+    expect(readPreservedProjection(content)).toEqual(original)
+    Object.defineProperty(content.context.period, "unexpected", { value: "source-field", enumerable: false })
+    expect(unwrap(content)).toBe(content)
+    expect(Object.getOwnPropertyDescriptor(content.context.period, "unexpected")).toMatchObject({
+      value: "source-field", enumerable: false,
+    })
+    expect(Option.isNone(Schema.decodeUnknownOption(SfReviewDomainProjection)(content))).toBe(true)
+    expect(readPreservedProjection(content)).toBeUndefined()
+    expect(Reflect.ownKeys(content.context.period)).toEqual(["start", "end", "unexpected"])
   })
 })
