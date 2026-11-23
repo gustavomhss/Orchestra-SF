@@ -148,11 +148,13 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   }
   const loadCase = async (existing?: CaseQuery) => {
     const ready = owner.ready()
-    const caseRef = existing ?? parsedCase()
-    if (!ready || !caseRef) {
+    const selected = existing ?? parsedCase()
+    if (!ready || !selected) {
       setView("listState", "invalid")
       return
     }
+    // Materialize contract fields before storing selection; Solid metadata is not wire input.
+    const caseRef: CaseQuery = { caseId: selected.caseId, incarnation: selected.incarnation, version: selected.version }
     requestEpoch += 1
     listAbort?.abort()
     detailAbort?.abort()
@@ -162,7 +164,8 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const epoch = requestEpoch
     const client = createSfMemoryClient(ready.transport)
     setView({
-      active: caseRef, conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
+      active: { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version },
+      conditions: [], choices: [], signals: [], material: null, outcome: null, outcomeIssue: null,
       selectedCondition: "", selectedChoice: "", listState: "loading", detailState: "idle", message: null,
     })
     if (props.surfaceId === "UI63") {
@@ -205,8 +208,8 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     }
     // Both are current ACL reads, not a cached similarity or re-evaluation.
     const [conditions, signals] = await Promise.allSettled([
-      client["intelligence.memory-conditions"](caseRef, { signal }),
-      client["intelligence.memory-signals"](caseRef, { signal }),
+      client["intelligence.memory-conditions"]({ caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version }, { signal }),
+      client["intelligence.memory-signals"]({ caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version }, { signal }),
     ])
     if (!current(epoch, generation, signal)) return
     const c = conditions.status === "fulfilled" ? conditions.value : undefined
@@ -236,7 +239,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const generation = owner.generation()
     setView({ selectedCondition: conditionId, selectedChoice: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-materiality"](
-      { ...caseRef, conditionId }, { signal },
+      { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version, conditionId }, { signal },
     ).catch(() => undefined)
     if (!current(epoch, generation, signal)) return
     if (result?.kind === "response" && result.body.status === "ok") {
@@ -260,7 +263,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     const generation = owner.generation()
     setView({ selectedChoice: choiceId, selectedCondition: "", material: null, outcome: null, outcomeIssue: null, detailState: "loading" })
     const result = await createSfMemoryClient(ready.transport)["intelligence.memory-outcome"](
-      { ...caseRef, choiceId }, { signal },
+      { caseId: caseRef.caseId, incarnation: caseRef.incarnation, version: caseRef.version, choiceId }, { signal },
     ).catch(() => undefined)
     if (!current(epoch, generation, signal)) return
     if (result?.kind === "response" && result.body.status === "comparable") {

@@ -240,7 +240,8 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const generation = owner.generation()
     const serial = resultSerial
     const selection = { caseId: source.ref.id, incarnation: source.ref.incarnation, version: source.ref.version,
-      query: view.query.trim(), period: source.period, includeHistorical: view.includeHistorical,
+      query: view.query.trim(), period: { start: source.period.start, end: source.period.end },
+      includeHistorical: view.includeHistorical,
       candidates: selectedCases.map(({ id, incarnation, version }) => ({ id, incarnation, version })) }
     setView("resultState", "loading")
     try {
