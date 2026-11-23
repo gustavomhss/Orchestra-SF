@@ -547,7 +547,7 @@ waveFourTest("workflow polish: routines, schedules, exports and local context", 
     "Original summary values compared with an unsent one-choice change; typed display keys preserve identity and order. The producer version and configure command remain unchanged.")
   await record(page, info, "UI69", "summary-selection-review-actions",
     "Review and cancel remain reachable in the original summary editor; no configuration, maintenance, restore or Teams write is invoked.", '[data-component="sf-change-review"] .sf-s03-actions')
-  await review.getByRole("button", { name: "Cancel", exact: true }).click()
+  await review.getByRole("button", { name: "Cancel review", exact: true }).click({ timeout: 15_000 })
   await expect(review).toHaveCount(0)
   await expect(form).toBeVisible()
   expect(summaryWrites).toEqual([])

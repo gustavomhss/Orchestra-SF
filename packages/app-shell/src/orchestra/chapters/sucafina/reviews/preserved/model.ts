@@ -103,17 +103,15 @@ function covers(period: { start: string; end: string } | undefined, section: { s
 
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
+  // Solid adds symbol metadata to reactive objects. Restore only a store proxy
+  // to plain source data before applying the unchanged, closed producer codec.
+  let source: unknown = content
   try {
-    // Solid tracks nested producer JSON with non-enumerable symbols. The closed
-    // period schema must see only source data, while every original string key
-    // and literal value remains available to the unchanged decoder.
-    const source = structuredClone(unwrap(content))
-    const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(source)
-    return Option.isSome(decoded) ? decoded.value : undefined
-  } catch {
-    // Uncloneable material is not an admitted JSON projection.
-    return undefined
-  }
+    const unwrapped = unwrap(content)
+    if (unwrapped !== content) source = structuredClone(unwrapped)
+  } catch { return undefined }
+  const decoded = Schema.decodeUnknownOption(SfReviewDomainProjection)(source)
+  return Option.isSome(decoded) ? decoded.value : undefined
 }
 
 export function reviewReadState(reply: { kind: "transport-error"; reason: string } | { kind: "response"; status: number; body: { status: string } }): SfUiState {
