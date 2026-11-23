@@ -1,0 +1,115 @@
+{
+  "source": {
+    "candidate": "722b703b060e5cc578fa8d23568b3f9c56d72077",
+    "snapshot": "4d1aa02cca18a6116933c9a23acf50767fba6271",
+    "run": 45121178514,
+    "job": 137515072792,
+    "artifact": 14794405155,
+    "artifactBytes": 4289649,
+    "artifactDigest": "sha256:e96bcbaa3476f06f23e24503b15ccc7de412fe279784f1967e1d4176571cf533"
+  },
+  "journey": "UI69 original summary review/save/CAS/readback and Brazilian Portuguese after PR715",
+  "result": {
+    "passed": 1,
+    "failed": 0,
+    "durationMinutes": 4.7,
+    "bodyExpectations": 30,
+    "preflightExpectations": 1,
+    "pageErrors": 0,
+    "consoleErrors": 0
+  },
+  "selection": {
+    "method": "snapshot-only named spec",
+    "bodyByteIdentical": true,
+    "setupByteIdentical": true,
+    "summaryMutationByteIdentical": true,
+    "permanentFiveTestSpecPreserved": true
+  },
+  "review": {
+    "allPreviewsInspected": true,
+    "findings": "Native glass/tokens and two-column fieldset preserved; authorized state content has deliberate row spacing; narrow review actions remain full-width and separated; no horizontal overflow."
+  },
+  "captures": [
+    {
+      "area": "UI69",
+      "state": "dark-desktop-summary-settings",
+      "pathname": "/orchestra/sf-home/administration",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI69",
+      "state": "light-desktop-summary-review",
+      "pathname": "/orchestra/sf-home/administration",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI69",
+      "state": "light-320-summary-review-actions",
+      "pathname": "/orchestra/sf-home/administration",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320
+    },
+    {
+      "area": "UI69",
+      "state": "light-desktop-persisted-summaries",
+      "pathname": "/orchestra/sf-home/administration",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    },
+    {
+      "area": "UI69",
+      "state": "pt-br-dark-desktop-administration",
+      "pathname": "/orchestra/sf-home/administration",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440
+    }
+  ],
+  "images": [
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-dark-desktop-summary-settings.jpg",
+      "sha": "4f1c14ad69b9e4723c7ade5e3c788fe05ce8fdc9",
+      "area": "UI69",
+      "state": "dark-desktop-summary-settings",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 81819,
+      "sourceRun": 45121178514,
+      "sourceJob": 137515072792,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-light-320-summary-review-actions.jpg",
+      "sha": "001ec01acdb72250caf995a0ad7f5d9bb0c6f3cb",
+      "area": "UI69",
+      "state": "light-320-summary-review-actions",
+      "width": 320,
+      "height": 900,
+      "documentWidth": 320,
+      "bytes": 23181,
+      "sourceRun": 45121178514,
+      "sourceJob": 137515072792,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    },
+    {
+      "path": "docs/qa/sucafina/design/wave-six/memory/evidence/r13-ui69-pt-br-dark-desktop-administration.jpg",
+      "sha": "08739e9b391ce4892518bd861f4ee9b16d5e6f80",
+      "area": "UI69",
+      "state": "pt-br-dark-desktop-administration",
+      "width": 1440,
+      "height": 1100,
+      "documentWidth": 1440,
+      "bytes": 85345,
+      "sourceRun": 45121178514,
+      "sourceJob": 137515072792,
+      "sourceMarker": "SF_FINAL14_VISUAL"
+    }
+  ]
+}
