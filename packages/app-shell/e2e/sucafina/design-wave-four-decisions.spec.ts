@@ -17,7 +17,7 @@ waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
 waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
-type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
+type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string; recipientsAvailable?: boolean }
 type ForwardedRead = Awaited<ReturnType<typeof forwardOnce>>
 const originalAnalysisChoices = new WeakMap<Page, { status: number; request: Request; body: Record<string, unknown> }>()
 
@@ -169,7 +169,8 @@ async function openScreen(page: Page, owner: Owner, screen: Screen, localized = 
     : screen.id === "UI35" ? [projection, choice] : [projection]
   let postRead: ForwardedRead | undefined
   let historyRead: ForwardedRead | undefined
-  const mode = screen.id === "UI41" ? "workbench-analysis" : screen.id === "UI37" ? "collaboration-recipients" : undefined
+  const mode = screen.id === "UI41" ? "workbench-analysis"
+    : screen.id === "UI37" && screen.recipientsAvailable ? "collaboration-recipients" : undefined
   const postEndpoint = (url: URL) => url.origin === owner.publicOrigin && url.pathname === owner.mount + "/dashboard" &&
     url.searchParams.getAll("sf").length === 1 && url.searchParams.get("sf") === mode
   try {
@@ -337,7 +338,9 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     { id: "UI34", caseRef: editableRef, href: editable.href, title: "Case summary", titleBr: "Resumo do caso" },
     { id: "UI35", caseRef: caseRef, href: href("/alternatives"), title: "Alternatives", titleBr: "Alternativas" },
     { id: "UI36", caseRef: caseRef, href: href("/assumptions"), title: "Assumptions", titleBr: "Premissas" },
-    { id: "UI37", caseRef: caseRef, href: href("/questions"), title: "Questions", titleBr: "Perguntas" },
+    { id: "UI37", caseRef: caseRef, href: href("/questions"), title: "Questions", titleBr: "Perguntas",
+      recipientsAvailable: availability.some((entry) => entry.operation === "collaboration.recipients" &&
+        entry.state === "ready" && entry.operational === true) },
     { id: "UI38", caseRef: caseRef, href: href("/choice"), title: "Current choice", titleBr: "Escolha atual" },
     { id: "UI39", caseRef: caseRef, href: href("/changes"), title: "Prepared changes", titleBr: "Mudanças preparadas" },
     { id: "UI40", caseRef: caseRef, href: href("/history"), title: "Application result", titleBr: "Resultado da aplicação" },
@@ -493,6 +496,11 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     }
     const composer = page.locator("[data-sf-question-composer]")
     await composer.locator("summary").first().click()
+    if (!screens[3]!.recipientsAvailable) {
+      const recipient = composer.getByRole("combobox", { name: "Recipient", exact: true })
+      await expect(recipient).toBeDisabled()
+      await expect(recipient.locator("option")).toHaveText("No recipient")
+    }
     const question = composer.getByLabel("Question text", { exact: true })
     await question.fill(waveFourDecisionsData.question)
     await composer.getByRole("combobox", { name: "Related criterion", exact: true }).selectOption(source.criteria[0]!.id)
@@ -638,7 +646,10 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       if (screen.id === "UI36") {
         const divergences = localized.getByRole("region", { name: "Divergências", exact: true })
         await expect(divergences.getByText("A cobertura de custos está pendente ou não corresponde à fonte.", { exact: true })).toBeVisible()
-        await expect(divergences.locator("> ul")).toContainText("Cobertura de custos · Migração:")
+        const divergenceSummary = divergences.locator("[data-sf-gap-summary]")
+        await expect(divergenceSummary.getByText("Migração", { exact: true })).toBeVisible()
+        await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toHaveCount(1)
+        await expect(divergenceSummary.getByText(waveFourDecisionsData.pending, { exact: true })).toBeVisible()
         await expect(divergences.locator("details.sf-decision-source-scope")).not.toHaveAttribute("open", "")
       }
       if (screen.id === "UI39") {
@@ -650,6 +661,11 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     await openScreen(localized, owner, screens[3]!, true)
     const composer = localized.locator("[data-sf-question-composer]")
     await composer.locator("summary").first().click()
+    if (!screens[3]!.recipientsAvailable) {
+      const recipient = composer.getByRole("combobox", { name: "Destinatário", exact: true })
+      await expect(recipient).toBeDisabled()
+      await expect(recipient.locator("option")).toHaveText("Sem destinatário")
+    }
     await composer.getByLabel("Texto da pergunta", { exact: true }).fill(waveFourDecisionsData.question)
     await composer.getByRole("button", { name: "Preparar pergunta", exact: true }).click()
     await expect(composer.getByRole("group", { name: "Confirmar preparação", exact: true })).toBeVisible()
