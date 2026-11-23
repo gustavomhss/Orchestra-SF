@@ -151,6 +151,20 @@
       "stage": "Read request",
       "reason": "Playwright accepts named spec files only; --grep is not supported",
       "executedTests": 0
+    },
+    "commandReceipt": {
+      "sourceRun": 45230759990,
+      "artifact": 14846853413,
+      "artifactSha256": "b0b2bd9b8bb9173b6969579c7ad996da46e37be82ba56e30897dd36524c96f32",
+      "observedFailure": "CDP Response.json failed Network.getResponseBody after original422; no pageerrors",
+      "correction": "Use existing forwardOnce APIResponse for each of the three originalPOST deliveries; unchanged bytes/status/body, no replay/retry. Accepted command still awaits originalCAP16readback.",
+      "assertionSites": {
+        "caseAndCommandObserverBefore": 29,
+        "caseAndCommandObserverAfter": 30,
+        "fileBefore": 32,
+        "fileAfter": 33,
+        "extra": "Every observed command must be IT Performance Contract/save-sub"
+      }
     }
   },
   "verification": {
