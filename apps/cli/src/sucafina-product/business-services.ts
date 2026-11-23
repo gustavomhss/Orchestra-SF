@@ -36,7 +36,7 @@ import { createProcurementCapabilities } from "../../../../modules/sucafina/Suca
 import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
 import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
-import type { PlannerScenarioObservation } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+import type { PlannerScenarioObservation, PlannerSourceObservation } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
 import { createPlannerCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts"
@@ -456,7 +456,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       async () => ({ status: "ok", value: await read() }))
     return observed.status === "ok" ? observed.value : selected.map(() => structuredClone(observed))
   }
-  const product = createPlannerProduct({ observeScenarios: observePlannerScenarios, standalone: { supports: procurementScenarios.producer.supports,
+  const observePlannerSources: PlannerSourceObservation = async (references, call, read) => {
+    const selected = [...references]
+    const observed = await withPlannerObservation({ scenarioRefs: selected, criteria: [] }, call,
+      async () => ({ status: "ok", value: await read() }))
+    return observed.status === "ok" ? observed.value : selected.map(() => false)
+  }
+  const product = createPlannerProduct({ observeScenarios: observePlannerScenarios, observeSources: observePlannerSources, standalone: { supports: procurementScenarios.producer.supports,
     supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
     resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context, currentChoicePreparing: input.currentChoicePreparing,
     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
