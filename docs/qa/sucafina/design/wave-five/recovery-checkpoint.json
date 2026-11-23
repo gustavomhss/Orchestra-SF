@@ -316,6 +316,142 @@
       "branch": "ci-run-sf613emitr15"
     },
     "qualification": false,
-    "productUnchanged": true
+    "productUnchanged": true,
+    "status": "completed-not-promoted"
+  },
+  "canonicalDirectMicroCompleted": {
+    "normal": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-direct-normal.json",
+    "release": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-direct-release.json",
+    "decision": "Do not adopt the generic emitter: four of five fixture categories regress; only highly aliased projection improves."
+  },
+  "pendingDev715Union": {
+    "sha": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "tree": "f05b34174897a3cc1ff9096a27da65d97910c0b5",
+    "parents": [
+      "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+    ],
+    "files": [
+      {
+        "path": "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+        "sha": "8dec9c5260a1e58f2cef45ffd754a5ba9a387457",
+        "union": false
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+        "sha": "b414e80ae7c3cab850059464a7172efb70d5462d",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-kpis.spec.ts",
+        "sha": "d5171163b601a9df842aaa1268b4b9fee289a4d5",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "sha": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-skills.spec.ts",
+        "sha": "2ca74bba846b1fde38987412def43a609d4efec1",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+        "sha": "4ec46b7cf7064cffea3d277d05d0a8c239550290",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+        "sha": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "sha": "6fd460b7fab807c5af806ca90c4f88aeed179bc9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/DESIGN.md",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/kpis.css",
+        "sha": "5d3077ceb2d2f9beb2d4a31552c8a3152b834d98",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/providers-dialogs.tsx",
+        "sha": "b0d50b62a9f7a647bccb97722e28a4e8a779f053",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/skills-dialog.tsx",
+        "sha": "b4ece911bd9c96e31398b63c0b7ea18bb8c32c0d",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+        "sha": "fc0fa09e050574f105e9692f1cef93881f429ff9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "sha": "6321522fbfa5d0179df6c34393e980073c453ffd",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+        "sha": "1f3de8db7173c0ca493a711d2be243e68ae2e0e2",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+        "sha": "2b121e8d16635ed778c2b2f35774b3af6673c478",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+        "sha": "6fc5a9ddaf42c10121ac37833b625d7e1602e4d6",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+        "sha": "895ebe3cb614ba8e89ee65ba9ce7f05df4497dd7",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+        "sha": "e543fde224fc86080ea61cce71b9fa6a116787e3",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+        "sha": "d891f1ec9db579dbf4606208013fd1b30da5289c",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+        "sha": "9ad346316b8baa7156af81a77e009de5fde34acb",
+        "union": false
+      }
+    ]
   }
 }
