@@ -492,6 +492,7 @@ test(`audit: submitting skill draft freezes, failure retains it for retry`, asyn
   })
   await page.screenshot({ path: test.info().outputPath("skill-failed-save-focus.png") })
   expect.soft(focus.inside, "A failed save keeps keyboard focus in its still-open dialog").toBe(true)
+  await expect(dialog.getByRole("button", { name: "Save", exact: true })).toBeFocused()
   fault.fail = false
   await dialog.getByRole("button", { name: "Save", exact: true }).click()
   await expect(dialog).toHaveCount(0)
