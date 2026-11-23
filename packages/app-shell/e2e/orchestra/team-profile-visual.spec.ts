@@ -59,6 +59,10 @@ async function layoutEvidence(page: Page) {
         return {
           name: element.id || element.getAttribute("aria-label") || element.tagName,
           color: style.borderTopColor,
+          minimumBorderWidth: Math.min(...[style.borderTopWidth, style.borderRightWidth,
+            style.borderBottomWidth, style.borderLeftWidth].map(Number.parseFloat)),
+          paintedBorder: [style.borderTopStyle, style.borderRightStyle, style.borderBottomStyle,
+            style.borderLeftStyle].every((value) => value !== "none" && value !== "hidden"),
           insideRatio: contrast(border, inside),
           outsideRatio: contrast(border, outside),
           focusVisible: element.matches(":focus-visible"),
@@ -136,6 +140,8 @@ async function capture(page: Page, info: TestInfo, state: string, scheme: "dark"
     state + " keeps content inside the raised surface with its bottom padding")
     .toBeGreaterThanOrEqual(evidence.containment.bottomPadding - 1)
   for (const edge of evidence.inputEdges) {
+    expect(edge.paintedBorder, state + " field boundary is painted on every side: " + edge.name).toBe(true)
+    expect(edge.minimumBorderWidth, state + " field boundary has a visible stroke: " + edge.name).toBeGreaterThanOrEqual(1)
     expect(edge.insideRatio, state + " field boundary against its fill: " + edge.name).toBeGreaterThanOrEqual(3)
     expect(edge.outsideRatio, state + " field boundary against its surrounding surface: " + edge.name).toBeGreaterThanOrEqual(3)
     if (edge.focusVisible) {
@@ -323,6 +329,8 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
         await expect(read).toBeFocused()
         await page.keyboard.press("Tab")
         await expect(teamID).toBeFocused()
+        await expect.poll(() => teamID.evaluate((input) => input.matches(":focus-visible")),
+          { message: "Keyboard navigation exposes the Team ID focus indicator" }).toBe(true)
         await expect(teamID).toHaveValue("")
         await capture(page, info, "administration-input-keyboard", scheme)
         const tail = administration.locator('[data-sf-admin-team="' + teamsVisualTeams[7].id + '"]')
