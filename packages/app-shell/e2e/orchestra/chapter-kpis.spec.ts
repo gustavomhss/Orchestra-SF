@@ -420,9 +420,9 @@ test("at 700px Home keeps the project list and lays tiles in two columns without
 
 for (const view of [
   { width: 320, scheme: "dark", locale: "en", unavailable: "Unavailable", noRepository: "No repository", notConnected: "Not connected", configure: "Configure tracking" },
-  { width: 320, scheme: "light", locale: "pt-BR", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
+  { width: 320, scheme: "light", locale: "br", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
   { width: 390, scheme: "light", locale: "en", unavailable: "Unavailable", noRepository: "No repository", notConnected: "Not connected", configure: "Configure tracking" },
-  { width: 390, scheme: "dark", locale: "pt-BR", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
+  { width: 390, scheme: "dark", locale: "br", unavailable: "Indisponível", noRepository: "Sem repositório", notConnected: "Não conectado", configure: "Configurar rastreamento" },
 ] as const) {
   test(`round two: Home keeps absence states readable at ${view.width}px in ${view.locale} ${view.scheme}`, async ({ page }, info) => {
     expect(info.config.metadata.bundle).toBe("production")
@@ -435,6 +435,7 @@ for (const view of [
       pullRequests: { mode: "not_installed" },
     })
     await page.goto("/")
+    await expect(page.locator("html")).toHaveAttribute("lang", view.locale === "br" ? "pt-BR" : "en")
     await expect(home(page)).toHaveAttribute("aria-busy", "false")
     await expect(value(page, "tokens")).toHaveText(view.unavailable)
     await expect(value(page, "commits")).toHaveText(view.noRepository)
@@ -625,7 +626,7 @@ async function setup(
   page: Page,
   input: {
     scheme?: "dark" | "light"
-    locale?: "en" | "de" | "pt-BR"
+    locale?: "en" | "de" | "br"
     gate?: Promise<void>
     finished?: () => void
     requests?: URL[]
