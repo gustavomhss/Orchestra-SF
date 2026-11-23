@@ -475,7 +475,8 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(recoveryTokens).toEqual(afterTokens)
   // The Files transport preflights context before issuing a receipt read after cross-tab logout.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
-  await reader.getByRole("button", { name: "Sign out", exact: true }).click()
+  await reader.getByRole("button", { name: "Context and access", exact: true }).click()
+  await reader.getByRole("menuitem", { name: "Sign out", exact: true }).click()
   expect((await signedOut).status()).toBe(204)
   const { response: revoked } = await forwardedRead(page, context.url(), () => refreshReceipt.click())
   expect(revoked.status()).toBe(401)

@@ -715,7 +715,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               {(receipt) => <section class="sf-files-section" data-sf-receipt="producer">
                 <h2>{receipt().outcome === "rejected" ? t("sf.u23.rejectedReceipt") : t("sf.u23.recorded")}</h2>
                 <dl class="sf-records-receipt">
-                  <div><dt>{t("sf.u23.outcome")}</dt><dd>{receipt().outcome}</dd></div>
+                  <div><dt>{t("sf.u23.outcome")}</dt><dd>{receipt().outcome === "applied" ? t("sf.u23.outcomeApplied") :
+                    receipt().outcome === "unchanged" ? t("sf.u23.outcomeUnchanged") :
+                    receipt().outcome === "rejected" ? t("sf.u23.outcomeRejected") : receipt().outcome}</dd></div>
                   <div><dt>{t("sf.u23.changedFields")}</dt><dd>{receipt().changedFields}</dd></div>
                 </dl>
                 <details class="sf-records-technical">

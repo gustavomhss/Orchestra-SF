@@ -44,8 +44,17 @@ it.live.skipIf(process.platform === "win32")(
       const query = new URLSearchParams({ installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId })
       const store = await openLocalStore(installation.businessDirectory)
       try {
-        const snapshot = () => store.transaction("dashboard", async (value) => ({ commit: false, value: digestSfValue(value) }))
+        const snapshot = () => store.transaction("dashboard", async (value) => ({ commit: false, value: structuredClone(value) }))
         const before = await snapshot()
+        const unchanged = async () => {
+          const after = await snapshot()
+          if (digestSfValue(before) !== digestSfValue(after)) console.info("SF_FINAL_ROUTINES_SNAPSHOT_CHANGE " + JSON.stringify({
+            fields: Object.keys({ ...before, ...after }).filter((key) => digestSfValue(Reflect.get(before, key)) !== digestSfValue(Reflect.get(after, key))),
+            data: Object.keys({ ...before.data, ...after.data }).filter((key) => digestSfValue(before.data[key]) !== digestSfValue(after.data[key])),
+            product: digestSfValue(before.data.__sfProductV1) === digestSfValue(after.data.__sfProductV1),
+          }))
+          expect(digestSfValue(after)).toBe(digestSfValue(before))
+        }
         const result = await installation.request("/api/ui/context?" + query)
         expect(result.status).toBe(200)
         const context = Schema.decodeUnknownSync(SfContextResult, { onExcessProperty: "error" })(await result.json())
@@ -69,7 +78,7 @@ it.live.skipIf(process.platform === "win32")(
         if (inventory.status !== "ok") throw new Error("Original installed residents were not readable")
         expect(inventory.context).toEqual(context.value.stamp)
         expect(inventory.value.profiles.map((entry) => entry.id).sort()).toEqual(["sf_finance", "sf_maestro", "sf_portfolio", "sf_procurement", "sf_reviewer"])
-        expect(await snapshot()).toBe(before)
+        await unchanged()
         const denied = await fetch(installation.origin + installation.mount + "/api/ui/projections/residents",
           { signal: AbortSignal.timeout(20_000) })
         expect(denied.status).toBe(401)
@@ -78,7 +87,7 @@ it.live.skipIf(process.platform === "win32")(
           headers: { origin: "https://unrelated.example", "sec-fetch-site": "cross-site" },
         })
         expect(crossSite.status).toBe(400)
-        expect(await snapshot()).toBe(before)
+        await unchanged()
         console.info("SF_FINAL_ROUTINES_NATIVE " + JSON.stringify({
           source: "original-native-installation", readOperations: 5, residents: inventory.value.profiles.length,
           caseStateChangedByReads: false, approvalRequestsSubmitted: 0, schedulePortInstalled: false,
