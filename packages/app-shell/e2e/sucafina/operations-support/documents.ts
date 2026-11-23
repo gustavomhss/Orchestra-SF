@@ -192,7 +192,8 @@ async function runDocumentJourney(page: Page, info: TestInfo, journey: "upload" 
 }
 
 async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() => Promise<void>)[], journey: "upload" | "evidence", capture?: WorkflowCapture) {
-  const account = await login(page, "first", "suppliers")
+  // The original host issues a distinct one-shot enrollment for each isolated document journey.
+  const account = await login(page, "first", journey === "upload" ? "suppliers-upload" : "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
   const bytes = Buffer.from(text, "utf8"), blobDigest = createHash("sha256").update(bytes).digest("hex")

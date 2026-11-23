@@ -249,7 +249,7 @@ active.handle = async (request) => {
 const enrolled: Record<string, { baseURL: string; principal: string; enrollments: Record<string, string> }> = {}
 for (const [index, account] of accounts.entries()) {
   const enrollments: Record<string, string> = {}
-  for (const scenario of approvalDirectory ? ["decision-approval"] : ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "settings"]) {
+  for (const scenario of approvalDirectory ? ["decision-approval"] : ["validation", "conflict", "comment", "late-edit", "journey", "comparison", "suppliers", "suppliers-upload", "settings"]) {
     const code = await account.identity.enroll()
     enrollmentOwners.set(code, account)
     enrollments[scenario] = origin + mount + "/auth/local?code=" + code
