@@ -1,0 +1,92 @@
+{
+  "status": "browser-qualification-in-progress",
+  "candidate": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+  "sourceTree": "aedc5483dfde0c83c4b1db49b93b4c048cd1e5f6",
+  "current": {
+    "label": "R11",
+    "run": 45117078885,
+    "job": 137502251987,
+    "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
+    "snapshotTree": "152b4ca72aa299547fe7d605603195ecd3559a49",
+    "branch": "ci-run-linux-sf-final-memory-r11-20261123",
+    "status": "in_progress",
+    "areas": [
+      "UI61",
+      "UI62",
+      "UI63",
+      "UI67",
+      "UI69"
+    ],
+    "testDeadlineMs": 300000,
+    "httpDeadlineMs": 40000,
+    "domDeadlineMs": 10000,
+    "retries": 0
+  },
+  "gate16": {
+    "run": 45117046888,
+    "job": 137502149296,
+    "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
+    "source": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "checks": 9,
+    "codecTests": 12,
+    "codecAsserts": 243,
+    "guards": 78,
+    "paths": 71,
+    "errors": 0,
+    "approvals": 0,
+    "warnings": 10,
+    "palettes": 7,
+    "regressions": 11,
+    "preexistingSkip": 1
+  },
+  "native69": {
+    "run": 45112013210,
+    "job": 137486273104,
+    "snapshot": "2032885b3d834bbc17a5ee1cdf51a05531ab00ee",
+    "source": "c2794f7fe028f9febd764cddeb094ca959d63088",
+    "testsPassed": 69,
+    "testsFailed": 0,
+    "expectations": 887
+  },
+  "previous": {
+    "R8": {
+      "run": 45104661696,
+      "job": 137463071254,
+      "passed": 2,
+      "failed": 1,
+      "artifact": 14787368136
+    },
+    "R9": {
+      "run": 45107929407,
+      "job": 137473376276,
+      "passed": 1,
+      "failed": 4,
+      "artifact": 14789106497,
+      "actualUI61Capture": {
+        "width": 1440,
+        "height": 1100,
+        "scheme": "dark",
+        "misleadingStateName": "light-320-cancelled-consultation"
+      }
+    },
+    "R10": {
+      "run": 45112934520,
+      "job": 137489157834,
+      "snapshot": "ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9",
+      "passed": 0,
+      "failed": 5,
+      "artifact": 14790834255,
+      "captures": 3,
+      "previews": 2,
+      "onlyCapturedArea": "UI69",
+      "summaryPostStatus": 200,
+      "persistedReadbackQualified": false
+    }
+  },
+  "limits": [
+    "No numeric expected/observed comparison qualified; original decision-compare exceeded40s.",
+    "No original signal response200 qualified; R8 request exceeded40s.",
+    "Notifications/backups original I00 reader remains unbound.",
+    "Actual browser zoom not measured."
+  ]
+}
