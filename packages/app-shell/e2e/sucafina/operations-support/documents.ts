@@ -369,19 +369,23 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await register.locator("summary").click()
   await document.selectOption({ value: selected[0]!.selectionRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
-  await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
-    const choice = localized.getByRole("combobox", { name: "Documento", exact: true })
-    const option = choice.locator("option").filter({ hasText: filename })
-    await expect(option).toHaveCount(1)
-    await expect(option).toHaveText(filename)
-    // An opaque selection reference belongs to this newly authorized catalog read.
-    // Match the unique original attachment name and use this context's current option.
-    await choice.selectOption({ label: filename })
-    const currentRef = await option.getAttribute("value")
-    expect(currentRef).toBeTruthy()
-    await expect(choice).toHaveValue(currentRef!)
-    await expect(localized.getByRole("button", { name: "Abrir documento", exact: true })).toBeEnabled()
-  })
+  // Extra locale re-mounts belong to the existing opt-in visual sweep;
+  // keep the default lane's original 180s budget for confirmation and revocation.
+  if (capture) {
+    await capturePortugueseRecord(page, info, "UI58", "authorized-catalog", async (localized) => {
+      const choice = localized.getByRole("combobox", { name: "Documento", exact: true })
+      const option = choice.locator("option").filter({ hasText: filename })
+      await expect(option).toHaveCount(1)
+      await expect(option).toHaveText(filename)
+      // An opaque selection reference belongs to this newly authorized catalog read.
+      // Match the unique original attachment name and use this context's current option.
+      await choice.selectOption({ label: filename })
+      const currentRef = await option.getAttribute("value")
+      expect(currentRef).toBeTruthy()
+      await expect(choice).toHaveValue(currentRef!)
+      await expect(localized.getByRole("button", { name: "Abrir documento", exact: true })).toBeEnabled()
+    })
+  }
   let admittedRef: string | undefined
   const [admitted, emptyCandidates] = await Promise.all([
     observe(page, endpoint("document-admit"), "POST", async (response) => {
@@ -539,14 +543,23 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
     simulationGrantsAdded: false, sourceRemainsReadable: true,
   })
   await captureRecordVariants(page, info, "UI60", "confirmed-source-restricted-simulation")
-  await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
-    await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
-    await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
-  })
+  // UI59 retains the default pt-BR review; this additional mount is optional.
+  if (capture) {
+    await capturePortugueseRecord(page, info, "UI60", "confirmed-evidence", async (localized) => {
+      await localized.locator(confirmedSelector).getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()
+      await expect(localized.locator('[data-sf-surface="UI60"] blockquote')).toHaveText("42")
+    })
+  }
 
   // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
   const reader = await page.context().newPage()
+  // Capture the initial original source read as well as the subsequent reload.
+  // A missing UI option must be distinguishable from a producer/catalog failure.
+  const initialSources = await observe(reader, endpoint("document-sources"))
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)
+  expect((await valueOf<Source[]>((await initialSources.completed).response))
+    .filter((source) => source.label === filename).map(({ label, surface }) => ({ label, surface })))
+    .toEqual([{ label: filename, surface: "procurement" }])
   const readerCatalog = reader.locator(catalogLeaf)
   await expect(readerCatalog).toHaveCount(1)
   await expect(reader.getByRole("combobox", { name: "Document", exact: true }).getByRole("option", { name: filename, exact: true })).toHaveCount(1)
@@ -629,6 +642,6 @@ export async function documentJourney(page: Page, info: TestInfo, capture?: Work
   await expect(readerCatalog.locator("[data-sf-evidence-id]")).toHaveCount(0)
   await expect(readerCatalog.getByRole("button", { name: "Open document", exact: true })).toBeDisabled()
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract", "document-confirm"])
-  await observation(info, "operations-document-real-reference", { supplier, asset: assetURL.searchParams.get("asset"), blobDigest, documentRef, schema, candidate, confirmed, scenario: "UI60 confirmed evidence and original Planner preview; exact target, document reference, domainApplied=false and unchanged baseline/CAS are attached separately", sourceRevocation: { assetStatus: revokedAsset.status(), evidenceStatus: revokedSource.status(), candidateStatus: revokedCandidateRead.status(), discoveryCount: 0 }, supportedFormat: "UTF-8 text; no OCR assertion" })
+  await observation(info, "operations-document-real-reference", { supplier, asset: assetURL.searchParams.get("asset"), blobDigest, documentRef, schema, candidate, confirmed, scenario: "UI60 confirmed evidence remains readable; original restricted policy denies scenario discovery. Positive native preview is a separate journey.", sourceRevocation: { assetStatus: revokedAsset.status(), evidenceStatus: revokedSource.status(), candidateStatus: revokedCandidateRead.status(), discoveryCount: 0 }, supportedFormat: "UTF-8 text; no OCR assertion" })
   await reader.close()
 }
