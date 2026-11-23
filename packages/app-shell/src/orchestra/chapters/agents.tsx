@@ -316,7 +316,7 @@ export default function Agents(props: ChapterPageProps) {
 
   return (
     <section class="mx-page orchestra-agents" aria-labelledby="agents-title">
-      <div class="agents-inner">
+      <div class="mx-inner agents-inner">
         <Show when={selected() && selectedID()} keyed fallback={rosterView()}>
           {(_) => (
             <Show when={selected()}>
