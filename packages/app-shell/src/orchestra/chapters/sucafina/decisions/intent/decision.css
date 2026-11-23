@@ -136,6 +136,7 @@
 .sf-decision-context > div { display: grid; align-content: start; gap: 4px; min-inline-size: 0; }
 .sf-decision-summary { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; }
 .sf-decision-criteria, .sf-decision-constraints { display: grid; align-content: start; gap: 16px; min-inline-size: 0; }
+.sf-decision-coverage-gap { display: grid; gap: 8px; min-inline-size: 0; }
 .sf-decision-constraints { padding-inline-start: 24px; border-inline-start: 1px solid var(--mx-line); }
 .sf-decision-criteria-list { list-style: none; padding: 0; counter-reset: criteria; }
 .sf-decision-criteria-list li { counter-increment: criteria; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding-block: 14px; }

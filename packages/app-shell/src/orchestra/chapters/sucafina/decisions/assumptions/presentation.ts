@@ -61,3 +61,30 @@ export function sfDecisionGap(value: string): Readonly<{
   const reason = coverage[2]!
   return { code: value, category, reason, reasonKey: sfDecisionIssueKey(reason) }
 }
+
+export type SfDecisionGapGroup =
+  | Readonly<{ kind: "literal"; code: string; label?: CopyKey }>
+  | Readonly<{ kind: "coverage"; reason: string; reasonKey?: CopyKey; categories: readonly CopyKey[] }>
+
+/** Only exact repeated producer reasons share a visual group. Source order and
+ * category identity remain explicit; unknown extensions are never interpreted. */
+export function sfDecisionGapGroups(values: readonly string[]): readonly SfDecisionGapGroup[] {
+  const groups: SfDecisionGapGroup[] = []
+  const coverage = new Map<string, { kind: "coverage"; reason: string; reasonKey?: CopyKey; categories: CopyKey[] }>()
+  for (const value of values) {
+    const gap = sfDecisionGap(value)
+    if (!gap.category || gap.reason === undefined) {
+      groups.push({ kind: "literal", code: gap.code, ...(gap.label ? { label: gap.label } : {}) })
+      continue
+    }
+    const existing = coverage.get(gap.reason)
+    if (existing) {
+      existing.categories.push(gap.category)
+      continue
+    }
+    const group = { kind: "coverage" as const, reason: gap.reason, reasonKey: gap.reasonKey, categories: [gap.category] }
+    coverage.set(gap.reason, group)
+    groups.push(group)
+  }
+  return groups
+}
