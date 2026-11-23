@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23 04:54:27 UTC",
-  "status": "C14_ACL_FOCALS_PASS_ANALYTICS_BI_TRACE_RUNNING_BUDGET_PROBE_PREFLIGHT",
+  "updatedAt": "2026-11-23 05:07:56 UTC",
+  "status": "C14_FOCALS_AND_BUDGET_PASS_PREVIEW_STILL_FAILS_CPU_JOINT_PREFLIGHT",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
   "task": {
@@ -89,55 +89,21 @@
   ],
   "pending": [
     {
-      "kind": "analyticsBiTrace",
       "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
       "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "sha": "661acd223fbc84968b9fe1f7daceeb7cd87ddd64",
-      "tree": "c2becc6149c8a11552105d6949262b9f473ecfbc",
-      "branch": "ci-run-sf613aclabi",
+      "sha": "96cb1ee0abc4c84674fa27e1a3ab7a0d9ca87cd0",
+      "tree": "5039840e1153a593b1266474e4183f813ef0fc50",
+      "branch": "ci-run-sf613cpu14",
       "overlayPaths": [
-        "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
-        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
-        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
-        "packages/client/src/sucafina/transport.ts",
+        "apps/cli/src/sucafina-product/preview-jsc-diagnostic.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "packages/app-shell/e2e/sucafina/design-support/installation.ts",
         ".ci-run.json"
       ],
-      "qualification": false,
-      "status": "DISPATCHED",
-      "peerAck": "sf613_ui",
-      "dispatchedAt": "2026-11-23 04:46:27 UTC",
-      "run": 45113831723
-    },
-    {
-      "kind": "normal",
-      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
-      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "sha": "ccc99009ddee0dda18e997c1389bf14d2f582bb1",
-      "tree": "bfd64a8891fd93ccde038dc569f71239c0cbc275",
-      "branch": "ci-run-sf613bud1",
-      "overlayPaths": [
-        "apps/cli/test/sucafina-sql-budget-reopen-diagnostic.test.ts",
-        "apps/cli/test/sucafina-sql-budget-verification.test.ts",
-        ".ci-run.json"
-      ],
-      "qualification": false,
-      "status": "PEER_REVIEW_PENDING"
-    },
-    {
-      "kind": "release",
-      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
-      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "sha": "2a59877839068f8108d2935abcda8fe5deaaea7f",
-      "tree": "9485556067b5d28d2a10397cea287cd904447119",
-      "branch": "ci-run-sf613bud2",
-      "overlayPaths": [
-        "apps/cli/test/sucafina-sql-budget-reopen-diagnostic.test.ts",
-        "apps/cli/test/sucafina-sql-budget-verification.test.ts",
-        ".ci-run.json",
-        "package.json"
-      ],
-      "qualification": false,
-      "status": "PEER_REVIEW_PENDING"
+      "status": "PEER_REVIEW_PENDING",
+      "qualification": false
     }
   ],
   "previousFullCampaign": {
@@ -264,9 +230,9 @@
     "interpretation": "SQL conditional path admitted with space available;no causal speed claim;historicalnegativesremain"
   },
   "next": {
-    "biTrace": "Reapplyonly4P9BIoverlaysoverC14;agentUIhas29hunks+sourcepin;diagnosticnotqualification",
-    "budgetRegression": "Verifierpreparingsnapshot-onlynativebindingprobepluspublicStorethrowrollbackreopencontrol",
-    "docs": "Statusreconstructingclosingdocs;do not publishqualifiedheadersuntilallgreen"
+    "cpuJoint": "First Preview30s/10ms joint leaf+first allowed caller;6 snapshot-only overlays; original Analytics entire spec",
+    "product": "No Preview fix accepted yet; no BI lifecycle correction based on a passing trace",
+    "docs": "Rebuilding JSON/Markdown renderers; do not publish qualification while Preview remains negative"
   },
   "closure": {
     "beforeAreas": 41,
@@ -316,5 +282,10 @@
       "result": "5/5PASS,G660PASS2originalUIDskips,C1799732.06ms",
       "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/acl-release.json"
     }
-  }
+  },
+  "budgetReceipts": {
+    "normal": "recovery-receipts/budget-normal.json",
+    "release": "recovery-receipts/budget-release.json"
+  },
+  "biTraceReceipt": "recovery-receipts/bi-trace.json"
 }

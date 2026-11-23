@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "kind": "snapshot-only-sql-budget-reopen-probe",
+  "qualification": false,
+  "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+  "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+  "snapshot": "ccc99009ddee0dda18e997c1389bf14d2f582bb1",
+  "snapshotTree": "bfd64a8891fd93ccde038dc569f71239c0cbc275",
+  "run": 45114630584,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45114630584",
+  "status": "success",
+  "branch": "ci-run-sf613bud1",
+  "branchDeleted404": true,
+  "main": {
+    "bytes": 71659,
+    "sha256": "efcfd7383c1b5f75325e39fdc8e9b3c2522e02dce08b138c16fc3a3a2271ed0b",
+    "job": 137494536040
+  },
+  "cleanup": {
+    "bytes": 2284,
+    "sha256": "309e5b5cb2a0fdcad1485ea8d21540d2edbc92afccab062175e60c08e8d70a08",
+    "job": 137495172462,
+    "status": "success"
+  },
+  "artifacts": [],
+  "markers": [
+    {
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "version": "1.3.14",
+      "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "scope": "synthetic-plan-reservations-and-real-sqlite",
+      "retainedUnits": 8388608,
+      "nativeBeforePressure": 3,
+      "refusedBeforeClose": 3,
+      "refusedAfterReopen": 3,
+      "reconcileBeforeReopenReads": false,
+      "nativeAfterBudgetRelease": true
+    },
+    {
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "scope": "public-local-store-callback-rollback-and-reopen",
+      "surfaces": 3,
+      "originalErrorIdentity": true,
+      "bytesIdentityPreserved": true,
+      "newRootIdentity": true,
+      "detachedCopies": true
+    }
+  ],
+  "driver": {
+    "passed": 4,
+    "failed": 0,
+    "assertions": 8
+  },
+  "probes": {
+    "passed": 2,
+    "failed": 0,
+    "assertions": 37
+  },
+  "commands": {
+    "count": 6,
+    "exitCodes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "truncated": false
+  },
+  "omni": {
+    "declared": 4,
+    "spawns": 6,
+    "delegated": 0
+  },
+  "types": [
+    "Sucafina",
+    "CLI"
+  ],
+  "review": {
+    "rootLogIntake": true,
+    "peer": "verify_session_identity"
+  },
+  "limits": [
+    "Synthetic retained plan units; not measured heap allocation",
+    "Native binding probe uses real SQLite but is not product qualification",
+    "Public LocalStore rollback case proves error identity, bytes identity, new roots and detached copies; it does not observe budget counters",
+    "Old bug variant was not executed"
+  ],
+  "overlayPaths": [
+    "apps/cli/test/sucafina-sql-budget-reopen-diagnostic.test.ts",
+    "apps/cli/test/sucafina-sql-budget-verification.test.ts",
+    ".ci-run.json"
+  ]
+}
