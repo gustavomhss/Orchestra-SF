@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
-  "productSource": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
+  "productSource": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -7484,10 +7484,1388 @@
       "snapshot": "8472793d20731e3e9cf2c99d5fdc1980f882bc13",
       "tree": "2371a05f3e994d8c480c29843b11aa25edd2ae89",
       "parent": "72040df448c814a4825bb53f7269625318284218",
-      "status": "in_progress",
+      "status": "completed",
       "qualifies": false,
       "method": "Four-file numeric aggregate supplement for public canonicalization, source identity validation and concrete snapshot clones; original recursion, values, awaits, controls and case deadlines unchanged.",
-      "stripRestoresOriginalBytes": true
+      "stripRestoresOriginalBytes": true,
+      "result": "failure",
+      "ledger": {
+        "schema": "sf-materiality-aggregate-diagnostic-v1",
+        "run": 45246722659,
+        "job": 137945303089,
+        "snapshot": "8472793d20731e3e9cf2c99d5fdc1980f882bc13",
+        "tree": "2371a05f3e994d8c480c29843b11aa25edd2ae89",
+        "originalProductSource": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+        "artifact": {
+          "run": 45246722659,
+          "job": 137945303089,
+          "snapshot": "8472793d20731e3e9cf2c99d5fdc1980f882bc13",
+          "artifactId": 14854124392,
+          "sha256": "84f263e534e829d4348e967e9d8c9e76956f2647393c7b2b5f0f6ac8d6b9f917",
+          "bytes": 11954766,
+          "archive": "/workspace/scratch/e460075886fd/round-four-final-after/materiality-diagnostic8/r4-materiality-diagnostic8-14854124392.zip"
+        },
+        "stats": {
+          "total": 1,
+          "expected": 0,
+          "unexpected": 1,
+          "flaky": 0,
+          "skipped": 0,
+          "ok": false
+        },
+        "reportDurationMs": 371791.231,
+        "aggregateRows": 468,
+        "allActiveZero": true,
+        "allStartEndCountsBalanced": true,
+        "markerPairs": 126,
+        "metrics": [
+          {
+            "phase": "first",
+            "name": "canonical-all-bytes",
+            "count": 651268,
+            "totalUs": 11272406,
+            "maxUs": 34655,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "canonical-all-digest",
+            "count": 649624,
+            "totalUs": 13094331,
+            "maxUs": 38148,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "materiality-bcs-read-context-end",
+            "count": 591,
+            "totalUs": 0,
+            "maxUs": 0,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "materiality-bcs-source-end",
+            "count": 1176,
+            "totalUs": 0,
+            "maxUs": 0,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "observation-total",
+            "count": 1,
+            "totalUs": 36403111,
+            "maxUs": 36403111,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-identities-validation",
+            "count": 23752,
+            "totalUs": 366379,
+            "maxUs": 13909,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-observe",
+            "count": 4920,
+            "totalUs": 3722370,
+            "maxUs": 36260,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-output-projection-clone",
+            "count": 4920,
+            "totalUs": 148727,
+            "maxUs": 102,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-planner-read",
+            "count": 4920,
+            "totalUs": 8954036,
+            "maxUs": 37111,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-planner-ref",
+            "count": 2580,
+            "totalUs": 167357,
+            "maxUs": 13438,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-planner-resolve",
+            "count": 2460,
+            "totalUs": 11671011,
+            "maxUs": 41803,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-prepare-snapshot-clone",
+            "count": 4920,
+            "totalUs": 496503,
+            "maxUs": 6628,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-project-snapshot-clone",
+            "count": 4920,
+            "totalUs": 438878,
+            "maxUs": 7536,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "source-read-scoped-snapshot",
+            "count": 4920,
+            "totalUs": 4037810,
+            "maxUs": 36361,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "store-full-snapshot-clone",
+            "count": 24,
+            "totalUs": 115247,
+            "maxUs": 18114,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "store-full-snapshot-decode",
+            "count": 78289,
+            "totalUs": 439299,
+            "maxUs": 13750,
+            "active": 0
+          },
+          {
+            "phase": "first",
+            "name": "store-full-snapshot-materialize",
+            "count": 10400,
+            "totalUs": 2475283,
+            "maxUs": 16287,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "canonical-all-bytes",
+            "count": 651268,
+            "totalUs": 11410391,
+            "maxUs": 35282,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "canonical-all-digest",
+            "count": 649624,
+            "totalUs": 13204613,
+            "maxUs": 36947,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "materiality-bcs-read-context-end",
+            "count": 591,
+            "totalUs": 0,
+            "maxUs": 0,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "materiality-bcs-source-end",
+            "count": 1176,
+            "totalUs": 0,
+            "maxUs": 0,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "observation-total",
+            "count": 1,
+            "totalUs": 36180189,
+            "maxUs": 36180189,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-identities-validation",
+            "count": 23752,
+            "totalUs": 389966,
+            "maxUs": 29382,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-observe",
+            "count": 4920,
+            "totalUs": 3743084,
+            "maxUs": 31126,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-output-projection-clone",
+            "count": 4920,
+            "totalUs": 151946,
+            "maxUs": 83,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-planner-read",
+            "count": 4920,
+            "totalUs": 9011721,
+            "maxUs": 31984,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-planner-ref",
+            "count": 2580,
+            "totalUs": 154148,
+            "maxUs": 797,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-planner-resolve",
+            "count": 2460,
+            "totalUs": 11766844,
+            "maxUs": 41510,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-prepare-snapshot-clone",
+            "count": 4920,
+            "totalUs": 517413,
+            "maxUs": 7701,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-project-snapshot-clone",
+            "count": 4920,
+            "totalUs": 432025,
+            "maxUs": 1993,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "source-read-scoped-snapshot",
+            "count": 4920,
+            "totalUs": 4049545,
+            "maxUs": 31234,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "store-full-snapshot-clone",
+            "count": 24,
+            "totalUs": 82456,
+            "maxUs": 3849,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "store-full-snapshot-decode",
+            "count": 78289,
+            "totalUs": 458619,
+            "maxUs": 13159,
+            "active": 0
+          },
+          {
+            "phase": "second",
+            "name": "store-full-snapshot-materialize",
+            "count": 10400,
+            "totalUs": 2539576,
+            "maxUs": 16655,
+            "active": 0
+          }
+        ],
+        "balance": [
+          {
+            "phase": "first",
+            "span": "materiality-authority-principal",
+            "start": 26775,
+            "balanced": true,
+            "completed": 26775
+          },
+          {
+            "phase": "first",
+            "span": "materiality-authority-snapshot",
+            "start": 24823,
+            "balanced": true,
+            "completed": 24823
+          },
+          {
+            "phase": "first",
+            "span": "materiality-authority-ui-authorize",
+            "start": 24823,
+            "balanced": true,
+            "completed": 24823
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-admission",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-bound-access",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-capture-digest",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-context-values",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-current-read",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-egress",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-maps-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-maps-second",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-planner-evidence",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-read-context",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "first",
+            "span": "materiality-bcs-source",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-after",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-authorization-first",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-before",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-evidence-operations",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-final-checks",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-state-first",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "first",
+            "span": "materiality-case-state-second",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-criteria-first",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-criteria-second",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-scenarios-final",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-scenarios-first",
+            "start": 6,
+            "balanced": true,
+            "completed": 6
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-scenarios-second",
+            "start": 6,
+            "balanced": true,
+            "completed": 6
+          },
+          {
+            "phase": "first",
+            "span": "materiality-compare-sources",
+            "start": 14,
+            "balanced": true,
+            "completed": 14
+          },
+          {
+            "phase": "first",
+            "span": "materiality-domain-binding",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-domain-compare-first",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-domain-compare-second",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-domain-scenarios-first",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-domain-scenarios-second",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-admission",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-build-projection",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-canonical-read",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-environment",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-final-validation",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-projection-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-projection-source-second",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-evidence-source-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-coverage-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-coverage-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-projection-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-projection-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-source-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-forecast-source-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-produce",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-registry-after",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-registry-before",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "first",
+            "span": "materiality-result-batch-callbacks-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-result-batch-callbacks-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-result-batch-final",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-result-batch-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-result-batch-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-scope-egress",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "first",
+            "span": "materiality-scope-work",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-case",
+            "start": 80,
+            "balanced": true,
+            "completed": 80
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-final",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-forecast",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-history",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-initial",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-prepare",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "first",
+            "span": "materiality-stored-reread",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-authority-principal",
+            "start": 26775,
+            "balanced": true,
+            "completed": 26775
+          },
+          {
+            "phase": "second",
+            "span": "materiality-authority-snapshot",
+            "start": 24823,
+            "balanced": true,
+            "completed": 24823
+          },
+          {
+            "phase": "second",
+            "span": "materiality-authority-ui-authorize",
+            "start": 24823,
+            "balanced": true,
+            "completed": 24823
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-admission",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-bound-access",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-capture-digest",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-context-values",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-current-read",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-egress",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-maps-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-maps-second",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-planner-evidence",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-read-context",
+            "start": 591,
+            "balanced": true,
+            "completed": 591
+          },
+          {
+            "phase": "second",
+            "span": "materiality-bcs-source",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-after",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-authorization-first",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-before",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-evidence-operations",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-final-checks",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-state-first",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "second",
+            "span": "materiality-case-state-second",
+            "start": 92,
+            "balanced": true,
+            "completed": 92
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-criteria-first",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-criteria-second",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-scenarios-final",
+            "start": 2,
+            "balanced": true,
+            "completed": 2
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-scenarios-first",
+            "start": 6,
+            "balanced": true,
+            "completed": 6
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-scenarios-second",
+            "start": 6,
+            "balanced": true,
+            "completed": 6
+          },
+          {
+            "phase": "second",
+            "span": "materiality-compare-sources",
+            "start": 14,
+            "balanced": true,
+            "completed": 14
+          },
+          {
+            "phase": "second",
+            "span": "materiality-domain-binding",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-domain-compare-first",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-domain-compare-second",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-domain-scenarios-first",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-domain-scenarios-second",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-admission",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-build-projection",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-canonical-read",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-environment",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-final-validation",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-projection-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-projection-source-second",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-evidence-source-first",
+            "start": 1176,
+            "balanced": true,
+            "completed": 1176
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-coverage-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-coverage-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-projection-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-projection-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-source-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-forecast-source-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-produce",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-registry-after",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-registry-before",
+            "start": 1,
+            "balanced": true,
+            "completed": 1
+          },
+          {
+            "phase": "second",
+            "span": "materiality-result-batch-callbacks-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-result-batch-callbacks-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-result-batch-final",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-result-batch-first",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-result-batch-second",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-scope-egress",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-scope-work",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-case",
+            "start": 80,
+            "balanced": true,
+            "completed": 80
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-final",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-forecast",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-history",
+            "start": 40,
+            "balanced": true,
+            "completed": 40
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-initial",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-prepare",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          },
+          {
+            "phase": "second",
+            "span": "materiality-stored-reread",
+            "start": 20,
+            "balanced": true,
+            "completed": 20
+          }
+        ],
+        "network": [
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:23:37.502Z",
+            "timeMs": 685.2659999999742,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 26,
+            "contentBytes": 26
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-condition",
+            "method": "POST",
+            "startedDateTime": "2026-11-23T19:23:57.410Z",
+            "timeMs": 3090.706999999995,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 15,
+            "contentBytes": 15
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:24:00.506Z",
+            "timeMs": 3181.287000000011,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 318,
+            "contentBytes": 318
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:24:38.768Z",
+            "timeMs": 3471.7730000000447,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 318,
+            "contentBytes": 318
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:24:38.760Z",
+            "timeMs": 3484.59,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 304,
+            "contentBytes": 318
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-materiality",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:24:43.773Z",
+            "timeMs": -1,
+            "status": -1,
+            "hasHeaders": false,
+            "bodyBytes": -1,
+            "contentBytes": -1
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:25:44.267Z",
+            "timeMs": 15672.215000000026,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 318,
+            "contentBytes": 318
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-conditions",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:25:44.264Z",
+            "timeMs": 15681.221,
+            "status": 200,
+            "hasHeaders": true,
+            "bodyBytes": 304,
+            "contentBytes": 318
+          },
+          {
+            "path": "/sucafina/dashboard",
+            "selector": "memory-materiality",
+            "method": "GET",
+            "startedDateTime": "2026-11-23T19:24:43.775Z",
+            "timeMs": -1,
+            "status": -1,
+            "hasHeaders": false,
+            "bodyBytes": -1,
+            "contentBytes": -1
+          }
+        ],
+        "cases": [
+          {
+            "title": "UI61 · original conditions, independent materiality and explicit signal cancellation",
+            "results": [
+              {
+                "status": "failed",
+                "retry": 0,
+                "durationMs": 216387,
+                "steps": [
+                  {
+                    "title": "UI61 publishes registered conditions without starting signal re-evaluation",
+                    "durationMs": 39691,
+                    "error": false
+                  },
+                  {
+                    "title": "UI61 reads original materiality independently and clears detail on a new selection",
+                    "durationMs": 40400,
+                    "error": true
+                  },
+                  {
+                    "title": "UI61 Portuguese condition",
+                    "durationMs": 20160,
+                    "error": true
+                  },
+                  {
+                    "title": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+                    "durationMs": 16295,
+                    "error": false
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "sha256": {
+          "materiality-job.log": "d66109f0314294a3a1c53add2d39cdaa1cb5c5e9826ac35e155a8c166566de60",
+          "aggregate-metrics.json": "4d77ec1ee9dcab49dc372e3dd58e0f2f413390572d3a498e75c0ed4ac5e4f731",
+          "instrumentation-ledger.json": "85ba067b33c1b445733df3b115902643a64f476dcea54b53b9e3a71e93f4756f",
+          "artifact/packages/app-shell/e2e/playwright-report/data/c3b390d9ca08985788ed062ef117259e9a5cbad0.zip": "4694e0c1b7b37a83ccb531e80e10fa269c566d0c2b84933e1cf1f11ec9fe9b51",
+          "report-json/report.json": "71aa16344189651b83250bc91ef66fab0ba363fe71321517224af8f63535d467"
+        },
+        "notes": [
+          "Diagnostic only; original 40s request and 300s case guards unchanged; no positive materiality qualification.",
+          "All timings are inclusive. Global digest contains global bytes; source resolve contains source reads; materialization may include decode. Do not add nested buckets.",
+          "Max for LIFO start/end marker buckets is not a reliable duration for overlapping calls; use count and total only.",
+          "Network status -1 and absent headers/body establish only no response within the original guard; no late 200 is inferred.",
+          "Artifacts contain private fixture data; this ledger intentionally excludes request headers, payloads, and IDs."
+        ]
+      },
+      "ledgerSha256": "68b38f3adfa04c639f6cd88b2e0e49f55b4553040be3a229f788c1399c80fc39"
+    },
+    "materialityPairCoverage": {
+      "run": 45238328771,
+      "artifactSha256": "f84b6242d72707c76fa0a550ef7383f3fbf4c3e90fc91cc603252ae44732fb3d",
+      "window": {
+        "firstMs": 432007.876,
+        "lastMs": 492318.076,
+        "completed": true
+      },
+      "pairWorkOwners": 20,
+      "depthAtClose": 0,
+      "counts": {
+        "materiality-bcs-source-start": {
+          "inside_pair_work": 960,
+          "outside_pair_work": 216
+        },
+        "materiality-bcs-read-context-start": {
+          "inside_pair_work": 480,
+          "outside_pair_work": 111
+        },
+        "materiality-authority-ui-authorize-start": {
+          "inside_pair_work": 20080,
+          "outside_pair_work": 4743
+        },
+        "materiality-case-state-first-start": {
+          "inside_pair_work": 80,
+          "outside_pair_work": 12
+        },
+        "materiality-evidence-canonical-read-start": {
+          "inside_pair_work": 960,
+          "outside_pair_work": 216
+        },
+        "materiality-bcs-capture-digest-start": {
+          "inside_pair_work": 480,
+          "outside_pair_work": 111
+        }
+      },
+      "boundary": "Counts and topology only. Diagnostic6 per-call stdout distorts timing; no production latency or HTTP success claim.",
+      "ledgerSha256": "cc29cf557f7971ca977fa973307d220a3ea470a198478406bbe2394988008d0e"
     }
   },
   "sourceBoundaries": {
@@ -8212,8 +9590,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
-    "tree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
+    "source": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
+    "tree": "be83cba4cc0406ff2544e77afea20cd6bfade432",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -8231,6 +9609,13 @@
         "tree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
         "parent": "80e8b7f869e1f8c97967fdaa289ed9b904521cd4",
         "candidate": "1f2f44e0862387e998e7cb186bc77c20bc124bb9"
+      },
+      {
+        "sha": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
+        "tree": "be83cba4cc0406ff2544e77afea20cd6bfade432",
+        "parent": "1b2b01c7ded3c62a1ee765ae38a9f990301bd5c4",
+        "candidate": "1b2b01c7ded3c62a1ee765ae38a9f990301bd5c4",
+        "control": "adfddaaa5b61293690c6c0839dde916c20ac83bb"
       }
     ],
     "structural": {
@@ -8257,8 +9642,8 @@
     }
   },
   "checkpoint": {
-    "productSource": "60d18cc9de59cde7b4abffd6be9cf3bacfb8ee8d",
-    "productTree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
+    "productSource": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
+    "productTree": "be83cba4cc0406ff2544e77afea20cd6bfade432",
     "status": "qualification-in-progress",
     "browserCases": 94,
     "reviewedOriginals": 64
@@ -8757,6 +10142,380 @@
       "integratedTree": "088ce39bff8f114dd261673f7ae095c6dacd1b06",
       "qualificationLedgerSha256": "08c343ac92f683e73b298730fb26b74b6310a64b658af4489bee1632829567aa",
       "performanceClaim": "No end-to-end latency improvement claimed; final composed producer and browser qualification remains pending."
+    },
+    {
+      "qualification": "round-four-currentchoice-source-owner",
+      "result": "success",
+      "repository": "gustavomhss/Orchestra-SF",
+      "source": {
+        "commit": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
+        "tree": "be83cba4cc0406ff2544e77afea20cd6bfade432",
+        "parent": "1b2b01c7ded3c62a1ee765ae38a9f990301bd5c4",
+        "branch": "currentchoice-source-control"
+      },
+      "product": {
+        "currentChoiceBlob": "2f4b5ce43c8d6061b70c72e7296899c3eececd0f",
+        "sourceLifecycleBlob": "aef84a44e583889011704233a2114cf30a8da91a",
+        "newTestBlob": "c6de920d61ac8f7f3edd57907b6697380b672bd7"
+      },
+      "snapshot": {
+        "commit": "88e253559b6595b7fa05c42131a982acac84eac3",
+        "tree": "bd2739c5ef87e9d559f34bf8d9fc0c800c41e9c8",
+        "branch": "ci-run-r4owner",
+        "onlyAddedFiles": [
+          ".ci-run.json",
+          "apps/cli/test/sucafina-owner-verification.test.ts"
+        ]
+      },
+      "run": {
+        "id": 45253041565,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45253041565",
+        "job": 137967475014,
+        "cleanupJob": 137969009872,
+        "workflow": "test-ci",
+        "runner": "ubuntu-24.04",
+        "createdAt": "2026-11-23T19:50:12Z",
+        "updatedAt": "2026-11-23T19:52:54Z",
+        "status": "completed",
+        "conclusion": "success",
+        "artifacts": [],
+        "omni": {
+          "mode": "strict",
+          "declared": 4,
+          "spawns": 4,
+          "delegated": 0,
+          "positiveControl": "pass"
+        }
+      },
+      "summary": {
+        "outerPassed": 4,
+        "outerFailed": 0,
+        "innerPassed": 45,
+        "innerFailed": 0,
+        "originalConditionalSkips": 2,
+        "innerAssertions": 816
+      },
+      "suites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "passed": 41,
+          "skipped": 2,
+          "failed": 0,
+          "assertions": 474,
+          "durationMs": 6570,
+          "skipBoundary": "The two original skipIf(getuid() !== 0) foreign-UID directory/database cases require root fixture privileges. No new skip or original-test modification."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+          "passed": 1,
+          "failed": 0,
+          "assertions": 35,
+          "durationMs": 5650
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+          "passed": 2,
+          "failed": 0,
+          "assertions": 127,
+          "durationMs": 93260,
+          "caseDurationsMs": [
+            41182.97,
+            51552.05
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-source-authority.test.ts",
+          "passed": 1,
+          "failed": 0,
+          "assertions": 180,
+          "durationMs": 538,
+          "caseDurationMs": 108.28,
+          "newCaseInnerDeadlinesMs": [
+            105000,
+            120000
+          ]
+        }
+      ],
+      "boundaries": {
+        "originalTestsUnchanged": true,
+        "originalInnerDeadlinesUnchanged": true,
+        "noRetriesAdded": true,
+        "noWorkflowChanges": true,
+        "noLocalProductExecution": true,
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "noEndToEndPerformanceClaim": true
+      },
+      "gates": [
+        {
+          "gate": "local-store",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/local-store.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "finance-pair-observation",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/finance-pair-observation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "scenario-phase-observation",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/scenario-phase-observation.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        {
+          "gate": "current-choice-source-authority",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/current-choice-source-authority.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        }
+      ],
+      "evidence": {
+        "decodedJobLogSha256": "e9b04fd5cf61cb5e1a9b1e1ea8dedc05e889793978e225cdf3f7472eb5321459",
+        "sanitizedJobLogSha256": "0257e7124fe3e4636163f4384a12942b171233eafdfa27063006b1d223a14b2e",
+        "sanitizedLogBytes": 82373
+      },
+      "status": "integrated",
+      "integratedCommit": "83a62ec384bb59ad53d5c2c2d789956501bf307a",
+      "integratedTree": "be83cba4cc0406ff2544e77afea20cd6bfade432",
+      "qualificationLedgerSha256": "c3f908cb87697137e1503836a6e4727e4e04a614cea8ee1862d20db077254939",
+      "scope": "Completion of R4-17; no separate defect and no end-to-end performance claim."
     }
-  ]
+  ],
+  "performancePending": {
+    "plannerCompletedProof": {
+      "source": "5d9ede025232ee8190af66812d94f50c597f3217",
+      "tree": "9786fbc9b90723f75f55b501f172892a173c339a",
+      "branch": "planner-proof-control",
+      "status": "qualification-in-progress",
+      "integrated": false,
+      "quickGate": {
+        "ledger": {
+          "qualification": "round-four-planner-completed-proof",
+          "result": "success",
+          "repository": "gustavomhss/Orchestra-SF",
+          "source": {
+            "commit": "5d9ede025232ee8190af66812d94f50c597f3217",
+            "tree": "9786fbc9b90723f75f55b501f172892a173c339a",
+            "branch": "planner-proof-control",
+            "testBlob": "42f8d6eac812ddcdb33f3034d344eedbf2034190"
+          },
+          "snapshot": {
+            "commit": "544602c2b07723be6c161b52152e7cdc82b0ac61",
+            "tree": "92f989487c4ff489e4505a21854ecda9f7ca1e19",
+            "branch": "ci-run-r4proof",
+            "onlyAddedFiles": [
+              ".ci-run.json",
+              "apps/cli/test/sucafina-proof-verification.test.ts"
+            ]
+          },
+          "run": {
+            "id": 45257154019,
+            "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45257154019",
+            "workflow": "test-ci",
+            "job": 137981872157,
+            "cleanupJob": 137984667131,
+            "runner": "ubuntu-24.04",
+            "createdAt": "2026-11-23T20:13:39Z",
+            "updatedAt": "2026-11-23T20:18:23Z",
+            "status": "completed",
+            "conclusion": "success",
+            "artifacts": [],
+            "omni": {
+              "mode": "strict",
+              "declared": 5,
+              "spawns": 5,
+              "delegated": 0,
+              "positiveControl": "pass"
+            }
+          },
+          "summary": {
+            "outerPassed": 5,
+            "outerFailed": 0,
+            "innerPassed": 7,
+            "innerFailed": 0,
+            "innerAssertions": 437,
+            "outerDurationMs": 158030
+          },
+          "suites": [
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-record-proof-scope.test.ts",
+              "passed": 2,
+              "failed": 0,
+              "assertions": 228,
+              "durationMs": 15680,
+              "caseDurationsMs": [
+                7580.84,
+                7688.48
+              ]
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+              "passed": 1,
+              "failed": 0,
+              "assertions": 35,
+              "caseDurationsMs": [
+                3981.47
+              ]
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+              "passed": 2,
+              "failed": 0,
+              "assertions": 127,
+              "durationMs": 59690,
+              "caseDurationsMs": [
+                26863.84,
+                32434.23
+              ]
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+              "passed": 1,
+              "failed": 0,
+              "assertions": 19,
+              "caseDurationsMs": [
+                74719.89
+              ]
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-observation.test.ts",
+              "passed": 1,
+              "failed": 0,
+              "assertions": 28,
+              "caseDurationsMs": [
+                2483.41
+              ]
+            }
+          ],
+          "gates": [
+            {
+              "gate": "planner-record-proof-scope",
+              "command": [
+                "/home/runner/.bun/bin/bun",
+                "test",
+                "./test/product/wp10/integration/planner-record-proof-scope.test.ts"
+              ],
+              "cwd": "modules/sucafina/Sucafinav1",
+              "exitCode": 0,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            },
+            {
+              "gate": "finance-pair-observation",
+              "command": [
+                "/home/runner/.bun/bin/bun",
+                "test",
+                "./test/product/wp10/integration/finance-pair-observation.test.ts"
+              ],
+              "cwd": "modules/sucafina/Sucafinav1",
+              "exitCode": 0,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            },
+            {
+              "gate": "scenario-phase-observation",
+              "command": [
+                "/home/runner/.bun/bin/bun",
+                "test",
+                "./test/product/wp10/integration/scenario-phase-observation.test.ts"
+              ],
+              "cwd": "modules/sucafina/Sucafinav1",
+              "exitCode": 0,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            },
+            {
+              "gate": "calculation-ancestry-composition",
+              "command": [
+                "/home/runner/.bun/bin/bun",
+                "test",
+                "./test/product/wp10/integration/calculation-ancestry-composition.test.ts"
+              ],
+              "cwd": "modules/sucafina/Sucafinav1",
+              "exitCode": 0,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            },
+            {
+              "gate": "calculation-observation",
+              "command": [
+                "/home/runner/.bun/bin/bun",
+                "test",
+                "./test/product/wp10/integration/calculation-observation.test.ts"
+              ],
+              "cwd": "modules/sucafina/Sucafinav1",
+              "exitCode": 0,
+              "stdoutTruncated": false,
+              "stderrTruncated": false
+            }
+          ],
+          "boundaries": {
+            "originalInnerDeadlinesUnchanged": true,
+            "noRetriesAdded": true,
+            "noSkipsAdded": true,
+            "noWorkflowChanges": true,
+            "noLocalProductExecution": true,
+            "stdoutTruncated": false,
+            "stderrTruncated": false,
+            "noEndToEndPerformanceClaim": true,
+            "followupPending": "Native C08 child continuity repair and new child controls at 789f66533ca496d0ffb9a6dafe0c6c74728b78fe are not qualified by this run."
+          },
+          "evidence": {
+            "decodedJobLogChars": 87155,
+            "sanitizedJobLogSha256": "3aa404600b50069ea11e26fac45979e9a20166c43ca66eddc4059062c5fe473e",
+            "sanitizedLogBytes": 87157
+          }
+        },
+        "ledgerSha256": "9c2c969757c0a7dee576ec4a69a38681ac787ff322f771dc5719d944b59b427f",
+        "status": "completed",
+        "result": "success"
+      },
+      "isolatedBrowser": {
+        "source": "5d9ede025232ee8190af66812d94f50c597f3217",
+        "snapshot": "f40b3ec2006916305d28ee3803696820d1fc915c",
+        "tree": "2026fe80e65553521ea82a9da36d103e433a164d",
+        "run": 45257236373,
+        "qualifies": false
+      },
+      "childScope": {
+        "source": "789f66533ca496d0ffb9a6dafe0c6c74728b78fe",
+        "tree": "fcbb58bb641d6118a137ab8dae318fbf1ee09adb",
+        "snapshot": "e911420756ec883ea05471537079662e283b5c1f",
+        "snapshotTree": "c9056510d10fbe6fa6a85927956e4154744f4d43",
+        "branch": "ci-run-r4proof2",
+        "run": 45258337739,
+        "status": "qualification-in-progress",
+        "integrated": false
+      },
+      "additionalReview": "A retained SourcePersistence factory input can replace projectScope without changing exposed port identities. The Planner-specific native admission/current pin and an actual composition control are being completed; the earlier proof gate does not qualify this follow-up.",
+      "performanceClaim": "No end-to-end latency improvement claimed before the complete original browser journey."
+    }
+  }
 }
