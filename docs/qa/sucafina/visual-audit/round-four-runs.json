@@ -3424,6 +3424,3033 @@
       },
       "ledgerSha256": "896021fb34209b6d1ccfbf8c2a4fb13179f7a5261be9df60a30920a52fa8951f",
       "qualifies": false
+    },
+    "materialityCanonicalCosts": {
+      "run": 45234822186,
+      "job": 137903617284,
+      "snapshot": "c8f22730036dc7865b7b0328faafd31c987f0bc1",
+      "parent": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+      "product": "4b03e4f3fbeb19d578e2c8442bd2d744cee14d12",
+      "originalRequestOnly": true,
+      "counts": {
+        "materiality-http-admission-start": 1,
+        "materiality-http-admission-ok": 1,
+        "materiality-http-case-scope-start": 1,
+        "materiality-case-state-first-start": 185,
+        "materiality-case-state-first-end": 185,
+        "materiality-case-authorization-first-start": 185,
+        "materiality-case-authorization-first-end": 185,
+        "materiality-case-evidence-operations-start": 185,
+        "materiality-case-evidence-operations-end": 185,
+        "materiality-case-final-checks-start": 185,
+        "materiality-case-final-checks-end": 185,
+        "materiality-case-state-second-start": 185,
+        "materiality-case-state-second-end": 185,
+        "materiality-access-first-start": 1,
+        "materiality-registry-before-start": 2,
+        "materiality-scope-entry": 40,
+        "materiality-scope-owner-allowed": 40,
+        "materiality-scope-admitted": 40,
+        "materiality-scope-selection-present": 40,
+        "materiality-scope-prepared-present": 40,
+        "materiality-scope-witness-current": 40,
+        "materiality-scope-work-start": 40,
+        "materiality-stored-initial-start": 40,
+        "materiality-stored-history-start": 80,
+        "materiality-result-batch-first-start": 80,
+        "materiality-result-batch-first-end": 80,
+        "materiality-result-batch-callbacks-first-start": 80,
+        "materiality-result-batch-callbacks-first-end": 80,
+        "materiality-result-batch-second-start": 80,
+        "materiality-result-batch-second-end": 80,
+        "materiality-result-batch-callbacks-second-start": 80,
+        "materiality-result-batch-callbacks-second-end": 80,
+        "materiality-result-batch-final-start": 80,
+        "materiality-result-batch-final-end": 80,
+        "materiality-stored-history-end": 80,
+        "materiality-stored-initial-end": 40,
+        "materiality-stored-prepare-start": 40,
+        "materiality-stored-case-start": 160,
+        "materiality-stored-case-end": 160,
+        "materiality-stored-forecast-start": 80,
+        "materiality-forecast-source-first-start": 80,
+        "materiality-forecast-source-first-end": 80,
+        "materiality-forecast-coverage-first-start": 80,
+        "materiality-forecast-coverage-first-end": 80,
+        "materiality-forecast-projection-first-start": 80,
+        "materiality-forecast-projection-first-end": 80,
+        "materiality-forecast-projection-second-start": 80,
+        "materiality-forecast-projection-second-end": 80,
+        "materiality-forecast-source-second-start": 80,
+        "materiality-forecast-source-second-end": 80,
+        "materiality-forecast-coverage-second-start": 80,
+        "materiality-forecast-coverage-second-end": 80,
+        "materiality-stored-forecast-end": 80,
+        "materiality-stored-prepare-end": 40,
+        "materiality-stored-reread-start": 40,
+        "materiality-stored-reread-end": 40,
+        "materiality-stored-final-start": 40,
+        "materiality-stored-final-end": 40,
+        "materiality-scope-work-end": 40,
+        "materiality-scope-grouped-ok": 40,
+        "materiality-scope-lane-observed": 40,
+        "materiality-scope-egress-start": 40,
+        "materiality-scope-egress-prepared-present": 40,
+        "materiality-scope-egress-return-current": 40,
+        "materiality-registry-before-ok": 2,
+        "materiality-case-before-start": 2,
+        "materiality-case-before-ok": 2,
+        "materiality-produce-start": 2,
+        "materiality-domain-binding-start": 2,
+        "materiality-domain-binding-ok": 2,
+        "materiality-domain-scenarios-first-start": 2,
+        "materiality-domain-scenarios-first-end": 2,
+        "materiality-domain-compare-first-start": 2,
+        "materiality-compare-scenarios-first-start": 12,
+        "materiality-compare-scenarios-first-end": 12,
+        "materiality-compare-sources-start": 28,
+        "materiality-compare-sources-ok": 28,
+        "materiality-compare-scenarios-second-start": 12,
+        "materiality-compare-scenarios-second-end": 12,
+        "materiality-compare-criteria-first-start": 4,
+        "materiality-compare-criteria-first-end": 4,
+        "materiality-compare-criteria-second-start": 4,
+        "materiality-compare-criteria-second-end": 4,
+        "materiality-compare-scenarios-final-start": 4,
+        "materiality-compare-scenarios-final-end": 4,
+        "materiality-domain-compare-first-ok": 2,
+        "materiality-domain-scenarios-second-start": 2,
+        "materiality-domain-scenarios-second-end": 2,
+        "materiality-domain-compare-second-start": 2,
+        "materiality-domain-compare-second-ok": 2,
+        "materiality-produce-ok": 2,
+        "materiality-registry-after-start": 2,
+        "materiality-registry-after-ok": 2,
+        "materiality-case-after-start": 2,
+        "materiality-case-after-ok": 2,
+        "materiality-access-first-ok": 1,
+        "materiality-access-second-start": 1,
+        "materiality-access-second-ok": 1,
+        "materiality-access-return-ok": 1,
+        "materiality-http-case-scope-ok": 1,
+        "materiality-http-producer-returned": 1
+      },
+      "phaseStats": [
+        {
+          "phase": "http-admission",
+          "n": 1,
+          "totalMs": 9,
+          "minMs": 9,
+          "maxMs": 9
+        },
+        {
+          "phase": "case-state-first",
+          "n": 185,
+          "totalMs": 384,
+          "minMs": 0,
+          "maxMs": 3
+        },
+        {
+          "phase": "case-authorization-first",
+          "n": 185,
+          "totalMs": 80,
+          "minMs": 0,
+          "maxMs": 3
+        },
+        {
+          "phase": "case-evidence-operations",
+          "n": 185,
+          "totalMs": 7188,
+          "minMs": 26,
+          "maxMs": 139
+        },
+        {
+          "phase": "case-final-checks",
+          "n": 185,
+          "totalMs": 7345,
+          "minMs": 0,
+          "maxMs": 120
+        },
+        {
+          "phase": "case-state-second",
+          "n": 185,
+          "totalMs": 407,
+          "minMs": 1,
+          "maxMs": 17
+        },
+        {
+          "phase": "result-batch-first",
+          "n": 80,
+          "totalMs": 191,
+          "minMs": 0,
+          "maxMs": 18
+        },
+        {
+          "phase": "result-batch-callbacks-first",
+          "n": 80,
+          "totalMs": 4873,
+          "minMs": 55,
+          "maxMs": 79
+        },
+        {
+          "phase": "result-batch-second",
+          "n": 80,
+          "totalMs": 183,
+          "minMs": 1,
+          "maxMs": 18
+        },
+        {
+          "phase": "result-batch-callbacks-second",
+          "n": 80,
+          "totalMs": 5077,
+          "minMs": 56,
+          "maxMs": 88
+        },
+        {
+          "phase": "result-batch-final",
+          "n": 80,
+          "totalMs": 164,
+          "minMs": 0,
+          "maxMs": 8
+        },
+        {
+          "phase": "stored-history",
+          "n": 80,
+          "totalMs": 10704,
+          "minMs": 120,
+          "maxMs": 187
+        },
+        {
+          "phase": "stored-initial",
+          "n": 40,
+          "totalMs": 5481,
+          "minMs": 122,
+          "maxMs": 192
+        },
+        {
+          "phase": "stored-case",
+          "n": 160,
+          "totalMs": 12014,
+          "minMs": 67,
+          "maxMs": 108
+        },
+        {
+          "phase": "forecast-source-first",
+          "n": 80,
+          "totalMs": 255,
+          "minMs": 2,
+          "maxMs": 6
+        },
+        {
+          "phase": "forecast-coverage-first",
+          "n": 80,
+          "totalMs": 6586,
+          "minMs": 75,
+          "maxMs": 110
+        },
+        {
+          "phase": "forecast-projection-first",
+          "n": 80,
+          "totalMs": 26,
+          "minMs": 0,
+          "maxMs": 11
+        },
+        {
+          "phase": "forecast-projection-second",
+          "n": 80,
+          "totalMs": 22,
+          "minMs": 0,
+          "maxMs": 1
+        },
+        {
+          "phase": "forecast-source-second",
+          "n": 80,
+          "totalMs": 249,
+          "minMs": 2,
+          "maxMs": 5
+        },
+        {
+          "phase": "forecast-coverage-second",
+          "n": 80,
+          "totalMs": 6645,
+          "minMs": 73,
+          "maxMs": 117
+        },
+        {
+          "phase": "stored-forecast",
+          "n": 80,
+          "totalMs": 13970,
+          "minMs": 158,
+          "maxMs": 203
+        },
+        {
+          "phase": "stored-prepare",
+          "n": 40,
+          "totalMs": 20072,
+          "minMs": 475,
+          "maxMs": 535
+        },
+        {
+          "phase": "stored-reread",
+          "n": 40,
+          "totalMs": 5246,
+          "minMs": 120,
+          "maxMs": 151
+        },
+        {
+          "phase": "stored-final",
+          "n": 40,
+          "totalMs": 6105,
+          "minMs": 137,
+          "maxMs": 190
+        },
+        {
+          "phase": "scope-work",
+          "n": 40,
+          "totalMs": 36953,
+          "minMs": 894,
+          "maxMs": 998
+        },
+        {
+          "phase": "registry-before",
+          "n": 2,
+          "totalMs": 5825,
+          "minMs": 2889,
+          "maxMs": 2936
+        },
+        {
+          "phase": "case-before",
+          "n": 2,
+          "totalMs": 430,
+          "minMs": 204,
+          "maxMs": 226
+        },
+        {
+          "phase": "domain-binding",
+          "n": 2,
+          "totalMs": 470,
+          "minMs": 232,
+          "maxMs": 238
+        },
+        {
+          "phase": "domain-scenarios-first",
+          "n": 2,
+          "totalMs": 2222,
+          "minMs": 1109,
+          "maxMs": 1113
+        },
+        {
+          "phase": "compare-scenarios-first",
+          "n": 12,
+          "totalMs": 13303,
+          "minMs": 1071,
+          "maxMs": 1184
+        },
+        {
+          "phase": "compare-sources",
+          "n": 28,
+          "totalMs": 12873,
+          "minMs": 399,
+          "maxMs": 506
+        },
+        {
+          "phase": "compare-scenarios-second",
+          "n": 12,
+          "totalMs": 13235,
+          "minMs": 1080,
+          "maxMs": 1156
+        },
+        {
+          "phase": "compare-criteria-first",
+          "n": 4,
+          "totalMs": 15621,
+          "minMs": 3820,
+          "maxMs": 3981
+        },
+        {
+          "phase": "compare-criteria-second",
+          "n": 4,
+          "totalMs": 15750,
+          "minMs": 3876,
+          "maxMs": 4040
+        },
+        {
+          "phase": "compare-scenarios-final",
+          "n": 4,
+          "totalMs": 4396,
+          "minMs": 1093,
+          "maxMs": 1106
+        },
+        {
+          "phase": "domain-compare-first",
+          "n": 2,
+          "totalMs": 25141,
+          "minMs": 12462,
+          "maxMs": 12679
+        },
+        {
+          "phase": "domain-scenarios-second",
+          "n": 2,
+          "totalMs": 2199,
+          "minMs": 1091,
+          "maxMs": 1108
+        },
+        {
+          "phase": "domain-compare-second",
+          "n": 2,
+          "totalMs": 25145,
+          "minMs": 12559,
+          "maxMs": 12586
+        },
+        {
+          "phase": "produce",
+          "n": 2,
+          "totalMs": 55764,
+          "minMs": 27718,
+          "maxMs": 28046
+        },
+        {
+          "phase": "registry-after",
+          "n": 2,
+          "totalMs": 5800,
+          "minMs": 2890,
+          "maxMs": 2910
+        },
+        {
+          "phase": "case-after",
+          "n": 2,
+          "totalMs": 423,
+          "minMs": 200,
+          "maxMs": 223
+        },
+        {
+          "phase": "access-first",
+          "n": 1,
+          "totalMs": 34046,
+          "minMs": 34046,
+          "maxMs": 34046
+        },
+        {
+          "phase": "access-second",
+          "n": 1,
+          "totalMs": 34351,
+          "minMs": 34351,
+          "maxMs": 34351
+        },
+        {
+          "phase": "http-case-scope",
+          "n": 1,
+          "totalMs": 68667,
+          "minMs": 68667,
+          "maxMs": 68667
+        }
+      ],
+      "ledgerSha256": "811ba99f526592551438b559c6bd3fe354cbe16e7c2d905438822ce1c9ce0daa",
+      "qualifies": false,
+      "artifact": 14849811629,
+      "artifactBytes": 12170898,
+      "artifactSha256": "3a09763f24254e4f47bf22b4ac8ab1772579af3bff33ac53d90df3c49d35bf4b",
+      "logSha256": "006ec8d7448637513202d352a7b1eb1ae70c65a4ec6fbbe8d653d0a5da137888",
+      "networkSha256": "5107f455658fd3cda00d297e0b7693ec9552863c78e5282041889975c1f9c6bb",
+      "result": "failure",
+      "producerMs": 68676,
+      "observationsMs": [
+        34046,
+        34351
+      ],
+      "pairs": 40,
+      "workMs": 36953,
+      "historicalMs": 10704,
+      "caseReads": 160,
+      "caseReadMs": 12014,
+      "forecasts": 80,
+      "forecastMs": 13970,
+      "forecastCoverageMs": 13231,
+      "forecastSourceAndProjectionMs": 552,
+      "externalValidateSourcesMs": 12873,
+      "physicalC08Ms": 1329,
+      "operationLoops": 0,
+      "fallbacks": 0,
+      "requestResponseObserved": false
+    },
+    "atlasPreparationIntent": {
+      "purpose": "isolated exact UI62 verification; full original Memory5 remains final qualification",
+      "source": "42abce1949cc1a533f62baab6597896d359f3129",
+      "snapshot": "19f8cef635498bb1e172a745b1ae3380bc302564",
+      "tree": "1a6ba8ae3bbbf94edfe2c678f23ef3a17bf0146c",
+      "branch": "ci-run-r4recall5",
+      "runId": 45236553987,
+      "sourceSpec": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+      "sourceSpecBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+      "nativeFixtureBlob": "bca30bef5d5a87b1825ff084e09642c5baa951d7",
+      "scannerBlob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "selectionSpec": "packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts",
+      "bodyChars": 7512,
+      "helpersChars": 4500,
+      "bodyEqual": true,
+      "helpersEqual": true,
+      "limitsEqual": true,
+      "designWave": "four-memory",
+      "runtimeInstrumentation": false,
+      "retries": 0,
+      "workers": 1,
+      "status": "failed-before-browser",
+      "jobId": 137909683270,
+      "artifact": {
+        "id": 14850497028,
+        "bytes": 671013,
+        "sha256": "3e13ce4521c57d6ecc76b0a82500ee1306bced1124aa866d52be842fac86c4ea",
+        "zip": "r4-recall5-14850497028.zip"
+      },
+      "browserReached": false,
+      "publicationInvoked": false,
+      "captures": 0,
+      "failure": {
+        "observedStage": "admission",
+        "observedReason": "unavailable",
+        "typedReasonRecorded": false,
+        "at": "2026-11-23T18:20:50.2074015Z"
+      },
+      "sourceDiagnosis": {
+        "path": "apps/cli/src/sucafina-product/command-identity.ts",
+        "blob": "68f4a4e153d7d56db797fae469be998c0082b9aa",
+        "finding": "The fixture POST lacked Idempotency-Key and the canonical JSON/sf fallback. Command identity therefore cannot be resolved if admission reaches that boundary; runtime did not distinguish admit from validate.",
+        "fixCommit": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460"
+      },
+      "stages": [
+        {
+          "at": "2026-11-23T18:19:09.3886027Z",
+          "stage": "build"
+        },
+        {
+          "at": "2026-11-23T18:19:52.8817377Z",
+          "stage": "installation"
+        },
+        {
+          "at": "2026-11-23T18:19:52.8999679Z",
+          "stage": "configuration"
+        },
+        {
+          "at": "2026-11-23T18:19:52.9001429Z",
+          "stage": "dashboard-seed"
+        },
+        {
+          "at": "2026-11-23T18:19:52.9147028Z",
+          "stage": "planner-seed"
+        },
+        {
+          "at": "2026-11-23T18:19:52.9188274Z",
+          "stage": "procurement-seed"
+        },
+        {
+          "at": "2026-11-23T18:19:52.9580700Z",
+          "stage": "seed-complete"
+        },
+        {
+          "at": "2026-11-23T18:19:56.3850284Z",
+          "stage": "native-ready"
+        },
+        {
+          "at": "2026-11-23T18:19:56.3877876Z",
+          "stage": "decisions-seed"
+        },
+        {
+          "at": "2026-11-23T18:19:56.3937937Z",
+          "stage": "decisions-request-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:19:56.5500561Z",
+          "stage": "decisions-response-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:19:56.5501216Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:19:56.8853655Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:19:56.8870029Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:19:57.1509352Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:19:57.1523896Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:19:57.2101867Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:19:57.2102413Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:19:59.8670906Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:19:59.8677909Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:20:00.1074186Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:20:00.1074966Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:20:00.1559185Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:20:00.1560849Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:02.7929230Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:02.7942694Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:20:03.0267336Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:20:03.0269996Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:20:03.4845045Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:20:03.4845704Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:20:05.9368067Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:20:05.9368653Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:20:06.4326150Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:20:06.4327061Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:20:09.0799558Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:20:09.0801172Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:13.1565247Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:13.1591241Z",
+          "stage": "decisions-request-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:20:13.6884247Z",
+          "stage": "decisions-response-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:20:13.6884886Z",
+          "stage": "decisions-request-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:20:27.1451530Z",
+          "stage": "decisions-response-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:20:27.1452289Z",
+          "stage": "decisions-request-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:20:44.5835736Z",
+          "stage": "decisions-response-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:20:44.5837813Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:49.4975221Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:20:49.4992518Z",
+          "stage": "decisions-ready"
+        },
+        {
+          "at": "2026-11-23T18:20:49.4993172Z",
+          "stage": "memory-publication"
+        }
+      ],
+      "reportStats": {
+        "total": 1,
+        "expected": 0,
+        "unexpected": 1,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": false
+      },
+      "reportFiles": [
+        "8ab59dc77c8796956736.json",
+        "report.json"
+      ],
+      "request": {
+        "request": {
+          "package": "app",
+          "directory": "packages/app-shell",
+          "packageSelector": "@orchestra/app",
+          "runner": "playwright",
+          "args": [
+            "e2e/sucafina/diagnostic-ui62.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+            "ORCHESTRA_CHANNEL": "prod"
+          },
+          "config": "e2e/playwright.production.config.ts"
+        },
+        "platform": "linux",
+        "arch": "x64",
+        "sha": "19f8cef635498bb1e172a745b1ae3380bc302564"
+      },
+      "playwright-selection": {
+        "config": {
+          "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+          "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+          "forbidOnly": true,
+          "fullyParallel": false,
+          "globalSetup": null,
+          "globalTeardown": null,
+          "globalTimeout": 0,
+          "grep": {},
+          "grepInvert": {},
+          "maxFailures": 0,
+          "metadata": {
+            "bundle": "production"
+          },
+          "preserveOutput": "always",
+          "projects": [
+            {
+              "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+              "repeatEach": 1,
+              "retries": 0,
+              "metadata": {
+                "bundle": "production"
+              },
+              "id": "chromium",
+              "name": "chromium",
+              "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+              "testIgnore": [
+                "performance/**"
+              ],
+              "testMatch": [
+                "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+              ],
+              "timeout": 60000
+            }
+          ],
+          "quiet": false,
+          "reporter": [
+            [
+              "json"
+            ]
+          ],
+          "reportSlowTests": {
+            "max": 5,
+            "threshold": 300000
+          },
+          "shard": null,
+          "tags": [],
+          "updateSnapshots": "missing",
+          "updateSourceMethod": "patch",
+          "version": "1.59.1",
+          "workers": 1,
+          "webServer": null
+        },
+        "suites": [
+          {
+            "title": "sucafina/diagnostic-ui62.spec.ts",
+            "file": "sucafina/diagnostic-ui62.spec.ts",
+            "column": 0,
+            "line": 0,
+            "specs": [
+              {
+                "title": "[diagnostic] UI62 · private authorized case recall in an isolated installation",
+                "ok": true,
+                "tags": [],
+                "tests": [
+                  {
+                    "timeout": 60000,
+                    "annotations": [],
+                    "expectedStatus": "passed",
+                    "projectId": "chromium",
+                    "projectName": "chromium",
+                    "results": [],
+                    "status": "skipped"
+                  }
+                ],
+                "id": "8ab59dc77c8796956736-575759489855f3ff6e53",
+                "file": "sucafina/diagnostic-ui62.spec.ts",
+                "line": 113,
+                "column": 1
+              }
+            ]
+          }
+        ],
+        "errors": [],
+        "stats": {
+          "startTime": "2026-11-23T18:18:20.071Z",
+          "duration": 477.4230000000001,
+          "expected": 0,
+          "skipped": 1,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "playwright-runtime": {
+        "artifactPath": "test-ci-evidence/playwright-runtime.json",
+        "stats": {
+          "startTime": "2026-11-23T18:18:21.167Z",
+          "duration": 149067.064,
+          "expected": 0,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        },
+        "workers": 1,
+        "projects": [
+          {
+            "name": "chromium",
+            "retries": 0,
+            "repeatEach": 1
+          }
+        ]
+      },
+      "ledgerSha256": "2f7e3eeb57054fa5e1a1273d089cfbba621c2c98ef200c849bf9ca9c553638b7",
+      "qualifies": false
+    },
+    "materialityEvidenceCosts": {
+      "run": 45238328771,
+      "snapshot": "badaa1d7a21be19ab1a0d813c42c1d28e3166171",
+      "tree": "e506d681a157bfd50a760b8a59e618e3068d4350",
+      "branch": "ci-run-r4material6",
+      "source": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+      "status": "completed",
+      "qualifies": false,
+      "observers": {
+        "files": 15,
+        "added": 153,
+        "removed": 0,
+        "stripRestoresOriginalBytes": true
+      },
+      "originalInnerBoundsUnchanged": true,
+      "clock": "test.trace stdout timestamp ms",
+      "allMarkerCount": 944271,
+      "requestMarkerCount": 276113,
+      "requestCompleted": false,
+      "requestObservedWindowMs": 84935.40999999997,
+      "instrumentationOverhead": "Authority logs emitted for every revalidation; total observed window is not production latency. First observation is complete; second truncated on teardown.",
+      "firstObservationDurationMs": 60310.20000000001,
+      "firstObservation": {
+        "phaseStats": [
+          {
+            "phase": "authority-snapshot",
+            "n": 24823,
+            "totalMs": 1772.408,
+            "minMs": 0.003,
+            "maxMs": 15.124,
+            "meanMs": 0.071
+          },
+          {
+            "phase": "authority-principal",
+            "n": 26775,
+            "totalMs": 10021.637,
+            "minMs": 0.003,
+            "maxMs": 36.341,
+            "meanMs": 0.374
+          },
+          {
+            "phase": "authority-ui-authorize",
+            "n": 24823,
+            "totalMs": 23590.545,
+            "minMs": 0.019,
+            "maxMs": 36.457,
+            "meanMs": 0.95
+          },
+          {
+            "phase": "case-state-first",
+            "n": 92,
+            "totalMs": 363.086,
+            "minMs": 1.948,
+            "maxMs": 19.572,
+            "meanMs": 3.947
+          },
+          {
+            "phase": "case-authorization-first",
+            "n": 92,
+            "totalMs": 87.892,
+            "minMs": 0.044,
+            "maxMs": 2.849,
+            "meanMs": 0.955
+          },
+          {
+            "phase": "bcs-admission",
+            "n": 1176,
+            "totalMs": 1136.215,
+            "minMs": 0.027,
+            "maxMs": 16.341,
+            "meanMs": 0.966
+          },
+          {
+            "phase": "bcs-maps-first",
+            "n": 1176,
+            "totalMs": 85.07,
+            "minMs": 0.003,
+            "maxMs": 2.387,
+            "meanMs": 0.072
+          },
+          {
+            "phase": "bcs-bound-access",
+            "n": 1176,
+            "totalMs": 2809.793,
+            "minMs": 0.08,
+            "maxMs": 37.294,
+            "meanMs": 2.389
+          },
+          {
+            "phase": "evidence-admission",
+            "n": 1176,
+            "totalMs": 1086.334,
+            "minMs": 0.027,
+            "maxMs": 17.743,
+            "meanMs": 0.924
+          },
+          {
+            "phase": "evidence-source-first",
+            "n": 1176,
+            "totalMs": 9774.143,
+            "minMs": 1.136,
+            "maxMs": 51.784,
+            "meanMs": 8.311
+          },
+          {
+            "phase": "evidence-environment",
+            "n": 1176,
+            "totalMs": 160.487,
+            "minMs": 0.003,
+            "maxMs": 5.47,
+            "meanMs": 0.136
+          },
+          {
+            "phase": "evidence-projection-first",
+            "n": 1176,
+            "totalMs": 970.278,
+            "minMs": 0.004,
+            "maxMs": 22.326,
+            "meanMs": 0.825
+          },
+          {
+            "phase": "evidence-build-projection",
+            "n": 1176,
+            "totalMs": 181.915,
+            "minMs": 0.004,
+            "maxMs": 2.53,
+            "meanMs": 0.155
+          },
+          {
+            "phase": "evidence-projection-source-second",
+            "n": 1176,
+            "totalMs": 10550.422,
+            "minMs": 1.143,
+            "maxMs": 63.012,
+            "meanMs": 8.971
+          },
+          {
+            "phase": "evidence-final-validation",
+            "n": 1176,
+            "totalMs": 1358.246,
+            "minMs": 0.027,
+            "maxMs": 18.866,
+            "meanMs": 1.155
+          },
+          {
+            "phase": "evidence-canonical-read",
+            "n": 1176,
+            "totalMs": 24544.542,
+            "minMs": 11.272,
+            "maxMs": 97.818,
+            "meanMs": 20.871
+          },
+          {
+            "phase": "bcs-planner-evidence",
+            "n": 1176,
+            "totalMs": 25799.283,
+            "minMs": 11.677,
+            "maxMs": 98.268,
+            "meanMs": 21.938
+          },
+          {
+            "phase": "bcs-current-read",
+            "n": 1176,
+            "totalMs": 31742.531,
+            "minMs": 15.647,
+            "maxMs": 104.005,
+            "meanMs": 26.992
+          },
+          {
+            "phase": "bcs-source",
+            "n": 1176,
+            "totalMs": 35912.445,
+            "minMs": 16.933,
+            "maxMs": 110.199,
+            "meanMs": 30.538
+          },
+          {
+            "phase": "bcs-egress",
+            "n": 1176,
+            "totalMs": 1089.611,
+            "minMs": 0.027,
+            "maxMs": 17.012,
+            "meanMs": 0.927
+          },
+          {
+            "phase": "bcs-maps-second",
+            "n": 1176,
+            "totalMs": 102.249,
+            "minMs": 0.003,
+            "maxMs": 2.608,
+            "meanMs": 0.087
+          },
+          {
+            "phase": "bcs-context-values",
+            "n": 591,
+            "totalMs": 38493.407,
+            "minMs": 40.925,
+            "maxMs": 188.559,
+            "meanMs": 65.133
+          },
+          {
+            "phase": "bcs-read-context",
+            "n": 591,
+            "totalMs": 39815.795,
+            "minMs": 41.349,
+            "maxMs": 192.984,
+            "meanMs": 67.37
+          },
+          {
+            "phase": "bcs-capture-digest",
+            "n": 591,
+            "totalMs": 4022.304,
+            "minMs": 0.132,
+            "maxMs": 27.195,
+            "meanMs": 6.806
+          },
+          {
+            "phase": "case-evidence-operations",
+            "n": 92,
+            "totalMs": 6578.034,
+            "minMs": 52.631,
+            "maxMs": 178.627,
+            "meanMs": 71.5
+          },
+          {
+            "phase": "case-final-checks",
+            "n": 92,
+            "totalMs": 7158.115,
+            "minMs": 53.069,
+            "maxMs": 210.755,
+            "meanMs": 77.806
+          },
+          {
+            "phase": "case-state-second",
+            "n": 92,
+            "totalMs": 401.783,
+            "minMs": 1.899,
+            "maxMs": 23.716,
+            "meanMs": 4.367
+          },
+          {
+            "phase": "result-batch-first",
+            "n": 40,
+            "totalMs": 189.709,
+            "minMs": 2.833,
+            "maxMs": 18.395,
+            "meanMs": 4.743
+          },
+          {
+            "phase": "result-batch-callbacks-first",
+            "n": 40,
+            "totalMs": 5125.631,
+            "minMs": 111.964,
+            "maxMs": 225.717,
+            "meanMs": 128.141
+          },
+          {
+            "phase": "result-batch-second",
+            "n": 40,
+            "totalMs": 159.113,
+            "minMs": 3.026,
+            "maxMs": 5.076,
+            "meanMs": 3.978
+          },
+          {
+            "phase": "result-batch-callbacks-second",
+            "n": 40,
+            "totalMs": 5132.481,
+            "minMs": 112.131,
+            "maxMs": 183.826,
+            "meanMs": 128.312
+          },
+          {
+            "phase": "result-batch-final",
+            "n": 40,
+            "totalMs": 154.523,
+            "minMs": 0.035,
+            "maxMs": 5.912,
+            "meanMs": 3.863
+          },
+          {
+            "phase": "stored-history",
+            "n": 40,
+            "totalMs": 10897.844,
+            "minMs": 244.508,
+            "maxMs": 356.421,
+            "meanMs": 272.446
+          },
+          {
+            "phase": "stored-initial",
+            "n": 20,
+            "totalMs": 5440.126,
+            "minMs": 245.267,
+            "maxMs": 321.187,
+            "meanMs": 272.006
+          },
+          {
+            "phase": "stored-case",
+            "n": 80,
+            "totalMs": 11971.413,
+            "minMs": 128.982,
+            "maxMs": 203.588,
+            "meanMs": 149.643
+          },
+          {
+            "phase": "forecast-source-first",
+            "n": 40,
+            "totalMs": 276.572,
+            "minMs": 3.631,
+            "maxMs": 32.637,
+            "meanMs": 6.914
+          },
+          {
+            "phase": "forecast-coverage-first",
+            "n": 40,
+            "totalMs": 6343.198,
+            "minMs": 139.517,
+            "maxMs": 196.882,
+            "meanMs": 158.58
+          },
+          {
+            "phase": "forecast-projection-first",
+            "n": 40,
+            "totalMs": 29.1,
+            "minMs": 0.007,
+            "maxMs": 1.907,
+            "meanMs": 0.727
+          },
+          {
+            "phase": "forecast-projection-second",
+            "n": 40,
+            "totalMs": 22.712,
+            "minMs": 0.007,
+            "maxMs": 2.243,
+            "meanMs": 0.568
+          },
+          {
+            "phase": "forecast-source-second",
+            "n": 40,
+            "totalMs": 255.689,
+            "minMs": 4.792,
+            "maxMs": 18.644,
+            "meanMs": 6.392
+          },
+          {
+            "phase": "forecast-coverage-second",
+            "n": 40,
+            "totalMs": 6427.85,
+            "minMs": 138.811,
+            "maxMs": 249.582,
+            "meanMs": 160.696
+          },
+          {
+            "phase": "stored-forecast",
+            "n": 40,
+            "totalMs": 13548.749,
+            "minMs": 302.838,
+            "maxMs": 424.66,
+            "meanMs": 338.719
+          },
+          {
+            "phase": "stored-prepare",
+            "n": 20,
+            "totalMs": 19798.241,
+            "minMs": 917.572,
+            "maxMs": 1088.582,
+            "meanMs": 989.912
+          },
+          {
+            "phase": "stored-reread",
+            "n": 20,
+            "totalMs": 5469.871,
+            "minMs": 244.76,
+            "maxMs": 356.722,
+            "meanMs": 273.494
+          },
+          {
+            "phase": "stored-final",
+            "n": 20,
+            "totalMs": 5838.87,
+            "minMs": 266.357,
+            "maxMs": 333.135,
+            "meanMs": 291.943
+          },
+          {
+            "phase": "scope-work",
+            "n": 20,
+            "totalMs": 36580.819,
+            "minMs": 1701.653,
+            "maxMs": 1980.534,
+            "meanMs": 1829.041
+          },
+          {
+            "phase": "registry-before",
+            "n": 1,
+            "totalMs": 5492.474,
+            "minMs": 5492.474,
+            "maxMs": 5492.474,
+            "meanMs": 5492.474
+          },
+          {
+            "phase": "case-before",
+            "n": 1,
+            "totalMs": 327.015,
+            "minMs": 327.015,
+            "maxMs": 327.015,
+            "meanMs": 327.015
+          },
+          {
+            "phase": "domain-binding",
+            "n": 1,
+            "totalMs": 350.256,
+            "minMs": 350.256,
+            "maxMs": 350.256,
+            "meanMs": 350.256
+          },
+          {
+            "phase": "domain-scenarios-first",
+            "n": 1,
+            "totalMs": 2096.632,
+            "minMs": 2096.632,
+            "maxMs": 2096.632,
+            "meanMs": 2096.632
+          },
+          {
+            "phase": "compare-scenarios-first",
+            "n": 6,
+            "totalMs": 12579.781,
+            "minMs": 1958.401,
+            "maxMs": 2219.732,
+            "meanMs": 2096.63
+          },
+          {
+            "phase": "compare-sources",
+            "n": 14,
+            "totalMs": 9867.062,
+            "minMs": 659.374,
+            "maxMs": 753.502,
+            "meanMs": 704.79
+          },
+          {
+            "phase": "compare-scenarios-second",
+            "n": 6,
+            "totalMs": 12361.751,
+            "minMs": 2030.214,
+            "maxMs": 2129.47,
+            "meanMs": 2060.292
+          },
+          {
+            "phase": "compare-criteria-first",
+            "n": 2,
+            "totalMs": 13744.496,
+            "minMs": 6804.246,
+            "maxMs": 6940.25,
+            "meanMs": 6872.248
+          },
+          {
+            "phase": "compare-criteria-second",
+            "n": 2,
+            "totalMs": 13550.425,
+            "minMs": 6676.665,
+            "maxMs": 6873.76,
+            "meanMs": 6775.213
+          },
+          {
+            "phase": "compare-scenarios-final",
+            "n": 2,
+            "totalMs": 4078.055,
+            "minMs": 2033.589,
+            "maxMs": 2044.466,
+            "meanMs": 2039.027
+          },
+          {
+            "phase": "domain-compare-first",
+            "n": 1,
+            "totalMs": 21739.615,
+            "minMs": 21739.615,
+            "maxMs": 21739.615,
+            "meanMs": 21739.615
+          },
+          {
+            "phase": "domain-scenarios-second",
+            "n": 1,
+            "totalMs": 2005.452,
+            "minMs": 2005.452,
+            "maxMs": 2005.452,
+            "meanMs": 2005.452
+          },
+          {
+            "phase": "domain-compare-second",
+            "n": 1,
+            "totalMs": 21982.897,
+            "minMs": 21982.897,
+            "maxMs": 21982.897,
+            "meanMs": 21982.897
+          },
+          {
+            "phase": "produce",
+            "n": 1,
+            "totalMs": 48526.732,
+            "minMs": 48526.732,
+            "maxMs": 48526.732,
+            "meanMs": 48526.732
+          },
+          {
+            "phase": "registry-after",
+            "n": 1,
+            "totalMs": 5377.42,
+            "minMs": 5377.42,
+            "maxMs": 5377.42,
+            "meanMs": 5377.42
+          },
+          {
+            "phase": "case-after",
+            "n": 1,
+            "totalMs": 405.305,
+            "minMs": 405.305,
+            "maxMs": 405.305,
+            "meanMs": 405.305
+          },
+          {
+            "phase": "access-first",
+            "n": 1,
+            "totalMs": 60310.2,
+            "minMs": 60310.2,
+            "maxMs": 60310.2,
+            "meanMs": 60310.2
+          }
+        ],
+        "counts": {
+          "materiality-access-first-start": 1,
+          "materiality-authority-ui-authorize-start": 24823,
+          "materiality-authority-snapshot-start": 24823,
+          "materiality-authority-snapshot-end": 24823,
+          "materiality-authority-principal-start": 26775,
+          "materiality-authority-principal-end": 26775,
+          "materiality-authority-ui-authorize-end": 24823,
+          "materiality-registry-before-start": 1,
+          "materiality-case-state-first-start": 92,
+          "materiality-case-state-first-end": 92,
+          "materiality-case-authorization-first-start": 92,
+          "materiality-case-authorization-first-end": 92,
+          "materiality-case-evidence-operations-start": 92,
+          "materiality-bcs-read-context-start": 591,
+          "materiality-bcs-context-values-start": 591,
+          "materiality-bcs-admission-start": 1176,
+          "materiality-bcs-admission-end": 1176,
+          "materiality-bcs-maps-first-start": 1176,
+          "materiality-bcs-maps-first-end": 1176,
+          "materiality-bcs-source-start": 1176,
+          "materiality-bcs-bound-access-start": 1176,
+          "materiality-bcs-bound-access-end": 1176,
+          "materiality-bcs-current-read-start": 1176,
+          "materiality-bcs-planner-evidence-start": 1176,
+          "materiality-evidence-canonical-read-start": 1176,
+          "materiality-evidence-admission-start": 1176,
+          "materiality-evidence-admission-end": 1176,
+          "materiality-evidence-source-first-start": 1176,
+          "materiality-evidence-source-first-end": 1176,
+          "materiality-evidence-environment-start": 1176,
+          "materiality-evidence-environment-end": 1176,
+          "materiality-evidence-projection-first-start": 1176,
+          "materiality-evidence-projection-first-end": 1176,
+          "materiality-evidence-build-projection-start": 1176,
+          "materiality-evidence-build-projection-end": 1176,
+          "materiality-evidence-projection-source-second-start": 1176,
+          "materiality-evidence-projection-source-second-end": 1176,
+          "materiality-evidence-final-validation-start": 1176,
+          "materiality-evidence-final-validation-end": 1176,
+          "materiality-evidence-canonical-read-end": 1176,
+          "materiality-bcs-planner-evidence-end": 1176,
+          "materiality-bcs-current-read-end": 1176,
+          "materiality-bcs-source-end": 1176,
+          "materiality-bcs-egress-start": 1176,
+          "materiality-bcs-egress-end": 1176,
+          "materiality-bcs-maps-second-start": 1176,
+          "materiality-bcs-maps-second-end": 1176,
+          "materiality-bcs-context-values-end": 591,
+          "materiality-bcs-read-context-end": 591,
+          "materiality-bcs-capture-digest-start": 591,
+          "materiality-bcs-capture-digest-end": 591,
+          "materiality-case-evidence-operations-end": 92,
+          "materiality-case-final-checks-start": 92,
+          "materiality-case-final-checks-end": 92,
+          "materiality-case-state-second-start": 92,
+          "materiality-case-state-second-end": 92,
+          "materiality-scope-entry": 20,
+          "materiality-scope-owner-allowed": 20,
+          "materiality-scope-admitted": 20,
+          "materiality-scope-selection-present": 20,
+          "materiality-scope-prepared-present": 20,
+          "materiality-scope-witness-current": 20,
+          "materiality-scope-work-start": 20,
+          "materiality-stored-initial-start": 20,
+          "materiality-stored-history-start": 40,
+          "materiality-result-batch-first-start": 40,
+          "materiality-result-batch-first-end": 40,
+          "materiality-result-batch-callbacks-first-start": 40,
+          "materiality-result-batch-callbacks-first-end": 40,
+          "materiality-result-batch-second-start": 40,
+          "materiality-result-batch-second-end": 40,
+          "materiality-result-batch-callbacks-second-start": 40,
+          "materiality-result-batch-callbacks-second-end": 40,
+          "materiality-result-batch-final-start": 40,
+          "materiality-result-batch-final-end": 40,
+          "materiality-stored-history-end": 40,
+          "materiality-stored-initial-end": 20,
+          "materiality-stored-prepare-start": 20,
+          "materiality-stored-case-start": 80,
+          "materiality-stored-case-end": 80,
+          "materiality-stored-forecast-start": 40,
+          "materiality-forecast-source-first-start": 40,
+          "materiality-forecast-source-first-end": 40,
+          "materiality-forecast-coverage-first-start": 40,
+          "materiality-forecast-coverage-first-end": 40,
+          "materiality-forecast-projection-first-start": 40,
+          "materiality-forecast-projection-first-end": 40,
+          "materiality-forecast-projection-second-start": 40,
+          "materiality-forecast-projection-second-end": 40,
+          "materiality-forecast-source-second-start": 40,
+          "materiality-forecast-source-second-end": 40,
+          "materiality-forecast-coverage-second-start": 40,
+          "materiality-forecast-coverage-second-end": 40,
+          "materiality-stored-forecast-end": 40,
+          "materiality-stored-prepare-end": 20,
+          "materiality-stored-reread-start": 20,
+          "materiality-stored-reread-end": 20,
+          "materiality-stored-final-start": 20,
+          "materiality-stored-final-end": 20,
+          "materiality-scope-work-end": 20,
+          "materiality-scope-grouped-ok": 20,
+          "materiality-scope-lane-observed": 20,
+          "materiality-scope-egress-start": 20,
+          "materiality-scope-egress-prepared-present": 20,
+          "materiality-scope-egress-return-current": 20,
+          "materiality-registry-before-ok": 1,
+          "materiality-case-before-start": 1,
+          "materiality-case-before-ok": 1,
+          "materiality-produce-start": 1,
+          "materiality-domain-binding-start": 1,
+          "materiality-domain-binding-ok": 1,
+          "materiality-domain-scenarios-first-start": 1,
+          "materiality-domain-scenarios-first-end": 1,
+          "materiality-domain-compare-first-start": 1,
+          "materiality-compare-scenarios-first-start": 6,
+          "materiality-compare-scenarios-first-end": 6,
+          "materiality-compare-sources-start": 14,
+          "materiality-compare-sources-ok": 14,
+          "materiality-compare-scenarios-second-start": 6,
+          "materiality-compare-scenarios-second-end": 6,
+          "materiality-compare-criteria-first-start": 2,
+          "materiality-compare-criteria-first-end": 2,
+          "materiality-compare-criteria-second-start": 2,
+          "materiality-compare-criteria-second-end": 2,
+          "materiality-compare-scenarios-final-start": 2,
+          "materiality-compare-scenarios-final-end": 2,
+          "materiality-domain-compare-first-ok": 1,
+          "materiality-domain-scenarios-second-start": 1,
+          "materiality-domain-scenarios-second-end": 1,
+          "materiality-domain-compare-second-start": 1,
+          "materiality-domain-compare-second-ok": 1,
+          "materiality-produce-ok": 1,
+          "materiality-registry-after-start": 1,
+          "materiality-registry-after-ok": 1,
+          "materiality-case-after-start": 1,
+          "materiality-case-after-ok": 1,
+          "materiality-access-first-ok": 1
+        },
+        "unclosed": {
+          "scope-egress": 20
+        },
+        "importantPhases": [
+          {
+            "phase": "scope-work",
+            "startMs": 432575.404,
+            "endMs": 434555.938,
+            "durationMs": 1980.5340000000433
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 435022.028,
+            "endMs": 436865.715,
+            "durationMs": 1843.6870000000345
+          },
+          {
+            "phase": "registry-before",
+            "startMs": 432011.472,
+            "endMs": 437503.946,
+            "durationMs": 5492.473999999987
+          },
+          {
+            "phase": "case-before",
+            "startMs": 437504.185,
+            "endMs": 437831.2,
+            "durationMs": 327.01500000001397
+          },
+          {
+            "phase": "domain-binding",
+            "startMs": 437832.707,
+            "endMs": 438182.963,
+            "durationMs": 350.25599999999395
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 438263.986,
+            "endMs": 440123.58,
+            "durationMs": 1859.594000000041
+          },
+          {
+            "phase": "domain-scenarios-first",
+            "startMs": 438182.972,
+            "endMs": 440279.604,
+            "durationMs": 2096.6319999999832
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 440361.975,
+            "endMs": 442174.001,
+            "durationMs": 1812.0260000000126
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 443125.752,
+            "endMs": 444951.047,
+            "durationMs": 1825.295000000042
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 446850.121,
+            "endMs": 448710.177,
+            "durationMs": 1860.0560000000405
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 449666.486,
+            "endMs": 451464.742,
+            "durationMs": 1798.2560000000522
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 453585.215,
+            "endMs": 455472.418,
+            "durationMs": 1887.2029999999795
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 456425.263,
+            "endMs": 458181.817,
+            "durationMs": 1756.5540000000037
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 459417.626,
+            "endMs": 461199.696,
+            "durationMs": 1782.070000000007
+          },
+          {
+            "phase": "domain-compare-first",
+            "startMs": 440279.617,
+            "endMs": 462019.232,
+            "durationMs": 21739.61499999999
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 462107.276,
+            "endMs": 463854.02,
+            "durationMs": 1746.744000000006
+          },
+          {
+            "phase": "domain-scenarios-second",
+            "startMs": 462019.268,
+            "endMs": 464024.72,
+            "durationMs": 2005.4519999999902
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 464111.641,
+            "endMs": 465813.294,
+            "durationMs": 1701.6529999999912
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 466778.734,
+            "endMs": 468555.467,
+            "durationMs": 1776.7330000000075
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 470424.222,
+            "endMs": 472386.929,
+            "durationMs": 1962.7069999999949
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 473364.725,
+            "endMs": 475158.997,
+            "durationMs": 1794.2719999999972
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 477434.351,
+            "endMs": 479302.262,
+            "durationMs": 1867.9109999999637
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 480305.131,
+            "endMs": 482120.5,
+            "durationMs": 1815.369000000006
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 483399.683,
+            "endMs": 485168.639,
+            "durationMs": 1768.9560000000056
+          },
+          {
+            "phase": "domain-compare-second",
+            "startMs": 464024.731,
+            "endMs": 486007.628,
+            "durationMs": 21982.896999999997
+          },
+          {
+            "phase": "produce",
+            "startMs": 437831.537,
+            "endMs": 486358.269,
+            "durationMs": 48526.73199999996
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 486939.503,
+            "endMs": 488853.652,
+            "durationMs": 1914.1489999999758
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 489285.667,
+            "endMs": 491112.717,
+            "durationMs": 1827.0499999999884
+          },
+          {
+            "phase": "registry-after",
+            "startMs": 486358.521,
+            "endMs": 491735.941,
+            "durationMs": 5377.419999999984
+          },
+          {
+            "phase": "case-after",
+            "startMs": 491735.956,
+            "endMs": 492141.261,
+            "durationMs": 405.304999999993
+          },
+          {
+            "phase": "access-first",
+            "startMs": 432007.876,
+            "endMs": 492318.076,
+            "durationMs": 60310.20000000001
+          }
+        ]
+      },
+      "requestWindow": {
+        "phaseStats": [
+          {
+            "phase": "authority-snapshot",
+            "n": 34852,
+            "totalMs": 2514.041,
+            "minMs": 0.003,
+            "maxMs": 15.124,
+            "meanMs": 0.072
+          },
+          {
+            "phase": "authority-principal",
+            "n": 37598,
+            "totalMs": 13981.183,
+            "minMs": 0.003,
+            "maxMs": 36.341,
+            "meanMs": 0.372
+          },
+          {
+            "phase": "authority-ui-authorize",
+            "n": 34851,
+            "totalMs": 33445.321,
+            "minMs": 0.019,
+            "maxMs": 36.457,
+            "meanMs": 0.96
+          },
+          {
+            "phase": "http-admission",
+            "n": 1,
+            "totalMs": 11.008,
+            "minMs": 11.008,
+            "maxMs": 11.008,
+            "meanMs": 11.008
+          },
+          {
+            "phase": "case-state-first",
+            "n": 131,
+            "totalMs": 516.512,
+            "minMs": 1.85,
+            "maxMs": 19.572,
+            "meanMs": 3.943
+          },
+          {
+            "phase": "case-authorization-first",
+            "n": 131,
+            "totalMs": 130.206,
+            "minMs": 0.044,
+            "maxMs": 3.846,
+            "meanMs": 0.994
+          },
+          {
+            "phase": "bcs-admission",
+            "n": 1651,
+            "totalMs": 1595.286,
+            "minMs": 0.027,
+            "maxMs": 16.341,
+            "meanMs": 0.966
+          },
+          {
+            "phase": "bcs-maps-first",
+            "n": 1651,
+            "totalMs": 129.092,
+            "minMs": 0.003,
+            "maxMs": 5.633,
+            "meanMs": 0.078
+          },
+          {
+            "phase": "bcs-bound-access",
+            "n": 1651,
+            "totalMs": 4029.752,
+            "minMs": 0.052,
+            "maxMs": 37.294,
+            "meanMs": 2.441
+          },
+          {
+            "phase": "evidence-admission",
+            "n": 1651,
+            "totalMs": 1506.568,
+            "minMs": 0.027,
+            "maxMs": 17.743,
+            "meanMs": 0.913
+          },
+          {
+            "phase": "evidence-source-first",
+            "n": 1651,
+            "totalMs": 13810.73,
+            "minMs": 1.136,
+            "maxMs": 56.91,
+            "meanMs": 8.365
+          },
+          {
+            "phase": "evidence-environment",
+            "n": 1651,
+            "totalMs": 223.781,
+            "minMs": 0.003,
+            "maxMs": 5.47,
+            "meanMs": 0.136
+          },
+          {
+            "phase": "evidence-projection-first",
+            "n": 1651,
+            "totalMs": 1394.876,
+            "minMs": 0.003,
+            "maxMs": 22.326,
+            "meanMs": 0.845
+          },
+          {
+            "phase": "evidence-build-projection",
+            "n": 1651,
+            "totalMs": 267.931,
+            "minMs": 0.004,
+            "maxMs": 2.53,
+            "meanMs": 0.162
+          },
+          {
+            "phase": "evidence-projection-source-second",
+            "n": 1651,
+            "totalMs": 14845.074,
+            "minMs": 0.17,
+            "maxMs": 63.012,
+            "meanMs": 8.992
+          },
+          {
+            "phase": "evidence-final-validation",
+            "n": 1651,
+            "totalMs": 1912.476,
+            "minMs": 0.027,
+            "maxMs": 18.866,
+            "meanMs": 1.158
+          },
+          {
+            "phase": "evidence-canonical-read",
+            "n": 1651,
+            "totalMs": 34635.698,
+            "minMs": 10.495,
+            "maxMs": 97.818,
+            "meanMs": 20.979
+          },
+          {
+            "phase": "bcs-planner-evidence",
+            "n": 1651,
+            "totalMs": 36430.074,
+            "minMs": 11.677,
+            "maxMs": 98.268,
+            "meanMs": 22.065
+          },
+          {
+            "phase": "bcs-current-read",
+            "n": 1651,
+            "totalMs": 44641.308,
+            "minMs": 14.777,
+            "maxMs": 104.005,
+            "meanMs": 27.039
+          },
+          {
+            "phase": "bcs-source",
+            "n": 1651,
+            "totalMs": 50572.603,
+            "minMs": 15.923,
+            "maxMs": 110.199,
+            "meanMs": 30.631
+          },
+          {
+            "phase": "bcs-egress",
+            "n": 1651,
+            "totalMs": 1544.524,
+            "minMs": 0.027,
+            "maxMs": 17.012,
+            "meanMs": 0.936
+          },
+          {
+            "phase": "bcs-maps-second",
+            "n": 1651,
+            "totalMs": 138.821,
+            "minMs": 0.003,
+            "maxMs": 2.608,
+            "meanMs": 0.084
+          },
+          {
+            "phase": "bcs-context-values",
+            "n": 830,
+            "totalMs": 54217.086,
+            "minMs": 40.925,
+            "maxMs": 196.724,
+            "meanMs": 65.322
+          },
+          {
+            "phase": "bcs-read-context",
+            "n": 830,
+            "totalMs": 56063.599,
+            "minMs": 41.349,
+            "maxMs": 201.475,
+            "meanMs": 67.547
+          },
+          {
+            "phase": "bcs-capture-digest",
+            "n": 829,
+            "totalMs": 5675.826,
+            "minMs": 0.132,
+            "maxMs": 50.507,
+            "meanMs": 6.847
+          },
+          {
+            "phase": "case-evidence-operations",
+            "n": 131,
+            "totalMs": 9547.49,
+            "minMs": 52.082,
+            "maxMs": 221.423,
+            "meanMs": 72.882
+          },
+          {
+            "phase": "case-final-checks",
+            "n": 131,
+            "totalMs": 10416.756,
+            "minMs": 53.069,
+            "maxMs": 210.755,
+            "meanMs": 79.517
+          },
+          {
+            "phase": "case-state-second",
+            "n": 131,
+            "totalMs": 577.363,
+            "minMs": 1.899,
+            "maxMs": 26.16,
+            "meanMs": 4.407
+          },
+          {
+            "phase": "result-batch-first",
+            "n": 56,
+            "totalMs": 251.092,
+            "minMs": 2.833,
+            "maxMs": 18.395,
+            "meanMs": 4.484
+          },
+          {
+            "phase": "result-batch-callbacks-first",
+            "n": 56,
+            "totalMs": 7128.788,
+            "minMs": 111.964,
+            "maxMs": 225.717,
+            "meanMs": 127.3
+          },
+          {
+            "phase": "result-batch-second",
+            "n": 56,
+            "totalMs": 223.554,
+            "minMs": 2.072,
+            "maxMs": 5.476,
+            "meanMs": 3.992
+          },
+          {
+            "phase": "result-batch-callbacks-second",
+            "n": 56,
+            "totalMs": 7241.047,
+            "minMs": 112.131,
+            "maxMs": 183.826,
+            "meanMs": 129.304
+          },
+          {
+            "phase": "result-batch-final",
+            "n": 56,
+            "totalMs": 212.519,
+            "minMs": 0.035,
+            "maxMs": 6.212,
+            "meanMs": 3.795
+          },
+          {
+            "phase": "stored-history",
+            "n": 56,
+            "totalMs": 15247.608,
+            "minMs": 244.508,
+            "maxMs": 356.421,
+            "meanMs": 272.279
+          },
+          {
+            "phase": "stored-initial",
+            "n": 28,
+            "totalMs": 7684.669,
+            "minMs": 245.267,
+            "maxMs": 321.187,
+            "meanMs": 274.452
+          },
+          {
+            "phase": "stored-case",
+            "n": 112,
+            "totalMs": 16748.23,
+            "minMs": 128.982,
+            "maxMs": 203.588,
+            "meanMs": 149.538
+          },
+          {
+            "phase": "forecast-source-first",
+            "n": 56,
+            "totalMs": 377.151,
+            "minMs": 3.631,
+            "maxMs": 32.637,
+            "meanMs": 6.735
+          },
+          {
+            "phase": "forecast-coverage-first",
+            "n": 56,
+            "totalMs": 8893.619,
+            "minMs": 139.517,
+            "maxMs": 240.816,
+            "meanMs": 158.815
+          },
+          {
+            "phase": "forecast-projection-first",
+            "n": 56,
+            "totalMs": 42.644,
+            "minMs": 0.007,
+            "maxMs": 2.231,
+            "meanMs": 0.761
+          },
+          {
+            "phase": "forecast-projection-second",
+            "n": 56,
+            "totalMs": 32.489,
+            "minMs": 0.007,
+            "maxMs": 2.243,
+            "meanMs": 0.58
+          },
+          {
+            "phase": "forecast-source-second",
+            "n": 56,
+            "totalMs": 389.768,
+            "minMs": 4.792,
+            "maxMs": 42.66,
+            "meanMs": 6.96
+          },
+          {
+            "phase": "forecast-coverage-second",
+            "n": 56,
+            "totalMs": 8872.193,
+            "minMs": 138.811,
+            "maxMs": 249.582,
+            "meanMs": 158.432
+          },
+          {
+            "phase": "stored-forecast",
+            "n": 56,
+            "totalMs": 18873.473,
+            "minMs": 302.838,
+            "maxMs": 424.66,
+            "meanMs": 337.026
+          },
+          {
+            "phase": "stored-prepare",
+            "n": 28,
+            "totalMs": 27554.345,
+            "minMs": 917.572,
+            "maxMs": 1088.582,
+            "meanMs": 984.084
+          },
+          {
+            "phase": "stored-reread",
+            "n": 28,
+            "totalMs": 7579.895,
+            "minMs": 244.76,
+            "maxMs": 356.722,
+            "meanMs": 270.711
+          },
+          {
+            "phase": "stored-final",
+            "n": 28,
+            "totalMs": 8227.834,
+            "minMs": 266.357,
+            "maxMs": 333.135,
+            "meanMs": 293.851
+          },
+          {
+            "phase": "scope-work",
+            "n": 28,
+            "totalMs": 51093.184,
+            "minMs": 1701.653,
+            "maxMs": 1980.534,
+            "meanMs": 1824.757
+          },
+          {
+            "phase": "registry-before",
+            "n": 2,
+            "totalMs": 10729.542,
+            "minMs": 5237.068,
+            "maxMs": 5492.474,
+            "meanMs": 5364.771
+          },
+          {
+            "phase": "case-before",
+            "n": 2,
+            "totalMs": 648.889,
+            "minMs": 321.874,
+            "maxMs": 327.015,
+            "meanMs": 324.445
+          },
+          {
+            "phase": "domain-binding",
+            "n": 2,
+            "totalMs": 731.596,
+            "minMs": 350.256,
+            "maxMs": 381.34,
+            "meanMs": 365.798
+          },
+          {
+            "phase": "domain-scenarios-first",
+            "n": 2,
+            "totalMs": 4152.192,
+            "minMs": 2055.56,
+            "maxMs": 2096.632,
+            "meanMs": 2076.096
+          },
+          {
+            "phase": "compare-scenarios-first",
+            "n": 9,
+            "totalMs": 18777.658,
+            "minMs": 1958.401,
+            "maxMs": 2219.732,
+            "meanMs": 2086.406
+          },
+          {
+            "phase": "compare-sources",
+            "n": 18,
+            "totalMs": 12739.045,
+            "minMs": 653.751,
+            "maxMs": 821.392,
+            "meanMs": 707.725
+          },
+          {
+            "phase": "compare-scenarios-second",
+            "n": 8,
+            "totalMs": 16487.595,
+            "minMs": 2030.214,
+            "maxMs": 2129.47,
+            "meanMs": 2060.949
+          },
+          {
+            "phase": "compare-criteria-first",
+            "n": 3,
+            "totalMs": 20694.373,
+            "minMs": 6804.246,
+            "maxMs": 6949.877,
+            "meanMs": 6898.124
+          },
+          {
+            "phase": "compare-criteria-second",
+            "n": 2,
+            "totalMs": 13550.425,
+            "minMs": 6676.665,
+            "maxMs": 6873.76,
+            "meanMs": 6775.213
+          },
+          {
+            "phase": "compare-scenarios-final",
+            "n": 2,
+            "totalMs": 4078.055,
+            "minMs": 2033.589,
+            "maxMs": 2044.466,
+            "meanMs": 2039.027
+          },
+          {
+            "phase": "domain-compare-first",
+            "n": 1,
+            "totalMs": 21739.615,
+            "minMs": 21739.615,
+            "maxMs": 21739.615,
+            "meanMs": 21739.615
+          },
+          {
+            "phase": "domain-scenarios-second",
+            "n": 1,
+            "totalMs": 2005.452,
+            "minMs": 2005.452,
+            "maxMs": 2005.452,
+            "meanMs": 2005.452
+          },
+          {
+            "phase": "domain-compare-second",
+            "n": 1,
+            "totalMs": 21982.897,
+            "minMs": 21982.897,
+            "maxMs": 21982.897,
+            "meanMs": 21982.897
+          },
+          {
+            "phase": "produce",
+            "n": 1,
+            "totalMs": 48526.732,
+            "minMs": 48526.732,
+            "maxMs": 48526.732,
+            "meanMs": 48526.732
+          },
+          {
+            "phase": "registry-after",
+            "n": 1,
+            "totalMs": 5377.42,
+            "minMs": 5377.42,
+            "maxMs": 5377.42,
+            "meanMs": 5377.42
+          },
+          {
+            "phase": "case-after",
+            "n": 1,
+            "totalMs": 405.305,
+            "minMs": 405.305,
+            "maxMs": 405.305,
+            "meanMs": 405.305
+          },
+          {
+            "phase": "access-first",
+            "n": 1,
+            "totalMs": 60310.2,
+            "minMs": 60310.2,
+            "maxMs": 60310.2,
+            "meanMs": 60310.2
+          }
+        ],
+        "counts": {
+          "materiality-http-admission-start": 1,
+          "materiality-authority-snapshot-start": 34852,
+          "materiality-authority-snapshot-end": 34852,
+          "materiality-authority-principal-start": 37598,
+          "materiality-authority-principal-end": 37598,
+          "materiality-authority-ui-authorize-start": 34851,
+          "materiality-authority-ui-authorize-end": 34851,
+          "materiality-http-admission-ok": 1,
+          "materiality-http-case-scope-start": 1,
+          "materiality-case-state-first-start": 131,
+          "materiality-case-state-first-end": 131,
+          "materiality-case-authorization-first-start": 131,
+          "materiality-case-authorization-first-end": 131,
+          "materiality-case-evidence-operations-start": 131,
+          "materiality-bcs-read-context-start": 830,
+          "materiality-bcs-context-values-start": 830,
+          "materiality-bcs-admission-start": 1651,
+          "materiality-bcs-admission-end": 1651,
+          "materiality-bcs-maps-first-start": 1651,
+          "materiality-bcs-maps-first-end": 1651,
+          "materiality-bcs-source-start": 1651,
+          "materiality-bcs-bound-access-start": 1651,
+          "materiality-bcs-bound-access-end": 1651,
+          "materiality-bcs-current-read-start": 1651,
+          "materiality-bcs-planner-evidence-start": 1651,
+          "materiality-evidence-canonical-read-start": 1651,
+          "materiality-evidence-admission-start": 1651,
+          "materiality-evidence-admission-end": 1651,
+          "materiality-evidence-source-first-start": 1651,
+          "materiality-evidence-source-first-end": 1651,
+          "materiality-evidence-environment-start": 1651,
+          "materiality-evidence-environment-end": 1651,
+          "materiality-evidence-projection-first-start": 1651,
+          "materiality-evidence-projection-first-end": 1651,
+          "materiality-evidence-build-projection-start": 1651,
+          "materiality-evidence-build-projection-end": 1651,
+          "materiality-evidence-projection-source-second-start": 1651,
+          "materiality-evidence-projection-source-second-end": 1651,
+          "materiality-evidence-final-validation-start": 1651,
+          "materiality-evidence-final-validation-end": 1651,
+          "materiality-evidence-canonical-read-end": 1651,
+          "materiality-bcs-planner-evidence-end": 1651,
+          "materiality-bcs-current-read-end": 1651,
+          "materiality-bcs-source-end": 1651,
+          "materiality-bcs-egress-start": 1651,
+          "materiality-bcs-egress-end": 1651,
+          "materiality-bcs-maps-second-start": 1651,
+          "materiality-bcs-maps-second-end": 1651,
+          "materiality-bcs-context-values-end": 830,
+          "materiality-bcs-read-context-end": 830,
+          "materiality-bcs-capture-digest-start": 830,
+          "materiality-bcs-capture-digest-end": 829,
+          "materiality-case-evidence-operations-end": 131,
+          "materiality-case-final-checks-start": 131,
+          "materiality-case-final-checks-end": 131,
+          "materiality-case-state-second-start": 131,
+          "materiality-case-state-second-end": 131,
+          "materiality-access-first-start": 1,
+          "materiality-registry-before-start": 2,
+          "materiality-scope-entry": 28,
+          "materiality-scope-owner-allowed": 28,
+          "materiality-scope-admitted": 28,
+          "materiality-scope-selection-present": 28,
+          "materiality-scope-prepared-present": 28,
+          "materiality-scope-witness-current": 28,
+          "materiality-scope-work-start": 28,
+          "materiality-stored-initial-start": 28,
+          "materiality-stored-history-start": 56,
+          "materiality-result-batch-first-start": 56,
+          "materiality-result-batch-first-end": 56,
+          "materiality-result-batch-callbacks-first-start": 56,
+          "materiality-result-batch-callbacks-first-end": 56,
+          "materiality-result-batch-second-start": 56,
+          "materiality-result-batch-second-end": 56,
+          "materiality-result-batch-callbacks-second-start": 56,
+          "materiality-result-batch-callbacks-second-end": 56,
+          "materiality-result-batch-final-start": 56,
+          "materiality-result-batch-final-end": 56,
+          "materiality-stored-history-end": 56,
+          "materiality-stored-initial-end": 28,
+          "materiality-stored-prepare-start": 28,
+          "materiality-stored-case-start": 112,
+          "materiality-stored-case-end": 112,
+          "materiality-stored-forecast-start": 56,
+          "materiality-forecast-source-first-start": 56,
+          "materiality-forecast-source-first-end": 56,
+          "materiality-forecast-coverage-first-start": 56,
+          "materiality-forecast-coverage-first-end": 56,
+          "materiality-forecast-projection-first-start": 56,
+          "materiality-forecast-projection-first-end": 56,
+          "materiality-forecast-projection-second-start": 56,
+          "materiality-forecast-projection-second-end": 56,
+          "materiality-forecast-source-second-start": 56,
+          "materiality-forecast-source-second-end": 56,
+          "materiality-forecast-coverage-second-start": 56,
+          "materiality-forecast-coverage-second-end": 56,
+          "materiality-stored-forecast-end": 56,
+          "materiality-stored-prepare-end": 28,
+          "materiality-stored-reread-start": 28,
+          "materiality-stored-reread-end": 28,
+          "materiality-stored-final-start": 28,
+          "materiality-stored-final-end": 28,
+          "materiality-scope-work-end": 28,
+          "materiality-scope-grouped-ok": 28,
+          "materiality-scope-lane-observed": 28,
+          "materiality-scope-egress-start": 28,
+          "materiality-scope-egress-prepared-present": 28,
+          "materiality-scope-egress-return-current": 28,
+          "materiality-registry-before-ok": 2,
+          "materiality-case-before-start": 2,
+          "materiality-case-before-ok": 2,
+          "materiality-produce-start": 2,
+          "materiality-domain-binding-start": 2,
+          "materiality-domain-binding-ok": 2,
+          "materiality-domain-scenarios-first-start": 2,
+          "materiality-domain-scenarios-first-end": 2,
+          "materiality-domain-compare-first-start": 2,
+          "materiality-compare-scenarios-first-start": 9,
+          "materiality-compare-scenarios-first-end": 9,
+          "materiality-compare-sources-start": 19,
+          "materiality-compare-sources-ok": 18,
+          "materiality-compare-scenarios-second-start": 8,
+          "materiality-compare-scenarios-second-end": 8,
+          "materiality-compare-criteria-first-start": 3,
+          "materiality-compare-criteria-first-end": 3,
+          "materiality-compare-criteria-second-start": 3,
+          "materiality-compare-criteria-second-end": 2,
+          "materiality-compare-scenarios-final-start": 2,
+          "materiality-compare-scenarios-final-end": 2,
+          "materiality-domain-compare-first-ok": 1,
+          "materiality-domain-scenarios-second-start": 1,
+          "materiality-domain-scenarios-second-end": 1,
+          "materiality-domain-compare-second-start": 1,
+          "materiality-domain-compare-second-ok": 1,
+          "materiality-produce-ok": 1,
+          "materiality-registry-after-start": 1,
+          "materiality-registry-after-ok": 1,
+          "materiality-case-after-start": 1,
+          "materiality-case-after-ok": 1,
+          "materiality-access-first-ok": 1,
+          "materiality-access-second-start": 1
+        },
+        "unclosed": {
+          "http-case-scope": 1,
+          "bcs-capture-digest": 1,
+          "scope-egress": 28,
+          "produce": 1,
+          "domain-compare-first": 1,
+          "compare-sources": 1,
+          "compare-criteria-second": 1,
+          "access-second": 1
+        },
+        "importantPhases": [
+          {
+            "phase": "scope-work",
+            "startMs": 432575.404,
+            "endMs": 434555.938,
+            "durationMs": 1980.5340000000433
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 435022.028,
+            "endMs": 436865.715,
+            "durationMs": 1843.6870000000345
+          },
+          {
+            "phase": "registry-before",
+            "startMs": 432011.472,
+            "endMs": 437503.946,
+            "durationMs": 5492.473999999987
+          },
+          {
+            "phase": "case-before",
+            "startMs": 437504.185,
+            "endMs": 437831.2,
+            "durationMs": 327.01500000001397
+          },
+          {
+            "phase": "domain-binding",
+            "startMs": 437832.707,
+            "endMs": 438182.963,
+            "durationMs": 350.25599999999395
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 438263.986,
+            "endMs": 440123.58,
+            "durationMs": 1859.594000000041
+          },
+          {
+            "phase": "domain-scenarios-first",
+            "startMs": 438182.972,
+            "endMs": 440279.604,
+            "durationMs": 2096.6319999999832
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 440361.975,
+            "endMs": 442174.001,
+            "durationMs": 1812.0260000000126
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 443125.752,
+            "endMs": 444951.047,
+            "durationMs": 1825.295000000042
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 446850.121,
+            "endMs": 448710.177,
+            "durationMs": 1860.0560000000405
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 449666.486,
+            "endMs": 451464.742,
+            "durationMs": 1798.2560000000522
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 453585.215,
+            "endMs": 455472.418,
+            "durationMs": 1887.2029999999795
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 456425.263,
+            "endMs": 458181.817,
+            "durationMs": 1756.5540000000037
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 459417.626,
+            "endMs": 461199.696,
+            "durationMs": 1782.070000000007
+          },
+          {
+            "phase": "domain-compare-first",
+            "startMs": 440279.617,
+            "endMs": 462019.232,
+            "durationMs": 21739.61499999999
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 462107.276,
+            "endMs": 463854.02,
+            "durationMs": 1746.744000000006
+          },
+          {
+            "phase": "domain-scenarios-second",
+            "startMs": 462019.268,
+            "endMs": 464024.72,
+            "durationMs": 2005.4519999999902
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 464111.641,
+            "endMs": 465813.294,
+            "durationMs": 1701.6529999999912
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 466778.734,
+            "endMs": 468555.467,
+            "durationMs": 1776.7330000000075
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 470424.222,
+            "endMs": 472386.929,
+            "durationMs": 1962.7069999999949
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 473364.725,
+            "endMs": 475158.997,
+            "durationMs": 1794.2719999999972
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 477434.351,
+            "endMs": 479302.262,
+            "durationMs": 1867.9109999999637
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 480305.131,
+            "endMs": 482120.5,
+            "durationMs": 1815.369000000006
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 483399.683,
+            "endMs": 485168.639,
+            "durationMs": 1768.9560000000056
+          },
+          {
+            "phase": "domain-compare-second",
+            "startMs": 464024.731,
+            "endMs": 486007.628,
+            "durationMs": 21982.896999999997
+          },
+          {
+            "phase": "produce",
+            "startMs": 437831.537,
+            "endMs": 486358.269,
+            "durationMs": 48526.73199999996
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 486939.503,
+            "endMs": 488853.652,
+            "durationMs": 1914.1489999999758
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 489285.667,
+            "endMs": 491112.717,
+            "durationMs": 1827.0499999999884
+          },
+          {
+            "phase": "registry-after",
+            "startMs": 486358.521,
+            "endMs": 491735.941,
+            "durationMs": 5377.419999999984
+          },
+          {
+            "phase": "case-after",
+            "startMs": 491735.956,
+            "endMs": 492141.261,
+            "durationMs": 405.304999999993
+          },
+          {
+            "phase": "access-first",
+            "startMs": 432007.876,
+            "endMs": 492318.076,
+            "durationMs": 60310.20000000001
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 492886.394,
+            "endMs": 494703.147,
+            "durationMs": 1816.753000000026
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 495162.417,
+            "endMs": 496960.061,
+            "durationMs": 1797.6439999999711
+          },
+          {
+            "phase": "registry-before",
+            "startMs": 492326.535,
+            "endMs": 497563.603,
+            "durationMs": 5237.068000000028
+          },
+          {
+            "phase": "case-before",
+            "startMs": 497563.615,
+            "endMs": 497885.489,
+            "durationMs": 321.8740000000107
+          },
+          {
+            "phase": "domain-binding",
+            "startMs": 497886.199,
+            "endMs": 498267.539,
+            "durationMs": 381.3399999999674
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 498346.364,
+            "endMs": 500165.422,
+            "durationMs": 1819.058000000019
+          },
+          {
+            "phase": "domain-scenarios-first",
+            "startMs": 498267.551,
+            "endMs": 500323.111,
+            "durationMs": 2055.5599999999977
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 500405.154,
+            "endMs": 502183.774,
+            "durationMs": 1778.6199999999953
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 503077.551,
+            "endMs": 504904.53,
+            "durationMs": 1826.9790000000503
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 506736.213,
+            "endMs": 508578.852,
+            "durationMs": 1842.6390000000247
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 509525.402,
+            "endMs": 511336.955,
+            "durationMs": 1811.5530000000144
+          },
+          {
+            "phase": "scope-work",
+            "startMs": 513692.798,
+            "endMs": 515511.917,
+            "durationMs": 1819.119000000006
+          }
+        ]
+      },
+      "steps": [
+        {
+          "ms": 430930.648,
+          "name": "UI61 publishes registered conditions without starting signal re-evaluation",
+          "status": "passed",
+          "summary": null
+        },
+        {
+          "ms": 471510.89,
+          "name": "UI61 reads original materiality independently and clears detail on a new selection",
+          "status": "failed",
+          "summary": "route.fetch: Timeout 40000ms exceeded."
+        },
+        {
+          "ms": 491834.509,
+          "name": "UI61 Portuguese condition",
+          "status": "failed",
+          "summary": "page.goto: Timeout 15000ms exceeded."
+        },
+        {
+          "ms": 516417.563,
+          "name": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+          "status": "failed",
+          "summary": "route.fetch: Target page, context or browser has been closed"
+        },
+        {
+          "ms": 516418.925,
+          "name": "No memory selection command was issued by the browser",
+          "status": "passed",
+          "summary": null
+        },
+        {
+          "ms": 516419.978,
+          "name": "Memory pages emitted no JavaScript errors",
+          "status": "passed",
+          "summary": null
+        },
+        {
+          "ms": 516427.417,
+          "name": "Memory console contains only verified original coverage refusals",
+          "status": "failed",
+          "summary": "expect(received).toEqual(expected) // deep equality"
+        }
+      ],
+      "ledgerSha256": "6a9396a596440dea25da40a354f17d8fbb7de142d2a8649182deba47e90c238d",
+      "result": "failure",
+      "artifact": 14849749309,
+      "artifactBytes": 24410146,
+      "artifactSha256": "f84b6242d72707c76fa0a550ef7383f3fbf4c3e90fc91cc603252ae44732fb3d",
+      "latencyQualification": "Per-call stdout overhead inflated the first observation and the second was cut by teardown. Counts and call topology are useful; absolute fine-grained latency is not a clean production measurement.",
+      "rejectedHypothesis": "Canonical projection digest is not the dominant cost and was not changed.",
+      "firstObservationCounts": {
+        "contextCalls": 591,
+        "evidenceResolutions": 1176,
+        "uiAuthorizations": 24823
+      }
+    },
+    "atlasPreparedRecall": {
+      "purpose": "isolated exact UI62 verification; full original Memory5 remains final qualification",
+      "source": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+      "snapshot": "2a30dfc5b3804c23571ccead84327ac9844bbaf4",
+      "tree": "7d1821e6d4e89a0c9d3eff7449fb3e9b11f057f3",
+      "branch": "ci-run-r4recall6",
+      "runId": 45238030823,
+      "jobId": 137914879262,
+      "sourceSpec": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+      "sourceSpecBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+      "nativeFixtureBlob": "bca30bef5d5a87b1825ff084e09642c5baa951d7",
+      "memoryPreparationBlob": "41b4aed05e325a1e63c1997fd07fd5a45569fde3",
+      "scannerBlob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "selectionSpec": "packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts",
+      "bodyChars": 7512,
+      "helpersChars": 4500,
+      "bodyEqual": true,
+      "helpersEqual": true,
+      "limitsEqual": true,
+      "designWave": "four-memory",
+      "runtimeInstrumentation": false,
+      "retries": 0,
+      "workers": 1,
+      "status": "failed-original-recall-deadline",
+      "artifact": {
+        "id": 14850454436,
+        "bytes": 7178895,
+        "sha256": "2523146f2a4501a9fac906ae9dcb21156a0accb85ffe118c32156a46029a3ddb",
+        "zip": "r4-recall6-14850454436.zip"
+      },
+      "browserReached": true,
+      "publicationInvoked": true,
+      "publication": {
+        "status": "passed",
+        "start": "2026-11-23T18:29:20.5144707Z",
+        "end": "2026-11-23T18:29:22.0666081Z",
+        "milliseconds": 1552.1374,
+        "canonicalScanner": true,
+        "canonicalWriter": true,
+        "caseAndUnrelatedOutboxPreserved": true
+      },
+      "originalCaseRead": {
+        "httpStatus": 200,
+        "milliseconds": 22169
+      },
+      "originalRecall": {
+        "status": "no-response-observed-within-bound",
+        "httpStatus": null,
+        "body": null,
+        "started": "2026-11-23T18:32:44.302Z",
+        "deadlineMs": 40000,
+        "observerAbortedOnFailure": true,
+        "eventualProducerOutcome": "unmeasured"
+      },
+      "originalResultCheckpoints": 0,
+      "failure": {
+        "stage": "original recall",
+        "followOn": "Portuguese page.goto 15s deadline and console guard remained failures"
+      },
+      "stages": [
+        {
+          "at": "2026-11-23T18:27:38.0382985Z",
+          "stage": "build"
+        },
+        {
+          "at": "2026-11-23T18:28:22.4755881Z",
+          "stage": "installation"
+        },
+        {
+          "at": "2026-11-23T18:28:22.4967498Z",
+          "stage": "configuration"
+        },
+        {
+          "at": "2026-11-23T18:28:22.4968473Z",
+          "stage": "dashboard-seed"
+        },
+        {
+          "at": "2026-11-23T18:28:22.5123314Z",
+          "stage": "planner-seed"
+        },
+        {
+          "at": "2026-11-23T18:28:22.5166778Z",
+          "stage": "procurement-seed"
+        },
+        {
+          "at": "2026-11-23T18:28:22.5573706Z",
+          "stage": "seed-complete"
+        },
+        {
+          "at": "2026-11-23T18:28:25.8220078Z",
+          "stage": "native-ready"
+        },
+        {
+          "at": "2026-11-23T18:28:25.8259186Z",
+          "stage": "decisions-seed"
+        },
+        {
+          "at": "2026-11-23T18:28:25.8319146Z",
+          "stage": "decisions-request-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:28:25.9673928Z",
+          "stage": "decisions-response-bi-options"
+        },
+        {
+          "at": "2026-11-23T18:28:25.9677537Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:28:26.2789691Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:28:26.2809492Z",
+          "stage": "decisions-request-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:28:26.5230396Z",
+          "stage": "decisions-response-bi-data"
+        },
+        {
+          "at": "2026-11-23T18:28:26.5242792Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:28:26.5879529Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:28:26.5880155Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:29.2718322Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:29.2732970Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:28:29.5032869Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:28:29.5033882Z",
+          "stage": "decisions-request-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:28:29.5520179Z",
+          "stage": "decisions-response-workbench-command"
+        },
+        {
+          "at": "2026-11-23T18:28:29.5520823Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:32.2530095Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:32.2539866Z",
+          "stage": "decisions-request-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:28:32.4998764Z",
+          "stage": "decisions-response-decision-edit"
+        },
+        {
+          "at": "2026-11-23T18:28:32.5004004Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:28:32.9985506Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:28:33.0009108Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:28:35.5365531Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:28:35.5366096Z",
+          "stage": "decisions-request-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:28:36.0628631Z",
+          "stage": "decisions-response-decision-coverage"
+        },
+        {
+          "at": "2026-11-23T18:28:36.0629880Z",
+          "stage": "decisions-request-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:28:38.7830520Z",
+          "stage": "decisions-response-decision-promote"
+        },
+        {
+          "at": "2026-11-23T18:28:38.7839226Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:43.0028410Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:28:43.0057470Z",
+          "stage": "decisions-request-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:28:43.5893665Z",
+          "stage": "decisions-response-decision-criteria"
+        },
+        {
+          "at": "2026-11-23T18:28:43.5894829Z",
+          "stage": "decisions-request-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:28:57.5226853Z",
+          "stage": "decisions-response-decision-compare"
+        },
+        {
+          "at": "2026-11-23T18:28:57.5227585Z",
+          "stage": "decisions-request-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:29:15.3179149Z",
+          "stage": "decisions-response-decision-choose"
+        },
+        {
+          "at": "2026-11-23T18:29:15.3179657Z",
+          "stage": "decisions-request-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:29:20.5121177Z",
+          "stage": "decisions-response-decision-controls"
+        },
+        {
+          "at": "2026-11-23T18:29:20.5143633Z",
+          "stage": "decisions-ready"
+        },
+        {
+          "at": "2026-11-23T18:29:20.5144707Z",
+          "stage": "memory-publication"
+        },
+        {
+          "at": "2026-11-23T18:29:22.0666081Z",
+          "stage": "memory-published"
+        }
+      ],
+      "independentSteps": [
+        {
+          "name": "UI62 sends a private recall question and explicit authorized candidates to the original producer",
+          "status": "failed",
+          "detail": {
+            "kind": "Error",
+            "summary": "Original similar-case response exceeded the original 40s read deadline",
+            "assertion": [],
+            "location": [
+              "    at Timeout.<anonymous> (file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-memory-recall.ts:11:43)",
+              "    at listOnTimeout (node:internal/timers:605:17)",
+              "    at processTimers (node:internal/timers:541:7)"
+            ]
+          }
+        },
+        {
+          "name": "UI62 Portuguese authorized candidates",
+          "status": "failed",
+          "detail": {
+            "kind": "TimeoutError",
+            "summary": "page.goto: Timeout 15000ms exceeded.",
+            "assertion": [],
+            "location": [
+              "    at Object.action (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:159:57)",
+              "    at observeFinalNavigation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:136:17)",
+              "    at navigateFinalSurface (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:158:19)"
+            ]
+          }
+        },
+        {
+          "name": "No memory selection command was issued by the browser",
+          "status": "passed"
+        },
+        {
+          "name": "Memory pages emitted no JavaScript errors",
+          "status": "passed"
+        },
+        {
+          "name": "Memory console contains only verified original coverage refusals",
+          "status": "failed",
+          "detail": {
+            "kind": "Error",
+            "summary": "expect(received).toEqual(expected) // deep equality",
+            "assertion": [],
+            "location": [
+              "    at Object.assertOnlyExpectedErrors (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:77:26)",
+              "    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts:202:21",
+              "    at independently (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts:65:7)"
+            ]
+          }
+        }
+      ],
+      "networkObservations": "network-observations.json",
+      "next": "Await shared performance diagnosis and parent composed source; no new UI62 diagnostic launched; full Memory5 remains required",
+      "stats": {
+        "startTime": "2026-11-23T18:26:48.543Z",
+        "duration": 419268.647,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "testResults": [
+        {
+          "timeout": 300000,
+          "status": "unexpected",
+          "results": [
+            {
+              "duration": 263327,
+              "retry": 0,
+              "status": "failed"
+            }
+          ]
+        }
+      ],
+      "failurePng": {
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-diagnostic-45238030823/artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/test-failed-1.png",
+        "sha256": "cfad41252d8e8a201e1d3ced832fd26fbd0662ac191f162cdb2765fd1487b4cd",
+        "width": 1440,
+        "height": 1100,
+        "visuallyReviewed": true,
+        "state": "Authorized selected candidate form and unavailable response after observer abort; no original result checkpoint"
+      },
+      "ledgerSha256": "5c9d31d5c654eebe0c924308a36c2832ffe29be684438a9d9c1aa789b2575073",
+      "qualifies": false
+    },
+    "materialityAggregates": {
+      "source": "3c4e8937074a5e308f499dd142eeb968ddbcfe73",
+      "snapshot": "72040df448c814a4825bb53f7269625318284218",
+      "tree": "212f1c591ca9c429d3a70e1084b64147c1928f2d",
+      "status": "in_progress",
+      "qualifies": false,
+      "method": "Private AsyncLocalStorage per complete observation; numeric count/duration aggregates only at closure, no per-call stdout or retained identity/payload/value. Original Promise identities, awaits, controls and deadlines remain.",
+      "review": "Root reviewed helper, both numeric-only relays and authority/store/operator expression wrappers.",
+      "caveat": "LIFO marker maxima are not per-call maxima when markers overlap; aggregate totals require balanced starts/ends. Closure spans track each invocation exactly.",
+      "run": 45243608894,
+      "job": 137934469300,
+      "branch": "ci-run-r4material7"
     }
   },
   "sourceBoundaries": {
@@ -3600,7 +6627,9 @@
       "productFixCount": 0,
       "integratedSource": "0a06f132c53e1a9374c26ab60fb5cd3808395cfc",
       "envCommit": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
-      "status": "original UI62 diagnosis running; full Memory spec pending"
+      "status": "Canonical setup published the actual precedent in 1552.137ms on source6d0db12c; original browser entered and case read returned200. Recall still exceeds the original40s bound; full Memory qualification pending.",
+      "intentCommit": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+      "intentRepair": "The original native command-identity owner requires a valid Idempotency-Key for this explicit setup POST. Bind it to the actual case revision; retain authentication and original admission/validation. Record only allow-listed categorical failures."
     }
   ],
   "limits": [
@@ -3744,6 +6773,48 @@
         "findings": [],
         "errors": [],
         "approved": []
+      }
+    },
+    {
+      "source": "42abce1949cc1a533f62baab6597896d359f3129",
+      "sourceTree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+      "snapshot": "a4441555b415c6df7e0654cbf0710d9b92469fe4",
+      "tree": "58ca514e50cc84cca86c1664c8dbb69f7e97271b",
+      "branch": "ci-run-r4gates6",
+      "run": 45236453824,
+      "status": "completed",
+      "result": "success",
+      "job": 137909340458,
+      "outer": {
+        "passed": 10,
+        "failed": 0
+      },
+      "nested": {
+        "comparisonLayout": 13,
+        "browserCommandsTeams": 103,
+        "pageDomainAssets": 145,
+        "installedContextProcurement": 4,
+        "total": 265
+      },
+      "guardrails": {
+        "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+        "bootstrap": false,
+        "rules": 78,
+        "files": 56,
+        "findings": [],
+        "errors": [],
+        "approved": [],
+        "touchesGuards": false
+      },
+      "palettes": {
+        "files": 7,
+        "changed": []
+      },
+      "omni": {
+        "declared": 10,
+        "spawns": 12,
+        "delegated": 0,
+        "verdict": "pass"
       }
     }
   ],
@@ -4104,8 +7175,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "42abce1949cc1a533f62baab6597896d359f3129",
-    "tree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+    "source": "81a072807ab48f345862200d4548b4415c055d32",
+    "tree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -4126,24 +7197,339 @@
       "tree": "58ca514e50cc84cca86c1664c8dbb69f7e97271b",
       "branch": "ci-run-r4gates6",
       "run": 45236453824,
-      "status": "in_progress",
-      "result": null
+      "status": "completed",
+      "result": "success"
     },
     "atlasBrowser": {
-      "run": 45236553987,
-      "source": "42abce1949cc1a533f62baab6597896d359f3129",
-      "snapshot": "19f8cef635498bb1e172a745b1ae3380bc302564",
-      "tree": "1a6ba8ae3bbbf94edfe2c678f23ef3a17bf0146c",
-      "branch": "ci-run-r4recall5",
+      "run": 45238030823,
+      "snapshot": "2a30dfc5b3804c23571ccead84327ac9844bbaf4",
+      "tree": "7d1821e6d4e89a0c9d3eff7449fb3e9b11f057f3",
+      "source": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+      "branch": "ci-run-r4recall6",
       "status": "in_progress",
       "qualifies": false
     }
   },
   "checkpoint": {
-    "productSource": "42abce1949cc1a533f62baab6597896d359f3129",
-    "productTree": "f5329c3468c25837b3d48e88c4ce185742fae1da",
+    "productSource": "81a072807ab48f345862200d4548b4415c055d32",
+    "productTree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
     "status": "qualification-in-progress",
     "browserCases": 94,
     "reviewedOriginals": 64
+  },
+  "observerBoundaryRepair": {
+    "sha": "81a072807ab48f345862200d4548b4415c055d32",
+    "tree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
+    "parent": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "blob": "d8b7bf8fe6de923123a06f2545e273666ee2bee0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts",
+        "blob": "16ad55776bd4c13c2439d34e5c169e1a9deed7e0"
+      }
+    ],
+    "issue": "R4-17",
+    "countedSeparately": false,
+    "finding": "A host observer bypassed the original batch cardinality and detached-value boundary. Empty later arrays could evade the some checks; retained callback objects could change an earlier observation.",
+    "repair": "Route each observer response through the existing resolvePlannerScenarioBatch facade, preserving complete pairs, detached output and no fallback after a present observer's refusal.",
+    "controls": "Original complete phase test preserved. A separate real-fixture case covers five empty/short observations, three typed refusals without fallback, retained-return mutation and full result parity. Each case retains its own 105s/120s limits.",
+    "status": "completed",
+    "result": "success",
+    "run": 45239858966,
+    "job": 137921265132,
+    "snapshot": "cec2ae1fd5599f5b584dff3f31f62a9dde415431",
+    "snapshotTree": "cae54d64a93077ec76bb1ba251af58b6466adbf9",
+    "passed": 2,
+    "failed": 0,
+    "expectCalls": 127,
+    "durationsMs": {
+      "original": 31809.15,
+      "boundary": 40252.33
+    },
+    "omni": {
+      "verdict": "pass",
+      "truncated": false
+    },
+    "qualificationLedger": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "scope": "Complete R4-17 observation boundary; no new product-fix number",
+      "run": 45239858966,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45239858966",
+      "job": 137921265132,
+      "cleanupJob": 137922854928,
+      "createdAt": "2026-11-23T18:34:38Z",
+      "completedAt": "2026-11-23T18:37:19Z",
+      "conclusion": "success",
+      "base": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+      "baseTree": "1ac673d3dbc6148f2f799068bb62e17ffdf4b254",
+      "source": "81a072807ab48f345862200d4548b4415c055d32",
+      "sourceTree": "4ee379fdae289c5e03db2145c2ec6f0bb83a5104",
+      "snapshot": "cec2ae1fd5599f5b584dff3f31f62a9dde415431",
+      "snapshotTree": "cae54d64a93077ec76bb1ba251af58b6466adbf9",
+      "snapshotOnlyPaths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-scenario-observation-verification.test.ts"
+      ],
+      "blobs": {
+        "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts": "d8b7bf8fe6de923123a06f2545e273666ee2bee0",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts": "16ad55776bd4c13c2439d34e5c169e1a9deed7e0",
+        ".ci-run.json": "ec61eef33f01b0141a3184a7c173efd4c4fa7cf7",
+        "apps/cli/test/sucafina-scenario-observation-verification.test.ts": "1a5f41009eb4b3520bf2eec9f42b0ca49f830a91"
+      },
+      "originalControl": {
+        "baseBlob": "896c8af51a7907d48d13a11d2539d49e28ee4b39",
+        "bodyUnchanged": true,
+        "importOnlyExpanded": "resolvePlannerScenarioBatch"
+      },
+      "constraints": {
+        "cooperativeDeadlinePerTestMs": 105000,
+        "bunDeadlinePerTestMs": 120000,
+        "childEnvelopeForBothMs": 270000,
+        "wrapperEnvelopeMs": 300000,
+        "platform": "Linux x64 / ubuntu-24.04",
+        "workflow": "test-ci",
+        "omni": "strict",
+        "positiveControl": "pass",
+        "omniSpawns": 1,
+        "delegatedSpawns": 0,
+        "localProductExecution": false
+      },
+      "results": {
+        "tests": 2,
+        "passed": 2,
+        "failed": 0,
+        "expects": 127,
+        "originalControlMs": 31809.15,
+        "boundaryControlMs": 40252.33,
+        "childReportedSeconds": 72.46,
+        "wrapperMs": 72500.54,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "cause": "The optional observer result bypassed the existing detached-array/cardinality boundary. Empty later arrays made some() vacuously pass; an initial empty array could throw. A callback retaining its initial returned graph could mutate the comparator's retained baseline.",
+      "repair": "Each observer is now a resolveMany facade consumed by resolvePlannerScenarioBatch. The existing helper clones the completed response, rejects wrong cardinality, and never falls back after an observer refusal. Every phase invokes that boundary independently.",
+      "controls": {
+        "incomplete": [
+          {
+            "phase": 1,
+            "length": 0
+          },
+          {
+            "phase": 2,
+            "length": 0
+          },
+          {
+            "phase": 2,
+            "length": 1
+          },
+          {
+            "phase": 3,
+            "length": 0
+          },
+          {
+            "phase": 3,
+            "length": 1
+          }
+        ],
+        "typedRefusals": [
+          "denied",
+          "unavailable",
+          "stale"
+        ],
+        "noFallback": "Measured canonical batch/scalar counts match the attempted phases; explicit typed refusals perform zero canonical reads.",
+        "retainedMutation": "The callback mutates its previous real canonical result.sourceRefs array before phase2. Full comparison equality with the real canonical reference remains required.",
+        "original": "Canonical parity, three independent phases, criteria outside roots, second complete comparison, revocation, reader replacement, source change after root remain unchanged."
+      },
+      "phaseTimings": [
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "native-fixture",
+          "state": "returned",
+          "phaseMs": 7207,
+          "elapsedMs": 7208,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "canonical-without-callback",
+          "state": "returned",
+          "phaseMs": 8655,
+          "elapsedMs": 15862,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "observed-comparison",
+          "state": "returned",
+          "phaseMs": 6941,
+          "elapsedMs": 22803,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "fresh-comparison",
+          "state": "returned",
+          "phaseMs": 7136,
+          "elapsedMs": 29939,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "revoked-during-pair",
+          "state": "returned",
+          "phaseMs": 722,
+          "elapsedMs": 30661,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "reader-replaced-during-pair",
+          "state": "returned",
+          "phaseMs": 261,
+          "elapsedMs": 30923,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-phase-observation",
+          "phase": "source-changed-after-pair-root",
+          "state": "returned",
+          "phaseMs": 881,
+          "elapsedMs": 31804,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "native-fixture",
+          "state": "returned",
+          "phaseMs": 7219,
+          "elapsedMs": 7219,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "canonical-boundary-reference",
+          "state": "returned",
+          "phaseMs": 8564,
+          "elapsedMs": 15783,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "incomplete-phase-1-length-0",
+          "state": "returned",
+          "phaseMs": 724,
+          "elapsedMs": 16507,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "incomplete-phase-2-length-0",
+          "state": "returned",
+          "phaseMs": 1610,
+          "elapsedMs": 18118,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "incomplete-phase-2-length-1",
+          "state": "returned",
+          "phaseMs": 1611,
+          "elapsedMs": 19728,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "incomplete-phase-3-length-0",
+          "state": "returned",
+          "phaseMs": 6719,
+          "elapsedMs": 26447,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "incomplete-phase-3-length-1",
+          "state": "returned",
+          "phaseMs": 6549,
+          "elapsedMs": 32996,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "typed-refusal-denied",
+          "state": "returned",
+          "phaseMs": 97,
+          "elapsedMs": 33094,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "typed-refusal-unavailable",
+          "state": "returned",
+          "phaseMs": 97,
+          "elapsedMs": 33190,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "typed-refusal-stale",
+          "state": "returned",
+          "phaseMs": 96,
+          "elapsedMs": 33286,
+          "aborted": false
+        },
+        {
+          "fixture": "scenario-observation-boundary",
+          "phase": "retained-response-mutated-between-phases",
+          "state": "returned",
+          "phaseMs": 6962,
+          "elapsedMs": 40249,
+          "aborted": false
+        }
+      ],
+      "artifacts": [],
+      "artifactNote": "Bun workflow uploaded no separate artifact; complete job log is preserved.",
+      "review": {
+        "base": "e115b667d845822a1df5f523bbfd828ab57ca978",
+        "reviewedHead": "6d0db12c2fdc1fdde9d8233317aadf06c88e6460",
+        "areas": [
+          "R4-16 pageOperational/CAP23",
+          "R4-17 observer pair and composition",
+          "R4-18 request/result tuple",
+          "Atlas fixture boundaries"
+        ],
+        "otherBlockingFindings": [],
+        "remainingBoundary": "Atlas fixture explicitly publishes the seeded real choice through the canonical writer, same authority and persistence, and a real scanner. It does not prove automatic production outbox publication. Final-head native reviewer-recall and browser qualification remain required."
+      },
+      "preparedNextGate": {
+        "launchAuthorized": false,
+        "awaiting": "root final source",
+        "manifestFrom": "25931e709c2486e3038e47f461ac03307d579e40",
+        "manifestBlob": "3b869c4f19f6d436d25aaaaf2477d4c283cf4e94",
+        "args": [
+          "./test/sucafina-reviewer-recall.test.ts"
+        ],
+        "expectedOriginalTestBlob": "c622668cc5e1dbba1674a8d1cb3c6d55bc1ad74a",
+        "internalDeadlineMs": 850000,
+        "omni": "strict"
+      },
+      "evidenceHashes": {
+        "job.log": {
+          "sha256": "90c2b34b629f21ed7f23dd385e8f4f41ebc43f6fb54dcf754409487e3a529f73",
+          "bytes": 71525
+        },
+        "sanitized-job.log": {
+          "sha256": "beeabee48cac18876133c0f01b96892ddfe915f6b1a5ce7cc6da30d949cdcb90",
+          "bytes": 7930
+        },
+        "request.json": {
+          "sha256": "d53ccd03ba79179b266713162b3171b003bdcf65e992195ecca72339d6d020fa",
+          "bytes": 288
+        }
+      },
+      "ledgerSha256": "dd2336b88f254366d4b0daaf3334e9ffe8e6712d6a1eacfc6c56cd5b150afef5"
+    }
   }
 }
