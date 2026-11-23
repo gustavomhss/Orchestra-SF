@@ -2,7 +2,8 @@ import { expect, type Page, type Response as PlaywrightResponse } from "@playwri
 import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
-import { waveFourTest, enter, scheme, reflow, observePage } from "./design-support/wave-four"
+import { SfDecisions } from "@orchestra/schema/sucafina/decisions"
+import { waveFourTest, enter, ready, scheme, reflow, scrollPageTop, observePage } from "./design-support/wave-four"
 import { captureFinalSurface } from "./design-support/final-capture"
 import { captureFinalRoutineGate, expectFinalRoutineGate } from "./design-support/final-routines-gate"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
@@ -62,6 +63,49 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   const availability = context.value.availability.filter((entry) =>
     ["routine-admission", "routine-runs", "schedules", "residents"].includes(entry.resource))
   console.info("SF_FINAL_ROUTINES_AVAILABILITY " + JSON.stringify(availability))
+
+  const sourceStamp = context.value.stamp
+  const originalRead = (target: Page, path: string) => {
+    const response = target.waitForResponse((reply) => {
+      const url = new URL(reply.url())
+      return url.origin === installation.origin && url.pathname === installation.mount + path &&
+        reply.request().method() === "GET"
+    }, { timeout: 40_000 })
+    void response.catch(() => undefined)
+    return response
+  }
+  const enterResidents = async (target: Page, title: string) => {
+    const destination = new URL(screens[3].path, installation.origin)
+    const selection = new URL(target.url()).searchParams
+    for (const key of ["server", "project", "installation"]) {
+      const value = selection.get(key)
+      if (!value) throw new Error("The current resident owner selection is missing " + key)
+      destination.searchParams.set(key, value)
+    }
+    expect(destination.searchParams.get("project")).toBe(owner.projectId)
+    expect(destination.searchParams.get("installation")).toBe(owner.installationId)
+    // Observe the UI's single original read before applying the original DOM deadline.
+    const response = originalRead(target, "/api/ui/projections/residents")
+    await target.goto(destination.href)
+    const original = await response
+    expect(original.status()).toBe(200)
+    const body = Schema.decodeUnknownSync(SfAnalyses.operations["projection.residents"].output,
+      { onExcessProperty: "error" })(await original.json())
+    expect(body.status).toBe("ok")
+    if (body.status !== "ok") throw new Error("The original resident inventory did not succeed")
+    expect(body.context).toEqual(sourceStamp)
+    expect(body.value.profiles).toHaveLength(5)
+    expect(body.value.profiles.reduce((count, profile) => count + profile.skills.length, 0)).toBe(25)
+    await ready(target, title)
+    await expect(target).toHaveURL((url) => url.origin === destination.origin && url.pathname === destination.pathname &&
+      ["server", "project", "installation"].every((key) => url.searchParams.get(key) === destination.searchParams.get(key)))
+    await reflow(target)
+    await scrollPageTop(target)
+    console.info("SF_FINAL_ROUTINES_RESIDENT_SOURCE " + JSON.stringify({
+      status: original.status(), profiles: body.value.profiles.length,
+      skills: body.value.profiles.reduce((count, profile) => count + profile.skills.length, 0),
+    }))
+  }
 
   await waveFourTest.step("UI64 preserves unavailable planning and returns to decisions and context through F01", async () => {
     const catalog = context.value.availability.flatMap((entry) => entry.operations)
@@ -189,7 +233,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
 
   await waveFourTest.step("UI70 reads actual resident inventory, filters it and rechecks a real decision case", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, new URL(screens[3].path, installation.origin).href, screens[3].en)
+    await enterResidents(page, screens[3].en)
     // Read the same original source through this context's authenticated session.
     // The UI effect can release its response after consuming it; its CDP body is not a durable oracle.
     const choicesResponse = await page.context().request.post(installation.origin + installation.mount + "/dashboard?sf=workbench-analysis", {
@@ -231,8 +275,23 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
       context.value.availability.some((entry) => entry.resource === "analysis" &&
         entry.operations.some((operation) => operation.operationId === operationId && operation.state === "ready" && operation.operational)))
     const historyResponse = analysisAvailable ? page.waitForResponse((reply) => analysisAction(reply) === "list") : undefined
+    const humanResponse = originalRead(page, "/api/ui/projections/case")
     await cases.selectOption(caseValue)
     await expect(cases).toHaveValue(caseValue)
+    const originalHuman = await humanResponse
+    expect(originalHuman.status()).toBe(200)
+    const human = Schema.decodeUnknownSync(SfDecisions.operations["projection.case"].output,
+      { onExcessProperty: "error" })(await originalHuman.json())
+    expect(human.status).toBe("ok")
+    if (human.status !== "ok") throw new Error("The original human decision projection did not succeed")
+    expect(human.context).toEqual(sourceStamp)
+    const projectedCase = human.value.projection.case
+    expect({ id: projectedCase.id, incarnation: projectedCase.incarnation, version: projectedCase.version }).toEqual(authorizedCase)
+    expect(projectedCase.choices.length).toBeGreaterThan(0)
+    await expect(detail.locator("[data-sf-human-decision]")).toHaveAttribute("data-state", "ready")
+    console.info("SF_FINAL_ROUTINES_HUMAN_SOURCE " + JSON.stringify({
+      status: originalHuman.status(), caseRef: authorizedCase, choices: projectedCase.choices.length,
+    }))
     if (historyResponse) {
       const original = await historyResponse
       const sent = original.request().postDataJSON()
@@ -297,7 +356,8 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
         await localized.setViewportSize({ width: 360, height: 900 })
         continue
       }
-      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
+      if (screen.id === "UI70") await enterResidents(localized, screen.br)
+      else await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
       await scheme(localized, "dark")
       if (screen.id === "UI65") {
         await expect(localized.getByText("Escolha uma execução de rotina para consultar o estado e o resultado.", { exact: true })).toBeVisible()
