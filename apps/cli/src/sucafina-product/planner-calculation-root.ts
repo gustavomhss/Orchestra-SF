@@ -120,9 +120,15 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         const accepted = await root.call(persistence, async () => {
           invocations++
           if (invocations !== 1 || !current()) return false
-          const healthy = currentSfReadonlySnapshotScope(persistence)?.current ?? live
-          if (!healthy()) return false
           const native = currentSfPlannerReadonlySnapshotScope(persistence)
+          // A C08 descendant has its own logical scope within this same physical
+          // root. Use that scope's original strict current, never a parent-scope
+          // closure in the child, and require both original physical identities.
+          const healthy = native?.bytesIdentity ? () => {
+            const active = currentSfPlannerReadonlySnapshotScope(persistence)
+            return !!active && active.identity === native.identity && active.bytesIdentity === native.bytesIdentity && active.current()
+          } : currentSfReadonlySnapshotScope(persistence)?.current ?? live
+          if (!healthy()) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
             candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }
           if (native?.bytesIdentity) {
@@ -132,7 +138,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
             rootProofs.set(proof, Object.freeze({ host, call, identity: native.identity, bytesIdentity: native.bytesIdentity, current: () => {
               if (failed) return false
               try {
-                const valid = owner.current(call) && native.current()
+                const valid = owner.current(call)
                 if (!valid) failed = true
                 return valid
               } catch (error) { failed = true; throw error }
