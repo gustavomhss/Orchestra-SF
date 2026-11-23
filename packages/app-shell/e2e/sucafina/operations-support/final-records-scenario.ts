@@ -6,7 +6,7 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { SfFiles } from "@orchestra/schema/sucafina/files"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { Account } from "./runtime"
-import { observation } from "./runtime"
+import { forwardOnce, observation } from "./runtime"
 
 async function versions(page: Page, account: Account) {
   const response = await page.request.get(account.baseURL + "/api/ui/pages/CAP23", { maxRetries: 0 })
@@ -91,37 +91,42 @@ export async function previewRecordScenario(page: Page, info: TestInfo, account:
   await surface.getByRole("combobox", { name: "Planner destination and month", exact: true }).selectOption(String(index))
   const submit = surface.getByRole("button", { name: "Preview scenario", exact: true })
   await expect(submit).toBeEnabled()
-  const previewed = page.waitForResponse((response) => mode(response.url(), "document-scenario-preview") &&
-    response.request().method() === "POST")
-  await submit.click()
-  const response = await previewed
-  expect(response.status()).toBe(200)
-  expect(response.request().postDataJSON()).toEqual({
-    documentRef: confirmed.ref, baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
-  })
-  const body = Schema.decodeUnknownSync(SfFiles.operations["files.document-scenario-preview"].output)(await response.json())
-  if (body.status !== "ok") throw new Error("The original Planner did not produce the requested document scenario")
-  expect(body.value.domainApplied).toBe(false)
-  expect(body.value.evidence).toEqual(confirmed)
-  expect(body.value.request).toEqual({
-    baseRef: target.baseRef,
-    operations: [{ kind: "replace", targetRef: target.targetRef, amount: 42, currency: "USD", period: target.period }],
-    assumptions: [{ id: "document:" + confirmed.id, value: 42, evidenceRefs: [confirmed.ref], state: "confirmed" }],
-  })
-  expect(body.value.scenario).toMatchObject({
-    currency: "USD", sourceRefs: expect.arrayContaining([confirmed.ref]), total: null,
-  })
-  await expect(surface).toHaveAttribute("data-sf-phase", "preview")
-  const preview = surface.locator('[data-sf-scenario="preview"]')
-  await expect(preview.getByRole("heading", { name: "Simulation · no changes applied", exact: true })).toBeVisible()
-  await expect(preview).toContainText(/Price:\s*42 USD/)
-  await expect(preview).toContainText(confirmed.ref.refId)
-  expect(await baseline(page, account, fixture.version, fixture.year)).toEqual(fixture.original)
-  await observation(info, "final-records-document-scenario", {
-    target, request: body.value.request, result: body.value.scenario,
-    evidence: body.value.evidence.ref, domainApplied: body.value.domainApplied,
-    baselineAndCASUnchanged: true,
-    limits: ["The original producer keeps total unavailable because the confirmed field does not establish complete cost coverage.",
-      "No persistent scenario link is submitted in this isolated native preview journey."],
-  })
+  // Observe the sole real UI POST before Chromium can evict its response body.
+  // The helper delivers the original bytes unchanged and forbids retries.
+  const previewed = await forwardOnce(page, (url) => mode(url.href, "document-scenario-preview"), "POST")
+  try {
+    await submit.click()
+    const { response, request } = await previewed.completed
+    expect(response.status()).toBe(200)
+    expect(request.postDataJSON()).toEqual({
+      documentRef: confirmed.ref, baseRef: target.baseRef, targetRef: target.targetRef, period: target.period,
+    })
+    const body = Schema.decodeUnknownSync(SfFiles.operations["files.document-scenario-preview"].output)(await response.json())
+    if (body.status !== "ok") throw new Error("The original Planner did not produce the requested document scenario")
+    expect(body.value.domainApplied).toBe(false)
+    expect(body.value.evidence).toEqual(confirmed)
+    expect(body.value.request).toEqual({
+      baseRef: target.baseRef,
+      operations: [{ kind: "replace", targetRef: target.targetRef, amount: 42, currency: "USD", period: target.period }],
+      assumptions: [{ id: "document:" + confirmed.id, value: 42, evidenceRefs: [confirmed.ref], state: "confirmed" }],
+    })
+    expect(body.value.scenario).toMatchObject({
+      currency: "USD", sourceRefs: expect.arrayContaining([confirmed.ref]), total: null,
+    })
+    await expect(surface).toHaveAttribute("data-sf-phase", "preview")
+    const preview = surface.locator('[data-sf-scenario="preview"]')
+    await expect(preview.getByRole("heading", { name: "Simulation · no changes applied", exact: true })).toBeVisible()
+    await expect(preview).toContainText(/Price:\s*42 USD/)
+    await expect(preview).toContainText(confirmed.ref.refId)
+    expect(await baseline(page, account, fixture.version, fixture.year)).toEqual(fixture.original)
+    await observation(info, "final-records-document-scenario", {
+      target, request: body.value.request, result: body.value.scenario,
+      evidence: body.value.evidence.ref, domainApplied: body.value.domainApplied,
+      baselineAndCASUnchanged: true,
+      limits: ["The original producer keeps total unavailable because the confirmed field does not establish complete cost coverage.",
+        "No persistent scenario link is submitted in this isolated native preview journey."],
+    })
+  } finally {
+    await previewed.close()
+  }
 }
