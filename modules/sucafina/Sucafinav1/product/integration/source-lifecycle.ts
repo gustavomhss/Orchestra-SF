@@ -7,6 +7,7 @@ import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, Sna
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+import { sfOriginalStructuredCloneCurrent } from "../contracts/canonical-clone.ts"
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
@@ -103,6 +104,16 @@ export function isInstalledSfSourceResolver(resolve: SfScopedSourcePort["resolve
 }
 
 const plannerAclReaders = new WeakSet<object>()
+const plannerAclPreparers = new WeakSet<object>()
+const preparationHas = WeakSet.prototype.has, preparationAdd = WeakSet.prototype.add, preparationApply = Reflect.apply
+
+/** The installed Planner preparer reads ACL only; wrapped/unknown callbacks
+ * retain a full Snapshot. Registration changes no callback identity or result. */
+export function plannerScopePreparation(prepare: (snapshot: Pick<Snapshot, "data">) =>
+  ReturnType<Parameters<NonNullable<SfScopedSourcePort["readScopedSourcePrepared"]>>[1]>) {
+  preparationApply(preparationAdd, plannerAclPreparers, [prepare])
+  return prepare
+}
 
 /** The canonical Planner source authorizer needs the current role map only. */
 export function plannerScopeAuthority(authorize: (snapshot: Pick<Snapshot, "data">) => Promise<boolean>) {
@@ -535,8 +546,13 @@ export function createSfSourcePersistence(input: {
         const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
           active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
           currentDriverReadonlyAuthorityData(driver, ["planner"]) : undefined
-        // Preparation receives an isolated view before source authorization.
-        const prepared = await prepare(structuredClone(snapshot))
+        // The installed preparer consumes ACL only. Its copy must remain separate
+        // from the held ACL used by both later, fresh authorizations. All other
+        // callbacks and changed copy operations retain the complete original view.
+        const prepared = await prepare(owned && sfOriginalStructuredCloneCurrent() &&
+          preparationApply(preparationHas, plannerAclPreparers, [prepare])
+          ? { data: structuredClone(owned.snapshots.planner.data), versions: {}, sequences: {}, audit: [], notices: [] }
+          : structuredClone(snapshot))
         if (checking) requireSourceChecks(checking)
         if (!prepared) return { commit: false, value: undefined }
         const acl = owned && plannerAclReaders.has(prepared.authorize) ? {

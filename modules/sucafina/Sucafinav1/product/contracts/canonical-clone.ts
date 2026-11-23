@@ -54,6 +54,12 @@ function ownData(owner: object, key: PropertyKey, expected: unknown) {
   const found = native.property(owner, key)
   return !!found && native.own(found, "value") && found.value === expected
 }
+/** Observe only the original global copy operation. This neither admits a
+ * runtime to clone birth nor records any returned object as ordinary. */
+export function sfOriginalStructuredCloneCurrent() {
+  return typeof clone === "function" && ownData(realm, "structuredClone", clone)
+}
+
 function environmentCurrent() {
   // The ordinary-birth proof covers this native clone implementation only.
   // Descriptor reads never invoke a version/revision getter or a replacement Bun.

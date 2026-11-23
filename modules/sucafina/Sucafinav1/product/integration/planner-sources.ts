@@ -5,7 +5,7 @@ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
-import { plannerScopeAuthority, type SfScopedSourcePort } from "./source-lifecycle.ts"
+import { plannerScopeAuthority, plannerScopePreparation, type SfScopedSourcePort } from "./source-lifecycle.ts"
 import { sfPlannerProjectionSelector } from "./source-projections.ts"
 
 export function sfPlannerSourceSelector(id: string, incarnation: string, version: number) {
@@ -45,7 +45,7 @@ export function createSfPlannerSourceHost(input: {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
       const read = async () => {
-        const describe = async (snapshot: Snapshot) => {
+        const describe = async (snapshot: Pick<Snapshot, "data">) => {
           const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
           if (!principal || principal.id !== context.binding.principalRef) return undefined
           const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
@@ -76,10 +76,10 @@ export function createSfPlannerSourceHost(input: {
           return input.scopedSources.readScopedSource("planner", prepared.scope, prepared.authorize)
         }
         const current = input.scopedSources.readScopedSourcePrepared
-          ? await input.scopedSources.readScopedSourcePrepared("planner", async (snapshot) => {
+          ? await input.scopedSources.readScopedSourcePrepared("planner", plannerScopePreparation(async (snapshot) => {
             const selector = await describe(snapshot)
             return selector ? prepare(selector) : undefined
-          }, { signal: request.signal })
+          }), { signal: request.signal })
           : await legacy()
         if (!current || !await input.host.revalidate(context)) return undefined
         return { projection: object(current.projection), identity: { incarnation: current.incarnation, version: current.version } }
