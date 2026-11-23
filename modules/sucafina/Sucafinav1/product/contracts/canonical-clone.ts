@@ -202,3 +202,90 @@ export function sfCanonicalCloneTree(value: unknown): unknown[] | undefined {
 
   try { return visit(value, 0)?.tree } catch { return undefined }
 }
+
+
+type EncodedBytes = { bytes: string; height: number; expansion: number; units: number }
+
+/**
+ * Canonical bytes for a current, bounded graph from the private clone registry.
+ * Aliases reuse only strings created during this call. The original native
+ * guard and graph limits still decide admission; refusals use the eager codec.
+ * Retained string units are bounded separately from expanded output units.
+ */
+export function sfCanonicalCloneBytes(value: unknown): string | undefined {
+  if (!value || typeof value !== "object" || !has(ordinary, value) || !environmentCurrent()) return undefined
+  const memo = new native.WeakMap<object, EncodedBytes>(), visiting = new native.WeakSet<object>()
+  let nodes = 0, properties = 0, retainedUnits = 0
+  const visit = (input: unknown, depth: number): EncodedBytes | undefined => {
+    if (depth > maximumDepth) return undefined
+    if (input === undefined) return { bytes: '["absent"]', height: 0, expansion: 1, units: 12 }
+    if (input === null) return { bytes: '["null"]', height: 0, expansion: 1, units: 10 }
+    if (typeof input === "string") {
+      const units = 16 + input.length * 6
+      if (units > maximumUnits) return undefined
+      const bytes = native.stringify(input)
+      return typeof bytes === "string" ? { bytes: '["string",' + bytes + "]", height: 0, expansion: 1, units } : undefined
+    }
+    if (typeof input === "boolean")
+      return { bytes: input ? '["boolean",true]' : '["boolean",false]', height: 0, expansion: 1, units: 20 }
+    if (typeof input === "number") {
+      if (!native.finite(input)) return undefined
+      const bytes = native.same(input, -0) ? '"-0"' : native.stringify(input)
+      return typeof bytes === "string" ? { bytes: '["number",' + bytes + "]", height: 0, expansion: 1, units: 40 } : undefined
+    }
+    if (typeof input !== "object" || !has(ordinary, input) || has(visiting, input)) return undefined
+    const saved: EncodedBytes | undefined = native.apply(native.memoGet, memo, [input])
+    if (saved) return depth + saved.height <= maximumDepth ? saved : undefined
+    if (++nodes > maximumNodes) return undefined
+    const array = native.isArray(input), prototype = native.prototype(input)
+    if (array ? prototype !== native.arrayPrototype : prototype !== native.objectPrototype && prototype !== null) return undefined
+    const keys = native.ownKeys(input)
+    if (properties + keys.length > maximumProperties) return undefined
+    properties += keys.length
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]
+      if (typeof key !== "string" || key === "map" || key === "constructor" || key === "species") return undefined
+    }
+    let count = keys.length
+    if (array) {
+      const size = native.property(input, "length")
+      if (!size || !native.own(size, "value") || typeof size.value !== "number" || keys.length !== size.value + 1) return undefined
+      count = size.value
+    } else native.apply(native.sort, keys, [])
+    let height = 0, expansion = 1, units = 16
+    let bytes = array ? '["array",[' : '["object",['
+    add(visiting, input)
+    for (let index = 0; index < count; index++) {
+      const key = array ? index : keys[index]
+      if (typeof key !== "number" && typeof key !== "string") return undefined
+      const field = native.property(input, key)
+      if (!field || !native.own(field, "value") || !field.enumerable) return undefined
+      const child = visit(field.value, depth + 1)
+      if (!child) return undefined
+      const keyUnits = typeof key === "number" ? 1 : 8 + key.length * 6
+      if (expansion > maximumExpansion - child.expansion ||
+        units > maximumUnits - child.units - keyUnits) return undefined
+      expansion += child.expansion
+      units += child.units + keyUnits
+      if (child.height + 1 > height) height = child.height + 1
+      if (index) bytes += ","
+      if (array) bytes += child.bytes
+      else {
+        const name = native.stringify(key)
+        if (typeof name !== "string") return undefined
+        bytes += "[" + name + "," + child.bytes + "]"
+      }
+    }
+    native.apply(native.weakDelete, visiting, [input])
+    bytes += "]]"
+    const encoded = { bytes, height, expansion, units }
+    // Revisited aliases still charge expanded units at each parent. If retaining
+    // another string would exceed the logical quota, a later visit walks again.
+    if (retainedUnits <= maximumUnits - bytes.length) {
+      native.apply(native.memoSet, memo, [input, encoded])
+      retainedUnits += bytes.length
+    }
+    return encoded
+  }
+  try { return visit(value, 0)?.bytes } catch { return undefined }
+}
