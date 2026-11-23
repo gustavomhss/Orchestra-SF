@@ -66,6 +66,9 @@ export async function enter(page: Page, owner: Owner, href: string, title: strin
   // The owner has two distinct original reads: provider admission, then route
   // admission. Keep Playwright's existing response deadline for both replies;
   // the caller's unchanged DOM budget starts after the actual read contracts.
+  // A matching response proves the original HTTP status. The existing ready()
+  // assertions below prove that the app consumed and rendered the admissions;
+  // Response.finished() can remain pending after that state in routed Chromium.
   const contexts: { status: number; elapsedMs: number }[] = []
   const started = performance.now()
   const contextResponse = (response: Response) => {
@@ -85,12 +88,10 @@ export async function enter(page: Page, owner: Owner, href: string, title: strin
   })
   const originalAdmissions = async () => {
     const provider = await providerAdmission
-    await provider.finished()
     contexts.push({ status: provider.status(), elapsedMs: performance.now() - started })
     expect(provider.status(), "the original provider context is authorized").toBe(200)
     expect(routeAdmission, "route admission rereads the original context").toBeDefined()
     const route = await routeAdmission!
-    await route.finished()
     contexts.push({ status: route.status(), elapsedMs: performance.now() - started })
     console.info("SF_OWNER_ADMISSION_READS " + JSON.stringify({ contexts }))
     expect(route.status(), "the original route context is authorized").toBe(200)
