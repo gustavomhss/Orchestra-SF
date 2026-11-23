@@ -75,7 +75,8 @@ export async function capturePortugueseRecord(page: Page, info: TestInfo, area: 
     await theme(localized, "dark")
     await captureRecord(localized, info, area, state + "-pt-br-desktop", true)
   } finally {
-    await context.close()
+    // Cleanup after an already-ended test must not replace the original action/assertion failure.
+    await context.close().catch(() => undefined)
   }
 }
 
