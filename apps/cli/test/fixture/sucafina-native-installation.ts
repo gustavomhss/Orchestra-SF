@@ -1,4 +1,4 @@
-import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir, userInfo } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -13,6 +13,8 @@ const entry = fileURLToPath(new URL("../../src/index.ts", import.meta.url))
 const factory = fileURLToPath(new URL("../../../../modules/sucafina/Sucafinav1/local/entry.ts", import.meta.url))
 const memoryFactory = fileURLToPath(new URL("./sucafina-memory-installation.ts", import.meta.url))
 const hostname = "127.0.0.1"
+// Snapshot-only CPU evidence; never part of the native product or qualification.
+const cpuProfileDirectory = fileURLToPath(new URL("../../../../packages/app-shell/e2e/test-results/native-cpu-profile/", import.meta.url))
 
 export type NativeFixtureSeed = {
   root: string
@@ -64,7 +66,9 @@ export function withNativeInstallation(input: {
       return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }
     })
     const app = yield* AppProcess.Service
+    yield* Effect.promise(() => mkdir(cpuProfileDirectory, { recursive: true }))
     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
+      "--cpu-prof", "--cpu-prof-name", "recall-native.cpuprofile", "--cpu-prof-dir", cpuProfileDirectory,
       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", input.memoryPrecedent ? memoryFactory : factory,
     ], {
       cwd: root,
