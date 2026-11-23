@@ -1,0 +1,14 @@
+.sf-schedule-unavailable {
+  max-width: 760px;
+  padding: 24px;
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+.sf-schedule-unavailable h2 { margin: 0; font-size: var(--font-size-xl); }
+.sf-schedule-unavailable p { margin: 0; max-width: 62ch; line-height: 1.65; }
+.sf-schedule-unavailable .mx-btn { min-height: 44px; white-space: normal; text-align: center; }
+@media (max-width: 600px) {
+  .sf-schedule-unavailable { padding: 20px; }
+  .sf-schedule-unavailable .mx-btn { width: 100%; justify-content: center; }
+}

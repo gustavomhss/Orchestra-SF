@@ -453,7 +453,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(rejection.getByRole("button", { name: "Reject candidate; save reason and page", exact: true })).toBeDisabled()
   await captureRecord(page, info, "UI59", "rejection-requires-reason")
   await rejection.locator("summary").click()
-  await captureRecordVariants(page, info, "UI59", "review-original-source")
+  await captureRecordVariants(page, info, "UI59", "review-original-source", true, { lightDesktop: true, lightNarrow: true })
   await capturePortugueseRecord(page, info, "UI59", "review-original-source", async (localized) => {
     const card = localized.locator(`[data-sf-evidence-id=${JSON.stringify(candidate.id)}]`)
     await card.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" }).click()

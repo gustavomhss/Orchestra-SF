@@ -35,20 +35,22 @@ export async function prepareRecordScenario(page: Page, account: Account) {
   const source = before.data.versions[0]
   const revision = source ? before.versions["versions:" + source.id]?.version : 0
   if (revision === undefined) throw new Error("Copying the original Planner version requires its current CAS")
+  const name = "Design test data · Document scenario " + randomUUID()
   const created = await page.request.post(account.baseURL + "/planner?page=Versions", {
     maxRetries: 0, headers: { Origin: account.origin },
     data: { page: "Versions", action: source ? "copy" : "save", ...(source ? { id: source.id } : {}),
       version: revision, confirmed: true,
-      values: source ? { name: "Design test data · Document scenario " + randomUUID() } : {} },
+      values: source ? { name } : {} },
   })
   expect(created.status()).toBe(200)
-  const result = await created.json() as { ok: boolean; value?: string }
-  expect(result.ok).toBe(true)
-  if (typeof result.value !== "string" || !result.value) throw new Error("Planner did not return the new scenario fixture version")
-  const version = result.value
+  expect(await created.json()).toMatchObject({ ok: true })
+  // The original HTTP command intentionally publishes no internal result ID.
+  // Identify the sole new version from an independently authorized CAP23 read.
   const current = await versions(page, account)
-  const own = current.data.versions.filter((entry) => entry.id === version)
+  const own = current.data.versions.filter((entry) => !before.data.versions.some((prior) => prior.id === entry.id))
   expect(own).toHaveLength(1)
+  if (source) expect(own[0]!.name).toBe(name)
+  const version = own[0]!.id
   const year = own[0]!.year
   const line = randomUUID()
   const saved = await page.request.post(account.baseURL + "/planner", {

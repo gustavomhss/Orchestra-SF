@@ -1,5 +1,9 @@
 // New context copy is frozen in native-ui surface-manifest.json UI67.
 export const SF_CONTEXT_COPY = {
+  "sf.ui66.unavailableDescription": "Check the availability of schedules for this installation.",
+  "sf.ui66.unavailableTitle": "Scheduling is unavailable",
+  "sf.ui66.unavailableMessage": "This installation does not currently provide scheduling. You can return to the routine catalog; no schedule has been created or changed.",
+  "sf.ui66.returnToRoutines": "Back to routines",
   "sf.ui67.description": "Review the installation and identity currently authorized for this workspace.",
   "sf.ui67.activeContext": "Current context",
   "sf.ui67.contextDetails": "These identifiers describe the current connection and access scope.",
@@ -90,6 +94,10 @@ export const SF_CONTEXT_COPY = {
 } as const
 
 export const SF_CONTEXT_COPY_BR: Record<keyof typeof SF_CONTEXT_COPY, string> = {
+  "sf.ui66.unavailableDescription": "Confira a disponibilidade dos agendamentos nesta instalação.",
+  "sf.ui66.unavailableTitle": "Agendamentos indisponíveis",
+  "sf.ui66.unavailableMessage": "Esta instalação ainda não disponibiliza agendamentos. Você pode voltar ao catálogo de rotinas; nenhuma programação foi criada ou alterada.",
+  "sf.ui66.returnToRoutines": "Voltar para rotinas",
   "sf.ui67.description": "Confira a instalação e a identidade autorizadas para este ambiente.",
   "sf.ui67.activeContext": "Contexto atual",
   "sf.ui67.contextDetails": "Estes identificadores descrevem a conexão e o escopo de acesso atuais.",
