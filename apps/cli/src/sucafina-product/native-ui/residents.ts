@@ -32,7 +32,7 @@ export function createSfResidentProjectionHandlers(deps: Dependencies): readonly
         request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "invalid" }, 400)
       const runtime = deps.runtime(), reader = deps.readContext
       if (!runtime || request.signal.aborted) return reply({ status: "unavailable" }, 503)
-      const context = await reader(request)
+      const context = await reader(request).catch(() => ({ status: "unavailable" as const, reason: "host-unavailable" as const }))
       if (context.status !== "ok") return reply({ status: context.status }, context.status === "unauthenticated" ? 401 : context.status === "denied" ? 403 : 503)
       const stamp = Object.freeze({ ...context.value.stamp })
       const current = () => !request.signal.aborted && deps.runtime() === runtime && deps.readContext === reader
