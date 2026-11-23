@@ -68,8 +68,15 @@ export function withNativeInstallation(input: {
       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", input.memoryPrecedent ? memoryFactory : factory,
     ], {
       cwd: root,
+      extendEnv: false,
       ...(input.memoryPrecedent ? { stdin: "pipe" as const } : {}),
+      // Preserve host tools (tar/unzip for pinned acquisition) and the requested
+      // runtime mode. Credentials and every writable store remain isolated below.
       env: {
+        ...Object.fromEntries(["PATH", "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER", "ORCHESTRA_CHANNEL"].flatMap((key) => {
+          const value = process.env[key]
+          return value === undefined ? [] : [[key, value]]
+        })),
         SUCAFINA_LOCAL_CONFIG: seed.config,
         ORCHESTRA_DB: path.join(root, "host-data", "orchestra.db"),
         ORCHESTRA_CONFIG_DIR: path.join(root, "host-config"),
