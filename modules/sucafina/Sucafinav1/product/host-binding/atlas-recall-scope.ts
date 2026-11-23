@@ -115,10 +115,15 @@ export function createSfAtlasRecallScope(input: {
   }
   const observe: SfAtlasReadObservation = async <Value>(incoming: { id: string; incarnation: string }, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    console.info("SF_DESIGN_STAGE recall-calculation-observe-start")
     const unavailable = (): PortResult<Value> => ({ status: "unavailable", reason: "atlas-read-observation-changed" })
+    console.info(call.kind === "ui" ? "SF_DESIGN_STAGE recall-calculation-ui" : "SF_DESIGN_STAGE recall-calculation-native-fallback")
     if (call.kind !== "ui") return work()
     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), inputDigest = digestSfValue(incoming)
-    if (!request || request.signal.aborted || active.has(call) || !await input.host.revalidate(call)) return unavailable()
+    console.info("SF_DESIGN_STAGE recall-calculation-admission-start")
+    if (!request || request.signal.aborted || active.has(call) || !await input.host.revalidate(call)) return (console.info("SF_DESIGN_STAGE recall-calculation-admission-refused"), unavailable())
+    console.info("SF_DESIGN_STAGE recall-calculation-admission-ok")
+    console.info("SF_DESIGN_STAGE recall-calculation-selection-start")
     const selected = await input.state.read(request, "cases", (state, actor) => {
       const value = state.cases[incoming.id]
       if (!value || value.incarnation !== incoming.incarnation || !value.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
@@ -126,36 +131,49 @@ export function createSfAtlasRecallScope(input: {
       const selected = { id: value.id, incarnation: value.incarnation, version: value.version }
       return { selected, eligible: value.sourceRefs.some((ref) => ref.kind === "calculation" && recordOnlyRequest(state, selected, ref) !== undefined) }
     })
+    console.info(selected.status !== "ok" ? "SF_DESIGN_STAGE recall-calculation-selection-refused" : !selected.value ? "SF_DESIGN_STAGE recall-calculation-selection-absent" : "SF_DESIGN_STAGE recall-calculation-selection-ready")
+    if ("reason" in selected) console.info(selected.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-calculation-selection-product-access-unavailable" : selected.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-calculation-selection-product-state-uninitialized" : selected.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-calculation-selection-invalid-product-state" : selected.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-selection-product-authority-changed" : selected.reason === "cancelled" ? "SF_DESIGN_STAGE recall-calculation-selection-cancelled" : "SF_DESIGN_STAGE recall-calculation-selection-other-refusal")
     if (selected.status !== "ok" || !selected.value || active.has(call) || input.host.requestFor(call) !== request || request.signal.aborted ||
-      binding !== digestSfValue([call.kind, call.binding]) || inputDigest !== digestSfValue(incoming)) return unavailable()
+      binding !== digestSfValue([call.kind, call.binding]) || inputDigest !== digestSfValue(incoming)) return (console.info("SF_DESIGN_STAGE recall-calculation-selection-changed"), unavailable())
     // Preserve the original historical/mixed-domain path, including its case
     // semantics. Merely having Atlas mounted does not enable proof reuse.
+    console.info(selected.value.eligible ? "SF_DESIGN_STAGE recall-calculation-eligible" : "SF_DESIGN_STAGE recall-calculation-canonical-fallback")
     if (!selected.value.eligible) return work()
     const scope: Scope = { call, request, binding, incoming, inputDigest, selected: selected.value.selected, busy: false, closed: false, invalid: false }
     active.add(call)
     try {
       return await local.run(scope, async () => {
+        console.info("SF_DESIGN_STAGE recall-calculation-case-start")
         const result = await input.withCalculationCase<Value>(call, scope.selected, work, async (result) => {
+          console.info(result.status !== "ok" ? "SF_DESIGN_STAGE recall-calculation-case-work-refused" : !scope.proof ? "SF_DESIGN_STAGE recall-calculation-case-work-canonical" : "SF_DESIGN_STAGE recall-calculation-case-work-proved")
           if (result.status !== "ok" || !scope.proof) return result
           // The private case wrapper calls this AFTER its own final await while
           // retaining the exact CaseScope needed by the real coverage callback.
           scope.busy = true
           try {
+            console.info("SF_DESIGN_STAGE recall-calculation-final-fence-start")
             const final = await fence(scope, scope.proof.ref)
+            console.info(final?.kind === "current" ? "SF_DESIGN_STAGE recall-calculation-final-fence-ready" : final?.kind === "unsupported" ? "SF_DESIGN_STAGE recall-calculation-final-fence-unsupported" : "SF_DESIGN_STAGE recall-calculation-final-fence-unavailable")
             return final?.kind === "current" && final.digest === scope.proof.fence && current(scope)
               ? result : { status: "unavailable", reason: "atlas-recall-proof-changed" }
           } finally { scope.busy = false }
         })
-        return result.status === "ok" && current(scope) ? result : unavailable()
+        console.info(result.status === "ok" ? "SF_DESIGN_STAGE recall-calculation-case-ready" : "SF_DESIGN_STAGE recall-calculation-case-refused")
+        if ("reason" in result) console.info(result.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-calculation-case-product-access-unavailable" : result.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-calculation-case-product-state-uninitialized" : result.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-calculation-case-invalid-product-state" : result.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-case-product-authority-changed" : result.reason === "cancelled" ? "SF_DESIGN_STAGE recall-calculation-case-cancelled" : result.reason === "calculation-case-authority-unavailable" ? "SF_DESIGN_STAGE recall-calculation-case-calculation-case-authority-unavailable" : result.reason === "calculation-case-scope-mismatch" ? "SF_DESIGN_STAGE recall-calculation-case-calculation-case-scope-mismatch" : result.reason === "calculation-case-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-case-calculation-case-authority-changed" : result.reason === "atlas-recall-proof-changed" ? "SF_DESIGN_STAGE recall-calculation-case-atlas-recall-proof-changed" : result.reason === "atlas-read-observation-changed" ? "SF_DESIGN_STAGE recall-calculation-case-atlas-read-observation-changed" : result.reason === "atlas-recall-unavailable" ? "SF_DESIGN_STAGE recall-calculation-case-atlas-recall-unavailable" : result.reason === "case-selection-unavailable" ? "SF_DESIGN_STAGE recall-calculation-case-case-selection-unavailable" : result.reason === "case-selection-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-case-case-selection-authority-changed" : "SF_DESIGN_STAGE recall-calculation-case-other-refusal")
+        return result.status === "ok" && current(scope) ? result : (console.info("SF_DESIGN_STAGE recall-calculation-scope-refused"), unavailable())
       })
-    } catch { return unavailable() }
+    } catch { return (console.info("SF_DESIGN_STAGE recall-calculation-caught"), unavailable()) }
     finally { scope.closed = true; scope.proof = undefined; active.delete(call) }
   }
   const recall = async (incoming: { id: string; incarnation: string }, call: TrustedDomainContext, work: () => Promise<RecallResult>): Promise<RecallResult> => {
+    console.info("SF_DESIGN_STAGE recall-calculation-recall-start")
     const result = await observe(incoming, call, async (): Promise<PortResult<RecallResult>> => {
+      console.info("SF_DESIGN_STAGE recall-calculation-canonical-start")
       const value = await work()
+      console.info(value.status === "ok" ? "SF_DESIGN_STAGE recall-calculation-canonical-ready" : "SF_DESIGN_STAGE recall-calculation-canonical-unavailable")
       return value.status === "ok" ? { status: "ok", value } : { status: "unavailable", reason: "atlas-recall-unavailable" }
     })
+    if ("reason" in result) console.info(result.reason === "product-access-unavailable" ? "SF_DESIGN_STAGE recall-calculation-recall-product-access-unavailable" : result.reason === "product-state-uninitialized" ? "SF_DESIGN_STAGE recall-calculation-recall-product-state-uninitialized" : result.reason === "invalid-product-state" ? "SF_DESIGN_STAGE recall-calculation-recall-invalid-product-state" : result.reason === "product-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-recall-product-authority-changed" : result.reason === "cancelled" ? "SF_DESIGN_STAGE recall-calculation-recall-cancelled" : result.reason === "calculation-case-authority-unavailable" ? "SF_DESIGN_STAGE recall-calculation-recall-calculation-case-authority-unavailable" : result.reason === "calculation-case-scope-mismatch" ? "SF_DESIGN_STAGE recall-calculation-recall-calculation-case-scope-mismatch" : result.reason === "calculation-case-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-recall-calculation-case-authority-changed" : result.reason === "atlas-recall-proof-changed" ? "SF_DESIGN_STAGE recall-calculation-recall-atlas-recall-proof-changed" : result.reason === "atlas-read-observation-changed" ? "SF_DESIGN_STAGE recall-calculation-recall-atlas-read-observation-changed" : result.reason === "atlas-recall-unavailable" ? "SF_DESIGN_STAGE recall-calculation-recall-atlas-recall-unavailable" : result.reason === "case-selection-unavailable" ? "SF_DESIGN_STAGE recall-calculation-recall-case-selection-unavailable" : result.reason === "case-selection-authority-changed" ? "SF_DESIGN_STAGE recall-calculation-recall-case-selection-authority-changed" : "SF_DESIGN_STAGE recall-calculation-recall-other-refusal")
     return result.status === "ok" ? result.value : { status: "unavailable" }
   }
   return { recall, resolve, observe }
