@@ -515,9 +515,15 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   ])
   expect(afterRecovery).toEqual(after)
   expect(recoveryTokens).toEqual(afterTokens)
+  // The reader remains on native CAP18; its access actions live in the context menu.
+  await reader.getByRole("button", { name: "Context and access", exact: true }).click()
+  const access = reader.getByRole("menu", { name: "Context and access", exact: true })
+  await expect(access).toBeVisible()
+  const signOut = access.getByRole("menuitem", { name: "Sign out", exact: true })
+  await expect(signOut).toBeEnabled()
   // The Files transport preflights context before issuing a receipt read after cross-tab logout.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
-  await reader.getByRole("button", { name: "Sign out", exact: true }).click()
+  await signOut.click()
   expect((await signedOut).status()).toBe(204)
   const { response: revoked } = await forwardedRead(page, context.url(), () => refreshReceipt.click())
   expect(revoked.status()).toBe(401)
