@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T04:46:27.000Z",
-  "status": "C14_ACL_GATES_AND_BI_TRACE_RUNNING",
+  "updatedAt": "2026-11-23 04:54:27 UTC",
+  "status": "C14_ACL_FOCALS_PASS_ANALYTICS_BI_TRACE_RUNNING_BUDGET_PROBE_PREFLIGHT",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
   "task": {
@@ -89,30 +89,6 @@
   ],
   "pending": [
     {
-      "kind": "normal",
-      "sha": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
-      "tree": "2b27e319d17a4ca9b478776886c8c7bc1bf8e635",
-      "branch": "ci-run-sf613acl1",
-      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
-      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "status": "DISPATCHED",
-      "dispatchedAt": "2026-11-23 04:42:11 UTC",
-      "peerAck": "sf613_status",
-      "run": 45113428923
-    },
-    {
-      "kind": "release",
-      "sha": "f495aa0f59572b935ed12054b32383a154e3db6c",
-      "tree": "a404f36c41d4dfa4d258b5871b7eb09c44b1db93",
-      "branch": "ci-run-sf613acl2",
-      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
-      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
-      "status": "DISPATCHED",
-      "dispatchedAt": "2026-11-23 04:42:11 UTC",
-      "peerAck": "sf613_status",
-      "run": 45113430240
-    },
-    {
       "kind": "analyticsBiTrace",
       "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
       "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
@@ -129,7 +105,39 @@
       "qualification": false,
       "status": "DISPATCHED",
       "peerAck": "sf613_ui",
-      "dispatchedAt": "2026-11-23 04:46:27 UTC"
+      "dispatchedAt": "2026-11-23 04:46:27 UTC",
+      "run": 45113831723
+    },
+    {
+      "kind": "normal",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "sha": "ccc99009ddee0dda18e997c1389bf14d2f582bb1",
+      "tree": "bfd64a8891fd93ccde038dc569f71239c0cbc275",
+      "branch": "ci-run-sf613bud1",
+      "overlayPaths": [
+        "apps/cli/test/sucafina-sql-budget-reopen-diagnostic.test.ts",
+        "apps/cli/test/sucafina-sql-budget-verification.test.ts",
+        ".ci-run.json"
+      ],
+      "qualification": false,
+      "status": "PEER_REVIEW_PENDING"
+    },
+    {
+      "kind": "release",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "sha": "2a59877839068f8108d2935abcda8fe5deaaea7f",
+      "tree": "9485556067b5d28d2a10397cea287cd904447119",
+      "branch": "ci-run-sf613bud2",
+      "overlayPaths": [
+        "apps/cli/test/sucafina-sql-budget-reopen-diagnostic.test.ts",
+        "apps/cli/test/sucafina-sql-budget-verification.test.ts",
+        ".ci-run.json",
+        "package.json"
+      ],
+      "qualification": false,
+      "status": "PEER_REVIEW_PENDING"
     }
   ],
   "previousFullCampaign": {
@@ -296,5 +304,17 @@
     "lost": "Volatile functions stores/log caches/renderers",
     "preserved": "Git commits/refs and tool/conversation receipts",
     "noProjectExecutionRepeated": true
+  },
+  "aclReceipts": {
+    "normal": {
+      "run": 45113428923,
+      "result": "4/4PASS,G660PASS2originalUIDskips,C1796762.25ms,typesSFCLI",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/acl-normal.json"
+    },
+    "release": {
+      "run": 45113430240,
+      "result": "5/5PASS,G660PASS2originalUIDskips,C1799732.06ms",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/acl-release.json"
+    }
   }
 }
