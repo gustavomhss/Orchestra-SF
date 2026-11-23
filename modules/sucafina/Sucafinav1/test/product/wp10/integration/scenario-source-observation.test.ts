@@ -25,6 +25,7 @@ async function fixture(deadline: Deadline) {
   const input = { scenarioRefs: original.references, criteria: ["cost"] }
   const counts = { pairCalls: 0, pairWork: 0, sourceCalls: 0, sourceWork: 0, source: 0, coverage: 0, criteria: 0 }
   const owners = { pairs: [] as object[], sources: [] as object[] }
+  const pairResults: Awaited<ReturnType<PlannerScenarioObservation>>[] = []
   const hooks: { beforeSource?: () => Promise<void> } = {}
   const outside = () => {
     expect(currentSfPlannerReadonlySnapshotScope(original.persistence)).toBeUndefined()
@@ -52,8 +53,15 @@ async function fixture(deadline: Deadline) {
     outside()
     const value = await original.business.observePlannerScenarios(references, call, async () => {
       counts.pairWork++
-      captureOwner(owners.pairs)
-      return read()
+      // Unsupported witnesses still run the full canonical producer. A missing
+      // native identity fails the positive owner counts, never the producer.
+      try {
+        const current = currentSfPlannerReadonlySnapshotScope(original.persistence)
+        if (current?.bytesIdentity && current.current()) owners.pairs.push(current.identity)
+      } catch { /* Closed or unsupported probes must not substitute a refusal. */ }
+      const value = await read()
+      pairResults.push(structuredClone(value))
+      return value
     })
     outside()
     return value
@@ -96,17 +104,20 @@ async function fixture(deadline: Deadline) {
     for (const key of Object.keys(counts) as (keyof typeof counts)[]) counts[key] = 0
     owners.pairs.length = 0
     owners.sources.length = 0
+    pairResults.length = 0
     hooks.beforeSource = undefined
   }
   const state = async () => sensitivityOk(await original.authority.state.read(original.transport, "cases", (value) =>
     structuredClone({ cases: value.cases, versions: value.versions })))
-  return { original, input, counts, owners, hooks, outside, observe, run, reset, state }
+  return { original, input, counts, owners, pairResults, hooks, outside, observe, run, reset, state }
 }
 
 function expectCompletePhases(f: Awaited<ReturnType<typeof fixture>>, observed: boolean) {
   expect(f.counts).toEqual({ pairCalls: 3, pairWork: 3, sourceCalls: observed ? 3 : 0,
     sourceWork: observed ? 3 : 0, source: 6, coverage: 6, criteria: 2 })
   expect(f.owners.pairs).toHaveLength(3)
+  expect(f.pairResults).toHaveLength(3)
+  expect(f.pairResults.every((batch) => batch.length === 2 && batch.every((value) => value.status === "ok"))).toBe(true)
   expect(new Set(f.owners.pairs).size).toBe(3)
   expect(f.owners.sources).toHaveLength(observed ? 3 : 0)
   expect(new Set([...f.owners.pairs, ...f.owners.sources]).size).toBe(observed ? 6 : 3)
@@ -204,7 +215,10 @@ test("Planner source observations preserve complete comparisons and independent 
       }))
     expect(changed.status).not.toBe("ok")
     expect(closedSourceAttack).toBe(1)
-    expect(f.counts).toMatchObject({ sourceCalls: 1, sourceWork: 1, source: 2, coverage: 2 })
+    expect(f.counts).toMatchObject({ pairCalls: 2, pairWork: 2, sourceCalls: 1, sourceWork: 1, source: 2, coverage: 2 })
+    expect(f.pairResults).toHaveLength(2)
+    expect(f.pairResults[1]!).toHaveLength(2)
+    expect(f.pairResults[1]!.some((value) => value.status !== "ok")).toBe(true)
   } finally { await deadline.close() }
 }, 120_000)
 
@@ -293,6 +307,21 @@ test("Planner source observations do not share pending or expired canonical call
     const completedCounts = { ...f.counts }
     for (const read of retained) expect(await read()).toEqual([false, false])
     expect(f.counts).toEqual(completedCounts)
+    expect(await f.state()).toEqual(state)
+
+    f.reset()
+    let unused: SourceRead | undefined
+    const neverRead = await deadline.phase("a-closed-unread-callback-cannot-start-its-first-producer", () =>
+      f.run(async (_references, _call, read) => {
+        unused = read
+        return [true, true]
+      }))
+    expect(neverRead).toEqual(staleFor(1))
+    expect(f.counts).toMatchObject({ sourceCalls: 1, sourceWork: 0, source: 0, coverage: 0 })
+    if (!unused) throw new Error("The uncalled canonical reader was not retained")
+    const untouchedCounts = { ...f.counts }
+    expect(await unused()).toEqual([false, false])
+    expect(f.counts).toEqual(untouchedCounts)
     expect(await f.state()).toEqual(state)
 
     f.reset()
