@@ -115,6 +115,32 @@ const make = Effect.gen(function* () {
       })
     }
 
+    // The available projection reads the same top-level metadata, but validates
+    // only providers selected by the current credential and availability read.
+    const projectModelInput = (model: ModelV2.Info, provider: ProviderV2.Info) => {
+      // A model without its own package takes the provider's, and its own URL when it has one.
+      const api =
+        model.api.type === "native" && Object.keys(model.api.settings).length === 0 && provider.api.type === "aisdk"
+          ? { ...provider.api, id: model.api.id, url: model.api.url ?? provider.api.url }
+          : model.api.type === "native" && !model.api.url && Object.keys(model.api.settings).length === 0
+          ? { ...provider.api, id: model.api.id }
+          : model.api.type === "aisdk" && provider.api.type === "aisdk" && !model.api.url
+            ? { ...model.api, url: provider.api.url, settings: { ...provider.api.settings, ...model.api.settings } }
+            : model.api.type === "aisdk" && provider.api.type === "aisdk"
+              ? { ...model.api, settings: { ...provider.api.settings, ...model.api.settings } }
+              : model.api
+      const request = {
+        headers: { ...provider.request.headers, ...model.request.headers },
+        body: { ...provider.request.body, ...model.request.body },
+        variant: model.request.variant,
+      }
+      return {
+        ...model,
+        api,
+        request,
+      }
+    }
+
     const normalizeApi = (item: ProviderV2.MutableInfo | ModelV2.MutableInfo) => {
       if (typeof item.request.body.baseURL !== "string") return
       item.api.url = item.request.body.baseURL
@@ -234,14 +260,21 @@ const make = Effect.gen(function* () {
       })
     })
 
-    const projectModels = (virtuals: ProviderRecord[]) =>
+    const projectModels = (virtuals: ProviderRecord[], providers?: ReadonlySet<ProviderV2.ID>) =>
       pipe(
         [...Array.fromIterable(state.get().providers.values()), ...virtuals],
         Array.flatMap((record) => {
           const parsed = parseVirtualID(record.provider.id)
-          return Array.fromIterable(record.models.values()).map((model) =>
+          const models = Array.fromIterable(record.models.values())
+          if (!providers) return models.map((model) =>
             projectModel(parsed ? { ...model, providerID: record.provider.id } : model, record.provider),
           )
+          return models.flatMap((model) => {
+            // Nested metadata of an unavailable provider is outside this result.
+            // all() and get() retain their complete projection and validation.
+            const input = projectModelInput(parsed ? { ...model, providerID: record.provider.id } : model, record.provider)
+            return providers.has(input.providerID) ? [ModelV2.Info.make(input)] : []
+          })
         }),
         Array.sortWith((item) => item.time.released, Order.flip(Order.Number)),
       )
@@ -289,7 +322,7 @@ const make = Effect.gen(function* () {
         available: Effect.fn("CatalogV2.model.available")(function* () {
           const virtuals = yield* virtualEntries()
           const providers = new Set((yield* availableProviders(virtuals)).map((provider) => provider.id))
-          return projectModels(virtuals).filter((model) => providers.has(model.providerID) && model.enabled)
+          return projectModels(virtuals, providers).filter((model) => providers.has(model.providerID) && model.enabled)
         }),
 
         default: Effect.fn("CatalogV2.model.default")(function* () {
