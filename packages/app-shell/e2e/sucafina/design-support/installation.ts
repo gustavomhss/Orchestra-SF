@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url"
 
 export type DesignInstallation = {
   root: string
+  workspace: string
   origin: string
   mount: string
   actorId: string
@@ -114,7 +115,7 @@ function isolatedEnvironment(root: string): Record<string, string> {
 
 function isInstallation(value: unknown): value is DesignInstallation {
   if (!value || typeof value !== "object") return false
-  const fields = ["root", "origin", "mount", "actorId", "signIn", "serverPassword", "topicName", "opexName", "riskName", "projectName"] as const
+  const fields = ["root", "workspace", "origin", "mount", "actorId", "signIn", "serverPassword", "topicName", "opexName", "riskName", "projectName"] as const
   if (!fields.every((field) => field in value && typeof Reflect.get(value, field) === "string")) return false
   return "year" in value && typeof value.year === "number" && Number.isSafeInteger(value.year) &&
     "month" in value && typeof value.month === "number" && Number.isInteger(value.month) && value.month >= 1 && value.month <= 12
@@ -129,7 +130,7 @@ export async function authenticateDesignInstallation(context: BrowserContext, in
   if (origin.protocol !== "http:" || origin.hostname !== "127.0.0.1" || installed.mount !== "/sucafina")
     throw new Error("Expected the isolated native loopback installation")
   const discovery = new URL("/api/sucafina/installations", origin)
-  discovery.search = new URLSearchParams({ select: "location", "location[directory]": installed.root }).toString()
+  discovery.search = new URLSearchParams({ select: "location", "location[directory]": installed.workspace }).toString()
   const found = await context.request.get(discovery.href, { timeout: 20_000 })
   if (found.status() !== 200) throw new Error("Native installation discovery failed (" + found.status() + ")")
   const list = Schema.decodeUnknownSync(SfInstallationList, { onExcessProperty: "error" })(await found.json())

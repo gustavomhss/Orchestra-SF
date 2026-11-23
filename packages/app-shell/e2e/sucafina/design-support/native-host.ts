@@ -8,6 +8,7 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { withNativeInstallation } from "../../../../../apps/cli/test/fixture/sucafina-native-installation"
 import { prepareOperatorAccess } from "../../../../../modules/sucafina/Sucafinav1/local/enroll"
+import { prepareSfLocalWorkspace } from "../../../../../modules/sucafina/Sucafinav1/local/workspace"
 import type { Actor, Command, Domain } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract"
 import { DashboardBudget } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-budget"
 import { DashboardPeople } from "../../../../../modules/sucafina/Sucafinav1/runtime/dashboard-people"
@@ -192,6 +193,7 @@ const program = Effect.scoped(Effect.gen(function* () {
       process.stdout.write("SF_DESIGN_STAGE seed-complete\n")
     },
   })
+  const workspace = yield* Effect.promise(() => prepareSfLocalWorkspace(installed.root))
   process.stdout.write("SF_DESIGN_STAGE native-ready\n")
   if (decisionsWave) {
     process.stdout.write("SF_DESIGN_STAGE decisions-seed\n")
@@ -220,7 +222,7 @@ const program = Effect.scoped(Effect.gen(function* () {
       destination.searchParams.size !== 1 || !/^[a-f0-9]{64}$/.test(destination.searchParams.get("code") ?? ""))
     throw new Error("Native enrollment destination does not match this installation")
   const metadata = {
-    root: installed.root, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
+    root: installed.root, workspace, origin: installed.origin, mount: installed.mount, actorId: installed.actorId,
     signIn, serverPassword, year, month, topicName, opexName, riskName, projectName,
   }
   yield* Effect.promise(() => writeFile(path.join(privateRoot, "installation.json"), JSON.stringify(metadata), { mode: 0o600, flag: "wx" }))
