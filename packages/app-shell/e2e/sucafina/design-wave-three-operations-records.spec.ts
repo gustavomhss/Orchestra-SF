@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, type TestInfo } from "@playwright/test"
-import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter, originalRead } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -30,7 +30,8 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[2]]
@@ -52,13 +53,15 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     const surface = page.locator('[data-sf-surface="CAP13"]')
     await surface.getByLabel("Status", { exact: true }).selectOption("closed")
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator("tr[data-sf-row]")).toHaveCount(0)
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("0")
     await scrollPageTop(page)
     await capture(page, info, "CAP13-filtered-empty-dark-desktop-test-data")
     await surface.getByLabel("Status", { exact: true }).selectOption("")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     const row = surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.risk })
     await row.getByRole("button", { name: "Open record", exact: true }).click()
     const detail = surface.locator("[data-sf-record-detail]")
@@ -91,7 +94,8 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     await expect(editor.getByLabel("Impact", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP13" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(riskNotes)
     await visit(screens[2])
@@ -125,7 +129,8 @@ waveThreeTest("installed native operations · relationships source values and a 
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[3]]
@@ -147,11 +152,13 @@ waveThreeTest("installed native operations · relationships source values and a 
     const surface = page.locator('[data-sf-surface="CAP15"]')
     await surface.getByLabel("Search", { exact: true }).fill("  REGIONAL OPERATIONS COUNCIL  ")
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("1")
     await expect(surface.locator("tr[data-sf-row]")).toHaveCount(1)
     await surface.getByLabel("Search", { exact: true }).fill("")
-    await surface.getByRole("button", { name: "Apply filters", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      surface.getByRole("button", { name: "Apply filters", exact: true }).click())
     await expect(surface.locator(".sf-u30-count strong")).toHaveText("2")
     await surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.operations.stakeholder })
       .getByRole("button", { name: "Open record", exact: true }).click()
@@ -178,7 +185,8 @@ waveThreeTest("installed native operations · relationships source values and a 
     await expect(editor.getByLabel("Notes", { exact: true })).toHaveValue(relationshipNotes)
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP15" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(relationshipNotes)
     await visit(screens[3])
@@ -212,7 +220,8 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     if (request.method() === "POST" && url.pathname.startsWith(installation.mount + "/")) mutations.push(url.pathname)
   })
   const visit = async (screen: typeof screens[number]) => {
-    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title)
+    await enter(page, owner, periodURL(screen, installation.origin, installation.year, installation.month), screen.title,
+      undefined, { path: "/api/ui/pages/" + screen.id })
     await loaded(page, screen.id)
   }
   const selectedScreens = [screens[4]]
@@ -274,7 +283,8 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
     await expect(editor.getByLabel("Score", { exact: true })).toHaveValue("3")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP16" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(review).toHaveCount(0)
     await expect(surface.locator("[data-sf-performance-detail]")).toContainText(performanceNotes)
     await visit(screens[4])
@@ -295,10 +305,14 @@ waveThreeTest("installed native operations · performance hierarchy and a real r
 })
 
 waveThreeTest("installed native operations · weight exceptions require fresh producer-backed consent", async ({ page, installation, owner }, info) => {
+  // This separate scenario includes two genuine producer refusals, explicit consent,
+  // one accepted command and a fresh source readback; no existing case budget changes.
   waveThreeTest.setTimeout(300_000)
+  const started = performance.now()
   expect(info.project.metadata.bundle).toBe("production")
   const messages = observePage(page)
-  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title)
+  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title,
+    undefined, { path: "/api/ui/pages/CAP16" })
   await loaded(page, "CAP16")
   const surface = page.locator('[data-sf-surface="CAP16"]')
   await surface.locator(".sf-u31-open").filter({ hasText: waveThreeData.operations.subitem }).click()
@@ -357,7 +371,8 @@ waveThreeTest("installed native operations · weight exceptions require fresh pr
     response.request().method() === "POST" &&
     new URL(response.url()).pathname === installation.mount + "/dashboard" &&
     response.request().postDataJSON()?.action === "save-sub")
-  await review.getByRole("button", { name: "Save", exact: true }).click()
+  await originalRead(page, owner, { path: "/api/ui/pages/CAP16" }, () =>
+    review.getByRole("button", { name: "Save", exact: true }).click())
   const accepted = await acceptedResponse
   expect(accepted.status()).toBe(200)
   expect(await accepted.json()).toMatchObject({ ok: true })
@@ -369,7 +384,8 @@ waveThreeTest("installed native operations · weight exceptions require fresh pr
   expect(new Set(keys).size).toBe(3)
   await expect(review).toHaveCount(0)
   await expect(detail).toContainText("Revised allocation exception explicitly accepted")
-  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title)
+  await enter(page, owner, new URL(screens[4].path, installation.origin).href, screens[4].title,
+    undefined, { path: "/api/ui/pages/CAP16" })
   await loaded(page, "CAP16")
   await surface.locator(".sf-u31-open").filter({ hasText: waveThreeData.operations.subitem }).click()
   await detail.getByRole("button", { name: "Edit sub-item", exact: true }).click()
@@ -379,7 +395,7 @@ waveThreeTest("installed native operations · weight exceptions require fresh pr
   expect(messages.consoleErrors.filter((value) =>
     !/^Failed to load resource: the server responded with a status of 422 \(Unprocessable (Entity|Content)\)$/.test(value))).toEqual([])
   await info.attach("native-weight-consent-evidence", { contentType: "application/json",
-    body: JSON.stringify({ source: "canonical IT Performance Contract producer", rejected: [first.status(), second.status()],
+    body: JSON.stringify({ source: "canonical IT Performance Contract producer", elapsedFromEntryMs: Math.round(performance.now() - started), rejected: [first.status(), second.status()],
       accepted: accepted.status(), freshIdempotencyKeys: new Set(keys).size, confirmed: [false, false, true],
       unchangedVersionAfterRejection: payload.version === first.request().postDataJSON().version, ...messages }, null, 2) })
 })

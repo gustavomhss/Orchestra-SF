@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter, originalRead } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -33,7 +33,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
   await waveThreeTest.step("three native collections in both schemes and at narrow width", async () => {
     for (const screen of peopleScreens) {
       await page.setViewportSize({ width: 1440, height: 1100 })
-      await enter(page, owner, new URL(screen.path, installation.origin).href, screen.title)
+      await enter(page, owner, new URL(screen.path, installation.origin).href, screen.title,
+        undefined, { path: "/api/ui/pages/" + screen.id })
       const surface = page.locator('[data-sf-surface="' + screen.id + '"]')
       await expect(surface).toHaveAttribute("data-sf-wave", "three")
       if (screen.id === "CAP06") {
@@ -71,7 +72,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
 
   await waveThreeTest.step("CIO, leader, member and change review remain source bound", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, new URL(peopleScreens[1].path, installation.origin).href, peopleScreens[1].title)
+    await enter(page, owner, new URL(peopleScreens[1].path, installation.origin).href, peopleScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP07" })
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="CAP07"]')
     await surface.getByRole("button", { name: "Edit CIO", exact: true }).click()
@@ -114,7 +116,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await reviewActions(page)
     await capture(page, info, "CAP07-dark-320-member-review-actions-test-data")
     expect(mutations).toHaveLength(0)
-    await review.getByRole("button", { name: "Save member", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP07" }, () =>
+      review.getByRole("button", { name: "Save member", exact: true }).click())
     await expect(editor.getByLabel("Title", { exact: true })).toHaveValue("Design test data · Regional service delivery manager")
     expect(mutations).toHaveLength(1)
     await page.setViewportSize({ width: 1440, height: 1100 })
@@ -144,7 +147,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
   })
 
   await waveThreeTest.step("talent filter, record, assessment and unavailable workbook routes", async () => {
-    await enter(page, owner, new URL(peopleScreens[2].path, installation.origin).href, peopleScreens[2].title)
+    await enter(page, owner, new URL(peopleScreens[2].path, installation.origin).href, peopleScreens[2].title,
+      undefined, { path: "/api/ui/pages/CAP08" })
     const surface = page.locator('[data-sf-surface="CAP08"]')
     await surface.getByLabel("Search members", { exact: true }).fill("no matching talent")
     await expect(surface.locator("tbody tr")).toHaveCount(0)
@@ -194,7 +198,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await page.setViewportSize({ width: 1440, height: 1100 })
 
     for (const kind of ["import", "export"] as const) {
-      await enter(page, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].title)
+      await enter(page, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].title,
+        undefined, { path: "/api/ui/pages/CAP08" })
       const workbook = page.locator('[data-sf-section="' + kind + '"]')
       await expect(workbook).toContainText(kind === "import" ? "has not provided a workbook preview" : "has not provided a download")
       await expect(workbook.getByRole("button")).toBeDisabled()
@@ -205,11 +210,11 @@ waveThreeTest("native people design · reported headcount, structure, talent and
 
   await waveThreeTest.step("semantic returns from direct people links preserve owner and filters", async () => {
     for (const route of [
-      { path: "/orchestra/sf-people/structure/cio", title: "Team Structure", back: "Back to team",
+      { id: "CAP07", path: "/orchestra/sf-people/structure/cio", title: "Team Structure", back: "Back to team",
         collection: "/orchestra/sf-people/structure" },
-      { path: "/orchestra/sf-people/talent/import", title: "Talent Review", back: "Back to talent review",
+      { id: "CAP08", path: "/orchestra/sf-people/talent/import", title: "Talent Review", back: "Back to talent review",
         collection: "/orchestra/sf-people/talent" },
-      { path: "/orchestra/sf-people/talent/export", title: "Talent Review", back: "Back to talent review",
+      { id: "CAP08", path: "/orchestra/sf-people/talent/export", title: "Talent Review", back: "Back to talent review",
         collection: "/orchestra/sf-people/talent" },
     ]) {
       const direct = await page.context().newPage()
@@ -218,8 +223,11 @@ waveThreeTest("native people design · reported headcount, structure, talent and
         url.searchParams.set("year", String(installation.year))
         url.searchParams.set("month", String(installation.month))
         if (route.collection.endsWith("/talent")) url.searchParams.set("status", "Terminated")
-        await enter(direct, owner, url.href, route.title)
-        await direct.getByRole("button", { name: route.back, exact: true }).click()
+        await enter(direct, owner, url.href, route.title, undefined, { path: "/api/ui/pages/" + route.id,
+          query: { year: String(installation.year), month: String(installation.month) } })
+        await originalRead(direct, owner, { path: "/api/ui/pages/" + route.id,
+          query: { year: String(installation.year), month: String(installation.month) } }, () =>
+          direct.getByRole("button", { name: route.back, exact: true }).click())
         await expect(direct).toHaveURL((url) => url.pathname === route.collection &&
           url.searchParams.get("installation") === owner.installationId &&
           url.searchParams.get("year") === String(installation.year) &&
@@ -247,7 +255,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     localized.setDefaultTimeout(15_000)
     const diagnostics = observePage(localized)
     for (const screen of peopleScreens) {
-      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
+      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
+        undefined, { path: "/api/ui/pages/" + screen.id })
       await scheme(localized, "dark")
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
@@ -261,7 +270,8 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await localized.locator('[data-sf-editor="talent"]').getByRole("button", { name: "Revisar", exact: true }).click()
     await localized.getByRole("button", { name: "Voltar à avaliação de talentos", exact: true }).click()
     for (const kind of ["import", "export"] as const) {
-      await enter(localized, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].br)
+      await enter(localized, owner, new URL(peopleScreens[2].path + "/" + kind, installation.origin).href, peopleScreens[2].br,
+        undefined, { path: "/api/ui/pages/CAP08" })
       await expect(localized.locator('[data-sf-section="' + kind + '"]')).toContainText("está indisponível")
       await capture(localized, info, "CAP08-pt-BR-dark-desktop-" + kind + "-unavailable-test-data")
     }
@@ -294,7 +304,8 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
   await waveThreeTest.step("portfolio and project collection across both schemes and narrow reflow", async () => {
     for (const screen of portfolioScreens) {
       await page.setViewportSize({ width: 1440, height: 1100 })
-      await enter(page, owner, new URL(screen.path, installation.origin).href, screen.title)
+      await enter(page, owner, new URL(screen.path, installation.origin).href, screen.title,
+        undefined, { path: "/api/ui/pages/" + screen.id })
       const surface = page.locator('[data-sf-surface="' + screen.id + '"]')
       await expect(surface.locator("tr[data-sf-row]")).toHaveCount(3)
       await expect(surface).toContainText(waveThreeData.projects.primary)
@@ -318,7 +329,8 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
 
   await waveThreeTest.step("filters, detail, edit, exact proposal and real project write", async () => {
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title)
+    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP10" })
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="CAP10"]')
     await surface.getByLabel("Search", { exact: true }).fill("no matching project")
@@ -329,14 +341,17 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await expect(surface.locator("tr[data-sf-row]")).toContainText(waveThreeData.projects.long)
     await surface.getByRole("button", { name: "Reset filters", exact: true }).click()
     const row = surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary })
-    await expect(row).toContainText("Source currency not specified")
+    await expect(surface.locator("#sf-cap10-currency")).toHaveText("Budget and spent: source currency not specified.")
+    await expect(surface.getByRole("table")).toHaveAccessibleDescription(/Budget and spent: source currency not specified\./)
+    await expect(row).not.toContainText("Source currency not specified")
     await row.locator('[data-sf-action="select"]').click()
     await expect(surface.locator("[data-sf-record-detail]")).toContainText(waveThreeData.projects.primary)
     await expect(surface.locator('[data-sf-section="budget-spent"]')).toContainText("Source currency not specified")
     await expect(surface.getByLabel("Search", { exact: true })).toBeHidden()
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-project-detail-test-data")
-    await surface.getByRole("button", { name: "Edit project", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      surface.getByRole("button", { name: "Edit project", exact: true }).click())
     await ready(page, portfolioScreens[1].title)
     const editor = surface.locator("[data-sf-project-editor]")
     await expect(editor.locator(".sf-u05-currency-hint")).toHaveText("Source currency not specified")
@@ -360,10 +375,12 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
       await expect(action).toBeInViewport({ ratio: 1 })
     await capture(page, info, "CAP10-dark-320-project-review-actions-test-data")
     expect(mutations).toHaveLength(0)
-    await editor.getByRole("button", { name: "Save project", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      editor.getByRole("button", { name: "Save project", exact: true }).click())
     await expect(surface.locator(".sf-u05-notice")).toContainText("Changes were accepted")
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title)
+    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP10" })
     await expect(surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary })).toContainText("190,000")
     expect(mutations).toHaveLength(1)
   })
@@ -371,7 +388,8 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
   await waveThreeTest.step("milestone edit, revision retention, command review and genuine source confirmation", async () => {
     const surface = page.locator('[data-sf-surface="CAP10"]')
     await surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary }).locator('[data-sf-action="select"]').click()
-    await surface.getByRole("button", { name: "Milestones", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      surface.getByRole("button", { name: "Milestones", exact: true }).click())
     await ready(page, portfolioScreens[1].title)
     await expect(surface).toHaveAttribute("data-sf-route", "milestones")
     const milestone = surface.locator("[data-sf-milestone]").filter({ hasText: waveThreeData.projects.milestone })
@@ -395,9 +413,11 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await expect(milestone.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Regional discovery reviewed with the delivery owner.")
     await milestone.getByRole("button", { name: "Review changes", exact: true }).click()
     const milestoneHref = page.url()
-    await review.getByRole("button", { name: "Save milestone", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      review.getByRole("button", { name: "Save milestone", exact: true }).click())
     await expect(surface.locator(".sf-u05-notice")).toContainText("Changes were accepted")
-    await enter(page, owner, milestoneHref, portfolioScreens[1].title)
+    await enter(page, owner, milestoneHref, portfolioScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP10" })
     await milestone.locator("summary").click()
     await expect(milestone.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Regional discovery reviewed with the delivery owner.")
     expect(mutations).toHaveLength(2)
@@ -410,8 +430,10 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
   })
 
   await waveThreeTest.step("new project draft and review have their own stage", async () => {
-    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title)
-    await page.getByRole("button", { name: "New project", exact: true }).click()
+    await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title,
+      undefined, { path: "/api/ui/pages/CAP10" })
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      page.getByRole("button", { name: "New project", exact: true }).click())
     await ready(page, portfolioScreens[1].title)
     const editor = page.locator("[data-sf-project-editor]")
     await editor.getByLabel("Project name", { exact: true }).fill("Design test data · New project draft")
@@ -443,13 +465,17 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     localized.setDefaultTimeout(15_000)
     const diagnostics = observePage(localized)
     for (const screen of portfolioScreens) {
-      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
+      await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br,
+        undefined, { path: "/api/ui/pages/" + screen.id })
       await scheme(localized, "dark")
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
     const surface = localized.locator('[data-sf-surface="CAP10"]')
-    await surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary })
-      .getByRole("button", { name: "Editar projeto", exact: true }).click()
+    await expect(surface.locator("#sf-cap10-currency")).toHaveText("Orçamento e realizado: moeda não especificada na fonte.")
+    await expect(surface.getByRole("table")).toHaveAccessibleDescription(/Orçamento e realizado: moeda não especificada na fonte\./)
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP10" }, () =>
+      surface.locator("tr[data-sf-row]").filter({ hasText: waveThreeData.projects.primary })
+        .getByRole("button", { name: "Editar projeto", exact: true }).click())
     const editor = surface.locator("[data-sf-project-editor]")
     await expect(editor.getByLabel("Orçamento", { exact: true })).toHaveValue("190000")
     await scrollPageTop(localized)

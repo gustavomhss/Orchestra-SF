@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test"
 import { ServerConnection } from "../../src/context/server-connection"
+import { originalRead } from "./design-support/original-read"
 import { waveTwoTest, observePage, ready, scheme, scrollPageTop, reflow, reviewActions, capture } from "./design-support/wave-two"
 
 // Keep the original enrollment and scoped session out of traces in every test file.
@@ -35,7 +36,7 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     return url.href
   }
   const enter = async (screen: typeof screens[number], target = page, portuguese = false, topics = 3) => {
-    await target.goto(href(screen.path))
+    await originalRead(target, owner, { path: "/api/ui/pages/" + screen.id }, () => target.goto(href(screen.path)))
     await ready(target, portuguese ? screen.br : screen.title)
     await expect(target).toHaveURL((url) => url.origin === installation.origin && url.pathname === screen.path &&
       url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
@@ -89,19 +90,20 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
 
   await waveTwoTest.step("topic filter, create and update confirmation, cancellation and fresh edit", async () => {
     const filter = page.getByLabel("Filter by status", { exact: true })
-    await filter.selectOption("done")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "done" } }, () => filter.selectOption("done"))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(0)
     await expect(filter).toBeVisible()
     await expect(page.locator("[data-sf-topic-list] .sf-topics-empty")).toBeVisible()
     await expect(page.getByRole("button", { name: "New topic", exact: true })).toBeEnabled()
-    await filter.selectOption("")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "" } }, () => filter.selectOption(""))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(3)
-    await filter.selectOption("blocked")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "blocked" } }, () => filter.selectOption("blocked"))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(1)
     await expect(page.locator("[data-sf-topic-list]")).toContainText("Dados de teste · Validar plano de continuidade do fornecedor")
-    await filter.selectOption("")
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02", query: { topicStatus: "" } }, () => filter.selectOption(""))
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(3)
-    await page.getByRole("button", { name: "New topic", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      page.getByRole("button", { name: "New topic", exact: true }).click())
     const editor = page.locator("[data-sf-topic-editor]")
     await fillTopic(page, installation.year, false)
     await reflow(page)
@@ -127,15 +129,18 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await reviewActions(page)
     await capture(page, info, "CAP02-dark-320-review-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
-    await review.getByRole("button", { name: "Confirm save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      review.getByRole("button", { name: "Confirm save", exact: true }).click())
     const saved = page.locator("[data-sf-topic-confirmed]")
     await expect(saved.locator('[data-topic-feedback="saved"]')).toBeVisible()
     await expect(editor).toHaveCount(0)
     expect(mutations).toHaveLength(1)
-    await saved.getByRole("button", { name: "Back to topics", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      saved.getByRole("button", { name: "Back to topics", exact: true }).click())
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
     const created = page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
-    await created.getByRole("button", { name: "View details", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      created.getByRole("button", { name: "View details", exact: true }).click())
     const detail = page.locator("[data-sf-topic-detail]")
     await expect(detail.getByRole("heading", { name: newTopic, exact: true })).toBeVisible()
     await expect(detail).toContainText(topicNotes)
@@ -155,7 +160,8 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await expect(deletion.getByRole("button", { name: "Delete topic", exact: true })).toBeEnabled()
     await deletion.getByRole("button", { name: "Cancel review", exact: true }).click()
     await expect(deletion).toHaveCount(0)
-    await detail.getByRole("button", { name: "Edit topic", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      detail.getByRole("button", { name: "Edit topic", exact: true }).click())
     const existing = page.locator("[data-sf-topic-editor]")
     await expect(existing.getByLabel("Action", { exact: true })).toHaveValue(newTopic)
     await existing.getByLabel("Notes", { exact: true }).fill(topicNotes + " Rascunho de edição.")
@@ -171,18 +177,22 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     const updatedNotes = topicNotes + " Revisão confirmada na instalação de teste."
     await existing.getByLabel("Notes", { exact: true }).fill(updatedNotes)
     await existing.getByRole("button", { name: "Review save", exact: true }).click()
-    await existing.getByRole("button", { name: "Confirm save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      existing.getByRole("button", { name: "Confirm save", exact: true }).click())
     await expect(saved.locator('[data-topic-feedback="saved"]')).toBeVisible()
     await expect(existing).toHaveCount(0)
     expect(mutations).toHaveLength(2)
     await scrollPageTop(page)
     await capture(page, info, "CAP02-dark-desktop-saved-test-data")
-    await saved.getByRole("button", { name: "Back to topics", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      saved.getByRole("button", { name: "Back to topics", exact: true }).click())
     await expect(page.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
-    await page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
-      .getByRole("button", { name: "View details", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      page.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
+        .getByRole("button", { name: "View details", exact: true }).click())
     await expect(detail).toContainText(updatedNotes)
-    await detail.getByRole("button", { name: "Edit topic", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      detail.getByRole("button", { name: "Edit topic", exact: true }).click())
     await expect(existing.getByLabel("Notes", { exact: true })).toHaveValue(updatedNotes)
     await expect(existing.getByRole("button", { name: "Review save", exact: true })).toBeEnabled()
   })
@@ -315,7 +325,8 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
     await capture(page, info, "CAP04-dark-320-review-test-data")
     await page.setViewportSize({ width: 1440, height: 1100 })
     expect(mutations).toHaveLength(2)
-    await review.getByRole("button", { name: "Save", exact: true }).click()
+    await originalRead(page, owner, { path: "/api/ui/pages/CAP04" }, () =>
+      review.getByRole("button", { name: "Save", exact: true }).click())
     await expect(editor).toHaveCount(0)
     await expect(january).toContainText("14,600")
     expect(mutations).toHaveLength(3)
@@ -340,14 +351,17 @@ waveTwoTest("installed native second-wave design · topics, budget and OPEX with
       await capture(localized, info, screen.id + "-pt-BR-dark-desktop-test-data")
     }
     await enter(screens[0], localized, true, 4)
-    await localized.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
-      .getByRole("button", { name: "Ver detalhes", exact: true }).click()
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      localized.locator("[data-sf-topic-list] [data-sf-topic]").filter({ hasText: newTopic })
+        .getByRole("button", { name: "Ver detalhes", exact: true }).click())
     await expect(localized.locator("[data-sf-topic-detail]")).toBeVisible()
     await scrollPageTop(localized)
     await capture(localized, info, "CAP02-pt-BR-dark-desktop-detail-test-data")
-    await localized.getByRole("button", { name: "Voltar aos tópicos", exact: true }).click()
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      localized.getByRole("button", { name: "Voltar aos tópicos", exact: true }).click())
     await expect(localized.locator("[data-sf-topic-list] [data-sf-topic]")).toHaveCount(4)
-    await localized.getByRole("button", { name: "Novo tópico", exact: true }).click()
+    await originalRead(localized, owner, { path: "/api/ui/pages/CAP02" }, () =>
+      localized.getByRole("button", { name: "Novo tópico", exact: true }).click())
     await fillTopic(localized, installation.year, true)
     await scrollPageTop(localized)
     await capture(localized, info, "CAP02-pt-BR-dark-desktop-editor-test-data")
