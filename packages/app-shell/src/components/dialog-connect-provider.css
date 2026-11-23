@@ -1,0 +1,50 @@
+/* This provider dialog keeps DialogV2's sizing and Orchestra's existing float material. */
+[data-component="dialog-v2"] [data-slot="dialog-container"].orchestra-provider-dialog {
+  border-radius: var(--orchestra-radius-xl);
+
+  [data-slot="dialog-content"] {
+    [data-slot="dialog-header"] {
+      align-items: center;
+      gap: 8px;
+
+      [data-slot="dialog-header-title"] {
+        font-family: var(--mx-emphasis, var(--orchestra-font-family-sans));
+        font-size: var(--orchestra-font-size-2xl);
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.025em;
+        overflow-wrap: anywhere;
+      }
+
+      :is([data-slot="dialog-close-button"], .provider-dialog-back) {
+        inline-size: 28px;
+        block-size: 28px;
+        flex: none;
+        margin-block-start: 0;
+        margin-inline-end: 0;
+        border-radius: var(--orchestra-radius-sm);
+        color: var(--mx-dim, var(--orchestra-muted));
+      }
+
+      :is([data-slot="dialog-close-button"], .provider-dialog-back):focus-visible {
+        outline: 2px solid var(--mx-blue, var(--orchestra-accent));
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .provider-dialog-heading {
+    min-inline-size: 0;
+    padding-block-end: 12px;
+  }
+
+  .provider-dialog-title {
+    min-inline-size: 0;
+    font-family: var(--mx-emphasis, var(--orchestra-font-family-sans));
+    font-size: var(--orchestra-font-size-2xl);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+  }
+}

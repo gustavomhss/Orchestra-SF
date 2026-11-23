@@ -126,6 +126,7 @@ test("v2: error and retry, server route, confirmed credential removal, key and p
   await chapter.getByRole("button", { name: "Connect provider" }).click()
   await expect(connect.locator("[data-provider-id]")).toHaveCount(43)
   await expect(connect.locator('[data-provider-id="_custom"]')).toHaveCount(0)
+  await expectNativeProviderFrame(page, "Connect provider")
   await page.screenshot({ path: test.info().outputPath("v2-light.png") })
 })
 
@@ -225,6 +226,21 @@ for (const scheme of ["dark", "light"] as const) {
     await expectCompactProviderError(page, "Authorization failed: The server returned an authorization link that is not a web address.")
     await expect(dialog.locator("a")).toHaveCount(0)
     await page.screenshot({ path: test.info().outputPath("provider-error-" + scheme + "-390.png") })
+    // The error keeps Retry focused; keyboard navigation still reaches both native-size header actions.
+    const close = dialog.getByRole("button", { name: "Close", exact: true })
+    const back = dialog.getByRole("button", { name: "Navigate back", exact: true })
+    await page.keyboard.press("Shift+Tab")
+    await expect(close).toBeFocused()
+    await expect(close).toHaveCSS("outline-style", "solid")
+    await expect(close).toHaveCSS("outline-width", "2px")
+    await page.keyboard.press("Shift+Tab")
+    await expect(back).toBeFocused()
+    await expect(back).toHaveCSS("width", "28px")
+    await expect(back).toHaveCSS("height", "28px")
+    await expect(back).toHaveCSS("outline-style", "solid")
+    await expect(back).toHaveCSS("outline-width", "2px")
+    await expect(back).toBeInViewport({ ratio: 1 })
+    await page.screenshot({ path: test.info().outputPath("provider-navigation-focus-" + scheme + "-390.png") })
     await page.keyboard.press("Escape")
     await expect(dialog).toHaveCount(0)
   })
@@ -297,6 +313,47 @@ function patches(mock: Mock) {
   return mock.calls.filter((call) => call.method === "PATCH" && call.path === "/api/config").map((call) => call.body)
 }
 
+async function expectNativeProviderFrame(page: Page, titleText: string) {
+  const dialog = page.locator('[data-component="dialog-v2"]')
+  const frame = dialog.locator('[data-slot="dialog-container"]')
+  const title = dialog.getByText(titleText, { exact: true })
+  const close = dialog.getByRole("button", { name: "Close", exact: true })
+  await expect(title).toBeVisible()
+  await expect(title).toHaveCSS("font-size", "20px")
+  await expect(frame).toHaveCSS("border-radius", "16px")
+  await expect(close).toHaveCSS("width", "28px")
+  await expect(close).toHaveCSS("height", "28px")
+  await expect(close).toBeInViewport({ ratio: 1 })
+  await expect(title).toBeInViewport({ ratio: 1 })
+  const measurement = await title.evaluate((element) => {
+    const container = element.closest('[data-slot="dialog-container"]')!
+    const frame = container.getBoundingClientRect()
+    const title = element.getBoundingClientRect()
+    const range = document.createRange()
+    range.selectNodeContents(element)
+    return {
+      frame: { x: frame.x, y: frame.y, right: frame.right, bottom: frame.bottom },
+      title: { x: title.x, y: title.y, right: title.right, bottom: title.bottom },
+      text: Array.from(range.getClientRects(), (rect) => ({
+        x: rect.x, y: rect.y, right: rect.right, bottom: rect.bottom,
+      })),
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+    }
+  })
+  expect(measurement.scrollWidth).toBeLessThanOrEqual(measurement.clientWidth)
+  for (const text of measurement.text) {
+    expect(text.x).toBeGreaterThanOrEqual(measurement.frame.x)
+    expect(text.right).toBeLessThanOrEqual(measurement.frame.right)
+    expect(text.y).toBeGreaterThanOrEqual(measurement.frame.y)
+    expect(text.bottom).toBeLessThanOrEqual(measurement.frame.bottom)
+  }
+  await test.info().attach("provider-native-frame", {
+    contentType: "application/json",
+    body: JSON.stringify({ title: titleText, viewport: page.viewportSize(), ...measurement }, null, 2),
+  })
+}
+
 async function expectCompactProviderError(page: Page, message: string) {
   const dialog = page.locator('[data-component="dialog-v2"]')
   const error = dialog.locator("[data-provider-connection-error]")
@@ -305,6 +362,7 @@ async function expectCompactProviderError(page: Page, message: string) {
   await expect(alert).toHaveText(message)
   await expect(retry).toBeEnabled()
   await expect(retry).toBeFocused()
+  await expectNativeProviderFrame(page, "Connect OpenAI")
   await expect(alert).toBeInViewport({ ratio: 1 })
   await expect(retry).toBeInViewport({ ratio: 1 })
   const [frame, text, action] = await Promise.all([
