@@ -1,0 +1,804 @@
+{
+  "schemaVersion": 1,
+  "kind": "snapshot-only-preview-joint-profile",
+  "qualification": false,
+  "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+  "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+  "snapshot": "96cb1ee0abc4c84674fa27e1a3ab7a0d9ca87cd0",
+  "snapshotTree": "5039840e1153a593b1266474e4183f813ef0fc50",
+  "run": 45115960623,
+  "status": "failure",
+  "declarations": {
+    "passed": 0,
+    "failed": 2,
+    "preview": "Original 60000ms wait failed",
+    "bi": "Original PT native request acquisition failed with net::ERR_ABORTED; EN request completed"
+  },
+  "main": {
+    "job": 137498751158,
+    "bytes": 4692009,
+    "sha256": "612289d6a16a727944c055205c19415fb897009bb20b0cc5c77615329d860a2c"
+  },
+  "cleanup": {
+    "job": 137501857977,
+    "bytes": 2291,
+    "sha256": "adfca5c6329d0a989667a856fac615ea76bfdbc3aa7f493dcfb77c15d8ca6fe7",
+    "status": "success"
+  },
+  "records": [
+    {
+      "at": "2026-11-23T05:15:12.4390444Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "start",
+      "boundary": "after-json-and-validation-before-human-admit",
+      "scope": "whole-isolate",
+      "callbackStartMs": 0,
+      "windowRequestedMs": 30000,
+      "intervalRequestedUs": 10000,
+      "runtimeExpected": "1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "runtimeExactPair": true,
+      "pulseEvery": 1024,
+      "maxLines": 8,
+      "maxLineBytes": 4096,
+      "maxTraces": 8192,
+      "maxSources": 2048,
+      "maxFrames": 64,
+      "maxSitesPerView": 256,
+      "maxJointRows": 16,
+      "jointAttribution": "same-inspected-sample",
+      "nativeReportAllocationBounded": false,
+      "effectiveNativeStopMs": null,
+      "clock": "relative-performance-ms",
+      "sampleClock": "separate-monotonic-clock",
+      "sampleDenominator": "retained-nonempty-VM-entry-walks",
+      "sampleFractionsAreNotCpuOrWallFractions": true,
+      "profilerPromiseGatesDomain": false
+    },
+    {
+      "at": "2026-11-23T05:15:42.3933027Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "signal",
+      "reason": "digest-pulse",
+      "callbackStartMs": 0,
+      "signalMs": 30027,
+      "pulses": 370688,
+      "pulseClockReads": 362,
+      "effectiveNativeStopMs": null
+    },
+    {
+      "at": "2026-11-23T05:15:42.4721842Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "delivered",
+      "callbackStartMs": 0,
+      "signalMs": 30027,
+      "profileDeliveredMs": 30106,
+      "signalToDeliveryMs": 79,
+      "effectiveNativeStopMs": null,
+      "nativeReportStartMs": null,
+      "reason": "digest-pulse"
+    },
+    {
+      "at": "2026-11-23T05:15:42.4804964Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "samples",
+      "intervalObservedUs": 10000,
+      "actualTraces": 2950,
+      "inspectedTraces": 2950,
+      "parsedNonemptyTraces": 2950,
+      "malformedTraces": 0,
+      "emptyTraces": 0,
+      "traceTruncated": 0,
+      "actualSources": 57,
+      "sourceTruncated": 0,
+      "sourceMalformed": 0,
+      "sourceUnknown": 31,
+      "frameTruncatedSamples": 0,
+      "malformedFrames": 0,
+      "unknownSiteSamples": 294,
+      "siteOverflowSamples": 73,
+      "timestampCount": 2950,
+      "sampleTimestampSpanMs": 30030,
+      "builtinFlagSamples": 210,
+      "leafUnknownNameSamples": 701,
+      "leafUnknownMappingSamples": 2633,
+      "leafOverflowSamples": 0,
+      "jointEligibleSamples": 2656,
+      "jointOverflowSamples": 152,
+      "leafCategories": [
+        [
+          "LLInt",
+          1
+        ],
+        [
+          "Baseline",
+          12
+        ],
+        [
+          "DFG",
+          45
+        ],
+        [
+          "FTL",
+          573
+        ],
+        [
+          "js builtin",
+          0
+        ],
+        [
+          "IPInt",
+          0
+        ],
+        [
+          "BBQ",
+          0
+        ],
+        [
+          "OMG",
+          0
+        ],
+        [
+          "Wasm",
+          0
+        ],
+        [
+          "Host",
+          101
+        ],
+        [
+          "RegExp",
+          3
+        ],
+        [
+          "C/C++",
+          0
+        ],
+        [
+          "Unknown Frame",
+          0
+        ],
+        [
+          "Unknown Executable",
+          2215
+        ],
+        [
+          "unrecognized",
+          0
+        ]
+      ]
+    },
+    {
+      "at": "2026-11-23T05:15:42.4815772Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "sites",
+      "part": 1,
+      "parts": 1,
+      "attribution": "first-allowed-repository-frame-per-sample",
+      "lineBasis": "JSC-reported-no-offset",
+      "columns": [
+        "path",
+        "line",
+        "column",
+        "samples"
+      ],
+      "rows": [
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          314
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          190,
+          50,
+          278
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          232
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          218,
+          41,
+          119
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          579,
+          25,
+          116
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/snapshot-sql-read.ts",
+          203,
+          35,
+          88
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          539,
+          40,
+          74
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          91,
+          20,
+          65
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          190,
+          43,
+          62
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          276,
+          37,
+          56
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          214,
+          52,
+          50
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          218,
+          48,
+          50
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          162,
+          192,
+          50
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/planner-projection-source-refs.ts",
+          140,
+          40,
+          42
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          826,
+          153,
+          35
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          21,
+          90,
+          34
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          88,
+          18,
+          32
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          162,
+          136,
+          32
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1088,
+          34,
+          30
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          218,
+          77,
+          28
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          420,
+          36,
+          28
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          21,
+          69,
+          24
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          124,
+          31,
+          23
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          190,
+          75,
+          21
+        ]
+      ]
+    },
+    {
+      "at": "2026-11-23T05:15:42.4826643Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "leaves",
+      "attribution": "leaf-frame-only",
+      "sourceIds": "process-local",
+      "lineBasis": "JSC-reported-no-offset",
+      "columns": [
+        "sourceId",
+        "line",
+        "column",
+        "category",
+        "allowedName",
+        "mapping",
+        "samples"
+      ],
+      "rows": [
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "structuredClone",
+          "unknown",
+          540
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "lstatSync",
+          "unknown",
+          311
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "stringify",
+          "unknown",
+          288
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "parse",
+          "unknown",
+          279
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "unknown",
+          "unknown",
+          262
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "update",
+          "unknown",
+          144
+        ],
+        [
+          4,
+          1,
+          11,
+          "FTL",
+          "map",
+          "unknown",
+          138
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "get",
+          "unknown",
+          129
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "sort",
+          "unknown",
+          123
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Host",
+          "unknown",
+          "unknown",
+          101
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "getOwnPropertyDescriptor",
+          "unknown",
+          82
+        ],
+        [
+          4,
+          1,
+          11,
+          "FTL",
+          "unknown",
+          "unknown",
+          37
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "digest",
+          "unknown",
+          36
+        ],
+        [
+          8,
+          218,
+          77,
+          "FTL",
+          "unknown",
+          "repository",
+          28
+        ],
+        [
+          10,
+          48,
+          7,
+          "FTL",
+          "unknown",
+          "unknown",
+          26
+        ],
+        [
+          8,
+          218,
+          67,
+          "FTL",
+          "unknown",
+          "repository",
+          16
+        ],
+        [
+          8,
+          212,
+          30,
+          "FTL",
+          "canonical",
+          "repository",
+          13
+        ],
+        [
+          4,
+          1,
+          11,
+          "FTL",
+          "fromEntries",
+          "unknown",
+          12
+        ],
+        [
+          8,
+          209,
+          91,
+          "FTL",
+          "canonical",
+          "repository",
+          10
+        ],
+        [
+          10,
+          31,
+          44,
+          "FTL",
+          "unknown",
+          "unknown",
+          9
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          "Unknown Executable",
+          "run",
+          "unknown",
+          8
+        ],
+        [
+          10,
+          28,
+          50,
+          "FTL",
+          "unknown",
+          "unknown",
+          8
+        ],
+        [
+          4,
+          1,
+          11,
+          "FTL",
+          "filter",
+          "unknown",
+          8
+        ],
+        [
+          10,
+          51,
+          12,
+          "FTL",
+          "unknown",
+          "unknown",
+          7
+        ]
+      ]
+    },
+    {
+      "at": "2026-11-23T05:15:42.4839636Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "joint",
+      "attribution": "first-allowed-repository-frame-with-leaf-from-the-same-sample",
+      "lineBasis": "JSC-reported-no-offset",
+      "countBasis": "observed-samples-not-cpu-or-wall-time",
+      "unmappedSamples": 294,
+      "overflowSamples": 152,
+      "columns": [
+        "path",
+        "line",
+        "column",
+        "leafCategory",
+        "leafAllowedName",
+        "leafMapping",
+        "samples"
+      ],
+      "rows": [
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          "Unknown Executable",
+          "lstatSync",
+          "unknown",
+          311
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          190,
+          50,
+          "Unknown Executable",
+          "stringify",
+          "unknown",
+          278
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          "Unknown Executable",
+          "parse",
+          "unknown",
+          232
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          218,
+          41,
+          "Unknown Executable",
+          "sort",
+          "unknown",
+          119
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/snapshot-sql-read.ts",
+          203,
+          35,
+          "Unknown Executable",
+          "get",
+          "unknown",
+          88
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          579,
+          25,
+          "FTL",
+          "unknown",
+          "unknown",
+          79
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          539,
+          40,
+          "Unknown Executable",
+          "structuredClone",
+          "unknown",
+          74
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          91,
+          20,
+          "Unknown Executable",
+          "structuredClone",
+          "unknown",
+          65
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          190,
+          43,
+          "Unknown Executable",
+          "update",
+          "unknown",
+          62
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          276,
+          37,
+          "Unknown Executable",
+          "structuredClone",
+          "unknown",
+          56
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          218,
+          48,
+          "FTL",
+          "map",
+          "unknown",
+          50
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          162,
+          192,
+          "Unknown Executable",
+          "unknown",
+          "unknown",
+          50
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          214,
+          52,
+          "FTL",
+          "map",
+          "unknown",
+          47
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/planner-projection-source-refs.ts",
+          140,
+          40,
+          "Unknown Executable",
+          "update",
+          "unknown",
+          42
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          826,
+          153,
+          "Unknown Executable",
+          "get",
+          "unknown",
+          35
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          579,
+          25,
+          "Unknown Executable",
+          "unknown",
+          "unknown",
+          35
+        ]
+      ]
+    },
+    {
+      "at": "2026-11-23T05:15:42.4847522Z",
+      "schema": "sf-preview-jsc-v1",
+      "qualification": false,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "phase": "complete",
+      "summaryStartedMs": 30106,
+      "summaryFinishedMs": 30115,
+      "retainedSites": 256,
+      "exportedSites": 24,
+      "retainedSamples": 2583,
+      "exportedSamples": 1883,
+      "unexportedRetainedSamples": 700,
+      "retainedLeafSites": 231,
+      "exportedLeafSites": 24,
+      "unexportedRetainedLeafSamples": 335,
+      "retainedJointSites": 256,
+      "exportedJointSites": 16,
+      "retainedJointSamples": 2504,
+      "exportedJointSamples": 1623,
+      "unexportedRetainedJointSamples": 881,
+      "outputErrors": 0,
+      "dropped": 0,
+      "complete": true
+    }
+  ],
+  "branch": "ci-run-sf613cpu14",
+  "branchDeleted404": true,
+  "artifacts": [
+    {
+      "id": 14791937624,
+      "node_id": "MDg6QXJ0aWZhY3QxNDc5MTkzNzYyNA==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 46405982,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14791937624",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14791937624/zip",
+      "expired": false,
+      "digest": "sha256:f95b0b22f28d19e74b0ade5cf57d57a3ca75c051355227325352e920791eed0b",
+      "created_at": "2026-11-23T05:18:30Z",
+      "updated_at": "2026-11-23T05:18:30Z",
+      "expires_at": "2026-11-30T05:18:26Z",
+      "workflow_run": {
+        "id": 45115960623,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613cpu14",
+        "head_sha": "96cb1ee0abc4c84674fa27e1a3ab7a0d9ca87cd0"
+      }
+    }
+  ],
+  "visualReview": "Not newly claimed by root",
+  "zipOpened": false,
+  "pngOpened": false,
+  "limits": [
+    "Whole isolate observed sample counts, not CPU or wall-time fractions",
+    "Stop requested at30027ms; native stop time unknown; report delivered30106ms",
+    "Top16 joint/24sites ranks retained keys only because maps reached256 keys; omitted tails and overflow recorded",
+    "No diagnostic overlay is a product parent; no qualification or causal speed claim"
+  ]
+}

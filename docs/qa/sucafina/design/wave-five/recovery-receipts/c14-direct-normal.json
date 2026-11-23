@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "kind": "canonical-direct-fixture-microdiagnostic",
+  "qualification": false,
+  "run": 45119867531,
+  "snapshot": "66c2bddf57a23279a2319fef9678628ddba83e5e",
+  "snapshotTree": "565220c71d5daa78952d2dfb0ed0516deefe565d",
+  "branch": "ci-run-sf613emit15",
+  "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+  "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+  "status": "success",
+  "functional": {
+    "driver": {
+      "passed": 4,
+      "failed": 0,
+      "assertions": 8
+    },
+    "micro": {
+      "passed": 4,
+      "failed": 0,
+      "assertions": 280
+    },
+    "commands": 6,
+    "omni": {
+      "declared": 4,
+      "spawns": 6,
+      "delegated": 0
+    }
+  },
+  "main": {
+    "job": 137510931758,
+    "bytes": 73609,
+    "sha256": "f4366dbe8c482def5d516e9535ada4a57f1d84772bfdccece6d6f72c497a5d70"
+  },
+  "cleanup": {
+    "job": 137511456422,
+    "bytes": 2286,
+    "sha256": "d8574da17b85483bf432f11e2a329d401948d6e46a2f23e87e4b0ec4c68e0dbe",
+    "status": "success"
+  },
+  "branchDeleted404": true,
+  "artifacts": [],
+  "records": [
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "start",
+      "pairsPerFixture": 4,
+      "warmupCallsPerLane": 100,
+      "graphProofIncluded": true,
+      "runtimeCurrentPerCall": true,
+      "cloneTreeFirst": true,
+      "fallback": "unchanged-canonicalSfValue; repeats-quiet-clone-refusal",
+      "limits": [
+        4096,
+        32768,
+        64,
+        65536,
+        4194304
+      ],
+      "retainedStringUnitsLimit": 4194304,
+      "timeUnit": "wall-ms",
+      "heapMeasured": false,
+      "installedPreviewMeasured": false,
+      "originalHasherChanged": false,
+      "maxLines": 7,
+      "maxLineBytes": 4096
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "tagged-values",
+      "iterationsPerLane": 1000,
+      "canonicalUnits": 418,
+      "columns": [
+        "directFirst",
+        "canonicalMs",
+        "directMs",
+        "admitted",
+        "cloneBypass",
+        "fallback"
+      ],
+      "pairs": [
+        [
+          0,
+          3.539,
+          18.924,
+          1000,
+          0,
+          0
+        ],
+        [
+          1,
+          2.231,
+          15.493,
+          1000,
+          0,
+          0
+        ],
+        [
+          0,
+          2.603,
+          17.111,
+          1000,
+          0,
+          0
+        ],
+        [
+          1,
+          1.919,
+          15.339,
+          1000,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "evidence-reference",
+      "iterationsPerLane": 1000,
+      "canonicalUnits": 645,
+      "columns": [
+        "directFirst",
+        "canonicalMs",
+        "directMs",
+        "admitted",
+        "cloneBypass",
+        "fallback"
+      ],
+      "pairs": [
+        [
+          0,
+          2.955,
+          15.101,
+          1000,
+          0,
+          0
+        ],
+        [
+          1,
+          2.601,
+          14.871,
+          1000,
+          0,
+          0
+        ],
+        [
+          0,
+          4.314,
+          18.991,
+          1000,
+          0,
+          0
+        ],
+        [
+          1,
+          2.459,
+          13.924,
+          1000,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "captured-context",
+      "iterationsPerLane": 500,
+      "canonicalUnits": 3160,
+      "columns": [
+        "directFirst",
+        "canonicalMs",
+        "directMs",
+        "admitted",
+        "cloneBypass",
+        "fallback"
+      ],
+      "pairs": [
+        [
+          0,
+          7.802,
+          18.424,
+          500,
+          0,
+          0
+        ],
+        [
+          1,
+          5.758,
+          18.361,
+          500,
+          0,
+          0
+        ],
+        [
+          0,
+          7.39,
+          16.486,
+          500,
+          0,
+          0
+        ],
+        [
+          1,
+          5.786,
+          16.695,
+          500,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "aliased-projection",
+      "iterationsPerLane": 250,
+      "canonicalUnits": 49879,
+      "columns": [
+        "directFirst",
+        "canonicalMs",
+        "directMs",
+        "admitted",
+        "cloneBypass",
+        "fallback"
+      ],
+      "pairs": [
+        [
+          0,
+          48.163,
+          23.712,
+          250,
+          0,
+          0
+        ],
+        [
+          1,
+          48.578,
+          22.504,
+          250,
+          0,
+          0
+        ],
+        [
+          0,
+          47.699,
+          23.237,
+          250,
+          0,
+          0
+        ],
+        [
+          1,
+          51.498,
+          31.231,
+          250,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "fixture",
+      "fixture": "distinct-projection",
+      "iterationsPerLane": 250,
+      "canonicalUnits": 49879,
+      "columns": [
+        "directFirst",
+        "canonicalMs",
+        "directMs",
+        "admitted",
+        "cloneBypass",
+        "fallback"
+      ],
+      "pairs": [
+        [
+          0,
+          50.611,
+          53.184,
+          250,
+          0,
+          0
+        ],
+        [
+          1,
+          46.287,
+          52.381,
+          250,
+          0,
+          0
+        ],
+        [
+          0,
+          45.937,
+          52.249,
+          250,
+          0,
+          0
+        ],
+        [
+          1,
+          47.211,
+          53.021,
+          250,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "schema": "sf-canonical-direct-v1",
+      "qualification": false,
+      "fixtureOnly": true,
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "runtime": {
+        "version": "1.3.14",
+        "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      },
+      "phase": "complete",
+      "fixtures": 5,
+      "pairs": 20,
+      "measuredCallsPerLane": 12000,
+      "measuredDirectAdmissions": 12000,
+      "timeThresholdApplied": false
+    }
+  ],
+  "controls": [
+    "2026-11-23T05:47:13.1910833Z {\"gate\":\"fetch source parent\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"66c2bddf57a23279a2319fef9678628ddba83e5e\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":296,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:47:13.1938248Z {\"gate\":\"snapshot identity\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:47:13.2082099Z {\"gate\":\"source identity\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":14,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:47:13.2092363Z (pass) snapshot identifies the exact reviewed product source and tree [322.83ms]",
+    "2026-11-23T05:47:14.2978044Z {\"gate\":\"canonical direct-emitter fixture proof and paired comparison\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/sucafina-canonical-direct-diagnostic.test.ts\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":1087,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:47:14.2988374Z (pass) direct serialization preserves bytes and reports paired fixture timings [1088.75ms]",
+    "2026-11-23T05:47:14.3001096Z (pass) direct canonical fixture bytes preserve tags, key order, aliases and current values [11.49ms]",
+    "2026-11-23T05:47:14.3001742Z (pass) direct refusal retains original getter, proxy, hooks and error behavior [1.06ms]",
+    "2026-11-23T05:47:14.3002354Z (pass) direct admission refuses logical limits without retaining data across calls [16.54ms]",
+    "2026-11-23T05:47:14.3003025Z (pass) paired direct-emitter microcomparison includes the full runtime and graph proof [1030.50ms]",
+    "2026-11-23T05:47:14.3003449Z  4 pass",
+    "2026-11-23T05:47:14.3003610Z  0 fail",
+    "2026-11-23T05:47:14.3003736Z  280 expect() calls",
+    "2026-11-23T05:47:41.1016258Z {\"gate\":\"Sucafina package typecheck\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":26803,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:47:41.1018137Z (pass) the Sucafina package preserves its original types [26803.87ms]",
+    "2026-11-23T05:48:07.8634413Z {\"gate\":\"CLI package typecheck\",\"source\":\"9ba028b0d4d54317aea0d4df239047cbbdffdbe9\",\"sourceTree\":\"60bd6712f564288fe109359ff2700a4d5638a50e\",\"snapshot\":\"66c2bddf57a23279a2319fef9678628ddba83e5e\",\"run\":\"45119867531\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":26760,\"stdoutTruncated\":false,\"stderrTruncated\":false}",
+    "2026-11-23T05:48:07.8643549Z omni positive control [2d01762941ac04b968891cd2a022f220]: pass (declared: 4 test(s) in test/sucafina-canonical-direct-verification.test.ts); 6 omni spawn(s), 0 delegated.",
+    "2026-11-23T05:48:07.8645129Z (pass) the CLI package preserves its original types [26761.72ms]",
+    "2026-11-23T05:48:07.8649006Z  4 pass",
+    "2026-11-23T05:48:07.8649409Z  0 fail",
+    "2026-11-23T05:48:07.8649600Z  8 expect() calls"
+  ],
+  "decision": "Do not adopt the generic emitter: four of five fixture categories regress; only highly aliased projection improves.",
+  "limits": [
+    "Per-pair same-runner measurements only; no cross-runtime causal timing claim.",
+    "All 12000 measured direct calls admitted, with byte equality and zero clone bypass/fallback.",
+    "Fixture-owned ordinary graphs only, no generic host-exotic admission proof.",
+    "Native SHA256, product canonical and original Preview unchanged; no installed performance measurement."
+  ]
+}

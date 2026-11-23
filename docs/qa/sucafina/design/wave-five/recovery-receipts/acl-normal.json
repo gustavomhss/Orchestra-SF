@@ -1,0 +1,279 @@
+{
+  "kind": "C14_ACL_FOCAL_NORMAL",
+  "run": 45113428923,
+  "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+  "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+  "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+  "snapshotTree": "2b27e319d17a4ca9b478776886c8c7bc1bf8e635",
+  "conclusion": "success",
+  "qualificationScope": "FOCAL_ONLY",
+  "runtime": "1.3.14/0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+  "driver": {
+    "passed": 4,
+    "failed": 0,
+    "assertions": 8
+  },
+  "composition": {
+    "passed": 60,
+    "skipped": 2,
+    "failed": 0,
+    "assertions": 1213,
+    "skipReason": "Two original foreign UID privilege controls"
+  },
+  "c17": {
+    "passed": true,
+    "ms": 96762.25,
+    "cooperativeBudgetMs": 105000,
+    "testBudgetMs": 120000,
+    "phases": [
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "started",
+        "elapsedMs": 0
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "initialize",
+        "state": "returned",
+        "phaseMs": 13,
+        "elapsedMs": 14,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "started",
+        "elapsedMs": 14
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-inner",
+        "state": "returned",
+        "phaseMs": 949,
+        "elapsedMs": 962,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "started",
+        "elapsedMs": 965
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "produce-outer",
+        "state": "returned",
+        "phaseMs": 69135,
+        "elapsedMs": 70100,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "reopen",
+        "state": "started",
+        "elapsedMs": 70101
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "reopen",
+        "state": "returned",
+        "phaseMs": 6,
+        "elapsedMs": 70107,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "resolve-reopened-ancestry",
+        "state": "started",
+        "elapsedMs": 70107
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "resolve-reopened-ancestry",
+        "state": "returned",
+        "phaseMs": 26265,
+        "elapsedMs": 96373,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "reject-persisted-cycle",
+        "state": "started",
+        "elapsedMs": 96378
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "reject-persisted-cycle",
+        "state": "returned",
+        "phaseMs": 14,
+        "elapsedMs": 96391,
+        "aborted": false
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "recovery-and-revocation",
+        "state": "started",
+        "elapsedMs": 96393
+      },
+      {
+        "fixture": "calculation-ancestry-composition",
+        "phase": "recovery-and-revocation",
+        "state": "returned",
+        "phaseMs": 363,
+        "elapsedMs": 96757,
+        "aborted": false
+      }
+    ],
+    "originalCycleRecoveryRevocationReached": true
+  },
+  "finance": {
+    "passed": true,
+    "ms": 41205.04
+  },
+  "newControls": [
+    "cold/warm independent ACL data, own undefined/absence and terminal inherited drift",
+    "Five late codec hooks restored before assertions/current",
+    "Depth130 full-decoder error preserves exact original sentinel"
+  ],
+  "typechecks": [
+    "Sucafina",
+    "CLI"
+  ],
+  "omni": {
+    "declared": 4,
+    "spawns": 6,
+    "delegated": 0
+  },
+  "commands": [
+    {
+      "gate": "fetch source parent",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=2",
+        "origin",
+        "cee100bd82aceef28fbf51ec06766c5a0d501d6f"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 309,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "snapshot identity",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 3,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "source identity",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "git",
+        "show",
+        "-s",
+        "--format=%H%n%T",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 15,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "CurrentChoice readonly storage and nested calculation composition",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/local-store.test.ts",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts",
+        "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "./test/product/wp10/integration/finance-pair-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 147850,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "Sucafina package typecheck",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 28289,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "CLI package typecheck",
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "snapshot": "cee100bd82aceef28fbf51ec06766c5a0d501d6f",
+      "run": "45113428923",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "durationMs": 29443,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "main": {
+    "job": 137490725936,
+    "bytes": 88569,
+    "sha256": "d3bd800110a0c1a6f63cc93087fbe3e740943f943698b7c61abf450b8aa58831"
+  },
+  "cleanup": {
+    "job": 137492070365,
+    "bytes": 2284,
+    "sha256": "8e2df6410f7bb5a8d797d385c542d32b3adb0114dd4445ad0287af3392f3a839",
+    "conclusion": "success"
+  },
+  "artifacts": [],
+  "temporaryRef404": true,
+  "limits": [
+    "No cross-run or cross-runtime causal speedup claim",
+    "Full technical T8 and clean original Analytics remain required",
+    "No guards executed in these wrappers",
+    "No production cutover or personal visual acceptance"
+  ]
+}

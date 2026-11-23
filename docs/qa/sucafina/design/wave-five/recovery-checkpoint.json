@@ -1,0 +1,606 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-23 05:32:35 UTC",
+  "status": "C14_PREVIEW_PROFILE_COMPLETE_PRODUCT_FIX_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 613,
+  "task": {
+    "recoveredSession": "@@@### / @@@####",
+    "authorization": "User confirmed session and requested finish with every required gate green and merge",
+    "scope": "UI42–UI56;15 areas/22 routes",
+    "productionCutover": false
+  },
+  "writer": {
+    "branch": "sf613-finish",
+    "sharedBranch": "sf-design-next",
+    "sharedHead": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "target": "dev",
+    "dev": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "rootOnlyGitWriter": true
+  },
+  "source": {
+    "sha": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "tree": "f05b34174897a3cc1ff9096a27da65d97910c0b5",
+    "parent": "1082f4496d3b6f2cc15e4dbb390a5f423baf2bf0",
+    "dev": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "status": "ACL_STATIC_ACK_QUALIFICATION_PENDING",
+    "qualification": false,
+    "backendUnchangedFrom": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9"
+  },
+  "chain": [
+    {
+      "label": "C9ea",
+      "sha": "9ea7345587465822daabfecb635d48d96f643b19",
+      "tree": "e9423a5832f50470afdd70e63979e45f61e9b7cb"
+    },
+    {
+      "label": "U",
+      "sha": "2d1d2e91e40a9a6b0ea3b318fe83aeeb7338751c",
+      "tree": "429ca4e8c548b0e3225e2069c9ebfd2795f3fbcc",
+      "parents": [
+        "9ea7345587465822daabfecb635d48d96f643b19",
+        "65349c1c723a8c626135d5b8032b929f5c635193"
+      ],
+      "notes": "#710:238literaldev/21unions/5converged/1wave-three retained"
+    },
+    {
+      "label": "P",
+      "sha": "e68c2f720b5aa0fdbf0d865377ca886ef6f998ec",
+      "tree": "61f4f8bfadca364d9acf7da4b9cda173771bc079",
+      "notes": "SQL helper+LocalStore+3public controls"
+    },
+    {
+      "label": "Q",
+      "sha": "e5218d8c11ea7c6fb01dee9a9be1733db00637be",
+      "tree": "b9f4cc454f87930c4eebc020e3bbbb5e663b1cd7",
+      "notes": "Only3go-live docs from dev27/#714"
+    },
+    {
+      "label": "C13",
+      "sha": "1082f4496d3b6f2cc15e4dbb390a5f423baf2bf0",
+      "tree": "9c520edf1d167f22bdffad69a45010fcfaecd420",
+      "notes": "Remove retainedUnits reset only from close; reconcile reset retained"
+    },
+    {
+      "label": "C14",
+      "sha": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "tree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "notes": "OnlyLocalStore+3append-only tests; optional complete-plan ACLcopy; four independent static reviews"
+    }
+  ],
+  "currentFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/snapshot-sql-read.ts",
+      "blob": "c608ada089fc087cf14f909eb53343cd031a3c44",
+      "bytes": 11610,
+      "sha256": "7b99dd302672d22ef20574e9bcb69d8f0715210cabdd57bac73f2992652b5ac5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "116974b0c5a6d4c4be8d9dc9ac37f4ed6bfdad8e",
+      "bytes": 73671,
+      "sha256": "d42d61db7a091875a6cce5c7dfbd3735e904f659199ca58a93270e1d6efcf4f8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "blob": "956a94d2e938163d1fce56d427c6e70c020cdec5",
+      "bytes": 76061,
+      "sha256": "c4ba22a2e8f449b9bd947bd579c6f55cf3f27f441926c91943d7020befc8fa2e"
+    }
+  ],
+  "pending": [
+    {
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "sha": "435073b641454eb86e1bb2627b6c26c1a5d467cd",
+      "tree": "be56bc2f6c8ba8d055e89765dd023dee97e58bbd",
+      "branch": "ci-run-sf613bidefer",
+      "overlayPaths": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        ".ci-run.json"
+      ],
+      "qualification": false,
+      "status": "DISPATCHED",
+      "peerAck": "sf613_ui",
+      "dispatchedAt": "2026-11-23 05:32:35 UTC"
+    }
+  ],
+  "previousFullCampaign": {
+    "source": "e68c2f720b5aa0fdbf0d865377ca886ef6f998ec",
+    "allCleanupsSuccessAndRefs404": true,
+    "groups": [
+      {
+        "kind": "T7",
+        "run": 45108343856,
+        "snapshot": "d8720983df1c0634f92583582127e6f15a23ee0e",
+        "tree": "aa270707258eed3ff1f65a9a8da6e430aa34fc3b",
+        "result": "14/15;C17FAIL105006.25ms;latercycle/recoverynotreached",
+        "main": 137474704573,
+        "cleanup": 137477050541,
+        "mainSha256": "41ad86e679de573ef7e58f2f6ba10dc5ef3f6251c6d4c01e31ae15f356099942"
+      },
+      {
+        "kind": "Release3",
+        "run": 45108344998,
+        "snapshot": "2531f2bf44bb12553baabef6d351e471527ecd90",
+        "tree": "eede251fba369db217cf2051bbe2bc02e4639259",
+        "result": "5/5;C17PASS75466.41ms;alloriginalphases",
+        "main": 137474708841,
+        "cleanup": 137475753567
+      },
+      {
+        "kind": "A6",
+        "run": 45108397263,
+        "snapshot": "ec413e4f94c91b0b616d3711b55ddeefe2a0391b",
+        "tree": "5530659794656b295b19ba77809cfbe2188b60f9",
+        "result": "1FAILPreview60s/1PASSoriginalBIEN+PT;UI43/44notreached",
+        "main": 137474880472,
+        "cleanup": 137477742827,
+        "jpegsReviewed": 47,
+        "reviewer": "sf613_ui",
+        "artifact": 14788358175
+      },
+      {
+        "kind": "RA2",
+        "run": 45108400320,
+        "snapshot": "14a2f735209e255008d2bc68c9419ad9d7a285b2",
+        "tree": "6f5c910ceda94738604f1f579359ad01e8bc3cc9",
+        "result": "1FAILPreview60s/1PASSoriginalBIEN+PT;UI43/44notreached",
+        "main": 137474889352,
+        "cleanup": 137478198822,
+        "jpegsReviewed": 47,
+        "reviewer": "sf613_ui",
+        "artifact": 14788703567
+      },
+      {
+        "kind": "C6",
+        "run": 45108398059,
+        "snapshot": "13c77aaca9edf29b3e7347e690c88b048acab03e",
+        "tree": "eebdc1fcc14c6b877517e9ce7f997337433e7423",
+        "result": "2/2PASS",
+        "main": 137474882617,
+        "cleanup": 137476793877,
+        "jpegsReviewed": 45,
+        "reviewer": "sf613_status",
+        "artifact": 14789160244
+      },
+      {
+        "kind": "R6",
+        "run": 45108399100,
+        "snapshot": "301e770e6d6d0d1232d8496e89b112ba0b11aab1",
+        "tree": "07932c72291fd8b430c2d99a92bef0dfcf116c1e",
+        "result": "2/2PASS;expected409stale;comparisonRows0",
+        "main": 137474885555,
+        "cleanup": 137477120445,
+        "jpegsReviewed": 49,
+        "reviewer": "sf613_ui",
+        "artifact": 14788598207
+      }
+    ],
+    "externalDetailedReceipt": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7091435987",
+    "personalVisualApproval": "NOT_ASSERTED",
+    "rootZipInternalsOpened": false
+  },
+  "sqlDiagnostics": {
+    "source": "1082f4496d3b6f2cc15e4dbb390a5f423baf2bf0",
+    "qualification": false,
+    "c17": {
+      "run": 45110849519,
+      "snapshot": "daeae0daf794dc89e7444c76b49c383ef1a36a41",
+      "main": 137482610597,
+      "cleanup": 137483380926,
+      "result": "SUCCESS2/2driver;C17originalPASS94953.90ms",
+      "reads": 45395,
+      "steps": 45378,
+      "hits": 45369,
+      "misses": 8,
+      "planAbsent": 17,
+      "otherRefusals": 0,
+      "combinedPeakUnits": 246534,
+      "lastPulseMs": 93839,
+      "cutoffIsNotStrict60Seconds": true,
+      "mainBytes": 73759,
+      "mainSha256": "fbd9fa51763668989a088bc5a7136a4be5087a72c0a55d93c9c61bd68e701f17",
+      "cleanupBytes": 2286,
+      "cleanupSha256": "7b19a91c7a0f1ae2463b54ea22fd3918faaebefac559d7a9206dbfbf2b1f63b1"
+    },
+    "analytics": {
+      "run": 45110850115,
+      "snapshot": "873149ea98347b088de57a0bb5a970b184a5c4d8",
+      "main": 137482614054,
+      "cleanup": 137485813987,
+      "result": "2FAIL;Preview60s;BIptBRNetworkERR_ABORTED;EN200completed",
+      "reads": 34232,
+      "steps": 34232,
+      "hits": 34230,
+      "misses": 2,
+      "refusals": 0,
+      "combinedPeakUnits": 3897858,
+      "lastPulseMs": 60146,
+      "mainBytes": 4691149,
+      "mainSha256": "0f4f4b0dd9574a1b1e2478ffe297b39a093b3ed8f28086a0abc3d6b2f29ddd97",
+      "cleanupBytes": 2284,
+      "cleanupSha256": "59633182e29b06130bd76d350e5c93c8962c489187205e93551e28952bbf4420",
+      "artifact": 14790335381,
+      "captureGroups": 44,
+      "captureChunks": 206,
+      "fullVisualReview": false
+    },
+    "interpretation": "SQL conditional path admitted with space available;no causal speed claim;historicalnegativesremain"
+  },
+  "next": {
+    "product": "Choose pure data/canonical optimization from observed caller+leaf counts; do not pursue sameStore without evidence",
+    "bi": "Buffered metadata only until native signal abort; original whole Analytics, no deadline/oracle change.",
+    "qualification": "All6cleanreceipts stillpending on final corrected product",
+    "docs": "4 renderers and sourcepack preserved; do not qualify before clean success"
+  },
+  "closure": {
+    "beforeAreas": 41,
+    "totalAreas": 70,
+    "beforeRoutes": 118,
+    "totalRoutes": 165,
+    "waveAreas": 15,
+    "waveRoutes": 22,
+    "afterMergeAreas": 56,
+    "afterMergeRoutes": 140,
+    "countsOnlyAfterActualMerge": true,
+    "sourceReferences": 75,
+    "sourceFiles": 66,
+    "changedReferences": 62,
+    "changedFiles": 53,
+    "changedAreas": 59,
+    "outsideWaveAcceptancePreserved": true
+  },
+  "limits": [
+    "GitHub MCP only for repository work;projectexecution onlyexistingtest-ciLinuxstrictOmni/prod",
+    "Original C17 105000cooperative/120000test;Preview60000;evaluation60000;Sensitivity120000",
+    "Original complete specs;oneworker/retries0/repeat1;nooracle/config/workflowweakening",
+    "No stale SQL/auth/grantcache;fresh guards and callbacks preserved",
+    "Snapshot diagnostics not product;working product,executed snapshot,docshead,andactualmerge remain distinct",
+    "Never claim crossrunner timingcausality orhumanvisualacceptance",
+    "Do not promote sharedhead ormerge until completegreen"
+  ],
+  "externalReviews": [
+    "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7091234190",
+    "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7091406879"
+  ],
+  "runtimeReset": {
+    "occurred": true,
+    "atApproxUtc": "2026-11-23T04:40:00Z",
+    "lost": "Volatile functions stores/log caches/renderers",
+    "preserved": "Git commits/refs and tool/conversation receipts",
+    "noProjectExecutionRepeated": true,
+    "secondAtApproxUtc": "2026-11-23T05:22:00Z"
+  },
+  "aclReceipts": {
+    "normal": {
+      "run": 45113428923,
+      "result": "4/4PASS,G660PASS2originalUIDskips,C1796762.25ms,typesSFCLI",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/acl-normal.json"
+    },
+    "release": {
+      "run": 45113430240,
+      "result": "5/5PASS,G660PASS2originalUIDskips,C1799732.06ms",
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/acl-release.json"
+    }
+  },
+  "budgetReceipts": {
+    "normal": "recovery-receipts/budget-normal.json",
+    "release": "recovery-receipts/budget-release.json"
+  },
+  "biTraceReceipt": "recovery-receipts/bi-trace.json",
+  "renderers": {
+    "json": "recovery-renderers/closure-json.js",
+    "markdown": "recovery-renderers/closure-markdown.js",
+    "templates": "recovery-renderers/closure-templates.js",
+    "technical": "recovery-renderers/closure-technical.js"
+  },
+  "cpuReceipt": "recovery-receipts/c14-cpu-joint.json",
+  "recoveryUpdatedAt": "2026-11-23T05:49:00Z",
+  "latestBufferedBiReceipt": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-bi-buffered.json",
+  "latestObservedDev": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "pendingCanonicalMicrodiagnostic": {
+    "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+    "normal": {
+      "run": 45119867531,
+      "snapshot": "66c2bddf57a23279a2319fef9678628ddba83e5e",
+      "tree": "565220c71d5daa78952d2dfb0ed0516deefe565d",
+      "branch": "ci-run-sf613emit15"
+    },
+    "release": {
+      "run": 45119867749,
+      "snapshot": "890baa35698ade21cc519605dbf649c394f92a6f",
+      "tree": "f1871b1ba4c0b0c144fcaee1c9cfc0b7ab8926bc",
+      "branch": "ci-run-sf613emitr15"
+    },
+    "qualification": false,
+    "productUnchanged": true,
+    "status": "completed-not-promoted"
+  },
+  "canonicalDirectMicroCompleted": {
+    "normal": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-direct-normal.json",
+    "release": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-direct-release.json",
+    "decision": "Do not adopt the generic emitter: four of five fixture categories regress; only highly aliased projection improves."
+  },
+  "pendingDev715Union": {
+    "sha": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "tree": "f05b34174897a3cc1ff9096a27da65d97910c0b5",
+    "parents": [
+      "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "5b48dab52621037168ad4e3a6243c79a4fe5ad6e"
+    ],
+    "files": [
+      {
+        "path": "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+        "sha": "8dec9c5260a1e58f2cef45ffd754a5ba9a387457",
+        "union": false
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+        "sha": "b414e80ae7c3cab850059464a7172efb70d5462d",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-kpis.spec.ts",
+        "sha": "d5171163b601a9df842aaa1268b4b9fee289a4d5",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "sha": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-skills.spec.ts",
+        "sha": "2ca74bba846b1fde38987412def43a609d4efec1",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+        "sha": "4ec46b7cf7064cffea3d277d05d0a8c239550290",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+        "sha": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "sha": "6fd460b7fab807c5af806ca90c4f88aeed179bc9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/DESIGN.md",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/kpis.css",
+        "sha": "5d3077ceb2d2f9beb2d4a31552c8a3152b834d98",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/providers-dialogs.tsx",
+        "sha": "b0d50b62a9f7a647bccb97722e28a4e8a779f053",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/skills-dialog.tsx",
+        "sha": "b4ece911bd9c96e31398b63c0b7ea18bb8c32c0d",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+        "sha": "fc0fa09e050574f105e9692f1cef93881f429ff9",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "sha": "6321522fbfa5d0179df6c34393e980073c453ffd",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+        "sha": "1f3de8db7173c0ca493a711d2be243e68ae2e0e2",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+        "sha": "2b121e8d16635ed778c2b2f35774b3af6673c478",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+        "sha": "6fc5a9ddaf42c10121ac37833b625d7e1602e4d6",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+        "sha": null,
+        "union": true
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+        "sha": "895ebe3cb614ba8e89ee65ba9ce7f05df4497dd7",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+        "sha": "e543fde224fc86080ea61cce71b9fa6a116787e3",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+        "sha": "d891f1ec9db579dbf4606208013fd1b30da5289c",
+        "union": false
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+        "sha": "9ad346316b8baa7156af81a77e009de5fde34acb",
+        "union": false
+      }
+    ],
+    "status": "accepted-static-composition-finish-updated"
+  },
+  "currentProduct": {
+    "sha": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "tree": "f05b34174897a3cc1ff9096a27da65d97910c0b5",
+    "branch": "sf613-finish"
+  },
+  "presentationLayer715": "docs/qa/sucafina/design/wave-five/recovery-receipts/presentation-layer-715.json",
+  "componentSourcePack": {
+    "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/component-source-pack.json",
+    "source": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "bytes": 30272,
+    "sha256": "0718c262a4bb5be3a6c6cbf5239c1a82b25105a964e3d5de0400142c97400b4d",
+    "nativeTree": "f7f056fd7349bedf23964b4c2c5d8b0cdaf36365"
+  },
+  "pendingCanonicalCloneCapture": {
+    "qualification": false,
+    "normal": {
+      "sha": "33bb046ee5b7dd558089967380a0900e262d4e72",
+      "tree": "7036934a2c1f6e51f699854de49cb39955eccabd",
+      "branch": "ci-run-sf613cost16",
+      "source": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7faf58dd5ca5566d3e0197689564cee2413096ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "46d2b48fc0404755df8b1bb194781c367bf0da19"
+        },
+        {
+          "path": "apps/cli/test/sucafina-captured-tree-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c4fd8086f07b5c28d91918f20ae1d08bee0c1ea8"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-clone-bytes-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b7fa8b60950286d4c82dd56630a1404f424c583f"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-experiments-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4f5f6b31b142612d3c796bb87b71428c56566bcc"
+        },
+        {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d0c3257445f6a8adbc0344976d5f8ab75364bf97"
+        }
+      ],
+      "run": 45121910093,
+      "receipt": "docs/qa/sucafina/design/wave-five/recovery-receipts/u15-clone-capture-normal.json",
+      "status": "completed"
+    },
+    "release": {
+      "sha": "dc5b1795724372ac1d358dfb2c158ce697228114",
+      "tree": "74479c1a81f6c18f34d29a5803ec9b7013a2ac73",
+      "branch": "ci-run-sf613costr16",
+      "source": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical-clone.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7faf58dd5ca5566d3e0197689564cee2413096ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "46d2b48fc0404755df8b1bb194781c367bf0da19"
+        },
+        {
+          "path": "apps/cli/test/sucafina-captured-tree-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c4fd8086f07b5c28d91918f20ae1d08bee0c1ea8"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-clone-bytes-diagnostic.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b7fa8b60950286d4c82dd56630a1404f424c583f"
+        },
+        {
+          "path": "apps/cli/test/sucafina-canonical-experiments-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4f5f6b31b142612d3c796bb87b71428c56566bcc"
+        },
+        {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d0c3257445f6a8adbc0344976d5f8ab75364bf97"
+        },
+        {
+          "path": "package.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "16e720dee8dbc5d90f011970f821fa996307e3d0"
+        }
+      ],
+      "run": 45121911981,
+      "receipt": "docs/qa/sucafina/design/wave-five/recovery-receipts/u15-clone-capture-release.json",
+      "status": "completed"
+    },
+    "purpose": "Compare existing clone-tree, direct bytes and original unregistered fallback; compare private captured tree against original copy without redirecting product callers.",
+    "expected": {
+      "driverGates": 5,
+      "driverCommands": 7,
+      "microDeclarations": 5,
+      "cloneMarkers": 7,
+      "captureMarkers": 6
+    },
+    "limits": [
+      "No installed performance claim.",
+      "Release retains original clone refusal, no new fast-path admission.",
+      "Four recorded lane orders are not a fully position-balanced three-lane design.",
+      "Whole-fixture clone aliasing is not claimed to match all BCS contexts."
+    ],
+    "decision": {
+      "capturedTree": "REJECTED_NO_CONSISTENT_PREPARATION_BENEFIT",
+      "directCloneBytes": "P17_CANDIDATE_RESTRICTED_TO_EXISTING_CLONE_BIRTH_PROOF",
+      "notClaimed": [
+        "Generic serializer speedup",
+        "Installed Preview improvement",
+        "New Release clone admission"
+      ],
+      "reason": "Direct bytes improved both large fixture categories versus the existing tree branch in all four pairs. Unregistered native fallback remained faster in four of five categories. Actual product qualification is still required."
+    }
+  },
+  "pendingP17": {
+    "parent": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+    "canonicalBlob": "bbd63c8e31c3ac69df170c991cd6ea9b0260b49a",
+    "cloneBlob": "456a03f61ba47fa0d2cceed33ff456fc0a0802c0",
+    "permanentTests": "pending",
+    "qualification": false
+  }
+}

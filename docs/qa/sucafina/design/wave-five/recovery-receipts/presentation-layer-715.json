@@ -1,0 +1,179 @@
+{
+  "pullRequest": 715,
+  "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+  "incoming": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "incomingTree": "f5a527f3e0986a9e241422311e60f8512b4bed09",
+  "previousProduct": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+  "product": "93b01debf8979e34de24d1a55c3edec9d3c58e60",
+  "productTree": "f05b34174897a3cc1ff9096a27da65d97910c0b5",
+  "nativeTree": "f7f056fd7349bedf23964b4c2c5d8b0cdaf36365",
+  "manifest": {
+    "path": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+    "blob": "b414e80ae7c3cab850059464a7172efb70d5462d",
+    "at": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "productSource": "9def26cfca6dfe61deb4142b5f78a8105d068a30",
+    "qualificationScope": "UPSTREAM_SOURCE_ONLY",
+    "qualifiesDesignComposition": false
+  },
+  "paths": 24,
+  "takeDev": 20,
+  "unions": 4,
+  "indexedComponentReferences": 3,
+  "personalVisualAcceptance": "NOT_ASSERTED",
+  "changesAcceptedMergedCounts": false,
+  "cduClassificationScope": "Historical PR710 composition; later layer does not reclassify C/D/U",
+  "componentUnions": [
+    {
+      "id": "UI49",
+      "path": "reviews/compare/index.tsx",
+      "previousBlob": "618322edb3ce616ae5a6f81b5dcdd6529f9ec2ba",
+      "baseBlob": "25c4949edb7be54e736f56155e87ec55076efaaf",
+      "incomingBlob": "aec5aa200804ac6e1965b10c9293a61f43c9d4dc",
+      "resultBlob": "974e5cec91132eefc6dcabb0a45a95b66c6ccfc9"
+    },
+    {
+      "id": "UI50",
+      "path": "reviews/reports/index.tsx",
+      "previousBlob": "235a5ce9cec0a1969ba510adf149c42e9816e1c5",
+      "baseBlob": "4929a5a150513d8d1016a80a2c3e8a5d38693aa8",
+      "incomingBlob": "1f1f1950a596df948fc3b5dd9601866f6b942849",
+      "resultBlob": "c586e4979de847205c49f9db99129e8f6afce5a5"
+    },
+    {
+      "id": "UI54",
+      "path": "dashboard/hot-topics/proposals/index.tsx",
+      "previousBlob": "556546e5855217f63ede65b1ab09cba50a265764",
+      "baseBlob": "ed7949c6175b5404ad4f0789b99031227504bab1",
+      "incomingBlob": "a395f937053764e0c62875450adab4405b9ff495",
+      "resultBlob": "1e37e89db37c30cb7aad278387d3627e41eb434c"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+      "blob": "8dec9c5260a1e58f2cef45ffd754a5ba9a387457",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+      "blob": "b414e80ae7c3cab850059464a7172efb70d5462d",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-kpis.spec.ts",
+      "blob": "d5171163b601a9df842aaa1268b4b9fee289a4d5",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+      "blob": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/orchestra/chapter-skills.spec.ts",
+      "blob": "2ca74bba846b1fde38987412def43a609d4efec1",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+      "blob": "4ec46b7cf7064cffea3d277d05d0a8c239550290",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+      "blob": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+      "blob": "6fd460b7fab807c5af806ca90c4f88aeed179bc9",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/DESIGN.md",
+      "blob": "a17bb3a4c99a9b5b9ca52f132b2e2f4981af8d8e",
+      "relation": "UNION"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/kpis.css",
+      "blob": "5d3077ceb2d2f9beb2d4a31552c8a3152b834d98",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/providers-dialogs.tsx",
+      "blob": "b0d50b62a9f7a647bccb97722e28a4e8a779f053",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/skills-dialog.tsx",
+      "blob": "b4ece911bd9c96e31398b63c0b7ea18bb8c32c0d",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+      "blob": "1e37e89db37c30cb7aad278387d3627e41eb434c",
+      "relation": "UNION"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+      "blob": "fc0fa09e050574f105e9692f1cef93881f429ff9",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+      "blob": "6321522fbfa5d0179df6c34393e980073c453ffd",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+      "blob": "1f3de8db7173c0ca493a711d2be243e68ae2e0e2",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+      "blob": "2b121e8d16635ed778c2b2f35774b3af6673c478",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+      "blob": "6fc5a9ddaf42c10121ac37833b625d7e1602e4d6",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+      "blob": "974e5cec91132eefc6dcabb0a45a95b66c6ccfc9",
+      "relation": "UNION"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+      "blob": "c586e4979de847205c49f9db99129e8f6afce5a5",
+      "relation": "UNION"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+      "blob": "895ebe3cb614ba8e89ee65ba9ce7f05df4497dd7",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+      "blob": "e543fde224fc86080ea61cce71b9fa6a116787e3",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+      "blob": "d891f1ec9db579dbf4606208013fd1b30da5289c",
+      "relation": "TAKE_DEV"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+      "blob": "9ad346316b8baa7156af81a77e009de5fde34acb",
+      "relation": "TAKE_DEV"
+    }
+  ],
+  "finalEnrichment": {
+    "scope": "add presentationLayers:[layer715], retain incomingPresentation PR710",
+    "inventory": "add componentProvenance.presentationLayers:[layer715], retain incomingEvidence PR710",
+    "refs": "UI49/UI50/UI54 add laterPresentation records; do not overwrite historical ours/incoming/relation",
+    "markdown": "Append separately identified PR715 provenance paragraph to SOURCE-INTEGRATION without altering PR710 history."
+  }
+}
