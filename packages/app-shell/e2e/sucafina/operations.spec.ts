@@ -1,6 +1,7 @@
 import { test } from "@playwright/test"
 import { importJourney } from "./operations-support/imports"
 import { documentJourney } from "./operations-support/documents"
+import { exportRecordJourney } from "./operations-support/final-records-export"
 
 test.describe("CI-UI-OPERATIONS", () => {
   test.describe.configure({ retries: 0 })
@@ -18,4 +19,10 @@ test.describe("CI-UI-OPERATIONS", () => {
     test.setTimeout(180_000)
     await documentJourney(page, info)
   })
+
+  test("OP-EXPORT-01 UI68 delivers the exact authorized Planner file", async ({ page }, info) => {
+    test.setTimeout(60_000)
+    await exportRecordJourney(page, info)
+  })
+
 })

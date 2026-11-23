@@ -8,6 +8,7 @@ import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
 import type { Account } from "./runtime.ts"
+import { captureRecord, captureRecordVariants, capturePortugueseRecord } from "./final-records"
 
 // ExcelJS belongs to the existing Sucafina package. Resolve there under Bun's isolated workspace linker.
 const { Workbook } = createRequire(new URL("../../../../../modules/sucafina/package.json", import.meta.url))("exceljs") as typeof import("../../../../../modules/sucafina/node_modules/exceljs")
@@ -438,6 +439,21 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result).toHaveAttribute("data-sf-phase", "receipt")
     await expect(result.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id + " · " + receipt.at + " · applied · " + receipt.version)
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    await captureRecordVariants(resultPage, info, "UI57", "recovered-receipt")
+    await capturePortugueseRecord(resultPage, info, "UI57", "recovered-receipt", async (localized) => {
+      await localized.locator(".sf-files-fields").getByRole("button", { name: "Refresh receipt", exact: true }).click()
+      await expect(localized.locator(resultRoot)).toHaveAttribute("data-sf-phase", "receipt")
+      await expect(localized.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
+    })
+    expect((await resultPage.goto(chapterURL(account, "/orchestra/sf-imports").href))?.status()).toBe(200)
+    const history = resultPage.locator(resultRoot)
+    await expect(history.getByRole("heading", { name: "Find an import", exact: true })).toBeVisible()
+    await captureRecord(resultPage, info, "UI57", "history-empty-reference")
+    await history.getByLabel("Import preview reference", { exact: true }).fill(preview.id)
+    const historyRead = await readReference(resultPage, () => history.locator("form").getByRole("button", { name: "Refresh receipt", exact: true }).click())
+    expect(historyRead).toEqual(recovered)
+    await expect(history.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id)
+    await captureRecord(resultPage, info, "UI57", "history-authorized-reference")
   } finally {
     await resultPage.close()
   }
