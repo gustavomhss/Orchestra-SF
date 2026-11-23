@@ -1,6 +1,6 @@
 # Final wave: memory, context and local administration
 
-> Qualification checkpoint: R11 is running on the exact composed candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`. Technical Gate16 and native69 are green. This checkpoint does not mark the five current browser journeys complete; the recorded source limits remain explicit.
+> R11 completed with three passing journeys: UI63, UI67 and UI69. UI61 condition presentation passed, but its original materiality read exceeded 40 seconds. UI62's original recall POST returned 503; R11 did not emit its reason. Technical Gate16 and native69 are green. Focused follow-ups retain the original deadlines and assertions; this report does not qualify materiality, recall or numerical results that the original source has not returned.
 
 ## Scope and behavior
 
@@ -106,6 +106,8 @@ The UI now distinguishes validated local access from that unavailable projection
 
 ## Evidence and gallery
 
+The durable [R11 gallery](./GALLERY.md) contains the actual bounded previews. Its [manifest](./evidence/manifest.json) separates successful journeys from visible states captured within failed journeys.
+
 ### Technical gates
 
 The root's combined candidates passed app types, e2e types, guards and palette checks in [45093119702](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45093119702) and [45094187488](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45094187488). The canonical process-bootstrap correction passed app/core/e2e types, guards, palette and regressions in [45094586912](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45094586912), including eleven existing filesystem/Omni tests. One existing mode-1 case is skipped by its original strict-mode condition.
@@ -133,7 +135,7 @@ The final [Gate16 run 45117046888](https://github.com/gustavomhss/Orchestra-SF/a
 | [45104661696](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45104661696) | R8: 2/3 passed, 13.5m. UI67/UI69 passed; full English UI63 step passed. Conditions HTTP 200 in 5,967ms; original signals did not respond within 40s | Preserve the source limit; expose conditions independently, make signals explicit and locally cancellable; isolate memory installations |
 | [45107929407](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107929407) | R9: 1/5 passed, 21.5m: UI67. Initial reads reached DOM too early. UI61 independent actual signal start/cancel and UI63 Portuguese deep-link refusal passed | No materiality or recall request was exercised. UI61 image filename said light 320 but actual image was 1440px dark; qualify only actual dimensions/theme |
 | [45112934520](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112934520) | R10: 0/5 passed, 23.1m. CDP body eviction, a catalog codec rejection before HTTP, summary readback timing and narrow-theme order | Preserve all distinct failures; correct source-admitted undefined and the observation order without larger deadlines |
-| [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885) | R11: in progress on the exact composed candidate, with all five journeys and retries 0 | Await actual result and images; no final browser qualification claimed here |
+| [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885) | R11: 3/5 passed in 25.8 minutes; UI63, UI67 and UI69 passed. UI61 original materiality exceeded 40 seconds; UI62 original recall POST returned 503 | Conditions, choices without conditions, exact coverage refusal, context refresh and one summary save/readback are proven separately; materiality and recall remain unqualified |
 
 UI67's successful run includes four actual captures: dark desktop current context, light desktop refreshed context, light 320px context and Brazilian Portuguese dark desktop. The desktop preview was reviewed by the area implementer and root; hierarchy, card, identifiers and gutters were accepted. All four captures passed viewport overflow checks, the refresh retained the exact principal, and console/page error collections were empty. The evidence is in [artifact 14783036959](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45094574346/artifacts/14783036959).
 
@@ -160,12 +162,34 @@ R10 snapshot `ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9` tested candidate `c66b98
 
 No materiality or signal request was exercised in R10. Its catalog wait is **not** evidence of a slow producer: the client stopped before HTTP. Browser JavaScript/console diagnostics were empty in that run, but its incomplete journeys remain failures.
 
-### Current R11 candidate
+### R11 outcome and exact evidence
 
-[Run 45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885), job `137502251987`, snapshot `257717aa632d7f029ec27b4d3cb8b9a603bad0a6` on candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`, was launched with only the original `.ci-run.json` snapshot addition. All five test-scoped journeys retain 300 seconds, original source 40 seconds, DOM10 seconds and retries 0. Initial navigation waits for two distinct original context reads and the actual initial leaf readers before DOM readiness. All prior functional assertions, owner/stamp checks, exact 503 body and error checks remain.
+[Run 45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885), job `137502251987`, snapshot `257717aa632d7f029ec27b4d3cb8b9a603bad0a6` on candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`, completed at 05:47:18 UTC on 23 November 2026. It passed three of five test-scoped journeys. All journeys retained 300 seconds, original source observations 40 seconds, DOM assertions 10 seconds and retries 0. The original five-test spec retains all 114 expectations.
 
-The candidate's binding, new codec tests, memory spec, browser helper and shared navigation source were compared directly with their approved commit contents and found byte-identical. Final outcome, gallery metadata and source-boundary findings will be appended after the original run finishes. See [qualification.json](./qualification.json) for durable exact revisions and current status.
+| Area | Proven in R11 | Remaining boundary |
+| --- | --- | --- |
+| UI61 | Initial catalog and cases returned 200; the original conditions read returned 200 in 6,046 ms. Recorded condition, idle signal control and zero automatic signal requests passed. Dark/light 1440px and light 320px captures are real. | Original materiality did not respond within 40 seconds. Subsequent same-host work also timed out. The R11 signal step never reached its GET; no signal response or cancellation is claimed from R11. The separate R9 native abort evidence remains historical. |
+| UI62 | Case list and selected case were returned by the original producer; the Brazilian Portuguese authorized-candidate step passed. | The original similar-cases POST returned 503. The test had read its body but did not log the reason before its unchanged 200 assertion failed. R11 therefore does not identify a source reason or qualify recall matches. |
+| UI63 | Entire journey passed: original recorded choice with no signal condition, exact `coverage-incomplete` 503, no numeric comparison cells, opaque locator reopening, owner/stamp checks, selection clearing, zero browser memory commands, dark/light/narrow and Brazilian Portuguese. | The numerical comparison remains unavailable in the original source; no numerical result is inferred. |
+| UI67 | Entire journey passed: active server/project/installation/principal, original context refresh, responsive identifiers and Brazilian Portuguese, with no page or console errors. | Actual browser zoom was not measured. |
+| UI69 | Entire journey passed: local operator authorization, original I00 unavailable presentation, retained draft through Revise and Cancel, exactly one reviewed save, closed-schema persisted readback, exact context, CAS version increment and proposed pages, fresh-page persistence and Brazilian Portuguese. | PR715 subsequently added spacing inside the summary content wrapper. A focused repetition on that composition is in progress. Notifications/backups remain unavailable at their original I00 boundary. |
+
+R11 produced 19 full-page PNG attachments and 14 bounded JPEG previews. The original Playwright artifact is `14792609948`, 32,801,200 bytes, with digest `sha256:11e1b788ee2c8a4beae575e889c4d9cd3c4dec29e690b7e9e92ecf22a1db5a45`. The JPEG bytes are preserved in this directory without editing; [GALLERY.md](./GALLERY.md) and [evidence/manifest.json](./evidence/manifest.json) identify their exact source run, states, dimensions and Git blobs. Every recorded capture had document width equal to its viewport width.
+
+The fourteen previews were visually reviewed. UI61 preserves a useful condition independently of the signal action; the 320px controls stack without horizontal overflow. UI62's Brazilian Portuguese labels and selected original case are legible, but this is an authorized-candidate presentation, not a successful recall result. UI63 keeps the choice hierarchy and coverage warning readable in dark, light and narrow views. UI67 aligns identifiers and the refresh action inside the shared page width. UI69 separates the summary editor from the unavailable notifications/backups source; the review actions stack with full targets at 320px.
+
+### Focused follow-ups after R11
+
+PR715 was composed at `722b703b060e5cc578fa8d23568b3f9c56d72077`, tree `6949be73c3bce882df95ed956685bdbc39f50311`. Its only overlap here adds a grid and row gap to the authorized summary state content. Source review confirmed compatibility with the unchanged fieldset, review actions, hidden-state rule and 44px targets.
+
+A first focused request, run [45120144344](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45120144344), was rejected by the original test-ci request validator because `--grep` is not an admitted spec path. No browser test executed. The validator and workflow were not changed. The corrected R13 uses a snapshot-only named spec containing the byte-identical original UI69 test, setup and mutation observer; it retains the permanent five-test spec.
+
+- UI69 R13: [run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514), snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`, base `722b703b`; in progress at this checkpoint.
+- UI62 R14: [run 45121399352](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121399352), snapshot `0729f9e4c3cc0e91956a8c8209c73f80bf06ed3e`, same base plus the reviewed bounded diagnostic; in progress. Its test body and helpers are literal copies, including the positive 200 assertion and all match, privacy and source checks.
+- The recall diagnostic in commit `bb97d390f56a104c095638b0866f11a13eec5942` emits only original HTTP status, source status/reason and match count, before the unchanged assertion. It does not emit request headers, question content or a private body, and adds no request.
+
+See [qualification.json](./qualification.json) for durable revisions and status. These follow-ups are not recorded as passes until their original runs finish.
 
 ## Limits
 
-Actual browser zoom is not measured. Numeric expected/observed comparison is not qualified: the full nine-component attempt exceeded the original 40-second comparison deadline and remains recorded as a failure. The final pending fixture preserves incomplete coverage and renders the source refusal. Notifications and backups remain unavailable at the original I00 boundary; summary settings are independently admitted and tested. An observed difference does not establish causality. Source absence or denial remains visible and cannot be converted into a successful read or recommendation by presentation code.
+Actual browser zoom is not measured. Materiality and recall are not qualified by R11; their original timeout and 503 remain recorded. No original signal response has been qualified. Numeric expected/observed comparison is not qualified: the full nine-component attempt exceeded the original 40-second comparison deadline and remains recorded as a failure. The final pending fixture preserves incomplete coverage and renders the source refusal. Notifications and backups remain unavailable at the original I00 boundary; summary settings are independently admitted and tested. An observed difference does not establish causality. Source absence or denial remains visible and cannot be converted into a successful read or recommendation by presentation code.
