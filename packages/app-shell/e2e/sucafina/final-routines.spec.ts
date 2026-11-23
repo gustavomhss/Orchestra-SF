@@ -420,11 +420,11 @@ async function runRoutineJourney({ page, browser, installation, owner }: Routine
 waveFourTest.describe("routine availability and returns", () => {
   waveFourTest.use({ designWave: "four" })
   waveFourTest("UI64 UI65 UI66 · original availability boundaries and same-owner returns",
-    async (fixtures, info) => runRoutineJourney(fixtures, info, "availability"))
+    async ({ page, browser, installation, owner }, info) => runRoutineJourney({ page, browser, installation, owner }, info, "availability"))
 })
 
 waveFourTest.describe("installed resident sources", () => {
   waveFourTest.use({ designWave: "four-decisions" })
   waveFourTest("UI70 · original resident inventory and human case projection",
-    async (fixtures, info) => runRoutineJourney(fixtures, info, "residents"))
+    async ({ page, browser, installation, owner }, info) => runRoutineJourney({ page, browser, installation, owner }, info, "residents"))
 })
