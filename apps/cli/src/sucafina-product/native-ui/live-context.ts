@@ -8,6 +8,7 @@
  * This module is inert until 162 installs it in the original host's services.
  */
 import { Schema } from "effect"
+import { beginContextJscDiagnostic } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context-jsc-diagnostic.ts"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import {
   SfContext as SfContextSchema,
@@ -254,8 +255,14 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     const destinations = approvedDestinations(first.destinations)
     if (!destinations) return mismatch()
 
+    let diagnostic: ReturnType<typeof beginContextJscDiagnostic>
+    let diagnosticRequested = false
     const readOperations = async (): Promise<ReadonlyMap<string, SfOperationAvailability> | undefined> => {
       if (!source.operational || procurementRequestPage) return operational([])
+      if (!internal && !diagnosticRequested) {
+        diagnosticRequested = true
+        diagnostic = beginContextJscDiagnostic()
+      }
       const actual = await source.operational(request, admittedStamp)
       if (request.signal.aborted || !stillCurrent()) return undefined
       // These two settings operations are local-operator UI69 producers. Mode
@@ -263,40 +270,44 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
       return operational(actual.filter((item) => admittedMode === "local-operator" ||
         item.operationId !== "local-admin.summary-read" && item.operationId !== "local-admin.summary-configure"))
     }
-    const before = await readOperations().catch(() => undefined)
-    if (!stillCurrent() || !before) return mismatch()
-
-    // Reauthenticate through the same original Request, including policy/grant
-    // and accessRevision, after the asynchronous operational source read.
-    const again = await source.admit(request).catch((): SfLiveContextAdmission =>
-      ({ status: "unavailable", reason: "host-unavailable" }))
-    if (!stillCurrent() || again.status !== "ok" ||
-      !sameStamp(admittedStamp, again.stamp) || admittedMode !== again.authMode) return mismatch()
-    const againDestinations = approvedDestinations(again.destinations)
-    if (!againDestinations || !equalDestinations(destinations, againDestinations)) return mismatch()
-    const after = await readOperations().catch(() => undefined)
-    if (!stillCurrent() || !after || !equalObservations(before, after)) return mismatch()
-
-    // Final fence covers revocation while the second operational observation
-    // was in flight. No await occurs after this last authenticated comparison.
-    const final = await source.admit(request).catch((): SfLiveContextAdmission =>
-      ({ status: "unavailable", reason: "host-unavailable" }))
-    if (!stillCurrent() || final.status !== "ok" ||
-      !sameStamp(admittedStamp, final.stamp) || admittedMode !== final.authMode) return mismatch()
-    const finalDestinations = approvedDestinations(final.destinations)
-    if (!finalDestinations || !equalDestinations(destinations, finalDestinations)) return mismatch()
-
-    const currentAvailability = availability(after)
-    if (!currentAvailability) return mismatch()
-    const value = {
-      stamp: admittedStamp,
-      contractRevision: "sf-native-ui/1" as const,
-      authMode: admittedMode,
-      destinations,
-      availability: currentAvailability,
+    try {
+      const before = await readOperations().catch(() => undefined)
+      if (!stillCurrent() || !before) return mismatch()
+  
+      // Reauthenticate through the same original Request, including policy/grant
+      // and accessRevision, after the asynchronous operational source read.
+      const again = await source.admit(request).catch((): SfLiveContextAdmission =>
+        ({ status: "unavailable", reason: "host-unavailable" }))
+      if (!stillCurrent() || again.status !== "ok" ||
+        !sameStamp(admittedStamp, again.stamp) || admittedMode !== again.authMode) return mismatch()
+      const againDestinations = approvedDestinations(again.destinations)
+      if (!againDestinations || !equalDestinations(destinations, againDestinations)) return mismatch()
+      const after = await readOperations().catch(() => undefined)
+      if (!stillCurrent() || !after || !equalObservations(before, after)) return mismatch()
+  
+      // Final fence covers revocation while the second operational observation
+      // was in flight. No await occurs after this last authenticated comparison.
+      const final = await source.admit(request).catch((): SfLiveContextAdmission =>
+        ({ status: "unavailable", reason: "host-unavailable" }))
+      if (!stillCurrent() || final.status !== "ok" ||
+        !sameStamp(admittedStamp, final.stamp) || admittedMode !== final.authMode) return mismatch()
+      const finalDestinations = approvedDestinations(final.destinations)
+      if (!finalDestinations || !equalDestinations(destinations, finalDestinations)) return mismatch()
+  
+      const currentAvailability = availability(after)
+      if (!currentAvailability) return mismatch()
+      const value = {
+        stamp: admittedStamp,
+        contractRevision: "sf-native-ui/1" as const,
+        authMode: admittedMode,
+        destinations,
+        availability: currentAvailability,
+      }
+      if (!Schema.is(SfContextSchema)(value)) return mismatch()
+      return { status: "ok", value }
+    } finally {
+      try { diagnostic?.finish() } catch { /* Observation cannot replace the original context result. */ }
     }
-    if (!Schema.is(SfContextSchema)(value)) return mismatch()
-    return { status: "ok", value }
   }
   return Object.freeze({ currentBinding,
     readContext: (request: Request, expected: Binding) => read(request, expected, false),

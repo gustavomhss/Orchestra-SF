@@ -70,8 +70,16 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
         forceKillAfter: "10 seconds",
       }))
       owned.child = child
+      let contextJscLines = 0
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+        try {
+          if (contextJscLines < 64 && line.startsWith("SF_CONTEXT_JSC ") &&
+            line.length + 1 <= 4096 && /^[\x20-\x7e]+$/.test(line)) {
+            contextJscLines++
+            console.info(line)
+          }
+        } catch { /* Diagnostic forwarding cannot alter readiness. */ }
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
       yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>

@@ -83,9 +83,17 @@ export function withNativeInstallation(input: {
     }))
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    let contextJscLines = 0
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      try {
+        if (contextJscLines < 64 && line.startsWith("SF_CONTEXT_JSC ") &&
+          line.length + 1 <= 4096 && /^[\x20-\x7e]+$/.test(line)) {
+          contextJscLines++
+          console.info(line)
+        }
+      } catch { /* Diagnostic forwarding cannot alter readiness. */ }
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
