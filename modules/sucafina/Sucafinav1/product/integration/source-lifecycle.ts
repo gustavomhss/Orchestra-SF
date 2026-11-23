@@ -141,6 +141,10 @@ export function currentSfSiblingSnapshots(owner: Pick<Persistence, "currentSnaps
 
 /** Recognize only factory-owned forwarders, including their canonical spread composition. */
 export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  return readSfReadonlyAuthorityData(owner, surfaces)
+}
+
+function readSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[], plannerOwner = false): ReadonlyAuthorityData<S> | undefined {
   if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
   const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
   const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
@@ -150,7 +154,8 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
   if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner)) return undefined
   // A caller may bracket the root callback. The admitted snapshot methods
   // and the actual underlying LocalStore scope still determine its data.
-  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces)
+  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces) ??
+    (plannerOwner ? currentChoiceReadonlyAuthorityData(registered.base, surfaces) : undefined)
   if (!observation) return undefined
   const integrity = { failed: false }
   return { snapshots: observation.snapshots, scope: observation.scope, current: (requirement) => {
@@ -164,9 +169,18 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
 
 /** A known read root seals the full snapshot set while its live callbacks run. */
 export function currentSfReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">) {
+  return readSfReadonlySnapshotScope(owner)
+}
+
+/** Planner may traverse the exact native CurrentChoice owner behind this factory. */
+export function currentSfPlannerReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">) {
+  return readSfReadonlySnapshotScope(owner, true)
+}
+
+function readSfReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">, plannerOwner = false) {
   const method = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshotScope")
   if (!method || !Object.hasOwn(method, "value") || typeof method.value !== "function") return undefined
-  const observed = currentSfReadonlyAuthorityData(owner, [])
+  const observed = readSfReadonlyAuthorityData(owner, [], plannerOwner)
   if (!observed?.scope) return undefined
   const optionalFields = ["sfSources", "sfBlobGenerations"]
   const plain = () => sfCanonicalSerializerUnhooked() && sealedDigestsCurrent() &&
@@ -650,8 +664,8 @@ export function createSfSourcePersistence(input: {
   }
   if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
   // Registration accepts no external callback. Only these freshly constructed
-  // forwarders can identify this factory, and their base remains independently
-  // recognized by LocalStore. Inspecting a custom input must not call a getter.
+  // forwarders can identify this factory; the native readonly owner is proved
+  // separately. Inspecting a custom input must not call a getter.
   if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
     const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
     const key = Object.getOwnPropertyDescriptor(persistence, "currentSnapshots")?.value
