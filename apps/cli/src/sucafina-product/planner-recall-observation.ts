@@ -85,7 +85,9 @@ export function createSfPlannerRecallObservation(input: {
             const value = stored.cases[ref.id]
             if (!value || value.id !== ref.id || value.incarnation !== ref.incarnation || !value.participants.includes(actor.principalRef)) return undefined
             if (value.version !== ref.version) return beforeAdmission ? unsupported : undefined
-            if (selected.period && digestSfValue(value.horizon) !== digestSfValue(selected.period) || !plannerCase(value, call, refs))
+            // The query period belongs to the current case. The canonical ranker
+            // compares each candidate with its own original horizon and evidence.
+            if (selected.period && ref === selected.cases[0] && digestSfValue(value.horizon) !== digestSfValue(selected.period) || !plannerCase(value, call, refs))
               return unsupported
             cases.push(value)
           }
