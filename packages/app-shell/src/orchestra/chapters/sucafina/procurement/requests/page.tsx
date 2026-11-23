@@ -2,6 +2,7 @@ import { createEffect, createMemo, createUniqueId, For, onCleanup, Show } from "
 import { Dynamic } from "solid-js/web"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { procurementStatusLabel } from "../presentation"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import type { SfSurfaceProps } from "../../context/contracts"
@@ -67,7 +68,20 @@ const actionKey: Record<SfRequestCommand, Key> = {
   cancel: "sf.u11.remaining.cancel",
   delete: "sf.u11.remaining.delete",
 }
-function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): readonly SfReviewField[] {
+function reviewValue(field: string, actual: unknown, locale: string): SfReviewField["value"] {
+  if (actual === undefined || actual === null)
+    return { kind: "missing", reason: { key: sfCommonKey("sf.common.unknown") } }
+  if (field === "type" && (actual === "product" || actual === "service"))
+    return { kind: "text", text: { kind: "message", message: message(actual === "product"
+      ? "sf.u11.remaining.product" : "sf.u11.remaining.service") } }
+  if (typeof actual === "boolean")
+    return { kind: "boolean", value: actual,
+      trueLabel: message("sf.u11.remaining.yes"), falseLabel: message("sf.u11.remaining.no") }
+  return { kind: "text", text: dataText(typeof actual === "number" && Number.isFinite(actual)
+    ? new Intl.NumberFormat(locale, { maximumSignificantDigits: 21 }).format(actual)
+    : typeof actual === "object" ? JSON.stringify(actual) : String(actual)) }
+}
+function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind, locale: string): readonly SfReviewField[] {
   if (!values) return []
   const fields = kind === "pr" ? PR_FIELDS : PO_FIELDS
   return fields.filter((field) => Object.prototype.hasOwnProperty.call(values, field)).map((field) => {
@@ -75,11 +89,7 @@ function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): read
     return {
       path: kind + "." + field,
       label: message(("sf.u11.remaining.field." + field) as Key),
-      value: actual === undefined || actual === null
-        ? { kind: "missing" as const, reason: { key: sfCommonKey("sf.common.unknown") } }
-        : { kind: "text" as const, text: dataText(
-          typeof actual === "object" ? JSON.stringify(actual) : String(actual),
-        ) },
+      value: reviewValue(field, actual, locale),
     }
   })
 }
@@ -167,6 +177,9 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
   const canPr = () => !!row() && isPrWritable(row()!) && actionAllowed("save-pr")
   const canPo = () => !!row() && isPoWritable(row()!) && actionAllowed("save-po")
   const stage = () => row() ? stageOf(row()!.status) : "pr"
+  const stageLabel = () => t(stage() === "pr" ? "sf.u11.remaining.pr" :
+    stage() === "sourcing" ? "sf.u11.remaining.sourcing" :
+    stage() === "po" ? "sf.u11.remaining.po" : "sf.u11.remaining.closed")
   const sourceRevision = () => JSON.stringify({
     row: row(), version: version(), actionIds: view.read?.actionIds, stamp: sf.ready()?.context.stamp,
   })
@@ -604,7 +617,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       render: (row) => <span>{row.pr?.title ?? "—"}</span> },
     { id: "status", labelKey: tableKey("sf.u11.remaining.status"), sortKey: "status",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 180 },
-      render: (row) => <span>{row.status}</span> },
+      render: (row) => <span title={row.status}>{procurementStatusLabel(row.status, language.t)}</span> },
     { id: "requester", labelKey: tableKey("sf.u11.remaining.requester"), sortKey: "requester",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 170 },
       render: (row) => <span>{row.requesterName ?? row.createdBy}</span> },
@@ -617,11 +630,11 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     const fields = intent.action === "cancel" ? [
       { path: "reason", label: message("sf.u11.remaining.reason"),
         value: { kind: "text" as const, text: dataText(intent.reason) } },
-    ] : fieldsOf(intent.po ?? intent.pr, editKind)
+    ] : fieldsOf(intent.po ?? intent.pr, editKind, language.intl())
     const persisted = row()
     const original: SfReviewSnapshot | null = persisted && intent.ref
       ? { kind: "persisted", ref: intent.ref, version: intent.version,
-        fields: fieldsOf(intent.po ? poFromRecord(persisted) : prFromRecord(persisted), editKind) } : null
+        fields: fieldsOf(intent.po ? poFromRecord(persisted) : prFromRecord(persisted), editKind, language.intl()) } : null
     const operationId = ("domain.command.CAP25." + uiCommandAction(intent.action)) as
       "domain.command.CAP25.create" | "domain.command.CAP25.save" |
       "domain.command.CAP25.submit_pr" | "domain.command.CAP25.submit_po" |
@@ -642,7 +655,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"),
         reasons: [], knownCount: fields.length, expectedCount: fields.length }}
       blockingReasons={[]}
-      confirmation={{ kind: "admitted", labelKey: tableKey("sf.u11.remaining.confirm"),
+      confirmation={{ kind: "admitted", labelKey: tableKey(actionKey[intent.action]),
         purpose, binding: { kind: "catalog-command", operationId,
           version: { kind: "record", expectedVersion: intent.version },
           confirmation: "presentation-only" } }}
@@ -676,7 +689,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
         <h2>{creating() ? t("sf.u11.remaining.new") : current?.pr?.title ?? ref}</h2>
         <Show when={!creating() && ref}>
           <p>{t("sf.u11.remaining.identity")}: {ref}</p>
-          <p>{t("sf.u11.remaining.status")}: {current?.status}</p>
+          <p title={current?.status}>{t("sf.u11.remaining.status")}: {procurementStatusLabel(current?.status ?? "", language.t)}</p>
           <p>{t("sf.u11.remaining.version")}: {version() ?? "—"}</p>
           <Show when={current?.requestSummary}>
             <p data-request-summary={ref}>{current?.requestSummary}</p>
@@ -686,7 +699,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
           </Show>
         </Show>
         <Show when={current}>
-          <p>{t("sf.u11.remaining.stage")}: {stage()}</p>
+          <p title={stage()}>{t("sf.u11.remaining.stage")}: {stageLabel()}</p>
         </Show>
         <Show when={current?.poEstimate}><p role="status">{current?.poEstimate}</p></Show>
         <Show when={current?.orderDifference}><p role="status">{current?.orderDifference}</p></Show>
@@ -708,9 +721,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
                 </label>
               </fieldset>
             </Show>
-            <button type="button" disabled={!stageAllowed("submit_po")} onClick={() => reviewAction("submit_po")}>
-              {t("sf.u11.remaining.submitPo")}
-            </button>
+            <p role="note">{t("sf.u11.remaining.poUnavailableDuringSourcing")}</p>
           </section>
         </Show>
       </header>
@@ -774,7 +785,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       </Show>
       <Show when={current && stage() === "po"}>
         <section class="sf-u11-stage" data-stage="po">
-          <h3>{t("sf.u11.remaining.po")}</h3>
+          <Show when={!canPo() || !activePo()}><h3>{t("sf.u11.remaining.po")}</h3></Show>
           <Show when={poConflict()}>
             <div data-draft-conflict="po"><p role="alert">{language.t("sf.common.conflict")}</p>
               <button type="button" class="mx-btn" disabled={view.sending || view.outcomeUnknown || poPending()}

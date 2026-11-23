@@ -5,7 +5,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfDomainPageData } from "@orchestra/schema/sucafina/domain"
 import { SfChangeReview } from "../../shared/change-review"
 import { sfCommonKey, useSfPresentation } from "../../shared/frame/presentation"
-import type { SfCopyKey } from "../../shared/frame/types"
+import type { SfCopyKey, SfDisplayValue } from "../../shared/frame/types"
 import type { SfDraftRegistry, SfPublicDraftController } from "../../context/contracts"
 import type { SfDraftState } from "../../shared/draft"
 import { useSfContext } from "../../context"
@@ -219,22 +219,28 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     const saved = review()
     if (saved && (!allowed() || !sfU02ReviewReady(saved, current()))) setReview(undefined)
   })
+  const reviewValue = (value: number | undefined): SfDisplayValue => {
+    if (value === undefined) return { kind: "missing", reason: { key: key("sf.u02.noValue") } }
+    if (props.actionId === "save-month") return {
+      kind: "text", text: { kind: "data", text: new Intl.DateTimeFormat(locale(), {
+        month: "long", year: "numeric", timeZone: "UTC",
+      }).format(new Date(Date.UTC(props.year, value - 1, 1))) },
+    }
+    if (props.actionId === "save-users") return {
+      kind: "text", text: { kind: "data", text: new Intl.NumberFormat(locale(), { maximumFractionDigits: 20 }).format(value) },
+    }
+    return {
+      kind: "number", value, unit: { kind: "unspecified", label: { key: key("sf.u02.noCurrency") } }, fractionDigits: 2,
+    }
+  }
   const reviewFields = () => [{
     path: props.actionId === "save-month" ? "month" : props.actionId === "save-revenue" ? "revenue" : "value",
     label: { key: key(props.valueLabelKey) },
-    value: { kind: "text" as const, text: { kind: "data" as const, text: active()?.value.text ?? "" } },
+    value: reviewValue(validNumber(active()?.value.text ?? "", props) ?? undefined),
   }]
   const base = () => props.recordId && props.version !== undefined
     ? { kind: "persisted" as const, ref: props.recordId as SfRef, version: props.version,
-      fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) },
-        value: props.value === undefined ?
-          { kind: "missing" as const, reason: { key: key("sf.u02.noValue") } } :
-          props.surfaceId === "CAP01" && props.actionId === "save-users" ?
-          { kind: "text" as const, text: { kind: "data" as const,
-            text: new Intl.NumberFormat(locale(), { maximumFractionDigits: 20 }).format(props.value) } } :
-          { kind: "number" as const, value: props.value,
-            unit: { kind: "unspecified" as const, label: { key: key("sf.u02.noCurrency") } },
-            fractionDigits: 2 } }] }
+      fields: [{ path: reviewFields()[0].path, label: { key: key(props.valueLabelKey) }, value: reviewValue(props.value) }] }
     : { kind: "not-provided" as const, reason: { key: key("sf.u02.noValue") } }
 
   async function confirm() {
@@ -283,7 +289,11 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
           aria-invalid={feedback() === "invalid"}
           onInput={(event) => { if (conflicted()) return;draft().edit({ text: event.currentTarget.value });setFeedback("none") }} />
       </label>
-      <p>{t(key("sf.u02.sourceVersion"))}: {props.version}</p>
+      <details class="sf-u02-edit-source">
+        <summary>{t(key("sf.u02.sourceDetails"))}</summary>
+        <p>{t(key("sf.u02.sourceVersion"))}: {props.version}</p>
+        <code>{props.scope}</code>
+      </details>
       <Show when={conflicted()}><p role="alert">{t(sfCommonKey("sf.common.conflict"))}</p></Show>
       <button class="mx-btn primary" type="button" disabled={!allowed()}
         onClick={() => {
@@ -311,7 +321,7 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     <Show when={review() && allowed() && sfU02ReviewReady(review()!, current())}>
       <SfChangeReview
         operation={{ ref: (props.operationId + ":" + props.scope) as SfOperationRef,
-          label: { key: key(props.labelKey) }, scope: { kind: "data", text: props.scope } }}
+          label: { key: key(props.labelKey) }, scope: { kind: "data", text: t(key(props.valueLabelKey)) + " · " + props.year } }}
         base={base()} current={base()}
         proposed={{ kind: "draft", intentRef: intentRef(), sourceRef: props.recordId ? props.recordId as SfRef : null,
           sourceVersion: props.version ?? null, fields: reviewFields() }}

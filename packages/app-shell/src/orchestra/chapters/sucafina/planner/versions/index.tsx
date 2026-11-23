@@ -19,6 +19,10 @@ import "./versions.css"
 
 type CommandAction = "save" | "copy" | "official" | "lock" | "unlock" | "delete"
 type EditableVersion = Readonly<{ name: string; year: number }>
+const actionLabels: Readonly<Record<CommandAction, keyof typeof SF_U46_COPY>> = {
+  save: "sf.u46.save", copy: "sf.u46.copy", official: "sf.u46.official",
+  lock: "sf.u46.lock", unlock: "sf.u46.unlock", delete: "sf.u46.delete",
+}
 const op = {
   save: "domain.command.CAP23.save",
   copy: "domain.command.CAP23.copy",
@@ -541,25 +545,25 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
               <Show when={visibleReview() && screen.review} keyed>
                 {(request) => (
                   <SfChangeReview
-                    operation={{ ref: request.ref, label: msg("sf.u46.reviewScope"), scope: data(request.versionId || copy.t(key("sf.u46.createFirst"))) }}
+                    operation={{ ref: request.ref, label: msg(actionLabels[request.action]), scope: data(request.version?.name || request.proposed.name || copy.t(key("sf.u46.createFirst"))) }}
                     base={reviewBase(request)}
                     current={reviewBase(request)}
                     proposed={reviewProposed(request)}
                     effects={[{
-                      id: request.ref, domain: "planner", title: data(copy.t(key("sf.u46." + request.action as keyof typeof SF_U46_COPY))),
+                      id: request.ref, domain: "planner", title: data(copy.t(key(actionLabels[request.action]))),
                       state: "proposed", details: [{
                         path: "action", label: msg("sf.u46.actions"),
-                        value: textValue(copy.t(key(("sf.u46." + request.action) as keyof typeof SF_U46_COPY))),
+                        value: textValue(copy.t(key(actionLabels[request.action]))),
                       }],
                     }]}
                     coverage={{ state: "complete", summary: msg("sf.u46.reviewScope"), reasons: [],
                       knownCount: 1, expectedCount: 1 }}
                     blockingReasons={model.can(request.action) ? [] : [msg("sf.u46.reviewScope")]}
                     confirmation={model.can(request.action) && screen.outcome === "idle" && !screen.busy && !screen.verified
-                      ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request),
+                      ? { kind: "admitted", labelKey: key(actionLabels[request.action]), purpose: reviewAction(request),
                           binding: { kind: "catalog-command", operationId: op[request.action],
                             version: { kind: "record", expectedVersion: request.expected }, confirmation: "presentation-only" } }
-                      : { kind: "blocked", labelKey: key("sf.u46.confirm"), reasons: [msg("sf.u46.reviewScope")] }}
+                      : { kind: "blocked", labelKey: key(actionLabels[request.action]), reasons: [msg("sf.u46.reviewScope")] }}
                     busy={screen.busy || !!screen.verified}
                     state={screen.outcome === "unknown" ? "outcome-unknown" :
                       screen.outcome === "conflict" ? "conflict" : "ready"}

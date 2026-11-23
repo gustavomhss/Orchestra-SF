@@ -18,6 +18,7 @@ import { SfDecisionFigure } from "../decisions"
 import type { SfBiFinancialView, SfBiOperationalView, SfBiSnapshot } from "../finance/model"
 import { sfBiKey } from "../finance/model"
 import "./catalog.css"
+import "../../reviews/workflows.css"
 
 const BI_CATALOG = [
   { id: "BI01", family: "finance", question: "sf.u20.question.BI01" },
@@ -313,11 +314,11 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       primaryAction={undefined} density="comfortable" layout="work"
       onLayoutMode={(mode) => setStore("layout", mode)}
     >
-      <section class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-layout-mode={store.layout}>
+      <section data-sf-wave="polish" class="sf-bi-catalog sf-workflow" data-sf-catalog={props.surfaceId} data-sf-surface={props.surfaceId} data-sf-layout-mode={store.layout}>
         <SfStatePanel state={ownerState()}
           messageKey={sfCommonKey(ownerState() === "denied" ? "sf.common.noAccess" : "sf.common.unavailable")}
           onRetryRead={() => { void context.reload() }}>
-          <form class="sf-bi-catalog-form" onSubmit={(event) => { event.preventDefault(); void chooseContext() }}>
+          <form class="sf-bi-catalog-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void chooseContext() }}>
             <label>
               {t(sfBiKey("sf.u21.view"))}
               <select value={store.viewId} required disabled={pending() || props.surfaceId === "UI46"} data-sf-field="view"

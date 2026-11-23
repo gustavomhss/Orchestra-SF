@@ -100,6 +100,10 @@ export const SF_U32_COPY = {
   "sf.u32.discussionReconciled": "Discussion reconciled. Your drafts are retained; send an action explicitly.",
   "sf.u32.retainedAction": "Draft and original action retained. Reconcile before an explicit retry.",
   "sf.u32.draftRetained": "Your draft is retained.",
+  "sf.u32.openSource": "Open source",
+  "sf.u32.authorReference": "Author reference",
+  "sf.u32.valueReference": "Value reference",
+  "sf.u32.statusReady": "Ready",
 } as const
 
 export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> = {
@@ -203,4 +207,8 @@ export const SF_U32_COPY_BR: Readonly<Record<keyof typeof SF_U32_COPY, string>> 
   "sf.u32.discussionReconciled": "Discussion reconciled. Your drafts are retained; send an action explicitly.",
   "sf.u32.retainedAction": "Draft and original action retained. Reconcile before an explicit retry.",
   "sf.u32.draftRetained": "Your draft is retained.",
+  "sf.u32.openSource": "Abrir origem",
+  "sf.u32.authorReference": "Referência do autor",
+  "sf.u32.valueReference": "Referência do valor",
+  "sf.u32.statusReady": "Pronto",
 }

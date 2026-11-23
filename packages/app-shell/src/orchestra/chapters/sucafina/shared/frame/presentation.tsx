@@ -93,6 +93,7 @@ export function SfDisplayValueText(props: { value: SfDisplayValue }) {
           <span class="sf-numeric" dir="auto">
             {formattedNumber(number().value, number().fractionDigits, locale()) ??
               <SfMessageText message={{ key: sfCommonKey("sf.common.unknown") }} />}
+            {" "}
             <span class="sf-unit"><SfUnitText unit={number().unit} /></span>
           </span>
         )}

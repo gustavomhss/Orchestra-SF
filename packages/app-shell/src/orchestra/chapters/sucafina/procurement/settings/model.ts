@@ -41,6 +41,8 @@ const valueText = (text: string): SfDisplayValue => ({ kind: "text", text: { kin
 export function displayValue(value: unknown): SfDisplayValue {
   if (value === null || value === undefined)
     return { kind: "missing", reason: message("sf.common.unknown") }
+  if (typeof value === "boolean")
+    return { kind: "boolean", value, trueLabel: message("sf.u36.enabled"), falseLabel: message("sf.u36.disabled") }
   if (Array.isArray(value))
     return { kind: "list", items: value.map((entry) => displayValue(entry)) }
   if (typeof value === "object")
@@ -58,7 +60,9 @@ function fields(settings: Readonly<Settings>, names: readonly (keyof Settings)[]
   return names.map((name) => ({
     path: String(name),
     label: message(settingsLabel[name] ?? "sf.common.unknown"),
-    value: displayValue(settings[name]),
+    value: name === "prApprovalMode" && (settings[name] === "first" || settings[name] === "matrix")
+      ? { kind: "text", text: { kind: "message", message: message(settings[name] === "first" ? "sf.u36.first" : "sf.u36.matrixOption") } }
+      : displayValue(settings[name]),
   }))
 }
 export function settingsReview(
@@ -95,7 +99,7 @@ export function settingsReview(
       ? { kind: "blocked", labelKey: message("sf.common.unavailable").key, reasons }
       : {
           kind: "admitted",
-          labelKey: message("sf.common.save").key,
+          labelKey: message("sf.u36.save").key,
           purpose: "save",
           binding: {
             kind: "catalog-command", operationId: "domain.command.CAP28.save",

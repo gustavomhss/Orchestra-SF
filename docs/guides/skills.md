@@ -2,6 +2,12 @@
 
 The Skills chapter lists the skills Orchestra finds in the project's skill folders (`.orchestra/skills/`, `.claude/skills/`, `.agents/skills/`), the global folder and the built-in modules.
 
+## Reading and editing a skill
+
+Open a skill to read its instructions with headings, lists and code blocks. A built-in or otherwise read-only skill opens as a reader with **Close**. Expand **Source and access** to inspect the exact source instructions and their access information. Reading a skill does not make its source editable.
+
+Editable project skills keep the instruction editor and their explicit save and remove actions. A pending save or an unsupported source still follows the same access and recovery rules.
+
 ## Agent-only skills
 
 Some skills exist only for an agent to load, for example the planning skills of a specialist seat. Mark them in the frontmatter so the catalog does not show them to users:

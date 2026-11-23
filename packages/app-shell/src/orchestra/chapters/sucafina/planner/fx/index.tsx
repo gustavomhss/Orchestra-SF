@@ -447,10 +447,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
               <input type="search" class="mx-input" value={screen.filter}
                 onInput={(event) => setScreen("filter", event.currentTarget.value)} />
             </label>
-            <Show when={can("import-workbook")}>
-              <p class="sf-n20-source-only">{language.t("sf.cap22.import-hint")}</p>
-            </Show>
           </div>
+          <Show when={can("import-workbook")}>
+            <p role="note" class="sf-n20-source-only">{language.t("sf.cap22.import-hint")}</p>
+          </Show>
           <section aria-label={language.t("sf.cap22.base")} class="mx-card sf-n20-fx-base">
             <h2>{language.t("sf.cap22.base")}</h2>
             <strong>{language.t("sf.cap22.fixed")}</strong>
@@ -481,7 +481,7 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   render: (row) => <bdi>{row.provider || language.t("sf.cap22.no-provenance")}</bdi> },
                 { id: "observedAt", labelKey: key("sf.cap22.field.observedAt.label"), align: "start",
                   widthPolicy: { kind: "flex", minPx: 160, weight: 2 },
-                  render: (row) => <time dateTime={row.observedAt ?? ""}>{row.observedAt || language.t("sf.cap22.no-provenance")}</time> },
+                  render: (row) => <time dateTime={row.observedAt ?? ""} title={row.observedAt ?? undefined}>{row.observedAt && !Number.isNaN(Date.parse(row.observedAt)) ? new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(row.observedAt)) + " UTC" : row.observedAt || language.t("sf.cap22.no-provenance")}</time> },
               ]}
               selectedKey={screen.selection ? ref(screen.selection) : undefined}
               sort={screen.sort} onSort={(next) => setScreen("sort", next)}

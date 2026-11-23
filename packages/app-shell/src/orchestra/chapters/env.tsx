@@ -414,7 +414,7 @@ export default function EnvPage(props: ChapterPageProps) {
                     {language.t("orchestra.env.cancel")}
                   </button>
                   <Show when={state.dialog === "edit" || state.dialog === "remove"}>
-                    <button type="submit" class="mx-btn primary">
+                    <button type="submit" class="mx-btn" classList={{ primary: state.dialog === "edit", danger: state.dialog === "remove" }}>
                       {language.t(state.dialog === "remove" ? "orchestra.env.dialog.confirm" : "orchestra.env.apply")}
                     </button>
                   </Show>

@@ -46,3 +46,22 @@
   .sf-n20-actions > *, .sf-n20-catalog-heading > button { inline-size: 100%; }
   .sf-n20-allocation-splits label { grid-template-columns: minmax(0, 1fr); gap: 6px; }
 }
+
+.sf-n20-toolbar { align-items: center; }
+.sf-n20-source-only {
+  margin: 0;
+  padding: 12px 16px;
+  border-inline-start: 2px solid var(--mx-line);
+  background: var(--mx-soft);
+  border-radius: var(--orchestra-radius-sm);
+}
+.sf-n20-editor textarea { inline-size: 100%; min-block-size: 96px; resize: vertical; }
+.sf-n20-reference {
+  display: block;
+  margin-block-start: 4px;
+  color: var(--orchestra-muted);
+  font-family: var(--mx-mono);
+  font-size: var(--orchestra-font-size-xs);
+  overflow-wrap: anywhere;
+}
+.sf-n20-detail dd { overflow-wrap: anywhere; }

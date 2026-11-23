@@ -13,6 +13,7 @@ import { operationGranted } from "../../collaboration/grant"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
 import "./relations.css"
+import "../../reviews/workflows.css"
 
 type Relation = Extract<typeof SfCollaboration.operations["collaboration.relation-read"]["output"]["Type"], { status: "ok" }>["value"]["relations"][number]
 type Pair = typeof SfRelationPair.Type
@@ -277,9 +278,9 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}
     >
-      <div class="sf-u44-relations" data-sf-surface="UI51">
+      <div data-sf-wave="polish" class="sf-u44-relations sf-workflow" data-sf-surface="UI51">
         <Show when={owner.state().status === "ready"}>
-          <form class="sf-u44-relation-source" onSubmit={(event) => { event.preventDefault(); void read(source()) }}>
+          <form class="sf-u44-relation-source sf-form" onSubmit={(event) => { event.preventDefault(); void read(source()) }}>
             <label>{t("sf.u44.sourceRef")}
               <input data-sf-relations-source required value={source()} onInput={(event) => {
                 setSource(event.currentTarget.value); setPreparedPair(undefined)
@@ -317,7 +318,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
           </Show>
         </SfStatePanel>
         <Show when={owner.state().status === "ready" && !!source() && storageVersion() !== undefined && !pending() && granted("collaboration.relation-create")}>
-          <form class="sf-u44-relation-create" onSubmit={(event) => { event.preventDefault(); prepareManual() }}>
+          <form class="sf-u44-relation-create sf-form" onSubmit={(event) => { event.preventDefault(); prepareManual() }}>
             <h3>{t("sf.u44.createExplicit")}</h3>
             <p>{t("sf.u44.evidenceHelp")}</p>
             <label>{t("sf.u44.targetRef")}

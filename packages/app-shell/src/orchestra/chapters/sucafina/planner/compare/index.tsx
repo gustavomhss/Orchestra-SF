@@ -159,10 +159,9 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
       default: return key("sf.common.unavailable")
     }
   }
-  const showNumber = (value: number | null | undefined, money = true) => {
+  const showNumber = (value: number | null | undefined) => {
     if (value === undefined || value === null) return copy.t(key("sf.u46.noValue"))
-    const text = new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(value)
-    return money ? text + " " + copy.t(key("sf.u02.noCurrency")) : text
+    return new Intl.NumberFormat(copy.locale(), { maximumFractionDigits: 2 }).format(value)
   }
   const metricRows = () => [
     { id: "budget", label: "sf.u06.budget" as const, left: left()?.total, right: right()?.total },
@@ -247,6 +246,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                 onRetryRead={() => setComparison("request", (n) => n + 1)}>
                 <Show when={left() && right()}>
                   <div class="sf-u46-compare-content">
+                    <p class="sf-u46-compare-note" role="note">{copy.t(key("sf.u02.noCurrency"))}</p>
                     <div class="sf-u46-compare-scroll" role="region" aria-label={copy.t(key("sf.u46.compare"))} tabIndex={0}>
                       <table>
                         <caption>{copy.t(key("sf.u46.compare"))}</caption>
@@ -261,8 +261,8 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                           <For each={metricRows()}>
                             {(row) => <tr>
                               <th scope="row">{copy.t(key(row.label))}</th>
-                              <td>{showNumber(row.left, row.id !== "fte")}</td>
-                              <td>{showNumber(row.right, row.id !== "fte")}</td>
+                              <td>{showNumber(row.left)}</td>
+                              <td>{showNumber(row.right)}</td>
                             </tr>}
                           </For>
                         </tbody>
@@ -290,7 +290,7 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
                         <tbody>
                           <For each={months}>
                             {(month, index) => <tr>
-                              <th scope="row">{month}</th>
+                              <th scope="row" title={month}>{new Intl.DateTimeFormat(copy.locale(), { month: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2000, index(), 1)))}</th>
                               <For each={[left(), right()]}>
                                 {(item) => <>
                                   <td>{showNumber(item?.budget[index()] ?? null)}</td>

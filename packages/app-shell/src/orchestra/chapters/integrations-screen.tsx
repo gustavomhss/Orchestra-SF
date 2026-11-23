@@ -61,7 +61,10 @@ export function IntegrationsScreen(props: { model: Model; basic: boolean; profil
       }
     >
       <div class="integrations-screen" aria-busy={props.model.state.busy}>
-        <p class="mx-note">{language.t("orchestra.integrations.supported")}</p>
+        <details class="integrations-guidance">
+          <summary>{language.t("orchestra.integrations.availableProviders")}</summary>
+          <p class="mx-note">{language.t("orchestra.integrations.supported")}</p>
+        </details>
         <Show when={props.model.state.hostAuthorization}>
           <form
             class="integrations-auth mx-card"
@@ -83,128 +86,134 @@ export function IntegrationsScreen(props: { model: Model; basic: boolean; profil
               <input name="bearer" type="password" dir="ltr" required autocomplete="off" disabled={disabled()} />
             </label>
             <p class="mx-note">{language.t("orchestra.integrations.authHint")}</p>
-            <button type="submit" class="mx-btn" disabled={disabled()}>
-              {language.t("orchestra.integrations.applyAuth")}
-            </button>
-            <button type="button" class="mx-btn" onClick={() => auth.current?.reset()}>
-              {language.t("orchestra.integrations.cancel")}
-            </button>
-          </form>
-        </Show>
-        <div class="integrations-controls">
-          <Show when={!props.model.state.readRetryable}>
-            <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.load()}>
-              {language.t("orchestra.integrations.refresh")}
-            </button>
-          </Show>
-          <Show when={props.model.state.after}>
-            <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.load(true)}>
-              {language.t("orchestra.integrations.more")}
-            </button>
-          </Show>
-        </div>
-        <Show when={props.model.state.status === "loading"}>
-          <p class="mx-empty" role="status">
-            {language.t("orchestra.integrations.loading")}
-          </p>
-        </Show>
-        <Show when={props.model.state.busy}>
-          <div class="integrations-controls">
-            <p role="status">{language.t("orchestra.integrations.busy")}</p>
-            <button type="button" class="mx-btn" onClick={() => props.model.cancel()}>
-              {language.t("orchestra.integrations.cancel")}
-            </button>
-          </div>
-        </Show>
-        <Show when={props.model.state.failure || (props.model.state.status === "error" && !props.model.state.busy)}>
-          <div role="alert" class="mx-error integrations-controls">
-            <p>{language.t(`orchestra.integrations.error.${props.model.state.failure ?? "request"}`)}</p>
-            <Show when={props.model.state.retryable}>
-              <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.retry()}>
-                {language.t("orchestra.integrations.retry")}
+            <div class="integrations-controls">
+              <button type="submit" class="mx-btn" disabled={disabled()}>
+                {language.t("orchestra.integrations.applyAuth")}
               </button>
-              <button type="button" class="mx-btn" disabled={disabled()} onClick={() => props.model.cancel()}>
+              <button type="button" class="mx-btn" onClick={() => auth.current?.reset()}>
                 {language.t("orchestra.integrations.cancel")}
               </button>
-            </Show>
-            <Show when={props.model.state.readRetryable}>
-              <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.retryRead()}>
-                {language.t("orchestra.integrations.refresh")}
-              </button>
-            </Show>
-          </div>
+            </div>
+          </form>
         </Show>
-        <Show when={props.model.state.receipt}>
-          {(receipt) => (
-            <p role="status">
-              {language.t(receipt().reused ? "orchestra.integrations.reused" : "orchestra.integrations.saved")}
-            </p>
-          )}
-        </Show>
-        <h2
-          id="integrations-accounts-title"
-          class="mx-section"
-          tabindex={-1}
-          ref={(element) => {
-            focus.heading = element
-          }}
-        >
-          {language.t("orchestra.integrations.accounts")}
-        </h2>
-        <Show when={props.model.state.status === "ready"}>
-          <p class="mx-note">{language.t("orchestra.integrations.live")}</p>
-          <Show when={!props.model.state.connections.length}>
+        <section class="integrations-section integrations-accounts" aria-labelledby="integrations-accounts-title">
+          <header class="integrations-section-header">
+            <h2
+              id="integrations-accounts-title"
+              class="mx-section"
+              tabindex={-1}
+              ref={(element) => {
+                focus.heading = element
+              }}
+            >
+              {language.t("orchestra.integrations.accounts")}
+            </h2>
+            <div class="integrations-controls">
+              <Show when={!props.model.state.readRetryable}>
+                <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.load()}>
+                  {language.t("orchestra.integrations.refresh")}
+                </button>
+              </Show>
+              <Show when={props.model.state.after}>
+                <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.load(true)}>
+                  {language.t("orchestra.integrations.more")}
+                </button>
+              </Show>
+            </div>
+          </header>
+          <Show when={props.model.state.status === "loading"}>
             <p class="mx-empty" role="status">
-              {language.t("orchestra.integrations.empty")}
+              {language.t("orchestra.integrations.loading")}
             </p>
           </Show>
-        </Show>
-        <ul class="integrations-list" aria-labelledby="integrations-accounts-title">
-          <For each={state.accounts}>
-            {(id) => {
-              const item = () => props.model.state.connections.find((item) => item.connection.id === id)
-              return (
-                <li class="mx-card" hidden={!item()}>
-                  <button
-                    type="button"
-                    class="mx-btn integrations-select"
-                    disabled={disabled() || !item()}
-                    aria-pressed={id === props.model.state.connectionID}
-                    onClick={() => {
-                      const current = item()
-                      if (!current) return
-                      focus.epoch++
-                      void props.model.select({ ...current, connection: { ...current.connection } })
-                    }}
-                  >
-                    <bdi>{item()?.connection.provider}</bdi>
-                    <Show when={item()?.label}>
-                      <bdi>{item()?.label}</bdi>
+          <Show when={props.model.state.busy}>
+            <div class="integrations-controls">
+              <p role="status">{language.t("orchestra.integrations.busy")}</p>
+              <button type="button" class="mx-btn" onClick={() => props.model.cancel()}>
+                {language.t("orchestra.integrations.cancel")}
+              </button>
+            </div>
+          </Show>
+          <Show when={props.model.state.failure || (props.model.state.status === "error" && !props.model.state.busy)}>
+            <div role="alert" class="mx-error integrations-controls">
+              <p>{language.t(`orchestra.integrations.error.${props.model.state.failure ?? "request"}`)}</p>
+              <Show when={props.model.state.retryable}>
+                <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.retry()}>
+                  {language.t("orchestra.integrations.retry")}
+                </button>
+                <button type="button" class="mx-btn" disabled={disabled()} onClick={() => props.model.cancel()}>
+                  {language.t("orchestra.integrations.cancel")}
+                </button>
+              </Show>
+              <Show when={props.model.state.readRetryable}>
+                <button type="button" class="mx-btn" disabled={disabled()} onClick={() => void props.model.retryRead()}>
+                  {language.t("orchestra.integrations.refresh")}
+                </button>
+              </Show>
+            </div>
+          </Show>
+          <Show when={props.model.state.receipt}>
+            {(receipt) => (
+              <p role="status">
+                {language.t(receipt().reused ? "orchestra.integrations.reused" : "orchestra.integrations.saved")}
+              </p>
+            )}
+          </Show>
+          <Show when={props.model.state.status === "ready"}>
+            <p class="mx-note">{language.t("orchestra.integrations.live")}</p>
+            <Show when={!props.model.state.connections.length}>
+              <p class="mx-empty" role="status">
+                {language.t("orchestra.integrations.empty")}
+              </p>
+            </Show>
+          </Show>
+          <ul class="integrations-list" aria-labelledby="integrations-accounts-title">
+            <For each={state.accounts}>
+              {(id) => {
+                const item = () => props.model.state.connections.find((item) => item.connection.id === id)
+                return (
+                  <li class="mx-card" hidden={!item()}>
+                    <button
+                      type="button"
+                      class="mx-btn integrations-select"
+                      disabled={disabled() || !item()}
+                      aria-pressed={id === props.model.state.connectionID}
+                      onClick={() => {
+                        const current = item()
+                        if (!current) return
+                        focus.epoch++
+                        void props.model.select({ ...current, connection: { ...current.connection } })
+                      }}
+                    >
+                      <bdi>{item()?.connection.provider}</bdi>
+                      <Show when={item()?.label}>
+                        <bdi>{item()?.label}</bdi>
+                      </Show>
+                      <bdi dir="ltr">
+                        <code>{id}</code>
+                      </bdi>
+                    </button>
+                    <Show when={item()}>
+                      {(current) => (
+                        <div class="mx-meta">
+                          <MxBadge>{language.t(`orchestra.integrations.state.${current().state}`)}</MxBadge>
+                          <MxBadge>{language.t(`orchestra.integrations.credential.${current().credential}`)}</MxBadge>
+                          <Show when={props.model.state.verifications[current().connection.id]}>
+                            {(verification) => (
+                              <MxBadge tone={verification() === "verified" ? "good" : undefined}>
+                                {language.t(`orchestra.integrations.verification.${verification()}`)}
+                              </MxBadge>
+                            )}
+                          </Show>
+                        </div>
+                      )}
                     </Show>
-                    <bdi dir="ltr">
-                      <code>{id}</code>
-                    </bdi>
-                  </button>
-                  <Show when={item()}>
-                    {(current) => (
-                      <div class="mx-meta">
-                        <MxBadge>{language.t(`orchestra.integrations.state.${current().state}`)}</MxBadge>
-                        <MxBadge>{language.t(`orchestra.integrations.credential.${current().credential}`)}</MxBadge>
-                        <Show when={props.model.state.verifications[current().connection.id]}>
-                          {(verification) => (
-                            <MxBadge tone={verification() === "verified" ? "good" : undefined}>
-                              {language.t(`orchestra.integrations.verification.${verification()}`)}
-                            </MxBadge>
-                          )}
-                        </Show>
-                      </div>
-                    )}
-                  </Show>
-                </li>
-              )
-            }}
-          </For>
-        </ul>
+                  </li>
+                )
+              }}
+            </For>
+          </ul>
+        </section>
         <Show when={props.model.state.connectionID}>
           <section class="integrations-section" aria-labelledby="integrations-targets-title">
             <h2 id="integrations-targets-title" class="mx-section">{language.t("orchestra.integrations.targets")}</h2>

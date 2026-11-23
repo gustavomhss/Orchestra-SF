@@ -10,6 +10,7 @@ import { SfCaseSourcesEditor } from "./sources"
 import { sfDecisionHref } from "../cases/route"
 import "../cases/n24.css"
 import "./decision.css"
+import "../../reviews/workflows.css"
 
 const k = (value: string) => value as SfCopyKey
 
@@ -50,7 +51,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
         busy: false, onInvoke: () => setUi({ editing: true, editorMounted: true }),
       }]}
     >
-      <div class="sf-n24 sf-decision-page sf-decision-intent" data-sf-wave="four" data-sf-decision="UI34" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
+      <div class="sf-n24 sf-decision-page sf-decision-intent sf-workflow" data-sf-wave="four" data-sf-decision="UI34" data-sf-surface="UI34" data-sf-case-ref={source()} data-sf-case-version={data()?.version}>
         <Show when={route() && back()}>
           <A class="mx-btn sf-decision-back" href={back()!}>{t("sf.ui33.return")}</A>
         </Show>
@@ -78,7 +79,7 @@ export function SfIntentView(props: SfSurfaceProps): JSX.Element {
                 <dl class="sf-decision-context">
                   <div><dt>{t("sf.ui34.period")}</dt><dd><time>{record().horizon.start}</time> – <time>{record().horizon.end}</time></dd></div>
                   <div><dt>{t("sf.ui33.currency")}</dt><dd><bdi>{record().currency}</bdi></dd></div>
-                  <div><dt>{t("sf.ui34.state")}</dt><dd><bdi>{record().state}</bdi></dd></div>
+                  <div><dt>{t("sf.ui34.state")}</dt><dd><bdi>{record().state === "draft" ? t("sf.common.draft") : record().state}</bdi></dd></div>
                   <div><dt>{t("sf.ui34.current")}</dt><dd>{record().version}</dd></div>
                 </dl>
                 <p class="sf-decision-note">{t("sf.ui34.readonly")}</p>

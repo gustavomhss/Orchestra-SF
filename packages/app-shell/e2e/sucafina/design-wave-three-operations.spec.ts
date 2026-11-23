@@ -2,6 +2,10 @@ import { expect, type Locator, type Page, type TestInfo } from "@playwright/test
 import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveThreeTest.use({ trace: "off", video: "off" })
+waveThreeTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP11", path: "/orchestra/sf-operations/service", title: "IT Operations", br: "Serviço de TI" },
   { id: "CAP12", path: "/orchestra/sf-operations/security", title: "IT Security KPIs", br: "Segurança de TI" },
@@ -77,13 +81,13 @@ waveThreeTest("installed native operations · service source values and a real r
     const importReview = editor.locator('[data-component="sf-change-review"]')
     await expect(importReview.getByRole("button", { name: "Replace month", exact: true })).toBeEnabled()
     await expect(importReview).toContainText("Infrastructure · Incidents · Opened")
-    for (const name of ["Original", "Current source"]) {
-      const comparison = importReview.getByRole("region", { name, exact: true })
-      await expect(comparison).not.toContainText("No records yet.")
-      await expect(comparison.locator(".sf-s03-field").filter({ hasText: "Infrastructure · Incidents · Opened" })
-        .locator("dd")).toHaveText("12")
-      await expect(comparison.locator(".sf-s03-field").filter({ hasText: "Incident SLA" })
-        .locator("dd")).toHaveText("98.4")
+    const incidents = importReview.getByRole("region", { name: "Infrastructure · Incidents · Opened", exact: true })
+    const sla = importReview.getByRole("region", { name: "Incident SLA", exact: true })
+    for (const version of ["base", "current"]) {
+      await expect(importReview.locator('[data-version="' + version + '"]')
+        .filter({ hasText: "No records yet." })).toHaveCount(0)
+      await expect(incidents.locator('[data-version="' + version + '"] .sf-s03-field-value')).toHaveText("12")
+      await expect(sla.locator('[data-version="' + version + '"] .sf-s03-field-value')).toHaveText("98.4")
     }
     await scrollPageTop(page)
     await capture(page, info, "CAP11-import-review-top-dark-desktop-test-data")

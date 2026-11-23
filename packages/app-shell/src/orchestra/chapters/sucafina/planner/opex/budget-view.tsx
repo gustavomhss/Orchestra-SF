@@ -576,6 +576,24 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     }
     setState("review",{kind,id,revision,operationRef:crypto.randomUUID() as SfOperationRef,...extras})
   }
+  const projectName = (id: string) => projectRows().find((project) => project.id === id)?.name ?? id
+  const projectReference = (id: string) => {
+    const project = projectRows().find((item) => item.id === id)
+    return project?.name ? project.name + " · " + id : id
+  }
+  const reviewLabel = (kind: ReviewKind) => {
+    switch (kind) {
+      case "project-save": return "sf.u07.saveProject"
+      case "project-delete": return "sf.u07.deleteProject"
+      case "line-create": return "sf.u07.create"
+      case "line-save": return "sf.u07.saveLine"
+      case "line-delete": return "sf.u07.deleteLine"
+      case "spread": return "sf.u07.spread"
+      case "reset": return "sf.u07.reset"
+      case "closed": return "sf.u07.saveClosed"
+      case "split": return "sf.u07.saveSplit"
+    }
+  }
   const fields = (values: object) =>
     Object.entries(values).map(([path,value]):SfReviewField => ({
       path, label: msg("sf.u07." + (path === "desc" ? "description" : path === "cur" ? "currency" :
@@ -585,7 +603,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
         ? { kind: "missing", reason: msg("sf.u07.missing") }
         : path === "split" && typeof value === "boolean"
           ? { kind: "boolean", value, trueLabel: msg("sf.u07.splitEnabled"), falseLabel: msg("sf.u07.splitDisabled") }
-          : textual(path === "approvalState" && typeof value === "string" ? approvalLabel(value) : String(value)),
+          : textual(path === "approvalState" && typeof value === "string" ? approvalLabel(value) :
+            path === "proj" && typeof value === "string" ? projectReference(value) : String(value)),
     }))
   const reviewFields = () => {
     const r=state.review
@@ -869,7 +888,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                   <For each={page().data.lines}>{(rec)=><tr data-sf-row={rec.id}>
                     <td class="sf-u07-record-name">{displayText(rec.name)}</td>
                     <td><span class="sf-u07-cell-label" aria-hidden="true">{t("sf.u07.owner")}</span>{displayText(rec.owner)}</td>
-                    <td><span class="sf-u07-cell-label" aria-hidden="true">{t(isOpex() ? "sf.u07.element" : "sf.u07.project")}</span>{displayText(isOpex() ? rec.el : rec.proj)}</td>
+                    <td><span class="sf-u07-cell-label" aria-hidden="true">{t(isOpex() ? "sf.u07.element" : "sf.u07.project")}</span>{displayText(isOpex() ? rec.el : rec.proj ? projectName(rec.proj) : rec.proj)}</td>
                     <td><span class="sf-u07-cell-label" aria-hidden="true">{t("sf.u07.currency")}</span>{displayText(rec.cur)}</td>
                     <Show when={isOpex()}><td data-sf-field="annual"><span class="sf-u07-cell-label" aria-hidden="true">{t("sf.u07.annual")}</span>{displayAmount(rec.annual)}</td></Show>
                     <td class="sf-u07-id"><span class="sf-u07-cell-label" aria-hidden="true">{t("sf.u07.columns.id")}</span><code>{rec.id}</code></td>
@@ -1075,14 +1094,23 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
                       <For each={fieldNames()}>{(field)=><label data-sf-field={field}>
                         {t("sf.u07."+(field==="desc"?"description":field==="cur"?"currency":field==="alloc"?"allocation":field==="cls"?"classification":field==="el"?"element":field==="proj"?"project":field))}
                         <Show when={field === "approvalState"} fallback={
-                          <input type={(field === "investmentStart" || field === "investmentEnd") &&
-                            (draft().value[field] === "" || /^\d{4}-\d{2}$/.test(draft().value[field])) ? "month" : "text"}
-                            value={draft().value[field]} disabled={!allowed("save")}
-                            onInput={(event)=>{
-                              const ctrl=getEditor(rec())
-                              const snapshot=ctrl?.snapshot()
-                              if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
-                            }}/>
+                          <Show when={field === "desc"} fallback={
+                            <input type={(field === "investmentStart" || field === "investmentEnd") &&
+                              (draft().value[field] === "" || /^\d{4}-\d{2}$/.test(draft().value[field])) ? "month" : "text"}
+                              value={draft().value[field]} disabled={!allowed("save")}
+                              onInput={(event)=>{
+                                const ctrl=getEditor(rec())
+                                const snapshot=ctrl?.snapshot()
+                                if(snapshot?.availability==="active")ctrl?.edit({...snapshot.value,[field]:event.currentTarget.value})
+                              }}/>
+                          }>
+                            <textarea rows={4} value={draft().value[field]} disabled={!allowed("save")}
+                              onInput={(event) => {
+                                const ctrl = getEditor(rec())
+                                const snapshot = ctrl?.snapshot()
+                                if (snapshot?.availability === "active") ctrl?.edit({ ...snapshot.value, [field]: event.currentTarget.value })
+                              }} />
+                          </Show>
                         }>
                           <select aria-label={t("sf.u07.approvalState")} value={draft().value.approvalState} disabled={!allowed("save")}
                             onChange={(event)=>{
@@ -1134,8 +1162,8 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
           <fieldset class="sf-u07-review-controls" disabled={state.busy || state.uncertainty}
             aria-labelledby={stageId + "-review-heading"}>
           <SfChangeReview
-            operation={{ref:r().operationRef,label:msg(isOpex()?"sf.cap18.primary":"sf.cap19.primary"),
-              scope:{kind:"data",text:versionId()}}}
+            operation={{ref:r().operationRef,label:msg(reviewLabel(r().kind)),
+              scope:{kind:"data",text:record()?.name || version()?.name || versionId()}}}
             base={{kind:"persisted",ref:(r().id||versionId()) as SfRef,
               version:r().revision,fields:reviewFields()}}
             current={{kind:"persisted",ref:(r().id||versionId()) as SfRef,
@@ -1147,11 +1175,11 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
             coverage={fullCoverage()}
             blockingReasons={allowed(reviewAction())?[]:[msg("sf.u07.readDenied")]}
             confirmation={allowed(reviewAction())?{kind:"admitted",
-              labelKey:key("sf.u07.confirm"),
+              labelKey:key(reviewLabel(r().kind)),
               purpose:r().kind==="line-create"?"create":reviewAction(),
               binding:{kind:"catalog-command",operationId:reviewOperationId(),
                 version:{kind:"record",expectedVersion:r().revision},confirmation:"presentation-only"}}:
-              {kind:"blocked",labelKey:key("sf.u07.confirm"),
+              {kind:"blocked",labelKey:key(reviewLabel(r().kind)),
                 reasons:[msg("sf.u07.readDenied")]}}
             state={reviewState()}
             onConfirm={()=>void submitReview()}

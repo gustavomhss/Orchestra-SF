@@ -68,3 +68,26 @@
 .orchestra-skills-dialog .mx-dialog-head p {
   overflow-wrap: anywhere;
 }
+
+/* Reading keeps the document hierarchy; exact source remains available in the disclosure. */
+.orchestra-skill-reader {
+  --skill-reader-gap: 20px;
+  --skill-reader-small-gap: 10px;
+  --skill-reader-hairline: 1px;
+  --skill-reader-focus: 2px;
+  --skill-reader-target: 44px;
+  min-inline-size: 0;
+  color: var(--mx-strong);
+  font: var(--orchestra-font-size-md)/1.7 var(--mx-sans);
+}
+.orchestra-skill-reader [data-component="markdown"] { min-inline-size: 0; overflow-wrap: anywhere; }
+.orchestra-skill-reader [data-component="markdown"] :is(h1, h2, h3) { color: var(--mx-strong); font-family: var(--mx-emphasis); line-height: 1.4; }
+.orchestra-skill-reader [data-component="markdown"] h1 { font-size: var(--orchestra-font-size-2xl); }
+.orchestra-skill-reader [data-component="markdown"] h2 { font-size: var(--orchestra-font-size-xl); }
+.orchestra-skill-reader [data-component="markdown"] h3 { font-size: var(--orchestra-font-size-lg); }
+.orchestra-skill-reader [data-component="markdown"] :is(pre, table) { max-inline-size: 100%; overflow-x: auto; }
+.orchestra-skill-source { margin-block-start: var(--skill-reader-gap); border-block-start: var(--skill-reader-hairline) solid var(--mx-line); }
+.orchestra-skill-source summary { display: list-item; list-style-position: inside; min-block-size: var(--skill-reader-target); padding-block: var(--skill-reader-small-gap); color: var(--mx-dim); font: 500 var(--orchestra-font-size-sm)/1.5 var(--mx-sans); cursor: pointer; }
+.orchestra-skill-source summary:focus-visible { outline: var(--skill-reader-focus) solid var(--mx-blue); outline-offset: var(--skill-reader-focus); }
+.orchestra-skill-source p { margin: 0 0 var(--skill-reader-small-gap); color: var(--mx-dim); overflow-wrap: anywhere; }
+.orchestra-skill-source .mx-field { margin: 0; }

@@ -1,38 +1,38 @@
 /* The explicitly marked Sucafina views share native page geometry.
-   Selectors stay scoped to their explicit wave marker; other chapters retain
+   Markers may live in the page content or its enclosing surface. Unmarked chapters retain
    their established frame, and all colors/materials come from Orchestra. */
-.sf-page-frame:has([data-sf-wave]) {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) {
   --sf-wave-page-width: 1160px;
   font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-page .mx-inner {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-page .mx-inner {
   max-inline-size: var(--sf-wave-page-width);
   padding-block: 12px 40px;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-heading {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading {
   align-items: flex-start;
   gap: 16px 24px;
   margin-block-end: 24px;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-eyebrow {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-eyebrow {
   color: var(--orchestra-muted);
   margin-block-end: 6px;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-heading h1 {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading h1 {
   font-size: var(--orchestra-font-size-4xl);
   line-height: 1.27;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-heading p {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading p {
   max-inline-size: 64ch;
   margin-block-start: 6px;
   font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
 }
-.sf-page-frame:has([data-sf-wave]) .sf-frame-body {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .sf-frame-body {
   margin-block-start: 0;
 }
-.sf-page-frame:has([data-sf-wave]) .mx-heading > div:last-child .sf-action-button {
+:is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading > div:last-child .sf-action-button {
   min-block-size: 44px;
   padding-inline: 16px;
   border-radius: var(--orchestra-radius-sm);
@@ -95,11 +95,11 @@
   .sf-wave-access { --sf-wave-access-gutter: 16px; }
 }
 @container sf-frame (max-width: 767px) {
-  .sf-page-frame:has([data-sf-wave]) .mx-heading {
+  :is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading {
     gap: 16px;
     margin-block-end: 20px;
   }
-  .sf-page-frame:has([data-sf-wave]) .mx-heading h1 {
+  :is(.sf-page-frame:has([data-sf-wave]), [data-sf-wave] .sf-page-frame) .mx-heading h1 {
     font-size: var(--orchestra-font-size-3xl);
   }
 }

@@ -315,7 +315,7 @@ test("an uncertain domain POST survives focus without replay and logout retires 
     const target = window.location.href
     view.click('a[data-sf-capability-id="CAP04"]'); await eventually(() => dialog(view)); view.click("[data-sf-confirm-discard]")
     await tick(); expect(window.location.href).toBe(target)
-    view.click("header button")
+    view.click("[data-sf-sign-out]")
     await eventually(() => view.state() === "unauthenticated")
     expect(new URL(window.location.href).pathname).toBe("/")
     expect(new URL(window.location.href).search).toBe("")

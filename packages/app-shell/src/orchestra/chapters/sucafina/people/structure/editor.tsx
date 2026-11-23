@@ -17,6 +17,8 @@ export type PeopleField = Readonly<{
   labelKey: SfCopyKey
   input: "text" | "date" | "textarea" | "select"
   required?: boolean
+  hintKey?: SfCopyKey
+  sourceLabels?: Readonly<Record<string, SfCopyKey>>
   options?: readonly Readonly<{ value: string; labelKey?: SfCopyKey; label?: string }>[]
 }>
 export type PeopleFormValues = Readonly<Record<string, string>>
@@ -58,14 +60,19 @@ function initialValues(props: PeopleEditorProps): PeopleFormValues {
  */
 export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
   const id = createUniqueId()
-  const { t } = useSfPresentation()
+  const { t, locale } = useSfPresentation()
+  const dateText = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value))
+    ? new Intl.DateTimeFormat(locale(), { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value + "T00:00:00Z"))
+    : value
   // Present authorized option labels; retain the original values in the draft
   // and command. Missing fields still preserve the source's unknown state.
   const detail = (value: PeopleFormValues, fields: readonly PeopleField[], newDraft = false) =>
     fields.map((field) => {
       const raw = value[field.name] ?? ""
       const option = field.options?.find((entry) => entry.value === raw)
+      const sourceLabel = field.sourceLabels?.[raw]
       const text = option?.label ?? (option?.labelKey ? t(option.labelKey) :
+        sourceLabel ? t(sourceLabel) : field.input === "date" && raw ? dateText(raw) :
         raw || t(designKey("sf.u03.design.notRecorded")))
       return {
         path: field.name,
@@ -228,7 +235,8 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
                     <Show when={field.input === "select" && field.options} fallback={
                       <Show when={field.input === "textarea"} fallback={
                         <input id={id + "-" + field.name}
-                          type={field.input === "date" ? "date" : "text"}
+                          type={field.input === "date" ? "date" : "text"} lang={locale()}
+                          aria-describedby={field.hintKey || field.input === "date" ? id + "-" + field.name + "-help" : undefined}
                           required={field.required}
                           value={active()?.value[field.name] ?? ""}
                           disabled={!props.admitted || busy()}
@@ -241,13 +249,24 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
                       </Show>
                     }>
                       <select id={id + "-" + field.name}
+                        aria-describedby={field.hintKey ? id + "-" + field.name + "-help" : undefined}
                         value={active()?.value[field.name] ?? ""}
                         disabled={!props.admitted || busy()}
                         onChange={(event) => update(field.name, event.currentTarget.value)}>
+                        <Show when={active()?.value[field.name] && !field.options?.some((option) => option.value === active()?.value[field.name])}>
+                          <option value={active()?.value[field.name]} disabled>{
+                            (() => { const raw = active()?.value[field.name] ?? ""; const sourceLabel = field.sourceLabels?.[raw]; return sourceLabel ? t(sourceLabel) : raw })()
+                          }</option>
+                        </Show>
                         <For each={field.options}>
                           {(option) => <option value={option.value}>{option.label ?? (option.labelKey ? t(option.labelKey) : option.value)}</option>}
                         </For>
                       </select>
+                    </Show>
+                    <Show when={field.hintKey || field.input === "date"}>
+                      <small id={id + "-" + field.name + "-help"} class="sf-people-field-help">{
+                        field.hintKey ? t(field.hintKey) : dateText(active()?.value[field.name] ?? "")
+                      }</small>
                     </Show>
                   </div>
                 )}

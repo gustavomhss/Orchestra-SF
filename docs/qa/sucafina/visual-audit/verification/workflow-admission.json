@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "Independent narrow review of workflow admission evidence and conditional positive/negative assertions",
+  "source": {
+    "root": "11673d826dc6f6371f8d9b81a6ac3cd7a0e9a274",
+    "change": "c482d8521a77d11624c7dda04f1c94d32d85d9ab",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/commit/c482d8521a77d11624c7dda04f1c94d32d85d9ab"
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/workflow-polish-admission.ts",
+      "blob_sha": "7147add9d287bb1e38a5ed2501f931c51e7d51cb",
+      "read": "Entire helper"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+      "blob_sha": "ef9658c9de6d170c6389d66127920a3eb412a48b",
+      "read": "Admission wrapper and all positive/negative admission branches; unrelated agenda body is outside this narrow review"
+    }
+  ],
+  "verdict": "No masking fallback found in the reviewed admission logic. Positive rendering failures remain test failures when original prerequisite evidence is ready.",
+  "checks": [
+    {
+      "topic": "Original evidence",
+      "result": "GET to owner.publicOrigin+mount/api/ui/context with exact owner query, maxRetries0, HTTP200, SfContextResult schema decoding, statusok and matching installation/project/host stamp are mandatory. No fulfilled synthetic response or grant injection."
+    },
+    {
+      "topic": "Missing catalog",
+      "result": "Every requirement must match at least one original catalog resource; a missing catalog entry fails instead of becoming an accepted negative."
+    },
+    {
+      "topic": "Host refusal",
+      "result": "Negative helper asserts proof.ready false and at least one requirement not ready; it then requires discovered/provider ready, view denied, exact native refusal text, zero leaf surfaces/page frames/busy markers and exact target URL in every captured variant."
+    },
+    {
+      "topic": "Positive branch",
+      "result": "admitted() returns true immediately for ready proof and has no selector-failure catch/fallback. The caller must still open the original leaf and meet the positive field/content assertions; a missing leaf/input does not convert into an accepted refusal."
+    },
+    {
+      "topic": "UI42 and UI44",
+      "result": "Both first require controls.read operation ready+operational, then test the product's stricter aggregate resourceState ready. When admitted, exact scenario/candidate counts or authorized-case selection/form assertions must pass. Otherwise exact denied leaf state and absence of inputs are required; evidence explicitly disclaims rendered inputs or evaluation."
+    },
+    {
+      "topic": "UI43",
+      "result": "Deliberate nonexistent result is a negative control even when route operations are ready. The broad missing/unavailable/invalid/denied leaf state is explicitly scoped as absent result or stricter resource refusal; it is not positive portfolio-result qualification."
+    },
+    {
+      "topic": "Other positive flows",
+      "result": "UI51/52/53 require exact seeded source/target/comment/fingerprint or review content; UI61/63 require actual producer response and condition counts; UI62/64/65/66/70 retain their named leaf/field/state assertions. Observed unavailable/empty inventories are not relabeled successful execution."
+    }
+  ],
+  "limits": [
+    "Source review only; no CI or local product execution was performed.",
+    "This verifies how evidence selects assertions, not which prerequisite branch the next run will take.",
+    "Earlier Files6 image approval does not imply live interaction or additional unobserved states.",
+    "Readiness of a route operation does not itself claim downstream evaluation or execution. UI43 and UI70 retain explicitly limited absent-result/inventory-state coverage.",
+    "No product authority, guards, source/ref, payload or CAS were changed by this review."
+  ]
+}

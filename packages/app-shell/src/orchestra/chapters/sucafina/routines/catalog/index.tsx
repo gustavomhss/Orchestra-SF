@@ -15,6 +15,7 @@ import {
 } from "./ui"
 import { StatusText } from "../../reviews/labels"
 import "./catalog.css"
+import "../../reviews/workflows.css"
 
 type ChoicesBody = (typeof SfAnalyses.operations["intelligence.analysis.choices"]["output"])["Type"]
 type CaseChoice = Extract<ChoicesBody, { status: "ok" }>["value"]["cases"][number]
@@ -372,7 +373,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
         busy: view.casesState === "loading", onInvoke: () => { void owner.reload() },
       }]}
     >
-      <section class="sf-n29-routines" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
+      <section data-sf-wave="polish" class="sf-n29-routines sf-workflow" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
         <Show when={view.phase === "outcome-unknown"}>
           <p role="alert" class="mx-error">{t("sf.u27.unknown")}</p>
         </Show>
@@ -460,7 +461,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
               <p>{t("sf.u27.reviewSummary")}</p>
               <Show when={view.requestError}><p role="status">{t(n29StateKey(view.admissionState))}</p></Show>
               <Show when={view.phase === "reviewing"}>
-                <div class="sf-n29-review" role="group" aria-label={t("sf.u27.review")}>
+                <div class="sf-n29-review sf-section" role="group" aria-label={t("sf.u27.review")}>
                   <h3>{t("sf.u27.review")}</h3>
                   <p>{t("sf.u27.case")}: <bdi>{currentCase()?.id}</bdi></p>
                   <p>{t("sf.u27.recipe")}: <bdi>{recipe()?.documentId}</bdi></p>
@@ -477,7 +478,7 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
                 </div>
               </Show>
               <Show when={currentAdmissionRef()}>
-                <div class="sf-n29-result">
+                <div class="sf-n29-result sf-section">
                   <p>{t("sf.u27.admission")}: <bdi>{currentAdmissionRef()}</bdi></p>
                   <button type="button" class="mx-btn" disabled={!currentCase() || !permitted("routines.read-admission")}
                     onClick={() => { void readAdmission() }}>{t("sf.u27.refresh")}</button>

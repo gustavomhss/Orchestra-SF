@@ -1,6 +1,7 @@
 import { createEffect, createMemo, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
+import { procurementStatusLabel } from "../presentation"
 import { createSfProcurementClient } from "@orchestra/client/sucafina/procurement"
 import { SfProcurement } from "@orchestra/schema/sucafina/procurement"
 import { useSfContext } from "../../context"
@@ -185,7 +186,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                     onChange={(event) => setView("statusFilter", event.currentTarget.value)}
                   >
                     <option value="">{t(key("sf.n21.all"))}</option>
-                    <For each={statuses()}>{(status) => <option value={status}>{status}</option>}</For>
+                    <For each={statuses()}>{(status) => <option value={status}>{procurementStatusLabel(status, language.t)}</option>}</For>
                   </select>
                   <Show when={view.statusFilter}>
                     <button class="mx-btn" type="button" onClick={() => setView("statusFilter", "")}>
@@ -222,7 +223,7 @@ export function SfProcurementOverviewView(props: SfSurfaceProps<"CAP24">): JSX.E
                           {(record) => (
                             <tr data-sf-request={requestId(record) ?? undefined}>
                               <th scope="row"><bdi>{requestId(record) ?? t(sfCommonKey("sf.common.unknown"))}</bdi></th>
-                              <td><bdi>{record.status}</bdi></td>
+                              <td><bdi title={record.status}>{procurementStatusLabel(record.status, language.t)}</bdi></td>
                               <td>{money(record.value)}</td>
                             </tr>
                           )}

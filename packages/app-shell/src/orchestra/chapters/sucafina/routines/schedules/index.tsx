@@ -13,6 +13,7 @@ import {
 } from "../catalog/ui"
 import { StatusText } from "../../reviews/labels"
 import "./schedules.css"
+import "../../reviews/workflows.css"
 
 type ListBody = (typeof SfRoutines.operations["schedules.list"]["output"])["Type"]
 type Schedule = Extract<ListBody, { status: "ok" }>["value"][number]
@@ -310,7 +311,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
         busy: view.state === "loading", onInvoke: () => { setView("refresh", (value) => value + 1) },
       }]}
     >
-      <section class="sf-n29-schedules" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
+      <section data-sf-wave="polish" class="sf-n29-schedules sf-workflow" data-sf-surface={props.surfaceId} data-state={state()} data-phase={view.phase}>
         <Show when={view.phase === "outcome-unknown"}>
           <p class="mx-error" role="alert">{t("sf.u34.unknown")}</p>
           <button type="button" class="mx-btn" onClick={() => {
@@ -353,7 +354,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
             </SfStatePanel>
           </div>
 
-          <div class="sf-n29-schedule-detail">
+          <div class="sf-n29-schedule-detail sf-section">
             <Show when={view.mode === "create" || view.mode === "update"}>
               <section class="mx-card" aria-label={t(view.mode === "create" ? "sf.u34.create" : "sf.u34.edit")}>
                 <h2>{t(view.mode === "create" ? "sf.u34.create" : "sf.u34.edit")}</h2>
@@ -361,7 +362,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                   <p role="status">{t("sf.u34.noDetail")}</p>
                 </Show>
                 <Show when={view.phase === "reviewing"} fallback={
-                  <div class="sf-n29-fields">
+                  <div class="sf-n29-fields sf-fields">
                     <For each={[
                       ["conditionRef", "sf.u34.condition"],
                       ["recipeRef", "sf.u34.recipe"],
@@ -384,7 +385,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
                     </button>
                   </div>
                 }>
-                  <div class="sf-n29-review" role="group" aria-label={t("sf.u34.submitReview")}>
+                  <div class="sf-n29-review sf-section" role="group" aria-label={t("sf.u34.submitReview")}>
                     <p>{t("sf.u34.reviewWarning")}</p>
                     <Show when={view.mode === "create"}>
                       <dl>

@@ -183,6 +183,7 @@ test("v2: OAuth code, automatic, prompted and unsafe-link flows", async ({ page 
   mock.auto = "failed"
   expect((await cancelled).status()).toBe(204)
   await expect(dialog.getByText("Authorization failed: Denied by user", { exact: true })).toBeVisible()
+  await expectCompactProviderError(page, "Authorization failed: Denied by user")
   mock.auto = "complete"
   await dialog.getByRole("button", { name: "Try again" }).click()
   await expect(dialog).toHaveCount(0)
@@ -207,7 +208,26 @@ test("v2: OAuth code, automatic, prompted and unsafe-link flows", async ({ page 
     }),
   ).toBeVisible()
   await expect(dialog.locator("a")).toHaveCount(0)
+  await expectCompactProviderError(page, "Authorization failed: The server returned an authorization link that is not a web address.")
 })
+
+for (const scheme of ["dark", "light"] as const) {
+  test("v2: a connection error fits the native dialog at 390px in " + scheme, async ({ page }) => {
+    const mock: Mock = { calls: [] }
+    await setup(page, mock, scheme)
+    await page.setViewportSize({ width: 390, height: 844 })
+    await openProviders(page)
+    const card = page.locator('[data-chapter="providers"] .mx-card[data-provider-id="openai"]')
+    await card.getByRole("button", { name: "Configure", exact: true }).click()
+    const dialog = page.locator('[data-component="dialog-v2"]')
+    await dialog.getByRole("button", { name: "Broken link", exact: true }).click()
+    await expectCompactProviderError(page, "Authorization failed: The server returned an authorization link that is not a web address.")
+    await expect(dialog.locator("a")).toHaveCount(0)
+    await page.screenshot({ path: test.info().outputPath("provider-error-" + scheme + "-390.png") })
+    await page.keyboard.press("Escape")
+    await expect(dialog).toHaveCount(0)
+  })
+}
 
 test("v2: Claude mode engine write and sign-in states", async ({ page }) => {
   const mock: Mock = { calls: [], claude: { signedIn: false } }
@@ -274,6 +294,40 @@ function statusPolls(mock: Mock) {
 
 function patches(mock: Mock) {
   return mock.calls.filter((call) => call.method === "PATCH" && call.path === "/api/config").map((call) => call.body)
+}
+
+async function expectCompactProviderError(page: Page, message: string) {
+  const dialog = page.locator('[data-component="dialog-v2"]')
+  const error = dialog.locator("[data-provider-connection-error]")
+  const alert = error.getByRole("alert")
+  const retry = error.getByRole("button", { name: "Try again", exact: true })
+  await expect(alert).toHaveText(message)
+  await expect(retry).toBeEnabled()
+  await expect(retry).toBeFocused()
+  await expect(alert).toBeInViewport({ ratio: 1 })
+  await expect(retry).toBeInViewport({ ratio: 1 })
+  const [frame, text, action] = await Promise.all([
+    dialog.locator('[data-slot="dialog-container"]').boundingBox(),
+    alert.boundingBox(),
+    retry.boundingBox(),
+  ])
+  expect(frame).not.toBeNull()
+  expect(text).not.toBeNull()
+  expect(action).not.toBeNull()
+  const viewport = page.viewportSize()!
+  expect(frame!.x).toBeGreaterThanOrEqual(0)
+  expect(frame!.y).toBeGreaterThanOrEqual(0)
+  expect(frame!.x + frame!.width).toBeLessThanOrEqual(viewport.width)
+  expect(frame!.y + frame!.height).toBeLessThanOrEqual(viewport.height)
+  expect(text!.x - frame!.x, "Error text keeps the native dialog gutter").toBeGreaterThanOrEqual(16)
+  expect(frame!.x + frame!.width - text!.x - text!.width).toBeGreaterThanOrEqual(16)
+  expect(action!.x - frame!.x, "Retry aligns with the content gutter").toBeGreaterThanOrEqual(16)
+  expect(frame!.y + frame!.height - action!.y - action!.height,
+    "A short error does not retain the catalog's empty fixed-height panel").toBeLessThanOrEqual(32)
+  await test.info().attach("provider-error-layout", {
+    contentType: "application/json",
+    body: JSON.stringify({ viewport, frame, text, action }, null, 2),
+  })
 }
 
 async function expectSecretGone(page: Page) {

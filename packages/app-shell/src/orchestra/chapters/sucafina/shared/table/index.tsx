@@ -1,4 +1,4 @@
-import { createEffect, createUniqueId, For, on, Show, type JSX } from "solid-js"
+import { createEffect, createMemo, createUniqueId, For, on, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { SfStatePanel } from "../states"
 import { sfS01Key, sfS01StateKey, useSfS01Copy } from "./copy"
@@ -98,6 +98,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
       : props.page.kind === "offset"
         && (props.page.total === null ? props.rows.length === props.page.size : (props.page.index + 1) * props.page.size < props.page.total)
   const actions = (row: Readonly<Row>): readonly SfRowAction[] => props.rowActions(row)
+  const hasActions = createMemo(() => props.rows.some((row) => actions(row).length > 0))
 
   // A refetch may replace row objects without changing their stable producer identity.
   // Restore only an already-focused control; neither mounting nor receiving data initiates navigation.
@@ -135,6 +136,9 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
       <Show when={visible()}>
         <div
           class="sf-s01-table-scroll"
+          role="region"
+          aria-label={copy.t(props.captionKey)}
+          tabIndex={0}
           ref={viewport}
           onScroll={(event) => {
             setView("scrollTop", event.currentTarget.scrollTop)
@@ -149,7 +153,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
               <For each={props.columns}>
                 {(column) => <col style={columnWidth(column.widthPolicy, flexSum())} />}
               </For>
-              <col />
+              <Show when={hasActions()}><col /></Show>
             </colgroup>
             <thead>
               <tr>
@@ -175,9 +179,11 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                     </th>
                   )}
                 </For>
-                <th scope="col" class="sf-s01-actions-head">
-                  {copy.t(sfS01Key("sf.s01.tableActions"))}
-                </th>
+                <Show when={hasActions()}>
+                  <th scope="col" class="sf-s01-actions-head">
+                    {copy.t(sfS01Key("sf.s01.tableActions"))}
+                  </th>
+                </Show>
               </tr>
             </thead>
             <tbody>
@@ -219,33 +225,35 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                           </td>
                         )}
                       </For>
-                      <td class="sf-s01-actions-cell">
-                        <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
-                          <For each={actions(row)}>
-                            {(action) => (
-                              <>
-                                <button
-                                  type="button"
-                                  class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
-                                  data-sf-action={action.id}
-                                  disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
-                                  aria-busy={action.busy}
-                                  title={action.reason ? copy.message(action.reason) : undefined}
-                                  onClick={() => {
-                                    if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
-                                      props.onRowAction({ recordRef: recordRef(), actionId: action.id })
-                                  }}
-                                >
-                                  {copy.t(action.labelKey)}
-                                </button>
-                                <Show when={action.reason}>
-                                  {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
-                                </Show>
-                              </>
-                            )}
-                          </For>
-                        </div>
-                      </td>
+                      <Show when={hasActions()}>
+                        <td class="sf-s01-actions-cell">
+                          <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
+                            <For each={actions(row)}>
+                              {(action) => (
+                                <>
+                                  <button
+                                    type="button"
+                                    class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
+                                    data-sf-action={action.id}
+                                    disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
+                                    aria-busy={action.busy}
+                                    title={action.reason ? copy.message(action.reason) : undefined}
+                                    onClick={() => {
+                                      if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
+                                        props.onRowAction({ recordRef: recordRef(), actionId: action.id })
+                                    }}
+                                  >
+                                    {copy.t(action.labelKey)}
+                                  </button>
+                                  <Show when={action.reason}>
+                                    {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
+                                  </Show>
+                                </>
+                              )}
+                            </For>
+                          </div>
+                        </td>
+                      </Show>
                     </tr>
                   )
                 }}

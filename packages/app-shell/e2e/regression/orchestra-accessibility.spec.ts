@@ -51,7 +51,15 @@ for (const scheme of ["dark", "light"] as const) {
     await expect(page.locator(home)).toHaveText(/\w/)
     expect(await auditAccessibility(page, [sidebar])).toEqual([])
     await expectTabOrder(page, [sidebar], { trap: false })
-    const results = await measureContrast(page, [...sidebarText, { name: "Home text", selector: home }])
+    const targets: ContrastTarget[] = [...sidebarText, { name: "Home text", selector: home }]
+    const navWip = nav.locator('[data-slot="orchestra-nav-wip"]')
+    // The production channel intentionally has no developer-only WIP marks.
+    if (process.env.ORCHESTRA_CHANNEL === "prod") await expect(navWip).toHaveCount(0)
+    else {
+      await expect(navWip.first()).toBeVisible()
+      targets.push({ name: "WIP mark", selector: `${sidebar} [data-slot="orchestra-nav-wip"]` })
+    }
+    const results = await measureContrast(page, targets)
     await nav.getByRole("button", { name: "MCP", exact: true }).focus()
     results.push(...(await measureContrast(page, [ring("nav focus ring", `${sidebar} .orchestra-nav-button`)])))
     await nav.getByRole("button", { name: "Home", exact: true }).focus()
@@ -109,8 +117,12 @@ for (const scheme of ["dark", "light"] as const) {
     await expect(page.getByRole("heading", { name: ".env", level: 1 })).toBeVisible()
     results.push(...(await measureContrast(page, [{ name: "chapter text", selector: chapter }])))
     await nav.getByRole("button", { name: "MCP", exact: true }).click()
-    await expect(page.locator('[data-slot="orchestra-wip"]')).toBeVisible()
-    results.push(...(await measureContrast(page, [{ name: "page WIP mark", selector: '[data-slot="orchestra-wip"]' }])))
+    const pageWip = page.locator('[data-slot="orchestra-wip"]')
+    if (process.env.ORCHESTRA_CHANNEL === "prod") await expect(pageWip).toHaveCount(0)
+    else {
+      await expect(pageWip).toBeVisible()
+      results.push(...(await measureContrast(page, [{ name: "page WIP mark", selector: '[data-slot="orchestra-wip"]' }])))
+    }
     await report(results, `sidebar-${scheme}`)
   })
 }
@@ -578,7 +590,6 @@ const sidebarText: ContrastTarget[] = [
     kind: "graphic",
   },
   { name: "search key", selector: `${sidebar} .orchestra-nav-button kbd` },
-  { name: "WIP mark", selector: `${sidebar} [data-slot="orchestra-nav-wip"]` },
   { name: "profile name", selector: `${sidebar} .orchestra-profile-text strong` },
   { name: "profile meta", selector: `${sidebar} .orchestra-profile-text small` },
   { name: "sidebar footer", selector: `${sidebar} .orchestra-sidebar-footer` },

@@ -629,7 +629,7 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                           label: message("sf.u30.delete"),
                           scope: { kind: "data", text: spec.name(row()) } }}
                         base={originalSnapshot(row())} current={originalSnapshot(row())}
-                        proposed={{ kind: "not-provided", reason: message("sf.common.removed") }}
+                        proposed={{ kind: "not-provided", reason: message("sf.u30.deleteProposed") }}
                         effects={[{ id: "domain-delete", domain: "dashboard", state: "proposed",
                           title: { kind: "data", text: spec.name(row()) }, details: [] }]}
                         coverage={complete()}

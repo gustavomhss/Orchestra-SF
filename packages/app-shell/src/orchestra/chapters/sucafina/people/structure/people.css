@@ -218,8 +218,8 @@
 .sf-people-workspace .sf-people-workbook-stage > p { color: var(--mx-dim); }
 .sf-people-workspace .sf-s03-head { display: none; }
 .sf-people-workspace .sf-s03-snapshots { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--sf-people-gap); }
-.sf-people-workspace .sf-s03-snapshot { min-inline-size: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; padding: 0; }
-.sf-people-workspace .sf-s03-snapshot:only-child { grid-column: 1 / -1; }
+.sf-people-workspace .sf-s03-snapshots > .sf-s03-snapshot { min-inline-size: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; padding: 0; }
+.sf-people-workspace .sf-s03-snapshots > .sf-s03-snapshot:only-child { grid-column: 1 / -1; }
 .sf-people-workspace .sf-s03-field-list { display: grid; gap: var(--sf-people-small-gap); }
 .sf-people-workspace .sf-s03-field { min-inline-size: 0; border-block-end: 1px solid var(--mx-line); padding-block: var(--sf-people-small-gap); }
 .sf-people-workspace .sf-s03-field dt { font-size: var(--orchestra-font-size-sm); color: var(--mx-dim); }
@@ -250,3 +250,7 @@
 @media (prefers-reduced-motion:reduce) {
   .sf-people-workspace * { scroll-behavior: auto; transition: none; animation: none; }
 }
+
+.sf-people-workspace .sf-people-field-help { color: var(--mx-dim); font-size: var(--orchestra-font-size-xs); line-height: 1.5; }
+.sf-people-workspace .sf-people-table-region { scrollbar-width: thin; scrollbar-color: var(--mx-line) transparent; padding-block-end: 8px; }
+.sf-people-workspace[data-sf-surface="CAP06"] .sf-people-table :is(th, td):first-child { position: sticky; inset-inline-start: 0; z-index: 1; background: var(--orchestra-surface); }

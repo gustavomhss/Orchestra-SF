@@ -1,9 +1,10 @@
+import type { WorkflowCapture } from "../design-support/workflow-polish-capture"
 import { createHash, randomUUID } from "node:crypto"
 import { createRequire } from "node:module"
 import { expect } from "@playwright/test"
 import { Schema } from "effect"
 import { SfPlanner } from "@orchestra/schema/sucafina/planner"
-import type { APIResponse, Locator, Page, Request, Route, TestInfo } from "@playwright/test"
+import type { APIResponse, Locator, Page, Request, Response, Route, TestInfo } from "@playwright/test"
 import type { ImportManifest } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail, ImportReceiptSummary } from "../../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { chapterURL, forwardOnce, login, modeURL, observation } from "./runtime.ts"
@@ -119,13 +120,22 @@ async function tokens(page: Page, account: Account, year: string, version: strin
     expect(Number.isSafeInteger(revision)).toBe(true)
     result[id] = revision
     if (!observeControls) continue
-    const row = surface.locator(`tbody tr[data-sf-row="${id}"]`)
+    await surface.getByRole("tab", { name: "Lines", exact: true }).click()
+    const lines = surface.getByRole("tabpanel", { name: "Lines", exact: true })
+    await expect(lines).toBeVisible()
+    const row = lines.locator(`tbody tr[data-sf-row="${id}"]`)
     await expect(row).toHaveCount(1)
     await row.getByRole("button", { name: "Manage", exact: true }).click()
-    const detail = page.getByRole("region", { name: "Manage record", exact: true })
-    const line = detail.locator("p").filter({ has: page.getByText(id, { exact: true }) })
+    const detail = surface.getByRole("region", { name: "Manage", exact: true })
+    await expect(detail).toBeVisible()
+    const provenance = detail.locator("details.sf-u07-source")
+    await provenance.locator("summary").click()
+    const line = provenance.locator("p").filter({ has: page.getByText(id, { exact: true }) })
     await expect(line).toHaveCount(1)
+    await expect(line).toBeVisible()
     await expect(line).toContainText(new RegExp(`Source revision:\\s*${revision}(?![0-9])`))
+    await detail.getByRole("button", { name: "Back to plan", exact: true }).click()
+    await expect(lines).toBeVisible()
   }
   return result
 }
@@ -135,8 +145,8 @@ async function confirmVersion(page: Page, account: Account, opener: Locator, exp
   await opener.click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
-  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
-  const confirm = review.getByRole("button", { name: "Confirm", exact: true })
+  await expect(review.getByRole("heading", { name: "Save version", exact: true })).toBeVisible()
+  const confirm = review.getByRole("button", { name: "Save version", exact: true })
   await expect(confirm).toBeEnabled()
   const endpoint = account.baseURL + "/planner?page=Versions"
   const match = (url: URL) => url.href === endpoint
@@ -216,7 +226,7 @@ async function prepareImport(page: Page, account: Account, generate: Locator, so
 }
 
 /** PR34 15df31a: actual XLSX admission, C02 preview, one Apply, delivery loss and read-only reconciliation. */
-export async function importJourney(page: Page, info: TestInfo) {
+export async function importJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
   const account = await login(page, "first", "journey")
   const name = "Operations import " + randomUUID()
   const renewal = randomUUID(), fixed = randomUUID()
@@ -226,23 +236,63 @@ export async function importJourney(page: Page, info: TestInfo) {
   }
   expect((await page.goto("/orchestra/sf-planner/versions/new"))?.status()).toBe(200)
   const surface = page.locator('[data-sf-surface="CAP23"]')
-  await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
-  // CAP23 acknowledges the save; read the single record from this isolated installation.
+  const reads: { event: string; method: string; path: string; status?: number; failure?: string }[] = []
+  const versionRead = (request: Request) => {
+    const url = new URL(request.url())
+    const mount = new URL(account.baseURL).pathname
+    return request.method() === "GET" && url.origin === account.origin && (
+      url.pathname === mount + "/api/ui/pages/CAP23" ||
+      url.pathname === mount + "/api/ui/context" ||
+      url.pathname === mount + "/planner" && url.searchParams.get("page") === "Versions"
+    )
+  }
+  const requested = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "request", method: request.method(), path: new URL(request.url()).pathname })
+  }
+  const responded = (response: Response) => {
+    if (versionRead(response.request())) reads.push({ event: "response", method: response.request().method(),
+      path: new URL(response.url()).pathname, status: response.status() })
+  }
+  const failed = (request: Request) => {
+    if (versionRead(request)) reads.push({ event: "failed", method: request.method(),
+      path: new URL(request.url()).pathname, failure: request.failure()?.errorText })
+  }
+  page.on("request", requested)
+  page.on("response", responded)
+  page.on("requestfailed", failed)
   const createdRow = surface.locator("tr[data-sf-row]")
-  await expect(createdRow).toHaveCount(1)
+  try {
+    await confirmVersion(page, account, surface.getByRole("button", { name: "Create first version", exact: true }), { version: 0, values: {} })
+    // The original UI must finish its authorized readback; no reload, timeout extension or substitute read can pass this.
+    await expect(createdRow).toHaveCount(1)
+  } finally {
+    page.off("request", requested)
+    page.off("response", responded)
+    page.off("requestfailed", failed)
+    await observation(info, "operations-first-version-readback", {
+      path: new URL(page.url()).pathname, year: new URL(page.url()).searchParams.get("year"), reads,
+      states: await page.locator("[data-sf-state]").evaluateAll((panels) => panels.map((panel) => ({
+        state: panel.getAttribute("data-sf-state"), text: panel.textContent?.trim().slice(0, 240),
+      }))),
+    })
+  }
   await expect(createdRow).toHaveAttribute("data-sf-row", /\S+/)
   const version = (await createdRow.getAttribute("data-sf-row"))!
   await createdRow.getByRole("button", { name: "Open record", exact: true }).click()
   const versionDetail = page.locator("[data-sf-record-detail]")
   await expect(versionDetail).toHaveCount(1)
-  const identity = versionDetail.locator("p.sf-s01-secondary bdi")
+  const reference = versionDetail.locator("details.sf-s01-secondary")
+  await expect(reference.locator("summary")).toHaveText("Record reference")
+  await reference.locator("summary").click()
+  const identity = reference.locator("bdi")
+  await expect(identity).toBeVisible()
   await expect(identity).toHaveText(version)
   const year = versionDetail.locator("#sf-u46-year")
   await expect(year).toHaveValue(/^\d{4}$/)
   const nameField = versionDetail.locator("#sf-u46-name")
   await expect(nameField).toBeEnabled()
   await nameField.fill(name)
-  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save", exact: true }), { id: version, version: 1, values: { name } })
+  await confirmVersion(page, account, versionDetail.getByRole("button", { name: "Save version", exact: true }), { id: version, version: 1, values: { name } })
   await expect(versionDetail.locator("#sf-u46-name")).toHaveValue(name)
   await expect(versionDetail.getByRole("heading", { name, exact: true })).toBeVisible()
   const fiscalYear = await year.inputValue()
@@ -300,6 +350,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(root.getByLabel("Remove records missing from supplied sheets", { exact: true })).not.toBeChecked()
   const generate = root.getByRole("button", { name: "Generate preview", exact: true })
   await expect(generate, "Preview needs the installed import admission and real scanner").toBeEnabled()
+  await capture?.(page, info, { surface: "UI55", state: "source-file-selected", evidence: "Original target selection and real XLSX bytes; Generate preview is enabled." })
   const { preview, detail, referenceURL } = await prepareImport(page, account, generate, sourceDigest, info)
   const isReference = (request: Request) => request.method() === "GET" && request.url() === referenceURL
   const readReference = async (tab: Page, action: () => Promise<unknown>) =>
@@ -324,12 +375,27 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
   await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
   await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator("summary")).toHaveCount(6)
+  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator(":scope > details > summary")).toHaveCount(6)
   const [afterPreview, previewTokens] = await Promise.all([
     exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
   ])
   expect(afterPreview).toEqual(before)
   expect(previewTokens).toEqual(beforeTokens)
+  await capture?.(page, info, { surface: "UI55", state: "original-preview", evidence: "Original scanned import preview; independent export and version tokens prove no domain changes.", attributes: { "data-sf-phase": "reviewing" }, focus: '.sf-files-section[aria-label="Item and field changes"]' })
+  if (capture) {
+    const previewPage = await page.context().newPage()
+    try {
+      const previewURL = chapterURL(account, "/orchestra/sf-imports/r_" + Buffer.from(preview.id).toString("base64url") + "/preview")
+      expect((await previewPage.goto(previewURL.href))?.status()).toBe(200)
+      const previewRoot = previewPage.locator('[data-sf-surface="UI56"]')
+      await expect(previewRoot).toBeVisible()
+      const reread = await readReference(previewPage, () => previewRoot.locator(".sf-files-fields")
+        .getByRole("button", { name: "Refresh receipt", exact: true }).click())
+      expect(reread).toEqual(detail)
+      await expect(previewRoot.getByRole("region", { name: "Item and field changes", exact: true })).toBeVisible()
+      await capture(previewPage, info, { surface: "UI56", state: "original-manifest-preview", evidence: "Independent native preview route re-read the exact original manifest; no Apply was invoked.", focus: '.sf-files-section[aria-label="Item and field changes"]' })
+    } finally { await previewPage.close() }
+  }
   const applies: Request[] = []
   const applyURL = modeURL(account, "planner", "import-apply").href
   const applyPayload = { manifestId: preview.id, version: preview.version }
@@ -379,6 +445,7 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(refreshReceipt).toBeEnabled()
   await expect(root.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
   expect(applies).toHaveLength(1)
+  await capture?.(page, info, { surface: "UI55", state: "lost-delivery-unavailable", evidence: "The original Apply committed once; only its delivery and one reconciliation read were dropped. Apply is absent.", attributes: { "data-sf-phase": "unknown", "data-sf-read-state": "unavailable" } })
   const recovered = await readReference(page, () => refreshReceipt.click())
   expect(recovered.manifest).toEqual(committed)
   expect(recovered.manifest.receipts).toHaveLength(1)
@@ -438,6 +505,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result).toHaveAttribute("data-sf-phase", "receipt")
     await expect(result.locator('[data-sf-receipt="producer"]')).toContainText(receipt.id + " · " + receipt.at + " · applied · " + receipt.version)
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    await capture?.(resultPage, info, { surface: "UI57", state: "original-confirmed-receipt", evidence: "Independent native receipt route matches the committed producer receipt and one original Apply.", attributes: { "data-sf-phase": "receipt" }, focus: '[data-sf-receipt="producer"]' })
   } finally {
     await resultPage.close()
   }
@@ -447,9 +515,15 @@ export async function importJourney(page: Page, info: TestInfo) {
   ])
   expect(afterRecovery).toEqual(after)
   expect(recoveryTokens).toEqual(afterTokens)
+  // The reader remains on native CAP18; its access actions live in the context menu.
+  await reader.getByRole("button", { name: "Context and access", exact: true }).click()
+  const access = reader.getByRole("menu", { name: "Context and access", exact: true })
+  await expect(access).toBeVisible()
+  const signOut = access.getByRole("menuitem", { name: "Sign out", exact: true })
+  await expect(signOut).toBeEnabled()
   // The Files transport preflights context before issuing a receipt read after cross-tab logout.
   const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
-  await reader.getByRole("button", { name: "Sign out", exact: true }).click()
+  await signOut.click()
   expect((await signedOut).status()).toBe(204)
   const { response: revoked } = await forwardedRead(page, context.url(), () => refreshReceipt.click())
   expect(revoked.status()).toBe(401)
@@ -480,6 +554,7 @@ export async function importJourney(page: Page, info: TestInfo) {
     await expect(result.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
     await expect(result.getByRole("region", { name: "Item and field changes", exact: true })).toHaveCount(0)
     await expect(result.getByRole("button", { name: "Apply reviewed import", exact: true })).toHaveCount(0)
+    await capture?.(viewerPage, info, { surface: "UI57", state: "real-owner-denied", evidence: "A separately authenticated read-only operator received the original HTTP 403 denied for the owner's exact manifest. No response or role was fabricated.", attributes: { "data-sf-read-state": "denied" } })
   } finally {
     await viewerPage.close()
   }

@@ -242,7 +242,7 @@ test("Imports localizes source/history labels without changing selection, wire v
   try {
     expect(history.host.textContent).toContain("Referência da prévia de importação")
     setLocale("en")
-    expect(history.host.textContent).toContain("importPreviewRef")
+    expect(history.host.textContent).toContain("Import preview reference")
     expect(calls).toHaveLength(0)
   } finally { history.close() }
 })
@@ -253,14 +253,21 @@ test("Imports displays actual diff states distinctly from null, zero, false and 
     click(view.host, "sf.u23.reconcile")
     await until(() => view.host.querySelectorAll(".sf-files-change").length === detail.changes.length)
     const texts = () => Object.fromEntries([...view.host.querySelectorAll(".sf-files-change")].map((entry) => [
-      entry.querySelector("h3")?.textContent, entry.querySelector("p")?.textContent,
+      entry.querySelector(".sf-technical-details code")?.textContent,
+      [...entry.querySelectorAll(".sf-files-diff > div > p")].map((value) => value.textContent),
     ]))
-    expect(texts()).toEqual({ "/added": "ausente → nulo", "/flag": "true → false", "/missing": "indefinido → nulo",
-      "/removed": "0 → ausente", "/text": '"original" → ""', "/zero": "nulo → 0" })
+    expect(texts()).toEqual({ "/added": ["ausente", "nulo"], "/flag": ["true", "false"], "/missing": ["indefinido", "nulo"],
+      "/removed": ["0", "ausente"], "/text": ['"original"', '""'], "/zero": ["nulo", "0"] })
+    for (const entry of view.host.querySelectorAll(".sf-files-change"))
+      expect([...entry.querySelectorAll(".sf-files-diff h4")].map((heading) => heading.textContent))
+        .toEqual(["Antes da importação", "Valor proposto"])
     const unchanged = JSON.stringify(reference), count = calls.length
     setLocale("en")
-    expect(texts()).toEqual({ "/added": "absent → null", "/flag": "true → false", "/missing": "undefined → null",
-      "/removed": "0 → absent", "/text": '"original" → ""', "/zero": "null → 0" })
+    expect(texts()).toEqual({ "/added": ["absent", "null"], "/flag": ["true", "false"], "/missing": ["undefined", "null"],
+      "/removed": ["0", "absent"], "/text": ['"original"', '""'], "/zero": ["null", "0"] })
+    for (const entry of view.host.querySelectorAll(".sf-files-change"))
+      expect([...entry.querySelectorAll(".sf-files-diff h4")].map((heading) => heading.textContent))
+        .toEqual(["Before import", "Proposed value"])
     expect(JSON.stringify(reference)).toBe(unchanged)
     expect(calls).toHaveLength(count)
     expect(calls.every((call) => call.operation === "files.import-reference")).toBe(true)

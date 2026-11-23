@@ -47,6 +47,8 @@ export function u18TransportState(error: SfTransportFailure): SfUiState {
 }
 
 export function u18ErrorKey(state: SfUiState): SfCopyKey {
+  if (state === "empty") return u18Key("sf.common.empty")
+  if (state === "filtered-empty") return u18Key("sf.common.filterEmpty")
   if (state === "denied" || state === "session-expired") return u18Key("sf.u18.error.denied")
   if (state === "not-found" || state === "invalid") return u18Key("sf.u18.error.invalid")
   if (state === "conflict" || state === "stale") return u18Key("sf.u18.error.conflict")

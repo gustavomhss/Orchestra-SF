@@ -1,0 +1,498 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "git_video_recuperacao",
+  "reviewedAt": "2026-11-23",
+  "scope": "Decisions6 final focused visual qualification: UI34, UI35, UI39 and UI41",
+  "verdict": "PASS within the exact captured states; no new material visual defect found.",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "productCommit": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+    "snapshot": "6950d8f5479d07fe34731c3c7ca02b46a20e501f",
+    "branch": "ci-run-linux-polishdecisions6",
+    "runId": 45095084001,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45095084001",
+    "testJobId": 137433008909,
+    "artifactId": 14783336895,
+    "archivePath": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/artifact.zip",
+    "archiveBytes": 49320455,
+    "archiveSha256": "5320bcb136a4fda77a9cc796d5161abe7dee7eed21fe498fb46ddf5b305742a8",
+    "bundle": "production",
+    "runtimeReport": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/test-ci-evidence/playwright-runtime.json",
+    "runtimeSummary": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/runtime-summary.json",
+    "sourceAttachments": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/source-attachments.json"
+  },
+  "runtime": {
+    "passed": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "retries": 0,
+    "errors": [],
+    "title": "wave four decisions: real sources, retained drafts, uncertainty and native review",
+    "file": "sucafina/design-wave-four-decisions.spec.ts",
+    "startTime": "2026-11-23T01:33:16.762Z",
+    "reportDurationMs": 849841.003,
+    "testDurationMs": 634672,
+    "countingNote": "Counted the executed playwright-runtime.json. The selection-only --list report is not a runtime pass/skip report."
+  },
+  "artifactInventory": {
+    "pngPaths": 129,
+    "uniquePngHashes": 43,
+    "namedOriginals": 42,
+    "automaticUniqueOriginals": 1
+  },
+  "method": {
+    "originalsOpenedIndividually": 22,
+    "uniqueOriginalHashesViewed": 22,
+    "contactSheetsReviewed": [],
+    "historicalHashesSubstitutedForViewing": 0,
+    "detail": "Every original listed below was opened individually using view_image at its original dimensions. An initial truncated multi-image output was excluded and its images reopened individually. No crop or generated reconstruction was used."
+  },
+  "coverage": {
+    "UI34": {
+      "count": 6,
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "states": [
+        "Summary EN dark/light desktop and PT dark desktop",
+        "Summary EN dark 390",
+        "Editor EN dark desktop",
+        "Review actions EN dark 390"
+      ]
+    },
+    "UI35": {
+      "count": 7,
+      "indices": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "states": [
+        "Alternatives EN dark/light desktop and PT dark desktop",
+        "Alternatives EN dark 390",
+        "Comparison and lower qualification EN dark 320",
+        "Empty choice EN dark desktop"
+      ]
+    },
+    "UI39": {
+      "count": 4,
+      "indices": [
+        30,
+        31,
+        32,
+        33
+      ],
+      "states": [
+        "Empty prepared changes EN dark/light desktop, PT dark desktop and EN dark 390"
+      ]
+    },
+    "UI41": {
+      "count": 5,
+      "indices": [
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "states": [
+        "Unavailable admitted model with mounted preparation controls EN dark/light desktop, PT dark desktop and EN dark 390",
+        "Edited objective/type with unavailable model EN dark desktop"
+      ]
+    },
+    "variantLimit": "This is the exact available variant inventory, not every theme/locale/width combination. Only UI35 has 320px images in this recorte.",
+    "outsideAssignedScope": [
+      "UI36",
+      "UI37",
+      "UI38",
+      "UI40",
+      "the automatic final image"
+    ]
+  },
+  "closedFindings": [
+    {
+      "id": "DECISIONS4-ENUM-COPY",
+      "previousSeverity": "P3",
+      "status": "Fixed and visually requalified in Decisions6",
+      "implementationCommit": "fe42c68df2401aa00b4f814443a3f5a2efaf2545",
+      "proofIndices": [
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13
+      ],
+      "observed": "UI34 renders Draft / Rascunho. UI35 renders Conditioned / Condicionada and Pending / Pendente. Known subtotal values 1200 USD and 2400 USD, periods and version remain visible. Original producer evidence/names are preserved.",
+      "contractLimit": "This presentation-only label change preserves raw enum values and fallback text for unknown values; the screenshots do not replace source/authority qualification."
+    },
+    {
+      "id": "DECISIONS4-UI39-MESSAGE",
+      "previousSeverity": "P2",
+      "status": "Fixed and visually requalified in Decisions6",
+      "mappingCommit": "fe47ab5dfebf943abaa9c9518a754b0fc17cd9b5",
+      "integratedProduct": "78c48fd5d20fb747cfd267a5f2cf3fd3794f9479",
+      "proofIndices": [
+        30,
+        31,
+        32,
+        33
+      ],
+      "observed": "The successful empty list now has one truthful No records yet / Ainda não há registros message. No false producer-unavailable warning or repeated empty fallback appears. The ledger heading remains visible.",
+      "sizing": "The two content panels are compact: approximately 55px each in the 390px screenshot and 63–64px each in desktop screenshots. These are visual estimates from the image bounds, not DOM measurements. The remaining screen height is the shell background, not an inflated empty-state panel."
+    },
+    {
+      "id": "UI41-ADMITTED-CATALOG-UNAVAILABLE",
+      "status": "Mounted preparation controls and disabled Prepare requalified",
+      "proofIndices": [
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "observed": "Authorized case, analysis type, admitted model and objective controls stay mounted alongside the explicit unavailable-model notice. Prepare analysis remains disabled. The edited desktop frame shows a selected original analysis and a retained objective while the missing model still prevents preparation.",
+      "narrowObservation": "At 390×844, all four preparation fields and the disabled Prepare button are visible in the captured viewport. The following Refresh authorized choices/history area extends below that viewport and is not claimed as fully shown there.",
+      "originalCatalog": {
+        "cases": 2,
+        "analyses": 2,
+        "models": 0,
+        "preparationAvailable": false,
+        "selectionsAvailable": false,
+        "preparedInputExercised": false
+      },
+      "behaviorLimit": "This proves the original unavailable-model state with its positive controls. It does not claim an admitted model, a successful preparation, or a generated analysis. preparedInputExercised is false."
+    }
+  ],
+  "observations": [
+    {
+      "area": "UI34",
+      "result": "Header actions and review Save/Cancel fit the assigned 390px states; editor fields and focus treatment remain coherent on desktop. Lower summary sections are outside the initial 390px viewport and are not claimed there."
+    },
+    {
+      "area": "UI35",
+      "result": "Cards stack at 320/390px; headers, values and comparison qualification wrap within the captured width. The lower 320px qualification frame is explicitly a scrolled checkpoint, not an initial-screen proof."
+    },
+    {
+      "area": "UI39",
+      "result": "Dark/light desktop and dark 390 retain consistent insets, bounded cards and one truthful empty message."
+    },
+    {
+      "area": "UI41",
+      "result": "Dark/light desktop and PT layout retain coherent form hierarchy, warning separation and disabled primary action. The edited objective frame shows a visible focus outline without obscuring its content."
+    }
+  ],
+  "newFindings": [],
+  "limitations": [
+    "Only the 22 exact originals listed here were visually inspected in this final focused review; no claim is made that all 42 named images of the artifact were reviewed by this agent.",
+    "A screenshot qualifies the visible captured state and viewport. It is not a general keyboard, wheel, contrast-ratio or offscreen-interaction test.",
+    "The original UI41 source returned 2 cases, 2 analyses and 0 models; preparationAvailable, selectionsAvailable and preparedInputExercised are false.",
+    "No new local product build, test, typecheck or CI dispatch was performed by this peer. The parent-owned run provides runtime evidence.",
+    "Original producer text may remain Portuguese inside an English interface; source evidence/names were not rewritten as UI copy.",
+    "The historical Decisions4 UI41 frames remain historical and do not retroactively qualify the corrected UI41.",
+    "Later UI50/Matrix changes are outside this snapshot and review."
+  ],
+  "originalsReviewed": [
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-dark-390-review-actions-test-data.png",
+      "sha256": "38897f4daa8c5e59ee4f21a44796ed24f2148b6cd2c12bcf73bb205f0e647d1b",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-dark-390-review-actions-test-data-5a9f4938e8274d8980b7856faece550858559289.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/6adb9a750eb886591560feb43b42bff10322ad7c.png"
+      ],
+      "size": [
+        390,
+        844
+      ],
+      "index": 1
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-dark-390-test-data.png",
+      "sha256": "cbb92c1699e070bf9c11773176acae27a5beb2026c9b9e57b4bb3f36ed74b0ff",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-dark-390-test-data-4bf880abd3d5f0f8ba3f1410582a49386d115833.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/77031b1b7b7407d6388ab42fba37d18296927b7f.png"
+      ],
+      "size": [
+        390,
+        844
+      ],
+      "index": 2
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-dark-desktop-editor-test-data.png",
+      "sha256": "1bef94d3521431203a9a76f7484f4079409c5c763b4f5826da5b5823acfc211b",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-dark-desktop-editor-test-data-95f808cee5699f457137cc0d3e5350f551972e69.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/acb1914a9c54422160a975d590be4b99b81db83d.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 3
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-dark-desktop-test-data.png",
+      "sha256": "44c26547edd83a252edbfa7f757dd6a67c6ea8a1f89d812c1589607130046061",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-dark-desktop-test-data-613cabe199ede57ac9c0dc9eb5a70bd73edb56a9.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/81741502ba094b64fd849e34f66ac7aee797ddc7.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 4
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-light-desktop-test-data.png",
+      "sha256": "6be9e7c18a1192b5622887237155bf836af38f0f8fec17b163422d77bf04797d",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-light-desktop-test-data-2b85f5636f043dd2cbf15d631f179c719ff7e160.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/57201f8ff09e709cefd0c84c92c9ecb694bb3e3f.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 5
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI34-pt-BR-dark-desktop-test-data.png",
+      "sha256": "f5db2da5ca0728b33ff9381e74dac24283ea77af9ea41de71230fd94db354a65",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI34-pt-BR-dark-desktop-test-data-0e65754c2abc128ba6a7f421d5670d2fd477fe4a.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/42717cdff5b5c056a0a2e98946845a0fcee92ee9.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 6
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-dark-320-comparison-qualification-test-data.png",
+      "sha256": "733e39ce7af631c623421433204acb47244a63d8506820ca5a3c03d82f709e17",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-dark-320-comparison-qualification-test-data-c05eeb80faf85e9b9d3f0a7f3fcb79c726bef535.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/9674d690632b35e701f93802dde358072eb191d2.png"
+      ],
+      "size": [
+        320,
+        800
+      ],
+      "index": 7
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-dark-320-comparison-test-data.png",
+      "sha256": "afd6c4a58cb9f9f5bc200458c3876690013d9c86fa2510fe556a8dee828f4107",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-dark-320-comparison-test-data-fdab68984eb5dcd172ce4f470b2e05e3f14595e0.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/7b887ec87119a0e123392c39358ce1aad6333d94.png"
+      ],
+      "size": [
+        320,
+        800
+      ],
+      "index": 8
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-dark-390-test-data.png",
+      "sha256": "1dcceae9cce17ab04acb673da73d92e71373f4aa40d120c1f214605b60dbfd36",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-dark-390-test-data-4c100b2a53cfbf94799fdd5847ca3e1e48589149.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/c03d8c98c00a1e105c70780eec31d6b9e7bc37ea.png"
+      ],
+      "size": [
+        390,
+        844
+      ],
+      "index": 9
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-dark-desktop-empty-choice-test-data.png",
+      "sha256": "e0c2659241d6fb6b841f8790ada8eb88d18801feda42bfa6d1021b1bb11d3804",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-dark-desktop-empty-choice-test-data-f9c63124910275f725fabf86b125d31fd5fea444.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/f0480d7cbdd27e73e3a6fc726a8c7e798ca97b83.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 10
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-dark-desktop-test-data.png",
+      "sha256": "3fa5c1316d9e15f0ea20e7393eab908da27b0c51bbb1879fad92f5eb646c23e9",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-dark-desktop-test-data-8acfd45e085b64ded064ddb63c6bc1365a924ffb.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/4ed30be7c26815140e8ad311906aba8c53c75d41.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 11
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-light-desktop-test-data.png",
+      "sha256": "f0b6fca1c16a3f46f4e189a1b016b8c25edad93cb84a16a34013fdb6ec3ecb55",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-light-desktop-test-data-2d79656356522e784e5aeb9033aca4aa5179ddda.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/63e114bced86531129b82658d2786ebb5ac218cf.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 12
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI35-pt-BR-dark-desktop-test-data.png",
+      "sha256": "f2c6c14fea4a0c27a5ae85fedca84eb3c42377f9e3cb5e5d75239fe307556bd0",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI35-pt-BR-dark-desktop-test-data-f4ceee50741a4aef9055131f3d998404d285ccde.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/c5e9418723299fce46c2bdeed89e127cd326f918.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 13
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI39-dark-390-test-data.png",
+      "sha256": "0377fdb1b3f03b36a24d01b0f2bcd9ed17a8450870fcd4371b3800dce00648d5",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI39-dark-390-test-data-e7ff22e26d8d7f238a6f2ab646c04e42cfdd3708.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/6df4b602d5e53961aa16d44c52b64ccbdd6f0ccc.png"
+      ],
+      "size": [
+        390,
+        844
+      ],
+      "index": 30
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI39-dark-desktop-test-data.png",
+      "sha256": "b0883c6cc729ec7781d2d8b87334cf7ed65db7035324f13aaf53ed7e160c8385",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI39-dark-desktop-test-data-af095b73736659e0da51f007dde7e1c5d33fc870.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/ed6f0622f6e264c7bde2225cfdebdb9b385b9989.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 31
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI39-light-desktop-test-data.png",
+      "sha256": "e1960fb31e929fde62fcb5fa80f5fdf0775ac83f1e614649dc7c914c1f1fb505",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI39-light-desktop-test-data-3a853933699596b6e8448d19348a6e36fca51a26.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/64dd9ffbae0b27f421c0ba80c3cfff994bf1e8f0.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 32
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI39-pt-BR-dark-desktop-test-data.png",
+      "sha256": "f79b2d648527cd70326b693e99878ba13860d43c4fd432f75119df2037a848ac",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI39-pt-BR-dark-desktop-test-data-754516493cddcf3412553bfe7c0e39e4b30cc785.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/8632b71d018dd41d8e86db9aa48ea98265e66936.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 33
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI41-dark-390-test-data.png",
+      "sha256": "f46e62ac5b65f006912ddefa23351dffd81042d6117c9159630e33c7aac02266",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI41-dark-390-test-data-467dc2614f86feac61f361ff08c05d1de2c1ce46.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/test-finished-1.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/14f4955aa941f8ea6ccdedfe8ac5f1c83ec9f1b6.png"
+      ],
+      "size": [
+        390,
+        844
+      ],
+      "index": 38
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI41-dark-desktop-admitted-catalog-unavailable-test-data.png",
+      "sha256": "aab3aed0e3ce79b544926095bb917e3e7f5bc4113ab4ca9c3309d2445641bf04",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI41-dark-desktop-admitted-catalog-unavailable-test-data-629fd31c194e6b2cb0aa8b566d99e06aaa955d23.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/22d1af74e0f30e663d7420bf964fa970fb173a76.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 39
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI41-dark-desktop-test-data.png",
+      "sha256": "d5bcc312c2a59a0370fd1329fe660f7603b37380586948f1efbd8dc70f1091ef",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI41-dark-desktop-test-data-2e9696cdbdaeb482fa777df94242c4a2dcbcbde0.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/b853eeb337cd9e03667c097e553d3cd99e523f5e.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 40
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI41-light-desktop-test-data.png",
+      "sha256": "73a8ccff4e3a357750e3e217b63e0af815986fe7ec63ae8f983a311fc19659c7",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI41-light-desktop-test-data-fa90b14dbabc2c8a98318e7dd87e6d8fbedf2eaf.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/e699c6df1cbb931034b5ae4cf1f13adaa799ad09.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 41
+    },
+    {
+      "path": "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/UI41-pt-BR-dark-desktop-test-data.png",
+      "sha256": "b5a1780dd419ddaa939da1acbac15792c6b30b10a699864b9296153050563682",
+      "duplicates": [
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/test-results/sucafina-design-wave-four--b2934-certainty-and-native-review-chromium/attachments/UI41-pt-BR-dark-desktop-test-data-6b847525552eadb2bb28ed35793a39cd9310eca7.png",
+        "/workspace/scratch/e460075886fd/sf_visual_audit/ci-decisions6/packages/app-shell/e2e/playwright-report/data/16525a9f89f6d4f2607e7e4e4d06ca6c21378857.png"
+      ],
+      "size": [
+        1440,
+        1100
+      ],
+      "index": 42
+    }
+  ]
+}

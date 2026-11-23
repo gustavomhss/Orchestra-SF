@@ -11,7 +11,9 @@ type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" 
     preparedChanges: readonly unknown[]
     receipts: readonly unknown[]
   }
-waveFourTest.use({ designWave: "four-decisions" })
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }
@@ -211,7 +213,9 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
   const testEnteredAt = Date.now()
   const readTimes = observeDecisionReads(page, testEnteredAt)
   const writes: Request[] = []
+  const analysisRequests: Request[] = []
   page.on("request", (request) => {
+    if (action(request, "workbench-analysis")) analysisRequests.push(request)
     if (action(request, "decision-edit") || action(request, "workbench-command", "sf_question_prepare") ||
         action(request, "current-choice-promote") || action(request, "decision-apply"))
       writes.push(request)
@@ -462,20 +466,30 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
     const models = choices.models as { id: string; providerID: string }[]
     expect(cases.some((entry) => entry.caseRef.id === source.id && entry.caseRef.incarnation === source.incarnation)).toBe(true)
     await expect(page.getByRole("combobox", { name: "Authorized case", exact: true }).locator("option")).toHaveCount(cases.length + 1)
-    await expect(page.getByRole("combobox", { name: "Analysis type", exact: true }).locator("option")).toHaveCount(analyses.length + 1)
-    await expect(page.getByRole("combobox", { name: "Admitted model", exact: true }).locator("option")).toHaveCount(models.length + 1)
     await expect(page.getByRole("heading", { name: "Analysis history", exact: true })).toBeVisible()
     await expect(page.getByText("No analyses were recorded for this authorized case.", { exact: true })).toBeVisible()
-    await page.getByLabel("Analysis objective", { exact: true }).fill(waveFourDecisionsData.objective)
     const published = analyses.findIndex((entry) => entry.skillId === "sf-enquadrar-decisao")
-    if (published >= 0) await page.getByRole("combobox", { name: "Analysis type", exact: true }).selectOption({ index: published + 1 })
-    if (models.length) await page.getByRole("combobox", { name: "Admitted model", exact: true }).selectOption({ index: 1 })
-    if (!analyses.length) await expect(page.getByText("No admitted analysis option is available.", { exact: true })).toBeVisible()
-    if (analyses.length && !models.length) await expect(page.getByText("No admitted model is available.", { exact: true })).toBeVisible()
     const preparationAvailable = availability.some((entry) => entry.operation === "intelligence.analysis.prepare" &&
       entry.state === "ready" && entry.operational === true)
+    const selectionsAvailable = analyses.length > 0 && models.length > 0
+    // Preserve the original empty-catalog oracle: fields stay mounted and only
+    // the original canPrepare contract decides whether preparation is available.
+    await expect(page.getByRole("combobox", { name: "Analysis type", exact: true }).locator("option")).toHaveCount(analyses.length + 1)
+    await expect(page.getByRole("combobox", { name: "Admitted model", exact: true }).locator("option")).toHaveCount(models.length + 1)
+    await page.getByLabel("Analysis objective", { exact: true }).fill(waveFourDecisionsData.objective)
+    if (published >= 0) await page.getByRole("combobox", { name: "Analysis type", exact: true }).selectOption({ index: published + 1 })
+    if (models.length) await page.getByRole("combobox", { name: "Admitted model", exact: true }).selectOption({ index: 1 })
     if (published < 0 || !models.length || !preparationAvailable) {
       await expect(page.getByRole("button", { name: "Prepare analysis", exact: true })).toBeDisabled()
+      expect(analysisRequests.map((request) => object(request.postDataJSON()).action)
+        .filter((selected) => selected !== "choices" && selected !== "list")).toEqual([])
+      if (!selectionsAvailable) {
+        await expect(page.getByRole("button", { name: "Refresh authorized choices", exact: true })).toBeEnabled()
+        await expect(page.getByText(!analyses.length
+          ? "No admitted analysis option is available."
+          : "No admitted model is available.", { exact: true })).toBeVisible()
+        await capture(page, info, "UI41-dark-desktop-admitted-catalog-unavailable-test-data")
+      }
     } else {
       await page.getByRole("button", { name: "Prepare analysis", exact: true }).click()
       const review = page.locator("[data-sf-analysis-review]")
@@ -488,7 +502,7 @@ waveFourTest("wave four decisions: real sources, retained drafts, uncertainty an
       await expect(page.getByLabel("Analysis objective", { exact: true })).toHaveValue(waveFourDecisionsData.objective)
     }
     await info.attach("UI41-original-catalog-counts", { contentType: "application/json",
-      body: JSON.stringify({ cases: cases.length, analyses: analyses.length, models: models.length, preparationAvailable, preparedInputExercised: published >= 0 && models.length > 0 && preparationAvailable }) })
+      body: JSON.stringify({ cases: cases.length, analyses: analyses.length, models: models.length, preparationAvailable, selectionsAvailable, preparedInputExercised: published >= 0 && selectionsAvailable && preparationAvailable }) })
   })
 
   for (const color of ["dark", "light"] as const) {

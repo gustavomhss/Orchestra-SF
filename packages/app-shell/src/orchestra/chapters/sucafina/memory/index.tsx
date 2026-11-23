@@ -11,6 +11,7 @@ import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { SfSimilarCasesView } from "./similar-cases"
 import "./memory.css"
+import "../reviews/workflows.css"
 
 type Conditions = Extract<typeof SfMemory.operations["intelligence.memory-conditions"]["output"]["Type"], { status: "ok" }>["value"]
 type Signals = Extract<typeof SfMemory.operations["intelligence.memory-signals"]["output"]["Type"], { status: "ok" }>["signals"]
@@ -285,9 +286,9 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
   return (
     <SfPageFrame titleKey={k(title())} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory" data-sf-surface={props.surfaceId}>
+      <section data-sf-wave="polish" class="sf-memory sf-workflow" data-sf-surface={props.surfaceId}>
         <Show when={privacy() === "ready" && !referenceRoute()}>
-          <form class="sf-memory-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
+          <form class="sf-memory-form sf-form sf-fields" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
             <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
             <label>{t("sf.u26.caseId")}<input autocomplete="off" required value={view.caseId}
               onInput={(event) => changeCase("caseId", event.currentTarget.value)} /></label>
@@ -305,7 +306,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
         <SfStatePanel state={pageState()} messageKey={k(pageMessage())}
           onRetryRead={view.active && privacy() === "ready" ? () => void loadCase(view.active!) : undefined}>
           <Show when={view.active}>
-            <section class="sf-memory-section">
+            <section class="sf-memory-section sf-section">
               <h2>{t("sf.u26.conditions")}</h2>
               <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>
                 <ul class="sf-memory-list">
@@ -323,7 +324,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
               </Show>
             </section>
             <Show when={props.surfaceId === "UI61"}>
-              <section class="sf-memory-section">
+              <section class="sf-memory-section sf-section">
                 <h2>{t("sf.u26.signals")}</h2>
                 <Show when={view.signals.length} fallback={<p>{t("sf.u26.noSignals")}</p>}>
                   <ul class="sf-memory-list">
@@ -345,7 +346,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
             messageKey={k(detailMessage())}
             onRetryRead={() => void readMateriality(view.selectedCondition)}>
             <Show when={view.material}>{(data) => (
-              <section class="sf-memory-section" data-sf-memory-materiality>
+              <section class="sf-memory-section sf-section" data-sf-memory-materiality>
                 <h2>{t("sf.u26.materiality")}</h2>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.condition")}</dt><dd>{data().snapshot.condition.id}</dd>
@@ -374,7 +375,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
             messageKey={k(detailMessage())}
             onRetryRead={() => { const selectionRef = referenceRoute(); if (selectionRef) void readReference(selectionRef); else void readOutcome(view.selectedChoice) }}>
             <Show when={view.outcome}>{(data) => (
-              <section class="sf-memory-section" data-sf-memory-outcome>
+              <section class="sf-memory-section sf-section" data-sf-memory-outcome>
                 <h2>{t("sf.ui63.title")}</h2>
                 <dl class="sf-memory-facts">
                   <dt>{t("sf.u26.choice")}</dt><dd>{data().choiceId}</dd>

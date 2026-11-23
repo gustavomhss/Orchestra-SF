@@ -1,6 +1,11 @@
 import { expect, type Page } from "@playwright/test"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
+import { forwardOnce } from "./operations-support/runtime"
 import { waveThreeData } from "./design-support/wave-three-data"
+
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveThreeTest.use({ trace: "off", video: "off" })
+waveThreeTest.describe.configure({ retries: 0 })
 
 const screens = [
   { id: "CAP05", path: "/orchestra/sf-dashboard/capex", title: "CAPEX Projects", br: "Projetos CAPEX" },
@@ -72,7 +77,7 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await annualEditor.getByLabel("Field", { exact: true }).selectOption("budget")
     const beforeAnnual = posts.length
     await annualEditor.getByRole("button", { name: "Review changes", exact: true }).click()
-    await expect(annualEditor.locator('[data-component="sf-change-review"]')).toContainText("252000")
+    await expect(annualEditor.locator('[data-component="sf-change-review"]')).toContainText("252,000")
     await reviewActions(page)
     await capture(page, info, "CAP05-dark-desktop-annual-review-test-data")
     expect(posts).toHaveLength(beforeAnnual)
@@ -93,14 +98,14 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     const january = detail.locator('tr[data-sf-month="1"]')
     await january.getByRole("button", { name: "Save month", exact: true }).click()
     const month = page.locator('.sf-budget-editor[data-sf-action="save-entry"]')
-    await expect(month.getByLabel("actual", { exact: true })).toHaveValue("16400")
-    await month.getByLabel("forecast", { exact: true }).fill("19500")
+    await expect(month.getByLabel("Actual", { exact: true })).toHaveValue("16400")
+    await month.getByLabel("Forecast", { exact: true }).fill("19500")
     await scrollPageTop(page)
     await capture(page, info, "CAP05-dark-desktop-month-editor-test-data")
     await month.getByRole("button", { name: "Review changes", exact: true }).click()
-    await expect(month.locator('[data-component="sf-change-review"]')).toContainText("19500")
+    await expect(month.locator('[data-component="sf-change-review"]')).toContainText("19,500")
     await month.getByRole("button", { name: "Revise", exact: true }).click()
-    await expect(month.getByLabel("forecast", { exact: true })).toHaveValue("19500")
+    await expect(month.getByLabel("Forecast", { exact: true })).toHaveValue("19500")
     await month.getByRole("button", { name: "Review changes", exact: true }).click()
     await narrow()
     await reviewActions(page)
@@ -120,7 +125,7 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await scrollPageTop(page)
     await capture(page, info, "CAP05-dark-desktop-create-test-data")
     await create.getByRole("button", { name: "Review changes", exact: true }).click()
-    await expect(create.locator('[data-component="sf-change-review"]')).toContainText("48000")
+    await expect(create.locator('[data-component="sf-change-review"]')).toContainText("48,000")
     await create.getByRole("button", { name: "Revise", exact: true }).click()
     await discardBudgetDraft(page, "save")
     await expect(list.locator("tr[data-sf-row]")).toHaveCount(3)
@@ -190,7 +195,7 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await expect(editor.getByLabel("Notice period", { exact: true })).toHaveValue("120 days")
     await desktop()
     await editor.getByRole("button", { name: "Review contract change", exact: true }).click()
-    await review.getByRole("button", { name: "Confirm", exact: true }).click()
+    await review.getByRole("button", { name: "Save contract", exact: true }).click()
     await expect(surface.locator(".sf-u15-notice")).toContainText("Current record verified after saving.")
     expect(posts).toHaveLength(before + 1)
     await surface.getByRole("button", { name: "Discard changes", exact: true }).click()
@@ -210,7 +215,9 @@ waveThreeTest("installed native finance wave · CAP05 and CAP14 original financi
     await create.getByLabel("Amount type", { exact: true }).selectOption("annual")
     await create.getByLabel("Renewal", { exact: true }).selectOption("fixed")
     await create.getByRole("button", { name: "Review contract change", exact: true }).click()
-    await expect(stage.locator('[data-component="sf-change-review"]')).toContainText("36000")
+    await expect(stage.locator('[data-component="sf-change-review"]')
+      .getByRole("region", { name: "Amount", exact: true }).locator('[data-version="proposed"] .sf-s03-field-value'))
+      .toHaveText(new Intl.NumberFormat("en", { maximumSignificantDigits: 21 }).format(36000))
     await reviewActions(page)
     await expect(review).toContainText("Not provided")
     await expect(review).toContainText("Empty value")
@@ -457,20 +464,28 @@ waveThreeTest("installed native finance wave · CAP17 CAP18 CAP19 original plann
     await desktop()
     await detail.getByRole("button", { name: "Review changes", exact: true }).click()
     const before = posts.length
-    // Read the command body as its response arrives; a successful save immediately reloads the plan.
-    const saved = page.waitForResponse((response) => {
-      const request = response.request()
-      if (request.method() !== "POST" || new URL(response.url()).pathname !== installation.mount + "/planner") return false
-      const input = request.postDataJSON()
-      return input?.page === "CAPEX" && input.action === "save" && input.values?.collection === "projects"
-    }).then(async (response) => {
+    // Retain the one original producer response outside Chromium's body cache.
+    // The shared observer forwards it unchanged with redirects and retries disabled.
+    const saved = await forwardOnce(page, (url) =>
+      url.origin === installation.origin && url.pathname === installation.mount + "/planner", "POST")
+    // This is the original response failure deadline, not a readiness delay.
+    const deadline = Promise.withResolvers<never>()
+    const deadlineTimer = setTimeout(() => {
+      deadline.reject(new Error("CAP19 original project-save response was not observed within 15_000 ms"))
+    }, 15_000)
+    try {
+      const [{ response, request }] = await Promise.all([
+        Promise.race([saved.completed, deadline.promise]),
+        review.getByRole("button", { name: "Save project", exact: true }).click(),
+      ])
+      expect(request.method()).toBe("POST")
+      expect(request.postDataJSON()).toMatchObject({ page: "CAPEX", action: "save", values: { collection: "projects" } })
       expect(response.ok()).toBe(true)
       expect(await response.json()).toMatchObject({ ok: true })
-    })
-    await Promise.all([
-      saved,
-      review.getByRole("button", { name: "Confirm", exact: true }).click(),
-    ])
+    } finally {
+      clearTimeout(deadlineTimer)
+      await saved.close()
+    }
     await expect(review).toHaveCount(0)
     await ready(page, "CAPEX")
     expect(posts).toHaveLength(before + 1)

@@ -1,3 +1,4 @@
+import type { WorkflowCapture } from "../design-support/workflow-polish-capture"
 import { createHash, randomUUID } from "node:crypto"
 import { readFile } from "node:fs/promises"
 import { expect } from "@playwright/test"
@@ -139,9 +140,9 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
   await openReview.click()
   const review = page.locator('[data-component="sf-change-review"]')
   await expect(review).toHaveCount(1)
-  await expect(review.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  await expect(review.getByRole("heading", { name: "Create supplier", exact: true })).toBeVisible()
   await expect(review).toContainText(name)
-  const confirmCreate = review.getByRole("button", { name: "Confirm once", exact: true })
+  const confirmCreate = review.getByRole("button", { name: "Create supplier", exact: true })
   await expect(confirmCreate).toBeEnabled()
   const created = await captureCommandResponse(page, account, { action: "create" }, confirmCreate)
   expect(created.status).toBe(200)
@@ -151,7 +152,7 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
     values: { supplier: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } },
   })
   await expect(suppliers.getByRole("status").filter({ hasText:
-    "The producer acknowledged the command; no synthetic receipt was created.",
+    "Operation accepted.",
   })).toBeVisible()
   const supplierRow = page.locator("tr[data-sf-row]").filter({ has: page.getByRole("cell", { name, exact: true }) })
   await expect(supplierRow).toHaveCount(1)
@@ -165,7 +166,7 @@ export async function createDocumentSupplier(page: Page, account: Account, key: 
 }
 
 /** PR34 15df31a: real private bytes, explicit schema and confirmation, then removal of the same source. */
-export async function documentJourney(page: Page, info: TestInfo) {
+export async function documentJourney(page: Page, info: TestInfo, capture?: WorkflowCapture) {
   const account = await login(page, "first", "suppliers")
   const key = randomUUID(), name = "Operations document " + key, filename = key + ".txt"
   const text = "Price: 42\nReference: " + key + "\n"
@@ -204,13 +205,24 @@ export async function documentJourney(page: Page, info: TestInfo) {
     .setInputFiles({ name: filename, mimeType: "text/plain", buffer: bytes })
   const supplierPage = account.baseURL + "/api/ui/pages/CAP27?" + new URLSearchParams({ supplier })
   const reconciled = await observe(page, supplierPage)
-  const uploaded = page.waitForResponse((response) => {
-    const url = new URL(response.url())
-    return url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" && url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier && response.request().method() === "POST"
-  }).then(async (response) => ({ response, result: await response.json() as { ok?: boolean; errors?: unknown } }))
-  const [{ response: uploadResponse, result: uploadResult }] = await Promise.all([
-    uploaded, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
+  // Chromium may lose its cached response body after the native request finishes.
+  // Observe one original POST before delivery; forwardOnce preserves its complete
+  // response and forbids redirects/retries. A body-tool failure was not a verdict.
+  const uploaded = await observe(page, (url) =>
+    url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+  const [{ response: uploadResponse, request: uploadRequest }] = await Promise.all([
+    uploaded.completed, upload.getByRole("button", { name: `Admit / scan / link (version ${beforeVersion})`, exact: true }).click(),
   ])
+  expect(uploadRequest.method()).toBe("POST")
+  await observation(info, "operations-document-original-upload-response", {
+    stage: "supplier-private-upload", httpStatus: uploadResponse.status(),
+    contentType: uploadResponse.headers()["content-type"] ?? null,
+    scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+    source: "one forwarded original POST", responseSubstituted: false, automaticRetries: 0,
+    priorBodyToolFailureQualifiedProducer: false,
+  })
+  const uploadResult = await uploadResponse.json() as { ok?: boolean; errors?: unknown }
   if (uploadResponse.status() !== 200) {
     const knownErrors = new Set([
       "Attachment limit is not configured.",
@@ -365,6 +377,8 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(await valueOf<DocumentEvidence[]>((await emptyCandidates.completed).response)).toEqual([])
   await expect(root).toHaveAttribute("data-sf-read-state", "ready")
   await expect(root.getByText("No extracted candidates yet.", { exact: true })).toBeVisible()
+  await capture?.(page, info, { surface: "UI58", state: "admitted-empty-evidence", evidence: "Original private attachment admitted; original candidates read returned an empty array.", attributes: { "data-sf-read-state": "ready" } })
+  await capture?.(page, info, { surface: "UI58", state: "authorized-extraction-fields", evidence: "The original admitted document remains selected; extraction fields are inspected before any schema or extraction command.", attributes: { "data-sf-read-state": "ready" }, focus: 'form.sf-files-fields:has(input[maxlength="120"])' })
   const documentRoute = `/orchestra/sf-documents/${encodeSfRouteRef(documentRef)}`
   const evidenceURL = chapterURL(account, documentRoute + "/evidence")
   const scenarioURL = chapterURL(account, documentRoute + "/scenario")
@@ -402,6 +416,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(root).toHaveAttribute("data-sf-phase", "candidates")
   await expect(root.locator("[data-sf-evidence-id]")).toHaveCount(1)
   await expect(root.getByRole("button", { pressed: false }).filter({ hasText: "Price: 42 USD" })).toBeVisible()
+  await capture?.(page, info, { surface: "UI58", state: "original-extracted-candidate", evidence: "Original schema and extraction returned Price 42 USD with exact text range and blob digest; confirmation is absent.", attributes: { "data-sf-phase": "candidates" }, focus: `[data-sf-evidence-id=${JSON.stringify(candidate.id)}]` })
   const continueToEvidence = root.getByRole("link", { name: /^(Document evidence|Evidência do documento)$/ })
   await expect(continueToEvidence).toHaveAttribute("href", evidenceURL.pathname + evidenceURL.search)
   const routedCandidates = await observeCandidates()
@@ -432,6 +447,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(confirmationReview).toContainText("Price: 42 USD")
   await expect(confirmationReview.locator("blockquote")).toHaveText("42")
   expect(requests).toEqual(["document-admit", "document-schema", "document-extract"])
+  await capture?.(page, info, { surface: "UI59", state: "source-confirmation-review", evidence: "Selected original extracted value and original source excerpt are both 42; confirmation has not been sent.", focus: '[data-sf-confirmation="review"]' })
   const [confirmResponse, confirmedCandidates] = await Promise.all([
     observe(page, endpoint("document-confirm"), "POST"), observeCandidates(),
   ])
@@ -450,6 +466,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenarioLink).toHaveAttribute("href", scenarioURL.pathname + scenarioURL.search)
   expect(await readSchemas()).toEqual([schema])
   expect(await readCandidates()).toEqual([confirmed])
+  await capture?.(page, info, { surface: "UI59", state: "original-confirmed-evidence", evidence: "The original confirmation response returned confirmationVersion 1 and the native evidence route re-read that exact record.", attributes: { "data-sf-phase": "confirmed" } })
   const scenarioCandidates = await observeCandidates()
   await scenarioLink.click()
   await expect(page).toHaveURL(scenarioURL.href)
@@ -467,6 +484,9 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const currentPresentation = await valueOf<Presentation>(confirmedSourceTransport)
   expect(currentPresentation).toMatchObject({ title: presentation.title, excerpt: presentation.excerpt, location: presentation.location })
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
+
+  await expect(scenario.getByRole("region", { name: "source-text", exact: true }).locator("blockquote")).toHaveText("42")
+  await capture?.(page, info, { surface: "UI60", state: "confirmed-source-prerequisite", evidence: "The original confirmed evidence and source excerpt are visible. Planner scenario preview remains unavailable and is not claimed." })
 
   // Leave the confirmed UI60 card and source open while the second page deletes the supplier.
   const reader = await page.context().newPage()
@@ -496,7 +516,12 @@ export async function documentJourney(page: Page, info: TestInfo) {
   const readerDetail = reader.locator("[data-sf-record-detail]")
   await expect(readerDetail).toHaveCount(1)
   await expect(reader.locator(`[data-sf-supplier-ref="${supplier}"]`)).toHaveCount(1)
-  await expect(readerDetail.locator("p.sf-s01-secondary bdi")).toHaveText(supplierNumber)
+  const supplierReference = readerDetail.locator("details.sf-s01-secondary")
+  await expect(supplierReference).toHaveCount(1)
+  await expect(supplierReference.locator("summary")).toHaveText("Record reference")
+  await supplierReference.locator("summary").click()
+  await expect(supplierReference.locator("bdi")).toBeVisible()
+  await expect(supplierReference.locator("bdi")).toHaveText(supplierNumber)
   const remove = readerDetail.getByRole("button", { name: "Delete pending supplier", exact: true })
   await expect(remove).toHaveCount(1)
   await expect(remove).toBeEnabled()
@@ -505,16 +530,16 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await remove.click()
   const deleteReview = reader.locator('[data-component="sf-change-review"]')
   await expect(deleteReview).toHaveCount(1)
-  await expect(deleteReview.getByRole("heading", { name: "Review changes", exact: true })).toBeVisible()
+  await expect(deleteReview.getByRole("heading", { name: "Delete pending supplier", exact: true })).toBeVisible()
   await expect(deleteReview).toContainText(supplier)
-  const confirmDelete = deleteReview.getByRole("button", { name: "Confirm once", exact: true })
+  const confirmDelete = deleteReview.getByRole("button", { name: "Delete pending supplier", exact: true })
   await expect(confirmDelete).toBeEnabled()
   const deleted = await captureCommandResponse(reader, account, { action: "delete", id: supplier }, confirmDelete)
   expect(deleted.status).toBe(200)
   expect(deleted.body).toMatchObject({ ok: true })
   expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
   await expect(reader.locator(".sf-u14-layout").getByRole("status").filter({ hasText:
-    "The producer acknowledged the command; no synthetic receipt was created.",
+    "Operation accepted.",
   })).toBeVisible()
   await expect(reader.locator(`tr[data-sf-row="${supplier}"]`)).toHaveCount(0)
   await expect(reader.getByRole("cell", { name, exact: true })).toHaveCount(0)
@@ -538,6 +563,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
   await expect(scenario.locator("blockquote")).toHaveCount(0)
   await expect(scenarioAction).toHaveCount(0)
   await expect(scenario.locator('[data-sf-scenario="preview"]')).toHaveCount(0)
+  await capture?.(page, info, { surface: "UI60", state: "source-revoked", evidence: "Original supplier removal revoked the source; native refresh removed all source text and candidates.", attributes: { "data-sf-read-state": "unavailable" } })
 
   const refreshed = await observe(reader, endpoint("document-sources"))
   expect((await reader.goto(catalogRoute.href))?.status()).toBe(200)

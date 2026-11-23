@@ -2,6 +2,10 @@ import { expect } from "@playwright/test"
 import { waveThreeTest, ready, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveThreeTest.use({ trace: "off", video: "off" })
+waveThreeTest.describe.configure({ retries: 0 })
+
 const peopleScreens = [
   { id: "CAP06", path: "/orchestra/sf-people/overview", title: "Headcount Overview", br: "Visão de headcount" },
   { id: "CAP07", path: "/orchestra/sf-people/structure", title: "Team Structure", br: "Estrutura da equipe" },
@@ -99,7 +103,7 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = editor.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText("Regional service delivery manager")
-    await expect(editor.getByLabel("Title", { exact: true })).toBeHidden()
+    await expect(editor.getByRole("textbox", { name: "Title", exact: true })).toBeHidden()
     await review.getByRole("button", { name: "Revise", exact: true }).click()
     await expect(editor.getByLabel("Title", { exact: true })).toHaveValue("Design test data · Regional service delivery manager")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
@@ -290,7 +294,7 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await capture(page, info, "CAP10-dark-desktop-project-editor-test-data")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     await expect(editor.getByLabel("Budget", { exact: true })).toBeHidden()
-    await expect(editor.locator(".sf-u05-review-values")).toContainText("190000")
+    await expect(editor.locator(".sf-u05-review-values")).toContainText("190,000")
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-project-review-test-data")
     await editor.getByRole("button", { name: "Continue editing", exact: true }).click()
@@ -303,7 +307,7 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
       await expect(action).toBeInViewport({ ratio: 1 })
     await capture(page, info, "CAP10-dark-320-project-review-actions-test-data")
     expect(mutations).toHaveLength(0)
-    await editor.getByRole("button", { name: "Confirm save", exact: true }).click()
+    await editor.getByRole("button", { name: "Save project", exact: true }).click()
     await expect(surface.locator(".sf-u05-notice")).toContainText("Changes were accepted")
     await page.setViewportSize({ width: 1440, height: 1100 })
     await enter(page, owner, new URL(portfolioScreens[1].path, installation.origin).href, portfolioScreens[1].title)
@@ -334,13 +338,13 @@ waveThreeTest("native portfolio design · overview, projects, milestones and exa
     await expect(milestone.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Regional discovery reviewed with the delivery owner.")
     await milestone.getByRole("button", { name: "Save milestone", exact: true }).click()
     const milestoneHref = page.url()
-    await review.getByRole("button", { name: "Confirm save", exact: true }).click()
+    await review.getByRole("button", { name: "Save milestone", exact: true }).click()
     await expect(surface.locator(".sf-u05-notice")).toContainText("Changes were accepted")
     await enter(page, owner, milestoneHref, portfolioScreens[1].title)
     await milestone.locator("summary").click()
     await expect(milestone.getByLabel("Notes", { exact: true })).toHaveValue("Design test data · Regional discovery reviewed with the delivery owner.")
     expect(mutations).toHaveLength(2)
-    await surface.getByRole("button", { name: "Delete record", exact: true }).click()
+    await surface.getByRole("button", { name: "Delete project", exact: true }).click()
     await expect(review).toContainText(waveThreeData.projects.primary)
     await scrollPageTop(page)
     await capture(page, info, "CAP10-dark-desktop-delete-review-test-data")

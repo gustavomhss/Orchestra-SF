@@ -17,9 +17,6 @@ export const waveThreeTest = test.extend<{ installation: DesignInstallation; own
     await use(await authenticateDesignInstallation(context, installation))
   },
 })
-// The real single-use enrollment and scoped session must never enter a trace.
-waveThreeTest.use({ trace: "off", video: "off" })
-waveThreeTest.describe.configure({ retries: 0 })
 const previewBytes = new WeakMap<TestInfo, number>()
 const diagnostics = new WeakMap<Page, { consoleErrors: string[]; pageErrors: string[] }>()
 

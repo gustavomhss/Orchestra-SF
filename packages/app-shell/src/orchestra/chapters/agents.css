@@ -127,9 +127,9 @@
 }
 .agents-avatars {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
   gap: 6px;
-  max-block-size: 288px;
+  max-block-size: 208px;
   overflow-y: auto;
 }
 .agents-avatar-pick {
@@ -469,14 +469,17 @@
 }
 textarea.agent-prompt {
   inline-size: 100%;
-  min-block-size: 420px;
+  --agent-prompt-min: 220px;
+  --agent-prompt-preferred: 36vh;
+  --agent-prompt-max: 420px;
+  min-block-size: clamp(var(--agent-prompt-min), var(--agent-prompt-preferred), var(--agent-prompt-max));
   padding: 12px 14px;
   border: 1px solid var(--mx-line);
   border-radius: var(--orchestra-radius-sm);
   background: var(--mx-raised);
   color: var(--mx-strong);
   outline: 0;
-  font: var(--orchestra-font-size-xs) / 1.65 var(--mx-mono);
+  font: var(--orchestra-font-size-md) / 1.6 var(--mx-sans);
   resize: vertical;
 }
 textarea.agent-prompt:focus {
