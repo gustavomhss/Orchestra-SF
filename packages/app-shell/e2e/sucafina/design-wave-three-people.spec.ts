@@ -103,7 +103,7 @@ waveThreeTest("native people design · reported headcount, structure, talent and
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = editor.locator('[data-component="sf-change-review"]')
     await expect(review).toContainText("Regional service delivery manager")
-    await expect(editor.getByLabel("Title", { exact: true })).toBeHidden()
+    await expect(editor.getByRole("textbox", { name: "Title", exact: true })).toBeHidden()
     await review.getByRole("button", { name: "Revise", exact: true }).click()
     await expect(editor.getByLabel("Title", { exact: true })).toHaveValue("Design test data · Regional service delivery manager")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()

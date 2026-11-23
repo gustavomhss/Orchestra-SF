@@ -83,8 +83,36 @@ for (const variant of sharedVisualVariants) {
     await captureSharedState(page, info, variant, state, "integrations", "empty-accounts",
       "Mocked ConnectionPage with the required coverage wire literal; this is not a live-provider or authorization receipt.")
 
+    const guidance = integrations.locator("details.integrations-guidance")
+    const providers = guidance.locator("summary")
+    await expect(guidance).toHaveCount(1)
+    await expect(providers).toHaveText("Available providers")
+    await expect(guidance).toHaveJSProperty("open", false)
+    if (variant.name === "dark-narrow") {
+      const bounds = await providers.boundingBox()
+      expect(bounds).not.toBeNull()
+      expect(bounds!.height).toBeGreaterThanOrEqual(44)
+    }
+    await providers.click()
+    await expect(guidance).toHaveJSProperty("open", true)
+    await expect(guidance.locator("p")).toHaveText("Key setup is available for Slack, Discord, Cloudflare, Supabase, Neon, Linear, Stripe, OpenAI, Runway and Globalping. Providers that need browser sign-in are not available yet.")
+    await expect(guidance.locator("p")).toBeVisible()
+    await captureSharedState(page, info, variant, state, "integrations", "available-providers-guidance",
+      "Original native disclosure opened through its summary. Listed key setup and unavailable browser sign-in remain visible guidance, not account connection or live provider qualification.")
+    await providers.click()
+    await expect(guidance).toHaveJSProperty("open", false)
+    await expect(guidance.locator("p")).toBeHidden()
+
     await connect.click()
     const dialog = page.getByRole("dialog", { name: "Connect account", exact: true })
+    if (variant.name === "dark-narrow") {
+      const close = dialog.getByRole("button", { name: "Close", exact: true })
+      await expect(close).toBeVisible()
+      const bounds = await close.boundingBox()
+      expect(bounds).not.toBeNull()
+      expect(bounds!.width).toBeGreaterThanOrEqual(44)
+      expect(bounds!.height).toBeGreaterThanOrEqual(44)
+    }
     await expect(dialog.getByRole("combobox", { name: "Provider", exact: true })).toBeEnabled()
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveValue("")
     await expect(dialog.getByLabel("Access token", { exact: true })).toHaveAttribute("type", "password")
@@ -121,9 +149,32 @@ for (const variant of sharedVisualVariants) {
     await expect(studio.getByText("Embedding is off.", { exact: true })).toBeVisible()
     await captureSharedState(page, info, variant, state, "rag-studio", "empty-files-declared-pipeline",
       "Schema-decoded synthetic pipeline matches the component's initial values. No file admission, model, retrieval, vectors or question execution is claimed.")
-    await studio.getByRole("heading", { name: "Pipeline", exact: true }).scrollIntoViewIfNeeded()
+    const pipeline = studio.getByRole("heading", { name: "Pipeline", exact: true })
+    await pipeline.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }))
+    await expect(pipeline).toBeInViewport()
     await captureSharedState(page, info, variant, state, "rag-studio", "pipeline-controls",
-      "Original lower-page pipeline controls after scrolling. No field change or pipeline mutation.")
+      "Original pipeline starts at the viewport edge so its parser, boundary, tokenizer and word controls can be reviewed. No field change or mutation.")
+
+    const model = studio.getByRole("textbox", { name: "OpenRouter model", exact: true })
+    const modelRow = maintain.locator(".rag-stage").filter({ has: model })
+    await expect(modelRow).toHaveCount(1)
+    await expect(model).toHaveValue("")
+    await expect(studio.getByRole("textbox", { name: "Pieces in the block", exact: true })).toHaveValue("4")
+    await expect(studio.getByRole("textbox", { name: "Dimension", exact: true })).toHaveValue("0")
+    await modelRow.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }))
+    await expect(model).toBeInViewport()
+    await captureSharedState(page, info, variant, state, "rag-studio", "pipeline-model-and-metric-controls",
+      "Original empty model inputs, zero dimension, number type and metric controls. No model is selected and no pipeline update is sent.")
+
+    const passes = studio.getByRole("heading", { name: "Passes", exact: true })
+    await expect(studio.getByRole("button", { name: "Read again", exact: true })).toBeDisabled()
+    await expect(studio.getByRole("button", { name: "Cut again", exact: true })).toBeDisabled()
+    await expect(studio.getByRole("button", { name: "Redo numbers", exact: true })).toBeDisabled()
+    await expect(studio.getByRole("button", { name: "Compare saved questions", exact: true })).toBeDisabled()
+    await passes.evaluate((element) => element.scrollIntoView({ block: "start", inline: "nearest" }))
+    await expect(passes).toBeInViewport()
+    await captureSharedState(page, info, variant, state, "rag-studio", "maintenance-passes-and-comparison",
+      "Original maintenance and comparison controls with an empty corpus; file-dependent passes and comparison remain disabled. No pass or revision command is invoked.")
 
     state.rag = "error"
     await page.reload()

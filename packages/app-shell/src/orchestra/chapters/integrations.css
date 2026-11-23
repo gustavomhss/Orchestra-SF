@@ -19,13 +19,15 @@
 }
 .integrations-guidance {
   min-inline-size: 0;
-  padding: 12px 16px;
+  padding-inline: 16px;
   border: 1px solid var(--mx-line);
   border-radius: var(--orchestra-radius-md);
   background: var(--mx-soft);
 }
 .integrations-guidance summary {
-  inline-size: fit-content;
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: 12px;
   color: var(--mx-strong);
   font-size: var(--orchestra-font-size-sm);
   font-weight: 600;
@@ -37,7 +39,10 @@
   border-radius: 2px;
 }
 .integrations-guidance[open] summary {
-  margin-block-end: 8px;
+  padding-block-end: 8px;
+}
+.integrations-guidance > .mx-note {
+  padding-block-end: 12px;
 }
 .integrations-section-header {
   display: flex;
@@ -143,4 +148,12 @@
   max-block-size: calc(100dvh - 32px);
   overflow: auto;
   pointer-events: auto;
+}
+
+/* Keep the close label aligned while extending its pointer target into the header gutter. */
+.integrations-dialog .mx-dialog-head > .mx-link {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 12px;
+  margin: -12px;
 }

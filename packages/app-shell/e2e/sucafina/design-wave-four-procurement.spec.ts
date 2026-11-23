@@ -323,12 +323,12 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
         .locator('[data-sf-action="select"]').click()
       await surface.locator("[data-sf-record-detail]").getByRole("button", { name: "Review decision", exact: true }).click()
       const comment = "Design test data · Scope and estimate reviewed for sourcing."
-      await surface.getByLabel("Approval comment (optional)", { exact: true }).fill(comment)
+      await surface.getByRole("textbox", { name: "Approval comment (optional)", exact: true }).fill(comment)
       const beforeCancel = posts.length
       await review.getByRole("button", { name: "Cancel review", exact: true }).click()
       expect(posts).toHaveLength(beforeCancel)
       await surface.locator("[data-sf-record-detail]").getByRole("button", { name: "Review decision", exact: true }).click()
-      await expect(surface.getByLabel("Approval comment (optional)", { exact: true })).toHaveValue(comment)
+      await expect(surface.getByRole("textbox", { name: "Approval comment (optional)", exact: true })).toHaveValue(comment)
       await narrow()
       await reviewActions(page)
       await capture(page, info, "CAP26-dark-320-pr-review-actions-test-data")
@@ -346,7 +346,7 @@ for (const journey of journeys) waveFourTest("installed procurement wave · " + 
       await expect(detail).toContainText(data.suppliers.primary)
       await scrollPageTop(page)
       await capture(page, info, "CAP26-dark-desktop-sourcing-approval-detail-test-data")
-      await detail.getByLabel("Approval comment", { exact: true }).fill("Design test data · Recorded quotation reviewed.")
+      await detail.getByRole("textbox", { name: "Approval comment", exact: true }).fill("Design test data · Recorded quotation reviewed.")
       await detail.getByRole("button", { name: "Approve current step", exact: true }).click()
       await expect(review).toContainText(sourceRef)
       await confirm("Approve current step")

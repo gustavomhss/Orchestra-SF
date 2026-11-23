@@ -270,6 +270,7 @@ export const workflowPolishCoverage = {
       "spec": "operations.spec.ts",
       "states": [
         "admitted document with empty candidates",
+        "authorized extraction fields before any extraction command",
         "original extracted candidate"
       ],
       "limits": "Actual private bytes, schema, digest and extraction."

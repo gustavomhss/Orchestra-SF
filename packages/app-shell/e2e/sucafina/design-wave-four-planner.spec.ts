@@ -134,7 +134,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     const detail = surface.locator("[data-sf-headcount-position]")
     await expect(detail.getByLabel("Name", { exact: true })).toHaveValue(waveFourPlannerData.headcount.position)
     await expect(detail.getByLabel("FTE", { exact: true })).toHaveValue("1")
-    await expect(detail.getByRole("region", { name: "Monthly cost", exact: true }).locator("tbody td")).toHaveCount(12)
+    await expect(detail.getByRole("region", { name: "Monthly cost (USD)", exact: true }).locator("tbody td")).toHaveCount(12)
     await detail.getByLabel("FTE", { exact: true }).fill("0.9")
     await scrollPageTop(page)
     await capture(page, info, "CAP20-dark-320-position-editor-test-data")
