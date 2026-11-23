@@ -354,108 +354,113 @@ function gate() {
   return { promise, release }
 }
 
+/** Each case opens a new native store, authority and real Atlas publication. */
+async function publishedRecallFixture(deadline: Deadline) {
+  const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true))
+  const scanner = f.scanner, memory = f.business.atlasRecall()?.memory
+  if (!scanner || !memory) throw new Error("The canonical scanner and Atlas reader are required")
+  const staged = await deadline.phase("stage-real-precedent", () => f.stage(f.previous))
+  Object.assign(f.previous, staged.ref)
+  const incoming = () => ({ caseRef: structuredClone(f.current), limit: 10, scope: {
+    query: "Review the observed service cost",
+    recallScope: { cases: [structuredClone(f.previous)], period: structuredClone(f.period), includeHistorical: false },
+  } })
+  const canonical = f.business.caseRecallSource()?.recall
+  if (!canonical) throw new Error("The complete installed Recall reader is required")
+
+  await deadline.phase("malformed-selection-keeps-canonical-pre-admission-refusal", async () => {
+    const before = await f.snapshot()
+    const input = incoming()
+    expect(Reflect.set(input, "caseRef", null)).toBe(true)
+    await f.ui("sf_decision_recall", input, async (call) => {
+      let reads = 0, produced: RecallResult | undefined
+      const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+        reads++
+        produced = await canonical(input, call)
+        return produced
+      }))
+      expect(measured.value.status).toBe("unavailable")
+      if (!produced) throw new Error("The malformed selection did not reach the canonical reader")
+      expect(measured.value).toEqual(produced)
+      expect(reads).toBe(1)
+      expect(measured.roots).toEqual([])
+    })
+    expect(await f.snapshot()).toEqual(before)
+  })
+
+  await deadline.phase("pending-is-unavailable-and-does-not-publish", async () => {
+    const before = await f.snapshot()
+    expect(before.outbox[staged.outbox.key]?.state).toBe("pending")
+    const input = incoming()
+    await f.ui("sf_decision_recall", input, async (call) => {
+      let reads = 0, produced: RecallResult | undefined
+      const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+        reads++
+        produced = await canonical(input, call)
+        return produced
+      }))
+      expect(measured.value.status).toBe("unavailable")
+      expect(produced?.status).toBe("unavailable")
+      expect(reads).toBe(1)
+      expectIndependentRoots(measured.roots)
+    })
+    expect(await f.snapshot()).toEqual(before)
+  })
+
+  const receipt = await deadline.phase("publish-through-the-real-atlas-writer", async () => {
+    const before = await f.snapshot()
+    const payload = { caseRef: encodeCaseRef(f.previous) }
+    const published = await f.ui("sf_case_read", payload,
+      (call) => f.business.context.emitFromLedger(staged.outbox.eventRef, call))
+    expect(published.status).toBe("committed")
+    expect(published.scanner).toMatchObject({ name: scanner.spec.name, version: scanner.version, status: "clean" })
+    const after = await f.snapshot()
+    expect(after.cases).toEqual(before.cases)
+    expect(after.versions.cases).toBe(before.versions.cases)
+    expect(after.outbox[staged.outbox.key]).toMatchObject({ state: "settled", receipt: published })
+    return published
+  })
+  const publishedEventId = receipt.eventId
+  if (!publishedEventId) throw new Error("The committed publication lacks its canonical event identity")
+  // The current case is still being worked on. Its unpublished event must not
+  // be confused with the explicitly selected, already published precedent.
+  const currentPending = await deadline.phase("stage-current-case-without-publication", () => f.stage(f.current))
+  Object.assign(f.current, currentPending.ref)
+  const publishedState = await f.snapshot()
+  expect(publishedState.outbox[currentPending.outbox.key]?.state).toBe("pending")
+
+  const baseline = await deadline.phase("canonical-recall-without-a-shared-recall-owner", async () => {
+    const input = incoming()
+    const unversioned = { ...input, caseRef: { id: f.current.id, incarnation: f.current.incarnation } }
+    return f.ui("sf_decision_recall", unversioned, async (call) => {
+      const recalled = await memory.recall(f.previous, call)
+      if (recalled.status !== "ok") throw new Error("The published Atlas precedent is not readable")
+      expect(recalled.records).toHaveLength(1)
+      for (const record of recalled.records) {
+        expect(record.resolutions.length).toBeGreaterThan(0)
+        expect(record.resolutions.every((resolution) => resolution.state === "fresh")).toBe(true)
+      }
+      // The original request contract permits an omitted source version. The
+      // real withCase selection still pins it; the Recall observer preserves
+      // the canonical path before admission. Internal case reads keep their
+      // own independent observations.
+      const value = ok(await f.business.withCase(call, f.current, {}, async () => ({
+        status: "ok", value: await f.business.caseRecall(unversioned, call),
+      })))
+      const complete = recallOk(value)
+      expect(complete.matches).toHaveLength(1)
+      expect(complete.matches[0]!.caseRef).toEqual(f.previous)
+      expect(complete.matches[0]!.memoryRecordRef).toBe(publishedEventId)
+      return structuredClone(complete)
+    })
+  })
+  return { f, staged, incoming, canonical, baseline, publishedState }
+}
+
 test("Planner Recall preserves published Atlas closure and freshly closes every native owner", async () => {
   const deadline = compositionTestDeadline("planner-recall-atlas")
   try {
-    const f = await deadline.phase("native-scanner-and-fixture", () => fixture(deadline, true))
-    const scanner = f.scanner, memory = f.business.atlasRecall()?.memory
-    if (!scanner || !memory) throw new Error("The canonical scanner and Atlas reader are required")
-    const staged = await deadline.phase("stage-real-precedent", () => f.stage(f.previous))
-    Object.assign(f.previous, staged.ref)
-    const incoming = () => ({ caseRef: structuredClone(f.current), limit: 10, scope: {
-      query: "Review the observed service cost",
-      recallScope: { cases: [structuredClone(f.previous)], period: structuredClone(f.period), includeHistorical: false },
-    } })
-    const canonical = f.business.caseRecallSource()?.recall
-    if (!canonical) throw new Error("The complete installed Recall reader is required")
-
-    await deadline.phase("malformed-selection-keeps-canonical-pre-admission-refusal", async () => {
-      const before = await f.snapshot()
-      const input = incoming()
-      expect(Reflect.set(input, "caseRef", null)).toBe(true)
-      await f.ui("sf_decision_recall", input, async (call) => {
-        let reads = 0, produced: RecallResult | undefined
-        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
-          reads++
-          produced = await canonical(input, call)
-          return produced
-        }))
-        expect(measured.value.status).toBe("unavailable")
-        if (!produced) throw new Error("The malformed selection did not reach the canonical reader")
-        expect(measured.value).toEqual(produced)
-        expect(reads).toBe(1)
-        expect(measured.roots).toEqual([])
-      })
-      expect(await f.snapshot()).toEqual(before)
-    })
-
-    await deadline.phase("pending-is-unavailable-and-does-not-publish", async () => {
-      const before = await f.snapshot()
-      expect(before.outbox[staged.outbox.key]?.state).toBe("pending")
-      const input = incoming()
-      await f.ui("sf_decision_recall", input, async (call) => {
-        let reads = 0, produced: RecallResult | undefined
-        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
-          reads++
-          produced = await canonical(input, call)
-          return produced
-        }))
-        expect(measured.value.status).toBe("unavailable")
-        expect(produced?.status).toBe("unavailable")
-        expect(reads).toBe(1)
-        expectIndependentRoots(measured.roots)
-      })
-      expect(await f.snapshot()).toEqual(before)
-    })
-
-    const receipt = await deadline.phase("publish-through-the-real-atlas-writer", async () => {
-      const before = await f.snapshot()
-      const payload = { caseRef: encodeCaseRef(f.previous) }
-      const published = await f.ui("sf_case_read", payload,
-        (call) => f.business.context.emitFromLedger(staged.outbox.eventRef, call))
-      expect(published.status).toBe("committed")
-      expect(published.scanner).toMatchObject({ name: scanner.spec.name, version: scanner.version, status: "clean" })
-      const after = await f.snapshot()
-      expect(after.cases).toEqual(before.cases)
-      expect(after.versions.cases).toBe(before.versions.cases)
-      expect(after.outbox[staged.outbox.key]).toMatchObject({ state: "settled", receipt: published })
-      return published
-    })
-    const publishedEventId = receipt.eventId
-    if (!publishedEventId) throw new Error("The committed publication lacks its canonical event identity")
-    // The current case is still being worked on. Its unpublished event must not
-    // be confused with the explicitly selected, already published precedent.
-    const currentPending = await deadline.phase("stage-current-case-without-publication", () => f.stage(f.current))
-    Object.assign(f.current, currentPending.ref)
-    const publishedState = await f.snapshot()
-    expect(publishedState.outbox[currentPending.outbox.key]?.state).toBe("pending")
-
-    const baseline = await deadline.phase("canonical-recall-without-a-shared-recall-owner", async () => {
-      const input = incoming()
-      const unversioned = { ...input, caseRef: { id: f.current.id, incarnation: f.current.incarnation } }
-      return f.ui("sf_decision_recall", unversioned, async (call) => {
-        const recalled = await memory.recall(f.previous, call)
-        if (recalled.status !== "ok") throw new Error("The published Atlas precedent is not readable")
-        expect(recalled.records).toHaveLength(1)
-        for (const record of recalled.records) {
-          expect(record.resolutions.length).toBeGreaterThan(0)
-          expect(record.resolutions.every((resolution) => resolution.state === "fresh")).toBe(true)
-        }
-        // The original request contract permits an omitted source version. The
-        // real withCase selection still pins it; the Recall observer preserves
-        // the canonical path before admission. Internal case reads keep their
-        // own independent observations.
-        const value = ok(await f.business.withCase(call, f.current, {}, async () => ({
-          status: "ok", value: await f.business.caseRecall(unversioned, call),
-        })))
-        const complete = recallOk(value)
-        expect(complete.matches).toHaveLength(1)
-        expect(complete.matches[0]!.caseRef).toEqual(f.previous)
-        expect(complete.matches[0]!.memoryRecordRef).toBe(publishedEventId)
-        return structuredClone(complete)
-      })
-    })
-
+    const { f, incoming, canonical, baseline, publishedState } = await publishedRecallFixture(deadline)
     await deadline.phase("installed-recall-has-independent-work-and-egress-owners", async () => {
       const roots: RootObservation[] = []
       for (let phase = 0; phase < 2; phase++) {
@@ -546,7 +551,13 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
       })
       expect(await f.snapshot()).toEqual(publishedState)
     })
+  } finally { await deadline.close() }
+}, 120_000)
 
+test("Planner Recall refuses changed case selections and Atlas publication closure", async () => {
+  const deadline = compositionTestDeadline("planner-recall-closure")
+  try {
+    const { f, staged, incoming, canonical, baseline, publishedState } = await publishedRecallFixture(deadline)
     await deadline.phase("a-divergent-private-child-selection-refuses-before-its-producer", async () => {
       const input = incoming()
       await f.ui("sf_decision_recall", input, async (call) => {
