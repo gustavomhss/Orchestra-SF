@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto"
 import { expect } from "@playwright/test"
-import type { Browser, Page, TestInfo } from "@playwright/test"
+import type { Browser, Page, Request as BrowserRequest, TestInfo } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { SfDomain } from "@orchestra/schema/sucafina/domain"
@@ -10,13 +10,28 @@ import { authenticateDesignInstallation, withDesignInstallation } from "../desig
 import { ServerConnection } from "../../../src/context/server-connection"
 import { encodeSfRouteRef } from "../../../src/orchestra/chapters/sucafina/navigation-state"
 import type { Account } from "./runtime"
-import { modeURL, observation } from "./runtime"
+import { forwardOnce, modeURL, observation } from "./runtime"
 import { prepareRecordScenario, previewRecordScenario } from "./final-records-scenario"
 import { captureRecordVariants, captureRecordDetail, captureRecordFailure } from "./final-records"
 
 /** Local diagnostics have no Playwright fixture or suite-registration side effects. */
 function observeNativeScenario(page: Page) {
-  const diagnostics = { pageErrors: [] as string[], consoleErrors: [] as string[] }
+  const started = performance.now()
+  const diagnostics = {
+    pageErrors: [] as string[], consoleErrors: [] as string[],
+    reads: [] as { kind: string; method: string; event: string; elapsedMs: number; status?: number }[],
+  }
+  const observeRead = (request: BrowserRequest, event: string, status?: number) => {
+    const url = new URL(request.url())
+    const kind = url.pathname.endsWith("/api/ui/context") ? "context" : url.searchParams.get("sf")
+    if (!kind || !["context", "document-candidates", "document-scenario-targets", "document-scenario-preview"].includes(kind)) return
+    diagnostics.reads.push({ kind, method: request.method(), event,
+      elapsedMs: Math.round(performance.now() - started), ...(status === undefined ? {} : { status }) })
+    if (diagnostics.reads.length > 64) diagnostics.reads.shift()
+  }
+  page.on("request", (request) => observeRead(request, "request"))
+  page.on("response", (response) => observeRead(response.request(), "response", response.status()))
+  page.on("requestfailed", (request) => observeRead(request, "failed"))
   const record = (list: string[], message: string) => {
     const safe = message.replace(/[a-f0-9]{64}/g, "[redacted]")
       .replace(/https?:\/\/[^\s"'<>]+/g, "[url]")
@@ -174,7 +189,7 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       const current = Schema.decodeUnknownSync(SfContextResult)(await contextResponse.json())
       if (current.status !== "ok") throw new Error("The native scenario owner could not be read")
       const reported = current.value.availability.flatMap((resource) => resource.family === "files" ? resource.operations : [])
-      for (const operation of ["files.document-scenario-targets", "files.document-scenario-preview"]) {
+      for (const operation of ["files.document-candidates", "files.document-scenario-targets", "files.document-scenario-preview"]) {
         const matches = reported.filter((entry) => entry.operationId === operation)
         expect(matches).toHaveLength(1)
         expect(matches[0]).toMatchObject({ state: "ready", operational: true })
@@ -185,8 +200,25 @@ export async function nativeRecordScenarioJourney(browser: Browser, info: TestIn
       // if the default source is unavailable. The server reauthorizes the read.
       const source = surface.getByRole("combobox", { name: "Source", exact: true })
       await expect(source).toBeEnabled()
-      await source.selectOption("dashboard")
-      await expect(source).toHaveValue("dashboard")
+      const candidatesURL = modeURL(account, "dashboard", "document-candidates", { documentRef: confirmed.fileRef })
+      const candidateRead = await forwardOnce(page, candidatesURL.href, "GET")
+      try {
+        await source.selectOption("dashboard")
+        await expect(source).toHaveValue("dashboard")
+        // Complete the actual source read before timing its native rendering.
+        // This observes the UI's one GET; it sends no independent replacement.
+        const { response, request } = await candidateRead.completed
+        expect(request.method()).toBe("GET")
+        expect(response.status()).toBe(200)
+        const candidates = Schema.decodeUnknownSync(SfFiles.operations["files.document-candidates"].output)(await response.json())
+        expect(candidates).toMatchObject({ status: "ok", value: [confirmed] })
+        await observation(info, "final-records-native-selected-source", {
+          source: "dashboard", httpStatus: response.status(), documentRef: confirmed.fileRef,
+          confirmed: confirmed.ref, sourceRead: "one original UI GET", reads: diagnostics.reads,
+        })
+      } finally {
+        await candidateRead.close()
+      }
       await expect(surface).toHaveAttribute("data-sf-read-state", "ready")
       await expect(surface.locator("[data-sf-evidence-id]")).toHaveCount(1)
       await previewRecordScenario(page, info, account, confirmed, fixture, "dashboard")
