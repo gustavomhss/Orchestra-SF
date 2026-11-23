@@ -1,8 +1,11 @@
-.sf-bi-figure { display: grid; gap: 1rem; min-inline-size: 0; }
+.sf-bi-figure { --sf-bi-chart-width: 700px; display: grid; gap: 1rem; min-inline-size: 0; }
 .sf-bi-series { min-inline-size: 0; margin: 0; border: 1px solid var(--border, currentColor); border-radius: .5rem; padding: clamp(.5rem, 1.5vw, 1rem); }
 .sf-bi-series figcaption { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem 1.25rem; overflow-wrap: anywhere; }
 .sf-bi-unit { font-size: .85em; opacity: .8; }
-.sf-bi-svg { inline-size: 100%; block-size: auto; max-block-size: 38rem; overflow: visible; }
+/* Preserve the SVG coordinate scale; narrow screens scroll marks instead of shrinking their labels. */
+.sf-bi-chart-scroll { min-inline-size: 0; max-inline-size: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.sf-bi-chart-scroll:focus-visible { outline: var(--sf-focus-width) solid var(--mx-blue); outline-offset: calc(-1 * var(--sf-focus-width)); }
+.sf-bi-svg { display: block; inline-size: 100%; min-inline-size: var(--sf-bi-chart-width); block-size: auto; max-block-size: 38rem; overflow: visible; }
 .sf-bi-axis-label, .sf-bi-axis-value { font-size: 12px; fill: currentColor; }
 .sf-bi-axis-value { font-variant-numeric: tabular-nums; }
 .sf-bi-source-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: .5rem; }

@@ -1,4 +1,4 @@
-import { For, Show, createMemo } from "solid-js"
+import { For, Show, createMemo, createUniqueId } from "solid-js"
 import type { SfBiFigureProps, SfBiOwnedView } from "./model"
 import { sfBiChartModel, sfBiEvidenceRef, sfBiKey, sfBiPeriodLabel } from "./model"
 import { SfChartFrame } from "../../shared/frame"
@@ -45,45 +45,49 @@ export function SfBiOwnedFigure(props: SfBiFigureProps<SfBiOwnedView> & Readonly
           ? model().series.filter((series) => series.points.some((point) => point.value.kind === "known"))
           : model().series}>
           {(series) => {
+            const captionId = createUniqueId()
             const rows = () => model().rows.filter((row) => series.points.some((point) => point.id === row.id))
             const extent = () => Math.max(1, ...rows().flatMap((row) => row.value === null ? [] : [Math.abs(row.value)]))
+            const chartHeight = () => Math.max(60, rows().length * 43 + 18)
             return (
               <figure class="sf-bi-series" data-sf-bi-role={series.semanticToken}>
-                <figcaption>
+                <figcaption id={captionId}>
                   <strong>{rows()[0]?.label ?? t(series.label.key)}</strong>
                   <span class="sf-bi-unit">{rows()[0]?.unit}</span>
                 </figcaption>
-                <svg viewBox={"0 0 700 " + Math.max(60, rows().length * 43 + 18)}
-                  role="img" aria-label={t(sfBiKey(props.copy + ".axis"))}
-                  class="sf-bi-svg" preserveAspectRatio="xMinYMin meet">
-                  <line x1="350" y1="8" x2="350" y2={Math.max(50, rows().length * 43 + 5)}
-                    stroke="currentColor" stroke-opacity="0.45" />
-                  <For each={rows()}>
-                    {(row, index) => {
-                      const magnitude = () => row.value === null ? 0 : Math.abs(row.value) / extent() * 210
-                      return (
-                        <g data-sf-value-id={row.id} data-sf-evidence={row.evidence}
-                          data-sf-value-kind={row.value === null ? "missing" : "known"}>
-                          <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + row.unit}</title>
-                          <text x="6" y={index() * 43 + 31} class="sf-bi-axis-label">{row.period}</text>
-                          <Show when={row.value !== null} fallback={
-                            <text x="360" y={index() * 43 + 31} class="sf-bi-axis-label">
-                              {t(sfBiKey(props.copy + ".missing"))}
-                            </text>
-                          }>
-                            <rect x={row.value !== null && row.value < 0 ? 350 - magnitude() : 350}
-                              y={index() * 43 + 13} width={magnitude()} height="20"
-                              fill="currentColor" fill-opacity={row.value !== null && row.value < 0 ? "0.45" : "0.72"} />
-                            <text x={row.value !== null && row.value < 0 ? 350 - magnitude() - 6 : 358 + magnitude()}
-                              y={index() * 43 + 29}
-                              text-anchor={row.value !== null && row.value < 0 ? "end" : "start"}
-                              class="sf-bi-axis-value">{fmt(row.value)}</text>
-                          </Show>
-                        </g>
-                      )
-                    }}
-                  </For>
-                </svg>
+                <div class="sf-bi-chart-scroll" role="region" aria-labelledby={captionId} tabIndex={0}>
+                  <svg viewBox={"0 0 700 " + chartHeight()} style={{ "min-block-size": chartHeight() + "px" }}
+                    role="img" aria-label={t(sfBiKey(props.copy + ".axis"))}
+                    class="sf-bi-svg" preserveAspectRatio="xMinYMin meet">
+                    <line x1="350" y1="8" x2="350" y2={Math.max(50, rows().length * 43 + 5)}
+                      stroke="currentColor" stroke-opacity="0.45" />
+                    <For each={rows()}>
+                      {(row, index) => {
+                        const magnitude = () => row.value === null ? 0 : Math.abs(row.value) / extent() * 210
+                        return (
+                          <g data-sf-value-id={row.id} data-sf-evidence={row.evidence}
+                            data-sf-value-kind={row.value === null ? "missing" : "known"}>
+                            <title>{row.label + " · " + row.period + " · " + fmt(row.value) + " " + row.unit}</title>
+                            <text x="6" y={index() * 43 + 31} class="sf-bi-axis-label">{row.period}</text>
+                            <Show when={row.value !== null} fallback={
+                              <text x="360" y={index() * 43 + 31} class="sf-bi-axis-label">
+                                {t(sfBiKey(props.copy + ".missing"))}
+                              </text>
+                            }>
+                              <rect x={row.value !== null && row.value < 0 ? 350 - magnitude() : 350}
+                                y={index() * 43 + 13} width={magnitude()} height="20"
+                                fill="currentColor" fill-opacity={row.value !== null && row.value < 0 ? "0.45" : "0.72"} />
+                              <text x={row.value !== null && row.value < 0 ? 350 - magnitude() - 6 : 358 + magnitude()}
+                                y={index() * 43 + 29}
+                                text-anchor={row.value !== null && row.value < 0 ? "end" : "start"}
+                                class="sf-bi-axis-value">{fmt(row.value)}</text>
+                            </Show>
+                          </g>
+                        )
+                      }}
+                    </For>
+                  </svg>
+                </div>
                 <div class="sf-bi-source-actions">
                   <For each={rows().filter((row) => row.evidenceRef)}>
                     {(row) => <button class="mx-btn" type="button"
