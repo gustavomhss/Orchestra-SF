@@ -31,7 +31,7 @@ async function baseline(page: Page, account: Account, version: string, year: num
 /** Independent fixture preconditions through the original domain commands; this is not UI coverage. */
 export async function prepareRecordScenario(page: Page, account: Account) {
   const before = await versions(page, account)
-  expect(before.data.versions.length, "the isolated Operations fixture has at most its original import version").toBeLessThanOrEqual(1)
+  expect(before.data.versions.length, "the basic native fixture has at most its original Planner version").toBeLessThanOrEqual(1)
   const source = before.data.versions[0]
   const revision = source ? before.versions["versions:" + source.id]?.version : 0
   if (revision === undefined) throw new Error("Copying the original Planner version requires its current CAS")
@@ -122,6 +122,6 @@ export async function previewRecordScenario(page: Page, info: TestInfo, account:
     evidence: body.value.evidence.ref, domainApplied: body.value.domainApplied,
     baselineAndCASUnchanged: true,
     limits: ["The original producer keeps total unavailable because the confirmed field does not establish complete cost coverage.",
-      "No persistent scenario link is submitted in the original confirmation/revocation journey."],
+      "No persistent scenario link is submitted in this isolated native preview journey."],
   })
 }

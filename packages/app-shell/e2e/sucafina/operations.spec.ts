@@ -2,6 +2,7 @@ import { test } from "@playwright/test"
 import { importJourney } from "./operations-support/imports"
 import { documentJourney } from "./operations-support/documents"
 import { exportRecordJourney } from "./operations-support/final-records-export"
+import { nativeRecordScenarioJourney } from "./operations-support/final-records-native-scenario"
 import { captureRecordFailure } from "./operations-support/final-records"
 
 test.describe("CI-UI-OPERATIONS", () => {
@@ -32,6 +33,12 @@ test.describe("CI-UI-OPERATIONS", () => {
   test("OP-EXPORT-01 UI68 delivers the exact authorized Planner file", async ({ page }, info) => {
     test.setTimeout(60_000)
     await exportRecordJourney(page, info)
+  })
+
+  test("OP-SCENARIO-01 UI60 previews confirmed evidence through the original native installation", async ({ browser }, info) => {
+    // Includes the unchanged 180s native build/setup scope plus the qualified scanner and original UI journey.
+    test.setTimeout(300_000)
+    await nativeRecordScenarioJourney(browser, info)
   })
 
 })
