@@ -577,7 +577,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
         <Show when={auth.ready() && (!catalog() || props.route.kind === "detail")}>
           <div class="sf-files-fields">
             <label>{t("sf.u24.source")}
-              <select value={state.surface} disabled={state.busy}
+              <select value={state.surface} disabled={state.busy || state.phase === "unknown"}
                 onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
                 <option value="procurement">{t("sf.u24.sourceProcurement")}</option><option value="dashboard">{t("sf.u24.sourceDashboard")}</option>
               </select>
