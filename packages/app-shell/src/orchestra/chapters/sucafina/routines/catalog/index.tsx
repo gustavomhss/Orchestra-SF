@@ -85,7 +85,11 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
     && !!caseChoice() && !!recipe() && !!parsedParams() && permitted("routines.prepare-admission")
   const admitted = () => view.preparation?.admission === "admitted"
     && !!view.preparation.admissionRef && Number.isInteger(view.preparation.admissionVersion)
-  const currentCase = () => caseChoice()?.caseRef
+  // A strict wire object cannot contain the Solid store's private symbol keys.
+  const currentCase = () => {
+    const reference = caseChoice()?.caseRef
+    return reference ? { id: reference.id, incarnation: reference.incarnation, version: reference.version } : undefined
+  }
 
   // Case authority is supplied by A15's current authorized case choices, not
   // by an arbitrary route ref or a user-entered case identity/version.

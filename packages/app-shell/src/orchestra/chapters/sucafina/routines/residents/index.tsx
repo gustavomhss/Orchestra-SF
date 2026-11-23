@@ -148,7 +148,7 @@ export function SfResidentsView(props: SfSurfaceProps<"UI70">): JSX.Element {
     }
     const abort = new AbortController()
     const stamp = current.context.stamp
-    const originalCase = chosen.caseRef
+    const originalCase = { id: chosen.caseRef.id, incarnation: chosen.caseRef.incarnation, version: chosen.caseRef.version }
     const selectedKey = caseKey(originalCase)
     const valid = () => !abort.signal.aborted && n29SameAuthority(owner, generation, stamp) &&
       view.selected === profile.id && view.caseKey === selectedKey

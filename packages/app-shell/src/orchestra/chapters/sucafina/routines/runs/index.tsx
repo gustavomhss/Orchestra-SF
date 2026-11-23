@@ -158,7 +158,8 @@ export function SfRoutineRunView(props: SfSurfaceProps<"UI65">): JSX.Element {
         return
       }
       const response = await createSfRoutinesClient(active.transport)["routines.read-run"]({
-        caseRef: selected.caseRef, input: { runRef: reference },
+        caseRef: { id: selected.caseRef.id, incarnation: selected.caseRef.incarnation, version: selected.caseRef.version },
+        input: { runRef: reference },
       }, { signal: abort.signal })
       if (!n29SameAuthority(owner, generation, stamp) || !caseChoice()
         || caseChoice()!.caseRef.id !== selected.caseRef.id
