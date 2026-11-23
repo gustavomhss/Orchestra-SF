@@ -2,7 +2,6 @@ import { expect, type Page, type Request, type Response } from "@playwright/test
 import { Schema } from "effect"
 import { SfContextResult, type SfContext, type SfContextStamp } from "@orchestra/schema/sucafina/context"
 import { ServerConnection } from "../../../src/context/server-connection"
-import { ready, reflow, scrollPageTop } from "./wave-four"
 
 const originalReadDeadline = 40_000
 
@@ -24,7 +23,8 @@ export type FinalOriginalGet = Readonly<{
 
 /** Observe distinct original JSON GET requests. This never sends, retries,
  * intercepts, fulfills or cancels a request. Non-200 bodies remain original. */
-export function observeFinalGet(page: Page, origin: string, pathname: string, count: 1 | 2 = 1) {
+export function observeFinalGet(page: Page, origin: string, pathname: string, count: 1 | 2 = 1,
+  matches?: (url: URL) => boolean) {
   const slots = Array.from({ length: count }, () => {
     let resolve!: (value: FinalOriginalGet | PromiseLike<FinalOriginalGet>) => void
     let reject!: (error: unknown) => void
@@ -39,7 +39,7 @@ export function observeFinalGet(page: Page, origin: string, pathname: string, co
   const capture = (request: Request) => {
     const url = new URL(request.url())
     if (closed || received >= count || identities.has(request) || request.method() !== "GET" ||
-        url.origin !== origin || url.pathname !== pathname) return
+        url.origin !== origin || url.pathname !== pathname || (matches && !matches(url))) return
     identities.add(request)
     const slot = slots[received++]
     if (!slot) throw new Error("The original GET observation has no slot")
@@ -149,4 +149,33 @@ export async function navigateFinalSurface(input: FinalNavigationBase & Readonly
   await reflow(input.page)
   await scrollPageTop(input.page)
   return context
+}
+
+// These pure DOM checks have the same bodies as wave-three.ts. Keep this
+// module free of fixture imports: Operations uses a separate installation.
+async function ready(page: Page, title: string, busyTimeoutMs = 10_000) {
+  const host = page.locator('[data-sf-host="owner-runtime231"]')
+  await expect(host).toHaveCount(1)
+  for (const attribute of ["data-sf-discovery-state", "data-sf-provider-state", "data-sf-view-state"])
+    await expect(host).toHaveAttribute(attribute, "ready")
+  await expect(host.getByRole("heading", { level: 1, name: title, exact: true })).toBeVisible()
+  await expect(host.locator('[data-sf-frame="page"]')).toHaveCount(1)
+  await expect(host.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: busyTimeoutMs })
+}
+
+async function scrollPageTop(page: Page) {
+  const scroller = page.locator('[data-sf-frame="page"] .mx-page')
+  await scroller.evaluate((element) => element.scrollTo({ top: 0, left: 0, behavior: "instant" }))
+  await expect.poll(() => scroller.evaluate((element) => element.scrollTop), {
+    message: "the actual native page scroller starts the capture at the top",
+  }).toBe(0)
+}
+
+async function reflow(page: Page) {
+  await expect.poll(() => page.locator('[data-sf-frame="page"]').evaluate((element) => {
+    const scroller = element.querySelector(".mx-page")
+    if (!(scroller instanceof HTMLElement)) throw new Error("Native page scroller missing")
+    return Math.max(document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      scroller.scrollWidth - scroller.clientWidth)
+  }), { message: "the native document and page do not overflow horizontally" }).toBeLessThanOrEqual(1)
 }
