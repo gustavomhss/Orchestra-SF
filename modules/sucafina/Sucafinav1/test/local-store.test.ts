@@ -1352,3 +1352,183 @@ test("warm snapshot text remains exact across Unicode variants and SQLite databa
     })
   }
 })
+
+test("readonly authority copies preserve cold and warm data, absence and terminal inherited drift", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const root = store.readSnapshotRoot
+    if (!root) throw new Error("Real readonly root required")
+    const selected = readonlyChoice(store)
+    const roleMap = [{ surface: "planner", role: "finance", nested: { optional: undefined, negativeZero: -0 } }]
+    const access = { person: { versions: ["published-v1"], active: true } }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data = { roleMap, access, sourcePayload: { privateAmount: 2000 } }
+      return { commit: true, value: undefined }
+    })
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data = { roleMap: undefined, sourcePayload: { privateAmount: 1000 } }
+      return { commit: true, value: undefined }
+    })
+    const inspect = () => root(async () => {
+      const raw = currentLocalReadonlyAuthorityData(store, [])
+      const forwarded = currentChoiceReadonlyAuthorityData(selected.fence.persistence, [])
+      const first = currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner", "dashboard"])
+      const second = currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["planner", "dashboard"])
+      if (!raw?.scope?.bytesIdentity || !forwarded?.scope || !first || !second)
+        throw new Error("Original readonly scope and detached ACL copies required")
+      expect(forwarded.scope.identity).toBe(raw.scope.identity)
+      expect(forwarded.scope.bytesIdentity).toBe(raw.scope.bytesIdentity)
+      expect(first.snapshots.planner.data).toEqual({ roleMap, access })
+      expect(first.snapshots.planner.data).not.toHaveProperty("sourcePayload")
+      expect(first.snapshots.dashboard.data).toEqual({ roleMap: undefined })
+      expect(Object.hasOwn(first.snapshots.dashboard.data, "roleMap")).toBe(true)
+      expect(Object.hasOwn(first.snapshots.dashboard.data, "access")).toBe(false)
+      expect(first.snapshots.planner.data).not.toBe(second.snapshots.planner.data)
+      const detachedRoles = first.snapshots.planner.data.roleMap
+      if (!Array.isArray(detachedRoles)) throw new Error("Original role map array required")
+      detachedRoles[0] = { changed: true }
+      first.snapshots.dashboard.data.roleMap = ["detached"]
+      expect(second.snapshots.planner.data).toEqual({ roleMap, access })
+      expect(second.snapshots.dashboard.data).toEqual({ roleMap: undefined })
+      expect(store.currentSnapshot?.("planner")?.data).toEqual({ roleMap, access, sourcePayload: { privateAmount: 2000 } })
+      expect(first.current()).toBe(true)
+      expect(second.current()).toBe(true)
+      return { snapshots: second.snapshots, identity: raw.scope.identity, bytesIdentity: raw.scope.bytesIdentity }
+    })
+    const cold = await inspect()
+    const warm = await inspect()
+    expect(warm.snapshots).toEqual(cold.snapshots)
+    expect(warm.identity).not.toBe(cold.identity)
+    expect(warm.bytesIdentity).toBe(cold.bytesIdentity)
+
+    await root(async () => {
+      const observed = currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["dashboard"])
+      if (!observed) throw new Error("Original absent-field observation required")
+      expect(observed.current()).toBe(true)
+      if (Object.getOwnPropertyDescriptor(Object.prototype, "access"))
+        throw new Error("Fixture requires an absent inherited access field")
+      let getterCalls = 0
+      const result = (() => {
+        Object.defineProperty(Object.prototype, "access", {
+          configurable: true,
+          get() { getterCalls++; throw new Error("Inherited access getter must not execute") },
+        })
+        try {
+          return {
+            fresh: currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["dashboard"]),
+            current: observed.current(),
+          }
+        } finally {
+          Reflect.deleteProperty(Object.prototype, "access")
+        }
+      })()
+      expect(getterCalls).toBe(0)
+      expect(result.fresh).toBeUndefined()
+      expect(result.current).toBe(false)
+      expect(observed.current()).toBe(false)
+      expect(currentChoiceReadonlyAuthorityData(selected.fence.persistence, ["dashboard"])?.current()).toBe(true)
+    })
+  })
+})
+
+test("warm readonly authority reads preserve the original behavior under late codec hooks", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const root = store.readSnapshotRoot
+    if (!root) throw new Error("Real readonly root required")
+    const roleMap = [{ surface: "planner", role: "finance", optional: undefined }]
+    const access = { person: { active: true, negativeZero: -0 } }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data = { roleMap, access, unrelated: { sourceValue: 2000 } }
+      return { commit: true, value: undefined }
+    })
+    await root(async () => {
+      expect(currentLocalReadonlyAuthorityData(store, ["planner"])?.snapshots.planner.data).toEqual({ roleMap, access })
+    })
+    const iteratorPrototype = Object.getPrototypeOf([][Symbol.iterator]())
+    const modes: readonly ("values" | "empty-every" | "inherited-generations" | "string-set-add" | "iterator-return")[] =
+      ["values", "empty-every", "inherited-generations", "string-set-add", "iterator-return"]
+    for (const mode of modes) await root(async () => {
+      const originalEvery = Array.prototype.every
+      const originalAdd = Set.prototype.add
+      const owner = mode === "values" ? Object : mode === "empty-every" ? Array.prototype
+        : mode === "inherited-generations" ? Object.prototype : mode === "iterator-return" ? iteratorPrototype : Set.prototype
+      const key = mode === "values" ? "values" : mode === "empty-every" ? "every"
+        : mode === "inherited-generations" ? "sfBlobGenerations" : mode === "iterator-return" ? "return" : "add"
+      const descriptor = Object.getOwnPropertyDescriptor(owner, key)
+      if (mode === "inherited-generations" || mode === "iterator-return" ? descriptor !== undefined : !descriptor || !Object.hasOwn(descriptor, "value"))
+        throw new Error("Original codec fixture descriptor unavailable: " + mode)
+      let hookCalls = 0
+      const fail = () => { hookCalls++; throw new Error("Additional ACL decode operation: " + mode) }
+      const hook: PropertyDescriptor = mode === "values"
+        ? { ...descriptor, value() { return fail() } }
+        : mode === "empty-every"
+          ? { ...descriptor, value(this: unknown[], predicate: (value: unknown, index: number, array: unknown[]) => unknown, thisArg?: unknown): boolean {
+            if (this.length === 0) return fail()
+            return originalEvery.call(this, predicate, thisArg)
+          } }
+          : mode === "inherited-generations" || mode === "iterator-return"
+            ? { configurable: true, get() { return fail() } }
+            : { ...descriptor, value(this: Set<unknown>, value: unknown): Set<unknown> {
+              if (typeof value === "string") return fail()
+              return originalAdd.call(this, value)
+            } }
+      const observed = (() => {
+        Object.defineProperty(owner, key, hook)
+        try {
+          return currentLocalReadonlyAuthorityData(store, ["planner"])
+        } finally {
+          if (descriptor) Object.defineProperty(owner, key, descriptor)
+          else Reflect.deleteProperty(owner, key)
+        }
+      })()
+      expect(hookCalls).toBe(0)
+      expect(observed?.snapshots.planner.data).toEqual({ roleMap, access })
+      expect(observed?.current()).toBe(true)
+    })
+  })
+})
+
+test("readonly authority fallback preserves full validation errors beyond the copy-plan depth", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    const root = store.readSnapshotRoot
+    if (!root) throw new Error("Real readonly root required")
+    const roleMap = [{ surface: "planner", role: "finance" }]
+    const access = { person: { active: true } }
+    let deep: Record<string, unknown> = { original: true }
+    for (let depth = 0; depth < 130; depth++) deep = { child: deep }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data = { roleMap, access, unrelated: deep }
+      snapshot.versions.record = { version: 1, by: "fixture" }
+      return { commit: true, value: undefined }
+    })
+    await root(async () => {
+      expect(currentLocalReadonlyAuthorityData(store, ["planner"])?.snapshots.planner.data).toEqual({ roleMap, access })
+    })
+    await root(async () => {
+      const descriptor = Object.getOwnPropertyDescriptor(Number, "isSafeInteger")
+      if (!descriptor || !Object.hasOwn(descriptor, "value"))
+        throw new Error("Original integer validator required")
+      const sentinel = new Error("Original full snapshot validation remains observable")
+      let hookCalls = 0
+      const result = (() => {
+        Object.defineProperty(Number, "isSafeInteger", {
+          ...descriptor,
+          value() { hookCalls++; throw sentinel },
+        })
+        try {
+          currentLocalReadonlyAuthorityData(store, ["planner"])
+          return { threw: false, error: undefined }
+        } catch (error) {
+          return { threw: true, error }
+        } finally {
+          Object.defineProperty(Number, "isSafeInteger", descriptor)
+        }
+      })()
+      expect(result.threw).toBe(true)
+      expect(result.error).toBe(sentinel)
+      expect(hookCalls).toBe(1)
+    })
+  })
+})

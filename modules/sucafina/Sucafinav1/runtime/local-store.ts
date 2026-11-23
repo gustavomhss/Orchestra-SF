@@ -183,7 +183,7 @@ export async function openLocalStore(directory: string, options: {
     materialize: () => Snapshot
     copy?: () => Snapshot
     freshPlan?: { units: number; copy: () => Snapshot }
-    copyAcl?: () => Snapshot["data"] | undefined
+    copyAcl?: (requireComplete?: true) => Snapshot["data"] | undefined
     bytesIdentity?: object
   } => {
     const prior = materializations.get(surface)
@@ -201,9 +201,11 @@ export async function openLocalStore(directory: string, options: {
       const materialize = prior.fingerprint && prior.copy
         ? fingerprintSnapshotCopy(prior) : () => materializeSnapshot(prior, payload)
       const acl = prior.acl
+      const complete = prior.copy !== undefined
       return { materialize, bytesIdentity: prior.identity,
         ...(!prior.fingerprint || prior.copy ? { copy: materialize } : {}),
-        ...(acl === undefined ? {} : { copyAcl: () => aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
+        ...(acl === undefined ? {} : { copyAcl: (requireComplete?: true) =>
+          (!requireComplete || complete) && aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
     }
     materializations.delete(surface)
     snapshotSql.reconcile(materializations)
@@ -232,7 +234,7 @@ export async function openLocalStore(directory: string, options: {
   const loadSnapshot = (surface: Surface, payload?: unknown) => observeSnapshot(surface, payload).materialize()
 
   type SnapshotCopies = Partial<Record<Surface, () => Snapshot>>
-  type AclCopies = Partial<Record<Surface, () => Snapshot["data"] | undefined>>
+  type AclCopies = Partial<Record<Surface, (requireComplete?: true) => Snapshot["data"] | undefined>>
   const byteIdentities = new WeakMap<object, WeakMap<object, WeakMap<object, object>>>()
   const snapshotBytesIdentity = (keys: Partial<Record<Surface, object>>) => {
     const { dashboard, planner, procurement } = keys
@@ -933,9 +935,19 @@ export async function openLocalStore(directory: string, options: {
     if (!Object.hasOwn(scope.root, "readOnly") || scope.root.readOnly !== true || !sameStore()) return undefined
     const fields = ["roleMap", "access"] as const
     const observed = surfaces.map((surface) => {
-      const snapshot = scope.root.snapshots[surface]
-      if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-      const data = snapshot.data
+      let data: Snapshot["data"] | undefined
+      if (typeof surface === "string" && readonlyAuthorityAclCodec?.()) {
+        const copies = Object.getOwnPropertyDescriptor(scope.root, "aclCopies")
+        const stored: unknown = copies && Object.hasOwn(copies, "value") ? copies.value : undefined
+        const copy = stored && typeof stored === "object" ? Object.getOwnPropertyDescriptor(stored, surface) : undefined
+        const read: unknown = copy && Object.hasOwn(copy, "value") ? copy.value : undefined
+        if (typeof read === "function") data = read(true)
+      }
+      if (data === undefined) {
+        const snapshot = scope.root.snapshots[surface]
+        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+        data = snapshot.data
+      }
       if (Object.getPrototypeOf(data) !== Object.prototype) return undefined
       const descriptors = fields.map((field) => Object.getOwnPropertyDescriptor(data, field))
       // A getter inherited by an absent field would observe the full data
@@ -1155,6 +1167,75 @@ function aclCodecCurrent() {
   return JSON.stringify === aclCodec.stringify && JSON.parse === aclCodec.parse && Array.prototype.map === aclCodec.map &&
     !Object.getOwnPropertyDescriptor(Array.prototype, "toJSON") && !Object.getOwnPropertyDescriptor(Object.prototype, "toJSON")
 }
+// The short ACL decoder is optional and starts with the original module import.
+// It does not attest globals changed before that bootstrap. Hooks installed later
+// retain the complete snapshot path, including its original errors.
+const readonlyAuthorityAclCodec = (() => {
+  try {
+    const property = Object.getOwnPropertyDescriptor, own = Object.hasOwn, parentOf = Object.getPrototypeOf
+    const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
+    const iteratorPrototype: object = parentOf([][Symbol.iterator]())
+    const iteratorParents: { owner: object; parent: object | null }[] = []
+    let iteratorOwner: object | null = iteratorPrototype
+    while (iteratorOwner !== null) {
+      if (property(iteratorOwner, "return")) return undefined
+      const parent: object | null = parentOf(iteratorOwner)
+      iteratorParents.push({ owner: iteratorOwner, parent })
+      iteratorOwner = parent
+    }
+    const groups: { owner: object; keys: readonly PropertyKey[] }[] = [
+      { owner: globalThis, keys: ["Object", "Array", "JSON", "Number", "Set", "String"] },
+      { owner: Object, keys: ["getOwnPropertyDescriptor", "getPrototypeOf", "hasOwn", "values", "fromEntries", "keys", "defineProperty"] },
+      { owner: JSON, keys: ["parse", "stringify"] },
+      { owner: Array, keys: ["isArray", Symbol.species] },
+      { owner: arrayPrototype, keys: ["map", "every", "includes", "constructor", Symbol.iterator] },
+      { owner: iteratorPrototype, keys: ["next"] },
+      { owner: Set.prototype, keys: ["add", "size"] },
+      { owner: Number, keys: ["isFinite", "isSafeInteger"] },
+      { owner: String.prototype, keys: ["slice", "indexOf"] },
+    ]
+    const pins: { owner: object; key: PropertyKey; expected: PropertyDescriptor }[] = []
+    for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+      const group = groups[groupIndex]
+      if (!group) return undefined
+      for (let keyIndex = 0; keyIndex < group.keys.length; keyIndex++) {
+        const key = group.keys[keyIndex]
+        if (key === undefined) return undefined
+        const expected = property(group.owner, key)
+        if (!expected) return undefined
+        pins.push({ owner: group.owner, key, expected })
+      }
+    }
+    return () => {
+      try {
+        // Inspect with the original primitives so refusing a changed codec
+        // cannot invoke an added accessor before the complete-path fallback.
+        for (let index = 0; index < pins.length; index++) {
+          const pin = pins[index]
+          if (!pin) return false
+          const current = property(pin.owner, pin.key), expected = pin.expected
+          if (!current || current.enumerable !== expected.enumerable ||
+            current.configurable !== expected.configurable || own(current, "value") !== own(expected, "value")) return false
+          if (own(expected, "value")) {
+            if (current.value !== expected.value || current.writable !== expected.writable) return false
+          } else if (current.get !== expected.get || current.set !== expected.set) return false
+        }
+        // Destructuring each decoded entry closes its iterator early. A newly
+        // inherited return method must not become an additional callback.
+        for (let index = 0; index < iteratorParents.length; index++) {
+          const pin = iteratorParents[index]
+          if (!pin || parentOf(pin.owner) !== pin.parent || property(pin.owner, "return")) return false
+        }
+        // The encoded ACL always owns its five required Snapshot fields. Its
+        // versions/sequences/audit/notices are empty; only this optional lookup
+        // could otherwise observe an inherited value during validation.
+        return !property(objectPrototype, "sfBlobGenerations") &&
+          !property(objectPrototype, "toJSON") && !property(arrayPrototype, "toJSON")
+      } catch { return false }
+    }
+  } catch { return undefined }
+})()
+
 type SnapshotMaterialization = Readonly<{
   identity: object
   payload?: string
