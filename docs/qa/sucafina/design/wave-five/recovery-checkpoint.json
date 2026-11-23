@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23 05:23:45 UTC",
+  "updatedAt": "2026-11-23 05:32:35 UTC",
   "status": "C14_PREVIEW_PROFILE_COMPLETE_PRODUCT_FIX_PENDING",
   "repository": "gustavomhss/Orchestra-SF",
   "pullRequest": 613,
@@ -87,7 +87,26 @@
       "sha256": "c4ba22a2e8f449b9bd947bd579c6f55cf3f27f441926c91943d7020befc8fa2e"
     }
   ],
-  "pending": [],
+  "pending": [
+    {
+      "source": "9ba028b0d4d54317aea0d4df239047cbbdffdbe9",
+      "sourceTree": "60bd6712f564288fe109359ff2700a4d5638a50e",
+      "sha": "435073b641454eb86e1bb2627b6c26c1a5d467cd",
+      "tree": "be56bc2f6c8ba8d055e89765dd023dee97e58bbd",
+      "branch": "ci-run-sf613bidefer",
+      "overlayPaths": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        ".ci-run.json"
+      ],
+      "qualification": false,
+      "status": "DISPATCHED",
+      "peerAck": "sf613_ui",
+      "dispatchedAt": "2026-11-23 05:32:35 UTC"
+    }
+  ],
   "previousFullCampaign": {
     "source": "e68c2f720b5aa0fdbf0d865377ca886ef6f998ec",
     "allCleanupsSuccessAndRefs404": true,
@@ -213,7 +232,7 @@
   },
   "next": {
     "product": "Choose pure data/canonical optimization from observed caller+leaf counts; do not pursue sameStore without evidence",
-    "bi": "PT ERR_ABORTED recurred in CPU run; original native completion gate remains required",
+    "bi": "Buffered metadata only until native signal abort; original whole Analytics, no deadline/oracle change.",
     "qualification": "All6cleanreceipts stillpending on final corrected product",
     "docs": "4 renderers and sourcepack preserved; do not qualify before clean success"
   },
